@@ -1,3 +1,5 @@
+package level;
+
 import java.util.Set;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Set;
  * @specfield: Edges -- Set<Chute> // the set of edges contained in the Graph
  */
 
-public class Frame
+public class Board
 {
 	
 	/**
