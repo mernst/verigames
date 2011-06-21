@@ -10,7 +10,7 @@ package level;
  * Uses eternal equality so that it can be used in Collections while maintaining
  * mutability
  * 
- * @specfield type : Intersection.IntersectionType // represents which kind of
+ * @specfield type : Intersection.Type // represents which kind of
  * intersection this is
  * 
  * @specfield input : List<Chute> // represents the ordered set of input chutes

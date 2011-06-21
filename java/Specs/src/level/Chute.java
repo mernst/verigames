@@ -5,6 +5,8 @@ package level;
  * 
  * A mutable structure representing chute segments.
  * 
+ * Implements eternal equality because it is mutable, but must be used in Collections
+ * 
  * @specfield start : Intersection // The starting point of this Chute
  * @specfield end : Intersection // The ending point of this Chute
  * 
@@ -48,6 +50,15 @@ public class Chute
     * @return narrow
     */
    public boolean isNarrow()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies this
+    * @effects sets the specfield narrow to the given boolean value
+    */
+   public void setNarrow(boolean narrow)
    {
       throw new RuntimeException("Not yet implemented");
    }
