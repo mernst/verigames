@@ -23,9 +23,27 @@ package level;
  * 
  */
 
+/*
+ * Notes:
+ * 
+ * - Should Intersection be an interface, with different implementations for
+ * different types of intersections? This may lead to too much bloat, but the
+ * SUBNETWORK type requires additional information. We could just have a field
+ * that isn't used unless it's a SUBNETWORK type, as this specification suggests
+ * 
+ * - Should the enums perhaps include instance fields to specify how many input
+ * and output chutes they can have?
+ * 
+ * - Should there be enums for restarting chutes, even though the same effect
+ * can be accomplished through an end node then a start node? In other words, is
+ * the added bloat worth the convenience?
+ * 
+ * - I think I have all the the Intersection types in the enum, but if I'm
+ * missing any, let me know.
+ */
+
 public class Intersection
 {
-   // enum names use draft terminology -- comments welcome
    public enum Type
    {
       INCOMING, // The start point of chutes that are entering the frame on
@@ -33,7 +51,7 @@ public class Intersection
       OUTGOING, // The end point of chutes that are exiting the frame on the
       // bottom
       SPLIT, // An intersection in which a chute is split into multiple chutes
-      NULL_TEST, //
+      NULL_TEST, // Represent branching due to testing a value for null
       MERGE, // An intersection where multiple chutes merge into one
       START_WHITE_BALL, // Represents a white (NonNull) ball being dropped
       // into the top of the exit chute
@@ -46,12 +64,9 @@ public class Intersection
       RE_START_BLACK_BALL, // Terminate a chute and restart it with a new black
                            // ball
       RE_START_NO_BALL, // Terminate a chute and restart it without a ball
-      SUBNETWORK, // Represents a method call,
+      SUBNETWORK, // Represents a method call
       
    };
-   
-   // Should the enums perhaps include instance fields to specify how many
-   // input and output chutes they can have?
    
    private final Type intersectionType;
    
@@ -80,11 +95,23 @@ public class Intersection
    }
    
    /**
-	 * @requires port is a valid port number for this Intersection
-	 * @modifies this
-	 * @effects sets the given input chute 
-	 */
+    * @requires port is a valid port number for this Intersection
+    * @modifies this
+    * @effects sets the given chute to this Intersection's input at the given
+    * port, replacing the old one, if present
+    */
    protected void setInputChute(Chute input, int port)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @requires port is a valid port number for this Intersection
+    * @modifies this
+    * @effects sets the given chute to this Intersection's output at the given
+    * port, replacing the old one, if present
+    */
+   protected void setOutputChute(Chute output, int port)
    {
       throw new RuntimeException("Not yet implemented");
    }

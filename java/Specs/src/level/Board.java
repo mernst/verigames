@@ -24,7 +24,7 @@ import java.util.Set;
 /*
  * Notes:
  * 
- * - This class suffers from pretty severe rep exposure. Any of the Chutes and
+ * - This class suffers from representation exposure. Any of the Chutes and
  * Intersections could be modified by clients. I think it's the best option,
  * though.
  * 
@@ -48,7 +48,9 @@ import java.util.Set;
  * 
  * I'm going to try to mitigate the issue by making the relevant mutations on
  * Chutes and Intersections protected, so they can only be accessed from within
- * the package. I think that will give us the best of both worlds.
+ * the package. I think that will give us the best of both worlds, because the
+ * graph structure information stored in these objects won't be accessible
+ * outside the package, but the other information will.
  * 
  * Comments are, of course, welcome.
  */

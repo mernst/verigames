@@ -8,7 +8,9 @@ package level;
  * Implements eternal equality because it is mutable, but must be used in Collections
  * 
  * @specfield start : Intersection // The starting point of this Chute
+ * @specfield startPort: integer // The port from which this exits its starting node
  * @specfield end : Intersection // The ending point of this Chute
+ * @specfield endPort: integer // The port through which this enters its ending node
  * 
  * @specfield pinch : boolean // true iff there is a pinch-point in this chute
  * segment
@@ -82,19 +84,21 @@ public class Chute
    }
    
    /**
+    * @requires start != null; port is a valid port number for start
     * @modifies this
-    * @effects sets "start" to the given Intersection
+    * @effects sets "start" to the given Intersection, replacing the old one, if present
     */
-   protected void setStart(Intersection start)
+   protected void setStart(Intersection start, int port)
    {
       throw new RuntimeException("Not yet implemented");
    }
    
    /**
+    * @requires start != null; port is a valid port number for start
     * @modifies this
-    * @effects sets "end" to the given Intersection
+    * @effects sets "end" to the given Intersection, replacing the old one, if present
     */
-   protected void setEnd(Intersection end)
+   protected void setEnd(Intersection end, int port)
    {
       throw new RuntimeException("Not yet implemented");
    }
