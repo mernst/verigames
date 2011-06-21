@@ -19,19 +19,70 @@ package level;
 
 public class Chute
 {
-	
-	private Intersection start;
-	private Intersection end;
-	private boolean pinch;
-	private boolean narrow;
-	
-	/**
-	 * @effects creates a new Chute object. the specfield "pinch" will have the
-	 * same value as the argument
-	 */
-	public Chute(boolean pinch)
-	{
-		throw new RuntimeException("Not yet implemented");
-	}
-	
+   
+   private Intersection start;
+   private Intersection end;
+   private final boolean pinch; // whether a chute has a pinch-point is a fact
+                                // of the original code, and cannot be modified
+                                // in-game
+   private boolean narrow;
+   
+   /**
+    * @effects creates a new Chute object. the specfield "pinch" will have the
+    * same value as the argument
+    */
+   public Chute(boolean pinch)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return pinch
+    */
+   public boolean isPinched()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return narrow
+    */
+   public boolean isNarrow()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return start
+    */
+   public Intersection getStart()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return end
+    */
+   public Intersection getEnd()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies this
+    * @effects sets "start" to the given Intersection
+    */
+   public void setStart(Intersection start)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   /**
+    * @modifies this
+    * @effects sets "end" to the given Intersection
+    */
+   public void setEnd(Intersection end)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
 }
