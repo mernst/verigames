@@ -10,14 +10,16 @@ package level;
  * Uses eternal equality so that it can be used in Collections while maintaining
  * mutability
  * 
- * @specfield type : Intersection.Type // represents which kind of
- * intersection this is
+ * @specfield type : Intersection.Type // represents which kind of intersection
+ * this is
  * 
  * @specfield input : List<Chute> // represents the ordered set of input chutes
  * (the index of a given Chute represents the port at which it enters)
  * 
  * @specfield output : List<Chute> // represents the ordered set of output
  * chutes (the index of a given Chute represents the port at which it exits)
+ * 
+ * @specfield UID : integer // the unique even identifier for this Intersection
  * 
  */
 
@@ -78,7 +80,12 @@ public class Intersection
    }
    
    /**
-	 * 
+	 * @requires port is a valid port number for this Intersection
+	 * @modifies this
+	 * @effects sets the given input chute 
 	 */
-   // public setChute()
+   protected void setInputChute(Chute input, int port)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
 }

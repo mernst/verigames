@@ -15,6 +15,8 @@ package level;
  * 
  * @specfield narrow : boolean // true iff the chute is currently narrow
  * 
+ * @specfield UID: integer // the unique odd identifier for this chute
+ * 
  * Except in corner cases, pinch --> narrow
  * 
  */
@@ -22,8 +24,8 @@ package level;
 public class Chute
 {
    
-   private Intersection start;
-   private Intersection end;
+   private /*@LazyNonNull*/ Intersection start;
+   private /*@LazyNonNull*/ Intersection end;
    private final boolean pinch; // whether a chute has a pinch-point is a fact
                                 // of the original code, and cannot be modified
                                 // in-game
@@ -64,17 +66,17 @@ public class Chute
    }
    
    /**
-    * @return start
+    * @return start, or null if end does not exist
     */
-   public Intersection getStart()
+   public /*@Nullable*/ Intersection getStart()
    {
       throw new RuntimeException("Not yet implemented");
    }
    
    /**
-    * @return end
+    * @return end, or null if end does not exist
     */
-   public Intersection getEnd()
+   public /*@Nullable*/ Intersection getEnd()
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -83,7 +85,7 @@ public class Chute
     * @modifies this
     * @effects sets "start" to the given Intersection
     */
-   public void setStart(Intersection start)
+   protected void setStart(Intersection start)
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -92,7 +94,7 @@ public class Chute
     * @modifies this
     * @effects sets "end" to the given Intersection
     */
-   public void setEnd(Intersection end)
+   protected void setEnd(Intersection end)
    {
       throw new RuntimeException("Not yet implemented");
    }
