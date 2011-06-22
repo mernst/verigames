@@ -11,7 +11,9 @@ import level.*;
  * 
  * @specfield board: Board // The board that this BoardBuilder is building
  * 
- * @specfield level: Level // The level that board belongs in -- used to connect chutes
+ * @specfield levelBuilder: LevelBuilder // The LevelBuilder that is making the
+ * Level that "board" belongs in -- stores information global to the level that
+ * is needed for construction, but not gameplay
  * 
  * @specfield varToFurthestEdge: map from Name to Chute
  * 
@@ -19,6 +21,5 @@ import level.*;
 
 public class BoardBuilder
 {
-   
    
 }
