@@ -82,6 +82,9 @@ public class Level
     * @effects prints the text of the XML representation of this Level to the
     * given PrintStream
     * @return true iff no detectable problems occur
+    * 
+    * My Java file IO is a little rusty, so let me know if I should be using
+    * something other than a PrintStream
     */
    public boolean outputXML(PrintStream out)
    {
