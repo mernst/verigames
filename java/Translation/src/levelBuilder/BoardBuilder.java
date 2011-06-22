@@ -17,9 +17,15 @@ import level.*;
  * 
  * @specfield varToFurthestEdge: map from Name to Chute
  * 
+ * @specfield active: boolean // indicates whether this BoardBuilder represents an unfinished Board
+ * 
  */
 
 public class BoardBuilder
 {
+   
+   /**
+    * 
+    */
    
 }
