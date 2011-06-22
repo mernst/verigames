@@ -2,7 +2,7 @@ package translation;
 
 import java.io.*;
 
-import com.sun.source.tree.TreeVisitor;
+import com.sun.source.tree.*;
 
 /**
  * @author Nathaniel Mote
