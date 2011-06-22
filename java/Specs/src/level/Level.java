@@ -3,17 +3,23 @@ package level;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Set;
+import javax.lang.model.element.Name;
 
 /**
  * @author: Nathaniel Mote
  * 
- * A data structure that represents a complete level
+ * A mutable data structure that represents a complete level
  * 
  * @specfield: contiguousEdgeMap: Map<Chute, Set<Chute>> // maps edges to a set
  * of their contiguous edges
- * @specfield: boardSet: Set<Board> // represents the set of frames
- * @specfield: nameMap: Map<String, Board> // maps the name of a method to its
+ * 
+ * @specfield: boardSet: Set<Board> // represents the set of all boards in this
+ * level
+ * 
+ * @specfield: nameMap: Map<Name, Board> // maps the name of a method to its
  * board
+ * 
+ * 
  */
 
 /*
@@ -44,6 +50,28 @@ public class Level
     * boardSet, and nameMap
     */
    public Level()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies this
+    * @effects makes it so that the given chutes are equivalent under the
+    * relation R defined above. In other words, for all a, b in chutes (the
+    * argument to this method), aRb
+    */
+   public void makeContiguous(Set<Chute> chutes)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @requires b is not in boardSet, name is not in nameMap.keySet()
+    * @modifies this
+    * @effects adds b to boardSet, and adds the mapping from name to b to
+    * nameMap
+    */
+   public void addBoard(Name name, Board b)
    {
       throw new RuntimeException("Not yet implemented");
    }
