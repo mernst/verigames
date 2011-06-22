@@ -65,6 +65,9 @@ public class Intersection
                            // ball
       RE_START_NO_BALL, // Terminate a chute and restart it without a ball
       SUBNETWORK, // Represents a method call
+      CONNECT, // Simply connects one chute to another, without making any
+               // modifications.Can be optimized away after, but I think it will
+               // be convenient to have during construction.
       
    };
    
