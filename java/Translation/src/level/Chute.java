@@ -1,5 +1,7 @@
 package level;
 
+import javax.lang.model.element.Name;
+
 /**
  * @author: Nathaniel Mote
  * 
@@ -50,10 +52,10 @@ public class Chute
    private boolean narrow;
    
    /**
-    * @effects creates a new Chute object. the specfield "pinch" will have the
-    * same value as the argument
+    * @effects creates a new Chute object, with the given values for name and
+    * pinch
     */
-   public Chute(boolean pinch)
+   public Chute(/* @Nullable */Name name, boolean pinch)
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -83,6 +85,9 @@ public class Chute
       throw new RuntimeException("Not yet implemented");
    }
    
+   /**
+    * @return editable
+    */
    public boolean isEditable()
    {
       throw new RuntimeException("Not yet implemented");

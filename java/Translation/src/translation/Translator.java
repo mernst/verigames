@@ -1,6 +1,11 @@
 package translation;
 
 import java.io.*;
+
+import javax.lang.model.element.Name;
+
+import level.Chute;
+import level.Level;
 import levelBuilder.LevelBuilder;
 import levelBuilder.BoardBuilder;
 import com.sun.source.tree.*;
@@ -17,9 +22,16 @@ import com.sun.source.tree.*;
 public class Translator
 {
    
-   public static void translate(ClassTree c, PrintStream out)
+   
+   public static Level translate(ClassTree c)
    {
       LevelBuilder lb = new LevelBuilder();
       TranslationVisitor visitor = new TranslationVisitor();
+      return null;
+   }
+   
+   public static Chute generateChute(VariableTree tree)
+   {
+      return null;
    }
 }

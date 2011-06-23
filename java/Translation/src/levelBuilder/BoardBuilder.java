@@ -19,7 +19,9 @@ import level.*;
  * Level that "board" belongs in -- stores information global to the level that
  * is needed for construction, but not gameplay
  * 
- * @specfield varToFurthestEdge: map from Name to Chute // For a given 
+ * @specfield varToFurthestEdge: map from Name to Chute // For a given variable
+ * name, return the base chute. its auxiliary chutes can be accessed through the
+ * base chute
  * 
  * @specfield active: boolean // indicates whether this BoardBuilder represents
  * an unfinished Board
@@ -50,15 +52,17 @@ public class BoardBuilder
    }
    
    /**
-    * 
+    * @requires the named variable is not already present in this BoardBuilder
+    * @effects adds the named variable to this BoardBuilder. More specifically,
+    * creates a
     */
-   public void addVar(Name var)
+   public void addVar(Name var, Intersection.Type startType)
    {
       throw new RuntimeException("Not yet implemented");
    }
    
    /**
-    * @requires
+    * @requires the named variable is present in this BoardBuilder7
     */
    public void addPinchToVar(Name var)
    {

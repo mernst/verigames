@@ -50,7 +50,8 @@ import java.util.Set;
  * Chutes and Intersections protected, so they can only be accessed from within
  * the package. I think that will give us the best of both worlds, because the
  * graph structure information stored in these objects won't be accessible
- * outside the package, but the other information will.
+ * outside the package, but the other information will. However, problems could
+ * still arise if the same Intersection or Chute is present in multiple Boards
  * 
  * Comments are, of course, welcome.
  */

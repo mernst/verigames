@@ -8,7 +8,11 @@ import level.Board;
  * @author Nathaniel Mote
  * 
  * @specfield fieldToChutes: Map<Name, Set<Chute>> // mapping from Name of field
- * to a set of chutes representing that field
+ * to the set of all base chutes in this level representing that field. the
+ * auxiliary chutes are accessible through the returned chutes themselves. to
+ * reiterate, this map should not contain any auxiliary chutes.
+ * 
+ * @specfield
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
  * 
@@ -35,5 +39,7 @@ public class LevelBuilder
    {
       throw new RuntimeException("Not yet implemented");
    }
+   
+   //public void addField()
    
 }
