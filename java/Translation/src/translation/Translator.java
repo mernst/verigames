@@ -20,6 +20,6 @@ public class Translator
    public static void translate(ClassTree c, PrintStream out)
    {
       LevelBuilder lb = new LevelBuilder();
-      
+      TranslationVisitor visitor = new TranslationVisitor();
    }
 }

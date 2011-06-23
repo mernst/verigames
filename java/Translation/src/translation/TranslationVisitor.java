@@ -3,6 +3,7 @@ package translation;
 import levelBuilder.BoardBuilder;
 
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.tree.*;
 
 /**
  * @author Nathaniel Mote
@@ -16,5 +17,9 @@ import com.sun.source.util.SimpleTreeVisitor;
 
 public class TranslationVisitor extends SimpleTreeVisitor<Void, BoardBuilder>
 {
-   
+   @Override
+   public Void visitIf(IfTree node, BoardBuilder b)
+   {
+      return DEFAULT_VALUE;
+   }
 }
