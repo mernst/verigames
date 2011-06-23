@@ -1,5 +1,8 @@
 package levelBuilder;
 
+import javax.lang.model.element.Name;
+import level.Board;
+
 /**
  * 
  * @author Nathaniel Mote
@@ -23,5 +26,14 @@ public class LevelBuilder
       throw new RuntimeException("Not yet implemented");
    }
    
+   /**
+    * @modifies this
+    * @effects adds the given board, with the given name, to the level that is
+    * being created.
+    */
+   public void addBoard(Name name, Board b)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
    
 }

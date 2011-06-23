@@ -77,6 +77,23 @@ public class Level
    }
    
    /**
+    * @return boardSet
+    */
+   public Set<Board> boardSet()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return the Board that name maps to in nameMap, or null if it maps to
+    * nothing
+    */
+   public/* @Nullable */Board getBoard(Name name)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
     * @requires out is open and ready to be written to
     * @modifies out
     * @effects prints the text of the XML representation of this Level to the
