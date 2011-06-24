@@ -1,6 +1,11 @@
 package level;
 
+import java.util.List;
+
 import javax.lang.model.element.Name;
+
+import checkers.nullness.quals.LazyNonNull;
+import checkers.nullness.quals.Nullable;
 
 /**
  * @author: Nathaniel Mote
@@ -37,27 +42,50 @@ import javax.lang.model.element.Name;
  * 
  * @specfield UID: integer // the unique odd identifier for this chute
  * 
- * Except in corner cases, pinch --> narrow
+ * Except in corner cases, pinch --> narrow. This is not, however, enforced.
  * 
  */
 
 public class Chute
 {
+   private final @Nullable Name name;
    
-   private/* @LazyNonNull */Intersection start;
-   private/* @LazyNonNull */Intersection end;
+   private List<Chute> auxiliaryChutes;
+   
+   private @LazyNonNull Intersection start;
+   private int startPort;
+   private @LazyNonNull Intersection end;
+   private int endPort;
+   
    private final boolean pinch; // whether a chute has a pinch-point is a fact
                                 // of the original code, and cannot be modified
                                 // in-game
    private boolean narrow;
+   private final boolean editable;
+   private final int UID;
+   
+   private static int nextUID = 1;
    
    /**
-    * @effects creates a new Chute object, with the given values for name and
-    * pinch
+    * @effects creates a new Chute object, with the given values for name,
+    * pinch, and editable
     */
-   public Chute(/* @Nullable */Name name, boolean pinch)
+   public Chute(@Nullable Name name, boolean pinch, boolean editable)
    {
-      throw new RuntimeException("Not yet implemented");
+      this.name = name;
+      this.pinch = pinch;
+      this.editable = editable;
+      
+      UID = nextUID;
+      nextUID += 2;
+   }
+   
+   /**
+    * @returns name, or null if none exists
+    */
+   public @Nullable Name getName()
+   {
+      return name;
    }
    
    /**
@@ -65,7 +93,7 @@ public class Chute
     */
    public boolean isPinched()
    {
-      throw new RuntimeException("Not yet implemented");
+      return pinch;
    }
    
    /**
@@ -73,16 +101,19 @@ public class Chute
     */
    public boolean isNarrow()
    {
-      throw new RuntimeException("Not yet implemented");
+      return narrow;
    }
    
    /**
     * @modifies this
     * @effects sets the specfield narrow to the given boolean value
+    * 
+    * Note: this can be called even if editable is false, because it may be
+    * necessary (or at least easier) for construction
     */
    public void setNarrow(boolean narrow)
    {
-      throw new RuntimeException("Not yet implemented");
+      this.narrow = narrow;
    }
    
    /**
@@ -90,25 +121,39 @@ public class Chute
     */
    public boolean isEditable()
    {
-      throw new RuntimeException("Not yet implemented");
+      return editable;
    }
-   
-   // public void setEditable
    
    /**
     * @return start, or null if end does not exist
     */
-   public/* @Nullable */Intersection getStart()
+   public @Nullable Intersection getStart()
    {
-      throw new RuntimeException("Not yet implemented");
+      return start;
+   }
+   
+   /**
+    * @return startPort
+    */
+   public int getStartPort()
+   {
+      return startPort;
    }
    
    /**
     * @return end, or null if end does not exist
     */
-   public/* @Nullable */Intersection getEnd()
+   public @Nullable Intersection getEnd()
    {
-      throw new RuntimeException("Not yet implemented");
+      return end;
+   }
+   
+   /**
+    * @return endPort
+    */
+   public int getEndPort()
+   {
+      return endPort;
    }
    
    /**
@@ -119,7 +164,11 @@ public class Chute
     */
    protected void setStart(Intersection start, int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      if (start == null)
+         throw new IllegalArgumentException("Chute.setStart passed a null argument");
+      
+      this.start = start;
+      this.startPort = port;
    }
    
    /**
@@ -130,7 +179,19 @@ public class Chute
     */
    protected void setEnd(Intersection end, int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      if (end == null)
+         throw new IllegalArgumentException("Chute.setEnd passed a null argument");
+      
+      this.end = end;
+      this.endPort = port;
+   }
+   
+   /**
+    * @return UID
+    */
+   public int getUID()
+   {
+      return UID;
    }
    
 }
