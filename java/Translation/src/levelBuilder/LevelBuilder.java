@@ -2,6 +2,7 @@ package levelBuilder;
 
 import javax.lang.model.element.Name;
 import level.Board;
+import level.Chute;
 
 /**
  * 
@@ -12,7 +13,10 @@ import level.Board;
  * auxiliary chutes are accessible through the returned chutes themselves. to
  * reiterate, this map should not contain any auxiliary chutes.
  * 
- * @specfield
+ * @specfield fields: Map<Name, Chute> // contains a mapping from the Name of a
+ * field to a prototypical base chute associated with it. The chute objects
+ * contained in this Map will not be put part of the Level. They will, rather,
+ * be used to create template Boards.
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
  * 
@@ -40,6 +44,15 @@ public class LevelBuilder
       throw new RuntimeException("Not yet implemented");
    }
    
-   //public void addField()
+   /**
+    * @requires the given name is not already a key in fields, the given chute
+    * is not, and will not, be used as part of a board.
+    * @effects adds a field with the given name, with type information specified
+    * by the given chute
+    */
+   public void addField(Name name, Chute chute)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
    
 }
