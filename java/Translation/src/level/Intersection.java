@@ -1,5 +1,10 @@
 package level;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import checkers.nullness.quals.Nullable;
+
 /**
  * @author Nathaniel Mote
  * 
@@ -56,10 +61,17 @@ public class Intersection
       CONNECT, // Simply connects one chute to another, without making any
                // modifications.Can be optimized away after, but I think it will
                // be convenient to have during construction.
-      
    };
    
    private final Type intersectionType;
+   
+   private List<Chute> input;
+   
+   private List<Chute> output;
+   
+   private final int UID;
+   
+   private static int nextUID = 0;
    
    /**
     * @requires type != SUBNETWORK
@@ -79,14 +91,30 @@ public class Intersection
                + " for this implementation");
       
       intersectionType = type;
+      input = new ArrayList<Chute>();
+      output = new ArrayList<Chute>();
+      
+      UID = nextUID;
+      nextUID += 2;
+      
    }
    
    /**
-    * @return true iff the given type is a valid type for this implementation
+    * @return true iff the given type is a valid intersection type for this
+    * implementation
     */
    protected boolean checkIntersectionType(Type type)
    {
+      // this implementation supports every Intersection type except for SUBNETWORK
       return type != Type.SUBNETWORK;
+   }
+   
+   /**
+    * @return intersectionType
+    */
+   public Type getIntersectionType()
+   {
+      return intersectionType;
    }
    
    /**
@@ -109,5 +137,12 @@ public class Intersection
    protected void setOutputChute(Chute output, int port)
    {
       throw new RuntimeException("Not yet implemented");
+   }
+   
+   // add private method to null out the elements of a list.
+   
+   public int getUID()
+   {
+      return UID;
    }
 }

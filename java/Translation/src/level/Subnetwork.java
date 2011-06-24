@@ -3,7 +3,7 @@ package level;
 public class Subnetwork extends Intersection
 {
    /**
-    * @requires methodName stands in for a valid subnetwork
+    * @requires methodName represents a valid subnetwork
     * @effects creates a new Intersection object of type SUBNETWORK, with the
     * specific subnetwork defined by the argument
     * 
@@ -19,6 +19,7 @@ public class Subnetwork extends Intersection
    @Override
    protected boolean checkIntersectionType(Type type)
    {
+      // This implementation supports only the SUBNETWORK type
       return type == Type.SUBNETWORK;
    }
 }
