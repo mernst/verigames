@@ -23,7 +23,11 @@ import checkers.nullness.quals.Nullable;
  * within the method
  * 
  * @specfield auxiliaryChutes: List<Chute> // The list of chutes that represent
- * types auxiliary to the type that this chute represents
+ * types auxiliary to the type that this chute represents. Only includes chutes
+ * that are directly auxiliary to this. For example, if this chute represented
+ * Map<String, Set<Integer>>, the auxiliary chutes would represent String and
+ * Set. The Integer chute would be listed as an auxiliary chute to Set, but not
+ * to this.
  * 
  * @specfield start : Intersection // The starting point of this Chute
  * @specfield startPort: integer // The port from which this exits its starting
@@ -165,7 +169,8 @@ public class Chute
    protected void setStart(Intersection start, int port)
    {
       if (start == null)
-         throw new IllegalArgumentException("Chute.setStart passed a null argument");
+         throw new IllegalArgumentException(
+               "Chute.setStart passed a null argument");
       
       this.start = start;
       this.startPort = port;
@@ -180,7 +185,8 @@ public class Chute
    protected void setEnd(Intersection end, int port)
    {
       if (end == null)
-         throw new IllegalArgumentException("Chute.setEnd passed a null argument");
+         throw new IllegalArgumentException(
+               "Chute.setEnd passed a null argument");
       
       this.end = end;
       this.endPort = port;

@@ -26,18 +26,6 @@ package level;
 /*
  * Notes:
  * 
- * - Should Intersection be an interface, with different implementations for
- * different types of intersections? This may lead to too much bloat, but the
- * SUBNETWORK type requires additional information. We could just have a field
- * that isn't used unless it's a SUBNETWORK type, as this specification suggests
- * 
- * - Should the enums perhaps include instance fields to specify how many input
- * and output chutes they can have?
- * 
- * - Should there be enums for restarting chutes, even though the same effect
- * can be accomplished through an end node then a start node? In other words, is
- * the added bloat worth the convenience?
- * 
  * - I think I have all the the Intersection types in the enum, but if I'm
  * missing any, let me know.
  */
@@ -74,27 +62,31 @@ public class Intersection
    private final Type intersectionType;
    
    /**
+    * @requires type != SUBNETWORK
     * @effects creates a new Intersection object of the given type with empty
     * i/o ports
+    * 
+    * Subclasses calling this constructor can modify the requires clause by
+    * overriding checkIntersectionType
+    * 
     */
    public Intersection(Type type)
    {
-      throw new RuntimeException("Not yet implemented");
+      
+      if (!checkIntersectionType(type)) // if this is not a valid Type for this
+                                        // implementation of Intersection
+         throw new IllegalArgumentException("Invalid Intersection Type " + type
+               + " for this implementation");
+      
+      intersectionType = type;
    }
    
    /**
-    * @requires methodName stands in for a valid subnetwork
-    * @effects creates a new Intersection object of type SUBNETWORK, with the
-    * specific subnetwork defined by the argument
-    * 
+    * @return true iff the given type is a valid type for this implementation
     */
-   public Intersection(String methodName /*
-                                          * String is a place-holder for
-                                          * whatever we decide to use to refer
-                                          * to methods
-                                          */)
+   protected boolean checkIntersectionType(Type type)
    {
-      throw new RuntimeException("Not yet implemented");
+      return type != Type.SUBNETWORK;
    }
    
    /**
