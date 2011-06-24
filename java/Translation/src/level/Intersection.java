@@ -18,10 +18,10 @@ import checkers.nullness.quals.Nullable;
  * @specfield type : Intersection.Type // represents which kind of intersection
  * this is
  * 
- * @specfield input : List<Chute> // represents the ordered set of input chutes
- * (the index of a given Chute represents the port at which it enters)
+ * @specfield inputChutes : List<Chute> // represents the ordered set of input
+ * chutes (the index of a given Chute represents the port at which it enters)
  * 
- * @specfield output : List<Chute> // represents the ordered set of output
+ * @specfield outputChutes : List<Chute> // represents the ordered set of output
  * chutes (the index of a given Chute represents the port at which it exits)
  * 
  * @specfield UID : integer // the unique even identifier for this Intersection
@@ -65,9 +65,9 @@ public class Intersection
    
    private final Type intersectionType;
    
-   private List<Chute> input;
+   private List<Chute> inputChutes;
    
-   private List<Chute> output;
+   private List<Chute> outputChutes;
    
    private final int UID;
    
@@ -91,8 +91,8 @@ public class Intersection
                + " for this implementation");
       
       intersectionType = type;
-      input = new ArrayList<Chute>();
-      output = new ArrayList<Chute>();
+      inputChutes = new ArrayList<Chute>();
+      outputChutes = new ArrayList<Chute>();
       
       UID = nextUID;
       nextUID += 2;
@@ -105,7 +105,8 @@ public class Intersection
     */
    protected boolean checkIntersectionType(Type type)
    {
-      // this implementation supports every Intersection type except for SUBNETWORK
+      // this implementation supports every Intersection type except for
+      // SUBNETWORK
       return type != Type.SUBNETWORK;
    }
    
@@ -125,7 +126,9 @@ public class Intersection
     */
    protected void setInputChute(Chute input, int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      nullRemainingElts(inputChutes, port);
+      inputChutes.add(port, input);
+      
    }
    
    /**
@@ -136,10 +139,23 @@ public class Intersection
     */
    protected void setOutputChute(Chute output, int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      nullRemainingElts(outputChutes, port);
+      outputChutes.add(port, output);
    }
    
-   // add private method to null out the elements of a list.
+   /**
+    * @modifes list
+    * @effects if minSize is greater than list.size, adds null elements to the
+    * end of list until list.size == minSize
+    * 
+    * Notes: used to make sure that the given list can accommodate a call to add
+    * with indices up to minSize
+    */
+   private <E> void nullRemainingElts(List</* @Nullable */E> list, int minSize)
+   {
+      while (list.size() < minSize)
+         list.add(null);
+   }
    
    public int getUID()
    {

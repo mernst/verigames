@@ -1,5 +1,14 @@
 package level;
 
+import javax.lang.model.element.Name;
+
+/**
+ * @author Nathaniel Mote
+ * 
+ * 
+ *
+ */
+
 public class Subnetwork extends Intersection
 {
    /**
@@ -8,10 +17,7 @@ public class Subnetwork extends Intersection
     * specific subnetwork defined by the argument
     * 
     */
-   public Subnetwork(String methodName /*
-                                        * String is a place-holder for whatever
-                                        * we decide to use to refer to methods
-                                        */)
+   public Subnetwork(Name methodName)
    {
       super(Type.SUBNETWORK);
    }
