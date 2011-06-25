@@ -131,6 +131,8 @@ public class Intersection
       
    }
    
+   // add accessors for specific chutes
+   
    /**
     * @requires port is a valid port number for this Intersection
     * @modifies this
@@ -157,6 +159,9 @@ public class Intersection
          list.add(null);
    }
    
+   /**
+    * @return UID
+    */
    public int getUID()
    {
       return UID;

@@ -1,0 +1,15 @@
+<project name="Translation" default="build" basedir=".">
+
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+
+	<target name="build">
+		<mkdir dir="${bin}" />
+		<javac srcdir="${src}" destdir="${bin}" includeAntRuntime="false" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${bin}" />
+	</target>
+
+</project>
