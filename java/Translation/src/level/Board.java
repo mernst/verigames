@@ -1,7 +1,10 @@
 package level;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
+import static level.Intersection.Kind;
+
+import checkers.nullness.quals.LazyNonNull;
 
 /**
  * @author: Nathaniel Mote
@@ -59,15 +62,52 @@ import java.util.Set;
 public class Board
 {
    
+   private @LazyNonNull Intersection incomingNode;
+   private @LazyNonNull Intersection outgoingNode;
+   
+   private Set<Intersection> nodes;
+   private Set<Chute> edges;
+   
+   /*
+    * Representation Invariant:
+    * 
+    * nodes != null; edges != null
+    * 
+    * if nodes.size == 1, its element, i, must be of type INCOMING
+    * 
+    * nodes may contain no more than one element of type INCOMING
+    * 
+    * nodes may contain no more than one element of type OUTGOING
+    * 
+    * incomingNode != null <--> there exits an element i in nodes such that
+    * i.getIntersectionType() == INCOMING
+    * 
+    * outgoingNode != null <--> there exits an element i in nodes such that
+    * i.getIntersectionType() == OUTGOING
+    */
+   
+   /**
+    * @effects Creates a new, empty board
+    */
+   public Board()
+   {
+      nodes = new HashSet<Intersection>();
+      edges = new HashSet<Chute>();
+   }
+   
    /**
     * @requires given node implements eternal equality; if this is the first
-    * node to be added, it must have type OUTGOING
+    * node to be added, it must have type INCOMING
     * @modifies this
     * @effects If this does not already contain node, adds node to this
     * @return true iff this did not already contain node
     */
    public boolean addNode(Intersection node)
    {
+      if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
+         throw new IllegalArgumentException(
+               "First node in Board must be of type INCOMING");
+      
       throw new RuntimeException("Not yet implemented");
    }
    

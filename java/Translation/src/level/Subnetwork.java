@@ -2,6 +2,7 @@ package level;
 
 import javax.lang.model.element.Name;
 
+
 /**
  * @author Nathaniel Mote
  * 
@@ -31,12 +32,22 @@ public class Subnetwork extends Intersection
     */
    public Subnetwork(Name methodName)
    {
-      super(Type.SUBNETWORK);
+      super(Kind.SUBNETWORK);
    }
    
-   @Override protected boolean checkIntersectionType(Type type)
+   @Override protected boolean checkIntersectionKind(Kind kind)
    {
       // This implementation supports only the SUBNETWORK type
-      return type == Type.SUBNETWORK;
+      return kind == Kind.SUBNETWORK;
+   }
+   
+   @Override public boolean isSubnetwork()
+   {
+      return true;
+   }
+   
+   @Override public Subnetwork asSubnetwork()
+   {
+      return this;
    }
 }

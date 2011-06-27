@@ -56,7 +56,7 @@ public class BoardBuilder
     * @effects adds the named variable to this BoardBuilder. More specifically,
     * creates a
     */
-   public void addVar(Name var, Intersection.Type startType)
+   public void addVar(Name var, Intersection.Kind startType)
    {
       throw new RuntimeException("Not yet implemented");
    }

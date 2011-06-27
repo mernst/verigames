@@ -37,7 +37,7 @@ import checkers.nullness.quals.Nullable;
 
 public class Intersection
 {
-   public enum Type
+   public enum Kind
    {
       INCOMING, // The start point of chutes that are entering the frame on
       // the top
@@ -63,7 +63,7 @@ public class Intersection
                // be convenient to have during construction.
    };
    
-   private final Type intersectionType;
+   private final Kind intersectionKind;
    
    private List<Chute> inputChutes;
    
@@ -72,6 +72,12 @@ public class Intersection
    private final int UID;
    
    private static int nextUID = 0;
+   
+   /*
+    * Representation Invariant:
+    * 
+    * intersectionKind != SUBNETWORK
+    */
    
    /**
     * @requires type != SUBNETWORK
@@ -82,15 +88,15 @@ public class Intersection
     * overriding checkIntersectionType
     * 
     */
-   public Intersection(Type type)
+   public Intersection(Kind kind)
    {
       
-      if (!checkIntersectionType(type)) // if this is not a valid Type for this
+      if (!checkIntersectionKind(kind)) // if this is not a valid Type for this
                                         // implementation of Intersection
-         throw new IllegalArgumentException("Invalid Intersection Type " + type
+         throw new IllegalArgumentException("Invalid Intersection Type " + kind
                + " for this implementation");
       
-      intersectionType = type;
+      intersectionKind = kind;
       inputChutes = new ArrayList<Chute>();
       outputChutes = new ArrayList<Chute>();
       
@@ -103,19 +109,19 @@ public class Intersection
     * @return true iff the given type is a valid intersection type for this
     * implementation
     */
-   protected boolean checkIntersectionType(Type type)
+   protected boolean checkIntersectionKind(Kind kind)
    {
       // this implementation supports every Intersection type except for
       // SUBNETWORK
-      return type != Type.SUBNETWORK;
+      return kind != Kind.SUBNETWORK;
    }
    
    /**
     * @return intersectionType
     */
-   public Type getIntersectionType()
+   public Kind getIntersectionKind()
    {
-      return intersectionType;
+      return intersectionKind;
    }
    
    /**
@@ -157,6 +163,28 @@ public class Intersection
    {
       while (list.size() < minSize)
          list.add(null);
+   }
+   
+   /**
+    * @return true iff this is a Subnetwork type.
+    * 
+    * Notes: If implemented correctly, this is equivalent to
+    * getIntersectionKind() == Kind.SUBNETWORK. Is it still good to include this
+    * method?
+    */
+   public boolean isSubnetwork()
+   {
+      return false;
+   }
+   
+   /**
+    * @requires this is of Subnetwork type
+    * @return this as a Subnetwork
+    */
+   public Subnetwork asSubnetwork()
+   {
+      throw new IllegalStateException(
+            "asSubnetwork called on an Intersection not of Subnetwork type");
    }
    
    /**
