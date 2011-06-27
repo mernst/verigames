@@ -38,7 +38,7 @@ import checkers.nullness.quals.LazyNonNull;
  * do this by value, for two reasons. The first is that there may be Chutes and
  * Intersections that are identical except for their UID. The second is that
  * since both are mutable, and we wish to use them in Sets and Maps, we can't
- * override hashcode and equals to rely on the value of mutable data. Therefore,
+ * override hashCode and equals to rely on the value of mutable data. Therefore,
  * we can't use the Collections' built in search functions, because they rely on
  * equals. Therefore, the only way to find a specific object would be to do a
  * linear search on the objects, comparing values.
