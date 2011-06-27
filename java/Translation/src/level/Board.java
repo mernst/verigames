@@ -2,6 +2,7 @@ package level;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import static level.Intersection.Kind;
 
 import checkers.nullness.quals.LazyNonNull;
@@ -97,7 +98,7 @@ public class Board
    
    /**
     * @requires given node implements eternal equality; if this is the first
-    * node to be added, it must have type INCOMING
+    * node to be added, it must have type INCOMING; 
     * @modifies this
     * @effects If this does not already contain node, adds node to this
     * @return true iff this did not already contain node
@@ -106,7 +107,15 @@ public class Board
    {
       if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
          throw new IllegalArgumentException(
-               "First node in Board must be of type INCOMING");
+               "First node in Board must be of kind INCOMING");
+      
+      if (incomingNode != null && node.getIntersectionKind() == Kind.INCOMING)
+         throw new IllegalArgumentException(
+               "No more than one node can be of kind INCOMING");
+      
+      if (outgoingNode != null && node.getIntersectionKind() == Kind.OUTGOING)
+         throw new IllegalArgumentException(
+               "No more than one node can be of kind OUTGOING");
       
       throw new RuntimeException("Not yet implemented");
    }

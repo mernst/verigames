@@ -50,4 +50,9 @@ public class Subnetwork extends Intersection
    {
       return this;
    }
+   
+   public Name getSubnetworkName()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
 }

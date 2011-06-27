@@ -183,6 +183,7 @@ public class Intersection
     */
    public Subnetwork asSubnetwork()
    {
+      // Is this the right exception to throw?
       throw new IllegalStateException(
             "asSubnetwork called on an Intersection not of Subnetwork type");
    }
