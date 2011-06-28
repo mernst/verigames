@@ -37,6 +37,9 @@ import level.*;
  * 
  */
 
+// TODO add some set of variables, similar to the fields specfield in
+// LevelBuilder
+
 public class BoardBuilder
 {
    

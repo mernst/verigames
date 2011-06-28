@@ -44,5 +44,6 @@ public class NullTest extends Intersection
       return this;
    }
    
+   // TODO add methods specific to NullTest
    
 }

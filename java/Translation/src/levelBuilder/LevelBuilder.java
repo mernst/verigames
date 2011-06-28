@@ -3,6 +3,7 @@ package levelBuilder;
 import javax.lang.model.element.Name;
 import level.Board;
 import level.Chute;
+import level.Level;
 
 /**
  * 
@@ -20,8 +21,17 @@ import level.Chute;
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
  * 
- * @specfield active: boolean // indicates whether this is currently in the
- * process of building a level
+ * @specfield active: boolean // indicates whether this LevelBuilder is
+ * currently constructing a Level. If false, no changes are allowed to the
+ * contained Level. Active is set to false as soon as the contained Level is
+ * returned. This is for the following reasons:
+ * 
+ * It only makes sense for a client to want the Level once it is complete, so
+ * this does no harm.
+ * 
+ * Once a reference to the Level is returned, it could be modified externally.
+ * That means that this class can no longer provide any guarantees about its
+ * contents, so it is safer to just stop construction.
  * 
  */
 
@@ -37,7 +47,7 @@ public class LevelBuilder
    }
    
    /**
-    * @modifies this
+    * @modifies active
     * @effects adds the given board, with the given name, to the level that is
     * being created.
     */
@@ -47,12 +57,31 @@ public class LevelBuilder
    }
    
    /**
-    * @requires chute.name is not already a key in fields; the given chute is
-    * not, and will not, be used as part of a board.
+    * @requires active; chute.name is not already a key in fields; the given
+    * chute is not, and will not, be used as part of a board.
     * @effects adds a field with name and type information specified by the
     * given chute
     */
    public void addField(Chute chute)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return a new BoardBuilder that is a template for a method in the class
+    * represented by level. It will 
+    */
+   public BoardBuilder getTemplateBoardBuilder()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies this
+    * @effects sets active to false
+    * @return level
+    */
+   public Level getLevel()
    {
       throw new RuntimeException("Not yet implemented");
    }

@@ -151,11 +151,17 @@ public class Intersection
       outputChutes.add(port, output);
    }
    
+   /**
+    * @return the chute at the given port, or null if none exists
+    */
    public @Nullable Chute getInputChute(int port)
    {
       throw new RuntimeException("Not yet implemented");
    }
    
+   /**
+    * @return the chute at the given port, or null if none exists
+    */
    public @Nullable Chute getOutputChute(int port)
    {
       throw new RuntimeException("Not yet implemented");

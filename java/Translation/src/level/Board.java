@@ -88,8 +88,9 @@ public class Board
     * 
     * TODO add bit about how the edges and nodes must be connected
     * 
-    * for all n in nodes(for all e in edges(
+    * for all n in nodes; e in edges:
     * 
+    * - e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
     */
    
    /**
@@ -137,7 +138,24 @@ public class Board
    public void addEdge(Intersection start, int startPort, Intersection end,
          int endPort, Chute edge)
    {
-      // TODO check preconditions
+      if (!this.contains(start))
+         throw new IllegalArgumentException(
+               "Call to addEdge made with a start node that is not in this Board");
+      if (!this.contains(end))
+         throw new IllegalArgumentException(
+               "Call to addEdge made with a end node that is not in this Board");
+      if (this.contains(edge))
+         throw new IllegalArgumentException(
+               "Call to addEdge made with an edge that is already in this Board");
+      if (edge.getStart() != null || edge.getEnd() != null)
+         throw new IllegalArgumentException(
+               "Call to addEdge made with an edge that is already connected to nodes");
+      if (start.getOutputChute(startPort) != null)
+         throw new IllegalArgumentException(
+               "Call to addEdge made with a start node that is already connected to an edge on the given port");
+      if (end.getOutputChute(endPort) != null)
+         throw new IllegalArgumentException(
+               "Call to addEdge made with an end node that is already connected to an edge on the given port");
       
       edges.add(edge);
       
@@ -146,8 +164,6 @@ public class Board
       
       edge.setStart(start, startPort);
       edge.setEnd(end, endPort);
-      
-      throw new RuntimeException("Not yet implemented");
    }
    
    /**
