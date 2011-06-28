@@ -120,7 +120,7 @@ public class Intersection
    }
    
    /**
-    * @return intersectionType
+    * @return intersectionKind
     */
    public Kind getIntersectionKind()
    {
