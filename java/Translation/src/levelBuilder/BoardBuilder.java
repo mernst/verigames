@@ -23,8 +23,17 @@ import level.*;
  * name, return the base chute. its auxiliary chutes can be accessed through the
  * base chute
  * 
- * @specfield active: boolean // indicates whether this BoardBuilder represents
- * an unfinished Board
+ * @specfield active: boolean // indicates whether this BoardBuilder is
+ * currently constructing a Board. If false, no changes are allowed to the
+ * contained Board. Active is set to false as soon as the contained Board is
+ * returned. This is for the following reasons:
+ * 
+ * It only makes sense for a client to want the Board once it is complete, so
+ * this does no harm.
+ * 
+ * Once a reference to the Board is returned, it could be modified externally.
+ * That means that this class can no longer provide any guarantees about its
+ * contents, so it is safer to just stop construction.
  * 
  */
 
@@ -54,17 +63,19 @@ public class BoardBuilder
    
    /**
     * @requires active; the named variable is not already present in this
-    * BoardBuilder
+    * BoardBuilder; startType must be able to have 0 input ports and 1 output
+    * port
     * @effects adds the named variable to this BoardBuilder. More specifically,
-    * creates a
+    * creates a node of the given type
     */
-   public void addVar(Name var, Intersection.Kind startType)
+   public void addVar(Chute var, Intersection.Kind startType)
    {
       throw new RuntimeException("Not yet implemented");
    }
    
    /**
-    * @requires active; the named variable is present in this BoardBuilder7
+    * @requires active; the named variable is present in this BoardBuilder
+    * @effects
     */
    public void addPinchToVar(Name var)
    {
@@ -79,6 +90,16 @@ public class BoardBuilder
     * is a simple SPLIT at the top and a MERGE at the bottom.
     */
    public void addSubBoards(Set<BoardBuilder> bb)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies this
+    * @effects sets active to false
+    * @return the board that this
+    */
+   public Board getBoard()
    {
       throw new RuntimeException("Not yet implemented");
    }

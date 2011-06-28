@@ -2,7 +2,6 @@ package level;
 
 import javax.lang.model.element.Name;
 
-
 /**
  * @author Nathaniel Mote
  * 
@@ -12,14 +11,6 @@ import javax.lang.model.element.Name;
  * 
  * @specfield subnetwork: Name // The name referring to this subnetwork
  * 
- */
-
-/*
- * Notes:
- * 
- * - There still must be a way for client code to retrieve information about the
- * Subnetwork. If they are all referred to as Intersections, this could be
- * problematic. Perhaps subclassing is not the best design.
  */
 
 public class Subnetwork extends Intersection
@@ -35,22 +26,34 @@ public class Subnetwork extends Intersection
       super(Kind.SUBNETWORK);
    }
    
+   /**
+    * @return true iff kind is SUBNETWORK
+    */
    @Override protected boolean checkIntersectionKind(Kind kind)
    {
-      // This implementation supports only the SUBNETWORK type
+      // This implementation supports only the SUBNETWORK kind
       return kind == Kind.SUBNETWORK;
    }
    
+   /**
+    * @return true to indicate that this is of kind SUBNETWORK
+    */
    @Override public boolean isSubnetwork()
    {
       return true;
    }
    
+   /**
+    * @return this
+    */
    @Override public Subnetwork asSubnetwork()
    {
       return this;
    }
    
+   /**
+    * @return the Name of the method that this subnetwork refers to
+    */
    public Name getSubnetworkName()
    {
       throw new RuntimeException("Not yet implemented");

@@ -1,9 +1,8 @@
 package level;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import checkers.nullness.quals.*;
+import checkers.nullness.quals.Nullable;
 
 /**
  * @author Nathaniel Mote
@@ -116,7 +115,7 @@ public class Intersection
    {
       // this implementation supports every Intersection kind except for
       // SUBNETWORK
-      return kind != Kind.SUBNETWORK;
+      return kind != Kind.SUBNETWORK && kind != Kind.NULL_TEST;
    }
    
    /**
@@ -198,6 +197,24 @@ public class Intersection
       // Is this the right exception to throw?
       throw new IllegalStateException(
             "asSubnetwork called on an Intersection not of Subnetwork kind");
+   }
+   
+   /**
+    * @return true iff this is a NullTest kind
+    */
+   public boolean isNullTest()
+   {
+      return false;
+   }
+   
+   /**
+    * @requires this is of NullTest kind
+    * @return this as a NullTest
+    */
+   public NullTest asNullTest()
+   {
+      throw new IllegalStateException(
+            "asNullTest called on an Intersection not of NullTest kind");
    }
    
    /**

@@ -54,6 +54,9 @@ map var_to_current_edge
 //should later change width together) while board is building,
 map var_to_set_edges
 
+Nat says: I've decided to encapsulate the above data into wrappers for the board and level structures. I'm calling them BoardBuilders and LevelBuilders, respectively. They store the information needed during construction, as well as abstracting away from creation of individual chute and intersection objects, towards operations that make more sense in terms of code translation.
+
+I also decided that each Chute object would be a tree. Its children are its auxiliary chutes. This is just for convenience, and the other chutes will still be explicitliy represented in the Board structure.
 
 VISITOR PATTERN SKETCH
     // For the visitor pattern, each method will need access to the

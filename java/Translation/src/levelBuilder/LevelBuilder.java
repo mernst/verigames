@@ -20,6 +20,8 @@ import level.Chute;
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
  * 
+ * @specfield active: boolean // indicates whether this is currently in the
+ * process of building a level
  * 
  */
 
@@ -45,12 +47,12 @@ public class LevelBuilder
    }
    
    /**
-    * @requires the given name is not already a key in fields, the given chute
-    * is not, and will not, be used as part of a board.
-    * @effects adds a field with the given name, with type information specified
-    * by the given chute
+    * @requires chute.name is not already a key in fields; the given chute is
+    * not, and will not, be used as part of a board.
+    * @effects adds a field with name and type information specified by the
+    * given chute
     */
-   public void addField(Name name, Chute chute)
+   public void addField(Chute chute)
    {
       throw new RuntimeException("Not yet implemented");
    }
