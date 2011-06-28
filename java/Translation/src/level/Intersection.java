@@ -15,7 +15,7 @@ import checkers.nullness.quals.*;
  * Uses eternal equality so that it can be used in Collections while maintaining
  * mutability
  * 
- * @specfield type : Intersection.Type // represents which kind of intersection
+ * @specfield kind : Intersection.Kind // represents which kind of intersection
  * this is
  * 
  * @specfield inputChutes : List<Chute> // represents the ordered set of input
@@ -31,7 +31,7 @@ import checkers.nullness.quals.*;
 /*
  * Notes:
  * 
- * - I think I have all the the Intersection types in the enum, but if I'm
+ * - I think I have all the the Intersection kinds in the enum, but if I'm
  * missing any, let me know.
  */
 
@@ -83,8 +83,8 @@ public class Intersection
     */
    
    /**
-    * @requires type != SUBNETWORK
-    * @effects creates a new Intersection object of the given type with empty
+    * @requires kind != SUBNETWORK
+    * @effects creates a new Intersection object of the given kind with empty
     * i/o ports
     * 
     * Subclasses calling this constructor can modify the requires clause by
@@ -94,9 +94,9 @@ public class Intersection
    public Intersection(Kind kind)
    {
       
-      if (!checkIntersectionKind(kind)) // if this is not a valid Type for this
+      if (!checkIntersectionKind(kind)) // if this is not a valid Kind for this
                                         // implementation of Intersection
-         throw new IllegalArgumentException("Invalid Intersection Type " + kind
+         throw new IllegalArgumentException("Invalid Intersection Kind " + kind
                + " for this implementation");
       
       intersectionKind = kind;
@@ -109,12 +109,12 @@ public class Intersection
    }
    
    /**
-    * @return true iff the given type is a valid intersection type for this
+    * @return true iff the given kind is a valid intersection kind for this
     * implementation
     */
    protected boolean checkIntersectionKind(Kind kind)
    {
-      // this implementation supports every Intersection type except for
+      // this implementation supports every Intersection kind except for
       // SUBNETWORK
       return kind != Kind.SUBNETWORK;
    }
@@ -178,7 +178,7 @@ public class Intersection
    }
    
    /**
-    * @return true iff this is a Subnetwork type.
+    * @return true iff this is a Subnetwork kind.
     * 
     * Notes: If implemented correctly, this is equivalent to
     * getIntersectionKind() == Kind.SUBNETWORK. Is it still good to include this
@@ -190,14 +190,14 @@ public class Intersection
    }
    
    /**
-    * @requires this is of Subnetwork type
+    * @requires this is of Subnetwork kind
     * @return this as a Subnetwork
     */
    public Subnetwork asSubnetwork()
    {
       // Is this the right exception to throw?
       throw new IllegalStateException(
-            "asSubnetwork called on an Intersection not of Subnetwork type");
+            "asSubnetwork called on an Intersection not of Subnetwork kind");
    }
    
    /**
