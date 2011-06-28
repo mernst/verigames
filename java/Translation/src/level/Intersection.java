@@ -88,7 +88,7 @@ public class Intersection
     * i/o ports
     * 
     * Subclasses calling this constructor can modify the requires clause by
-    * overriding checkIntersectionType
+    * overriding checkIntersectionKind
     * 
     */
    public Intersection(Kind kind)
