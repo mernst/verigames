@@ -41,8 +41,9 @@ public class BoardBuilder
    }
    
    /**
-    * @requires The given node must have only a single input port and a single
-    * output port. Otherwise the state of the other ports would be undefined.
+    * @requires active; The given node must have only a single input port and a
+    * single output port. Otherwise the state of the other ports would be
+    * undefined.
     * @modifies this
     * @effects Adds the given node to the given variable
     */
@@ -52,7 +53,8 @@ public class BoardBuilder
    }
    
    /**
-    * @requires the named variable is not already present in this BoardBuilder
+    * @requires active; the named variable is not already present in this
+    * BoardBuilder
     * @effects adds the named variable to this BoardBuilder. More specifically,
     * creates a
     */
@@ -62,7 +64,7 @@ public class BoardBuilder
    }
    
    /**
-    * @requires the named variable is present in this BoardBuilder7
+    * @requires active; the named variable is present in this BoardBuilder7
     */
    public void addPinchToVar(Name var)
    {
@@ -70,8 +72,8 @@ public class BoardBuilder
    }
    
    /**
-    * @requires bb's input and output ports all correspond to variables in this
-    * board
+    * @requires active; bb's input and output ports all correspond to variables
+    * in this board
     * @modifies this
     * @effects adds the given sub-boards to this. For each of the chutes, there
     * is a simple SPLIT at the top and a MERGE at the bottom.

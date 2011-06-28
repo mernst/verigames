@@ -25,9 +25,9 @@
 
 -------
 
-Steph says: My general idea for building up the graph for each
-frame/method/all-other-equivalent-terms is to keep a helper map that
-connects a variable to its currently furthest edge in the graph. it's kind
+Steph says: My general idea for building up the board for each
+method/all-other-equivalent-terms is to keep a helper map that
+connects a variable to its currently furthest edge in the board. it's kind
 of like when you draw, you start at the top and incrementally work your way
 down both the code and the picture. When you process some code that is some
 sort of event (merge, restart, split, etc) you create a node for it, attach
@@ -36,41 +36,41 @@ stemming from there.
 
 When writing the pseudocode, I realized that all the maps will need to be
 accessible from each of the visit methods, and will be different for any
-subgraphs built up as an intermediary step. I've emailed Nat about this for
+subboards built up as an intermediary step. I've emailed Nat about this for
 when he returns from vacation. One possibility is to store more data in the
-Graph data structure (this code uses that idea for a variable's current
-edge). Another idea is to pass a tuple of the Graph and its maps to the
-visit method instead of just a graph. Also, this is still just a skeleton,
+board data structure (this code uses that idea for a variable's current
+edge). Another idea is to pass a tuple of the board and its maps to the
+visit method instead of just a board. Also, this is still just a skeleton,
 and I'm sure during implementation many more details will need to be
 determined.
 
 These maps fall into that category:
 
-//keeps track of the furthest edge in the graph associated with each
+//keeps track of the furthest edge in the board associated with each
 //variable. Like a horizontal snapshot, sort of.
 map var_to_current_edge
 
 //keeps track of which edges are associated with which variables (and
-//should later change width together) while graph is building,
-map var_to_set_edges 
+//should later change width together) while board is building,
+map var_to_set_edges
 
 
 VISITOR PATTERN SKETCH
     // For the visitor pattern, each method will need access to the
-    // current graph, as well as the  
-    // maps that keep track of the current edges for that graph
+    // current board, as well as the  
+    // maps that keep track of the current edges for that board
     
     function createLevelMain(Class c) { //
-        //an initial graph that has all of the fields of this
-        Graph gInitial = new Graph
+        //an initial board that has all of the fields of this
+        Board gInitial = new Board
         initialize gInitial's var_to_set_edges
         for each field f
             set chutes = generateChutes(f, false, gInitial.var_to_set_edges.keyset)
             for each chute in chutes
                 add (chute, empty set) to gInitial's var_to_set_edges map
-        Map<Name, Graph> graphs
+        Map<Name, Board> boards
         for each constructor
-            Graph g = copy of gInitial //copy the initial graph so that g has global fields
+            Board g = copy of gInitial //copy the initial board so that g has global fields
             for each non-primitive constructor parameter p
                 //the keyset will have all variables processed so far,
                 //which generateChutes needs so that the type argument for
@@ -80,33 +80,33 @@ VISITOR PATTERN SKETCH
                 for each chute in chutes
                     add (chute, empty set) to g's var_to_set_edges map
             g = visitConstructor(ConstructorTree, g)
-            graphs.put(uniqueConstructorName, g)
+            boards.put(uniqueConstructorName, g)
         for each method
-            Graph g = copy of gInitial //copy the initial graph so that g has global fields
+            Board g = copy of gInitial //copy the initial board so that g has global fields
             for each non-primitive method parameter p
                 set chutes = generateChutes(p, false)
                 for each chute in chutes
                     add (chute, empty set) to g's var_to_set_edges map
             g = visit(getMethodBody, g)
-            graphs.put(uniqueMethodName, g)
+            boards.put(uniqueMethodName, g)
         
-        map contiguous_chutes = build_map_contiguous_chutes(graphs)
+        map contiguous_chutes = build_map_contiguous_chutes(boards)
 
-        outputXMLFile(graphs, contiguous_chutes)    
+        outputXMLFile(boards, contiguous_chutes)    
     }
     
-    //this function should take the graphs of a completely processed level
+    //this function should take the boards of a completely processed level
     //and return a map in which each edge in the level is a key and maps to
     //a set of edges that should all change widths when the key edge's width
     // is changed.
-    function build_map_contiguous_chutes(Map<Name, Graph> graphs) returns map<Edge, Edge>
+    function build_map_contiguous_chutes(Map<Name, Board> boards) returns map<Edge, Edge>
         map<Var, Set<Edge>> consolidate
-        //each graph contains a map<var,edges> and we need to bring them
+        //each board contains a map<var,edges> and we need to bring them
         //together into one map from vars to sets of edges that goes over
         //then entire level, so we can change widths of connected chutes in
-        //multiple frames
-        for each graph in graphs.values {
-            map gEdges = graph.var_to_set_edges
+        //multiple boards
+        for each board in boards.values {
+            map gEdges = board.var_to_set_edges
             for each var in gEdges.keys
                 if consolidate containsKey(var)
                     consolidate.put(var, (union consolidate.get(var) with gEdges.get(var)))
@@ -151,12 +151,12 @@ VISITOR PATTERN SKETCH
                 
     //I couldn't actually find what tree is used for constructors, but
     //hopefully it does exist under a weird name
-    visitConstructor(ConstructorTree, Graph g) { 
+    visitConstructor(ConstructorTree, Board g) { 
         g = visit(getConstructorBody, g)
         
         //g still has half-edges floating around in its var_to_current_edge
         //map.  we need to attach all of these edges to an OUTGOING node in
-        //order to finish the graph
+        //order to finish the board
         if(g does not contain an OUTGOING node) {
           //perhaps the OUTGOING (sink) node should always be added here, and 
           //visitReturn should be changed... that might be better...
@@ -168,14 +168,14 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitMethod(MethodTree, Graph g){
+    visitMethod(MethodTree, Board g){
         g = visit(getMethodBody, g)
         
         
         //if a method did not return a value
         //g still has half-edges floating around in its var_to_current_edge map
         //we need to attach all of these edges to an OUTGOING node in order
-        //to finish the graph
+        //to finish the board
         if(g does not contain an OUTGOING node) {
             //perhaps the OUTGOING (sink) node should always be added here, and                                                  
             //visitReturn should be changed... that might be better...
@@ -186,19 +186,19 @@ VISITOR PATTERN SKETCH
         return g
     }
 
-    visitBlock(BlockTree, Graph g) {
+    visitBlock(BlockTree, Board g) {
         for each statement in block
             g = visit(statement, g)
         return g
     }
     
     //loops are not relevant to types
-    visitForLoop (ForLoopTree, Graph g) { return visit( loop statement, g ) }
+    visitForLoop (ForLoopTree, Board g) { return visit( loop statement, g ) }
     
     //add special case for null-test in these loops. treat like if test and
     //gotos?  but how would a goto work?? its so discontinuous, but the
     //chutes build on the idea of connected flow... ??
-    visitDoWhileLoop (DoWhileLoopTree, Graph g) { 
+    visitDoWhileLoop (DoWhileLoopTree, Board g) { 
         g = visit( loop statement, g ) 
         if test is (var == null) {
             //special case - should be factored out by visitExpression eventually
@@ -214,7 +214,7 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitWhileLoop (WhileLoopTree, Graph g) { //Has the same issues as above...
+    visitWhileLoop (WhileLoopTree, Board g) { //Has the same issues as above...
         g = visit( loop statement, g ) 
         if test is (var == null) { //special case - should be factored out by visitExpression eventually
             g.var.current.width = narrow
@@ -230,7 +230,7 @@ VISITOR PATTERN SKETCH
     }
     
     //for( variable: expression ) { statement } //create chutes for declarations
-    visitEnhancedForLoop (EnhancedForLoopTree, Graph g) {
+    visitEnhancedForLoop (EnhancedForLoopTree, Board g) {
         //for (x : y)
         var x = new chute(EnhancedForLoopTree.getVariable)
         var y = visit(EnhancedForLooptree.getExpression, g).variable //I'm still unsure of how this will work.
@@ -262,19 +262,19 @@ VISITOR PATTERN SKETCH
         return g        
     }
     
-    visitIf (IfTree, Graph g) {
+    visitIf (IfTree, Board g) {
         check for special case test (var == null) if so, {
-            g1 = new Graph with same field chutes as g, var == null (wide initial edge width, (not controlable by user?))
-            g2 = new Graph with same field chutes as g, var != null (narrow initial edge width, (not controlable by user?))
+            g1 = new Board with same field chutes as g, var == null (wide initial edge width, (not controlable by user?))
+            g2 = new Board with same field chutes as g, var != null (narrow initial edge width, (not controlable by user?))
             split_type = NULL_TEST            
         } else { //generic if
             //no special case, process each branch
-            g1 = new Graph with same field chutes as g (empty)
-            g2 = new Graph with same field chutes as g (empty)
+            g1 = new Board with same field chutes as g (empty)
+            g2 = new Board with same field chutes as g (empty)
             split_type = SPLIT
         }
-        //it makes sense to build up a subgraph and then hook it up to the
-        //overall graph once each branch has been fully explored.
+        //it makes sense to build up a subboard and then hook it up to the
+        //overall board once each branch has been fully explored.
         g1 = visit(ThenStatement, g1)
         if(ElseStatement != null) {
             g2 = visit(ElseStatement, g2)
@@ -300,7 +300,7 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitMethodInvocation (MethodInvocationTree, Graph g){
+    visitMethodInvocation (MethodInvocationTree, Board g){
         if the method is a call to map.get(key){//special case
             create a GET node gn
             var m = map being accessed
@@ -325,11 +325,11 @@ VISITOR PATTERN SKETCH
             create a new edge e2 between kSplit and gn, for var k
             add ek to g.k.var_to_set_edges map //the set that keeps track of contiguous edges associated with variable k
             
-            //add a chute for the return value of get to the graph
+            //add a chute for the return value of get to the board
             create a new var value
             create a new edge ev starting at gn, for var value (wide width)
-            add (value, ev) to graph's var_to_current_edge map
-            add (value, set(ev)) to graph's var_to_set_edges map //the set that keeps track of contiguous edges associated with value
+            add (value, ev) to board's var_to_current_edge map
+            add (value, set(ev)) to board's var_to_set_edges map //the set that keeps track of contiguous edges associated with value
             
         } else if the method is part of this class { //create a SUBNETWORK
             create a SUBNETWORK node(unique method name)
@@ -348,7 +348,7 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitMemberSelect (MemberSelectTree, Graph g){ //expression . identifier -> identifier.identifier
+    visitMemberSelect (MemberSelectTree, Board g){ //expression . identifier -> identifier.identifier
         var v = expression
         if(expression is an identifier) {// point.x
             g.v.current.pinch = true
@@ -359,7 +359,7 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitSwitch (SwitchTree, Graph){ //multi-way split
+    visitSwitch (SwitchTree, Board){ //multi-way split
         //essentially the same as an if statement, except generalized to an
         //n-way split instead of a 2-way split or, alternatively, the
         //switch statement can be broken down into
@@ -369,7 +369,7 @@ VISITOR PATTERN SKETCH
         //game, and what looks best on the screen.
     }
     
-    visitAssignment (AssignmentTree, Graph g){
+    visitAssignment (AssignmentTree, Board g){
         if(getVariable is not a primitive){
             if(getExpression is a NewClassTree){ //call to new
                 if g contains getVariable {
@@ -390,7 +390,7 @@ VISITOR PATTERN SKETCH
                 } else {
                     create new START_WHITE_BALL node n
                     create a new edge e starting at n, for var
-                    add (var, e) to graph's var_to_current_edge map
+                    add (var, e) to board's var_to_current_edge map
                     add (var, set(e) to g.var_to_set_edges map
                     if(var has type parameters){
                         for each type parameter
@@ -421,7 +421,7 @@ VISITOR PATTERN SKETCH
                 } else {
                     create new START_BLACK_BALL node n
                     create a new edge e starting at n, for var
-                    add (var, e) to graph's var_to_current_edge map
+                    add (var, e) to board's var_to_current_edge map
                     add (var, set(e) to g.var_to_set_edges map
                     if(var has type parameters){
                         for each type parameter
@@ -460,7 +460,7 @@ VISITOR PATTERN SKETCH
         return g
     }
     
-    visitReturn(ReturnTree, Graph g){
+    visitReturn(ReturnTree, Board g){
         if(return value not a primitive){
             create OUTGOING node out
             //split off the variable chute into a new variable called returnValue. 
@@ -474,21 +474,21 @@ VISITOR PATTERN SKETCH
                 create new edge e2 starting at s, for var returnValue 
                 add (returnValue, set(e2)) to g.var_to_set_edges map
                 update g.r.current to e1
-                add (returnValue, e2) to graph's var_to_current_edge map
+                add (returnValue, e2) to board's var_to_current_edge map
             } else if getExpession is the null literal {
                 create a new START_BLACK_BALL node s
                 create new var returnValue
                 create new edge e starting at s, for var returnValue
-                add (returnValue, e) to graph's var_to_current_edge map
+                add (returnValue, e) to board's var_to_current_edge map
             }
-            for each var in the graph
+            for each var in the board
                 attach g.var.current to out
         }
         return g            
     }
     
     //TODO special cases for null literal, new class tree, etc.
-    visitExpression(ExpressionTree, Graph g) {
+    visitExpression(ExpressionTree, Board g) {
 
         //I'm not sure how this should work...  I think for an expression
         //like (((variable.identifier).identifier).identifier) is really
@@ -500,9 +500,9 @@ VISITOR PATTERN SKETCH
         //necessarily the specific identifier...
         
         //What I'm unsure about is how visitExpression, which returns a
-        //Graph, can tell us "yes, this was exactly a (var == null)
+        //Board, can tell us "yes, this was exactly a (var == null)
         //test..."  especially if depending on the context (while loop
-        //vs. if statement vs. switch) the graph for a null-test might look
+        //vs. if statement vs. switch) the board for a null-test might look
         //different.  Is the answer to standardize this? i.e. break
         //everything down into if statements? (that brings up the idea of
         //how to represent gotos in chutes, and so far my best idea for
