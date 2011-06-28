@@ -27,11 +27,11 @@ public class Translator
    {
       LevelBuilder lb = new LevelBuilder();
       TranslationVisitor visitor = new TranslationVisitor();
-      return null;
+      throw new RuntimeException("Not yet implemented");
    }
    
    public static Chute generateChute(VariableTree tree)
    {
-      return null;
+      throw new RuntimeException("Not yet implemented");
    }
 }

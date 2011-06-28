@@ -3,7 +3,7 @@ package level;
 import java.util.ArrayList;
 import java.util.List;
 
-import checkers.nullness.quals.Nullable;
+import checkers.nullness.quals.*;
 
 /**
  * @author Nathaniel Mote
@@ -65,9 +65,12 @@ public class Intersection
    
    private final Kind intersectionKind;
    
-   private List<Chute> inputChutes;
+   // The annotated JDK does not allow null elements in most Collections, but
+   // for some reason, ArrayLists are an exception. However, we can't use the
+   // List interface, because that will not support NonNull elements
+   private ArrayList</* @Nullable */Chute> inputChutes;
    
-   private List<Chute> outputChutes;
+   private ArrayList</* @Nullable */Chute> outputChutes;
    
    private final int UID;
    
@@ -97,8 +100,8 @@ public class Intersection
                + " for this implementation");
       
       intersectionKind = kind;
-      inputChutes = new ArrayList<Chute>();
-      outputChutes = new ArrayList<Chute>();
+      inputChutes = new ArrayList</* @Nullable */Chute>();
+      outputChutes = new ArrayList</* @Nullable */Chute>();
       
       UID = nextUID;
       nextUID += 2;
@@ -137,8 +140,6 @@ public class Intersection
       
    }
    
-   // add accessors for specific chutes
-   
    /**
     * @requires port is a valid port number for this Intersection
     * @modifies this
@@ -151,6 +152,16 @@ public class Intersection
       outputChutes.add(port, output);
    }
    
+   public @Nullable Chute getInputChute(int port)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   public @Nullable Chute getOutputChute(int port)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
    /**
     * @modifes list
     * @effects if minSize is greater than list.size, adds null elements to the
@@ -159,7 +170,8 @@ public class Intersection
     * Notes: used to make sure that the given list can accommodate a call to add
     * with indices up to minSize
     */
-   private <E> void nullRemainingElts(List</* @Nullable */E> list, int minSize)
+   private <E> void nullRemainingElts(ArrayList</* @Nullable */E> list,
+         int minSize)
    {
       while (list.size() < minSize)
          list.add(null);

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import static level.Intersection.Kind;
 
-import checkers.nullness.quals.LazyNonNull;
+import checkers.nullness.quals.*;
 
 /**
  * @author: Nathaniel Mote
@@ -85,6 +85,11 @@ public class Board
     * 
     * outgoingNode != null <--> there exits an element i in nodes such that
     * i.getIntersectionType() == OUTGOING
+    * 
+    * TODO add bit about how the edges and nodes must be connected
+    * 
+    * for all n in nodes(for all e in edges(
+    * 
     */
    
    /**
@@ -98,7 +103,7 @@ public class Board
    
    /**
     * @requires given node implements eternal equality; if this is the first
-    * node to be added, it must have type INCOMING; 
+    * node to be added, it must have type INCOMING;
     * @modifies this
     * @effects If this does not already contain node, adds node to this
     * @return true iff this did not already contain node
@@ -117,12 +122,13 @@ public class Board
          throw new IllegalArgumentException(
                "No more than one node can be of kind OUTGOING");
       
-      throw new RuntimeException("Not yet implemented");
+      return nodes.add(node);
    }
    
    /**
-    * @requires this.contains(start); this.contains(end); edge does not have
-    * start or end nodes; the given ports on the given nodes are empty
+    * @requires this.contains(start); this.contains(end); !this.contains(edge)
+    * edge does not have start or end nodes; the given ports on the given nodes
+    * are empty
     * @modifies this, start, end, edge
     * @effects creates an edge from startPort on the start node to endPort on
     * the end node. modifies start, end, and edge to reflect their new
@@ -131,15 +137,33 @@ public class Board
    public void addEdge(Intersection start, int startPort, Intersection end,
          int endPort, Chute edge)
    {
+      // TODO check preconditions
+      
+      edges.add(edge);
+      
+      start.setOutputChute(edge, startPort);
+      end.setInputChute(edge, endPort);
+      
+      edge.setStart(start, startPort);
+      edge.setEnd(end, endPort);
+      
       throw new RuntimeException("Not yet implemented");
    }
    
    /**
-    * @returns the cardinality of Nodes
+    * @returns the cardinality of nodes
     */
-   public int size()
+   public int nodesSize()
    {
-      throw new RuntimeException("Not yet implemented");
+      return nodes.size();
+   }
+   
+   /**
+    * @return the cardinality of edges
+    */
+   public int edgesSize()
+   {
+      return edges.size();
    }
    
    /**
@@ -149,7 +173,7 @@ public class Board
     */
    public Set<Intersection> getNodes()
    {
-      throw new RuntimeException("Not yet implemented");
+      return new HashSet<Intersection>(nodes);
    }
    
    /**
@@ -159,7 +183,7 @@ public class Board
     */
    public Set<Chute> getEdges()
    {
-      throw new RuntimeException("Not yet implemented");
+      return new HashSet<Chute>(edges);
    }
    
    /**
@@ -167,7 +191,7 @@ public class Board
     */
    public/* @Nullable */Intersection getIncomingNode()
    {
-      throw new RuntimeException("Not yet implemented");
+      return incomingNode;
    }
    
    /**
@@ -175,7 +199,7 @@ public class Board
     */
    public/* @Nullable */Intersection getOutgoingNode()
    {
-      throw new RuntimeException("Not yet implemented");
+      return outgoingNode;
    }
    
    /**
@@ -183,6 +207,6 @@ public class Board
     */
    public boolean contains(Object elt)
    {
-      throw new RuntimeException("Not yet implemented");
+      return nodes.contains(elt) || edges.contains(elt);
    }
 }
