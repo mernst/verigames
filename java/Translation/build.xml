@@ -1,45 +1,70 @@
 <project name="Translation" default="build" basedir=".">
 
-	<property name="src" location="src" />
-	<property name="bin" location="bin" />
-	<property name="lib" location="lib" />
+   <property name="src" location="src" />
+   <property name="bin" location="bin" />
+   <property name="lib" location="lib" />
 
-	<property environment="env" />
+   <property environment="env" />
 
-	<presetdef name="jsr308.javac">
-		<javac fork="yes">
-			<!-- JSR308 related compiler arguments -->
-			<compilerarg value="-version" />
-			<compilerarg value="-implicit:class" />
-			<compilerarg line="-Awarns -Xmaxwarns 10000" />
-			<compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar" />
-			<compilerarg value="-XDTA:spacesincomments" />
-			<!-- included so that Eclipse's formatter can still be used -->
+   <presetdef name="jsr308.javac">
+      <javac fork="yes">
+         <!-- JSR308 related compiler arguments -->
+         <compilerarg value="-version" />
+         <compilerarg value="-implicit:class" />
+         <compilerarg line="-Awarns -Xmaxwarns 10000" />
+         <compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar" />
+         <compilerarg value="-XDTA:spacesincomments" />
+         <!-- included so that Eclipse's formatter can still be used -->
 
-			<classpath>
-				<pathelement location="${env.CHECKERS}/checkers.jar" />
-			</classpath>
-		</javac>
-	</presetdef>
+         <classpath>
+            <pathelement location="${env.CHECKERS}/checkers.jar" />
+         </classpath>
+      </javac>
+   </presetdef>
 
-	<target name="build">
-		<mkdir dir="${bin}" />
-		<javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" includeAntRuntime="false" />
-	</target>
+   <target name="build">
+      <mkdir dir="${bin}" />
+      <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar"
+             srcdir="${src}"
+             destdir="${bin}"
+             includeAntRuntime="false" />
+   </target>
 
-	<target name="check-nullness" description="Check for nullness errors" depends="clean">
-		<mkdir dir="${bin}" />
-		<!-- use jsr308.javac instead of javac -->
-		<jsr308.javac classpath="${lib}/javac.jar;${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" includeAntRuntime="false">
-			<compilerarg line="-processor checkers.nullness.NullnessChecker" />
-			<compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar" />
-			<compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*" />
-			<!-- optional, to not check library bodies: <compilerarg value="-AskipClasses=^(java\.awt\.|javax\.swing\.)"/> -->
-		</jsr308.javac>
-	</target>
+   <target name="check-nullness"
+           description="Check for nullness errors"
+           depends="clean">
+      <mkdir dir="${bin}" />
+      <!-- use jsr308.javac instead of javac -->
+      <jsr308.javac classpath="${lib}/javac.jar;${lib}/junit-4.8.2.jar"
+                    srcdir="${src}"
+                    destdir="${bin}"
+                    includeAntRuntime="false">
+         <compilerarg line="-processor checkers.nullness.NullnessChecker" />
+         <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar" />
+         <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*" />
+         <!-- optional, to not check library bodies: <compilerarg value="-AskipClasses=^(java\.awt\.|javax\.swing\.)"/> -->
+      </jsr308.javac>
+   </target>
 
-	<target name="clean">
-		<delete dir="${bin}" />
-	</target>
+   <target name="clean">
+      <delete dir="${bin}" />
+   </target>
 
+   <!-- junit tests -->
+   <path id="test.classpath">
+      <fileset dir="${lib}">
+         <include name="**/*.jar" />
+      </fileset>
+   </path>
+   <!-- still a work in progress: -->
+   <target name="test" depends="clean, build">
+      <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
+         <test name="level.tests.SpecificationTests" />
+         <formatter type="plain" usefile="false" />
+         <classpath refid="test.classpath" />
+         <classpath>
+            <pathelement path="${bin}" />
+         </classpath>
+      </junit>
+   </target>
 </project>

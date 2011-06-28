@@ -1,8 +1,11 @@
 package level;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.element.Name;
 
 /**
@@ -10,8 +13,7 @@ import javax.lang.model.element.Name;
  * 
  * A mutable data structure that represents a complete level
  * 
- * @specfield: contiguousEdgeMap: Map<Chute, Set<Chute>> // maps edges to a set
- * of their contiguous edges
+ * @specfield: linkedEdges: Set<Set<Chute>> // maps edges to their set of 
  * 
  * @specfield: boardSet: Set<Board> // represents the set of all boards in this
  * level
@@ -25,7 +27,7 @@ import javax.lang.model.element.Name;
 /*
  * Notes:
  * 
- * - The contiguous edge map is really representing a set of sets. The idea is
+ * - The linked edge map is really representing a set of sets. The idea is
  * that some chutes are necessarily of the same type. This could easily be
  * represented as a Set<Set<Chute>>, and it would be more natural that way. The
  * only concern is that this turns a constant-time lookup to linear time in the
@@ -35,7 +37,7 @@ import javax.lang.model.element.Name;
  * More abstractly: Let R be an equivalence relation on the set of all Chutes
  * such that aRb <--> a and b necessarily have the same width.
  * 
- * The contiguousEdgeMap is, then, for all c in the set of Chutes, a mapping
+ * The linkedEdgeMap is, then, for all c in the set of Chutes, a mapping
  * from c to [c], where [c] is the R-equivalence class of c.
  * 
  * I'm not sure if it will be helpful to generalize it like that, but it came to
@@ -45,13 +47,18 @@ import javax.lang.model.element.Name;
 public class Level
 {
    
+   private Set<Set<Chute>> linkedEdges;
+   
+   private Map<Name, Board> nameMap; 
+   
    /**
-    * @effects creates a new Level object with an empty contiguousEdgeMap,
+    * @effects creates a new Level object with an empty linkedEdgeMap,
     * boardSet, and nameMap
     */
    public Level()
    {
-      throw new RuntimeException("Not yet implemented");
+      linkedEdges = new HashSet<Set<Chute>>();
+      nameMap = new HashMap<Name, Board>();
    }
    
    /**
@@ -60,7 +67,7 @@ public class Level
     * relation R defined above. In other words, for all a, b in chutes (the
     * argument to this method), aRb
     */
-   public void makeContiguous(Set<Chute> chutes)
+   public void makeLinked(Set<Chute> chutes)
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -73,15 +80,15 @@ public class Level
     */
    public void addBoard(Name name, Board b)
    {
-      throw new RuntimeException("Not yet implemented");
+      nameMap.put(name, b);
    }
    
    /**
-    * @return boardSet
+    * @return a shallow copy of boardSet
     */
    public Set<Board> boardSet()
    {
-      throw new RuntimeException("Not yet implemented");
+      return new HashSet<Board>(nameMap.values());
    }
    
    /**
@@ -90,7 +97,7 @@ public class Level
     */
    public/* @Nullable */Board getBoard(Name name)
    {
-      throw new RuntimeException("Not yet implemented");
+      return nameMap.get(name);
    }
    
    /**
@@ -105,6 +112,28 @@ public class Level
     */
    public boolean outputXML(PrintStream out)
    {
+      out.println("<level>");
+      outputLinkedEdges(out);
+      out.println("<level/>");
       throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @modifies out
+    * @effects prints the linked edge section of the xml to out, indented by one space
+    */
+   private void outputLinkedEdges(PrintStream out)
+   {
+      out.println(" <linked-edges>");
+      for (Set<Chute> set : linkedEdges)
+      {
+         out.println("  <set>");
+         for (Chute c : set)
+         {
+            out.println("   <value id=\"" + c.getUID() + "\"/>");
+         }
+         out.println(" </set>");
+      }
+      out.println(" </linked-edges>");
    }
 }
