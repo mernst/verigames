@@ -60,6 +60,7 @@
    <target name="test" depends="clean, build">
       <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
          <test name="level.tests.SpecificationTests" />
+         <test name="level.tests.ImplementationTests" />
          <formatter type="plain" usefile="false" />
          <classpath refid="test.classpath" />
          <classpath>

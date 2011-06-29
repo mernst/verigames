@@ -1,6 +1,8 @@
 package level.tests;
 
 /**
+ * @author Nathaniel Mote
+ * 
  * A class used to run the suite of specification tests for the level objects
  */
 

@@ -12,6 +12,11 @@ import level.Chute;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @author Nathaniel Mote
+ * 
+ */
+
 public class ChuteSpecTests
 {
    
@@ -26,8 +31,7 @@ public class ChuteSpecTests
    
    public List<Chute> allChutes;
    
-   @Before
-   public void initChutes()
+   @Before public void initChutes()
    {
       namedPinchedEditable = new Chute(null, true, true, null);
       namedPinchedUneditable = new Chute(null, true, false, null);
@@ -50,8 +54,7 @@ public class ChuteSpecTests
       allChutes.add(unnamedUnpinchedUneditable);
    }
    
-   @Test
-   public void testUID()
+   @Test public void testUID()
    {
       for (Chute i : allChutes)
       {
