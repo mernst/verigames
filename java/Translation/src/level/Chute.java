@@ -1,5 +1,6 @@
 package level;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Name;
@@ -18,11 +19,11 @@ import checkers.nullness.quals.Nullable;
  * @specfield name : Name // The name of the variable corresponding to this
  * chute. Can be null if this chute does not correspond directly to a variable,
  * but all chutes connected to an incoming or outgoing node, except for the
- * arguments and the return value, must have a name. This is because they
- * represent fields, or, if their board is a sub-board, variables declared
- * within the method
+ * return value, must either have a name or be an auxiliary chute. This is
+ * because they represent fields, or, if their board is a sub-board, variables
+ * declared within the method.
  * 
- * @specfield auxiliaryChutes: List<Chute> // The list of chutes that represent
+ * @specfield auxiliaryChutes: List<Chute> // The list of chutes that represents
  * types auxiliary to the type that this chute represents. Only includes chutes
  * that are directly auxiliary to this. For example, if this chute represented
  * Map<String, Set<Integer>>, the auxiliary chutes would represent String and
@@ -74,11 +75,14 @@ public class Chute
     * @effects creates a new Chute object, with the given values for name,
     * pinch, and editable
     */
-   public Chute(@Nullable Name name, boolean pinch, boolean editable)
+   public Chute(@Nullable Name name, boolean pinch, boolean editable,
+         @Nullable List<Chute> aux)
    {
       this.name = name;
       this.pinch = pinch;
       this.editable = editable;
+      
+      auxiliaryChutes = aux == null ? new ArrayList<Chute>() : new ArrayList<Chute>(aux);
       
       UID = nextUID;
       nextUID += 2;

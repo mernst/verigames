@@ -156,7 +156,10 @@ public class Intersection
     */
    public @Nullable Chute getInputChute(int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      if (port >= inputChutes.size())
+         return null;
+      else
+         return inputChutes.get(port);
    }
    
    /**
@@ -164,7 +167,10 @@ public class Intersection
     */
    public @Nullable Chute getOutputChute(int port)
    {
-      throw new RuntimeException("Not yet implemented");
+      if (port >= outputChutes.size())
+         return null;
+      else
+         return outputChutes.get(port);
    }
    
    /**

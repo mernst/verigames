@@ -123,6 +123,12 @@ public class Board
          throw new IllegalArgumentException(
                "No more than one node can be of kind OUTGOING");
       
+      if (node.getIntersectionKind() == Kind.INCOMING)
+         incomingNode = node;
+      
+      if (node.getIntersectionKind() == Kind.OUTGOING)
+         outgoingNode = node;
+      
       return nodes.add(node);
    }
    

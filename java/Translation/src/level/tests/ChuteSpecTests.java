@@ -29,14 +29,14 @@ public class ChuteSpecTests
    @Before
    public void initChutes()
    {
-      namedPinchedEditable = new Chute(null, true, true);
-      namedPinchedUneditable = new Chute(null, true, false);
-      namedUnpinchedEditable = new Chute(null, false, true);
-      namedUnpinchedUneditable = new Chute(null, false, false);
-      unnamedPinchedEditable = new Chute(null, true, true);
-      unnamedPinchedUneditable = new Chute(null, true, false);
-      unnamedUnpinchedEditable = new Chute(null, false, true);
-      unnamedUnpinchedUneditable = new Chute(null, false, false);
+      namedPinchedEditable = new Chute(null, true, true, null);
+      namedPinchedUneditable = new Chute(null, true, false, null);
+      namedUnpinchedEditable = new Chute(null, false, true, null);
+      namedUnpinchedUneditable = new Chute(null, false, false, null);
+      unnamedPinchedEditable = new Chute(null, true, true, null);
+      unnamedPinchedUneditable = new Chute(null, true, false, null);
+      unnamedUnpinchedEditable = new Chute(null, false, true, null);
+      unnamedUnpinchedUneditable = new Chute(null, false, false, null);
       
       allChutes = new ArrayList<Chute>();
       
