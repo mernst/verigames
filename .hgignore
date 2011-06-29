@@ -1,0 +1,5 @@
+java/.metadata/
+java/Translation/bin/
+java/Translation/.classpath
+java/Translation/.project
+java/Translation/check-nullness

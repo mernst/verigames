@@ -79,7 +79,7 @@ method names that take the method signature into account, because of method-over
         <input/>
         <output/>
       </node>
-      <node kind="startWhiteBall" id="4">
+      <node kind="START_WHITE_BALL" id="4">
         <input/>
         <output>
           <port num="1" edge="1"/>
@@ -304,7 +304,7 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="31"/>
         </output>
       </node>
-      <node kind="reStartWhiteBall" id="30">
+      <node kind="RESTART_WHITE_BALL" id="30">
         <input>
           <port num="1" edge="29"/>
         </input>
