@@ -16,8 +16,7 @@ public class IntersectionImpTests
     * Tests to make sure that the Intersection constructor fails on Kind
     * SUBNETWORK
     */
-   @Test(expected=IllegalArgumentException.class)
-   public void testConstructorFailure1()
+   @Test(expected = IllegalArgumentException.class) public void testConstructorFailure1()
    {
       new Intersection(Kind.SUBNETWORK);
    }
@@ -26,9 +25,24 @@ public class IntersectionImpTests
     * Tests to make sure that the Intersection constructor fails on Kind
     * NULL_TEST
     */
-   @Test(expected=IllegalArgumentException.class)
-   public void testConstructorFailure2()
+   @Test(expected = IllegalArgumentException.class) public void testConstructorFailure2()
    {
       new Intersection(Kind.NULL_TEST);
+   }
+
+   /**
+    * Tests that asSubnetwork fails on Intersection instances
+    */
+   @Test(expected = IllegalStateException.class) public void testAsSubnetworkFailure()
+   {
+      (new Intersection(Kind.INCOMING)).asSubnetwork();
+   }
+   
+   /**
+    * Tests that asNullTest fails on Intersection instances
+    */
+   @Test(expected = IllegalStateException.class) public void testAsNullTestFailure()
+   {
+      (new Intersection(Kind.INCOMING)).asNullTest();
    }
 }
