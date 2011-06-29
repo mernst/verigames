@@ -104,12 +104,14 @@ public class Board
    
    /**
     * @requires given node implements eternal equality; if this is the first
-    * node to be added, it must have type INCOMING;
+    * node to be added, it must have type INCOMING; if this is of Kind INCOMING,
+    * there must not already be a node of Kind OUTGOING; if this is of Kind
+    * OUTGOING, there must not already be a node of Kind OUTGOING;
+    * !this.contains(node)
     * @modifies this
-    * @effects If this does not already contain node, adds node to this
-    * @return true iff this did not already contain node
+    * @effects adds node to this
     */
-   public boolean addNode(Intersection node)
+   public void addNode(Intersection node)
    {
       if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
          throw new IllegalArgumentException(
@@ -123,13 +125,17 @@ public class Board
          throw new IllegalArgumentException(
                "No more than one node can be of kind OUTGOING");
       
+      if (this.contains(node))
+         throw new IllegalArgumentException(
+               "A given node object can be added no more than once");
+      
       if (node.getIntersectionKind() == Kind.INCOMING)
          incomingNode = node;
       
       if (node.getIntersectionKind() == Kind.OUTGOING)
          outgoingNode = node;
       
-      return nodes.add(node);
+      nodes.add(node);
    }
    
    /**
