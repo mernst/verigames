@@ -82,7 +82,8 @@ public class Chute
       this.pinch = pinch;
       this.editable = editable;
       
-      auxiliaryChutes = aux == null ? new ArrayList<Chute>() : new ArrayList<Chute>(aux);
+      auxiliaryChutes = aux == null ? new ArrayList<Chute>()
+            : new ArrayList<Chute>(aux);
       
       UID = nextUID;
       nextUID += 2;
@@ -122,6 +123,15 @@ public class Chute
    public void setNarrow(boolean narrow)
    {
       this.narrow = narrow;
+   }
+   
+   /**
+    * @return the auxiliary chutes associated with this Chute. Structural
+    * changes to the returned list will not affect this object.
+    */
+   public List<Chute> getAuxiliaryChute()
+   {
+      throw new RuntimeException("Not yet implemented");
    }
    
    /**

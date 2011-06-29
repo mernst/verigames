@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import level.Chute;
+import level.Intersection;
+import level.Intersection.Kind;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +31,12 @@ public class ChuteSpecTests
    
    public List<Chute> allChutes;
    
+   // TODO replace Name with whatever we end up using, and make that field
+   // not-null in some of the Chutes
+   
+   public Intersection incoming;
+   public Intersection outgoing;
+   
    @Before public void initChutes()
    {
       namedPinchedEditable = new Chute(null, true, true, null);
@@ -50,6 +58,9 @@ public class ChuteSpecTests
       allChutes.add(unnamedPinchedUneditable);
       allChutes.add(unnamedUnpinchedEditable);
       allChutes.add(unnamedUnpinchedUneditable);
+      
+      incoming = new Intersection(Kind.INCOMING);
+      outgoing = new Intersection(Kind.OUTGOING);
    }
    
    @Test public void testUID()
@@ -68,4 +79,20 @@ public class ChuteSpecTests
    }
    
    // TODO write some tests with Intersection, once that's nailed down.
+   /*
+    * Tests to do:
+    * 
+    * - Test Intersection accessors (high port numbers, too)
+    * 
+    * - Double check other accessors
+    * 
+    * - Test auxiliary chutes
+    */
+   
+   // Tests that the Chute behaves properly with its start and end intersections
+   @Test public void testIntersections()
+   {
+      
+   }
+   
 }
