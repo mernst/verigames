@@ -1,9 +1,17 @@
 package level.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+
+import level.Chute;
 import level.Intersection;
 import level.Intersection.Kind;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,11 +22,7 @@ import org.junit.Test;
 public class IntersectionSpecTests
 {
    // TODO write tests:
-   /*
-    * is_____() methods return false
-    * 
-    * test UID uniqueness and evenness
-    * 
+   /* 
     * test get__chute with existing chutes, non-existing chutes, and ports
     * higher than any given so far
     */
@@ -38,9 +42,53 @@ public class IntersectionSpecTests
     */
    @Test public void isNullTestTest()
    {
-      assertFalse(
-            "isNullTest should return false on a regular Intersection.",
+      assertFalse("isNullTest should return false on a regular Intersection.",
             (new Intersection(Kind.MERGE)).isNullTest());
    }
    
+   /**
+    * Tests that the UID of every intersection is unique and even
+    */
+   @Test public void testUID()
+   {
+      ArrayList<Intersection> elts = new ArrayList<Intersection>();
+      for (int i = 0; i < 8; i++)
+         elts.add(new Intersection(Kind.CONNECT));
+      
+      for (Intersection i : elts)
+      {
+         assertEquals("Intersections' UID's should be even (" + i.getUID()
+               + ")", i.getUID() % 2, 0);
+         for (Intersection j : elts)
+         {
+            assertTrue(
+                  "Intersections of different identities should have different UIDs",
+                  i == j || i.getUID() != j.getUID());
+         }
+      }
+   }
+   
+   public Intersection i;
+   public Intersection j;
+   public Chute chute1;
+   public Chute chute2;
+   
+   @Before public void init()
+   {
+      i = new Intersection(Kind.INCOMING);
+      j = new Intersection(Kind.OUTGOING);
+      chute1 = new Chute(null, true, true, null);
+      chute2 = new Chute(null, true, true, null);
+   }
+   
+   @Test public void getInputChuteTest()
+   {
+      assertNull(i.getInputChute(5));
+      // TODO finish
+   }
+   
+   @Test public void getOutputChuteTest()
+   {
+      // TODO complete stub
+   }
 }
