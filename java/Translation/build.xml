@@ -30,6 +30,7 @@
              includeAntRuntime="false" />
    </target>
 
+   <!-- check-nullness target checks nullness on every file that does not include "test(s)" in its directory path -->
    <target name="check-nullness"
            description="Check for nullness errors"
            depends="clean">
@@ -38,6 +39,7 @@
       <jsr308.javac classpath="${lib}/javac.jar;${lib}/junit-4.8.2.jar"
                     srcdir="${src}"
                     destdir="${bin}"
+                    excludes="**/test/**,**/tests/**"
                     includeAntRuntime="false">
          <compilerarg line="-processor checkers.nullness.NullnessChecker" />
          <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar" />

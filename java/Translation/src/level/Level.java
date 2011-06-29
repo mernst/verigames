@@ -13,7 +13,7 @@ import javax.lang.model.element.Name;
  * 
  * A mutable data structure that represents a complete level
  * 
- * @specfield: linkedEdges: Set<Set<Chute>> // maps edges to their set of 
+ * @specfield: linkedEdges: Set<Set<Chute>> // maps edges to their set of
  * 
  * @specfield: boardSet: Set<Board> // represents the set of all boards in this
  * level
@@ -27,8 +27,8 @@ import javax.lang.model.element.Name;
 /*
  * Notes:
  * 
- * - The linked edge map is really representing a set of sets. The idea is
- * that some chutes are necessarily of the same type. This could easily be
+ * - The linked edge map is really representing a set of sets. The idea is that
+ * some chutes are necessarily of the same type. This could easily be
  * represented as a Set<Set<Chute>>, and it would be more natural that way. The
  * only concern is that this turns a constant-time lookup to linear time in the
  * number of Set<Chute>'s. However, this number should be so small as to be
@@ -37,11 +37,14 @@ import javax.lang.model.element.Name;
  * More abstractly: Let R be an equivalence relation on the set of all Chutes
  * such that aRb <--> a and b necessarily have the same width.
  * 
- * The linkedEdgeMap is, then, for all c in the set of Chutes, a mapping
- * from c to [c], where [c] is the R-equivalence class of c.
+ * The linkedEdgeMap is, then, for all c in the set of Chutes, a mapping from c
+ * to [c], where [c] is the R-equivalence class of c.
  * 
  * I'm not sure if it will be helpful to generalize it like that, but it came to
  * mind.
+ * 
+ * - I've decided (tentatively) to represent it as a Set<Set<Chute>>. It still
+ * wouldn't be too much trouble to switch, though.
  */
 
 public class Level
@@ -49,11 +52,11 @@ public class Level
    
    private Set<Set<Chute>> linkedEdges;
    
-   private Map<Name, Board> nameMap; 
+   private Map<Name, Board> nameMap;
    
    /**
-    * @effects creates a new Level object with an empty linkedEdgeMap,
-    * boardSet, and nameMap
+    * @effects creates a new Level object with an empty linkedEdgeMap, boardSet,
+    * and nameMap
     */
    public Level()
    {
@@ -67,8 +70,29 @@ public class Level
     * relation R defined above. In other words, for all a, b in chutes (the
     * argument to this method), aRb
     */
-   public void makeLinked(Set<Chute> chutes)
+   public void makeLinked(Set<Chute> toLink)
    {
+      // This set contains all of the sets in linkedEdges that contain elements
+      // in toLink
+      Set<Set<Chute>> containsToLink = new HashSet<Set<Chute>>();
+      
+      for (Set<Chute> set : linkedEdges)
+      {
+         for (Chute c : toLink)
+         {
+            // if a set in linkedEdges contains any element in toLink, it should
+            // be added to containsToLink
+            if (set.contains(c))
+               containsToLink.add(set);
+         }
+      }
+      
+      // All of the sets in containsToLink and toLink should be combined into
+      // one, and the other chutes should be removed from linkedEdges:
+      linkedEdges.removeAll(containsToLink);
+      
+      // TODO finish implementation
+      
       throw new RuntimeException("Not yet implemented");
    }
    
@@ -120,7 +144,8 @@ public class Level
    
    /**
     * @modifies out
-    * @effects prints the linked edge section of the xml to out, indented by one space
+    * @effects prints the linked edge section of the xml to out, indented by one
+    * space
     */
    private void outputLinkedEdges(PrintStream out)
    {

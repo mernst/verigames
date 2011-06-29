@@ -1,11 +1,9 @@
 package level.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.lang.model.element.Name;
 
 import level.Chute;
 
