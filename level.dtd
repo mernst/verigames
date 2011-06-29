@@ -2,27 +2,27 @@
  <!ELEMENT linked-edge-map (set*)>
   <!ELEMENT set (value*)>
    <!ELEMENT value EMPTY>
-    <!ATTLIST value id ID #REQUIRED>
+    <!ATTLIST value id CDATA #REQUIRED>
  <!ELEMENT graphs-map (graph*)>
   <!ELEMENT graph (node*,edge*)>
    <!ATTLIST graph name CDATA #REQUIRED>
    <!ELEMENT node (input,output)>
     <!ATTLIST node kind (INCOMING|OUTGOING|SPLIT|NULL_TEST|MERGE|START_WHITE_BALL|START_BLACK_BALL|START_NO_BALL|END|RESTART_WHITE_BALL|RESTART_BLACK_BALL|RESTART_NO_BALL|SUBNETWORK|CONNECT) #REQUIRED>
-    <!ATTLIST node id ID #REQUIRED>
-    <!ATTLIST node name CDATA>
+    <!ATTLIST node id CDATA #REQUIRED>
+    <!ATTLIST node name CDATA #IMPLIED>
     <!ELEMENT input (port*)>
     <!ELEMENT output (port*)>
      <!ELEMENT port EMPTY>
       <!ATTLIST port num CDATA #REQUIRED>
-      <!ATTLIST port edge IDREF #REQUIRED>
+      <!ATTLIST port edge CDATA #REQUIRED>
    <!ELEMENT edge (from,to)>
-    <!ATTLIST edge var CDATA>
+    <!ATTLIST edge var CDATA #IMPLIED>
     <!ATTLIST edge pinch (true|false) #REQUIRED>
     <!ATTLIST edge width (wide|narrow) #REQUIRED>
-    <!ATTLIST edge id ID #REQUIRED>
+    <!ATTLIST edge id CDATA #REQUIRED>
     <!ELEMENT from (noderef)>
     <!ELEMENT to (noderef)>
      <!ELEMENT noderef EMPTY>
-      <!ATTLIST noderef id IDREF #REQUIRED>
+      <!ATTLIST noderef id CDATA #REQUIRED>
       <!ATTLIST noderef port CDATA #REQUIRED>
     
