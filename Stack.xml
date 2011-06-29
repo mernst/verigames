@@ -572,8 +572,10 @@ method names that take the method signature into account, because of method-over
         </output>
       </node>
       <node kind="OUTGOING" id="48">
-        <input><port num="0" edge="51"/><port num="1" edge="55"/>
-</input>
+        <input>
+          <port num="0" edge="51"/>
+          <port num="1" edge="55"/>
+        </input>
         <output/>
       </node>
       <edge var="theVector" pinch="false" width="wide" id="45">
