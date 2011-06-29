@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!DOCTYPE level SYSTEM "level.dtd">
 <!-- 
 Sample XML level for Stack.java
 Rough Draft
@@ -74,24 +75,24 @@ method names that take the method signature into account, because of method-over
 	at the end? Keys are the graph names.-->
   <graphs-map>
     <graph name="constructor">
-      <node type="incoming" id="2">
+      <node kind="incoming" id="2">
         <input/>
         <output/>
       </node>
-      <node type="startWhiteBall" id="4">
+      <node kind="startWhiteBall" id="4">
         <input/>
         <output>
           <port num="1" edge="1"/>
         </output>
         <!-- port #, edge ID -->
       </node>
-      <node type="startNoBall" id="6">
+      <node kind="startNoBall" id="6">
         <input/>
         <output>
           <port num="1" edge="3"/>
         </output>
       </node>
-      <node type="outgoing" id="8">
+      <node kind="outgoing" id="8">
         <input>
           <port num="1" edge="1"/>
           <port num="2" edge="3"/>
@@ -117,14 +118,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="isFull">
-      <node type="incoming" id="10">
+      <node kind="incoming" id="10">
         <input/>
         <output>
           <port num="1" edge="5"/>
           <port num="2" edge="7"/>
         </output>
       </node>
-      <node type="outgoing" id="12">
+      <node kind="outgoing" id="12">
         <input>
           <port num="1" edge="5"/>
           <port num="2" edge="7"/>
@@ -149,14 +150,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="isEmpty">
-      <node type="incoming" id="26">
+      <node kind="incoming" id="26">
         <input/>
         <output>
           <port num="1" edge="9"/>
           <port num="2" edge="11"/>
         </output>
       </node>
-      <node type="outgoing" id="28">
+      <node kind="outgoing" id="28">
         <input>
           <port num="1" edge="9"/>
           <port num="2" edge="11"/>
@@ -181,14 +182,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="top">
-      <node type="incoming" id="14">
+      <node kind="incoming" id="14">
         <input/>
         <output>
           <port num="1" edge="13"/>
           <port num="2" edge="15"/>
         </output>
       </node>
-      <node type="subnetwork" name="isEmpty" id="16">
+      <node kind="subnetwork" name="isEmpty" id="16">
         <input>
           <port num="1" edge="13"/>
           <port num="2" edge="15"/>
@@ -198,7 +199,7 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="19"/>
         </output>
       </node>
-      <node type="split" id="18">
+      <node kind="split" id="18">
         <input>
           <port num="1" edge="19"/>
         </input>
@@ -207,13 +208,13 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="23"/>
         </output>
       </node>
-      <node type="startBlackBall" id="20">
+      <node kind="startBlackBall" id="20">
         <input/>
         <output>
           <port num="1" edge="25"/>
         </output>
       </node>
-      <node type="merge" id="22">
+      <node kind="merge" id="22">
         <input>
           <port num="1" edge="23"/>
           <port num="2" edge="25"/>
@@ -222,7 +223,7 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="27"/>
         </output>
       </node>
-      <node type="outgoing" id="24">
+      <node kind="outgoing" id="24">
         <input>
           <port num="1" edge="17"/>
           <port num="2" edge="21"/>
@@ -296,14 +297,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="makeEmpty">
-      <node type="incoming" id="28">
+      <node kind="incoming" id="28">
         <input/>
         <output>
           <port num="1" edge="29"/>
           <port num="2" edge="31"/>
         </output>
       </node>
-      <node type="reStartWhiteBall" id="30">
+      <node kind="reStartWhiteBall" id="30">
         <input>
           <port num="1" edge="29"/>
         </input>
@@ -311,7 +312,7 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="33"/>
         </output>
       </node>
-      <node type="reStartNoBall" id="32">
+      <node kind="reStartNoBall" id="32">
         <input>
           <port num="1" edge="31"/>
         </input>
@@ -319,7 +320,7 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="35"/>
         </output>
       </node>
-      <node type="outgoing" id="34">
+      <node kind="outgoing" id="34">
         <input>
           <port num="1" edge="33"/>
           <port num="2" edge="35"/>
@@ -360,14 +361,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="pop">
-      <node type="incoming" id="36">
+      <node kind="incoming" id="36">
         <input/>
         <output>
           <port num="1" edge="37"/>
           <port num="2" edge="39"/>
         </output>
       </node>
-      <node type="subnetwork" name="isEmpty" id="38">
+      <node kind="subnetwork" name="isEmpty" id="38">
         <input>
           <port num="1" edge="37"/>
           <port num="2" edge="39"/>
@@ -377,7 +378,7 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="43"/>
         </output>
       </node>
-      <node type="outgoing" id="40">
+      <node kind="outgoing" id="40">
         <input>
           <port num="1" edge="41"/>
           <port num="2" edge="43"/>
@@ -418,14 +419,14 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="topAndPop">
-      <node type="incoming" id="50">
+      <node kind="incoming" id="50">
         <input/>
         <output>
           <port num="1" edge="57"/>
           <port num="2" edge="59"/>
         </output>
       </node>
-      <node type="subnetwork" name="isEmpty" id="52">
+      <node kind="subnetwork" name="isEmpty" id="52">
         <input>
           <port num="1" edge="57"/>
           <port num="2" edge="59"/>
@@ -435,7 +436,7 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="63"/>
         </output>
       </node>
-      <node type="subnetwork" name="top" id="54">
+      <node kind="subnetwork" name="top" id="54">
         <input>
           <port num="1" edge="61"/>
           <port num="2" edge="63"/>
@@ -446,13 +447,13 @@ method names that take the method signature into account, because of method-over
           <port num="3" edge="69"/>
         </output>
       </node>
-      <node type="startBlackBall" id="56">
+      <node kind="startBlackBall" id="56">
         <input/>
         <output>
           <port num="1" edge="71"/>
         </output>
       </node>
-      <node type="merge" id="58">
+      <node kind="merge" id="58">
         <input>
           <port num="1" edge="69"/>
           <port num="2" edge="71"/>
@@ -461,7 +462,7 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="73"/>
         </output>
       </node>
-      <node type="outgoing" id="60">
+      <node kind="outgoing" id="60">
         <input>
           <port num="1" edge="65"/>
           <port num="2" edge="67"/>
@@ -543,7 +544,7 @@ method names that take the method signature into account, because of method-over
       </edge>
     </graph>
     <graph name="push">
-      <node type="incoming" id="42">
+      <node kind="incoming" id="42">
         <input/>
         <output>
           <port num="1" edge="45"/>
@@ -551,7 +552,7 @@ method names that take the method signature into account, because of method-over
           <port num="3" edge="49"/>
         </output>
       </node>
-      <node type="subNetwork" name="isFull" id="44">
+      <node kind="subNetwork" name="isFull" id="44">
         <input>
           <port num="1" edge="45"/>
           <port num="2" edge="47"/>
@@ -561,7 +562,7 @@ method names that take the method signature into account, because of method-over
           <port num="2" edge="53"/>
         </output>
       </node>
-      <node type="merge" id="46">
+      <node kind="merge" id="46">
         <input>
           <port num="1" edge="53"/>
           <port num="2" edge="49"/>
@@ -570,7 +571,7 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="55"/>
         </output>
       </node>
-      <node type="outoing" id="48">
+      <node kind="outoing" id="48">
         <input>51,55</input>
         <output/>
       </node>

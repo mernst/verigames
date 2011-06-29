@@ -1,0 +1,7 @@
+<!ELEMENT level (linked-edge-map,graphs-map)>
+<!ELEMENT linked-edge-map (set*)>
+<!ELEMENT set (value*)>
+<!ELEMENT value EMPTY>
+<!ATTLIST value id ID #REQUIRED>
+<!ELEMENT graphs-map (graph*)>
+<!ELEMENT graph (node*,edge*)>
