@@ -1,0 +1,423 @@
+<!-- 
+Sample XML level for Stack.java
+Rough Draft
+Steph Dietzel, May 2011
+-->
+
+<!-- In this file:
+Nodes have even unique IDs, edged have odd UIDs. In real life, this could 
+easily be replaced by some other scheme, such as Identity hashcodes. But for now, 
+by hand, it's easier. 
+
+Graph names are just the method name they represent. Later, this could change to unique
+method names that take the method signature into account, because of method-overloading. 
+-->
+
+<level>
+	<!-- edge IDs are the keys, list of edge IDs the value -->
+	<contiguous-edge-map>
+		<!-- theVector -->
+		<key id="1"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="5"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="9"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="13"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="17"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="29"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="33"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="37"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="41"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="45"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="51"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="57"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="61"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<key id="65"><value id="1" /><value id="5" /><value id="9" /><value id="13" /><value id="17" />
+			<value id="29" /><value id="33" /><value id="37" /><value id="41" /><value id="45" />
+			<value id="51" /><value id="57" /><value id="61" /><value id="65" /></key>
+		<!-- theVector.elts -->
+		<key id="3"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="7"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="11"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="15"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="19"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="21"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="31"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="35"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="39"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="43"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="47"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="53"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="55"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="59"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="63"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<key id="67"><value id="3" /><value id="7" /><value id="11" /><value id="15" /><value id="19" />
+			<value id="21" /><value id="31" /><value id="35" /><value id="39" /><value id="43" />
+			<value id="47" /><value id="53" /><value id="55" /><value id="59" /><value id="63" /><value id="67" /></key>
+		<!--top.return-->
+		<key id="23"><value id="23" /><value id="25" /><value id="27" /><value id="69" /></key>
+		<key id="25"><value id="23" /><value id="25" /><value id="27" /><value id="69" /></key>
+		<key id="27"><value id="23" /><value id="25" /><value id="27" /><value id="69" /></key>
+		<key id="69"><value id="23" /><value id="25" /><value id="27" /><value id="69" /></key>
+		<!--topAndPop.return-->
+		<key id="71"><value id="71" /><value id="73" /></key>
+		<key id="73"><value id="71" /><value id="73" /></key>
+		<!-- push.param1 -->
+		<key id="49"></key>
+	</contiguous-edge-map>
+	<!-- Each graph needs to be put in a set of graphs, and also a map from name to graph (?)
+	so that the subnetwork nodes can be efficiently clicked on. I can't think of a way to write
+	out the map and set explicitly. Maybe just write the map, and Tim can take the value set
+	at the end? Keys are the graph names.-->
+	<graphs-map>
+		<graph name="constructor">
+			<node type="incoming" id="2">
+				<input></input>
+				<output></output>
+			</node>
+			<node type="startWhiteBall" id="4">
+				<input></input>
+				<output><port num="1" edge="1" /></output> <!-- port #, edge ID -->
+			</node>
+			<node type="startNoBall" id="6">
+				<input></input>
+				<output><port num="1" edge="3" /></output>
+			</node>
+			<node type="outgoing" id="8">
+				<input><port num="1" edge="1" /><port num="2" edge="3" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="1">
+				<from><node id="4" port="1" /></from> <!-- node ID, port #-->
+				<to><node id="8" port="1" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="3">
+				<from> <node id="6" port="1" /> </from>
+				<to> <node id="8" port="2" /></to>
+			</edge>
+		</graph>
+		
+		<graph name="isFull">
+			<node type="incoming" id="10">
+				<input></input>
+				<output><port num="1" edge="5" /><port num="2" edge="7" /></output>
+			</node>
+			<node type="outgoing" id="12">
+				<input><port num="1" edge="5" /><port num="2" edge="7" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="true" width="wide" id="5">
+				<from> <node id="10" port="1" /></from>
+				<to><node id="12" port="1" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="7">
+				<from> <node id="10" port="2" /></from>
+				<to> <node id="12" port="2" /></to>
+			</edge>
+		</graph>
+		
+		<graph name="isEmpty">
+			<node type="incoming" id="26">
+				<input></input>
+				<output><port num="1" edge="9" /><port num="2" edge="11" /></output>
+			</node>
+			<node type="outgoing" id="28">
+				<input><port num="1" edge="9" /><port num="2" edge="11" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="true" width="wide" id="9">
+				<from> <node id="26" port="1" /></from>
+				<to> <node id="28" port="1" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="11">
+				<from> <node id="26" port="2" /></from>
+				<to> <node id="28" port="2" /></to>
+			</edge>
+		</graph>
+		
+		<graph name="top">
+			<node type="incoming" id="14">
+				<input></input>
+				<output><port num="1" edge="13" /><port num="2" edge="15" /></output>
+			</node>
+			<node type="subnetwork" name="isEmpty" id="16">
+				<input><port num="1" edge="13" /><port num="2" edge="15" /></input>
+				<output><port num="1" edge="17" /><port num="2" edge="19" /></output>
+			</node>
+			<node type="split" id="18">
+				<input><port num="1" edge="19" /></input>
+				<output><port num="1" edge="21" /><port num="2" edge="23" /></output>
+			</node>
+			<node type="startBlackBall" id="20">
+				<input></input>
+				<output><port num="1" edge="25" /></output>
+			</node>
+			<node type="merge" id="22">
+				<input><port num="1" edge="23" /><port num="2" edge="25" /></input>
+				<output><port num="1" edge="27" /></output>
+			</node>
+			<node type="outgoing" id="24">
+				<input><port num="1" edge="17" /><port num="2" edge="21" /><port num="3" edge="27" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="13">
+				<from> <node id="14" port="1" /></from>
+				<to> <node id="16" port="1" /></to>
+			</edge>
+			<edge var="theVector" pinch="true" width="wide" id="17">
+				<from> <node id="16" port="1" /></from>
+				<to> <node id="24" port="1" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="15">
+				<from> <node id="14" port="2" /></from>
+				<to> <node id="16" port="2" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="19">
+				<from> <node id="16" port="2" /></from>
+				<to> <node id="18" port="1" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="21">
+				<from> <node id="18" port="1" /></from>
+				<to> <node id="24" port="2" /></to>
+			</edge>
+			<edge var="top.return" pinch="false" width="wide" id="23">
+				<from> <node id="18" port="2" /> </from>
+				<to> <node id="22" port="1" /> </to>
+			</edge>
+			<edge var="top.return" pinch="false" width="wide" id="25">
+				<from> <node id="20" port="1" /></from>
+				<to> <node id="22" port="2" /></to>
+			</edge>
+			<edge var="top.return" pinch="false" width="wide" id="27">
+				<from> <node id="22" port="1" /> </from>
+				<to> <node id="24" port="3" /> </to>
+			</edge>
+		</graph>
+		
+		<graph name="makeEmpty">
+			<node type="incoming" id="28">
+				<input></input>
+				<output><port num="1" edge="29" /><port num="2" edge="31" /></output>
+			</node>
+			<node type="reStartWhiteBall" id="30">
+				<input><port num="1" edge="29" /></input>
+				<output><port num="1" edge="33" /></output>
+			</node>
+			<node type="reStartNoBall" id="32">
+				<input><port num="1" edge="31" /></input>
+				<output><port num="1" edge="35" /></output>
+			</node>
+			<node type="outgoing" id="34">
+				<input><port num="1" edge="33" /><port num="2" edge="35" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="29">
+				<from> <node id="28" port="1" /> </from>
+				<to> <node id="30" port="1" /> </to>
+			</edge>
+			<edge var="theVector" pinch="false" width="wide" id="33">
+				<from> <node id="30" port="1" /> </from>
+				<to> <node id="34" port="1" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="31">
+				<from> <node id="28" port="2" /></from>
+				<to> <node id="30" port="2" /></to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="35">
+				<from> <node id="30" port="2" /> </from>
+				<to> <node id="34" port="2" /> </to>
+			</edge>
+		</graph>
+		
+		<graph name="pop">
+			<node type="incoming" id="36">
+				<input></input>
+				<output><port num="1" edge="37" /><port num="2" edge="39" /></output>
+			</node>
+			<node type="subnetwork" name="isEmpty" id="38">
+				<input><port num="1" edge="37" /><port num="2" edge="39" /></input>
+				<output><port num="1" edge="41" /><port num="2" edge="43" /></output>
+			</node>
+			<node type="outgoing" id="40">
+				<input><port num="1" edge="41" /><port num="2" edge="43" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="37">
+				<from> <node id="36" port="1" /></from>
+				<to> <node id="38" port="1" /></to>
+			</edge>
+			<edge var="theVector" pinch="true" width="wide" id="41">
+				<from> <node id="38" port="1" /> </from>
+				<to> <node id="40" port="1" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="39">
+				<from> <node id="36" port="2" /> </from>
+				<to> <node id="38" port="2" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="43">
+				<from> <node id="38" port="2" /> </from>
+				<to> <node id="40" port="2" /> </to>
+			</edge>
+		</graph>
+		
+		<graph name="topAndPop">
+			<node type="incoming" id="50">
+				<input></input>
+				<output><port num="1" edge="57" /><port num="2" edge="59" /></output>
+			</node>
+			<node type="subnetwork" name="isEmpty" id="52">
+				<input><port num="1" edge="57" /><port num="2" edge="59" /></input>
+				<output><port num="1" edge="61" /><port num="2" edge="63" /></output>
+			</node>
+			<node type="subnetwork" name="top" id="54">
+				<input><port num="1" edge="61" /><port num="2" edge="63" /></input>
+				<output><port num="1" edge="65" /><port num="2" edge="67" /><port num="3" edge="69" /></output>
+			</node>
+			<node type="startBlackBall" id="56">
+				<input></input>
+				<output><port num="1" edge="71" /></output>
+			</node>
+			<node type="merge" id="58">
+				<input><port num="1" edge="69" /><port num="2" edge="71" /> </input>
+				<output><port num="1" edge="73" /></output>
+			</node>
+			<node type="outgoing" id="60">
+				<input><port num="1" edge="65" /><port num="2" edge="67" /><port num="3" edge="73" /></input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="57">
+				<from> <node id="50" port="1" /></from>
+				<to> <node id="52" port="1" /></to>
+			</edge>
+			<edge var="theVector" pinch="false" width="wide" id="61">
+				<from> <node id="52" port="1" /> </from>
+				<to> <node id="54" port="1" /> </to>
+			</edge>
+			<edge var="theVector" pinch="true" width="wide" id="65">
+				<from> <node id="54" port="1" /> </from>
+				<to> <node id="60" port="1" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="59">
+				<from> <node id="50" port="2" /> </from>
+				<to> <node id="52" port="2" /></to>
+			</edge>	
+			<edge var="theVector.elts" pinch="false" width="narrow" id="63">
+				<from> <node id="52" port="2" /> </from>
+				<to> <node id="54" port="2" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="67">
+				<from> <node id="54" port="2" /> </from>
+				<to> <node id="60" port="2" /> </to>
+			</edge>
+			<edge var="topAndPop.return" pinch="false" width="wide" id="69">
+				<from> <node id="54" port="3" /> </from>
+				<to> <node id="58" port="1" /> </to>
+			</edge>
+			<edge var="topAndPop.return" pinch="false" width="wide" id="71">
+				<from> <node id="56" port="1" /> </from>
+				<to> <node id="58" port="2" /> </to>
+			</edge>
+			<edge var="topAndPop.return" pinch="false" width="wide" id="73">
+				<from> <node id="58" port="1" /> </from>
+				<to> <node id="60" port="3" /></to>
+			</edge>	
+		</graph>
+		
+		<graph name="push">
+			<node type="incoming" id="42">
+				<input></input>
+				<output><port num="1" edge="45" /><port num="2" edge="47" /><port num="3" edge="49" /></output>
+			</node>
+			<node type="subNetwork" name="isFull" id="44">
+				<input><port num="1" edge="45" /><port num="2" edge="47" /></input>
+				<output><port num="1" edge="51" /><port num="2" edge="53" /></output>
+			</node>
+			<node type="merge" id="46">
+				<input><port num="1" edge="53" /><port num="2" edge="49" /></input>
+				<output><port num="1" edge="55" /></output>
+			</node>
+			<node type="outoing" id="48">
+				<input>51,55</input>
+				<output></output>
+			</node>
+			<edge var="theVector" pinch="false" width="wide" id="45">
+				<from> <node id="42" port="1" /> </from>
+				<to> <node id="44" port="1" /> </to>
+			</edge>
+			<edge var="theVector" pinch="true" width="wide" id="51">
+				<from> <node id="44" port="1" />  </from>
+				<to> <node id="48" port="1" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="47">
+				<from> <node id="42" port="2" /> </from>
+				<to> <node id="44" port="2" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="53">
+				<from> <node id="44" port="2" /> </from>
+				<to> <node id="46" port="1" /> </to>
+			</edge>
+			<edge var="theVector.elts" pinch="false" width="narrow" id="55">
+				<from> <node id="46" port="1" /> </from>
+				<to> <node id="48" port="2" /> </to>
+			</edge>
+			<edge var="push.param1" pinch="false" width="wide" id="49">
+				<from> <node id="42" port="3" /> </from>
+				<to> <node id="46" port="2" /> </to>
+			</edge>
+		</graph>
+	</graphs-map>
+</level>

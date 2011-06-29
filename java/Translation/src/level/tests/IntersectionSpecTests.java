@@ -111,7 +111,7 @@ public class IntersectionSpecTests
    }
    
    /**
-    * Tests that getOutputChute returns the correect chute or null 
+    * Tests that getOutputChute returns the correct chute or null
     */
    @Test public void getOutputChuteTest() throws IllegalAccessException, InvocationTargetException
    {
