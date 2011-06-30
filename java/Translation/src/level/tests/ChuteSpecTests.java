@@ -1,7 +1,11 @@
 package level.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,8 @@ public class ChuteSpecTests
    // TODO replace Name with whatever we end up using, and make that field
    // not-null in some of the Chutes
    
+   public Method[] chuteMethods;
+   
    public Intersection incoming;
    public Intersection outgoing;
    
@@ -58,6 +64,8 @@ public class ChuteSpecTests
       allChutes.add(unnamedPinchedUneditable);
       allChutes.add(unnamedUnpinchedEditable);
       allChutes.add(unnamedUnpinchedUneditable);
+      
+      chuteMethods = Chute.class.getDeclaredMethods();
       
       incoming = new Intersection(Kind.INCOMING);
       outgoing = new Intersection(Kind.OUTGOING);
@@ -91,9 +99,43 @@ public class ChuteSpecTests
     */
    
    // Tests that the Chute behaves properly with its start and end intersections
-   @Test public void testIntersections()
+   @Test public void testIntersections() throws InvocationTargetException,
+         IllegalAccessException
    {
+      Chute chute = new Chute(null, false, true, null);
       
+      assertNull(chute.getStart());
+      assertNull(chute.getEnd());
+      
+      // chute.setStart(incoming, 4);
+      for (Method m : chuteMethods)
+      {
+         if (m.getName().equals("setStart"))
+         {
+            m.setAccessible(true);
+            Object[] args = { incoming, 4 };
+            m.invoke(chute, args);
+         }
+      }
+      
+      assertEquals(chute.getStart(), incoming);
+      assertEquals(chute.getStartPort(), 4);
+      
+      assertNull(chute.getEnd());
+      
+      // chute.setEnd(outgoing, 7);
+      for (Method m : chuteMethods)
+      {
+         if (m.getName().equals("setEnd"))
+         {
+            m.setAccessible(true);
+            Object[] args = { outgoing, 7 };
+            m.invoke(chute, args);
+         }
+      }
+      
+      assertEquals(chute.getEnd(), outgoing);
+      assertEquals(chute.getEndPort(), 7);
    }
    
 }

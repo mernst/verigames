@@ -166,6 +166,7 @@ public class Chute
       return end;
    }
    
+   // TODO define behavior of get___Port if no Intersection is there
    /**
     * @return endPort
     */
