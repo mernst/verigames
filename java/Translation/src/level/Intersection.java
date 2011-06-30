@@ -1,6 +1,7 @@
 package level;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import checkers.nullness.quals.Nullable;
 
@@ -64,12 +65,9 @@ public class Intersection
    
    private final Kind intersectionKind;
    
-   // The annotated JDK does not allow null elements in most Collections, but
-   // for some reason, ArrayLists are an exception. However, we can't use the
-   // List interface, because that will not support NonNull elements
-   private ArrayList</* @Nullable */Chute> inputChutes;
+   private List</* @Nullable */Chute> inputChutes;
    
-   private ArrayList</* @Nullable */Chute> outputChutes;
+   private List</* @Nullable */Chute> outputChutes;
    
    private final int UID;
    
