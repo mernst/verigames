@@ -49,7 +49,8 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return the Chute associated with the null branch of the test. That is, after this node, only null balls will roll down this chute.
+    * @return the Chute associated with the null branch of the test. That is,
+    * after this node, only null balls will roll down this chute.
     */
    public Chute getNullChute()
    {
@@ -57,7 +58,8 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return the Chute associated with the not-null branch of the test. That is, after this node, only non-null balls will roll down this chute.
+    * @return the Chute associated with the not-null branch of the test. That
+    * is, after this node, only non-null balls will roll down this chute.
     */
    public Chute getNonNullChute()
    {
