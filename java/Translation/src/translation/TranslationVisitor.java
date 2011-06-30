@@ -15,6 +15,10 @@ import com.sun.source.tree.*;
  * 
  */
 
+// SimpleTreeVisitor ought to be annotated as:
+// public class SimpleTreeVisitor <R extends /*@Nullable*/ Object,P> implements TreeVisitor<R,P> {
+// but since it is not, suppress the warning due to this extends clause.
+@SuppressWarnings("nullness")
 public class TranslationVisitor extends
       SimpleTreeVisitor</* @Nullable */Void, BoardBuilder>
 {
