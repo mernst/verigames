@@ -65,9 +65,10 @@ public class Intersection
    
    private final Kind intersectionKind;
    
-   private List</* @Nullable */Chute> inputChutes;
+   // TODO remove warning suppression after JDK is properly annotated
+   @SuppressWarnings("nullness") private List</* @Nullable */Chute> inputChutes;
    
-   private List</* @Nullable */Chute> outputChutes;
+   @SuppressWarnings("nullness") private List</* @Nullable */Chute> outputChutes;
    
    private final int UID;
    
@@ -179,8 +180,10 @@ public class Intersection
     * Notes: used to make sure that the given list can accommodate a call to add
     * with indices up to minSize
     */
-   private <E> void nullRemainingElts(ArrayList</* @Nullable */E> list,
-         int minSize)
+   // List is annotated to require non-null elements
+   // TODO change after this is corrected
+   @SuppressWarnings("nullness") private <E> void nullRemainingElts(
+         List</* @Nullable */E> list, int minSize)
    {
       while (list.size() < minSize)
          list.add(null);
