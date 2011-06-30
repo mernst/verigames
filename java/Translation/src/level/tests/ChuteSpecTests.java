@@ -3,6 +3,7 @@ package level.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -89,12 +90,6 @@ public class ChuteSpecTests
    /*
     * TODO write the following tests:
     * 
-    * Tests to do:
-    * 
-    * - Test Intersection accessors (high port numbers, too)
-    * 
-    * - Double check other accessors
-    * 
     * - Test auxiliary chutes
     */
    
@@ -136,6 +131,34 @@ public class ChuteSpecTests
       
       assertEquals(chute.getEnd(), outgoing);
       assertEquals(chute.getEndPort(), 7);
+   }
+   
+   /**
+    * Tests that the isPinched getter is working properly
+    */
+   @Test public void testIsPinched()
+   {
+      assertTrue(namedPinchedEditable.isPinched());
+      assertTrue(namedPinchedUneditable.isPinched());
+      assertTrue(unnamedPinchedEditable.isPinched());
+      
+      assertFalse(namedUnpinchedEditable.isPinched());
+      assertFalse(namedUnpinchedUneditable.isPinched());
+      assertFalse(unnamedUnpinchedEditable.isPinched());
+   }
+   
+   /**
+    * Tests that the isEditable getter is working properly
+    */
+   @Test public void testIsEditable()
+   {
+      assertTrue(namedPinchedEditable.isEditable());
+      assertTrue(namedUnpinchedEditable.isEditable());
+      assertTrue(unnamedUnpinchedEditable.isEditable());
+      
+      assertFalse(unnamedUnpinchedUneditable.isEditable());
+      assertFalse(namedPinchedUneditable.isEditable());
+      assertFalse(namedUnpinchedUneditable.isEditable());
    }
    
 }
