@@ -23,12 +23,6 @@ import org.junit.Test;
 
 public class IntersectionSpecTests
 {
-   // TODO write tests:
-   /*
-    * test get__chute with existing chutes, non-existing chutes, and ports
-    * higher than any given so far
-    */
-   
    /**
     * Tests that isSubnetwork returns false
     */

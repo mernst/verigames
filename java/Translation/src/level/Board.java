@@ -86,11 +86,10 @@ public class Board
     * outgoingNode != null <--> there exits an element i in nodes such that
     * i.getIntersectionType() == OUTGOING
     * 
-    * TODO add bit about how the edges and nodes must be connected
-    * 
     * for all n in nodes; e in edges:
     * 
     * - e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
+    * - e.getEnd() == n <--> n.getInputChute(e.getStartPort()) == e
     */
    
    /**

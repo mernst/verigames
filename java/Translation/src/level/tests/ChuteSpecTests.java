@@ -78,8 +78,9 @@ public class ChuteSpecTests
       }
    }
    
-   // TODO write some tests with Intersection, once that's nailed down.
    /*
+    * TODO write the following tests:
+    * 
     * Tests to do:
     * 
     * - Test Intersection accessors (high port numbers, too)

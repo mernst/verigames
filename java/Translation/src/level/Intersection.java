@@ -51,15 +51,15 @@ public class Intersection
       // the top of the exit chute
       START_NO_BALL, // Start a new chute with no ball dropping into it
       END, // Terminate a chute
-      RE_START_WHITE_BALL, // Terminate a chute and restart it with a new white
-                           // ball
-      RE_START_BLACK_BALL, // Terminate a chute and restart it with a new black
-                           // ball
-      RE_START_NO_BALL, // Terminate a chute and restart it without a ball
+      RESTART_WHITE_BALL, // Terminate a chute and restart it with a new white
+                          // ball
+      RESTART_BLACK_BALL, // Terminate a chute and restart it with a new black
+                          // ball
+      RESTART_NO_BALL, // Terminate a chute and restart it without a ball
       SUBNETWORK, // Represents a method call
       CONNECT, // Simply connects one chute to another, without making any
-               // modifications.Can be optimized away after, but I think it will
-               // be convenient to have during construction.
+               // modifications. Can be optimized away after, but I think it
+               // will be convenient to have during construction.
    };
    
    private final Kind intersectionKind;
