@@ -151,10 +151,13 @@ public class Chute
    }
    
    /**
+    * @require this chute has a "start" intersection
     * @return startPort
     */
    public int getStartPort()
    {
+      if (start==null)
+         throw new IllegalStateException();
       return startPort;
    }
    
@@ -166,12 +169,14 @@ public class Chute
       return end;
    }
    
-   // TODO define behavior of get___Port if no Intersection is there
    /**
+    * @require this chute has an "end" intersection
     * @return endPort
     */
    public int getEndPort()
    {
+      if (end==null)
+         throw new IllegalStateException();
       return endPort;
    }
    
