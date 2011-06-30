@@ -156,7 +156,7 @@ public class Chute
     */
    public int getStartPort()
    {
-      if (start==null)
+      if (start == null)
          throw new IllegalStateException();
       return startPort;
    }
@@ -175,7 +175,7 @@ public class Chute
     */
    public int getEndPort()
    {
-      if (end==null)
+      if (end == null)
          throw new IllegalStateException();
       return endPort;
    }
