@@ -95,6 +95,7 @@ public class Level
    
    /**
     * TODO add clause about how the board must be well-formed and complete.
+    * 
     * @requires b is not in boardSet, name is not in nameMap.keySet()
     * @modifies this
     * @effects adds b to boardSet, and adds the mapping from name to b to
@@ -166,6 +167,7 @@ public class Level
     * @effects prints the board map section of the xml to out, indented by one
     * space
     */
+   // TODO add "editable" attribute to edges (involves editing DTD)
    private void outputBoardsMap(PrintStream out)
    {
       out.println(" <boards-map>");
@@ -178,6 +180,41 @@ public class Level
          {
             out.println("   <node kind=\"" + node.getIntersectionKind()
                   + "\" id=\"" + node.getUID() + "\">");
+            out.println("    <input>");
+            
+            Chute input = node.getInputChute(0);
+            for (int i = 0; input != null; input = node.getInputChute(++i))
+               out.println("     <port num=\"" + i + "\" edge=\""
+                     + input.getUID() + "\"/>");
+            
+            out.println("    </input>");
+            out.println("    <output>");
+            
+            Chute output = node.getInputChute(0);
+            for (int i = 0; output != null; output = node.getOutputChute(++i))
+               out.println("     <port num=\"" + i + "\" edge=\""
+                     + output.getUID() + "\"/>");
+            
+            out.println("    </output>");
+            out.println("   </node>");
+         }
+         
+         for (Chute edge : board.getEdges())
+         {
+            out.println("   <edge var=\"" + edge.getName() + "\" pinch=\""
+                  + edge.isPinched() + "\" width=\""
+                  + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\""
+                  + edge.getUID() + "\">");
+            
+            out.println("    <from>");
+            out.println("     <noderef id=\"" + edge.getStart().getUID());
+            out.println("    </from>");
+            out.println("    <to>");
+            
+            out.println("    </to>");
+            
+            out.println("   </edge>");
+            
          }
          
          out.println("  </board>");

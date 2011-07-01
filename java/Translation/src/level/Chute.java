@@ -3,6 +3,7 @@ package level;
 import java.util.ArrayList;
 import java.util.List;
 
+import checkers.nullness.quals.AssertNonNullAfter;
 import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
@@ -192,7 +193,8 @@ public class Chute
     * @effects sets "start" to the given Intersection, replacing the old one, if
     * present
     */
-   protected void setStart(Intersection start, int port)
+   @AssertNonNullAfter({ "start" }) protected void setStart(Intersection start,
+         int port)
    {
       if (start == null)
          throw new IllegalArgumentException(
@@ -208,7 +210,8 @@ public class Chute
     * @effects sets "end" to the given Intersection, replacing the old one, if
     * present
     */
-   protected void setEnd(Intersection end, int port)
+   @AssertNonNullAfter({ "end" }) protected void setEnd(Intersection end,
+         int port)
    {
       if (end == null)
          throw new IllegalArgumentException(
