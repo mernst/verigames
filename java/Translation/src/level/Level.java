@@ -19,7 +19,6 @@ import java.util.Set;
  * @specfield: nameMap: Map<String, Board> // maps the name of a method to its
  * board
  * 
- * 
  */
 
 /*
@@ -47,7 +46,6 @@ import java.util.Set;
 
 public class Level
 {
-   
    private Set<Set<Chute>> linkedEdges;
    
    // TODO change String, if necessary, to whatever we end up using
@@ -96,6 +94,7 @@ public class Level
    }
    
    /**
+    * TODO add clause about how the board must be well-formed and complete.
     * @requires b is not in boardSet, name is not in nameMap.keySet()
     * @modifies this
     * @effects adds b to boardSet, and adds the mapping from name to b to
@@ -137,7 +136,7 @@ public class Level
    {
       out.println("<level>");
       outputLinkedEdges(out);
-      //outputBoardMap(out);
+      outputBoardsMap(out);
       out.println("<level/>");
       throw new RuntimeException("Not yet implemented");
    }
@@ -160,5 +159,29 @@ public class Level
          out.println(" </set>");
       }
       out.println(" </linked-edges>");
+   }
+   
+   /**
+    * @modifies out
+    * @effects prints the board map section of the xml to out, indented by one
+    * space
+    */
+   private void outputBoardsMap(PrintStream out)
+   {
+      out.println(" <boards-map>");
+      for (String name : nameMap.keySet())
+      {
+         Board board = nameMap.get(name);
+         out.println("  <board name=\"" + name + "\">");
+         
+         for (Intersection node : board.getNodes())
+         {
+            out.println("   <node kind=\"" + node.getIntersectionKind()
+                  + "\" id=\"" + node.getUID() + "\">");
+         }
+         
+         out.println("  </board>");
+      }
+      out.println(" </boards-map>");
    }
 }
