@@ -87,6 +87,8 @@ public class Chute
       this.pinch = pinch;
       this.editable = editable;
       
+      narrow = false;
+      
       auxiliaryChutes = aux == null ? new ArrayList<Chute>()
             : new ArrayList<Chute>(aux);
       

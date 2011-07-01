@@ -32,13 +32,13 @@ public class NullTestImpTests
    }
    
    /**
-    * Tests that when an uneditable chute is passed into the setNullChute
+    * Tests that when an editable chute is passed into the setNullChute
     * setter, it throws an IllegalArgumentException.
     */
-   @Test public void testUneditableNull() throws IllegalAccessException,
-         InvocationTargetException
+   @Test public void testUneditableNull()
    {
       Chute uneditable = new Chute(null, false, true, null);
+      uneditable.setNarrow(false);
       
       boolean exceptionThrown = false;
       
@@ -57,12 +57,35 @@ public class NullTestImpTests
    }
    
    /**
-    * 
+    * Tests that when an editable chute is passed into the setNonNullChute
+    * setter, it throws an IllegalArgumentException
     */
+   @Test public void testUneditableNonNull()
+   {
+      Chute uneditable = new Chute(null, false, true, null);
+      uneditable.setNarrow(true);
+      
+      boolean exceptionThrown = false;
+      
+      // n.setNonNullChute(uneditable)
+      Object[] args = { uneditable };
+      try
+      {
+         runMethod(n, "setNonNullChute", args);
+      } catch (Throwable e)
+      {
+         if (e instanceof IllegalArgumentException)
+            exceptionThrown = true;
+      }
+      assertTrue("IllegalArgumentException not thrown when expected",
+            exceptionThrown);
+   }
    
    /**
     * runs the given method on the given receiver with the given arguments
-    * (subverting access control)
+    * 
+    * I know this is not awesome style, but subverting access control is
+    * necessarily a little bit hackish, and it's just a test
     */
    private static void runMethod(NullTest receiver, String methodName,
          Object[] args) throws Throwable
@@ -84,6 +107,6 @@ public class NullTestImpTests
          }
       }
       if (!methodRun)
-         throw new RuntimeException("Given method not run");
+         throw new RuntimeException("Given method not found");
    }
 }
