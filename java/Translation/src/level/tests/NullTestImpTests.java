@@ -32,8 +32,8 @@ public class NullTestImpTests
    }
    
    /**
-    * Tests that when an editable chute is passed into the setNullChute
-    * setter, it throws an IllegalArgumentException.
+    * Tests that when an editable chute is passed into the setNullChute setter,
+    * it throws an IllegalArgumentException.
     */
    @Test public void testUneditableNull()
    {
@@ -82,7 +82,32 @@ public class NullTestImpTests
    }
    
    /**
-    * runs the given method on the given receiver with the given arguments
+    * Tests that when a narrow chute is passed into the setNullChute setter, it
+    * throws an IllegalArgumentException
+    */
+   @Test public void testNarrowNull()
+   {
+      Chute narrow = new Chute(null, false, false, null);
+      narrow.setNarrow(true);
+      
+      boolean exceptionThrown = false;
+      
+      // n.setNonNullChute(narrow)
+      Object[] args = { narrow };
+      try
+      {
+         runMethod(n, "setNullChute", args);
+      } catch (Throwable e)
+      {
+         if (e instanceof IllegalArgumentException)
+            exceptionThrown = true;
+      }
+      assertTrue("IllegalArgumentException not thrown when expected",
+            exceptionThrown);
+   }
+    
+    
+    /** runs the given method on the given receiver with the given arguments
     * 
     * I know this is not awesome style, but subverting access control is
     * necessarily a little bit hackish, and it's just a test
