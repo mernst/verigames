@@ -110,6 +110,9 @@ public class Intersection
     * SUBNETWORK(any, any)
     * 
     * CONNECT(1, 1)
+    * 
+    * This means that the size of inputChutes and outputChutes, respectively,
+    * can be no greater than the given number of ports
     */
    
    /**
