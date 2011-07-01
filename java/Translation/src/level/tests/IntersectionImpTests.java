@@ -29,7 +29,7 @@ public class IntersectionImpTests
    {
       new Intersection(Kind.NULL_TEST);
    }
-
+   
    /**
     * Tests that asSubnetwork fails on Intersection instances
     */

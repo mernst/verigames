@@ -57,11 +57,28 @@ public class NullTest extends Intersection
       throw new RuntimeException("Not yet implemented");
    }
    
+   
+   //TODO finish writing these specs
+   /**
+    * @requires chute is not editable
+    * @modifies this
+    * @effects sets the given chute to be
+    */
+   protected void setNullChute(Chute chute)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
    /**
     * @return the Chute associated with the not-null branch of the test. That
     * is, after this node, only non-null balls will roll down this chute.
     */
    public Chute getNonNullChute()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   public void setNonNullChute(Chute chute)
    {
       throw new RuntimeException("Not yet implemented");
    }
