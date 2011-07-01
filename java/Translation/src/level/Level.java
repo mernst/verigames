@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.lang.model.element.Name;
-
 /**
  * @author: Nathaniel Mote
  * 
@@ -18,7 +16,7 @@ import javax.lang.model.element.Name;
  * @specfield: boardSet: Set<Board> // represents the set of all boards in this
  * level
  * 
- * @specfield: nameMap: Map<Name, Board> // maps the name of a method to its
+ * @specfield: nameMap: Map<String, Board> // maps the name of a method to its
  * board
  * 
  * 
@@ -52,7 +50,8 @@ public class Level
    
    private Set<Set<Chute>> linkedEdges;
    
-   private Map<Name, Board> nameMap;
+   // TODO change String, if necessary, to whatever we end up using
+   private Map<String, Board> nameMap;
    
    /**
     * @effects creates a new Level object with an empty linkedEdgeMap, boardSet,
@@ -61,7 +60,7 @@ public class Level
    public Level()
    {
       linkedEdges = new HashSet<Set<Chute>>();
-      nameMap = new HashMap<Name, Board>();
+      nameMap = new HashMap<String, Board>();
    }
    
    /**
@@ -102,7 +101,7 @@ public class Level
     * @effects adds b to boardSet, and adds the mapping from name to b to
     * nameMap
     */
-   public void addBoard(Name name, Board b)
+   public void addBoard(String name, Board b)
    {
       nameMap.put(name, b);
    }
@@ -119,7 +118,7 @@ public class Level
     * @return the Board that name maps to in nameMap, or null if it maps to
     * nothing
     */
-   public/* @Nullable */Board getBoard(Name name)
+   public/* @Nullable */Board getBoard(String name)
    {
       return nameMap.get(name);
    }
@@ -138,6 +137,7 @@ public class Level
    {
       out.println("<level>");
       outputLinkedEdges(out);
+      //outputBoardMap(out);
       out.println("<level/>");
       throw new RuntimeException("Not yet implemented");
    }

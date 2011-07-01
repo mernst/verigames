@@ -3,8 +3,6 @@ package level;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.element.Name;
-
 import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
@@ -16,7 +14,7 @@ import checkers.nullness.quals.Nullable;
  * Implements eternal equality because it is mutable, but must be used in
  * Collections
  * 
- * @specfield name : Name // The name of the variable corresponding to this
+ * @specfield name : String // The name of the variable corresponding to this
  * chute. Can be null if this chute does not correspond directly to a variable,
  * but all chutes connected to an incoming or outgoing node, except for the
  * return value, must either have a name or be an auxiliary chute. This is
@@ -58,7 +56,8 @@ import checkers.nullness.quals.Nullable;
 
 public class Chute
 {
-   private final @Nullable Name name;
+   // TODO change String to whatever we end up using
+   private final @Nullable String name;
    
    private List<Chute> auxiliaryChutes;
    
@@ -80,7 +79,7 @@ public class Chute
     * @effects creates a new Chute object, with the given values for name,
     * pinch, and editable
     */
-   public Chute(@Nullable Name name, boolean pinch, boolean editable,
+   public Chute(@Nullable String name, boolean pinch, boolean editable,
          @Nullable List<Chute> aux)
    {
       this.name = name;
@@ -99,7 +98,7 @@ public class Chute
    /**
     * @returns name, or null if none exists
     */
-   public @Nullable Name getName()
+   public @Nullable String getName()
    {
       return name;
    }

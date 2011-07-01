@@ -1,7 +1,5 @@
 package level;
 
-import javax.lang.model.element.Name;
-
 /**
  * @author Nathaniel Mote
  * 
@@ -9,7 +7,7 @@ import javax.lang.model.element.Name;
  * need more information than regular intersections, they are implemented
  * separately
  * 
- * @specfield subnetwork: Name // The name referring to this subnetwork
+ * @specfield subnetwork: String // The name referring to this subnetwork
  * 
  */
 
@@ -21,7 +19,7 @@ public class Subnetwork extends Intersection
     * specific subnetwork defined by the argument
     * 
     */
-   public Subnetwork(Name methodName)
+   public Subnetwork(String methodName)
    {
       super(Kind.SUBNETWORK);
    }
@@ -52,9 +50,9 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * @return the Name of the method that this subnetwork refers to
+    * @return the name of the method that this subnetwork refers to
     */
-   public Name getSubnetworkName()
+   public String getSubnetworkName()
    {
       throw new RuntimeException("Not yet implemented");
    }
