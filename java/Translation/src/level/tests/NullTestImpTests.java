@@ -13,14 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class NullTestImpTests
-{
-   /*
-    * TODO write the following tests
-    * 
-    * - make sure checkRep() catches a mutation later on (if checkrep is
-    * enabled)
-    */
-   
+{  
    public NullTest n;
    
    public static Method[] nullTestMethods = NullTest.class.getDeclaredMethods();
@@ -42,10 +35,9 @@ public class NullTestImpTests
       boolean exceptionThrown = false;
       
       // n.setNullChute(uneditable)
-      Object[] args = { uneditable };
       try
       {
-         runMethod(n, "setNullChute", args);
+         runMethod(n, "setNullChute", new Object[] {uneditable});
       } catch (Throwable e)
       {
          if (e instanceof IllegalArgumentException)
@@ -67,10 +59,9 @@ public class NullTestImpTests
       boolean exceptionThrown = false;
       
       // n.setNonNullChute(uneditable)
-      Object[] args = { uneditable };
       try
       {
-         runMethod(n, "setNonNullChute", args);
+         runMethod(n, "setNonNullChute", new Object[] {uneditable});
       } catch (Throwable e)
       {
          if (e instanceof IllegalArgumentException)
@@ -92,10 +83,9 @@ public class NullTestImpTests
       boolean exceptionThrown = false;
       
       // n.setNonNullChute(narrow)
-      Object[] args = { narrow };
       try
       {
-         runMethod(n, "setNullChute", args);
+         runMethod(n, "setNullChute", new Object[] {narrow});
       } catch (Throwable e)
       {
          if (e instanceof IllegalArgumentException)
@@ -117,10 +107,9 @@ public class NullTestImpTests
       boolean exceptionThrown = false;
       
       // n.setNonNullChute(wide)
-      Object[] args = { wide };
       try
       {
-         runMethod(n, "setNonNullChute", args);
+         runMethod(n, "setNonNullChute", new Object[] {wide});
       } catch (Throwable e)
       {
          if (e instanceof IllegalArgumentException)
@@ -131,7 +120,7 @@ public class NullTestImpTests
    }
    
    /**
-    * TODO Tests that when a chute is mutated after adding that checkRep()
+    * Tests that when a chute is mutated after adding that checkRep()
     * catches it later
     */
    @Test public void testCheckRep() throws Throwable
@@ -157,8 +146,7 @@ public class NullTestImpTests
          wide.setNarrow(false);
          
          // n.setNullChute(wide)
-         Object[] args1 = { wide };
-         runMethod(n, "setNullChute", args1);
+         runMethod(n, "setNullChute", new Object[] {wide});
          
          wide.setNarrow(true);
          
@@ -169,10 +157,9 @@ public class NullTestImpTests
          // should throw RuntimeException when checkRep catches the mutation to
          // wide
          boolean expectedExceptionThrown = false;
-         Object[] args2 = { narrow };
          try
          {
-            runMethod(n, "setNonNullChute", args2);
+            runMethod(n, "setNonNullChute", new Object[] {narrow});
          } catch (Throwable e)
          {
             // It should throw a RuntimeException, but not an

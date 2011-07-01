@@ -69,12 +69,12 @@ method names that take the method signature into account, because of method-over
       <value id="49"/>
     </set>
   </linked-edge-map>
-  <!-- Each graph needs to be put in a set of graphs, and also a map from name to graph (?)
+  <!-- Each board needs to be put in a set of boards, and also a map from name to board (?)
 	so that the subnetwork nodes can be efficiently clicked on. I can't think of a way to write
 	out the map and set explicitly. Maybe just write the map, and Tim can take the value set
-	at the end? Keys are the graph names.-->
-  <graphs-map>
-    <graph name="constructor">
+	at the end? Keys are the board names.-->
+  <boards-map>
+    <board name="constructor">
       <node kind="INCOMING" id="2">
         <input/>
         <output/>
@@ -116,8 +116,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="8" port="1"/>
         </to>
       </edge>
-    </graph>
-    <graph name="isFull">
+    </board>
+    <board name="isFull">
       <node kind="INCOMING" id="10">
         <input/>
         <output>
@@ -148,8 +148,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="12" port="1"/>
         </to>
       </edge>
-    </graph>
-    <graph name="isEmpty">
+    </board>
+    <board name="isEmpty">
       <node kind="INCOMING" id="26">
         <input/>
         <output>
@@ -180,8 +180,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="28" port="1"/>
         </to>
       </edge>
-    </graph>
-    <graph name="top">
+    </board>
+    <board name="top">
       <node kind="INCOMING" id="14">
         <input/>
         <output>
@@ -295,8 +295,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="24" port="2"/>
         </to>
       </edge>
-    </graph>
-    <graph name="makeEmpty">
+    </board>
+    <board name="makeEmpty">
       <node kind="INCOMING" id="28">
         <input/>
         <output>
@@ -359,8 +359,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="34" port="1"/>
         </to>
       </edge>
-    </graph>
-    <graph name="pop">
+    </board>
+    <board name="pop">
       <node kind="INCOMING" id="36">
         <input/>
         <output>
@@ -417,8 +417,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="40" port="1"/>
         </to>
       </edge>
-    </graph>
-    <graph name="topAndPop">
+    </board>
+    <board name="topAndPop">
       <node kind="INCOMING" id="50">
         <input/>
         <output>
@@ -542,8 +542,8 @@ method names that take the method signature into account, because of method-over
           <noderef id="60" port="2"/>
         </to>
       </edge>
-    </graph>
-    <graph name="push">
+    </board>
+    <board name="push">
       <node kind="INCOMING" id="42">
         <input/>
         <output>
@@ -626,6 +626,6 @@ method names that take the method signature into account, because of method-over
           <noderef id="46" port="1"/>
         </to>
       </edge>
-    </graph>
-  </graphs-map>
+    </board>
+  </boards-map>
 </level>
