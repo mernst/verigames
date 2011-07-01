@@ -131,13 +131,14 @@ public class NullTestImpTests
    }
    
    /**
-    * TODO
-    * Tests that when a chute is mutated after adding that checkRep() catches it
-    * later 
+    * TODO Tests that when a chute is mutated after adding that checkRep()
+    * catches it later
     */
-   @Test public void testCheckRep() throws IllegalAccessException
+   @Test public void testCheckRep() throws Throwable
    {
-      boolean checkRepEnabled = false;
+      boolean checkRepEnabled = true;
+      
+      // checkRepEnabled = NullTest.CHECK_REP_ENABLED
       Field[] fields = NullTest.class.getDeclaredFields();
       for (Field f : fields)
       {
@@ -147,8 +148,42 @@ public class NullTestImpTests
             checkRepEnabled = (Boolean) f.get(NullTest.class);
          }
       }
-      System.out.println(checkRepEnabled);
       
+      if (checkRepEnabled)
+      {
+         NullTest n = new NullTest();
+         
+         Chute wide = new Chute(null, false, false, null);
+         wide.setNarrow(false);
+         
+         // n.setNullChute(wide)
+         Object[] args1 = { wide };
+         runMethod(n, "setNullChute", args1);
+         
+         wide.setNarrow(true);
+         
+         Chute narrow = new Chute(null, false, false, null);
+         narrow.setNarrow(true);
+         
+         // n.setNonNullChute(narrow)
+         // should throw RuntimeException when checkRep catches the mutation to
+         // wide
+         boolean expectedExceptionThrown = false;
+         Object[] args2 = { narrow };
+         try
+         {
+            runMethod(n, "setNonNullChute", args2);
+         } catch (Throwable e)
+         {
+            // It should throw a RuntimeException, but not an
+            // IllegalArgumentException. It also shouldn't be from the runMethod
+            // method
+            if (e instanceof RuntimeException
+                  && !(e instanceof IllegalArgumentException))
+               expectedExceptionThrown = true;
+         }
+         assertTrue(expectedExceptionThrown);
+      }
    }
    
    /**
@@ -177,6 +212,6 @@ public class NullTestImpTests
          }
       }
       if (!methodRun)
-         throw new RuntimeException("Given method not found");
+         throw new Exception("Given method not found");
    }
 }
