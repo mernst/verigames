@@ -63,6 +63,8 @@ public class Intersection
                // will be convenient to have during construction.
    };
    
+   private final boolean CHECK_REP_ENABLED = true;
+   
    private final Kind intersectionKind;
    
    // TODO remove warning suppression after JDK is properly annotated
@@ -77,8 +79,110 @@ public class Intersection
    /*
     * Representation Invariant:
     * 
-    * intersectionKind != SUBNETWORK
+    * Requirements for the number of input/output individual Intersection kinds:
+    * 
+    * <KIND>(#input, #output)
+    * 
+    * INCOMING(0, any)
+    * 
+    * OUTGOING(any, 0)
+    * 
+    * SPLIT(1, 2)
+    * 
+    * NULL_TEST(1, 2)
+    * 
+    * MERGE(2, 1)
+    * 
+    * START_WHITE_BALL(0, 1)
+    * 
+    * START_BLACK_BALL(0, 1)
+    * 
+    * START_NO_BALL(0, 1)
+    * 
+    * END(1, 0)
+    * 
+    * RESTART_WHITE_BALL(1, 1)
+    * 
+    * RESTART_BLACK_BALL(1, 1)
+    * 
+    * RESTART_NO_BALL(1, 1)
+    * 
+    * SUBNETWORK(any, any)
+    * 
+    * CONNECT(1, 1)
     */
+   
+   /**
+    * checks that the rep invariant holds
+    */
+   private void checkRep()
+   {
+      if (CHECK_REP_ENABLED)
+      {
+         // check that there are the proper number of chutes. there may still be
+         // fewer chutes than a finished Intersection of this Kind should have,
+         // so take that into account.
+         switch (intersectionKind)
+         {
+            case INCOMING:
+               ensure(inputChutes.size() == 0);
+               break;
+            case OUTGOING:
+               ensure(outputChutes.size() == 0);
+               break;
+            case SPLIT:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 2);
+               break;
+            case NULL_TEST:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 2);
+               break;
+            case MERGE:
+               ensure(inputChutes.size() <= 2 && outputChutes.size() <= 1);
+               break;
+            case START_WHITE_BALL:
+               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
+               break;
+            case START_BLACK_BALL:
+               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
+               break;
+            case START_NO_BALL:
+               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
+               break;
+            case END:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() == 0);
+               break;
+            case RESTART_WHITE_BALL:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
+               break;
+            case RESTART_BLACK_BALL:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
+               break;
+            case RESTART_NO_BALL:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
+               break;
+            case SUBNETWORK:
+               // no restrictions
+               break;
+            case CONNECT:
+               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
+               break;
+            
+            default:
+               throw new RuntimeException(
+                     "Add new Intersection Kind to checkRep()");
+         }
+      }
+   }
+   
+   /**
+    * intended to be a substitute for assert, except I don't want to have to
+    * make sure the -ea flag is turned on in order to get these checks.
+    */
+   private void ensure(boolean value)
+   {
+      if (!value)
+         throw new RuntimeException();
+   }
    
    /**
     * @requires kind != SUBNETWORK
@@ -104,6 +208,7 @@ public class Intersection
       UID = nextUID;
       nextUID += 2;
       
+      checkRep();
    }
    
    /**
@@ -135,7 +240,7 @@ public class Intersection
    {
       nullRemainingElts(inputChutes, port);
       inputChutes.add(port, input);
-      
+      checkRep();
    }
    
    /**
@@ -148,6 +253,7 @@ public class Intersection
    {
       nullRemainingElts(outputChutes, port);
       outputChutes.add(port, output);
+      checkRep();
    }
    
    /**
