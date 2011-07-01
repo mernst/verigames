@@ -63,7 +63,7 @@ public class Intersection
                // will be convenient to have during construction.
    };
    
-   private final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = true;
    
    private final Kind intersectionKind;
    

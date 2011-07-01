@@ -2,6 +2,7 @@ package level.tests;
 
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -15,8 +16,6 @@ public class NullTestImpTests
 {
    /*
     * TODO write the following tests
-    * 
-    * - make sure exception is thrown on bad chute settings
     * 
     * - make sure checkRep() catches a mutation later on (if checkrep is
     * enabled)
@@ -129,6 +128,27 @@ public class NullTestImpTests
       }
       assertTrue("IllegalArgumentException not thrown when expected",
             exceptionThrown);
+   }
+   
+   /**
+    * TODO
+    * Tests that when a chute is mutated after adding that checkRep() catches it
+    * later 
+    */
+   @Test public void testCheckRep() throws IllegalAccessException
+   {
+      boolean checkRepEnabled = false;
+      Field[] fields = NullTest.class.getDeclaredFields();
+      for (Field f : fields)
+      {
+         if (f.getName().equals("CHECK_REP_ENABLED"))
+         {
+            f.setAccessible(true);
+            checkRepEnabled = (Boolean) f.get(NullTest.class);
+         }
+      }
+      System.out.println(checkRepEnabled);
+      
    }
    
    /**

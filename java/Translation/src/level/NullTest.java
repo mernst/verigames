@@ -34,7 +34,7 @@ public class NullTest extends Intersection
     * wide
     */
    
-   private final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = true;
    
    /**
     * Checks that the representation invariant holds
