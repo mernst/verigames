@@ -105,9 +105,34 @@ public class NullTestImpTests
       assertTrue("IllegalArgumentException not thrown when expected",
             exceptionThrown);
    }
-    
-    
-    /** runs the given method on the given receiver with the given arguments
+   
+   /**
+    * Tests that when a wide chute is passed into the setNonNullChute setter, it
+    * throws an IllegalArgumentException
+    */
+   @Test public void testWideNonNull()
+   {
+      Chute wide = new Chute(null, false, false, null);
+      wide.setNarrow(false);
+      
+      boolean exceptionThrown = false;
+      
+      // n.setNonNullChute(wide)
+      Object[] args = { wide };
+      try
+      {
+         runMethod(n, "setNonNullChute", args);
+      } catch (Throwable e)
+      {
+         if (e instanceof IllegalArgumentException)
+            exceptionThrown = true;
+      }
+      assertTrue("IllegalArgumentException not thrown when expected",
+            exceptionThrown);
+   }
+   
+   /**
+    * runs the given method on the given receiver with the given arguments
     * 
     * I know this is not awesome style, but subverting access control is
     * necessarily a little bit hackish, and it's just a test
