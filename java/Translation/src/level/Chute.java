@@ -49,6 +49,11 @@ import checkers.nullness.quals.Nullable;
  * 
  * Except in corner cases, pinch --> narrow. This is not, however, enforced.
  * 
+ * I toyed with the idea of requiring that editable is true to change things
+ * like narrow or pinch, but editable really determines whether it can be
+ * changed by the player in the game, and not whether this object is mutable or
+ * not.
+ * 
  */
 
 public class Chute

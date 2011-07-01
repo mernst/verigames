@@ -8,6 +8,17 @@ import checkers.nullness.quals.Nullable;
  * An Intersection subclass that only represents NULL_TEST kinds of
  * Intersection.
  * 
+ * The output chute in port 0 is the chute that represents the "not null" branch
+ * of this test
+ * 
+ * The output chute in port 1 is the chute that represents the "null" branch of
+ * this test
+ * 
+ * Note that the requirements on the chutes imposed by the setNullChute and
+ * setNonNullChute methods can be circumvented by using the super-class
+ * accessors. This is not recommended, and, when checkRep is enabled for
+ * debugging, could lead to a failure.
+ * 
  */
 
 public class NullTest extends Intersection
