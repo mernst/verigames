@@ -57,8 +57,7 @@ public class NullTest extends Intersection
       throw new RuntimeException("Not yet implemented");
    }
    
-   
-   //TODO finish writing these specs
+   // TODO finish writing these specs
    /**
     * @requires chute is not editable
     * @modifies this
