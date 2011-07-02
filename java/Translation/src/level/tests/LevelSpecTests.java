@@ -1,5 +1,11 @@
 package level.tests;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import level.Board;
 import level.Chute;
 import level.Intersection;
@@ -22,7 +28,6 @@ public class LevelSpecTests
    public Board b;
    
    public Level l;
-   
    
    @Before public void init()
    {
@@ -52,6 +57,30 @@ public class LevelSpecTests
    
    @Test public void testLinkedEdges1()
    {
+      Set<Chute> set1 = new HashSet<Chute>();
+      for (int i = 0; i < 5; i++)
+         set1.add(chutes[i]);
+      
+      Set<Chute> set2 = new HashSet<Chute>();
+      for (int i = 5; i < chutes.length; i++)
+         set2.add(chutes[i]);
+      
+      l.makeLinked(set1);
+      l.makeLinked(set2);
+      
+      assertTrue(l.areLinked(set1));
+      assertTrue(l.areLinked(set2));
+      
+      Set<Chute> set3 = new HashSet<Chute>();
+      for (Chute c : chutes)
+         set3.add(c);
+      assertFalse(l.areLinked(set3));
+      
+      Set<Chute> set4 = new HashSet<Chute>();
+      set4.add(chutes[1]);
+      set4.add(chutes[8]);
+      assertFalse(l.areLinked(set4));
+      // TODO finish tests
       
    }
 }
