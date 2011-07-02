@@ -167,7 +167,7 @@ public class Level
       out.println("<level>");
       outputLinkedEdges(out);
       outputBoardsMap(out);
-      out.println("<level/>");
+      out.println("</level>");
    }
    
    /**
