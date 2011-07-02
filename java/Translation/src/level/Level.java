@@ -73,6 +73,7 @@ public class Level
    }
    
    /**
+    * @requires every Chute in toLink must be contained in a Board in nameMap
     * @modifies this
     * @effects makes it so that the given chutes are equivalent under the
     * relation R defined above. In other words, for all a, b in chutes (the
@@ -108,6 +109,8 @@ public class Level
       for (Set<Chute> s : containsToLink)
          newEquivClass.addAll(s);
       
+      newEquivClass.addAll(toLink);
+      
       linkedEdges.removeAll(containsToLink);
       
       linkedEdges.add(newEquivClass);
@@ -118,7 +121,12 @@ public class Level
     */
    public boolean areLinked(Set<Chute> chutes)
    {
-      throw new RuntimeException("Not yet implemented");
+      for (Set<Chute> s : linkedEdges)
+      {
+         if (s.containsAll(chutes))
+            return true;
+      }
+      return false;
    }
    
    /**
