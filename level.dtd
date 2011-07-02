@@ -1,5 +1,5 @@
-<!ELEMENT level (linked-edge-map,boards-map)>
- <!ELEMENT linked-edge-map (set*)>
+<!ELEMENT level (linked-edges,boards-map)>
+ <!ELEMENT linked-edges (set*)>
   <!ELEMENT set (value*)>
    <!ELEMENT value EMPTY>
     <!ATTLIST value id CDATA #REQUIRED>

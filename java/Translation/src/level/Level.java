@@ -51,6 +51,17 @@ public class Level
    // TODO change String, if necessary, to whatever we end up using
    private Map<String, Board> nameMap;
    
+   /*
+    * Representation Invariant:
+    * 
+    * No chute can be contained in more than one set in linkedEdges
+    * 
+    * No set in linkedEdges may be empty
+    * 
+    * All chutes contained in sets contained in linkedEdges must also be
+    * contained contained by some Board in nameMap.values()
+    */
+   
    /**
     * @effects creates a new Level object with an empty linkedEdgeMap, boardSet,
     * and nameMap
@@ -66,11 +77,13 @@ public class Level
     * @effects makes it so that the given chutes are equivalent under the
     * relation R defined above. In other words, for all a, b in chutes (the
     * argument to this method), aRb
+    * 
+    * runs in O(m*n) time, where m is linkedEdges.size() and n is toLink.size()
     */
    public void makeLinked(Set<Chute> toLink)
    {
-      // This set contains all of the sets in linkedEdges that contain elements
-      // in toLink
+      // This set is to contain all of the sets in linkedEdges that contain
+      // elements in toLink
       Set<Set<Chute>> containsToLink = new HashSet<Set<Chute>>();
       
       for (Set<Chute> set : linkedEdges)
@@ -84,12 +97,27 @@ public class Level
          }
       }
       
-      // All of the sets in containsToLink and toLink should be combined into
-      // one, and the other chutes should be removed from linkedEdges:
+      // All of the elements in the sets in containsToLink and toLink should be
+      // put into a single set. This is accomplished by creating a new set with
+      // all the elements in it, and removing the old ones from linkedEdges
+      
+      Set<Chute> newEquivClass = new HashSet<Chute>();
+      
+      // take all of the elements in all of the chutes that contain elements
+      // that are supposed to be linked and add them to the new set
+      for (Set<Chute> s : containsToLink)
+         newEquivClass.addAll(s);
+      
       linkedEdges.removeAll(containsToLink);
       
-      // TODO finish implementation
-      
+      linkedEdges.add(newEquivClass);
+   }
+   
+   /**
+    * @return true iff all of the chutes in the given set are linked
+    */
+   public boolean areLinked(Set<Chute> chutes)
+   {
       throw new RuntimeException("Not yet implemented");
    }
    
@@ -128,18 +156,18 @@ public class Level
     * @modifies out
     * @effects prints the text of the XML representation of this Level to the
     * given PrintStream
-    * @return true iff no detectable problems occur
     * 
     * My Java file IO is a little rusty, so let me know if I should be using
     * something other than a PrintStream
     */
-   public boolean outputXML(PrintStream out)
+   public void outputXML(PrintStream out)
    {
+      out.println("<?xml version=\"1.0\"?>");
+      out.println("<!DOCTYPE level SYSTEM \"level.dtd\">");
       out.println("<level>");
       outputLinkedEdges(out);
       outputBoardsMap(out);
       out.println("<level/>");
-      throw new RuntimeException("Not yet implemented");
    }
    
    /**
@@ -167,7 +195,7 @@ public class Level
     * @effects prints the board map section of the xml to out, indented by one
     * space
     */
-   // TODO add "editable" attribute to edges (involves editing DTD)
+   // TODO add "editable" attribute to edge output (involves editing DTD)
    private void outputBoardsMap(PrintStream out)
    {
       out.println(" <boards-map>");
@@ -207,12 +235,15 @@ public class Level
                   + edge.getUID() + "\">");
             
             out.println("    <from>");
-            out.println("     <noderef id=\"" + edge.getStart().getUID());
+            // TODO do something about this nullness warning
+            out.println("     <noderef id=\"" + edge.getStart().getUID()
+                  + "\" port=\"" + edge.getStartPort() + "\"/>");
             out.println("    </from>");
             out.println("    <to>");
-            
+            // TODO do something about this nullness warning
+            out.println("     <noderef id=\"" + edge.getEnd().getUID()
+                  + "\" port=\"" + edge.getEndPort() + "\"/>");
             out.println("    </to>");
-            
             out.println("   </edge>");
             
          }
@@ -220,5 +251,11 @@ public class Level
          out.println("  </board>");
       }
       out.println(" </boards-map>");
+   }
+   
+   public static void main(String[] args)
+   {
+      Level l = new Level();
+      l.outputXML(System.out);
    }
 }

@@ -15,7 +15,7 @@ method names that take the method signature into account, because of method-over
 -->
 <level>
   <!-- edge IDs are the keys, list of edge IDs the value -->
-  <linked-edge-map>
+  <linked-edges>
     <!-- theVector -->
     <set>
       <value id="1"/>
@@ -68,7 +68,7 @@ method names that take the method signature into account, because of method-over
     <set>
       <value id="49"/>
     </set>
-  </linked-edge-map>
+  </linked-edges>
   <!-- Each board needs to be put in a set of boards, and also a map from name to board (?)
 	so that the subnetwork nodes can be efficiently clicked on. I can't think of a way to write
 	out the map and set explicitly. Maybe just write the map, and Tim can take the value set
