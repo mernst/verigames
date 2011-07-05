@@ -87,12 +87,6 @@ public class ChuteSpecTests
       }
    }
    
-   /*
-    * TODO write the following tests:
-    * 
-    * - Test auxiliary chutes
-    */
-   
    // Tests that the Chute behaves properly with its start and end intersections
    @Test public void testIntersections() throws InvocationTargetException,
          IllegalAccessException
@@ -159,6 +153,31 @@ public class ChuteSpecTests
       assertFalse(unnamedUnpinchedUneditable.isEditable());
       assertFalse(namedPinchedUneditable.isEditable());
       assertFalse(namedUnpinchedUneditable.isEditable());
+   }
+   
+   /**
+    * Test that the auxiliary chute accessors work properly
+    */
+   @Test public void testAuxChutes()
+   {
+      // Represents the variable
+      // Map<String, Integer> map;
+      
+      Chute IntegerChute = new Chute(null, false, true, null);
+      Chute StringChute = new Chute(null, false, true, null);
+      List<Chute> aux = new ArrayList<Chute>();
+      aux.add(StringChute);
+      aux.add(IntegerChute);
+      Chute mapChute = new Chute("map", false, true, aux);
+      
+      assertEquals(aux, mapChute.getAuxiliaryChutes());
+      
+      List<Chute> aux2 = new ArrayList<Chute>(aux);
+      assertEquals(aux, aux2);
+      
+      // make sure that it copies the given list
+      aux.remove(1);
+      assertEquals(aux2, mapChute.getAuxiliaryChutes());
    }
    
 }

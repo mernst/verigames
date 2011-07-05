@@ -136,7 +136,7 @@ public class Chute
     * @return the auxiliary chutes associated with this Chute. Structural
     * changes to the returned list will not affect this object.
     */
-   public List<Chute> getAuxiliaryChute()
+   public List<Chute> getAuxiliaryChutes()
    {
       throw new RuntimeException("Not yet implemented");
    }
