@@ -233,7 +233,7 @@ public class Level
             out.println("    </input>");
             out.println("    <output>");
             
-            Chute output = node.getInputChute(0);
+            Chute output = node.getOutputChute(0);
             for (int i = 0; output != null; output = node.getOutputChute(++i))
                out.println("     <port num=\"" + i + "\" edge=\""
                      + output.getUID() + "\"/>");

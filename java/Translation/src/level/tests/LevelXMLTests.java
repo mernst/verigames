@@ -65,7 +65,7 @@ public class LevelXMLTests
       Chute c3 = new Chute("s", false, true, null);
       
       method.addEdge(incoming, 0, restart, 0, c2);
-      method.addEdge(restart, 0, outgoing, 0, c3);
+      method.addEdge(restart, 0, out, 0, c3);
       
       l.addBoard("method", method);
       
