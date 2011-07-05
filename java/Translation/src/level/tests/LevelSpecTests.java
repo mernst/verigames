@@ -55,6 +55,9 @@ public class LevelSpecTests
       // to makeLinked
    }
    
+   /**
+    * Test basic functionality in makeLinked.
+    */
    @Test public void testLinkedEdges1()
    {
       Set<Chute> set1 = new HashSet<Chute>();
@@ -85,6 +88,10 @@ public class LevelSpecTests
       assertFalse(l.areLinked(set4));
    }
    
+   /**
+    * Test that different sets of linked chutes are combined into one when
+    * necessary
+    */
    @Test public void testLinkedEdges2()
    {
       Set<Chute> set1 = new HashSet<Chute>();
@@ -119,6 +126,10 @@ public class LevelSpecTests
       assertTrue(l.areLinked(set4));
    }
    
+   /**
+    * Test that any given edge is always linked with itself (reflexivity in the
+    * equivalence relation)
+    */
    @Test public void testLinkedEdges3()
    {
       Set<Chute> set1 = new HashSet<Chute>();
