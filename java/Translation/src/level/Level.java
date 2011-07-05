@@ -58,6 +58,9 @@ public class Level
     * 
     * No set in linkedEdges may be empty
     * 
+    * No set in linkedEdges may have size 1 (the fact that a chute is linked to
+    * itself need not be represented)
+    * 
     * All chutes contained in sets contained in linkedEdges must also be
     * contained contained by some Board in nameMap.values()
     */
@@ -121,6 +124,10 @@ public class Level
     */
    public boolean areLinked(Set<Chute> chutes)
    {
+      // A single chute is always linked to itself
+      if (chutes.size() == 1)
+         return true;
+      
       for (Set<Chute> s : linkedEdges)
       {
          if (s.containsAll(chutes))
