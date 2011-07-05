@@ -91,7 +91,7 @@ public class Board
     * 
     * - e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
     * 
-    * - e.getEnd() == n <--> n.getInputChute(e.getStartPort()) == e
+    * - e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
     */
    
    private void checkRep()
