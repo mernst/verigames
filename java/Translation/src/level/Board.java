@@ -62,6 +62,7 @@ import checkers.nullness.quals.*;
 
 public class Board
 {
+   private static final boolean CHECK_REP_ENABLED = true;
    
    private @LazyNonNull Intersection incomingNode;
    private @LazyNonNull Intersection outgoingNode;
@@ -89,8 +90,35 @@ public class Board
     * for all n in nodes; e in edges:
     * 
     * - e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
+    * 
     * - e.getEnd() == n <--> n.getInputChute(e.getStartPort()) == e
     */
+   
+   private void checkRep()
+   {
+      if (CHECK_REP_ENABLED)
+      {
+         ensure(nodes != null);
+         ensure(edges != null);
+         
+         if (nodes.size() == 1)
+         {
+            ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
+         }
+         
+         // TODO write more checkrep
+      }
+   }
+   
+   /**
+    * intended to be a substitute for assert, except I don't want to have to
+    * make sure the -ea flag is turned on in order to get these checks.
+    */
+   private void ensure(boolean value)
+   {
+      if (!value)
+         throw new RuntimeException();
+   }
    
    /**
     * @effects Creates a new, empty board

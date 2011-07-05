@@ -17,12 +17,6 @@ import org.junit.Test;
 
 public class LevelSpecTests
 {
-   /*
-    * TODO write the following tests:
-    * 
-    * - Test linked edge behavior (link edges, make sure they're linked, repeat)
-    */
-   
    public Chute[] chutes;
    
    public Board b;
@@ -80,8 +74,8 @@ public class LevelSpecTests
          set3.add(c);
       assertFalse(l.areLinked(set3));
       
-      // Check that not two chutes (an arbitrary one from each original set) are
-      // not linked
+      // Check that two chutes (an arbitrary one from each original set) are not
+      // linked
       Set<Chute> set4 = new HashSet<Chute>();
       set4.add(chutes[1]);
       set4.add(chutes[8]);
