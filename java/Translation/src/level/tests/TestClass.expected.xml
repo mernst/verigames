@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE level SYSTEM "level.dtd">
+<level>
+  <linked-edges>
+    <set>
+      <value id="1"/>
+      <value id="3"/>
+      <value id="5"/>
+    </set>
+  </linked-edges>
+  <boards-map>
+    <board name="constructor">
+      <node kind="INCOMING" id="0">
+        <input/>
+        <output/>
+      </node>
+      <node kind="START_BLACK_BALL" id="2">
+        <input/>
+        <output>
+          <port num="0" edge="1"/>
+        </output>
+      </node>
+      <node kind="OUTGOING" id="4">
+        <input>
+          <port num="0" edge="1"/>
+        </input>
+        <output/>
+      </node>
+    </board>
+  </boards-map>
+</level>
