@@ -71,16 +71,66 @@ public class LevelSpecTests
       assertTrue(l.areLinked(set1));
       assertTrue(l.areLinked(set2));
       
+      // Check that not all of the chutes are linked
       Set<Chute> set3 = new HashSet<Chute>();
       for (Chute c : chutes)
          set3.add(c);
       assertFalse(l.areLinked(set3));
       
+      // Check that not two chutes (an arbitrary one from each original set) are
+      // not linked
       Set<Chute> set4 = new HashSet<Chute>();
       set4.add(chutes[1]);
       set4.add(chutes[8]);
       assertFalse(l.areLinked(set4));
-      // TODO finish tests
+   }
+   
+   @Test public void testLinkedEdges2()
+   {
+      Set<Chute> set1 = new HashSet<Chute>();
+      set1.add(chutes[0]);
+      set1.add(chutes[1]);
+      set1.add(chutes[2]);
       
+      Set<Chute> set2 = new HashSet<Chute>();
+      set2.add(chutes[3]);
+      set2.add(chutes[4]);
+      
+      l.makeLinked(set1);
+      l.makeLinked(set2);
+      
+      assertTrue(l.areLinked(set1));
+      assertTrue(l.areLinked(set2));
+      
+      Set<Chute> set3 = new HashSet<Chute>();
+      set3.add(chutes[0]);
+      set3.add(chutes[3]);
+      
+      assertFalse(l.areLinked(set3));
+      
+      l.makeLinked(set3);
+      
+      assertTrue(l.areLinked(set3));
+      
+      Set<Chute> set4 = new HashSet<Chute>();
+      for (int i = 0; i < 5; i++)
+         set4.add(chutes[i]);
+      
+      assertTrue(l.areLinked(set4));
+   }
+   
+   @Test public void testLinkedEdges3()
+   {
+      Set<Chute> set1 = new HashSet<Chute>();
+      set1.add(chutes[0]);
+      
+      assertTrue(l.areLinked(set1));
+      
+      Set<Chute> set2 = new HashSet<Chute>();
+      for (Chute c : chutes)
+         set2.add(c);
+      
+      l.makeLinked(set2);
+      assertTrue(l.areLinked(set1));
    }
 }
