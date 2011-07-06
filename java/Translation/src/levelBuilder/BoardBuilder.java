@@ -1,8 +1,11 @@
 package levelBuilder;
 
+import java.util.List;
 import java.util.Set;
 
-import level.*;
+import level.Board;
+import level.Chute;
+import level.Intersection;
 
 /**
  * @author Nathaniel Mote
@@ -25,6 +28,9 @@ import level.*;
  * maps to a prototypical base Chute for its type. The chute objects contained
  * in this Map will not be part of the Board. They are simply used to keep track
  * of type information for variables.
+ * 
+ * "return" is always a key in this Map. Other variables can merge into it,
+ * indicating that they can be the return value for this method.
  * 
  * @specfield active: boolean // indicates whether this BoardBuilder is
  * currently constructing a Board. If false, no changes are allowed to the
@@ -98,6 +104,18 @@ public class BoardBuilder
    }
    
    /**
+    * @requires active; name is, or will be, a valid board name in levelBuilder;
+    * all args and ret are valid variables in this.
+    * @modifies this
+    * @effects adds the given subnetwork, with the given args and return value,
+    * to the board that this is building
+    */
+   public void addSubnetwork(String name, List<String> args, String ret)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
     * @requires given variables are both present
     * @modifies this
     * @effects represents an assignment from "from" to "to." Specifically, puts
@@ -112,8 +130,10 @@ public class BoardBuilder
    /**
     * @requires given variable is present
     * @modifies this
-    * 
+    * @effects makes the chutes for the given variable flow into the return
+    * output chute
     */
+   // TODO determine what to do if client tries to modify this variable after
    public void returnVar(String var)
    {
       throw new RuntimeException("Not yet implemented");
@@ -123,7 +143,7 @@ public class BoardBuilder
     * @requires active
     * @modifies this
     * @effects sets active to false
-    * @return the board that this
+    * @return the board that this BoardBuilder is building
     */
    public Board getBoard()
    {
