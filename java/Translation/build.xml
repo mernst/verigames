@@ -14,6 +14,7 @@
          <compilerarg line="-Awarns -Xmaxwarns 10000" />
          <compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar" />
          <compilerarg value="-XDTA:spacesincomments" />
+         <compilerarg value="-Alint=uninitialized,advancedchecks" />
          <!-- included so that Eclipse's formatter can still be used -->
 
          <classpath>

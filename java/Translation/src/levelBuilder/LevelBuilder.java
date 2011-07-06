@@ -1,6 +1,5 @@
 package levelBuilder;
 
-import javax.lang.model.element.Name;
 import level.Board;
 import level.Chute;
 import level.Level;
@@ -51,7 +50,7 @@ public class LevelBuilder
     * @effects adds the given board, with the given name, to the level that is
     * being created.
     */
-   public void addBoard(Name name, Board b)
+   public void addBoard(String name, Board b)
    {
       throw new RuntimeException("Not yet implemented");
    }
