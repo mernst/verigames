@@ -138,7 +138,7 @@ public class Chute
     */
    public List<Chute> getAuxiliaryChutes()
    {
-      throw new RuntimeException("Not yet implemented");
+      return new ArrayList<Chute>(auxiliaryChutes);
    }
    
    /**

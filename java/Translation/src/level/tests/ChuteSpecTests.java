@@ -165,6 +165,9 @@ public class ChuteSpecTests
       
       Chute IntegerChute = new Chute(null, false, true, null);
       Chute StringChute = new Chute(null, false, true, null);
+      assertTrue(IntegerChute.getAuxiliaryChutes().isEmpty());
+      assertTrue(StringChute.getAuxiliaryChutes().isEmpty());
+      
       List<Chute> aux = new ArrayList<Chute>();
       aux.add(StringChute);
       aux.add(IntegerChute);
@@ -175,7 +178,8 @@ public class ChuteSpecTests
       List<Chute> aux2 = new ArrayList<Chute>(aux);
       assertEquals(aux, aux2);
       
-      // make sure that it copies the given list
+      // make sure that the auxiliary chutes list is copied by the Chute, so
+      // that changes to it are not reflected in the Chute
       aux.remove(1);
       assertEquals(aux2, mapChute.getAuxiliaryChutes());
    }
