@@ -2,8 +2,6 @@ package levelBuilder;
 
 import java.util.Set;
 
-import javax.lang.model.element.Name;
-
 import level.*;
 
 /**
@@ -37,6 +35,12 @@ import level.*;
  * 
  */
 
+/*
+ * Notes:
+ * 
+ * - This class is currently a prototype. The interface may change at any time.
+ */
+
 // TODO add some set of variables, similar to the fields specfield in
 // LevelBuilder
 
@@ -47,19 +51,9 @@ public class BoardBuilder
     * @effects creates a new BoardBuilder with the given LevelBuilder in the
     * levelBuilder specfield
     */
+   // TODO does this need to be public? I think all creation could be taken care
+   // of by the factory method in LevelBuilder
    public BoardBuilder(LevelBuilder lb)
-   {
-      throw new RuntimeException("Not yet implemented");
-   }
-   
-   /**
-    * @requires active; The given node must have only a single input port and a
-    * single output port. Otherwise the state of the other ports would be
-    * undefined.
-    * @modifies this
-    * @effects Adds the given node to the given variable
-    */
-   public void addNodeToVar(Name var, Intersection node)
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -80,7 +74,8 @@ public class BoardBuilder
     * @requires active; the named variable is present in this BoardBuilder
     * @effects
     */
-   public void addPinchToVar(Name var)
+   // TODO change String to whatever we end up using
+   public void addPinchToVar(String var)
    {
       throw new RuntimeException("Not yet implemented");
    }

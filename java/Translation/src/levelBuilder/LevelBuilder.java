@@ -34,6 +34,12 @@ import level.Level;
  * 
  */
 
+/*
+ * Notes:
+ * 
+ * - This class is currently a prototype. The interface may change at any time.
+ */
+
 public class LevelBuilder
 {
    
@@ -68,7 +74,7 @@ public class LevelBuilder
    
    /**
     * @return a new BoardBuilder that is a template for a method in the class
-    * represented by level. It will 
+    * represented by level. It will
     */
    public BoardBuilder getTemplateBoardBuilder()
    {

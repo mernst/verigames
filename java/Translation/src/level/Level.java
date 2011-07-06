@@ -221,6 +221,7 @@ public class Level
          
          for (Intersection node : board.getNodes())
          {
+            // TODO add special cases for subnetwork and (maybe) null test
             out.println("   <node kind=\"" + node.getIntersectionKind()
                   + "\" id=\"" + node.getUID() + "\">");
             out.println("    <input>");
