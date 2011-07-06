@@ -8,15 +8,15 @@ import level.Level;
  * 
  * @author Nathaniel Mote
  * 
- * @specfield fieldToChutes: Map<Name, Set<Chute>> // mapping from Name of field
- * to the set of all base chutes in this level representing that field. the
- * auxiliary chutes are accessible through the returned chutes themselves. to
- * reiterate, this map should not contain any auxiliary chutes.
+ * @specfield fieldToChutes: Map<String, Set<Chute>> // mapping from name of
+ * field to the set of all base chutes in this level representing that field.
+ * the auxiliary chutes are accessible through the returned chutes themselves.
+ * to reiterate, this map should not contain any auxiliary chutes.
  * 
- * @specfield fields: Map<Name, Chute> // contains a mapping from the Name of a
- * field to a prototypical base chute associated with it. The chute objects
- * contained in this Map will not be put part of the Level. They will, rather,
- * be used to create template Boards.
+ * @specfield fields: Map<String, Chute> // contains a mapping from the name of
+ * a field to a prototypical base chute associated with it. The chute objects
+ * contained in this Map will not be part of the Level. They will, rather, be
+ * used to create template Boards.
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
  * 
@@ -52,11 +52,13 @@ public class LevelBuilder
    }
    
    /**
-    * @modifies active
-    * @effects adds the given board, with the given name, to the level that is
-    * being created.
+    * @requires active, b.active, b was made by a call to this Level's
+    * getTemplateBoardBuilder
+    * @modifies this, b
+    * @effects sets b.active to false by calling b.getBoard. adds the given
+    * board, with the given name, to the level that is being built.
     */
-   public void addBoard(String name, Board b)
+   public void finishBoardBuilder(BoardBuilder b)
    {
       throw new RuntimeException("Not yet implemented");
    }
@@ -76,7 +78,8 @@ public class LevelBuilder
     * @return a new BoardBuilder that is a template for a method in the class
     * represented by level. It will
     */
-   public BoardBuilder getTemplateBoardBuilder()
+   // TODO should keep track of all BoardBuilders made by this
+   public BoardBuilder getTemplateBoardBuilder(String name)
    {
       throw new RuntimeException("Not yet implemented");
    }

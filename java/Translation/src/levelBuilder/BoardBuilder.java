@@ -17,9 +17,14 @@ import level.*;
  * Level that "board" belongs in -- stores information global to the level that
  * is needed for construction, but not gameplay
  * 
- * @specfield varToFurthestEdge: map from Name to Chute // For a given variable
+ * @specfield varToFurthestEdge: Map<String, Chute> // For a given variable
  * name, return the base chute. its auxiliary chutes can be accessed through the
  * base chute
+ * 
+ * @specfield variables: Map<String, Chute> // For a given local variable name,
+ * maps to a prototypical base Chute for its type. The chute objects contained
+ * in this Map will not be part of the Board. They are simply used to keep track
+ * of type information for variables.
  * 
  * @specfield active: boolean // indicates whether this BoardBuilder is
  * currently constructing a Board. If false, no changes are allowed to the
@@ -93,6 +98,29 @@ public class BoardBuilder
    }
    
    /**
+    * @requires given variables are both present
+    * @modifies this
+    * @effects represents an assignment from "from" to "to." Specifically, puts
+    * a split in the from chute and an end on the to chute, then merging one of
+    * the branches of from with to.
+    */
+   public void assignment(String to, String from)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @requires given variable is present
+    * @modifies this
+    * 
+    */
+   public void returnVar(String var)
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @requires active
     * @modifies this
     * @effects sets active to false
     * @return the board that this
