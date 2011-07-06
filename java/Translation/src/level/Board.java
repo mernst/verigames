@@ -94,6 +94,9 @@ public class Board
     * - e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
     */
    
+   /**
+    * Ensures that the representation invariant holds
+    */
    private void checkRep()
    {
       if (CHECK_REP_ENABLED)
