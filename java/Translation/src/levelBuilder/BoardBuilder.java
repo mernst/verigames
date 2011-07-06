@@ -1,6 +1,7 @@
 package levelBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import level.Board;
@@ -58,15 +59,26 @@ import level.Intersection;
 public class BoardBuilder
 {
    
+   private final Board board;
+   
+   private final LevelBuilder levelBuilder;
+   
+   private Map<String, Chute> varToFurthestEdge;
+   
+   private Map<String, Chute> variables;
+   
+   private boolean active;
+   
    /**
-    * @effects creates a new BoardBuilder with the given LevelBuilder in the
-    * levelBuilder specfield
+    * @requires initialBoard has an incoming node, and all chutes present in
+    * initialBoard must represent fields in lb
+    * @effects creates a new BoardBuilder with the given LevelBuilder as
+    * levelBuilder and the given Board as board
     */
-   // TODO does this need to be public? I think all creation could be taken care
-   // of by the factory method in LevelBuilder
-   public BoardBuilder(LevelBuilder lb)
+   protected BoardBuilder(LevelBuilder lb, Board initialBoard)
    {
-      throw new RuntimeException("Not yet implemented");
+      board = initialBoard;
+      levelBuilder = lb;
    }
    
    /**
@@ -83,7 +95,7 @@ public class BoardBuilder
    
    /**
     * @requires active; the named variable is present in this BoardBuilder
-    * @effects
+    * @effects adds a pinch point on the furthest chute associated with var
     */
    // TODO change String to whatever we end up using
    public void addPinchToVar(String var)
@@ -148,5 +160,21 @@ public class BoardBuilder
    public Board getBoard()
    {
       throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return levelBuilder
+    */
+   public LevelBuilder getLevelBuilder()
+   {
+      throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return active
+    */
+   public boolean isActive()
+   {
+      return active;
    }
 }
