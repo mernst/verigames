@@ -1,5 +1,6 @@
 package levelBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import level.Board;
 import level.Chute;
 import level.Intersection;
+import level.Intersection.Kind;
 
 /**
  * @author Nathaniel Mote
@@ -21,11 +23,7 @@ import level.Intersection;
  * Level that "board" belongs in -- stores information global to the level that
  * is needed for construction, but not gameplay
  * 
- * @specfield varToFurthestEdge: Map<String, Chute> // For a given variable
- * name, return the base chute. its auxiliary chutes can be accessed through the
- * base chute
- * 
- * @specfield variables: Map<String, Chute> // For a given local variable name,
+ * @specfield varToCurrentEdge: Map<String, Chute> // For a given variable name,
  * maps to a prototypical base Chute for its type. The chute objects contained
  * in this Map will not be part of the Board. They are simply used to keep track
  * of type information for variables.
@@ -53,9 +51,6 @@ import level.Intersection;
  * - This class is currently a prototype. The interface may change at any time.
  */
 
-// TODO add some set of variables, similar to the fields specfield in
-// LevelBuilder
-
 public class BoardBuilder
 {
    
@@ -63,11 +58,21 @@ public class BoardBuilder
    
    private final LevelBuilder levelBuilder;
    
-   private Map<String, Chute> varToFurthestEdge;
+   private Map<String, Chute> varToCurrentEdge;
    
-   private Map<String, Chute> variables;
+   // I'd like these two maps to be a single map from String to a tuple of
+   // Intersection and Integer, but Java doesn't have that feature
+   private Map<String, Intersection> varToFurthestNode;
+   
+   private Map<String, Integer> varToNodePort;
    
    private boolean active;
+   
+   /*
+    * Representation Invariant:
+    * 
+    * -
+    */
    
    /**
     * @requires initialBoard has an incoming node, and all chutes present in
@@ -75,10 +80,16 @@ public class BoardBuilder
     * @effects creates a new BoardBuilder with the given LevelBuilder as
     * levelBuilder and the given Board as board
     */
-   protected BoardBuilder(LevelBuilder lb, Board initialBoard)
+   protected BoardBuilder(LevelBuilder lb)
    {
-      board = initialBoard;
       levelBuilder = lb;
+      board = new Board();
+      Intersection incoming = new Intersection(Kind.INCOMING);
+      board.addNode(incoming);
+      
+      // TODO finish constructor
+      
+      varToCurrentEdge = new HashMap<String, Chute>();
    }
    
    /**

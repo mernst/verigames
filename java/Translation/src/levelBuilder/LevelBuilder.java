@@ -13,12 +13,16 @@ import level.Level;
  * the auxiliary chutes are accessible through the returned chutes themselves.
  * to reiterate, this map should not contain any auxiliary chutes.
  * 
- * @specfield fields: Map<String, Chute> // contains a mapping from the name of
- * a field to a prototypical base chute associated with it. The chute objects
- * contained in this Map will not be part of the Level. They will, rather, be
- * used to create template Boards.
+ * @specfield fields: List<Chute> // Contains a list of base chutes representing
+ * the fields in this class, in the order that they appear in the incoming and
+ * outgoing nodes in Boards. The chute objects contained in this Map will not be
+ * part of the Level. They will, rather, be used to create template Boards.
  * 
  * @specfield level: Level // the level that this LevelBuilder is creating
+ * 
+ * @specfield activeBoards: Set<BoardBuilder> // boards that have been created
+ * by the getTemplateBoardBuilder but have not yet been finished and added to
+ * the level
  * 
  * @specfield active: boolean // indicates whether this LevelBuilder is
  * currently constructing a Level. If false, no changes are allowed to the
