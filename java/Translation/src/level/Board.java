@@ -81,10 +81,10 @@ public class Board
     * 
     * nodes may contain no more than one element of type OUTGOING
     * 
-    * incomingNode != null <--> there exits an element i in nodes such that
+    * incomingNode != null <--> there exists an element i in nodes such that
     * i.getIntersectionType() == INCOMING
     * 
-    * outgoingNode != null <--> there exits an element i in nodes such that
+    * outgoingNode != null <--> there exists an element i in nodes such that
     * i.getIntersectionType() == OUTGOING
     * 
     * for all n in nodes; e in edges:
@@ -106,7 +106,34 @@ public class Board
             ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
          }
          
-         // TODO write more checkrep
+         boolean incomingEncountered = false;
+         boolean outgoingEncountered = false;
+         for (Intersection i : nodes)
+         {
+            if (i.getIntersectionKind() == Kind.INCOMING)
+            {
+               ensure(!incomingEncountered);
+               incomingEncountered = true;
+            }
+            else if (i.getIntersectionKind() == Kind.OUTGOING)
+            {
+               ensure(!outgoingEncountered);
+               outgoingEncountered = true;
+            }
+         }
+         
+         ensure((incomingNode != null) == incomingEncountered);
+         ensure((outgoingNode != null) == outgoingEncountered);
+         
+         for (Intersection n : nodes)
+         {
+            for (Chute e : edges)
+            {
+               ensure((e.getStart() == n) == (n
+                     .getOutputChute(e.getStartPort()) == e));
+               ensure((e.getEnd() == n) == (n.getInputChute(e.getEndPort()) == e));
+            }
+         }
       }
    }
    
@@ -127,6 +154,7 @@ public class Board
    {
       nodes = new HashSet<Intersection>();
       edges = new HashSet<Chute>();
+      checkRep();
    }
    
    /**
@@ -163,6 +191,7 @@ public class Board
          outgoingNode = node;
       
       nodes.add(node);
+      checkRep();
    }
    
    /**
@@ -203,6 +232,8 @@ public class Board
       
       edge.setStart(start, startPort);
       edge.setEnd(end, endPort);
+      
+      checkRep();
    }
    
    /**
