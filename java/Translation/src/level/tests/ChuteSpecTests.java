@@ -24,8 +24,6 @@ import org.junit.Test;
 
 public class ChuteSpecTests
 {
- 
-   //TODO write test for clone
    
    public Chute namedPinchedEditable;
    public Chute namedPinchedUneditable;
