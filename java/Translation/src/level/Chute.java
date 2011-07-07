@@ -232,4 +232,24 @@ public class Chute
       return UID;
    }
    
+   /**
+    * @requires start == null; end == null (this cannot be attached to Intersections)
+    * @return a deep copy of this Chute.
+    */
+   public Chute copy()
+   {
+      if (start != null || end != null)
+         throw new IllegalStateException("Chute must not be attached to Intersections to be copied");
+      List<Chute> copyAuxChutes = new ArrayList<Chute>();
+      for (Chute c : auxiliaryChutes)
+      {
+         copyAuxChutes.add(c.copy());
+      }
+      
+      Chute copy = new Chute(name, pinch, editable, copyAuxChutes);
+      copy.setNarrow(narrow);
+      
+      return copy;
+   }
+   
 }

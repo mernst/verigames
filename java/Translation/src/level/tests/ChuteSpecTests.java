@@ -1,13 +1,14 @@
 package level.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import level.Chute;
@@ -184,4 +185,64 @@ public class ChuteSpecTests
       assertEquals(aux2, mapChute.getAuxiliaryChutes());
    }
    
+   /**
+    * Test that copy copies all attributes, performs a deep copy, and that the
+    * copied Chute has a different UID
+    */
+   @Test public void testCopy()
+   {
+      Chute c1 = unnamedPinchedEditable.copy();
+      assertTrue(chuteValueEquals(c1, unnamedPinchedEditable));
+      assertFalse(c1.getUID() == unnamedPinchedEditable.getUID());
+      
+      List<Chute> auxChuteList = new ArrayList<Chute>();
+      auxChuteList.add(c1);
+      auxChuteList.add(new Chute(null, true, false, null));
+      Chute withAux = new Chute("asdf", true, true, auxChuteList);
+      Chute withAuxCopy = withAux.copy();
+      
+      assertTrue(chuteValueEquals(withAux, withAuxCopy));
+      assertFalse(withAux.getUID() == withAuxCopy.getUID());
+   }
+   
+   /**
+    * @return true iff the given chutes have equal attributes, excluding UID and
+    * start and end Intersections
+    */
+   private boolean chuteValueEquals(Chute c1, Chute c2)
+   {
+      if (c1 == null)
+         return c2 == null;
+      if (!(c1.getName() == null ? c2.getName() == null : c1.getName().equals(c2.getName())))
+         return false;
+      if (c1.isEditable() != c2.isEditable())
+         return false;
+      if (c1.isNarrow() != c2.isNarrow())
+         return false;
+      if (c1.isPinched() != c2.isPinched())
+         return false;
+      
+      List<Chute> c1Aux = c1.getAuxiliaryChutes();
+      List<Chute> c2Aux = c2.getAuxiliaryChutes();
+      if (c1Aux.size() != c2Aux.size())
+      {
+         return false;
+      }
+      else
+      {
+         Iterator<Chute> c1Itr = c1Aux.iterator();
+         Iterator<Chute> c2Itr = c2Aux.iterator();
+         
+         while (c1Itr.hasNext() && c2Itr.hasNext())
+         {
+            if (!chuteValueEquals(c1Itr.next(), c2Itr.next()))
+               return false;
+         }
+         if (c1Itr.hasNext() || c2Itr.hasNext())
+            throw new RuntimeException(
+                  "Lists should have equal length, so the iterators should be done at the same time");
+      }
+      
+      return true;
+   }
 }
