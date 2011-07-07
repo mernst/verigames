@@ -104,27 +104,34 @@ public class LevelBuilder
     */
    public void addField(Chute chute)
    {
-      throw new RuntimeException("Not yet implemented");
+      fields.add(chute);
    }
    
    /**
     * @return a new BoardBuilder that is a template for a method in the class
-    * represented by level. It will
+    * represented by level.
     */
    // TODO should keep track of all BoardBuilders made by this
    public BoardBuilder getTemplateBoardBuilder(String name)
    {
-      throw new RuntimeException("Not yet implemented");
+      BoardBuilder b = new BoardBuilder(this);
+      activeBoards.put(b, name);
+      return b;
    }
    
    /**
+    * @requires active
     * @modifies this
     * @effects sets active to false
     * @return level
     */
    public Level getLevel()
    {
-      throw new RuntimeException("Not yet implemented");
+      if (!active)
+         throw new IllegalStateException(
+               "getLevel requires that this LevelBuilder is active");
+      active = false;
+      return level;
    }
    
    /**
