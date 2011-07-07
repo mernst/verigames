@@ -15,6 +15,9 @@ import checkers.nullness.quals.Nullable;
  * Implements eternal equality because it is mutable, but must be used in
  * Collections
  * 
+ * Implements Cloneable because Chutes need to be copied so much during
+ * construction of levels.
+ * 
  * @specfield name : String // The name of the variable corresponding to this
  * chute. Can be null if this chute does not correspond directly to a variable,
  * but all chutes connected to an incoming or outgoing node, except for the
@@ -55,7 +58,7 @@ import checkers.nullness.quals.Nullable;
  * 
  */
 
-public class Chute
+public class Chute implements Cloneable
 {
    // TODO change String to whatever we end up using
    private final @Nullable String name;
@@ -87,8 +90,8 @@ public class Chute
       this.pinch = pinch;
       this.editable = editable;
       
-      startPort=-1;
-      endPort=-1;
+      startPort = -1;
+      endPort = -1;
       
       narrow = false;
       
@@ -230,6 +233,30 @@ public class Chute
    public int getUID()
    {
       return UID;
+   }
+   
+   /**
+    * @return a clone of this Chute
+    * @throws CloneNotSupportedException
+    * if this Chute has start or end Intersections
+    * 
+    * From the Object.clone() spec:
+    * 
+    * "Subclasses that override the clone method can also throw [a
+    * CloneNotSupportedException] to indicate that an instance cannot be
+    * cloned."
+    * 
+    * So, throwing this exception, despite implementing Cloneable, does not
+    * violate superclass spec
+    */
+   @Override public Chute clone() throws CloneNotSupportedException
+   {
+      if (start != null || end != null)
+         throw new CloneNotSupportedException();
+      
+      Chute clonedChute = (Chute) super.clone();
+      
+      return clonedChute;
    }
    
 }

@@ -109,7 +109,7 @@ public class LevelBuilder
    
    /**
     * @return a new BoardBuilder that is a template for a method in the class
-    * represented by level. It will
+    * represented by level.
     */
    // TODO should keep track of all BoardBuilders made by this
    public BoardBuilder getTemplateBoardBuilder(String name)
