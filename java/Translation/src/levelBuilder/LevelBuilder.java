@@ -1,6 +1,10 @@
 package levelBuilder;
 
-import level.Board;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import level.Chute;
 import level.Level;
 
@@ -11,7 +15,7 @@ import level.Level;
  * @specfield fieldToChutes: Map<String, Set<Chute>> // mapping from name of
  * field to the set of all base chutes in this level representing that field.
  * the auxiliary chutes are accessible through the returned chutes themselves.
- * to reiterate, this map should not contain any auxiliary chutes.
+ * To reiterate, this map should not contain any auxiliary chutes.
  * 
  * @specfield fields: List<Chute> // Contains a list of base chutes representing
  * the fields in this class, in the order that they appear in the incoming and
@@ -47,12 +51,28 @@ import level.Level;
 public class LevelBuilder
 {
    
+   private Map<String, Set<Chute>> fieldToChutes;
+   
+   private List<Chute> fields;
+   
+   private Level level;
+   
+   private Map<BoardBuilder, String> activeBoards;
+   
+   boolean active;
+   
    /**
     * @effects creates a new LevelBuilder, ready to be used
     */
    public LevelBuilder()
    {
-      throw new RuntimeException("Not yet implemented");
+      active = true;
+      
+      fieldToChutes = new HashMap<String, Set<Chute>>();
+      
+      level = new Level();
+      
+      activeBoards = new HashMap<BoardBuilder, String>();
    }
    
    /**
@@ -64,7 +84,16 @@ public class LevelBuilder
     */
    public void finishBoardBuilder(BoardBuilder b)
    {
-      throw new RuntimeException("Not yet implemented");
+      if (!active)
+         throw new IllegalStateException("Level must be active");
+      if (!b.isActive())
+         throw new IllegalArgumentException("Given BoardBuilder must be active");
+      if (!activeBoards.containsKey(b))
+         throw new IllegalArgumentException(
+               "Given BoardBuilder must have been created by this LevelBuilder");
+      
+      level.addBoard(activeBoards.get(b), b.getBoard());
+      activeBoards.remove(b);
    }
    
    /**
@@ -96,6 +125,14 @@ public class LevelBuilder
    public Level getLevel()
    {
       throw new RuntimeException("Not yet implemented");
+   }
+   
+   /**
+    * @return active
+    */
+   public boolean isActive()
+   {
+      return active;
    }
    
 }

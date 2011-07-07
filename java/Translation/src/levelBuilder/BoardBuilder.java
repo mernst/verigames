@@ -15,7 +15,9 @@ import level.Intersection.Kind;
  * 
  * A mutable class used for building a board from source code. Used to bridge
  * the gap between the Board structure and the information required by the
- * translation algorithm
+ * translation algorithm.
+ * 
+ * Implements eternal equality.
  * 
  * @specfield board: Board // The board that this BoardBuilder is building
  * 
@@ -53,18 +55,18 @@ import level.Intersection.Kind;
 
 public class BoardBuilder
 {
-   
    private final Board board;
    
    private final LevelBuilder levelBuilder;
    
    private Map<String, Chute> varToCurrentEdge;
    
-   // I'd like these two maps to be a single map from String to a tuple of
-   // Intersection and Integer, but Java doesn't have that feature
-   private Map<String, Intersection> varToFurthestNode;
-   
-   private Map<String, Integer> varToNodePort;
+   /*
+    * Maps a Chute object to the Intersection and port number that it will
+    * attach to.
+    */
+   private Map<Chute, Intersection> chuteToFurthestNode;
+   private Map<Chute, Integer> chuteToNodePort;
    
    private boolean active;
    
@@ -75,13 +77,13 @@ public class BoardBuilder
     */
    
    /**
-    * @requires initialBoard has an incoming node, and all chutes present in
-    * initialBoard must represent fields in lb
     * @effects creates a new BoardBuilder with the given LevelBuilder as
     * levelBuilder and the given Board as board
     */
    protected BoardBuilder(LevelBuilder lb)
    {
+      active = true;
+      
       levelBuilder = lb;
       board = new Board();
       Intersection incoming = new Intersection(Kind.INCOMING);
@@ -168,7 +170,7 @@ public class BoardBuilder
     * @effects sets active to false
     * @return the board that this BoardBuilder is building
     */
-   public Board getBoard()
+   protected Board getBoard()
    {
       throw new RuntimeException("Not yet implemented");
    }
