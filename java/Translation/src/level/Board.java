@@ -151,7 +151,7 @@ public class Board
    }
    
    /**
-    * @effects Creates a new, empty board
+    *  Creates a new, empty board
     */
    public Board()
    {
@@ -161,13 +161,13 @@ public class Board
    }
    
    /**
-    * @requires given node implements eternal equality; if this is the first
+    * Requires given node implements eternal equality; if this is the first
     * node to be added, it must have type INCOMING; if this is of Kind INCOMING,
     * there must not already be a node of Kind OUTGOING; if this is of Kind
     * OUTGOING, there must not already be a node of Kind OUTGOING;
     * !this.contains(node)
     * @modifies this
-    * @effects adds node to this
+    *  adds node to this
     */
    public void addNode(Intersection node)
    {
@@ -198,11 +198,11 @@ public class Board
    }
    
    /**
-    * @requires this.contains(start); this.contains(end); !this.contains(edge)
+    * Requires this.contains(start); this.contains(end); !this.contains(edge)
     * edge does not have start or end nodes; the given ports on the given nodes
     * are empty
     * @modifies this, start, end, edge
-    * @effects creates an edge from startPort on the start node to endPort on
+    *  creates an edge from startPort on the start node to endPort on
     * the end node. modifies start, end, and edge to reflect their new
     * connections
     */
@@ -240,7 +240,7 @@ public class Board
    }
    
    /**
-    * @returns the cardinality of nodes
+    * Returns the cardinality of nodes
     */
    public int nodesSize()
    {
@@ -248,7 +248,7 @@ public class Board
    }
    
    /**
-    * @return the cardinality of edges
+    * Returns the cardinality of edges
     */
    public int edgesSize()
    {
@@ -256,7 +256,7 @@ public class Board
    }
    
    /**
-    * @return a Set<Intersection> with all node objects in this graph. The
+    * Returns a Set<Intersection> with all node objects in this graph. The
     * returned set will not be affected by future changes to this object, and
     * changes to the returned set will not affect this object.
     */
@@ -266,7 +266,7 @@ public class Board
    }
    
    /**
-    * @return a Set<Chute> with all edge objects in this graph. The returned set
+    * Returns a Set<Chute> with all edge objects in this graph. The returned set
     * will not be affected by future changes to this object, and changes to the
     * returned set will not affect this object.
     */
@@ -276,7 +276,7 @@ public class Board
    }
    
    /**
-    * @return this Board's incomingNode, or null if it does not have one
+    * Returns this Board's incomingNode, or null if it does not have one
     */
    public/* @Nullable */Intersection getIncomingNode()
    {
@@ -284,7 +284,7 @@ public class Board
    }
    
    /**
-    * @return this Board's outgoingNode, or null if it does not have one
+    * Returns this Board's outgoingNode, or null if it does not have one
     */
    public/* @Nullable */Intersection getOutgoingNode()
    {
@@ -292,7 +292,7 @@ public class Board
    }
    
    /**
-    * @return true iff nodes contains elt or edges contains elt
+    * Returns true iff nodes contains elt or edges contains elt
     */
    public boolean contains(Object elt)
    {

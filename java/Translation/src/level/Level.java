@@ -66,7 +66,7 @@ public class Level
     */
    
    /**
-    * @effects creates a new Level object with an empty linkedEdgeMap, boardSet,
+    *  creates a new Level object with an empty linkedEdgeMap, boardSet,
     * and nameMap
     */
    public Level()
@@ -76,9 +76,9 @@ public class Level
    }
    
    /**
-    * @requires every Chute in toLink must be contained in a Board in nameMap
+    * Requires every Chute in toLink must be contained in a Board in nameMap
     * @modifies this
-    * @effects makes it so that the given chutes are equivalent under the
+    *  makes it so that the given chutes are equivalent under the
     * relation R defined above. In other words, for all a, b in chutes (the
     * argument to this method), aRb
     * 
@@ -120,7 +120,7 @@ public class Level
    }
    
    /**
-    * @return true iff all of the chutes in the given set are linked
+    * Returns true iff all of the chutes in the given set are linked
     */
    public boolean areLinked(Set<Chute> chutes)
    {
@@ -139,9 +139,9 @@ public class Level
    /**
     * TODO add clause about how the board must be well-formed and complete.
     * 
-    * @requires b is not in boardSet, name is not in nameMap.keySet()
+    * Requires b is not in boardSet, name is not in nameMap.keySet()
     * @modifies this
-    * @effects adds b to boardSet, and adds the mapping from name to b to
+    *  adds b to boardSet, and adds the mapping from name to b to
     * nameMap
     */
    public void addBoard(String name, Board b)
@@ -150,7 +150,7 @@ public class Level
    }
    
    /**
-    * @return a shallow copy of boardSet
+    * Returns a shallow copy of boardSet
     */
    public Set<Board> boardSet()
    {
@@ -158,7 +158,7 @@ public class Level
    }
    
    /**
-    * @return the Board that name maps to in nameMap, or null if it maps to
+    * Returns the Board that name maps to in nameMap, or null if it maps to
     * nothing
     */
    public/* @Nullable */Board getBoard(String name)
@@ -167,9 +167,9 @@ public class Level
    }
    
    /**
-    * @requires out is open and ready to be written to
+    * Requires out is open and ready to be written to
     * @modifies out
-    * @effects prints the text of the XML representation of this Level to the
+    *  prints the text of the XML representation of this Level to the
     * given PrintStream
     * 
     * My Java file IO is a little rusty, so let me know if I should be using
@@ -187,7 +187,7 @@ public class Level
    
    /**
     * @modifies out
-    * @effects prints the linked edge section of the xml to out, indented by one
+    *  prints the linked edge section of the xml to out, indented by one
     * space
     */
    private void outputLinkedEdges(PrintStream out)
@@ -207,7 +207,7 @@ public class Level
    
    /**
     * @modifies out
-    * @effects prints the board map section of the xml to out, indented by one
+    *  prints the board map section of the xml to out, indented by one
     * space
     */
    // TODO add "editable" attribute to edge output (involves editing DTD)

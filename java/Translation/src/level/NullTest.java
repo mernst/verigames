@@ -58,7 +58,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @effects creates a new Intersection of kind NULL_TEST
+    *  creates a new Intersection of kind NULL_TEST
     */
    public NullTest()
    {
@@ -76,7 +76,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return true to indicate that this is of kind NULL_TEST
+    * Returns true to indicate that this is of kind NULL_TEST
     */
    @Override public boolean isNullTest()
    {
@@ -84,7 +84,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return this
+    * Returns this
     */
    @Override public NullTest asNullTest()
    {
@@ -92,7 +92,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return the Chute (or null if none exists) associated with the null branch
+    * Returns the Chute (or null if none exists) associated with the null branch
     * of the test. That is, after this node, only null balls will roll down this
     * chute.
     */
@@ -102,10 +102,10 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @requires !chute.isEditable; !chute.isNarrow(), narrowness will not change
+    * Requires !chute.isEditable; !chute.isNarrow(), narrowness will not change
     * in the future
     * @modifies this
-    * @effects sets the given Chute to be the null branch of this null test
+    *  sets the given Chute to be the null branch of this null test
     */
    protected void setNullChute(Chute chute)
    {
@@ -120,7 +120,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @return the Chute (or null if none exists) associated with the not-null
+    * Returns the Chute (or null if none exists) associated with the not-null
     * branch of the test. That is, after this node, only non-null balls will
     * roll down this chute.
     */
@@ -130,10 +130,10 @@ public class NullTest extends Intersection
    }
    
    /**
-    * @requires !chute.isEditable; chute.isNarrow(), narrowness will not change
+    * Requires !chute.isEditable; chute.isNarrow(), narrowness will not change
     * in the future
     * @modifies this
-    * @effects sets the given Chute to be the not-null branch of this not-null
+    *  sets the given Chute to be the not-null branch of this not-null
     * test
     */
    protected void setNonNullChute(Chute chute)

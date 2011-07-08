@@ -77,7 +77,7 @@ public class BoardBuilder
     */
    
    /**
-    * @effects creates a new BoardBuilder with the given LevelBuilder as
+    *  creates a new BoardBuilder with the given LevelBuilder as
     * levelBuilder and the given Board as board
     */
    protected BoardBuilder(LevelBuilder lb)
@@ -95,10 +95,10 @@ public class BoardBuilder
    }
    
    /**
-    * @requires active; the named variable is not already present in this
+    * Requires active; the named variable is not already present in this
     * BoardBuilder; startType must be able to have 0 input ports and 1 output
     * port
-    * @effects adds the named variable to this BoardBuilder. More specifically,
+    *  adds the named variable to this BoardBuilder. More specifically,
     * creates a node of the given type
     */
    public void addVar(Chute var, Intersection.Kind startType)
@@ -107,8 +107,8 @@ public class BoardBuilder
    }
    
    /**
-    * @requires active; the named variable is present in this BoardBuilder
-    * @effects adds a pinch point on the furthest chute associated with var
+    * Requires active; the named variable is present in this BoardBuilder
+    *  adds a pinch point on the furthest chute associated with var
     */
    // TODO change String to whatever we end up using
    public void addPinchToVar(String var)
@@ -117,10 +117,10 @@ public class BoardBuilder
    }
    
    /**
-    * @requires active; bb's input and output ports all correspond to variables
+    * Requires active; bb's input and output ports all correspond to variables
     * in this board
     * @modifies this
-    * @effects adds the given sub-boards to this. For each of the chutes, there
+    *  adds the given sub-boards to this. For each of the chutes, there
     * is a simple SPLIT at the top and a MERGE at the bottom.
     */
    public void addSubBoards(Set<BoardBuilder> bb)
@@ -129,10 +129,10 @@ public class BoardBuilder
    }
    
    /**
-    * @requires active; name is, or will be, a valid board name in levelBuilder;
+    * Requires active; name is, or will be, a valid board name in levelBuilder;
     * all args and ret are valid variables in this.
     * @modifies this
-    * @effects adds the given subnetwork, with the given args and return value,
+    *  adds the given subnetwork, with the given args and return value,
     * to the board that this is building
     */
    public void addSubnetwork(String name, List<String> args, String ret)
@@ -141,9 +141,9 @@ public class BoardBuilder
    }
    
    /**
-    * @requires given variables are both present
+    * Requires given variables are both present
     * @modifies this
-    * @effects represents an assignment from "from" to "to." Specifically, puts
+    *  represents an assignment from "from" to "to." Specifically, puts
     * a split in the from chute and an end on the to chute, then merging one of
     * the branches of from with to.
     */
@@ -153,9 +153,9 @@ public class BoardBuilder
    }
    
    /**
-    * @requires given variable is present
+    * Requires given variable is present
     * @modifies this
-    * @effects makes the chutes for the given variable flow into the return
+    *  makes the chutes for the given variable flow into the return
     * output chute
     */
    // TODO determine what to do if client tries to modify this variable after
@@ -165,10 +165,10 @@ public class BoardBuilder
    }
    
    /**
-    * @requires active
+    * Requires active
     * @modifies this
-    * @effects sets active to false
-    * @return the board that this BoardBuilder is building
+    *  sets active to false
+    * Returns the board that this BoardBuilder is building
     */
    protected Board getBoard()
    {
@@ -176,7 +176,7 @@ public class BoardBuilder
    }
    
    /**
-    * @return levelBuilder
+    * Returns levelBuilder
     */
    public LevelBuilder getLevelBuilder()
    {
@@ -184,7 +184,7 @@ public class BoardBuilder
    }
    
    /**
-    * @return active
+    * Returns active
     */
    public boolean isActive()
    {

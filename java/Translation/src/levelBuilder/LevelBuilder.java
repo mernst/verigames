@@ -62,7 +62,7 @@ public class LevelBuilder
    boolean active;
    
    /**
-    * @effects creates a new LevelBuilder, ready to be used
+    *  creates a new LevelBuilder, ready to be used
     */
    public LevelBuilder()
    {
@@ -76,10 +76,10 @@ public class LevelBuilder
    }
    
    /**
-    * @requires active, b.active, b was made by a call to this Level's
+    * Requires active, b.active, b was made by a call to this Level's
     * getTemplateBoardBuilder
     * @modifies this, b
-    * @effects sets b.active to false by calling b.getBoard. adds the given
+    *  sets b.active to false by calling b.getBoard. adds the given
     * board, with the given name, to the level that is being built.
     */
    public void finishBoardBuilder(BoardBuilder b)
@@ -97,9 +97,9 @@ public class LevelBuilder
    }
    
    /**
-    * @requires active; chute.name is not already a key in fields; the given
+    * Requires active; chute.name is not already a key in fields; the given
     * chute is not, and will not, be used as part of a board.
-    * @effects adds a field with name and type information specified by the
+    *  adds a field with name and type information specified by the
     * given chute
     */
    public void addField(Chute chute)
@@ -108,7 +108,7 @@ public class LevelBuilder
    }
    
    /**
-    * @return a new BoardBuilder that is a template for a method in the class
+    * Returns a new BoardBuilder that is a template for a method in the class
     * represented by level.
     */
    // TODO should keep track of all BoardBuilders made by this
@@ -120,10 +120,10 @@ public class LevelBuilder
    }
    
    /**
-    * @requires active
+    * Requires active
     * @modifies this
-    * @effects sets active to false
-    * @return level
+    *  sets active to false
+    * Returns level
     */
    public Level getLevel()
    {
@@ -135,7 +135,7 @@ public class LevelBuilder
    }
    
    /**
-    * @return active
+    * Returns active
     */
    public boolean isActive()
    {

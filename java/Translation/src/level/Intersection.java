@@ -188,8 +188,8 @@ public class Intersection
    }
    
    /**
-    * @requires kind != SUBNETWORK
-    * @effects creates a new Intersection object of the given kind with empty
+    * Requires kind != SUBNETWORK
+    *  creates a new Intersection object of the given kind with empty
     * i/o ports
     * 
     * Subclasses calling this constructor can modify the requires clause by
@@ -215,7 +215,7 @@ public class Intersection
    }
    
    /**
-    * @return true iff the given kind is a valid intersection kind for this
+    * Returns true iff the given kind is a valid intersection kind for this
     * implementation
     */
    protected boolean checkIntersectionKind(Kind kind)
@@ -226,7 +226,7 @@ public class Intersection
    }
    
    /**
-    * @return intersectionKind
+    * Returns intersectionKind
     */
    public Kind getIntersectionKind()
    {
@@ -234,9 +234,9 @@ public class Intersection
    }
    
    /**
-    * @requires port is a valid port number for this Intersection
+    * Requires port is a valid port number for this Intersection
     * @modifies this
-    * @effects sets the given chute to this Intersection's input at the given
+    *  sets the given chute to this Intersection's input at the given
     * port, replacing the old one, if present
     */
    protected void setInputChute(Chute input, int port)
@@ -247,9 +247,9 @@ public class Intersection
    }
    
    /**
-    * @requires port is a valid port number for this Intersection
+    * Requires port is a valid port number for this Intersection
     * @modifies this
-    * @effects sets the given chute to this Intersection's output at the given
+    *  sets the given chute to this Intersection's output at the given
     * port, replacing the old one, if present
     */
    protected void setOutputChute(Chute output, int port)
@@ -260,7 +260,7 @@ public class Intersection
    }
    
    /**
-    * @return the chute at the given port, or null if none exists
+    * Returns the chute at the given port, or null if none exists
     */
    public @Nullable Chute getInputChute(int port)
    {
@@ -271,7 +271,7 @@ public class Intersection
    }
    
    /**
-    * @return the chute at the given port, or null if none exists
+    * Returns the chute at the given port, or null if none exists
     */
    public @Nullable Chute getOutputChute(int port)
    {
@@ -283,7 +283,7 @@ public class Intersection
    
    /**
     * @modifes list
-    * @effects if minSize is greater than list.size, adds null elements to the
+    *  if minSize is greater than list.size, adds null elements to the
     * end of list until list.size == minSize
     * 
     * Notes: used to make sure that the given list can accommodate a call to add
@@ -299,7 +299,7 @@ public class Intersection
    }
    
    /**
-    * @return true iff this is a Subnetwork kind.
+    * Returns true iff this is a Subnetwork kind.
     * 
     * Notes: If implemented correctly, this is equivalent to
     * getIntersectionKind() == Kind.SUBNETWORK. Is it still good to include this
@@ -311,8 +311,8 @@ public class Intersection
    }
    
    /**
-    * @requires this is of Subnetwork kind
-    * @return this as a Subnetwork
+    * Requires this is of Subnetwork kind
+    * Returns this as a Subnetwork
     */
    public Subnetwork asSubnetwork()
    {
@@ -322,7 +322,7 @@ public class Intersection
    }
    
    /**
-    * @return true iff this is a NullTest kind
+    * Returns true iff this is a NullTest kind
     */
    public boolean isNullTest()
    {
@@ -330,8 +330,8 @@ public class Intersection
    }
    
    /**
-    * @requires this is of NullTest kind
-    * @return this as a NullTest
+    * Requires this is of NullTest kind
+    * Returns this as a NullTest
     */
    public NullTest asNullTest()
    {
@@ -340,7 +340,7 @@ public class Intersection
    }
    
    /**
-    * @return UID
+    * Returns UID
     */
    public int getUID()
    {

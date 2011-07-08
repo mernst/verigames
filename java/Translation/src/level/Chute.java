@@ -77,7 +77,7 @@ public class Chute
    private static int nextUID = 1;
    
    /**
-    * @effects creates a new Chute object, with the given values for name,
+    *  creates a new Chute object, with the given values for name,
     * pinch, and editable
     */
    public Chute(@Nullable String name, boolean pinch, boolean editable,
@@ -100,7 +100,7 @@ public class Chute
    }
    
    /**
-    * @returns name, or null if none exists
+    * Returns name, or null if none exists
     */
    public @Nullable String getName()
    {
@@ -108,7 +108,7 @@ public class Chute
    }
    
    /**
-    * @return pinch
+    * Returns pinch
     */
    public boolean isPinched()
    {
@@ -116,7 +116,7 @@ public class Chute
    }
    
    /**
-    * @return narrow
+    * Returns narrow
     */
    public boolean isNarrow()
    {
@@ -125,7 +125,7 @@ public class Chute
    
    /**
     * @modifies this
-    * @effects sets the specfield narrow to the given boolean value
+    *  sets the specfield narrow to the given boolean value
     * 
     * Note: this can be called even if editable is false, because it may be
     * necessary (or at least easier) for construction
@@ -136,7 +136,7 @@ public class Chute
    }
    
    /**
-    * @return the auxiliary chutes associated with this Chute. Structural
+    * Returns the auxiliary chutes associated with this Chute. Structural
     * changes to the returned list will not affect this object.
     */
    public List<Chute> getAuxiliaryChutes()
@@ -145,7 +145,7 @@ public class Chute
    }
    
    /**
-    * @return editable
+    * Returns editable
     */
    public boolean isEditable()
    {
@@ -153,7 +153,7 @@ public class Chute
    }
    
    /**
-    * @return start, or null if end does not exist
+    * Returns start, or null if end does not exist
     */
    public @Nullable Intersection getStart()
    {
@@ -162,7 +162,7 @@ public class Chute
    
    /**
     * @require this chute has a "start" intersection
-    * @return startPort
+    * Returns startPort
     */
    public int getStartPort()
    {
@@ -172,7 +172,7 @@ public class Chute
    }
    
    /**
-    * @return end, or null if end does not exist
+    * Returns end, or null if end does not exist
     */
    public @Nullable Intersection getEnd()
    {
@@ -181,7 +181,7 @@ public class Chute
    
    /**
     * @require this chute has an "end" intersection
-    * @return endPort
+    * Returns endPort
     */
    public int getEndPort()
    {
@@ -191,9 +191,9 @@ public class Chute
    }
    
    /**
-    * @requires start != null; port is a valid port number for start
+    * Requires start != null; port is a valid port number for start
     * @modifies this
-    * @effects sets "start" to the given Intersection, replacing the old one, if
+    *  sets "start" to the given Intersection, replacing the old one, if
     * present
     */
    @AssertNonNullAfter({ "start" }) protected void setStart(Intersection start,
@@ -208,9 +208,9 @@ public class Chute
    }
    
    /**
-    * @requires start != null; port is a valid port number for start
+    * Requires start != null; port is a valid port number for start
     * @modifies this
-    * @effects sets "end" to the given Intersection, replacing the old one, if
+    *  sets "end" to the given Intersection, replacing the old one, if
     * present
     */
    @AssertNonNullAfter({ "end" }) protected void setEnd(Intersection end,
@@ -225,7 +225,7 @@ public class Chute
    }
    
    /**
-    * @return UID
+    * Returns UID
     */
    public int getUID()
    {
@@ -233,8 +233,8 @@ public class Chute
    }
    
    /**
-    * @requires start == null; end == null (this cannot be attached to Intersections)
-    * @return a deep copy of this Chute.
+    * Requires start == null; end == null (this cannot be attached to Intersections)
+    * Returns a deep copy of this Chute.
     */
    public Chute copy()
    {

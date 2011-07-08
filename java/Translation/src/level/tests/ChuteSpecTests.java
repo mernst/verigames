@@ -206,7 +206,7 @@ public class ChuteSpecTests
    }
    
    /**
-    * @return true iff the given chutes have equal attributes, excluding UID and
+    * Returns true iff the given chutes have equal attributes, excluding UID and
     * start and end Intersections
     */
    private boolean chuteValueEquals(Chute c1, Chute c2)

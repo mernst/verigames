@@ -14,8 +14,8 @@ package level;
 public class Subnetwork extends Intersection
 {
    /**
-    * @requires methodName represents a valid subnetwork
-    * @effects creates a new Intersection object of type SUBNETWORK, with the
+    * Requires methodName represents a valid subnetwork
+    *  creates a new Intersection object of type SUBNETWORK, with the
     * specific subnetwork defined by the argument
     * 
     */
@@ -25,7 +25,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * @return true iff kind is SUBNETWORK
+    * Returns true iff kind is SUBNETWORK
     */
    @Override protected boolean checkIntersectionKind(Kind kind)
    {
@@ -34,7 +34,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * @return true to indicate that this is of kind SUBNETWORK
+    * Returns true to indicate that this is of kind SUBNETWORK
     */
    @Override public boolean isSubnetwork()
    {
@@ -42,7 +42,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * @return this
+    * Returns this
     */
    @Override public Subnetwork asSubnetwork()
    {
@@ -50,7 +50,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * @return the name of the method that this subnetwork refers to
+    * Returns the name of the method that this subnetwork refers to
     */
    public String getSubnetworkName()
    {
