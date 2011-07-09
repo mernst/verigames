@@ -7,11 +7,6 @@ import level.Intersection.Kind;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Nathaniel Mote
- * 
- */
-
 public class BoardImpTests
 {
    // uses the test objects initialized in the spec tests. I know it's not the

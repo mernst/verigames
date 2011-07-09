@@ -4,11 +4,6 @@ import level.Chute;
 
 import org.junit.Test;
 
-/**
- * @author Nathaniel Mote
- * 
- */
-
 public class ChuteImpTests
 {
    /**

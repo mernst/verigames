@@ -11,7 +11,6 @@ import level.Intersection;
 import level.Intersection.Kind;
 
 /**
- * @author Nathaniel Mote
  * 
  * A mutable class used for building a board from source code. Used to bridge
  * the gap between the Board structure and the information required by the
@@ -45,6 +44,7 @@ import level.Intersection.Kind;
  * That means that this class can no longer provide any guarantees about its
  * contents, so it is safer to just stop construction.
  * 
+ * @author Nathaniel Mote
  */
 
 /*

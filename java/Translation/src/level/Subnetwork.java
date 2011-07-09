@@ -1,7 +1,6 @@
 package level;
 
 /**
- * @author Nathaniel Mote
  * 
  * An Intersection subclass that creates only subnetworks. Because subnetworks
  * need more information than regular intersections, they are implemented
@@ -9,6 +8,7 @@ package level;
  * 
  * @specfield subnetwork: String // The name referring to this subnetwork
  * 
+ * @author Nathaniel Mote
  */
 
 public class Subnetwork extends Intersection

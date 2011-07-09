@@ -18,11 +18,6 @@ import level.Intersection.Kind;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Nathaniel Mote
- * 
- */
-
 public class ChuteSpecTests
 {
    

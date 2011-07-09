@@ -8,7 +8,6 @@ import static level.Intersection.Kind;
 import checkers.nullness.quals.*;
 
 /**
- * @author: Nathaniel Mote
  * 
  * An ADT representing a board for a verification game. It is essentially a
  * graph where the nodes are Intersections and the edges are Chutes. It stores
@@ -23,6 +22,8 @@ import checkers.nullness.quals.*;
  * 
  * @specfield: outgoingNode -- Intersection // the node representing the bottom
  * of the board, where all the outgoing chutes exit
+ * 
+ * @author: Nathaniel Mote
  */
 
 /*

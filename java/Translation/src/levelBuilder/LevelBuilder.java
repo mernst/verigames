@@ -10,7 +10,6 @@ import level.Level;
 
 /**
  * 
- * @author Nathaniel Mote
  * 
  * @specfield fieldToChutes: Map<String, Set<Chute>> // mapping from name of
  * field to the set of all base chutes in this level representing that field.
@@ -40,6 +39,7 @@ import level.Level;
  * That means that this class can no longer provide any guarantees about its
  * contents, so it is safer to just stop construction.
  * 
+ * @author Nathaniel Mote
  */
 
 /*

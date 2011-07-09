@@ -5,11 +5,6 @@ import level.Intersection.Kind;
 
 import org.junit.Test;
 
-/**
- * @author Nathaniel Mote
- * 
- */
-
 public class IntersectionImpTests
 {
    /**

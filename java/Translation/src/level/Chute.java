@@ -8,7 +8,6 @@ import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
 /**
- * @author: Nathaniel Mote
  * 
  * A mutable structure representing chute segments.
  * 
@@ -53,6 +52,7 @@ import checkers.nullness.quals.Nullable;
  * changed by the player in the game, and not whether this object is mutable or
  * not.
  * 
+ * @author: Nathaniel Mote
  */
 
 public class Chute

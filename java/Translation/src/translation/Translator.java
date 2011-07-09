@@ -11,12 +11,12 @@ import levelBuilder.BoardBuilder;
 import com.sun.source.tree.*;
 
 /**
- * @author Nathaniel Mote
- * @author Stephanie Dietzel
  * 
  * This is the class responsible for translating Classes (in the form of
  * ClassTrees) into Levels
  * 
+ * @author Nathaniel Mote
+ * @author Stephanie Dietzel
  */
 
 public class Translator

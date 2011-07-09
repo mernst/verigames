@@ -6,7 +6,6 @@ import java.util.List;
 import checkers.nullness.quals.Nullable;
 
 /**
- * @author Nathaniel Mote
  * 
  * A mutable ADT representing the intersections between chutes.
  * 
@@ -26,6 +25,7 @@ import checkers.nullness.quals.Nullable;
  * 
  * @specfield UID : integer // the unique even identifier for this Intersection
  * 
+ * @author Nathaniel Mote
  */
 
 /*

@@ -3,7 +3,6 @@ package level;
 import checkers.nullness.quals.Nullable;
 
 /**
- * @author Nathaniel Mote
  * 
  * An Intersection subclass that only represents NULL_TEST kinds of
  * Intersection.
@@ -19,6 +18,7 @@ import checkers.nullness.quals.Nullable;
  * accessors. This is not recommended, and, when checkRep is enabled for
  * debugging, could lead to a failure.
  * 
+ * @author Nathaniel Mote
  */
 
 public class NullTest extends Intersection

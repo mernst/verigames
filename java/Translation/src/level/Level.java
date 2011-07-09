@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author: Nathaniel Mote
  * 
  * A mutable data structure that represents a complete level
  * 
@@ -19,6 +18,7 @@ import java.util.Set;
  * @specfield: nameMap: Map<String, Board> // maps the name of a method to its
  * board
  * 
+ * @author: Nathaniel Mote
  */
 
 /*
