@@ -162,11 +162,7 @@ public class NullTestImpTests
             runMethod(n, "setNonNullChute", new Object[] {narrow});
          } catch (Throwable e)
          {
-            // It should throw a RuntimeException, but not an
-            // IllegalArgumentException. It also shouldn't be from the runMethod
-            // method
-            if (e instanceof RuntimeException
-                  && !(e instanceof IllegalArgumentException))
+            if (e instanceof AssertionError)
                expectedExceptionThrown = true;
          }
          assertTrue(expectedExceptionThrown);

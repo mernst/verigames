@@ -8,15 +8,16 @@ import java.util.Set;
 
 /**
  * 
- * A mutable data structure that represents a complete level
- * 
- * @specfield: linkedEdges: Set<Set<Chute>> // maps edges to their set of
- * 
- * @specfield: boardSet: Set<Board> // represents the set of all boards in this
- * level
- * 
- * @specfield: nameMap: Map<String, Board> // maps the name of a method to its
- * board
+ * A mutable data structure that represents a complete level<br/>
+ * <br/>
+ * Specification Field: linkedEdges: Set<Set<Chute>> // maps edges to their set
+ * of<br/>
+ * <br/>
+ * Specification Field: boardSet: Set<Board> // represents the set of all boards
+ * in this level<br/>
+ * <br/>
+ * Specification Field: nameMap: Map<String, Board> // maps the name of a method
+ * to its board<br/>
  * 
  * @author: Nathaniel Mote
  */
@@ -66,8 +67,8 @@ public class Level
     */
    
    /**
-    *  creates a new Level object with an empty linkedEdgeMap, boardSet,
-    * and nameMap
+    * Creates a new Level object with an empty linkedEdgeMap, boardSet, and
+    * nameMap
     */
    public Level()
    {
@@ -76,9 +77,8 @@ public class Level
    }
    
    /**
-    * Requires every Chute in toLink must be contained in a Board in nameMap
-    * @modifies this
-    *  makes it so that the given chutes are equivalent under the
+    * Requires: every Chute in toLink must be contained in a Board in nameMap
+    * Modifies: this makes it so that the given chutes are equivalent under the
     * relation R defined above. In other words, for all a, b in chutes (the
     * argument to this method), aRb
     * 
@@ -137,12 +137,13 @@ public class Level
    }
    
    /**
+    * Adds b to boardSet, and adds the mapping from name to b to nameMap<br/>
     * TODO add clause about how the board must be well-formed and complete.
     * 
-    * Requires b is not in boardSet, name is not in nameMap.keySet()
-    * @modifies this
-    *  adds b to boardSet, and adds the mapping from name to b to
-    * nameMap
+    * Requires: b is not in boardSet, name is not in nameMap.keySet()<br/>
+    * <br/>
+    * Modifies: this<br/>
+    * 
     */
    public void addBoard(String name, Board b)
    {
@@ -167,13 +168,12 @@ public class Level
    }
    
    /**
-    * Requires out is open and ready to be written to
-    * @modifies out
-    *  prints the text of the XML representation of this Level to the
-    * given PrintStream
+    * Prints the text of the XML representation of this Level to the given
+    * PrintStream<br/>
+    * <br/>
+    * Requires: out is open and ready to be written to<br/>
+    * Modifies: out<br/>
     * 
-    * My Java file IO is a little rusty, so let me know if I should be using
-    * something other than a PrintStream
     */
    public void outputXML(PrintStream out)
    {
@@ -186,9 +186,10 @@ public class Level
    }
    
    /**
-    * @modifies out
-    *  prints the linked edge section of the xml to out, indented by one
-    * space
+    * Prints the linked edge section of the xml to out, indented by one space<br/>
+    * <br/>
+    * Modifies: out
+    * 
     */
    private void outputLinkedEdges(PrintStream out)
    {
@@ -206,9 +207,10 @@ public class Level
    }
    
    /**
-    * @modifies out
-    *  prints the board map section of the xml to out, indented by one
-    * space
+    * Prints the board map section of the xml to out, indented by one space<br/>
+    * <br/>
+    * Modifies: out<br/>
+    * 
     */
    // TODO add "editable" attribute to edge output (involves editing DTD)
    private void outputBoardsMap(PrintStream out)
@@ -267,11 +269,5 @@ public class Level
          out.println("  </board>");
       }
       out.println(" </boards-map>");
-   }
-   
-   public static void main(String[] args)
-   {
-      Level l = new Level();
-      l.outputXML(System.out);
    }
 }

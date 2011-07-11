@@ -1,12 +1,12 @@
 package level;
 
 /**
- * 
  * An Intersection subclass that creates only subnetworks. Because subnetworks
  * need more information than regular intersections, they are implemented
- * separately
- * 
- * @specfield subnetwork: String // The name referring to this subnetwork
+ * separately<br/>
+ * <br/>
+ * Specification Field: subnetwork: String // The name referring to this
+ * subnetwork<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -14,9 +14,10 @@ package level;
 public class Subnetwork extends Intersection
 {
    /**
-    * Requires methodName represents a valid subnetwork
-    *  creates a new Intersection object of type SUBNETWORK, with the
-    * specific subnetwork defined by the argument
+    * creates a new Intersection object of type SUBNETWORK, with the specific
+    * subnetwork defined by the argument<br/>
+    * <br/>
+    * Requires: methodName represents a valid subnetwork
     * 
     */
    public Subnetwork(String methodName)

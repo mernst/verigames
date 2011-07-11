@@ -3,20 +3,19 @@ package level;
 import checkers.nullness.quals.Nullable;
 
 /**
- * 
  * An Intersection subclass that only represents NULL_TEST kinds of
- * Intersection.
- * 
+ * Intersection.<br/>
+ * <br/>
  * The output chute in port 0 is the chute that represents the "not null" branch
- * of this test
- * 
+ * of this test<br/>
+ * <br/>
  * The output chute in port 1 is the chute that represents the "null" branch of
- * this test
- * 
+ * this test<br/>
+ * <br/>
  * Note that the requirements on the chutes imposed by the setNullChute and
  * setNonNullChute methods can be circumvented by using the super-class
  * accessors. This is not recommended, and, when checkRep is enabled for
- * debugging, could lead to a failure.
+ * debugging, could lead to a failure.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -58,7 +57,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    *  creates a new Intersection of kind NULL_TEST
+    * Creates a new Intersection of kind NULL_TEST
     */
    public NullTest()
    {
@@ -67,7 +66,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * return true iff kind is NULL_TEST
+    * Returns true iff kind is NULL_TEST
     */
    @Override protected boolean checkIntersectionKind(Kind kind)
    {
@@ -102,10 +101,12 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Requires !chute.isEditable; !chute.isNarrow(), narrowness will not change
-    * in the future
-    * @modifies this
-    *  sets the given Chute to be the null branch of this null test
+    * Sets the given Chute to be the null branch of this null test<br/>
+    * <br/>
+    * Requires: !chute.isEditable; !chute.isNarrow(), narrowness will not change
+    * in the future<br/>
+    * <br/>
+    * Modifies: this<br/>
     */
    protected void setNullChute(Chute chute)
    {
@@ -130,11 +131,13 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Requires !chute.isEditable; chute.isNarrow(), narrowness will not change
-    * in the future
-    * @modifies this
-    *  sets the given Chute to be the not-null branch of this not-null
-    * test
+    * sets the given Chute to be the not-null branch of this null test<br/>
+    * <br/>
+    * Requires:<br/>
+    * !chute.isEditable;<br/>
+    * chute.isNarrow(), narrowness will not change in the future<br/>
+    * <br/>
+    * Modifies: this
     */
    protected void setNonNullChute(Chute chute)
    {

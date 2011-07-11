@@ -4,5 +4,6 @@ java/Translation/doc/
 java/Translation/.classpath
 java/Translation/.project
 java/Translation/check-nullness
+java/Translation/javadoc
 java/DO_NOT_DELETE_Observation_Translation
 java/DO_NOT_DELETE_Speculation_Translation

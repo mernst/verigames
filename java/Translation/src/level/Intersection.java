@@ -6,24 +6,26 @@ import java.util.List;
 import checkers.nullness.quals.Nullable;
 
 /**
- * 
- * A mutable ADT representing the intersections between chutes.
- * 
- * It is mutable so that chutes can be added and removed to it.
- * 
+ * A mutable ADT representing the intersections between chutes.<br/>
+ * <br/>
+ * It is mutable so that chutes can be added and removed to it.<br/>
+ * <br/>
  * Uses eternal equality so that it can be used in Collections while maintaining
- * mutability
- * 
- * @specfield kind : Intersection.Kind // represents which kind of intersection
- * this is
- * 
- * @specfield inputChutes : List<Chute> // represents the ordered set of input
- * chutes (the index of a given Chute represents the port at which it enters)
- * 
- * @specfield outputChutes : List<Chute> // represents the ordered set of output
- * chutes (the index of a given Chute represents the port at which it exits)
- * 
- * @specfield UID : integer // the unique even identifier for this Intersection
+ * mutability<br/>
+ * <br/>
+ * Specification Field: kind : Intersection.Kind // represents which kind of
+ * intersection this is<br/>
+ * <br/>
+ * Specification Field: inputChutes : List<Chute> // represents the ordered set
+ * of input chutes (the index of a given Chute represents the port at which it
+ * enters)<br/>
+ * <br/>
+ * Specification Field: outputChutes : List<Chute> // represents the ordered set
+ * of output chutes (the index of a given Chute represents the port at which it
+ * exits)<br/>
+ * <br/>
+ * Specification Field: UID : integer // the unique even identifier for this
+ * Intersection<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -178,20 +180,20 @@ public class Intersection
    }
    
    /**
-    * intended to be a substitute for assert, except I don't want to have to
+    * Intended to be a substitute for assert, except I don't want to have to
     * make sure the -ea flag is turned on in order to get these checks.
     */
    private void ensure(boolean value)
    {
       if (!value)
-         throw new RuntimeException();
+         throw new AssertionError();
    }
    
    /**
-    * Requires kind != SUBNETWORK
-    *  creates a new Intersection object of the given kind with empty
-    * i/o ports
-    * 
+    * Creates a new Intersection object of the given kind with empty i/o ports<br/>
+    * <br/>
+    * Requires: kind != SUBNETWORK<br/>
+    * <br/>
     * Subclasses calling this constructor can modify the requires clause by
     * overriding checkIntersectionKind
     * 
@@ -234,10 +236,9 @@ public class Intersection
    }
    
    /**
-    * Requires port is a valid port number for this Intersection
-    * @modifies this
-    *  sets the given chute to this Intersection's input at the given
-    * port, replacing the old one, if present
+    * Requires: port is a valid port number for this Intersection Modifies: this
+    * sets the given chute to this Intersection's input at the given port,
+    * replacing the old one, if present
     */
    protected void setInputChute(Chute input, int port)
    {
@@ -247,10 +248,9 @@ public class Intersection
    }
    
    /**
-    * Requires port is a valid port number for this Intersection
-    * @modifies this
-    *  sets the given chute to this Intersection's output at the given
-    * port, replacing the old one, if present
+    * Requires: port is a valid port number for this Intersection Modifies: this
+    * sets the given chute to this Intersection's output at the given port,
+    * replacing the old one, if present
     */
    protected void setOutputChute(Chute output, int port)
    {
@@ -282,13 +282,15 @@ public class Intersection
    }
    
    /**
-    * @modifes list
-    *  if minSize is greater than list.size, adds null elements to the
-    * end of list until list.size == minSize
-    * 
+    * If minSize is greater than list.size, adds null elements to the end of
+    * list until list.size == minSize<br/>
+    * <br/>
+    * Modifies: list<br/>
+    * <br/>
     * Notes: used to make sure that the given list can accommodate a call to add
     * with indices up to minSize
     */
+   // TODO Fix name and documentation
    // List is annotated to require non-null elements
    // TODO change after this is corrected
    @SuppressWarnings("nullness") private <E> void nullRemainingElts(
@@ -300,10 +302,6 @@ public class Intersection
    
    /**
     * Returns true iff this is a Subnetwork kind.
-    * 
-    * Notes: If implemented correctly, this is equivalent to
-    * getIntersectionKind() == Kind.SUBNETWORK. Is it still good to include this
-    * method?
     */
    public boolean isSubnetwork()
    {
@@ -311,8 +309,7 @@ public class Intersection
    }
    
    /**
-    * Requires this is of Subnetwork kind
-    * Returns this as a Subnetwork
+    * Requires: this is of Subnetwork kind Returns this as a Subnetwork
     */
    public Subnetwork asSubnetwork()
    {
@@ -330,8 +327,7 @@ public class Intersection
    }
    
    /**
-    * Requires this is of NullTest kind
-    * Returns this as a NullTest
+    * Requires: this is of NullTest kind Returns this as a NullTest
     */
    public NullTest asNullTest()
    {

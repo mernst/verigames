@@ -8,45 +8,45 @@ import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
 /**
- * 
- * A mutable structure representing chute segments.
- * 
+ * A mutable structure representing chute segments.<br/>
+ * <br/>
  * Implements eternal equality because it is mutable, but must be used in
- * Collections
- * 
- * @specfield name : String // The name of the variable corresponding to this
- * chute. Can be null if this chute does not correspond directly to a variable,
- * but all chutes connected to an incoming or outgoing node, except for the
- * return value, must either have a name or be an auxiliary chute. This is
- * because they represent fields, or, if their board is a sub-board, variables
- * declared within the method.
- * 
- * @specfield auxiliaryChutes: List<Chute> // The list of chutes that represents
- * types auxiliary to the type that this chute represents. Only includes chutes
- * that are directly auxiliary to this. For example, if this chute represented
- * Map<String, Set<Integer>>, the auxiliary chutes would represent String and
- * Set. The Integer chute would be listed as an auxiliary chute to Set, but not
- * to this.
- * 
- * @specfield start : Intersection // The starting point of this Chute
- * @specfield startPort: integer // The port from which this exits its starting
- * node
- * @specfield end : Intersection // The ending point of this Chute
- * @specfield endPort: integer // The port through which this enters its ending
- * node
- * 
- * @specfield pinch : boolean // true iff there is a pinch-point in this chute
- * segment
- * 
- * @specfield narrow : boolean // true iff the chute is currently narrow
- * 
- * @specfield editable : boolean // true iff the player can edit the width of
- * the chute
- * 
- * @specfield UID: integer // the unique odd identifier for this chute
- * 
- * Except in corner cases, pinch --> narrow. This is not, however, enforced.
- * 
+ * Collections<br/>
+ * <br/>
+ * Specification Field: name : String // The name of the variable corresponding
+ * to this chute. Can be null if this chute does not correspond directly to a
+ * variable, but all chutes connected to an incoming or outgoing node, except
+ * for the return value, must either have a name or be an auxiliary chute. This
+ * is because they represent fields, or, if their board is a sub-board,
+ * variables declared within the method.<br/>
+ * <br/>
+ * Specification Field: auxiliaryChutes: List<Chute> // The list of chutes that
+ * represents types auxiliary to the type that this chute represents. Only
+ * includes chutes that are directly auxiliary to this. For example, if this
+ * chute represented Map<String, Set<Integer>>, the auxiliary chutes would
+ * represent String and Set. The Integer chute would be listed as an auxiliary
+ * chute to Set, but not to this.<br/>
+ * <br/>
+ * Specification Field: start : Intersection // The starting point of this Chute<br/>
+ * Specification Field: startPort: integer // The port from which this exits its
+ * starting node<br/>
+ * Specification Field: end : Intersection // The ending point of this Chute
+ * Specification Field: endPort: integer // The port through which this enters
+ * its ending node<br/>
+ * <br/>
+ * Specification Field: pinch : boolean // true iff there is a pinch-point in
+ * this chute segment<br/>
+ * <br/>
+ * Specification Field: narrow : boolean // true iff the chute is currently
+ * narrow<br/>
+ * <br/>
+ * Specification Field: editable : boolean // true iff the player can edit the
+ * width of the chute<br/>
+ * <br/>
+ * Specification Field: UID: integer // the unique odd identifier for this chute<br/>
+ * <br/>
+ * Except in corner cases, pinch --> narrow. This is not, however, enforced.<br/>
+ * <br/>
  * I toyed with the idea of requiring that editable is true to change things
  * like narrow or pinch, but editable really determines whether it can be
  * changed by the player in the game, and not whether this object is mutable or
@@ -77,8 +77,8 @@ public class Chute
    private static int nextUID = 1;
    
    /**
-    *  creates a new Chute object, with the given values for name,
-    * pinch, and editable
+    * creates a new Chute object, with the given values for name, pinch, and
+    * editable
     */
    public Chute(@Nullable String name, boolean pinch, boolean editable,
          @Nullable List<Chute> aux)
@@ -87,8 +87,8 @@ public class Chute
       this.pinch = pinch;
       this.editable = editable;
       
-      startPort=-1;
-      endPort=-1;
+      startPort = -1;
+      endPort = -1;
       
       narrow = false;
       
@@ -124,8 +124,7 @@ public class Chute
    }
    
    /**
-    * @modifies this
-    *  sets the specfield narrow to the given boolean value
+    * Modifies: this sets the specfield narrow to the given boolean value
     * 
     * Note: this can be called even if editable is false, because it may be
     * necessary (or at least easier) for construction
@@ -161,8 +160,10 @@ public class Chute
    }
    
    /**
-    * @require this chute has a "start" intersection
-    * Returns startPort
+    * Returns startPort<br/>
+    * <br/>
+    * Requires:<br/>
+    * this chute has a "start" intersection
     */
    public int getStartPort()
    {
@@ -180,8 +181,10 @@ public class Chute
    }
    
    /**
-    * @require this chute has an "end" intersection
-    * Returns endPort
+    * Returns endPort<br/>
+    * <br/>
+    * Requires:<br/>
+    * this chute has an "end" intersection
     */
    public int getEndPort()
    {
@@ -191,9 +194,8 @@ public class Chute
    }
    
    /**
-    * Requires start != null; port is a valid port number for start
-    * @modifies this
-    *  sets "start" to the given Intersection, replacing the old one, if
+    * Requires: start != null; port is a valid port number for start Modifies:
+    * this sets "start" to the given Intersection, replacing the old one, if
     * present
     */
    @AssertNonNullAfter({ "start" }) protected void setStart(Intersection start,
@@ -208,9 +210,8 @@ public class Chute
    }
    
    /**
-    * Requires start != null; port is a valid port number for start
-    * @modifies this
-    *  sets "end" to the given Intersection, replacing the old one, if
+    * Requires: start != null; port is a valid port number for start Modifies:
+    * this sets "end" to the given Intersection, replacing the old one, if
     * present
     */
    @AssertNonNullAfter({ "end" }) protected void setEnd(Intersection end,
@@ -233,13 +234,14 @@ public class Chute
    }
    
    /**
-    * Requires start == null; end == null (this cannot be attached to Intersections)
-    * Returns a deep copy of this Chute.
+    * Requires: start == null; end == null (this cannot be attached to
+    * Intersections) Returns a deep copy of this Chute.
     */
    public Chute copy()
    {
       if (start != null || end != null)
-         throw new IllegalStateException("Chute must not be attached to Intersections to be copied");
+         throw new IllegalStateException(
+               "Chute must not be attached to Intersections to be copied");
       List<Chute> copyAuxChutes = new ArrayList<Chute>();
       for (Chute c : auxiliaryChutes)
       {

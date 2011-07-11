@@ -8,20 +8,18 @@ import static level.Intersection.Kind;
 import checkers.nullness.quals.*;
 
 /**
- * 
  * An ADT representing a board for a verification game. It is essentially a
  * graph where the nodes are Intersections and the edges are Chutes. It stores
- * data in both the nodes and the edges.
- * 
- * @specfield: nodes -- Set<Intersection> // the set of nodes contained in the
- * Graph
- * @specfield: edges -- Set<Chute> // the set of edges contained in the Graph
- * 
- * @specfield: incomingNode -- Intersection // the node representing the top of
- * the board, where all the incoming chutes enter
- * 
- * @specfield: outgoingNode -- Intersection // the node representing the bottom
- * of the board, where all the outgoing chutes exit
+ * data in both the nodes and the edges.<br/>
+ * <br/>
+ * Specification Field: nodes -- Set<Intersection> // the set of nodes contained in the
+ * Graph<br/>
+ * Specification Field: edges -- Set<Chute> // the set of edges contained in the Graph<br/>
+ * <br/>
+ * Specification Field: incomingNode -- Intersection // the node representing the top of
+ * the board, where all the incoming chutes enter<br/>
+ * Specification Field: outgoingNode -- Intersection // the node representing the bottom
+ * of the board, where all the outgoing chutes exit<br/>
  * 
  * @author: Nathaniel Mote
  */
@@ -71,30 +69,6 @@ public class Board
    private Set<Intersection> nodes;
    private Set<Chute> edges;
    
-   /*
-    * Representation Invariant:
-    * 
-    * nodes != null; edges != null
-    * 
-    * if nodes.size == 1, its element, i, must be of type INCOMING
-    * 
-    * nodes may contain no more than one element of type INCOMING
-    * 
-    * nodes may contain no more than one element of type OUTGOING
-    * 
-    * incomingNode != null <--> there exists an element i in nodes such that
-    * i.getIntersectionType() == INCOMING
-    * 
-    * outgoingNode != null <--> there exists an element i in nodes such that
-    * i.getIntersectionType() == OUTGOING
-    * 
-    * for all n in nodes; e in edges:
-    * 
-    * - e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
-    * 
-    * - e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
-    */
-   
    /**
     * Ensures that the representation invariant holds
     */
@@ -102,9 +76,14 @@ public class Board
    {
       if (CHECK_REP_ENABLED)
       {
+         // Representation Invariant:
+         
+         // nodes != null:
          ensure(nodes != null);
+         // edges != null
          ensure(edges != null);
          
+         // if nodes.size == 1, its element, i, must be of type INCOMING
          if (nodes.size() == 1)
          {
             ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
@@ -116,25 +95,36 @@ public class Board
          {
             if (i.getIntersectionKind() == Kind.INCOMING)
             {
+               // nodes may contain no more than one element of type INCOMING
                ensure(!incomingEncountered);
                incomingEncountered = true;
             }
             else if (i.getIntersectionKind() == Kind.OUTGOING)
             {
+               // nodes may contain no more than one element of type OUTGOING
                ensure(!outgoingEncountered);
                outgoingEncountered = true;
             }
          }
          
+         // incomingNode != null <--> there exists an element i in nodes such
+         // that
+         // i.getIntersectionType() == INCOMING
          ensure((incomingNode != null) == incomingEncountered);
+         // outgoingNode != null <--> there exists an element i in nodes such
+         // that
+         // i.getIntersectionType() == OUTGOING
          ensure((outgoingNode != null) == outgoingEncountered);
          
+         // for all n in nodes; e in edges:
          for (Intersection n : nodes)
          {
             for (Chute e : edges)
             {
+               // e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
                ensure((e.getStart() == n) == (n
                      .getOutputChute(e.getStartPort()) == e));
+               // e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
                ensure((e.getEnd() == n) == (n.getInputChute(e.getEndPort()) == e));
             }
          }
@@ -142,17 +132,17 @@ public class Board
    }
    
    /**
-    * intended to be a substitute for assert, except I don't want to have to
+    * Intended to be a substitute for assert, except I don't want to have to
     * make sure the -ea flag is turned on in order to get these checks.
     */
    private void ensure(boolean value)
    {
       if (!value)
-         throw new RuntimeException();
+         throw new AssertionError();
    }
    
    /**
-    *  Creates a new, empty board
+    * Creates a new, empty board
     */
    public Board()
    {
@@ -162,14 +152,21 @@ public class Board
    }
    
    /**
-    * Requires given node implements eternal equality; if this is the first
-    * node to be added, it must have type INCOMING; if this is of Kind INCOMING,
-    * there must not already be a node of Kind OUTGOING; if this is of Kind
-    * OUTGOING, there must not already be a node of Kind OUTGOING;
-    * !this.contains(node)
-    * @modifies this
-    *  adds node to this
+    * Adds node to this.nodes<br/>
+    * <br/>
+    * Requires:<br/>
+    * given node implements eternal equality;<br/>
+    * if this is the first node to be added, it must have type INCOMING;<br/>
+    * if this is of Kind INCOMING, there must not already be a node of Kind
+    * OUTGOING;<br/>
+    * if this is of Kind OUTGOING, there must not already be a node of Kind
+    * OUTGOING;<br/>
+    * !this.contains(node)<br/>
+    * <br/>
+    * Modifies this
+    * 
     */
+   // TODO fix error messages
    public void addNode(Intersection node)
    {
       if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
@@ -191,7 +188,7 @@ public class Board
       if (node.getIntersectionKind() == Kind.INCOMING)
          incomingNode = node;
       
-      if (node.getIntersectionKind() == Kind.OUTGOING)
+      else if (node.getIntersectionKind() == Kind.OUTGOING)
          outgoingNode = node;
       
       nodes.add(node);
@@ -199,14 +196,18 @@ public class Board
    }
    
    /**
-    * Requires this.contains(start); this.contains(end); !this.contains(edge)
-    * edge does not have start or end nodes; the given ports on the given nodes
-    * are empty
-    * @modifies this, start, end, edge
-    *  creates an edge from startPort on the start node to endPort on
-    * the end node. modifies start, end, and edge to reflect their new
-    * connections
+    * Creates an edge from startPort on the start node to endPort on the end
+    * node. modifies start, end, and edge to reflect their new connections<br/>
+    * <br/>
+    * Requires:<br/>
+    * this.contains(start);<br/>
+    * this.contains(end);<br/>
+    * !this.contains(edge) edge does not have start or end nodes;<br/>
+    * the given ports on the given nodes are empty<br/>
+    * <br/>
+    * Modifies: this, start, end, edge
     */
+   // TODO fix error messages
    public void addEdge(Intersection start, int startPort, Intersection end,
          int endPort, Chute edge)
    {
