@@ -3,6 +3,7 @@
   <property name="src" location="src"/>
   <property name="bin" location="bin"/>
   <property name="lib" location="lib"/>
+  <property name="doc" location="doc"/>
   <property environment="env"/>
   <presetdef name="jsr308.javac">
     <javac fork="yes">
@@ -56,6 +57,9 @@
     </junit>
   </target>
   <target name="javadoc">
-    <javadoc access="public" author="true" classpath="lib/junit-4.8.2.jar:/homes/gws/nmote/lib/checkers/checkers.jar:lib/javac.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
+    <javadoc access="public" author="true" classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar" destdir="${doc}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="${src}" splitindex="true" use="true" version="true"/>
+  </target>
+  <target name="javadoc.private">
+    <javadoc access="private" author="true" classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar" destdir="${doc}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="${src}" splitindex="true" use="true" version="true"/>
   </target>
 </project>
