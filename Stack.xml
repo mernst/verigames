@@ -348,7 +348,7 @@ method names that take the method signature into account, because of method-over
           <noderef id="28" port="1"/>
         </from>
         <to>
-          <noderef id="30" port="1"/>
+          <noderef id="32" port="0"/>
         </to>
       </edge>
       <edge var="theVector.elts" pinch="false" width="narrow" id="35">
