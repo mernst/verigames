@@ -52,7 +52,7 @@ import checkers.nullness.quals.Nullable;
  * changed by the player in the game, and not whether this object is mutable or
  * not.
  * 
- * @author: Nathaniel Mote
+ * @author Nathaniel Mote
  */
 
 public class Chute
@@ -234,8 +234,11 @@ public class Chute
    }
    
    /**
-    * Requires: start == null; end == null (this cannot be attached to
-    * Intersections) Returns a deep copy of this Chute.
+    * Returns a deep copy of this Chute.<br/>
+    * <br/>
+    * Requires:<br/>
+    * start == null;<br/>
+    * end == null (this cannot be attached to Intersections)
     */
    public Chute copy()
    {

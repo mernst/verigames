@@ -12,51 +12,17 @@ import checkers.nullness.quals.*;
  * graph where the nodes are Intersections and the edges are Chutes. It stores
  * data in both the nodes and the edges.<br/>
  * <br/>
- * Specification Field: nodes -- Set<Intersection> // the set of nodes contained in the
+ * Specification Field: nodes -- Set<Intersection> // the set of nodes contained
+ * in the Graph<br/>
+ * Specification Field: edges -- Set<Chute> // the set of edges contained in the
  * Graph<br/>
- * Specification Field: edges -- Set<Chute> // the set of edges contained in the Graph<br/>
  * <br/>
- * Specification Field: incomingNode -- Intersection // the node representing the top of
- * the board, where all the incoming chutes enter<br/>
- * Specification Field: outgoingNode -- Intersection // the node representing the bottom
- * of the board, where all the outgoing chutes exit<br/>
+ * Specification Field: incomingNode -- Intersection // the node representing
+ * the top of the board, where all the incoming chutes enter<br/>
+ * Specification Field: outgoingNode -- Intersection // the node representing
+ * the bottom of the board, where all the outgoing chutes exit<br/>
  * 
- * @author: Nathaniel Mote
- */
-
-/*
- * Notes:
- * 
- * - This class suffers from representation exposure. Any of the Chutes and
- * Intersections could be modified by clients. I think it's the best option,
- * though.
- * 
- * My reasoning is as follows:
- * 
- * We need a way to refer to specific Chute and Intersection objects. We cannot
- * do this by value, for two reasons. The first is that there may be Chutes and
- * Intersections that are identical except for their UID. The second is that
- * since both are mutable, and we wish to use them in Sets and Maps, we can't
- * override hashCode and equals to rely on the value of mutable data. Therefore,
- * we can't use the Collections' built in search functions, because they rely on
- * equals. Therefore, the only way to find a specific object would be to do a
- * linear search on the objects, comparing values.
- * 
- * This leaves us with two options for referring to specific objects. We could
- * use their UIDs (a feature of Chute and Intersection) or refer to them by
- * reference. These two options would be identical, except that in the case of
- * UID, outside users would not be able to create or modify the objects. This
- * means that the responsibility for doing that would fall on this class, which
- * would lead to bloat, in my opinion.
- * 
- * I'm going to try to mitigate the issue by making the relevant mutations on
- * Chutes and Intersections protected, so they can only be accessed from within
- * the package. I think that will give us the best of both worlds, because the
- * graph structure information stored in these objects won't be accessible
- * outside the package, but the other information will. However, problems could
- * still arise if the same Intersection or Chute is present in multiple Boards
- * 
- * Comments are, of course, welcome.
+ * @author Nathaniel Mote
  */
 
 public class Board
@@ -89,43 +55,64 @@ public class Board
             ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
          }
          
-         boolean incomingEncountered = false;
-         boolean outgoingEncountered = false;
          for (Intersection i : nodes)
          {
             if (i.getIntersectionKind() == Kind.INCOMING)
             {
                // nodes may contain no more than one element of type INCOMING
-               ensure(!incomingEncountered);
-               incomingEncountered = true;
+               ensure(incomingNode == i);
             }
             else if (i.getIntersectionKind() == Kind.OUTGOING)
             {
                // nodes may contain no more than one element of type OUTGOING
-               ensure(!outgoingEncountered);
-               outgoingEncountered = true;
+               ensure(outgoingNode == i);
             }
          }
          
          // incomingNode != null <--> there exists an element i in nodes such
          // that
          // i.getIntersectionType() == INCOMING
-         ensure((incomingNode != null) == incomingEncountered);
+         ensure((incomingNode == null) || nodes.contains(incomingNode));
          // outgoingNode != null <--> there exists an element i in nodes such
          // that
          // i.getIntersectionType() == OUTGOING
-         ensure((outgoingNode != null) == outgoingEncountered);
+         ensure((outgoingNode == null) || nodes.contains(outgoingNode));
          
          // for all n in nodes; e in edges:
+         // e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
+         // e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
+         for (Chute e : edges)
+         {
+            Intersection n = e.getStart();
+            // e.getStart() == n --> n.getOutputChute(e.getStartPort()) == e
+            ensure(n.getOutputChute(e.getStartPort()) == e);
+            
+            n = e.getEnd();
+            // e.getEnd() == n --> n.getInputChute(e.getEndPort()) == e
+            ensure(n.getInputChute(e.getEndPort()) == e);
+         }
+         
          for (Intersection n : nodes)
          {
-            for (Chute e : edges)
+            
+            // This approach stops verifying after encountering the first port
+            // with a null value. Therefore, it may not always check every
+            // existing output port
+            
+            Chute e = n.getOutputChute(0);
+            for (int i = 0; e != null; e = n.getOutputChute(++i))
             {
-               // e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
-               ensure((e.getStart() == n) == (n
-                     .getOutputChute(e.getStartPort()) == e));
-               // e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
-               ensure((e.getEnd() == n) == (n.getInputChute(e.getEndPort()) == e));
+               // e.getStart() == n <-- n.getOutputChute(e.getStartPort()) == e
+               ensure(i == e.getStartPort());
+               ensure(e.getStart() == n);
+            }
+            
+            e = n.getInputChute(0);
+            for (int i = 0; e != null; e = n.getInputChute(++i))
+            {
+               // e.getEnd() == n <-- n.getInputChute(e.getEndPort()) == e
+               ensure(i == e.getEndPort());
+               ensure(e.getEnd() == n);
             }
          }
       }
@@ -152,7 +139,7 @@ public class Board
    }
    
    /**
-    * Adds node to this.nodes<br/>
+    * Adds node to this.nodes.<br/>
     * <br/>
     * Requires:<br/>
     * given node implements eternal equality;<br/>
@@ -163,7 +150,7 @@ public class Board
     * OUTGOING;<br/>
     * !this.contains(node)<br/>
     * <br/>
-    * Modifies this
+    * Modifies: this
     * 
     */
    // TODO fix error messages
@@ -196,16 +183,14 @@ public class Board
    }
    
    /**
-    * Creates an edge from startPort on the start node to endPort on the end
-    * node. modifies start, end, and edge to reflect their new connections<br/>
+    * Adds an edge from startPort on the start node to endPort on the end
+    * node. Modifies start, end, and edge to reflect their new connections<br/>
     * <br/>
     * Requires:<br/>
     * this.contains(start);<br/>
     * this.contains(end);<br/>
     * !this.contains(edge) edge does not have start or end nodes;<br/>
     * the given ports on the given nodes are empty<br/>
-    * <br/>
-    * Modifies: this, start, end, edge
     */
    // TODO fix error messages
    public void addEdge(Intersection start, int startPort, Intersection end,

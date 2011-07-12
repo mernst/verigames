@@ -19,30 +19,17 @@ import java.util.Set;
  * Specification Field: nameMap: Map<String, Board> // maps the name of a method
  * to its board<br/>
  * 
- * @author: Nathaniel Mote
+ * @author Nathaniel Mote
  */
 
 /*
  * Notes:
  * 
- * - The linked edge map is really representing a set of sets. The idea is that
- * some chutes are necessarily of the same type. This could easily be
- * represented as a Set<Set<Chute>>, and it would be more natural that way. The
- * only concern is that this turns a constant-time lookup to linear time in the
- * number of Set<Chute>'s. However, this number should be so small as to be
- * negligible.
+ * Let R be an equivalence relation on the set of all Chutes such that:
  * 
- * More abstractly: Let R be an equivalence relation on the set of all Chutes
- * such that aRb <--> a and b necessarily have the same width.
+ * aRb <--> a and b necessarily have the same width.
  * 
- * The linkedEdgeMap is, then, for all c in the set of Chutes, a mapping from c
- * to [c], where [c] is the R-equivalence class of c.
- * 
- * I'm not sure if it will be helpful to generalize it like that, but it came to
- * mind.
- * 
- * - I've decided (tentatively) to represent it as a Set<Set<Chute>>. It still
- * wouldn't be too much trouble to switch, though.
+ * linkedEdges is the set of equivalence classes defined by R
  */
 
 public class Level
