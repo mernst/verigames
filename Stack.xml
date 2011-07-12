@@ -304,18 +304,26 @@ method names that take the method signature into account, because of method-over
           <port num="1" edge="31"/>
         </output>
       </node>
-      <node kind="RESTART_WHITE_BALL" id="30">
+      <node kind="END" id="30">
         <input>
           <port num="0" edge="29"/>
         </input>
+        <output/>
+      </node>
+      <node kind="START_WHITE_BALL" id="62">
+        <input/>
         <output>
           <port num="0" edge="33"/>
         </output>
       </node>
-      <node kind="RESTART_NO_BALL" id="32">
+      <node kind="END" id="32">
         <input>
           <port num="0" edge="31"/>
         </input>
+        <output/>
+      </node>
+      <node kind="START_NO_BALL" id="64">
+        <input/>
         <output>
           <port num="0" edge="35"/>
         </output>
@@ -337,7 +345,7 @@ method names that take the method signature into account, because of method-over
       </edge>
       <edge var="theVector" pinch="false" width="wide" id="33">
         <from>
-          <noderef id="30" port="0"/>
+          <noderef id="62" port="0"/>
         </from>
         <to>
           <noderef id="34" port="0"/>
@@ -353,7 +361,7 @@ method names that take the method signature into account, because of method-over
       </edge>
       <edge var="theVector.elts" pinch="false" width="narrow" id="35">
         <from>
-          <noderef id="32" port="0"/>
+          <noderef id="64" port="0"/>
         </from>
         <to>
           <noderef id="34" port="1"/>
