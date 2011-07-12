@@ -15,6 +15,8 @@ import level.Level;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO add tests for other features of level
+
 public class LevelSpecTests
 {
    public Chute[] chutes;

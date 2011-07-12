@@ -10,100 +10,96 @@ import java.util.Set;
  * 
  * A mutable data structure that represents a complete level<br/>
  * <br/>
- * Specification Field: linkedEdges: Set<Set<Chute>> // maps edges to their set
- * of<br/>
+ * Specification Field: linkedEdgeClasses: Set<Set<Chute>> // Contains
+ * equivalence classes of Chutes, as defined by the following equivalence
+ * relation<br/>
  * <br/>
- * Specification Field: boardSet: Set<Board> // represents the set of all boards
+ * Let R be an equivalence relation on the set of all Chutes such that:<br/>
+ * aRb <--> a and b necessarily have the same width.<br/>
+ * <br/>
+ * Specification Field: boards: Set<Board> // represents the set of all boards
  * in this level<br/>
  * <br/>
- * Specification Field: nameMap: Map<String, Board> // maps the name of a method
- * to its board<br/>
+ * Specification Field: boardNames: Map<String, Board> // maps the name of a
+ * method to its board<br/>
  * 
  * @author Nathaniel Mote
  */
 
-/*
- * Notes:
- * 
- * Let R be an equivalence relation on the set of all Chutes such that:
- * 
- * aRb <--> a and b necessarily have the same width.
- * 
- * linkedEdges is the set of equivalence classes defined by R
- */
-
 public class Level
 {
-   private Set<Set<Chute>> linkedEdges;
+   private Set<Set<Chute>> linkedEdgeClasses;
    
    // TODO change String, if necessary, to whatever we end up using
-   private Map<String, Board> nameMap;
+   private Map<String, Board> boardNames;
    
    /*
     * Representation Invariant:
     * 
-    * No chute can be contained in more than one set in linkedEdges
+    * No chute can be contained in more than one set in linkedEdgeClasses
     * 
-    * No set in linkedEdges may be empty
+    * No set in linkedEdgeClasses may be empty
     * 
-    * No set in linkedEdges may have size 1 (the fact that a chute is linked to
-    * itself need not be represented)
+    * No set in linkedEdgeClasses may have size 1 (the fact that a chute is
+    * linked to itself need not be represented)
     * 
-    * All chutes contained in sets contained in linkedEdges must also be
-    * contained contained by some Board in nameMap.values()
+    * All chutes contained in sets contained in linkedEdgeClasses must also be
+    * contained contained by some Board in boardNames.values()
     */
    
    /**
-    * Creates a new Level object with an empty linkedEdgeMap, boardSet, and
-    * nameMap
+    * Creates a new Level object with an empty linkedEdgeMap, boards, and
+    * boardNames
     */
    public Level()
    {
-      linkedEdges = new HashSet<Set<Chute>>();
-      nameMap = new HashMap<String, Board>();
+      linkedEdgeClasses = new HashSet<Set<Chute>>();
+      boardNames = new HashMap<String, Board>();
    }
    
    /**
-    * Requires: every Chute in toLink must be contained in a Board in nameMap
-    * Modifies: this makes it so that the given chutes are equivalent under the
-    * relation R defined above. In other words, for all a, b in chutes (the
-    * argument to this method), aRb
+    * Makes it so that the given chutes are equivalent under the relation R
+    * defined for linkedEdgeClasses. In other words, for all a, b in toLink, aRb<br/>
+    * <br/>
+    * Requires: every Chute in toLink must be contained in a Board in boardNames<br/>
+    * Modifies: this <br/>
+    * <br/>
+    * Runs in O(m*n) time, where m is linkedEdgeClasses.size() and n is
+    * toLink.size()
     * 
-    * runs in O(m*n) time, where m is linkedEdges.size() and n is toLink.size()
+    * @param toLink
+    * The Set of Chutes to make equivalent under the equivalence relation R
+    * 
     */
    public void makeLinked(Set<Chute> toLink)
    {
-      // This set is to contain all of the sets in linkedEdges that contain
-      // elements in toLink
-      Set<Set<Chute>> containsToLink = new HashSet<Set<Chute>>();
+      /*
+       * Contains the sets that should be removed from linkedEdgeClasses because
+       * they will be deprecated by the newly created equivalence class
+       */
+      Set<Set<Chute>> toRemove = new HashSet<Set<Chute>>();
       
-      for (Set<Chute> set : linkedEdges)
+      /*
+       * The new equivalence class to be added to linkedEdgeClasses. It will at
+       * least have all of the elements in toLink.
+       */
+      Set<Chute> newEquivClass = new HashSet<Chute>(toLink);
+      
+      for (Set<Chute> linked : linkedEdgeClasses)
       {
          for (Chute c : toLink)
          {
-            // if a set in linkedEdges contains any element in toLink, it should
-            // be added to containsToLink
-            if (set.contains(c))
-               containsToLink.add(set);
+            if (linked.contains(c))
+            {
+               toRemove.add(linked);
+               newEquivClass.addAll(linked);
+            }
          }
       }
       
-      // All of the elements in the sets in containsToLink and toLink should be
-      // put into a single set. This is accomplished by creating a new set with
-      // all the elements in it, and removing the old ones from linkedEdges
+      linkedEdgeClasses.removeAll(toRemove);
       
-      Set<Chute> newEquivClass = new HashSet<Chute>();
-      
-      // take all of the elements in all of the chutes that contain elements
-      // that are supposed to be linked and add them to the new set
-      for (Set<Chute> s : containsToLink)
-         newEquivClass.addAll(s);
-      
-      newEquivClass.addAll(toLink);
-      
-      linkedEdges.removeAll(containsToLink);
-      
-      linkedEdges.add(newEquivClass);
+      linkedEdgeClasses.add(newEquivClass);
    }
    
    /**
@@ -115,7 +111,7 @@ public class Level
       if (chutes.size() == 1)
          return true;
       
-      for (Set<Chute> s : linkedEdges)
+      for (Set<Chute> s : linkedEdgeClasses)
       {
          if (s.containsAll(chutes))
             return true;
@@ -124,34 +120,34 @@ public class Level
    }
    
    /**
-    * Adds b to boardSet, and adds the mapping from name to b to nameMap<br/>
+    * Adds b to boards, and adds the mapping from name to b to boardNames<br/>
     * TODO add clause about how the board must be well-formed and complete.
     * 
-    * Requires: b is not in boardSet, name is not in nameMap.keySet()<br/>
+    * Requires: b is not in boards, name is not in boardNames.keySet()<br/>
     * <br/>
     * Modifies: this<br/>
     * 
     */
    public void addBoard(String name, Board b)
    {
-      nameMap.put(name, b);
+      boardNames.put(name, b);
    }
    
    /**
-    * Returns a shallow copy of boardSet
+    * Returns a shallow copy of boards
     */
-   public Set<Board> boardSet()
+   public Set<Board> boards()
    {
-      return new HashSet<Board>(nameMap.values());
+      return new HashSet<Board>(boardNames.values());
    }
    
    /**
-    * Returns the Board that name maps to in nameMap, or null if it maps to
+    * Returns the Board that name maps to in boardNames, or null if it maps to
     * nothing
     */
    public/* @Nullable */Board getBoard(String name)
    {
-      return nameMap.get(name);
+      return boardNames.get(name);
    }
    
    /**
@@ -167,7 +163,7 @@ public class Level
       out.println("<?xml version=\"1.0\"?>");
       out.println("<!DOCTYPE level SYSTEM \"level.dtd\">");
       out.println("<level>");
-      outputLinkedEdges(out);
+      outputlinkedEdgeClasses(out);
       outputBoardsMap(out);
       out.println("</level>");
    }
@@ -178,10 +174,10 @@ public class Level
     * Modifies: out
     * 
     */
-   private void outputLinkedEdges(PrintStream out)
+   private void outputlinkedEdgeClasses(PrintStream out)
    {
       out.println(" <linked-edges>");
-      for (Set<Chute> set : linkedEdges)
+      for (Set<Chute> set : linkedEdgeClasses)
       {
          out.println("  <set>");
          for (Chute c : set)
@@ -203,9 +199,9 @@ public class Level
    private void outputBoardsMap(PrintStream out)
    {
       out.println(" <boards-map>");
-      for (String name : nameMap.keySet())
+      for (String name : boardNames.keySet())
       {
-         Board board = nameMap.get(name);
+         Board board = boardNames.get(name);
          out.println("  <board name=\"" + name + "\">");
          
          for (Intersection node : board.getNodes())
