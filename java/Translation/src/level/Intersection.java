@@ -57,11 +57,6 @@ public class Intersection
       // the top of the exit chute
       START_NO_BALL, // Start a new chute with no ball dropping into it
       END, // Terminate a chute
-      RESTART_WHITE_BALL, // Terminate a chute and restart it with a new white
-                          // ball
-      RESTART_BLACK_BALL, // Terminate a chute and restart it with a new black
-                          // ball
-      RESTART_NO_BALL, // Terminate a chute and restart it without a ball
       SUBNETWORK, // Represents a method call
    };
    
@@ -156,15 +151,6 @@ public class Intersection
                break;
             case END:
                ensure(inputChutes.size() <= 1 && outputChutes.size() == 0);
-               break;
-            case RESTART_WHITE_BALL:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
-               break;
-            case RESTART_BLACK_BALL:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
-               break;
-            case RESTART_NO_BALL:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
                break;
             case SUBNETWORK:
                // no restrictions

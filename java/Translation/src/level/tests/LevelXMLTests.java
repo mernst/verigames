@@ -15,26 +15,26 @@ import level.Level;
 
 import org.junit.Test;
 
-// class TestClass
-// {
-// String s;
-//
-// public TestClass()
-// {
-// s = null;
-// }
-//
-// public void method()
-// {
-// s = new String("asdf");
-// }
-// }
-
 public class LevelXMLTests
 {
    
    /**
-    * Generates the XML for the above TestClass
+    * Generates the XML for TestClass (below)
+    * 
+    * class TestClass
+    * {
+    *    String s;
+    *    
+    *    public TestClass()
+    *    {
+    *       s = null;
+    *    }
+    * 
+    *    public void method()
+    *    {
+    *       s = new String("asdf");
+    *    }   
+    * }
     */
    @Test public void test1() throws FileNotFoundException
    {
@@ -42,7 +42,8 @@ public class LevelXMLTests
       
       Board constructor = new Board();
       constructor.addNode(Intersection.intersectionFactory(Kind.INCOMING));
-      Intersection start = Intersection.intersectionFactory(Kind.START_BLACK_BALL);
+      Intersection start = Intersection
+            .intersectionFactory(Kind.START_BLACK_BALL);
       constructor.addNode(start);
       Intersection outgoing = Intersection.intersectionFactory(Kind.OUTGOING);
       constructor.addNode(outgoing);
@@ -53,18 +54,21 @@ public class LevelXMLTests
       l.addBoard("constructor", constructor);
       
       Intersection incoming = Intersection.intersectionFactory(Kind.INCOMING);
-      Intersection restart = Intersection.intersectionFactory(Kind.RESTART_WHITE_BALL);
+      Intersection end = Intersection.intersectionFactory(Kind.END);
+      Intersection restart = Intersection
+            .intersectionFactory(Kind.START_WHITE_BALL);
       Intersection out = Intersection.intersectionFactory(Kind.OUTGOING);
       
       Board method = new Board();
       method.addNode(incoming);
+      method.addNode(end);
       method.addNode(restart);
       method.addNode(out);
       
       Chute c2 = new Chute("s", false, true, null);
       Chute c3 = new Chute("s", false, true, null);
       
-      method.addEdge(incoming, 0, restart, 0, c2);
+      method.addEdge(incoming, 0, end, 0, c2);
       method.addEdge(restart, 0, out, 0, c3);
       
       l.addBoard("method", method);
@@ -76,7 +80,8 @@ public class LevelXMLTests
       
       l.makeLinked(linked);
       
-      PrintStream p = new PrintStream(new FileOutputStream(new File("TestClass.actual.xml")));
+      PrintStream p = new PrintStream(new FileOutputStream(new File(
+            "TestClass.actual.xml")));
       
       l.outputXML(p);
       
