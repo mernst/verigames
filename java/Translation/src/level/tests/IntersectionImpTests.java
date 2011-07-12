@@ -8,21 +8,11 @@ import org.junit.Test;
 public class IntersectionImpTests
 {
    /**
-    * Tests to make sure that the Intersection constructor fails on Kind
-    * SUBNETWORK
+    * Tests to make sure that the Intersection factory fails on Kind SUBNETWORK
     */
    @Test(expected = IllegalArgumentException.class) public void testConstructorFailure1()
    {
-      new Intersection(Kind.SUBNETWORK);
-   }
-   
-   /**
-    * Tests to make sure that the Intersection constructor fails on Kind
-    * NULL_TEST
-    */
-   @Test(expected = IllegalArgumentException.class) public void testConstructorFailure2()
-   {
-      new Intersection(Kind.NULL_TEST);
+      Intersection.intersectionFactory(Kind.SUBNETWORK);
    }
    
    /**
@@ -30,7 +20,7 @@ public class IntersectionImpTests
     */
    @Test(expected = IllegalStateException.class) public void testAsSubnetworkFailure()
    {
-      (new Intersection(Kind.INCOMING)).asSubnetwork();
+      (Intersection.intersectionFactory(Kind.INCOMING)).asSubnetwork();
    }
    
    /**
@@ -38,6 +28,6 @@ public class IntersectionImpTests
     */
    @Test(expected = IllegalStateException.class) public void testAsNullTestFailure()
    {
-      (new Intersection(Kind.INCOMING)).asNullTest();
+      (Intersection.intersectionFactory(Kind.INCOMING)).asNullTest();
    }
 }

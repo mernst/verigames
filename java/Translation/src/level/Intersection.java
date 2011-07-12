@@ -191,15 +191,45 @@ public class Intersection
    }
    
    /**
+    * Returns an Intersection of the given Kind<br/>
+    * <br/>
+    * Requires: kind != SUBNETWORK (use subnetworkFactory)
+    * 
+    * @param kind
+    * The kind of Intersection to return
+    * 
+    */
+   public static Intersection intersectionFactory(Kind kind)
+   {
+      if (kind == Kind.SUBNETWORK)
+         throw new IllegalArgumentException(
+               "intersectionFactory passed Kind.SUBNETWORK. Use subnetworkFactory instead.");
+      else if (kind == Kind.NULL_TEST)
+         return new NullTest();
+      else
+         return new Intersection(kind);
+   }
+   
+   public static Subnetwork subnetworkFactory(String methodName)
+   {
+      return new Subnetwork(methodName);
+   }
+   
+   /**
     * Creates a new Intersection object of the given kind with empty i/o ports<br/>
     * <br/>
-    * Requires: kind != SUBNETWORK<br/>
+    * Requires:<br/>
+    * kind != NULL_TEST;<br/>
+    * kind != SUBNETWORK<br/>
     * <br/>
     * Subclasses calling this constructor can modify the requires clause by
     * overriding checkIntersectionKind
     * 
+    * @param kind
+    * The kind of Intersection to create
+    * 
     */
-   public Intersection(Kind kind)
+   protected Intersection(Kind kind)
    {
       
       if (!checkIntersectionKind(kind)) // if this is not a valid Kind for this

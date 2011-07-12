@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import level.Chute;
+import level.Intersection;
+import level.Intersection.Kind;
 import level.NullTest;
 
 import org.junit.Test;
@@ -18,7 +20,7 @@ public class NullTestSpecTests
     */
    @Test public void testNullChuteAccessors() throws IllegalAccessException, InvocationTargetException
    {
-      NullTest nt = new NullTest();
+      NullTest nt = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
       
       Chute nullable = new Chute(null, false, false, null);
       nullable.setNarrow(false);

@@ -20,7 +20,7 @@ public class Subnetwork extends Intersection
     * Requires: methodName represents a valid subnetwork
     * 
     */
-   public Subnetwork(String methodName)
+   protected Subnetwork(String methodName)
    {
       super(Kind.SUBNETWORK);
    }

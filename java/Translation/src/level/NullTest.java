@@ -59,7 +59,7 @@ public class NullTest extends Intersection
    /**
     * Creates a new Intersection of kind NULL_TEST
     */
-   public NullTest()
+   protected NullTest()
    {
       super(Kind.NULL_TEST);
       checkRep();

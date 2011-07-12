@@ -25,7 +25,7 @@ public class IntersectionSpecTests
    {
       assertFalse(
             "isSubnetwork should return false on a regular Intersection.",
-            (new Intersection(Kind.MERGE)).isSubnetwork());
+            (Intersection.intersectionFactory(Kind.MERGE)).isSubnetwork());
    }
    
    /**
@@ -34,7 +34,7 @@ public class IntersectionSpecTests
    @Test public void isNullTestTest()
    {
       assertFalse("isNullTest should return false on a regular Intersection.",
-            (new Intersection(Kind.MERGE)).isNullTest());
+            (Intersection.intersectionFactory(Kind.MERGE)).isNullTest());
    }
    
    /**
@@ -44,7 +44,7 @@ public class IntersectionSpecTests
    {
       ArrayList<Intersection> elts = new ArrayList<Intersection>();
       for (int i = 0; i < 8; i++)
-         elts.add(new Intersection(Kind.CONNECT));
+         elts.add(Intersection.intersectionFactory(Kind.CONNECT));
       
       for (Intersection i : elts)
       {
@@ -68,8 +68,8 @@ public class IntersectionSpecTests
    
    @Before public void init()
    {
-      i = new Intersection(Kind.INCOMING);
-      j = new Intersection(Kind.OUTGOING);
+      i = Intersection.intersectionFactory(Kind.INCOMING);
+      j = Intersection.intersectionFactory(Kind.OUTGOING);
       chute1 = new Chute(null, true, true, null);
       chute2 = new Chute(null, true, true, null);
       

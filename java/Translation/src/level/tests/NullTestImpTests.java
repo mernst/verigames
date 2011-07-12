@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import level.Chute;
+import level.Intersection;
+import level.Intersection.Kind;
 import level.NullTest;
 
 import org.junit.Before;
@@ -20,7 +22,7 @@ public class NullTestImpTests
    
    @Before public void init()
    {
-      n = new NullTest();
+      n = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
    }
    
    /**
@@ -140,7 +142,7 @@ public class NullTestImpTests
       
       if (checkRepEnabled)
       {
-         NullTest n = new NullTest();
+         NullTest n = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
          
          Chute wide = new Chute(null, false, false, null);
          wide.setNarrow(false);

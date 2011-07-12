@@ -87,7 +87,7 @@ public class BoardBuilder
       
       levelBuilder = lb;
       board = new Board();
-      Intersection incoming = new Intersection(Kind.INCOMING);
+      Intersection incoming = Intersection.intersectionFactory(Kind.INCOMING);
       board.addNode(incoming);
       
       // TODO finish constructor
