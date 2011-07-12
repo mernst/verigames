@@ -8,17 +8,17 @@ import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable structure representing chute segments.<br/>
+ * A mutable structure representing a chute segment.<br/>
  * <br/>
  * Implements eternal equality because it is mutable, but must be used in
  * Collections<br/>
  * <br/>
- * Specification Field: name : String // The name of the variable corresponding
- * to this chute. Can be null if this chute does not correspond directly to a
- * variable, but all chutes connected to an incoming or outgoing node, except
- * for the return value, must either have a name or be an auxiliary chute. This
- * is because they represent fields, or, if their board is a sub-board,
- * variables declared within the method.<br/>
+ * Specification Field: name : Nullable String // The name of the variable
+ * corresponding to this chute. Can be null if this chute does not correspond
+ * directly to a variable, but all chutes connected to an incoming or outgoing
+ * node, except for the return value, must either have a name or be an auxiliary
+ * chute. This is because they represent fields, or, if their board is a
+ * sub-board, variables declared within the method.<br/>
  * <br/>
  * Specification Field: auxiliaryChutes: List<Chute> // The list of chutes that
  * represents types auxiliary to the type that this chute represents. Only
@@ -26,6 +26,9 @@ import checkers.nullness.quals.Nullable;
  * chute represented Map<String, Set<Integer>>, the auxiliary chutes would
  * represent String and Set. The Integer chute would be listed as an auxiliary
  * chute to Set, but not to this.<br/>
+ * <br/>
+ * This is useful because a reference to a single chute can serve as a complete
+ * description of the relevant type information of a given type. <br/>
  * <br/>
  * Specification Field: start : Intersection // The starting point of this Chute<br/>
  * Specification Field: startPort: integer // The port from which this exits its
@@ -45,6 +48,9 @@ import checkers.nullness.quals.Nullable;
  * <br/>
  * Specification Field: UID: integer // the unique odd identifier for this chute<br/>
  * <br/>
+ * The UID of a Chute is odd, while the UID of an Intersection is even. This is
+ * to reduce confusion for humans reading the generated XML<br/>
+ * <br/>
  * Except in corner cases, pinch --> narrow. This is not, however, enforced.<br/>
  * <br/>
  * I toyed with the idea of requiring that editable is true to change things
@@ -63,9 +69,9 @@ public class Chute
    private List<Chute> auxiliaryChutes;
    
    private @LazyNonNull Intersection start;
-   private int startPort;
+   private int startPort = -1;
    private @LazyNonNull Intersection end;
-   private int endPort;
+   private int endPort = -1;
    
    private final boolean pinch; // whether a chute has a pinch-point is a fact
                                 // of the original code, and cannot be modified
@@ -86,9 +92,6 @@ public class Chute
       this.name = name;
       this.pinch = pinch;
       this.editable = editable;
-      
-      startPort = -1;
-      endPort = -1;
       
       narrow = false;
       

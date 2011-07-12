@@ -183,8 +183,8 @@ public class Board
    }
    
    /**
-    * Adds an edge from startPort on the start node to endPort on the end
-    * node. Modifies start, end, and edge to reflect their new connections<br/>
+    * Adds an edge from startPort on the start node to endPort on the end node.
+    * Modifies start, end, and edge to reflect their new connections<br/>
     * <br/>
     * Requires:<br/>
     * this.contains(start);<br/>
@@ -227,7 +227,9 @@ public class Board
    }
    
    /**
-    * Returns the cardinality of nodes
+    * Returns the cardinality of nodes.<br/>
+    * <br/>
+    * May be more efficient than getNodes().size()
     */
    public int nodesSize()
    {
@@ -235,7 +237,9 @@ public class Board
    }
    
    /**
-    * Returns the cardinality of edges
+    * Returns the cardinality of edges<br/>
+    * <br/>
+    * May be more efficient than getEdges().size()
     */
    public int edgesSize()
    {
@@ -279,7 +283,10 @@ public class Board
    }
    
    /**
-    * Returns true iff nodes contains elt or edges contains elt
+    * Returns true iff nodes contains elt or edges contains elt<br/>
+    * <br/>
+    * May be more efficient than<br/>
+    * getNodes().contains(elt) || getEdges.contains(elt)
     */
    public boolean contains(Object elt)
    {
