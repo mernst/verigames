@@ -39,7 +39,7 @@ import checkers.nullness.quals.Nullable;
 
 public class Intersection
 {
-   public enum Kind
+   public static enum Kind
    {
       INCOMING, // The start point of chutes that are entering the frame on
       // the top
