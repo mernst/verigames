@@ -3,14 +3,11 @@ package level;
 import checkers.nullness.quals.Nullable;
 
 /**
- * An Intersection subclass that only represents NULL_TEST kinds of
- * Intersection.<br/>
+ * An Intersection subclass that represents NULL_TEST kinds of Intersection.<br/>
  * <br/>
- * The output chute in port 0 is the chute that represents the "not null" branch
- * of this test<br/>
+ * The output chute in port 0 represents the "not null" branch of this test<br/>
  * <br/>
- * The output chute in port 1 is the chute that represents the "null" branch of
- * this test<br/>
+ * The output chute in port 1 represents the "null" branch of this test<br/>
  * <br/>
  * Note that the requirements on the chutes imposed by the setNullChute and
  * setNonNullChute methods can be circumvented by using the super-class
@@ -38,8 +35,11 @@ public class NullTest extends Intersection
    /**
     * Checks that the representation invariant holds
     */
-   private void checkRep()
+   @Override
+   protected void checkRep()
    {
+      super.checkRep();
+      
       if (CHECK_REP_ENABLED)
       {
          Chute nonNullChute = getNonNullChute();

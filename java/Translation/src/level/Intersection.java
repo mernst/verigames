@@ -120,7 +120,7 @@ public class Intersection
    /**
     * checks that the rep invariant holds
     */
-   private void checkRep()
+   protected void checkRep()
    {
       if (CHECK_REP_ENABLED)
       {
@@ -218,12 +218,15 @@ public class Intersection
    
    /**
     * Returns true iff the given kind is a valid intersection kind for this
-    * implementation
+    * implementation.<br/>
+    * <br/>
+    * Subclasses should override this so that the call to this class's
+    * constructor succeeds.
     */
    protected boolean checkIntersectionKind(Kind kind)
    {
       // this implementation supports every Intersection kind except for
-      // SUBNETWORK
+      // SUBNETWORK and NULL_TEST
       return kind != Kind.SUBNETWORK && kind != Kind.NULL_TEST;
    }
    
