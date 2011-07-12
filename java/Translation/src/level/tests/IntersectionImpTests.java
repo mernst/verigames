@@ -7,6 +7,7 @@ import org.junit.Test;
 
 public class IntersectionImpTests
 {
+   // TODO add test to ensure that inactive Intersections can't be mutated
    /**
     * Tests to make sure that the Intersection factory fails on Kind SUBNETWORK
     */

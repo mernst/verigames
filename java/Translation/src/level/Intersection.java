@@ -6,9 +6,11 @@ import java.util.List;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable ADT representing an intersection between chutes.<br/>
+ * A mutable (until deactivated) ADT representing an intersection between
+ * chutes.<br/>
  * <br/>
- * It is mutable so that chutes can be added and removed to it.<br/>
+ * It is mutable, until deactivated, so that chutes can be added and removed to
+ * it.<br/>
  * <br/>
  * Uses eternal equality so that it can be used in Collections while maintaining
  * mutability<br/>
@@ -26,6 +28,13 @@ import checkers.nullness.quals.Nullable;
  * <br/>
  * Specification Field: UID : integer // the unique even identifier for this
  * Intersection<br/>
+ * <br/>
+ * The UID of a Chute is odd, while the UID of an Intersection is even. This is
+ * to reduce confusion for humans reading the generated XML<br/>
+ * <br/>
+ * Specification Field: active : boolean // true iff this can be part of a
+ * structure that is still under construction. once active is set to false, this
+ * becomes immutable.
  * 
  * @author Nathaniel Mote
  */
@@ -69,6 +78,8 @@ public class Intersection
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness") private List</* @Nullable */Chute> inputChutes;
    @SuppressWarnings("nullness") private List</* @Nullable */Chute> outputChutes;
+   
+   private boolean active = true;
    
    private final int UID;
    
@@ -256,24 +267,42 @@ public class Intersection
    }
    
    /**
-    * Requires: port is a valid port number for this Intersection Modifies: this
-    * sets the given chute to this Intersection's input at the given port,
-    * replacing the old one, if present
+    * Sets the given chute to this Intersection's input at the given port,
+    * replacing the old one, if present <br/>
+    * <br/>
+    * Requires:<br/>
+    * active;<br/>
+    * port is a valid port number for this Intersection<br/>
+    * <br/>
+    * Modifies: this
+    * 
     */
    protected void setInputChute(Chute input, int port)
    {
+      if (!active)
+         throw new IllegalStateException(
+               "Mutation attempted on inactive Intersection");
       padToLength(inputChutes, port);
       inputChutes.add(port, input);
       checkRep();
    }
    
    /**
-    * Requires: port is a valid port number for this Intersection Modifies: this
-    * sets the given chute to this Intersection's output at the given port,
-    * replacing the old one, if present
+    * Sets the given chute to this Intersection's output at the given port,
+    * replacing the old one, if present<br/>
+    * <br/>
+    * Requires:<br/>
+    * active;<br/>
+    * port is a valid port number for this Intersection <br/>
+    * <br/>
+    * Modifies: this
+    * 
     */
    protected void setOutputChute(Chute output, int port)
    {
+      if (!active)
+         throw new IllegalStateException(
+               "Mutation attempted on inactive Intersection");
       padToLength(outputChutes, port);
       outputChutes.add(port, output);
       checkRep();
@@ -360,5 +389,25 @@ public class Intersection
    public int getUID()
    {
       return UID;
+   }
+   
+   /**
+    * Returns active
+    */
+   public boolean isActive()
+   {
+      return active;
+   }
+   
+   /**
+    * Sets active to false<br/>
+    * <br/>
+    * Requires: active
+    */
+   public void deactivate()
+   {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      active = false;
    }
 }

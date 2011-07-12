@@ -8,7 +8,7 @@ import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable structure representing a chute segment.<br/>
+ * A mutable (until deactivated) structure representing a chute segment.<br/>
  * <br/>
  * Implements eternal equality because it is mutable, but must be used in
  * Collections<br/>
@@ -51,6 +51,10 @@ import checkers.nullness.quals.Nullable;
  * The UID of a Chute is odd, while the UID of an Intersection is even. This is
  * to reduce confusion for humans reading the generated XML<br/>
  * <br/>
+ * Specification Field: active : boolean // true iff this can be part of a
+ * structure that is still under construction. once active is set to false, this
+ * becomes immutable.<br/>
+ * <br/>
  * Except in corner cases, pinch --> narrow. This is not, however, enforced.<br/>
  * <br/>
  * I toyed with the idea of requiring that editable is true to change things
@@ -78,6 +82,9 @@ public class Chute
                                 // in-game
    private boolean narrow;
    private final boolean editable;
+   
+   private boolean active = true;
+   
    private final int UID;
    
    private static int nextUID = 1;
@@ -127,13 +134,18 @@ public class Chute
    }
    
    /**
-    * Modifies: this sets the specfield narrow to the given boolean value
+    * Sets the specification field narrow to parameter narrow<br/>
+    * <br/>
+    * Requires: active<br/>
+    * <br/>
+    * Modifies: this
     * 
-    * Note: this can be called even if editable is false, because it may be
-    * necessary (or at least easier) for construction
+    * @param narrow
     */
    public void setNarrow(boolean narrow)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
       this.narrow = narrow;
    }
    
@@ -204,6 +216,8 @@ public class Chute
    @AssertNonNullAfter({ "start" }) protected void setStart(Intersection start,
          int port)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
       if (start == null)
          throw new IllegalArgumentException(
                "Chute.setStart passed a null argument");
@@ -220,6 +234,8 @@ public class Chute
    @AssertNonNullAfter({ "end" }) protected void setEnd(Intersection end,
          int port)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
       if (end == null)
          throw new IllegalArgumentException(
                "Chute.setEnd passed a null argument");
@@ -258,6 +274,26 @@ public class Chute
       copy.setNarrow(narrow);
       
       return copy;
+   }
+   
+   /**
+    * Returns active
+    */
+   public boolean isActive()
+   {
+      return active;
+   }
+   
+   /**
+    * Sets active to false<br/>
+    * <br/>
+    * Requires: active
+    */
+   public void deactivate()
+   {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      active = false;
    }
    
 }
