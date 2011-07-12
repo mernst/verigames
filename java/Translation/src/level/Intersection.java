@@ -6,7 +6,7 @@ import java.util.List;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable ADT representing the intersections between chutes.<br/>
+ * A mutable ADT representing an intersection between chutes.<br/>
  * <br/>
  * It is mutable so that chutes can be added and removed to it.<br/>
  * <br/>
@@ -46,8 +46,11 @@ public class Intersection
       OUTGOING, // The end point of chutes that are exiting the frame on the
       // bottom
       SPLIT, // An intersection in which a chute is split into multiple chutes
-      NULL_TEST, // Represent branching due to testing a value for null
       MERGE, // An intersection where multiple chutes merge into one
+      CONNECT, // Simply connects one chute to another, without making any
+      // modifications. Can be optimized away after, but I think it
+      // will be convenient to have during construction.
+      NULL_TEST, // Represent branching due to testing a value for null
       START_WHITE_BALL, // Represents a white (NonNull) ball being dropped
       // into the top of the exit chute
       START_BLACK_BALL, // Represents a black (null) ball being dropped into
@@ -60,18 +63,16 @@ public class Intersection
                           // ball
       RESTART_NO_BALL, // Terminate a chute and restart it without a ball
       SUBNETWORK, // Represents a method call
-      CONNECT, // Simply connects one chute to another, without making any
-               // modifications. Can be optimized away after, but I think it
-               // will be convenient to have during construction.
    };
    
    private static final boolean CHECK_REP_ENABLED = true;
    
    private final Kind intersectionKind;
    
+   // Elements are Nullable so that chutes can be added in any order. Empty
+   // ports are represented by null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness") private List</* @Nullable */Chute> inputChutes;
-   
    @SuppressWarnings("nullness") private List</* @Nullable */Chute> outputChutes;
    
    private final int UID;
@@ -245,7 +246,7 @@ public class Intersection
     */
    protected void setInputChute(Chute input, int port)
    {
-      nullRemainingElts(inputChutes, port);
+      padToLength(inputChutes, port);
       inputChutes.add(port, input);
       checkRep();
    }
@@ -257,7 +258,7 @@ public class Intersection
     */
    protected void setOutputChute(Chute output, int port)
    {
-      nullRemainingElts(outputChutes, port);
+      padToLength(outputChutes, port);
       outputChutes.add(port, output);
       checkRep();
    }
@@ -285,21 +286,20 @@ public class Intersection
    }
    
    /**
-    * If minSize is greater than list.size, adds null elements to the end of
-    * list until list.size == minSize<br/>
+    * Ensures that list.size() >= length by padding the list with null<br/>
     * <br/>
-    * Modifies: list<br/>
-    * <br/>
-    * Notes: used to make sure that the given list can accommodate a call to add
-    * with indices up to minSize
+    * Modifies: list
+    * 
+    * @param list
+    * the List to pad
+    * @param length
+    * the minimum length that list is guaranteed to have after this method exits
     */
-   // TODO Fix name and documentation
-   // List is annotated to require non-null elements
-   // TODO change after this is corrected
-   @SuppressWarnings("nullness") private <E> void nullRemainingElts(
-         List</* @Nullable */E> list, int minSize)
+   // TODO change after JDK is properly annotated
+   @SuppressWarnings("nullness") private <E> void padToLength(
+         List</* @Nullable */E> list, int length)
    {
-      while (list.size() < minSize)
+      while (list.size() < length)
          list.add(null);
    }
    
