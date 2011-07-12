@@ -62,4 +62,7 @@
   <target name="javadoc.private">
     <javadoc access="private" author="true" classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar" destdir="${doc}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="${src}" splitindex="true" use="true" version="true"/>
   </target>
+  <target name="javadoc.protected">
+    <javadoc access="protected" author="true" classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar" destdir="${doc}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="${src}" splitindex="true" use="true" version="true"/>
+  </target>
 </project>
