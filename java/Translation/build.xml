@@ -14,7 +14,6 @@
       <compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar"/>
       <compilerarg value="-XDTA:spacesincomments"/>
       <!-- ^ included so that Eclipse's formatter, which inserts spaces in annotation comments, can still be used -->
-      <compilerarg value="-Alint=uninitialized"/>
       <classpath>
         <pathelement location="${env.CHECKERS}/checkers.jar"/>
       </classpath>
