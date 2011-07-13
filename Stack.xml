@@ -14,66 +14,65 @@ Graph names are just the method name they represent. Later, this could change to
 method names that take the method signature into account, because of method-overloading. 
 -->
 <level>
-  <!-- edge IDs are the keys, list of edge IDs the value -->
   <linked-edges>
     <!-- theVector -->
-    <set>
-      <value id="1"/>
-      <value id="5"/>
-      <value id="9"/>
-      <value id="13"/>
-      <value id="17"/>
-      <value id="29"/>
-      <value id="33"/>
-      <value id="37"/>
-      <value id="41"/>
-      <value id="45"/>
-      <value id="51"/>
-      <value id="57"/>
-      <value id="61"/>
-      <value id="65"/>
-    </set>
+    <edge-set>
+      <edgeref id="1"/>
+      <edgeref id="5"/>
+      <edgeref id="9"/>
+      <edgeref id="13"/>
+      <edgeref id="17"/>
+      <edgeref id="29"/>
+      <edgeref id="33"/>
+      <edgeref id="37"/>
+      <edgeref id="41"/>
+      <edgeref id="45"/>
+      <edgeref id="51"/>
+      <edgeref id="57"/>
+      <edgeref id="61"/>
+      <edgeref id="65"/>
+    </edge-set>
     <!-- theVector.elts -->
-    <set>
-      <value id="3"/>
-      <value id="7"/>
-      <value id="11"/>
-      <value id="15"/>
-      <value id="19"/>
-      <value id="21"/>
-      <value id="31"/>
-      <value id="35"/>
-      <value id="39"/>
-      <value id="43"/>
-      <value id="47"/>
-      <value id="53"/>
-      <value id="55"/>
-      <value id="59"/>
-      <value id="63"/>
-      <value id="67"/>
-    </set>
+    <edge-set>
+      <edgeref id="3"/>
+      <edgeref id="7"/>
+      <edgeref id="11"/>
+      <edgeref id="15"/>
+      <edgeref id="19"/>
+      <edgeref id="21"/>
+      <edgeref id="31"/>
+      <edgeref id="35"/>
+      <edgeref id="39"/>
+      <edgeref id="43"/>
+      <edgeref id="47"/>
+      <edgeref id="53"/>
+      <edgeref id="55"/>
+      <edgeref id="59"/>
+      <edgeref id="63"/>
+      <edgeref id="67"/>
+    </edge-set>
     <!--top.return-->
-    <set>
-      <value id="23"/>
-      <value id="25"/>
-      <value id="27"/>
-      <value id="69"/>
-    </set>
+    <edge-set>
+      <edgeref id="23"/>
+      <edgeref id="25"/>
+      <edgeref id="27"/>
+      <edgeref id="69"/>
+    </edge-set>
     <!--topAndPop.return-->
-    <set>
-      <value id="71"/>
-      <value id="73"/>
-    </set>
+    <edge-set>
+      <edgeref id="71"/>
+      <edgeref id="73"/>
+    </edge-set>
     <!-- push.param1 -->
-    <set>
-      <value id="49"/>
-    </set>
+    <edge-set>
+      <edgeref id="49"/>
+    </edge-set>
   </linked-edges>
   <!-- Each board needs to be put in a set of boards, and also a map from name to board (?)
 	so that the subnetwork nodes can be efficiently clicked on. I can't think of a way to write
 	out the map and set explicitly. Maybe just write the map, and Tim can take the value set
 	at the end? Keys are the board names.-->
-  <boards-map>
+  <boards>
     <board name="constructor">
       <node kind="INCOMING" id="2">
         <input/>
@@ -635,5 +634,5 @@ method names that take the method signature into account, because of method-over
         </to>
       </edge>
     </board>
-  </boards-map>
+  </boards>
 </level>

@@ -1,9 +1,9 @@
-<!ELEMENT level (linked-edges,boards-map)>
- <!ELEMENT linked-edges (set*)>
-  <!ELEMENT set (value*)>
-   <!ELEMENT value EMPTY>
-    <!ATTLIST value id CDATA #REQUIRED>
- <!ELEMENT boards-map (board*)>
+<!ELEMENT level (linked-edges,boards)>
+ <!ELEMENT linked-edges (edge-set*)>
+  <!ELEMENT edge-set (edgeref*)>
+   <!ELEMENT edgeref EMPTY>
+    <!ATTLIST edgeref id CDATA #REQUIRED>
+ <!ELEMENT boards (board*)>
   <!ELEMENT board (node*,edge*)>
    <!ATTLIST board name CDATA #REQUIRED>
    <!ELEMENT node (input,output)>
