@@ -131,49 +131,105 @@ public class Intersection
    {
       if (CHECK_REP_ENABLED)
       {
-         // check that there are the proper number of chutes. there may still be
-         // fewer chutes than a finished Intersection of this Kind should have,
-         // so take that into account.
-         switch (intersectionKind)
+         int numInPorts = getNumberOfInputPorts();
+         int numOutPorts = getNumberOfOutputPorts();
+         if (active)
          {
-            case INCOMING:
-               ensure(inputChutes.size() == 0);
-               break;
-            case OUTGOING:
-               ensure(outputChutes.size() == 0);
-               break;
-            case SPLIT:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 2);
-               break;
-            case NULL_TEST:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 2);
-               break;
-            case MERGE:
-               ensure(inputChutes.size() <= 2 && outputChutes.size() <= 1);
-               break;
-            case START_WHITE_BALL:
-               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
-               break;
-            case START_BLACK_BALL:
-               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
-               break;
-            case START_NO_BALL:
-               ensure(inputChutes.size() == 0 && outputChutes.size() <= 1);
-               break;
-            case END:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() == 0);
-               break;
-            case SUBNETWORK:
-               // no restrictions
-               break;
-            case CONNECT:
-               ensure(inputChutes.size() <= 1 && outputChutes.size() <= 1);
-               break;
+            // Ensures that the current number of used ports is less than or equal to the total number
             
-            default:
-               throw new RuntimeException(
-                     "Add new Intersection Kind to checkRep()");
+            if (numInPorts != -1)
+               ensure(inputChutes.size() <= numInPorts);
+            
+            if (numOutPorts != -1)
+               ensure(outputChutes.size() <= numOutPorts);
          }
+         else
+         {
+            // Ensures that the all ports are filled
+            
+            ensure(inputChutes.size() == numInPorts);
+            for (Chute c : inputChutes)
+               ensure(c != null);
+            ensure(outputChutes.size() == numOutPorts);
+            for (Chute c : outputChutes)
+               ensure(c != null);
+         }
+      }
+   }
+   
+   /**
+    * Returns the number of input ports for an Intersection of this Kind, or -1 if there is no limit<br/>
+    * <br/>
+    * When construction is completed, an Intersection must have all of its ports filled.
+    */
+   private int getNumberOfInputPorts()
+   {
+      switch (intersectionKind)
+      {
+         case INCOMING:
+            return 0;
+         case OUTGOING:
+            return -1;
+         case SPLIT:
+            return 1;
+         case NULL_TEST:
+            return 1;
+         case MERGE:
+            return 2;
+         case START_WHITE_BALL:
+            return 0;
+         case START_BLACK_BALL:
+            return 0;
+         case START_NO_BALL:
+            return 0;
+         case END:
+            return 1;
+         case SUBNETWORK:
+            return -1;
+         case CONNECT:
+            return 1;
+            
+         default:
+            throw new RuntimeException(
+                  "Add new Intersection Kind to switch statement");
+      }
+   }
+   
+   /**
+    * Returns the number of output ports for an Intersection of this Kind, or -1 if there is no limit<br/>
+    * <br/>
+    * When construction is completed, an Intersection must have all of its ports filled.
+    */
+   private int getNumberOfOutputPorts()
+   {
+      switch (intersectionKind)
+      {
+         case INCOMING:
+            return -1;
+         case OUTGOING:
+            return 0;
+         case SPLIT:
+            return 2;
+         case NULL_TEST:
+            return 2;
+         case MERGE:
+            return 1;
+         case START_WHITE_BALL:
+            return 1;
+         case START_BLACK_BALL:
+            return 1;
+         case START_NO_BALL:
+            return 1;
+         case END:
+            return 0;
+         case SUBNETWORK:
+            return -1;
+         case CONNECT:
+            return 1;
+            
+         default:
+            throw new RuntimeException(
+                  "Add new Intersection Kind to switch statement");
       }
    }
    
@@ -402,12 +458,13 @@ public class Intersection
    /**
     * Sets active to false<br/>
     * <br/>
-    * Requires: active
+    * Requires:<br/>active;<br/>all ports for this Kind of Intersection are filled
     */
    public void deactivate()
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");
       active = false;
+      checkRep();
    }
 }
