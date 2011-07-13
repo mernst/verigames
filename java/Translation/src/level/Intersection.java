@@ -228,6 +228,7 @@ public class Intersection
     * The kind of Intersection to return
     * 
     */
+   // TODO refactor name
    public static Intersection intersectionFactory(Kind kind)
    {
       if (kind == Kind.SUBNETWORK)
@@ -438,6 +439,8 @@ public class Intersection
     */
    protected void deactivate()
    {
+      // TODO enforce requirements for an Intersection to be deactivated without
+      // checkRep()
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");
       active = false;
