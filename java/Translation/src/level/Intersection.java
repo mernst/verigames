@@ -88,40 +88,12 @@ public class Intersection
    /*
     * Representation Invariant:
     * 
-    * Requirements for the number of input/output individual Intersection kinds:
+    * When active, the number of used input/output ports can be no greater than
+    * the value returned by getNumberOfInputPorts() and getNumberOfOutputPorts()
     * 
-    * <KIND>(#input, #output)
-    * 
-    * INCOMING(0, any)
-    * 
-    * OUTGOING(any, 0)
-    * 
-    * SPLIT(1, 2)
-    * 
-    * NULL_TEST(1, 2)
-    * 
-    * MERGE(2, 1)
-    * 
-    * START_WHITE_BALL(0, 1)
-    * 
-    * START_BLACK_BALL(0, 1)
-    * 
-    * START_NO_BALL(0, 1)
-    * 
-    * END(1, 0)
-    * 
-    * RESTART_WHITE_BALL(1, 1)
-    * 
-    * RESTART_BLACK_BALL(1, 1)
-    * 
-    * RESTART_NO_BALL(1, 1)
-    * 
-    * SUBNETWORK(any, any)
-    * 
-    * CONNECT(1, 1)
-    * 
-    * This means that the size of inputChutes and outputChutes, respectively,
-    * can be no greater than the given number of ports
+    * When inactive, the number of used input/output ports must be exactly equal
+    * to the value returned by getNumberOf____Ports(), and no port can have a
+    * null pointer
     */
    
    /**
