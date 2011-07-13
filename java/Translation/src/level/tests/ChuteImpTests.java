@@ -13,7 +13,6 @@ import org.junit.Test;
 
 public class ChuteImpTests
 {
-   // TODO add test to ensure that inactive Chutes can't be mutated
    /**
     * Tests that the getStartPort accessor throws an IllegalStateException if
     * there is no starting Intersection
@@ -50,7 +49,7 @@ public class ChuteImpTests
          if (m.getName().equals(name))
          {
             m.setAccessible(true);
-            m.invoke(c, args);
+            m.invoke(receiver, args);
             methodInvoked = true;
          }
       }
