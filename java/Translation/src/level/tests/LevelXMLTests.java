@@ -82,7 +82,7 @@ public class LevelXMLTests
       
       PrintStream p = new PrintStream(new FileOutputStream(new File(
             "TestClass.actual.xml")));
-      
+      l.deactivate();
       l.outputXML(p);
       
    }

@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * 
- * A mutable data structure that represents a complete level<br/>
+ * A mutable (until deactivated) data structure that represents a complete level<br/>
  * <br/>
  * Specification Field: linkedEdgeClasses: Set<Set<Chute>> // Contains
  * equivalence classes of Chutes, as defined by the following equivalence
@@ -22,6 +22,10 @@ import java.util.Set;
  * <br/>
  * Specification Field: boardNames: Map<String, Board> // maps the name of a
  * method to its board<br/>
+ * <br/>
+ * Specification Field: active : boolean // true iff this can be part of a
+ * structure that is still under construction. once active is set to false, this
+ * becomes immutable.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -32,6 +36,8 @@ public class Level
    
    // TODO change String, if necessary, to whatever we end up using
    private Map<String, Board> boardNames;
+   
+   private boolean active = true;
    
    /*
     * Representation Invariant:
@@ -192,12 +198,16 @@ public class Level
    /**
     * Prints the board map section of the xml to out, indented by one space<br/>
     * <br/>
+    * Requires: !this.isActive()<br/>
+    * <br/>
     * Modifies: out<br/>
-    * 
     */
    // TODO add "editable" attribute to edge output (involves editing DTD)
    private void outputBoardsMap(PrintStream out)
    {
+      if (active)
+         throw new IllegalStateException("outputBoardsMap called on active Level");
+      
       out.println(" <boards-map>");
       for (String name : boardNames.keySet())
       {
@@ -252,5 +262,29 @@ public class Level
          out.println("  </board>");
       }
       out.println(" </boards-map>");
+   }
+   
+   /**
+    * Returns active
+    */
+   public boolean isActive()
+   {
+      return active;
+   }
+   
+   /**
+    * Sets active to false<br/>
+    * <br/>
+    * Requires:<br/>
+    * active;<br/>
+    * all Boards in boards are in a state in which they can be deactivated
+    */
+   public void deactivate()
+   {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      active = false;
+      for (Board b : boardNames.values())
+         b.deactivate();
    }
 }
