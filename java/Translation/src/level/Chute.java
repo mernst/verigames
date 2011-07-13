@@ -324,7 +324,7 @@ public class Chute
    /**
     * Sets active to false<br/>
     * <br/>
-    * Requires:<br/>active;<br/>all ports for this Kind of Intersection are filled
+    * Requires:<br/>active;<br/>start and end Intersections exist
     */
    public void deactivate()
    {
