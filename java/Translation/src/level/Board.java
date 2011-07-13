@@ -21,6 +21,10 @@ import checkers.nullness.quals.*;
  * the top of the board, where all the incoming chutes enter<br/>
  * Specification Field: outgoingNode -- Intersection // the node representing
  * the bottom of the board, where all the outgoing chutes exit<br/>
+ * <br/>
+ * Specification Field: active : boolean // true iff this can be part of a
+ * structure that is still under construction. once active is set to false, this
+ * becomes immutable.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -34,6 +38,8 @@ public class Board
    
    private Set<Intersection> nodes;
    private Set<Chute> edges;
+   
+   private boolean active = true;
    
    /**
     * Ensures that the representation invariant holds
@@ -142,6 +148,8 @@ public class Board
     * Adds node to this.nodes.<br/>
     * <br/>
     * Requires:<br/>
+    * active;<br/>
+    * node.isActive();<br/>
     * given node implements eternal equality;<br/>
     * if this is the first node to be added, it must have type INCOMING;<br/>
     * if this is of Kind INCOMING, there must not already be a node of Kind
@@ -156,6 +164,11 @@ public class Board
    // TODO fix error messages
    public void addNode(Intersection node)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on an inactive Board");
+      if (!node.isActive())
+         throw new IllegalStateException("Inactive Intersection added to Board");
+      
       if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
          throw new IllegalArgumentException(
                "First node in Board must be of kind INCOMING");
@@ -187,6 +200,10 @@ public class Board
     * Modifies start, end, and edge to reflect their new connections<br/>
     * <br/>
     * Requires:<br/>
+    * active;<br/>
+    * start.isActive();<br/>
+    * end.isActive();<br/>
+    * edge.isActive();<br/>
     * this.contains(start);<br/>
     * this.contains(end);<br/>
     * !this.contains(edge) edge does not have start or end nodes;<br/>
@@ -196,6 +213,11 @@ public class Board
    public void addEdge(Intersection start, int startPort, Intersection end,
          int endPort, Chute edge)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on an inactive Board");
+      if (!edge.isActive())
+         throw new IllegalArgumentException("Board.addEdge called with an inactive edge");
+      
       if (!this.contains(start))
          throw new IllegalArgumentException(
                "Call to addEdge made with a start node that is not in this Board");
@@ -291,5 +313,33 @@ public class Board
    public boolean contains(Object elt)
    {
       return nodes.contains(elt) || edges.contains(elt);
+   }
+   
+   /**
+    * Returns active
+    */
+   public boolean isActive()
+   {
+      return active;
+   }
+   
+   /**
+    * Sets active to false<br/>
+    * <br/>
+    * Requires:<br/>
+    * active;<br/>
+    * all Intersections in nodes and Chutes in edges are in a state in which
+    * they can be deactivated
+    */
+   public void deactivate()
+   {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      active = false;
+      for (Intersection i : nodes)
+         i.deactivate();
+      for (Chute c : edges)
+         c.deactivate();
+      checkRep();
    }
 }
