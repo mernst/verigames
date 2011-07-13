@@ -98,4 +98,11 @@ public class BoardSpecTests
       assertEquals(chute1.getEnd(), outgoing);
       assertEquals(chute1.getEndPort(), 5);
    }
+   
+   @Test
+   public void deactivateTest1()
+   {
+      // TODO make sure Board behaves when deactivated
+   }
+   
 }
