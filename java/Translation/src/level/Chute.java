@@ -326,7 +326,7 @@ public class Chute
     * <br/>
     * Requires:<br/>active;<br/>start and end Intersections exist
     */
-   public void deactivate()
+   protected void deactivate()
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");

@@ -432,7 +432,7 @@ public class Intersection
     * <br/>
     * Requires:<br/>active;<br/>all ports for this Kind of Intersection are filled
     */
-   public void deactivate()
+   protected void deactivate()
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");
