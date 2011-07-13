@@ -89,6 +89,39 @@ public class Chute
    
    private static int nextUID = 1;
    
+   /*
+    * Representation Invariant:
+    * 
+    * If !active, start and end must be non-null, and startPort and endPort must
+    * not equal -1
+    */
+   
+   private static final boolean CHECK_REP_ENABLED = true;
+   
+   private void checkRep()
+   {
+      if (CHECK_REP_ENABLED)
+      {
+         if (!active)
+         {
+            ensure(start != null);
+            ensure(end != null);
+            ensure(startPort != -1);
+            ensure(endPort != -1);
+         }
+      }
+   }
+   
+   /**
+    * Intended to be a substitute for assert, except I don't want to have to
+    * make sure the -ea flag is turned on in order to get these checks.
+    */
+   private void ensure(boolean value)
+   {
+      if (!value)
+         throw new AssertionError();
+   }
+   
    /**
     * creates a new Chute object, with the given values for name, pinch, and
     * editable
@@ -107,6 +140,7 @@ public class Chute
       
       UID = nextUID;
       nextUID += 2;
+      checkRep();
    }
    
    /**
@@ -147,6 +181,7 @@ public class Chute
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");
       this.narrow = narrow;
+      checkRep();
    }
    
    /**
@@ -224,6 +259,7 @@ public class Chute
       
       this.start = start;
       this.startPort = port;
+      checkRep();
    }
    
    /**
@@ -242,6 +278,7 @@ public class Chute
       
       this.end = end;
       this.endPort = port;
+      checkRep();
    }
    
    /**
@@ -287,13 +324,14 @@ public class Chute
    /**
     * Sets active to false<br/>
     * <br/>
-    * Requires: active
+    * Requires:<br/>active;<br/>all ports for this Kind of Intersection are filled
     */
    public void deactivate()
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Chute");
       active = false;
+      checkRep();
    }
    
 }
