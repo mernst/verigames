@@ -107,7 +107,8 @@ public class Intersection
          int numOutPorts = getNumberOfOutputPorts();
          if (active)
          {
-            // Ensures that the current number of used ports is less than or equal to the total number
+            // Ensures that the current number of used ports is less than or
+            // equal to the total number
             
             if (numInPorts != -1)
                ensure(inputChutes.size() <= numInPorts);
@@ -119,10 +120,13 @@ public class Intersection
          {
             // Ensures that the all ports are filled
             
-            ensure(inputChutes.size() == numInPorts);
+            if (numInPorts != -1)
+               ensure(inputChutes.size() == numInPorts);
             for (Chute c : inputChutes)
                ensure(c != null);
-            ensure(outputChutes.size() == numOutPorts);
+            
+            if (numOutPorts != -1)
+               ensure(outputChutes.size() == numOutPorts);
             for (Chute c : outputChutes)
                ensure(c != null);
          }
