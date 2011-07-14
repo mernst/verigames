@@ -41,11 +41,11 @@ public class LevelXMLTests
       Level l = new Level();
       
       Board constructor = new Board();
-      constructor.addNode(Intersection.intersectionFactory(Kind.INCOMING));
+      constructor.addNode(Intersection.factory(Kind.INCOMING));
       Intersection start = Intersection
-            .intersectionFactory(Kind.START_BLACK_BALL);
+            .factory(Kind.START_BLACK_BALL);
       constructor.addNode(start);
-      Intersection outgoing = Intersection.intersectionFactory(Kind.OUTGOING);
+      Intersection outgoing = Intersection.factory(Kind.OUTGOING);
       constructor.addNode(outgoing);
       Chute c = new Chute("s", false, true, null);
       c.setNarrow(false);
@@ -53,11 +53,11 @@ public class LevelXMLTests
       
       l.addBoard("constructor", constructor);
       
-      Intersection incoming = Intersection.intersectionFactory(Kind.INCOMING);
-      Intersection end = Intersection.intersectionFactory(Kind.END);
+      Intersection incoming = Intersection.factory(Kind.INCOMING);
+      Intersection end = Intersection.factory(Kind.END);
       Intersection restart = Intersection
-            .intersectionFactory(Kind.START_WHITE_BALL);
-      Intersection out = Intersection.intersectionFactory(Kind.OUTGOING);
+            .factory(Kind.START_WHITE_BALL);
+      Intersection out = Intersection.factory(Kind.OUTGOING);
       
       Board method = new Board();
       method.addNode(incoming);

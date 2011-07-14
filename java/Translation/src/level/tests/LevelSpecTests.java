@@ -36,8 +36,8 @@ public class LevelSpecTests
       // satisfy precondition for makeLinked
       b = new Board();
       
-      Intersection in = Intersection.intersectionFactory(Kind.INCOMING);
-      Intersection out = Intersection.intersectionFactory(Kind.OUTGOING);
+      Intersection in = Intersection.factory(Kind.INCOMING);
+      Intersection out = Intersection.factory(Kind.OUTGOING);
       
       b.addNode(in);
       b.addNode(out);

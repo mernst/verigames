@@ -19,7 +19,7 @@ public class IntersectionImpTests
     */
    @Test(expected = IllegalArgumentException.class) public void testConstructorFailure1()
    {
-      Intersection.intersectionFactory(Kind.SUBNETWORK);
+      Intersection.factory(Kind.SUBNETWORK);
    }
    
    /**
@@ -27,7 +27,7 @@ public class IntersectionImpTests
     */
    @Test(expected = IllegalStateException.class) public void testAsSubnetworkFailure()
    {
-      (Intersection.intersectionFactory(Kind.INCOMING)).asSubnetwork();
+      (Intersection.factory(Kind.INCOMING)).asSubnetwork();
    }
    
    /**
@@ -35,7 +35,7 @@ public class IntersectionImpTests
     */
    @Test(expected = IllegalStateException.class) public void testAsNullTestFailure()
    {
-      (Intersection.intersectionFactory(Kind.INCOMING)).asNullTest();
+      (Intersection.factory(Kind.INCOMING)).asNullTest();
    }
    
    private Intersection i;
@@ -69,7 +69,7 @@ public class IntersectionImpTests
    @Before public void initIntersection() throws IllegalArgumentException,
          IllegalAccessException, InvocationTargetException
    {
-      i = Intersection.intersectionFactory(Kind.CONNECT);
+      i = Intersection.factory(Kind.CONNECT);
       
       // i.setInputChute(new Chute(null, true, true, null), 0);
       invokeIntersectionMethod(i, "setInputChute", new Object[] {

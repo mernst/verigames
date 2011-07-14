@@ -29,10 +29,10 @@ public class BoardSpecTests
    {
       board = new Board();
       
-      incoming = Intersection.intersectionFactory(Kind.INCOMING);
-      outgoing = Intersection.intersectionFactory(Kind.OUTGOING);
-      split = Intersection.intersectionFactory(Kind.SPLIT);
-      merge = Intersection.intersectionFactory(Kind.MERGE);
+      incoming = Intersection.factory(Kind.INCOMING);
+      outgoing = Intersection.factory(Kind.OUTGOING);
+      split = Intersection.factory(Kind.SPLIT);
+      merge = Intersection.factory(Kind.MERGE);
       
       chute1 = new Chute(null, false, true, null);
       chute2 = new Chute(null, false, true, null);

@@ -22,7 +22,7 @@ public class NullTestImpTests
    
    @Before public void init()
    {
-      n = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
+      n = Intersection.factory(Kind.NULL_TEST).asNullTest();
    }
    
    /**
@@ -142,7 +142,7 @@ public class NullTestImpTests
       
       if (checkRepEnabled)
       {
-         NullTest n = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
+         NullTest n = Intersection.factory(Kind.NULL_TEST).asNullTest();
          
          Chute wide = new Chute(null, false, false, null);
          wide.setNarrow(false);

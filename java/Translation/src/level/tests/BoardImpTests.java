@@ -41,7 +41,7 @@ public class BoardImpTests
       {
          fail("Unit test failed on configuration");
       }
-      testObjs.board.addNode(Intersection.intersectionFactory(Kind.INCOMING));
+      testObjs.board.addNode(Intersection.factory(Kind.INCOMING));
    }
    
    /**
@@ -58,7 +58,7 @@ public class BoardImpTests
       {
          fail("Unit test failed on configuration");
       }
-      testObjs.board.addNode(Intersection.intersectionFactory(Kind.OUTGOING));
+      testObjs.board.addNode(Intersection.factory(Kind.OUTGOING));
    }
    
    /**

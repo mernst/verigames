@@ -64,8 +64,8 @@ public class ChuteSpecTests
       
       chuteMethods = Chute.class.getDeclaredMethods();
       
-      incoming = Intersection.intersectionFactory(Kind.INCOMING);
-      outgoing = Intersection.intersectionFactory(Kind.OUTGOING);
+      incoming = Intersection.factory(Kind.INCOMING);
+      outgoing = Intersection.factory(Kind.OUTGOING);
    }
    
    @Test public void testUID()

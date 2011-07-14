@@ -20,7 +20,7 @@ public class NullTestSpecTests
     */
    @Test public void testNullChuteAccessors() throws IllegalAccessException, InvocationTargetException
    {
-      NullTest nt = Intersection.intersectionFactory(Kind.NULL_TEST).asNullTest();
+      NullTest nt = Intersection.factory(Kind.NULL_TEST).asNullTest();
       
       Chute nullable = new Chute(null, false, false, null);
       nullable.setNarrow(false);

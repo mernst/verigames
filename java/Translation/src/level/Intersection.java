@@ -226,7 +226,7 @@ public class Intersection
     * 
     */
    // TODO refactor name
-   public static Intersection intersectionFactory(Kind kind)
+   public static Intersection factory(Kind kind)
    {
       if (kind == Kind.SUBNETWORK)
          throw new IllegalArgumentException(

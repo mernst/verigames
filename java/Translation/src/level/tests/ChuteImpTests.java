@@ -68,7 +68,7 @@ public class ChuteImpTests
             c,
             "setStart",
             new Object[] {
-                  Intersection.intersectionFactory(Intersection.Kind.INCOMING),
+                  Intersection.factory(Intersection.Kind.INCOMING),
                   0 });
       
       // c.setEnd(Intersection.intersectionFactory(Intersection.Kind.OUTGOING));
@@ -76,7 +76,7 @@ public class ChuteImpTests
             c,
             "setEnd",
             new Object[] {
-                  Intersection.intersectionFactory(Intersection.Kind.OUTGOING),
+                  Intersection.factory(Intersection.Kind.OUTGOING),
                   0 });
       
       // c.deactivate();
@@ -113,7 +113,7 @@ public class ChuteImpTests
       // c.setStart(Intersection.intersectionFactory(Intersection.Kind.START_WHITE_BALL),0);
       try
       {
-         invokeChuteMethod(c, "setStart", new Object[] {Intersection.intersectionFactory(Intersection.Kind.START_WHITE_BALL), 0});
+         invokeChuteMethod(c, "setStart", new Object[] {Intersection.factory(Intersection.Kind.START_WHITE_BALL), 0});
       }
       catch (InvocationTargetException e)
       {
@@ -130,7 +130,7 @@ public class ChuteImpTests
       // c.setEnd(Intersection.intersectionFactory(Intersection.Kind.END),0);
       try
       {
-         invokeChuteMethod(c, "setEnd", new Object[] {Intersection.intersectionFactory(Intersection.Kind.END), 0});
+         invokeChuteMethod(c, "setEnd", new Object[] {Intersection.factory(Intersection.Kind.END), 0});
       }
       catch (InvocationTargetException e)
       {
