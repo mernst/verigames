@@ -185,12 +185,12 @@ public class Level
       out.println(" <linked-edges>");
       for (Set<Chute> set : linkedEdgeClasses)
       {
-         out.println("  <set>");
+         out.println("  <edge-set>");
          for (Chute c : set)
          {
-            out.println("   <value id=\"" + c.getUID() + "\"/>");
+            out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
          }
-         out.println(" </set>");
+         out.println(" </edge-set>");
       }
       out.println(" </linked-edges>");
    }
@@ -208,7 +208,7 @@ public class Level
       if (active)
          throw new IllegalStateException("outputBoardsMap called on active Level");
       
-      out.println(" <boards-map>");
+      out.println(" <boards>");
       for (String name : boardNames.keySet())
       {
          Board board = boardNames.get(name);
@@ -218,12 +218,12 @@ public class Level
          {
             // TODO add special cases for subnetwork and (maybe) null test
             out.println("   <node kind=\"" + node.getIntersectionKind()
-                  + "\" id=\"" + node.getUID() + "\">");
+                  + "\" id=\"n" + node.getUID() + "\">");
             out.println("    <input>");
             
             Chute input = node.getInputChute(0);
             for (int i = 0; input != null; input = node.getInputChute(++i))
-               out.println("     <port num=\"" + i + "\" edge=\""
+               out.println("     <port num=\"" + i + "\" edge=\"e"
                      + input.getUID() + "\"/>");
             
             out.println("    </input>");
@@ -231,7 +231,7 @@ public class Level
             
             Chute output = node.getOutputChute(0);
             for (int i = 0; output != null; output = node.getOutputChute(++i))
-               out.println("     <port num=\"" + i + "\" edge=\""
+               out.println("     <port num=\"" + i + "\" edge=\"e"
                      + output.getUID() + "\"/>");
             
             out.println("    </output>");
@@ -242,17 +242,17 @@ public class Level
          {
             out.println("   <edge var=\"" + edge.getName() + "\" pinch=\""
                   + edge.isPinched() + "\" width=\""
-                  + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\""
+                  + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\"e"
                   + edge.getUID() + "\">");
             
             out.println("    <from>");
             // TODO do something about this nullness warning
-            out.println("     <noderef id=\"" + edge.getStart().getUID()
+            out.println("     <noderef id=\"n" + edge.getStart().getUID()
                   + "\" port=\"" + edge.getStartPort() + "\"/>");
             out.println("    </from>");
             out.println("    <to>");
             // TODO do something about this nullness warning
-            out.println("     <noderef id=\"" + edge.getEnd().getUID()
+            out.println("     <noderef id=\"n" + edge.getEnd().getUID()
                   + "\" port=\"" + edge.getEndPort() + "\"/>");
             out.println("    </to>");
             out.println("   </edge>");
@@ -261,7 +261,7 @@ public class Level
          
          out.println("  </board>");
       }
-      out.println(" </boards-map>");
+      out.println(" </boards>");
    }
    
    /**
