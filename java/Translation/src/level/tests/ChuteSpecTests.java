@@ -72,8 +72,6 @@ public class ChuteSpecTests
    {
       for (Chute i : allChutes)
       {
-         assertTrue("A chute does not have an odd UID (" + i.getUID() + ")",
-               i.getUID() % 2 == 1);
          for (Chute j : allChutes)
          {
             assertTrue(

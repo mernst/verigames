@@ -26,11 +26,8 @@ import checkers.nullness.quals.Nullable;
  * of output chutes (the index of a given Chute represents the port at which it
  * exits)<br/>
  * <br/>
- * Specification Field: UID : integer // the unique even identifier for this
+ * Specification Field: UID : integer // the unique identifier for this
  * Intersection<br/>
- * <br/>
- * The UID of a Chute is odd, while the UID of an Intersection is even. This is
- * to reduce confusion for humans reading the generated XML<br/>
  * <br/>
  * Specification Field: active : boolean // true iff this can be part of a
  * structure that is still under construction. once active is set to false, this
@@ -272,7 +269,7 @@ public class Intersection
       outputChutes = new ArrayList</* @Nullable */Chute>();
       
       UID = nextUID;
-      nextUID += 2;
+      nextUID += 1;
       
       checkRep();
    }

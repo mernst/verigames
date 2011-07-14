@@ -38,7 +38,7 @@ public class IntersectionSpecTests
    }
    
    /**
-    * Tests that the UID of every intersection is unique and even
+    * Tests that the UID of every intersection is unique
     */
    @Test public void testUID()
    {
@@ -48,8 +48,6 @@ public class IntersectionSpecTests
       
       for (Intersection i : elts)
       {
-         assertEquals("Intersections' UID's should be even (" + i.getUID()
-               + ")", i.getUID() % 2, 0);
          for (Intersection j : elts)
          {
             assertTrue(
