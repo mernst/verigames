@@ -160,12 +160,16 @@ public class Level
     * Prints the text of the XML representation of this Level to the given
     * PrintStream<br/>
     * <br/>
-    * Requires: out is open and ready to be written to<br/>
+    * Requires:<br/>
+    * !this.isActive();<br/>
+    * out is open and ready to be written to<br/>
     * Modifies: out<br/>
-    * 
     */
    public void outputXML(PrintStream out)
    {
+      if (this.isActive())
+         throw new IllegalStateException("outputXML called on active Level");
+      // TODO remove header info once <world> tag is added
       out.println("<?xml version=\"1.0\"?>");
       out.println("<!DOCTYPE level SYSTEM \"level.dtd\">");
       out.println("<level>");
@@ -176,6 +180,8 @@ public class Level
    
    /**
     * Prints the linked edge section of the xml to out, indented by one space<br/>
+    * <br/>
+    * Requires: For all Chutes c in Sets in linkedEdgeClasses, !c.isActive()<br/>
     * <br/>
     * Modifies: out
     * 
@@ -188,6 +194,9 @@ public class Level
          out.println("  <edge-set>");
          for (Chute c : set)
          {
+            if (c.isActive())
+               throw new IllegalStateException(
+                     "outputlinkedEdgeClasses called when linkedEdgeClasses contains active Chute");
             out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
          }
          out.println(" </edge-set>");
@@ -198,7 +207,8 @@ public class Level
    /**
     * Prints the board map section of the xml to out, indented by one space<br/>
     * <br/>
-    * Requires: !this.isActive()<br/>
+    * Requires: For all nodes n, edges e in any Board contained in this:
+    * !n.isActive() && !e.isActive() <br/>
     * <br/>
     * Modifies: out<br/>
     */
@@ -216,6 +226,9 @@ public class Level
          
          for (Intersection node : board.getNodes())
          {
+            if (node.isActive())
+               throw new IllegalStateException("active Intersection in Level while printing XML");
+            
             // TODO add special cases for subnetwork and (maybe) null test
             out.println("   <node kind=\"" + node.getIntersectionKind()
                   + "\" id=\"n" + node.getUID() + "\">");
@@ -240,6 +253,9 @@ public class Level
          
          for (Chute edge : board.getEdges())
          {
+            if (edge.isActive())
+               throw new IllegalStateException("active Chute in Level while printing XML");
+            
             out.println("   <edge var=\"" + edge.getName() + "\" pinch=\""
                   + edge.isPinched() + "\" width=\""
                   + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\"e"
@@ -273,7 +289,7 @@ public class Level
    }
    
    /**
-    * Sets active to false<br/>
+    * Sets active to false, deactivates all contained Boards<br/>
     * <br/>
     * Requires:<br/>
     * active;<br/>
