@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE level SYSTEM "level.dtd">
+<!DOCTYPE world SYSTEM "world.dtd">
 <!-- 
 Sample XML level for Stack.java
 Rough Draft
@@ -13,6 +13,7 @@ by hand, it's easier.
 Graph names are just the method name they represent. Later, this could change to unique
 method names that take the method signature into account, because of method-overloading. 
 -->
+<world>
 <level>
   <linked-edges>
     <!-- theVector -->
@@ -636,3 +637,4 @@ method names that take the method signature into account, because of method-over
     </board>
   </boards>
 </level>
+</world>
