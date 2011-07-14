@@ -6,11 +6,11 @@
      <!ATTLIST edgeref id IDREF #REQUIRED>
   <!ELEMENT boards (board*)>
    <!ELEMENT board (node*,edge*)>
-    <!ATTLIST board name CDATA #REQUIRED>
+    <!ATTLIST board name ID #REQUIRED>
     <!ELEMENT node (input,output)>
      <!ATTLIST node kind (INCOMING|OUTGOING|SPLIT|NULL_TEST|MERGE|START_WHITE_BALL|START_BLACK_BALL|START_NO_BALL|END|SUBNETWORK|CONNECT) #REQUIRED>
      <!ATTLIST node id ID #REQUIRED>
-     <!ATTLIST node name CDATA #IMPLIED>
+     <!ATTLIST node name IDREF #IMPLIED>
      <!ELEMENT input (port*)>
      <!ELEMENT output (port*)>
       <!ELEMENT port EMPTY>
