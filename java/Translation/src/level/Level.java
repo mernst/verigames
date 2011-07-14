@@ -169,9 +169,7 @@ public class Level
    {
       if (this.isActive())
          throw new IllegalStateException("outputXML called on active Level");
-      // TODO remove header info once <world> tag is added
-      out.println("<?xml version=\"1.0\"?>");
-      out.println("<!DOCTYPE level SYSTEM \"level.dtd\">");
+      
       out.println("<level>");
       outputlinkedEdgeClasses(out);
       outputBoardsMap(out);
