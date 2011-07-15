@@ -1,11 +1,16 @@
 package level;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import checkers.nullness.quals.AssertNonNullAfter;
 import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
+import checkers.nullness.quals.Pure;
 
 /**
  * A mutable (until deactivated) structure representing a chute segment.<br/>
@@ -143,6 +148,7 @@ public class Chute
    /**
     * Returns name, or null if none exists
     */
+   @Pure
    public @Nullable String getName()
    {
       return name;
@@ -289,15 +295,11 @@ public class Chute
    /**
     * Returns a deep copy of this Chute.<br/>
     * <br/>
-    * Requires:<br/>
-    * start == null;<br/>
-    * end == null (this cannot be attached to Intersections)
+    * If this chute is attached to Intersections, that information will not be
+    * copied.
     */
    public Chute copy()
    {
-      if (start != null || end != null)
-         throw new IllegalStateException(
-               "Chute must not be attached to Intersections to be copied");
       List<Chute> copyAuxChutes = new ArrayList<Chute>();
       for (Chute c : auxiliaryChutes)
       {
@@ -331,4 +333,24 @@ public class Chute
       checkRep();
    }
    
+   /**
+    * Returns an iterator that performs a preorder traversal of the auxiliary
+    * chutes tree. Does not include this.
+    */
+   public Iterator<Chute> traverseAuxChutes()
+   {
+      Queue<Chute> allAuxChuteTraversals = new LinkedList<Chute>();
+      for (Chute aux : this.getAuxiliaryChutes())
+      {
+         // Add aux
+         allAuxChuteTraversals.add(aux);
+         // Perform a traversal of the chutes in aux and add all of them, too
+         Iterator<Chute> auxTraversal = aux.traverseAuxChutes();
+         while (auxTraversal.hasNext())
+            allAuxChuteTraversals.add(auxTraversal.next());
+      }
+      // wrapped as unmodifiable so that iterator remove operations fail
+      // (otherwise they would succeed, but not do anything)
+      return Collections.unmodifiableCollection(allAuxChuteTraversals).iterator();
+   }
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 
 public class ChuteSpecTests
 {
+   // TODO add test for aux chute traversal
    
    public Chute namedPinchedEditable;
    public Chute namedPinchedUneditable;
@@ -31,9 +32,6 @@ public class ChuteSpecTests
    public Chute unnamedUnpinchedUneditable;
    
    public List<Chute> allChutes;
-   
-   // TODO replace Name with whatever we end up using, and make that field
-   // not-null in some of the Chutes
    
    public Method[] chuteMethods;
    
