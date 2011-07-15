@@ -438,7 +438,7 @@ public class Intersection
       // TODO enforce requirements for an Intersection to be deactivated without
       // checkRep()
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+         throw new IllegalStateException("Mutation attempted on inactive Intersection");
       active = false;
       checkRep();
    }
