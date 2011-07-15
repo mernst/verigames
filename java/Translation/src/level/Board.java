@@ -327,19 +327,19 @@ public class Board
     * Sets active to false<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
     * all Intersections in nodes and Chutes in edges are in a state in which
     * they can be deactivated
     */
    public void deactivate()
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Board");
-      active = false;
-      for (Intersection i : nodes)
-         i.deactivate();
-      for (Chute c : edges)
-         c.deactivate();
+      if (active)
+      {
+         active = false;
+         for (Intersection i : nodes)
+            i.deactivate();
+         for (Chute c : edges)
+            c.deactivate();
+      }
       checkRep();
    }
 }
