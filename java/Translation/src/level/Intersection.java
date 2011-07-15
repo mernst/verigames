@@ -225,7 +225,6 @@ public class Intersection
     * The kind of Intersection to return
     * 
     */
-   // TODO refactor name
    public static Intersection factory(Kind kind)
    {
       if (kind == Kind.SUBNETWORK)
