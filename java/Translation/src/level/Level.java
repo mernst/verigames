@@ -296,7 +296,7 @@ public class Level
    public void deactivate()
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+         throw new IllegalStateException("Mutation attempted on inactive Level");
       active = false;
       for (Board b : boardNames.values())
          b.deactivate();

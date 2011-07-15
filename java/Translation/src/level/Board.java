@@ -334,7 +334,7 @@ public class Board
    public void deactivate()
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+         throw new IllegalStateException("Mutation attempted on inactive Board");
       active = false;
       for (Intersection i : nodes)
          i.deactivate();
