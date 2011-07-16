@@ -1,5 +1,6 @@
 package levelBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +73,14 @@ public class LevelBuilder
       
       level = new Level();
       
+      fields = new ArrayList<Chute>();
+      
       activeBoards = new HashMap<BoardBuilder, String>();
    }
    
    /**
-    * Sets b.active to false by calling b.getBoard. adds the given board, with
-    * the given name, to the level that is being built.<br/>
+    * Adds the given board, with the given name, to the level that is being
+    * built. Sets b.active to false by calling b.getBoard.<br/>
     * <br/>
     * Requires:<br/>
     * active;<br/>
@@ -114,9 +117,10 @@ public class LevelBuilder
    
    /**
     * Returns a new BoardBuilder that is a template for a method in the class
-    * represented by level.
+    * represented by level.<br/>
+    * <br/>
+    * Requires: no more fields will be added to this.
     */
-   // TODO should keep track of all BoardBuilders made by this
    public BoardBuilder getTemplateBoardBuilder(String name)
    {
       BoardBuilder b = new BoardBuilder(this);
@@ -125,7 +129,13 @@ public class LevelBuilder
    }
    
    /**
-    * Requires: active Modifies: this sets active to false Returns level
+    * Returns level<br/>
+    * <br/>
+    * Sets active to false<br/>
+    * <br/>
+    * Requires: active<br/>
+    * <br/>
+    * Modifies: this<br/>
     */
    public Level getLevel()
    {
@@ -133,6 +143,7 @@ public class LevelBuilder
          throw new IllegalStateException(
                "getLevel requires that this LevelBuilder is active");
       active = false;
+      level.deactivate();
       return level;
    }
    
@@ -142,6 +153,16 @@ public class LevelBuilder
    public boolean isActive()
    {
       return active;
+   }
+   
+   /**
+    * Returns a reference to fields<br/>
+    * <br/>
+    * Requires: The returned list will not be modified
+    */
+   protected List<Chute> getFields()
+   {
+      return fields;
    }
    
 }
