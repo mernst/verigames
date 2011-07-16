@@ -43,7 +43,7 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
-  <target name="test" depends="test.level, test.levelBuilder"/>
+  <target name="test" depends="clean, build, test.level, test.levelBuilder"/>
   <target name="test.level">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
       <test name="level.tests.SpecificationTests"/>
