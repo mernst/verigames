@@ -53,6 +53,10 @@ public class LevelBuilderSpecTests
       World w = new World();
       w.add(TestClass.getLevel());
       
-      w.outputXML(new PrintStream(new FileOutputStream(new File("TestClass.actual.xml"))));
+      PrintStream out = new PrintStream(new FileOutputStream(new File("TestClass.actual.xml")));
+      
+      w.outputXML(out);
+      
+      out.close();
    }
 }

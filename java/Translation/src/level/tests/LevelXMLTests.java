@@ -79,11 +79,13 @@ public class LevelXMLTests
       linked.add(c3);
       
       l.makeLinked(linked);
+
+      l.deactivate();
       
       PrintStream p = new PrintStream(new FileOutputStream(new File(
             "TestClass.actual.xml")));
-      l.deactivate();
       l.outputXML(p);
+      p.close();
       
    }
 }
