@@ -48,6 +48,8 @@
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
       <test name="level.tests.SpecificationTests"/>
       <test name="level.tests.ImplementationTests"/>
+      <test name="levelBuilder.tests.SpecificationTests"/>
+      <test name="levelBuilder.tests.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
