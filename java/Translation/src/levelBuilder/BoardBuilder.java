@@ -217,6 +217,7 @@ public class BoardBuilder
    // TODO change String to whatever we end up using
    public void addPinchToVar(String var)
    {
+      // FIXME sets it to narrow, doesn't pinch
       varToCurrentEdge.get(var).setNarrow(true);
       checkRep();
    }
