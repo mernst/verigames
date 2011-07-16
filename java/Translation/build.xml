@@ -43,11 +43,20 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
-  <!-- still a work in progress: -->
-  <target name="test" depends="clean, build">
+  <target name="test" depends="test.level, test.levelBuilder"/>
+  <target name="test.level">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
       <test name="level.tests.SpecificationTests"/>
       <test name="level.tests.ImplementationTests"/>
+      <formatter type="plain" usefile="false"/>
+      <classpath refid="test.classpath"/>
+      <classpath>
+        <pathelement path="${bin}"/>
+      </classpath>
+    </junit>
+  </target>
+  <target name="test.levelBuilder">
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder/tests">
       <test name="levelBuilder.tests.SpecificationTests"/>
       <test name="levelBuilder.tests.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
