@@ -14,627 +14,627 @@ Graph names are just the method name they represent. Later, this could change to
 method names that take the method signature into account, because of method-overloading. 
 -->
 <world>
-<level>
-  <linked-edges>
-    <!-- theVector -->
-    <edge-set>
-      <edgeref id="e1"/>
-      <edgeref id="e5"/>
-      <edgeref id="e9"/>
-      <edgeref id="e13"/>
-      <edgeref id="e17"/>
-      <edgeref id="e29"/>
-      <edgeref id="e33"/>
-      <edgeref id="e37"/>
-      <edgeref id="e41"/>
-      <edgeref id="e45"/>
-      <edgeref id="e51"/>
-      <edgeref id="e57"/>
-      <edgeref id="e61"/>
-      <edgeref id="e65"/>
-    </edge-set>
-    <!-- theVector.elts -->
-    <edge-set>
-      <edgeref id="e3"/>
-      <edgeref id="e7"/>
-      <edgeref id="e11"/>
-      <edgeref id="e15"/>
-      <edgeref id="e19"/>
-      <edgeref id="e21"/>
-      <edgeref id="e31"/>
-      <edgeref id="e35"/>
-      <edgeref id="e39"/>
-      <edgeref id="e43"/>
-      <edgeref id="e47"/>
-      <edgeref id="e53"/>
-      <edgeref id="e55"/>
-      <edgeref id="e59"/>
-      <edgeref id="e63"/>
-      <edgeref id="e67"/>
-    </edge-set>
-    <!--top.return-->
-    <edge-set>
-      <edgeref id="e23"/>
-      <edgeref id="e25"/>
-      <edgeref id="e27"/>
-      <edgeref id="e69"/>
-    </edge-set>
-    <!--topAndPop.return-->
-    <edge-set>
-      <edgeref id="e71"/>
-      <edgeref id="e73"/>
-    </edge-set>
-    <!-- push.param1 -->
-    <edge-set>
-      <edgeref id="e49"/>
-    </edge-set>
-  </linked-edges>
-  <!-- Each board needs to be put in a set of boards, and also a map from name to board (?)
+  <level>
+    <linked-edges>
+      <!-- theVector -->
+      <edge-set>
+        <edgeref id="e1"/>
+        <edgeref id="e5"/>
+        <edgeref id="e9"/>
+        <edgeref id="e13"/>
+        <edgeref id="e17"/>
+        <edgeref id="e29"/>
+        <edgeref id="e33"/>
+        <edgeref id="e37"/>
+        <edgeref id="e41"/>
+        <edgeref id="e45"/>
+        <edgeref id="e51"/>
+        <edgeref id="e57"/>
+        <edgeref id="e61"/>
+        <edgeref id="e65"/>
+      </edge-set>
+      <!-- theVector.elts -->
+      <edge-set>
+        <edgeref id="e3"/>
+        <edgeref id="e7"/>
+        <edgeref id="e11"/>
+        <edgeref id="e15"/>
+        <edgeref id="e19"/>
+        <edgeref id="e21"/>
+        <edgeref id="e31"/>
+        <edgeref id="e35"/>
+        <edgeref id="e39"/>
+        <edgeref id="e43"/>
+        <edgeref id="e47"/>
+        <edgeref id="e53"/>
+        <edgeref id="e55"/>
+        <edgeref id="e59"/>
+        <edgeref id="e63"/>
+        <edgeref id="e67"/>
+      </edge-set>
+      <!--top.return-->
+      <edge-set>
+        <edgeref id="e23"/>
+        <edgeref id="e25"/>
+        <edgeref id="e27"/>
+        <edgeref id="e69"/>
+      </edge-set>
+      <!--topAndPop.return-->
+      <edge-set>
+        <edgeref id="e71"/>
+        <edgeref id="e73"/>
+      </edge-set>
+      <!-- push.param1 -->
+      <edge-set>
+        <edgeref id="e49"/>
+      </edge-set>
+    </linked-edges>
+    <!-- Each board needs to be put in a set of boards, and also a map from name to board (?)
 	so that the subnetwork nodes can be efficiently clicked on. I can't think of a way to write
 	out the map and set explicitly. Maybe just write the map, and Tim can take the value set
 	at the end? Keys are the board names.-->
-  <boards>
-    <board name="constructor">
-      <node kind="INCOMING" id="n2">
-        <input/>
-        <output/>
-      </node>
-      <node kind="START_WHITE_BALL" id="n4">
-        <input/>
-        <output>
-          <port num="0" edge="e1"/>
-        </output>
-        <!-- port #, edge ID -->
-      </node>
-      <node kind="START_NO_BALL" id="n6">
-        <input/>
-        <output>
-          <port num="0" edge="e3"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n8">
-        <input>
-          <port num="0" edge="e1"/>
-          <port num="1" edge="e3"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e1">
-        <from>
-          <noderef id="n4" port="0"/>
-        </from>
-        <!-- node ID, port #-->
-        <to>
-          <noderef id="n8" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e3">
-        <from>
-          <noderef id="n6" port="0"/>
-        </from>
-        <to>
-          <noderef id="n8" port="1"/>
-        </to>
-      </edge>
-    </board>
-    <board name="isFull">
-      <node kind="INCOMING" id="n10">
-        <input/>
-        <output>
-          <port num="0" edge="e5"/>
-          <port num="1" edge="e7"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n12">
-        <input>
-          <port num="0" edge="e5"/>
-          <port num="1" edge="e7"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="true" width="wide" id="e5">
-        <from>
-          <noderef id="n10" port="0"/>
-        </from>
-        <to>
-          <noderef id="n12" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e7">
-        <from>
-          <noderef id="n10" port="1"/>
-        </from>
-        <to>
-          <noderef id="n12" port="1"/>
-        </to>
-      </edge>
-    </board>
-    <board name="isEmpty">
-      <node kind="INCOMING" id="n26">
-        <input/>
-        <output>
-          <port num="0" edge="e9"/>
-          <port num="1" edge="e11"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n28">
-        <input>
-          <port num="0" edge="e9"/>
-          <port num="1" edge="e11"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="true" width="wide" id="e9">
-        <from>
-          <noderef id="n26" port="0"/>
-        </from>
-        <to>
-          <noderef id="n28" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e11">
-        <from>
-          <noderef id="n26" port="1"/>
-        </from>
-        <to>
-          <noderef id="n28" port="1"/>
-        </to>
-      </edge>
-    </board>
-    <board name="top">
-      <node kind="INCOMING" id="n14">
-        <input/>
-        <output>
-          <port num="0" edge="e13"/>
-          <port num="1" edge="e15"/>
-        </output>
-      </node>
-      <node kind="SUBNETWORK" name="isEmpty" id="n16">
-        <input>
-          <port num="0" edge="e13"/>
-          <port num="1" edge="e15"/>
-        </input>
-        <output>
-          <port num="0" edge="e17"/>
-          <port num="1" edge="e19"/>
-        </output>
-      </node>
-      <node kind="SPLIT" id="n18">
-        <input>
-          <port num="0" edge="e19"/>
-        </input>
-        <output>
-          <port num="0" edge="e21"/>
-          <port num="1" edge="e23"/>
-        </output>
-      </node>
-      <node kind="START_BLACK_BALL" id="n20">
-        <input/>
-        <output>
-          <port num="0" edge="e25"/>
-        </output>
-      </node>
-      <node kind="MERGE" id="n22">
-        <input>
-          <port num="0" edge="e23"/>
-          <port num="1" edge="e25"/>
-        </input>
-        <output>
-          <port num="0" edge="e27"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n24">
-        <input>
-          <port num="0" edge="e17"/>
-          <port num="1" edge="e21"/>
-          <port num="2" edge="e27"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e13">
-        <from>
-          <noderef id="n14" port="0"/>
-        </from>
-        <to>
-          <noderef id="n16" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="true" width="wide" id="e17">
-        <from>
-          <noderef id="n16" port="0"/>
-        </from>
-        <to>
-          <noderef id="n24" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e15">
-        <from>
-          <noderef id="n14" port="1"/>
-        </from>
-        <to>
-          <noderef id="n16" port="1"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e19">
-        <from>
-          <noderef id="n16" port="1"/>
-        </from>
-        <to>
-          <noderef id="n18" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e21">
-        <from>
-          <noderef id="n18" port="0"/>
-        </from>
-        <to>
-          <noderef id="n24" port="1"/>
-        </to>
-      </edge>
-      <edge var="top.return" pinch="false" width="wide" id="e23">
-        <from>
-          <noderef id="n18" port="1"/>
-        </from>
-        <to>
-          <noderef id="n22" port="0"/>
-        </to>
-      </edge>
-      <edge var="top.return" pinch="false" width="wide" id="e25">
-        <from>
-          <noderef id="n20" port="0"/>
-        </from>
-        <to>
-          <noderef id="n22" port="1"/>
-        </to>
-      </edge>
-      <edge var="top.return" pinch="false" width="wide" id="e27">
-        <from>
-          <noderef id="n22" port="0"/>
-        </from>
-        <to>
-          <noderef id="n24" port="2"/>
-        </to>
-      </edge>
-    </board>
-    <board name="makeEmpty">
-      <node kind="INCOMING" id="n29">
-        <input/>
-        <output>
-          <port num="0" edge="e29"/>
-          <port num="1" edge="e31"/>
-        </output>
-      </node>
-      <node kind="END" id="n30">
-        <input>
-          <port num="0" edge="e29"/>
-        </input>
-        <output/>
-      </node>
-      <node kind="START_WHITE_BALL" id="n62">
-        <input/>
-        <output>
-          <port num="0" edge="e33"/>
-        </output>
-      </node>
-      <node kind="END" id="n32">
-        <input>
-          <port num="0" edge="e31"/>
-        </input>
-        <output/>
-      </node>
-      <node kind="START_NO_BALL" id="n64">
-        <input/>
-        <output>
-          <port num="0" edge="e35"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n34">
-        <input>
-          <port num="0" edge="e33"/>
-          <port num="1" edge="e35"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e29">
-        <from>
-          <noderef id="n29" port="0"/>
-        </from>
-        <to>
-          <noderef id="n30" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="false" width="wide" id="e33">
-        <from>
-          <noderef id="n62" port="0"/>
-        </from>
-        <to>
-          <noderef id="n34" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e31">
-        <from>
-          <noderef id="n29" port="1"/>
-        </from>
-        <to>
-          <noderef id="n32" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e35">
-        <from>
-          <noderef id="n64" port="0"/>
-        </from>
-        <to>
-          <noderef id="n34" port="1"/>
-        </to>
-      </edge>
-    </board>
-    <board name="pop">
-      <node kind="INCOMING" id="n36">
-        <input/>
-        <output>
-          <port num="0" edge="e37"/>
-          <port num="1" edge="e39"/>
-        </output>
-      </node>
-      <node kind="SUBNETWORK" name="isEmpty" id="n38">
-        <input>
-          <port num="0" edge="e37"/>
-          <port num="1" edge="e39"/>
-        </input>
-        <output>
-          <port num="0" edge="e41"/>
-          <port num="1" edge="e43"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n40">
-        <input>
-          <port num="0" edge="e41"/>
-          <port num="1" edge="e43"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e37">
-        <from>
-          <noderef id="n36" port="0"/>
-        </from>
-        <to>
-          <noderef id="n38" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="true" width="wide" id="e41">
-        <from>
-          <noderef id="n38" port="0"/>
-        </from>
-        <to>
-          <noderef id="n40" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e39">
-        <from>
-          <noderef id="n36" port="1"/>
-        </from>
-        <to>
-          <noderef id="n38" port="1"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e43">
-        <from>
-          <noderef id="n38" port="1"/>
-        </from>
-        <to>
-          <noderef id="n40" port="1"/>
-        </to>
-      </edge>
-    </board>
-    <board name="topAndPop">
-      <node kind="INCOMING" id="n50">
-        <input/>
-        <output>
-          <port num="0" edge="e57"/>
-          <port num="1" edge="e59"/>
-        </output>
-      </node>
-      <node kind="SUBNETWORK" name="isEmpty" id="n52">
-        <input>
-          <port num="0" edge="e57"/>
-          <port num="1" edge="e59"/>
-        </input>
-        <output>
-          <port num="0" edge="e61"/>
-          <port num="1" edge="e63"/>
-        </output>
-      </node>
-      <node kind="SUBNETWORK" name="top" id="n54">
-        <input>
-          <port num="0" edge="e61"/>
-          <port num="1" edge="e63"/>
-        </input>
-        <output>
-          <port num="0" edge="e65"/>
-          <port num="1" edge="e67"/>
-          <port num="2" edge="e69"/>
-        </output>
-      </node>
-      <node kind="START_BLACK_BALL" id="n56">
-        <input/>
-        <output>
-          <port num="0" edge="e71"/>
-        </output>
-      </node>
-      <node kind="MERGE" id="n58">
-        <input>
-          <port num="0" edge="e69"/>
-          <port num="1" edge="e71"/>
-        </input>
-        <output>
-          <port num="0" edge="e73"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n60">
-        <input>
-          <port num="0" edge="e65"/>
-          <port num="1" edge="e67"/>
-          <port num="2" edge="e73"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e57">
-        <from>
-          <noderef id="n50" port="0"/>
-        </from>
-        <to>
-          <noderef id="n52" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="false" width="wide" id="e61">
-        <from>
-          <noderef id="n52" port="0"/>
-        </from>
-        <to>
-          <noderef id="n54" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="true" width="wide" id="e65">
-        <from>
-          <noderef id="n54" port="0"/>
-        </from>
-        <to>
-          <noderef id="n60" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e59">
-        <from>
-          <noderef id="n50" port="1"/>
-        </from>
-        <to>
-          <noderef id="n52" port="1"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e63">
-        <from>
-          <noderef id="n52" port="1"/>
-        </from>
-        <to>
-          <noderef id="n54" port="1"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e67">
-        <from>
-          <noderef id="n54" port="1"/>
-        </from>
-        <to>
-          <noderef id="n60" port="1"/>
-        </to>
-      </edge>
-      <edge var="topAndPop.return" pinch="false" width="wide" id="e69">
-        <from>
-          <noderef id="n54" port="2"/>
-        </from>
-        <to>
-          <noderef id="n58" port="0"/>
-        </to>
-      </edge>
-      <edge var="topAndPop.return" pinch="false" width="wide" id="e71">
-        <from>
-          <noderef id="n56" port="0"/>
-        </from>
-        <to>
-          <noderef id="n58" port="1"/>
-        </to>
-      </edge>
-      <edge var="topAndPop.return" pinch="false" width="wide" id="e73">
-        <from>
-          <noderef id="n58" port="0"/>
-        </from>
-        <to>
-          <noderef id="n60" port="2"/>
-        </to>
-      </edge>
-    </board>
-    <board name="push">
-      <node kind="INCOMING" id="n42">
-        <input/>
-        <output>
-          <port num="0" edge="e45"/>
-          <port num="1" edge="e47"/>
-          <port num="2" edge="e49"/>
-        </output>
-      </node>
-      <node kind="SUBNETWORK" name="isFull" id="n44">
-        <input>
-          <port num="0" edge="e45"/>
-          <port num="1" edge="e47"/>
-        </input>
-        <output>
-          <port num="0" edge="e51"/>
-          <port num="1" edge="e53"/>
-        </output>
-      </node>
-      <node kind="MERGE" id="n46">
-        <input>
-          <port num="0" edge="e53"/>
-          <port num="1" edge="e49"/>
-        </input>
-        <output>
-          <port num="0" edge="e55"/>
-        </output>
-      </node>
-      <node kind="OUTGOING" id="n48">
-        <input>
-          <port num="0" edge="e51"/>
-          <port num="1" edge="e55"/>
-        </input>
-        <output/>
-      </node>
-      <edge var="theVector" pinch="false" width="wide" id="e45">
-        <from>
-          <noderef id="n42" port="0"/>
-        </from>
-        <to>
-          <noderef id="n44" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector" pinch="true" width="wide" id="e51">
-        <from>
-          <noderef id="n44" port="0"/>
-        </from>
-        <to>
-          <noderef id="n48" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e47">
-        <from>
-          <noderef id="n42" port="1"/>
-        </from>
-        <to>
-          <noderef id="n44" port="1"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e53">
-        <from>
-          <noderef id="n44" port="1"/>
-        </from>
-        <to>
-          <noderef id="n46" port="0"/>
-        </to>
-      </edge>
-      <edge var="theVector.elts" pinch="false" width="narrow" id="e55">
-        <from>
-          <noderef id="n46" port="0"/>
-        </from>
-        <to>
-          <noderef id="n48" port="1"/>
-        </to>
-      </edge>
-      <edge var="push.param1" pinch="false" width="wide" id="e49">
-        <from>
-          <noderef id="n42" port="2"/>
-        </from>
-        <to>
-          <noderef id="n46" port="1"/>
-        </to>
-      </edge>
-    </board>
-  </boards>
-</level>
+    <boards>
+      <board name="constructor">
+        <node kind="INCOMING" id="n2">
+          <input/>
+          <output/>
+        </node>
+        <node kind="START_WHITE_BALL" id="n4">
+          <input/>
+          <output>
+            <port num="0" edge="e1"/>
+          </output>
+          <!-- port #, edge ID -->
+        </node>
+        <node kind="START_NO_BALL" id="n6">
+          <input/>
+          <output>
+            <port num="0" edge="e3"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n8">
+          <input>
+            <port num="0" edge="e1"/>
+            <port num="1" edge="e3"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e1">
+          <from>
+            <noderef id="n4" port="0"/>
+          </from>
+          <!-- node ID, port #-->
+          <to>
+            <noderef id="n8" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e3">
+          <from>
+            <noderef id="n6" port="0"/>
+          </from>
+          <to>
+            <noderef id="n8" port="1"/>
+          </to>
+        </edge>
+      </board>
+      <board name="isFull">
+        <node kind="INCOMING" id="n10">
+          <input/>
+          <output>
+            <port num="0" edge="e5"/>
+            <port num="1" edge="e7"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n12">
+          <input>
+            <port num="0" edge="e5"/>
+            <port num="1" edge="e7"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="true" width="wide" id="e5">
+          <from>
+            <noderef id="n10" port="0"/>
+          </from>
+          <to>
+            <noderef id="n12" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e7">
+          <from>
+            <noderef id="n10" port="1"/>
+          </from>
+          <to>
+            <noderef id="n12" port="1"/>
+          </to>
+        </edge>
+      </board>
+      <board name="isEmpty">
+        <node kind="INCOMING" id="n26">
+          <input/>
+          <output>
+            <port num="0" edge="e9"/>
+            <port num="1" edge="e11"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n28">
+          <input>
+            <port num="0" edge="e9"/>
+            <port num="1" edge="e11"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="true" width="wide" id="e9">
+          <from>
+            <noderef id="n26" port="0"/>
+          </from>
+          <to>
+            <noderef id="n28" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e11">
+          <from>
+            <noderef id="n26" port="1"/>
+          </from>
+          <to>
+            <noderef id="n28" port="1"/>
+          </to>
+        </edge>
+      </board>
+      <board name="top">
+        <node kind="INCOMING" id="n14">
+          <input/>
+          <output>
+            <port num="0" edge="e13"/>
+            <port num="1" edge="e15"/>
+          </output>
+        </node>
+        <node kind="SUBNETWORK" name="isEmpty" id="n16">
+          <input>
+            <port num="0" edge="e13"/>
+            <port num="1" edge="e15"/>
+          </input>
+          <output>
+            <port num="0" edge="e17"/>
+            <port num="1" edge="e19"/>
+          </output>
+        </node>
+        <node kind="SPLIT" id="n18">
+          <input>
+            <port num="0" edge="e19"/>
+          </input>
+          <output>
+            <port num="0" edge="e21"/>
+            <port num="1" edge="e23"/>
+          </output>
+        </node>
+        <node kind="START_BLACK_BALL" id="n20">
+          <input/>
+          <output>
+            <port num="0" edge="e25"/>
+          </output>
+        </node>
+        <node kind="MERGE" id="n22">
+          <input>
+            <port num="0" edge="e23"/>
+            <port num="1" edge="e25"/>
+          </input>
+          <output>
+            <port num="0" edge="e27"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n24">
+          <input>
+            <port num="0" edge="e17"/>
+            <port num="1" edge="e21"/>
+            <port num="2" edge="e27"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e13">
+          <from>
+            <noderef id="n14" port="0"/>
+          </from>
+          <to>
+            <noderef id="n16" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="true" width="wide" id="e17">
+          <from>
+            <noderef id="n16" port="0"/>
+          </from>
+          <to>
+            <noderef id="n24" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e15">
+          <from>
+            <noderef id="n14" port="1"/>
+          </from>
+          <to>
+            <noderef id="n16" port="1"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e19">
+          <from>
+            <noderef id="n16" port="1"/>
+          </from>
+          <to>
+            <noderef id="n18" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e21">
+          <from>
+            <noderef id="n18" port="0"/>
+          </from>
+          <to>
+            <noderef id="n24" port="1"/>
+          </to>
+        </edge>
+        <edge var="top.return" pinch="false" width="wide" id="e23">
+          <from>
+            <noderef id="n18" port="1"/>
+          </from>
+          <to>
+            <noderef id="n22" port="0"/>
+          </to>
+        </edge>
+        <edge var="top.return" pinch="false" width="wide" id="e25">
+          <from>
+            <noderef id="n20" port="0"/>
+          </from>
+          <to>
+            <noderef id="n22" port="1"/>
+          </to>
+        </edge>
+        <edge var="top.return" pinch="false" width="wide" id="e27">
+          <from>
+            <noderef id="n22" port="0"/>
+          </from>
+          <to>
+            <noderef id="n24" port="2"/>
+          </to>
+        </edge>
+      </board>
+      <board name="makeEmpty">
+        <node kind="INCOMING" id="n29">
+          <input/>
+          <output>
+            <port num="0" edge="e29"/>
+            <port num="1" edge="e31"/>
+          </output>
+        </node>
+        <node kind="END" id="n30">
+          <input>
+            <port num="0" edge="e29"/>
+          </input>
+          <output/>
+        </node>
+        <node kind="START_WHITE_BALL" id="n62">
+          <input/>
+          <output>
+            <port num="0" edge="e33"/>
+          </output>
+        </node>
+        <node kind="END" id="n32">
+          <input>
+            <port num="0" edge="e31"/>
+          </input>
+          <output/>
+        </node>
+        <node kind="START_NO_BALL" id="n64">
+          <input/>
+          <output>
+            <port num="0" edge="e35"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n34">
+          <input>
+            <port num="0" edge="e33"/>
+            <port num="1" edge="e35"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e29">
+          <from>
+            <noderef id="n29" port="0"/>
+          </from>
+          <to>
+            <noderef id="n30" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="false" width="wide" id="e33">
+          <from>
+            <noderef id="n62" port="0"/>
+          </from>
+          <to>
+            <noderef id="n34" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e31">
+          <from>
+            <noderef id="n29" port="1"/>
+          </from>
+          <to>
+            <noderef id="n32" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e35">
+          <from>
+            <noderef id="n64" port="0"/>
+          </from>
+          <to>
+            <noderef id="n34" port="1"/>
+          </to>
+        </edge>
+      </board>
+      <board name="pop">
+        <node kind="INCOMING" id="n36">
+          <input/>
+          <output>
+            <port num="0" edge="e37"/>
+            <port num="1" edge="e39"/>
+          </output>
+        </node>
+        <node kind="SUBNETWORK" name="isEmpty" id="n38">
+          <input>
+            <port num="0" edge="e37"/>
+            <port num="1" edge="e39"/>
+          </input>
+          <output>
+            <port num="0" edge="e41"/>
+            <port num="1" edge="e43"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n40">
+          <input>
+            <port num="0" edge="e41"/>
+            <port num="1" edge="e43"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e37">
+          <from>
+            <noderef id="n36" port="0"/>
+          </from>
+          <to>
+            <noderef id="n38" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="true" width="wide" id="e41">
+          <from>
+            <noderef id="n38" port="0"/>
+          </from>
+          <to>
+            <noderef id="n40" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e39">
+          <from>
+            <noderef id="n36" port="1"/>
+          </from>
+          <to>
+            <noderef id="n38" port="1"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e43">
+          <from>
+            <noderef id="n38" port="1"/>
+          </from>
+          <to>
+            <noderef id="n40" port="1"/>
+          </to>
+        </edge>
+      </board>
+      <board name="topAndPop">
+        <node kind="INCOMING" id="n50">
+          <input/>
+          <output>
+            <port num="0" edge="e57"/>
+            <port num="1" edge="e59"/>
+          </output>
+        </node>
+        <node kind="SUBNETWORK" name="isEmpty" id="n52">
+          <input>
+            <port num="0" edge="e57"/>
+            <port num="1" edge="e59"/>
+          </input>
+          <output>
+            <port num="0" edge="e61"/>
+            <port num="1" edge="e63"/>
+          </output>
+        </node>
+        <node kind="SUBNETWORK" name="top" id="n54">
+          <input>
+            <port num="0" edge="e61"/>
+            <port num="1" edge="e63"/>
+          </input>
+          <output>
+            <port num="0" edge="e65"/>
+            <port num="1" edge="e67"/>
+            <port num="2" edge="e69"/>
+          </output>
+        </node>
+        <node kind="START_BLACK_BALL" id="n56">
+          <input/>
+          <output>
+            <port num="0" edge="e71"/>
+          </output>
+        </node>
+        <node kind="MERGE" id="n58">
+          <input>
+            <port num="0" edge="e69"/>
+            <port num="1" edge="e71"/>
+          </input>
+          <output>
+            <port num="0" edge="e73"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n60">
+          <input>
+            <port num="0" edge="e65"/>
+            <port num="1" edge="e67"/>
+            <port num="2" edge="e73"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e57">
+          <from>
+            <noderef id="n50" port="0"/>
+          </from>
+          <to>
+            <noderef id="n52" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="false" width="wide" id="e61">
+          <from>
+            <noderef id="n52" port="0"/>
+          </from>
+          <to>
+            <noderef id="n54" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="true" width="wide" id="e65">
+          <from>
+            <noderef id="n54" port="0"/>
+          </from>
+          <to>
+            <noderef id="n60" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e59">
+          <from>
+            <noderef id="n50" port="1"/>
+          </from>
+          <to>
+            <noderef id="n52" port="1"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e63">
+          <from>
+            <noderef id="n52" port="1"/>
+          </from>
+          <to>
+            <noderef id="n54" port="1"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e67">
+          <from>
+            <noderef id="n54" port="1"/>
+          </from>
+          <to>
+            <noderef id="n60" port="1"/>
+          </to>
+        </edge>
+        <edge var="topAndPop.return" pinch="false" width="wide" id="e69">
+          <from>
+            <noderef id="n54" port="2"/>
+          </from>
+          <to>
+            <noderef id="n58" port="0"/>
+          </to>
+        </edge>
+        <edge var="topAndPop.return" pinch="false" width="wide" id="e71">
+          <from>
+            <noderef id="n56" port="0"/>
+          </from>
+          <to>
+            <noderef id="n58" port="1"/>
+          </to>
+        </edge>
+        <edge var="topAndPop.return" pinch="false" width="wide" id="e73">
+          <from>
+            <noderef id="n58" port="0"/>
+          </from>
+          <to>
+            <noderef id="n60" port="2"/>
+          </to>
+        </edge>
+      </board>
+      <board name="push">
+        <node kind="INCOMING" id="n42">
+          <input/>
+          <output>
+            <port num="0" edge="e45"/>
+            <port num="1" edge="e47"/>
+            <port num="2" edge="e49"/>
+          </output>
+        </node>
+        <node kind="SUBNETWORK" name="isFull" id="n44">
+          <input>
+            <port num="0" edge="e45"/>
+            <port num="1" edge="e47"/>
+          </input>
+          <output>
+            <port num="0" edge="e51"/>
+            <port num="1" edge="e53"/>
+          </output>
+        </node>
+        <node kind="MERGE" id="n46">
+          <input>
+            <port num="0" edge="e53"/>
+            <port num="1" edge="e49"/>
+          </input>
+          <output>
+            <port num="0" edge="e55"/>
+          </output>
+        </node>
+        <node kind="OUTGOING" id="n48">
+          <input>
+            <port num="0" edge="e51"/>
+            <port num="1" edge="e55"/>
+          </input>
+          <output/>
+        </node>
+        <edge var="theVector" pinch="false" width="wide" id="e45">
+          <from>
+            <noderef id="n42" port="0"/>
+          </from>
+          <to>
+            <noderef id="n44" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector" pinch="true" width="wide" id="e51">
+          <from>
+            <noderef id="n44" port="0"/>
+          </from>
+          <to>
+            <noderef id="n48" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e47">
+          <from>
+            <noderef id="n42" port="1"/>
+          </from>
+          <to>
+            <noderef id="n44" port="1"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e53">
+          <from>
+            <noderef id="n44" port="1"/>
+          </from>
+          <to>
+            <noderef id="n46" port="0"/>
+          </to>
+        </edge>
+        <edge var="theVector.elts" pinch="false" width="narrow" id="e55">
+          <from>
+            <noderef id="n46" port="0"/>
+          </from>
+          <to>
+            <noderef id="n48" port="1"/>
+          </to>
+        </edge>
+        <edge var="push.param1" pinch="false" width="wide" id="e49">
+          <from>
+            <noderef id="n42" port="2"/>
+          </from>
+          <to>
+            <noderef id="n46" port="1"/>
+          </to>
+        </edge>
+      </board>
+    </boards>
+  </level>
 </world>
