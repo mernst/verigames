@@ -1,0 +1,95 @@
+===========================================================================
+
+Mike's proposal:
+
+...
+
+===========================================================================
+
+Drew Dean agrees with this characterization of the video, and adds:
+
+Video specifics
+
+Drew-
+
+We're working on the video you requested.  We want to make sure it fits
+your needs, without wasting our time.
+
+There are a lot of points that could be made in your pitch and/or the
+video, such as:
+ * statistics about security problems, and about the amount of existing
+   code that has not been verified
+ * possibility of a pan-university student competition to resolve as much
+   of the Linux kernel as possible
+ * list of security bugs that could be addressed with slight
+   modification of the framework
+
+My impression (but please correct me if I am wrong!) is that you want a
+short video that focuses on
+ * how the problem is solved today (command-line tool)
+ * gameplay, including:
+    * basic mechanics
+    * what people are thinking about when solving the game
+    * switching between boards within a level
+    * advancing between levels within a game
+ * translation back to a verified program (use command-line tool to verify
+   automatically-annotated program)
+
+My impression is that you prefer to handle the motivation, impacts,
+importance to the military, etc. parts of the pitch.
+
+There are some intermediate topics that could be included or excluded:
+ * collaboration aspects that enable teams to work together through problem
+   subdivision or re-solving partially solved problems.
+ * human insight into insoluble problems:  exceptions to the rules of
+   physics show a programmer where to focus.
+
+If you can please offer some guidance, that would be a big help in
+preventing us from creating a beautiful and compelling video that isn't
+what you want or need.
+
+Thanks!
+                    -Mike
+
+===========================================================================
+
+Zoran's proposal:
+
+1.       introduction on the current way these bugs are tracked, either through
+some emacs buffer thing, or the output of the state-of-the-art code checker.
+
+2.       Point to some jaw dropping statistics on important code used daily
+without any certainty of robustness.  Make it security heavy because that’s
+what they want to hear.
+
+3.       A didactic example of play introducing the basic mechanics and what
+the user is thinking about when solving the puzzle
+
+4.       Switch to a more complex example with nesting, dependency of pipes
+across multiple frames, etc.
+
+5.       Point to a collaborative aspect that enables teams to work together
+through problem subdivision or resolving partially solved problems.
+
+6.       Show a largeish code base that we were able to resolve (if that
+actually is the case).
+
+7.       Point to a possibility of a pan-univresity student competition to
+resolve as much of the linux kernel as possible
+
+8.       Show a list of top 25 security bugs that could be addressed with
+slight modification of the framework
+
+9.       (optional) point to other problems like threading etc that would need
+to be addressed with the larger program just so it does not look like we’ve
+already solved it, so that they feel justify to fund the program for at least
+3-4 years.
+
+What works best (from our countless siggraph video experiences) is writing out
+all the text first, making sure that it work fits in the planned time, and then
+generate video cuts that fit optimally with text.  I suggest we work on that as
+woon as we agree on the rough outline.  Please add items to this list, suggest
+removal or edit.  Seth could you create a google doc  so that all comments and
+edits are tracked.
+
+===========================================================================
