@@ -128,6 +128,13 @@ public class LevelBuilder
       return b;
    }
    
+   public BoardBuilder getConstructorTemplate(String name)
+   {
+      BoardBuilder b = new BoardBuilder(this, true);
+      activeBoards.put(b, name);
+      return b;
+   }
+   
    /**
     * Returns level<br/>
     * <br/>

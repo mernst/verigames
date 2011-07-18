@@ -80,6 +80,8 @@ public class BoardBuilder
    
    private boolean active;
    
+   private final boolean constructor;
+   
    private static final boolean CHECK_REP_ENABLED = true;
    
    private void checkRep()
@@ -120,11 +122,13 @@ public class BoardBuilder
    
    /**
     * Creates a new BoardBuilder with the given LevelBuilder. Uses, as a
-    * template, the fields present in LevelBuilder.
+    * template, the fields present in LevelBuilder. If constructor is false,
     */
-   protected BoardBuilder(LevelBuilder lb)
+   protected BoardBuilder(LevelBuilder lb, boolean constructor)
    {
       active = true;
+      
+      this.constructor = constructor;
       
       varToCurrentEdge = new HashMap<String, Chute>();
       chuteToFurthestNode = new HashMap<Chute, Intersection>();
@@ -135,29 +139,42 @@ public class BoardBuilder
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       board.addNode(incoming);
       
-      // Copy the chutes in levelBuilder.getFields() and attach them to incoming
-      // in the proper order. Also, for each named field, add it to
-      // varToCurrentEdge
-      List<Chute> fields = levelBuilder.getFields();
-      
-      int currentIncomingPort = 0;
-      for (Chute template : fields)
+      if (!constructor)
       {
-         Chute c = template.copy();
-         varToCurrentEdge.put(c.getName(), c);
-         chuteToFurthestNode.put(c, incoming);
-         chuteToNodePort.put(c, currentIncomingPort++);
+         // Copy the chutes in levelBuilder.getFields() and attach them to
+         // incoming
+         // in the proper order. Also, for each named field, add it to
+         // varToCurrentEdge
+         List<Chute> fields = levelBuilder.getFields();
          
-         // Perform a preorder traversal of the auxiliary chutes tree
-         Iterator<Chute> auxChuteTraversal = c.traverseAuxChutes();
-         while (auxChuteTraversal.hasNext())
+         int currentIncomingPort = 0;
+         for (Chute template : fields)
          {
-            Chute aux = auxChuteTraversal.next();
-            chuteToFurthestNode.put(aux, incoming);
-            chuteToNodePort.put(aux, currentIncomingPort++);
+            Chute c = template.copy();
+            varToCurrentEdge.put(c.getName(), c);
+            chuteToFurthestNode.put(c, incoming);
+            chuteToNodePort.put(c, currentIncomingPort++);
+            
+            // Perform a preorder traversal of the auxiliary chutes tree
+            Iterator<Chute> auxChuteTraversal = c.traverseAuxChutes();
+            while (auxChuteTraversal.hasNext())
+            {
+               Chute aux = auxChuteTraversal.next();
+               chuteToFurthestNode.put(aux, incoming);
+               chuteToNodePort.put(aux, currentIncomingPort++);
+            }
          }
       }
       checkRep();
+   }
+   
+   /**
+    * Creates a new BoardBuilder with the given LevelBuilder. Uses, as a
+    * template, the fields present in LevelBuilder.
+    */
+   protected BoardBuilder(LevelBuilder lb)
+   {
+      this(lb, false);
    }
    
    
@@ -300,30 +317,54 @@ public class BoardBuilder
    // TODO retrofit so that it works with aux chutes
    public void assignment(String to, Intersection.Kind from)
    {
-      if (!varToCurrentEdge.containsKey(to))
-         throw new IllegalArgumentException("Variable" + to + " not present");
-      
-      Intersection end = Intersection.factory(Kind.END);
-      board.addNode(end);
-      
-      Chute oldChute = varToCurrentEdge.get(to);
-      
-      board.addEdge(chuteToFurthestNode.get(oldChute),
-            chuteToNodePort.get(oldChute), end, 0, oldChute);
-      varToCurrentEdge.remove(to);
-      chuteToFurthestNode.remove(oldChute);
-      chuteToNodePort.remove(oldChute);
-      
-      Intersection newNode = Intersection.factory(from);
-      board.addNode(newNode);
-      
-      Chute newChute = oldChute.copy();
-      
-      varToCurrentEdge.put(to, newChute);
-      chuteToFurthestNode.put(newChute, newNode);
-      chuteToNodePort.put(newChute, 0);
-      
+      if (varToCurrentEdge.containsKey(to))
+      {
+         Intersection end = Intersection.factory(Kind.END);
+         board.addNode(end);
+         
+         Chute oldChute = varToCurrentEdge.get(to);
+         
+         board.addEdge(chuteToFurthestNode.get(oldChute),
+               chuteToNodePort.get(oldChute), end, 0, oldChute);
+         varToCurrentEdge.remove(to);
+         chuteToFurthestNode.remove(oldChute);
+         chuteToNodePort.remove(oldChute);
+         
+         Intersection newNode = Intersection.factory(from);
+         board.addNode(newNode);
+         
+         Chute newChute = oldChute.copy();
+         
+         varToCurrentEdge.put(to, newChute);
+         chuteToFurthestNode.put(newChute, newNode);
+         chuteToNodePort.put(newChute, 0);
+      }
+      else if (constructor)
+      {
+         Chute fieldtype = null;
+         for (Chute c : levelBuilder.getFields())
+         {
+            if (c.getName().equals(to))
+            {
+               fieldtype = c;
+               break;
+            }
+         }
+         if (fieldtype != null)
+         {
+            addVar(fieldtype, from);
+         }
+         else
+         {
+            throw new IllegalArgumentException("Variable " + to + " not present");
+         }
+      }
+      else
+      {
+         throw new IllegalArgumentException("Variable " + to + " not present");
+      }
       checkRep();
+      
    }
    
    /**

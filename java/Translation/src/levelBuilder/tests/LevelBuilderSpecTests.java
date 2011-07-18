@@ -40,7 +40,7 @@ public class LevelBuilderSpecTests
       
       TestClass.addField(new Chute("s", true, null));
       
-      BoardBuilder constructor = TestClass.getTemplateBoardBuilder("constructor");
+      BoardBuilder constructor = TestClass.getConstructorTemplate("constructor");
       constructor.assignment("s", Kind.START_BLACK_BALL);
       
       TestClass.finishBoardBuilder(constructor);
