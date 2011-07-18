@@ -19,7 +19,7 @@ public class ChuteImpTests
     */
    @Test(expected = IllegalStateException.class) public void getStartPortTest()
    {
-      (new Chute(null, true, true, null)).getStartPort();
+      (new Chute(null, true, null)).getStartPort();
    }
    
    /**
@@ -28,7 +28,7 @@ public class ChuteImpTests
     */
    @Test(expected = IllegalStateException.class) public void getEndPortTest()
    {
-      (new Chute(null, true, true, null)).getEndPort();
+      (new Chute(null, true, null)).getEndPort();
    }
    
    private Chute c;
@@ -61,7 +61,7 @@ public class ChuteImpTests
    @Before public void initC() throws IllegalArgumentException,
          IllegalAccessException, InvocationTargetException
    {
-      c = new Chute("asdf", true, false, null);
+      c = new Chute("asdf", false, null);
       
       // c.setStart(Intersection.intersectionFactory(Intersection.Kind.INCOMING),0);
       invokeChuteMethod(

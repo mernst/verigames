@@ -68,8 +68,8 @@ public class IntersectionSpecTests
    {
       i = Intersection.factory(Kind.INCOMING);
       j = Intersection.factory(Kind.OUTGOING);
-      chute1 = new Chute(null, true, true, null);
-      chute2 = new Chute(null, true, true, null);
+      chute1 = new Chute(null, true, null);
+      chute2 = new Chute(null, true, null);
       
       intersectionMethods = Intersection.class.getDeclaredMethods();
    }

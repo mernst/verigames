@@ -73,11 +73,11 @@ public class IntersectionImpTests
       
       // i.setInputChute(new Chute(null, true, true, null), 0);
       invokeIntersectionMethod(i, "setInputChute", new Object[] {
-            new Chute(null, true, true, null), 0 });
+            new Chute(null, true, null), 0 });
       
       // i.setOutputChute(new Chute(null, true, true, null), 0);
       invokeIntersectionMethod(i, "setOutputChute", new Object[] {
-            new Chute(null, true, true, null), 0 });
+            new Chute(null, true, null), 0 });
       
       // i.deactivate();
       invokeIntersectionMethod(i, "deactivate", new Object[] {});
@@ -106,7 +106,7 @@ public class IntersectionImpTests
       // i.setInputChute(new Chute(null, true, true, null), 0);
       try
       {
-         invokeIntersectionMethod(i, "setInputChute", new Object[]{new Chute(null, true, true, null), 0});
+         invokeIntersectionMethod(i, "setInputChute", new Object[]{new Chute(null, true, null), 0});
       }
       catch (InvocationTargetException e)
       {
@@ -123,7 +123,7 @@ public class IntersectionImpTests
       // i.setOutputChute(new Chute(null, true, true, null), 0);
       try
       {
-         invokeIntersectionMethod(i, "setOutputChute", new Object[]{new Chute(null, true, true, null), 0});
+         invokeIntersectionMethod(i, "setOutputChute", new Object[]{new Chute(null, true, null), 0});
       }
       catch (InvocationTargetException e)
       {

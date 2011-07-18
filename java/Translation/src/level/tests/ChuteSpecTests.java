@@ -40,14 +40,18 @@ public class ChuteSpecTests
    
    @Before public void initChutes()
    {
-      namedPinchedEditable = new Chute(null, true, true, null);
-      namedPinchedUneditable = new Chute(null, true, false, null);
-      namedUnpinchedEditable = new Chute(null, false, true, null);
-      namedUnpinchedUneditable = new Chute(null, false, false, null);
-      unnamedPinchedEditable = new Chute(null, true, true, null);
-      unnamedPinchedUneditable = new Chute(null, true, false, null);
-      unnamedUnpinchedEditable = new Chute(null, false, true, null);
-      unnamedUnpinchedUneditable = new Chute(null, false, false, null);
+      namedPinchedEditable = new Chute(null, true, null);
+      namedPinchedEditable.setPinched(true);
+      namedPinchedUneditable = new Chute(null, false, null);
+      namedPinchedUneditable.setPinched(true);
+      namedUnpinchedEditable = new Chute(null, true, null);
+      namedUnpinchedUneditable = new Chute(null, false, null);
+      unnamedPinchedEditable = new Chute(null, true, null);
+      unnamedPinchedEditable.setPinched(true);
+      unnamedPinchedUneditable = new Chute(null, false, null);
+      unnamedPinchedUneditable.setPinched(true);
+      unnamedUnpinchedEditable = new Chute(null, true, null);
+      unnamedUnpinchedUneditable = new Chute(null, false, null);
       
       allChutes = new ArrayList<Chute>();
       
@@ -83,7 +87,7 @@ public class ChuteSpecTests
    @Test public void testIntersections() throws InvocationTargetException,
          IllegalAccessException
    {
-      Chute chute = new Chute(null, false, true, null);
+      Chute chute = new Chute(null, true, null);
       
       assertNull(chute.getStart());
       assertNull(chute.getEnd());
@@ -155,15 +159,15 @@ public class ChuteSpecTests
       // Represents the variable
       // Map<String, Integer> map;
       
-      Chute IntegerChute = new Chute(null, false, true, null);
-      Chute StringChute = new Chute(null, false, true, null);
+      Chute IntegerChute = new Chute(null, true, null);
+      Chute StringChute = new Chute(null, true, null);
       assertTrue(IntegerChute.getAuxiliaryChutes().isEmpty());
       assertTrue(StringChute.getAuxiliaryChutes().isEmpty());
       
       List<Chute> aux = new ArrayList<Chute>();
       aux.add(StringChute);
       aux.add(IntegerChute);
-      Chute mapChute = new Chute("map", false, true, aux);
+      Chute mapChute = new Chute("map", true, aux);
       
       assertEquals(aux, mapChute.getAuxiliaryChutes());
       
@@ -188,8 +192,8 @@ public class ChuteSpecTests
       
       List<Chute> auxChuteList = new ArrayList<Chute>();
       auxChuteList.add(c1);
-      auxChuteList.add(new Chute(null, true, false, null));
-      Chute withAux = new Chute("asdf", true, true, auxChuteList);
+      auxChuteList.add(new Chute(null, false, null));
+      Chute withAux = new Chute("asdf", true, auxChuteList);
       Chute withAuxCopy = withAux.copy();
       
       assertTrue(chuteValueEquals(withAux, withAuxCopy));

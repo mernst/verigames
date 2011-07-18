@@ -44,6 +44,7 @@ import checkers.nullness.quals.Pure;
  * <br/>
  * Specification Field: pinch : boolean // true iff there is a pinch-point in
  * this chute segment<br/>
+ * Defaults to false<br/>
  * <br/>
  * Specification Field: narrow : boolean // true iff the chute is currently
  * narrow<br/>
@@ -79,9 +80,8 @@ public class Chute
    private @LazyNonNull Intersection end;
    private int endPort = -1;
    
-   private final boolean pinch; // whether a chute has a pinch-point is a fact
-                                // of the original code, and cannot be modified
-                                // in-game
+   private boolean pinch;
+   
    private boolean narrow;
    private final boolean editable;
    
@@ -128,14 +128,13 @@ public class Chute
     * creates a new Chute object, with the given values for name, pinch, and
     * editable
     */
-   public Chute(@Nullable String name, boolean pinch, boolean editable,
-         @Nullable List<Chute> aux)
+   public Chute(@Nullable String name, boolean editable, @Nullable List<Chute> aux)
    {
       this.name = name;
-      this.pinch = pinch;
       this.editable = editable;
       
       narrow = false;
+      pinch = false;
       
       auxiliaryChutes = aux == null ? new ArrayList<Chute>()
             : new ArrayList<Chute>(aux);
@@ -155,11 +154,30 @@ public class Chute
    }
    
    /**
-    * Returns pinch
+    * Returns pinch<br/>
+    * <br/>
+    * Defaults to false
     */
    public boolean isPinched()
    {
       return pinch;
+   }
+   
+   /**
+    * Sets the specification field pinch to the value of the parameter<br/>
+    * <br/>
+    * Requires: active<br/>
+    * <br/>
+    * Modifies: this
+    * 
+    * @param pinched
+    */
+   public void setPinched(boolean pinched)
+   {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      this.pinch = pinched;
+      checkRep();
    }
    
    /**
@@ -306,8 +324,9 @@ public class Chute
          copyAuxChutes.add(c.copy());
       }
       
-      Chute copy = new Chute(name, pinch, editable, copyAuxChutes);
+      Chute copy = new Chute(name, editable, copyAuxChutes);
       copy.setNarrow(narrow);
+      copy.setPinched(pinch);
       
       return copy;
    }
