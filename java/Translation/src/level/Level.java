@@ -1,8 +1,8 @@
 package level;
 
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,8 +59,8 @@ public class Level
     */
    public Level()
    {
-      linkedEdgeClasses = new HashSet<Set<Chute>>();
-      boardNames = new HashMap<String, Board>();
+      linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
+      boardNames = new LinkedHashMap<String, Board>();
    }
    
    /**
@@ -83,13 +83,13 @@ public class Level
        * Contains the sets that should be removed from linkedEdgeClasses because
        * they will be deprecated by the newly created equivalence class
        */
-      Set<Set<Chute>> toRemove = new HashSet<Set<Chute>>();
+      Set<Set<Chute>> toRemove = new LinkedHashSet<Set<Chute>>();
       
       /*
        * The new equivalence class to be added to linkedEdgeClasses. It will at
        * least have all of the elements in toLink.
        */
-      Set<Chute> newEquivClass = new HashSet<Chute>(toLink);
+      Set<Chute> newEquivClass = new LinkedHashSet<Chute>(toLink);
       
       for (Set<Chute> linked : linkedEdgeClasses)
       {
@@ -144,7 +144,7 @@ public class Level
     */
    public Set<Board> boards()
    {
-      return new HashSet<Board>(boardNames.values());
+      return new LinkedHashSet<Board>(boardNames.values());
    }
    
    /**

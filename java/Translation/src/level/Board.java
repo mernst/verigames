@@ -1,11 +1,10 @@
 package level;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static level.Intersection.Kind;
-
-import checkers.nullness.quals.*;
+import level.Intersection.Kind;
+import checkers.nullness.quals.LazyNonNull;
 
 /**
  * An ADT representing a board for a verification game. It is essentially a
@@ -139,8 +138,8 @@ public class Board
     */
    public Board()
    {
-      nodes = new HashSet<Intersection>();
-      edges = new HashSet<Chute>();
+      nodes = new LinkedHashSet<Intersection>();
+      edges = new LinkedHashSet<Chute>();
       checkRep();
    }
    
@@ -275,7 +274,7 @@ public class Board
     */
    public Set<Intersection> getNodes()
    {
-      return new HashSet<Intersection>(nodes);
+      return new LinkedHashSet<Intersection>(nodes);
    }
    
    /**
@@ -285,7 +284,7 @@ public class Board
     */
    public Set<Chute> getEdges()
    {
-      return new HashSet<Chute>(edges);
+      return new LinkedHashSet<Chute>(edges);
    }
    
    /**

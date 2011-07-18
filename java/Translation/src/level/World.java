@@ -1,7 +1,7 @@
 package level;
 
 import java.io.PrintStream;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * A Set of Levels that make up a world.
@@ -10,7 +10,7 @@ import java.util.HashSet;
  * 
  */
 
-public class World extends HashSet<Level>
+public class World extends LinkedHashSet<Level>
 {
    
    private static final long serialVersionUID = 8743080574151346401L;
