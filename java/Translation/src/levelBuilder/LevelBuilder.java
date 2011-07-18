@@ -107,11 +107,17 @@ public class LevelBuilder
     * Adds a field with name and type information specified by the given chute<br/>
     * <br/>
     * Requires: active;<br/>
+    * chute.getName() != null<br/>
     * chute.name is not already a key in fields;<br/>
     * the given chute is not, and will not be, used as part of a board.
     */
    public void addField(Chute chute)
    {
+      if (!active)
+         throw new IllegalStateException("Mutation attempted on inactive LevelBuilder");
+      if (chute.getName() == null)
+         throw new IllegalArgumentException("addField passed an unnamed Chute");
+      
       fields.add(chute);
    }
    
