@@ -146,8 +146,10 @@ public class LevelBuilder
     * <br/>
     * Sets active to false<br/>
     * <br/>
-    * Requires: active<br/>
-    * <br/>
+    * Requires:<br/>
+    * active;<br/>
+    * All BoardBuilders created by this LevelBuilder's factory methods must have
+    * been passed back into finishBoardBuilder<br/>
     * Modifies: this<br/>
     */
    public Level getLevel()
@@ -155,6 +157,9 @@ public class LevelBuilder
       if (!active)
          throw new IllegalStateException(
                "getLevel requires that this LevelBuilder is active");
+      if (!activeBoards.isEmpty())
+         throw new IllegalStateException("BoardBuilder still unfinished");
+      
       active = false;
       level.deactivate();
       return level;
