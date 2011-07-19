@@ -1,7 +1,9 @@
 package levelBuilder;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,14 +71,27 @@ public class BoardBuilder
    private final LevelBuilder levelBuilder;
    
    /* Maps a variable name to the current Chute that represents it */
-   private Map<String, Chute> varToCurrentEdge;
+   private final Map<String, Chute> varToCurrentEdge;
    
    /*
-    * Maps a Chute in varToCurrentEdge.values() to the Intersection and port
+    * Maps a furthest Chute to the Intersection and port
     * number that it will attach to.
     */
-   private Map<Chute, Intersection> chuteToFurthestNode;
-   private Map<Chute, Integer> chuteToNodePort;
+   private final Map<Chute, Intersection> chuteToFurthestNode;
+   private final Map<Chute, Integer> chuteToNodePort;
+   
+   /**
+    * Maps a furthest Chute to the Set<Chute> that it is linked to, in the sense
+    * defined by {@link level.Level Level}
+    */
+   private final Map<Chute, Set<Chute>> chuteToLinkedChutes;
+   
+   /**
+    * Contains elements transferred from {@link #chuteToLinkedChutes
+    * chuteToLinkedChutes.values()} after the variables they represent are no
+    * longer active, so there is no longer an appropriate key chute
+    */
+   private final Set<Set<Chute>> linkedChuteSets;
    
    private boolean active;
    
@@ -90,9 +105,10 @@ public class BoardBuilder
       {
          // Representation Invariant:
          
-         // - chuteToFurthestNode.keySet() and chuteToNodePort.keySet() must be
-         // equal
+         // - chuteToFurthestNode.keySet(), chuteToNodePort.keySet(), and
+         // chuteToLinkedChutes.keySet() must be equal
          ensure(chuteToFurthestNode.keySet().equals(chuteToNodePort.keySet()));
+         ensure(chuteToNodePort.keySet().equals(chuteToLinkedChutes.keySet()));
          
          // - The elements in varToCurrentEdge.values() are a subset of
          // chuteToFurthestNode.keySet() and chuteToNodePort.keySet()
@@ -107,6 +123,9 @@ public class BoardBuilder
          
          // - For every Chute c in varToCurrentEdge.values():
          // - - 
+         
+         // For every Chute c in chuteToLinkedChutes.keySet():
+         // chuteToLinkedChutes.get(c).contains(c);
       }
    }
    
@@ -133,6 +152,8 @@ public class BoardBuilder
       varToCurrentEdge = new HashMap<String, Chute>();
       chuteToFurthestNode = new HashMap<Chute, Intersection>();
       chuteToNodePort = new HashMap<Chute, Integer>();
+      chuteToLinkedChutes = new HashMap<Chute, Set<Chute>>();
+      linkedChuteSets = new HashSet<Set<Chute>>();
       
       levelBuilder = lb;
       board = new Board();
@@ -154,6 +175,11 @@ public class BoardBuilder
             varToCurrentEdge.put(c.getName(), c);
             chuteToFurthestNode.put(c, incoming);
             chuteToNodePort.put(c, currentIncomingPort++);
+            chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
+            chuteToLinkedChutes.get(c).add(c);
+            
+            // TODO change so that fields' aux chute are all linked, too
+            levelBuilder.addChuteToField(c.getName(), c);
             
             // Perform a preorder traversal of the auxiliary chutes tree
             Iterator<Chute> auxChuteTraversal = c.traverseAuxChutes();
@@ -162,6 +188,8 @@ public class BoardBuilder
                Chute aux = auxChuteTraversal.next();
                chuteToFurthestNode.put(aux, incoming);
                chuteToNodePort.put(aux, currentIncomingPort++);
+               chuteToLinkedChutes.put(aux, new LinkedHashSet<Chute>());
+               chuteToLinkedChutes.get(aux).add(aux);
             }
          }
       }
@@ -209,6 +237,8 @@ public class BoardBuilder
       
       chuteToFurthestNode.put(c, newNode);
       chuteToNodePort.put(c, 0);
+      chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
+      chuteToLinkedChutes.get(c).add(c);
       
       Iterator<Chute> auxItr = c.traverseAuxChutes();
       while (auxItr.hasNext())
@@ -220,6 +250,8 @@ public class BoardBuilder
          
          chuteToFurthestNode.put(nextAux, node);
          chuteToNodePort.put(nextAux, 0);
+         chuteToLinkedChutes.put(nextAux, new LinkedHashSet<Chute>());
+         chuteToLinkedChutes.get(nextAux).add(nextAux);
       }
       checkRep();
    }
@@ -330,6 +362,7 @@ public class BoardBuilder
          chuteToFurthestNode.remove(oldChute);
          chuteToNodePort.remove(oldChute);
          
+         
          Intersection newNode = Intersection.factory(from);
          board.addNode(newNode);
          
@@ -338,6 +371,10 @@ public class BoardBuilder
          varToCurrentEdge.put(to, newChute);
          chuteToFurthestNode.put(newChute, newNode);
          chuteToNodePort.put(newChute, 0);
+         chuteToLinkedChutes.put(newChute, chuteToLinkedChutes.get(oldChute));
+         chuteToLinkedChutes.get(newChute).add(newChute);
+         chuteToLinkedChutes.remove(oldChute);
+         
       }
       else if (constructor)
       {
@@ -411,11 +448,15 @@ public class BoardBuilder
       
       List<Chute> fields = levelBuilder.getFields();
       
+      // Attach all the field and argument chutes to the outgoing node.
+      // TODO add support for return values
       int currentOutPort = 0;
       for (Chute f : fields)
       {
          String fieldName = f.getName();
          Chute lastChute = varToCurrentEdge.get(fieldName);
+         
+         levelBuilder.addChuteToField(fieldName, lastChute);
          
          board.addEdge(chuteToFurthestNode.get(lastChute), chuteToNodePort.get(lastChute), outgoing, currentOutPort++, lastChute);
          
@@ -428,6 +469,12 @@ public class BoardBuilder
       }
       
       board.deactivate();
+      
+      // add all of the remaining sets of linked chutes to linkedChuteSets
+      linkedChuteSets.addAll(chuteToLinkedChutes.values());
+      
+      for (Set<Chute> toLink : linkedChuteSets)
+         levelBuilder.addLinkedEdgeSet(toLink);
       
       return board;
       
@@ -493,5 +540,9 @@ public class BoardBuilder
       
       chuteToFurthestNode.put(nextChute, n);
       chuteToNodePort.put(nextChute, outPort);
+      
+      chuteToLinkedChutes.put(nextChute, chuteToLinkedChutes.get(c));
+      chuteToLinkedChutes.get(nextChute).add(nextChute);
+      
    }
 }

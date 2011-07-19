@@ -2,6 +2,8 @@ package levelBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +54,11 @@ import level.Level;
 public class LevelBuilder
 {
    
+   // Maps a field name to Chutes that represent that field. Must contain at
+   // least one Chute for each board in which this field is used.
    private Map<String, Set<Chute>> fieldToChutes;
+   
+   private Set<Set<Chute>> linkedChuteSets;
    
    private List<Chute> fields;
    
@@ -69,7 +75,9 @@ public class LevelBuilder
    {
       active = true;
       
-      fieldToChutes = new HashMap<String, Set<Chute>>();
+      fieldToChutes = new LinkedHashMap<String, Set<Chute>>();
+      
+      linkedChuteSets = new LinkedHashSet<Set<Chute>>();
       
       level = new Level();
       
@@ -117,8 +125,35 @@ public class LevelBuilder
          throw new IllegalStateException("Mutation attempted on inactive LevelBuilder");
       if (chute.getName() == null)
          throw new IllegalArgumentException("addField passed an unnamed Chute");
+      if (fieldToChutes.containsKey(chute.getName()))
+         throw new IllegalArgumentException("field with given name already exists");
       
       fields.add(chute);
+      fieldToChutes.put(chute.getName(), new LinkedHashSet<Chute>());
+   }
+   
+   /**
+    * Adds chute to the set of chutes representing field
+    * 
+    * @param field
+    * @param chute
+    */
+   protected void addChuteToField(String field, Chute chute)
+   {
+      if (!fieldToChutes.containsKey(field))
+         throw new IllegalArgumentException("field " + field + " does not exist");
+      fieldToChutes.get(field).add(chute);
+   }
+   
+   /**
+    * Ensures that the given Chutes will be linked, according to the definition
+    * in (@link level.Level Level}
+    * 
+    * @param linked
+    */
+   protected void addLinkedEdgeSet(Set<Chute> linked)
+   {
+      linkedChuteSets.add(linked);
    }
    
    /**
@@ -159,6 +194,12 @@ public class LevelBuilder
                "getLevel requires that this LevelBuilder is active");
       if (!activeBoards.isEmpty())
          throw new IllegalStateException("BoardBuilder still unfinished");
+      
+      for (Set<Chute> s : fieldToChutes.values())
+         level.makeLinked(s);
+      
+      for (Set<Chute> s : linkedChuteSets)
+         level.makeLinked(s);
       
       active = false;
       level.deactivate();
