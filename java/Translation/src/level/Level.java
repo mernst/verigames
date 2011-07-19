@@ -1,6 +1,7 @@
 package level;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -39,20 +40,57 @@ public class Level
    
    private boolean active = true;
    
-   /*
-    * Representation Invariant:
-    * 
-    * No chute can be contained in more than one set in linkedEdgeClasses
-    * 
-    * No set in linkedEdgeClasses may be empty
-    * 
-    * No set in linkedEdgeClasses may have size 1 (the fact that a chute is
-    * linked to itself need not be represented)
-    * 
-    * All chutes contained in sets contained in linkedEdgeClasses must also be
-    * contained contained by some Board in boardNames.values()
-    */
+   private static final boolean CHECK_REP_ENABLED = true;
    
+   /**
+    * Enforces the Representation Invariant
+    */
+   private void checkRep()
+   {
+      // Representation Invariant:
+      if (CHECK_REP_ENABLED)
+      {
+         Set<Chute> encountered = new HashSet<Chute>();
+         for (Set<Chute> s : linkedEdgeClasses)
+         {
+            
+            // No chute can be contained in more than one set in
+            // linkedEdgeClasses
+            for (Chute c : s)
+            {
+               ensure(!encountered.contains(c));
+               encountered.add(c);
+            }
+            
+            // No set in linkedEdgeClasses may be empty
+            ensure(!s.isEmpty());
+            
+            /*
+             * No set in linkedEdgeClasses may have size 1 (the fact that a
+             * chute is linked to itself need not be represented)
+             */
+            ensure(s.size() != 1);
+            
+            /*
+             * All chutes contained in sets contained in linkedEdgeClasses must
+             * also be contained contained by some Board in boardNames.values()
+             * 
+             * Not checked for effiency's sake
+             */
+         }
+      }
+   }
+   
+   /**
+    * Intended to be a substitute for assert, except I don't want to have to
+    * make sure the -ea flag is turned on in order to get these checks.
+    */
+   private void ensure(boolean value)
+   {
+      if (!value)
+         throw new AssertionError();
+   }
+    
    /**
     * Creates a new Level object with an empty linkedEdgeMap, boards, and
     * boardNames
@@ -61,6 +99,7 @@ public class Level
    {
       linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
       boardNames = new LinkedHashMap<String, Board>();
+      checkRep();
    }
    
    /**
@@ -79,33 +118,38 @@ public class Level
     */
    public void makeLinked(Set<Chute> toLink)
    {
-      /*
-       * Contains the sets that should be removed from linkedEdgeClasses because
-       * they will be deprecated by the newly created equivalence class
-       */
-      Set<Set<Chute>> toRemove = new LinkedHashSet<Set<Chute>>();
-      
-      /*
-       * The new equivalence class to be added to linkedEdgeClasses. It will at
-       * least have all of the elements in toLink.
-       */
-      Set<Chute> newEquivClass = new LinkedHashSet<Chute>(toLink);
-      
-      for (Set<Chute> linked : linkedEdgeClasses)
+      if (!toLink.isEmpty() && toLink.size() != 1)
       {
-         for (Chute c : toLink)
+         /*
+          * Contains the sets that should be removed from linkedEdgeClasses
+          * because they will be deprecated by the newly created equivalence
+          * class
+          */
+         Set<Set<Chute>> toRemove = new LinkedHashSet<Set<Chute>>();
+         
+         /*
+          * The new equivalence class to be added to linkedEdgeClasses. It will
+          * at least have all of the elements in toLink.
+          */
+         Set<Chute> newEquivClass = new LinkedHashSet<Chute>(toLink);
+         
+         for (Set<Chute> linked : linkedEdgeClasses)
          {
-            if (linked.contains(c))
+            for (Chute c : toLink)
             {
-               toRemove.add(linked);
-               newEquivClass.addAll(linked);
+               if (linked.contains(c))
+               {
+                  toRemove.add(linked);
+                  newEquivClass.addAll(linked);
+               }
             }
          }
+         
+         linkedEdgeClasses.removeAll(toRemove);
+         
+         linkedEdgeClasses.add(newEquivClass);
+         checkRep();
       }
-      
-      linkedEdgeClasses.removeAll(toRemove);
-      
-      linkedEdgeClasses.add(newEquivClass);
    }
    
    /**
@@ -137,6 +181,7 @@ public class Level
    public void addBoard(String name, Board b)
    {
       boardNames.put(name, b);
+      checkRep();
    }
    
    /**
