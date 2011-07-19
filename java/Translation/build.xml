@@ -54,6 +54,7 @@
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
+    <copy file="../../world.dtd" todir="${bin}/level/tests"/>
   </target>
   <target name="test.levelBuilder">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder/tests">
@@ -65,6 +66,7 @@
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
+    <copy file="../../world.dtd" todir="${bin}/levelBuilder/tests"/>
   </target>
   <target name="javadoc">
     <javadoc access="public" author="true" classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar" destdir="${doc}" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="level,levelBuilder,translation" source="1.6" sourcepath="${src}" splitindex="true" use="true" version="true"/>
