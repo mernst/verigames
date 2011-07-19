@@ -1,8 +1,10 @@
 package levelBuilder;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -66,19 +68,14 @@ import checkers.nullness.quals.Nullable;
 
 public class BoardBuilder
 {
-   private final Board board;
+   private final BoardManager boardManager;
    
    private final LevelBuilder levelBuilder;
    
    /* Maps a variable name to the current Chute that represents it */
    private final Map<String, Chute> varToCurrentEdge;
    
-   /*
-    * Maps a furthest Chute to the Intersection and port
-    * number that it will attach to.
-    */
-   private final Map<Chute, Intersection> chuteToFurthestNode;
-   private final Map<Chute, Integer> chuteToNodePort;
+   private final Set<Chute> currentEdges;
    
    /**
     * Maps a furthest Chute to the Set<Chute> that it is linked to, in the sense
@@ -97,6 +94,177 @@ public class BoardBuilder
    
    private final boolean constructor;
    
+   // Adapter for Board that allows half-edges. That is, edges are allowed to be
+   // added without an end point
+   private class BoardManager
+   {
+      private Board board;
+      
+      // start Board delegate methods
+      
+      /**
+       * @see java.lang.Object#hashCode()
+       */
+      @Override
+      public int hashCode()
+      {
+         return board.hashCode();
+      }
+   
+      /**
+       * @see java.lang.Object#equals(java.lang.Object)
+       */
+      @Override
+      public boolean equals(Object obj)
+      {
+         return board.equals(obj);
+      }
+   
+      /**
+       * @see level.Board#addNode(level.Intersection)
+       */
+      public void addNode(Intersection node)
+      {
+         board.addNode(node);
+      }
+   
+      /**
+       * @see level.Board#addEdge(level.Intersection, int, level.Intersection, int, level.Chute)
+       */
+      public void addEdge(Intersection start, int startPort, Intersection end,
+            int endPort, Chute edge)
+      {
+         board.addEdge(start, startPort, end, endPort, edge);
+      }
+   
+      /**
+       * @see level.Board#nodesSize()
+       */
+      public int nodesSize()
+      {
+         return board.nodesSize();
+      }
+   
+      /**
+       * @see level.Board#edgesSize()
+       */
+      public int edgesSize()
+      {
+         return board.edgesSize();
+      }
+   
+      /**
+       * @see level.Board#getNodes()
+       */
+      public Set<Intersection> getNodes()
+      {
+         return board.getNodes();
+      }
+   
+      /*
+       * @see java.lang.Object#toString()
+       */
+      @Override
+      public String toString()
+      {
+         return board.toString();
+      }
+   
+      /**
+       * @see level.Board#getEdges()
+       */
+      public Set<Chute> getEdges()
+      {
+         return board.getEdges();
+      }
+   
+      /**
+       * @see level.Board#getIncomingNode()
+       */
+      public Intersection getIncomingNode()
+      {
+         return board.getIncomingNode();
+      }
+   
+      /**
+       * @see level.Board#getOutgoingNode()
+       */
+      public Intersection getOutgoingNode()
+      {
+         return board.getOutgoingNode();
+      }
+   
+      /**
+       * @see level.Board#contains(java.lang.Object)
+       */
+      public boolean contains(Object elt)
+      {
+         return board.contains(elt) || halfEdgeToStartNode.containsKey(elt);
+      }
+   
+      /**
+       * @see level.Board#isActive()
+       */
+      public boolean isActive()
+      {
+         return board.isActive();
+      }
+   
+      /**
+       * 
+       * @see level.Board#deactivate()
+       */
+      public void deactivate()
+      {
+         board.deactivate();
+      }
+      
+      // End board delegate methods
+      
+      public Board getBoard()
+      {
+         if (!halfEdgeToStartNode.keySet().isEmpty())
+            throw new IllegalStateException(
+                  "getBoard called while there are still half edges");
+         return board;
+      }
+      
+      private Map<Chute, Intersection> halfEdgeToStartNode;
+      private Map<Chute, Integer> halfEdgeToNodePort;
+   
+      public BoardManager()
+      {
+         board = new Board();
+         halfEdgeToStartNode = new LinkedHashMap<Chute, Intersection>();
+         halfEdgeToNodePort = new LinkedHashMap<Chute, Integer>();
+      }
+      
+      public Set<Chute> currentHalfEdges()
+      {
+         return Collections.unmodifiableSet(halfEdgeToStartNode.keySet());
+      }
+      
+      /**
+       * 
+       * @param start Must be a node in this
+       * @param startPort Must be a valid output port number for start
+       * @param edge Must not be in this
+       */
+      public void addHalfEdge(Intersection start, int startPort, Chute edge)
+      {
+         halfEdgeToStartNode.put(edge, start);
+         halfEdgeToNodePort.put(edge, startPort);
+      }
+      
+      public void finishHalfEdge(Intersection end, int endPort, Chute edge)
+      {
+         addEdge(halfEdgeToStartNode.get(edge), halfEdgeToNodePort.get(edge), end, endPort, edge);
+         halfEdgeToStartNode.remove(edge);
+         halfEdgeToNodePort.remove(edge);
+      }
+      
+   }
+
    private static final boolean CHECK_REP_ENABLED = true;
    
    private void checkRep()
@@ -107,19 +275,19 @@ public class BoardBuilder
          
          // - chuteToFurthestNode.keySet(), chuteToNodePort.keySet(), and
          // chuteToLinkedChutes.keySet() must be equal
-         ensure(chuteToFurthestNode.keySet().equals(chuteToNodePort.keySet()));
-         ensure(chuteToNodePort.keySet().equals(chuteToLinkedChutes.keySet()));
+         //ensure(chuteToFurthestNode.keySet().equals(chuteToNodePort.keySet()));
+         //ensure(chuteToNodePort.keySet().equals(chuteToLinkedChutes.keySet()));
          
          // - The elements in varToCurrentEdge.values() are a subset of
          // chuteToFurthestNode.keySet() and chuteToNodePort.keySet()
-         chuteToFurthestNode.keySet().containsAll(varToCurrentEdge.values());
+         //chuteToFurthestNode.keySet().containsAll(varToCurrentEdge.values());
          
          // - for all Intersections n in chuteToFurthestNode.values(),
          // board.contains(n);
-         ensure(board.getNodes().containsAll(chuteToFurthestNode.values()));
+         //ensure(boardManager.getNodes().containsAll(chuteToFurthestNode.values()));
          
          // - active <--> board.isActive()
-         ensure(active == board.isActive());
+         ensure(active == boardManager.isActive());
          
          // - For every Chute c in varToCurrentEdge.values():
          // - - 
@@ -150,15 +318,16 @@ public class BoardBuilder
       this.constructor = constructor;
       
       varToCurrentEdge = new HashMap<String, Chute>();
-      chuteToFurthestNode = new HashMap<Chute, Intersection>();
-      chuteToNodePort = new HashMap<Chute, Integer>();
       chuteToLinkedChutes = new HashMap<Chute, Set<Chute>>();
       linkedChuteSets = new HashSet<Set<Chute>>();
       
       levelBuilder = lb;
-      board = new Board();
+      boardManager = new BoardManager();
+      
+      currentEdges = boardManager.currentHalfEdges();
+      
       Intersection incoming = Intersection.factory(Kind.INCOMING);
-      board.addNode(incoming);
+      boardManager.addNode(incoming);
       
       if (!constructor)
       {
@@ -173,8 +342,9 @@ public class BoardBuilder
          {
             Chute c = template.copy();
             varToCurrentEdge.put(c.getName(), c);
-            chuteToFurthestNode.put(c, incoming);
-            chuteToNodePort.put(c, currentIncomingPort++);
+
+            boardManager.addHalfEdge(incoming, currentIncomingPort++, c);
+            
             chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
             chuteToLinkedChutes.get(c).add(c);
             
@@ -186,8 +356,7 @@ public class BoardBuilder
             while (auxChuteTraversal.hasNext())
             {
                Chute aux = auxChuteTraversal.next();
-               chuteToFurthestNode.put(aux, incoming);
-               chuteToNodePort.put(aux, currentIncomingPort++);
+               boardManager.addHalfEdge(incoming, currentIncomingPort++, aux);
                chuteToLinkedChutes.put(aux, new LinkedHashSet<Chute>());
                chuteToLinkedChutes.get(aux).add(aux);
             }
@@ -204,7 +373,6 @@ public class BoardBuilder
    {
       this(lb, false);
    }
-   
    
    /**
     * Adds the named variable to this BoardBuilder. More specifically, creates a
@@ -230,13 +398,13 @@ public class BoardBuilder
                + " already exists in this BoardBuilder");
       
       Intersection newNode = Intersection.factory(startType);
-      board.addNode(newNode);
+      boardManager.addNode(newNode);
       
       Chute c = vartype.copy();
       varToCurrentEdge.put(c.getName(), c);
       
-      chuteToFurthestNode.put(c, newNode);
-      chuteToNodePort.put(c, 0);
+      boardManager.addHalfEdge(newNode, 0, c);
+      
       chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
       chuteToLinkedChutes.get(c).add(c);
       
@@ -246,10 +414,10 @@ public class BoardBuilder
          Chute nextAux = auxItr.next();
          Intersection node = Intersection.factory(Kind.START_NO_BALL);
          
-         board.addNode(node);
+         boardManager.addNode(node);
          
-         chuteToFurthestNode.put(nextAux, node);
-         chuteToNodePort.put(nextAux, 0);
+         boardManager.addHalfEdge(node, 0, nextAux);
+         
          chuteToLinkedChutes.put(nextAux, new LinkedHashSet<Chute>());
          chuteToLinkedChutes.get(nextAux).add(nextAux);
       }
@@ -301,7 +469,7 @@ public class BoardBuilder
    {
       Subnetwork node = Intersection.subnetworkFactory(name);
       
-      board.addNode(node);
+      boardManager.addNode(node);
       
       for (String s : args)
       {
@@ -352,25 +520,23 @@ public class BoardBuilder
       if (varToCurrentEdge.containsKey(to))
       {
          Intersection end = Intersection.factory(Kind.END);
-         board.addNode(end);
+         boardManager.addNode(end);
          
          Chute oldChute = varToCurrentEdge.get(to);
          
-         board.addEdge(chuteToFurthestNode.get(oldChute),
-               chuteToNodePort.get(oldChute), end, 0, oldChute);
-         varToCurrentEdge.remove(to);
-         chuteToFurthestNode.remove(oldChute);
-         chuteToNodePort.remove(oldChute);
+         boardManager.finishHalfEdge(end, 0, oldChute);
          
+         varToCurrentEdge.remove(to);
          
          Intersection newNode = Intersection.factory(from);
-         board.addNode(newNode);
+         boardManager.addNode(newNode);
          
          Chute newChute = oldChute.copy();
          
          varToCurrentEdge.put(to, newChute);
-         chuteToFurthestNode.put(newChute, newNode);
-         chuteToNodePort.put(newChute, 0);
+         
+         boardManager.addHalfEdge(newNode, 0, newChute);
+         
          chuteToLinkedChutes.put(newChute, chuteToLinkedChutes.get(oldChute));
          chuteToLinkedChutes.get(newChute).add(newChute);
          chuteToLinkedChutes.remove(oldChute);
@@ -444,7 +610,7 @@ public class BoardBuilder
       active = false;
       
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
-      board.addNode(outgoing);
+      boardManager.addNode(outgoing);
       
       List<Chute> fields = levelBuilder.getFields();
       
@@ -458,17 +624,17 @@ public class BoardBuilder
          
          levelBuilder.addChuteToField(fieldName, lastChute);
          
-         board.addEdge(chuteToFurthestNode.get(lastChute), chuteToNodePort.get(lastChute), outgoing, currentOutPort++, lastChute);
+         boardManager.finishHalfEdge(outgoing, currentOutPort++, lastChute);
          
          Iterator<Chute> auxItr = lastChute.traverseAuxChutes();
          while(auxItr.hasNext())
          {
             Chute aux = auxItr.next();
-            board.addEdge(chuteToFurthestNode.get(aux), chuteToNodePort.get(aux), outgoing, currentOutPort++, aux);
+            boardManager.finishHalfEdge(outgoing, currentOutPort++, aux);
          }
       }
       
-      board.deactivate();
+      boardManager.deactivate();
       
       // add all of the remaining sets of linked chutes to linkedChuteSets
       linkedChuteSets.addAll(chuteToLinkedChutes.values());
@@ -476,7 +642,7 @@ public class BoardBuilder
       for (Set<Chute> toLink : linkedChuteSets)
          levelBuilder.addLinkedEdgeSet(toLink);
       
-      return board;
+      return boardManager.getBoard();
       
    }
    
@@ -518,28 +684,20 @@ public class BoardBuilder
    {
       if (c.getName() != null && varToCurrentEdge.get(c.getName()) != c)
          throw new IllegalArgumentException("add message");
-      if (!chuteToFurthestNode.containsKey(c))
-         throw new IllegalArgumentException("add message");
-      if (!chuteToNodePort.containsKey(c))
-         throw new IllegalArgumentException("c does not ");
       
-      if (board.contains(n))
+      if (boardManager.contains(n))
          throw new IllegalArgumentException("board already contains n");
       
-      board.addNode(n);
+      boardManager.addNode(n);
       
-      board.addEdge(chuteToFurthestNode.get(c), chuteToNodePort.get(c), n, inPort, c);
+      boardManager.addHalfEdge(n, inPort, c);
       
       Chute nextChute = c.copy();
       String name = nextChute.getName();
       if (name != null)
          varToCurrentEdge.put(name, nextChute);
       
-      chuteToFurthestNode.remove(c);
-      chuteToNodePort.remove(c);
-      
-      chuteToFurthestNode.put(nextChute, n);
-      chuteToNodePort.put(nextChute, outPort);
+      boardManager.addHalfEdge(n, outPort, nextChute);
       
       chuteToLinkedChutes.put(nextChute, chuteToLinkedChutes.get(c));
       chuteToLinkedChutes.get(nextChute).add(nextChute);
