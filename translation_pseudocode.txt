@@ -82,7 +82,7 @@ VISITOR PATTERN SKETCH
                 set chutes = generateChutes(p, false, g.var_to_set_edges.keyset)
                 for each chute in chutes
                     add (chute, empty set) to g's var_to_set_edges map
-            g = visitNewClass(NewClassTree, g)
+            g = visitConstructor(ConstructorTree, g)
             boards.put(uniqueConstructorName, g)
         for each method
             Board g = copy of gInitial //copy the initial board so that g has global fields
@@ -152,7 +152,9 @@ VISITOR PATTERN SKETCH
                 chutes = chutes union generate chutes(P, true, currentVariables union chutes) 
         return chutes
                 
-    visitNewClass(NewClassTree t, Board g) { 
+    //I couldn't actually find what tree is used for constructors, but
+    //hopefully it does exist under a weird name
+    visitConstructor(ConstructorTree, Board g) { 
         g = visit(getConstructorBody, g)
         
         //g still has half-edges floating around in its var_to_current_edge
