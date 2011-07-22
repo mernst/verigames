@@ -164,7 +164,7 @@ public class NullTestImpTests
             runMethod(n, "setNonNullChute", new Object[] {narrow});
          } catch (Throwable e)
          {
-            if (e instanceof AssertionError)
+            if (e instanceof RuntimeException)
                expectedExceptionThrown = true;
          }
          assertTrue(expectedExceptionThrown);
