@@ -311,8 +311,8 @@ public class Intersection
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Intersection");
-      padToLength(inputChutes, port);
-      inputChutes.add(port, input);
+      padToLength(inputChutes, port + 1);
+      inputChutes.set(port, input);
       checkRep();
    }
    
@@ -332,8 +332,8 @@ public class Intersection
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Intersection");
-      padToLength(outputChutes, port);
-      outputChutes.add(port, output);
+      padToLength(outputChutes, port + 1);
+      outputChutes.set(port, output);
       checkRep();
    }
    
