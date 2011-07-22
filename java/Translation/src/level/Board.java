@@ -232,7 +232,7 @@ public class Board
       if (start.getOutputChute(startPort) != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with a start node that is already connected to an edge on the given port");
-      if (end.getOutputChute(endPort) != null)
+      if (end.getInputChute(endPort) != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with an end node that is already connected to an edge on the given port");
       
