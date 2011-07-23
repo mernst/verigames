@@ -26,4 +26,9 @@
       <!ELEMENT noderef EMPTY>
        <!ATTLIST noderef id IDREF #REQUIRED>
        <!ATTLIST noderef port CDATA #REQUIRED>
-     
+
+<!--
+Requirements not enforced by the DTD:
+
+- All edges are contained in exactly one edge-set
+-->
