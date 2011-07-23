@@ -231,6 +231,9 @@ public class Level
    private void outputlinkedEdgeClasses(PrintStream out)
    {
       out.println(" <linked-edges>");
+      
+      // Output all linked edges explicitly listed in linkedEdgeClasses
+      Set<Chute> alreadyPrintedEdges = new HashSet<Chute>();
       for (Set<Chute> set : linkedEdgeClasses)
       {
          out.println("  <edge-set>");
@@ -240,9 +243,30 @@ public class Level
                throw new IllegalStateException(
                      "outputlinkedEdgeClasses called when linkedEdgeClasses contains active Chute");
             out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
+            alreadyPrintedEdges.add(c);
          }
-         out.println(" </edge-set>");
+         out.println("  </edge-set>");
       }
+      
+      // Output all remaining edges -- edges not listed are in equivalence
+      // classes of size 1
+      
+      for (Board b : boards())
+      {
+         for (Chute c : b.getEdges())
+         {
+            if (!alreadyPrintedEdges.contains(c))
+            {
+               out.println("  <edge-set>");
+               if (c.isActive())
+                  throw new IllegalStateException(
+                        "outputlinkedEdgeClasses called when linkedEdgeClasses contains active Chute");
+               out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
+               out.println("  </edge-set>");
+            }
+         }
+      }
+      
       out.println(" </linked-edges>");
    }
    
