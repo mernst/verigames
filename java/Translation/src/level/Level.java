@@ -171,7 +171,6 @@ public class Level
    
    /**
     * Adds b to boards, and adds the mapping from name to b to boardNames<br/>
-    * TODO add clause about how the board must be well-formed and complete.
     * 
     * Requires: b is not in boards, name is not in boardNames.keySet()<br/>
     * <br/>
