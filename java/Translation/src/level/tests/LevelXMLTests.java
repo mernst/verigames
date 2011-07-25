@@ -336,14 +336,63 @@ public class LevelXMLTests
             getName.addEdge(split, 0, outgoing, 0, end);
             getName.addEdge(split, 1, outgoing, 5, ret);
             
-            l.makeLinked(new HashSet<Chute>(Arrays.asList(fieldToChute.get("name"), start, end, ret)));
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(
+                  fieldToChute.get("name"), start, end, ret)));
          }
          
          // Add other chutes
-         connectFields(getName, new LinkedHashSet<String>(Arrays.asList("auxiliaryChutes", "auxiliaryChutes.elts", "start", "end")));
+         connectFields(
+               getName,
+               new LinkedHashSet<String>(Arrays.asList("auxiliaryChutes",
+                     "auxiliaryChutes.elts", "start", "end")));
       }
       
-      private void addSetStart() {}
+      private void addSetStart()
+      {
+         Board setStart = new Board();
+         
+         l.addBoard("setStart", setStart);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         setStart.addNode(incoming);
+         setStart.addNode(outgoing);
+         
+         // Add start chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            Intersection merge = Intersection.factory(Kind.MERGE);
+            Intersection end = Intersection.factory(Kind.END);
+            setStart.addNode(split);
+            setStart.addNode(merge);
+            setStart.addNode(end);
+            
+            Chute arg = new Chute(null, true, null);
+            Chute argEnd = arg.copy();
+            
+            Chute inBetween = arg.copy();
+            
+            Chute firstStart = new Chute("start", true, null);
+            Chute lastStart = firstStart.copy();
+            
+            setStart.addEdge(incoming, 3, merge, 0, firstStart);
+            setStart.addEdge(merge, 0, outgoing, 3, lastStart);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(firstStart,
+                  lastStart, fieldToChute.get("start"))));
+            
+            setStart.addEdge(incoming, 5, split, 0, arg);
+            setStart.addEdge(split, 0, merge, 1, inBetween);
+            setStart.addEdge(split, 1, end, 0, argEnd);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(arg, argEnd,
+                  inBetween)));
+         }
+         
+         // Add other chutes
+         connectFields(
+               setStart,
+               new LinkedHashSet<String>(Arrays.asList("name",
+                     "auxiliaryChutes", "auxiliaryChutes.elts", "end")));
+      }
       
       private void addGetStart() {}
       
