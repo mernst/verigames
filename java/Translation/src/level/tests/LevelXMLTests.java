@@ -341,10 +341,8 @@ public class LevelXMLTests
          }
          
          // Add other chutes
-         connectFields(
-               getName,
-               new LinkedHashSet<String>(Arrays.asList("auxiliaryChutes",
-                     "auxiliaryChutes.elts", "start", "end")));
+         connectFields(getName, "auxiliaryChutes", "auxiliaryChutes.elts",
+               "start", "end");
       }
       
       private void addSetStart()
@@ -388,10 +386,8 @@ public class LevelXMLTests
          }
          
          // Add other chutes
-         connectFields(
-               setStart,
-               new LinkedHashSet<String>(Arrays.asList("name",
-                     "auxiliaryChutes", "auxiliaryChutes.elts", "end")));
+         connectFields(setStart, "name", "auxiliaryChutes",
+               "auxiliaryChutes.elts", "end");
       }
       
       private void addGetStart()
@@ -421,10 +417,8 @@ public class LevelXMLTests
          }
          
          // Add other chutes:
-         connectFields(
-               getStart,
-               new LinkedHashSet<String>(Arrays.asList("name",
-                     "auxiliaryChutes", "auxiliaryChutes.elts", "end")));
+         connectFields(getStart, "name", "auxiliaryChutes",
+               "auxiliaryChutes.elts", "end");
          
       }
       
@@ -468,8 +462,8 @@ public class LevelXMLTests
          }
          
          // Add other chutes:
-         connectFields(setEnd, new HashSet<String>(Arrays.asList("name", "auxiliaryChutes",
-               "auxiliaryChutes.elts", "start")));
+         connectFields(setEnd, "name", "auxiliaryChutes",
+               "auxiliaryChutes.elts", "start");
          
       }
       
@@ -500,10 +494,8 @@ public class LevelXMLTests
          }
          
          // Add other chutes:
-         connectFields(
-               getEnd,
-               new LinkedHashSet<String>(Arrays.asList("name",
-                     "auxiliaryChutes", "auxiliaryChutes.elts", "start")));
+         connectFields(getEnd, "name", "auxiliaryChutes",
+               "auxiliaryChutes.elts", "start");
       }
       
       private void addCopy()
@@ -630,7 +622,7 @@ public class LevelXMLTests
       
       private void addTraverseAuxChutes() {}
       
-      private void connectFields(Board b, Set<String> fieldNames)
+      private void connectFields(Board b, String... fieldNames)
       {
          Map<String, Integer> nameToPort = new HashMap<String, Integer>();
          nameToPort.put("name", 0);
