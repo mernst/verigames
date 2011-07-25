@@ -8,6 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import level.Intersection.Kind;
+
 /**
  * 
  * A mutable (until deactivated) data structure that represents a complete level<br/>
@@ -309,9 +311,15 @@ public class Level
             if (node.isActive())
                throw new IllegalStateException("active Intersection in Level while printing XML");
             
-            // TODO add special cases for subnetwork and (maybe) null test
-            out.println("   <node kind=\"" + node.getIntersectionKind()
-                  + "\" id=\"n" + node.getUID() + "\">");
+            out.print("   <node kind=\"" + node.getIntersectionKind()+ "\"");
+            if (node.getIntersectionKind() == Kind.SUBNETWORK)
+            {
+               if (node.isSubnetwork())
+                  out.print(" name=\"" + node.asSubnetwork().getSubnetworkName() + "\"");
+               else
+                  throw new RuntimeException("node " + node + " has kind subnetwork but isSubnetwork returns false");
+            }
+            out.println(" id=\"n" + node.getUID() + "\">");
             out.println("    <input>");
             
             Chute input = node.getInputChute(0);
