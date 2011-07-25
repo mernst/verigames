@@ -506,7 +506,125 @@ public class LevelXMLTests
                      "auxiliaryChutes", "auxiliaryChutes.elts", "start")));
       }
       
-      private void addCopy() {}
+      private void addCopy()
+      {
+         Board copy = new Board();
+         l.addBoard("copy", copy);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         copy.addNode(incoming);
+         copy.addNode(outgoing);
+         
+         Intersection copySub = Intersection.subnetworkFactory("copy");
+         Intersection constructorSub = Intersection
+               .subnetworkFactory("constructor");
+         copy.addNode(copySub);
+         copy.addNode(constructorSub);
+         
+         // Add name chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            copy.addNode(split);
+            
+            Chute top = new Chute("name", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            copy.addEdge(incoming, 0, copySub, 0, top);
+            copy.addEdge(copySub, 0, split, 0, middle);
+            copy.addEdge(split, 0, outgoing, 0, bottom);
+            
+            Chute inBetween = new Chute(null, true, null);
+            copy.addEdge(split, 1, constructorSub, 0, inBetween);
+            
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(top, middle, bottom,
+                  inBetween, fieldToChute.get("name"))));
+         }
+         
+         // Add auxiliaryChutes base chutes:
+         {
+            Chute top = new Chute("auxiliaryChutes", true, null);
+            Chute bottom = top.copy();
+            
+            copy.addEdge(incoming, 1, copySub, 1, top);
+            copy.addEdge(copySub, 1, outgoing, 1, bottom);
+            
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
+                  fieldToChute.get("auxiliaryChutes"))));
+         }
+         
+         // Add auxiliaryChutes aux chutes:
+         {
+            Chute top = new Chute("auxiliaryChutes.elts", true, null);
+            Chute bottom = top.copy();
+            top.setPinched(true);
+            
+            copy.addEdge(incoming, 2, copySub, 2, top);
+            copy.addEdge(copySub, 2, outgoing, 2, bottom);
+            
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
+                  fieldToChute.get("auxiliaryChutes.elts"))));
+         }
+         
+         // Add start chutes:
+         {
+            Chute top = new Chute("start", true, null);
+            Chute bottom = top.copy();
+            
+            copy.addEdge(incoming, 3, copySub, 3, top);
+            copy.addEdge(copySub, 3, outgoing, 3, bottom);
+            
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
+                  fieldToChute.get("start"))));
+         }
+         
+         // Add end chutes:
+         {
+            Chute top = new Chute("start", true, null);
+            Chute bottom = top.copy();
+            
+            copy.addEdge(incoming, 4, copySub, 4, top);
+            copy.addEdge(copySub, 4, outgoing, 4, bottom);
+            
+            l.makeLinked(top, bottom, fieldToChute.get("start"));
+         }
+         
+         // Add copyAuxChutes base chute:
+         {
+            Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+            copy.addNode(start);
+            
+            Chute copyAux = new Chute("copyAuxChutes", true, null);
+            copy.addEdge(start, 0, constructorSub, 1, copyAux);
+         }
+         
+         // Add copyAuxChutes aux chutes:
+         {
+            Intersection start = Intersection.factory(Kind.START_NO_BALL);
+            copy.addNode(start);
+            
+            Intersection merge = Intersection.factory(Kind.MERGE);
+            copy.addNode(merge);
+            
+            Chute top = new Chute("auxiliaryChutes", true, null);
+            Chute bottom = top.copy();
+            Chute inBetween = new Chute(null, true, null);
+            
+            copy.addEdge(start, 0, merge, 1, top);
+            copy.addEdge(copySub, 5, merge, 0, inBetween);
+            copy.addEdge(merge, 0, constructorSub, 2, bottom);
+         }
+         
+         // Add return value:
+         {
+            Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+            copy.addNode(start);
+            
+            Chute ret = new Chute(null, true, null);
+            copy.addEdge(start, 0, outgoing, 5, ret);
+         }
+      }
       
       private void addGetAuxiliaryChutes() {}
       
