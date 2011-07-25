@@ -394,7 +394,39 @@ public class LevelXMLTests
                      "auxiliaryChutes", "auxiliaryChutes.elts", "end")));
       }
       
-      private void addGetStart() {}
+      private void addGetStart()
+      {
+         Board getStart = new Board();
+         l.addBoard("getStart", getStart);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         getStart.addNode(incoming);
+         getStart.addNode(outgoing);
+         
+         // Add start chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            getStart.addNode(split);
+            
+            Chute start = new Chute("start", true, null);
+            Chute end = start.copy();
+            Chute ret = new Chute(null, true, null);
+            
+            getStart.addEdge(incoming, 3, split, 0, start);
+            getStart.addEdge(split, 0, outgoing, 3, end);
+            getStart.addEdge(split, 1, outgoing, 5, ret);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(start, end, ret,
+                  fieldToChute.get("start"))));
+         }
+         
+         // Add other chutes:
+         connectFields(
+               getStart,
+               new LinkedHashSet<String>(Arrays.asList("name",
+                     "auxiliaryChutes", "auxiliaryChutes.elts", "end")));
+         
+      }
       
       private void addSetEnd() {}
       
