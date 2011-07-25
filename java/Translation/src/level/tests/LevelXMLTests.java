@@ -428,7 +428,50 @@ public class LevelXMLTests
          
       }
       
-      private void addSetEnd() {}
+      private void addSetEnd()
+      {
+         Board setEnd = new Board();
+         l.addBoard("setEnd", setEnd);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         setEnd.addNode(incoming);
+         setEnd.addNode(outgoing);
+         
+         // Add end chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            Intersection merge = Intersection.factory(Kind.MERGE);
+            Intersection end = Intersection.factory(Kind.END);
+            setEnd.addNode(split);
+            setEnd.addNode(merge);
+            setEnd.addNode(end);
+            
+            Chute arg = new Chute(null, true, null);
+            Chute argEnd = arg.copy();
+            
+            Chute inBetween = arg.copy();
+            
+            Chute firstStart = new Chute("end", true, null);
+            Chute lastStart = firstStart.copy();
+            
+            setEnd.addEdge(incoming, 4, merge, 0, firstStart);
+            setEnd.addEdge(merge, 0, outgoing, 4, lastStart);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(firstStart,
+                  lastStart, fieldToChute.get("end"))));
+            
+            setEnd.addEdge(incoming, 5, split, 0, arg);
+            setEnd.addEdge(split, 0, merge, 1, inBetween);
+            setEnd.addEdge(split, 1, end, 0, argEnd);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(arg, argEnd,
+                  inBetween)));
+         }
+         
+         // Add other chutes:
+         connectFields(setEnd, new HashSet<String>(Arrays.asList("name", "auxiliaryChutes",
+               "auxiliaryChutes.elts", "start")));
+         
+      }
       
       private void addGetEnd() {}
       
