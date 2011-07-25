@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -138,8 +139,16 @@ public class LevelXMLTests
       private void makeLevel()
       {
          addConstructor();
+         addGetName();
+         addSetStart();
+         addGetStart();
+         addSetEnd();
+         addGetEnd();
+         addCopy();
+         addGetAuxiliaryChutes();
+         addTraverseAuxChutes();
       }
-      
+
       private void addConstructor()
       {
          Board constructor = new Board();
@@ -300,8 +309,74 @@ public class LevelXMLTests
             
             fieldToChute.put("auxiliaryChutes.elts", end);
          }
-         
       }
       
+      private void addGetName()
+      {
+         Board getName = new Board();
+         
+         l.addBoard("getName", getName);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         getName.addNode(incoming);
+         getName.addNode(outgoing);
+         
+         // Add name chute:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            getName.addNode(split);
+            
+            Chute start = new Chute("name", true, null);
+            getName.addEdge(incoming, 0, split, 0, start);
+            
+            Chute ret = start.copy();
+            Chute end = start.copy();
+            
+            getName.addEdge(split, 0, outgoing, 0, end);
+            getName.addEdge(split, 1, outgoing, 5, ret);
+            
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(fieldToChute.get("name"), start, end, ret)));
+         }
+         
+         // Add other chutes
+         connectFields(getName, new LinkedHashSet<String>(Arrays.asList("auxiliaryChutes", "auxiliaryChutes.elts", "start", "end")));
+      }
+      
+      private void addSetStart() {}
+      
+      private void addGetStart() {}
+      
+      private void addSetEnd() {}
+      
+      private void addGetEnd() {}
+      
+      private void addCopy() {}
+      
+      private void addGetAuxiliaryChutes() {}
+      
+      private void addTraverseAuxChutes() {}
+      
+      private void connectFields(Board b, Set<String> fieldNames)
+      {
+         Map<String, Integer> nameToPort = new HashMap<String, Integer>();
+         nameToPort.put("name", 0);
+         nameToPort.put("auxiliaryChutes", 1);
+         nameToPort.put("auxiliaryChutes.elts", 2);
+         nameToPort.put("start", 3);
+         nameToPort.put("end", 4);
+         
+         for (String name : fieldNames)
+            connectField(b, nameToPort.get(name), name);
+      }
+      
+      private void connectField(Board b, int port, String name)
+      {
+         Chute newChute = fieldToChute.get(name).copy();
+         
+         b.addEdge(b.getIncomingNode(), port, b.getOutgoingNode(), port, newChute);
+         
+         l.makeLinked(new HashSet<Chute>(Arrays.asList(fieldToChute.get(name), newChute)));
+      }
    }
 }
