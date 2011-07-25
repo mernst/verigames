@@ -618,7 +618,62 @@ public class LevelXMLTests
          }
       }
       
-      private void addGetAuxiliaryChutes() {}
+      private void addGetAuxiliaryChutes()
+      {
+         Board getAux = new Board();
+         l.addBoard("getAuxiliaryChutes", getAux);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         getAux.addNode(incoming);
+         getAux.addNode(outgoing);
+         
+         // Connect auxiliaryChutes base chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            Intersection end = Intersection.factory(Kind.END);
+            getAux.addNode(split);
+            getAux.addNode(end);
+            
+            Chute top = new Chute("auxiliaryChutes", true, null);
+            Chute bottom = top.copy();
+            getAux.addEdge(incoming, 1, split, 0, top);
+            getAux.addEdge(split, 0, outgoing, 1, bottom);
+            l.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes"));
+            
+            Chute inBetween = new Chute(null, true, null);
+            inBetween.setPinched(true);
+            getAux.addEdge(split, 1, end, 0, inBetween);
+         }
+         
+         // Connect auxiliaryChutes aux chutes and return value aux chute:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            getAux.addNode(split);
+            
+            Chute top = new Chute("auxiliaryChutes.elts", true, null);
+            Chute bottom = top.copy();
+            
+            getAux.addEdge(incoming, 2, split, 0, top);
+            getAux.addEdge(split, 0, outgoing, 2, bottom);
+            l.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes.elts"));
+            
+            Chute ret = new Chute(null, true, null);
+            getAux.addEdge(split, 1, outgoing, 6, ret);
+         }
+         
+         // Connect return value base chute
+         {
+            Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+            getAux.addNode(start);
+            
+            Chute ret = new Chute(null, true, null);
+            getAux.addEdge(start, 0, outgoing, 5, ret);
+         }
+         
+         // Connect other Chutes:
+         connectFields(getAux, "name", "start", "end");
+      }
       
       private void addTraverseAuxChutes() {}
       
