@@ -473,7 +473,38 @@ public class LevelXMLTests
          
       }
       
-      private void addGetEnd() {}
+      private void addGetEnd()
+      {
+         Board getEnd = new Board();
+         l.addBoard("getEnd", getEnd);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         getEnd.addNode(incoming);
+         getEnd.addNode(outgoing);
+         
+         // Add End chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            getEnd.addNode(split);
+            
+            Chute start = new Chute("end", true, null);
+            Chute end = start.copy();
+            Chute ret = new Chute(null, true, null);
+            
+            getEnd.addEdge(incoming, 4, split, 0, start);
+            getEnd.addEdge(split, 0, outgoing, 4, end);
+            getEnd.addEdge(split, 1, outgoing, 5, ret);
+            l.makeLinked(new HashSet<Chute>(Arrays.asList(start, end, ret,
+                  fieldToChute.get("end"))));
+         }
+         
+         // Add other chutes:
+         connectFields(
+               getEnd,
+               new LinkedHashSet<String>(Arrays.asList("name",
+                     "auxiliaryChutes", "auxiliaryChutes.elts", "start")));
+      }
       
       private void addCopy() {}
       
