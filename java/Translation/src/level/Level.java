@@ -1,6 +1,7 @@
 package level;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -110,15 +111,15 @@ public class Level
     * Modifies: this <br/>
     * <br/>
     * Runs in O(m*n) time, where m is linkedEdgeClasses.size() and n is
-    * toLink.size()
+    * toLink.length
     * 
     * @param toLink
-    * The Set of Chutes to make equivalent under the equivalence relation R
+    * The set of Chutes to make equivalent under the equivalence relation R
     * 
     */
-   public void makeLinked(Set<Chute> toLink)
+   public void makeLinked(Chute... toLink)
    {
-      if (!toLink.isEmpty() && toLink.size() != 1)
+      if (toLink.length > 1)
       {
          /*
           * Contains the sets that should be removed from linkedEdgeClasses
@@ -131,7 +132,8 @@ public class Level
           * The new equivalence class to be added to linkedEdgeClasses. It will
           * at least have all of the elements in toLink.
           */
-         Set<Chute> newEquivClass = new LinkedHashSet<Chute>(toLink);
+         Set<Chute> newEquivClass = new LinkedHashSet<Chute>(
+               Arrays.asList(toLink));
          
          for (Set<Chute> linked : linkedEdgeClasses)
          {
@@ -151,6 +153,18 @@ public class Level
          checkRep();
       }
    }
+   
+   /**
+    * Functions identically to {@link #makeLinked(Chute...)}
+    * 
+    * @param toLink
+    * @see #makeLinked(Chute...)
+    */
+   public void makeLinked(Set<Chute> toLink)
+   {
+      makeLinked(toLink.toArray(new Chute[0]));
+   }
+   
    
    /**
     * Returns true iff all of the chutes in the given set are linked
