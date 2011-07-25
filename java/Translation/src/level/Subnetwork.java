@@ -13,6 +13,7 @@ package level;
 
 public class Subnetwork extends Intersection
 {
+   private final String name;
    /**
     * creates a new Intersection object of type SUBNETWORK, with the specific
     * subnetwork defined by the argument<br/>
@@ -23,6 +24,7 @@ public class Subnetwork extends Intersection
    protected Subnetwork(String methodName)
    {
       super(Kind.SUBNETWORK);
+      name = methodName;
    }
    
    /**
@@ -55,6 +57,6 @@ public class Subnetwork extends Intersection
     */
    public String getSubnetworkName()
    {
-      throw new RuntimeException("Not yet implemented");
+      return name;
    }
 }
