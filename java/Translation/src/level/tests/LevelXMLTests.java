@@ -675,7 +675,195 @@ public class LevelXMLTests
          connectFields(getAux, "name", "start", "end");
       }
       
-      private void addTraverseAuxChutes() {}
+      private void addTraverseAuxChutes()
+      {
+         Board travAux = new Board();
+         l.addBoard("traverseAuxChutes", travAux);
+         
+         Intersection incoming = Intersection.factory(Kind.INCOMING);
+         Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+         travAux.addNode(incoming);
+         travAux.addNode(outgoing);
+         
+         Intersection auxChutesSub = Intersection.subnetworkFactory("getAuxiliaryChutes");
+         Intersection travSub = Intersection.subnetworkFactory("traverseAuxChutes");
+         travAux.addNode(auxChutesSub);
+         travAux.addNode(travSub);
+         
+         // name chutes:
+         {
+            Chute top = new Chute("name", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(incoming, 0, auxChutesSub, 0, top);
+            travAux.addEdge(auxChutesSub, 0, travSub, 0, middle);
+            travAux.addEdge(travSub, 0, outgoing, 0, bottom);
+            l.makeLinked(top, middle, bottom, fieldToChute.get("name"));
+         }
+         
+         // auxiliaryChutes base chutes:
+         {
+            Chute top = new Chute("auxiliaryChutes", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(incoming, 1, auxChutesSub, 1, top);
+            travAux.addEdge(auxChutesSub, 1, travSub, 1, middle);
+            travAux.addEdge(travSub, 1, outgoing, 1, bottom);
+            l.makeLinked(top, middle, bottom, fieldToChute.get("auxiliaryChutes"));
+         }
+         
+         // auxiliaryChutes aux chutes:
+         {
+            Chute top = new Chute("auxiliaryChutes.elts", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(incoming, 2, auxChutesSub, 2, top);
+            travAux.addEdge(auxChutesSub, 2, travSub, 2, middle);
+            travAux.addEdge(travSub, 2, outgoing, 2, bottom);
+            l.makeLinked(top, middle, bottom, fieldToChute.get("auxiliaryChutes.elts"));
+         }
+         
+         // start chutes:
+         {
+            Chute top = new Chute("start", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(incoming, 3, auxChutesSub, 3, top);
+            travAux.addEdge(auxChutesSub, 3, travSub, 3, middle);
+            travAux.addEdge(travSub, 3, outgoing, 3, bottom);
+            l.makeLinked(top, middle, bottom, fieldToChute.get("start"));
+         }
+         
+         // end chutes:
+         {
+            Chute top = new Chute("end", true, null);
+            Chute middle = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(incoming, 4, auxChutesSub, 4, top);
+            travAux.addEdge(auxChutesSub, 4, travSub, 4, middle);
+            travAux.addEdge(travSub, 4, outgoing, 4, bottom);
+            l.makeLinked(top, middle, bottom, fieldToChute.get("end"));
+         }
+         
+         // allAuxChuteTraversals base chute:
+         {
+            Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+            Intersection end = Intersection.factory(Kind.END);
+            travAux.addNode(start);
+            travAux.addNode(end);
+            
+            Chute chute = new Chute("allAuxChuteTraversals", true, null);
+            travAux.addEdge(start, 0, end, 0, chute);
+         }
+         
+         // allAuxChuteTraversals aux chutes:
+         Intersection getAuxMerge = Intersection.factory(Kind.MERGE);
+         Intersection traverseAuxMerge = Intersection.factory(Kind.MERGE);
+         travAux.addNode(getAuxMerge);
+         travAux.addNode(traverseAuxMerge);
+         {
+            Intersection start = Intersection.factory(Kind.START_NO_BALL);
+            Intersection end = Intersection.factory(Kind.END);
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            travAux.addNode(start);
+            travAux.addNode(end);
+            travAux.addNode(split);
+            
+            Chute top = new Chute("allAuxChuteTraversals.elts", true, null);
+            Chute second = top.copy();
+            Chute third = top.copy();
+            Chute bottom = top.copy();
+            
+            travAux.addEdge(start, 0, getAuxMerge, 1, top);
+            travAux.addEdge(getAuxMerge, 0, traverseAuxMerge, 1, second);
+            travAux.addEdge(traverseAuxMerge, 0, split, 0, third);
+            travAux.addEdge(split, 0, end, 0, bottom);
+
+            Chute ret = new Chute(null, true, null);
+            
+            travAux.addEdge(split, 1, outgoing, 6, ret);
+            
+            l.makeLinked(top, second, third, bottom);
+         }
+         
+         // getAuxiliaryChutes return value base chute:
+         {
+            Intersection end = Intersection.factory(Kind.END);
+            travAux.addNode(end);
+            
+            Chute chute = new Chute(null, true, null);
+            travAux.addEdge(auxChutesSub, 5, end, 0, chute);
+         }
+         
+         // traverseAuxChutes return value base chute:
+         {
+            Intersection end = Intersection.factory(Kind.END);
+            travAux.addNode(end);
+            
+            Chute chute = new Chute(null, true, null);
+            chute.setPinched(true);
+            travAux.addEdge(travSub, 5, end, 0, chute);
+         }
+         
+         // return value base chute:
+         {
+            Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+            travAux.addNode(start);
+            
+            Chute ret = new Chute(null, true, null);
+            travAux.addEdge(start, 0, outgoing, 5, ret);
+         }
+         
+         // getAuxiliaryChutes return value aux chutes:
+         {
+            Intersection split1 = Intersection.factory(Kind.SPLIT);
+            Intersection split2 = Intersection.factory(Kind.SPLIT);
+            Intersection end1 = Intersection.factory(Kind.END);
+            Intersection end2 = Intersection.factory(Kind.END);
+            travAux.addNode(split1);
+            travAux.addNode(split2);
+            travAux.addNode(end1);
+            travAux.addNode(end2);
+            
+            Chute retAux1 = new Chute(null, true, null);
+            Chute retAux2 = retAux1.copy();
+            travAux.addEdge(auxChutesSub, 6, split1, 0, retAux1);
+            travAux.addEdge(split1, 0, end1, 0, retAux2);
+            l.makeLinked(retAux1, retAux2);
+            
+            Chute aux1 = new Chute("aux", true, null);
+            Chute aux2 = aux1.copy();
+            aux2.setPinched(true);
+            travAux.addEdge(split1, 1, split2, 0, aux1);
+            travAux.addEdge(split2, 0, end2, 0, aux2);
+            l.makeLinked(aux1, aux2);
+            
+            Chute inBetween = new Chute(null, true, null);
+            travAux.addEdge(split2, 1, getAuxMerge, 0, inBetween);
+         }
+         
+         // traverseAuxChutes return value aux chutes:
+         {
+            Intersection split = Intersection.factory(Kind.SPLIT);
+            Intersection end = Intersection.factory(Kind.END);
+            travAux.addNode(split);
+            travAux.addNode(end);
+            
+            Chute ret1 = new Chute(null, true, null);
+            Chute ret2 = ret1.copy();
+            travAux.addEdge(travSub, 6, split, 0, ret1);
+            travAux.addEdge(split, 0, end, 0, ret2);
+            l.makeLinked(ret1, ret2);
+            
+            Chute inBetween = new Chute(null, true, null);
+            travAux.addEdge(split, 1, traverseAuxMerge, 0, inBetween);
+         }
+      }
       
       private void connectFields(Board b, String... fieldNames)
       {
