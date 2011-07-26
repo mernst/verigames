@@ -170,7 +170,9 @@ VISITOR PATTERN SKETCH
         }
         return g
     }
-    
+
+// Add special case for static method -- we don't want to include instance
+// fields in static methods 
     visitMethod(MethodTree, Board g){
         g = visit(getMethodBody, g)
         
@@ -267,8 +269,8 @@ VISITOR PATTERN SKETCH
     
     visitIf (IfTree, Board g) {
         check for special case test (var == null) if so, {
-            g1 = new Board with same field chutes as g, var == null (wide initial edge width, (not controlable by user?))
-            g2 = new Board with same field chutes as g, var != null (narrow initial edge width, (not controlable by user?))
+            g1 = new Board with same field chutes as g, var == null (wide initial edge width, (not controllable by user?))
+            g2 = new Board with same field chutes as g, var != null (narrow initial edge width, (not controllable by user?))
             split_type = NULL_TEST            
         } else { //generic if
             //no special case, process each branch
