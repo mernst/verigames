@@ -1,7 +1,12 @@
 package level.tests.levelWorldCreation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import level.Level;
 import level.World;
+
 
 public class LevelWorld
 {
@@ -9,10 +14,21 @@ public class LevelWorld
    {
       World levelWorld = new World();
       
-      Level chuteLevel = ChuteLevel.makeLevel();
-      chuteLevel.deactivate();
-      levelWorld.add(chuteLevel);
+      for (Level l : getLevels())
+      {
+         l.deactivate();
+         levelWorld.add(l);
+      }
       
       return levelWorld;
+   }
+   
+   private static Collection<Level> getLevels()
+   {
+      List<Level> l = new ArrayList<Level>();
+      
+      l.add(ChuteLevel.makeLevel());
+      
+      return l;
    }
 }
