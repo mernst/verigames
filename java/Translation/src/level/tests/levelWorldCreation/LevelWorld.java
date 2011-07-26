@@ -9,8 +9,7 @@ public class LevelWorld
    {
       World levelWorld = new World();
       
-      LevelMaker cl = new ChuteLevel();
-      Level chuteLevel = cl.getLevel();
+      Level chuteLevel = ChuteLevel.makeLevel();
       chuteLevel.deactivate();
       levelWorld.add(chuteLevel);
       

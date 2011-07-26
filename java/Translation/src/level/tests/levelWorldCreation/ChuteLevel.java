@@ -11,23 +11,27 @@ import level.Intersection;
 import level.Level;
 import level.Intersection.Kind;
 
-public class ChuteLevel extends LevelMaker
-{  
-   @Override
-   protected void makeLevel()
+public class ChuteLevel
+{
+   public static Level makeLevel()
    {
-      addConstructor();
-      addGetName();
-      addSetStart();
-      addGetStart();
-      addSetEnd();
-      addGetEnd();
-      addCopy();
-      addGetAuxiliaryChutes();
-      addTraverseAuxChutes();
+      Level l = new Level();
+      Map<String, Chute> fieldToChute = new HashMap<String, Chute>();
+      
+      addConstructor(l, fieldToChute);
+      addGetName(l, fieldToChute);
+      addSetStart(l, fieldToChute);
+      addGetStart(l, fieldToChute);
+      addSetEnd(l, fieldToChute);
+      addGetEnd(l, fieldToChute);
+      addCopy(l, fieldToChute);
+      addGetAuxiliaryChutes(l, fieldToChute);
+      addTraverseAuxChutes(l, fieldToChute);
+      
+      return l;
    }
 
-   private void addConstructor()
+   private static void addConstructor(Level level, Map<String, Chute> fieldToChute)
    {
       Board constructor = new Board();
       
@@ -189,7 +193,7 @@ public class ChuteLevel extends LevelMaker
       }
    }
    
-   private void addGetName()
+   private static void addGetName(Level level, Map<String, Chute> fieldToChute)
    {
       Board getName = new Board();
       
@@ -219,11 +223,11 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Add other chutes
-      connectFields(getName, "auxiliaryChutes", "auxiliaryChutes.elts",
-            "start", "end");
+      connectFields(getName, level, fieldToChute,
+            "auxiliaryChutes", "auxiliaryChutes.elts", "start", "end");
    }
    
-   private void addSetStart()
+   private static void addSetStart(Level level, Map<String, Chute> fieldToChute)
    {
       Board setStart = new Board();
       
@@ -264,11 +268,11 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Add other chutes
-      connectFields(setStart, "name", "auxiliaryChutes",
-            "auxiliaryChutes.elts", "end");
+      connectFields(setStart, level, fieldToChute,
+            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
    }
    
-   private void addGetStart()
+   private static void addGetStart(Level level, Map<String, Chute> fieldToChute)
    {
       Board getStart = new Board();
       level.addBoard("getStart", getStart);
@@ -295,12 +299,12 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Add other chutes:
-      connectFields(getStart, "name", "auxiliaryChutes",
-            "auxiliaryChutes.elts", "end");
+      connectFields(getStart, level, fieldToChute,
+            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
       
    }
    
-   private void addSetEnd()
+   private static void addSetEnd(Level level, Map<String, Chute> fieldToChute)
    {
       Board setEnd = new Board();
       level.addBoard("setEnd", setEnd);
@@ -340,12 +344,12 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Add other chutes:
-      connectFields(setEnd, "name", "auxiliaryChutes",
-            "auxiliaryChutes.elts", "start");
+      connectFields(setEnd, level, fieldToChute,
+            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
       
    }
    
-   private void addGetEnd()
+   private static void addGetEnd(Level level, Map<String, Chute> fieldToChute)
    {
       Board getEnd = new Board();
       level.addBoard("getEnd", getEnd);
@@ -372,11 +376,11 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Add other chutes:
-      connectFields(getEnd, "name", "auxiliaryChutes",
-            "auxiliaryChutes.elts", "start");
+      connectFields(getEnd, level, fieldToChute,
+            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
    }
    
-   private void addCopy()
+   private static void addCopy(Level level, Map<String, Chute> fieldToChute)
    {
       Board copy = new Board();
       level.addBoard("copy", copy);
@@ -496,7 +500,7 @@ public class ChuteLevel extends LevelMaker
       }
    }
    
-   private void addGetAuxiliaryChutes()
+   private static void addGetAuxiliaryChutes(Level level, Map<String, Chute> fieldToChute)
    {
       Board getAux = new Board();
       level.addBoard("getAuxiliaryChutes", getAux);
@@ -550,10 +554,10 @@ public class ChuteLevel extends LevelMaker
       }
       
       // Connect other Chutes:
-      connectFields(getAux, "name", "start", "end");
+      connectFields(getAux, level, fieldToChute, "name", "start", "end");
    }
    
-   private void addTraverseAuxChutes()
+   private static void addTraverseAuxChutes(Level level, Map<String, Chute> fieldToChute)
    {
       Board travAux = new Board();
       level.addBoard("traverseAuxChutes", travAux);
@@ -743,7 +747,7 @@ public class ChuteLevel extends LevelMaker
       }
    }
    
-   private void connectFields(Board b, String... fieldNames)
+   private static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, String... fieldNames)
    {
       Map<String, Integer> nameToPort = new HashMap<String, Integer>();
       nameToPort.put("name", 0);
@@ -753,10 +757,10 @@ public class ChuteLevel extends LevelMaker
       nameToPort.put("end", 4);
       
       for (String name : fieldNames)
-         connectField(b, nameToPort.get(name), name);
+         connectField(b, nameToPort.get(name), name, level, fieldToChute);
    }
    
-   private void connectField(Board b, int port, String name)
+   private static void connectField(Board b, int port, String name, Level level, Map<String, Chute> fieldToChute)
    {
       Chute newChute = fieldToChute.get(name).copy();
       
