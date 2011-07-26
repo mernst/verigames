@@ -195,6 +195,7 @@ public class Level
     */
    public void addBoard(String name, Board b)
    {
+      // TODO check preconditions
       boardNames.put(name, b);
       checkRep();
    }
