@@ -370,8 +370,8 @@ public class Intersection
     * the minimum length that list is guaranteed to have after this method exits
     */
    // TODO change after JDK is properly annotated
-   @SuppressWarnings("nullness") private <E> void padToLength(
-         List</* @Nullable */E> list, int length)
+   @SuppressWarnings("nullness")
+   private static <E> void padToLength(List</* @Nullable */E> list, int length)
    {
       while (list.size() < length)
          list.add(null);
