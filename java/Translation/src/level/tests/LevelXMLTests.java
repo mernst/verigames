@@ -96,7 +96,7 @@ public class LevelXMLTests
    /**
     * Outputs the xml for the level package to the file level.actual.xml<br/>
     * <br/>
-    * Based on the code at changeset bd5bd18a57ca<br/>
+    * Based on the code at changeset 594f3ec9f9d4<br/>
     * <br/>
     * Contains some optimizations, such as removing checkRep() calls
     */
