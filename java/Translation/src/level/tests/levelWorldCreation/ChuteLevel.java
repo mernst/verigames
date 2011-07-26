@@ -223,8 +223,8 @@ public class ChuteLevel
       }
       
       // Add other chutes
-      connectFields(getName, level, fieldToChute,
-            "auxiliaryChutes", "auxiliaryChutes.elts", "start", "end");
+      BuildingTools.connectFields(getName, level, fieldToChute,
+            nameToPortMap(), "auxiliaryChutes", "auxiliaryChutes.elts", "start", "end");
    }
    
    private static void addSetStart(Level level, Map<String, Chute> fieldToChute)
@@ -268,8 +268,8 @@ public class ChuteLevel
       }
       
       // Add other chutes
-      connectFields(setStart, level, fieldToChute,
-            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
+      BuildingTools.connectFields(setStart, level, fieldToChute,
+            nameToPortMap(), "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
    }
    
    private static void addGetStart(Level level, Map<String, Chute> fieldToChute)
@@ -299,8 +299,8 @@ public class ChuteLevel
       }
       
       // Add other chutes:
-      connectFields(getStart, level, fieldToChute,
-            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
+      BuildingTools.connectFields(getStart, level, fieldToChute,
+            nameToPortMap(), "name", "auxiliaryChutes", "auxiliaryChutes.elts", "end");
       
    }
    
@@ -344,8 +344,8 @@ public class ChuteLevel
       }
       
       // Add other chutes:
-      connectFields(setEnd, level, fieldToChute,
-            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
+      BuildingTools.connectFields(setEnd, level, fieldToChute,
+            nameToPortMap(), "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
       
    }
    
@@ -376,8 +376,8 @@ public class ChuteLevel
       }
       
       // Add other chutes:
-      connectFields(getEnd, level, fieldToChute,
-            "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
+      BuildingTools.connectFields(getEnd, level, fieldToChute,
+            nameToPortMap(), "name", "auxiliaryChutes", "auxiliaryChutes.elts", "start");
    }
    
    private static void addCopy(Level level, Map<String, Chute> fieldToChute)
@@ -554,7 +554,7 @@ public class ChuteLevel
       }
       
       // Connect other Chutes:
-      connectFields(getAux, level, fieldToChute, "name", "start", "end");
+      BuildingTools.connectFields(getAux, level, fieldToChute, nameToPortMap(), "name", "start", "end");
    }
    
    private static void addTraverseAuxChutes(Level level, Map<String, Chute> fieldToChute)
@@ -747,7 +747,7 @@ public class ChuteLevel
       }
    }
    
-   private static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, String... fieldNames)
+   private static Map<String, Integer> nameToPortMap()
    {
       Map<String, Integer> nameToPort = new HashMap<String, Integer>();
       nameToPort.put("name", 0);
@@ -756,16 +756,6 @@ public class ChuteLevel
       nameToPort.put("start", 3);
       nameToPort.put("end", 4);
       
-      for (String name : fieldNames)
-         connectField(b, nameToPort.get(name), name, level, fieldToChute);
-   }
-   
-   private static void connectField(Board b, int port, String name, Level level, Map<String, Chute> fieldToChute)
-   {
-      Chute newChute = fieldToChute.get(name).copy();
-      
-      b.addEdge(b.getIncomingNode(), port, b.getOutgoingNode(), port, newChute);
-      
-      level.makeLinked(new HashSet<Chute>(Arrays.asList(fieldToChute.get(name), newChute)));
+      return nameToPort;
    }
 }
