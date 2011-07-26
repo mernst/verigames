@@ -4,6 +4,35 @@ Mike's proposal:
 
 ...
 
+Caption:  Problem:  buggy, insecure 
+Image:  [no good ideas.  Just a black background?]
+
+----
+
+Caption:  How the problem is solved today
+
+Video:
+Show an editor buffer with code.
+Opens a command line, runs a (pluggable) type-checker.
+Lots of errors stream by.
+Go to the editor, make a change, re-run the type-checker.
+
+Voiceover:
+A skilled programmer runs a program verification tool and incrementally
+adds code annotations or fixes coding errors.  This process is slow and
+uneconomic.
+
+----
+
+Caption:
+Our approach
+
+
+fixes 
+
+
+
+
 ===========================================================================
 
 Drew Dean agrees with this characterization of the video, and adds:
