@@ -495,6 +495,11 @@ VISITOR PATTERN SKETCH
     //TODO special cases for null literal, new class tree, etc.
     visitExpression(ExpressionTree, Board g) {
 
+        // TODO needs to consider short circuit evaluation:
+        // the expression set == null || set.isEmpty()
+        // only dereferences set if it is not null, even though there is
+        // no explicit if statement
+
         //I'm not sure how this should work...  I think for an expression
         //like (((variable.identifier).identifier).identifier) is really
         //nested member select trees, so shouldn't each of them get
