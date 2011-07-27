@@ -49,7 +49,7 @@ public class IntersectionLevel
    private static void addFactory(Level level)
    {
       Board factory = new Board();
-      level.addBoard("factory", factory);
+      level.addBoard("Intersection.factory", factory);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -76,7 +76,7 @@ public class IntersectionLevel
    private static void addSubnetworkFactory(Level level)
    {
       Board subFac = new Board();
-      level.addBoard("subnetworkFactory", subFac);
+      level.addBoard("Intersection.subnetworkFactory", subFac);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -92,7 +92,7 @@ public class IntersectionLevel
    
    private static void addPadToLength(Level level)
    {
-      Board pad = initializeBoard(level, "padToLength");
+      Board pad = initializeBoard(level, "Intersection.padToLength");
       
       Intersection incoming = pad.getIncomingNode();
       Intersection outgoing = pad.getOutgoingNode();
@@ -129,7 +129,7 @@ public class IntersectionLevel
    
    private static void addConstructor(Level level, Map<String, Chute> fieldToChute)
    {
-      Board constructor = initializeBoard(level, "constructor");
+      Board constructor = initializeBoard(level, "Intersection.constructor");
       
       Intersection outgoing = constructor.getOutgoingNode();
       
@@ -181,12 +181,12 @@ public class IntersectionLevel
    private static void addSetInputChute(Level level,
          Map<String, Chute> fieldToChute)
    {
-      Board setIn = initializeBoard(level, "setInputChute");
+      Board setIn = initializeBoard(level, "Intersection.setInputChute");
       
       Intersection incoming = setIn.getIncomingNode();
       Intersection outgoing = setIn.getOutgoingNode();
       
-      Intersection padSub = subnetworkFactory("padToLength");
+      Intersection padSub = subnetworkFactory("Intersection.padToLength");
       setIn.addNode(padSub);
       
       // connect input base chutes:
@@ -230,12 +230,12 @@ public class IntersectionLevel
    private static void addSetOutputChute(Level level,
          Map<String, Chute> fieldToChute)
    {
-      Board setOut = initializeBoard(level, "setOutputChute");
+      Board setOut = initializeBoard(level, "Intersection.setOutputChute");
       
       Intersection incoming = setOut.getIncomingNode();
       Intersection outgoing = setOut.getOutgoingNode();
       
-      Intersection padSub = subnetworkFactory("padToLength");
+      Intersection padSub = subnetworkFactory("Intersection.padToLength");
       setOut.addNode(padSub);
       
       // connect output base chutes:
@@ -280,7 +280,7 @@ public class IntersectionLevel
    private static void addGetInputChute(Level level,
          Map<String, Chute> fieldToChute)
    {
-      Board getIn = initializeBoard(level, "getInputChute");
+      Board getIn = initializeBoard(level, "Intersection.getInputChute");
       
       Intersection incoming = getIn.getIncomingNode();
       Intersection outgoing = getIn.getOutgoingNode();
@@ -319,7 +319,7 @@ public class IntersectionLevel
    private static void addGetOutputChute(Level level,
          Map<String, Chute> fieldToChute)
    {
-      Board getOut = initializeBoard(level, "getOutputChute");
+      Board getOut = initializeBoard(level, "Intersection.getOutputChute");
       
       Intersection incoming = getOut.getIncomingNode();
       Intersection outgoing = getOut.getOutgoingNode();

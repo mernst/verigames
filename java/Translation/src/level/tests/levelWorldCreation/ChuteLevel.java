@@ -46,7 +46,7 @@ public class ChuteLevel
    {
       Board constructor = new Board();
       
-      level.addBoard("constructor", constructor);
+      level.addBoard("Chute.constructor", constructor);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       constructor.addNode(incoming);
@@ -208,7 +208,7 @@ public class ChuteLevel
    {
       Board getName = new Board();
       
-      level.addBoard("getName", getName);
+      level.addBoard("Chute.getName", getName);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -242,7 +242,7 @@ public class ChuteLevel
    {
       Board setStart = new Board();
       
-      level.addBoard("setStart", setStart);
+      level.addBoard("Chute.setStart", setStart);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -286,7 +286,7 @@ public class ChuteLevel
    private static void addGetStart(Level level, Map<String, Chute> fieldToChute)
    {
       Board getStart = new Board();
-      level.addBoard("getStart", getStart);
+      level.addBoard("Chute.getStart", getStart);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -318,7 +318,7 @@ public class ChuteLevel
    private static void addSetEnd(Level level, Map<String, Chute> fieldToChute)
    {
       Board setEnd = new Board();
-      level.addBoard("setEnd", setEnd);
+      level.addBoard("Chute.setEnd", setEnd);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -363,7 +363,7 @@ public class ChuteLevel
    private static void addGetEnd(Level level, Map<String, Chute> fieldToChute)
    {
       Board getEnd = new Board();
-      level.addBoard("getEnd", getEnd);
+      level.addBoard("Chute.getEnd", getEnd);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -394,16 +394,16 @@ public class ChuteLevel
    private static void addCopy(Level level, Map<String, Chute> fieldToChute)
    {
       Board copy = new Board();
-      level.addBoard("copy", copy);
+      level.addBoard("Chute.copy", copy);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
       copy.addNode(incoming);
       copy.addNode(outgoing);
       
-      Intersection copySub = Intersection.subnetworkFactory("copy");
+      Intersection copySub = Intersection.subnetworkFactory("Chute.copy");
       Intersection constructorSub = Intersection
-            .subnetworkFactory("constructor");
+            .subnetworkFactory("Chute.constructor");
       copy.addNode(copySub);
       copy.addNode(constructorSub);
       
@@ -514,7 +514,7 @@ public class ChuteLevel
    private static void addGetAuxiliaryChutes(Level level, Map<String, Chute> fieldToChute)
    {
       Board getAux = new Board();
-      level.addBoard("getAuxiliaryChutes", getAux);
+      level.addBoard("Chute.getAuxiliaryChutes", getAux);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
@@ -571,15 +571,15 @@ public class ChuteLevel
    private static void addTraverseAuxChutes(Level level, Map<String, Chute> fieldToChute)
    {
       Board travAux = new Board();
-      level.addBoard("traverseAuxChutes", travAux);
+      level.addBoard("Chute.traverseAuxChutes", travAux);
       
       Intersection incoming = Intersection.factory(Kind.INCOMING);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
       travAux.addNode(incoming);
       travAux.addNode(outgoing);
       
-      Intersection auxChutesSub = Intersection.subnetworkFactory("getAuxiliaryChutes");
-      Intersection travSub = Intersection.subnetworkFactory("traverseAuxChutes");
+      Intersection auxChutesSub = Intersection.subnetworkFactory("Chute.getAuxiliaryChutes");
+      Intersection travSub = Intersection.subnetworkFactory("Chute.traverseAuxChutes");
       travAux.addNode(auxChutesSub);
       travAux.addNode(travSub);
       

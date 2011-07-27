@@ -48,7 +48,7 @@ public class BoardLevel
    private static void addConstructor(Level level,
          Map<String, Chute> fieldToChute)
    {
-      Board constructor = initializeBoard(level, "constructor");
+      Board constructor = initializeBoard(level, "Board.constructor");
       
       // incomingNode chute:
       addField(constructor, fieldToChute, nameToPortMap, "incomingNode", START_BLACK_BALL);
