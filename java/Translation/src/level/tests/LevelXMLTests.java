@@ -85,7 +85,7 @@ public class LevelXMLTests
       l.deactivate();
       
       World w = new World();
-      w.add(l);
+      w.addLevel("TestClass", l);
       
       PrintStream p = new PrintStream(new FileOutputStream(new File(
             "TestClass.actual.xml")));

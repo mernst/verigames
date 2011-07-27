@@ -1,7 +1,10 @@
 package level;
 
 import java.io.PrintStream;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+// TODO update documentation
 
 /**
  * A Set of Levels that make up a world.
@@ -10,10 +13,19 @@ import java.util.LinkedHashSet;
  * 
  */
 
-public class World extends LinkedHashSet<Level>
+public class World
 {
+   private final Map<String, Level> nameToLevel;
    
-   private static final long serialVersionUID = 8743080574151346401L;
+   public World()
+   {
+      nameToLevel = new LinkedHashMap<String, Level>();
+   }
+   
+   public void addLevel(String name, Level level)
+   {
+      nameToLevel.put(name, level);
+   }
    
    /**
     * Prints the XML for this World<br/>
@@ -27,7 +39,7 @@ public class World extends LinkedHashSet<Level>
       out.println("<?xml version=\"1.0\"?>");
       out.println("<!DOCTYPE world SYSTEM \"world.dtd\">");
       out.println("<world>");
-      for (Level l : this)
+      for (Level l : nameToLevel.values())
          l.outputXML(out);
       out.println("</world>");
    }

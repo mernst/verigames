@@ -1,8 +1,7 @@
 package level.tests.levelWorldCreation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import level.Level;
 import level.World;
@@ -14,22 +13,22 @@ public class LevelWorld
    {
       World levelWorld = new World();
       
-      for (Level l : getLevels())
+      for (Map.Entry<String, Level> e : getLevels().entrySet())
       {
-         l.deactivate();
-         levelWorld.add(l);
+         e.getValue().deactivate();
+         levelWorld.addLevel(e.getKey(), e.getValue());
       }
       
       return levelWorld;
    }
    
-   private static Collection<Level> getLevels()
+   private static Map<String, Level> getLevels()
    {
-      List<Level> l = new ArrayList<Level>();
+      Map<String, Level> l = new LinkedHashMap<String, Level>();
       
-      //l.add(ChuteLevel.makeLevel());
-      //l.add(IntersectionLevel.makeLevel());
-      l.add(BoardLevel.makeLevel());
+      //l.put("Chute", ChuteLevel.makeLevel());
+      //l.put("Intersection", IntersectionLevel.makeLevel());
+      l.put("Board", BoardLevel.makeLevel());
       
       return l;
    }

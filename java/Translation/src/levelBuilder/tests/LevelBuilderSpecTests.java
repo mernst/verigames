@@ -53,7 +53,7 @@ public class LevelBuilderSpecTests
       TestClass.finishBoardBuilder(method);
       
       World w = new World();
-      w.add(TestClass.getLevel());
+      w.addLevel("TestClass", TestClass.getLevel());
       
       PrintStream out = new PrintStream(new FileOutputStream(new File("TestClass.actual.xml")));
       
@@ -103,7 +103,7 @@ public class LevelBuilderSpecTests
       TestClass2.finishBoardBuilder(addElt);
       
       World w = new World();
-      w.add(TestClass2.getLevel());
+      w.addLevel("TestClass2", TestClass2.getLevel());
       
       PrintStream out = new PrintStream(new FileOutputStream(new File("TestClass2.actual.xml")));
       
