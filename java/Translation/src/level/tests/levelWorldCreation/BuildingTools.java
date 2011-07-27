@@ -1,5 +1,7 @@
 package level.tests.levelWorldCreation;
 
+import static level.Intersection.factory;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,6 +28,16 @@ public class BuildingTools
       b.addNode(Intersection.factory(Kind.OUTGOING));
       
       return b;
+   }
+   
+   protected static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPortMap, String name, Kind kind)
+   {
+      Intersection start = factory(kind);
+      b.addNode(start);
+      
+      Chute chute = new Chute(name, true, null);
+      b.addEdge(start, 0, b.getOutgoingNode(), nameToPortMap.get(chute.getName()), chute);
+      fieldToChute.put(chute.getName(), chute);
    }
    
    protected static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPort, String... fieldNames)
