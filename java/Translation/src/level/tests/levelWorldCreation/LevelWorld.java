@@ -26,8 +26,8 @@ public class LevelWorld
    {
       Map<String, Level> l = new LinkedHashMap<String, Level>();
       
-      //l.put("Chute", ChuteLevel.makeLevel());
-      //l.put("Intersection", IntersectionLevel.makeLevel());
+      l.put("Chute", ChuteLevel.makeLevel());
+      l.put("Intersection", IntersectionLevel.makeLevel());
       l.put("Board", BoardLevel.makeLevel());
       
       return l;

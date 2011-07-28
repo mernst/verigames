@@ -210,41 +210,379 @@ public class BoardLevel
       }
    }
    
-   private static void addAddEdge(Level level, Map<String, Chute> fieldToChute)
+   private static void addAddEdge(final Level level,
+         final Map<String, Chute> fieldToChute)
    {
+      final Board addEdge = initializeBoard(level, "Board.addEdge");
       
+      final Intersection incoming = addEdge.getIncomingNode();
+      final Intersection outgoing = addEdge.getOutgoingNode();
+      
+      final Intersection containsStart = subnetworkFactory("Board.contains");
+      final Intersection containsEnd = subnetworkFactory("Board.contains");
+      final Intersection containsEdge = subnetworkFactory("Board.contains");
+      Intersection mergeElts = factory(MERGE);
+      addEdge.addNode(containsStart);
+      addEdge.addNode(containsEnd);
+      addEdge.addNode(containsEdge);
+      addEdge.addNode(mergeElts);
+      
+      // Because Java needs closures:
+      class Connecter
+      {
+         /**
+          * Connects the given chute from the incoming node to containsStart,
+          * then copies it to connect from containsEnd to containsEdge to
+          * outgoing, all on the given port. Also links the chute with the field
+          * of the same name
+          */
+         private void connect(Chute first, int port)
+         {
+            Chute[] chutes = new Chute[4];
+            chutes[0] = first;
+            for (int i = 1; i < 4; i++)
+               chutes[i] = chutes[0].copy();
+            
+            addEdge.addEdge(incoming, port, containsStart, port, chutes[0]);
+            addEdge.addEdge(containsStart, port, containsEnd, port, chutes[1]);
+            addEdge.addEdge(containsEnd, port, containsEdge, port, chutes[2]);
+            addEdge.addEdge(containsEdge, port, outgoing, port, chutes[3]);
+            level.makeLinked(chutes);
+            level.makeLinked(chutes[0], fieldToChute.get(chutes[0].getName()));
+         }
+      }
+      
+      Connecter c = new Connecter();
+      
+      // Add incomingNode chutes:
+      c.connect(new Chute("incomingNode", true, null), 0);
+      
+      // Add outgoingNode chutes:
+      c.connect(new Chute("outgoingNode", true, null), 1);
+      
+      // Add nodes base chutes:
+      c.connect(new Chute("nodes", true, null), 2);
+      
+      // Add nodes aux chutes:
+      c.connect(new Chute("nodes.elts", true, null), 3);
+      
+      // Add edges base chutes:
+      {
+         c.connect(new Chute("edges", true, null), 4);
+         outgoing.getInputChute(4).setPinched(true);
+      }
+      
+      // Add edges aux chutes:
+      {
+         Chute[] edgesElts = new Chute[5];
+         edgesElts[0] = new Chute("edges.elts", true, null);
+         for (int i = 1; i < 5; i++)
+            edgesElts[i] = edgesElts[0].copy();
+         
+         addEdge.addEdge(incoming, 5, containsStart, 5, edgesElts[0]);
+         addEdge.addEdge(containsStart, 5, containsEnd, 5, edgesElts[1]);
+         addEdge.addEdge(containsEnd, 5, containsEdge, 5, edgesElts[2]);
+         addEdge.addEdge(containsEdge, 5, mergeElts, 0, edgesElts[3]);
+         addEdge.addEdge(mergeElts, 0, outgoing, 5, edgesElts[4]);
+      }
+      
+      // Add start chutes:
+      {
+         Intersection containsSplit = factory(SPLIT);
+         Intersection setStartSplit = factory(SPLIT);
+         Intersection setStart = subnetworkFactory("Chute.setStart");
+         Intersection end = factory(END);
+         
+         addEdge.addNode(containsSplit);
+         addEdge.addNode(setStartSplit);
+         addEdge.addNode(setStart);
+         addEdge.addNode(end);
+         
+         Chute top = new Chute("start", true, null);
+         Chute middle = top.copy();
+         Chute bottom = top.copy();
+         middle.setPinched(true);
+         addEdge.addEdge(incoming, 6, containsSplit, 0, top);
+         addEdge.addEdge(containsSplit, 1, setStartSplit, 0, middle);
+         addEdge.addEdge(setStartSplit, 0, end, 0, bottom);
+         
+         Chute toContains = new Chute(null, true, null);
+         addEdge.addEdge(containsSplit, 0, containsStart, 6, toContains);
+         
+         Chute toSetStart = new Chute(null, true, null);
+         addEdge.addEdge(setStartSplit, 1, setStart, 0, toSetStart);
+      }
+      
+      // Add end chutes:
+      {
+         Intersection containsSplit = factory(SPLIT);
+         Intersection setStartSplit = factory(SPLIT);
+         Intersection setStart = subnetworkFactory("Chute.setEnd");
+         Intersection end = factory(END);
+         
+         addEdge.addNode(containsSplit);
+         addEdge.addNode(setStartSplit);
+         addEdge.addNode(setStart);
+         addEdge.addNode(end);
+         
+         Chute top = new Chute("end", true, null);
+         Chute middle = top.copy();
+         Chute bottom = top.copy();
+         middle.setPinched(true);
+         addEdge.addEdge(incoming, 7, containsSplit, 0, top);
+         addEdge.addEdge(containsSplit, 1, setStartSplit, 0, middle);
+         addEdge.addEdge(setStartSplit, 0, end, 0, bottom);
+         
+         Chute toContains = new Chute(null, true, null);
+         addEdge.addEdge(containsSplit, 0, containsEnd, 6, toContains);
+         
+         Chute toSetStart = new Chute(null, true, null);
+         addEdge.addEdge(setStartSplit, 1, setStart, 0, toSetStart);
+      }
+      
+      // Add edge chutes:
+      {
+         Intersection containsSplit = factory(SPLIT);
+         Intersection eltsSplit = factory(SPLIT);
+         Intersection setOutSplit = factory(SPLIT);
+         Intersection setInSplit = factory(SPLIT);
+         Intersection end = factory(END);
+         
+         addEdge.addNode(containsSplit);
+         addEdge.addNode(eltsSplit);
+         addEdge.addNode(setOutSplit);
+         addEdge.addNode(setInSplit);
+         addEdge.addNode(end);
+         
+         Intersection setOut = subnetworkFactory("Intersection.setOutputChute");
+         Intersection setIn = subnetworkFactory("Intersection.setInputChute");
+         addEdge.addNode(setOut);
+         addEdge.addNode(setIn);
+         
+         Chute[] edgeChutes = new Chute[5];
+         edgeChutes[0] = new Chute("edges", true, null);
+         for (int i = 0; i < 5; i++)
+            edgeChutes[i] = edgeChutes[0].copy();
+         
+         edgeChutes[0].setPinched(true);
+         edgeChutes[1].setPinched(true);
+         edgeChutes[4].setPinched(true);
+
+         addEdge.addEdge(incoming, 8, containsSplit, 0, edgeChutes[0]);
+         addEdge.addEdge(containsSplit, 1, eltsSplit, 0, edgeChutes[1]);
+         addEdge.addEdge(eltsSplit, 1, setOutSplit, 0, edgeChutes[2]);
+         addEdge.addEdge(setOutSplit, 1, setInSplit, 0, edgeChutes[3]);
+         addEdge.addEdge(setInSplit, 1, end, 0, edgeChutes[4]);
+         level.makeLinked(edgeChutes);
+         level.makeLinked(edgeChutes[0], fieldToChute.get(edgeChutes[0].getName()));
+         
+         addEdge.addEdge(containsSplit, 0, containsEdge, 6, new Chute(null, true, null));
+         addEdge.addEdge(eltsSplit, 0, mergeElts, 1, new Chute(null, true, null));
+         addEdge.addEdge(setOutSplit, 0, setOut, 0, new Chute(null, true, null));
+         addEdge.addEdge(setInSplit, 0, setIn, 0, new Chute(null, true, null));
+      }
    }
    
    private static void addNodesSize(Level level, Map<String, Chute> fieldToChute)
    {
+      Board nodesSize = initializeBoard(level, "Board.nodesSize");
       
+      // connect all fields
+      connectFields(nodesSize, level, fieldToChute, nameToPortMap,
+            nameToPortMap.keySet().toArray(new String[0]));
+      
+      Intersection incoming = nodesSize.getIncomingNode();
+      
+      Chute nodes = incoming.getOutputChute(2);
+      if (!nodes.getName().equals("nodes"))
+         throw new RuntimeException();
+      nodes.setPinched(true);
    }
    
    private static void addEdgesSize(Level level, Map<String, Chute> fieldToChute)
    {
+      Board edgesSize = initializeBoard(level, "Board.edgesSize");
       
+      // connect all fields
+      connectFields(edgesSize, level, fieldToChute, nameToPortMap,
+            nameToPortMap.keySet().toArray(new String[0]));
+      
+      Intersection incoming = edgesSize.getIncomingNode();
+      
+      Chute edges = incoming.getOutputChute(4);
+      if (!edges.getName().equals("edges"))
+         throw new RuntimeException();
+      edges.setPinched(true);
    }
    
    private static void addGetNodes(Level level, Map<String, Chute> fieldToChute)
    {
+      Board getNodes = initializeBoard(level, "Board.getNodes");
       
+      Intersection incoming = getNodes.getIncomingNode();
+      Intersection outgoing = getNodes.getOutgoingNode();
+      
+      // connect nodes chutes:
+      {
+         Intersection split = factory(SPLIT);
+         Intersection end = factory(END);
+         getNodes.addNode(split);
+         getNodes.addNode(end);
+         
+         Chute top = new Chute("nodes", true, null);
+         Chute bottom = top.copy();
+         getNodes.addEdge(incoming, 2, split, 0, top);
+         getNodes.addEdge(split, 0, outgoing, 2, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute right = new Chute(null, true, null);
+         right.setPinched(true);
+         getNodes.addEdge(split, 1, end, 0, right);
+      }
+      
+      // connect nodes.elts chutes and return value aux:
+      {
+         Intersection split = factory(SPLIT);
+         getNodes.addNode(split);
+         
+         Chute top = new Chute("nodes.elts", true, null);
+         Chute bottom = top.copy();
+         
+         getNodes.addEdge(incoming, 3, split, 0, top);
+         getNodes.addEdge(split, 0, outgoing, 3, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute retAux = new Chute(null, true, null);
+         getNodes.addEdge(split, 1, outgoing, 7, retAux);
+      }
+      
+      // connect return value:
+      {
+         Intersection start = factory(START_WHITE_BALL);
+         getNodes.addNode(start);
+         
+         Chute ret = new Chute(null, true, null);
+         getNodes.addEdge(start, 0, outgoing, 6, ret);
+      }
+      
+      // connect other chutes:
+      connectFields(getNodes, level, fieldToChute, nameToPortMap,
+            "incomingNode", "outgoingNode", "edges", "edges.elts");
    }
    
    private static void addGetEdges(Level level, Map<String, Chute> fieldToChute)
    {
+      Board getEdges = initializeBoard(level, "Board.getEdges");
       
+      Intersection incoming = getEdges.getIncomingNode();
+      Intersection outgoing = getEdges.getOutgoingNode();
+      
+      // connect nodes chutes:
+      {
+         Intersection split = factory(SPLIT);
+         Intersection end = factory(END);
+         getEdges.addNode(split);
+         getEdges.addNode(end);
+         
+         Chute top = new Chute("edges", true, null);
+         Chute bottom = top.copy();
+         getEdges.addEdge(incoming, 4, split, 0, top);
+         getEdges.addEdge(split, 0, outgoing, 4, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute right = new Chute(null, true, null);
+         right.setPinched(true);
+         getEdges.addEdge(split, 1, end, 0, right);
+      }
+      
+      // connect nodes.elts chutes and return value aux:
+      {
+         Intersection split = factory(SPLIT);
+         getEdges.addNode(split);
+         
+         Chute top = new Chute("edges.elts", true, null);
+         Chute bottom = top.copy();
+         
+         getEdges.addEdge(incoming, 5, split, 0, top);
+         getEdges.addEdge(split, 0, outgoing, 5, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute retAux = new Chute(null, true, null);
+         getEdges.addEdge(split, 1, outgoing, 7, retAux);
+      }
+      
+      // connect return value:
+      {
+         Intersection start = factory(START_WHITE_BALL);
+         getEdges.addNode(start);
+         
+         Chute ret = new Chute(null, true, null);
+         getEdges.addEdge(start, 0, outgoing, 6, ret);
+      }
+      
+      // connect other chutes:
+      connectFields(getEdges, level, fieldToChute, nameToPortMap,
+            "incomingNode", "outgoingNode", "nodes", "nodes.elts");
    }
    
    private static void addGetIncomingNode(Level level,
          Map<String, Chute> fieldToChute)
    {
+      Board getIn = initializeBoard(level, "Board.getIncomingNode");
       
+      Intersection incoming = getIn.getIncomingNode();
+      Intersection outgoing = getIn.getOutgoingNode();
+      
+      // connect incomingNode and return value:
+      {
+         Intersection split = factory(SPLIT);
+         getIn.addNode(split);
+         
+         Chute top = new Chute("incomingNode", true, null);
+         Chute bottom = top.copy();
+         
+         Chute ret = new Chute(null, true, null);
+         
+         getIn.addEdge(incoming, 0, split, 0, top);
+         getIn.addEdge(split, 0, outgoing, 0, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         getIn.addEdge(split, 1, outgoing, 6, ret);
+      }
+      
+      // connect other fields
+      connectFields(getIn, level, fieldToChute, nameToPortMap, "outgoingNode",
+            "nodes", "nodes.elts", "edges", "edges.elts");
    }
    
    private static void addGetOutgoingNode(Level level,
          Map<String, Chute> fieldToChute)
    {
+      Board getOut = initializeBoard(level, "Board.getOutgoingNode");
       
+      Intersection incoming = getOut.getIncomingNode();
+      Intersection outgoing = getOut.getOutgoingNode();
+      
+      // connect incomingNode and return value:
+      {
+         Intersection split = factory(SPLIT);
+         getOut.addNode(split);
+         
+         Chute top = new Chute("outgoingNode", true, null);
+         Chute bottom = top.copy();
+         
+         Chute ret = new Chute(null, true, null);
+         
+         getOut.addEdge(incoming, 1, split, 0, top);
+         getOut.addEdge(split, 0, outgoing, 1, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         getOut.addEdge(split, 1, outgoing, 6, ret);
+      }
+      
+      // connect other fields
+      connectFields(getOut, level, fieldToChute, nameToPortMap, "incomingNode",
+            "nodes", "nodes.elts", "edges", "edges.elts");
    }
    
    private static void addContains(Level level, Map<String, Chute> fieldToChute)
@@ -272,6 +610,56 @@ public class BoardLevel
    private static void addDeactivate(Level level,
          Map<String, Chute> fieldToChute)
    {
+      Board deactivate = initializeBoard(level, "Board.deactivate");
+
+      Intersection incoming = deactivate.getIncomingNode();
+      Intersection outgoing = deactivate.getOutgoingNode();
+            
+      //connect fields:
+      connectFields(deactivate, level, fieldToChute, nameToPortMap, "incomingNode", "outgoingNode", "nodes", "edges");
       
+      // add pinch points to nodes and edges:
+      Chute nodes = incoming.getOutputChute(2);
+      Chute edges = incoming.getOutputChute(4);
+      if(!nodes.getName().equals("nodes") || !edges.getName().equals("edges"))
+         throw new RuntimeException();
+      nodes.setPinched(true);
+      edges.setPinched(true);
+      
+      // add nodes aux chutes:
+      {
+         Intersection split = factory(SPLIT);
+         Intersection end = factory(END);
+         deactivate.addNode(split);
+         deactivate.addNode(end);
+         
+         Chute top = new Chute("nodes.elts", true, null);
+         Chute bottom = top.copy();
+         deactivate.addEdge(incoming, 3, split, 0, top);
+         deactivate.addEdge(split, 0, outgoing, 3, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute right = new Chute(null, true, null);
+         right.setPinched(true);
+         deactivate.addEdge(split, 1, end, 0, right);
+      }
+      
+      // add edges aux chutes:
+      {
+         Intersection split = factory(SPLIT);
+         Intersection end = factory(END);
+         deactivate.addNode(split);
+         deactivate.addNode(end);
+         
+         Chute top = new Chute("edges.elts", true, null);
+         Chute bottom = top.copy();
+         deactivate.addEdge(incoming, 5, split, 0, top);
+         deactivate.addEdge(split, 0, outgoing, 5, bottom);
+         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         
+         Chute right = new Chute(null, true, null);
+         right.setPinched(true);
+         deactivate.addEdge(split, 1, end, 0, right);
+      }
    }
 }
