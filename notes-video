@@ -24,6 +24,22 @@ Caption:  Problem:  buggy, insecure software
 Image:  [no good ideas.  Just a black background?  Show a hacker gaining
 access to software, or a real-world effect of a (security) bug?]
 
+[
+I don’t think we can demo this in the video well.  drew needs to setup the
+problem in general terms. would skip this altogether, or talk about it in terms
+of how the probem is solved today.
+]
+
+[
+I liked the example you gave in 331, where you had a real website that was
+supposed to display content, but instead just said
+java.lang.NullPointerException. Even for non-technical people, I think it's
+pretty obvious that this is a failure. More obvious than, say, a stack trace of
+a failing command-line tool. The fact that it's a failure on a website (which
+is, obviously, exposed to the public) could hint at the potential security
+gains that this project could result in, rather than just stability gains.
+]
+
 ----
 
 Caption:  How the problem is solved today
@@ -39,6 +55,13 @@ A skilled programmer runs a program verification tool and incrementally
 adds code annotations or fixes coding errors.  This process is slow and
 uneconomic.
 
+[
+I think this needs to say something more.  For example, are we just speeding up
+the slow process, or are we potentially solving stuff that cannot be solve
+regardless of the resources poured on it.  I’m hoping it’s the second, as this
+is a much more likely grounds for starting a new program.
+]
+
 ----
 
 Caption:
@@ -53,6 +76,24 @@ game that can be played in a browser or on a phone.  When a player finishes
 the game, the final configuration of the level can be translated into a
 proof of correctness for the original program.
 
+[
+I wonder if an alternative may be more effective: code -> game world->
+large scale expertise development -> verified software
+
+That way we are not just verifying software but building a very large
+population of experts that can over time do things faster more efficient,
+and lead to solutions and perhaps even verification algorithms not
+currently known.
+]
+
+
+[
+I think it is important to mention here that anybody will be able to play the
+game (and without having to know/understand the technical mechanics behind it),
+that it's not just the same skilled programmers somehow having more fun while
+doing the same thing. 
+]
+
 ----
 
 Video: the game being played
@@ -65,12 +106,34 @@ A small ball can roll through any pipe.  A large ball only fits through a
 wide pipe.  A large ball gets stuck if it tries to roll into a narrow pipe.
 Your job is to make sure that no ball gets stuck.
 
+[
+This has to be shortened.  About half of the current size.  Start with the
+goal: guide all balls so that they don’t get stuck.  Then say what you can
+change..  then point to the trickiness.
+]
+
 You can control the width of each pipe segment.  Click on a pipe segment to
 change its width from wide to narrow or vice-versa.
+
+[
+Just an English consistency comment: In the previous section we call the player
+"the player" and here we speak directly to the audience as the players with
+"you". In the final draft, this should probably have consistent wording. 
+]
 
 The game is not trivial, because the player does not have complete freedom
 to change widths.  Some pipes have pinch points, which are impassable by
 large balls even if the pipe segment is wide.  And, some balls are always wide.
+
+[
+This section could potentially be introduced in a different order. So far we
+have setup -> rules -> goal -> mechanics, so it's slightly disconnected to
+introduce more rules now. Alternatively, the "your job ... no balls get stuck"
+sentence could be moved into the "To solve the game..." paragraph to group all
+the goal descriptions together. Or it could be put as the second sentence in
+this whole section if it feels like we're going too long without giving the
+audience an overall goal of the game.
+]
 
 The game consists of multiple boards in a level, and multiple levels in a
 world.  A modification that makes progress on one board may cause a problem
@@ -100,6 +163,31 @@ of annotations, which are akin to program specifications or contracts.
 These annotations are guaranteed to be correct.  An external tool, called
 the Checker Framework, can independently verify the program against them.
 
+[
+The middle sentence of this section may not be very clear to an audience that
+is unfamiliar with code annotations/the Checker Framework. Perhaps something
+more like "A solution to the game can be automatically converted back into
+annotated source code, where the annotations specify properties of the code. An
+external tool, called the Checker Framework, can independently use these
+annotations to verify the program and produce a proof of correctness." -> That
+may not be perfect either. I'm sure this entire script will go through several
+iterations of wording.
+]
+
+[
+I think this could be anticlimactic. I think it could detract from our point
+that the game makes it simpler. I agree that we should show the end result
+somehow, but I think cutting back to a programmer with his editor buffer and
+shell could make it seem like the game didn't accomplish much.
+
+I know this is more artificial, but what if we just showed a program working
+correctly? Say we had an example buggy program at the beginning, and then we
+show it executing properly at the end? Obviously, just verifying code doesn't
+change its correctness, but detecting and fixing bugs is a goal of this
+project, and it may be more gratifying to show something like that. However, we
+do want to be sure that we're not misrepresenting the truth. 
+]
+
 ----
 
 [Discuss the mapping between program elements and game elements?]
@@ -107,9 +195,13 @@ the Checker Framework, can independently verify the program against them.
 
 ----
 
-[Show exceptions to the laws of physics?  Drew Dean would like to see this
-in the video.]
-[Working this into a 3-minute video will be difficult.]
+Show exceptions to the laws of physics
+
+Voiceover:
+If a player believes that a level is unsolvable, he can indicate the presence
+of a problem using [tool name]. This marks a point of interest in the
+underlying code, and a programmer will inspect it and correct the problem.
+
 
 ===========================================================================
 
@@ -203,5 +295,51 @@ generate video cuts that fit optimally with text.  I suggest we work on that as
 woon as we agree on the rough outline.  Please add items to this list, suggest
 removal or edit.  Seth could you create a google doc  so that all comments and
 edits are tracked.
+
+===========================================================================
+
+1. I think one needs to think carefully about what one is contrasting 
+between verification today vs verification w/ games.  Your script is not 
+clear about that because it could be that
+     - command line tools are used today for verification -> games are 
+more visual
+     - a verification expert is need for verification -> games can be 
+played by anyone
+     - verification is boring and tedious -> games are fun (and 
+potentially instructive)
+     - verification doesn't scale (for many reasons) -> distributed 
+games scale with the number of players
+     - ...
+     - some or all of the above
+
+I agree with your first point, that we should be more explicit about the
+benefits of the game. I believe that all of the points you listed are valid,
+though I'm not sure how many we can feasibly work into the video.
+
+I agree.  I believe Drew wants to motivate a new approach to verification based
+on crowd sourcing.  With one picture (lone person sitting in front of a
+command-line interface tool) one could all points (with the voiceover and
+carefully chosen words). 
+
+
+2. I still don't see the connection between making all the pipes green 
+and the proof/verification result.  In other words, I can play the game 
+and make all the pipes green without knowing anything about verification.
+
+As for your second, I'm not sure if I understand what you're saying. I would
+say that the *point* of the game is that you can play it without understanding
+the connection to verification. If you can solve the whole level without
+knowing anything about the code it came from, we've done our jobs. Or were you
+asking for an explanation about the relationship between green pipes and
+verified code for your own benefit?
+
+
+3. Who makes up the game?  Isn't making up the game as hard as finding 
+the proof?
+
+Lastly, just to clarify, the end goal is to have the translation from code to
+game levels be completely automated. We will not need to do a hand translation
+of all the code. You're right that that requires orders of magnitude more time
+and a much deeper understanding than simply adding annotations to code.
 
 ===========================================================================
