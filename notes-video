@@ -112,6 +112,17 @@ goal: guide all balls so that they don’t get stuck.  Then say what you can
 change..  then point to the trickiness.
 ]
 
+[
+there should be at least one mention
+of the fact that boards can be nested and appear within one another at which
+point I'll show the user mousing over a board and it being highlighted and then
+clicked on and visited (animating from the side so that the audience sees that
+it is actually another board in the level).
+
+"A world is made up of levels, which consist of multiple boards. Each board can
+include copies of other boards."
+]
+
 You can control the width of each pipe segment.  Click on a pipe segment to
 change its width from wide to narrow or vice-versa.
 
