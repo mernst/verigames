@@ -34,8 +34,8 @@ public class NullTestLevel
     */
    private static void addGet(Level level, boolean nullChute)
    {
-      Board getChute = initializeBoard(level, nullChute ? "Board.getNullChute"
-            : "Board.getNonNullChute");
+      Board getChute = initializeBoard(level, nullChute ? "NullTest.getNullChute"
+            : "NullTest.getNonNullChute");
       
       Intersection outgoing = getChute.getOutgoingNode();
       
@@ -53,8 +53,8 @@ public class NullTestLevel
     */
    private static void addSet(Level level, boolean nullChute)
    {
-      Board setChute = initializeBoard(level, nullChute ? "Board.setNullChute"
-            : "Board.setNonNullChute");
+      Board setChute = initializeBoard(level, nullChute ? "NullTest.setNullChute"
+            : "NullTest.setNonNullChute");
       
       Intersection incoming = setChute.getIncomingNode();
       
