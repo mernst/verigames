@@ -277,6 +277,7 @@ public class IntersectionLevel
             "inputChutes.elts");
    }
    
+   // TODO add pinchpoints to getInputChute and getOutputChute
    private static void addGetInputChute(Level level,
          Map<String, Chute> fieldToChute)
    {
