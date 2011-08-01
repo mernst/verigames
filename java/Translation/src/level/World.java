@@ -39,8 +39,8 @@ public class World
       out.println("<?xml version=\"1.0\"?>");
       out.println("<!DOCTYPE world SYSTEM \"world.dtd\">");
       out.println("<world>");
-      for (Level l : nameToLevel.values())
-         l.outputXML(out);
+      for (Map.Entry<String, Level> entry : nameToLevel.entrySet())
+         entry.getValue().outputXML(entry.getKey(), out);
       out.println("</world>");
    }
    

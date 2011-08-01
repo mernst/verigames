@@ -226,12 +226,12 @@ public class Level
     * out is open and ready to be written to<br/>
     * Modifies: out<br/>
     */
-   public void outputXML(PrintStream out)
+   public void outputXML(String name, PrintStream out)
    {
       if (this.isActive())
          throw new IllegalStateException("outputXML called on active Level");
       
-      out.println("<level>");
+      out.println("<level name=\"" + name + "\">");
       outputlinkedEdgeClasses(out);
       outputBoardsMap(out);
       out.println("</level>");
