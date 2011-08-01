@@ -96,15 +96,28 @@ doing the same thing. 
 
 ----
 
-Video: the game being played
-[Need to decide exactly what boards are shown and exactly what clicks are
-done, illustrating the voiceover.]
+Voiceover: In the game, balls roll through a network of interconnected pipes.
+Video: Chute.constructor, solved, with balls dropping through it (it's not
+trivial, but not overwhelming, either).
 
-In the game, balls roll through a network of interconnected pipes.  There
-are narrow pipes and wide pipes, and there are small balls and large balls.
-A small ball can roll through any pipe.  A large ball only fits through a
-wide pipe.  A large ball gets stuck if it tries to roll into a narrow pipe.
-Your job is to make sure that no ball gets stuck.
+Voiceover: There are narrow pipes and wide pipes, and there are small balls and
+large balls.
+Video: Intersection.getOutputChute, solved, with balls dropping through (it has
+all four features described above, without too much else to distract).
+
+Voiceover: A small ball can roll through any pipe.
+Video: Intersection.factory, with top chutes narrow and bottom chute wide,
+showing balls rolling
+
+Voiceover: A large ball gets stuck if it tries to roll into a narrow pipe or
+through a pinch point.
+Video: Intersection.padToLength, with left chute narrow (small example of large
+ball into narrow pipe), Boards.edgesSize unsolved (small example of pinch
+point)
+
+Voiceover: Your job is to make sure that no ball gets stuck.
+Video: Stay on Boards.edgesSize, and show the click to change the chute size,
+and the balls rolling successfully
 
 [
 This has to be shortened.  About half of the current size.  Start with the
