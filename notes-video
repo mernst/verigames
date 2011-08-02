@@ -10,8 +10,7 @@ Crowd-sourced program verification via game-playing
 University of Washington
 [a URL?]
 
-Image:  [Background can be an alpha'ed image of the game -- maybe 
-with the balls rolling, maybe a still image.]
+Image:  [Background can be an alpha'ed image of a still image of the game.]
 
 ----
 
@@ -57,11 +56,11 @@ Crowd-sourced, game-playing verification
 Diagram:
 
 
-                             -> verified software --> insert documentation
-                            /
-code --> game --> play game 
-                            \
-                             -> bug detected --> notify programmer
+				 -> verified software --> insert documentation
+				/
+code --> game --> completed game 
+				\
+				 -> bug detected --> notify programmer
 
 
 Each phrase is a textual label on an image:
@@ -131,6 +130,9 @@ In the Pipe Jam game, balls roll through a network of interconnected pipes.
 A large ball gets stuck if it tries to roll into a narrow pipe.  As the
 player, your job is to make sure that no ball gets stuck.
 
+["the Pipe Jam game" is a bit clumsy, but this is the
+introduction/definition of the term "Pipe Jam".]
+
 You can control the width of each pipe segment.
 [Video:  Click on a pipe segment to change its width from wide to narrow,
 and then click on that one or another one to show the reverse.]
@@ -139,26 +141,60 @@ The game is not trivial, because the player does not have complete freedom
 to change widths.  Some pipes have pinch points, which are impassable by
 large balls even if the pipe segment is wide.  And, some balls are always large.
 
+[
+ Intersection.padToLength is perfect for all of the above.
+
+We start with it completely unsolved. The balls fall while the voiceover is
+going on, and the large ones get stuck at a pinch-point, then at a merge with a
+smaller pipe.
+
+As the voiceover discusses that you can control the width of the pipe segment,
+The player widens one and narrows another, which solves the board.
+
+When talking about how the game isn't trivial, point out the pinch-point, then
+the grayed out pipe that can't have its width change.
+]
+
 The game consists of multiple boards in a level.
+
+[
+ This is a good point to transition into a different board. Since we want to
+ stick to one level, I suggest Intersection.getInputChute
+]
 
 All pipes of a given color have the same width and are controlled together.
 [Show this.]
 
 A modification that makes progress on one board may cause a problem
 on another board.
-[Show a change that does so.]
+[
+ We can show both of the above by widening the pink chute in getInputChute. This
+ makes a pinch-point impassible in setOutputChute because all the pink chutes
+ change together.
+
+ We can then click setOutputChute to see the new problem.
+]
 
 A board can include copies of other boards.
 [Illustrate nesting (subboards).
 Show the user mousing over a board and it being highlighted and then
 clicked on and visited (animating from the side so that the audience sees that
 it is actually another board in the level).]
+[
+ setOutputChute contains padToLength, so we can click that to demonstrate
+ subboards. This will demonstrate that it is in the same level especially well
+ because the viewer has seen it before.
+]
 
 The level is solved when all the boards are simultaneously solved.
 [Show the game being solved.]
+[We can go back to setOutputChute and fix the problem we created earlier.]
 
 There may be multiple solutions.
 [Show multiple solutions here.]
+[The salmon colored chute in setOutputChute can be wide or narrow. Show it being
+clicked, and watch the balls successfully falling again.
+]
 
 When you finish a level, you move on to another level in the world.
 [Show this happening.]
@@ -249,6 +285,7 @@ parts of the board.  How should we do this?
  * Indicate by where the mouse is.
 I like the first option best, but I am open to other suggestions as well.
 Does anyone already know how to do this?
+We should do this conservatively/subtly, to avoid distraction.
 
 As of 7/30, the script takes exactly 3 minutes to read.
 But, some of the later voiceovers are not nearly long enough to illustrate
