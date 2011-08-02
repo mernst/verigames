@@ -29,6 +29,10 @@ public class LevelWorld
       l.put("Chute", ChuteLevel.makeLevel());
       l.put("Intersection", IntersectionLevel.makeLevel());
       l.put("Board", BoardLevel.makeLevel());
+      l.put("Level", LevelLevel.makeLevel());
+      l.put("World", WorldLevel.makeLevel());
+      l.put("Subnetwork", SubnetworkLevel.makeLevel());
+      l.put("NullTest", NullTestLevel.makeLevel());
       
       return l;
    }
