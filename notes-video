@@ -1,5 +1,300 @@
 ===========================================================================
 
+Proposed video script:
+
+----
+
+Title:
+Verification Games:
+Crowd-sourced program verification via game-playing
+University of Washington
+[a URL?]
+
+Image:  [Background can be an alpha'ed image of a still image of the game.]
+
+----
+
+Title:  Problem:  buggy, insecure software
+Image:  [Just a black background.]
+
+Voiceover:
+
+Using a buggy or insecure program can be tremendously costly, due to errors
+and security breaches.
+
+[Fade in "Software verification" in the middle of the black background.]
+
+One approach to improving software quality is verification, which proves
+the absence of certain bugs.  It is complementary to other approaches such
+as testing, and can provide higher levels of assurance.
+
+----
+
+Title:  How verification is done today
+
+Video:
+Show an editor buffer with code.
+Opens a command line, runs a (pluggable) type-checker from the Checker Framework.
+Lots of errors stream by.
+Go to the editor, make a change, re-run the type-checker.
+Text fades in (on the side):
+ * skilled labor
+ * time-consuming
+ * expensive
+
+Voiceover:
+Program verification is slow and expensive, so it is rarely cost-effective.
+A skilled programmer runs a program verification tool and incrementally
+adds code annotations or fixes coding errors.
+
+----
+
+Title:
+Our approach:
+Crowd-sourced, game-playing verification
+
+Diagram:
+
+
+				 -> verified software --> insert documentation
+				/
+code --> game --> completed game 
+				\
+				 -> bug detected --> notify programmer
+
+
+Each phrase is a textual label on an image:
+Code:  a shrunk-down computer program, or a dog-eared icon, or something.
+Game [or "Pipe Jam game"]:  screenshot of our game 
+Play game [or "completed game"]:  screenshot of our game, with everything green
+Verified software: the shrunk-down computer program, with a green checkmark superimposed
+Insert documentation: the shrunk-down computer program, with lots of little
+red edits to it
+Bug detected: the computer program, with a picture of a bug superimposed.]
+
+
+Voiceover:
+Our approach automatically converts a program verification problem into a
+game that can be played in a browser or on a phone.  When a player finishes
+the game, the final configuration of the level can be translated into a
+proof of correctness for the original program.
+
+----
+
+Video:
+Duplicate the diagram many times on the page, in a "stacked" style, and
+also add text "large scale expertise development".
+Add somehow a picture of the community?
+Fade in the text (analogously to the "How verification is done today" slide):
+ * low skill level
+ * fun game
+ * many players
+ * cheaper, faster verification
+
+Voiceover:
+The game is amenable to crowdsourcing, because it can be played by anyone,
+even people who know nothing about software development.
+As a community of people plays the game, they become more effective
+at the task and may even develop new verification techniques.
+
+
+
+[
+1. I think one needs to think carefully about what one is contrasting 
+between verification today vs verification w/ games.  Your script is not 
+clear about that because it could be that
+     - command line tools are used today for verification -> games are 
+more visual
+     - a verification expert is need for verification -> games can be 
+played by anyone
+     - verification is boring and tedious -> games are fun (and 
+potentially instructive)
+     - verification doesn't scale (for many reasons) -> distributed 
+games scale with the number of players
+     - ...
+     - some or all of the above
+
+I believe Drew wants to motivate a new approach to verification based
+on crowd sourcing.  With one picture (lone person sitting in front of a
+command-line interface tool) one could all points (with the voiceover and
+carefully chosen words). 
+]
+
+----
+
+Video:
+From the architectural diagram, zoom out the "game" image so that it fills
+the screen.  Start the video so that we see the game being played.
+
+In the Pipe Jam game, balls roll through a network of interconnected pipes.
+A large ball gets stuck if it tries to roll into a narrow pipe.  As the
+player, your job is to make sure that no ball gets stuck.
+
+["the Pipe Jam game" is a bit clumsy, but this is the
+introduction/definition of the term "Pipe Jam".]
+
+You can control the width of each pipe segment.
+[Video:  Click on a pipe segment to change its width from wide to narrow,
+and then click on that one or another one to show the reverse.]
+
+The game is not trivial, because the player does not have complete freedom
+to change widths.  Some pipes have pinch points, which are impassable by
+large balls even if the pipe segment is wide.  And, some balls are always large.
+
+[
+ Intersection.padToLength is perfect for all of the above.
+
+We start with it completely unsolved. The balls fall while the voiceover is
+going on, and the large ones get stuck at a pinch-point, then at a merge with a
+smaller pipe.
+
+As the voiceover discusses that you can control the width of the pipe segment,
+The player widens one and narrows another, which solves the board.
+
+When talking about how the game isn't trivial, point out the pinch-point, then
+the grayed out pipe that can't have its width change.
+]
+
+The game consists of multiple boards in a level.
+
+[
+ This is a good point to transition into a different board. Since we want to
+ stick to one level, I suggest Intersection.getInputChute
+]
+
+All pipes of a given color have the same width and are controlled together.
+[Show this.]
+
+A modification that makes progress on one board may cause a problem
+on another board.
+[
+ We can show both of the above by widening the pink chute in getInputChute. This
+ makes a pinch-point impassible in setOutputChute because all the pink chutes
+ change together.
+
+ We can then click setOutputChute to see the new problem.
+]
+
+A board can include copies of other boards.
+[Illustrate nesting (subboards).
+Show the user mousing over a board and it being highlighted and then
+clicked on and visited (animating from the side so that the audience sees that
+it is actually another board in the level).]
+[
+ setOutputChute contains padToLength, so we can click that to demonstrate
+ subboards. This will demonstrate that it is in the same level especially well
+ because the viewer has seen it before.
+]
+
+The level is solved when all the boards are simultaneously solved.
+[Show the game being solved.]
+[We can go back to setOutputChute and fix the problem we created earlier.]
+
+There may be multiple solutions.
+[Show multiple solutions here.]
+[The salmon colored chute in setOutputChute can be wide or narrow. Show it being
+clicked, and watch the balls successfully falling again.
+]
+
+When you finish a level, you move on to another level in the world.
+[Show this happening.]
+
+Eventually, the entire world is solved.
+[Show this.]
+
+[
+I cut this text:
+  There are narrow pipes and wide pipes, and there are small balls and large
+  balls.  A small ball can roll through any pipe.  A large ball only fits
+  through a wide pipe.
+If it takes too much time to illustrate the game mechanics, we could add
+more text so there is not dead space in the script.  Otherwise, we can keep
+the description short.
+
+I cut the description of backtracking; we probably don't have time in this
+video.
+  In some cases, you may need to backtrack.
+  [Video shows backtracking.]
+]
+
+----
+
+Video:
+Shrink the game down to the "solved game" image in the architectural
+diagram.
+Highlight the path at upper right:
+  play game --> verified software --> insert documentation
+
+Voiceover:
+
+A solution to the game is a proof of correctness for the program.  The game
+configuration can also be converted into machine-verifiable documentation
+that a programmer can use to automatically verify future code changes.
+
+----
+
+Video:
+Highlight the path at lower right:
+  play game --> bug detected --> notify programmer
+
+Voiceover:
+Sometimes, the game is unsolvable.  
+
+Video:
+Expand the "game" image to fill the screen again.
+Show the player dragging the pair-of-saws animation (that shrinks the ball)
+to the game board.
+
+Voiceover:
+In this case, the player can use a
+special power to indicate changes that would make the game solvable.
+The game maps this information to a line of code, and notifies a programmer
+to examine that code to see whether it requires a bug fix.
+
+----
+
+Video:
+The high-level diagram, with added text:
+Verification Games:
+Crowd-sourced program verification via game-playing
+University of Washington
+[URL?]
+
+Voiceover:
+In conclusion, our crowd-sourced, game-playing approach to program
+verification has the potential to reduce the cost and increase the speed of
+program verification, and thereby to improve software quality.
+
+----
+
+Omitted:
+
+[Don't discuss the mapping between program elements and game elements.
+We don't have time for this in a 3-minute video.]
+
+----
+
+At various points in the video, we need to draw the viewer's eye to a
+particular part of the board, sometimes when a lot is going on in other
+parts of the board.  How should we do this?
+ * Increase the brightness of that part of the board, while possibly
+   reducing the brightness of the rest of the board (like
+   http://s2.hubimg.com/u/3007417_f520.jpg, but for video and preferably
+   with blurred edges).
+ * Draw a bright-colored (red?) box or circle.
+ * Indicate by where the mouse is.
+I like the first option best, but I am open to other suggestions as well.
+Does anyone already know how to do this?
+We should do this conservatively/subtly, to avoid distraction.
+
+As of 7/30, the script takes exactly 3 minutes to read.
+But, some of the later voiceovers are not nearly long enough to illustrate
+the game mechanics.
+
+end.
+
+===========================================================================
+
 Drew Dean wants a short video of 2-3 minutes that focuses on
  * how the problem is solved today (command-line tool)
  * gameplay, including:
@@ -13,103 +308,6 @@ Drew Dean wants a short video of 2-3 minutes that focuses on
 
 He prefers to handle the motivation, impacts, importance to the military,
 etc. parts of the pitch.
-
-===========================================================================
-
-Proposed video script:
-
-----
-
-Caption:  Problem:  buggy, insecure software
-Image:  [no good ideas.  Just a black background?  Show a hacker gaining
-access to software, or a real-world effect of a (security) bug?]
-
-----
-
-Caption:  How the problem is solved today
-
-Video:
-Show an editor buffer with code.
-Opens a command line, runs a (pluggable) type-checker from the Checker Framework.
-Lots of errors stream by.
-Go to the editor, make a change, re-run the type-checker.
-
-Voiceover:
-A skilled programmer runs a program verification tool and incrementally
-adds code annotations or fixes coding errors.  This process is slow and
-uneconomic.
-
-----
-
-Caption:
-Our approach
-
-Diagram:
-code -> game -> play game -> verified software
-
-Voiceover:
-Our approach automatically converts a program verification problem into a
-game that can be played in a browser or on a phone.  When a player finishes
-the game, the final configuration of the level can be translated into a
-proof of correctness for the original program.
-
-----
-
-Video: the game being played
-[Need to decide exactly what boards are shown and exactly what clicks are
-done, illustrating the voiceover.]
-
-In the game, balls roll through a network of interconnected pipes.  There
-are narrow pipes and wide pipes, and there are small balls and large balls.
-A small ball can roll through any pipe.  A large ball only fits through a
-wide pipe.  A large ball gets stuck if it tries to roll into a narrow pipe.
-Your job is to make sure that no ball gets stuck.
-
-You can control the width of each pipe segment.  Click on a pipe segment to
-change its width from wide to narrow or vice-versa.
-
-The game is not trivial, because the player does not have complete freedom
-to change widths.  Some pipes have pinch points, which are impassable by
-large balls even if the pipe segment is wide.  And, some balls are always wide.
-
-The game consists of multiple boards in a level, and multiple levels in a
-world.  A modification that makes progress on one board may cause a problem
-on another board.  There may be multiple solutions.
-[Show multiple solutions here.]
-
-To solve the game, the player takes a high-level view of how the balls roll
-through the pipe network, and the relationships among different parts of
-the network.
-
-When you finish a level, you move on to another level in the world.
-Eventually, the entire world is solved.
-
-----
-
-Video:
-Show the solved game and the program, on the same screen
-Somehow transition to showing the solved game flowing into the program
-The program obtains annotations, which can be highlighted in red.
-Show the Checker Framework being run from the command line, with
-"compilation succeeded" as the output.
-
-Voiceover:
-A solution to the game can be automatically converted into a proof of
-correctness for the program.  More specifically, it is converted into a set
-of annotations, which are akin to program specifications or contracts.
-These annotations are guaranteed to be correct.  An external tool, called
-the Checker Framework, can independently verify the program against them.
-
-----
-
-[Discuss the mapping between program elements and game elements?]
-[We don't have time for this in a 3-minute video.]
-
-----
-
-[Show exceptions to the laws of physics?  Drew Dean would like to see this
-in the video.]
-[Working this into a 3-minute video will be difficult.]
 
 ===========================================================================
 
@@ -205,3 +403,18 @@ removal or edit.  Seth could you create a google doc  so that all comments and
 edits are tracked.
 
 ===========================================================================
+
+2. I still don't see the connection between making all the pipes green 
+and the proof/verification result.  In other words, I can play the game 
+and make all the pipes green without knowing anything about verification.
+
+As for your second, I'm not sure if I understand what you're saying. I would
+say that the *point* of the game is that you can play it without understanding
+the connection to verification. If you can solve the whole level without
+knowing anything about the code it came from, we've done our jobs. Or were you
+asking for an explanation about the relationship between green pipes and
+verified code for your own benefit?
+
+===========================================================================
+
+ LocalWords:  voiceover alpha'ed screenshot checkmark subboards voiceovers
