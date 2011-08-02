@@ -55,7 +55,7 @@
       </classpath>
     </junit>
     <copy file="../../world.dtd" todir="${bin}/level/tests"/>
-    <copy file="${src}/level/tests/levelWorldCreation" todir="${bin}/level/tests"/>
+    <copy file="${src}/level/tests/levelWorldCreation/name_replace" todir="${bin}/level/tests"/>
   </target>
   <target name="test.levelBuilder">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder/tests">
