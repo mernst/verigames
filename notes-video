@@ -66,7 +66,7 @@ code --> game --> completed game
 Each phrase is a textual label on an image:
 Code:  a shrunk-down computer program, or a dog-eared icon, or something.
 Game [or "Pipe Jam game"]:  screenshot of our game 
-Play game [or "completed game"]:  screenshot of our game, with everything green
+Completed game:  screenshot of our game, with everything green
 Verified software: the shrunk-down computer program, with a green checkmark superimposed
 Insert documentation: the shrunk-down computer program, with lots of little
 red edits to it
@@ -78,6 +78,11 @@ Our approach automatically converts a program verification problem into a
 game that can be played in a browser or on a phone.  When a player finishes
 the game, the final configuration of the level can be translated into a
 proof of correctness for the original program.
+
+[
+Nat says: Isn't the final configuration of the game a proof of correctness in
+and of itself?
+]
 
 ----
 
@@ -244,6 +249,11 @@ Video:
 Expand the "game" image to fill the screen again.
 Show the player dragging the pair-of-saws animation (that shrinks the ball)
 to the game board.
+
+[
+Could be Level.outputBoardsMap (it has several problems) or could be a
+contrived example
+]
 
 Voiceover:
 In this case, the player can use a
