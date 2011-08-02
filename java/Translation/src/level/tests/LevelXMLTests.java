@@ -109,4 +109,48 @@ public class LevelXMLTests
       levelWorld.outputXML(p);
       p.close();
    }
+
+   /**
+    * Outputs the XML for a single board with a black ball merging into a pipe
+    * with a pinch-point.<br/>
+    * <br/>
+    * Useful because it necessitates an exception to the laws of physics.
+    */
+   @Test
+   public void exceptionXML() throws FileNotFoundException
+   {
+      Level l = new Level();
+
+      Board b = new Board();
+      Intersection incoming = Intersection.factory(Kind.INCOMING);
+      Intersection outgoing = Intersection.factory(Kind.OUTGOING);
+      b.addNode(incoming);
+      b.addNode(outgoing);
+      
+      Intersection start = Intersection.factory(Kind.START_BLACK_BALL);
+      Intersection merge = Intersection.factory(Kind.MERGE);
+      b.addNode(start);
+      b.addNode(merge);
+
+      Chute top = new Chute("var", true, null);
+      Chute bottom = top.copy();
+      bottom.setPinched(true);
+      b.addEdge(incoming, 0, merge, 0, top);
+      b.addEdge(merge, 0, outgoing, 0, bottom);
+      l.makeLinked(top, bottom);
+
+      Chute right = new Chute(null, true, null);
+      b.addEdge(start, 0, merge, 1, right);
+
+      l.addBoard("Placeholder", b);
+      l.deactivate();
+
+      World w = new World();
+      w.addLevel("Placeholder", l);
+
+      PrintStream p = new PrintStream(new FileOutputStream(new
+            File("exception.xml")));
+      w.outputXML(p);
+      p.close();
+   }
 }
