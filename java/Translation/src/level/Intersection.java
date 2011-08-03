@@ -1,5 +1,7 @@
 package level;
 
+import java.util.TreeMap;
+
 
 /**
  * A mutable (until deactivated) ADT representing an intersection between
@@ -62,7 +64,7 @@ public class Intersection extends graph.Node<Chute>
       SUBNETWORK, // Represents a method call
    };
    
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = false;
    
    private final Kind intersectionKind;
    
@@ -84,36 +86,41 @@ public class Intersection extends graph.Node<Chute>
    /**
     * checks that the rep invariant holds
     */
+   // TODO fix checkRep
    protected void checkRep()
    {
       if (CHECK_REP_ENABLED)
       {
          int numInPorts = getNumberOfInputPorts();
          int numOutPorts = getNumberOfOutputPorts();
+         
+         TreeMap<Integer, Chute> inputChutes = getInputs();
+         TreeMap<Integer, Chute> outputChutes = getOutputs();
+         
          if (isActive())
          {
             // Ensures that the current number of used ports is less than or
             // equal to the total number
             
-            if (numInPorts != -1)
-               ensure(inputChutes.size() <= numInPorts);
+            if (numInPorts != -1 && !inputChutes.isEmpty())
+               ensure(inputChutes.lastKey() <= numInPorts);
             
-            if (numOutPorts != -1)
-               ensure(outputChutes.size() <= numOutPorts);
+            if (numOutPorts != -1 && !outputChutes.isEmpty())
+               ensure(outputChutes.lastKey() <= numOutPorts);
          }
          else
          {
             // Ensures that the all ports are filled
             
             if (numInPorts != -1)
-               ensure(inputChutes.size() == numInPorts);
-            for (Chute c : inputChutes)
-               ensure(c != null);
+               ensure(inputChutes.lastKey() == numInPorts);
+            
+            ensure((inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1) == inputChutes.size());
             
             if (numOutPorts != -1)
-               ensure(outputChutes.size() == numOutPorts);
-            for (Chute c : outputChutes)
-               ensure(c != null);
+               ensure(outputChutes.lastKey() == numOutPorts);
+            
+            ensure((outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1) == outputChutes.size());
          }
       }
    }

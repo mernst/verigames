@@ -1,7 +1,10 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import checkers.nullness.quals.Nullable;
 
@@ -13,9 +16,9 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    // ports are represented by null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness")
-   protected List</* @Nullable */EdgeType> inputChutes;
+   private List</* @Nullable */EdgeType> inputChutes;
    @SuppressWarnings("nullness")
-   protected List</* @Nullable */EdgeType> outputChutes;
+   private List</* @Nullable */EdgeType> outputChutes;
    
    private boolean active = true;
    
@@ -97,6 +100,40 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
+    * Returns a mapping from port number to edge
+    */
+   public TreeMap<Integer, EdgeType> getInputs()
+   {
+      TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
+      
+      int index = 0;
+      for (EdgeType edge : inputChutes)
+      {
+         if (edge != null)
+            toReturn.put(index++, edge);
+      }
+      
+      return toReturn;
+   }
+   
+   /**
+    * Returns a mapping from port number to edge
+    */
+   public TreeMap<Integer, EdgeType> getOutputs()
+   {
+      TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
+      
+      int index = 0;
+      for (EdgeType edge : outputChutes)
+      {
+         if (edge != null)
+            toReturn.put(index++, edge);
+      }
+      
+      return toReturn;
+   }
+   
+   /**
     * Ensures that list.size() >= length by padding the list with null<br/>
     * <br/>
     * Modifies: list
@@ -129,7 +166,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void deactivate()
    {
-      // TODO enforce requirements for an Node to be deactivated without
+      // TODO enforce requirements for a Node to be deactivated without
       // checkRep()
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Node");
