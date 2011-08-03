@@ -113,17 +113,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    public TreeMap<Integer, EdgeType> getInputs()
    {
-      TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
-      
-      int index = 0;
-      for (EdgeType edge : inputs)
-      {
-         if (edge != null)
-            toReturn.put(index, edge);
-         index++;
-      }
-      
-      return toReturn;
+      return getMapFromList(inputs);
    }
    
    /**
@@ -131,10 +121,19 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    public TreeMap<Integer, EdgeType> getOutputs()
    {
-      TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
+      return getMapFromList(outputs);
+   }
+   
+   /**
+    * Returns a map from the indices in list that correspond to non-null
+    * elements to their elements
+    */
+   private static <E> TreeMap<Integer, E> getMapFromList(List<E> list)
+   {
+      TreeMap<Integer, E> toReturn = new TreeMap<Integer, E>();
       
       int index = 0;
-      for (EdgeType edge : outputs)
+      for (E edge : list)
       {
          if (edge != null)
             toReturn.put(index, edge);
