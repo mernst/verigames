@@ -12,13 +12,13 @@ import checkers.nullness.quals.Nullable;
 public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
    
-   // Elements are Nullable so that chutes can be added in any order. Empty
+   // Elements are Nullable so that edgess can be added in any order. Empty
    // ports are represented by null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness")
-   private List</* @Nullable */EdgeType> inputChutes;
+   private List</* @Nullable */EdgeType> inputs;
    @SuppressWarnings("nullness")
-   private List</* @Nullable */EdgeType> outputChutes;
+   private List</* @Nullable */EdgeType> outputs;
    
    private boolean active = true;
    
@@ -29,12 +29,12 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    
    public Node()
    {
-      inputChutes = new ArrayList</* @Nullable */EdgeType>();
-      outputChutes = new ArrayList</* @Nullable */EdgeType>();
+      inputs = new ArrayList</* @Nullable */EdgeType>();
+      outputs = new ArrayList</* @Nullable */EdgeType>();
    }
    
    /**
-    * Sets the given chute to this Node's input at the given port,
+    * Sets the given edge to this Node's input at the given port,
     * replacing the old one, if present <br/>
     * <br/>
     * Requires:<br/>
@@ -50,14 +50,14 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Node");
-      padToLength(inputChutes, port + 1);
-      inputChutes.set(port, input);
+      padToLength(inputs, port + 1);
+      inputs.set(port, input);
       checkRep();
    }
    
    
    /**
-    * Sets the given chute to this Node's output at the given port,
+    * Sets the given edge to this Node's output at the given port,
     * replacing the old one, if present<br/>
     * <br/>
     * Requires:<br/>
@@ -72,31 +72,31 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Node");
-      padToLength(outputChutes, port + 1);
-      outputChutes.set(port, output);
+      padToLength(outputs, port + 1);
+      outputs.set(port, output);
       checkRep();
    }
    
    /**
-    * Returns the chute at the given port, or null if none exists
+    * Returns the edge at the given port, or null if none exists
     */
    public @Nullable EdgeType getInputChute(int port)
    {
-      if (port >= inputChutes.size())
+      if (port >= inputs.size())
          return null;
       else
-         return inputChutes.get(port);
+         return inputs.get(port);
    }
    
    /**
-    * Returns the chute at the given port, or null if none exists
+    * Returns the edge at the given port, or null if none exists
     */
    public @Nullable EdgeType getOutputChute(int port)
    {
-      if (port >= outputChutes.size())
+      if (port >= outputs.size())
          return null;
       else
-         return outputChutes.get(port);
+         return outputs.get(port);
    }
    
    /**
@@ -107,7 +107,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
       
       int index = 0;
-      for (EdgeType edge : inputChutes)
+      for (EdgeType edge : inputs)
       {
          if (edge != null)
             toReturn.put(index++, edge);
@@ -124,7 +124,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       TreeMap<Integer, EdgeType> toReturn = new TreeMap<Integer, EdgeType>();
       
       int index = 0;
-      for (EdgeType edge : outputChutes)
+      for (EdgeType edge : outputs)
       {
          if (edge != null)
             toReturn.put(index++, edge);
