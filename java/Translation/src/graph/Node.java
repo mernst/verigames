@@ -10,7 +10,7 @@ import checkers.nullness.quals.Nullable;
 public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
    
-   // Elements are Nullable so that edgess can be added in any order. Empty
+   // Elements are Nullable so that edges can be added in any order. Empty
    // ports are represented by null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness")
