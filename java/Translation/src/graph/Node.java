@@ -44,6 +44,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Modifies: this
     * 
     */
+   // TODO add clause that requires port to be nonnegative
    protected void setInput(EdgeType input, int port)
    {
       if (!active)
@@ -99,7 +100,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns a mapping from port number to edge
+    * Returns Map m from port number to edge. All keys are nonnegative.
     */
    public TreeMap<Integer, EdgeType> getInputs()
    {
@@ -109,14 +110,15 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       for (EdgeType edge : inputs)
       {
          if (edge != null)
-            toReturn.put(index++, edge);
+            toReturn.put(index, edge);
+         index++;
       }
       
       return toReturn;
    }
    
    /**
-    * Returns a mapping from port number to edge
+    * Returns Map m from port number to edge. All keys are nonnegative.
     */
    public TreeMap<Integer, EdgeType> getOutputs()
    {
@@ -126,7 +128,8 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       for (EdgeType edge : outputs)
       {
          if (edge != null)
-            toReturn.put(index++, edge);
+            toReturn.put(index, edge);
+         index++;
       }
       
       return toReturn;
