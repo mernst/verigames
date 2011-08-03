@@ -246,7 +246,7 @@ public class LevelLevel
       
       // add pinchpoint to linkedEdgeClasses:
       {
-         Chute c = incoming.getOutputChute(nameToPortMap
+         Chute c = incoming.getOutput(nameToPortMap
                .get("linkedEdgeClasses"));
          if (!c.getName().equals("linkedEdgeClasses"))
             throw new RuntimeException();
@@ -302,7 +302,7 @@ public class LevelLevel
       
       // add pinch-point to linkedEdgeClasses
       {
-         Chute linkedEdgeClasses = incoming.getOutputChute(0);
+         Chute linkedEdgeClasses = incoming.getOutput(0);
          if (!linkedEdgeClasses.getName().equals("linkedEdgeClasses"))
             throw new RuntimeException();
          
@@ -358,7 +358,7 @@ public class LevelLevel
       
       // add pinch-point to boardNames
       {
-         Chute boardNames = incoming.getOutputChute(nameToPortMap
+         Chute boardNames = incoming.getOutput(nameToPortMap
                .get("boardNames"));
          if (!boardNames.getName().equals("boardNames"))
             throw new RuntimeException();
@@ -406,7 +406,7 @@ public class LevelLevel
       
       // add pinch to boardNames
       {
-         Chute boardNames = incoming.getOutputChute(nameToPortMap.get("boardNames"));
+         Chute boardNames = incoming.getOutput(nameToPortMap.get("boardNames"));
          if (!boardNames.getName().equals("boardNames"))
             throw new RuntimeException();
          boardNames.setPinched(true);
@@ -457,7 +457,7 @@ public class LevelLevel
       
       // add pinch to boardNames chute:
       {
-         Chute boardNames = incoming.getOutputChute(nameToPortMap
+         Chute boardNames = incoming.getOutput(nameToPortMap
                .get("boardNames"));
          if (!boardNames.getName().equals("boardNames"))
             throw new RuntimeException();
@@ -954,7 +954,7 @@ public class LevelLevel
       
       // pinch boardNames
       {
-         Chute boardNames = incoming.getOutputChute(nameToPortMap
+         Chute boardNames = incoming.getOutput(nameToPortMap
                .get("boardNames"));
          if (!boardNames.getName().equals("boardNames"))
             throw new RuntimeException();

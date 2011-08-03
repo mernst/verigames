@@ -33,17 +33,17 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
          
          
          // for all n in nodes; e in edges:
-         // e.getStart() == n <--> n.getOutputChute(e.getStartPort()) == e
-         // e.getEnd() == n <--> n.getInputChute(e.getEndPort()) == e
+         // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
+         // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
          for (EdgeType e : edges)
          {
             NodeType n = e.getStart();
-            // e.getStart() == n --> n.getOutputChute(e.getStartPort()) == e
-            ensure(n.getOutputChute(e.getStartPort()) == e);
+            // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
+            ensure(n.getOutput(e.getStartPort()) == e);
             
             n = e.getEnd();
-            // e.getEnd() == n --> n.getInputChute(e.getEndPort()) == e
-            ensure(n.getInputChute(e.getEndPort()) == e);
+            // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
+            ensure(n.getInput(e.getEndPort()) == e);
          }
          
          for (NodeType n : nodes)
@@ -53,18 +53,18 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
             // with a null value. Therefore, it may not always check every
             // existing output port
             
-            EdgeType e = n.getOutputChute(0);
-            for (int i = 0; e != null; e = n.getOutputChute(++i))
+            EdgeType e = n.getOutput(0);
+            for (int i = 0; e != null; e = n.getOutput(++i))
             {
-               // e.getStart() == n <-- n.getOutputChute(e.getStartPort()) == e
+               // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
                ensure(i == e.getStartPort());
                ensure(e.getStart() == n);
             }
             
-            e = n.getInputChute(0);
-            for (int i = 0; e != null; e = n.getInputChute(++i))
+            e = n.getInput(0);
+            for (int i = 0; e != null; e = n.getInput(++i))
             {
-               // e.getEnd() == n <-- n.getInputChute(e.getEndPort()) == e
+               // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
                ensure(i == e.getEndPort());
                ensure(e.getEnd() == n);
             }
@@ -148,17 +148,17 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       if (edge.getStart() != null || edge.getEnd() != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with an edge that is already connected to nodes");
-      if (start.getOutputChute(startPort) != null)
+      if (start.getOutput(startPort) != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with a start node that is already connected to an edge on the given port");
-      if (end.getInputChute(endPort) != null)
+      if (end.getInput(endPort) != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with an end node that is already connected to an edge on the given port");
       
       edges.add(edge);
       
-      start.setOutputChute(edge, startPort);
-      end.setInputChute(edge, endPort);
+      start.setOutput(edge, startPort);
+      end.setInput(edge, endPort);
       
       edge.setStart(start, startPort);
       edge.setEnd(end, endPort);

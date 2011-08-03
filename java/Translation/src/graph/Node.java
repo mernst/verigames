@@ -44,8 +44,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Modifies: this
     * 
     */
-   // TODO refactor to remove reference to Chute
-   protected void setInputChute(EdgeType input, int port)
+   protected void setInput(EdgeType input, int port)
    {
       if (!active)
          throw new IllegalStateException(
@@ -67,7 +66,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Modifies: this
     * 
     */
-   protected void setOutputChute(EdgeType output, int port)
+   protected void setOutput(EdgeType output, int port)
    {
       if (!active)
          throw new IllegalStateException(
@@ -80,7 +79,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    /**
     * Returns the edge at the given port, or null if none exists
     */
-   public @Nullable EdgeType getInputChute(int port)
+   public @Nullable EdgeType getInput(int port)
    {
       if (port >= inputs.size())
          return null;
@@ -91,7 +90,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    /**
     * Returns the edge at the given port, or null if none exists
     */
-   public @Nullable EdgeType getOutputChute(int port)
+   public @Nullable EdgeType getOutput(int port)
    {
       if (port >= outputs.size())
          return null;

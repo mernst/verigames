@@ -91,8 +91,8 @@ public class BoardSpecTests
       
       // verify that the connections between the chute and nodes have all been
       // made properly
-      assertEquals(incoming.getOutputChute(3), chute1);
-      assertEquals(outgoing.getInputChute(5), chute1);
+      assertEquals(incoming.getOutput(3), chute1);
+      assertEquals(outgoing.getInput(5), chute1);
       assertEquals(chute1.getStart(), incoming);
       assertEquals(chute1.getStartPort(), 3);
       assertEquals(chute1.getEnd(), outgoing);

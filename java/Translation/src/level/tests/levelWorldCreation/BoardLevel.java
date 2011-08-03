@@ -269,7 +269,7 @@ public class BoardLevel
       // Add edges base chutes:
       {
          c.connect(new Chute("edges", true, null), 4);
-         outgoing.getInputChute(4).setPinched(true);
+         outgoing.getInput(4).setPinched(true);
       }
       
       // Add edges aux chutes:
@@ -393,7 +393,7 @@ public class BoardLevel
       
       Intersection incoming = nodesSize.getIncomingNode();
       
-      Chute nodes = incoming.getOutputChute(2);
+      Chute nodes = incoming.getOutput(2);
       if (!nodes.getName().equals("nodes"))
          throw new RuntimeException();
       nodes.setPinched(true);
@@ -409,7 +409,7 @@ public class BoardLevel
       
       Intersection incoming = edgesSize.getIncomingNode();
       
-      Chute edges = incoming.getOutputChute(4);
+      Chute edges = incoming.getOutput(4);
       if (!edges.getName().equals("edges"))
          throw new RuntimeException();
       edges.setPinched(true);
@@ -594,8 +594,8 @@ public class BoardLevel
       
       // add pinchpoints to nodes and edges:
       Intersection incoming = contains.getIncomingNode();
-      Chute nodes = incoming.getOutputChute(2);
-      Chute edges = incoming.getOutputChute(4);
+      Chute nodes = incoming.getOutput(2);
+      Chute edges = incoming.getOutput(4);
       
       nodes.setPinched(true);
       edges.setPinched(true);
@@ -619,8 +619,8 @@ public class BoardLevel
       connectFields(deactivate, level, fieldToChute, nameToPortMap, "incomingNode", "outgoingNode", "nodes", "edges");
       
       // add pinch points to nodes and edges:
-      Chute nodes = incoming.getOutputChute(2);
-      Chute edges = incoming.getOutputChute(4);
+      Chute nodes = incoming.getOutput(2);
+      Chute edges = incoming.getOutput(4);
       if(!nodes.getName().equals("nodes") || !edges.getName().equals("edges"))
          throw new RuntimeException();
       nodes.setPinched(true);

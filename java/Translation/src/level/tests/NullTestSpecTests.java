@@ -52,7 +52,7 @@ public class NullTestSpecTests
       assertEquals(nt.getNonNullChute(), nonNull);
       assertEquals(nt.getNullChute(), nullable);
       
-      assertEquals(nt.getOutputChute(0), nonNull);
-      assertEquals(nt.getOutputChute(1), nullable);
+      assertEquals(nt.getOutput(0), nonNull);
+      assertEquals(nt.getOutput(1), nullable);
    }
 }

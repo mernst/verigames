@@ -82,12 +82,12 @@ public class IntersectionImpTests
    {
       i = Intersection.factory(Kind.CONNECT);
       
-      // i.setInputChute(new Chute(null, true, true, null), 0);
-      invokeIntersectionMethod(i, "setInputChute", new Object[] {
+      // i.setInput(new Chute(null, true, true, null), 0);
+      invokeIntersectionMethod(i, "setInput", new Object[] {
             new Chute(null, true, null), 0 });
       
-      // i.setOutputChute(new Chute(null, true, true, null), 0);
-      invokeIntersectionMethod(i, "setOutputChute", new Object[] {
+      // i.setOutput(new Chute(null, true, true, null), 0);
+      invokeIntersectionMethod(i, "setOutput", new Object[] {
             new Chute(null, true, null), 0 });
       
       // i.deactivate();
@@ -112,12 +112,12 @@ public class IntersectionImpTests
       }
    }
    
-   @Test(expected = IllegalStateException.class) public void setInputChuteTest() throws Throwable
+   @Test(expected = IllegalStateException.class) public void setInputTest() throws Throwable
    {
-      // i.setInputChute(new Chute(null, true, true, null), 0);
+      // i.setInput(new Chute(null, true, true, null), 0);
       try
       {
-         invokeIntersectionMethod(i, "setInputChute", new Object[]{new Chute(null, true, null), 0});
+         invokeIntersectionMethod(i, "setInput", new Object[]{new Chute(null, true, null), 0});
       }
       catch (InvocationTargetException e)
       {
@@ -129,12 +129,12 @@ public class IntersectionImpTests
       }
    }
    
-   @Test(expected = IllegalStateException.class) public void setOutputChuteTest() throws Throwable
+   @Test(expected = IllegalStateException.class) public void setOutputTest() throws Throwable
    {
-      // i.setOutputChute(new Chute(null, true, true, null), 0);
+      // i.setOutput(new Chute(null, true, true, null), 0);
       try
       {
-         invokeIntersectionMethod(i, "setOutputChute", new Object[]{new Chute(null, true, null), 0});
+         invokeIntersectionMethod(i, "setOutput", new Object[]{new Chute(null, true, null), 0});
       }
       catch (InvocationTargetException e)
       {

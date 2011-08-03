@@ -114,7 +114,7 @@ public class WorldLevel
       
       // add pinch to nameToLevel
       {
-         Chute nameToLevel = incoming.getOutputChute(0);
+         Chute nameToLevel = incoming.getOutput(0);
          if (!nameToLevel.getName().equals("nameToLevel"))
             throw new RuntimeException();
          nameToLevel.setPinched(true);

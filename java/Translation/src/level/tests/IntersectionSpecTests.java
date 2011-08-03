@@ -84,16 +84,16 @@ public class IntersectionSpecTests
    }
    
    /**
-    * Tests that getInputChute returns the correct chute or null
+    * Tests that getInput returns the correct chute or null
     */
-   @Test public void getInputChuteTest() throws IllegalAccessException,
+   @Test public void getInputTest() throws IllegalAccessException,
          InvocationTargetException
    {
-      assertNull(j.getInputChute(5));
+      assertNull(j.getInput(5));
       
       for (Method m : intersectionMethods)
       {
-         if (m.getName().equals("setInputChute"))
+         if (m.getName().equals("setInput"))
          {
             m.setAccessible(true);
             Object[] args = { chute1, 5 };
@@ -101,22 +101,22 @@ public class IntersectionSpecTests
          }
       }
       
-      assertEquals(j.getInputChute(5), chute1);
-      assertNull(j.getInputChute(1));
-      assertNull(j.getInputChute(7));
+      assertEquals(j.getInput(5), chute1);
+      assertNull(j.getInput(1));
+      assertNull(j.getInput(7));
    }
    
    /**
-    * Tests that getOutputChute returns the correct chute or null
+    * Tests that getOutput returns the correct chute or null
     */
-   @Test public void getOutputChuteTest() throws IllegalAccessException,
+   @Test public void getOutputTest() throws IllegalAccessException,
          InvocationTargetException
    {
-      assertNull(i.getOutputChute(5));
+      assertNull(i.getOutput(5));
       
       for (Method m : intersectionMethods)
       {
-         if (m.getName().equals("setOutputChute"))
+         if (m.getName().equals("setOutput"))
          {
             m.setAccessible(true);
             Object[] args = { chute1, 5 };
@@ -124,8 +124,8 @@ public class IntersectionSpecTests
          }
       }
       
-      assertEquals(i.getOutputChute(5), chute1);
-      assertNull(i.getOutputChute(1));
-      assertNull(i.getOutputChute(7));
+      assertEquals(i.getOutput(5), chute1);
+      assertNull(i.getOutput(1));
+      assertNull(i.getOutput(7));
    }
 }

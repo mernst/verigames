@@ -97,7 +97,7 @@ public class NullTest extends Intersection
     */
    public @Nullable Chute getNullChute()
    {
-      return getOutputChute(1);
+      return getOutput(1);
    }
    
    /**
@@ -116,7 +116,7 @@ public class NullTest extends Intersection
       if (chute.isNarrow())
          throw new IllegalArgumentException(
                "Chute passed to setNullChute must not be narrow");
-      setOutputChute(chute, 1);
+      setOutput(chute, 1);
       checkRep();
    }
    
@@ -127,7 +127,7 @@ public class NullTest extends Intersection
     */
    public @Nullable Chute getNonNullChute()
    {
-      return getOutputChute(0);
+      return getOutput(0);
    }
    
    /**
@@ -148,7 +148,7 @@ public class NullTest extends Intersection
          throw new IllegalArgumentException(
                "Chute passed to setNonNullChute must be narrow");
       
-      setOutputChute(chute, 0);
+      setOutput(chute, 0);
       checkRep();
    }
    

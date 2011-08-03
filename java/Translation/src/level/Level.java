@@ -323,16 +323,16 @@ public class Level
             out.println(" id=\"n" + node.getUID() + "\">");
             out.println("    <input>");
             
-            Chute input = node.getInputChute(0);
-            for (int i = 0; input != null; input = node.getInputChute(++i))
+            Chute input = node.getInput(0);
+            for (int i = 0; input != null; input = node.getInput(++i))
                out.println("     <port num=\"" + i + "\" edge=\"e"
                      + input.getUID() + "\"/>");
             
             out.println("    </input>");
             out.println("    <output>");
             
-            Chute output = node.getOutputChute(0);
-            for (int i = 0; output != null; output = node.getOutputChute(++i))
+            Chute output = node.getOutput(0);
+            for (int i = 0; output != null; output = node.getOutput(++i))
                out.println("     <port num=\"" + i + "\" edge=\"e"
                      + output.getUID() + "\"/>");
             

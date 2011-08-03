@@ -198,7 +198,7 @@ public class ChuteLevel
          
          level.makeLinked(new HashSet<Chute>(Arrays.asList(left, right, end)));
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(right, auxSplit.getInputChute(0))));
+         level.makeLinked(new HashSet<Chute>(Arrays.asList(right, auxSplit.getInput(0))));
          
          fieldToChute.put("auxiliaryChutes.elts", end);
       }
