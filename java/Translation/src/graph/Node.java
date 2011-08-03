@@ -82,10 +82,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    public @Nullable EdgeType getInput(int port)
    {
-      if (port >= inputs.size())
-         return null;
-      else
-         return inputs.get(port);
+      return get(inputs, port);
    }
    
    /**
@@ -93,10 +90,22 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    public @Nullable EdgeType getOutput(int port)
    {
-      if (port >= outputs.size())
+      return get(outputs, port);
+   }
+   
+   /**
+    * Returns the element in from at index, or null if none exists
+    * 
+    * @param from
+    * The list to query
+    * @param index
+    */
+   private static <E> /*@Nullable*/ E get(List<E> from, int index)
+   {
+      if (index >= from.size())
          return null;
       else
-         return outputs.get(port);
+         return from.get(index);
    }
    
    /**
