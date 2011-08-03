@@ -87,7 +87,6 @@ public class Intersection extends graph.Node<Chute>
    /**
     * checks that the rep invariant holds
     */
-   // TODO fix checkRep
    protected void checkRep()
    {
       if (CHECK_REP_ENABLED)
