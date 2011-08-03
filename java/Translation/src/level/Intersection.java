@@ -64,7 +64,7 @@ public class Intersection extends graph.Node<Chute>
       SUBNETWORK, // Represents a method call
    };
    
-   private static final boolean CHECK_REP_ENABLED = false;
+   private static final boolean CHECK_REP_ENABLED = true;
    
    private final Kind intersectionKind;
    
@@ -75,12 +75,13 @@ public class Intersection extends graph.Node<Chute>
    /*
     * Representation Invariant:
     * 
-    * When active, the number of used input/output ports can be no greater than
-    * the value returned by getNumberOfInputPorts() and getNumberOfOutputPorts()
+    * When active, both the highest port number plus one and the number of used
+    * input/output ports can be no greater than the value returned by
+    * getNumberOfInputPorts() and getNumberOfOutputPorts().
     * 
-    * When inactive, the number of used input/output ports must be exactly equal
-    * to the value returned by getNumberOf____Ports(), and no port can have a
-    * null pointer
+    * When inactive, both the highest port number plus one and the number of
+    * used input/output ports must be exactly equal to the value returned by
+    * getNumberOf____Ports(),
     */
    
    /**
@@ -91,36 +92,56 @@ public class Intersection extends graph.Node<Chute>
    {
       if (CHECK_REP_ENABLED)
       {
-         int numInPorts = getNumberOfInputPorts();
-         int numOutPorts = getNumberOfOutputPorts();
+         // The total number of ports that this Kind of Intersection can have
+         int numRequiredInPorts = getNumberOfInputPorts();
+         int numRequiredOutPorts = getNumberOfOutputPorts();
          
          TreeMap<Integer, Chute> inputChutes = getInputs();
          TreeMap<Integer, Chute> outputChutes = getOutputs();
          
+         int usedInPorts = inputChutes.size();
+         int usedOutPorts = outputChutes.size();
+         
+         // the size of the ports list, based on the highest index
+         int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
+         int maxOutPorts = outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1;
+         
          if (isActive())
          {
-            // Ensures that the current number of used ports is less than or
-            // equal to the total number
+            /*
+             * Ensures that both the highest port number plus one and the number
+             * of used input/output ports can be no greater than the value
+             * returned by getNumberOfInputPorts() and getNumberOfOutputPorts().
+             */
             
-            if (numInPorts != -1 && !inputChutes.isEmpty())
-               ensure(inputChutes.lastKey() <= numInPorts);
             
-            if (numOutPorts != -1 && !outputChutes.isEmpty())
-               ensure(outputChutes.lastKey() <= numOutPorts);
+            if (numRequiredInPorts != -1)
+            {
+               ensure(usedInPorts <= numRequiredInPorts);
+               ensure(maxInPorts <= numRequiredInPorts);
+            }
+            
+            if (numRequiredOutPorts != -1)
+            {
+               ensure(usedOutPorts <= numRequiredOutPorts);
+               ensure(maxOutPorts <= numRequiredOutPorts);
+            }
          }
          else
          {
             // Ensures that the all ports are filled
             
-            if (numInPorts != -1)
-               ensure(inputChutes.lastKey() == numInPorts);
+            if (numRequiredInPorts != -1)
+            {
+               ensure(usedInPorts == numRequiredInPorts);
+               ensure(maxInPorts == numRequiredInPorts);
+            }
             
-            ensure((inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1) == inputChutes.size());
-            
-            if (numOutPorts != -1)
-               ensure(outputChutes.lastKey() == numOutPorts);
-            
-            ensure((outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1) == outputChutes.size());
+            if (numRequiredOutPorts != -1)
+            {
+               ensure(usedOutPorts == numRequiredOutPorts);
+               ensure(maxOutPorts == numRequiredOutPorts);
+            }
          }
       }
    }
