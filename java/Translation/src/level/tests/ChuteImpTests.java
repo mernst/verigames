@@ -4,6 +4,9 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import level.Chute;
 import level.Intersection;
@@ -33,7 +36,16 @@ public class ChuteImpTests
    
    private Chute c;
    
-   private Method[] ChuteMethods = Chute.class.getDeclaredMethods();
+   public static List<Method> chuteMethods;
+   static
+   {
+      chuteMethods = new ArrayList<Method>();
+      
+      // add all declared methods in Chute class and superclasses
+      for (Class<?> currentClass = Chute.class; currentClass != null; currentClass = currentClass
+            .getSuperclass())
+         chuteMethods.addAll(Arrays.asList(currentClass.getDeclaredMethods()));
+   }
    
    /**
     * Invokes a method with the given name on the given receiver, with the given
@@ -44,7 +56,7 @@ public class ChuteImpTests
          InvocationTargetException
    {
       boolean methodInvoked = false;
-      for (Method m : ChuteMethods)
+      for (Method m : chuteMethods)
       {
          if (m.getName().equals(name))
          {

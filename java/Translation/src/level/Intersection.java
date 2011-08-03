@@ -1,9 +1,5 @@
 package level;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import checkers.nullness.quals.Nullable;
 
 /**
  * A mutable (until deactivated) ADT representing an intersection between
@@ -43,7 +39,7 @@ import checkers.nullness.quals.Nullable;
  * missing any, let me know.
  */
 
-public class Intersection
+public class Intersection extends graph.Node<Chute>
 {
    public static enum Kind
    {
@@ -70,14 +66,6 @@ public class Intersection
    
    private final Kind intersectionKind;
    
-   // Elements are Nullable so that chutes can be added in any order. Empty
-   // ports are represented by null.
-   // TODO remove warning suppression after JDK is properly annotated
-   @SuppressWarnings("nullness") private List</* @Nullable */Chute> inputChutes;
-   @SuppressWarnings("nullness") private List</* @Nullable */Chute> outputChutes;
-   
-   private boolean active = true;
-   
    private final int UID;
    
    private static int nextUID = 0;
@@ -102,7 +90,7 @@ public class Intersection
       {
          int numInPorts = getNumberOfInputPorts();
          int numOutPorts = getNumberOfOutputPorts();
-         if (active)
+         if (isActive())
          {
             // Ensures that the current number of used ports is less than or
             // equal to the total number
@@ -264,8 +252,6 @@ public class Intersection
                + " for this implementation");
       
       intersectionKind = kind;
-      inputChutes = new ArrayList</* @Nullable */Chute>();
-      outputChutes = new ArrayList</* @Nullable */Chute>();
       
       UID = nextUID;
       nextUID += 1;
@@ -295,87 +281,6 @@ public class Intersection
       return intersectionKind;
    }
    
-   /**
-    * Sets the given chute to this Intersection's input at the given port,
-    * replacing the old one, if present <br/>
-    * <br/>
-    * Requires:<br/>
-    * active;<br/>
-    * port is a valid port number for this Intersection<br/>
-    * <br/>
-    * Modifies: this
-    * 
-    */
-   protected void setInputChute(Chute input, int port)
-   {
-      if (!active)
-         throw new IllegalStateException(
-               "Mutation attempted on inactive Intersection");
-      padToLength(inputChutes, port + 1);
-      inputChutes.set(port, input);
-      checkRep();
-   }
-   
-   /**
-    * Sets the given chute to this Intersection's output at the given port,
-    * replacing the old one, if present<br/>
-    * <br/>
-    * Requires:<br/>
-    * active;<br/>
-    * port is a valid port number for this Intersection <br/>
-    * <br/>
-    * Modifies: this
-    * 
-    */
-   protected void setOutputChute(Chute output, int port)
-   {
-      if (!active)
-         throw new IllegalStateException(
-               "Mutation attempted on inactive Intersection");
-      padToLength(outputChutes, port + 1);
-      outputChutes.set(port, output);
-      checkRep();
-   }
-   
-   /**
-    * Returns the chute at the given port, or null if none exists
-    */
-   public @Nullable Chute getInputChute(int port)
-   {
-      if (port >= inputChutes.size())
-         return null;
-      else
-         return inputChutes.get(port);
-   }
-   
-   /**
-    * Returns the chute at the given port, or null if none exists
-    */
-   public @Nullable Chute getOutputChute(int port)
-   {
-      if (port >= outputChutes.size())
-         return null;
-      else
-         return outputChutes.get(port);
-   }
-   
-   /**
-    * Ensures that list.size() >= length by padding the list with null<br/>
-    * <br/>
-    * Modifies: list
-    * 
-    * @param list
-    * the List to pad
-    * @param length
-    * the minimum length that list is guaranteed to have after this method exits
-    */
-   // TODO change after JDK is properly annotated
-   @SuppressWarnings("nullness")
-   private static <E> void padToLength(List</* @Nullable */E> list, int length)
-   {
-      while (list.size() < length)
-         list.add(null);
-   }
    
    /**
     * Returns true iff this is a Subnetwork kind.
@@ -420,26 +325,5 @@ public class Intersection
       return UID;
    }
    
-   /**
-    * Returns active
-    */
-   public boolean isActive()
-   {
-      return active;
-   }
-   
-   /**
-    * Sets active to false<br/>
-    * <br/>
-    * Requires:<br/>active;<br/>all ports for this Kind of Intersection are filled
-    */
-   protected void deactivate()
-   {
-      // TODO enforce requirements for an Intersection to be deactivated without
-      // checkRep()
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Intersection");
-      active = false;
-      checkRep();
-   }
+
 }

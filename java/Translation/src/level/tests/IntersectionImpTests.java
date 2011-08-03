@@ -4,6 +4,9 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import level.Chute;
 import level.Intersection;
@@ -40,8 +43,16 @@ public class IntersectionImpTests
    
    private Intersection i;
    
-   private Method[] IntersectionMethods = Intersection.class
-         .getDeclaredMethods();
+   public static List<Method> intersectionMethods;
+   static
+   {
+      intersectionMethods = new ArrayList<Method>();
+      
+      // add all declared methods in Chute class and superclasses
+      for (Class<?> currentClass = Intersection.class; currentClass != null; currentClass = currentClass
+            .getSuperclass())
+         intersectionMethods.addAll(Arrays.asList(currentClass.getDeclaredMethods()));
+   }
    
    /**
     * Invokes a method with the given name on the given receiver, with the given
@@ -52,7 +63,7 @@ public class IntersectionImpTests
          IllegalAccessException, InvocationTargetException
    {
       boolean methodInvoked = false;
-      for (Method m : IntersectionMethods)
+      for (Method m : intersectionMethods)
       {
          if (m.getName().equals(name))
          {

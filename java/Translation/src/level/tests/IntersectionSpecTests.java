@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import level.Chute;
 import level.Intersection;
@@ -62,7 +64,16 @@ public class IntersectionSpecTests
    public Chute chute1;
    public Chute chute2;
    
-   public Method[] intersectionMethods;
+   public static List<Method> intersectionMethods;
+   static
+   {
+      intersectionMethods = new ArrayList<Method>();
+      
+      // add all declared methods in Chute class and superclasses
+      for (Class<?> currentClass = Intersection.class; currentClass != null; currentClass = currentClass
+            .getSuperclass())
+         intersectionMethods.addAll(Arrays.asList(currentClass.getDeclaredMethods()));
+   }
    
    @Before public void init()
    {
@@ -70,8 +81,6 @@ public class IntersectionSpecTests
       j = Intersection.factory(Kind.OUTGOING);
       chute1 = new Chute(null, true, null);
       chute2 = new Chute(null, true, null);
-      
-      intersectionMethods = Intersection.class.getDeclaredMethods();
    }
    
    /**

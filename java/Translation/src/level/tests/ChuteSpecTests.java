@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +34,16 @@ public class ChuteSpecTests
    
    public List<Chute> allChutes;
    
-   public Method[] chuteMethods;
+   public static List<Method> chuteMethods;
+   static
+   {
+      chuteMethods = new ArrayList<Method>();
+      
+      // add all declared methods in Chute class and superclasses
+      for (Class<?> currentClass = Chute.class; currentClass != null; currentClass = currentClass
+            .getSuperclass())
+         chuteMethods.addAll(Arrays.asList(currentClass.getDeclaredMethods()));
+   }
    
    public Intersection incoming;
    public Intersection outgoing;
@@ -63,8 +73,6 @@ public class ChuteSpecTests
       allChutes.add(unnamedPinchedUneditable);
       allChutes.add(unnamedUnpinchedEditable);
       allChutes.add(unnamedUnpinchedUneditable);
-      
-      chuteMethods = Chute.class.getDeclaredMethods();
       
       incoming = Intersection.factory(Kind.INCOMING);
       outgoing = Intersection.factory(Kind.OUTGOING);
