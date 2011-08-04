@@ -3,6 +3,31 @@ package graph;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * A mutable graph structure capable of storing data in both the edges and the
+ * nodes. It keeps track of the specific node ports to which edges attach.<br/>
+ * <br/>
+ * Once {@code deactivate()} is called, its structure becomes immutable, though
+ * nodes and edges may still mutate in such a way that they do not change the
+ * structure of the {@code Graph}<br/>
+ * <br/>
+ * Specification Field: {@code nodes} : {@code Set<NodeType>}
+ * // the set of nodes contained in {@code this}<br/>
+ * Specification Field: {@code edges} : {@code Set<EdgeType>}
+ * // the set of edges contained in {@code this}<br/>
+ * <br/>
+ * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * {@code this} can still be modified. Once {@code active} is set to
+ * {@code false}, {@code this} becomes immutable.
+ * 
+ * @param <NodeType>
+ * The type of the nodes in {@code this}. Its edge type must be {@code EdgeType}
+ * @param <EdgeType>
+ * The type of the edges in {@code this}. Its node type must be {@code NodeType}
+ * 
+ * @author Nathaniel Mote
+ */
+
 public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeType>>
 {
    
@@ -11,6 +36,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    private Set<EdgeType> edges;
    private boolean active = true;
 
+   /**
+    * Constructs a new, active {@code Graph} with no nodes or edges.
+    */
    public Graph()
    {
       nodes = new LinkedHashSet<NodeType>();
@@ -18,7 +46,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Ensures that the representation invariant holds
+    * Ensures that the representation invariant holds.
     */
    protected void checkRep()
    {
@@ -83,50 +111,63 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Adds node to this.nodes.<br/>
+    * Adds {@code node} to {@code this}.<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
-    * node.isActive();<br/>
-    * given node implements eternal equality;<br/>
-    * if this is the first node to be added, it must have type INCOMING;<br/>
-    * if this is of Kind INCOMING, there must not already be a node of Kind
-    * OUTGOING;<br/>
-    * if this is of Kind OUTGOING, there must not already be a node of Kind
-    * OUTGOING;<br/>
-    * !this.contains(node)<br/>
+    * - {@code this.isActive()}<br/>
+    * - {@code node} can be added to {@code this}. This implementation allows any node
+    * to be added, but subclasses are free to enforce arbitrary restrictions on
+    * when or what kind of nodes can be added.<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}
     * 
+    * @param node
+    * The node to add. Must be active, must not be contained in {@code this},
+    * and must implement eternal equality.
     */
    public void addNode(NodeType node)
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on an inactive Board");
       if (!node.isActive())
-         throw new IllegalStateException("Inactive NodeType added to Board");
+         throw new IllegalStateException("Inactive node added to Board");
       
       if (this.contains(node))
          throw new IllegalArgumentException(
-               "A given node object can be added no more than once");
+               "this already contains given node");
       
       nodes.add(node);
       checkRep();
    }
 
    /**
-    * Adds an edge from startPort on the start node to endPort on the end node.
-    * Modifies start, end, and edge to reflect their new connections<br/>
+    * Adds an edge from {@code startPort} on {@code start} to {@code endPort} on
+    * {@code end}.<br/>
+    * <br/>
+    * Modifies: {@code start}, {@code end}, and {@code edge} to reflect their
+    * new connections.<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
-    * start.isActive();<br/>
-    * end.isActive();<br/>
-    * edge.isActive();<br/>
-    * this.contains(start);<br/>
-    * this.contains(end);<br/>
-    * !this.contains(edge) edge does not have start or end nodes;<br/>
-    * the given ports on the given nodes are empty<br/>
+    * - {@code this.isActive()}<br/>
+    * - {@code edge} must be a valid edge to add to {@code this}. This
+    * implementation enforces no restrictions on what edges can be added, but
+    * subclasses may.
+    * 
+    * @param start
+    * The node at which the edge will start. Must be active, and must be
+    * contained in {@code this}.
+    * @param startPort
+    * The port at which the added edge will start. The output port of this
+    * number on {@code start} must be empty.
+    * @param end
+    * The node at which the edge will end. Must be active, and must be contained
+    * in {@code this}.
+    * @param endPort
+    * The port at which the added edge will end. The input port of this number
+    * on {@code end} must be empty.
+    * @param edge
+    * The edge to add. Must be active, have no start or end nodes, and must not
+    * be contained in {@code this}.
     */
    public void addEdge(NodeType start, int startPort, NodeType end, int endPort,
          EdgeType edge)
@@ -147,7 +188,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
                "Call to addEdge made with an edge that is already in this Graph");
       if (edge.getStart() != null || edge.getEnd() != null)
          throw new IllegalArgumentException(
-               "Call to addEdge made with an edge that is already connected to nodes");
+               "Call to addEdge made with an edge that is already connected to node(s)");
       if (start.getOutput(startPort) != null)
          throw new IllegalArgumentException(
                "Call to addEdge made with a start node that is already connected to an edge on the given port");
@@ -167,9 +208,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns the cardinality of nodes.<br/>
+    * Returns the cardinality of {@code nodes}.<br/>
     * <br/>
-    * May be more efficient than getNodes().size()
+    * May be more efficient than {@code getNodes().size()}
     */
    public int nodesSize()
    {
@@ -177,9 +218,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns the cardinality of edges<br/>
+    * Returns the cardinality of {@code edges}<br/>
     * <br/>
-    * May be more efficient than getEdges().size()
+    * May be more efficient than {@code getEdges().size()}
     */
    public int edgesSize()
    {
@@ -187,9 +228,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns a Set<NodeType> with all node objects in this graph. The
-    * returned set will not be affected by future changes to this object, and
-    * changes to the returned set will not affect this object.
+    * Returns a {@code Set<NodeType>} with all nodes in {@code this}. The
+    * returned set will not be affected by future changes to {@code this}, and
+    * changes to the returned set will not affect {@code this}.
     */
    public Set<NodeType> getNodes()
    {
@@ -197,9 +238,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns a Set<EdgeType> with all edge objects in this graph. The returned set
-    * will not be affected by future changes to this object, and changes to the
-    * returned set will not affect this object.
+    * Returns a {@code Set<EdgeType>} with all edge objects in {@code this}. The returned set
+    * will not be affected by future changes to {@code this}, and changes to the
+    * returned set will not affect {@code this}.
     */
    public Set<EdgeType> getEdges()
    {
@@ -207,10 +248,11 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns true iff nodes contains elt or edges contains elt<br/>
+    * Returns {@code true} iff {@code nodes} contains {@code elt} or
+    * {@code edges} contains {@code elt}<br/>
     * <br/>
-    * May be more efficient than<br/>
-    * getNodes().contains(elt) || getEdges.contains(elt)
+    * May be more efficient than
+    * {@code getNodes().contains(elt) || getEdges.contains(elt)}
     */
    public boolean contains(Object elt)
    {
@@ -218,7 +260,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns active
+    * Returns {@code active}
     */
    public boolean isActive()
    {
@@ -226,11 +268,11 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Sets active to false<br/>
+    * Sets active to {@code false}<br/>
     * <br/>
     * Requires:<br/>
-    * all Intersections in nodes and Chutes in edges are in a state in which
-    * they can be deactivated
+    * all nodes and edges in {@code this} are in a state in which they can be
+    * deactivated
     */
    public void deactivate()
    {

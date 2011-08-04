@@ -6,6 +6,23 @@ import java.util.TreeMap;
 
 import checkers.nullness.quals.Nullable;
 
+/**
+ * A mutable node for {@link Graph.graph Graph}.<br/>
+ * <br/>
+ * Specification Field: {@code inputs} : map from nonnegative integer to edge //
+ * mapping from input port number to the edge attached at that port.<br/>
+ * <br/>
+ * Specification Field: {@code outputs} : map from nonnegative integer to edge
+ * // mapping from output port number to the edge attached at that port.<br/>
+ * <br/>
+ * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * {@code this} can be part of a {@link graph.Graph Graph} that is still under
+ * construction. once {@code active} is set to {@code false}, {@code this}
+ * becomes immutable.
+ * 
+ * @param <EdgeType>
+ * @author Nathaniel Mote
+ */
 
 public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
@@ -32,17 +49,21 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Sets the given edge to this Node's input at the given port,
-    * replacing the old one, if present <br/>
+    * Adds the given edge to {@code inputs} with the given port number.<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
-    * port is a valid port number for this Node<br/>
+    * - {@code this.isActive()}<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}
     * 
+    * @param input
+    * The edge to attach to {@code this} as an input.
+    * @param port
+    * The input port to which {@code input} will be attached. Must be
+    * nonnegative. Must be a valid port number for {@code this}. This
+    * implementation enforces no restrictions on what ports are valid (other
+    * than that they must be nonnegative), but subclasses may.<br/>
     */
-   // TODO add clause that requires port to be nonnegative
    protected void setInput(EdgeType input, int port)
    {
       if (!active)
@@ -55,15 +76,20 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    
    
    /**
-    * Sets the given edge to this Node's output at the given port,
-    * replacing the old one, if present<br/>
+    * Adds the given edge to {@code outputs} with the given port number.<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
-    * port is a valid port number for this Node <br/>
+    * - {@code this.isActive()}<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}
     * 
+    * @param output
+    * The edge to attach to {@code this} as an output.
+    * @param port
+    * The output port to which {@code output} will be attached. Must be
+    * nonnegative. Must be a valid port number for {@code this}. This
+    * implementation enforces no restrictions on what ports are valid (other
+    * than that they must be nonnegative), but subclasses may.<br/>
     */
    protected void setOutput(EdgeType output, int port)
    {
@@ -76,7 +102,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns the edge at the given port, or null if none exists
+    * Returns the edge at the given port, or {@code null} if none exists
     */
    public @Nullable EdgeType getInput(int port)
    {
@@ -84,7 +110,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns the edge at the given port, or null if none exists
+    * Returns the edge at the given port, or {@code null} if none exists
     */
    public @Nullable EdgeType getOutput(int port)
    {
@@ -92,7 +118,8 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns the element in from at index, or null if none exists
+    * Returns the element in {@code from} at {@code index}, or {@code null} if
+    * none exists
     * 
     * @param from
     * The list to query
@@ -107,7 +134,9 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns Map m from port number to edge. All keys are nonnegative.
+    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to input
+    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
+    * affected by future changes to each other.
     */
    public TreeMap<Integer, EdgeType> getInputs()
    {
@@ -115,7 +144,9 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns Map m from port number to edge. All keys are nonnegative.
+    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to output
+    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
+    * affected by future changes to each other.
     */
    public TreeMap<Integer, EdgeType> getOutputs()
    {
@@ -123,8 +154,11 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns a map from the indices in list that correspond to non-null
-    * elements to their elements
+    * Returns a {@code TreeMap<Integer, E>} from indices to non-null elements.
+    * No index that would map to a null element is included.
+    * 
+    * @param list
+    * The {@code List} from which to create the returned {@code Map}
     */
    private static <E> TreeMap<Integer, E> getMapFromList(List<E> list)
    {
@@ -142,14 +176,16 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Ensures that list.size() >= length by padding the list with null<br/>
+    * Ensures that {@code list.size() >= length} by padding {@code list} with
+    * {@code null}<br/>
     * <br/>
-    * Modifies: list
+    * Modifies: {@code list}
     * 
     * @param list
-    * the List to pad
+    * the {@code List} to pad
     * @param length
-    * the minimum length that list is guaranteed to have after this method exits
+    * the minimum length that {@code list} is guaranteed to have after this
+    * method exits
     */
    // TODO change after JDK is properly annotated
    @SuppressWarnings("nullness")
@@ -160,7 +196,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns active
+    * Returns {@code active}
     */
    public boolean isActive()
    {
@@ -168,9 +204,14 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Sets active to false<br/>
+    * Sets {@code active} to {@code false}<br/>
     * <br/>
-    * Requires:<br/>active;<br/>all ports for this Kind of Node are filled
+    * Requires:<br/>
+    * - {@code this.isActive()}<br/>
+    * - There are no empty ports. That is, for the highest filled port (for both
+    * inputs and outputs), there are no empty ports below it.<br/>
+    * - Other implementations may enforce additional restrictions on the number
+    * of input or output ports that must be filled when deactivated.
     */
    protected void deactivate()
    {

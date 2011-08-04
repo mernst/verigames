@@ -4,6 +4,23 @@ import checkers.nullness.quals.AssertNonNullAfter;
 import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
+/**
+ * A mutable edge for {@link graph.Graph Graph}.<br/>
+ * <br/>
+ * Specification Field: {@code start} : {@code NodeType}
+ * // The starting point of {@code this}<br/>
+ * Specification Field: {@code startPort:} integer // The port on {@code start} to
+ * which {@code this} attaches<br/>
+ * Specification Field: {@code end} : {@code NodeType} // The ending point of
+ * {@code this}<br/>
+ * Specification Field: {@code endPort:} integer // The port on {@code end} to
+ * which {@code this} attaches<br/>
+ * 
+ * @param <NodeType>
+ * The type of nodes that {@code this} can attach to.
+ * @author Nathaniel Mote
+ */
+
 public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
    private @LazyNonNull NodeType start;
@@ -15,6 +32,9 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    
    private static final boolean CHECK_REP_ENABLED = true;
    
+   /**
+    * Ensures that the representation invariant holds.
+    */
    protected void checkRep()
    {
       if (CHECK_REP_ENABLED)
@@ -40,7 +60,7 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    }
    
    /**
-    * Returns start, or null if end does not exist
+    * Returns {@code start}, or {@code null} if {@code start} does not exist
     */
    public @Nullable NodeType getStart()
    {
@@ -48,20 +68,20 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    }
    
    /**
-    * Returns startPort<br/>
+    * Returns {@code startPort}<br/>
     * <br/>
     * Requires:<br/>
-    * this chute has a "start" intersection
+    * - {@code this} has a start node
     */
    public int getStartPort()
    {
       if (start == null)
-         throw new IllegalStateException();
+         throw new IllegalStateException("No start node");
       return startPort;
    }
    
    /**
-    * Returns end, or null if end does not exist
+    * Returns {@code end}, or {@code null} if {@code end} does not exist
     */
    public @Nullable NodeType getEnd()
    {
@@ -69,58 +89,72 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    }
    
    /**
-    * Returns endPort<br/>
+    * Returns {@code endPort}<br/>
     * <br/>
     * Requires:<br/>
-    * this chute has an "end" intersection
+    * - {@code this} has an end node
     */
    public int getEndPort()
    {
       if (end == null)
-         throw new IllegalStateException();
+         throw new IllegalStateException("No end node");
       return endPort;
    }
    
    /**
-    * Requires: start != null; port is a valid port number for start Modifies:
-    * this sets "start" to the given Intersection, replacing the old one, if
-    * present
+    * Sets {@code start} to the {@code startNode}, replacing {@code start}'s old
+    * value, if it exists<br/>
+    * 
+    * Modifies: {@code this}
+    * 
+    * @param startNode
+    * The node to set to {@code start}. Must not be {@code null}.
+    * @param port
+    * The port number to set to {@code startPort}. Must be a valid output port
+    * number for {@code startNode}. {@link graph.Node Node} does not restrict
+    * what ports may be used, but subclasses may.
     */
-   @AssertNonNullAfter({ "start" }) protected void setStart(NodeType start,
-         int port)
+   @AssertNonNullAfter({ "start" })
+   protected void setStart(NodeType startNode, int port)
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
-      if (start == null)
-         throw new IllegalArgumentException(
-               "Chute.setStart passed a null argument");
+         throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (startNode == null)
+         throw new IllegalArgumentException("node is null");
       
-      this.start = start;
+      this.start = startNode;
       this.startPort = port;
       checkRep();
    }
    
    /**
-    * Requires: start != null; port is a valid port number for start Modifies:
-    * this sets "end" to the given Intersection, replacing the old one, if
-    * present
+    * Sets {@code end} to the {@code endNode}, replacing {@code end}'s old
+    * value, if it exists<br/>
+    * 
+    * Modifies: {@code this}
+    * 
+    * @param endNode
+    * The node to set to {@code end}. Must not be {@code null}.
+    * @param port
+    * The port number to set to {@code endPort}. Must be a valid input port
+    * number for {@code endNode}. {@link graph.Node Node} does not restrict
+    * what ports may be used, but subclasses may.
     */
-   @AssertNonNullAfter({ "end" }) protected void setEnd(NodeType end,
-         int port)
+   @AssertNonNullAfter({ "end" })
+   protected void setEnd(NodeType endNode, int port)
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
-      if (end == null)
-         throw new IllegalArgumentException(
-               "Chute.setEnd passed a null argument");
+         throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (endNode == null)
+         throw new IllegalArgumentException("node is null");
       
-      this.end = end;
+      this.end = endNode;
       this.endPort = port;
       checkRep();
    }
    
    /**
-    * Returns active
+    * Returns {@code active}
     */
    public boolean isActive()
    {
@@ -128,14 +162,17 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    }
    
    /**
-    * Sets active to false<br/>
+    * Sets {@code active} to {@code false}<br/>
     * <br/>
-    * Requires:<br/>active;<br/>start and end Intersections exist
+    * Requires:<br/>
+    * - {@code this.isActive()}<br/>
+    * - start and end nodes exist
     */
+   // TODO enforce preconditions without using checkRep()
    protected void deactivate()
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+         throw new IllegalStateException("Mutation attempted on inactive Edge");
       active = false;
       checkRep();
    }
