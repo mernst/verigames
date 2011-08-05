@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable node for {@link Graph.graph Graph}.<br/>
+ * A mutable node for {@link graph.Graph Graph}.<br/>
  * <br/>
  * Specification Field: {@code inputs} : map from nonnegative integer to edge //
  * mapping from input port number to the edge attached at that port.<br/>
