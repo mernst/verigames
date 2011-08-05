@@ -173,11 +173,14 @@ public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     * - {@code this.isActive()}<br/>
     * - start and end nodes exist
     */
-   // TODO enforce preconditions without using checkRep()
    protected void deactivate()
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (getStart() == null)
+         throw new IllegalStateException("No start node");
+      if (getEnd() == null)
+         throw new IllegalStateException("No end node");
       active = false;
       checkRep();
    }
