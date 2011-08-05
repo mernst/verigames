@@ -9,12 +9,17 @@ import checkers.nullness.quals.Nullable;
  * <br/>
  * Specification Field: {@code start} : {@code NodeType}
  * // The starting point of {@code this}<br/>
- * Specification Field: {@code startPort:} integer // The port on {@code start} to
- * which {@code this} attaches<br/>
+ * Specification Field: {@code startPort} : integer // The port on {@code start}
+ * to which {@code this} attaches<br/>
  * Specification Field: {@code end} : {@code NodeType} // The ending point of
  * {@code this}<br/>
- * Specification Field: {@code endPort:} integer // The port on {@code end} to
+ * Specification Field: {@code endPort} : integer // The port on {@code end} to
  * which {@code this} attaches<br/>
+ * <br/>
+ * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * {@code this} can be part of a {@link graph.Graph Graph} that is still under
+ * construction. Once {@code active} is set to {@code false}, {@code this}
+ * becomes immutable.
  * 
  * @param <NodeType>
  * The type of nodes that {@code this} can attach to.

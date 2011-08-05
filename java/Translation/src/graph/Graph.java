@@ -169,6 +169,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * The edge to add. Must be active, have no start or end nodes, and must not
     * be contained in {@code this}.
     */
+   // TODO add clause about how not all edges can necessarily be connected to
+   // all nodes
    public void addEdge(NodeType start, int startPort, NodeType end, int endPort,
          EdgeType edge)
    {

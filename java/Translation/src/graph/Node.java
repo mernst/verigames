@@ -17,7 +17,7 @@ import checkers.nullness.quals.Nullable;
  * <br/>
  * Specification Field: {@code active} : {@code boolean} // {@code true} iff
  * {@code this} can be part of a {@link graph.Graph Graph} that is still under
- * construction. once {@code active} is set to {@code false}, {@code this}
+ * construction. Once {@code active} is set to {@code false}, {@code this}
  * becomes immutable.
  * 
  * @param <EdgeType>
@@ -64,6 +64,7 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * implementation enforces no restrictions on what ports are valid (other
     * than that they must be nonnegative), but subclasses may.<br/>
     */
+   // TODO add clause about how subclasses may restrict edges
    protected void setInput(EdgeType input, int port)
    {
       if (!active)
