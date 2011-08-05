@@ -11,25 +11,29 @@ import java.util.Set;
 import level.Intersection.Kind;
 
 /**
- * 
- * A mutable (until deactivated) data structure that represents a complete level<br/>
+ * A mutable level for Pipe Jam. A {@code Level} consists of any number of
+ * {@link Board}s, each associated with a unique name.<br/>
  * <br/>
- * Specification Field: linkedEdgeClasses: Set<Set<Chute>> // Contains
- * equivalence classes of Chutes, as defined by the following equivalence
- * relation<br/>
+ * A {@code Level} also keeps track of which {@link Chute}s in the contained
+ * {@code Board}s are linked (see below).<br/>
  * <br/>
- * Let R be an equivalence relation on the set of all Chutes such that:<br/>
- * aRb <--> a and b necessarily have the same width.<br/>
+ * Specification Field: {@code linkedEdgeClasses} : {@code Set<Set<Chute>>}
+ * // Contains equivalence classes of {@code Chute}s, as defined by the
+ * following equivalence relation<br/>
  * <br/>
- * Specification Field: boards: Set<Board> // represents the set of all boards
- * in this level<br/>
+ * Let R be an equivalence relation on the set of all {@code Chute}s such that:<br/>
+ * aRb <--> a and b necessarily have the same width. That is, when a changes
+ * width, b must follow, and vice-versa.<br/>
  * <br/>
- * Specification Field: boardNames: Map<String, Board> // maps the name of a
- * method to its board<br/>
+ * Specification Field: {@code boards} : {@code Set<Board>}
+ * // represents the set of all boards in this level<br/>
  * <br/>
- * Specification Field: active : boolean // true iff this can be part of a
- * structure that is still under construction. once active is set to false, this
- * becomes immutable.<br/>
+ * Specification Field: {@code boardNames} : {@code Map<String, Board>}
+ * // maps the name of a method to its {@code Board}<br/>
+ * <br/>
+ * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * {@code this} can still be modified. Once {@code active} is set to
+ * {@code false}, {@code this} becomes immutable.
  * 
  * @author Nathaniel Mote
  */
@@ -95,8 +99,8 @@ public class Level
    }
     
    /**
-    * Creates a new Level object with an empty linkedEdgeMap, boards, and
-    * boardNames
+    * Creates a new {@code Level} with an empty {@code linkedEdgeClasses},
+    * {@code boards}, and {@code boardNames}
     */
    public Level()
    {
@@ -106,18 +110,22 @@ public class Level
    }
    
    /**
-    * Makes it so that the given chutes are equivalent under the relation R
-    * defined for linkedEdgeClasses. In other words, for all a, b in toLink, aRb<br/>
+    * Makes it so that the given {@link Chute}s are equivalent under the
+    * relation R defined for {@code linkedEdgeClasses}. In other words, for all
+    * a, b in {@code toLink}, aRb<br/>
     * <br/>
-    * Requires: every Chute in toLink must be contained in a Board in boardNames<br/>
-    * Modifies: this <br/>
+    * Requires: every {@code Chute} in {@code toLink} must be contained in a
+    * {@link Board} in {@code boards}<br/>
     * <br/>
-    * Runs in O(m*n) time, where m is linkedEdgeClasses.size() and n is
-    * toLink.length
+    * Modifies: {@code this}<br/>
+    * <br/>
+    * Runs in O(m*n) time, where m is {@code linkedEdgeClasses.size()} and n is
+    * {@code toLink.length}
     * 
     * @param toLink
-    * The set of Chutes to make equivalent under the equivalence relation R
+    * The {@code Chute}s to make equivalent under the equivalence relation R
     * 
+    * @see #makeLinked(Set)
     */
    public void makeLinked(Chute... toLink)
    {
@@ -157,7 +165,8 @@ public class Level
    }
    
    /**
-    * Functions identically to {@link #makeLinked(Chute...)}
+    * Functions identically to {@link #makeLinked(Chute...)}, except the
+    * elements to link are specified by a {@code Set} instead of an array
     * 
     * @param toLink
     * @see #makeLinked(Chute...)
@@ -169,7 +178,8 @@ public class Level
    
    
    /**
-    * Returns true iff all of the chutes in the given set are linked
+    * Returns {@code true} iff all of the {@code Chute}s in {@code chutes} are linked.
+    * @param chutes
     */
    public boolean areLinked(Set<Chute> chutes)
    {
@@ -186,12 +196,17 @@ public class Level
    }
    
    /**
-    * Adds b to boards, and adds the mapping from name to b to boardNames<br/>
-    * 
-    * Requires: b is not in boards, name is not in boardNames.keySet()<br/>
+    * Adds {@code b} to {@code boards}, and adds the mapping from {@code name}
+    * to {@code b} to {@code boardNames}<br/>
     * <br/>
-    * Modifies: this<br/>
+    * Modifies: {@code this}<br/>
     * 
+    * @param b
+    * The {@link Board} to add to {@code boards}. Must not be contained in
+    * {@code boards}
+    * @param name
+    * The name to associate with {@code b}. Must not be contained in
+    * {@code boardNames.keySet()}
     */
    public void addBoard(String name, Board b)
    {
@@ -201,7 +216,7 @@ public class Level
    }
    
    /**
-    * Returns a shallow copy of boards
+    * Returns a shallow copy of {@code boards}
     */
    public Set<Board> boards()
    {
@@ -209,8 +224,8 @@ public class Level
    }
    
    /**
-    * Returns the Board that name maps to in boardNames, or null if it maps to
-    * nothing
+    * Returns the {@code Board} to which {@code name} maps in {@code boardNames}
+    * , or {@code null} if it maps to nothing
     */
    public/* @Nullable */Board getBoard(String name)
    {
@@ -218,13 +233,19 @@ public class Level
    }
    
    /**
-    * Prints the text of the XML representation of this Level to the given
-    * PrintStream<br/>
+    * Prints the text of the XML representation of {@code this} to the given
+    * {@code PrintStream}<br/>
     * <br/>
     * Requires:<br/>
-    * !this.isActive();<br/>
-    * out is open and ready to be written to<br/>
-    * Modifies: out<br/>
+    * - {@link #isActive() !this.isActive()}<br/>
+    * - {@code out} is open<br/>
+    * - For every {@link Chute} c in every {@code Set} in
+    * {@code linkedEdgeClasses}, {@link Chute#isActive() !c.isActive()}<br/>
+    * - For all nodes {@code n}, edges {@code e} in any {@link Board}
+    * contained in {@code this}: {@link Intersection#isActive() !n.isActive()}
+    * {@code &&} {@link Chute#isActive() !e.isActive()}<br/>
+    * <br/>
+    * Modifies: {@code out}<br/>
     */
    public void outputXML(String name, PrintStream out)
    {
@@ -238,12 +259,14 @@ public class Level
    }
    
    /**
-    * Prints the linked edge section of the xml to out, indented by one space<br/>
+    * Prints the linked edge section of the XML to {@code out}<br/>
     * <br/>
-    * Requires: For all Chutes c in Sets in linkedEdgeClasses, !c.isActive()<br/>
+    * Requires: For every {@link Chute} c in every {@code Set} in
+    * {@code linkedEdgeClasses}, {@link Chute#isActive() !c.isActive()}<br/>
     * <br/>
-    * Modifies: out
+    * Modifies: {@code out}
     * 
+    * @param out
     */
    private void outputlinkedEdgeClasses(PrintStream out)
    {
@@ -288,12 +311,13 @@ public class Level
    }
    
    /**
-    * Prints the board map section of the xml to out, indented by one space<br/>
+    * Prints the board map section of the XML to {@code out}.<br/>
     * <br/>
-    * Requires: For all nodes n, edges e in any Board contained in this:
-    * !n.isActive() && !e.isActive() <br/>
+    * Requires: For all nodes {@code n}, edges {@code e} in any {@link Board}
+    * contained in {@code this}: {@link Intersection#isActive() !n.isActive()}
+    * {@code &&} {@link Chute#isActive() !e.isActive()}<br/>
     * <br/>
-    * Modifies: out<br/>
+    * Modifies: {@code out}<br/>
     */
    // TODO add "editable" attribute to edge output (involves editing DTD)
    private void outputBoardsMap(PrintStream out)
@@ -370,7 +394,7 @@ public class Level
    }
    
    /**
-    * Returns active
+    * Returns {@code active}
     */
    public boolean isActive()
    {
@@ -378,11 +402,13 @@ public class Level
    }
    
    /**
-    * Sets active to false, deactivates all contained Boards<br/>
+    * Sets {@code active} to {@code false}, deactivates all contained
+    * {@link Board}s<br/>
     * <br/>
     * Requires:<br/>
-    * active;<br/>
-    * all Boards in boards are in a state in which they can be deactivated
+    * - {@link #isActive() this.isActive()}<br/>
+    * - all {@code Board}s in {@code boards} are in a state in which they can be
+    * deactivated
     */
    public void deactivate()
    {

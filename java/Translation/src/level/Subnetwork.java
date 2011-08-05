@@ -1,12 +1,13 @@
 package level;
 
 /**
- * An Intersection subclass that creates only subnetworks. Because subnetworks
- * need more information than regular intersections, they are implemented
- * separately<br/>
+ * An {@link Intersection} subclass that represents a
+ * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}. Because {@code SUBNETWORK}s
+ * represent more information than other {@code Intersection}s, they are
+ * implemented separately.<br/>
  * <br/>
- * Specification Field: subnetwork: String // The name referring to this
- * subnetwork<br/>
+ * Specification Field: {@code subnetworkName}: {@code String}
+ * // The name of the method to which {@code this} represents a call.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -14,12 +15,14 @@ package level;
 public class Subnetwork extends Intersection
 {
    private final String name;
+   
    /**
-    * creates a new Intersection object of type SUBNETWORK, with the specific
-    * subnetwork defined by the argument<br/>
+    * Creates a new {@link Intersection} with {@link Intersection.Kind Kind}
+    * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}.<br/>
     * <br/>
-    * Requires: methodName represents a valid subnetwork
-    * 
+    * {@code this} represents a call to the method with name {@code methodName}.
+    * @param methodName
+    * The name of the method to which {@code this} refers.
     */
    protected Subnetwork(String methodName)
    {
@@ -28,7 +31,11 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * Returns true iff kind is SUBNETWORK
+    * Returns {@code true} iff {@code kind} is
+    * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}, indicating that this
+    * implementation supports only {@code SUBNETWORK}s<br/>
+    * 
+    * @param kind
     */
    @Override protected boolean checkIntersectionKind(Kind kind)
    {
@@ -37,7 +44,8 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * Returns true to indicate that this is of kind SUBNETWORK
+    * Returns {@code true} to indicate that {@code this} is a
+    * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}.
     */
    @Override public boolean isSubnetwork()
    {
@@ -45,7 +53,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * Returns this
+    * Returns {@code this}
     */
    @Override public Subnetwork asSubnetwork()
    {
@@ -53,7 +61,7 @@ public class Subnetwork extends Intersection
    }
    
    /**
-    * Returns the name of the method that this subnetwork refers to
+    * Returns {@code subnetworkName}
     */
    public String getSubnetworkName()
    {

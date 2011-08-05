@@ -8,23 +8,19 @@ import level.Intersection.Kind;
 import checkers.nullness.quals.LazyNonNull;
 
 /**
- * An ADT representing a board for a verification game. It is essentially a
- * graph where the nodes are Intersections and the edges are Chutes. It stores
- * data in both the nodes and the edges.<br/>
+ * A board for Pipe Jam. It is a {@link graph.Graph Graph} with
+ * {@link Intersection}s as nodes and {@link Chute}s as edges. It stores data in
+ * both the nodes and the edges.<br/>
  * <br/>
- * Specification Field: nodes -- Set<Intersection> // the set of nodes contained
- * in the Graph<br/>
- * Specification Field: edges -- Set<Chute> // the set of edges contained in the
- * Graph<br/>
+ * It is a Directed Acyclic Graph (DAG). <br/>
  * <br/>
- * Specification Field: incomingNode -- Intersection // the node representing
- * the top of the board, where all the incoming chutes enter<br/>
- * Specification Field: outgoingNode -- Intersection // the node representing
- * the bottom of the board, where all the outgoing chutes exit<br/>
+ * Specification Field: {@code incomingNode} -- {@link Intersection}
+ * // the node representing the top of the board, where all the incoming chutes
+ * enter<br/>
+ * Specification Field: {@code outgoingNode} -- {@link Intersection}
+ * // the node representing the bottom of the board, where all the outgoing
+ * chutes exit<br/>
  * <br/>
- * Specification Field: active : boolean // true iff this can be part of a
- * structure that is still under construction. once active is set to false, this
- * becomes immutable.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -90,7 +86,7 @@ public class Board extends Graph<Intersection, Chute>
    }
    
    /**
-    * Creates a new, empty board
+    * Creates a new, empty {@code Board}
     */
    public Board()
    {
@@ -98,7 +94,8 @@ public class Board extends Graph<Intersection, Chute>
    }
    
    /**
-    * Returns this Board's incomingNode, or null if it does not have one
+    * Returns {@code this}' {@code incomingNode}, or {@code null} if it does not
+    * have one
     */
    public/* @Nullable */Intersection getIncomingNode()
    {
@@ -106,13 +103,30 @@ public class Board extends Graph<Intersection, Chute>
    }
    
    /**
-    * Returns this Board's outgoingNode, or null if it does not have one
+    * Returns {@code this}' {@code outgoingNode}, or {@code null} if it does not
+    * have one
     */
    public/* @Nullable */Intersection getOutgoingNode()
    {
       return outgoingNode;
    }
    
+   /**
+    * Adds {@code node} to {@code this}.<br/>
+    * <br/>
+    * Requires:<br/>
+    * - if {@link #getNodes() getNodes()}{@code .isEmpty()}, {@code node} must have
+    * {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING INCOMING}<br/>
+    * - if {@link #getIncomingNode} {@code != null} then {@code node} must not
+    * have {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING
+    * INCOMING}<br/>
+    * - if {@link #getOutgoingNode} {@code != null} then {@code node} must not
+    * have {@link Intersection.Kind Kind} {@link Intersection.Kind#OUTGOING
+    * OUTGOING}<br/>
+    * 
+    * @param node
+    * The {@link Intersection} to add.
+    */
    @Override
    public void addNode(Intersection node)
    {

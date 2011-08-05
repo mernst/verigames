@@ -1,6 +1,5 @@
 /**
- * Provides data structures for programmatically creating levels for the
- * verification game.
+ * Provides data structures for programmatically creating levels for Pipe Jam.
  */
 
 package level;

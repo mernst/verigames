@@ -3,16 +3,13 @@ package level;
 import checkers.nullness.quals.Nullable;
 
 /**
- * An Intersection subclass that represents NULL_TEST kinds of Intersection.<br/>
+ * An {@link Intersection} subclass that represents
+ * {@link Intersection.Kind#NULL_TEST NULL_TEST} {@link Intersection.Kind Kind}s
+ * of {@code Intersection}.<br/>
  * <br/>
  * The output chute in port 0 represents the "not null" branch of this test<br/>
  * <br/>
  * The output chute in port 1 represents the "null" branch of this test<br/>
- * <br/>
- * Note that the requirements on the chutes imposed by the setNullChute and
- * setNonNullChute methods can be circumvented by using the super-class
- * accessors. This is not recommended, and, when checkRep is enabled for
- * debugging, could lead to a failure.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -57,7 +54,8 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Creates a new Intersection of kind NULL_TEST
+    * Creates a new {@link Intersection} of {@link Intersection.Kind Kind}
+    * {@link Intersection.Kind#NULL_TEST NULL_TEST}
     */
    protected NullTest()
    {
@@ -66,7 +64,11 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Returns true iff kind is NULL_TEST
+    * Returns {@code true} iff {@code kind} is
+    * {@link Intersection.Kind#NULL_TEST NULL_TEST}, indicating that this
+    * implementation supports only {@code NULL_TEST}.
+    * 
+    * @param kind
     */
    @Override protected boolean checkIntersectionKind(Kind kind)
    {
@@ -75,7 +77,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Returns true to indicate that this is of kind NULL_TEST
+    * Returns {@code true} to indicate that {@code this} is a {@code NullTest}.
     */
    @Override public boolean isNullTest()
    {
@@ -83,7 +85,7 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Returns this
+    * Returns {@code this}
     */
    @Override public NullTest asNullTest()
    {
@@ -91,9 +93,10 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Returns the Chute (or null if none exists) associated with the null branch
-    * of the test. That is, after this node, only null balls will roll down this
-    * chute.
+    * Returns the {@link Chute} (or {@code null} if none exists) associated with
+    * the null branch of this test. That is, in the game, after reaching this
+    * {@link Intersection}, only "null balls" will roll down the returned
+    * {@link Chute}.
     */
    public @Nullable Chute getNullChute()
    {
@@ -101,12 +104,14 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Sets the given Chute to be the null branch of this null test<br/>
+    * Sets {@code chute} to the null branch<br/>
     * <br/>
-    * Requires: !chute.isEditable; !chute.isNarrow(), narrowness will not change
-    * in the future<br/>
+    * Requires:<br/>
+    * - {@link Chute#isEditable() !chute.isEditable()}<br/>
+    * - {@link Chute#isNarrow() !chute.isNarrow()}<br/>
     * <br/>
-    * Modifies: this<br/>
+    * Modifies: {@code this}<br/>
+    * @param chute
     */
    protected void setNullChute(Chute chute)
    {
@@ -121,9 +126,10 @@ public class NullTest extends Intersection
    }
    
    /**
-    * Returns the Chute (or null if none exists) associated with the not-null
-    * branch of the test. That is, after this node, only non-null balls will
-    * roll down this chute.
+    * Returns the {@link Chute} (or {@code null} if none exists) associated with
+    * the not-null branch of this test. That is, in the game, after reaching
+    * this {@link Intersection}, only "non-null balls" will roll down the
+    * returned {@link Chute}.
     */
    public @Nullable Chute getNonNullChute()
    {
@@ -131,13 +137,14 @@ public class NullTest extends Intersection
    }
    
    /**
-    * sets the given Chute to be the not-null branch of this null test<br/>
+    * Sets {@code chute} to the not-null branch<br/>
     * <br/>
     * Requires:<br/>
-    * !chute.isEditable;<br/>
-    * chute.isNarrow(), narrowness will not change in the future<br/>
+    * - {@link Chute#isEditable() !chute.isEditable()}<br/>
+    * - {@link Chute#isNarrow() chute.isNarrow()}<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}<br/>
+    * @param chute
     */
    protected void setNonNullChute(Chute chute)
    {
@@ -152,4 +159,6 @@ public class NullTest extends Intersection
       checkRep();
    }
    
+   // TODO override setOutput to call setNull and setNonNull, update
+   // documentation so this is ok
 }

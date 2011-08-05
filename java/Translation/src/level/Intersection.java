@@ -2,34 +2,17 @@ package level;
 
 import java.util.TreeMap;
 
-
 /**
- * A mutable (until deactivated) ADT representing an intersection between
- * chutes.<br/>
+ * An intersection between chutes. Mutable until deactivated<br/>
  * <br/>
- * It is mutable, until deactivated, so that chutes can be added and removed to
- * it.<br/>
+ * Uses eternal equality so that it can be used in {@code Collection}s while
+ * maintaining mutability<br/>
  * <br/>
- * Uses eternal equality so that it can be used in Collections while maintaining
- * mutability<br/>
+ * Specification Field: {@code kind} : {@link Intersection.Kind}
+ * // represents which kind of {@code Intersection} {@code this} is<br/>
  * <br/>
- * Specification Field: kind : Intersection.Kind // represents which kind of
- * intersection this is<br/>
- * <br/>
- * Specification Field: inputChutes : List<Chute> // represents the ordered set
- * of input chutes (the index of a given Chute represents the port at which it
- * enters)<br/>
- * <br/>
- * Specification Field: outputChutes : List<Chute> // represents the ordered set
- * of output chutes (the index of a given Chute represents the port at which it
- * exits)<br/>
- * <br/>
- * Specification Field: UID : integer // the unique identifier for this
- * Intersection<br/>
- * <br/>
- * Specification Field: active : boolean // true iff this can be part of a
- * structure that is still under construction. once active is set to false, this
- * becomes immutable.
+ * Specification Field: {@code UID} : integer // the unique identifier for this
+ * {@code Intersection}
  * 
  * @author Nathaniel Mote
  */
@@ -43,25 +26,44 @@ import java.util.TreeMap;
 
 public class Intersection extends graph.Node<Chute>
 {
+   /**
+    * Specifies different kinds of {@code Intersection}s. Different kinds of
+    * {@code Intersection}s are used for different purposes in a
+    * {@link level.Board Board}.
+    */
    public static enum Kind
    {
-      INCOMING, // The start point of chutes that are entering the frame on
-      // the top
-      OUTGOING, // The end point of chutes that are exiting the frame on the
-      // bottom
-      SPLIT, // An intersection in which a chute is split into multiple chutes
-      MERGE, // An intersection where multiple chutes merge into one
-      CONNECT, // Simply connects one chute to another, without making any
-      // modifications. Can be optimized away after, but I think it
-      // will be convenient to have during construction.
-      NULL_TEST, // Represent branching due to testing a value for null
-      START_WHITE_BALL, // Represents a white (NonNull) ball being dropped
-      // into the top of the exit chute
-      START_BLACK_BALL, // Represents a black (null) ball being dropped into
-      // the top of the exit chute
-      START_NO_BALL, // Start a new chute with no ball dropping into it
-      END, // Terminate a chute
-      SUBNETWORK, // Represents a method call
+      /** The start point of chutes that enter the board on the top */
+      INCOMING,
+      /** The end point of chutes that exit the board on the bottom */
+      OUTGOING,
+      /** An intersection in which a chute is split into two chutes */
+      SPLIT,
+      /** An intersection where two chutes merge into one */
+      MERGE,
+      /**
+       * Simply connects one chute to another. Can be optimized away after, but
+       * I think it will be convenient to have during construction.
+       */
+      CONNECT,
+      /** Represents a split due to testing for null */
+      NULL_TEST,
+      /**
+       * Represents a white (not null) ball being dropped into the top of the
+       * exit chute
+       */
+      START_WHITE_BALL,
+      /**
+       * Represents a black (null) ball being dropped into the top of the exit
+       * chute
+       */
+      START_BLACK_BALL,
+      /** Represents a chute with no ball dropping into it */
+      START_NO_BALL,
+      /** Terminate a chute */
+      END,
+      /** Represents a method call */
+      SUBNETWORK,
    };
    
    private static final boolean CHECK_REP_ENABLED = true;
@@ -87,8 +89,10 @@ public class Intersection extends graph.Node<Chute>
    /**
     * checks that the rep invariant holds
     */
+   @Override
    protected void checkRep()
    {
+      // TODO call superclass checkRep()
       if (CHECK_REP_ENABLED)
       {
          // The total number of ports that this Kind of Intersection can have
@@ -103,7 +107,8 @@ public class Intersection extends graph.Node<Chute>
          
          // the size of the ports list, based on the highest index
          int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
-         int maxOutPorts = outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1;
+         int maxOutPorts = outputChutes.isEmpty() ? 0
+               : outputChutes.lastKey() + 1;
          
          if (isActive())
          {
@@ -112,7 +117,6 @@ public class Intersection extends graph.Node<Chute>
              * of used input/output ports can be no greater than the value
              * returned by getNumberOfInputPorts() and getNumberOfOutputPorts().
              */
-            
             
             if (numRequiredInPorts != -1)
             {
@@ -146,9 +150,11 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns the number of input ports for an Intersection of this Kind, or -1 if there is no limit<br/>
+    * Returns the number of input ports for a completed {@code Intersection} of
+    * this {@code Kind}, or {@code -1} if there is no restriction<br/>
     * <br/>
-    * When construction is completed, an Intersection must have all of its ports filled.
+    * When deactivated, an {@code Intersection} must have all of its ports
+    * filled.
     */
    private int getNumberOfInputPorts()
    {
@@ -184,9 +190,11 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns the number of output ports for an Intersection of this Kind, or -1 if there is no limit<br/>
+    * Returns the number of output ports for a completed {@code Intersection} of
+    * this {@code Kind}, or {@code -1} if there is no restriction<br/>
     * <br/>
-    * When construction is completed, an Intersection must have all of its ports filled.
+    * When deactivated, an {@code Intersection} must have all of its ports
+    * filled.
     */
    private int getNumberOfOutputPorts()
    {
@@ -232,13 +240,13 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns an Intersection of the given Kind<br/>
+    * Returns an {@code Intersection} of the {@link Intersection.Kind Kind}
+    * {@code kind}<br/>
     * <br/>
-    * Requires: kind != SUBNETWORK (use subnetworkFactory)
+    * Requires: {@code kind !=} {@link Kind#SUBNETWORK SUBNETWORK} (use
+    * {@link #subnetworkFactory(java.lang.String) subnetworkFactory})
     * 
     * @param kind
-    * The kind of Intersection to return
-    * 
     */
    public static Intersection factory(Kind kind)
    {
@@ -251,23 +259,29 @@ public class Intersection extends graph.Node<Chute>
          return new Intersection(kind);
    }
    
+   /**
+    * Returns a {@link Subnetwork} representing a method with {@code methodName}
+    * 
+    * @param methodName
+    */
    public static Subnetwork subnetworkFactory(String methodName)
    {
       return new Subnetwork(methodName);
    }
    
    /**
-    * Creates a new Intersection object of the given kind with empty i/o ports<br/>
+    * Creates a new {@code Intersection} of the given {@code Kind} with empty
+    * input and output ports<br/>
     * <br/>
     * Requires:<br/>
-    * kind != NULL_TEST;<br/>
-    * kind != SUBNETWORK<br/>
+    * - {@code checkIntersectionKind(kind)}<br/>
     * <br/>
-    * Subclasses calling this constructor can modify the requires clause by
-    * overriding checkIntersectionKind
+    * Subclasses calling this constructor override
+    * {@link #checkIntersectionKind(Kind)} to change the restrictions on what
+    * {@link Intersection.Kind Kind}s can be used.
     * 
     * @param kind
-    * The kind of Intersection to create
+    * The kind of {@code Intersection} to create
     * 
     */
    protected Intersection(Kind kind)
@@ -287,11 +301,13 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns true iff the given kind is a valid intersection kind for this
-    * implementation.<br/>
+    * Returns true iff {@code kind} is valid for this implementation of
+    * {@code Intersection}.<br/>
     * <br/>
-    * Subclasses should override this so that the call to this class's
-    * constructor succeeds.
+    * This implementation supports all {@link Intersection.Kind Kind}s except
+    * {@link Kind#SUBNETWORK SUBNETWORK} and {@link Kind#NULL_TEST NULL_TEST}
+    * 
+    * @param kind
     */
    protected boolean checkIntersectionKind(Kind kind)
    {
@@ -301,16 +317,15 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns intersectionKind
+    * Returns {@code intersectionKind}
     */
    public Kind getIntersectionKind()
    {
       return intersectionKind;
    }
    
-   
    /**
-    * Returns true iff this is a Subnetwork kind.
+    * Returns {@code true} iff {@code this} is a {@link Subnetwork}.
     */
    public boolean isSubnetwork()
    {
@@ -318,7 +333,9 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Requires: this is of Subnetwork kind Returns this as a Subnetwork
+    * Returns {@code this} as a {@link Subnetwork}<br/>
+    * <br/>
+    * Requires: {@link #isSubnetwork()}
     */
    public Subnetwork asSubnetwork()
    {
@@ -328,7 +345,7 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns true iff this is a NullTest kind
+    * Returns {@code true} iff this is a {@link NullTest}
     */
    public boolean isNullTest()
    {
@@ -336,7 +353,9 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Requires: this is of NullTest kind Returns this as a NullTest
+    * Returns {@code this} as a {@link NullTest}<br/>
+    * <br/>
+    * Requires: {@link #isSubnetwork()}
     */
    public NullTest asNullTest()
    {
@@ -345,12 +364,11 @@ public class Intersection extends graph.Node<Chute>
    }
    
    /**
-    * Returns UID
+    * Returns {@code UID}
     */
    public int getUID()
    {
       return UID;
    }
    
-
 }

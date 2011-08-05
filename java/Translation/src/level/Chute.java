@@ -11,57 +11,42 @@ import checkers.nullness.quals.Nullable;
 import checkers.nullness.quals.Pure;
 
 /**
- * A mutable (until deactivated) structure representing a chute segment.<br/>
+ * A mutable chute segment for use in a {@link Board}. Once {@link #isActive()
+ * this.isActive()} is false, {@code this} is immutable.<br/>
  * <br/>
  * Implements eternal equality because it is mutable, but must be used in
- * Collections<br/>
+ * {@code Collection}s<br/>
  * <br/>
- * Specification Field: name : Nullable String // The name of the variable
- * corresponding to this chute. Can be null if this chute does not correspond
- * directly to a variable, but all chutes connected to an incoming or outgoing
- * node, except for the return value, must either have a name or be an auxiliary
- * chute. This is because they represent fields, or, if their board is a
- * sub-board, variables declared within the method.<br/>
+ * Specification Field: {@code name} : {@code @Nullable String}
+ * // The name of the variable corresponding to this chute. {@code null} if this
+ * chute has no name<br/>
  * <br/>
- * Specification Field: auxiliaryChutes: List<Chute> // The list of chutes that
- * represents types auxiliary to the type that this chute represents. Only
- * includes chutes that are directly auxiliary to this. For example, if this
- * chute represented Map<String, Set<Integer>>, the auxiliary chutes would
- * represent String and Set. The Integer chute would be listed as an auxiliary
- * chute to Set, but not to this.<br/>
+ * Specification Field: {@code auxiliaryChutes} : {@code List<Chute>}
+ * // The list of chutes that represents types auxiliary to the type that this
+ * chute represents. Only includes chutes that are directly auxiliary to this.
+ * For example, if this chute represented {@code Map<String, Set<Integer>>}, the
+ * auxiliary chutes would represent {@code String} and {@code Set}. The
+ * {@code Integer} chute would be listed as an auxiliary chute to the
+ * {@code Set} chute, but not to {@code this}.<br/>
  * <br/>
  * This is useful because a reference to a single chute can serve as a complete
  * description of the relevant type information of a given type. <br/>
  * <br/>
- * Specification Field: start : Intersection // The starting point of this Chute<br/>
- * Specification Field: startPort: integer // The port from which this exits its
- * starting node<br/>
- * Specification Field: end : Intersection // The ending point of this Chute
- * Specification Field: endPort: integer // The port through which this enters
- * its ending node<br/>
+ * Specification Field: {@code pinch} : {@code boolean} // {@code true} iff
+ * there is a pinch-point in this chute segment<br/>
+ * {@code false} by default.<br/>
  * <br/>
- * Specification Field: pinch : boolean // true iff there is a pinch-point in
- * this chute segment<br/>
- * Defaults to false<br/>
+ * Specification Field: {@code narrow} : {@code boolean} // {@code true} iff the
+ * chute is currently narrow<br/>
  * <br/>
- * Specification Field: narrow : boolean // true iff the chute is currently
- * narrow<br/>
+ * Specification Field: {@code editable} : {@code boolean} // {@code true} iff
+ * the player can edit the width of the chute<br/>
  * <br/>
- * Specification Field: editable : boolean // true iff the player can edit the
- * width of the chute<br/>
+ * Specification Field: {@code UID} : integer // the unique identifier for this
+ * chute<br/>
  * <br/>
- * Specification Field: UID: integer // the unique identifier for this chute<br/>
- * <br/>
- * Specification Field: active : boolean // true iff this can be part of a
- * structure that is still under construction. once active is set to false, this
- * becomes immutable.<br/>
- * <br/>
- * Except in corner cases, pinch --> narrow. This is not, however, enforced.<br/>
- * <br/>
- * I toyed with the idea of requiring that editable is true to change things
- * like narrow or pinch, but editable really determines whether it can be
- * changed by the player in the game, and not whether this object is mutable or
- * not.
+ * Except in corner cases, {@code pinch} --> {@code narrow}. This is not,
+ * however, enforced.<br/>
  * 
  * @author Nathaniel Mote
  */
@@ -91,8 +76,12 @@ public class Chute extends graph.Edge<Intersection>
 
    
    /**
-    * creates a new Chute object, with the given values for name, pinch, and
+    * Creates a new {@code Chute} object, with the given values for name, pinch, and
     * editable
+    * 
+    * @param name
+    * @param editable
+    * @param aux
     */
    public Chute(@Nullable String name, boolean editable, @Nullable List<Chute> aux)
    {
@@ -111,7 +100,7 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns name, or null if none exists
+    * Returns {@code name}, or {@code null} if none exists
     */
    @Pure
    public @Nullable String getName()
@@ -120,9 +109,9 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns pinch<br/>
+    * Returns {@code pinch}<br/>
     * <br/>
-    * Defaults to false
+    * Defaults to {@code false}
     */
    public boolean isPinched()
    {
@@ -130,11 +119,11 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Sets the specification field pinch to the value of the parameter<br/>
+    * Sets {@code pinch} to the value of the parameter<br/>
     * <br/>
-    * Requires: active<br/>
+    * Requires: {@link #isActive() this.isActive()}<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}
     * 
     * @param pinched
     */
@@ -147,7 +136,7 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns narrow
+    * Returns {@code narrow}
     */
    public boolean isNarrow()
    {
@@ -155,11 +144,12 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Sets the specification field narrow to parameter narrow<br/>
+    * Sets the specification field {@code narrow} to the value of the parameter
+    * {@code narrow}<br/>
     * <br/>
-    * Requires: active<br/>
+    * Requires: {@link #isActive() this.isActive()}<br/>
     * <br/>
-    * Modifies: this
+    * Modifies: {@code this}
     * 
     * @param narrow
     */
@@ -172,8 +162,8 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns the auxiliary chutes associated with this Chute. Structural
-    * changes to the returned list will not affect this object.
+    * Returns the {@code Chute}s auxiliary to {@code this}. Structural changes
+    * to the returned list will not affect {@code this}.
     */
    public List<Chute> getAuxiliaryChutes()
    {
@@ -181,7 +171,7 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns editable
+    * Returns {@code editable}
     */
    public boolean isEditable()
    {
@@ -191,7 +181,7 @@ public class Chute extends graph.Edge<Intersection>
    
    
    /**
-    * Returns UID
+    * Returns {@code UID}
     */
    public int getUID()
    {
@@ -199,10 +189,10 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns a deep copy of this Chute.<br/>
+    * Returns a deep copy of {@code this}.<br/>
     * <br/>
-    * If this chute is attached to Intersections, that information will not be
-    * copied.
+    * If this chute has {@code start} or {@code end} nodes, that information
+    * will not be copied.
     */
    public Chute copy()
    {
@@ -220,8 +210,8 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns an iterator that performs a preorder traversal of the auxiliary
-    * chutes tree. Does not include this.
+    * Returns an {@code Iterator<Chute>} that performs a preorder traversal of
+    * the auxiliary chutes tree. Does not include {@code this}.
     */
    public Iterator<Chute> traverseAuxChutes()
    {
