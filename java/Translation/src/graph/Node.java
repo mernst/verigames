@@ -24,7 +24,7 @@ import checkers.nullness.quals.Nullable;
  * @author Nathaniel Mote
  */
 
-public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
+public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
    
    // Elements are Nullable so that edges can be added in any order. Empty

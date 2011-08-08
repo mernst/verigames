@@ -26,7 +26,7 @@ import checkers.nullness.quals.Nullable;
  * @author Nathaniel Mote
  */
 
-public class Edge<NodeType extends Node<? extends Edge<NodeType>>>
+public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
    private @LazyNonNull NodeType start;
    private int startPort = -1;
