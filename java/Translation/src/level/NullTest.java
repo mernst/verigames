@@ -121,7 +121,7 @@ public class NullTest extends Intersection
       if (chute.isNarrow())
          throw new IllegalArgumentException(
                "Chute passed to setNullChute must not be narrow");
-      setOutput(chute, 1);
+      super.setOutput(chute, 1);
       checkRep();
    }
    
@@ -155,10 +155,36 @@ public class NullTest extends Intersection
          throw new IllegalArgumentException(
                "Chute passed to setNonNullChute must be narrow");
       
-      setOutput(chute, 0);
+      super.setOutput(chute, 0);
       checkRep();
    }
    
-   // TODO override setOutput to call setNull and setNonNull, update
-   // documentation so this is ok
+   /**
+    * {@inheritDoc}
+    * 
+    * @param port
+    * The output port to which {@code output} will be attached. Must be 0 or 1.<br/>
+    * @param output
+    * The chute to attach.<br/>
+    * Requires:<br/>
+    * - {@link Chute#isEditable() !chute.isEditable()}<br/>
+    * - if {@code port} is 0: {@link Chute#isNarrow() chute.isNarrow()}<br/>
+    * - if {@code port} is 1: {@link Chute#isNarrow() !chute.isNarrow()}<br/>
+    */
+   @Override
+   protected void setOutput(Chute output, int port)
+   {
+      switch (port)
+      {
+         case 0:
+            setNonNullChute(output);
+            break;
+         case 1:
+            setNullChute(output);
+            break;
+         default:
+            throw new IllegalArgumentException("port " + port
+                  + " out of bounds for NullTest node");
+      }
+   }
 }
