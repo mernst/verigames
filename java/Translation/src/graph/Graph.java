@@ -115,9 +115,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * <br/>
     * Requires:<br/>
     * - {@link #isActive()}<br/>
-    * - {@code node} can be added to {@code this}. This implementation allows any node
-    * to be added, but subclasses are free to enforce arbitrary restrictions on
-    * when or what kind of nodes can be added.<br/>
+    * - {@code node} can be added to {@code this}. This implementation allows
+    * any node to be added, but subclasses are free to enforce arbitrary
+    * restrictions on nodes to be added.<br/>
     * <br/>
     * Modifies: {@code this}
     * 
@@ -149,9 +149,6 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * <br/>
     * Requires:<br/>
     * - {@link #isActive()}<br/>
-    * - {@code edge} must be a valid edge to add to {@code this}. This
-    * implementation enforces no restrictions on what edges can be added, but
-    * subclasses may.
     * 
     * @param start
     * The node at which the edge will start. Must be active, and must be
@@ -167,7 +164,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * on {@code end} must be empty.
     * @param edge
     * The edge to add. Must be active, have no start or end nodes, and must not
-    * be contained in {@code this}.
+    * be contained in {@code this}. This implementation enforces no further
+    * restrictions on what edges can be added or what nodes they can be
+    * connected to, but subclasses may.
     */
    // TODO add clause about how not all edges can necessarily be connected to
    // all nodes
