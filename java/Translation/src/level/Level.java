@@ -210,7 +210,10 @@ public class Level
     */
    public void addBoard(String name, Board b)
    {
-      // TODO check preconditions
+      if (boardNames.containsKey(name))
+         throw new IllegalArgumentException("name \"" + name + "\" already in use");
+      if (boardNames.containsValue(b))
+         throw new IllegalArgumentException("Board " + b + " already contained");
       boardNames.put(name, b);
       checkRep();
    }
