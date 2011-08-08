@@ -61,7 +61,7 @@ public class WorldLevel
       
       // Add nameToLevel base chutes
       {
-         Chute nameToLevel = new Chute("nameToLevel", true, null);
+         Chute nameToLevel = new Chute("nameToLevel", true);
          nameToLevel.setPinched(true);
          addLevel.addEdge(incoming, 0, outgoing, 0, nameToLevel);
          
@@ -73,14 +73,14 @@ public class WorldLevel
          Intersection merge = factory(MERGE);
          addLevel.addNode(merge);
          
-         Chute top = new Chute("nameToLevel.keys", true, null);
+         Chute top = new Chute("nameToLevel.keys", true);
          Chute bottom = top.copy();
          
          addLevel.addEdge(incoming, 1, merge, 0, top);
          addLevel.addEdge(merge, 0, outgoing, 1, bottom);
          level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
          
-         Chute name = new Chute("name", true, null);
+         Chute name = new Chute("name", true);
          addLevel.addEdge(incoming, 3, merge, 1, name);
       }
       
@@ -89,14 +89,14 @@ public class WorldLevel
          Intersection merge = factory(MERGE);
          addLevel.addNode(merge);
          
-         Chute top = new Chute("nameToLevel.values", true, null);
+         Chute top = new Chute("nameToLevel.values", true);
          Chute bottom = top.copy();
          
          addLevel.addEdge(incoming, 2, merge, 0, top);
          addLevel.addEdge(merge, 0, outgoing, 2, bottom);
          level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
          
-         Chute name = new Chute("level", true, null);
+         Chute name = new Chute("level", true);
          addLevel.addEdge(incoming, 4, merge, 1, name);
       }
    }
@@ -127,7 +127,7 @@ public class WorldLevel
          output.addNode(start);
          output.addNode(end);
          
-         Chute values = new Chute(null, true, null);
+         Chute values = new Chute(null, true);
          values.setPinched(true);
          
          output.addEdge(start, 0, end, 0, values);
@@ -138,7 +138,7 @@ public class WorldLevel
          Intersection split = factory(SPLIT);
          output.addNode(split);
          
-         Chute top = new Chute("nameToLevel.values", true, null);
+         Chute top = new Chute("nameToLevel.values", true);
          Chute bottom = top.copy();
          output.addEdge(incoming, 2, split, 0, top);
          output.addEdge(split, 0, outgoing, 2, bottom);
@@ -147,7 +147,7 @@ public class WorldLevel
          Intersection end = factory(END);
          output.addNode(end);
          
-         Chute right = new Chute(null, true, null);
+         Chute right = new Chute(null, true);
          right.setPinched(true);
          output.addEdge(split, 1, end, 0, right);
       }
@@ -161,13 +161,13 @@ public class WorldLevel
          output.addNode(end);
          output.addNode(out);
          
-         Chute top = new Chute("out", true, null);
+         Chute top = new Chute("out", true);
          Chute bottom = top.copy();
          output.addEdge(incoming, 3, split, 0, top);
          output.addEdge(split, 1, end, 0, bottom);
          level.makeLinked(top, bottom);
          
-         Chute toOut = new Chute(null, true, null);
+         Chute toOut = new Chute(null, true);
          output.addEdge(split, 0, out, 0, toOut);
       }
    }

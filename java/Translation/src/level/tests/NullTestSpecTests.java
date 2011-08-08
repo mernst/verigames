@@ -22,9 +22,9 @@ public class NullTestSpecTests
    {
       NullTest nt = Intersection.factory(Kind.NULL_TEST).asNullTest();
       
-      Chute nullable = new Chute(null, false, null);
+      Chute nullable = new Chute(null, false);
       nullable.setNarrow(false);
-      Chute nonNull = new Chute(null, false, null);
+      Chute nonNull = new Chute(null, false);
       nonNull.setNarrow(true);
       
       Method[] ntMethods = NullTest.class.getDeclaredMethods();

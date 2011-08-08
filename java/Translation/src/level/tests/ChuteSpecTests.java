@@ -50,18 +50,18 @@ public class ChuteSpecTests
    
    @Before public void initChutes()
    {
-      namedPinchedEditable = new Chute(null, true, null);
+      namedPinchedEditable = new Chute(null, true);
       namedPinchedEditable.setPinched(true);
-      namedPinchedUneditable = new Chute(null, false, null);
+      namedPinchedUneditable = new Chute(null, false);
       namedPinchedUneditable.setPinched(true);
-      namedUnpinchedEditable = new Chute(null, true, null);
-      namedUnpinchedUneditable = new Chute(null, false, null);
-      unnamedPinchedEditable = new Chute(null, true, null);
+      namedUnpinchedEditable = new Chute(null, true);
+      namedUnpinchedUneditable = new Chute(null, false);
+      unnamedPinchedEditable = new Chute(null, true);
       unnamedPinchedEditable.setPinched(true);
-      unnamedPinchedUneditable = new Chute(null, false, null);
+      unnamedPinchedUneditable = new Chute(null, false);
       unnamedPinchedUneditable.setPinched(true);
-      unnamedUnpinchedEditable = new Chute(null, true, null);
-      unnamedUnpinchedUneditable = new Chute(null, false, null);
+      unnamedUnpinchedEditable = new Chute(null, true);
+      unnamedUnpinchedUneditable = new Chute(null, false);
       
       allChutes = new ArrayList<Chute>();
       
@@ -95,7 +95,7 @@ public class ChuteSpecTests
    @Test public void testIntersections() throws InvocationTargetException,
          IllegalAccessException
    {
-      Chute chute = new Chute(null, true, null);
+      Chute chute = new Chute(null, true);
       
       assertNull(chute.getStart());
       assertNull(chute.getEnd());
@@ -160,35 +160,6 @@ public class ChuteSpecTests
    }
    
    /**
-    * Test that the auxiliary chute accessors work properly
-    */
-   @Test public void testAuxChutes()
-   {
-      // Represents the variable
-      // Map<String, Integer> map;
-      
-      Chute IntegerChute = new Chute(null, true, null);
-      Chute StringChute = new Chute(null, true, null);
-      assertTrue(IntegerChute.getAuxiliaryChutes().isEmpty());
-      assertTrue(StringChute.getAuxiliaryChutes().isEmpty());
-      
-      List<Chute> aux = new ArrayList<Chute>();
-      aux.add(StringChute);
-      aux.add(IntegerChute);
-      Chute mapChute = new Chute("map", true, aux);
-      
-      assertEquals(aux, mapChute.getAuxiliaryChutes());
-      
-      List<Chute> aux2 = new ArrayList<Chute>(aux);
-      assertEquals(aux, aux2);
-      
-      // make sure that the auxiliary chutes list is copied by the Chute, so
-      // that changes to it are not reflected in the Chute
-      aux.remove(1);
-      assertEquals(aux2, mapChute.getAuxiliaryChutes());
-   }
-   
-   /**
     * Test that copy copies all attributes, performs a deep copy, and that the
     * copied Chute has a different UID
     */
@@ -198,10 +169,7 @@ public class ChuteSpecTests
       assertTrue(chuteValueEquals(c1, unnamedPinchedEditable));
       assertFalse(c1.getUID() == unnamedPinchedEditable.getUID());
       
-      List<Chute> auxChuteList = new ArrayList<Chute>();
-      auxChuteList.add(c1);
-      auxChuteList.add(new Chute(null, false, null));
-      Chute withAux = new Chute("asdf", true, auxChuteList);
+      Chute withAux = new Chute("asdf", true);
       Chute withAuxCopy = withAux.copy();
       
       assertTrue(chuteValueEquals(withAux, withAuxCopy));
@@ -224,27 +192,6 @@ public class ChuteSpecTests
          return false;
       if (c1.isPinched() != c2.isPinched())
          return false;
-      
-      List<Chute> c1Aux = c1.getAuxiliaryChutes();
-      List<Chute> c2Aux = c2.getAuxiliaryChutes();
-      if (c1Aux.size() != c2Aux.size())
-      {
-         return false;
-      }
-      else
-      {
-         Iterator<Chute> c1Itr = c1Aux.iterator();
-         Iterator<Chute> c2Itr = c2Aux.iterator();
-         
-         while (c1Itr.hasNext() && c2Itr.hasNext())
-         {
-            if (!chuteValueEquals(c1Itr.next(), c2Itr.next()))
-               return false;
-         }
-         if (c1Itr.hasNext() || c2Itr.hasNext())
-            throw new RuntimeException(
-                  "Lists should have equal length, so the iterators should be done at the same time");
-      }
       
       return true;
    }

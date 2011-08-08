@@ -350,16 +350,6 @@ public class BoardBuilder
             
             // TODO change so that fields' aux chute are all linked, too
             levelBuilder.addChuteToField(c.getName(), c);
-            
-            // Perform a preorder traversal of the auxiliary chutes tree
-            Iterator<Chute> auxChuteTraversal = c.traverseAuxChutes();
-            while (auxChuteTraversal.hasNext())
-            {
-               Chute aux = auxChuteTraversal.next();
-               boardManager.addHalfEdge(incoming, currentIncomingPort++, aux);
-               chuteToLinkedChutes.put(aux, new LinkedHashSet<Chute>());
-               chuteToLinkedChutes.get(aux).add(aux);
-            }
          }
       }
       checkRep();
@@ -408,19 +398,6 @@ public class BoardBuilder
       chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
       chuteToLinkedChutes.get(c).add(c);
       
-      Iterator<Chute> auxItr = c.traverseAuxChutes();
-      while (auxItr.hasNext())
-      {
-         Chute nextAux = auxItr.next();
-         Intersection node = Intersection.factory(Kind.START_NO_BALL);
-         
-         boardManager.addNode(node);
-         
-         boardManager.addHalfEdge(node, 0, nextAux);
-         
-         chuteToLinkedChutes.put(nextAux, new LinkedHashSet<Chute>());
-         chuteToLinkedChutes.get(nextAux).add(nextAux);
-      }
       checkRep();
    }
    
@@ -625,13 +602,6 @@ public class BoardBuilder
          levelBuilder.addChuteToField(fieldName, lastChute);
          
          boardManager.finishHalfEdge(outgoing, currentOutPort++, lastChute);
-         
-         Iterator<Chute> auxItr = lastChute.traverseAuxChutes();
-         while(auxItr.hasNext())
-         {
-            Chute aux = auxItr.next();
-            boardManager.finishHalfEdge(outgoing, currentOutPort++, aux);
-         }
       }
       
       boardManager.deactivate();

@@ -49,7 +49,7 @@ public class LevelXMLTests
       constructor.addNode(start);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
       constructor.addNode(outgoing);
-      Chute c = new Chute("s", true, null);
+      Chute c = new Chute("s", true);
       c.setNarrow(false);
       constructor.addEdge(start, 0, outgoing, 0, c);
       
@@ -67,8 +67,8 @@ public class LevelXMLTests
       method.addNode(restart);
       method.addNode(out);
       
-      Chute c2 = new Chute("s", true, null);
-      Chute c3 = new Chute("s", true, null);
+      Chute c2 = new Chute("s", true);
+      Chute c3 = new Chute("s", true);
       
       method.addEdge(incoming, 0, end, 0, c2);
       method.addEdge(restart, 0, out, 0, c3);
@@ -132,14 +132,14 @@ public class LevelXMLTests
       b.addNode(start);
       b.addNode(merge);
 
-      Chute top = new Chute("var", true, null);
+      Chute top = new Chute("var", true);
       Chute bottom = top.copy();
       bottom.setPinched(true);
       b.addEdge(incoming, 0, merge, 0, top);
       b.addEdge(merge, 0, outgoing, 0, bottom);
       l.makeLinked(top, bottom);
 
-      Chute right = new Chute(null, true, null);
+      Chute right = new Chute(null, true);
       b.addEdge(start, 0, merge, 1, right);
 
       l.addBoard("Placeholder", b);
