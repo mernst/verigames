@@ -30,8 +30,6 @@ import java.util.Set;
 
 public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeType>>
 {
-   
-   private static final boolean CHECK_REP_ENABLED = true;
    private Set<NodeType> nodes;
    private Set<EdgeType> edges;
    private boolean active = true;
@@ -45,6 +43,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       edges = new LinkedHashSet<EdgeType>();
    }
 
+   private static final boolean CHECK_REP_ENABLED = true;
    /**
     * Ensures that the representation invariant holds.
     */
@@ -59,17 +58,20 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
          // edges != null
          ensure(edges != null);
          
-         
          // for all n in nodes; e in edges:
          // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
          // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
          for (EdgeType e : edges)
          {
             NodeType n = e.getStart();
+            // e.getStart() != null
+            ensure(n != null);
             // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
             ensure(n.getOutput(e.getStartPort()) == e);
             
             n = e.getEnd();
+            // e.getEnd() != null
+            ensure(n != null);
             // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
             ensure(n.getInput(e.getEndPort()) == e);
          }
