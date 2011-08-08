@@ -67,14 +67,6 @@ public class Chute extends graph.Edge<Intersection>
    
    private static int nextUID = 1;
    
-   /*
-    * Representation Invariant:
-    * 
-    * If !active, start and end must be non-null, and startPort and endPort must
-    * not equal -1
-    */
-
-   
    /**
     * Creates a new {@code Chute} object, with the given values for name, pinch, and
     * editable
