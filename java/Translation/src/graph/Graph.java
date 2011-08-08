@@ -168,8 +168,6 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * restrictions on what edges can be added or what nodes they can be
     * connected to, but subclasses may.
     */
-   // TODO add clause about how not all edges can necessarily be connected to
-   // all nodes
    public void addEdge(NodeType start, int startPort, NodeType end, int endPort,
          EdgeType edge)
    {
@@ -272,8 +270,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * Sets active to {@code false}<br/>
     * <br/>
     * Requires:<br/>
-    * all nodes and edges in {@code this} are in a state in which they can be
-    * deactivated
+    * For all nodes, there are no empty ports. That is, for the highest filled
+    * port (for both inputs and outputs), there are no empty ports below it.<br/>
     */
    public void deactivate()
    {
