@@ -43,7 +43,7 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
-  <target name="test" depends="clean, build, test.level, test.levelBuilder"/>
+  <target name="test" depends="clean, build, test.graph, test.level, test.levelBuilder"/>
   <target name="test.level">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
       <test name="level.tests.SpecificationTests"/>
@@ -57,6 +57,17 @@
     <copy file="../../world.dtd" todir="${bin}/level/tests"/>
     <copy file="${src}/level/tests/levelWorldCreation/name_replace" todir="${bin}/level/tests"/>
     <copy file="${src}/level/tests/levelWorldCreation/names_list" todir="${bin}/level/tests"/>
+  </target>
+  <target name="test.graph">
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/graph/tests">
+      <test name="graph.tests.SpecificationTests"/>
+      <test name="graph.tests.ImplementationTests"/>
+      <formatter type="plain" usefile="false"/>
+      <classpath refid="test.classpath"/>
+      <classpath>
+        <pathelement path="${bin}"/>
+      </classpath>
+    </junit>
   </target>
   <target name="test.levelBuilder">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder/tests">

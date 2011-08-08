@@ -12,6 +12,8 @@ ant targets:
 
    test - Runs all tests
       
+      test.graph - Runs all the tests in the graph package
+      
       test.level - Runs all the tests in the level package
 
       test.levelBuilder - Runs all the tests in the levelBuilder package
