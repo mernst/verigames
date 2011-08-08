@@ -37,9 +37,61 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    
    private boolean active = true;
    
+   /*
+    * Representation Invariant:
+    * 
+    * - if !inputs.isEmpty(), then inputs.get(inputs.size()-1) != null
+    * 
+    * - if !outputs.isEmpty(), then outputs.get(outputs.size()-1) != null
+    * 
+    * In other words, the last element in inputs and outputs must not be null
+    * 
+    * - If !active:
+    * - - no edge in inputs or outputs may be null
+    * 
+    */
+   
+   private static final boolean CHECK_REP_ENABLED = true;
+   
+   /**
+    * Ensures that the representation invariant holds
+    */
    protected void checkRep()
    {
-      
+      if (CHECK_REP_ENABLED)
+      {
+         ensure(isLastEltNonNull(inputs));
+         ensure(isLastEltNonNull(outputs));
+         
+         if (!active)
+         {
+            for (EdgeType e : inputs)
+               ensure(e != null);
+            for (EdgeType e : outputs)
+               ensure(e != null);
+         }
+      }
+   }
+   
+   /**
+    * Intended to be a substitute for assert, except I don't want to have to
+    * make sure the -ea flag is turned on in order to get these checks.
+    */
+   private void ensure(boolean value)
+   {
+      if (!value)
+         throw new AssertionError();
+   }
+   
+   /**
+    * Returns {@code true} iff the last element in {@code list} is non-null, or
+    * {@code list} is empty.
+    * 
+    * @param list
+    */
+   private static <E> boolean isLastEltNonNull(List<E> list)
+   {
+      return list.isEmpty() ? true : list.get(list.size() - 1) != null;
    }
    
    public Node()
@@ -216,8 +268,17 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void deactivate()
    {
-      // TODO enforce requirements for a Node to be deactivated without
-      // checkRep()
+      for (EdgeType e : inputs)
+      {
+         if (e == null)
+            throw new IllegalStateException("Edge in inputs is null");
+      }
+      for (EdgeType e : outputs)
+      {
+         if (e == null)
+            throw new IllegalStateException("Edge in outputs is null");
+      }
+      
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive Node");
       active = false;
