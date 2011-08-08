@@ -92,7 +92,8 @@ public class Intersection extends graph.Node<Chute>
    @Override
    protected void checkRep()
    {
-      // TODO call superclass checkRep()
+      super.checkRep();
+      
       if (CHECK_REP_ENABLED)
       {
          // The total number of ports that this Kind of Intersection can have
