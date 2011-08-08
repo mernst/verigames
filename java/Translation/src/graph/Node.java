@@ -109,14 +109,14 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Modifies: {@code this}
     * 
     * @param input
-    * The edge to attach to {@code this} as an input.
+    * The edge to attach to {@code this} as an input. This implementation does
+    * not restrict what edges may be attached, but subclasses may.
     * @param port
     * The input port to which {@code input} will be attached. Must be
     * nonnegative. Must be a valid port number for {@code this}. This
     * implementation enforces no restrictions on what ports are valid (other
     * than that they must be nonnegative), but subclasses may.<br/>
     */
-   // TODO add clause about how subclasses may restrict edges
    protected void setInput(EdgeType input, int port)
    {
       if (!active)
@@ -137,7 +137,8 @@ public class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Modifies: {@code this}
     * 
     * @param output
-    * The edge to attach to {@code this} as an output.
+    * The edge to attach to {@code this} as an output. This implementation does
+    * not restrict what edges may be attached, but subclasses may.
     * @param port
     * The output port to which {@code output} will be attached. Must be
     * nonnegative. Must be a valid port number for {@code this}. This
