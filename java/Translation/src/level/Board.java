@@ -2,6 +2,9 @@ package level;
 
 import graph.Graph;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import level.Intersection.Kind;
@@ -32,6 +35,83 @@ public class Board extends Graph<Intersection, Chute>
    @LazyNonNull Intersection incomingNode;
    @LazyNonNull Intersection outgoingNode;
    
+   private final MultiBiMap<String, Chute> nameToChutes;
+   
+   /**
+    * A lightweight implementation of a MultiBiMap. That is, each key can map to
+    * multiple values, and an inverse view of the map can be provided.
+    */
+   static class MultiBiMap<K,V>
+   {
+      /**
+       * A lightweight implementation of a MultiMap. That is, each key can map to
+       * multiple values.
+       */
+      static class MultiMap<K,V>
+      {
+         private Map<K, Set<V>> delegate;
+
+         public MultiMap()
+         {
+            delegate = new LinkedHashMap<K, Set<V>>();
+         }
+
+         public void put(K key, V value)
+         {
+            if (delegate.containsKey(key))
+            {
+               delegate.get(key).add(value);
+            }
+            else
+            {
+               Set<V> values = new LinkedHashSet<V>();
+               values.add(value);
+               delegate.put(key, values);
+            }
+         }
+
+         public Set<V> get(K key)
+         {
+            return delegate.get(key);
+         }
+      }
+      
+      private MultiMap<K, V> forward;
+      private MultiMap<V, K> backward;
+
+      private MultiBiMap<V, K> inverse;
+
+      public MultiBiMap()
+      {
+         forward = new MultiMap<K, V>();
+         backward = new MultiMap<V, K>();
+         inverse = new MultiBiMap<V, K>(backward, forward, this);
+      }
+
+      private MultiBiMap(MultiMap<K, V> forward, MultiMap<V, K> backward, MultiBiMap<V, K> inverse)
+      {
+         this.forward = forward;
+         this.backward = backward;
+         this.inverse = inverse;
+      }
+
+      public Set<V> get(K key)
+      {
+         return forward.get(key);
+      }
+
+      public void put(K key, V value)
+      {
+         forward.put(key, value);
+         backward.put(value, key);
+      }
+
+      public MultiBiMap<V, K> inverse()
+      {
+         return inverse;
+      }
+   }
+
    /**
     * Ensures that the representation invariant holds
     */
@@ -90,7 +170,23 @@ public class Board extends Graph<Intersection, Chute>
     */
    public Board()
    {
+      nameToChutes = new MultiBiMap<String, Chute>();
       checkRep();
+   }
+   
+   public void addChuteName(Chute c, String name)
+   {
+      nameToChutes.put(name, c);
+   }
+   
+   public Set<String> getChuteNames(Chute c)
+   {
+      return nameToChutes.inverse().get(c);
+   }
+   
+   public Set<Chute> getNameChutes(String name)
+   {
+      return nameToChutes.get(name);
    }
    
    /**
