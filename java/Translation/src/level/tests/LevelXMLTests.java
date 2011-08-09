@@ -75,12 +75,7 @@ public class LevelXMLTests
       
       l.addBoard("method", method);
       
-      Set<Chute> linked = new HashSet<Chute>();
-      linked.add(c);
-      linked.add(c2);
-      linked.add(c3);
-      
-      l.makeLinked(linked);
+      l.makeLinked(c, c2, c3);
 
       l.deactivate();
       

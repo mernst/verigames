@@ -1,11 +1,11 @@
 package level.tests.levelWorldCreation;
 
-import static level.tests.levelWorldCreation.BuildingTools.*;
+import static level.Intersection.factory;
+import static level.Intersection.Kind.END;
+import static level.Intersection.Kind.SPLIT;
+import static level.tests.levelWorldCreation.BuildingTools.initializeBoard;
 
-import static level.Intersection.*;
-import static level.Intersection.Kind.*;
-
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import level.Board;
@@ -18,7 +18,7 @@ public class SubnetworkLevel
    private static final Map<String, Integer> nameToPortMap;
    static
    {
-      nameToPortMap = new HashMap<String, Integer>();
+      nameToPortMap = new LinkedHashMap<String, Integer>();
       nameToPortMap.put("name", 0);
    }
    

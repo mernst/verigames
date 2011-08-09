@@ -1,11 +1,21 @@
 package level.tests.levelWorldCreation;
 
-import static level.Intersection.Kind.*;
-import static level.Intersection.*;
-import static level.tests.levelWorldCreation.BuildingTools.*;
+import static level.Intersection.factory;
+import static level.Intersection.subnetworkFactory;
+import static level.Intersection.Kind.END;
+import static level.Intersection.Kind.MERGE;
+import static level.Intersection.Kind.NULL_TEST;
+import static level.Intersection.Kind.SPLIT;
+import static level.Intersection.Kind.START_BLACK_BALL;
+import static level.Intersection.Kind.START_NO_BALL;
+import static level.Intersection.Kind.START_WHITE_BALL;
+import static level.tests.levelWorldCreation.BuildingTools.addField;
+import static level.tests.levelWorldCreation.BuildingTools.connectFields;
+import static level.tests.levelWorldCreation.BuildingTools.initializeBoard;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import level.Board;
@@ -19,7 +29,7 @@ public class LevelLevel
    private static final Map<String, Integer> nameToPortMap;
    static
    {
-      Map<String, Integer> nameToPortLocal = new HashMap<String, Integer>();
+      Map<String, Integer> nameToPortLocal = new LinkedHashMap<String, Integer>();
       nameToPortLocal.put("linkedEdgeClasses", 0);
       nameToPortLocal.put("linkedEdgeClasses.elts", 1);
       nameToPortLocal.put("linkedEdgeClasses.elts.elts", 2);

@@ -1,15 +1,24 @@
 package level.tests.levelWorldCreation;
 
-import static level.tests.levelWorldCreation.BuildingTools.*;
-import static level.Intersection.*;
-import static level.Intersection.Kind.*;
+import static level.Intersection.factory;
+import static level.Intersection.subnetworkFactory;
+import static level.Intersection.Kind.END;
+import static level.Intersection.Kind.MERGE;
+import static level.Intersection.Kind.SPLIT;
+import static level.Intersection.Kind.START_BLACK_BALL;
+import static level.Intersection.Kind.START_NO_BALL;
+import static level.Intersection.Kind.START_WHITE_BALL;
+import static level.tests.levelWorldCreation.BuildingTools.connectFields;
+import static level.tests.levelWorldCreation.BuildingTools.initializeBoard;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import level.Board;
 import level.Chute;
 import level.Intersection;
+import level.Intersection.Kind;
 import level.Level;
 
 public class IntersectionLevel
@@ -17,7 +26,7 @@ public class IntersectionLevel
    private static Map<String, Integer> nameToPortMap;
    static
    {
-      nameToPortMap = new HashMap<String, Integer>();
+      nameToPortMap = new LinkedHashMap<String, Integer>();
       nameToPortMap.put("inputChutes", 0);
       nameToPortMap.put("inputChutes.elts", 1);
       nameToPortMap.put("outputChutes", 2);

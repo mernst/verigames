@@ -1,22 +1,20 @@
 package level.tests.levelWorldCreation;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import level.Board;
 import level.Chute;
 import level.Intersection;
-import level.Level;
 import level.Intersection.Kind;
+import level.Level;
 
 public class ChuteLevel
 {
    private static final Map<String, Integer> nameToPortMap;
    static
    {
-      nameToPortMap = new HashMap<String, Integer>();
+      nameToPortMap = new LinkedHashMap<String, Integer>();
       nameToPortMap.put("name", 0);
       nameToPortMap.put("auxiliaryChutes", 1);
       nameToPortMap.put("auxiliaryChutes.elts", 2);
@@ -27,7 +25,7 @@ public class ChuteLevel
    public static Level makeLevel()
    {
       Level l = new Level();
-      Map<String, Chute> fieldToChute = new HashMap<String, Chute>();
+      Map<String, Chute> fieldToChute = new LinkedHashMap<String, Chute>();
       
       addConstructor(l, fieldToChute);
       addGetName(l, fieldToChute);
@@ -84,7 +82,7 @@ public class ChuteLevel
          Chute auxArg2 = new Chute("aux");
          constructor.addEdge(merge, 0, end, 0, auxArg2);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(auxArg, auxArg2)));
+         level.makeLinked(auxArg, auxArg2);
          
          Chute auxNotNullBranch = new Chute("aux");
          auxNotNullBranch.setNarrow(true);
@@ -139,7 +137,7 @@ public class ChuteLevel
          
          constructor.addEdge(merge, 0, outgoing, 5, end);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(start, leftBranch, rightBranchStart, rightBranchEnd, end)));
+         level.makeLinked(start, leftBranch, rightBranchStart, rightBranchEnd, end);
       }
       
       // Construct start and end chutes
@@ -179,7 +177,7 @@ public class ChuteLevel
          constructor.addEdge(startRight, 0, merge, 1, auxChutesRight);
          constructor.addEdge(merge, 0, outgoing, 1, auxChutesEnd);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(auxChutesLeft, auxChutesRight, auxChutesEnd)));
+         level.makeLinked(auxChutesLeft, auxChutesRight, auxChutesEnd);
          fieldToChute.put("auxiliaryChutes", auxChutesEnd);
       }
       
@@ -198,9 +196,9 @@ public class ChuteLevel
          Chute right = new Chute("auxiliaryChutes.elts");
          constructor.addEdge(auxSplit, 0, merge, 1, right);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(left, right, end)));
+         level.makeLinked(left, right, end);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(right, auxSplit.getInput(0))));
+         level.makeLinked(right, auxSplit.getInput(0));
          
          fieldToChute.put("auxiliaryChutes.elts", end);
       }
@@ -231,8 +229,7 @@ public class ChuteLevel
          getName.addEdge(split, 0, outgoing, 0, end);
          getName.addEdge(split, 1, outgoing, 5, ret);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(
-               fieldToChute.get("name"), start, end, ret)));
+         level.makeLinked(fieldToChute.get("name"), start, end, ret);
       }
       
       // Add other chutes
@@ -270,14 +267,12 @@ public class ChuteLevel
          
          setStart.addEdge(incoming, 3, merge, 0, firstStart);
          setStart.addEdge(merge, 0, outgoing, 3, lastStart);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(firstStart,
-               lastStart, fieldToChute.get("start"))));
+         level.makeLinked(firstStart, lastStart, fieldToChute.get("start"));
          
          setStart.addEdge(incoming, 5, split, 0, arg);
          setStart.addEdge(split, 0, merge, 1, inBetween);
          setStart.addEdge(split, 1, end, 0, argEnd);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(arg, argEnd,
-               inBetween)));
+         level.makeLinked(arg, argEnd, inBetween);
       }
       
       // Add other chutes
@@ -307,8 +302,7 @@ public class ChuteLevel
          getStart.addEdge(incoming, 3, split, 0, start);
          getStart.addEdge(split, 0, outgoing, 3, end);
          getStart.addEdge(split, 1, outgoing, 5, ret);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(start, end, ret,
-               fieldToChute.get("start"))));
+         level.makeLinked(start, end, ret, fieldToChute.get("start"));
       }
       
       // Add other chutes:
@@ -346,14 +340,12 @@ public class ChuteLevel
          
          setEnd.addEdge(incoming, 4, merge, 0, firstStart);
          setEnd.addEdge(merge, 0, outgoing, 4, lastStart);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(firstStart,
-               lastStart, fieldToChute.get("end"))));
+         level.makeLinked(firstStart, lastStart, fieldToChute.get("end"));
          
          setEnd.addEdge(incoming, 5, split, 0, arg);
          setEnd.addEdge(split, 0, merge, 1, inBetween);
          setEnd.addEdge(split, 1, end, 0, argEnd);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(arg, argEnd,
-               inBetween)));
+         level.makeLinked(arg, argEnd, inBetween);
       }
       
       // Add other chutes:
@@ -384,8 +376,7 @@ public class ChuteLevel
          getEnd.addEdge(incoming, 4, split, 0, start);
          getEnd.addEdge(split, 0, outgoing, 4, end);
          getEnd.addEdge(split, 1, outgoing, 5, ret);
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(start, end, ret,
-               fieldToChute.get("end"))));
+         level.makeLinked(start, end, ret, fieldToChute.get("end"));
       }
       
       // Add other chutes:
@@ -425,8 +416,7 @@ public class ChuteLevel
          Chute inBetween = new Chute(null);
          copy.addEdge(split, 1, constructorSub, 0, inBetween);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(top, middle, bottom,
-               inBetween, fieldToChute.get("name"))));
+         level.makeLinked(top, middle, bottom, inBetween, fieldToChute.get("name"));
       }
       
       // Add auxiliaryChutes base chutes:
@@ -437,8 +427,7 @@ public class ChuteLevel
          copy.addEdge(incoming, 1, copySub, 1, top);
          copy.addEdge(copySub, 1, outgoing, 1, bottom);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
-               fieldToChute.get("auxiliaryChutes"))));
+         level.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes"));
       }
       
       // Add auxiliaryChutes aux chutes:
@@ -450,8 +439,7 @@ public class ChuteLevel
          copy.addEdge(incoming, 2, copySub, 2, top);
          copy.addEdge(copySub, 2, outgoing, 2, bottom);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
-               fieldToChute.get("auxiliaryChutes.elts"))));
+         level.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes.elts"));
       }
       
       // Add start chutes:
@@ -462,8 +450,7 @@ public class ChuteLevel
          copy.addEdge(incoming, 3, copySub, 3, top);
          copy.addEdge(copySub, 3, outgoing, 3, bottom);
          
-         level.makeLinked(new HashSet<Chute>(Arrays.asList(top, bottom,
-               fieldToChute.get("start"))));
+         level.makeLinked(top, bottom, fieldToChute.get("start"));
       }
       
       // Add end chutes:

@@ -52,6 +52,6 @@ public class BuildingTools
       
       b.addEdge(b.getIncomingNode(), port, b.getOutgoingNode(), port, newChute);
       
-      level.makeLinked(new HashSet<Chute>(Arrays.asList(fieldToChute.get(name), newChute)));
+      level.makeLinked(fieldToChute.get(name), newChute);
    }
 }
