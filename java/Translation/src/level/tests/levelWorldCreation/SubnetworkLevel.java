@@ -43,7 +43,7 @@ public class SubnetworkLevel
             Intersection end = factory(END);
             constructor.addNode(end);
             
-            Chute top = new Chute("methodName", true);
+            Chute top = new Chute("methodName");
             Chute bottom = top.copy();
             constructor.addEdge(incoming, 0, split, 0, top);
             constructor.addEdge(split, 1, end, 0, bottom);
@@ -51,7 +51,7 @@ public class SubnetworkLevel
          }
          
          // make name chute:
-         nameChute = new Chute("name", true);
+         nameChute = new Chute("name");
          constructor.addEdge(split, 0, outgoing, 0, nameChute);
       }
       
@@ -65,13 +65,13 @@ public class SubnetworkLevel
          Intersection split = factory(SPLIT);
          subnetworkName.addNode(split);
          
-         Chute top = new Chute("name", true);
+         Chute top = new Chute("name");
          Chute bottom = top.copy();
          subnetworkName.addEdge(incoming, 0, split, 0, top);
          subnetworkName.addEdge(split, 0, outgoing, 0, bottom);
          l.makeLinked(top, bottom, nameChute);
          
-         subnetworkName.addEdge(split, 1, outgoing, 1, new Chute(null, true));
+         subnetworkName.addEdge(split, 1, outgoing, 1, new Chute(null));
       }
       
       return l;

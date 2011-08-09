@@ -49,21 +49,21 @@ public class ChuteSpecTests
    
    @Before public void initChutes()
    {
-      namedPinchedEditable = new Chute(null, true);
+      namedPinchedEditable = new Chute(null);
       namedPinchedEditable.setPinched(true);
-      namedPinchedUneditable = new Chute(null, false);
+      namedPinchedUneditable = new Chute(null);
       namedPinchedUneditable.setPinched(true);
       namedPinchedUneditable.setEditable(false);
-      namedUnpinchedEditable = new Chute(null, true);
-      namedUnpinchedUneditable = new Chute(null, false);
+      namedUnpinchedEditable = new Chute(null);
+      namedUnpinchedUneditable = new Chute(null);
       namedUnpinchedUneditable.setEditable(false);
-      unnamedPinchedEditable = new Chute(null, true);
+      unnamedPinchedEditable = new Chute(null);
       unnamedPinchedEditable.setPinched(true);
-      unnamedPinchedUneditable = new Chute(null, false);
+      unnamedPinchedUneditable = new Chute(null);
       unnamedPinchedUneditable.setEditable(false);
       unnamedPinchedUneditable.setPinched(true);
-      unnamedUnpinchedEditable = new Chute(null, true);
-      unnamedUnpinchedUneditable = new Chute(null, false);
+      unnamedUnpinchedEditable = new Chute(null);
+      unnamedUnpinchedUneditable = new Chute(null);
       unnamedUnpinchedUneditable.setPinched(false);
       unnamedUnpinchedUneditable.setEditable(false);
       
@@ -99,7 +99,7 @@ public class ChuteSpecTests
    @Test public void testIntersections() throws InvocationTargetException,
          IllegalAccessException
    {
-      Chute chute = new Chute(null, true);
+      Chute chute = new Chute(null);
       
       assertNull(chute.getStart());
       assertNull(chute.getEnd());
@@ -173,7 +173,7 @@ public class ChuteSpecTests
       assertTrue(chuteValueEquals(c1, unnamedPinchedEditable));
       assertFalse(c1.getUID() == unnamedPinchedEditable.getUID());
       
-      Chute withAux = new Chute("asdf", true);
+      Chute withAux = new Chute("asdf");
       Chute withAuxCopy = withAux.copy();
       
       assertTrue(chuteValueEquals(withAux, withAuxCopy));

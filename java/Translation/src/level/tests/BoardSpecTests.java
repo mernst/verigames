@@ -34,8 +34,8 @@ public class BoardSpecTests
       split = Intersection.factory(Kind.SPLIT);
       merge = Intersection.factory(Kind.MERGE);
       
-      chute1 = new Chute(null, true);
-      chute2 = new Chute(null, true);
+      chute1 = new Chute(null);
+      chute2 = new Chute(null);
    }
    
    // tests the contains method

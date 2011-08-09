@@ -40,7 +40,7 @@ public class LevelBuilderSpecTests
    {
       LevelBuilder TestClass = new LevelBuilder();
       
-      TestClass.addField(new Chute("s", true));
+      TestClass.addField(new Chute("s"));
       
       BoardBuilder constructor = TestClass.getConstructorTemplate("constructor");
       constructor.assignment("s", Kind.START_BLACK_BALL);
@@ -86,9 +86,9 @@ public class LevelBuilderSpecTests
       LevelBuilder TestClass2 = new LevelBuilder();
       
       List<Chute> auxChutes = new ArrayList<Chute>();
-      auxChutes.add(new Chute(null, true));
+      auxChutes.add(new Chute(null));
       
-      TestClass2.addField(new Chute("list", true));
+      TestClass2.addField(new Chute("list"));
       
       BoardBuilder constructor = TestClass2.getConstructorTemplate("constructor");
       constructor.assignment("list", Kind.START_WHITE_BALL);

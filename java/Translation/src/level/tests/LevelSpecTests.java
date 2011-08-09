@@ -30,7 +30,7 @@ public class LevelSpecTests
       chutes = new Chute[10];
       
       for (int i = 0; i < chutes.length; i++)
-         chutes[i] = new Chute(null, true);
+         chutes[i] = new Chute(null);
       
       // Add all of these to a board, then add the board to a level in order to
       // satisfy precondition for makeLinked

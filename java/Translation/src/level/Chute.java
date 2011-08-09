@@ -48,16 +48,14 @@ public class Chute extends graph.Edge<Intersection>
    private static int nextUID = 1;
    
    /**
-    * Creates a new {@code Chute} object, with the given values for name, pinch, and
-    * editable
+    * Creates a new {@code Chute} object, with the given value for {@code name}.
     * 
     * @param name
-    * @param editable
     */
-   public Chute(@Nullable String name, boolean editable)
+   public Chute(@Nullable String name)
    {
       this.name = name;
-      this.editable = editable;
+      this.editable = true;
       
       narrow = false;
       pinch = false;
@@ -172,9 +170,10 @@ public class Chute extends graph.Edge<Intersection>
     */
    public Chute copy()
    {
-      Chute copy = new Chute(name, editable);
+      Chute copy = new Chute(name);
       copy.setNarrow(narrow);
       copy.setPinched(pinch);
+      copy.setEditable(editable);
       
       return copy;
    }

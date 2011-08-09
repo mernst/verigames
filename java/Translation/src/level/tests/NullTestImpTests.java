@@ -31,7 +31,7 @@ public class NullTestImpTests
     */
    @Test public void testUneditableNull()
    {
-      Chute uneditable = new Chute(null, true);
+      Chute uneditable = new Chute(null);
       uneditable.setNarrow(false);
       
       boolean exceptionThrown = false;
@@ -55,7 +55,7 @@ public class NullTestImpTests
     */
    @Test public void testUneditableNonNull()
    {
-      Chute uneditable = new Chute(null, true);
+      Chute uneditable = new Chute(null);
       uneditable.setNarrow(true);
       
       boolean exceptionThrown = false;
@@ -79,7 +79,7 @@ public class NullTestImpTests
     */
    @Test public void testNarrowNull()
    {
-      Chute narrow = new Chute(null, false);
+      Chute narrow = new Chute(null);
       narrow.setNarrow(true);
       narrow.setEditable(false);
       
@@ -104,7 +104,7 @@ public class NullTestImpTests
     */
    @Test public void testWideNonNull()
    {
-      Chute wide = new Chute(null, false);
+      Chute wide = new Chute(null);
       wide.setNarrow(false);
       wide.setEditable(false);
       
@@ -146,7 +146,7 @@ public class NullTestImpTests
       {
          NullTest n = Intersection.factory(Kind.NULL_TEST).asNullTest();
          
-         Chute wide = new Chute(null, false);
+         Chute wide = new Chute(null);
          wide.setNarrow(false);
          wide.setEditable(false);
          
@@ -155,7 +155,7 @@ public class NullTestImpTests
          
          wide.setNarrow(true);
          
-         Chute narrow = new Chute(null, false);
+         Chute narrow = new Chute(null);
          narrow.setNarrow(true);
          narrow.setEditable(false);
          

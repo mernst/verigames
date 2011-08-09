@@ -35,7 +35,7 @@ public class BuildingTools
       Intersection start = factory(kind);
       b.addNode(start);
       
-      Chute chute = new Chute(name, true);
+      Chute chute = new Chute(name);
       b.addEdge(start, 0, b.getOutgoingNode(), nameToPortMap.get(chute.getName()), chute);
       fieldToChute.put(chute.getName(), chute);
    }
