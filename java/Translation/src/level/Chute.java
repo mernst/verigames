@@ -52,9 +52,23 @@ public class Chute extends graph.Edge<Intersection>
     * 
     * @param name
     */
+   @Deprecated
    public Chute(@Nullable String name)
    {
       this.name = name;
+      this.editable = true;
+      
+      narrow = false;
+      pinch = false;
+      
+      UID = nextUID;
+      nextUID += 1;
+      checkRep();
+   }
+   
+   public Chute()
+   {
+      this.name = null;
       this.editable = true;
       
       narrow = false;
