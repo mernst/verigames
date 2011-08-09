@@ -24,8 +24,10 @@ public class NullTestSpecTests
       
       Chute nullable = new Chute(null, false);
       nullable.setNarrow(false);
+      nullable.setEditable(false);
       Chute nonNull = new Chute(null, false);
       nonNull.setNarrow(true);
+      nonNull.setEditable(false);
       
       Method[] ntMethods = NullTest.class.getDeclaredMethods();
       

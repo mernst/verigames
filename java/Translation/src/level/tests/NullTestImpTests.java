@@ -81,6 +81,7 @@ public class NullTestImpTests
    {
       Chute narrow = new Chute(null, false);
       narrow.setNarrow(true);
+      narrow.setEditable(false);
       
       boolean exceptionThrown = false;
       
@@ -105,6 +106,7 @@ public class NullTestImpTests
    {
       Chute wide = new Chute(null, false);
       wide.setNarrow(false);
+      wide.setEditable(false);
       
       boolean exceptionThrown = false;
       
@@ -146,6 +148,7 @@ public class NullTestImpTests
          
          Chute wide = new Chute(null, false);
          wide.setNarrow(false);
+         wide.setEditable(false);
          
          // n.setNullChute(wide)
          runMethod(n, "setNullChute", new Object[] {wide});
@@ -154,6 +157,7 @@ public class NullTestImpTests
          
          Chute narrow = new Chute(null, false);
          narrow.setNarrow(true);
+         narrow.setEditable(false);
          
          // n.setNonNullChute(narrow)
          // should throw RuntimeException when checkRep catches the mutation to

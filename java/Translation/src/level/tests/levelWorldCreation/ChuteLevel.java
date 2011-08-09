@@ -71,6 +71,7 @@ public class ChuteLevel
          
          Chute auxNullBranch = new Chute("aux", false);
          auxNullBranch.setNarrow(false);
+         auxNullBranch.setEditable(false);
          
          Intersection merge = Intersection.factory(Kind.MERGE);
          constructor.addNode(merge);
@@ -87,6 +88,7 @@ public class ChuteLevel
          
          Chute auxNotNullBranch = new Chute("aux", false);
          auxNotNullBranch.setNarrow(true);
+         auxNotNullBranch.setEditable(false);
          
          Intersection split = Intersection.factory(Kind.SPLIT);
          constructor.addNode(split);

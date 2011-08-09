@@ -891,10 +891,12 @@ public class LevelLevel
          Chute top = new Chute(varName, true);
          Chute right = new Chute(varName, false);
          right.setNarrow(false);
+         right.setEditable(false);
          Chute bottom = top.copy();
          Chute leftTop = new Chute(varName, false);
          leftTop.setPinched(true);
          leftTop.setNarrow(true);
+         leftTop.setEditable(false);
          Chute leftBottom = new Chute(varName, true);
          
          boardsOut.addEdge(topSubnetwork, 0, split, 0, top);

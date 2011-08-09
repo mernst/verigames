@@ -41,7 +41,7 @@ public class Chute extends graph.Edge<Intersection>
    private boolean pinch;
    
    private boolean narrow;
-   private final boolean editable;
+   private boolean editable;
    
    private final int UID;
    
@@ -137,7 +137,24 @@ public class Chute extends graph.Edge<Intersection>
       return editable;
    }
    
-   
+   /**
+    * Sets the specification field {@code editable} to the value of the
+    * parameter {@code editable}<br/>
+    * <br/>
+    * Requires: {@link #isActive() this.isActive()}<br/>
+    * <br/>
+    * Modifies: {@code this}
+    * 
+    * @param editable
+    */
+   public void setEditable(boolean editable)
+   {
+      if (!isActive())
+         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      
+      this.editable = editable;
+      checkRep();
+   }
    
    /**
     * Returns {@code UID}

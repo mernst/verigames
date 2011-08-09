@@ -53,14 +53,19 @@ public class ChuteSpecTests
       namedPinchedEditable.setPinched(true);
       namedPinchedUneditable = new Chute(null, false);
       namedPinchedUneditable.setPinched(true);
+      namedPinchedUneditable.setEditable(false);
       namedUnpinchedEditable = new Chute(null, true);
       namedUnpinchedUneditable = new Chute(null, false);
+      namedUnpinchedUneditable.setEditable(false);
       unnamedPinchedEditable = new Chute(null, true);
       unnamedPinchedEditable.setPinched(true);
       unnamedPinchedUneditable = new Chute(null, false);
+      unnamedPinchedUneditable.setEditable(false);
       unnamedPinchedUneditable.setPinched(true);
       unnamedUnpinchedEditable = new Chute(null, true);
       unnamedUnpinchedUneditable = new Chute(null, false);
+      unnamedUnpinchedUneditable.setPinched(false);
+      unnamedUnpinchedUneditable.setEditable(false);
       
       allChutes = new ArrayList<Chute>();
       

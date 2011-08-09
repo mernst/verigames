@@ -74,6 +74,7 @@ public class ChuteImpTests
          IllegalAccessException, InvocationTargetException
    {
       c = new Chute("asdf", false);
+      c.setEditable(false);
       
       // c.setStart(Intersection.intersectionFactory(Intersection.Kind.INCOMING),0);
       invokeChuteMethod(
