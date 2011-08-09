@@ -83,6 +83,7 @@ public class Chute extends graph.Edge<Intersection>
     * Returns {@code name}, or {@code null} if none exists
     */
    @Pure
+   @Deprecated
    public @Nullable String getName()
    {
       return name;
