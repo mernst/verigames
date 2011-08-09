@@ -372,7 +372,17 @@ public class Level
             if (edge.isActive())
                throw new IllegalStateException("active Chute in Level while printing XML");
             
-            out.println("   <edge var=\"" + edge.getName() + "\" pinch=\""
+            // TODO remove once chute name is fully transitioned
+            String edgeName = null;
+            {
+               Set<String> names = board.getChuteNames(edge);
+               if (!names.isEmpty())
+                  edgeName = names.iterator().next();
+            }
+            if (edgeName == null)
+               edgeName = edge.getName();
+            
+            out.println("   <edge var=\"" + edgeName + "\" pinch=\""
                   + edge.isPinched() + "\" width=\""
                   + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\"e"
                   + edge.getUID() + "\">");
