@@ -1,12 +1,5 @@
 package level;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 import checkers.nullness.quals.Nullable;
 import checkers.nullness.quals.Pure;
 
