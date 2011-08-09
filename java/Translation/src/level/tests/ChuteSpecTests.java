@@ -173,7 +173,7 @@ public class ChuteSpecTests
       assertTrue(chuteValueEquals(c1, unnamedPinchedEditable));
       assertFalse(c1.getUID() == unnamedPinchedEditable.getUID());
       
-      Chute withAux = new Chute("asdf");
+      Chute withAux = new Chute();
       Chute withAuxCopy = withAux.copy();
       
       assertTrue(chuteValueEquals(withAux, withAuxCopy));
@@ -188,8 +188,6 @@ public class ChuteSpecTests
    {
       if (c1 == null)
          return c2 == null;
-      if (!(c1.getName() == null ? c2.getName() == null : c1.getName().equals(c2.getName())))
-         return false;
       if (c1.isEditable() != c2.isEditable())
          return false;
       if (c1.isNarrow() != c2.isNarrow())

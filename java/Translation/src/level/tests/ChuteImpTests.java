@@ -73,7 +73,7 @@ public class ChuteImpTests
    @Before public void initC() throws IllegalArgumentException,
          IllegalAccessException, InvocationTargetException
    {
-      c = new Chute("asdf");
+      c = new Chute();
       c.setEditable(false);
       
       // c.setStart(Intersection.intersectionFactory(Intersection.Kind.INCOMING),0);
