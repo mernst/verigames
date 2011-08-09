@@ -72,7 +72,11 @@ public class Board extends Graph<Intersection, Chute>
 
          public Set<V> get(K key)
          {
-            return delegate.get(key);
+            Set<V> ret = delegate.get(key);
+            if (ret != null)
+               return ret;
+            else
+               return new LinkedHashSet<V>();
          }
       }
       
