@@ -49,21 +49,21 @@ public class ChuteSpecTests
    
    @Before public void initChutes()
    {
-      namedPinchedEditable = new Chute(null);
+      namedPinchedEditable = new Chute();
       namedPinchedEditable.setPinched(true);
-      namedPinchedUneditable = new Chute(null);
+      namedPinchedUneditable = new Chute();
       namedPinchedUneditable.setPinched(true);
       namedPinchedUneditable.setEditable(false);
-      namedUnpinchedEditable = new Chute(null);
-      namedUnpinchedUneditable = new Chute(null);
+      namedUnpinchedEditable = new Chute();
+      namedUnpinchedUneditable = new Chute();
       namedUnpinchedUneditable.setEditable(false);
-      unnamedPinchedEditable = new Chute(null);
+      unnamedPinchedEditable = new Chute();
       unnamedPinchedEditable.setPinched(true);
-      unnamedPinchedUneditable = new Chute(null);
+      unnamedPinchedUneditable = new Chute();
       unnamedPinchedUneditable.setEditable(false);
       unnamedPinchedUneditable.setPinched(true);
-      unnamedUnpinchedEditable = new Chute(null);
-      unnamedUnpinchedUneditable = new Chute(null);
+      unnamedUnpinchedEditable = new Chute();
+      unnamedUnpinchedUneditable = new Chute();
       unnamedUnpinchedUneditable.setPinched(false);
       unnamedUnpinchedUneditable.setEditable(false);
       
@@ -99,7 +99,7 @@ public class ChuteSpecTests
    @Test public void testIntersections() throws InvocationTargetException,
          IllegalAccessException
    {
-      Chute chute = new Chute(null);
+      Chute chute = new Chute();
       
       assertNull(chute.getStart());
       assertNull(chute.getEnd());

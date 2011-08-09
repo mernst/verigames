@@ -22,7 +22,7 @@ public class ChuteImpTests
     */
    @Test(expected = IllegalStateException.class) public void getStartPortTest()
    {
-      (new Chute(null)).getStartPort();
+      (new Chute()).getStartPort();
    }
    
    /**
@@ -31,7 +31,7 @@ public class ChuteImpTests
     */
    @Test(expected = IllegalStateException.class) public void getEndPortTest()
    {
-      (new Chute(null)).getEndPort();
+      (new Chute()).getEndPort();
    }
    
    private Chute c;

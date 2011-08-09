@@ -71,7 +71,7 @@ public class SubnetworkLevel
          subnetworkName.addEdge(split, 0, outgoing, 0, bottom);
          l.makeLinked(top, bottom, nameChute);
          
-         subnetworkName.addEdge(split, 1, outgoing, 1, new Chute(null));
+         subnetworkName.addEdge(split, 1, outgoing, 1, new Chute());
       }
       
       return l;

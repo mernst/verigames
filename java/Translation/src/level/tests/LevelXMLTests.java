@@ -134,7 +134,7 @@ public class LevelXMLTests
       b.addEdge(merge, 0, outgoing, 0, bottom);
       l.makeLinked(top, bottom);
 
-      Chute right = new Chute(null);
+      Chute right = new Chute();
       b.addEdge(start, 0, merge, 1, right);
 
       l.addBoard("Placeholder", b);

@@ -134,7 +134,7 @@ public class WorldLevel
          output.addNode(start);
          output.addNode(end);
          
-         Chute values = new Chute(null);
+         Chute values = new Chute();
          values.setPinched(true);
          
          output.addEdge(start, 0, end, 0, values);
@@ -154,7 +154,7 @@ public class WorldLevel
          Intersection end = factory(END);
          output.addNode(end);
          
-         Chute right = new Chute(null);
+         Chute right = new Chute();
          right.setPinched(true);
          output.addEdge(split, 1, end, 0, right);
       }
@@ -174,7 +174,7 @@ public class WorldLevel
          output.addEdge(split, 1, end, 0, bottom);
          level.makeLinked(top, bottom);
          
-         Chute toOut = new Chute(null);
+         Chute toOut = new Chute();
          output.addEdge(split, 0, out, 0, toOut);
       }
    }

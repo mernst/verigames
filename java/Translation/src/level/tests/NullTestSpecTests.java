@@ -22,10 +22,10 @@ public class NullTestSpecTests
    {
       NullTest nt = Intersection.factory(Kind.NULL_TEST).asNullTest();
       
-      Chute nullable = new Chute(null);
+      Chute nullable = new Chute();
       nullable.setNarrow(false);
       nullable.setEditable(false);
-      Chute nonNull = new Chute(null);
+      Chute nonNull = new Chute();
       nonNull.setNarrow(true);
       nonNull.setEditable(false);
       

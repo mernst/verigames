@@ -86,7 +86,7 @@ public class LevelBuilderSpecTests
       LevelBuilder TestClass2 = new LevelBuilder();
       
       List<Chute> auxChutes = new ArrayList<Chute>();
-      auxChutes.add(new Chute(null));
+      auxChutes.add(new Chute());
       
       TestClass2.addField(new Chute("list"));
       

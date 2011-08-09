@@ -73,9 +73,9 @@ public class IntersectionLevel
       Intersection merge = Intersection.factory(Kind.MERGE);
       factory.addNode(merge);
       
-      Chute left = new Chute(null);
-      Chute right = new Chute(null);
-      Chute bottom = new Chute(null);
+      Chute left = new Chute();
+      Chute right = new Chute();
+      Chute bottom = new Chute();
       
       factory.addEdge(startLeft, 0, merge, 0, left);
       factory.addEdge(startRight, 0, merge, 1, right);
@@ -95,7 +95,7 @@ public class IntersectionLevel
       Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
       subFac.addNode(start);
       
-      Chute ret = new Chute(null);
+      Chute ret = new Chute();
       subFac.addEdge(start, 0, outgoing, 0, ret);
    }
    
@@ -131,7 +131,7 @@ public class IntersectionLevel
          pad.addEdge(merge, 0, outgoing, 0, bottom);
          level.makeLinked(top, bottom);
          
-         Chute add = new Chute(null);
+         Chute add = new Chute();
          pad.addEdge(start, 0, merge, 1, add);
       }
    }
@@ -210,7 +210,7 @@ public class IntersectionLevel
          setIn.addEdge(split, 0, outgoing, 0, bottom);
          level.makeLinked(top, bottom, fieldToChute.get("inputChutes"));
          
-         Chute middle = new Chute(null);
+         Chute middle = new Chute();
          setIn.addEdge(split, 1, padSub, 0, middle);
       }
       
@@ -228,7 +228,7 @@ public class IntersectionLevel
          setIn.addEdge(merge, 0, outgoing, 1, bottom);
          level.makeLinked(top, middle, bottom, fieldToChute.get(top.getName()));
          
-         Chute arg = new Chute(null);
+         Chute arg = new Chute();
          setIn.addEdge(incoming, 4, merge, 1, arg);
       }
       
@@ -259,7 +259,7 @@ public class IntersectionLevel
          setOut.addEdge(split, 0, outgoing, 2, bottom);
          level.makeLinked(top, bottom, fieldToChute.get("outputChutes"));
          
-         Chute middle = new Chute(null);
+         Chute middle = new Chute();
          setOut.addEdge(split, 1, padSub, 0, middle);
       }
       
@@ -277,7 +277,7 @@ public class IntersectionLevel
          setOut.addEdge(merge, 0, outgoing, 3, bottom);
          level.makeLinked(top, middle, bottom, fieldToChute.get(top.getName()));
          
-         Chute arg = new Chute(null);
+         Chute arg = new Chute();
          setOut.addEdge(incoming, 4, merge, 1, arg);
       }
       
@@ -312,9 +312,9 @@ public class IntersectionLevel
          Intersection start = factory(START_BLACK_BALL);
          getIn.addNode(start);
          
-         Chute inBetween = new Chute(null);
-         Chute right = new Chute(null);
-         Chute ret = new Chute(null);
+         Chute inBetween = new Chute();
+         Chute right = new Chute();
+         Chute ret = new Chute();
          
          getIn.addEdge(split, 1, merge, 0, inBetween);
          getIn.addEdge(start, 0, merge, 1, right);
@@ -351,9 +351,9 @@ public class IntersectionLevel
          Intersection start = factory(START_BLACK_BALL);
          getOut.addNode(start);
          
-         Chute inBetween = new Chute(null);
-         Chute right = new Chute(null);
-         Chute ret = new Chute(null);
+         Chute inBetween = new Chute();
+         Chute right = new Chute();
+         Chute ret = new Chute();
          
          getOut.addEdge(split, 1, merge, 0, inBetween);
          getOut.addEdge(start, 0, merge, 1, right);

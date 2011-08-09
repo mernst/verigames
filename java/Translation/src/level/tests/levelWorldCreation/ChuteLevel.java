@@ -257,7 +257,7 @@ public class ChuteLevel
          setStart.addNode(merge);
          setStart.addNode(end);
          
-         Chute arg = new Chute(null);
+         Chute arg = new Chute();
          Chute argEnd = arg.copy();
          
          Chute inBetween = arg.copy();
@@ -297,7 +297,7 @@ public class ChuteLevel
          
          Chute start = new Chute("start");
          Chute end = start.copy();
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          
          getStart.addEdge(incoming, 3, split, 0, start);
          getStart.addEdge(split, 0, outgoing, 3, end);
@@ -330,7 +330,7 @@ public class ChuteLevel
          setEnd.addNode(merge);
          setEnd.addNode(end);
          
-         Chute arg = new Chute(null);
+         Chute arg = new Chute();
          Chute argEnd = arg.copy();
          
          Chute inBetween = arg.copy();
@@ -371,7 +371,7 @@ public class ChuteLevel
          
          Chute start = new Chute("end");
          Chute end = start.copy();
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          
          getEnd.addEdge(incoming, 4, split, 0, start);
          getEnd.addEdge(split, 0, outgoing, 4, end);
@@ -413,7 +413,7 @@ public class ChuteLevel
          copy.addEdge(copySub, 0, split, 0, middle);
          copy.addEdge(split, 0, outgoing, 0, bottom);
          
-         Chute inBetween = new Chute(null);
+         Chute inBetween = new Chute();
          copy.addEdge(split, 1, constructorSub, 0, inBetween);
          
          level.makeLinked(top, middle, bottom, inBetween, fieldToChute.get("name"));
@@ -483,7 +483,7 @@ public class ChuteLevel
          
          Chute top = new Chute("auxiliaryChutes");
          Chute bottom = top.copy();
-         Chute inBetween = new Chute(null);
+         Chute inBetween = new Chute();
          
          copy.addEdge(start, 0, merge, 1, top);
          copy.addEdge(copySub, 5, merge, 0, inBetween);
@@ -495,7 +495,7 @@ public class ChuteLevel
          Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
          copy.addNode(start);
          
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          copy.addEdge(start, 0, outgoing, 5, ret);
       }
    }
@@ -523,7 +523,7 @@ public class ChuteLevel
          getAux.addEdge(split, 0, outgoing, 1, bottom);
          level.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes"));
          
-         Chute inBetween = new Chute(null);
+         Chute inBetween = new Chute();
          inBetween.setPinched(true);
          getAux.addEdge(split, 1, end, 0, inBetween);
       }
@@ -540,7 +540,7 @@ public class ChuteLevel
          getAux.addEdge(split, 0, outgoing, 2, bottom);
          level.makeLinked(top, bottom, fieldToChute.get("auxiliaryChutes.elts"));
          
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          getAux.addEdge(split, 1, outgoing, 6, ret);
       }
       
@@ -549,7 +549,7 @@ public class ChuteLevel
          Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
          getAux.addNode(start);
          
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          getAux.addEdge(start, 0, outgoing, 5, ret);
       }
       
@@ -666,7 +666,7 @@ public class ChuteLevel
          travAux.addEdge(traverseAuxMerge, 0, split, 0, third);
          travAux.addEdge(split, 0, end, 0, bottom);
 
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          
          travAux.addEdge(split, 1, outgoing, 6, ret);
          
@@ -678,7 +678,7 @@ public class ChuteLevel
          Intersection end = Intersection.factory(Kind.END);
          travAux.addNode(end);
          
-         Chute chute = new Chute(null);
+         Chute chute = new Chute();
          travAux.addEdge(auxChutesSub, 5, end, 0, chute);
       }
       
@@ -687,7 +687,7 @@ public class ChuteLevel
          Intersection end = Intersection.factory(Kind.END);
          travAux.addNode(end);
          
-         Chute chute = new Chute(null);
+         Chute chute = new Chute();
          chute.setPinched(true);
          travAux.addEdge(travSub, 5, end, 0, chute);
       }
@@ -697,7 +697,7 @@ public class ChuteLevel
          Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
          travAux.addNode(start);
          
-         Chute ret = new Chute(null);
+         Chute ret = new Chute();
          travAux.addEdge(start, 0, outgoing, 5, ret);
       }
       
@@ -712,7 +712,7 @@ public class ChuteLevel
          travAux.addNode(end1);
          travAux.addNode(end2);
          
-         Chute retAux1 = new Chute(null);
+         Chute retAux1 = new Chute();
          Chute retAux2 = retAux1.copy();
          travAux.addEdge(auxChutesSub, 6, split1, 0, retAux1);
          travAux.addEdge(split1, 0, end1, 0, retAux2);
@@ -725,7 +725,7 @@ public class ChuteLevel
          travAux.addEdge(split2, 0, end2, 0, aux2);
          level.makeLinked(aux1, aux2);
          
-         Chute inBetween = new Chute(null);
+         Chute inBetween = new Chute();
          travAux.addEdge(split2, 1, getAuxMerge, 0, inBetween);
       }
       
@@ -736,13 +736,13 @@ public class ChuteLevel
          travAux.addNode(split);
          travAux.addNode(end);
          
-         Chute ret1 = new Chute(null);
+         Chute ret1 = new Chute();
          Chute ret2 = ret1.copy();
          travAux.addEdge(travSub, 6, split, 0, ret1);
          travAux.addEdge(split, 0, end, 0, ret2);
          level.makeLinked(ret1, ret2);
          
-         Chute inBetween = new Chute(null);
+         Chute inBetween = new Chute();
          travAux.addEdge(split, 1, traverseAuxMerge, 0, inBetween);
       }
    }
