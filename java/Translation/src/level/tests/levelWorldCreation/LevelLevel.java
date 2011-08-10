@@ -93,15 +93,19 @@ public class LevelLevel
          
          // Connect linkedEdgeClasses.elts chutes:
          {
-            Chute top = new Chute("linkedEdgeClasses.elts");
+            Chute top = new Chute();
             Chute middle = top.copy();
             Chute bottom = top.copy();
+            String name = "linkedEdgeClasses.elts";
             
             makeLinked.addEdge(incoming, 1, linkedSplit, 0, top);
             makeLinked.addEdge(linkedSplit, 0, newEquivMerge, 0, middle);
             makeLinked.addEdge(newEquivMerge, 0, outgoing, 1, bottom);
+            makeLinked.addChuteName(top, name);
+            makeLinked.addChuteName(middle, name);
+            makeLinked.addChuteName(bottom, name);
             level.makeLinked(top, middle, bottom,
-                  fieldToChute.get(top.getName()));
+                  fieldToChute.get(name));
          }
          
          // Connect linked and toRemove.elts
@@ -120,23 +124,29 @@ public class LevelLevel
             
             // connect linked:
             {
-               Chute linkedTop = new Chute("linked");
+               String name = "linked";
+               Chute linkedTop = new Chute();
                Chute linkedBottom = linkedTop.copy();
                linkedTop.setPinched(true);
                linkedBottom.setPinched(true);
                
                makeLinked.addEdge(linkedSplit, 1, split, 0, linkedTop);
                makeLinked.addEdge(split, 0, linkedEnd, 0, linkedBottom);
+               makeLinked.addChuteName(linkedTop, name);
+               makeLinked.addChuteName(linkedBottom, name);
                level.makeLinked(linkedTop, linkedBottom);
             }
             
             // connect toRemove:
             {
-               Chute top = new Chute("toRemove");
+               String name = "toRemove";
+               Chute top = new Chute();
                Chute bottom = top.copy();
                
                makeLinked.addEdge(toRemoveStart, 0, merge, 1, top);
                makeLinked.addEdge(merge, 0, toRemoveEnd, 0, bottom);
+               makeLinked.addChuteName(top, name);
+               makeLinked.addChuteName(bottom, name);
                level.makeLinked(top, bottom);
             }
             
@@ -153,12 +163,15 @@ public class LevelLevel
             makeLinked.addNode(split);
             makeLinked.addNode(end);
             
-            Chute top = new Chute("newEquivClass");
+            String name = "newEquivClass";
+            Chute top = new Chute();
             Chute bottom = top.copy();
             top.setPinched(true);
             
             makeLinked.addEdge(start, 0, split, 0, top);
             makeLinked.addEdge(split, 1, end, 0, bottom);
+            makeLinked.addChuteName(top, name);
+            makeLinked.addChuteName(bottom, name);
             level.makeLinked(top, bottom);
             
             makeLinked.addEdge(split, 0, newEquivMerge, 1, new Chute());
@@ -180,8 +193,9 @@ public class LevelLevel
             Intersection merge = factory(MERGE);
             makeLinked.addNode(merge);
             
+            String linkedName = "linkedEdgeClasses.elts.elts";
             Chute[] linkedEdgeClasses = new Chute[4];
-            linkedEdgeClasses[0] = new Chute("linkedEdgeClasses.elts.elts");
+            linkedEdgeClasses[0] = new Chute();
             for (int i = 1; i < linkedEdgeClasses.length; i++)
                linkedEdgeClasses[i] = linkedEdgeClasses[0].copy();
 
@@ -189,23 +203,32 @@ public class LevelLevel
             makeLinked.addEdge(merge, 0, toNewEquivSplit, 0, linkedEdgeClasses[1]);
             makeLinked.addEdge(toNewEquivSplit, 0, fromNewEquivMerge, 0, linkedEdgeClasses[2]);
             makeLinked.addEdge(fromNewEquivMerge, 0, outgoing, 2, linkedEdgeClasses[3]);
+
+            for (Chute chute : linkedEdgeClasses)
+               makeLinked.addChuteName(chute, linkedName);
+
             level.makeLinked(linkedEdgeClasses);
-            level.makeLinked(linkedEdgeClasses[0], fieldToChute.get(linkedEdgeClasses[0].getName()));
+            level.makeLinked(linkedEdgeClasses[0], fieldToChute.get(linkedName));
             
-            Chute toRemove = new Chute("toRemove.elts.elts");
+            Chute toRemove = new Chute();
             Intersection start = factory(START_NO_BALL);
             makeLinked.addNode(start);
             makeLinked.addEdge(start, 0, merge, 1, toRemove);
+            makeLinked.addChuteName(toRemove, "toRemove.elts.elts");
             level.makeLinked(linkedEdgeClasses[0], toRemove);
          }
          
          // connect toLink.elts
          {
-            Chute top = new Chute("toLink.elts");
+            String name = "toLink.elts";
+            Chute top = new Chute();
             Chute bottom = top.copy();
             
             makeLinked.addEdge(incoming, 7, fromToLinkSplit, 0, top);
             makeLinked.addEdge(fromToLinkSplit, 0, outgoing, 6, bottom);
+
+            makeLinked.addChuteName(top, name);
+            makeLinked.addChuteName(bottom, name);
             
             level.makeLinked(top, bottom);
          }
@@ -215,11 +238,14 @@ public class LevelLevel
             Intersection merge = factory(MERGE);
             makeLinked.addNode(merge);
             
-            Chute top = new Chute("newEquivClass.elts");
+            String name = "newEquivClass.elts";
+            Chute top = new Chute();
             Chute bottom = top.copy();
             
             makeLinked.addEdge(fromToLinkSplit, 1, merge, 1, top);
             makeLinked.addEdge(merge, 0, fromNewEquivMerge, 1, bottom);
+            makeLinked.addChuteName(top, name);
+            makeLinked.addChuteName(bottom, name);
             level.makeLinked(top, bottom);
             
             makeLinked.addEdge(toNewEquivSplit, 1, merge, 0, new Chute());
@@ -233,9 +259,11 @@ public class LevelLevel
          makeLinked.addNode(start);
          makeLinked.addNode(end);
          
-         Chute toRemove = new Chute("toRemove");
+         String name = "toRemove";
+         Chute toRemove = new Chute();
          toRemove.setPinched(true);
          makeLinked.addEdge(start, 0, end, 0, toRemove);
+         makeLinked.addChuteName(toRemove, name);
       }
       
       // connect toLink (arg) base chute:
@@ -243,10 +271,12 @@ public class LevelLevel
          Intersection end = factory(END);
          makeLinked.addNode(end);
          
-         Chute toLink = new Chute("toLink");
+         String name = "toLink";
+         Chute toLink = new Chute();
          toLink.setPinched(true);
          
          makeLinked.addEdge(incoming, 6, end, 0, toLink);
+         makeLinked.addChuteName(toLink, name);
       }
       
       // connect other chutes:
@@ -258,7 +288,7 @@ public class LevelLevel
       {
          Chute c = incoming.getOutput(nameToPortMap
                .get("linkedEdgeClasses"));
-         if (!c.getName().equals("linkedEdgeClasses"))
+         if (!makeLinked.getChuteNames(c).iterator().next().equals("linkedEdgeClasses"))
             throw new RuntimeException();
          c.setPinched(true);
       }
@@ -276,11 +306,14 @@ public class LevelLevel
          Intersection split = factory(SPLIT);
          areLinked.addNode(split);
          
-         Chute top = new Chute("linkedEdgeClasses.elts");
+         String name = "linkedEdgeClasses.elts";
+         Chute top = new Chute();
          Chute bottom = top.copy();
          areLinked.addEdge(incoming, 1, split, 0, top);
          areLinked.addEdge(split, 0, outgoing, 1, bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         areLinked.addChuteName(top, name);
+         areLinked.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
          Intersection end = factory(END);
          areLinked.addNode(end);
@@ -295,14 +328,19 @@ public class LevelLevel
          Intersection end = factory(END);
          areLinked.addNode(end);
          
-         Chute arg = new Chute("chutes");
+         String name = "chutes";
+         Chute arg = new Chute();
          arg.setPinched(true);
          
          areLinked.addEdge(incoming, 6, end, 0, arg);
+         areLinked.addChuteName(arg, name);
       }
       
       // connect argument aux chute
-      areLinked.addEdge(incoming, 7, outgoing, 6, new Chute("chutes.elts"));
+      String name = "chutes.elts";
+      Chute argAux = new Chute();
+      areLinked.addEdge(incoming, 7, outgoing, 6, argAux);
+      areLinked.addChuteName(argAux, name);
       
       // connect other chutes:
       connectFields(areLinked, level, fieldToChute, nameToPortMap,
@@ -312,7 +350,8 @@ public class LevelLevel
       // add pinch-point to linkedEdgeClasses
       {
          Chute linkedEdgeClasses = incoming.getOutput(0);
-         if (!linkedEdgeClasses.getName().equals("linkedEdgeClasses"))
+         if (!areLinked.getChuteNames(linkedEdgeClasses).iterator().next()
+               .equals("linkedEdgeClasses"))
             throw new RuntimeException();
          
          linkedEdgeClasses.setPinched(true);
@@ -331,16 +370,21 @@ public class LevelLevel
          Intersection merge = factory(MERGE);
          addBoard.addNode(merge);
          
-         Chute top = new Chute("boardNames.keys");
+         String boardNamesName = "boardNames.keys";
+         Chute top = new Chute();
          Chute bottom = top.copy();
-         addBoard.addEdge(incoming, nameToPortMap.get(top.getName()), merge, 0,
-               top);
-         addBoard.addEdge(merge, 0, outgoing, nameToPortMap.get(top.getName()),
-               bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         addBoard.addEdge(incoming, nameToPortMap.get(boardNamesName), merge,
+               0, top);
+         addBoard.addEdge(merge, 0, outgoing,
+               nameToPortMap.get(boardNamesName), bottom);
+         addBoard.addChuteName(top, boardNamesName);
+         addBoard.addChuteName(bottom, boardNamesName);
+         level.makeLinked(top, bottom, fieldToChute.get(boardNamesName));
          
-         Chute name = new Chute("name");
-         addBoard.addEdge(incoming, 6, merge, 1, name);
+         String name = "name";
+         Chute nameChute = new Chute();
+         addBoard.addEdge(incoming, 6, merge, 1, nameChute);
+         addBoard.addChuteName(nameChute, name);
       }
       
       // connect b (arg) and boardNames.values chutes
@@ -348,16 +392,19 @@ public class LevelLevel
          Intersection merge = factory(MERGE);
          addBoard.addNode(merge);
          
-         Chute top = new Chute("boardNames.values");
+         String name = "boardNames.values";
+         Chute top = new Chute();
          Chute bottom = top.copy();
-         addBoard.addEdge(incoming, nameToPortMap.get(top.getName()), merge, 0,
-               top);
-         addBoard.addEdge(merge, 0, outgoing, nameToPortMap.get(top.getName()),
-               bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         addBoard.addEdge(incoming, nameToPortMap.get(name), merge, 0, top);
+         addBoard.addEdge(merge, 0, outgoing, nameToPortMap.get(name), bottom);
+         addBoard.addChuteName(top, name);
+         addBoard.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
-         Chute name = new Chute("b");
-         addBoard.addEdge(incoming, 7, merge, 1, name);
+         String bName = "b";
+         Chute b = new Chute();
+         addBoard.addEdge(incoming, 7, merge, 1, b);
+         addBoard.addChuteName(b, bName);
       }
       
       // connect other chutes:
@@ -367,9 +414,9 @@ public class LevelLevel
       
       // add pinch-point to boardNames
       {
-         Chute boardNames = incoming.getOutput(nameToPortMap
-               .get("boardNames"));
-         if (!boardNames.getName().equals("boardNames"))
+         Chute boardNames = incoming.getOutput(nameToPortMap.get("boardNames"));
+         if (!addBoard.getChuteNames(boardNames).iterator().next()
+               .equals("boardNames"))
             throw new RuntimeException();
          
          boardNames.setPinched(true);
@@ -388,13 +435,14 @@ public class LevelLevel
          Intersection split = factory(SPLIT);
          boards.addNode(split);
          
-         Chute top = new Chute("boardNames.values");
+         String name = "boardNames.values";
+         Chute top = new Chute();
          Chute bottom = top.copy();
-         boards.addEdge(incoming, nameToPortMap.get(top.getName()), split, 0,
-               top);
-         boards.addEdge(split, 0, outgoing, nameToPortMap.get(top.getName()),
-               bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         boards.addEdge(incoming, nameToPortMap.get(name), split, 0, top);
+         boards.addEdge(split, 0, outgoing, nameToPortMap.get(name), bottom);
+         boards.addChuteName(top, name);
+         boards.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
          Chute retAux = new Chute();
          boards.addEdge(split, 1, outgoing, 7, retAux);
@@ -416,7 +464,7 @@ public class LevelLevel
       // add pinch to boardNames
       {
          Chute boardNames = incoming.getOutput(nameToPortMap.get("boardNames"));
-         if (!boardNames.getName().equals("boardNames"))
+         if (!boards.getChuteNames(boardNames).iterator().next().equals("boardNames"))
             throw new RuntimeException();
          boardNames.setPinched(true);
       }
@@ -438,13 +486,14 @@ public class LevelLevel
          getBoard.addNode(merge);
          getBoard.addNode(start);
          
-         Chute top = new Chute("boardNames.values");
+         String name = "boardNames.values";
+         Chute top = new Chute();
          Chute bottom = top.copy();
-         getBoard.addEdge(incoming, nameToPortMap.get(top.getName()), split, 0,
-               top);
-         getBoard.addEdge(split, 0, outgoing, nameToPortMap.get(top.getName()),
-               bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         getBoard.addEdge(incoming, nameToPortMap.get(name), split, 0, top);
+         getBoard.addEdge(split, 0, outgoing, nameToPortMap.get(name), bottom);
+         getBoard.addChuteName(top, name);
+         getBoard.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
          getBoard.addEdge(merge, 0, outgoing, 6, new Chute());
          getBoard.addEdge(split, 1, merge, 0, new Chute());
@@ -455,8 +504,11 @@ public class LevelLevel
       {
          Intersection end = factory(END);
          getBoard.addNode(end);
-         
-         getBoard.addEdge(incoming, 6, end, 0, new Chute("name"));
+
+         String name = "name";
+         Chute nameChute = new Chute();
+         getBoard.addEdge(incoming, 6, end, 0, nameChute);
+         getBoard.addChuteName(nameChute, name);
       }
       
       // add other chutes:
@@ -468,7 +520,7 @@ public class LevelLevel
       {
          Chute boardNames = incoming.getOutput(nameToPortMap
                .get("boardNames"));
-         if (!boardNames.getName().equals("boardNames"))
+         if (!getBoard.getChuteNames(boardNames).iterator().next().equals("boardNames"))
             throw new RuntimeException();
          boardNames.setPinched(true);
       }
@@ -493,13 +545,16 @@ public class LevelLevel
          String fieldName = entry.getKey();
          
          Chute[] chutes = new Chute[3];
-         chutes[0] = new Chute(fieldName);
+         chutes[0] = new Chute();
          chutes[1] = chutes[0].copy();
          chutes[2] = chutes[0].copy();
          
          outXML.addEdge(incoming, port, linkedOut, port, chutes[0]);
          outXML.addEdge(linkedOut, port, boardsOut, port, chutes[1]);
          outXML.addEdge(boardsOut, port, outgoing, port, chutes[2]);
+
+         for (Chute c : chutes)
+            outXML.addChuteName(c, fieldName);
          
          level.makeLinked(chutes);
          level.makeLinked(chutes[0], fieldToChute.get(fieldName));
@@ -507,8 +562,9 @@ public class LevelLevel
       
       // connect out (arg) chutes:
       {
+         String name = "out";
          Chute[] outChutes = new Chute[3];
-         outChutes[0] = new Chute("out");
+         outChutes[0] = new Chute();
          outChutes[1] = outChutes[0].copy();
          outChutes[2] = outChutes[0].copy();
          
@@ -526,6 +582,10 @@ public class LevelLevel
          outXML.addEdge(incoming, 6, split1, 0, outChutes[0]);
          outXML.addEdge(split1, 1, split2, 0, outChutes[1]);
          outXML.addEdge(split2, 1, end, 0, outChutes[2]);
+
+         for (Chute c : outChutes)
+            outXML.addChuteName(c, name);
+
          level.makeLinked(outChutes);
 
          outXML.addEdge(split1, 0, linkedOut, 6, new Chute());
@@ -550,25 +610,30 @@ public class LevelLevel
       {
          int port = nameToPortMap.get(name);
          
-         Chute top = new Chute(name);
+         Chute top = new Chute();
          Chute bottom = top.copy();
          
          outLinked.addEdge(incoming, port, boards, port, top);
          outLinked.addEdge(boards, port, outgoing, port, bottom);
+         outLinked.addChuteName(top, name);
+         outLinked.addChuteName(bottom, name);
          
          level.makeLinked(top, bottom, fieldToChute.get(name));
       }
       
       // connect linkedEdges base chutes:
       {
-         Chute top = new Chute("linkedEdgeClasses");
+         String name = "linkedEdgeClasses";
+         Chute top = new Chute();
          Chute bottom = top.copy();
          top.setPinched(true);
          
          outLinked.addEdge(incoming, 0, boards, 0, top);
          outLinked.addEdge(boards, 0, outgoing, 0, bottom);
+         outLinked.addChuteName(top, name);
+         outLinked.addChuteName(bottom, name);
          
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         level.makeLinked(top, bottom, fieldToChute.get(name));
       }
       
       // connect linkedEdges.elts chutes:
@@ -578,19 +643,25 @@ public class LevelLevel
          outLinked.addNode(split);
          outLinked.addNode(end);
          
-         Chute top = new Chute("linkedEdgeClasses.elts");
+         String name = "linkedEdgeClasses.elts";
+         Chute top = new Chute();
          Chute middle = top.copy();
          Chute bottom = top.copy();
          
          outLinked.addEdge(incoming, 1, split, 0, top);
          outLinked.addEdge(split, 0, boards, 1, middle);
          outLinked.addEdge(boards, 1, outgoing, 1, bottom);
-         level.makeLinked(top, middle, bottom, fieldToChute.get(top.getName()));
+         outLinked.addChuteName(top, name);
+         outLinked.addChuteName(middle, name);
+         outLinked.addChuteName(bottom, name);
+         level.makeLinked(top, middle, bottom, fieldToChute.get(name));
          
-         Chute set = new Chute("set");
+         String setName = "set";
+         Chute set = new Chute();
          set.setPinched(true);
          
          outLinked.addEdge(split, 1, end, 0, set);
+         outLinked.addChuteName(set, setName);
       }
       
       // connect linkedEdges.elts.elts and alreadyPrintedEdges.elts
@@ -603,25 +674,32 @@ public class LevelLevel
             Intersection cSplit = factory(SPLIT);
             outLinked.addNode(cSplit);
             
-            Chute top = new Chute("linkedEdgeClasses.elts.elts");
+            String name = "linkedEdgeClasses.elts.elts";
+            Chute top = new Chute();
             Chute middle = top.copy();
             Chute bottom = top.copy();
             
             outLinked.addEdge(incoming, 2, cSplit, 0, top);
             outLinked.addEdge(cSplit, 0, boards, 2, middle);
             outLinked.addEdge(boards, 2, outgoing, 2, bottom);
+            outLinked.addChuteName(top, name);
+            outLinked.addChuteName(middle, name);
+            outLinked.addChuteName(bottom, name);
             level.makeLinked(top, bottom, middle,
-                  fieldToChute.get(top.getName()));
+                  fieldToChute.get(name));
             
             Intersection end = factory(END);
             outLinked.addNode(end);
             
-            Chute cTop = new Chute("c");
+            String cName = "c";
+            Chute cTop = new Chute();
             Chute cBottom = cTop.copy();
             cTop.setPinched(true);
             
             outLinked.addEdge(cSplit, 1, split, 0, cTop);
             outLinked.addEdge(split, 0, end, 0, cBottom);
+            outLinked.addChuteName(cTop, cName);
+            outLinked.addChuteName(cBottom, cName);
             
             level.makeLinked(cTop, cBottom);
          }
@@ -636,11 +714,14 @@ public class LevelLevel
             outLinked.addNode(end);
             outLinked.addNode(merge);
             
-            Chute top = new Chute("alreadyPrintedEdges.elts");
+            String name = "alreadyPrintedEdges.elts";
+            Chute top = new Chute();
             Chute bottom = top.copy();
             
             outLinked.addEdge(start, 0, merge, 1, top);
             outLinked.addEdge(merge, 0, end, 0, bottom);
+            outLinked.addChuteName(top, name);
+            outLinked.addChuteName(bottom, name);
             level.makeLinked(top, bottom);
             
             outLinked.addEdge(split, 1, merge, 0, new Chute());
@@ -649,7 +730,8 @@ public class LevelLevel
       
       // connect alreadyPrintedEdges base chutes:
       {
-         Chute alreadyPrinted = new Chute("alreadyPrintedEdges");
+         String name = "alreadyPrintedEdges";
+         Chute alreadyPrinted = new Chute();
          alreadyPrinted.setPinched(true);
          
          Intersection start = factory(START_WHITE_BALL);
@@ -658,6 +740,7 @@ public class LevelLevel
          outLinked.addNode(end);
          
          outLinked.addEdge(start, 0, end, 0, alreadyPrinted);
+         outLinked.addChuteName(alreadyPrinted, name);
       }
       
       // connect boards retval base chute:
@@ -683,25 +766,29 @@ public class LevelLevel
          
          Chute start = new Chute();
          Chute left = start.copy();
-         Chute right = new Chute("b");
+         String rightName = "b";
+         Chute right = new Chute();
          right.setPinched(true);
          
          outLinked.addEdge(boards, 7, split, 0, start);
          outLinked.addEdge(split, 0, end1, 0, left);
          outLinked.addEdge(split, 1, end2, 0, right);
+         outLinked.addChuteName(right, rightName);
          
          level.makeLinked(start, left);
       }
       
       // connect out (arg)
       {
-         Chute out = new Chute("out");
+         String name = "out";
+         Chute out = new Chute();
          out.setPinched(true);
          
          Intersection end = factory(END);
          outLinked.addNode(end);
          
          outLinked.addEdge(incoming, 6, end, 0, out);
+         outLinked.addChuteName(out, name);
       }
       
       // connect Board.getEdges subnetwork and its return values
@@ -732,12 +819,14 @@ public class LevelLevel
             
             Chute start = new Chute();
             Chute left = start.copy();
-            Chute right = new Chute("c");
+            String rightName = "c";
+            Chute right = new Chute();
             right.setPinched(true);
             
             outLinked.addEdge(getEdges, 1, split, 0, start);
             outLinked.addEdge(split, 0, end1, 0, left);
             outLinked.addEdge(split, 1, end2, 0, right);
+            outLinked.addChuteName(right, rightName);
             
             level.makeLinked(start, left);
          }
@@ -759,12 +848,14 @@ public class LevelLevel
       
       // connect boardNames base chute:
       {
-         Chute boardNames = new Chute("boardNames");
+         String name = "boardNames";
+         Chute boardNames = new Chute();
          boardNames.setPinched(true);
          
          boardsOut.addEdge(incoming, 3, outgoing, 3, boardNames);
+         boardsOut.addChuteName(boardNames, name);
          
-         level.makeLinked(boardNames, fieldToChute.get(boardNames.getName()));
+         level.makeLinked(boardNames, fieldToChute.get(name));
       }
       
       // connect keySet chute:
@@ -787,14 +878,20 @@ public class LevelLevel
          boardsOut.addNode(split);
          boardsOut.addNode(end);
          
-         Chute top = new Chute("boardNames.keys");
+         String name = "boardNames.keys";
+         Chute top = new Chute();
          Chute bottom = top.copy();
          
          boardsOut.addEdge(incoming, 4, split, 0, top);
          boardsOut.addEdge(split, 0, outgoing, 4, bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         boardsOut.addChuteName(top, name);
+         boardsOut.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
-         boardsOut.addEdge(split, 1, end, 0, new Chute("name"));
+         String nameName = "name";
+         Chute nameChute = new Chute();
+         boardsOut.addEdge(split, 1, end, 0, nameChute);
+         boardsOut.addChuteName(nameChute, nameName);
       }
       
       // connect boardNames.values and board chutes:
@@ -808,14 +905,18 @@ public class LevelLevel
          boardsOut.addNode(merge);
          boardsOut.addNode(end);
          
-         Chute top = new Chute("boardNames.values");
+         String name = "boardNames.values";
+         Chute top = new Chute();
          Chute bottom = top.copy();
          
          boardsOut.addEdge(incoming, 5, split, 0, top);
          boardsOut.addEdge(split, 0, outgoing, 5, bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         boardsOut.addChuteName(top, name);
+         boardsOut.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
-         Chute board = new Chute("board");
+         String boardName = "board";
+         Chute board = new Chute();
          Chute right = new Chute();
          Chute left = new Chute();
          
@@ -824,17 +925,20 @@ public class LevelLevel
          boardsOut.addEdge(split, 1, merge, 0, left);
          boardsOut.addEdge(start, 0, merge, 1, right);
          boardsOut.addEdge(merge, 0, end, 0, board);
+         boardsOut.addChuteName(board, boardName);
       }
       
       // connect out (arg) chute:
       {
-         Chute out = new Chute("out");
+         String name = "out";
+         Chute out = new Chute();
          out.setPinched(true);
          
          Intersection end = factory(END);
          boardsOut.addNode(end);
          
          boardsOut.addEdge(incoming, 6, end, 0, out);
+         boardsOut.addChuteName(out, name);
       }
       
       // connect getNodes and getEdges calls:
@@ -870,9 +974,11 @@ public class LevelLevel
             boardsOut.addEdge(split, 0, endLeft, 0, bottom);
             level.makeLinked(top, bottom);
             
-            Chute right = new Chute(
-                  subnetworkName.equals("Board.getNodes") ? "node" : "edge");
+            String name = subnetworkName.equals("Board.getNodes") ? "node"
+                  : "edge";
+            Chute right = new Chute();
             boardsOut.addEdge(split, 1, endRight, 0, right);
+            boardsOut.addChuteName(right, name);
          }
       }
       
@@ -880,7 +986,8 @@ public class LevelLevel
       for (String subnetworkName : new String[] { "Intersection.getInputChute",
             "Intersection.getOutputChute" })
       {
-         String varName = subnetworkName.equals("Intersection.getInputChute") ? "input" : "output";
+         String varName = subnetworkName.equals("Intersection.getInputChute") ? "input"
+               : "output";
          
          Intersection topSubnetwork = subnetworkFactory(subnetworkName);
          Intersection bottomSubnetwork = subnetworkFactory(subnetworkName);
@@ -896,26 +1003,33 @@ public class LevelLevel
          boardsOut.addNode(end);
          boardsOut.addNode(merge);
          
-         Chute top = new Chute(varName);
-         Chute right = new Chute(varName);
+         Chute top = new Chute();
+         Chute right = new Chute();
          right.setNarrow(false);
          right.setEditable(false);
          Chute bottom = top.copy();
-         Chute leftTop = new Chute(varName);
+         Chute leftTop = new Chute();
          leftTop.setPinched(true);
          leftTop.setNarrow(true);
          leftTop.setEditable(false);
-         Chute leftBottom = new Chute(varName);
+         Chute leftBottom = new Chute();
          
          boardsOut.addEdge(topSubnetwork, 0, split, 0, top);
          boardsOut.addEdge(split, 1, merge, 1, right);
          boardsOut.addEdge(split, 0, endLeft, 0, leftTop);
          boardsOut.addEdge(bottomSubnetwork, 0, merge, 0, leftBottom);
          boardsOut.addEdge(merge, 0, end, 0, bottom);
+         
+         boardsOut.addChuteName(top, varName);
+         boardsOut.addChuteName(right, varName);
+         boardsOut.addChuteName(leftTop, varName);
+         boardsOut.addChuteName(leftBottom, varName);
+         boardsOut.addChuteName(bottom, varName);
       }
       
       // connect getStart and getEnd calls:
-      for (String subnetworkName : new String[] {"Chute.getStart", "Chute.getEnd"})
+      for (String subnetworkName : new String[] { "Chute.getStart",
+            "Chute.getEnd" })
       {
          Intersection sub = subnetworkFactory(subnetworkName);
          Intersection end = factory(END);
@@ -943,14 +1057,15 @@ public class LevelLevel
          deactivate.addNode(split);
          deactivate.addNode(end);
          
-         Chute top = new Chute("boardNames.values");
+         String name = "boardNames.values";
+         Chute top = new Chute();
          Chute bottom = top.copy();
          
-         deactivate.addEdge(incoming, nameToPortMap.get(top.getName()), split,
-               0, top);
-         deactivate.addEdge(split, 0, outgoing,
-               nameToPortMap.get(top.getName()), bottom);
-         level.makeLinked(top, bottom, fieldToChute.get(top.getName()));
+         deactivate.addEdge(incoming, nameToPortMap.get(name), split, 0, top);
+         deactivate.addEdge(split, 0, outgoing, nameToPortMap.get(name), bottom);
+         deactivate.addChuteName(top, name);
+         deactivate.addChuteName(bottom, name);
+         level.makeLinked(top, bottom, fieldToChute.get(name));
          
          Chute branch = new Chute();
          branch.setPinched(true);
@@ -966,7 +1081,7 @@ public class LevelLevel
       {
          Chute boardNames = incoming.getOutput(nameToPortMap
                .get("boardNames"));
-         if (!boardNames.getName().equals("boardNames"))
+         if (!deactivate.getChuteNames(boardNames).iterator().next().equals("boardNames"))
             throw new RuntimeException();
          boardNames.setPinched(true);
       }
