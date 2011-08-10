@@ -1,8 +1,5 @@
 package level;
 
-import checkers.nullness.quals.Nullable;
-import checkers.nullness.quals.Pure;
-
 /**
  * A mutable chute segment for use in a {@link Board}. Once {@link #isActive()
  * this.isActive()} is false, {@code this} is immutable.<br/>
@@ -35,9 +32,6 @@ import checkers.nullness.quals.Pure;
 
 public class Chute extends graph.Edge<Intersection>
 {
-   // TODO change String to whatever we end up using
-   private final @Nullable String name;
-   
    private boolean pinch;
    
    private boolean narrow;
@@ -48,27 +42,12 @@ public class Chute extends graph.Edge<Intersection>
    private static int nextUID = 1;
    
    /**
-    * Creates a new {@code Chute} object, with the given value for {@code name}.
+    * Creates a new {@code Chute} object.
     * 
     * @param name
     */
-   @Deprecated
-   public Chute(@Nullable String name)
-   {
-      this.name = name;
-      this.editable = true;
-      
-      narrow = false;
-      pinch = false;
-      
-      UID = nextUID;
-      nextUID += 1;
-      checkRep();
-   }
-   
    public Chute()
    {
-      this.name = null;
       this.editable = true;
       
       narrow = false;
@@ -77,16 +56,6 @@ public class Chute extends graph.Edge<Intersection>
       UID = nextUID;
       nextUID += 1;
       checkRep();
-   }
-   
-   /**
-    * Returns {@code name}, or {@code null} if none exists
-    */
-   @Pure
-   @Deprecated
-   public @Nullable String getName()
-   {
-      return name;
    }
    
    /**
@@ -185,7 +154,7 @@ public class Chute extends graph.Edge<Intersection>
     */
    public Chute copy()
    {
-      Chute copy = new Chute(name);
+      Chute copy = new Chute();
       copy.setNarrow(narrow);
       copy.setPinched(pinch);
       copy.setEditable(editable);

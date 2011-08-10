@@ -379,8 +379,6 @@ public class Level
                if (!names.isEmpty())
                   edgeName = names.iterator().next();
             }
-            if (edgeName == null)
-               edgeName = edge.getName();
             
             out.println("   <edge var=\"" + edgeName + "\" pinch=\""
                   + edge.isPinched() + "\" width=\""
