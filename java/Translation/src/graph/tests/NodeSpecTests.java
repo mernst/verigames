@@ -1,7 +1,6 @@
 package graph.tests;
 
 import static graph.tests.Reflect.invokeMethod;
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 import graph.Edge;
 import graph.Node;
