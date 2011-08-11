@@ -10,17 +10,20 @@ ant targets:
 
    clean - Deletes the files in bin/
 
-   test - Runs all tests
+   test - Runs clean, build, then all tests
       
-      test.graph - Runs all the tests in the graph package
-      
-      test.level - Runs all the tests in the level package
+      test.graph - Runs all the tests in the graph package. Does not build
+                   first.
 
-      test.levelBuilder - Runs all the tests in the levelBuilder package
+      test.level - Runs all the tests in the level package. Does not build
+                   first.
+
+      test.levelBuilder - Runs all the tests in the levelBuilder package. Does
+                          not build first.
 
    javadoc - Generates Javadoc for public members
 
    javadoc.proteected - Generates Javadoc for public and protected members
 
    javadoc.private - Generates Javadoc for public, protected, and private
-   members
+                     members
