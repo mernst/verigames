@@ -41,7 +41,7 @@ public class NullTestLevel
       
       Intersection getOut = subnetworkFactory("Intersection.getOutputChute");
       getChute.addNode(getOut);
-      getChute.addEdge(getOut, 0, outgoing, 0, new Chute(null, true, null));
+      getChute.addEdge(getOut, 0, outgoing, 0, new Chute());
    }
    
    /**
@@ -65,12 +65,16 @@ public class NullTestLevel
       setChute.addNode(split);
       setChute.addNode(end);
       
-      Chute top = new Chute("chute", true, null);
+      Chute top = new Chute();
       Chute bottom = top.copy();
+      String name = "chute";
+      
       setChute.addEdge(incoming, 0, split, 0, top);
       setChute.addEdge(split, 1, end, 0, bottom);
+      setChute.addChuteName(top, name);
+      setChute.addChuteName(bottom, name);
       level.makeLinked(top, bottom);
       
-      setChute.addEdge(split, 0, setOut, 0, new Chute(null, true, null));
+      setChute.addEdge(split, 0, setOut, 0, new Chute());
    }
 }

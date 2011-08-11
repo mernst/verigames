@@ -12,7 +12,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ LevelBuilderSpecTests.class })
+@SuiteClasses({  })
 public class SpecificationTests {
    // Placeholder class
 }

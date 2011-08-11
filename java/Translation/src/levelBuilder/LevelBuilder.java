@@ -123,13 +123,10 @@ public class LevelBuilder
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on inactive LevelBuilder");
-      if (chute.getName() == null)
-         throw new IllegalArgumentException("addField passed an unnamed Chute");
-      if (fieldToChutes.containsKey(chute.getName()))
-         throw new IllegalArgumentException("field with given name already exists");
       
       fields.add(chute);
-      fieldToChutes.put(chute.getName(), new LinkedHashSet<Chute>());
+      // TODO find name
+      // fieldToChutes.put(chute.getName(), new LinkedHashSet<Chute>());
    }
    
    /**

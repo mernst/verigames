@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Set;
 
 import level.Board;
 import level.Chute;
@@ -49,9 +47,10 @@ public class LevelXMLTests
       constructor.addNode(start);
       Intersection outgoing = Intersection.factory(Kind.OUTGOING);
       constructor.addNode(outgoing);
-      Chute c = new Chute("s", true, null);
+      Chute c = new Chute();
       c.setNarrow(false);
       constructor.addEdge(start, 0, outgoing, 0, c);
+      constructor.addChuteName(c, "s");
       
       l.addBoard("constructor", constructor);
       
@@ -67,20 +66,17 @@ public class LevelXMLTests
       method.addNode(restart);
       method.addNode(out);
       
-      Chute c2 = new Chute("s", true, null);
-      Chute c3 = new Chute("s", true, null);
+      Chute c2 = new Chute();
+      Chute c3 = new Chute();
       
       method.addEdge(incoming, 0, end, 0, c2);
+      method.addChuteName(c2, "s");
       method.addEdge(restart, 0, out, 0, c3);
+      method.addChuteName(c3, "s");
       
       l.addBoard("method", method);
       
-      Set<Chute> linked = new HashSet<Chute>();
-      linked.add(c);
-      linked.add(c2);
-      linked.add(c3);
-      
-      l.makeLinked(linked);
+      l.makeLinked(c, c2, c3);
 
       l.deactivate();
       
@@ -132,14 +128,16 @@ public class LevelXMLTests
       b.addNode(start);
       b.addNode(merge);
 
-      Chute top = new Chute("var", true, null);
+      Chute top = new Chute();
       Chute bottom = top.copy();
       bottom.setPinched(true);
       b.addEdge(incoming, 0, merge, 0, top);
+      b.addChuteName(top, "var");
       b.addEdge(merge, 0, outgoing, 0, bottom);
+      b.addChuteName(bottom, "var");
       l.makeLinked(top, bottom);
 
-      Chute right = new Chute(null, true, null);
+      Chute right = new Chute();
       b.addEdge(start, 0, merge, 1, right);
 
       l.addBoard("Placeholder", b);

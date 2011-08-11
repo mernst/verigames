@@ -341,7 +341,8 @@ public class BoardBuilder
          for (Chute template : fields)
          {
             Chute c = template.copy();
-            varToCurrentEdge.put(c.getName(), c);
+            // TODO find name
+            // varToCurrentEdge.put(c.getName(), c);
 
             boardManager.addHalfEdge(incoming, currentIncomingPort++, c);
             
@@ -349,17 +350,8 @@ public class BoardBuilder
             chuteToLinkedChutes.get(c).add(c);
             
             // TODO change so that fields' aux chute are all linked, too
-            levelBuilder.addChuteToField(c.getName(), c);
-            
-            // Perform a preorder traversal of the auxiliary chutes tree
-            Iterator<Chute> auxChuteTraversal = c.traverseAuxChutes();
-            while (auxChuteTraversal.hasNext())
-            {
-               Chute aux = auxChuteTraversal.next();
-               boardManager.addHalfEdge(incoming, currentIncomingPort++, aux);
-               chuteToLinkedChutes.put(aux, new LinkedHashSet<Chute>());
-               chuteToLinkedChutes.get(aux).add(aux);
-            }
+            // TODO find name
+            // levelBuilder.addChuteToField(c.getName(), c);
          }
       }
       checkRep();
@@ -390,37 +382,19 @@ public class BoardBuilder
       if (!active)
          throw new IllegalStateException(
                "variable added to inactive BoardBuilder");
-      if (vartype.getName() == null)
-         throw new IllegalArgumentException(
-               "vartype.getName() must not be null");
-      if (varToCurrentEdge.containsKey(vartype.getName()))
-         throw new IllegalArgumentException(vartype.getName()
-               + " already exists in this BoardBuilder");
       
       Intersection newNode = Intersection.factory(startType);
       boardManager.addNode(newNode);
       
       Chute c = vartype.copy();
-      varToCurrentEdge.put(c.getName(), c);
+      // TODO find name
+      // varToCurrentEdge.put(c.getName(), c);
       
       boardManager.addHalfEdge(newNode, 0, c);
       
       chuteToLinkedChutes.put(c, new LinkedHashSet<Chute>());
       chuteToLinkedChutes.get(c).add(c);
       
-      Iterator<Chute> auxItr = c.traverseAuxChutes();
-      while (auxItr.hasNext())
-      {
-         Chute nextAux = auxItr.next();
-         Intersection node = Intersection.factory(Kind.START_NO_BALL);
-         
-         boardManager.addNode(node);
-         
-         boardManager.addHalfEdge(node, 0, nextAux);
-         
-         chuteToLinkedChutes.put(nextAux, new LinkedHashSet<Chute>());
-         chuteToLinkedChutes.get(nextAux).add(nextAux);
-      }
       checkRep();
    }
    
@@ -547,7 +521,8 @@ public class BoardBuilder
          Chute fieldtype = null;
          for (Chute c : levelBuilder.getFields())
          {
-            if (c.getName().equals(to))
+            // TODO find name
+            // if (c.getName().equals(to))
             {
                fieldtype = c;
                break;
@@ -619,19 +594,13 @@ public class BoardBuilder
       int currentOutPort = 0;
       for (Chute f : fields)
       {
-         String fieldName = f.getName();
+         // TODO find name
+         String fieldName = "placeholder"; // f.getName();
          Chute lastChute = varToCurrentEdge.get(fieldName);
          
          levelBuilder.addChuteToField(fieldName, lastChute);
          
          boardManager.finishHalfEdge(outgoing, currentOutPort++, lastChute);
-         
-         Iterator<Chute> auxItr = lastChute.traverseAuxChutes();
-         while(auxItr.hasNext())
-         {
-            Chute aux = auxItr.next();
-            boardManager.finishHalfEdge(outgoing, currentOutPort++, aux);
-         }
       }
       
       boardManager.deactivate();
@@ -682,9 +651,6 @@ public class BoardBuilder
     */
    private void addNodeToChute(Chute c, Intersection n, int inPort, int outPort)
    {
-      if (c.getName() != null && varToCurrentEdge.get(c.getName()) != c)
-         throw new IllegalArgumentException("add message");
-      
       if (boardManager.contains(n))
          throw new IllegalArgumentException("board already contains n");
       
@@ -693,7 +659,8 @@ public class BoardBuilder
       boardManager.addHalfEdge(n, inPort, c);
       
       Chute nextChute = c.copy();
-      String name = nextChute.getName();
+      // TODO find name
+      String name = null;// nextChute.getName();
       if (name != null)
          varToCurrentEdge.put(name, nextChute);
       
