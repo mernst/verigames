@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ })
+@SuiteClasses({ NodeImpTests.class })
 public class ImplementationTests
 {
    // Placeholder class
