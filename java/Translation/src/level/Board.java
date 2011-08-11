@@ -41,13 +41,13 @@ public class Board extends Graph<Intersection, Chute>
     * A lightweight implementation of a MultiBiMap. That is, each key can map to
     * multiple values, and an inverse view of the map can be provided.
     */
-   static class MultiBiMap<K,V>
+   private static class MultiBiMap<K,V>
    {
       /**
        * A lightweight implementation of a MultiMap. That is, each key can map to
        * multiple values.
        */
-      static class MultiMap<K,V>
+      private static class MultiMap<K,V>
       {
          private Map<K, Set<V>> delegate;
 
