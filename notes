@@ -1,3 +1,9 @@
+DARPA people:
+Drew Dean
+John Cheng (technical SETA)
+
+===========================================================================
+
 Verigames deliverables for Nat and Steph:
   file formats
   data structures
@@ -26,3 +32,17 @@ Or, the player needs to find the place that an exception (cast) is needed.
 
 Gameplay needs to specify when you drop a ball for type-based simulation.
 Usually, but not always...
+
+===========================================================================
+
+Notes from meeting with Drew Dean, 8/9/2011:
+
+The Director of DARPA is especially interested in modularity -- how to
+break down a problem for crowdsourcing.  Here are some ways we can
+crowdsource:
+ * 1 person per level
+ * possibly in parallel, with multiple people trying to solve each level
+ * eventually, collaboratively on a single level (add chat feature)
+ * each level can depend on, and thus use, results from other levels
+
+===========================================================================
