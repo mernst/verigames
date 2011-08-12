@@ -14,7 +14,7 @@ Graph names are just the method name they represent. Later, this could change to
 method names that take the method signature into account, because of method-overloading. 
 -->
 <world>
-  <level>
+  <level name="Stack">
     <linked-edges>
       <!-- theVector -->
       <edge-set>
