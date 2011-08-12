@@ -63,4 +63,16 @@ Requirements not enforced by the DTD:
 
    - All nodes that have kind SUBNETWORK must have a name attribute
 
+Misc:
+
+   - NULL_TEST node:
+
+      - Represents the branching that occurs when the variable represented by
+      the input edge is tested against null.
+
+      - Upon encountering this node, a small ball will roll to the output edge
+      at port 0, and a large ball will roll to the output edge at port 1.
+
+      - The output edge at port 0 must be narrow, and the output edge at port 1
+      must be wide.
 -->
