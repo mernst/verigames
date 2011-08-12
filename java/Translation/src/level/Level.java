@@ -372,7 +372,6 @@ public class Level
             if (edge.isActive())
                throw new IllegalStateException("active Chute in Level while printing XML");
             
-            // TODO remove once chute name is fully transitioned
             String edgeName = null;
             {
                Set<String> names = board.getChuteNames(edge);
