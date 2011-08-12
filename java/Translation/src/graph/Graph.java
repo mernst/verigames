@@ -130,9 +130,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    public void addNode(NodeType node)
    {
       if (!active)
-         throw new IllegalStateException("Mutation attempted on an inactive Board");
+         throw new IllegalStateException("Mutation attempted on an inactive Graph");
       if (!node.isActive())
-         throw new IllegalStateException("Inactive node added to Board");
+         throw new IllegalStateException("Inactive node added to Graph");
       
       if (this.contains(node))
          throw new IllegalArgumentException(
