@@ -181,7 +181,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    private static <E> /*@Nullable*/ E get(List<E> from, int index)
    {
-      if (index >= from.size())
+      if (index >= from.size() || index < 0)
          return null;
       else
          return from.get(index);

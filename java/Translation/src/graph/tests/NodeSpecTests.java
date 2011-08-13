@@ -132,4 +132,15 @@ public class NodeSpecTests
       
       assertEquals(portToChute, inputs);
    }
+   
+   /**
+    * Tests that Node.getInput returns null on a negative port.
+    */
+   @Test
+   public void testGetNegativeInput()
+   {
+      Node<?> n = new ConcreteNode();
+      
+      assertEquals(null, n.getInput(-1));
+   }
 }
