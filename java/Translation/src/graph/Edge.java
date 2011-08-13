@@ -70,7 +70,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     * Intended to be a substitute for assert, except I don't want to have to
     * make sure the -ea flag is turned on in order to get these checks.
     */
-   private void ensure(boolean value)
+   private static void ensure(boolean value)
    {
       if (!value)
          throw new AssertionError();
