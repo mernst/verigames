@@ -44,62 +44,64 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    private static final boolean CHECK_REP_ENABLED = true;
+   
    /**
     * Ensures that the representation invariant holds.
     */
    protected void checkRep()
    {
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      // Representation Invariant:
+      
+      // nodes != null:
+      ensure(nodes != null);
+      // edges != null
+      ensure(edges != null);
+      
+      // for all n in nodes; e in edges:
+      // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
+      // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
+      for (EdgeType e : edges)
       {
-         // Representation Invariant:
+         NodeType n = e.getStart();
+         // e.getStart() != null
+         ensure(n != null);
+         // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
+         ensure(n.getOutput(e.getStartPort()) == e);
          
-         // nodes != null:
-         ensure(nodes != null);
-         // edges != null
-         ensure(edges != null);
+         n = e.getEnd();
+         // e.getEnd() != null
+         ensure(n != null);
+         // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
+         ensure(n.getInput(e.getEndPort()) == e);
+      }
+      
+      for (NodeType n : nodes)
+      {
          
-         // for all n in nodes; e in edges:
-         // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
-         // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
-         for (EdgeType e : edges)
+         // This approach stops verifying after encountering the first port
+         // with a null value. Therefore, it may not always check every
+         // existing output port
+         
+         EdgeType e = n.getOutput(0);
+         for (int i = 0; e != null; e = n.getOutput(++i))
          {
-            NodeType n = e.getStart();
-            // e.getStart() != null
-            ensure(n != null);
-            // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
-            ensure(n.getOutput(e.getStartPort()) == e);
-            
-            n = e.getEnd();
-            // e.getEnd() != null
-            ensure(n != null);
-            // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
-            ensure(n.getInput(e.getEndPort()) == e);
+            // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
+            ensure(i == e.getStartPort());
+            ensure(e.getStart() == n);
          }
          
-         for (NodeType n : nodes)
+         e = n.getInput(0);
+         for (int i = 0; e != null; e = n.getInput(++i))
          {
-            
-            // This approach stops verifying after encountering the first port
-            // with a null value. Therefore, it may not always check every
-            // existing output port
-            
-            EdgeType e = n.getOutput(0);
-            for (int i = 0; e != null; e = n.getOutput(++i))
-            {
-               // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
-               ensure(i == e.getStartPort());
-               ensure(e.getStart() == n);
-            }
-            
-            e = n.getInput(0);
-            for (int i = 0; e != null; e = n.getInput(++i))
-            {
-               // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
-               ensure(i == e.getEndPort());
-               ensure(e.getEnd() == n);
-            }
+            // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
+            ensure(i == e.getEndPort());
+            ensure(e.getEnd() == n);
          }
       }
+      
    }
 
    /**

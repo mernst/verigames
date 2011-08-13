@@ -42,27 +42,27 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     */
    protected void checkRep()
    {
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      // Representation Invariant:
+      
+      // start == null <--> startPort == -1
+      ensure((start == null) == (startPort == -1));
+      
+      // end == null <--> endPort == null
+      ensure((end == null) == (endPort == -1));
+      
+      /*
+       * If !active, start and end must be non-null, and startPort and endPort
+       * must not equal -1
+       */
+      if (!active)
       {
-         // Representation Invariant:
-         
-         // start == null <--> startPort == -1
-         ensure((start == null) == (startPort == -1));
-         
-         // end == null <--> endPort == null
-         ensure ((end == null) == (endPort == -1));
-          
-         /*
-          * If !active, start and end must be non-null, and startPort and
-          * endPort must not equal -1
-          */
-         if (!active)
-         {
-            ensure(start != null);
-            ensure(end != null);
-            ensure(startPort != -1);
-            ensure(endPort != -1);
-         }
+         ensure(start != null);
+         ensure(end != null);
+         ensure(startPort != -1);
+         ensure(endPort != -1);
       }
    }
    

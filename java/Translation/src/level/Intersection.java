@@ -89,65 +89,64 @@ public class Intersection extends graph.Node<Chute>
    /**
     * checks that the rep invariant holds
     */
-   @Override
-   protected void checkRep()
+   @Override protected void checkRep()
    {
       super.checkRep();
       
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      // The total number of ports that this Kind of Intersection can have
+      int numRequiredInPorts = getNumberOfInputPorts();
+      int numRequiredOutPorts = getNumberOfOutputPorts();
+      
+      TreeMap<Integer, Chute> inputChutes = getInputs();
+      TreeMap<Integer, Chute> outputChutes = getOutputs();
+      
+      int usedInPorts = inputChutes.size();
+      int usedOutPorts = outputChutes.size();
+      
+      // the size of the ports list, based on the highest index
+      int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
+      int maxOutPorts = outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1;
+      
+      if (isActive())
       {
-         // The total number of ports that this Kind of Intersection can have
-         int numRequiredInPorts = getNumberOfInputPorts();
-         int numRequiredOutPorts = getNumberOfOutputPorts();
+         /*
+          * Ensures that both the highest port number plus one and the number of
+          * used input/output ports can be no greater than the value returned by
+          * getNumberOfInputPorts() and getNumberOfOutputPorts().
+          */
          
-         TreeMap<Integer, Chute> inputChutes = getInputs();
-         TreeMap<Integer, Chute> outputChutes = getOutputs();
-         
-         int usedInPorts = inputChutes.size();
-         int usedOutPorts = outputChutes.size();
-         
-         // the size of the ports list, based on the highest index
-         int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
-         int maxOutPorts = outputChutes.isEmpty() ? 0
-               : outputChutes.lastKey() + 1;
-         
-         if (isActive())
+         if (numRequiredInPorts != -1)
          {
-            /*
-             * Ensures that both the highest port number plus one and the number
-             * of used input/output ports can be no greater than the value
-             * returned by getNumberOfInputPorts() and getNumberOfOutputPorts().
-             */
-            
-            if (numRequiredInPorts != -1)
-            {
-               ensure(usedInPorts <= numRequiredInPorts);
-               ensure(maxInPorts <= numRequiredInPorts);
-            }
-            
-            if (numRequiredOutPorts != -1)
-            {
-               ensure(usedOutPorts <= numRequiredOutPorts);
-               ensure(maxOutPorts <= numRequiredOutPorts);
-            }
+            ensure(usedInPorts <= numRequiredInPorts);
+            ensure(maxInPorts <= numRequiredInPorts);
          }
-         else
+         
+         if (numRequiredOutPorts != -1)
          {
-            // Ensures that the all ports are filled
-            
-            if (numRequiredInPorts != -1)
-            {
-               ensure(usedInPorts == numRequiredInPorts);
-               ensure(maxInPorts == numRequiredInPorts);
-            }
-            
-            if (numRequiredOutPorts != -1)
-            {
-               ensure(usedOutPorts == numRequiredOutPorts);
-               ensure(maxOutPorts == numRequiredOutPorts);
-            }
+            ensure(usedOutPorts <= numRequiredOutPorts);
+            ensure(maxOutPorts <= numRequiredOutPorts);
          }
       }
+      else
+      {
+         // Ensures that the all ports are filled
+         
+         if (numRequiredInPorts != -1)
+         {
+            ensure(usedInPorts == numRequiredInPorts);
+            ensure(maxInPorts == numRequiredInPorts);
+         }
+         
+         if (numRequiredOutPorts != -1)
+         {
+            ensure(usedOutPorts == numRequiredOutPorts);
+            ensure(maxOutPorts == numRequiredOutPorts);
+         }
+      }
+      
    }
    
    /**

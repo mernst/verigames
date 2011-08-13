@@ -58,19 +58,20 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void checkRep()
    {
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      ensure(isLastEltNonNull(inputs));
+      ensure(isLastEltNonNull(outputs));
+      
+      if (!active)
       {
-         ensure(isLastEltNonNull(inputs));
-         ensure(isLastEltNonNull(outputs));
-         
-         if (!active)
-         {
-            for (EdgeType e : inputs)
-               ensure(e != null);
-            for (EdgeType e : outputs)
-               ensure(e != null);
-         }
+         for (EdgeType e : inputs)
+            ensure(e != null);
+         for (EdgeType e : outputs)
+            ensure(e != null);
       }
+      
    }
    
    /**

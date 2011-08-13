@@ -55,37 +55,38 @@ public class Level
    private void checkRep()
    {
       // Representation Invariant:
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      Set<Chute> encountered = new HashSet<Chute>();
+      for (Set<Chute> s : linkedEdgeClasses)
       {
-         Set<Chute> encountered = new HashSet<Chute>();
-         for (Set<Chute> s : linkedEdgeClasses)
+         
+         // No chute can be contained in more than one set in
+         // linkedEdgeClasses
+         for (Chute c : s)
          {
-            
-            // No chute can be contained in more than one set in
-            // linkedEdgeClasses
-            for (Chute c : s)
-            {
-               ensure(!encountered.contains(c));
-               encountered.add(c);
-            }
-            
-            // No set in linkedEdgeClasses may be empty
-            ensure(!s.isEmpty());
-            
-            /*
-             * No set in linkedEdgeClasses may have size 1 (the fact that a
-             * chute is linked to itself need not be represented)
-             */
-            ensure(s.size() != 1);
-            
-            /*
-             * All chutes contained in sets contained in linkedEdgeClasses must
-             * also be contained contained by some Board in boardNames.values()
-             * 
-             * Not checked for effiency's sake
-             */
+            ensure(!encountered.contains(c));
+            encountered.add(c);
          }
+         
+         // No set in linkedEdgeClasses may be empty
+         ensure(!s.isEmpty());
+         
+         /*
+          * No set in linkedEdgeClasses may have size 1 (the fact that a chute
+          * is linked to itself need not be represented)
+          */
+         ensure(s.size() != 1);
+         
+         /*
+          * All chutes contained in sets contained in linkedEdgeClasses must
+          * also be contained contained by some Board in boardNames.values()
+          * 
+          * Not checked for effiency's sake
+          */
       }
+      
    }
    
    /**

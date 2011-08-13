@@ -32,25 +32,24 @@ public class NullTest extends Intersection
    /**
     * Checks that the representation invariant holds
     */
-   @Override
-   protected void checkRep()
+   @Override protected void checkRep()
    {
       super.checkRep();
       
-      if (CHECK_REP_ENABLED)
-      {
-         Chute nonNullChute = getNonNullChute();
-         if (nonNullChute != null
-               && (nonNullChute.isEditable() || !nonNullChute.isNarrow()))
-            throw new RuntimeException(
-                  "NullTest's NonNull chute does not have the proper settings");
-         
-         Chute nullChute = getNullChute();
-         if (nullChute != null
-               && (nullChute.isEditable() || nullChute.isNarrow()))
-            throw new RuntimeException(
-                  "NullTest's Null chute does not have the proper settings");
-      }
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      Chute nonNullChute = getNonNullChute();
+      if (nonNullChute != null
+            && (nonNullChute.isEditable() || !nonNullChute.isNarrow()))
+         throw new RuntimeException(
+               "NullTest's NonNull chute does not have the proper settings");
+      
+      Chute nullChute = getNullChute();
+      if (nullChute != null && (nullChute.isEditable() || nullChute.isNarrow()))
+         throw new RuntimeException(
+               "NullTest's Null chute does not have the proper settings");
+      
    }
    
    /**

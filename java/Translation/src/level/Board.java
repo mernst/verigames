@@ -123,40 +123,41 @@ public class Board extends Graph<Intersection, Chute>
    {
       super.checkRep();
       
-      if (CHECK_REP_ENABLED)
+      if (!CHECK_REP_ENABLED)
+         return;
+      
+      // Representation Invariant:
+      Set<Intersection> nodes = getNodes();
+      
+      // if nodes.size == 1, its element, i, must be of type INCOMING
+      if (nodes.size() == 1)
       {
-         // Representation Invariant:
-         Set<Intersection> nodes = getNodes();
-         
-         // if nodes.size == 1, its element, i, must be of type INCOMING
-         if (nodes.size() == 1)
-         {
-            ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
-         }
-         
-         for (Intersection i : nodes)
-         {
-            if (i.getIntersectionKind() == Kind.INCOMING)
-            {
-               // nodes may contain no more than one element of type INCOMING
-               ensure(incomingNode == i);
-            }
-            else if (i.getIntersectionKind() == Kind.OUTGOING)
-            {
-               // nodes may contain no more than one element of type OUTGOING
-               ensure(outgoingNode == i);
-            }
-         }
-         
-         // incomingNode != null <--> there exists an element i in nodes such
-         // that
-         // i.getIntersectionType() == INCOMING
-         ensure((incomingNode == null) || nodes.contains(incomingNode));
-         // outgoingNode != null <--> there exists an element i in nodes such
-         // that
-         // i.getIntersectionType() == OUTGOING
-         ensure((outgoingNode == null) || nodes.contains(outgoingNode));
+         ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
       }
+      
+      for (Intersection i : nodes)
+      {
+         if (i.getIntersectionKind() == Kind.INCOMING)
+         {
+            // nodes may contain no more than one element of type INCOMING
+            ensure(incomingNode == i);
+         }
+         else if (i.getIntersectionKind() == Kind.OUTGOING)
+         {
+            // nodes may contain no more than one element of type OUTGOING
+            ensure(outgoingNode == i);
+         }
+      }
+      
+      // incomingNode != null <--> there exists an element i in nodes such
+      // that
+      // i.getIntersectionType() == INCOMING
+      ensure((incomingNode == null) || nodes.contains(incomingNode));
+      // outgoingNode != null <--> there exists an element i in nodes such
+      // that
+      // i.getIntersectionType() == OUTGOING
+      ensure((outgoingNode == null) || nodes.contains(outgoingNode));
+      
    }
    
    /**
