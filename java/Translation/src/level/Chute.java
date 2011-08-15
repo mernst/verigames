@@ -43,8 +43,6 @@ public class Chute extends graph.Edge<Intersection>
    
    /**
     * Creates a new {@code Chute} object.
-    * 
-    * @param name
     */
    public Chute()
    {
