@@ -1,12 +1,13 @@
 package level;
 
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * A set of ordered pairs of {@link Level}s and names. Each {@link Level} must
- * have a unique name.
+ * A mapping from names to {@link Level}s. Each {@code Level} must have a unique
+ * name
  * 
  * @author Nathaniel Mote
  * 
@@ -35,6 +36,16 @@ public class World
    public void addLevel(String name, Level level)
    {
       nameToLevel.put(name, level);
+   }
+   
+   /**
+    * Return an unmodifiable {@code Map} view on the mapping {@code this}
+    * represents. The returned {@code Map} is backed by {@code this}, so changes
+    * in {@code this} will be reflected in the returned {@code Map}.
+    */
+   public Map<String, Level> getLevels()
+   {
+      return Collections.unmodifiableMap(nameToLevel);
    }
    
    /**
