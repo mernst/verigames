@@ -74,8 +74,8 @@ public class Intersection extends graph.Node<Chute>
    
    private final Kind intersectionKind;
 
-   private int x;
-   private int y;
+   private int x = -1;
+   private int y = -1;
    
    private final int UID;
    
@@ -331,21 +331,45 @@ public class Intersection extends graph.Node<Chute>
       return intersectionKind;
    }
 
+   /**
+    * Sets the x coordinate that {@code this} is to appear at to {@code x}.
+    *
+    * @param x
+    * Must be nonnegative
+    */
    public void setX(int x)
    {
+      if (x < 0)
+         throw new IllegalArgumentException("x value of " + x + " illegal -- must be nonnegative");
       this.x = x;
    }
 
+   /**
+    * Returns the x coordinate that {@code this} is to appear at, or -1 if none
+    * has been set.
+    */
    public int getX()
    {
       return x;
    }
 
+   /**
+    * Sets the y coordinate that {@code this} is to appear at to {@code y}.
+    *
+    * @param y
+    * Must be nonnegative
+    */
    public void setY(int y)
    {
+      if (y < 0)
+         throw new IllegalArgumentException("y value of " + y + " illegal -- must be nonnegative");
       this.y = y;
    }
 
+   /**
+    * Returns the y coordinate that {@code this} is to appear at, or -1 if none
+    * has been set.
+    */
    public int getY()
    {
       return y;
