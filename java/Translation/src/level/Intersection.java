@@ -11,6 +11,10 @@ import java.util.TreeMap;
  * Specification Field: {@code kind} : {@link Intersection.Kind}
  * // represents which kind of {@code Intersection} {@code this} is<br/>
  * <br/>
+ * Specification Field: Layout Coordinate : (x: integer, y:integer) // The
+ * coordinates at which {@code this} will be located when its containing {@link
+ * Board} is laid out to be played.<br/>
+ * <br/>
  * Specification Field: {@code UID} : integer // the unique identifier for this
  * {@code Intersection}
  * 
@@ -69,6 +73,9 @@ public class Intersection extends graph.Node<Chute>
    private static final boolean CHECK_REP_ENABLED = true;
    
    private final Kind intersectionKind;
+
+   private int x;
+   private int y;
    
    private final int UID;
    
@@ -322,6 +329,26 @@ public class Intersection extends graph.Node<Chute>
    public Kind getIntersectionKind()
    {
       return intersectionKind;
+   }
+
+   public void setX(int x)
+   {
+      this.x = x;
+   }
+
+   public int getX()
+   {
+      return x;
+   }
+
+   public void setY(int y)
+   {
+      this.y = y;
+   }
+
+   public int getY()
+   {
+      return y;
    }
    
    /**
