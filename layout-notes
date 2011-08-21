@@ -1,0 +1,66 @@
+Graphviz layout strategy:
+
+Graphviz has several layout tools. One of them (the one I believe to be best
+suited to our needs) -- "dot" -- draws hierarchical graphs, with parent nodes
+stricly above child nodes. 
+
+The row of nodes in which a nodes lies is its "rank."
+For example, the top row of nodes is rank 0 -- these nodes have no children.
+Rank 1 consists only of children of rank 0
+Rank 2 consists only of children of ranks 0 and 1
+etc.
+
+--------------------------------------------------------------------------------
+
+Preliminary graph layout algorithm:
+
+Make invisible, weight=0 edges from the incoming node to every other node, and
+to the outgoing node from every other node. This does nothing except enforce
+ranking -- The incoming node is always alone in rank 0, and the outgoing node
+is always alone in the last rank.
+
+Feed the generated graph in DOT format to the "dot" tool, then parse the
+coordinates of the nodes in the returned graph.
+
+follow the following algorithm to translate the coordinates to those that the
+game uses:
+
+incoming node.pos = (0,0)
+
+int currentY = 1
+
+list of (set of node) ranks = ranks(all_nodes)
+
+for each (set of node), rankSet, in ranks
+
+   int rank = index of rankSet in ranks
+
+   for each node n in rankSet:
+      n.y = currentY
+
+   int rankHeight = maxHeight(rankSet)
+   currentY += rankHeight
+
+   list nodes = rankSet sorted from lowest Graphviz x value to highest
+
+   int currentX = 0
+   for each node n in nodes:
+      n.x = currentX
+      currentX += n.width
+
+// returns the maximum height of the highest node in nodes
+function maxHeight(nodes: collection of node)
+   int maxHeight = 0
+   for each node, n, in nodes:
+      if n.height > maxHeight
+         maxhHeight = n.height
+   return maxHeight
+
+// returns a list of (set of node), where for any given set in the list, its
+// index indicates the rank of all contained nodes.
+function ranks(nodes: collection of node)
+   calculate ranks based on description above
+   list of (set of node) ranks
+   for all nodes n:
+      add n to the set at ranks[n.rank]
+   return ranks
