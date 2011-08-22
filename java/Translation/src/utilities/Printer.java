@@ -1,4 +1,4 @@
-package level.utilities;
+package utilities;
 
 import java.io.PrintStream;
 
@@ -20,7 +20,6 @@ import java.io.PrintStream;
  */
 public abstract class Printer<E, T>
 {
-
    /**
     * Prints a textual representation of the given object to the given
     * PrintStream.
