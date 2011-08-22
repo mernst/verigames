@@ -4,14 +4,14 @@ import java.io.PrintStream;
 
 /**
  * Prints objects of type {@code E}. Subclasses must provide an implementation
- * for {@link #printMiddle(E, PrintStream, T) printMiddle}.<br/>
+ * for {@link #printMiddle printMiddle}.<br/>
  * <br/>
- * Some subclasses may want to override {@link #printIntro(E, PrintStream, T)
- * printIntro} and/or {@link #printOutro(E, PrintStream, T) printOutro} -- the
- * default implementation does nothing.<br/>
+ * Some subclasses may want to override {@link #printIntro printIntro} and/or
+ * {@link #printOutro printOutro} -- the default implementation does nothing.<br/>
  * <br/>
- * Subclasses can override {@link #print(E, PrintStream, T) print}, but
- * typically this will not be necessary.
+ * Subclasses can override {@link #print print}, typically this will not be
+ * necessary.
+ * 
  * @param <E>
  * The type of the object to be printed
  * @param <T>
@@ -22,7 +22,11 @@ public abstract class Printer<E, T>
 {
    /**
     * Prints a textual representation of the given object to the given
-    * PrintStream.
+    * PrintStream.<br/>
+    * <br/>
+    * By default, calls {@link #printIntro}, {@link #printMiddle}, then
+    * {@link #printOutro}.
+    * 
     * @param toPrint
     * The object to print
     * @param out
