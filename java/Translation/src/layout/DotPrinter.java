@@ -17,7 +17,7 @@ import utilities.Printer;
  * 
  * @author Nathaniel Mote
  */
-public class DotPrinter extends Printer<Board, Void>
+class DotPrinter extends Printer<Board, Void>
 {
    /**
     * {@inheritDoc}
