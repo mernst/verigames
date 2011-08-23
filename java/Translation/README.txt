@@ -23,7 +23,10 @@ ant targets:
 
    javadoc - Generates Javadoc for public members
 
-   javadoc.proteected - Generates Javadoc for public and protected members
+   javadoc.protected - Generates Javadoc for public and protected members
 
-   javadoc.private - Generates Javadoc for public, protected, and private
-                     members
+   javadoc.package - Generates Javadoc for public, protected, and
+                     package-private members
+
+   javadoc.private - Generates Javadoc for public, package-private, protected,
+                     and private members
