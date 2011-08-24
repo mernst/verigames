@@ -3,6 +3,8 @@ package level.tests.levelWorldCreation;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import utilities.BuildingTools;
+
 import level.Board;
 import level.Chute;
 import level.Intersection;
