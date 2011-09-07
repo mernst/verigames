@@ -365,6 +365,17 @@ public class Level
                      + output.getUID() + "\"/>");
             
             out.println("    </output>");
+            
+            double x = node.getX();
+            double y = node.getY();
+            if (x >= 0 && y >= 0)
+            {
+               out.println("<layout>");
+               out.println("<x>"+x+"</x>");
+               out.println("<y>"+y+"</y>");
+               out.println("</layout>");
+            }
+            
             out.println("   </node>");
          }
          
