@@ -79,26 +79,30 @@ class DotPrinter extends Printer<Board, Void>
    {
       for (Intersection n : b.getNodes())
       {
+         int width = getMaxPorts(n);
+         
+         int height;
          if (n.getIntersectionKind() == Kind.INCOMING
                || n.getIntersectionKind() == Kind.OUTGOING)
-            out.println("" + n.getUID() + " [width = " + getMaxPorts(n)
-                  + ", height=1, label=\"\"];");
+            height = 1;
          else
+            height = 2;
+         
+         String label = n.getIntersectionKind().toString() + n.getUID();
+         
          {
-            int height = 2;
+            boolean pinchOut = false;
+            for (Chute c : n.getOutputs().values())
             {
-               boolean pinchOut = false;
-               for (Chute c : n.getOutputs().values())
-               {
-                  pinchOut |= c.isPinched();
-               }
-               if (pinchOut)
-                  height++;
+               if (c.isPinched())
+                  pinchOut = true;
             }
-            out.println("" + n.getUID() + " [width = " + getMaxPorts(n)
-                  + ", height=" + height + ", label=\""
-                  + n.getIntersectionKind() + n.getUID() + "\"];");
+            if (pinchOut)
+               height++;
          }
+         
+         out.println("" + n.getUID() + " [width = " + width + ", height="
+               + height + ", label=\"" + label + "\"];");
       }
    }
    
