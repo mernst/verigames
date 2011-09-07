@@ -74,8 +74,8 @@ public class Intersection extends graph.Node<Chute>
    
    private final Kind intersectionKind;
 
-   private int x = -1;
-   private int y = -1;
+   private double x = -1d;
+   private double y = -1d;
    
    private final int UID;
    
@@ -337,7 +337,7 @@ public class Intersection extends graph.Node<Chute>
     * @param x
     * Must be nonnegative
     */
-   public void setX(int x)
+   public void setX(double x)
    {
       if (x < 0)
          throw new IllegalArgumentException("x value of " + x + " illegal -- must be nonnegative");
@@ -348,7 +348,7 @@ public class Intersection extends graph.Node<Chute>
     * Returns the x coordinate that {@code this} is to appear at, or -1 if none
     * has been set.
     */
-   public int getX()
+   public double getX()
    {
       return x;
    }
@@ -359,7 +359,7 @@ public class Intersection extends graph.Node<Chute>
     * @param y
     * Must be nonnegative
     */
-   public void setY(int y)
+   public void setY(double y)
    {
       if (y < 0)
          throw new IllegalArgumentException("y value of " + y + " illegal -- must be nonnegative");
@@ -370,7 +370,7 @@ public class Intersection extends graph.Node<Chute>
     * Returns the y coordinate that {@code this} is to appear at, or -1 if none
     * has been set.
     */
-   public int getY()
+   public double getY()
    {
       return y;
    }
