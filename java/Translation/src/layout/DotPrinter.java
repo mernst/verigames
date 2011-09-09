@@ -12,7 +12,7 @@ import level.Intersection.Kind;
 import utilities.Printer;
 
 /**
- * Prints fully constructed Board objects in Graphviz's <a
+ * Prints fully constructed {@link level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
  * 
  * @author Nathaniel Mote
