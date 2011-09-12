@@ -2,7 +2,7 @@ package level.tests.levelWorldCreation;
 
 import static level.Intersection.*;
 import static level.Intersection.Kind.*;
-import static level.tests.levelWorldCreation.BuildingTools.*;
+import static utilities.BuildingTools.*;
 
 import level.Board;
 import level.Chute;

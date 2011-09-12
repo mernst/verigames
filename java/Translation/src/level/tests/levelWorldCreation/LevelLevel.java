@@ -9,9 +9,9 @@ import static level.Intersection.Kind.SPLIT;
 import static level.Intersection.Kind.START_BLACK_BALL;
 import static level.Intersection.Kind.START_NO_BALL;
 import static level.Intersection.Kind.START_WHITE_BALL;
-import static level.tests.levelWorldCreation.BuildingTools.addField;
-import static level.tests.levelWorldCreation.BuildingTools.connectFields;
-import static level.tests.levelWorldCreation.BuildingTools.initializeBoard;
+import static utilities.BuildingTools.addField;
+import static utilities.BuildingTools.connectFields;
+import static utilities.BuildingTools.initializeBoard;
 
 import java.util.Collections;
 import java.util.HashMap;

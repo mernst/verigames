@@ -1,4 +1,4 @@
-package level.tests.levelWorldCreation;
+package utilities;
 
 import static level.Intersection.factory;
 
@@ -17,7 +17,7 @@ public class BuildingTools
     * Makes a new Board, adds it to level with the given name, adds incoming and
     * outgoing nodes to it.
     */
-   protected static Board initializeBoard(Level level, String name)
+   public static Board initializeBoard(Level level, String name)
    {
       Board b = new Board();
       level.addBoard(name, b);
@@ -28,7 +28,7 @@ public class BuildingTools
       return b;
    }
    
-   protected static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPortMap, String name, Kind kind)
+   public static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPortMap, String name, Kind kind)
    {
       Intersection start = factory(kind);
       b.addNode(start);
@@ -39,7 +39,7 @@ public class BuildingTools
       fieldToChute.put(name, chute);
    }
    
-   protected static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPort, String... fieldNames)
+   public static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPort, String... fieldNames)
    {  
       for (String name : fieldNames)
          connectField(b, nameToPort.get(name), name, level, fieldToChute);

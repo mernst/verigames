@@ -3,7 +3,7 @@ package level.tests.levelWorldCreation;
 import static level.Intersection.factory;
 import static level.Intersection.Kind.END;
 import static level.Intersection.Kind.SPLIT;
-import static level.tests.levelWorldCreation.BuildingTools.initializeBoard;
+import static utilities.BuildingTools.initializeBoard;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
