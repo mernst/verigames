@@ -55,7 +55,7 @@ class DotRunner
    /**
     * Prints {@code b} in the DOT language to {@code os}, then closes {@code os}
     * <p>
-    * @modifies os
+    * Modifies: {@code os}
     */
    private static void outputBoard(Board b, OutputStream os)
    {
