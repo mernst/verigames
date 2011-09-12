@@ -46,6 +46,10 @@ public class GraphInformation
        * 
        * @return the previous GraphAttributes object, or null if none existed
        */
+
+      // This may need to be changed somehow because graph attributes can be
+      // split across multiple lines in DOT. Maybe a way to merge them or
+      // something?
       public GraphAttributes setGraphAttributes(GraphAttributes attributes)
       {
          GraphAttributes retVal = this.graphAttributes;
