@@ -1,6 +1,9 @@
-NOTE: this code assumes that you have an environment variable named $CHECKERS
-storing the location of your checkers folder in your copy of the checker
-framework
+To run the nullness checker, you must have an environment variable named
+$CHECKERS storing the location of the checkers folder in your copy of the
+checker framework.
+
+To use the layout module, you must have Graphviz (graphviz.org) installed, and
+its "dot" tool must be callable from the command line.
 
 ant targets:
 
@@ -12,14 +15,9 @@ ant targets:
 
    test - Runs clean, build, then all tests
       
-      test.graph - Runs all the tests in the graph package. Does not build
-                   first.
-
-      test.level - Runs all the tests in the level package. Does not build
-                   first.
-
-      test.levelBuilder - Runs all the tests in the levelBuilder package. Does
-                          not build first.
+   test.[level|layout|graph|levelBuilder] - Runs all the tests in the
+                                            respective package. Does not clean
+                                            or build first.
 
    javadoc - Generates Javadoc for public members
 
