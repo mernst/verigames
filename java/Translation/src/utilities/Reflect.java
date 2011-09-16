@@ -1,4 +1,4 @@
-package graph.tests;
+package utilities;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

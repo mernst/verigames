@@ -1,6 +1,6 @@
 package graph.tests;
 
-import static graph.tests.Reflect.*;
+import static utilities.Reflect.*;
 
 import java.lang.reflect.InvocationTargetException;
 

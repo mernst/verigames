@@ -1,7 +1,7 @@
 package graph.tests;
 
-import static graph.tests.Reflect.invokeMethod;
 import static org.junit.Assert.assertTrue;
+import static utilities.Reflect.invokeMethod;
 import graph.Edge;
 
 import java.lang.reflect.InvocationTargetException;
