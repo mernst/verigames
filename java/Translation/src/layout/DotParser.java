@@ -351,13 +351,18 @@ public class DotParser
     * return 12345. Rounds to the nearest hundredth.
     * 
     * @param String
-    * Must be a nonnegative decimal number
+    * Must be a nonnegative decimal number. There may not be a leading '.'
+    * (e.g.  ".35" must be written "0.35").
     * @return {@code int} indicating the number of hundredths in the given
     * number
+    * @throws NumberFormatException if {@code str} is poorly formed
     */
    private static int parseToHundredths(String str)
    {
-      // TODO add precondition check
+      // 1 or more digits, optionally followed by a single dot and one or more
+      // digits
+      if (!str.matches("[0-9]+(\\.[0-9]+)?"))
+         throw new NumberFormatException(str + " is not a well-formed decimal number");
       if (str.contains("."))
       {
          String[] parts = str.split("\\.");
