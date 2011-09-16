@@ -33,29 +33,29 @@ public class DotParserSpecTests
       + " 174.45,55.377\"];\n"
       + "}\n";
 
-      private static final GraphInformation testOutput;
-      static
-      {
-         GraphInformation.Builder builder = new GraphInformation.Builder();
+   private static final GraphInformation testOutput;
+   static
+   {
+      GraphInformation.Builder builder = new GraphInformation.Builder();
 
-         builder.setGraphAttributes(new GraphInformation.GraphAttributes(21669, 52800));
+      builder.setGraphAttributes(new GraphInformation.GraphAttributes(21669, 52800));
 
-         builder.setNodeAttributes("8", new GraphInformation.NodeAttributes(10164, 45600, 14400, 14400));
-         builder.setNodeAttributes("9", new GraphInformation.NodeAttributes(12964, 3600, 7200, 7200));
-         builder.setNodeAttributes("10", new GraphInformation.NodeAttributes(8264, 30400, 7200, 14400));
-         builder.setNodeAttributes("11", new GraphInformation.NodeAttributes(12964, 15200, 14400, 14400));
-         builder.setNodeAttributes("12", new GraphInformation.NodeAttributes(15864, 30400, 7200, 14400));
+      builder.setNodeAttributes("8", new GraphInformation.NodeAttributes(10164, 45600, 14400, 14400));
+      builder.setNodeAttributes("9", new GraphInformation.NodeAttributes(12964, 3600, 7200, 7200));
+      builder.setNodeAttributes("10", new GraphInformation.NodeAttributes(8264, 30400, 7200, 14400));
+      builder.setNodeAttributes("11", new GraphInformation.NodeAttributes(12964, 15200, 14400, 14400));
+      builder.setNodeAttributes("12", new GraphInformation.NodeAttributes(15864, 30400, 7200, 14400));
 
-         testOutput = builder.build();
-      }
+      testOutput = builder.build();
+   }
 
-      /**
-       * Tests that the parser gives testOutput on testInput
-       */
-      @Test
-      public void simpleTest()
-      {
-         DotParser parser = new DotParser();
-         assertEquals(testOutput, parser.parse(testInput));
-      }
+   /**
+    * Tests that the parser gives testOutput on testInput
+    */
+   @Test
+   public void simpleTest()
+   {
+      DotParser parser = new DotParser();
+      assertEquals(testOutput, parser.parse(testInput));
+   }
 }
