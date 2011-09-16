@@ -237,8 +237,13 @@ public class DotParser
     */
    private static NodeRecord parseNode(String line) throws IllegalLineException
    {
+      // TODO make sure NumberFormatExceptions and
+      // ArrayIndexOutOfBoundsExceptions don't escape
+
       // an example of a node line:
       // "   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];"
+      //     ^
+      // node name
       
       String[] tokens = tokenizeLine(line);
       
@@ -248,12 +253,9 @@ public class DotParser
       String heightStr = null;
       String pos = null;
 
-      // TODO change to for each loop?
       // Search for attributes:
-      for (int i = 0; i < tokens.length; i++)
+      for (String cur : tokens)
       {
-         String cur = tokens[i];
-
          // if the string starts with "pos"
          if (cur.matches("^pos=.*"))
             pos=cur;
@@ -265,8 +267,6 @@ public class DotParser
             heightStr=cur;
       }
       
-      // TODO clean up error messages and improve error handling (ie handle
-      // index out of bounds exceptions)
       if (pos == null)
          throw new IllegalLineException("No position information: " + line);
       if (widthStr == null)
@@ -285,27 +285,31 @@ public class DotParser
       int x = parseToHundredths(coords[0]);
       int y = parseToHundredths(coords[1]);
       
-      // TODO abstract width and height parsing into private function
-
       // The width and height attributes take the form width=ww.ww Graphviz
       // gives them in inches, but they must be converted to hundredths of
       // points (1 inch = 72 points = 7200 hundredths of points)
-
-      // a BigDecimal is used instead of a double so that there can be no loss
-      // of precision
-      BigDecimal widthInches = new BigDecimal(widthStr.split("=")[1]);
-      BigDecimal widthBig = widthInches.multiply(new BigDecimal(7200));
-
-      // TODO make this round rather than drop anything after the decimal point
-      int width = widthBig.intValue();
-
-      BigDecimal heightInches = new BigDecimal(heightStr.split("=")[1]);
-      BigDecimal heightBig = heightInches.multiply(new BigDecimal(7200));
-
-      // TODO make this round rather than drop anything after the decimal point
-      int height = heightBig.intValue();
+      int width = parseDimension(widthStr);
+      int height = parseDimension(heightStr);
 
       return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
+   }
+
+   /**
+    * Takes a text representation of a decimal number and returns an {@code
+    * int} 7200 times larger.
+    * <p>
+    * Used for converting height and width dimensions from inches to hundredths
+    * of points.
+    */
+   private static int parseDimension(String dimensionStr)
+   {
+      // a BigDecimal is used instead of a double so that there can be no loss
+      // of precision
+      BigDecimal dimInches = new BigDecimal(dimensionStr.split("=")[1]);
+      BigDecimal dimension = dimInches.multiply(new BigDecimal(7200));
+
+      // TODO make this round rather than drop anything after the decimal point
+      return dimension.intValue();
    }
 
    /**
@@ -362,7 +366,7 @@ public class DotParser
       // 1 or more digits, optionally followed by a single dot and one or more
       // digits
       if (!str.matches("[0-9]+(\\.[0-9]+)?"))
-         throw new NumberFormatException(str + " is not a well-formed decimal number");
+         throw new NumberFormatException(str + " is not a well-formed nonnegative decimal number");
       if (str.contains("."))
       {
          String[] parts = str.split("\\.");
