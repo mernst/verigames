@@ -20,6 +20,28 @@ import checkers.nullness.quals.Nullable;
 public class DotParser
 {
 
+   /**
+    * An {@code Exception} that is thrown when a bad line of DOT is
+    * encountered. It should only be used internally to ensure that errors are
+    * handled and expressed to clients in an appropriate way. A reference to an
+    * {@code IllegalLineException} should never escape this class.
+    * <p>
+    * A message is required, and it should contain the bad line or the bad part
+    * of the line.
+    */
+   private static class IllegalLineException extends Exception
+   {
+      public IllegalLineException(String message)
+      {
+         super(message);
+      }
+
+      public IllegalLineException(String message, Throwable cause)
+      {
+         super(message, cause);
+      }
+   }
+
    public DotParser()
    {
       
@@ -51,7 +73,14 @@ public class DotParser
             line = line.substring(0, line.length() - 1) + end;
          }
 
-         parseLine(line, out);
+         try
+         {
+            parseLine(line, out);
+         }
+         catch (IllegalLineException e)
+         {
+            throw new IllegalArgumentException(e.getMessage(), e);
+         }
       }
       
       if (out.areGraphAttributesSet())
@@ -77,7 +106,7 @@ public class DotParser
    /**
     * Returns an {@code Object} of type {@link GraphInformation}, 
     */
-   private static void parseLine(String line, GraphInformation.Builder builder)
+   private static void parseLine(String line, GraphInformation.Builder builder) throws IllegalLineException
    {
       switch (getLineKind(line))
       {
@@ -108,29 +137,34 @@ public class DotParser
     * @return a {@link #LineKind} indicating what kind of information {@code
     * line} represents.
     */
-   private static LineKind getLineKind(String line)
+   private static LineKind getLineKind(String line) throws IllegalLineException
    {
       String[] tokens = splitAroundWhitespace(line);
 
-      // TODO add out of bounds tests
-
-      // If the line is the start or end of a graph, return OTHER
-      if (tokens[0].equals("digraph"))
-         return LineKind.OTHER;
-      else if (tokens[0].equals("}"))
-         return LineKind.OTHER;
-      // else, there should be at least two tokens ("}" is the only 1-token
-      // line)
-      else if (tokens[0].equals("graph"))
-         return LineKind.GRAPH_PROPERTIES;
-      else if (tokens[0].equals("node"))
-         return LineKind.NODE_PROPERTIES;
-      else if (tokens[0].equals("edge"))
-         return LineKind.EDGE_PROPERTIES;
-      else if (tokens[1].equals("->"))
-         return LineKind.EDGE;
-      else
-         return LineKind.NODE;
+      try
+      {
+         // If the line is the start or end of a graph, return OTHER
+         if (tokens[0].equals("digraph"))
+            return LineKind.OTHER;
+         else if (tokens[0].equals("}"))
+            return LineKind.OTHER;
+         // else, there should be at least two tokens ("}" is the only 1-token
+         // line)
+         else if (tokens[0].equals("graph"))
+            return LineKind.GRAPH_PROPERTIES;
+         else if (tokens[0].equals("node"))
+            return LineKind.NODE_PROPERTIES;
+         else if (tokens[0].equals("edge"))
+            return LineKind.EDGE_PROPERTIES;
+         else if (tokens[1].equals("->"))
+            return LineKind.EDGE;
+         else
+            return LineKind.NODE;
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
+         throw new IllegalLineException(line, e);
+      }
    }
 
    /**
@@ -141,14 +175,14 @@ public class DotParser
     * Must be a valid, logical line of Graphviz output describing attributes of
     * the graph itself (as oppose to particular edges or nodes).
     */
-   private static @Nullable GraphInformation.GraphAttributes parseGraphAttributes(String line)
+   private static @Nullable GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
    {
       // sample line: "  graph [bb="0,0,216.69,528"];"
       
       String[] tokens = tokenizeLine(line);
 
       if(tokens.length < 2 || !tokens[0].equals("graph"))
-         throw new IllegalArgumentException("illegal graph line passed to parseGraphAttributes");
+         throw new IllegalLineException("\"" + line + "\" is not a graph attributes line");
 
       String bb = null;
       
@@ -166,13 +200,29 @@ public class DotParser
       // take the text inside the quotes and split around commas
       String[] bbCoords = bb.split("\"")[1].split(",");
 
-      int xStart = parseToHundredths(bbCoords[0]);
-      int yStart = parseToHundredths(bbCoords[1]);
-      int xEnd = parseToHundredths(bbCoords[2]);
-      int yEnd = parseToHundredths(bbCoords[3]);
+      int xStart;
+      int yStart;
+      int xEnd;
+      int yEnd;
+
+      try
+      {
+         xStart = parseToHundredths(bbCoords[0]);
+         yStart = parseToHundredths(bbCoords[1]);
+         xEnd = parseToHundredths(bbCoords[2]);
+         yEnd = parseToHundredths(bbCoords[3]);
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
+         throw new IllegalLineException("bounding box attribute poorly formed: " + line);
+      }
+      catch (NumberFormatException e)
+      {
+         throw new IllegalLineException("bounding box attribute poorly formed: " + line);
+      }
 
       if (xStart != 0 || yStart != 0)
-         throw new IllegalArgumentException("bottom-left corner of bounding box not at (0,0) -- it is (" + xStart + "," + yStart + ")");
+         throw new IllegalLineException("bottom-left corner of bounding box not at (0,0) -- it is (" + xStart + "," + yStart + ")");
 
       return new GraphInformation.GraphAttributes(xEnd, yEnd);
    }
@@ -185,7 +235,7 @@ public class DotParser
     * Must be a valid, logical line of Graphviz output describing attributes of
     * a node.
     */
-   private static NodeRecord parseNode(String line)
+   private static NodeRecord parseNode(String line) throws IllegalLineException
    {
       // an example of a node line:
       // "   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];"
@@ -218,11 +268,11 @@ public class DotParser
       // TODO clean up error messages and improve error handling (ie handle
       // index out of bounds exceptions)
       if (pos == null)
-         throw new IllegalArgumentException("line does not contain position information");
+         throw new IllegalLineException("No position information: " + line);
       if (widthStr == null)
-         throw new IllegalArgumentException("line does not contain width information");
+         throw new IllegalLineException("No width information: " + line);
       if (heightStr == null)
-         throw new IllegalArgumentException("line does not contain height information");
+         throw new IllegalLineException("No height information: " + line);
       
       // The pos attribute takes the form pos="xx.xx,yy.yy"
 
@@ -301,12 +351,13 @@ public class DotParser
     * return 12345. Rounds to the nearest hundredth.
     * 
     * @param String
-    * Must represent a nonnegative decimal number
+    * Must be a nonnegative decimal number
     * @return {@code int} indicating the number of hundredths in the given
     * number
     */
    private static int parseToHundredths(String str)
    {
+      // TODO add precondition check
       if (str.contains("."))
       {
          String[] parts = str.split("\\.");
