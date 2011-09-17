@@ -29,12 +29,14 @@ public class World
     * Adds {@code level} to {@code this}, with {@code name} as its name.
     * 
     * @param level
-    * The {@link Level} to add.
+    * The {@link Level} to add. {@link Level#isActive() !level.isActive()}
     * @param name
     * The name to associate with {@code level}.
     */
    public void addLevel(String name, Level level)
    {
+      if (level.isActive())
+         throw new IllegalArgumentException("active Level added to World");
       nameToLevel.put(name, level);
    }
    
@@ -49,15 +51,10 @@ public class World
    }
    
    /**
-    * Prints the XML for this {@code World}<br/>
-    * <br/>
-    * Requires:<br/>
-    * - For all {@link Level}s {@code l} in {@code this},
-    * {@link Level#isActive() !l.isActive()}<br/>
-    * - {@code out} is open<br/>
+    * Prints the XML for this {@code World}
     * 
     * @param out
-    * The {@code PrintStream} to which the XML will be printed
+    * The {@code PrintStream} to which the XML will be printed. Must be open.
     */
    public void outputXML(PrintStream out)
    {
