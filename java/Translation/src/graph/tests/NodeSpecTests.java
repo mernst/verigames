@@ -106,7 +106,7 @@ public class NodeSpecTests
    }
    
    @Test
-   public void testGetOutpus() throws InvocationTargetException
+   public void testGetOutputs() throws InvocationTargetException
    {
       testGetXXXputs(false);
    }
