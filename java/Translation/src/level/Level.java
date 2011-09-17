@@ -2,6 +2,7 @@ package level;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -220,11 +221,13 @@ public class Level
    }
    
    /**
-    * Returns a shallow copy of {@code boards}
+    * Return an unmodifiable {@code Map} view on {@code boardNames}. The
+    * returned {@code Map} is backed by {@code this}, so changes in {@code
+    * this} will be reflected in the returned {@code Map}.
     */
    public Map<String, Board> boards()
    {
-      return new LinkedHashMap<String, Board>(boardNames);
+      return Collections.unmodifiableMap(boardNames);
    }
    
    /**
