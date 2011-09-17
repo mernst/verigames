@@ -222,9 +222,9 @@ public class Level
    /**
     * Returns a shallow copy of {@code boards}
     */
-   public Set<Board> boards()
+   public Map<String, Board> boards()
    {
-      return new LinkedHashSet<Board>(boardNames.values());
+      return new LinkedHashMap<String, Board>(boardNames);
    }
    
    /**
@@ -251,7 +251,7 @@ public class Level
     * <br/>
     * Modifies: {@code out}<br/>
     */
-   public void outputXML(String name, PrintStream out)
+   protected void outputXML(String name, PrintStream out)
    {
       if (this.isActive())
          throw new IllegalStateException("outputXML called on active Level");
@@ -295,7 +295,7 @@ public class Level
       // Output all remaining edges -- edges not listed are in equivalence
       // classes of size 1
       
-      for (Board b : boards())
+      for (Board b : boards().values())
       {
          for (Chute c : b.getEdges())
          {
