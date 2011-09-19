@@ -262,8 +262,11 @@ public class Level
    
    /**
     * Prints the text of the XML representation of {@code this} to the given
-    * {@code PrintStream}<br/>
-    * <br/>
+    * {@code PrintStream}.
+    * <p>
+    * Deprecated. Instead, a {@link WorldXMLPrinter} should be used to print
+    * the whole {@link World}.
+    * <p>
     * Requires:<br/>
     * - {@link #isActive() !this.isActive()}<br/>
     * - {@code out} is open<br/>
@@ -275,6 +278,7 @@ public class Level
     * <br/>
     * Modifies: {@code out}<br/>
     */
+   @Deprecated
    protected void outputXML(String name, PrintStream out)
    {
       if (this.isActive())

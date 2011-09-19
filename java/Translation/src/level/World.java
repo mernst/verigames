@@ -51,11 +51,14 @@ public class World
    }
    
    /**
-    * Prints the XML for this {@code World}
+    * Prints the XML for this {@code World}.
+    * <p>
+    * Deprecated. Instead, a {@link WorldXMLPrinter} should be used.
     * 
     * @param out
     * The {@code PrintStream} to which the XML will be printed. Must be open.
     */
+   @Deprecated
    public void outputXML(PrintStream out)
    {
       out.println("<?xml version=\"1.0\"?>");
