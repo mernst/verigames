@@ -196,6 +196,27 @@ public class Level
       }
       return false;
    }
+
+   /**
+    * Returns a copy of {@code linkedEdgeClasses}. Structurally modifying the
+    * returned {@code Set}, or any of the {@code Set}s it contains, will have
+    * no effect on {@code this}.
+    */
+   // protected because most clients shouldn't need this -- areLinked should be
+   // adequate. However, if this turns out to be untrue, access may be
+   // increased.
+   protected Set<Set<Chute>> linkedEdgeClasses()
+   {
+      final Set<Set<Chute>> copy = new LinkedHashSet<Set<Chute>>();
+
+      for (Set<Chute> linkedChutes : linkedEdgeClasses)
+      {
+         copy.add(new LinkedHashSet<Chute>(linkedChutes));
+      }
+
+      return copy;
+   }
+
    
    /**
     * Adds {@code b} to {@code boards}, and adds the mapping from {@code name}
