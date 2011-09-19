@@ -61,12 +61,7 @@ public class World
    @Deprecated
    public void outputXML(PrintStream out)
    {
-      out.println("<?xml version=\"1.0\"?>");
-      out.println("<!DOCTYPE world SYSTEM \"world.dtd\">");
-      out.println("<world>");
-      for (Map.Entry<String, Level> entry : nameToLevel.entrySet())
-         entry.getValue().outputXML(entry.getKey(), out);
-      out.println("</world>");
+      new WorldXMLPrinter().print(this, out, null);
    }
    
 }
