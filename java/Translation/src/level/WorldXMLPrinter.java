@@ -40,7 +40,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
       {
          String name = entry.getKey();
          Level level = entry.getValue();
-         level.outputXML(name, out);
+         printLevel(level, out, name);
       }
    }
 
