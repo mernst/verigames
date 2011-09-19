@@ -36,18 +36,19 @@ class DotRunner
       outputBoard(b, process.getOutputStream());
       
       GraphInformation info = parseDot(process.getInputStream());
-      
-      // Ensures that the dot process has exited
+
+      // Waits for the dot process to exit and checks its exit value
+      int exitValue;
       try
       {
-         // throws IllegalThreadStateException if the Process hasn't yet exited
-         process.exitValue();
+         exitValue = process.waitFor();
       }
-      catch(IllegalThreadStateException e)
+      catch(InterruptedException e)
       {
-         process.destroy();
-         throw new RuntimeException("External dot process did not end properly", e);
+         throw new RuntimeException(e);
       }
+      if (exitValue != 0)
+         throw new RuntimeException("dot exited abnormally: exit code " + exitValue);
       
       return info;
    }
