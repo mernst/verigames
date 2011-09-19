@@ -367,66 +367,10 @@ public class DotParser
       // digits
       if (!str.matches("[0-9]+(\\.[0-9]+)?"))
          throw new NumberFormatException(str + " is not a well-formed nonnegative decimal number");
-      if (str.contains("."))
-      {
-         String[] parts = str.split("\\.");
-         String firstStr = parts[0];
-         String secondStr = parts[1];
 
-         int first = Integer.parseInt(firstStr);
-         
-         int fraction = Integer.parseInt(secondStr);
-         
-         // We want to get the first two digits, so we divide by 10 ^ (# digits
-         // - 2) (for example: 4700 / 10 ^ (4 - 2) = 47)
-         int divisor = pow(10, getNumDigits(fraction) - 2);
+      BigDecimal hundredths = new BigDecimal(str).multiply(new BigDecimal(100));
 
-         // to round, we add by half of the smallest unit, then do integer
-         // division:
-         int second = (fraction + (divisor / 2)) / divisor;
-
-         return first * 100 + second;
-
-      }
-      else
-      {
-         return Integer.parseInt(str) * 100;
-      }
-   }
-   
-   /**
-    * Returns the number of digits {@code n} has when represented as base 10.
-    * <p>
-    * 0 is considered to have 1 digit.
-    * 
-    * @param n
-    * Must be a nonnegative integer
-    */
-   private static int getNumDigits(int n)
-   {
-      if (n < 0)
-         throw new IllegalArgumentException(
-               "negative argument passed to getNumDigits");
-      // not incredibly elegant, but it works:
-      return Integer.toString(n).length();
-   }
-
-   /**
-    * Returns a to the power of b. Included because Math.pow only take doubles.
-    * 
-    * @param a
-    * @param b
-    * must be nonnegative
-    */
-   private static int pow(int a, int b)
-   {
-      if (b < 0)
-         throw new IllegalArgumentException("negative argument passed to pow");
-      
-      int result = 1;
-      for (int i = b; i > 0; i--)
-         result *= a;
-      
-      return result;
+      // round by adding 0.5, then taking the floor.
+      return hundredths.add(new BigDecimal("0.5")).intValue();
    }
 }
