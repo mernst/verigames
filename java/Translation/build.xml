@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="Translation" default="build" basedir=".">
   <property name="src" location="src"/>
+  <property name="test" location="test"/>
   <property name="bin" location="bin"/>
   <property name="lib" location="lib"/>
   <property name="doc" location="doc"/>
@@ -21,9 +22,15 @@
   </presetdef>
   <target name="build">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" includeAntRuntime="false" debug="true"/>
+    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+      <src>
+        <pathelement path="${src}"/>
+        <pathelement path="${test}"/>
+      </src>
+    </javac>
   </target>
   <!-- check-nullness target checks nullness on every file that does not include "test(s)" in its directory path -->
+  <!-- TODO update to include sources from test folder -->
   <target name="check-nullness" description="Check for nullness errors" depends="clean">
     <mkdir dir="${bin}"/>
     <!-- use jsr308.javac instead of javac -->
