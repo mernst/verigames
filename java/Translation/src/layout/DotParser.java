@@ -182,7 +182,7 @@ public class DotParser
       String[] tokens = tokenizeLine(line);
 
       if(tokens.length < 2 || !tokens[0].equals("graph"))
-         throw new IllegalLineException("\"" + line + "\" is not a graph attributes line");
+         throw new IllegalLineException("\"" + line + "\" is not a valid graph attributes line");
 
       String bb = null;
       
@@ -246,6 +246,9 @@ public class DotParser
       // node name
       
       String[] tokens = tokenizeLine(line);
+
+      if (tokens.length == 0)
+         throw new IllegalLineException("empty line: " + line);
       
       String name = tokens[0];
 
@@ -276,36 +279,62 @@ public class DotParser
       
       // The pos attribute takes the form pos="xx.xx,yy.yy"
 
-      // split around quotes, and take only the xx.xx,yy.yy part
-      String coordsStr = pos.split("\"")[1];
+      try
+      {
+         // split around quotes, and take only the xx.xx,yy.yy part
+         String coordsStr = pos.split("\"")[1];
 
-      // split around comma, to get [xx.xx, yy.yy]
-      String[] coords = coordsStr.split(",");
+         // split around comma, to get [xx.xx, yy.yy]
+         String[] coords = coordsStr.split(",");
 
-      int x = parseToHundredths(coords[0]);
-      int y = parseToHundredths(coords[1]);
-      
-      // The width and height attributes take the form width=ww.ww Graphviz
-      // gives them in inches, but they must be converted to hundredths of
-      // points (1 inch = 72 points = 7200 hundredths of points)
-      int width = parseDimension(widthStr);
-      int height = parseDimension(heightStr);
+         int x = parseToHundredths(coords[0]);
+         int y = parseToHundredths(coords[1]);
 
-      return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
+         int width = parseDimension(widthStr);
+         int height = parseDimension(heightStr);
+
+         return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
+         throw new IllegalLineException("Poorly formed line: " + line);
+      }
+      catch (NumberFormatException e)
+      {
+         throw new IllegalLineException("Poorly formed line: " + line);
+      }
    }
 
    /**
     * Takes a text representation of a decimal number and returns an {@code
-    * int} 7200 times larger.
+    * int} 7200 times larger. Rounds to the nearest integer.
     * <p>
     * Used for converting height and width dimensions from inches to hundredths
     * of points.
     */
-   private static int parseDimension(String dimensionStr)
+   private static int parseDimension(String dimensionStr) throws IllegalLineException
    {
+      // The width and height attributes take the form width=ww.ww
+      //
+      // Graphviz gives them in inches, but they must be converted to
+      // hundredths of points (1 inch = 72 points = 7200 hundredths of points)
+
       // a BigDecimal is used instead of a double so that there can be no loss
       // of precision
-      BigDecimal dimInches = new BigDecimal(dimensionStr.split("=")[1]);
+      BigDecimal dimInches; 
+      try
+      {
+         dimInches = new BigDecimal(dimensionStr.split("=")[1]);
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
+         throw new IllegalLineException("Poorly formed attribute:" + dimensionStr, e);
+      }
+      catch (NumberFormatException e)
+      {
+         throw new IllegalLineException("Poorly formed attribute:" + dimensionStr, e);
+      }
+
       BigDecimal dimension = dimInches.multiply(new BigDecimal(7200));
 
       // rounds by adding 0.5, then taking the floor
