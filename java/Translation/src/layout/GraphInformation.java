@@ -20,8 +20,7 @@ import checkers.nullness.quals.LazyNonNull;
  * @author Nathaniel Mote
  */
 
-// TODO remove public access once tests can subvert access control.
-public class GraphInformation
+class GraphInformation
 {
    /**
     * A Builder for a GraphInformation object.

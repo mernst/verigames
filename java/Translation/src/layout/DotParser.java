@@ -16,8 +16,7 @@ import checkers.nullness.quals.Nullable;
  * added at a later date.
  */
 
-// TODO remove public access once tests can subvert access control.
-public class DotParser
+class DotParser
 {
 
    /**
@@ -237,9 +236,6 @@ public class DotParser
     */
    private static NodeRecord parseNode(String line) throws IllegalLineException
    {
-      // TODO make sure NumberFormatExceptions and
-      // ArrayIndexOutOfBoundsExceptions don't escape
-
       // an example of a node line:
       // "   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];"
       //     ^
