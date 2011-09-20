@@ -52,23 +52,23 @@
   </path>
   <target name="test" depends="clean, build, test.graph, test.level, test.layout, test.levelBuilder"/>
   <target name="test.level">
-    <junit fork="yes" haltonfailure="yes" dir="${bin}/level/tests">
-      <test name="level.tests.SpecificationTests"/>
-      <test name="level.tests.ImplementationTests"/>
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/level">
+      <test name="level.SpecificationTests"/>
+      <test name="level.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
-    <copy file="../../world.dtd" todir="${bin}/level/tests"/>
-    <copy file="${src}/level/tests/levelWorldCreation/name_replace" todir="${bin}/level/tests"/>
-    <copy file="${src}/level/tests/levelWorldCreation/names_list" todir="${bin}/level/tests"/>
+    <copy file="../../world.dtd" todir="${bin}/level"/>
+    <copy file="${src}/sampleLevels/level/name_replace" todir="${bin}/level"/>
+    <copy file="${src}/sampleLevels/level/names_list" todir="${bin}/level"/>
   </target>
   <target name="test.layout">
-    <junit fork="yes" haltonfailure="yes" dir="${bin}/layout/tests">
-      <test name="layout.tests.SpecificationTests"/>
-      <test name="layout.tests.ImplementationTests"/>
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/layout">
+      <test name="layout.SpecificationTests"/>
+      <test name="layout.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -77,9 +77,9 @@
     </junit>
   </target>
   <target name="test.graph">
-    <junit fork="yes" haltonfailure="yes" dir="${bin}/graph/tests">
-      <test name="graph.tests.SpecificationTests"/>
-      <test name="graph.tests.ImplementationTests"/>
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/graph">
+      <test name="graph.SpecificationTests"/>
+      <test name="graph.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -88,16 +88,16 @@
     </junit>
   </target>
   <target name="test.levelBuilder">
-    <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder/tests">
-      <test name="levelBuilder.tests.SpecificationTests"/>
-      <test name="levelBuilder.tests.ImplementationTests"/>
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder">
+      <test name="levelBuilder.SpecificationTests"/>
+      <test name="levelBuilder.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
-    <copy file="../../world.dtd" todir="${bin}/levelBuilder/tests"/>
+    <copy file="../../world.dtd" todir="${bin}/levelBuilder"/>
   </target>
 
   <property name="docPackages" value="graph,layout,level,levelBuilder,translation,utilities"/>
