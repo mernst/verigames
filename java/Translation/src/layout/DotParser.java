@@ -308,8 +308,8 @@ public class DotParser
       BigDecimal dimInches = new BigDecimal(dimensionStr.split("=")[1]);
       BigDecimal dimension = dimInches.multiply(new BigDecimal(7200));
 
-      // TODO make this round rather than drop anything after the decimal point
-      return dimension.intValue();
+      // rounds by adding 0.5, then taking the floor
+      return dimension.add(new BigDecimal("0.5")).intValue();
    }
 
    /**

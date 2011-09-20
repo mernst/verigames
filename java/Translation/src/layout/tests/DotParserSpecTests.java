@@ -58,4 +58,30 @@ public class DotParserSpecTests
       DotParser parser = new DotParser();
       assertEquals(testOutput, parser.parse(testInput));
    }
+
+   /**
+    * Tests that the parser properly rounds dimensions, instead of just
+    * truncating them.
+    */
+   @Test
+   public void testDimensionRounding()
+   {
+      final String input = 
+      "digraph {\n"
+      + "	graph [bb=\"0,0,216.69,528\"];\n"
+      + "	8 [label=INCOMING8, width=1.00007, height=2, pos=\"101.64,456\"];\n"
+      + "}\n";
+
+      GraphInformation.Builder builder = new GraphInformation.Builder();
+
+      builder.setGraphAttributes(new GraphInformation.GraphAttributes(21669, 52800));
+
+      builder.setNodeAttributes("8", new
+            GraphInformation.NodeAttributes(10164, 45600, 7201, 14400));
+
+      GraphInformation output = builder.build();
+
+      DotParser parser = new DotParser();
+      assertEquals(output, parser.parse(input));
+   }
 }
