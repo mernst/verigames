@@ -1,4 +1,4 @@
-package level.levelWorldCreation;
+package sampleLevels.level;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

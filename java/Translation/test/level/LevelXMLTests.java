@@ -11,9 +11,10 @@ import level.Intersection;
 import level.Intersection.Kind;
 import level.Level;
 import level.World;
-import level.levelWorldCreation.LevelWorld;
 
 import org.junit.Test;
+
+import sampleLevels.level.LevelWorld;
 
 public class LevelXMLTests
 {

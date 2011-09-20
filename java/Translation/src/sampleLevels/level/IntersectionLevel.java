@@ -1,4 +1,4 @@
-package level.levelWorldCreation;
+package sampleLevels.level;
 
 import static level.Intersection.factory;
 import static level.Intersection.subnetworkFactory;
