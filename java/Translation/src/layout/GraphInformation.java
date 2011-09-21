@@ -169,6 +169,13 @@ class GraphInformation
          hashCode += getHeight();
          return hashCode;
       }
+
+      @Override
+      public String toString()
+      {
+         return "pos=(" + getX() + "," + getY() + ");width=" + getWidth() +
+               ";height=" + getHeight();
+      }
    }
    
    /**
@@ -223,7 +230,12 @@ class GraphInformation
       {
          return width * 97 + height;
       }
-      
+
+      @Override
+      public String toString()
+      {
+         return "width=" + getWidth() + ";height=" + getHeight();
+      }
    }
    
    private final Map<String, NodeAttributes> nodeAttributes;
@@ -299,5 +311,12 @@ class GraphInformation
    public int hashCode()
    {
       return graphAttributes.hashCode() * 31 + nodeAttributes.hashCode();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "graph:" + graphAttributes.toString() + ";nodes:" +
+            nodeAttributes.toString();
    }
 }
