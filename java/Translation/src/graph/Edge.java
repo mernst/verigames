@@ -196,4 +196,23 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       active = false;
       checkRep();
    }
+
+   /**
+    * Returns a {@code String} representation of {@code this} that does not
+    * include its connections to {@link Node Nodes}.
+    */
+   protected String shallowToString()
+   {
+      // by default, just return the ugly Object.toString(), because this
+      // implementation doesn't have much identifying information.
+      return super.toString();
+   }
+
+   @Override
+   public String toString()
+   {
+      String startStr = ((start == null) ? "None" : start.toString());
+      String endStr = ((end == null) ? "None" : end.toString());
+      return shallowToString() + " -- start: " + startStr + " end: " + endStr;
+   }
 }

@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import checkers.nullness.quals.Nullable;
@@ -285,5 +286,49 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
          throw new IllegalStateException("Mutation attempted on inactive Node");
       active = false;
       checkRep();
+   }
+
+   /**
+    * Returns a {@code String} representation of {@code this} that does not
+    * include its connections to {@link Edge Edges}.
+    */
+   protected String shallowToString()
+   {
+      // by default, just return the ugly Object.toString(), because this
+      // implementation doesn't have much identifying information.
+      return super.toString();
+   }
+
+   @Override
+   public String toString()
+   {
+      StringBuilder builder = new StringBuilder();
+      builder.append(shallowToString() + " -- inputs: ");
+      builder.append(portMapToString(getInputs()));
+      builder.append(" outputs: ");
+      builder.append(portMapToString(getOutputs()));
+      return builder.toString();
+   }
+
+   /**
+    * no null keys or values
+    */
+   private static <EdgeType extends Edge> String portMapToString(Map<Integer, EdgeType> map)
+   {
+      StringBuilder builder = new StringBuilder("[");
+
+      for (Map.Entry<Integer, EdgeType> entry : map.entrySet())
+      {
+         // auto unboxing should be fine because there should be no null keys
+         int port = entry.getKey();
+         EdgeType edge = entry.getValue();
+
+         // TODO remove trailing comma
+         builder.append("port " + port + ": " + edge.shallowToString() + ", ");
+      }
+
+      builder.append("]");
+
+      return builder.toString();
    }
 }
