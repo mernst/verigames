@@ -421,5 +421,10 @@ public class Intersection extends graph.Node<Chute>
    {
       return UID;
    }
-   
+
+   @Override
+   protected String shallowToString()
+   {
+      return getIntersectionKind().toString() + "#" + getUID();
+   }
 }

@@ -159,4 +159,18 @@ public class Chute extends graph.Edge<Intersection>
       
       return copy;
    }
+
+   @Override
+   protected String shallowToString()
+   {
+      String propertyString = isNarrow() ? "Narrow, " : "Wide, ";
+
+      if (isPinched())
+         propertyString += "Pinched, ";
+
+      // Take off the trailing comma and space
+      propertyString = propertyString.substring(0, propertyString.length() - 2);
+
+      return "Chute#" + getUID() + ": " + propertyString;
+   }
 }
