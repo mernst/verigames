@@ -97,6 +97,10 @@ class DotParser
    
    private static enum LineKind {GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER}
  
+   /**
+    * An immutable record type that stores the name of a node along with its
+    * attributes.
+    */
    private static class NodeRecord
    {
       public final String name;
