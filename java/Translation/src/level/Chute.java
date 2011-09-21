@@ -171,6 +171,6 @@ public class Chute extends graph.Edge<Intersection>
       // Take off the trailing comma and space
       propertyString = propertyString.substring(0, propertyString.length() - 2);
 
-      return "Chute#" + getUID() + ": " + propertyString;
+      return "Chute#" + getUID() + " (" + propertyString + ")";
    }
 }
