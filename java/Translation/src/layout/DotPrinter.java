@@ -79,18 +79,29 @@ class DotPrinter extends Printer<Board, Void>
    {
       for (Intersection n : b.getNodes())
       {
+         // sets the width to be max(#input ports, #output ports), as required
+         // by the game
          int width = getMaxPorts(n);
          
+         // As described in world.dtd, the height of an ordinary node is 2
+         // units, while the height of INCOMING and END nodes are of height 1.
+         // The height of an OUTGOING node is unspecified and irrelevant, as
+         // it has no nodes below it, so it is set to 1 as well.
          int height;
+         // TODO set height of END node to 1
          if (n.getIntersectionKind() == Kind.INCOMING
                || n.getIntersectionKind() == Kind.OUTGOING)
             height = 1;
          else
             height = 2;
          
-         String label = n.getIntersectionKind().toString() + n.getUID();
-         
          {
+            // As described in world.dtd, nodes connected by a pinched edge
+            // must have an additional y coordinate between them. Because this
+            // requirement can't be represented to GraphViz directly, the
+            // height of the node itself is increased by one. This increases
+            // the distance it can be from *any* node, not just the one it's
+            // connected to by a pinched edge.
             boolean pinchOut = false;
             for (Chute c : n.getOutputs().values())
             {
@@ -100,6 +111,8 @@ class DotPrinter extends Printer<Board, Void>
             if (pinchOut)
                height++;
          }
+         
+         String label = n.getIntersectionKind().toString() + n.getUID();
          
          out.println("" + n.getUID() + " [width = " + width + ", height="
                + height + ", label=\"" + label + "\"];");
@@ -126,7 +139,8 @@ class DotPrinter extends Printer<Board, Void>
     * Prints invisible, weight 0 edges from the incoming node to every other
     * node, and to the outgoing node from every other node.
     * <p>
-    * This keeps the incoming nodes at the top.
+    * This keeps the incoming node at the top and the outgoing node at the
+    * bottom.
     * 
     * @param b
     * {@link level.Board#isActive() b.isActive()} must be false.
