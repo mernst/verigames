@@ -14,6 +14,11 @@ import checkers.nullness.quals.Nullable;
  * Currently, it includes the dimensions of the graph's bounding box, as well as
  * the dimensions and position of the nodes. However, more information may be
  * added at a later date.
+ * <p>
+ * This parser is very brittle, and makes little attempt to account for
+ * variations in input. It attempts to match Graphviz's output, which is a
+ * subset of legal DOT. Therefore, some legal DOT may be rejected simply
+ * because it doesn't match what Graphviz outputs.
  */
 
 class DotParser
@@ -41,11 +46,13 @@ class DotParser
       }
    }
 
-   public DotParser()
-   {
-      
-   }
-
+   /**
+    * Parses the given {@code String} as a single graph in DOT format, and
+    * returns the information as a {@code GraphInformation} object.
+    *
+    * @param dotOutput
+    * Must be well-formed output from dot.
+    */
    public GraphInformation parse(String dotOutput)
    {
       final GraphInformation.Builder out = new GraphInformation.Builder();
@@ -133,7 +140,7 @@ class DotParser
     * is, it must not be terminated by '\' (this would indicate that it should
     * be joined with the line after).
     *
-    * @return a {@link #LineKind} indicating what kind of information {@code
+    * @return a {@link LineKind} indicating what kind of information {@code
     * line} represents.
     */
    private static LineKind getLineKind(String line) throws IllegalLineException
@@ -379,7 +386,7 @@ class DotParser
     * {@code String} into hundredths of units. That is, given "123.45", it would
     * return 12345. Rounds to the nearest hundredth.
     * 
-    * @param String
+    * @param str
     * Must be a nonnegative decimal number. There may not be a leading '.'
     * (e.g.  ".35" must be written "0.35").
     * @return {@code int} indicating the number of hundredths in the given

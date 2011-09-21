@@ -16,12 +16,12 @@
  * several places where it is possible:
  * <p>
  * The first is through the input that dot is given. This is controlled by
- * {@link DotPrinter}. What it prints can drastically change the layout. The
- * attributes that can be included are described <a
+ * {@link layout.DotPrinter}. What it prints can drastically change the layout.
+ * The attributes that can be included are described <a
  * href="http://www.graphviz.org/content/attrs">here</a>.
  * <p>
  * The second is to change what is done with dot's output. This can either
- * happen in {@link DotParser} or in {@link BoardLayout}.
+ * happen in {@link layout.DotParser} or in {@link layout.BoardLayout}.
  */
 
 package layout;

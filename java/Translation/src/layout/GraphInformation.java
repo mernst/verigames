@@ -79,7 +79,7 @@ class GraphInformation
        * Returns a GraphInformation object with the attributes that have been added to
        * this {@code Builder}
        * <p>
-       * Requires {@link #Builder.areGraphAttributesSet()}
+       * Requires {@link Builder#areGraphAttributesSet()}
        */
       public GraphInformation build()
       {
