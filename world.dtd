@@ -52,6 +52,8 @@ Layout information:
       - MERGE, SPLIT, START_XXX_BALL, and SUBNETWORK nodes have a height of 2.
       That is, a node below a SPLIT at (0,0) must be at (0,2) or below.
 
+      - INCOMING nodes have a height of 1.
+
       - Nodes connected by an edge with pinch=true must have an extra y
       coordinate between them.
 
