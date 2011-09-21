@@ -315,7 +315,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    private static <EdgeType extends Edge> String portMapToString(Map<Integer, EdgeType> map)
    {
-      StringBuilder builder = new StringBuilder("[");
+      StringBuilder builder = new StringBuilder();
 
       for (Map.Entry<Integer, EdgeType> entry : map.entrySet())
       {
@@ -323,12 +323,12 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
          int port = entry.getKey();
          EdgeType edge = entry.getValue();
 
-         // TODO remove trailing comma
          builder.append("port " + port + ": " + edge.shallowToString() + ", ");
       }
 
-      builder.append("]");
+      if (builder.length() >= 2)
+         builder.delete(builder.length() - 2, builder.length());
 
-      return builder.toString();
+      return "[" + builder.toString() + "]";
    }
 }

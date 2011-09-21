@@ -211,8 +211,8 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    @Override
    public String toString()
    {
-      String startStr = ((start == null) ? "None" : start.toString());
-      String endStr = ((end == null) ? "None" : end.toString());
+      String startStr = ((start == null) ? "None" : start.shallowToString());
+      String endStr = ((end == null) ? "None" : end.shallowToString());
       return shallowToString() + " -- start: " + startStr + " end: " + endStr;
    }
 }
