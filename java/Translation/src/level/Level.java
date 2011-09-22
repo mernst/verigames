@@ -285,4 +285,11 @@ public class Level
       for (Board b : boardNames.values())
          b.deactivate();
    }
+
+   @Override
+   public String toString()
+   {
+      return "Level: " + boards().keySet().toString();
+      
+   }
 }
