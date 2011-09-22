@@ -10,12 +10,26 @@ import level.Intersection;
 import level.Intersection.Kind;
 import level.Level;
 
+/**
+ * A set of tools used to automate repetitive tasks when building {@link
+ * level.World World}s, {@link level.Level Level}s, and {@link level.Board
+ * Board}s.
+ */
+// This shouldn't really be part of the public API -- it's basically just
+// often-repeated code that's been extracted into static methods, rather than
+// methods that perform specific tasks, and as such, it's not very clear, and is
+// unlikely to be useful to clients. However, it can't be package-private
+// because code in multiple packages uses it.
 public class BuildingTools
 {
    
    /**
-    * Makes a new Board, adds it to level with the given name, adds incoming and
-    * outgoing nodes to it.
+    * Makes a new Board, adds it to level with the given name, and adds incoming
+    * and outgoing nodes to it.
+    * <p>
+    * Modifies: {@code level}
+    *
+    * @param level
     */
    public static Board initializeBoard(Level level, String name)
    {
@@ -28,6 +42,9 @@ public class BuildingTools
       return b;
    }
    
+   /**
+    * Adds a field of the given name to the given {@link level.Board Board}.
+    */
    public static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPortMap, String name, Kind kind)
    {
       Intersection start = factory(kind);
