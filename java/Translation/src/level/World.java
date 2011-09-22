@@ -63,5 +63,10 @@ public class World
    {
       new WorldXMLPrinter().print(this, out, null);
    }
-   
+
+   @Override
+   public String toString()
+   {
+      return "World: " + getLevels().keySet().toString();
+   }
 }
