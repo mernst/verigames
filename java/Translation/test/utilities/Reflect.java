@@ -11,7 +11,8 @@ public class Reflect
 {
    /**
     * Invokes a method with the given name on the receiver, using reflection to
-    * subvert access control. May not resolve method overloading.
+    * subvert access control. Attempts to resolve method overloading, but uses
+    * the runtime types of the arguments, rather than the static types.
     * 
     * @throws InvocationTargetException
     */
@@ -30,8 +31,7 @@ public class Reflect
          for (Method m : allMethods)
             if (m.getName().equals(methodName))
                methods.add(m);
-      }
-      
+      } 
       Method method = null;
       
       for (Method m : methods)
@@ -91,7 +91,7 @@ public class Reflect
    public static void invokeStaticMethod(Class<?> clazz, String methodName,
          Object... args)
    {
-      // implement
+      // TODO implement
    }
    
    private static void invoke(Object receiver, Method m, Object... args)
