@@ -52,3 +52,10 @@ crowdsource:
  * each level can depend on, and thus use, results from other levels
 
 ===========================================================================
+
+Drew would eventually like to run our tools on Apache, but it's written in
+C.
+
+Drew is also interested in incremental re-solving (when a small source code
+modification is made after the previous version had been verified).
+
