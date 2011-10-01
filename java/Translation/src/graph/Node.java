@@ -8,18 +8,23 @@ import java.util.TreeMap;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable node for {@link graph.Graph Graph}.<br/>
- * <br/>
+ * An immutable record type representing a node for a {@link graph.Graph
+ * Graph}.
+ * <p>
  * Specification Field: {@code inputs} : map from nonnegative integer to edge //
- * mapping from input port number to the edge attached at that port.<br/>
- * <br/>
+ * mapping from input port number to the edge attached at that port.
+ * <p>
  * Specification Field: {@code outputs} : map from nonnegative integer to edge
- * // mapping from output port number to the edge attached at that port.<br/>
- * <br/>
+ * // mapping from output port number to the edge attached at that port.
+ * <p>
  * Specification Field: {@code active} : {@code boolean} // {@code true} iff
  * {@code this} can be part of a {@link graph.Graph Graph} that is still under
  * construction. Once {@code active} is set to {@code false}, {@code this}
  * becomes immutable.
+ * <p>
+ * Subclasses may enforce restrictions on the connections made to {@link Edge}s.
+ * In particular, there may be restrictions on the number of ports particular
+ * {@code Node}s have available.
  * 
  * @param <EdgeType>
  * @author Nathaniel Mote
@@ -28,8 +33,9 @@ import checkers.nullness.quals.Nullable;
 public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
    
-   // Elements are Nullable so that edges can be added in any order. Empty
-   // ports are represented by null.
+   // Elements are Nullable so that edges can be added in any order. Empty ports
+   // are represented by null. Once the Node is deactivated, neither list can
+   // contain null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness")
    private List</* @Nullable */EdgeType> inputs;
@@ -48,7 +54,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * In other words, the last element in inputs and outputs must not be null
     * 
     * - If !active:
-    * - - no edge in inputs or outputs may be null
+    *    - no edge in inputs or outputs may be null
     * 
     */
    
@@ -73,6 +79,15 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
             ensure(e != null);
       }
       
+      // Note: Graph is responsible for ensuring that a particular node's
+      // connections match that of the edges it is connected to (that is, the
+      // edges that this is connected to must also be connected to this at the
+      // appropriate ports).
+      //
+      // This is because there must be a point in time when the edge is
+      // connected to the node, but the node is not connected to the edge, or
+      // vice versa, simply because one operation must be done before the other,
+      // and checkRep is called from the methods that perform those operations.
    }
    
    /**
@@ -274,16 +289,18 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       for (EdgeType e : inputs)
       {
          if (e == null)
-            throw new IllegalStateException("Edge in inputs is null");
+            // TODO rework to include index of null element
+            throw new IllegalStateException("Edge " + e + " in inputs is null");
       }
       for (EdgeType e : outputs)
       {
          if (e == null)
-            throw new IllegalStateException("Edge in outputs is null");
+            // TODO rework to include index of null element
+            throw new IllegalStateException("Edge " + e + " in outputs is null");
       }
       
       if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Node");
+         throw new IllegalStateException("Deactivation attempted on already inactive Node " + this);
       active = false;
       checkRep();
    }
