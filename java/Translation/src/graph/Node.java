@@ -315,17 +315,18 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void deactivate()
    {
-      for (EdgeType e : inputs)
+      for (int i = 0; i < inputs.size(); i++)
       {
+         EdgeType e = inputs.get(i);
          if (e == null)
-            // TODO rework to include index of null element
-            throw new IllegalStateException("Edge " + e + " in inputs is null");
+            throw new IllegalStateException("Edge " + e + " at port " + i + " in inputs is null");
       }
-      for (EdgeType e : outputs)
+
+      for (int i = 0; i < outputs.size(); i++)
       {
+         EdgeType e = outputs.get(i);
          if (e == null)
-            // TODO rework to include index of null element
-            throw new IllegalStateException("Edge " + e + " in outputs is null");
+            throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null");
       }
       
       if (!active)
