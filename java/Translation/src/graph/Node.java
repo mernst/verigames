@@ -68,10 +68,12 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!CHECK_REP_ENABLED)
          return;
       
-      ensure(isLastEltNonNull(inputs));
-      ensure(isLastEltNonNull(outputs));
-      
-      if (!active)
+      if (active)
+      {
+         ensure(isLastEltNonNull(inputs));
+         ensure(isLastEltNonNull(outputs));
+      }
+      else
       {
          for (EdgeType e : inputs)
             ensure(e != null);
