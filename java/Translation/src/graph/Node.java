@@ -110,7 +110,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    private static <E> boolean isLastEltNonNull(List<E> list)
    {
-      return list.isEmpty() ? true : list.get(list.size() - 1) != null;
+      return list.isEmpty() || list.get(list.size() - 1) != null;
    }
    
    public Node()
