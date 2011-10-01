@@ -5,8 +5,9 @@ import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
 
 /**
- * A mutable edge for {@link graph.Graph Graph}.<br/>
- * <br/>
+ * An immutable record type representing an edge for a {@link graph.Graph
+ * Graph}.
+ * <p>
  * Specification Field: {@code start} : {@code NodeType}
  * // The starting point of {@code this}<br/>
  * Specification Field: {@code startPort} : integer // The port on {@code start}
@@ -14,8 +15,8 @@ import checkers.nullness.quals.Nullable;
  * Specification Field: {@code end} : {@code NodeType} // The ending point of
  * {@code this}<br/>
  * Specification Field: {@code endPort} : integer // The port on {@code end} to
- * which {@code this} attaches<br/>
- * <br/>
+ * which {@code this} attaches
+ * <p>
  * Specification Field: {@code active} : {@code boolean} // {@code true} iff
  * {@code this} can be part of a {@link graph.Graph Graph} that is still under
  * construction. Once {@code active} is set to {@code false}, {@code this}
@@ -25,12 +26,43 @@ import checkers.nullness.quals.Nullable;
  * The type of nodes that {@code this} can attach to.
  * @author Nathaniel Mote
  */
-
+// TODO change "active" to something else
 public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
+   /**
+    * Must be not null when an {@code Edge} is deactivated. Equivalently, if an
+    * {@code Edge} is not active, this field must be not null.
+    * <p>
+    * {@code start==null} <--> {@code startPort==-1} <--> start has not been
+    * initialized
+    */
    private @LazyNonNull NodeType start;
+
+   /**
+    * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
+    * {@code Edge} is not active, this field must not be -1.
+    * <p>
+    * {@code start==null} <--> {@code startPort==-1} <--> start has not been
+    * initialized
+    */
    private int startPort = -1;
+
+   /**
+    * Must be not null when an {@code Edge} is deactivated. Equivalently, if an
+    * {@code Edge} is not active, this field must be not null.
+    * <p>
+    * {@code end==null} <--> {@code endPort==-1} <--> end has not been
+    * initialized
+    */
    private @LazyNonNull NodeType end;
+
+   /**
+    * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
+    * {@code Edge} is not active, this field must not be -1.
+    * <p>
+    * {@code end==null} <--> {@code endPort==-1} <--> end has not been
+    * initialized
+    */
    private int endPort = -1;
 
    private boolean active = true;
@@ -64,6 +96,22 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
          ensure(startPort != -1);
          ensure(endPort != -1);
       }
+
+      /*
+       * The port numbers used must be valid port numbers for the nodes used.
+       * The default implementation enforces no such restrictions, but
+       * subclasses may.
+       */
+
+      // Note: Graph is responsible for ensuring that a particular edge's
+      // connections match those of the nodes it is connected to (that is, the
+      // output edge connected to start at startPort must be this, and likewise
+      // for end and endPort).
+      //
+      // This is because there must be a point in time when the edge is
+      // connected to the node, but the node is not connected to the edge, or
+      // vice versa, simply because one operation must be done before the other,
+      // and checkRep is called from the methods that perform those operations.
    }
    
    /**
