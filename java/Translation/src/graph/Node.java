@@ -126,6 +126,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * - {@code this.isActive()}<br/>
     * <br/>
     * Modifies: {@code this}
+    * <p>
+    * Requires: There must not already be an {@link Edge} at the given input
+    * port.
     * 
     * @param input
     * The edge to attach to {@code this} as an input. This implementation does
@@ -141,6 +144,11 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Node");
+
+      // TODO check that port is nonnegative
+      if (getInput(port) != null)
+         throw new IllegalArgumentException("Input port at port " + port + " already used");
+
       padToLength(inputs, port + 1);
       inputs.set(port, input);
       checkRep();
@@ -154,6 +162,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * - {@code this.isActive()}<br/>
     * <br/>
     * Modifies: {@code this}
+    * <p>
+    * Requires: There must not already be an {@link Edge} at the given output
+    * port.
     * 
     * @param output
     * The edge to attach to {@code this} as an output. This implementation does
@@ -169,6 +180,11 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!active)
          throw new IllegalStateException(
                "Mutation attempted on inactive Node");
+
+      // TODO check that port is nonnegative
+      if (getOutput(port) != null)
+         throw new IllegalArgumentException("Output port at port " + port + " already used");
+
       padToLength(outputs, port + 1);
       outputs.set(port, output);
       checkRep();
