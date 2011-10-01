@@ -173,7 +173,10 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns the edge at the given port, or {@code null} if none exists
+    * Returns the edge at the given port, or {@code null} if none exists.
+    * <p>
+    * @param port
+    * port >= 0
     */
    public @Nullable EdgeType getInput(int port)
    {
@@ -181,7 +184,10 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns the edge at the given port, or {@code null} if none exists
+    * Returns the edge at the given port, or {@code null} if none exists.
+    * <p>
+    * @param port
+    * port >= 0
     */
    public @Nullable EdgeType getOutput(int port)
    {
@@ -190,15 +196,20 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    
    /**
     * Returns the element in {@code from} at {@code index}, or {@code null} if
-    * none exists
+    * none exists.
     * 
     * @param from
     * The list to query
     * @param index
+    *
+    * @throws IndexOutOfBoundsException
+    * If index is negative.
     */
    private static <E> /*@Nullable*/ E get(List<E> from, int index)
    {
-      if (index >= from.size() || index < 0)
+      if (index < 0)
+         throw new IndexOutOfBoundsException();
+      else if (index >= from.size())
          return null;
       else
          return from.get(index);

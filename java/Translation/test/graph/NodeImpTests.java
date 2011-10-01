@@ -55,4 +55,13 @@ public class NodeImpTests
       
       assertTrue(expectedExceptionThrown);
    }
+   
+   /**
+    * Tests that Node.getInput returns null on a negative port.
+    */
+   @Test(expected=IndexOutOfBoundsException.class)
+   public void testGetNegativeInput()
+   {
+      new ConcreteNode().getInput(-1);
+   }
 }
