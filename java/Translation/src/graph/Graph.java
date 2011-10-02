@@ -180,27 +180,46 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    {
       if (!active)
          throw new IllegalStateException("Mutation attempted on an inactive Graph");
+      if (!start.isActive())
+         throw new IllegalArgumentException("Inactive start node " + start);
+      if (!end.isActive())
+         throw new IllegalArgumentException("Inactive end node " + end);
       if (!edge.isActive())
-         throw new IllegalArgumentException("Graph.addEdge called with an inactive edge");
+         throw new IllegalArgumentException("Inactive edge " + edge);
       
       if (!this.contains(start))
          throw new IllegalArgumentException(
-               "Call to addEdge made with a start node that is not in this Graph");
+               "Start node not in this Graph " + start);
       if (!this.contains(end))
          throw new IllegalArgumentException(
-               "Call to addEdge made with a end node that is not in this Graph");
+               "End node not in this Graph " + end);
       if (this.contains(edge))
          throw new IllegalArgumentException(
-               "Call to addEdge made with an edge that is already in this Graph");
+               "Edge already in this Graph " + edge);
       if (edge.getStart() != null || edge.getEnd() != null)
-         throw new IllegalArgumentException(
-               "Call to addEdge made with an edge that is already connected to node(s)");
+      {
+         Node oldStart = edge.getStart();
+         Node oldEnd = edge.getEnd();
+
+         String message = "Given Edge already connected to Node";
+         if (oldStart != null && oldEnd != null)
+            message += "s"; // pluralize "Node"
+         message += ":";
+
+         if (oldStart != null)
+            message += " start " + oldStart;
+         if (oldEnd != null)
+            message += " end " + oldEnd;
+
+         throw new IllegalArgumentException(message);
+      }
+
       if (start.getOutput(startPort) != null)
          throw new IllegalArgumentException(
-               "Call to addEdge made with a start node that is already connected to an edge on the given port");
+               "Start Node already connected to Edge on given port: " + start.getOutput(startPort));
       if (end.getInput(endPort) != null)
          throw new IllegalArgumentException(
-               "Call to addEdge made with an end node that is already connected to an edge on the given port");
+               "End Node already connected to Edge on given port: " + start.getInput(endPort));
       
       edges.add(edge);
       
