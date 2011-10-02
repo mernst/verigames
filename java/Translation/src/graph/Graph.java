@@ -158,13 +158,17 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * contained in {@code this}.
     * @param startPort
     * The port at which the added edge will start. The output port of this
-    * number on {@code start} must be empty.
+    * number on {@code start} must be empty. The standard implementation of
+    * {@link Node} enforces no further restrictions on what ports are valid, but
+    * subclasses may.
     * @param end
     * The node at which the edge will end. Must be active, and must be contained
     * in {@code this}.
     * @param endPort
     * The port at which the added edge will end. The input port of this number
-    * on {@code end} must be empty.
+    * on {@code end} must be empty. The standard implementation of {@link Node}
+    * enforces no further restrictions on what ports are valid, but subclasses
+    * may.
     * @param edge
     * The edge to add. Must be active, have no start or end nodes, and must not
     * be contained in {@code this}. This implementation enforces no further
