@@ -360,7 +360,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    /**
     * no null keys or values
     */
-   private static <EdgeType extends Edge> String portMapToString(Map<Integer, EdgeType> map)
+   private static <EdgeType extends Edge<?>> String portMapToString(Map<Integer, EdgeType> map)
    {
       StringBuilder builder = new StringBuilder();
 
