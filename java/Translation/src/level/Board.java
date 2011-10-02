@@ -273,21 +273,27 @@ public class Board extends Graph<Intersection, Chute>
    {
       if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
          throw new IllegalArgumentException(
-               "First node in Board must be of kind INCOMING");
-      
-      if (incomingNode != null && node.getIntersectionKind() == Kind.INCOMING)
-         throw new IllegalArgumentException(
-               "No more than one node can be of kind INCOMING");
-      
-      if (outgoingNode != null && node.getIntersectionKind() == Kind.OUTGOING)
-         throw new IllegalArgumentException(
-               "No more than one node can be of kind OUTGOING");
+               "First node in Board is not of kind INCOMING: " + node);
       
       if (node.getIntersectionKind() == Kind.INCOMING)
+      {
+         if (incomingNode != null)
+            throw new IllegalArgumentException(
+                  "Second INCOMING node added (no more than one is legal): " +
+                  node);
+
          incomingNode = node;
-      
+      }
+
       else if (node.getIntersectionKind() == Kind.OUTGOING)
+      {
+         if (outgoingNode != null)
+            throw new IllegalArgumentException(
+                  "Second OUTGOING node added (no more than one is legal): " +
+                  node);
+
          outgoingNode = node;
+      }
       
       super.addNode(node);
    }
