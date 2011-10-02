@@ -7,17 +7,17 @@ import java.util.Set;
 
 /**
  * A mutable graph structure capable of storing data in both the edges and the
- * nodes. It keeps track of the specific node ports to which edges attach.<br/>
- * <br/>
+ * nodes. It keeps track of the specific node ports to which edges attach.
+ * <p>
  * Once {@code deactivate()} is called, its structure becomes immutable, though
- * nodes and edges may still mutate in such a way that they do not change the
- * structure of the {@code Graph}<br/>
- * <br/>
+ * the data that the nodes and edges contain may still mutate in such a way that
+ * they do not change the structure of the {@code Graph}.
+ * <p>
  * Specification Field: {@code nodes} : {@code Set<NodeType>}
  * // the set of nodes contained in {@code this}<br/>
  * Specification Field: {@code edges} : {@code Set<EdgeType>}
- * // the set of edges contained in {@code this}<br/>
- * <br/>
+ * // the set of edges contained in {@code this}
+ * <p>
  * Specification Field: {@code active} : {@code boolean} // {@code true} iff
  * {@code this} can still be modified. Once {@code active} is set to
  * {@code false}, {@code this} becomes immutable.
