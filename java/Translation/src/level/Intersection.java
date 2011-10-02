@@ -1,5 +1,7 @@
 package level;
 
+import static utilities.Misc.ensure;
+
 import java.util.TreeMap;
 
 /**
@@ -70,7 +72,7 @@ public class Intersection extends graph.Node<Chute>
       SUBNETWORK,
    };
    
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    private final Kind intersectionKind;
 
@@ -234,16 +236,6 @@ public class Intersection extends graph.Node<Chute>
             throw new RuntimeException(
                   "Add new Intersection Kind to switch statement");
       }
-   }
-   
-   /**
-    * Intended to be a substitute for assert, except I don't want to have to
-    * make sure the -ea flag is turned on in order to get these checks.
-    */
-   private static void ensure(boolean value)
-   {
-      if (!value)
-         throw new AssertionError();
    }
    
    /**

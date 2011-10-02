@@ -27,7 +27,7 @@ public class NullTest extends Intersection
     * wide
     */
    
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    /**
     * Checks that the representation invariant holds

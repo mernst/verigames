@@ -1,5 +1,7 @@
 package level;
 
+import static utilities.Misc.ensure;
+
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,7 +50,7 @@ public class Level
    
    private boolean active = true;
    
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    /**
     * Enforces the Representation Invariant
@@ -90,16 +92,6 @@ public class Level
       
    }
    
-   /**
-    * Intended to be a substitute for assert, except I don't want to have to
-    * make sure the -ea flag is turned on in order to get these checks.
-    */
-   private static void ensure(boolean value)
-   {
-      if (!value)
-         throw new AssertionError();
-   }
-    
    /**
     * Creates a new {@code Level} with an empty {@code linkedEdgeClasses},
     * {@code boards}, and {@code boardNames}

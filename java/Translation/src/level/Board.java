@@ -1,5 +1,7 @@
 package level;
 
+import static utilities.Misc.ensure;
+
 import graph.Graph;
 
 import java.util.LinkedHashMap;
@@ -30,7 +32,7 @@ import checkers.nullness.quals.LazyNonNull;
 
 public class Board extends Graph<Intersection, Chute>
 {
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    @LazyNonNull Intersection incomingNode;
    @LazyNonNull Intersection outgoingNode;
@@ -206,16 +208,6 @@ public class Board extends Graph<Intersection, Chute>
       // i.getIntersectionType() == OUTGOING
       ensure((outgoingNode == null) || nodes.contains(outgoingNode));
       
-   }
-   
-   /**
-    * Intended to be a substitute for assert, except I don't want to have to
-    * make sure the -ea flag is turned on in order to get these checks.
-    */
-   private static void ensure(boolean value)
-   {
-      if (!value)
-         throw new AssertionError();
    }
    
    /**
