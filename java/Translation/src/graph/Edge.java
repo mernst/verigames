@@ -1,5 +1,7 @@
 package graph;
 
+import static utilities.Misc.ensure;
+
 import checkers.nullness.quals.AssertNonNullAfter;
 import checkers.nullness.quals.LazyNonNull;
 import checkers.nullness.quals.Nullable;
@@ -67,7 +69,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 
    private boolean active = true;
    
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    /**
     * Ensures that the representation invariant holds.
@@ -112,16 +114,6 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       // connected to the node, but the node is not connected to the edge, or
       // vice versa, simply because one operation must be done before the other,
       // and checkRep is called from the methods that perform those operations.
-   }
-   
-   /**
-    * Intended to be a substitute for assert, except I don't want to have to
-    * make sure the -ea flag is turned on in order to get these checks.
-    */
-   private static void ensure(boolean value)
-   {
-      if (!value)
-         throw new AssertionError();
    }
    
    /**

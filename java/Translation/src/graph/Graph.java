@@ -1,5 +1,7 @@
 package graph;
 
+import static utilities.Misc.ensure;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -43,7 +45,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       edges = new LinkedHashSet<EdgeType>();
    }
 
-   private static final boolean CHECK_REP_ENABLED = true;
+   private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
    /**
     * Ensures that the representation invariant holds.
@@ -102,16 +104,6 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
          }
       }
       
-   }
-
-   /**
-    * Intended to be a substitute for assert, except I don't want to have to
-    * make sure the -ea flag is turned on in order to get these checks.
-    */
-   private static void ensure(boolean value)
-   {
-      if (!value)
-         throw new AssertionError();
    }
 
    /**
