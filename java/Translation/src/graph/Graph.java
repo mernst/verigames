@@ -65,6 +65,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       // for all n in nodes; e in edges:
       // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
       // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
+      // this.isActive() == e.isActive()
+      // this.isActive() == n.isActive()
       for (EdgeType e : edges)
       {
          NodeType n = e.getStart();
@@ -78,6 +80,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
          ensure(n != null);
          // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
          ensure(n.getInput(e.getEndPort()) == e);
+
+         // this.isActive() == e.isActive()
+         ensure(this.isActive() == e.isActive());
       }
       
       for (NodeType n : nodes)
@@ -102,8 +107,11 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
             ensure(i == e.getEndPort());
             ensure(e.getEnd() == n);
          }
+
+
+         // this.isActive() == n.isActive()
+         ensure(this.isActive() == n.isActive());
       }
-      
    }
 
    /**
