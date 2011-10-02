@@ -3,6 +3,7 @@ package graph;
 import static utilities.Misc.ensure;
 
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -87,27 +88,25 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       
       for (NodeType n : nodes)
       {
-         
-         // This approach stops verifying after encountering the first port
-         // with a null value. Therefore, it may not always check every
-         // existing output port
-         
-         EdgeType e = n.getOutput(0);
-         for (int i = 0; e != null; e = n.getOutput(++i))
+         for (Map.Entry<Integer, EdgeType> entry : n.getOutputs().entrySet())
          {
+            EdgeType e = entry.getValue();
+            int nodePort = entry.getKey();
+
             // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
-            ensure(i == e.getStartPort());
+            ensure(nodePort == e.getStartPort());
             ensure(e.getStart() == n);
          }
-         
-         e = n.getInput(0);
-         for (int i = 0; e != null; e = n.getInput(++i))
+
+         for (Map.Entry<Integer, EdgeType> entry : n.getInputs().entrySet())
          {
+            EdgeType e = entry.getValue();
+            int nodePort = entry.getKey();
+
             // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
-            ensure(i == e.getEndPort());
+            ensure(nodePort == e.getEndPort());
             ensure(e.getEnd() == n);
          }
-
 
          // this.isActive() == n.isActive()
          ensure(this.isActive() == n.isActive());
