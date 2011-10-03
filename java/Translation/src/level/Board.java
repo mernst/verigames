@@ -176,38 +176,47 @@ public class Board extends Graph<Intersection, Chute>
       if (!CHECK_REP_ENABLED)
          return;
       
-      // Representation Invariant:
       Set<Intersection> nodes = getNodes();
       
-      // if nodes.size == 1, its element, i, must be of type INCOMING
-      if (nodes.size() == 1)
-      {
-         ensure(nodes.iterator().next().getIntersectionKind() == Kind.INCOMING);
-      }
+      // Representation Invariant:
+
+      // if incomingNode is not null, its Kind must be INCOMING
+      if (incomingNode != null)
+         ensure (incomingNode.getIntersectionKind() == Kind.INCOMING);
+
+      // if outgoingNode is not null, its Kind must be OUTGOING
+      if (outgoingNode != null)
+         ensure (outgoingNode.getIntersectionKind() == Kind.OUTGOING);
+
+      // if nodes is non-empty, incomingNode must be non-null
+      ensure(nodes.isEmpty() || incomingNode != null);
       
       for (Intersection i : nodes)
       {
          if (i.getIntersectionKind() == Kind.INCOMING)
          {
-            // nodes may contain no more than one element of type INCOMING
+            // nodes may contain no more than one Node of Kind INCOMING
             ensure(incomingNode == i);
          }
          else if (i.getIntersectionKind() == Kind.OUTGOING)
          {
-            // nodes may contain no more than one element of type OUTGOING
+            // nodes may contain no more than one Node of Kind OUTGOING
             ensure(outgoingNode == i);
          }
       }
       
-      // incomingNode != null <--> there exists an element i in nodes such
-      // that
-      // i.getIntersectionType() == INCOMING
-      ensure((incomingNode == null) || nodes.contains(incomingNode));
-      // outgoingNode != null <--> there exists an element i in nodes such
-      // that
-      // i.getIntersectionType() == OUTGOING
-      ensure((outgoingNode == null) || nodes.contains(outgoingNode));
+      // incomingNode != null <--> nodes contains incomingNode
+      ensure((incomingNode != null) == nodes.contains(incomingNode));
+      // outgoingNode != null <--> nodes contains outgoingNode
+      ensure((outgoingNode != null) == nodes.contains(outgoingNode));
       
+      // if this is inactive
+      if (!this.isActive())
+      {
+         // incomingNode and outgoingNode must be non-null
+         ensure(incomingNode != null);
+         ensure(outgoingNode != null);
+      }
    }
    
    /**
@@ -235,7 +244,7 @@ public class Board extends Graph<Intersection, Chute>
    }
    
    /**
-    * Returns {@code this}' {@code incomingNode}, or {@code null} if it does not
+    * Returns {@code this}'s {@code incomingNode}, or {@code null} if it does not
     * have one
     */
    public/* @Nullable */Intersection getIncomingNode()
@@ -244,7 +253,7 @@ public class Board extends Graph<Intersection, Chute>
    }
    
    /**
-    * Returns {@code this}' {@code outgoingNode}, or {@code null} if it does not
+    * Returns {@code this}'s {@code outgoingNode}, or {@code null} if it does not
     * have one
     */
    public/* @Nullable */Intersection getOutgoingNode()
