@@ -1,0 +1,33 @@
+Finish edits from Mike's code review
+
+--------------------------------------------------------------------------------
+
+Allow Graphviz to order the input and output ports by representing the incoming
+and outgoing nodes as multiple nodes (one for each port).
+
+--------------------------------------------------------------------------------
+
+Add framework to lay out edges with Graphviz
+   - Establish XML format for edge layout information
+   - Make second pass with neato -n
+
+--------------------------------------------------------------------------------
+
+Make certain edges straighter
+   - Select the edges that form a path from a particular input port to a
+     particular output port (fuzzy, write a heuristic to figure out which ones
+     to straighten)
+   - Set the weight of those edges to be higher (Graphviz will lay them out
+     straighter)
+
+--------------------------------------------------------------------------------
+
+Implement different contexts for Subnetworks (different pipes are visible
+depending on where the subnetwork is)
+
+For example, a subnetwork representing a method call in a different class will
+not (generally) include all the fields of that class as input and output pipes
+
+--------------------------------------------------------------------------------
+
+Add Map KeyFor data to Pipe Jam
