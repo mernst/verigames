@@ -48,12 +48,12 @@ public class Chute extends graph.Edge<Intersection>
    {
       this.editable = true;
       
-      narrow = false;
-      pinch = false;
+      this.narrow = false;
+      this.pinch = false;
       
-      UID = nextUID;
-      nextUID += 1;
-      checkRep();
+      this.UID = nextUID;
+      Chute.nextUID += 1;
+      this.checkRep();
    }
    
    /**
@@ -145,10 +145,16 @@ public class Chute extends graph.Edge<Intersection>
    }
    
    /**
-    * Returns a deep copy of {@code this}.<br/>
-    * <br/>
+    * Returns a deep copy of {@code this}.
+    * <p>
     * If this chute has {@code start} or {@code end} nodes, that information
     * will not be copied.
+    * <p>
+    * The choice not to override {@code Object.clone()} was deliberate. {@code
+    * copy()} intentionally only copies *some* of the properties of a {@code
+    * Chute}, and, notably, leaves out the UID. The UID is (and should be) a
+    * final field, and if {@code clone()} were used, the UID would need to be
+    * modified after object creation.
     */
    public Chute copy()
    {
