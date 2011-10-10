@@ -13,19 +13,22 @@ import level.Intersection.Kind;
 import checkers.nullness.quals.LazyNonNull;
 
 /**
- * A board for Pipe Jam. It is a {@link graph.Graph Graph} with
- * {@link Intersection}s as nodes and {@link Chute}s as edges. It stores data in
- * both the nodes and the edges.<br/>
- * <br/>
- * It is a Directed Acyclic Graph (DAG). <br/>
- * <br/>
+ * A board for Pipe Jam. It is a {@link graph.Graph Graph} with {@link
+ * Intersection}s as nodes and {@link Chute}s as edges. It stores data in both
+ * the nodes and the edges.
+ * <p>
+ * It must be a Directed Acyclic Graph (DAG).
+ * <p>
+ * The first node added must be an {@code Intersection} of {@link
+ * Intersection.Kind Kind} {@link Intersection.Kind#INCOMING INCOMING}.
+ * <p>
  * Specification Field: {@code incomingNode} -- {@link Intersection}
  * // the node representing the top of the board, where all the incoming chutes
- * enter<br/>
+ * enter
+ * <p>
  * Specification Field: {@code outgoingNode} -- {@link Intersection}
  * // the node representing the bottom of the board, where all the outgoing
- * chutes exit<br/>
- * <br/>
+ * chutes exit
  * 
  * @author Nathaniel Mote
  */
