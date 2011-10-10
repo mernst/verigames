@@ -23,6 +23,7 @@
   <target name="build">
     <mkdir dir="${bin}"/>
     <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+      <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
         <pathelement path="${test}"/>
