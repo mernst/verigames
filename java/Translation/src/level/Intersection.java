@@ -23,13 +23,6 @@ import java.util.TreeMap;
  * @author Nathaniel Mote
  */
 
-/*
- * Notes:
- * 
- * - I think I have all the the Intersection kinds in the enum, but if I'm
- * missing any, let me know.
- */
-
 public class Intersection extends graph.Node<Chute>
 {
    /**
@@ -40,36 +33,82 @@ public class Intersection extends graph.Node<Chute>
    public static enum Kind
    {
       /** The start point of chutes that enter the board on the top */
-      INCOMING,
+      INCOMING(0, -1),
       /** The end point of chutes that exit the board on the bottom */
-      OUTGOING,
+      OUTGOING(-1, 0),
       /** An intersection in which a chute is split into two chutes */
-      SPLIT,
+      SPLIT(1, 2),
       /** An intersection where two chutes merge into one */
-      MERGE,
+      MERGE(2, 1),
       /**
        * Simply connects one chute to another. Can be optimized away after, but
        * I think it will be convenient to have during construction.
        */
-      CONNECT,
+      CONNECT(1, 1),
       /** Represents a split due to testing for null */
-      NULL_TEST,
+      NULL_TEST(1, 2),
       /**
        * Represents a white (not null) ball being dropped into the top of the
        * exit chute
        */
-      START_WHITE_BALL,
+      START_WHITE_BALL(0, 1),
       /**
        * Represents a black (null) ball being dropped into the top of the exit
        * chute
        */
-      START_BLACK_BALL,
+      START_BLACK_BALL(0, 1),
       /** Represents a chute with no ball dropping into it */
-      START_NO_BALL,
+      START_NO_BALL(0, 1),
       /** Terminate a chute */
-      END,
+      END(1, 0),
       /** Represents a method call */
-      SUBNETWORK,
+      SUBNETWORK(-1, -1);
+
+      /**
+       * The number of input ports that an {@link Intersection} of this {@code
+       * Kind} must have. {@code -1} if there is no restriction.
+       */
+      private final int numInputPorts;
+      /**
+       * The number of output ports that an {@link Intersection} of this {@code
+       * Kind} must have. {@code -1} if there is no restriction.
+       */
+      private final int numOutputPorts;
+
+      /**
+       * Constructs a new {@code Kind} enum object.
+       *
+       * @param numInputPorts
+       * The number of input ports that an {@link Intersection} of this {@code
+       * Kind} must have. {@code -1} if there is no restriction.
+       *
+       * @param numOutputPorts
+       * The number of output ports that an {@link Intersection} of this {@code
+       * Kind} must have. {@code -1} if there is no restriction.
+       */
+      private Kind(int numInputPorts, int numOutputPorts)
+      {
+         this.numInputPorts = numInputPorts;
+         this.numOutputPorts = numOutputPorts;
+      }
+
+      /**
+       * Returns the number of input ports that an {@link Intersection} of this
+       * {@code Kind} must have, or {@code -1} if there is no restriction.
+       */
+      public int getNumberOfInputPorts()
+      {
+         return this.numInputPorts;
+      }
+
+      /**
+       * Returns the number of output ports that an {@link Intersection} of this
+       * {@code Kind} must have, or {@code -1} if there is no restriction.
+       */
+      public int getNumberOfOutputPorts()
+      {
+         return this.numOutputPorts;
+      }
    };
    
    private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
@@ -106,8 +145,8 @@ public class Intersection extends graph.Node<Chute>
          return;
       
       // The total number of ports that this Kind of Intersection can have
-      int numRequiredInPorts = getNumberOfInputPorts();
-      int numRequiredOutPorts = getNumberOfOutputPorts();
+      int numRequiredInPorts = intersectionKind.getNumberOfInputPorts();
+      int numRequiredOutPorts = intersectionKind.getNumberOfOutputPorts();
       
       TreeMap<Integer, Chute> inputChutes = getInputs();
       TreeMap<Integer, Chute> outputChutes = getOutputs();
@@ -156,86 +195,6 @@ public class Intersection extends graph.Node<Chute>
          }
       }
       
-   }
-   
-   /**
-    * Returns the number of input ports for a completed {@code Intersection} of
-    * this {@code Kind}, or {@code -1} if there is no restriction<br/>
-    * <br/>
-    * When deactivated, an {@code Intersection} must have all of its ports
-    * filled.
-    */
-   private int getNumberOfInputPorts()
-   {
-      switch (intersectionKind)
-      {
-         case INCOMING:
-            return 0;
-         case OUTGOING:
-            return -1;
-         case SPLIT:
-            return 1;
-         case NULL_TEST:
-            return 1;
-         case MERGE:
-            return 2;
-         case START_WHITE_BALL:
-            return 0;
-         case START_BLACK_BALL:
-            return 0;
-         case START_NO_BALL:
-            return 0;
-         case END:
-            return 1;
-         case SUBNETWORK:
-            return -1;
-         case CONNECT:
-            return 1;
-            
-         default:
-            throw new RuntimeException(
-                  "Add new Intersection Kind to switch statement");
-      }
-   }
-   
-   /**
-    * Returns the number of output ports for a completed {@code Intersection} of
-    * this {@code Kind}, or {@code -1} if there is no restriction<br/>
-    * <br/>
-    * When deactivated, an {@code Intersection} must have all of its ports
-    * filled.
-    */
-   private int getNumberOfOutputPorts()
-   {
-      switch (intersectionKind)
-      {
-         case INCOMING:
-            return -1;
-         case OUTGOING:
-            return 0;
-         case SPLIT:
-            return 2;
-         case NULL_TEST:
-            return 2;
-         case MERGE:
-            return 1;
-         case START_WHITE_BALL:
-            return 1;
-         case START_BLACK_BALL:
-            return 1;
-         case START_NO_BALL:
-            return 1;
-         case END:
-            return 0;
-         case SUBNETWORK:
-            return -1;
-         case CONNECT:
-            return 1;
-            
-         default:
-            throw new RuntimeException(
-                  "Add new Intersection Kind to switch statement");
-      }
    }
    
    /**
