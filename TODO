@@ -2,6 +2,11 @@ Finish edits from Mike's code review
 
 --------------------------------------------------------------------------------
 
+Change null test node to something that does not refer to null, change white
+ball to small ball, and change black ball to large ball.
+
+--------------------------------------------------------------------------------
+
 Allow Graphviz to order the input and output ports by representing the incoming
 and outgoing nodes as multiple nodes (one for each port).
 
