@@ -154,7 +154,8 @@ public class Chute extends graph.Edge<Intersection>
     * copy()} intentionally only copies *some* of the properties of a {@code
     * Chute}, and, notably, leaves out the UID. The UID is (and should be) a
     * final field, and if {@code clone()} were used, the UID would need to be
-    * modified after object creation.
+    * modified after object creation in order to maintain the property that no
+    * two {@code Chute}s have the same UID.
     */
    public Chute copy()
    {
