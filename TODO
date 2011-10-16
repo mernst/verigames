@@ -1,7 +1,3 @@
-Finish edits from Mike's code review
-
---------------------------------------------------------------------------------
-
 Change null test node to something that does not refer to null, change white
 ball to small ball, and change black ball to large ball.
 
