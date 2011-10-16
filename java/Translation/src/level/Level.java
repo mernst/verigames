@@ -15,25 +15,26 @@ import level.Intersection.Kind;
 
 /**
  * A mutable level for Pipe Jam. A {@code Level} consists of any number of
- * {@link Board}s, each associated with a unique name.<br/>
- * <br/>
+ * {@link Board}s, each associated with a unique name.
+ * <p>
  * A {@code Level} also keeps track of which {@link Chute}s in the contained
- * {@code Board}s are linked (see below).<br/>
- * <br/>
+ * {@code Board}s are linked (see below).
+ * <p>
  * Specification Field: {@code linkedEdgeClasses} : {@code Set<Set<Chute>>}
  * // Contains equivalence classes of {@code Chute}s, as defined by the
- * following equivalence relation<br/>
- * <br/>
- * Let R be an equivalence relation on the set of all {@code Chute}s such that:<br/>
- * aRb <--> a and b necessarily have the same width. That is, when a changes
- * width, b must follow, and vice-versa.<br/>
- * <br/>
+ * following equivalence relation
+ * <p>
+ * Let R be the maximal equivalence relation on the set of all {@code Chute}s
+ * such that:<br/>
+ * aRb --> a and b necessarily have the same width. That is, when a changes
+ * width, b must follow, and vice-versa.
+ * <p>
  * Specification Field: {@code boards} : {@code Set<Board>}
- * // represents the set of all boards in this level<br/>
- * <br/>
+ * // represents the set of all boards in this level
+ * <p>
  * Specification Field: {@code boardNames} : {@code Map<String, Board>}
- * // maps the name of a method to its {@code Board}<br/>
- * <br/>
+ * // maps the name of a method to its {@code Board}
+ * <p>
  * Specification Field: {@code active} : {@code boolean} // {@code true} iff
  * {@code this} can still be modified. Once {@code active} is set to
  * {@code false}, {@code this} becomes immutable.
@@ -64,6 +65,14 @@ public class Level
       Set<Chute> encountered = new HashSet<Chute>();
       for (Set<Chute> s : linkedEdgeClasses)
       {
+         /*
+          * No set in linkedEdgeClasses may be empty
+          *
+          * No set in linkedEdgeClasses may have size 1 (the fact that a chute
+          * is linked to itself need not be represented)
+          */
+         ensure(s.size() > 1);
+         
          
          // No chute can be contained in more than one set in
          // linkedEdgeClasses
@@ -72,22 +81,25 @@ public class Level
             ensure(!encountered.contains(c));
             encountered.add(c);
          }
-         
-         // No set in linkedEdgeClasses may be empty
-         ensure(!s.isEmpty());
-         
-         /*
-          * No set in linkedEdgeClasses may have size 1 (the fact that a chute
-          * is linked to itself need not be represented)
-          */
-         ensure(s.size() != 1);
-         
-         /*
-          * All chutes contained in sets contained in linkedEdgeClasses must
-          * also be contained contained by some Board in boardNames.values()
-          * 
-          * Not checked for effiency's sake
-          */
+      }
+
+      /*
+       * If this is inactive, all chutes contained in sets contained in
+       * linkedEdgeClasses must also be contained contained by some Board in
+       * boardNames.values()
+       */
+      if (!this.isActive())
+      {
+         Set<Chute> containedInBoards = new HashSet<Chute>();
+         for (Board b : boardNames.values())
+         {
+            for (Chute c : b.getEdges())
+               containedInBoards.add(c);
+         }
+
+         // make sure that the chutes in linkedEdgeClasses are a subset of the
+         // chutes in boardNames
+         ensure(containedInBoards.containsAll(encountered));
       }
       
    }
@@ -244,8 +256,8 @@ public class Level
    }
    
    /**
-    * Returns the {@code Board} to which {@code name} maps in {@code boardNames}
-    * , or {@code null} if it maps to nothing
+    * Returns the {@code Board} to which {@code name} maps in {@code
+    * boardNames}, or {@code null} if it maps to nothing
     */
    public/* @Nullable */Board getBoard(String name)
    {
