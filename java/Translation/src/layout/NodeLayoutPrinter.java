@@ -1,6 +1,5 @@
 package layout;
 
-import graph.Edge;
 import graph.Node;
 
 import java.io.PrintStream;
