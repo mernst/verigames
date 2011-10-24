@@ -20,6 +20,15 @@ import level.Board;
  */
 class DotRunner
 {
+   private final DotPrinter printer;
+   private final DotParser parser;
+
+   public DotRunner(DotPrinter printer, DotParser parser)
+   {
+      this.printer = printer;
+      this.parser = parser;
+   }
+
    public GraphInformation run(Board b)
    {
       Process process;
@@ -58,16 +67,15 @@ class DotRunner
     * <p>
     * Modifies: {@code os}
     */
-   private static void outputBoard(Board b, OutputStream os)
+   private void outputBoard(Board b, OutputStream os)
    {
-      DotPrinter printer = new DotPrinter();
       PrintStream out = new PrintStream(os);
       printer.print(b, out, null);
       // PrintStream closes its underlying OutputStream when closed
       out.close();
    }
    
-   private static GraphInformation parseDot(InputStream is)
+   private GraphInformation parseDot(InputStream is)
    {
       StringBuilder processOutput = new StringBuilder();
       
@@ -77,7 +85,6 @@ class DotRunner
       // Scanner closes its underlying InputStream when closed
       in.close();
       
-      DotParser parser = new DotParser();
       return parser.parse(processOutput.toString());
    }
 }

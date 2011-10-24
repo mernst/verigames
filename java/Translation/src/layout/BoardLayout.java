@@ -49,7 +49,7 @@ public class BoardLayout
     */
    public void layout(Board b)
    {
-      GraphInformation info = (new DotRunner()).run(b);
+      GraphInformation info = (new DotRunner(new NodeLayoutPrinter(), new DotParser())).run(b);
       
       int boardHeight = info.getGraphAttributes().getHeight();
       
