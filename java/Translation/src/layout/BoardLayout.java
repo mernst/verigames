@@ -49,7 +49,17 @@ public class BoardLayout
     */
    public void layout(Board b)
    {
-      GraphInformation info = (new DotRunner(new NodeLayoutPrinter(), new DotParser())).run(b);
+      GraphInformation info;
+
+      // These variables are all just for clarity, so putting them in a block
+      // avoids cluttering the namespace
+      {
+         DotPrinter printer = new NodeLayoutPrinter();
+         DotParser parser = new DotParser();
+         String command = "dot";
+         DotRunner runner = new DotRunner(printer, parser, command);
+         info = runner.run(b);
+      }
       
       int boardHeight = info.getGraphAttributes().getHeight();
       

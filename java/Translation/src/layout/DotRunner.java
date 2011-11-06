@@ -22,11 +22,13 @@ class DotRunner
 {
    private final DotPrinter printer;
    private final DotParser parser;
+   private final String command;
 
-   public DotRunner(DotPrinter printer, DotParser parser)
+   public DotRunner(DotPrinter printer, DotParser parser, String command)
    {
       this.printer = printer;
       this.parser = parser;
+      this.command = command;
    }
 
    public GraphInformation run(Board b)
@@ -34,12 +36,14 @@ class DotRunner
       Process process;
       try
       {
-         process = Runtime.getRuntime().exec("dot");
+         process = Runtime.getRuntime().exec(command);
       }
       catch (IOException e)
       {
          throw new RuntimeException(
-               "Problem running the system \"dot\" command. Check that Graphviz is installed and that \"dot\" is in the current process's path", e);
+               "Problem running the system \"" + command +
+               "\" command. Check that Graphviz is installed and that \"" +
+               command + "\" is in the current process's path", e);
       }
       
       outputBoard(b, process.getOutputStream());
