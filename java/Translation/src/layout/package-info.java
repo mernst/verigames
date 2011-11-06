@@ -21,7 +21,7 @@
  * href="http://www.graphviz.org/content/attrs">here</a>.
  * <p>
  * The second is to change what is done with dot's output. This can either
- * happen in {@link layout.DotParser} or in {@link layout.BoardLayout}.
+ * happen in {@link layout.GraphvizParser} or in {@link layout.BoardLayout}.
  */
 
 package layout;

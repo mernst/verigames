@@ -4,9 +4,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import layout.GraphInformation;
-import layout.DotParser;
 
-public class DotParserSpecTests
+public class NodeParserSpecTests
 {
    private static final String testInput =
       "digraph {\n"
@@ -55,7 +54,7 @@ public class DotParserSpecTests
    @Test
    public void simpleTest()
    {
-      DotParser parser = new DotParser();
+      NodeParser parser = new NodeParser();
       assertEquals(testOutput, parser.parse(testInput));
    }
 
@@ -81,7 +80,7 @@ public class DotParserSpecTests
 
       GraphInformation output = builder.build();
 
-      DotParser parser = new DotParser();
+      NodeParser parser = new NodeParser();
       assertEquals(output, parser.parse(input));
    }
 }

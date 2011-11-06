@@ -55,7 +55,7 @@ public class BoardLayout
       // avoids cluttering the namespace
       {
          DotPrinter printer = new NodeLayoutPrinter();
-         DotParser parser = new DotParser();
+         GraphvizParser parser = new NodeParser();
          String command = "dot";
          GraphvizRunner runner = new GraphvizRunner(printer, parser, command);
          info = runner.run(b);
