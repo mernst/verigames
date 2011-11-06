@@ -18,13 +18,13 @@ import level.Board;
  * @author Nathaniel Mote
  * 
  */
-class DotRunner
+class GraphvizRunner
 {
    private final DotPrinter printer;
    private final DotParser parser;
    private final String command;
 
-   public DotRunner(DotPrinter printer, DotParser parser, String command)
+   public GraphvizRunner(DotPrinter printer, DotParser parser, String command)
    {
       this.printer = printer;
       this.parser = parser;

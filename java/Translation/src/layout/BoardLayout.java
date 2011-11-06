@@ -57,7 +57,7 @@ public class BoardLayout
          DotPrinter printer = new NodeLayoutPrinter();
          DotParser parser = new DotParser();
          String command = "dot";
-         DotRunner runner = new DotRunner(printer, parser, command);
+         GraphvizRunner runner = new GraphvizRunner(printer, parser, command);
          info = runner.run(b);
       }
       
