@@ -33,7 +33,7 @@ class DotParser
     * A message is required, and it should contain the bad line or the bad part
     * of the line.
     */
-   private static class IllegalLineException extends Exception
+   protected static class IllegalLineException extends Exception
    {
       public IllegalLineException(String message)
       {
@@ -62,6 +62,9 @@ class DotParser
       while (in.hasNextLine())
       {
          String line = in.nextLine();
+         
+         // if the line is terminated by a \, the next line is logically part of
+         // this line, so stitch them together
          while (line.charAt(line.length() - 1) == '\\')
          {
             String end;
@@ -95,13 +98,13 @@ class DotParser
          throw new IllegalArgumentException("Input lacks graph property information");
    }
    
-   private static enum LineKind {GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER}
+   protected static enum LineKind {GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER}
  
    /**
     * An immutable record type that stores the name of a node along with its
     * attributes.
     */
-   private static class NodeRecord
+   protected static class NodeRecord
    {
       public final String name;
       public final GraphInformation.NodeAttributes attributes;
@@ -116,7 +119,7 @@ class DotParser
    /**
     * Returns an {@code Object} of type {@link GraphInformation}, 
     */
-   private static void parseLine(String line, GraphInformation.Builder builder) throws IllegalLineException
+   protected void parseLine(String line, GraphInformation.Builder builder) throws IllegalLineException
    {
       switch (getLineKind(line))
       {
@@ -147,7 +150,7 @@ class DotParser
     * @return a {@link LineKind} indicating what kind of information {@code
     * line} represents.
     */
-   private static LineKind getLineKind(String line) throws IllegalLineException
+   protected static LineKind getLineKind(String line) throws IllegalLineException
    {
       String[] tokens = splitAroundWhitespace(line);
 
@@ -180,12 +183,14 @@ class DotParser
    /**
     * Takes a logical Graphviz line representing a graph attributes statement
     * and returns a GraphAttributes object containing the information from it.
+    * <p>
+    * Currently only parses the "bb" attribute.
     * 
     * @param line
     * Must be a valid, logical line of Graphviz output describing attributes of
     * the graph itself (as oppose to particular edges or nodes).
     */
-   private static @Nullable GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
+   protected static @Nullable GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
    {
       // sample line: "  graph [bb="0,0,216.69,528"];"
       
@@ -397,7 +402,7 @@ class DotParser
     * number
     * @throws NumberFormatException if {@code str} is poorly formed
     */
-   private static int parseToHundredths(String str)
+   protected static int parseToHundredths(String str)
    {
       // 1 or more digits, optionally followed by a single dot and one or more
       // digits
