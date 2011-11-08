@@ -16,7 +16,7 @@ import utilities.Printer;
  * 
  * @author Nathaniel Mote
  */
-class NodeLayoutPrinter extends DotPrinter
+class NodeLayoutPrinter extends GraphvizPrinter
 {
    private static final Printer<Intersection, Board> nodePrinter = new Printer<Intersection, Board>()
    {

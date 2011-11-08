@@ -17,12 +17,12 @@ import utilities.Printer;
  * 
  * @author Nathaniel Mote
  */
-abstract class DotPrinter extends Printer<Board, Void>
+abstract class GraphvizPrinter extends Printer<Board, Void>
 {
    private final Printer<Intersection, Board> nodePrinter;
    private final Printer<Chute, Board> edgePrinter;
 
-   public DotPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
+   public GraphvizPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
    {
       this.nodePrinter = nodePrinter;
       this.edgePrinter = edgePrinter;

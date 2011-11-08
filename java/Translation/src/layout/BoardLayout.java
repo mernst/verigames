@@ -54,7 +54,7 @@ public class BoardLayout
       // These variables are all just for clarity, so putting them in a block
       // avoids cluttering the namespace
       {
-         DotPrinter printer = new NodeLayoutPrinter();
+         GraphvizPrinter printer = new NodeLayoutPrinter();
          GraphvizParser parser = new NodeParser();
          String command = "dot";
          GraphvizRunner runner = new GraphvizRunner(printer, parser, command);
