@@ -108,8 +108,8 @@ class EdgeLayoutPrinter extends GraphvizPrinter
    @Override
    protected String nodeSettings(Board b)
    {
-      // Make the nodes points.
-      return "shape=point";
+      // makes the nodes circular so that edges avoid them.
+      return "shape=circle";
    }
 
    @Override
