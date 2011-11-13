@@ -108,18 +108,22 @@ class EdgeLayoutPrinter extends GraphvizPrinter
    @Override
    protected String nodeSettings(Board b)
    {
-      // makes the nodes circular so that edges avoid them.
-      return "shape=circle";
+      // shape=circle: makes the nodes circular so that edges avoid them.
+      //
+      // width=1: makes the nodes have a radius of 0.5 so that edges stay that
+      // far away from them.
+      return "shape=circle, width=1";
    }
 
    @Override
    protected String edgeSettings(Board b)
    {
       // dirtype=none: Remove the drawings of arrows on the edges. Doing this
-      // gives better layout information.
+      // gives more regular spline information.
       //
       // headclip,tailclip=false: draw edges to the centers of nodes, instead of
-      // stopping at their edges
+      // stopping at their edges. Important because the nodes are circles, not
+      // points. For an explanation, see nodeSettings.
       return "dirtype=none, headclip=false, tailclip=false";
    }
 
