@@ -1,11 +1,18 @@
 package layout;
 
+import static utilities.Misc.ensure;
+
+import utilities.Pair;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import checkers.nullness.quals.AssertNonNullIfTrue;
 import checkers.nullness.quals.LazyNonNull;
+import checkers.nullness.quals.Nullable;
 
 /**
  * An immutable class that stores information about a Graphviz graph.
@@ -16,14 +23,19 @@ import checkers.nullness.quals.LazyNonNull;
  * Positions are given using the bottom left as the origin, with X increasing to
  * the right, and Y increasing upwards. They give the location of the center of
  * the node.
+ * <p>
+ * In an undirected graph, the directionality of an edge is meaningless --
+ * however, even in undirected graphs, Graphviz picks one node to be the start
+ * of an edge, and this structure reflects this decision.
  * 
  * @author Nathaniel Mote
  */
 
 class GraphInformation
 {
-   private final Map<String, NodeAttributes> nodeAttributes;
    private final GraphAttributes graphAttributes;
+   private final Map<String, NodeAttributes> nodeAttributes;
+   private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
    
    /**
     * Creates a new GraphInformation object with the given mappings from Node UID to
@@ -31,15 +43,19 @@ class GraphInformation
     * 
     */
    private GraphInformation(GraphAttributes graphAttributes,
-         Map<String, NodeAttributes> nodeAttributes)
+         Map<String, NodeAttributes> nodeAttributes, Map<Pair<String, String>, EdgeAttributes> edgeAttributes)
    {
       this.graphAttributes = graphAttributes;
+
       this.nodeAttributes = Collections
             .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
+
+      this.edgeAttributes = Collections.unmodifiableMap(
+            new HashMap<Pair<String, String>, EdgeAttributes>(edgeAttributes));
    }
    
    /**
-    * Returns the x value of the node with the given name.
+    * Returns the attributes of the node with the given name.
     * 
     * @param name
     * {@link #containsNode(String) containsNode(name)} must be true.
@@ -59,6 +75,24 @@ class GraphInformation
    {
       return graphAttributes;
    }
+
+   /**
+    * Returns the attributes of the given edge
+    * <p>
+    * this must contain an edge from startNode to endNode
+    * equivalently, 
+    *
+    * @param startNode
+    * @param endNode
+    */
+   public EdgeAttributes getEdgeAttributes(String startNode, String endNode)
+   {
+      if (!this.containsEdge(startNode, endNode))
+         throw new IllegalArgumentException("No edge from \"" + startNode +
+               "\" to \"" + endNode + "\"");
+
+      return edgeAttributes.get(new Pair<String, String>(startNode, endNode));
+   }
    
    /**
     * Returns {@code true} iff {@code this} contains attributes for a node of
@@ -69,6 +103,19 @@ class GraphInformation
    public boolean containsNode(String name)
    {
       return nodeAttributes.containsKey(name);
+   }
+
+   /**
+    * Returns {@code true} iff {@code this} contians an edge from {@code
+    * startNode} to {@code endNode}
+    * 
+    * @param startNode
+    * @param endNode
+    */
+   public boolean containsEdge(String startNode, String endNode)
+   {
+      return edgeAttributes.containsKey(new Pair<String, String>(startNode,
+            endNode));
    }
    
    /**
@@ -111,12 +158,14 @@ class GraphInformation
     */
    public static class Builder
    {
-      private final Map<String, NodeAttributes> nodeAttributes;
       private @LazyNonNull GraphAttributes graphAttributes;
+      private final Map<String, NodeAttributes> nodeAttributes;
+      private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
       
       public Builder()
       {
          nodeAttributes = new HashMap<String, NodeAttributes>();
+         edgeAttributes = new HashMap<Pair<String, String>, EdgeAttributes>();
          graphAttributes = null;
       }
       
@@ -131,13 +180,13 @@ class GraphInformation
       // This may need to be changed somehow because graph attributes can be
       // split across multiple lines in DOT. Maybe a way to merge them or
       // something?
-      public GraphAttributes setGraphAttributes(GraphAttributes attributes)
+      public @Nullable GraphAttributes setGraphAttributes(GraphAttributes attributes)
       {
-         GraphAttributes retVal = this.graphAttributes;
+         GraphAttributes oldAttrs = this.graphAttributes;
          
          this.graphAttributes = attributes;
          
-         return retVal;
+         return oldAttrs;
       }
       
       /**
@@ -156,6 +205,20 @@ class GraphInformation
       {
          nodeAttributes.put(name, attributes);
       }
+
+      /**
+       * Sets the attributes associated with the edge from {@code startNode} to
+       * {@code endNode}
+       *
+       * @param startNode
+       * The ID of the starting node for this edge.
+       * @param endNode
+       * The ID of the ending node for this edge.
+       */
+      public void setEdgeAttributes(String startNode, String endNode, EdgeAttributes attributes)
+      {
+         edgeAttributes.put(new Pair<String, String>(startNode, endNode), attributes);
+      }
       
       /**
        * Returns a GraphInformation object with the attributes that have been added to
@@ -168,7 +231,7 @@ class GraphInformation
          if (!areGraphAttributesSet())
             throw new IllegalStateException("graph attributes not yet set");
          
-         return new GraphInformation(graphAttributes, nodeAttributes);
+         return new GraphInformation(graphAttributes, nodeAttributes, edgeAttributes);
       }
    }
    
@@ -317,6 +380,100 @@ class GraphInformation
       {
          return "pos=(" + getX() + "," + getY() + ");width=" + getWidth() +
                ";height=" + getHeight();
+      }
+   }
+
+   public static class EdgeAttributes
+   {
+      /**
+       * Stores the control points for the spline. Should be instantiated as an
+       * immutable list.
+       * <p>
+       * Must have length congruent to 1 (mod 3), as enforced by Graphviz.
+       */
+      private final List<Point> controlPoints;
+
+      private void checkRep()
+      {
+         ensure(controlPoints.size() % 3 == 1);
+      }
+
+      /**
+       * Constructs a new {@code EdgeAttributes} object.
+       * <p>
+       * @param points
+       * The control points for this edge's b-spline. {@code points.size() % 3}
+       * must equal {@code 1}.
+       */
+      public EdgeAttributes(List<Point> points)
+      {
+         if (points.size() % 3 != 1)
+            throw new IllegalArgumentException("Size of argument is " +
+                  points.size() + ". " + points.size() + " % 3 = " +
+                  (points.size() % 3) + " != 1");
+
+         // Creates a new list containing the elements in points, where the only
+         // view on it is an unmodifiable view. In effect, make it immutable.
+         this.controlPoints = Collections.unmodifiableList(new ArrayList<Point>(points));
+
+         checkRep();
+      }
+
+      public Point getPoint(int index)
+      {
+         checkBounds(index);
+         return controlPoints.get(index);
+      }
+
+      public int getX(int index)
+      {
+         checkBounds(index);
+         return controlPoints.get(index).getX();
+      }
+
+      public int getY(int index)
+      {
+         checkBounds(index);
+         return controlPoints.get(index).getY();
+      }
+
+      private void checkBounds(int index)
+      {
+         if (index >= controlPoints.size())
+            throw new IndexOutOfBoundsException("index " + index + " >= size ("
+                  + controlPoints.size() + ")");
+      }
+
+      public int size()
+      {
+         return controlPoints.size();
+      }
+   }
+
+   /**
+    * A record type representing a 2D point.
+    * <p>
+    * Stores integer x and y values that are values in hundredths of points.
+    */
+   public static class Point
+   {
+      private final int x;
+      private final int y;
+
+      public Point(int x, int y)
+      {
+         this.x = x;
+         this.y = y;
+      }
+
+      public int getY()
+      {
+         return y;
+      }
+
+      public int getX()
+      {
+         return x;
       }
    }
 }
