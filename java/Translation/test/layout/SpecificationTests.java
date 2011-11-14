@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ NodeParserSpecTests.class, GraphInformationSpecTests.class })
+@SuiteClasses({ DotParserSpecTests.class, GraphInformationSpecTests.class })
 public class SpecificationTests
 {
    // Placeholder class

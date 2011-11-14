@@ -21,10 +21,10 @@ import level.Board;
 class GraphvizRunner
 {
    private final GraphvizPrinter printer;
-   private final GraphvizParser parser;
+   private final DotParser parser;
    private final String command;
 
-   public GraphvizRunner(GraphvizPrinter printer, GraphvizParser parser, String command)
+   public GraphvizRunner(GraphvizPrinter printer, DotParser parser, String command)
    {
       this.printer = printer;
       this.parser = parser;
