@@ -22,6 +22,88 @@ import checkers.nullness.quals.LazyNonNull;
 
 class GraphInformation
 {
+   private final Map<String, NodeAttributes> nodeAttributes;
+   private final GraphAttributes graphAttributes;
+   
+   /**
+    * Creates a new GraphInformation object with the given mappings from Node UID to
+    * Intersection.
+    * 
+    */
+   private GraphInformation(GraphAttributes graphAttributes,
+         Map<String, NodeAttributes> nodeAttributes)
+   {
+      this.graphAttributes = graphAttributes;
+      this.nodeAttributes = Collections
+            .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
+   }
+   
+   /**
+    * Returns the x value of the node with the given name.
+    * 
+    * @param name
+    * {@link #containsNode(String) containsNode(name)} must be true.
+    */
+   public NodeAttributes getNodeAttributes(String name)
+   {
+      if (!this.containsNode(name))
+         throw new IllegalArgumentException("!this.containsNode(" + name + ")");
+      
+      return nodeAttributes.get(name);
+   }
+   
+   /**
+    * Returns the attributes of the graph itself
+    */
+   public GraphAttributes getGraphAttributes()
+   {
+      return graphAttributes;
+   }
+   
+   /**
+    * Returns {@code true} iff {@code this} contains attributes for a node of
+    * the given name
+    * 
+    * @param name
+    */
+   public boolean containsNode(String name)
+   {
+      return nodeAttributes.containsKey(name);
+   }
+   
+   /**
+    * Returns {@code true} iff {@code this} and {@code other} are equal in
+    * value.
+    */
+   @Override
+   public boolean equals(Object other)
+   {
+      if (other instanceof GraphInformation)
+      {
+         GraphInformation g = (GraphInformation) other;
+         
+         return this.getGraphAttributes().equals(g.getGraphAttributes())
+               && this.nodeAttributes.equals(g.nodeAttributes);
+      }
+      else
+      {
+         return false;
+      }
+   }
+   
+   @Override
+   public int hashCode()
+   {
+      return graphAttributes.hashCode() * 31 + nodeAttributes.hashCode();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "graph:" + graphAttributes.toString() + ";nodes:" +
+            nodeAttributes.toString();
+   }
+   
    /**
     * A Builder for a GraphInformation object.
     * 
@@ -87,6 +169,66 @@ class GraphInformation
             throw new IllegalStateException("graph attributes not yet set");
          
          return new GraphInformation(graphAttributes, nodeAttributes);
+      }
+   }
+   
+   /**
+    * An immutable record type that stores the width and the height of a
+    * Graphviz graph in hundredths of points
+    */
+   public static class GraphAttributes
+   {
+      private final int width;
+      private final int height;
+      
+      public GraphAttributes(int width, int height)
+      {
+         this.width = width;
+         this.height = height;
+      }
+      
+      /**
+       * Returns the width of the graph.
+       */
+      public int getWidth()
+      {
+         return width;
+      }
+      
+      /**
+       * Returns the height of the graph.
+       */
+      public int getHeight()
+      {
+         return height;
+      }
+      
+      @Override
+      public boolean equals(Object other)
+      {
+         if (other instanceof GraphAttributes)
+         {
+            GraphAttributes g = (GraphAttributes) other;
+            
+            return this.getHeight() == g.getHeight()
+                  && this.getWidth() == g.getWidth();
+         }
+         else
+         {
+            return false;
+         }
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return width * 97 + height;
+      }
+
+      @Override
+      public String toString()
+      {
+         return "width=" + getWidth() + ";height=" + getHeight();
       }
    }
    
@@ -176,147 +318,5 @@ class GraphInformation
          return "pos=(" + getX() + "," + getY() + ");width=" + getWidth() +
                ";height=" + getHeight();
       }
-   }
-   
-   /**
-    * An immutable record type that stores the width and the height of a
-    * Graphviz graph in hundredths of points
-    */
-   public static class GraphAttributes
-   {
-      private final int width;
-      private final int height;
-      
-      public GraphAttributes(int width, int height)
-      {
-         this.width = width;
-         this.height = height;
-      }
-      
-      /**
-       * Returns the width of the graph.
-       */
-      public int getWidth()
-      {
-         return width;
-      }
-      
-      /**
-       * Returns the height of the graph.
-       */
-      public int getHeight()
-      {
-         return height;
-      }
-      
-      @Override
-      public boolean equals(Object other)
-      {
-         if (other instanceof GraphAttributes)
-         {
-            GraphAttributes g = (GraphAttributes) other;
-            
-            return this.getHeight() == g.getHeight()
-                  && this.getWidth() == g.getWidth();
-         }
-         else
-         {
-            return false;
-         }
-      }
-
-      @Override
-      public int hashCode()
-      {
-         return width * 97 + height;
-      }
-
-      @Override
-      public String toString()
-      {
-         return "width=" + getWidth() + ";height=" + getHeight();
-      }
-   }
-   
-   private final Map<String, NodeAttributes> nodeAttributes;
-   private final GraphAttributes graphAttributes;
-   
-   /**
-    * Creates a new GraphInformation object with the given mappings from Node UID to
-    * Intersection.
-    * 
-    */
-   private GraphInformation(GraphAttributes graphAttributes,
-         Map<String, NodeAttributes> nodeAttributes)
-   {
-      this.graphAttributes = graphAttributes;
-      this.nodeAttributes = Collections
-            .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
-   }
-   
-   /**
-    * Returns the x value of the node with the given name.
-    * 
-    * @param name
-    * {@link #containsNode(String) containsNode(name)} must be true.
-    */
-   public NodeAttributes getNodeAttributes(String name)
-   {
-      if (!this.containsNode(name))
-         throw new IllegalArgumentException("!this.containsNode(" + name + ")");
-      
-      return nodeAttributes.get(name);
-   }
-   
-   /**
-    * Returns the attributes of the graph itself
-    */
-   public GraphAttributes getGraphAttributes()
-   {
-      return graphAttributes;
-   }
-   
-   /**
-    * Returns {@code true} iff {@code this} contains attributes for a node of
-    * the given name
-    * 
-    * @param name
-    */
-   public boolean containsNode(String name)
-   {
-      return nodeAttributes.containsKey(name);
-   }
-   
-   /**
-    * Returns {@code true} iff {@code this} and {@code other} are equal in
-    * value.
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      if (other instanceof GraphInformation)
-      {
-         GraphInformation g = (GraphInformation) other;
-         
-         return this.getGraphAttributes().equals(g.getGraphAttributes())
-               && this.nodeAttributes.equals(g.nodeAttributes);
-      }
-      else
-      {
-         return false;
-      }
-   }
-   
-   @Override
-   public int hashCode()
-   {
-      return graphAttributes.hashCode() * 31 + nodeAttributes.hashCode();
-   }
-
-   @Override
-   public String toString()
-   {
-      return "graph:" + graphAttributes.toString() + ";nodes:" +
-            nodeAttributes.toString();
    }
 }
