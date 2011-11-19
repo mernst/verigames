@@ -26,7 +26,9 @@ import checkers.nullness.quals.Nullable;
  * <p>
  * In an undirected graph, the directionality of an edge is meaningless --
  * however, even in undirected graphs, Graphviz picks one node to be the start
- * of an edge, and this structure reflects this decision.
+ * of an edge, and this structure reflects this decision. Therefore, when
+ * accessing the edges of an undirected graph, it is prudent to check both
+ * directions.
  * 
  * @author Nathaniel Mote
  */
