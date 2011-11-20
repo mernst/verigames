@@ -1,7 +1,9 @@
 package layout;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -117,6 +119,24 @@ class DotParser
    }
 
    /**
+    * An immutable record type that stores the start and end nodes of an edge
+    * along with its attributes.
+    */
+   private static class EdgeRecord
+   {
+      public final String start;
+      public final String end;
+      public final GraphInformation.EdgeAttributes attributes;
+
+      public EdgeRecord(String start, String end, GraphInformation.EdgeAttributes attributes)
+      {
+         this.start = start;
+         this.end = end;
+         this.attributes = attributes;
+      }
+   }
+
+   /**
     * Mutates {@code builder} such that 
     * <p>
     * Modifies: {@code builder}
@@ -139,6 +159,10 @@ class DotParser
          case NODE:
             NodeRecord node = parseNode(line);
             builder.setNodeAttributes(node.name, node.attributes);
+            break;
+         case EDGE:
+            EdgeRecord edge = parseEdge(line);
+            builder.setEdgeAttributes(edge.start, edge.end, edge.attributes);
             break;
          default:
             // Right now, the graph attributes and node attributes is all the
@@ -164,20 +188,20 @@ class DotParser
 
       try
       {
-         // If the line is the start or end of a graph, return OTHER
-         if (tokens[0].equals("digraph"))
-            return LineKind.OTHER;
-         else if (tokens[0].equals("}"))
+         if (tokens[0].equals("}"))
             return LineKind.OTHER;
          // else, there should be at least two tokens ("}" is the only 1-token
          // line)
+         // If the line is the start or end of a graph, return OTHER
+         else if ((tokens[0].equals("digraph") || tokens[0].equals("graph")) && tokens[1].equals("{"))
+            return LineKind.OTHER;
          else if (tokens[0].equals("graph"))
             return LineKind.GRAPH_PROPERTIES;
          else if (tokens[0].equals("node"))
             return LineKind.NODE_PROPERTIES;
          else if (tokens[0].equals("edge"))
             return LineKind.EDGE_PROPERTIES;
-         else if (tokens[1].equals("->"))
+         else if (tokens[1].equals("->") || tokens[1].equals("--"))
             return LineKind.EDGE;
          else
             return LineKind.NODE;
@@ -261,7 +285,7 @@ class DotParser
    private static NodeRecord parseNode(String line) throws IllegalLineException
    {
       // an example of a node line:
-      // "   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];"
+      // '   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];'
       //     ^
       // node name
       
@@ -325,6 +349,21 @@ class DotParser
       }
    }
 
+   private static EdgeRecord parseEdge(String line)
+   {
+      // An example of an edge line:
+      //    '   8 -- 10 [pos="37,493 37,493 54,341 54,341"];'
+      //        ^    ^          ^      ^      ^      ^
+      // start node  |         spline   control   points
+      //          end node
+
+      List<GraphInformation.Point> points = new ArrayList<GraphInformation.Point>();
+
+      points.add(new GraphInformation.Point(5, 6));
+
+      return new EdgeRecord("8", "10", new GraphInformation.EdgeAttributes(points));
+   }
+
    /**
     * Takes a text representation of a decimal number and returns an {@code
     * int} 7200 times larger. Rounds to the nearest integer.
@@ -363,7 +402,8 @@ class DotParser
 
    /**
     * Splits the given line into tokens separated by whitespace. Removes
-    * brackets ([,]), as well as semicolons and trailing commas in tokens.
+    * brackets ([,]), as well as semicolons, quotes, and trailing commas in
+    * tokens.
     */
    private static String[] tokenizeLine(String line)
    {
