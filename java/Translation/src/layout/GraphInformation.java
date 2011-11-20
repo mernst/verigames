@@ -453,7 +453,7 @@ class GraphInformation
    }
 
    /**
-    * A record type representing a 2D point.
+    * A record type representing an immutable 2D point.
     * <p>
     * Stores integer x and y values that are values in hundredths of points.
     */
