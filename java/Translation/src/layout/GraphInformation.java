@@ -385,6 +385,8 @@ class GraphInformation
       }
    }
 
+   // TODO edit docs and checks to reflect that the number of points must be at
+   // least 4
    public static class EdgeAttributes
    {
       /**
