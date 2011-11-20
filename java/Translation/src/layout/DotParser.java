@@ -349,19 +349,94 @@ class DotParser
       }
    }
 
-   private static EdgeRecord parseEdge(String line)
+   private static EdgeRecord parseEdge(String line) throws IllegalLineException
    {
       // An example of an edge line:
       //    '   8 -- 10 [pos="37,493 37,493 54,341 54,341"];'
       //        ^    ^          ^      ^      ^      ^
       // start node  |         spline   control   points
       //          end node
+      //
+      // After it has run through tokenizeLine:
+      // [8, --, 10, pos="37,493 37,493 54,341 54,341"]
 
-      List<GraphInformation.Point> points = new ArrayList<GraphInformation.Point>();
+      String[] tokens = tokenizeLine(line);
 
-      points.add(new GraphInformation.Point(5, 6));
+      if (tokens.length < 4)
+         throw new IllegalLineException("Edge line without needed attributes: " + line);
 
-      return new EdgeRecord("8", "10", new GraphInformation.EdgeAttributes(points));
+      String start = tokens[0];
+      String end = tokens[2];
+
+      String pos = null;
+
+      for (int i = 3; i < tokens.length; i++)
+      {
+         String cur = tokens[i];
+
+         if (cur.matches("^pos=.*"))
+            pos = cur;
+      }
+
+      if (pos == null)
+         throw new IllegalLineException("No position information: " + line);
+
+      // The pos attribute takes the form
+      // pos="xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy"
+      // where the number of points is at least 4, and congruent to 1 (mod 3)
+
+      try
+      {
+         // split around quotes, and take only the part with coordinates
+         String coordsString = pos.split("\"")[1];
+
+         // splits
+         // xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy
+         // around whitespace, so each entry is
+         // xx.xx,yy.yy
+         String[] coords = coordsString.split("\\s");
+
+         List<GraphInformation.Point> points = new ArrayList<GraphInformation.Point>();
+         for (String XYString: coords)
+         {
+            if (XYString.length() != 0)
+            {
+               char firstChar = XYString.charAt(0);
+
+               // if a coordinate starts with an 'e' or an 's', that coordinate
+               // is not part of the edge itself, but instead controls where the
+               // arrowheads are drawn. These should not be included, for our
+               // purposes.
+               //
+               // see http://www.graphviz.org/content/attrs#ksplineType
+               if (firstChar != 'e' && firstChar != 's')
+               {
+                  // split xx.xx,yy.yy around a comma
+                  String XY[] = XYString.split(",");
+                  int x = parseToHundredths(XY[0]);
+                  int y = parseToHundredths(XY[1]);
+
+                  points.add(new GraphInformation.Point(x, y));
+               }
+            }
+         }
+
+         if (points.size() < 4 || points.size() % 3 != 1)
+            throw new IllegalLineException("Illegal number of points (" +
+                  points.size() +
+                  ") -- must be greater than 1 and congruent to 1 (mod 3): " +
+                  line);
+
+         return new EdgeRecord(start, end, new GraphInformation.EdgeAttributes(points));
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
+         throw new IllegalLineException("Poorly formed line: " + line, e);
+      }
+      catch (NumberFormatException e)
+      {
+         throw new IllegalLineException("Poorly formed line: " + line, e);
+      }
    }
 
    /**
@@ -477,22 +552,24 @@ class DotParser
    }
 
    /**
-    * Parses the given nonnegative decimal number, represented as a
-    * {@code String} into hundredths of units. That is, given "123.45", it would
-    * return 12345. Rounds to the nearest hundredth.
+    * Parses the given decimal number, represented as a {@code String} into
+    * hundredths of units. That is, given "123.45", it would return 12345.
+    * Rounds to the nearest hundredth.
     * 
     * @param str
-    * Must be a nonnegative decimal number. There may not be a leading '.'
-    * (e.g.  ".35" must be written "0.35").
+    * Must be a decimal number. There may not be a leading '.' (e.g.  ".35" must
+    * be written "0.35").
+    *
     * @return {@code int} indicating the number of hundredths in the given
     * number
+    *
     * @throws NumberFormatException if {@code str} is poorly formed
     */
    private static int parseToHundredths(String str)
    {
-      // 1 or more digits, optionally followed by a single dot and one or more
-      // digits
-      if (!str.matches("[0-9]+(\\.[0-9]+)?"))
+      // an optional minus sign, followed by 1 or more digits, optionally
+      // followed by a single dot and one or more digits
+      if (!str.matches("-?[0-9]+(\\.[0-9]+)?"))
          throw new NumberFormatException(str + " is not a well-formed nonnegative decimal number");
 
       BigDecimal hundredths = new BigDecimal(str).multiply(new BigDecimal(100));
