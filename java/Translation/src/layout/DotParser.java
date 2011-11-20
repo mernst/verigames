@@ -401,22 +401,60 @@ class DotParser
    }
 
    /**
-    * Splits the given line into tokens separated by whitespace. Removes
-    * brackets ([,]), as well as semicolons, quotes, and trailing commas in
+    * Splits the given line into tokens separated by unquoted whitespace.
+    * Removes brackets ([,]), as well as semicolons and trailing commas in
     * tokens.
+    * <p>
+    * Any sequence enclosed by double quotes will be contained in a single
+    * token, even if the quoted sequence includes whitespace.
     */
    private static String[] tokenizeLine(String line)
    {
       // remove extraneous characters -- '[', ']', ';' -- from the line.
       line = line.replaceAll("[\\[\\];]", "");
-      
-      String[] tokens = splitAroundWhitespace(line);
-      
-      // remove trailing commas at the end of tokens
-      for(int i = 0; i < tokens.length; i++)
-         tokens[i] = tokens[i].replaceAll(",$", "");
 
-      return tokens;
+      List<String> tokens = new ArrayList<String>();
+
+      int startIndex = 0;
+      int endIndex = 0;
+      boolean inQuotedString = false;
+      while(endIndex < line.length())
+      {
+         char currentChar = line.charAt(endIndex);
+
+         if (isWhitespace(currentChar) && !inQuotedString)
+         {
+            if (startIndex == endIndex)
+            {
+               startIndex++;
+               endIndex++;
+            }
+            else
+            {
+               tokens.add(line.substring(startIndex, endIndex));
+               startIndex = endIndex;
+            }
+            continue;
+         }
+         else if (currentChar == '"')
+            inQuotedString = !inQuotedString;
+         endIndex++;
+      }
+
+      // if some of the string remains
+      if (endIndex != startIndex)
+         tokens.add(line.substring(startIndex, endIndex));
+
+      // remove trailing commas at the end of tokens
+      for(int i = 0; i < tokens.size(); i++)
+         tokens.set(i, tokens.get(i).replaceAll(",$", ""));
+
+      return tokens.toArray(new String[0]);
+   }
+
+   private static boolean isWhitespace(char c)
+   {
+      return c == ' ' || c == '\t';
    }
 
    /**
@@ -426,8 +464,8 @@ class DotParser
     */
    private static String[] splitAroundWhitespace(String in)
    {
-      // Split the input around one or more spaces, tabs, or newlines
-      String[] result = in.split("[ \t\n]+");
+      // Split the input around whitespace
+      String[] result = in.split("[\\s]+");
 
       // If the first thing in the String is whitespace, there will be an empty
       // String at the beginning of the resulting array. If this is the case,
