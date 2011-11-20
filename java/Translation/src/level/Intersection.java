@@ -13,9 +13,9 @@ import java.util.TreeMap;
  * Specification Field: {@code kind} : {@link Intersection.Kind}
  * // represents which kind of {@code Intersection} {@code this} is<br/>
  * <br/>
- * Specification Field: Layout Coordinate : (x: integer, y:integer) // The
- * coordinates at which {@code this} will be located when its containing {@link
- * Board} is laid out to be played.<br/>
+ * Specification Field: Layout Coordinate : (x: real, y:real) // The coordinates
+ * at which {@code this} will be located when its containing {@link Board} is
+ * laid out to be played.<br/>
  * <br/>
  * Specification Field: {@code UID} : integer // the unique identifier for this
  * {@code Intersection}
