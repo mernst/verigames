@@ -2,10 +2,12 @@ package level;
 
 import java.io.PrintStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import level.Intersection.Kind;
+import utilities.Pair;
 import utilities.Printer;
 
 public class WorldXMLPrinter extends Printer<World, Void>
@@ -183,6 +185,24 @@ public class WorldXMLPrinter extends Printer<World, Void>
             out.println("     <noderef id=\"n" + edge.getEnd().getUID()
                   + "\" port=\"" + edge.getEndPort() + "\"/>");
             out.println("    </to>");
+
+            // output layout information, if it exists:
+            List<Pair<Double, Double>> layout = edge.getLayout();
+            if (layout != null)
+            {
+               out.println("<edge-layout>");
+
+               for (Pair<Double, Double> point : layout)
+               {
+                  out.println("<point>");
+                  out.println("<x>" + point.getFirst() + "</x>");
+                  out.println("<y>" + point.getSecond() + "</y>");
+                  out.println("</point>");
+               }
+
+               out.println("</edge-layout>");
+            }
+
             out.println("   </edge>");
             
          }
