@@ -1,5 +1,12 @@
 package level;
 
+import utilities.Pair;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
 /**
  * A mutable chute segment for use in a {@link Board}. Once {@link #isActive()
  * this.isActive()} is false, {@code this} is immutable.<br/>
@@ -21,6 +28,10 @@ package level;
  * Specification Field: {@code editable} : {@code boolean} // {@code true} iff
  * the player can edit the width of the chute<br/>
  * <br/>
+ * Specification Field: Layout Coordinates : list of (x: real, y:real), where
+ * the length of the list is 3n + 1, where n is a nonnegative integer. // The
+ * coordinates for the B-spline defining this edge's curve.<br/>
+ * <br/>
  * Specification Field: {@code UID} : integer // the unique identifier for this
  * chute<br/>
  * <br/>
@@ -36,6 +47,10 @@ public class Chute extends graph.Edge<Intersection>
    
    private boolean narrow;
    private boolean editable;
+
+   // should be instantiated as an immutable list
+   // TODO enforce length in checkRep
+   private List<Pair<Double, Double>> layout;
    
    private final int UID;
    
@@ -134,6 +149,22 @@ public class Chute extends graph.Edge<Intersection>
       
       this.editable = editable;
       checkRep();
+   }
+
+   public void setLayout(List<Pair<Double, Double>> layout)
+   {
+      if (layout.size() < 4 || layout.size() % 3 != 1)
+         throw new IllegalArgumentException("Number of points (" +
+            layout.size() +
+            ") illegal -- must be of the form 3n + 1 where n is a positive integer");
+
+      this.layout = Collections.unmodifiableList(
+            new ArrayList<Pair<Double,Double>>(layout));
+   }
+
+   public List<Pair<Double, Double>> getLayout()
+   {
+      return this.layout;
    }
    
    /**
