@@ -316,10 +316,8 @@ class DotParser
       
       if (pos == null)
          throw new IllegalLineException("No position information: " + line);
-      if (widthStr == null)
-         throw new IllegalLineException("No width information: " + line);
-      if (heightStr == null)
-         throw new IllegalLineException("No height information: " + line);
+      if (heightStr == null && widthStr == null)
+         throw new IllegalLineException("No height/width information: " + line);
       
       // The pos attribute takes the form pos="xx.xx,yy.yy"
 
@@ -334,8 +332,26 @@ class DotParser
          int x = parseToHundredths(coords[0]);
          int y = parseToHundredths(coords[1]);
 
-         int width = parseDimension(widthStr);
-         int height = parseDimension(heightStr);
+         // We know that either width or height is present from the check above.
+         // If one is present and the other isn't simply use the other's value.
+         // TODO clean up this code:
+         int width = -1;
+         int height = -1;
+         if (widthStr != null && heightStr != null)
+         {
+            width = parseDimension(widthStr);
+            height = parseDimension(heightStr);
+         }
+         else if (widthStr == null)
+         {
+            width = parseDimension(heightStr);
+            height = width;
+         }
+         else if (heightStr == null)
+         {
+            height = parseDimension(heightStr);
+            width = height;
+         }
 
          return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
       }
