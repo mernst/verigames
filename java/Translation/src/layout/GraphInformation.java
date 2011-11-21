@@ -448,7 +448,7 @@ class GraphInformation
                   + controlPoints.size() + ")");
       }
 
-      public int size()
+      public int controlPointCount()
       {
          return controlPoints.size();
       }
