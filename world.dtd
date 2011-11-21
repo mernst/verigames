@@ -20,7 +20,7 @@
      <!ELEMENT layout (x,y)>
       <!ELEMENT x (#PCDATA)>
       <!ELEMENT y (#PCDATA)>
-    <!ELEMENT edge (from,to)>
+    <!ELEMENT edge (from,to, edge-layout?)>
      <!ATTLIST edge var CDATA #IMPLIED>
      <!ATTLIST edge pinch (true|false) #REQUIRED>
      <!ATTLIST edge width (wide|narrow) #REQUIRED>
@@ -30,10 +30,12 @@
       <!ELEMENT noderef EMPTY>
        <!ATTLIST noderef id IDREF #REQUIRED>
        <!ATTLIST noderef port CDATA #REQUIRED>
+     <!ELEMENT edge-layout (point,(point,point,point)*)>
+      <!ELEMENT point (x,y)>
 
 <!--
 
-Layout information:
+Node layout information:
 
    X and Y coordinates are integers starting at 0. (0,0) is the top left
    corner.
@@ -59,11 +61,24 @@ Layout information:
 
       - END nodes have a height of 1
 
+================================================================================
+
+Edge layout information:
+
+   Edge layout is given in the form of a list of b-spline control points. The
+   number of control points, x, will always be such that (x = 1 (mod 3)).
+   Equivalently, (x mod 3) = 1, or x = 1 + 3n, where n is any nonnegative
+   integer.
+   
+================================================================================
+
 Requirements not enforced by the DTD:
 
    - All edges are contained in exactly one edge-set
 
    - All nodes that have kind SUBNETWORK must have a name attribute
+
+================================================================================
 
 Misc:
 
