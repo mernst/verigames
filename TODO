@@ -1,12 +1,3 @@
-Edit buildfile to build just the source by default -- tests can be built
-separately.
-
---------------------------------------------------------------------------------
-
-Remove use of deprecated XML printing
-
---------------------------------------------------------------------------------
-
 Improve error handling in layout package -- make sure that internal errors are
 sent to the client in a useful way
 

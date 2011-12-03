@@ -11,6 +11,7 @@ import level.Intersection;
 import level.Intersection.Kind;
 import level.Level;
 import level.World;
+import level.WorldXMLPrinter;
 
 import org.junit.Test;
 
@@ -86,7 +87,7 @@ public class LevelXMLTests
       
       PrintStream p = new PrintStream(new FileOutputStream(new File(
             "TestClass.actual.xml")));
-      w.outputXML(p);
+      new WorldXMLPrinter().print(w, p, null);
       p.close();
    }
    
@@ -103,7 +104,7 @@ public class LevelXMLTests
       
       PrintStream p = new PrintStream(new FileOutputStream(new File(
             "level.actual.xml")));
-      levelWorld.outputXML(p);
+      new WorldXMLPrinter().print(levelWorld, p, null);
       p.close();
    }
 
@@ -120,7 +121,7 @@ public class LevelXMLTests
 
       PrintStream p = new PrintStream(new FileOutputStream(new
             File("exception.xml")));
-      w.outputXML(p);
+      new WorldXMLPrinter().print(w, p, null);
       p.close();
    }
 }
