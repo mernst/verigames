@@ -1,3 +1,45 @@
+--------------------------------------------------------------------------------
+
+Improve error handling in layout package -- make sure that internal errors are
+sent to the client in a useful way
+
+--------------------------------------------------------------------------------
+
+Add a check that no edges are going up -- involves calculating the path of a
+B-spline and/or pulling in a third party library
+
+--------------------------------------------------------------------------------
+
+Change the word "active" to something more descriptive, like
+"underConstruction," and better document when "inactive" or "constructed"
+objects are required.
+
+new name for active? "mutable" "underConstruction"
+deactivate would be "makeImmutable" "finishConstruction"
+
+--------------------------------------------------------------------------------
+
+Test NullTest setOutput for failure
+
+--------------------------------------------------------------------------------
+
+Test MultiBiMap-related behavior (perhaps abstract it out?)
+
+--------------------------------------------------------------------------------
+
+Write tests for the layout package
+
+--------------------------------------------------------------------------------
+
+Compare generated XML against an oracle in tests
+
+--------------------------------------------------------------------------------
+
+Update existing tests that used to need reflection, but don't anymore now that
+they are in the same package as their test targets.
+
+--------------------------------------------------------------------------------
+
 Change null test node to something that does not refer to null, change white
 ball to small ball, and change black ball to large ball.
 
@@ -5,17 +47,6 @@ ball to small ball, and change black ball to large ball.
 
 Allow Graphviz to order the input and output ports by representing the incoming
 and outgoing nodes as multiple nodes (one for each port).
-
---------------------------------------------------------------------------------
-
-Add framework to lay out edges with Graphviz
-   - Establish XML format for edge layout information
-   - Make second pass with neato -n
-
---------------------------------------------------------------------------------
-
-Improve error handling in layout package -- make sure that internal errors are
-sent to the client in a useful way
 
 --------------------------------------------------------------------------------
 
@@ -33,6 +64,9 @@ depending on where the subnetwork is)
 
 For example, a subnetwork representing a method call in a different class will
 not (generally) include all the fields of that class as input and output pipes
+
+To do this, just allow empty ports -- come up with some mechanic so that safety
+is still offered (maybe it must explicitly be set to null?)
 
 --------------------------------------------------------------------------------
 
