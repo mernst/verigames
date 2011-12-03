@@ -16,18 +16,17 @@ import level.Board;
  * invokable from the command line.
  * 
  * @author Nathaniel Mote
- * 
  */
 class GraphvizRunner
 {
+   private static final DotParser parser = new DotParser();
+
    private final GraphvizPrinter printer;
-   private final DotParser parser;
    private final String command;
 
-   public GraphvizRunner(GraphvizPrinter printer, DotParser parser, String command)
+   public GraphvizRunner(GraphvizPrinter printer, String command)
    {
       this.printer = printer;
-      this.parser = parser;
       this.command = command;
    }
 
@@ -58,6 +57,7 @@ class GraphvizRunner
       }
       catch(InterruptedException e)
       {
+         // This should not happen -- if it does, it's a fatal error
          throw new RuntimeException(e);
       }
       if (exitValue != 0)

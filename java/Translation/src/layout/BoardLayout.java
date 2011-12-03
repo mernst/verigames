@@ -69,7 +69,7 @@ public class BoardLayout
          GraphvizPrinter printer = new NodeLayoutPrinter();
          DotParser parser = new DotParser();
          String command = "dot";
-         GraphvizRunner runner = new GraphvizRunner(printer, parser, command);
+         GraphvizRunner runner = new GraphvizRunner(printer, command);
          info = runner.run(b);
       }
       
@@ -110,7 +110,7 @@ public class BoardLayout
          GraphvizPrinter printer = new EdgeLayoutPrinter();
          DotParser parser = new DotParser();
          String command = "neato -n";
-         GraphvizRunner runner = new GraphvizRunner(printer, parser, command);
+         GraphvizRunner runner = new GraphvizRunner(printer, command);
          info = runner.run(b);
       }
 
