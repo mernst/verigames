@@ -2,6 +2,7 @@ package sampleLevels.intro;
 
 import level.World;
 import level.Level;
+import level.WorldXMLPrinter;
 
 public class IntroWorld
 {
@@ -26,6 +27,6 @@ public class IntroWorld
 
    public static void main(String[] args)
    {
-      getWorld().outputXML(System.out);
+      new WorldXMLPrinter().print(getWorld(), System.out, null);
    }
 }
