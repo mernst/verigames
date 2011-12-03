@@ -9,11 +9,13 @@ ant targets:
 
    build (default) - Builds the source files in src/ to bin/
 
+   buildall - Builds the source files in src/ and the tests in test/ to bin/
+
    check-nullness - Runs the nullness checker on the files in src/
 
    clean - Deletes the files in bin/
 
-   test - Runs clean, build, then all tests
+   test - Runs clean, buildall, then all tests
       
    test.[level|layout|graph|levelBuilder] - Runs all the tests in the
                                             respective package. Does not clean
