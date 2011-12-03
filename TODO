@@ -1,3 +1,10 @@
+Edit buildfile to build just the source by default -- tests can be built
+separately.
+
+--------------------------------------------------------------------------------
+
+Remove use of deprecated XML printing
+
 --------------------------------------------------------------------------------
 
 Improve error handling in layout package -- make sure that internal errors are
@@ -23,7 +30,7 @@ Test NullTest setOutput for failure
 
 --------------------------------------------------------------------------------
 
-Test MultiBiMap-related behavior (perhaps abstract it out?)
+Test MultiBiMap
 
 --------------------------------------------------------------------------------
 
