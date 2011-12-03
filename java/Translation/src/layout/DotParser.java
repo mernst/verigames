@@ -37,6 +37,7 @@ class DotParser
     */
    private static class IllegalLineException extends Exception
    {
+      private static final long serialVersionUID = 0;
       public IllegalLineException(String message)
       {
          super(message);
