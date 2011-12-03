@@ -198,8 +198,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
                "Edge already in this Graph " + edge);
       if (edge.getStart() != null || edge.getEnd() != null)
       {
-         Node oldStart = edge.getStart();
-         Node oldEnd = edge.getEnd();
+         NodeType oldStart = edge.getStart();
+         NodeType oldEnd = edge.getEnd();
 
          String message = "Given Edge already connected to Node";
          if (oldStart != null && oldEnd != null)
