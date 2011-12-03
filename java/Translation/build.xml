@@ -67,7 +67,7 @@
     </fileset>
   </path>
 
-  <target name="test" depends="clean, buildall, test.graph, test.level, test.layout, test.levelBuilder"/>
+  <target name="test" depends="clean, buildall, test.graph, test.level, test.layout"/>
 
   <target name="test.level">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level">
@@ -108,20 +108,7 @@
     </junit>
   </target>
 
-  <target name="test.levelBuilder">
-    <junit fork="yes" haltonfailure="yes" dir="${bin}/levelBuilder">
-      <test name="levelBuilder.SpecificationTests"/>
-      <test name="levelBuilder.ImplementationTests"/>
-      <formatter type="plain" usefile="false"/>
-      <classpath refid="test.classpath"/>
-      <classpath>
-        <pathelement path="${bin}"/>
-      </classpath>
-    </junit>
-    <copy file="../../world.dtd" todir="${bin}/levelBuilder"/>
-  </target>
-
-  <property name="docPackages" value="graph,layout,level,levelBuilder,translation,utilities"/>
+  <property name="docPackages" value="graph,layout,level,translation,utilities"/>
 
   <target name="javadoc">
     <javadoc access="public"
