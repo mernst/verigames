@@ -372,8 +372,8 @@ class DotParser
       {
          throw new IllegalLineException("Poorly formed line: " + line);
       }
-      // parseToHundredth and parseDimension throw {@code
-      // NumberFormatException}s if they fail to parse the numbers.
+      // parseToHundredth throws {@code NumberFormatException}s if it fails to
+      // parse the numbers.
       catch (NumberFormatException e)
       {
          throw new IllegalLineException("Poorly formed line: " + line);
