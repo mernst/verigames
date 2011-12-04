@@ -26,8 +26,11 @@ public class BoardLayout
    
    /**
     * Adds layout information to {@code b} using Graphviz.
+    * <p>
+    * Modifies: {@code b}
     * 
     * @param b
+    * The {@link level.Board} to lay out.
     */
    public void layout(Board b)
    {
@@ -35,6 +38,13 @@ public class BoardLayout
       edgeLayoutPass(b);
    }
 
+   /**
+    * Adds layout information to the nodes in {@code b}.
+    * <p>
+    * Modifies: {@code b}
+    *
+    * @param b
+    */
    private static void nodeLayoutPass(Board b)
    {
       GraphInformation info;
@@ -43,12 +53,13 @@ public class BoardLayout
       // avoids cluttering the namespace
       {
          GraphvizPrinter printer = new NodeLayoutPrinter();
-         DotParser parser = new DotParser();
          String command = "dot";
          GraphvizRunner runner = new GraphvizRunner(printer, command);
          info = runner.run(b);
       }
       
+      // the height of the board is needed when the origin is moved from the
+      // bottom left to the top left.
       int boardHeight = info.getGraphAttributes().getHeight();
       
       for (Intersection n : b.getNodes())
@@ -76,6 +87,14 @@ public class BoardLayout
       }
    }
 
+   /**
+    * Adds layout information to the edges in {@code b}.
+    * <p>
+    * Modifies: {@code b}
+    *
+    * @param b
+    * Must have layout information for its nodes already present.
+    */
    private static void edgeLayoutPass(Board b)
    {
       GraphInformation info;
@@ -84,12 +103,13 @@ public class BoardLayout
       // avoids cluttering the namespace
       {
          GraphvizPrinter printer = new EdgeLayoutPrinter();
-         DotParser parser = new DotParser();
          String command = "neato -n";
          GraphvizRunner runner = new GraphvizRunner(printer, command);
          info = runner.run(b);
       }
 
+      // the height of the board is needed when the origin is moved from the
+      // bottom left to the top left.
       int boardHeight = info.getGraphAttributes().getHeight();
 
       for (Chute c : b.getEdges())
