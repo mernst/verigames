@@ -10,27 +10,28 @@ import java.util.Scanner;
 import checkers.nullness.quals.Nullable;
 
 /**
- * Parses text in DOT format and returns the results as a GraphInformation
- * object.
+ * Parses text in DOT format and returns the results as a {@link
+ * GraphInformation} object.
  * <p>
  * Currently, it includes the dimensions of the graph's bounding box, as well as
- * the dimensions and position of the nodes. However, more information may be
- * added at a later date.
+ * the dimensions and position of the nodes and the spline control points for
+ * the edges. However, more information may be added at a later date.
  * <p>
  * This parser is very brittle, and makes little attempt to account for
  * variations in input. It attempts to match Graphviz's output, which is a
  * subset of legal DOT. Therefore, some legal DOT may be rejected simply
- * because it doesn't match what Graphviz outputs.
+ * because it doesn't match the format of what Graphviz outputs.
  */
 
 class DotParser
 {
 
    /**
-    * An {@code Exception} that is thrown when a bad line of DOT is
-    * encountered. It should only be used internally to ensure that errors are
-    * handled and expressed to clients in an appropriate way. A reference to an
-    * {@code IllegalLineException} should never escape this class.
+    * An {@code Exception} that is thrown when a bad line of DOT is encountered.
+    * It should only be used internally to ensure that errors are handled and
+    * expressed to clients in an appropriate way. A reference to an {@code
+    * IllegalLineException} should never escape this class, except in the cause
+    * field of another {@code Throwable}.
     * <p>
     * A message is required, and it should contain the bad line or the bad part
     * of the line.
@@ -138,7 +139,8 @@ class DotParser
    }
 
    /**
-    * Mutates {@code builder} such that 
+    * Mutates {@code builder} such that it includes the data contained in {@code
+    * line}
     * <p>
     * Modifies: {@code builder}
     *
@@ -166,8 +168,8 @@ class DotParser
             builder.setEdgeAttributes(edge.start, edge.end, edge.attributes);
             break;
          default:
-            // Right now, the graph attributes and node attributes is all the
-            // information that is used
+            // Right now, the graph, node, and edge attributes are all the
+            // attributes that are used
             break;
       }
    }
@@ -227,6 +229,9 @@ class DotParser
    {
       // sample line: "  graph [bb="0,0,216.69,528"];"
       
+      // split the string into tokens, stripping extraneous characters
+      // sample line would become:
+      // [graph, bb="0,0,216.69,528"]
       String[] tokens = tokenizeLine(line);
 
       if(tokens.length < 2 || !tokens[0].equals("graph"))
@@ -240,7 +245,8 @@ class DotParser
             bb = s;
       }
 
-      // If the bounding box attribute is not present in this line, just return null.
+      // Graph attributes may be spread across multiple lines, so if the
+      // bounding box attribute is not present in this line, just return null.
       // This may need to be changed if more graph information is desired.
       if (bb == null)
          return null;
@@ -290,6 +296,9 @@ class DotParser
       //     ^
       // node name
       
+      // split the string into tokens, stripping extraneous characters
+      // sample line would become:
+      // [label=OUTGOING9, width=1, height=1, pos="129.64,36"]
       String[] tokens = tokenizeLine(line);
 
       if (tokens.length == 0)
@@ -301,7 +310,7 @@ class DotParser
       String heightStr = null;
       String pos = null;
 
-      // Search for attributes:
+      // Search for specific attributes:
       for (String cur : tokens)
       {
          // if the string starts with "pos"
@@ -315,8 +324,11 @@ class DotParser
             heightStr=cur;
       }
       
+      // position attribute must be present
       if (pos == null)
          throw new IllegalLineException("No position information: " + line);
+      // either height or width must be present -- if one is absent, it is
+      // assumed that the height and width are the same
       if (heightStr == null && widthStr == null)
          throw new IllegalLineException("No height/width information: " + line);
       
@@ -360,6 +372,8 @@ class DotParser
       {
          throw new IllegalLineException("Poorly formed line: " + line);
       }
+      // parseToHundredth and parseDimension throw {@code
+      // NumberFormatException}s if they fail to parse the numbers.
       catch (NumberFormatException e)
       {
          throw new IllegalLineException("Poorly formed line: " + line);
@@ -373,12 +387,12 @@ class DotParser
       //        ^    ^          ^      ^      ^      ^
       // start node  |         spline   control   points
       //          end node
-      //
-      // After it has run through tokenizeLine:
-      // [8, --, 10, pos="37,493 37,493 54,341 54,341"]
 
+      // After example has run through tokenizeLine:
+      // [8, --, 10, pos="37,493 37,493 54,341 54,341"]
       String[] tokens = tokenizeLine(line);
 
+      // there need to be *at least* the 4 tokens shown above
       if (tokens.length < 4)
          throw new IllegalLineException("Edge line without needed attributes: " + line);
 
@@ -387,6 +401,8 @@ class DotParser
 
       String pos = null;
 
+      // search for a position attribute, starting at the token after the end
+      // node id
       for (int i = 3; i < tokens.length; i++)
       {
          String cur = tokens[i];
@@ -438,6 +454,7 @@ class DotParser
             }
          }
 
+         // ensure that the number of points meets the requirement
          if (points.size() < 4 || points.size() % 3 != 1)
             throw new IllegalLineException("Illegal number of points (" +
                   points.size() +
@@ -493,7 +510,9 @@ class DotParser
    }
 
    /**
-    * Splits the given line into tokens separated by unquoted whitespace.
+    * Splits the given line into tokens separated by unquoted whitespace. That
+    * is, any whitespace terminates a token, unless it is enclosed in quotes.
+    * <p>
     * Removes brackets ([,]), as well as semicolons and trailing commas in
     * tokens.
     * <p>
@@ -510,26 +529,42 @@ class DotParser
       int startIndex = 0;
       int endIndex = 0;
       boolean inQuotedString = false;
+
+      // strategy:
+      // increment endIndex until unquoted whitespace is encountered. When this
+      // occurs, take the String from startIndex (inclusive) to endIndex
+      // (exclusive), and add it to the token list. Then, set startIndex to
+      // endIndex and continue.
       while(endIndex < line.length())
       {
          char currentChar = line.charAt(endIndex);
 
+         //TODO Theres already a method to check for whitespace -- change to
+         //Character.isWhitespace(char)
          if (isWhitespace(currentChar) && !inQuotedString)
          {
+            // if we're at the start of a token, and it's whitespace, simply
+            // move past it
             if (startIndex == endIndex)
             {
                startIndex++;
                endIndex++;
             }
+            // otherwise, this token needs to be processed
             else
             {
                tokens.add(line.substring(startIndex, endIndex));
                startIndex = endIndex;
             }
+
+            // endIndex should not be incremented -- it's already been manually
+            // manipulated.
             continue;
          }
+         // if there's a quote, toggle inQuotedString
          else if (currentChar == '"')
             inQuotedString = !inQuotedString;
+
          endIndex++;
       }
 
