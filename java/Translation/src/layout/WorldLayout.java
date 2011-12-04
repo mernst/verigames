@@ -11,10 +11,10 @@ import level.World;
  */
 public class WorldLayout
 {
+   private static final BoardLayout layout = new BoardLayout();
+
    public void layout(World w)
    {
-      BoardLayout layout = BoardLayout.factory();
-
       for (Level l : w.getLevels().values())
       {
          for (Board b : l.boards().values())

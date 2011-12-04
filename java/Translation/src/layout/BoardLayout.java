@@ -16,34 +16,10 @@ import utilities.Pair;
  */
 public class BoardLayout
 {
-   private static final BoardLayout layout;
-   static
-   {
-      layout = new BoardLayout();
-   }
-   
-   /**
-    * Returns a {@code BoardLayout} object.
-    */
-   public static BoardLayout factory()
-   {
-      return layout;
-   }
-   
-   /**
-    * Adds layout information to {@code b} using Graphviz.
-    * 
-    * @param b
-    */
-   public static void staticLayout(Board b)
-   {
-      factory().layout(b);
-   }
-   
    /**
     * Creates a new BoardLayout object.
     */
-   protected BoardLayout()
+   public BoardLayout()
    {
       
    }
