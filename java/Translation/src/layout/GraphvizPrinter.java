@@ -14,6 +14,9 @@ import utilities.Printer;
 /**
  * Prints fully constructed {@link level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
+ * <p>
+ * The UIDs of the nodes are used to identify them. Other than that, the
+ * specifics of how a graph is represented are determined by the implementation.
  * 
  * @author Nathaniel Mote
  */
@@ -22,7 +25,16 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
    private final Printer<Intersection, Board> nodePrinter;
    private final Printer<Chute, Board> edgePrinter;
 
-   public GraphvizPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
+   /**
+    * Constructs a new GraphvizPrinter.
+    *
+    * @param nodePrinter
+    * The {@link utilities.Printer} used to output nodes
+    *
+    * @param edgePrinter
+    * The {@link utilities.Printer} used to output edges
+    */
+   protected GraphvizPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
    {
       this.nodePrinter = nodePrinter;
       this.edgePrinter = edgePrinter;
@@ -56,7 +68,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
    @Override
    protected void printIntro(Board b, PrintStream out, Void data)
    {
-      out.println((isDigraph(b) ? "digraph" : "graph") + " {");
+      out.println((isDigraph ? "digraph" : "graph") + " {");
       
       out.println("node [" + nodeSettings(b) + "];");
 
@@ -69,10 +81,11 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * Returns {@code true} iff the {@link level.Board Board} should be printed
     * as a directed graph.
     */
-   // Note -- this should not be accessed directly. Instead, the field isDigraph
+   // Note -- this should not be called directly. Instead, the field isDigraph
    // should be used. It is updated every time print is called. Using this
    // ensures consistent results, even if the subclass's implementation of
-   // isDigraph is inconsistent.
+   // isDigraph is inconsistent (i.e. returns different values for the same
+   // {@code Board}).
    protected abstract boolean isDigraph(Board b);
 
    /**
