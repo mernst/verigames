@@ -9,11 +9,11 @@ import java.util.Scanner;
 import level.Board;
 
 /**
- * A function object that runs Graphviz's "dot" tool on a Board and returns the
- * results as a {@link GraphInformation} object.
+ * An object that runs an arbitrary Graphviz tool on a {@link level.Board} and
+ * returns the results as a {@link GraphInformation} object.
  * <p>
- * Graphviz must be installed on the system, and the "dot" tool must be
- * invokable from the command line.
+ * Graphviz must be installed on the system, and the tool used must be invokable
+ * from the command line.
  * 
  * @author Nathaniel Mote
  */
@@ -24,12 +24,30 @@ class GraphvizRunner
    private final GraphvizPrinter printer;
    private final String command;
 
+   /**
+    * Constructs a new {@code GraphvizRunner} object that runs the given
+    * Graphviz command, and writes output with the given GraphvizPrinter.
+    *
+    * @param printer
+    * The GraphvizPrinter used to convert {@link level.Board}s into the DOT
+    * language.
+    *
+    * @param command
+    * The Graphviz command line command to run.
+    */
    public GraphvizRunner(GraphvizPrinter printer, String command)
    {
       this.printer = printer;
       this.command = command;
    }
 
+   /**
+    * Runs Graphviz on {@code b} and returns the output as a {@link
+    * GraphInformation} object.
+    *
+    * @param b
+    * The {@link Board} to run Graphviz on
+    */
    public GraphInformation run(Board b)
    {
       Process process;
@@ -70,6 +88,8 @@ class GraphvizRunner
     * Prints {@code b} in the DOT language to {@code os}, then closes {@code os}
     * <p>
     * Modifies: {@code os}
+    * <p>
+    * Requires: {@code os} is open.
     */
    private void outputBoard(Board b, OutputStream os)
    {
@@ -79,6 +99,10 @@ class GraphvizRunner
       out.close();
    }
    
+   /**
+    * Parses the text from {@code is} using a {@code DotParser} and outputs the
+    * results.
+    */
    private GraphInformation parseDot(InputStream is)
    {
       StringBuilder processOutput = new StringBuilder();
