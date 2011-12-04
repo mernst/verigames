@@ -83,4 +83,13 @@ public class DotParserSpecTests
       DotParser parser = new DotParser();
       assertEquals(output, parser.parse(input));
    }
+
+   // included because at one point this escaped as an
+   // ArrayIndexOutOfBoundsException
+   @Test(expected = IllegalArgumentException.class)
+   public void badLineTest()
+   {
+      String input = "graph {\ngraph [bb=0,0,216.69,528];\n";
+      new DotParser().parse(input);
+   }
 }
