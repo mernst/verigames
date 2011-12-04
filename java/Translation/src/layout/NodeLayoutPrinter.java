@@ -13,6 +13,24 @@ import utilities.Printer;
 /**
  * Prints fully constructed {@link level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
+ * <p>
+ * This {@link utilities.Printer Printer} prints for the node layout phase of
+ * the layout -- thus the name {@code NodeLayoutPrinter}. This is the first
+ * phase in the layout process -- the second is laying out the edges.
+ * <p>
+ * This {@code Printer} expresses the node layout requirements to Graphviz.
+ * These are, for the most part, straightforward. However, the height and width
+ * of the nodes mean something slightly different from what one might
+ * expect.<br/>
+ * The node is considered to be located in the top-left corner of the rectangle
+ * that represents it. The width, then, is the amount of empty space it needs to
+ * its right, and the height is the amount of empty space it needs below it, as
+ * described in world.dtd.<br/>
+ * Sometimes, a node must be, for example, 3 units above one particular node,
+ * and 2 units above others. Unfortunately, there is no way to express this to
+ * Graphviz, so its height is set to 3, restricting it to be 3 units above
+ * <b>all</b> nodes. This expresses the requirement imprecisely, but it is the
+ * best that Graphviz can do.
  * 
  * @author Nathaniel Mote
  */
@@ -28,9 +46,11 @@ class NodeLayoutPrinter extends GraphvizPrinter
          int width = getMaxPorts(n);
          
          // As described in world.dtd, the height of an ordinary node is 2
-         // units, while the height of INCOMING and END nodes are of height 1.
-         // The height of an OUTGOING node is unspecified and irrelevant, as
-         // it has no nodes below it, so it is set to 1 as well.
+         // units, while the height of INCOMING and END nodes is 1.  The height
+         // of an OUTGOING node is unspecified and irrelevant, as it has no
+         // nodes below it, so it is set to 1 as well, simply so that it doesn't
+         // take up too much space when an image rendered by Graphviz is viewed
+         // for debugging purposes.
          int height;
          // TODO set height of END node to 1
          if (n.getIntersectionKind() == Kind.INCOMING
@@ -83,6 +103,9 @@ class NodeLayoutPrinter extends GraphvizPrinter
       }
    };
 
+   /**
+    * Constructs a new {@code NodeLayoutPrinter}
+    */
    public NodeLayoutPrinter()
    {
       super(nodePrinter, edgePrinter);
@@ -117,8 +140,8 @@ class NodeLayoutPrinter extends GraphvizPrinter
    @Override
    protected void printMiddle(Board b, PrintStream out, Void data)
    {
+      // Do the regular printing, then print the invisible edges
       super.printMiddle(b, out, data);
-
       printInvisibleEdges(b, out);
    }
    
