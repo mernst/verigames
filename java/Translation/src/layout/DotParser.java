@@ -251,9 +251,6 @@ class DotParser
       if (bb == null)
          return null;
 
-      // take the text inside the quotes and split around commas
-      String[] bbCoords = bb.split("\"")[1].split(",");
-
       int xStart;
       int yStart;
       int xEnd;
@@ -261,6 +258,9 @@ class DotParser
 
       try
       {
+         // take the text inside the quotes and split around commas
+         String[] bbCoords = bb.split("\"")[1].split(",");
+
          xStart = parseToHundredths(bbCoords[0]);
          yStart = parseToHundredths(bbCoords[1]);
          xEnd = parseToHundredths(bbCoords[2]);
