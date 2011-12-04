@@ -15,6 +15,27 @@
  * <hr/>
  * Implementation notes:
  * <p>
+ * Units:
+ * <p>
+ * There are three different units used to represent coordinates and distances
+ * in this package. The first unit is the "game unit." This is the unit used in
+ * the game, and the origin is at the top-left of the board, with y coordinates
+ * growing downward.
+ * <p>
+ * The second is the inch. Graphviz uses inches for some measurements, and for
+ * convenience, this package equates a game unit with an inch. However, a
+ * measurement expressed in inches typically has the origin at the bottom-left
+ * of the board, with y coordinates growing upward, reflecting the style of
+ * Graphviz.
+ * <p>
+ * The third is the typographical point, which is equal to 1/72nd of an inch.
+ * For some reason, Graphviz uses points in some places and inches in others.
+ * For example, dimensions are expressed in inches, while positions are
+ * expressed in points. Typically, positions in points also have the origin at
+ * the bottom-left, with y coordinates growing upward.
+ * <p>
+ * Layout algorithm:
+ * <p>
  * The layout is performed in a somewhat unusual way, due to the specific
  * requirements of this problem.
  * <p>
@@ -38,6 +59,8 @@
  * top left). Because of this, we use the node positions determined in the first
  * pass and run Graphviz again, expressing the nodes differently. Then, we
  * harvest the edge spline control points.
+ * <p>
+ * Making changes:
  * <p>
  * If it is necessary to tweak the way the layout algorithm performs, there are
  * several places where it is possible:
