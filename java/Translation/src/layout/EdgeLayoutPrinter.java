@@ -14,9 +14,9 @@ import utilities.Printer;
  * Prints fully constructed {@link level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
  * <p>
- * This printer prints for the edge layout phase of the layout -- thus the name
- * {@code EdgeLayoutPrinter}. This is the second phase in the layout process --
- * the first is laying out the nodes.
+ * This {@link utilities.Printer Printer} prints for the edge layout phase of
+ * the layout -- thus the name {@code EdgeLayoutPrinter}. This is the second
+ * phase in the layout process -- the first is laying out the nodes.
  * <p>
  * IMPORTANT: In order for a {@link level.Board Board} to be printed
  * meaningfully with this printer, it must have complete node layout
@@ -134,8 +134,8 @@ class EdgeLayoutPrinter extends GraphvizPrinter
    {
       // shape=circle: makes the nodes circular so that edges avoid them.
       //
-      // width=1: makes the nodes have a radius of 0.5 so that edges stay that
-      // far away from them.
+      // width=1: makes the nodes have a radius of 0.5 inches so that edges stay
+      // that far away from them.
       return "shape=circle, width=1";
    }
 
