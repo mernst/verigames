@@ -18,23 +18,39 @@ import utilities.Printer;
  * {@code EdgeLayoutPrinter}. This is the second phase in the layout process --
  * the first is laying out the nodes.
  * <p>
- * IMPORTANT: In order for a {@link level.Board Board} to be printed with this
- * printer, it must have complete node layout information.
+ * IMPORTANT: In order for a {@link level.Board Board} to be printed
+ * meaningfully with this printer, it must have complete node layout
+ * information.
  * 
  * @author Nathaniel Mote
+ *
+ * @see layout
  */
 class EdgeLayoutPrinter extends GraphvizPrinter
 {
+   /**
+    * A class that prints {@link level.Intersection Intersection} objects to
+    * Graphviz's DOT format, with attributes tailored to the edge layout pass.
+    * <p>
+    * For the edge layout pass, the node coordinates must be printed. To convert
+    * between game coordinates and Graphviz coordinates, the height of the board
+    * is needed. However, calculating this is expensive (linear on the number of
+    * nodes in the {@code Board}), so the result is cached.
+    * <p>
+    * This cache introduces state that should be specific to each {@code
+    * EdgeLayoutPrinter}. Therefore, a new {@code NodePrinter} is created for
+    * every new {@code EdgeLayoutPrinter}.
+    */
    private static class NodePrinter extends Printer<Intersection, Board>
    {
       /**
-       * The height of the current board, in typographical units. This is needed
-       * for the conversion between coordinate systems, because we have y
-       * growing downards, and Graphviz has y growing upwards. This must be
+       * The height of the current board, in game units. This is needed for the
+       * conversion between coordinate systems, because we have y growing
+       * downards, and Graphviz has y growing upwards.  This must be
        * precalculated, because at any given time, the total height of a board
        * cannot be determined quickly.
        */
-      double boardHeight = -1d;
+      private double boardHeight = -1d;
 
       /**
        * Used to determine when the boardHeight should be updated. If the {@code
@@ -46,6 +62,7 @@ class EdgeLayoutPrinter extends GraphvizPrinter
        * useless, so garbage collection should be allowed.
        */
       private WeakReference<Board> currentBoard = new WeakReference<Board>(null);
+
       @Override
       protected void printMiddle(Intersection n, PrintStream out, Board b)
       {
@@ -84,6 +101,10 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       }
    }
 
+   /**
+    * An {@code Object} that prints {@link level.Chute Chute} objects to
+    * Graphviz's DOT format, with attributes tailored to the edge layout pass.
+    */
    private static final Printer<Chute, Board> edgePrinter = new Printer<Chute, Board>()
    {
       @Override
@@ -94,6 +115,9 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       }
    };
 
+   /**
+    * Constructs a new {@code EdgeLayoutPrinter}
+    */
    public EdgeLayoutPrinter()
    {
       super(new NodePrinter(), edgePrinter);
