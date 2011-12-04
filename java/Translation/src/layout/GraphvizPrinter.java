@@ -29,7 +29,8 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * Constructs a new GraphvizPrinter.
     *
     * @param nodePrinter
-    * The {@link utilities.Printer} used to output nodes
+    * The {@link utilities.Printer} used to output nodes. Must use an {@link
+    * level.Intersection}'s {@code UID} as the node identifier for Graphviz.
     *
     * @param edgePrinter
     * The {@link utilities.Printer} used to output edges
