@@ -13,9 +13,9 @@
  * If the layout tool hangs, it most likely means that dot is not exiting
  * properly.
  * <hr/>
- * Implementation notes:
+ * <h2>Implementation notes:</h2>
  * <p>
- * Units:
+ * <h3>Units:</h3>
  * <p>
  * There are three different units used to represent coordinates and distances
  * in this package. The first unit is the "game unit." This is the unit used in
@@ -34,7 +34,7 @@
  * expressed in points. Typically, positions in points also have the origin at
  * the bottom-left, with y coordinates growing upward.
  * <p>
- * Layout algorithm:
+ * <h3>Layout algorithm:</h3>
  * <p>
  * The layout is performed in a somewhat unusual way, due to the specific
  * requirements of this problem.
@@ -60,7 +60,7 @@
  * pass and run Graphviz again, expressing the nodes differently. Then, we
  * harvest the edge spline control points.
  * <p>
- * Making changes:
+ * <h3>Making changes:</h3>
  * <p>
  * If it is necessary to tweak the way the layout algorithm performs, there are
  * several places where it is possible:
