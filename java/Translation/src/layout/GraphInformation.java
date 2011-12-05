@@ -32,7 +32,6 @@ import checkers.nullness.quals.Nullable;
  * 
  * @author Nathaniel Mote
  */
-
 class GraphInformation
 {
    private final GraphAttributes graphAttributes;
@@ -40,9 +39,10 @@ class GraphInformation
    private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
    
    /**
-    * Creates a new GraphInformation object with the given mappings from Node UID to
-    * Intersection.
-    * 
+    * Creates a new GraphInformation object with the given mappings from Node
+    * UID to Intersection.
+    * <p>
+    * Private because it can only be created by a {@code Builder}
     */
    private GraphInformation(GraphAttributes graphAttributes,
          Map<String, NodeAttributes> nodeAttributes, Map<Pair<String, String>, EdgeAttributes> edgeAttributes)
@@ -71,7 +71,7 @@ class GraphInformation
    }
    
    /**
-    * Returns the attributes of the graph itself
+    * Returns the attributes of the graph itself.
     */
    public GraphAttributes getGraphAttributes()
    {
@@ -79,10 +79,10 @@ class GraphInformation
    }
 
    /**
-    * Returns the attributes of the given edge
+    * Returns the attributes of the given edge.
     * <p>
-    * this must contain an edge from startNode to endNode
-    * equivalently, 
+    * {@code this} must contain an edge from {@code startNode} to {@code
+    * endNode}
     *
     * @param startNode
     * @param endNode
@@ -108,7 +108,7 @@ class GraphInformation
    }
 
    /**
-    * Returns {@code true} iff {@code this} contians an edge from {@code
+    * Returns {@code true} iff {@code this} contains an edge from {@code
     * startNode} to {@code endNode}
     * 
     * @param startNode
@@ -124,6 +124,7 @@ class GraphInformation
     * Returns {@code true} iff {@code this} and {@code other} are equal in
     * value.
     */
+   // TODO update equals and hashCode to take edgeAttributes into account
    @Override
    public boolean equals(Object other)
    {
@@ -154,7 +155,7 @@ class GraphInformation
    }
    
    /**
-    * A Builder for a GraphInformation object.
+    * A {@code Builder} for a {@code GraphInformation} object.
     * 
     * @author Nathaniel Mote
     */
@@ -178,10 +179,10 @@ class GraphInformation
        * 
        * @return the previous GraphAttributes object, or null if none existed
        */
-
       // This may need to be changed somehow because graph attributes can be
       // split across multiple lines in DOT. Maybe a way to merge them or
-      // something?
+      // something? This will have to be solved if it is necessary to include
+      // more than just the "bb" attribute
       public @Nullable GraphAttributes setGraphAttributes(GraphAttributes attributes)
       {
          GraphAttributes oldAttrs = this.graphAttributes;
@@ -224,7 +225,7 @@ class GraphInformation
       
       /**
        * Returns a GraphInformation object with the attributes that have been added to
-       * this {@code Builder}
+       * this {@code Builder}.
        * <p>
        * Requires {@link Builder#areGraphAttributesSet()}
        */
@@ -385,8 +386,9 @@ class GraphInformation
       }
    }
 
-   // TODO edit docs and checks to reflect that the number of points must be at
-   // least 4
+   /**
+    * An immutable record type containing attributes of a particular edge
+    */
    public static class EdgeAttributes
    {
       /**
@@ -455,7 +457,7 @@ class GraphInformation
    }
 
    /**
-    * A record type representing an immutable 2D point.
+    * An immutable record type representing a 2D point.
     * <p>
     * Stores integer x and y values that are values in hundredths of points.
     */
