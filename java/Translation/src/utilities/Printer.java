@@ -3,8 +3,8 @@ package utilities;
 import java.io.PrintStream;
 
 /**
- * Prints objects of type {@code E}. Subclasses must provide an implementation
- * for {@link #printMiddle printMiddle}.<br/>
+ * Prints objects of type {@code E}. Subclasses must, minimally, provide an
+ * implementation for {@link #printMiddle printMiddle}.<br/>
  * <br/>
  * Some subclasses may want to override {@link #printIntro printIntro} and/or
  * {@link #printOutro printOutro} -- the default implementation does nothing.<br/>
@@ -17,6 +17,8 @@ import java.io.PrintStream;
  * @param <T>
  * The type of any extra data that may be necessary to print {@code E} objects.
  * Parameterize to Void if no data is needed.
+ *
+ * @author Nathaniel Mote
  */
 public abstract class Printer<E, T>
 {
