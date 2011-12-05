@@ -5,6 +5,8 @@ import java.util.Set;
 /**
  * A lightweight implementation of a MultiBiMap. That is, each key can map to
  * multiple values, and an inverse view of the map can be provided.
+ *
+ * @author Nathaniel Mote
  */
 
 // Could be fleshed out to implement the Map interface, although remove would be
@@ -30,7 +32,7 @@ public class MultiBiMap<K,V>
    /**
     * Creates a new MultiBiMap with the given fields. Used exclusively for
     * constructing the inverse view of a MultiBiMap created with the
-    * {@linkplain #Board.MultiBiMap() public constructor}
+    * {@linkplain MultiBiMap() public constructor}
     * 
     * @param forward
     * @param backward

@@ -13,13 +13,15 @@ import java.util.LinkedHashSet;
  * The type of they keys
  * @param <V>
  * The type of the values
+ *
+ * @author Nathaniel Mote
  */
 public class MultiMap<K,V>
 {
    private Map<K, Set<V>> delegate;
 
    /**
-    *  Creates a new, empty {@code MultiMap}
+    * Creates a new, empty {@code MultiMap}
     */
    public MultiMap()
    {
