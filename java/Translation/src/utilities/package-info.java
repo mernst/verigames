@@ -4,8 +4,8 @@
  * specifications are not guaranteed to remain constant.
  * <p>
  * The exception to this is if a class in this package is part of the public API
- * of something in another package, as is the case with {@link Pair}. In this
- * case, that class would be considered part of the public API.
+ * of something in another package, as is the case with {@link utilities.Pair}.
+ * In this case, that class would be considered part of the public API.
  */
 
 package utilities;

@@ -66,9 +66,10 @@
  * several places where it is possible:
  * <p>
  * The first is through the input that dot is given. This is controlled by
- * {@link GraphvizPrinter}, and its subclasses {@link EdgeLayoutPrinter} and
- * {@link NodeLayoutPrinter}. What it prints can drastically change the layout,
- * as this determines the behavior of Graphviz itself.
+ * {@link layout.GraphvizPrinter}, and its subclasses {@link
+ * layout.EdgeLayoutPrinter} and {@link layout.NodeLayoutPrinter}. What it
+ * prints can drastically change the layout, as this determines the behavior of
+ * Graphviz itself.
  * <p>
  * The attributes that can be included are described <a
  * href="http://www.graphviz.org/content/attrs">here</a>.
@@ -77,10 +78,10 @@
  * {@link layout.BoardLayout}.
  * <p>
  * If more information is needed from the Graphviz output, three things must be
- * done. First, {@link GraphInformation} must be updated to store the required
- * data. Second, {@link DotParser} must be updated to parse the required
- * information and store it to {@code GraphInformation}. Then, {@link
- * BoardLayout} must be updated to use the new information.
+ * done. First, {@link layout.GraphInformation} must be updated to store the
+ * required data. Second, {@link layout.DotParser} must be updated to parse the
+ * required information and store it to {@code GraphInformation}. Then, {@link
+ * layout.BoardLayout} must be updated to use the new information.
  */
 
 package layout;

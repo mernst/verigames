@@ -32,7 +32,7 @@ public class MultiBiMap<K,V>
    /**
     * Creates a new MultiBiMap with the given fields. Used exclusively for
     * constructing the inverse view of a MultiBiMap created with the
-    * {@linkplain MultiBiMap() public constructor}
+    * {@linkplain #MultiBiMap() public constructor}
     * 
     * @param forward
     * @param backward

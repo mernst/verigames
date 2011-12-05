@@ -147,7 +147,7 @@ class DotParser
     * @param line
     * The line to parse
     * @param builder
-    * The {@link GraphInformation#Builder} to which the data from the parsed
+    * The {@link GraphInformation.Builder} to which the data from the parsed
     * line will be added.
     */
    private static void parseLine(String line, GraphInformation.Builder builder) throws IllegalLineException
