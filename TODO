@@ -1,3 +1,7 @@
+See if edge width can be increased
+
+--------------------------------------------------------------------------------
+
 Improve error handling in layout package -- make sure that internal errors are
 sent to the client in a useful way
 
