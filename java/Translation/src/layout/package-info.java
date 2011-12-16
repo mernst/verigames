@@ -63,8 +63,10 @@
  * <h3>Making changes:</h3>
  * <p>
  * If it is necessary to tweak the way the layout algorithm performs, there are
- * several places where it is possible:
+ * two ways to do so.
  * <p>
+ * <ol>
+ * <li>
  * The first is through the input that dot is given. This is controlled by
  * {@link layout.GraphvizPrinter}, and its subclasses {@link
  * layout.EdgeLayoutPrinter} and {@link layout.NodeLayoutPrinter}. What it
@@ -73,7 +75,9 @@
  * <p>
  * The attributes that can be included are described <a
  * href="http://www.graphviz.org/content/attrs">here</a>.
+ * </li>
  * <p>
+ * <li>
  * The second is to change what is done with dot's output. This is done in
  * {@link layout.BoardLayout}.
  * <p>
@@ -82,6 +86,8 @@
  * required data. Second, {@link layout.DotParser} must be updated to parse the
  * required information and store it to {@code GraphInformation}. Then, {@link
  * layout.BoardLayout} must be updated to use the new information.
+ * </li>
+ * </ol>
  */
 
 package layout;
