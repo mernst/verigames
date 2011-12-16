@@ -11,17 +11,23 @@ import utilities.Pair;
 
 /**
  * Adds layout information to a {@link level.Board Board} using Graphviz.
+ * <p>
+ * This class does not represent an object -- it simply encapsulates the {@link
+ * #layout(level.Board) layout(Board)} method. As such, it is not instantiable.
+ *
+ * @see WorldLayout
  * 
  * @author Nathaniel Mote
  */
 public class BoardLayout
 {
    /**
-    * Creates a new BoardLayout object.
+    * Should not be called. BoardLayout is simply a collection of static
+    * methods.
     */
-   public BoardLayout()
+   private BoardLayout()
    {
-      
+      throw new RuntimeException("Uninstantiable");
    }
    
    /**
@@ -31,8 +37,10 @@ public class BoardLayout
     * 
     * @param b
     * The {@link level.Board} to lay out.
+    *
+    * @see WorldLayout#layout(level.World) WorldLayout.layout(World)
     */
-   public void layout(Board b)
+   public static void layout(Board b)
    {
       nodeLayoutPass(b);
       edgeLayoutPass(b);
