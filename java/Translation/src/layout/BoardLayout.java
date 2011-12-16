@@ -47,7 +47,7 @@ public class BoardLayout
    }
 
    /**
-    * Adds layout information to the nodes in {@code b}.
+    * Adds node layout information to the nodes in {@code b}.
     * <p>
     * Modifies: {@code b}
     *
@@ -96,12 +96,13 @@ public class BoardLayout
    }
 
    /**
-    * Adds layout information to the edges in {@code b}.
+    * Adds edge layout information to the edges in {@code b}, without changing
+    * existing node layout information.
     * <p>
     * Modifies: {@code b}
     *
     * @param b
-    * Must have layout information for its nodes already present.
+    * Must already have layout information for its nodes.
     */
    private static void edgeLayoutPass(Board b)
    {
