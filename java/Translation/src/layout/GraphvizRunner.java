@@ -19,8 +19,6 @@ import level.Board;
  */
 class GraphvizRunner
 {
-   private static final DotParser parser = new DotParser();
-
    private final GraphvizPrinter printer;
    private final String command;
 
@@ -100,7 +98,7 @@ class GraphvizRunner
    }
    
    /**
-    * Parses the text from {@code is} using a {@code DotParser} and outputs the
+    * Parses the text from {@code is} using {@code DotParser} and outputs the
     * results.
     */
    private GraphInformation parseDot(InputStream is)
@@ -113,6 +111,6 @@ class GraphvizRunner
       // Scanner closes its underlying InputStream when closed
       in.close();
       
-      return parser.parse(processOutput.toString());
+      return DotParser.parse(processOutput.toString());
    }
 }

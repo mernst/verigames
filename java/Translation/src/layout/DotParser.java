@@ -25,6 +25,14 @@ import checkers.nullness.quals.Nullable;
 
 class DotParser
 {
+   /**
+    * This class is simply a container for the static {@link #parse(String)}
+    * method, so it cannot be instantiated.
+    */
+   private DotParser()
+   {
+      throw new RuntimeException("Uninstantiable");
+   }
 
    /**
     * An {@code Exception} that is thrown when a bad line of DOT is encountered.
@@ -57,7 +65,7 @@ class DotParser
     * @param dotOutput
     * Must be well-formed output from dot.
     */
-   public GraphInformation parse(String dotOutput)
+   public static GraphInformation parse(String dotOutput)
    {
       final GraphInformation.Builder out = new GraphInformation.Builder();
       

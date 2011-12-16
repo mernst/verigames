@@ -54,8 +54,7 @@ public class DotParserSpecTests
    @Test
    public void simpleTest()
    {
-      DotParser parser = new DotParser();
-      assertEquals(testOutput, parser.parse(testInput));
+      assertEquals(testOutput, DotParser.parse(testInput));
    }
 
    /**
@@ -80,8 +79,7 @@ public class DotParserSpecTests
 
       GraphInformation output = builder.build();
 
-      DotParser parser = new DotParser();
-      assertEquals(output, parser.parse(input));
+      assertEquals(output, DotParser.parse(input));
    }
 
    // included because at one point this escaped as an
@@ -90,6 +88,6 @@ public class DotParserSpecTests
    public void badLineTest()
    {
       String input = "graph {\ngraph [bb=0,0,216.69,528];\n";
-      new DotParser().parse(input);
+      DotParser.parse(input);
    }
 }
