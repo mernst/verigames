@@ -61,6 +61,9 @@ class GraphInformation
     * 
     * @param name
     * {@link #containsNode(String) containsNode(name)} must be true.
+    *
+    * @throws IllegalArgumentException if this does not contain a node with the
+    * given name.
     */
    public NodeAttributes getNodeAttributes(String name)
    {

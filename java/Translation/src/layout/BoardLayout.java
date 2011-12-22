@@ -74,8 +74,20 @@ public class BoardLayout
       {
          int UID = n.getUID();
          
-         // TODO handle exception when the given node does not exist
-         GraphInformation.NodeAttributes nodeAttrs = info.getNodeAttributes(Integer.toString(UID));
+         GraphInformation.NodeAttributes nodeAttrs;
+         try
+         {
+            // throws IllegalArgumentException if the node is not present. This
+            // should not happen, but if, somehow, Graphviz's output does not
+            // include a node that is in the Board, the resulting, cryptic error
+            // should not escape to the client.
+            nodeAttrs = info.getNodeAttributes(Integer.toString(UID));
+         }
+         catch (IllegalArgumentException e)
+         {
+            throw new RuntimeException(
+                  "Internal error -- node in Board not present in Graphviz output", e);
+         }
          
          // gives the location of the center of the node in hundredths of
          // points, using the top left corner of the board as the origin
