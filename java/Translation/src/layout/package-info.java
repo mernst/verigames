@@ -37,28 +37,39 @@
  * <h3>Layout algorithm:</h3>
  * <p>
  * The layout is performed in a somewhat unusual way, due to the specific
- * requirements of this problem.
+ * requirements of this problem, which are documented in world.dtd at the top
+ * level of this repository.
  * <p>
  * The algorithm makes two layout passes -- one where the nodes are assigned
  * coordinates, and one where the edge paths are found.
  * <p>
- * The reason for this is essentially that when the node layout requirements are
- * expressed in the DOT language, the resulting layout has essentially garbage
- * edge paths. This is because there is a requirement that nodes are a certain
- * distance from each other, depending on the type of the node. The most precise
- * way to express htis requirement is to simply represent each node as a
- * rectangle. The top left corner is then considered the node's position. The
- * width and height encode the minimum distance to the right and to the bottom,
- * respectively, that another node can be from it.
+ * The reason for this is the way the code enforces the game's requirement that
+ * nodes be a certain distance apart. Graphviz does not have a way to express
+ * this requirement directly, so instead the first layout pass uses unnaturally
+ * large nodes, where the width and height of a node encode the minimum distance
+ * to the right and to the bottom, respectively, that another node can be from
+ * it. The top left corner is then considered the node's position. This produces
+ * a node layout that satisfies the game's requirements, but the resulting
+ * layout has essentially garbage edge paths. This is because there is a
+ * requirement that nodes be a certain distance from each other, depending on
+ * the type of the node. The most precise way to express this requirement is to
+ * simply represent each node as a rectangle.
  * <p>
- * However, in the game, nodes are essentially discrete points. Edges must start
- * and end exactly at the positions of their nodes. However, in the layout
- * above, edges start and end at the edges of the rectangles (it is also
- * possible to make them start and end at the center of the rectangles, but that
- * doesn't solve the problem -- the node coordinates are considered to be the
- * top left). Because of this, we use the node positions determined in the first
- * pass and run Graphviz again, expressing the nodes differently. Then, we
- * harvest the edge spline control points.
+ * However, in the game, most nodes are discrete points. They simply indicate
+ * where one or more edges terminate, and typically have no graphical
+ * representation beyond that (some nodes are an exception to this, but they are
+ * less common). Edges must start and end exactly at the positions of their
+ * nodes. However, in the layout above, edges start and end at the edges of the
+ * rectangles (it is also possible to make them start and end at the center of
+ * the rectangles, but that doesn't solve the problem -- the node coordinates
+ * are considered to be the top left).
+ * <p>
+ * Because of this, we run Graphviz a second time. This time, the node positions
+ * from the first pass are used, and Graphviz is instructed not to change them.
+ * Most nodes are effectively discrete points (though they are not always
+ * represented that way -- see {@link layout.NodeLayoutPrinter} for details),
+ * with edges going from node to node. So, given the node positions, Graphviz
+ * simply lays out the edges, and the spline control points are harvested.
  * <p>
  * <h3>Making changes:</h3>
  * <p>
@@ -67,7 +78,7 @@
  * <p>
  * <ol>
  * <li>
- * The first is through the input that dot is given. This is controlled by
+ * The first is through the input that Graphviz is given. This is controlled by
  * {@link layout.GraphvizPrinter}, and its subclasses {@link
  * layout.EdgeLayoutPrinter} and {@link layout.NodeLayoutPrinter}. What it
  * prints can drastically change the layout, as this determines the behavior of
@@ -78,7 +89,7 @@
  * </li>
  * <p>
  * <li>
- * The second is to change what is done with dot's output. This is done in
+ * The second is to change what is done with Graphviz's output. This is done in
  * {@link layout.BoardLayout}.
  * <p>
  * If more information is needed from the Graphviz output, three things must be
