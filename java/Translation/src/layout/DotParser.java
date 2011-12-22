@@ -13,6 +13,9 @@ import checkers.nullness.quals.Nullable;
  * Parses text in DOT format and returns the results as a {@link
  * GraphInformation} object.
  * <p>
+ * This class does not represent an object -- it simply encapsulates the {@link
+ * #parse(String) parse(String)} method. As such, it is not instantiable.
+ * <p>
  * Currently, it includes the dimensions of the graph's bounding box, as well as
  * the dimensions and position of the nodes and the spline control points for
  * the edges. However, more information may be added at a later date.
