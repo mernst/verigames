@@ -67,7 +67,7 @@
     </fileset>
   </path>
 
-  <target name="test" depends="clean, buildall, test.graph, test.level, test.layout"/>
+  <target name="test" depends="clean, buildall, test.graph, test.level, test.layout, test.utilities"/>
 
   <target name="test.level">
     <junit fork="yes" haltonfailure="yes" dir="${bin}/level">
@@ -100,6 +100,18 @@
     <junit fork="yes" haltonfailure="yes" dir="${bin}/graph">
       <test name="graph.SpecificationTests"/>
       <test name="graph.ImplementationTests"/>
+      <formatter type="plain" usefile="false"/>
+      <classpath refid="test.classpath"/>
+      <classpath>
+        <pathelement path="${bin}"/>
+      </classpath>
+    </junit>
+  </target>
+
+  <target name="test.utilities">
+    <junit fork="yes" haltonfailure="yes" dir="${bin}/utilities">
+      <test name="utilities.SpecificationTests"/>
+      <test name="utilities.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
