@@ -158,7 +158,7 @@ public class BoardLayout
 
             // gives the coordinates of the start node in game units, with the
             // top left as the origin.
-            Pair<Double, Double> startCoords = convertCoords(startAttrs.getX(), startAttrs.getY(), boardHeight);
+            Pair<Double, Double> startCoords = hundredthsOfPointsToGameUnits(startAttrs.getX(), startAttrs.getY(), boardHeight);
 
             // finds the difference between what the node coordinates originally
             // were and what they are now according to Graphviz
@@ -193,7 +193,7 @@ public class BoardLayout
 
          for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
          {
-            Pair<Double, Double> rawCoords = convertCoords(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
+            Pair<Double, Double> rawCoords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
 
             Pair<Double, Double> coords = new Pair<Double, Double>
                   (rawCoords.getFirst() + xOffset, rawCoords.getSecond() + yOffset);
@@ -212,7 +212,7 @@ public class BoardLayout
     * Converts coordinates from hundredths of points, using the bottom left as
     * the origin, to game units using the top left as the origin.
     */
-   private static Pair<Double, Double> convertCoords(int x, int y, int boardHeight)
+   private static Pair<Double, Double> hundredthsOfPointsToGameUnits(int x, int y, int boardHeight)
    {
       y = boardHeight - y;
 
