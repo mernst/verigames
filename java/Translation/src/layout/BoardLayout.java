@@ -1,5 +1,7 @@
 package layout;
 
+import static utilities.Misc.ensure;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +21,7 @@ import utilities.Pair;
  * 
  * @author Nathaniel Mote
  */
+// TODO document all variables with error-prone units using the units checker
 public class BoardLayout
 {
    /**
@@ -124,6 +127,8 @@ public class BoardLayout
       // avoids cluttering the namespace
       {
          GraphvizPrinter printer = new EdgeLayoutPrinter();
+         // neato's -n flag tells it to accept node positions and not to change
+         // them.
          String command = "neato -n";
          GraphvizRunner runner = new GraphvizRunner(printer, command);
          info = runner.run(b);
@@ -133,17 +138,21 @@ public class BoardLayout
       // bottom left to the top left.
       int boardHeight = info.getGraphAttributes().getHeight();
 
+      // because Graphviz, when using "neato -n" only guarantees that nodes
+      // stay in the same locations *relative to each other* and not
+      // absolutely, we need to find what the offset is between the original
+      // node location and its laid-out counterpart.
+      Double xOffset = null;
+      Double yOffset = null;
+
+      // the allowed variation for the x and y offsets between loop iterations.
+      final double epsilon = 0.000001;
+
       for (Chute c : b.getEdges())
       {
          String startUID = Integer.toString(c.getStart().getUID());
          String endUID = Integer.toString(c.getEnd().getUID());
 
-         // because Graphviz, when using "neato -n" only guarantees that nodes
-         // stay in the same locations *relative to each other* and not
-         // absolutely, we need to find what the offset is between the original
-         // node location and its laid-out counterpart.
-         double xOffset;
-         double yOffset;
          {
             GraphInformation.NodeAttributes startAttrs = info.getNodeAttributes(startUID);
 
@@ -153,8 +162,16 @@ public class BoardLayout
 
             // finds the difference between what the node coordinates originally
             // were and what they are now according to Graphviz
-            xOffset = c.getStart().getX() - startCoords.getFirst();
-            yOffset = c.getStart().getY() - startCoords.getSecond();
+            double currentXOffset = c.getStart().getX() - startCoords.getFirst();
+            double currentYOffset = c.getStart().getY() - startCoords.getSecond();
+
+            if (xOffset == null)
+               xOffset = currentXOffset;
+            if (yOffset == null)
+               yOffset = currentYOffset;
+
+            ensure(Math.abs(xOffset - currentXOffset) < epsilon);
+            ensure(Math.abs(xOffset - currentXOffset) < epsilon);
          }
 
          GraphInformation.EdgeAttributes edgeAttrs; 
