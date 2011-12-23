@@ -1,13 +1,13 @@
 package utilities;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 /**
- * A lightweight implementation of a MultiMap. That is, each key can map
+ * A lightweight implementation of a {@code MultiMap}. That is, each key can map
  * to multiple values.
+ * <p>
+ * This implementation is backed by a {@code HashMap} and {@code HashSet}s so
+ * that operations can be done in constant time.
  * 
  * @param <K>
  * The type of they keys
@@ -29,8 +29,8 @@ public class MultiMap<K,V>
    }
 
    /**
-    * Adds a mapping from {@code key} to {@code value}. Does not remove
-    * any previous mappings.
+    * Adds a mapping from {@code key} to {@code value}. Does not remove any
+    * previous mappings.
     * 
     * @param key
     * @param value
@@ -50,16 +50,20 @@ public class MultiMap<K,V>
    }
 
    /**
-    * Returns a set containing all values to which {@code key} maps
+    * Returns an unmodifiable view on a set containing all values to which
+    * {@code key} maps. Returns an empty set if {@code key} maps to no values.
     * 
     * @param key
     */
+   // TODO make results consistent -- right now, if the key exists, the returned
+   // set will change as values are added, but if the key does not exist, the
+   // returned map will not change.
    public Set<V> get(K key)
    {
       Set<V> ret = delegate.get(key);
       if (ret != null)
-         return ret;
+         return Collections.unmodifiableSet(ret);
       else
-         return new LinkedHashSet<V>();
+         return Collections.emptySet();
    }
 }
