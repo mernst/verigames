@@ -49,7 +49,7 @@
     <!-- use jsr308.javac instead of javac -->
     <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
-      <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar"/>
+      <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/binary/jdk.jar"/>
       <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
       <!-- optional, to not check library bodies: <compilerarg value="-AskipClasses=^(java\.awt\.|javax\.swing\.)"/> -->
     </jsr308.javac>
