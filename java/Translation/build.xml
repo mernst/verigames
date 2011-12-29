@@ -43,12 +43,11 @@
     </javac>
   </target>
 
-  <!-- check-nullness target checks nullness on every file that does not include "test(s)" in its directory path -->
-  <!-- TODO update to include sources from test folder -->
+  <!-- check-nullness target checks nullness on every file in the src folder -->
   <target name="check-nullness" description="Check for nullness errors" depends="clean">
     <mkdir dir="${bin}"/>
     <!-- use jsr308.javac instead of javac -->
-    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/test/**,**/tests/**" includeAntRuntime="false">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar"/>
       <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
