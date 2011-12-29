@@ -24,7 +24,7 @@
 
   <target name="build">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
@@ -34,7 +34,7 @@
 
   <target name="buildall">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/javac.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
@@ -48,7 +48,7 @@
   <target name="check-nullness" description="Check for nullness errors" depends="clean">
     <mkdir dir="${bin}"/>
     <!-- use jsr308.javac instead of javac -->
-    <jsr308.javac classpath="${lib}/javac.jar;${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/test/**,**/tests/**" includeAntRuntime="false">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/test/**,**/tests/**" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/jdk/jdk.jar"/>
       <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
@@ -125,7 +125,7 @@
   <target name="javadoc">
     <javadoc access="public"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar"
+             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -143,7 +143,7 @@
   <target name="javadoc.protected">
     <javadoc access="protected"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar"
+             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -161,7 +161,7 @@
   <target name="javadoc.package">
     <javadoc access="package"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar"
+             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -179,7 +179,7 @@
   <target name="javadoc.private">
     <javadoc access="private"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar:${lib}/javac.jar"
+             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
