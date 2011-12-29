@@ -129,7 +129,7 @@ class GraphInformation
     */
    // TODO update equals and hashCode to take edgeAttributes into account
    @Override
-   public boolean equals(Object other)
+   public boolean equals(/*@Nullable*/ Object other)
    {
       if (other instanceof GraphInformation)
       {
