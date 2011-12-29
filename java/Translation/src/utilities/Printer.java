@@ -20,7 +20,7 @@ import java.io.PrintStream;
  *
  * @author Nathaniel Mote
  */
-public abstract class Printer<E, T>
+public abstract class Printer<E, T extends /*@Nullable*/ Object>
 {
    /**
     * Prints a textual representation of the given object to the given
