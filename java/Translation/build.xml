@@ -47,7 +47,7 @@
   <target name="check-nullness" description="Check for nullness errors" depends="clean">
     <mkdir dir="${bin}"/>
     <!-- use jsr308.javac instead of javac -->
-    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**" includeAntRuntime="false">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**,**/BuildingTools.java" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/binary/jdk.jar"/>
       <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
