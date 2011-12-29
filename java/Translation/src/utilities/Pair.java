@@ -1,5 +1,7 @@
 package utilities;
 
+import checkers.nullness.quals.*;
+
 /**
  * An immutable record type representing a pair of arbitrary elements.
  * <p>
@@ -28,7 +30,7 @@ public class Pair<A,B>
    }
 
    @Override
-   public boolean equals(Object o)
+   public boolean equals(/*@Nullable*/ Object o)
    {
       if (o instanceof Pair)
       {
