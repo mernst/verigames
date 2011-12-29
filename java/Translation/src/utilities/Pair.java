@@ -1,7 +1,5 @@
 package utilities;
 
-import checkers.nullness.quals.*;
-
 /**
  * An immutable record type representing a pair of arbitrary elements.
  * <p>
