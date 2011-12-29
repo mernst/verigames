@@ -273,7 +273,7 @@ class GraphInformation
       }
       
       @Override
-      public boolean equals(Object other)
+      public boolean equals(/*@Nullable*/ Object other)
       {
          if (other instanceof GraphAttributes)
          {
@@ -352,7 +352,7 @@ class GraphInformation
       }
       
       @Override
-      public boolean equals(Object other)
+      public boolean equals(/*@Nullable*/ Object other)
       {
          if (other instanceof NodeAttributes)
          {
