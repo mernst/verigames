@@ -245,7 +245,7 @@ public class Intersection extends graph.Node<Chute>
    protected Intersection(Kind kind)
    {
       
-      if (!checkIntersectionKind(kind)) // if this is not a valid Kind for this
+      if (!checkIntersectionKind(kind)) // if kind is not a valid Kind for this
                                         // implementation of Intersection
          throw new IllegalArgumentException("Invalid Intersection Kind " + kind
                + " for this implementation");
