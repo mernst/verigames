@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import checkers.nullness.quals.Nullable;
-
 /**
  * An immutable record type representing a node for a {@link graph.Graph
  * Graph}.
@@ -188,7 +186,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * @param port
     * port >= 0
     */
-   public @Nullable EdgeType getInput(int port)
+   public /*@Nullable*/ EdgeType getInput(int port)
    {
       return get(inputs, port);
    }
@@ -199,7 +197,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * @param port
     * port >= 0
     */
-   public @Nullable EdgeType getOutput(int port)
+   public /*@Nullable*/ EdgeType getOutput(int port)
    {
       return get(outputs, port);
    }

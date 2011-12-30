@@ -1,7 +1,5 @@
 package level;
 
-import checkers.nullness.quals.Nullable;
-
 /**
  * An {@link Intersection} subclass that represents
  * {@link Intersection.Kind#NULL_TEST NULL_TEST} {@link Intersection.Kind Kind}s
@@ -97,7 +95,7 @@ public class NullTest extends Intersection
     * {@link Intersection}, only "null balls" will roll down the returned
     * {@link Chute}.
     */
-   public @Nullable Chute getNullChute()
+   public /*@Nullable*/ Chute getNullChute()
    {
       return getOutput(1);
    }
@@ -130,7 +128,7 @@ public class NullTest extends Intersection
     * this {@link Intersection}, only "non-null balls" will roll down the
     * returned {@link Chute}.
     */
-   public @Nullable Chute getNonNullChute()
+   public /*@Nullable*/ Chute getNonNullChute()
    {
       return getOutput(0);
    }

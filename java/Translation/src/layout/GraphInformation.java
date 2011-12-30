@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import checkers.nullness.quals.AssertNonNullIfTrue;
-import checkers.nullness.quals.LazyNonNull;
-import checkers.nullness.quals.Nullable;
 
 /**
  * An immutable class that stores information about a Graphviz graph.
@@ -164,7 +162,7 @@ class GraphInformation
     */
    public static class Builder
    {
-      private @LazyNonNull GraphAttributes graphAttributes;
+      private /*@LazyNonNull*/ GraphAttributes graphAttributes;
       private final Map<String, NodeAttributes> nodeAttributes;
       private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
       
@@ -186,7 +184,7 @@ class GraphInformation
       // split across multiple lines in DOT. Maybe a way to merge them or
       // something? This will have to be solved if it is necessary to include
       // more than just the "bb" attribute
-      public @Nullable GraphAttributes setGraphAttributes(GraphAttributes attributes)
+      public /*@Nullable*/ GraphAttributes setGraphAttributes(GraphAttributes attributes)
       {
          GraphAttributes oldAttrs = this.graphAttributes;
          

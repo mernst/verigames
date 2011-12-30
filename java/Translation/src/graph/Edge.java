@@ -3,8 +3,6 @@ package graph;
 import static utilities.Misc.ensure;
 
 import checkers.nullness.quals.AssertNonNullAfter;
-import checkers.nullness.quals.LazyNonNull;
-import checkers.nullness.quals.Nullable;
 
 /**
  * An immutable record type representing an edge for a {@link graph.Graph
@@ -38,7 +36,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     * {@code start==null} <--> {@code startPort==-1} <--> start has not been
     * initialized
     */
-   private @LazyNonNull NodeType start;
+   private /*@LazyNonNull*/ NodeType start;
 
    /**
     * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
@@ -56,7 +54,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     * {@code end==null} <--> {@code endPort==-1} <--> end has not been
     * initialized
     */
-   private @LazyNonNull NodeType end;
+   private /*@LazyNonNull*/ NodeType end;
 
    /**
     * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
@@ -119,7 +117,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    /**
     * Returns {@code start}, or {@code null} if {@code start} does not exist
     */
-   public @Nullable NodeType getStart()
+   public /*@Nullable*/ NodeType getStart()
    {
       return start;
    }
@@ -140,7 +138,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    /**
     * Returns {@code end}, or {@code null} if {@code end} does not exist
     */
-   public @Nullable NodeType getEnd()
+   public /*@Nullable*/ NodeType getEnd()
    {
       return end;
    }

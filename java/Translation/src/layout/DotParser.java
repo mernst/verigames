@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import checkers.nullness.quals.Nullable;
-
 /**
  * Parses text in DOT format and returns the results as a {@link
  * GraphInformation} object.
@@ -236,7 +234,7 @@ class DotParser
     * Must be a valid, logical line of Graphviz output describing attributes of
     * the graph itself (as oppose to particular edges or nodes).
     */
-   private static @Nullable GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
+   private static /*@Nullable*/ GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
    {
       // sample line: "  graph [bb="0,0,216.69,528"];"
       

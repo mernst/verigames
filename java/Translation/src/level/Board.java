@@ -6,8 +6,6 @@ import graph.Graph;
 import level.Intersection.Kind;
 import utilities.MultiBiMap;
 
-import checkers.nullness.quals.LazyNonNull;
-
 import java.util.Set;
 
 /**
@@ -35,8 +33,8 @@ public class Board extends Graph<Intersection, Chute>
 {
    private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
-   @LazyNonNull Intersection incomingNode;
-   @LazyNonNull Intersection outgoingNode;
+   /*@LazyNonNull*/ Intersection incomingNode;
+   /*@LazyNonNull*/ Intersection outgoingNode;
    
    private final MultiBiMap<String, Chute> nameToChutes;
    
@@ -122,7 +120,7 @@ public class Board extends Graph<Intersection, Chute>
     * Returns {@code this}'s {@code incomingNode}, or {@code null} if it does not
     * have one
     */
-   public/* @Nullable */Intersection getIncomingNode()
+   public /*@Nullable*/ Intersection getIncomingNode()
    {
       return incomingNode;
    }
@@ -131,7 +129,7 @@ public class Board extends Graph<Intersection, Chute>
     * Returns {@code this}'s {@code outgoingNode}, or {@code null} if it does not
     * have one
     */
-   public/* @Nullable */Intersection getOutgoingNode()
+   public /*@Nullable*/ Intersection getOutgoingNode()
    {
       return outgoingNode;
    }
