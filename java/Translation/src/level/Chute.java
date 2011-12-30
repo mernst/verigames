@@ -50,7 +50,7 @@ public class Chute extends graph.Edge<Intersection>
 
    // should be instantiated as an immutable list
    // TODO enforce length in checkRep
-   private List<Pair<Double, Double>> layout;
+   private /*@Nullable*/ List<Pair<Double, Double>> layout;
    
    private final int UID;
    
@@ -162,7 +162,7 @@ public class Chute extends graph.Edge<Intersection>
             new ArrayList<Pair<Double,Double>>(layout));
    }
 
-   public List<Pair<Double, Double>> getLayout()
+   public /*@Nullable*/ List<Pair<Double, Double>> getLayout()
    {
       return this.layout;
    }
