@@ -359,21 +359,13 @@ class DotParser
          // TODO clean up this code:
          int width = -1;
          int height = -1;
-         if (widthStr != null && heightStr != null)
-         {
-            width = parseDimension(widthStr);
-            height = parseDimension(heightStr);
-         }
-         else if (widthStr == null)
-         {
-            width = parseDimension(heightStr);
-            height = width;
-         }
-         else if (heightStr == null)
-         {
-            height = parseDimension(heightStr);
-            width = height;
-         }
+         if (widthStr == null)
+            widthStr = heightStr;
+         if (heightStr == null)
+            heightStr = widthStr;
+
+         width = parseDimension(widthStr);
+         height = parseDimension(heightStr);
 
          return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
       }
