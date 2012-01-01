@@ -67,7 +67,7 @@ public class NullTest extends Intersection
     * 
     * @param kind
     */
-   @Override protected boolean checkIntersectionKind(Kind kind)
+   @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
    {
       // this implementation supports only NULL_TEST
       return kind == Kind.NULL_TEST;

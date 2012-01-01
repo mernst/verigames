@@ -267,7 +267,7 @@ public class Intersection extends graph.Node<Chute>
     * 
     * @param kind
     */
-   protected boolean checkIntersectionKind(Kind kind)
+   protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
    {
       // this implementation supports every Intersection kind except for
       // SUBNETWORK and NULL_TEST

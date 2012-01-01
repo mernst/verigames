@@ -37,7 +37,7 @@ public class Subnetwork extends Intersection
     * 
     * @param kind
     */
-   @Override protected boolean checkIntersectionKind(Kind kind)
+   @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
    {
       // This implementation supports only the SUBNETWORK kind
       return kind == Kind.SUBNETWORK;
