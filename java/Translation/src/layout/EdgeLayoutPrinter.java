@@ -61,7 +61,7 @@ class EdgeLayoutPrinter extends GraphvizPrinter
        * compare identity, and a reference held here and nowhere else would be
        * useless, so garbage collection should be allowed.
        */
-      private WeakReference<Board> currentBoard = new WeakReference<Board>(null);
+      private WeakReference</*@Nullable*/ Board> currentBoard = new WeakReference</*@Nullable*/ Board>(null);
 
       @Override
       protected void printMiddle(Intersection n, PrintStream out, Board b)
@@ -97,7 +97,7 @@ class EdgeLayoutPrinter extends GraphvizPrinter
                maxY = currentY;
          }
          boardHeight = maxY - minY;
-         currentBoard = new WeakReference<Board>(b);
+         currentBoard = new WeakReference</*@Nullable*/ Board>(b);
       }
    }
 
