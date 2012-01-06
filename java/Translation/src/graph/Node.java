@@ -228,7 +228,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * edge. All keys are nonnegative. {@code m} and {@code this} will not be
     * affected by future changes to each other.
     */
-   public TreeMap<Integer, EdgeType> getInputs()
+   public TreeMap<Integer, /*@NonNull*/ EdgeType> getInputs()
    {
       return getMapFromList(inputs);
    }
@@ -238,7 +238,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * edge. All keys are nonnegative. {@code m} and {@code this} will not be
     * affected by future changes to each other.
     */
-   public TreeMap<Integer, EdgeType> getOutputs()
+   public TreeMap<Integer, /*@NonNull*/ EdgeType> getOutputs()
    {
       return getMapFromList(outputs);
    }
@@ -250,12 +250,12 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * @param list
     * The {@code List} from which to create the returned {@code Map}
     */
-   private static <E> TreeMap<Integer, E> getMapFromList(List<E> list)
+   private static <E> TreeMap<Integer, /*@NonNull*/ E> getMapFromList(List</*@Nullable*/ E> list)
    {
-      TreeMap<Integer, E> toReturn = new TreeMap<Integer, E>();
+      TreeMap<Integer, /*@NonNull*/ E> toReturn = new TreeMap<Integer, /*@NonNull*/ E>();
       
       int index = 0;
-      for (E edge : list)
+      for (/*@Nullable*/ E edge : list)
       {
          if (edge != null)
             toReturn.put(index, edge);
@@ -307,14 +307,14 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    {
       for (int i = 0; i < inputs.size(); i++)
       {
-         EdgeType e = inputs.get(i);
+         /*@Nullable*/ EdgeType e = inputs.get(i);
          if (e == null)
             throw new IllegalStateException("Edge " + e + " at port " + i + " in inputs is null");
       }
 
       for (int i = 0; i < outputs.size(); i++)
       {
-         EdgeType e = outputs.get(i);
+         /*@Nullable*/ EdgeType e = outputs.get(i);
          if (e == null)
             throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null");
       }
