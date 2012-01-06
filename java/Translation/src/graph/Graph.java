@@ -88,7 +88,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       
       for (NodeType n : nodes)
       {
-         for (Map.Entry<Integer, EdgeType> entry : n.getOutputs().entrySet())
+         for (Map.Entry<Integer, /*@NonNull*/ EdgeType> entry : n.getOutputs().entrySet())
          {
             EdgeType e = entry.getValue();
             int nodePort = entry.getKey();
@@ -98,7 +98,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
             ensure(e.getStart() == n);
          }
 
-         for (Map.Entry<Integer, EdgeType> entry : n.getInputs().entrySet())
+         for (Map.Entry<Integer, /*@NonNull*/ EdgeType> entry : n.getInputs().entrySet())
          {
             EdgeType e = entry.getValue();
             int nodePort = entry.getKey();
@@ -198,8 +198,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
                "Edge already in this Graph " + edge);
       if (edge.getStart() != null || edge.getEnd() != null)
       {
-         NodeType oldStart = edge.getStart();
-         NodeType oldEnd = edge.getEnd();
+         /*@Nullable*/ NodeType oldStart = edge.getStart();
+         /*@Nullable*/ NodeType oldEnd = edge.getEnd();
 
          String message = "Given Edge already connected to Node";
          if (oldStart != null && oldEnd != null)
