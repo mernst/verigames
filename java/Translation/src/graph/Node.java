@@ -75,9 +75,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       }
       else
       {
-         for (EdgeType e : inputs)
+         for (/*@Nullable*/ EdgeType e : inputs)
             ensure(e != null);
-         for (EdgeType e : outputs)
+         for (/*@Nullable*/ EdgeType e : outputs)
             ensure(e != null);
       }
       
@@ -184,7 +184,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Returns the edge at the given port, or {@code null} if none exists.
     * <p>
     * @param port
-    * port >= 0
+    * {@code port >= 0}
     */
    public /*@Nullable*/ EdgeType getInput(int port)
    {
@@ -195,7 +195,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Returns the edge at the given port, or {@code null} if none exists.
     * <p>
     * @param port
-    * port >= 0
+    * {@code port >= 0}
     */
    public /*@Nullable*/ EdgeType getOutput(int port)
    {
