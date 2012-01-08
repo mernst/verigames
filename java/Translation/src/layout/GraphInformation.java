@@ -134,7 +134,8 @@ class GraphInformation
          GraphInformation g = (GraphInformation) other;
          
          return this.getGraphAttributes().equals(g.getGraphAttributes())
-               && this.nodeAttributes.equals(g.nodeAttributes);
+               && this.nodeAttributes.equals(g.nodeAttributes)
+               && this.edgeAttributes.equals(g.edgeAttributes);
       }
       else
       {
@@ -145,7 +146,9 @@ class GraphInformation
    @Override
    public int hashCode()
    {
-      return graphAttributes.hashCode() * 31 + nodeAttributes.hashCode();
+      return graphAttributes.hashCode() * 71 +
+            nodeAttributes.hashCode() * 31 +
+            edgeAttributes.hashCode();
    }
 
    @Override
@@ -455,6 +458,27 @@ class GraphInformation
       {
          return controlPoints.size();
       }
+
+      @Override
+      public boolean equals(/*@Nullable*/ Object o)
+      {
+         if (o instanceof EdgeAttributes)
+         {
+            EdgeAttributes e = (EdgeAttributes) o;
+
+            return this.controlPoints.equals(e.controlPoints);
+         }
+         else
+         {
+            return false;
+         }
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return controlPoints.hashCode();
+      }
    }
 
    /**
@@ -482,5 +506,26 @@ class GraphInformation
       {
          return x;
       }
+
+      @Override
+      public boolean equals(/*@Nullable*/ Object o)
+      {
+         if (o instanceof Point)
+         {
+            Point p = (Point) o;
+            return this.y == p.y && this.x == p.x;
+         }
+         else
+         {
+            return false;
+         }
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return x * 31 + y;
+      }
+      // TODO override equals and hashcode for EdgeAttributes and Point
    }
 }
