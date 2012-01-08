@@ -4,11 +4,7 @@ import static utilities.Misc.ensure;
 
 import utilities.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import checkers.nullness.quals.AssertNonNullIfTrue;
 
@@ -95,6 +91,27 @@ class GraphInformation
                "\" to \"" + endNode + "\"");
 
       return edgeAttributes.get(new Pair<String, String>(startNode, endNode));
+   }
+
+   /**
+    * Returns a {@code Set<String>} containing all of the nodes in {@code this}.
+    */
+   public Set<String> getNodes()
+   {
+      // wrap it as unmodifiable once more in case the implementation changes,
+      // even though nodeAttributes is also unmodifiable.
+      return Collections.unmodifiableSet(nodeAttributes.keySet());
+   }
+
+   /**
+    * Returns a {@code Set<Pair<String, String>>} containing all of the edges in
+    * {@code this}.
+    */
+   public Set<Pair<String, String>> getEdges()
+   {
+      // wrap it as unmodifiable once more in case the implementation changes,
+      // even though edgeAttributes is also unmodifiable.
+      return Collections.unmodifiableSet(edgeAttributes.keySet());
    }
    
    /**
