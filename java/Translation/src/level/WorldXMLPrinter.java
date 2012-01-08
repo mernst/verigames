@@ -150,8 +150,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
             if (x >= 0 && y >= 0)
             {
                out.println("<layout>");
-               out.println("<x>"+x+"</x>");
-               out.println("<y>"+y+"</y>");
+               out.printf("<x>%.5f</x>\n", x);
+               out.printf("<y>%.5f</y>\n", y);
                out.println("</layout>");
             }
             
@@ -195,8 +195,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
                for (Pair<Double, Double> point : layout)
                {
                   out.println("<point>");
-                  out.println("<x>" + point.getFirst() + "</x>");
-                  out.println("<y>" + point.getSecond() + "</y>");
+                  out.printf("<x>%.5f</x>\n", point.getFirst());
+                  out.printf("<y>%.5f</y>\n", point.getSecond());
                   out.println("</point>");
                }
 
