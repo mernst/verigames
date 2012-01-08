@@ -108,10 +108,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
       
       out.println(" <boards>");
 
-      // TODO iterate over entrySet
-      for (String name : boardNames.keySet())
+      for (Map.Entry<String, Board> entry : boardNames.entrySet())
       {
-         Board board = boardNames.get(name);
+         String name = entry.getKey();
+         Board board = entry.getValue();
+
          out.println("  <board name=\"" + name + "\">");
          
          for (Intersection node : board.getNodes())
