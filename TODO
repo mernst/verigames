@@ -29,10 +29,6 @@ Write tests for the layout package
 
 --------------------------------------------------------------------------------
 
-Compare generated XML against an oracle in tests
-
---------------------------------------------------------------------------------
-
 Update existing tests that used to need reflection, but don't anymore now that
 they are in the same package as their test targets.
 
