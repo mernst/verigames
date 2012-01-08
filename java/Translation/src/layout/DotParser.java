@@ -544,9 +544,7 @@ class DotParser
       {
          char currentChar = line.charAt(endIndex);
 
-         //TODO Theres already a method to check for whitespace -- change to
-         //Character.isWhitespace(char)
-         if (isWhitespace(currentChar) && !inQuotedString)
+         if (Character.isWhitespace(currentChar) && !inQuotedString)
          {
             // if we're at the start of a token, and it's whitespace, simply
             // move past it
@@ -582,11 +580,6 @@ class DotParser
          tokens.set(i, tokens.get(i).replaceAll(",$", ""));
 
       return tokens.toArray(new String[0]);
-   }
-
-   private static boolean isWhitespace(char c)
-   {
-      return c == ' ' || c == '\t';
    }
 
    /**
