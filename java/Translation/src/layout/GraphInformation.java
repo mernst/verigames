@@ -142,7 +142,6 @@ class GraphInformation
     * Returns {@code true} iff {@code this} and {@code other} are equal in
     * value.
     */
-   // TODO update equals and hashCode to take edgeAttributes into account
    @Override
    public boolean equals(/*@Nullable*/ Object other)
    {
@@ -543,6 +542,5 @@ class GraphInformation
       {
          return x * 31 + y;
       }
-      // TODO override equals and hashcode for EdgeAttributes and Point
    }
 }
