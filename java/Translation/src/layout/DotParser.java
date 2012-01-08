@@ -18,6 +18,10 @@ import java.util.Scanner;
  * the dimensions and position of the nodes and the spline control points for
  * the edges. However, more information may be added at a later date.
  * <p>
+ * Spline control points preceded by an 'e' or an 's' are NOT included in the
+ * returned layout information. Points of that kind define the location of the
+ * arrows on an edge.
+ * <p>
  * This parser is very brittle, and makes little attempt to account for
  * variations in input. It attempts to match Graphviz's output, which is a
  * subset of legal DOT. Therefore, some legal DOT may be rejected simply
