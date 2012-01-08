@@ -146,7 +146,7 @@ public class BoardLayout
       Double yOffset = null;
 
       // the allowed variation for the x and y offsets between loop iterations.
-      final double epsilon = 0.000001;
+      final double epsilon = 0.001;
 
       for (Chute c : b.getEdges())
       {
@@ -171,7 +171,7 @@ public class BoardLayout
                yOffset = currentYOffset;
 
             ensure(Math.abs(xOffset - currentXOffset) < epsilon);
-            ensure(Math.abs(xOffset - currentXOffset) < epsilon);
+            ensure(Math.abs(yOffset - currentYOffset) < epsilon);
          }
 
          GraphInformation.EdgeAttributes edgeAttrs; 
