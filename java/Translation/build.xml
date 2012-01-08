@@ -85,6 +85,7 @@
   </target>
 
   <target name="test.layout">
+    <copy file="${test}/layout/levelWorld.expected.xml" todir="${bin}/layout"/>
     <junit fork="yes" haltonfailure="yes" dir="${bin}/layout">
       <test name="layout.SpecificationTests"/>
       <test name="layout.ImplementationTests"/>
