@@ -1,3 +1,5 @@
+.project
+.classpath
 java/.metadata/
 java/Translation/bin/
 java/Translation/doc/
@@ -7,3 +9,4 @@ java/Translation/check-nullness
 java/Translation/javadoc
 java/DO_NOT_DELETE_Observation_Translation
 java/DO_NOT_DELETE_Speculation_Translation
+bin/
