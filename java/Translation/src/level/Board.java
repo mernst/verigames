@@ -33,8 +33,8 @@ public class Board extends Graph<Intersection, Chute>
 {
    private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
-   /*@LazyNonNull*/ Intersection incomingNode;
-   /*@LazyNonNull*/ Intersection outgoingNode;
+   private /*@LazyNonNull*/ Intersection incomingNode;
+   private /*@LazyNonNull*/ Intersection outgoingNode;
    
    private final MultiBiMap<String, Chute> nameToChutes;
    
