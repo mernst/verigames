@@ -62,8 +62,9 @@ public class Chute extends graph.Edge<Intersection>
       this.narrow = false;
       this.pinch = false;
       
-      this.UID = nextUID;
+      this.UID = Chute.nextUID;
       Chute.nextUID += 1;
+
       this.checkRep();
    }
    
