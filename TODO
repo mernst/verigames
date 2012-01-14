@@ -1,3 +1,18 @@
+Add Map KeyFor data to Pipe Jam
+   - Update DTD
+   - Update object model
+
+--------------------------------------------------------------------------------
+
+Add representation for buzzsaw and info string containing location of element in
+source
+
+--------------------------------------------------------------------------------
+
+Add XML reading utility -- bring in XML library (XOM?)
+
+--------------------------------------------------------------------------------
+
 Change Intersection layout API to be more consistent with Chute's?
 
 --------------------------------------------------------------------------------
@@ -65,7 +80,3 @@ not (generally) include all the fields of that class as input and output pipes
 
 To do this, just allow empty ports -- come up with some mechanic so that safety
 is still offered (maybe it must explicitly be set to null?)
-
---------------------------------------------------------------------------------
-
-Add Map KeyFor data to Pipe Jam
