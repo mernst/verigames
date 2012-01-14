@@ -14,7 +14,7 @@ package level;
 
 public class Subnetwork extends Intersection
 {
-   private final String name;
+   private final String subnetworkName;
    
    /**
     * Creates a new {@link Intersection} with {@link Intersection.Kind Kind}
@@ -27,7 +27,7 @@ public class Subnetwork extends Intersection
    protected Subnetwork(String methodName)
    {
       super(Kind.SUBNETWORK);
-      name = methodName;
+      subnetworkName = methodName;
    }
    
    /**
@@ -65,6 +65,6 @@ public class Subnetwork extends Intersection
     */
    public String getSubnetworkName()
    {
-      return name;
+      return subnetworkName;
    }
 }
