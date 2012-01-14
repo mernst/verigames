@@ -85,7 +85,7 @@ public class Level
 
       /*
        * If this is inactive, all chutes contained in sets contained in
-       * linkedEdgeClasses must also be contained contained by some Board in
+       * linkedEdgeClasses must also be contained by some Board in
        * boardNames.values()
        */
       if (!this.isActive())
