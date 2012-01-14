@@ -48,13 +48,11 @@ public class Intersection extends graph.Node<Chute>
       /** Represents a split due to testing for null */
       NULL_TEST(1, 2),
       /**
-       * Represents a white (not null) ball being dropped into the top of the
-       * exit chute
+       * Represents a white (not null) ball being dropped into the top a chute.
        */
       START_WHITE_BALL(0, 1),
       /**
-       * Represents a black (null) ball being dropped into the top of the exit
-       * chute
+       * Represents a black (null) ball being dropped into the top of a chute.
        */
       START_BLACK_BALL(0, 1),
       /** Represents a chute with no ball dropping into it */
