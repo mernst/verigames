@@ -14,10 +14,6 @@ import java.util.List;
  * Implements eternal equality because it is mutable, but must be used in
  * {@code Collection}s<br/>
  * <br/>
- * Specification Field: {@code name} : {@code @Nullable String}
- * // The name of the variable corresponding to this chute. {@code null} if this
- * chute has no name<br/>
- * <br/>
  * Specification Field: {@code pinch} : {@code boolean} // {@code true} iff
  * there is a pinch-point in this chute segment<br/>
  * {@code false} by default.<br/>
