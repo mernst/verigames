@@ -185,6 +185,7 @@ public class Chute extends graph.Edge<Intersection>
     * modified after object creation in order to maintain the property that no
     * two {@code Chute}s have the same UID.
     */
+   // TODO explicitly document which information is and is not copied.
    public Chute copy()
    {
       Chute copy = new Chute();
