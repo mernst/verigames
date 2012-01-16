@@ -63,7 +63,7 @@ class GraphvizRunner
       
       outputBoard(b, process.getOutputStream());
       
-      GraphInformation info = parseDot(process.getInputStream());
+      String output = getOutput(process.getInputStream());
 
       // Waits for the dot process to exit and checks its exit value
       int exitValue;
@@ -79,7 +79,7 @@ class GraphvizRunner
       if (exitValue != 0)
          throw new RuntimeException("dot exited abnormally: exit code " + exitValue);
       
-      return info;
+      return DotParser.parse(output);
    }
    
    /**
@@ -101,7 +101,7 @@ class GraphvizRunner
     * Parses the text from {@code is} using {@code DotParser} and outputs the
     * results.
     */
-   private GraphInformation parseDot(InputStream is)
+   private String getOutput(InputStream is)
    {
       StringBuilder processOutput = new StringBuilder();
       
@@ -111,6 +111,6 @@ class GraphvizRunner
       // Scanner closes its underlying InputStream when closed
       in.close();
       
-      return DotParser.parse(processOutput.toString());
+      return processOutput.toString();
    }
 }
