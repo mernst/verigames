@@ -20,12 +20,14 @@ import java.util.Set;
  * <p>
  * Specification Field: {@code incomingNode} -- {@link Intersection}
  * // the node representing the top of the board, where all the incoming chutes
- * enter
+ * enter. {@code Intersections} of {@code Kind} can be the starting point for an
+ * arbitrary number of chutes.
  * <p>
  * Specification Field: {@code outgoingNode} -- {@link Intersection}
  * // the node representing the bottom of the board, where all the outgoing
- * chutes exit
- * 
+ * chutes exit. {@code Intersections} of {@code Kind} can be the starting point
+ * for an arbitrary number of chutes.
+ *
  * @author Nathaniel Mote
  */
 
