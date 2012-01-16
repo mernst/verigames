@@ -2,7 +2,12 @@
  * Provides data structures for programmatically creating levels for Pipe Jam.
  *
  * <h4>Expected Use:</h4>
- *
+ * The expected use follows. The following model for translation is suited for a
+ * line-by-line translation fo the code into the game. However, if a different
+ * translation strategy is used, this model may not be ideal, and others may be
+ * considered. For example, it may make sense to remove the one-to-one relation
+ * between {@code Board}s and Java methods.
+ * <p>
  * A {@link level.World World} represents a single game for Pipe Jam. No two
  * Worlds can be dependent on each other; any two worlds can be solved in
  * isolation. A {@code World} represents, typically, one Java project. 
