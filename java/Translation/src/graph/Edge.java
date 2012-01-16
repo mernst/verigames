@@ -26,7 +26,6 @@ import checkers.nullness.quals.AssertNonNullAfter;
  * The type of nodes that {@code this} can attach to.
  * @author Nathaniel Mote
  */
-// TODO change "underConstruction" to something else
 public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
    /**
