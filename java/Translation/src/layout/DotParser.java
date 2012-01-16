@@ -487,10 +487,14 @@ class DotParser
     */
    private static int parseDimension(String dimensionStr) throws IllegalLineException
    {
-      // The width and height attributes take the form width=ww.ww
+      // The width and height attributes take the form width=ww.ww or
+      // width="ww.ww"
       //
       // Graphviz gives them in inches, but they must be converted to
       // hundredths of points (1 inch = 72 points = 7200 hundredths of points)
+
+      // If the string contains quotes, strip them.
+      dimensionStr = dimensionStr.replaceAll("\"", "");
 
       // a BigDecimal is used instead of a double so that there can be no loss
       // of precision
@@ -501,11 +505,11 @@ class DotParser
       }
       catch (ArrayIndexOutOfBoundsException e)
       {
-         throw new IllegalLineException("Poorly formed attribute:" + dimensionStr, e);
+         throw new IllegalLineException("Poorly formed attribute: " + dimensionStr, e);
       }
       catch (NumberFormatException e)
       {
-         throw new IllegalLineException("Poorly formed attribute:" + dimensionStr, e);
+         throw new IllegalLineException("Poorly formed attribute: " + dimensionStr, e);
       }
 
       BigDecimal dimension = dimInches.multiply(new BigDecimal(7200));
