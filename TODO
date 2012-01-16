@@ -9,7 +9,7 @@ source
 
 --------------------------------------------------------------------------------
 
-Add XML reading utility -- bring in XML library (XOM?)
+Add XML parsing capability -- bring in XML library (XOM?)
 
 --------------------------------------------------------------------------------
 
@@ -31,12 +31,8 @@ B-spline and/or pulling in a third party library
 
 --------------------------------------------------------------------------------
 
-Change the word "active" to something more descriptive, like
-"underConstruction," and better document when "inactive" or "constructed"
-objects are required.
-
-new name for active? "mutable" "underConstruction"
-deactivate would be "makeImmutable" "finishConstruction"
+Change isActive() to underConstruction()
+and deactivate() to finishConstruction()
 
 --------------------------------------------------------------------------------
 
