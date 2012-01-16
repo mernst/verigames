@@ -10,7 +10,7 @@ import java.util.Set;
  * A mutable graph structure capable of storing data in both the edges and the
  * nodes. It keeps track of the specific node ports to which edges attach.
  * <p>
- * Once {@code deactivate()} is called, its structure becomes immutable, though
+ * Once {@code finishConstruction()} is called, its structure becomes immutable, though
  * the data that the nodes and edges contain may still mutate in such a way that
  * they do not change the structure of the {@code Graph}.
  * <p>
@@ -19,8 +19,8 @@ import java.util.Set;
  * Specification Field: {@code edges} : {@code Set<EdgeType>}
  * // the set of edges contained in {@code this}
  * <p>
- * Specification Field: {@code active} : {@code boolean} // {@code true} iff
- * {@code this} can still be modified. Once {@code active} is set to
+ * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
+ * {@code this} can still be modified. Once {@code underConstruction} is set to
  * {@code false}, {@code this} becomes immutable.
  * 
  * @param <NodeType>
@@ -35,10 +35,10 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
 {
    private Set<NodeType> nodes;
    private Set<EdgeType> edges;
-   private boolean active = true;
+   private boolean underConstruction = true;
 
    /**
-    * Constructs a new, active {@code Graph} with no nodes or edges.
+    * Constructs a new, underConstruction {@code Graph} with no nodes or edges.
     */
    public Graph()
    {
@@ -66,8 +66,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       // for all n in nodes; e in edges:
       // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
       // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
-      // this.isActive() == e.isActive()
-      // this.isActive() == n.isActive()
+      // this.underConstruction() == e.underConstruction()
+      // this.underConstruction() == n.underConstruction()
       for (EdgeType e : edges)
       {
          NodeType n = e.getStart();
@@ -82,8 +82,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
          // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
          ensure(n.getInput(e.getEndPort()) == e);
 
-         // this.isActive() == e.isActive()
-         ensure(this.isActive() == e.isActive());
+         // this.underConstruction() == e.underConstruction()
+         ensure(this.underConstruction() == e.underConstruction());
       }
       
       for (NodeType n : nodes)
@@ -108,8 +108,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
             ensure(e.getEnd() == n);
          }
 
-         // this.isActive() == n.isActive()
-         ensure(this.isActive() == n.isActive());
+         // this.underConstruction() == n.underConstruction()
+         ensure(this.underConstruction() == n.underConstruction());
       }
    }
 
@@ -117,7 +117,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * Adds {@code node} to {@code this}.<br/>
     * <br/>
     * Requires:<br/>
-    * - {@link #isActive()}<br/>
+    * - {@link #underConstruction()}<br/>
     * - {@code node} can be added to {@code this}. This implementation allows
     * any node to be added, but subclasses are free to enforce arbitrary
     * restrictions on nodes to be added.<br/>
@@ -125,15 +125,15 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * Modifies: {@code this}
     * 
     * @param node
-    * The node to add. Must be active, must not be contained in {@code this},
+    * The node to add. Must be underConstruction, must not be contained in {@code this},
     * and must implement eternal equality.
     */
    public void addNode(NodeType node)
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on an inactive Graph");
-      if (!node.isActive())
-         throw new IllegalStateException("Inactive node added to Graph");
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on an constructed Graph");
+      if (!node.underConstruction())
+         throw new IllegalStateException("Fully constructed node added to Graph");
       
       if (this.contains(node))
          throw new IllegalArgumentException(
@@ -151,10 +151,10 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * new connections.<br/>
     * <br/>
     * Requires:<br/>
-    * - {@link #isActive()}<br/>
+    * - {@link #underConstruction()}<br/>
     * 
     * @param start
-    * The node at which the edge will start. Must be active, and must be
+    * The node at which the edge will start. Must be underConstruction, and must be
     * contained in {@code this}.
     * @param startPort
     * The port at which the added edge will start. The output port of this
@@ -162,7 +162,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * {@link Node} enforces no further restrictions on what ports are valid, but
     * subclasses may.
     * @param end
-    * The node at which the edge will end. Must be active, and must be contained
+    * The node at which the edge will end. Must be underConstruction, and must be contained
     * in {@code this}.
     * @param endPort
     * The port at which the added edge will end. The input port of this number
@@ -170,7 +170,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     * enforces no further restrictions on what ports are valid, but subclasses
     * may.
     * @param edge
-    * The edge to add. Must be active, have no start or end nodes, and must not
+    * The edge to add. Must be underConstruction, have no start or end nodes, and must not
     * be contained in {@code this}. This implementation enforces no further
     * restrictions on what edges can be added or what nodes they can be
     * connected to, but subclasses may.
@@ -178,14 +178,14 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    public void addEdge(NodeType start, int startPort, NodeType end, int endPort,
          EdgeType edge)
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on an inactive Graph");
-      if (!start.isActive())
-         throw new IllegalArgumentException("Inactive start node " + start);
-      if (!end.isActive())
-         throw new IllegalArgumentException("Inactive end node " + end);
-      if (!edge.isActive())
-         throw new IllegalArgumentException("Inactive edge " + edge);
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on an constructed Graph");
+      if (!start.underConstruction())
+         throw new IllegalArgumentException("Fully constructed start node " + start);
+      if (!end.underConstruction())
+         throw new IllegalArgumentException("Fully constructed end node " + end);
+      if (!edge.underConstruction())
+         throw new IllegalArgumentException("Fully constructed edge " + edge);
       
       if (!this.contains(start))
          throw new IllegalArgumentException(
@@ -285,29 +285,29 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    }
 
    /**
-    * Returns {@code active}
+    * Returns {@code underConstruction}
     */
-   public boolean isActive()
+   public boolean underConstruction()
    {
-      return active;
+      return underConstruction;
    }
 
    /**
-    * Sets active to {@code false}<br/>
+    * Sets underConstruction to {@code false}<br/>
     * <br/>
     * Requires:<br/>
     * For all nodes, there are no empty ports. That is, for the highest filled
     * port (for both inputs and outputs), there are no empty ports below it.<br/>
     */
-   public void deactivate()
+   public void finishConstruction()
    {
-      if (active)
+      if (underConstruction)
       {
-         active = false;
+         underConstruction = false;
          for (NodeType i : nodes)
-            i.deactivate();
+            i.finishConstruction();
          for (EdgeType c : edges)
-            c.deactivate();
+            c.finishConstruction();
       }
       checkRep();
    }

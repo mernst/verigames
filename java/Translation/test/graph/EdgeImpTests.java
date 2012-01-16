@@ -43,7 +43,7 @@ public class EdgeImpTests
       Throwable cause = null;
       try
       {
-         invokeMethod(edge, "deactivate");
+         invokeMethod(edge, "finishConstruction");
       }
       catch (InvocationTargetException e)
       {

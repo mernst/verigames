@@ -5,7 +5,8 @@ import static utilities.Misc.ensure;
 import java.util.TreeMap;
 
 /**
- * An intersection between {@link Chute}s. Mutable until deactivated
+ * An intersection between {@link Chute}s. Mutable until construction is
+ * finished.
  * <p>
  * Uses eternal equality so that it can be used in {@code Collection}s while
  * maintaining mutability.
@@ -154,11 +155,11 @@ public class Intersection extends graph.Node<Chute>
    /*
     * Representation Invariant:
     * 
-    * When active, both the highest port number plus one and the number of used
+    * When underConstruction, both the highest port number plus one and the number of used
     * input/output ports can be no greater than the value returned by
     * getNumberOfInputPorts() and getNumberOfOutputPorts().
     * 
-    * When inactive, both the highest port number plus one and the number of
+    * When constructed, both the highest port number plus one and the number of
     * used input/output ports must be exactly equal to the value returned by
     * getNumberOf____Ports(),
     */
@@ -187,7 +188,7 @@ public class Intersection extends graph.Node<Chute>
       int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
       int maxOutPorts = outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1;
       
-      if (isActive())
+      if (underConstruction())
       {
          /*
           * Ensures that both the highest port number plus one and the number of

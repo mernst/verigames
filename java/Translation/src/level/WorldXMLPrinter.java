@@ -71,9 +71,9 @@ public class WorldXMLPrinter extends Printer<World, Void>
          out.println("  <edge-set>");
          for (Chute c : set)
          {
-            if (c.isActive())
+            if (c.underConstruction())
                throw new IllegalStateException(
-                     "outputlinkedEdgeClasses called when linkedEdgeClasses contains active Chute");
+                     "outputlinkedEdgeClasses called when linkedEdgeClasses contains underConstruction Chute");
             out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
             alreadyPrintedEdges.add(c);
          }
@@ -90,9 +90,9 @@ public class WorldXMLPrinter extends Printer<World, Void>
             if (!alreadyPrintedEdges.contains(c))
             {
                out.println("  <edge-set>");
-               if (c.isActive())
+               if (c.underConstruction())
                   throw new IllegalStateException(
-                        "outputlinkedEdgeClasses called when linkedEdgeClasses contains active Chute");
+                        "outputlinkedEdgeClasses called when linkedEdgeClasses contains underConstruction Chute");
                out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
                out.println("  </edge-set>");
             }
@@ -117,8 +117,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
          
          for (Intersection node : board.getNodes())
          {
-            if (node.isActive())
-               throw new IllegalStateException("active Intersection in Level while printing XML");
+            if (node.underConstruction())
+               throw new IllegalStateException("underConstruction Intersection in Level while printing XML");
             
             out.print("   <node kind=\"" + node.getIntersectionKind()+ "\"");
             if (node.getIntersectionKind() == Kind.SUBNETWORK)
@@ -161,8 +161,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
          
          for (Chute edge : board.getEdges())
          {
-            if (edge.isActive())
-               throw new IllegalStateException("active Chute in Level while printing XML");
+            if (edge.underConstruction())
+               throw new IllegalStateException("underConstruction Chute in Level while printing XML");
             
             String edgeName = null;
             {

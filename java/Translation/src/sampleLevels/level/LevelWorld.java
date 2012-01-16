@@ -15,7 +15,7 @@ public class LevelWorld
       
       for (Map.Entry<String, Level> e : getLevels().entrySet())
       {
-         e.getValue().deactivate();
+         e.getValue().finishConstruction();
          levelWorld.addLevel(e.getKey(), e.getValue());
       }
       

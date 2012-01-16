@@ -47,13 +47,13 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * {@inheritDoc}
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     */
    @Override
    public void print(Board b, PrintStream out, Void data)
    {
-      if (b.isActive())
-         throw new IllegalArgumentException("b.isActive()");
+      if (b.underConstruction())
+         throw new IllegalArgumentException("b.underConstruction()");
 
       this.isDigraph = isDigraph(b);
       
@@ -64,7 +64,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * {@inheritDoc}
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     */
    @Override
    protected void printIntro(Board b, PrintStream out, Void data)
@@ -111,7 +111,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * {@inheritDoc}
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     */
    @Override
    protected void printMiddle(Board b, PrintStream out, Void data)
@@ -139,7 +139,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * Prints {@code b}'s edges to {@code out} in the DOT language
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     * @param out
     */
    private void printEdges(Board b, PrintStream out)
@@ -154,7 +154,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
     * {@inheritDoc}
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     */
    @Override
    protected void printOutro(Board b, PrintStream out, Void data)

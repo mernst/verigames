@@ -17,21 +17,21 @@ import checkers.nullness.quals.AssertNonNullAfter;
  * Specification Field: {@code endPort} : integer // The port on {@code end} to
  * which {@code this} attaches
  * <p>
- * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
  * {@code this} can be part of a {@link graph.Graph Graph} that is still under
- * construction. Once {@code active} is set to {@code false}, {@code this}
+ * construction. Once {@code underConstruction} is set to {@code false}, {@code this}
  * becomes immutable.
  * 
  * @param <NodeType>
  * The type of nodes that {@code this} can attach to.
  * @author Nathaniel Mote
  */
-// TODO change "active" to something else
+// TODO change "underConstruction" to something else
 public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
    /**
-    * Must be not null when an {@code Edge} is deactivated. Equivalently, if an
-    * {@code Edge} is not active, this field must be not null.
+    * Must be not null when {@code Edge} construction is finished. Equivalently,
+    * if an {@code Edge} is not underConstruction, this field must be not null.
     * <p>
     * {@code start==null} <--> {@code startPort==-1} <--> start has not been
     * initialized
@@ -39,8 +39,9 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    private /*@LazyNonNull*/ NodeType start;
 
    /**
-    * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
-    * {@code Edge} is not active, this field must not be -1.
+    * Must not be -1 when {@code Edge} construction is finished.  Equivalently,
+    * if an {@code Edge} is not underConstruction, this field must
+    * not be -1.
     * <p>
     * {@code start==null} <--> {@code startPort==-1} <--> start has not been
     * initialized
@@ -48,8 +49,8 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    private int startPort = -1;
 
    /**
-    * Must be not null when an {@code Edge} is deactivated. Equivalently, if an
-    * {@code Edge} is not active, this field must be not null.
+    * Must be not null when {@code Edge} construction is finished. Equivalently,
+    * if an {@code Edge} is not underConstruction, this field must be not null.
     * <p>
     * {@code end==null} <--> {@code endPort==-1} <--> end has not been
     * initialized
@@ -57,15 +58,15 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    private /*@LazyNonNull*/ NodeType end;
 
    /**
-    * Must not be -1 when an {@code Edge} is deactivated. Equivalently, if an
-    * {@code Edge} is not active, this field must not be -1.
+    * Must not be -1 when {@code Edge} construction is finished. Equivalently,
+    * if an {@code Edge} is not underConstruction, this field must not be -1.
     * <p>
     * {@code end==null} <--> {@code endPort==-1} <--> end has not been
     * initialized
     */
    private int endPort = -1;
 
-   private boolean active = true;
+   private boolean underConstruction = true;
    
    private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
@@ -86,10 +87,10 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       ensure((end == null) == (endPort == -1));
       
       /*
-       * If !active, start and end must be non-null, and startPort and endPort
+       * If !underConstruction, start and end must be non-null, and startPort and endPort
        * must not equal -1
        */
-      if (!active)
+      if (!underConstruction)
       {
          ensure(start != null);
          ensure(end != null);
@@ -172,8 +173,8 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    @AssertNonNullAfter({ "start" })
    protected void setStart(NodeType startNode, int port)
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on constructed Edge");
       if (startNode == null)
          throw new IllegalArgumentException("node is null");
       
@@ -198,8 +199,8 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    @AssertNonNullAfter({ "end" })
    protected void setEnd(NodeType endNode, int port)
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on constructed Edge");
       if (endNode == null)
          throw new IllegalArgumentException("node is null");
       
@@ -209,29 +210,29 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    }
    
    /**
-    * Returns {@code active}
+    * Returns {@code underConstruction}
     */
-   public boolean isActive()
+   public boolean underConstruction()
    {
-      return active;
+      return underConstruction;
    }
    
    /**
-    * Sets {@code active} to {@code false}<br/>
+    * Sets {@code underConstruction} to {@code false}<br/>
     * <br/>
     * Requires:<br/>
-    * - {@code this.isActive()}<br/>
+    * - {@code this.underConstruction()}<br/>
     * - start and end nodes exist
     */
-   protected void deactivate()
+   protected void finishConstruction()
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Edge");
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on constructed Edge");
       if (getStart() == null)
          throw new IllegalStateException("No start node");
       if (getEnd() == null)
          throw new IllegalStateException("No end node");
-      active = false;
+      underConstruction = false;
       checkRep();
    }
 

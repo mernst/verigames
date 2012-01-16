@@ -80,7 +80,7 @@ public class LevelXMLTests
       
       l.makeLinked(c, c2, c3);
 
-      l.deactivate();
+      l.finishConstruction();
       
       World w = new World();
       w.addLevel("TestClass", l);

@@ -37,7 +37,7 @@ public class ExceptionWorld
       b.addEdge(start, 0, merge, 1, right);
 
       l.addBoard("Placeholder", b);
-      l.deactivate();
+      l.finishConstruction();
 
       World w = new World();
       w.addLevel("Placeholder", l);

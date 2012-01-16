@@ -17,9 +17,9 @@ import java.util.TreeMap;
  * Specification Field: {@code outputs} : map from nonnegative integer to edge
  * // mapping from output port number to the edge attached at that port.
  * <p>
- * Specification Field: {@code active} : {@code boolean} // {@code true} iff
+ * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
  * {@code this} can be part of a {@link graph.Graph Graph} that is still under
- * construction. Once {@code active} is set to {@code false}, {@code this}
+ * construction. Once {@code underConstruction} is set to {@code false}, {@code this}
  * becomes immutable.
  * <p>
  * Subclasses may enforce restrictions on the connections made to {@link Edge}s.
@@ -34,7 +34,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
    
    // Elements are Nullable so that edges can be added in any order. Empty ports
-   // are represented by null. Once the Node is deactivated, neither list can
+   // are represented by null. Once underConstruction is false, neither list can
    // contain null.
    // TODO remove warning suppression after JDK is properly annotated
    @SuppressWarnings("nullness")
@@ -42,7 +42,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    @SuppressWarnings("nullness")
    private List</* @Nullable */EdgeType> outputs;
    
-   private boolean active = true;
+   private boolean underConstruction = true;
    
    /*
     * Representation Invariant:
@@ -53,7 +53,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * 
     * In other words, the last element in inputs and outputs must not be null
     * 
-    * - If !active:
+    * - If !underConstruction:
     *    - no edge in inputs or outputs may be null
     * 
     */
@@ -68,7 +68,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       if (!CHECK_REP_ENABLED)
          return;
       
-      if (active)
+      if (underConstruction)
       {
          ensure(isLastEltNonNull(inputs));
          ensure(isLastEltNonNull(outputs));
@@ -113,7 +113,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Adds the given edge to {@code inputs} with the given port number.<br/>
     * <br/>
     * Requires:<br/>
-    * - {@code this.isActive()}<br/>
+    * - {@code this.underConstruction()}<br/>
     * <br/>
     * Modifies: {@code this}
     * <p>
@@ -131,9 +131,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void setInput(EdgeType input, int port)
    {
-      if (!active)
+      if (!underConstruction)
          throw new IllegalStateException(
-               "Mutation attempted on inactive Node");
+               "Mutation attempted on constructed Node");
 
       // TODO check that port is nonnegative
       if (getInput(port) != null)
@@ -149,7 +149,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     * Adds the given edge to {@code outputs} with the given port number.<br/>
     * <br/>
     * Requires:<br/>
-    * - {@code this.isActive()}<br/>
+    * - {@code this.underConstruction()}<br/>
     * <br/>
     * Modifies: {@code this}
     * <p>
@@ -167,9 +167,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     */
    protected void setOutput(EdgeType output, int port)
    {
-      if (!active)
+      if (!underConstruction)
          throw new IllegalStateException(
-               "Mutation attempted on inactive Node");
+               "Mutation attempted on constructed Node");
 
       // TODO check that port is nonnegative
       if (getOutput(port) != null)
@@ -286,24 +286,25 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    }
    
    /**
-    * Returns {@code active}
+    * Returns {@code underConstruction}
     */
-   public boolean isActive()
+   public boolean underConstruction()
    {
-      return active;
+      return underConstruction;
    }
    
    /**
-    * Sets {@code active} to {@code false}<br/>
+    * Sets {@code underConstruction} to {@code false}<br/>
     * <br/>
     * Requires:<br/>
-    * - {@code this.isActive()}<br/>
+    * - {@code this.underConstruction()}<br/>
     * - There are no empty ports. That is, for the highest filled port (for both
     * inputs and outputs), there are no empty ports below it.<br/>
     * - Other implementations may enforce additional restrictions on the number
-    * of input or output ports that must be filled when deactivated.
+    *   of input or output ports that must be filled when construction is
+    *   finished.
     */
-   protected void deactivate()
+   protected void finishConstruction()
    {
       for (int i = 0; i < inputs.size(); i++)
       {
@@ -319,9 +320,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
             throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null");
       }
       
-      if (!active)
-         throw new IllegalStateException("Deactivation attempted on already inactive Node " + this);
-      active = false;
+      if (!underConstruction)
+         throw new IllegalStateException("Deactivation attempted on already constructed Node " + this);
+      underConstruction = false;
       checkRep();
    }
 

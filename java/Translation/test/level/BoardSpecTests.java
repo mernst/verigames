@@ -100,9 +100,9 @@ public class BoardSpecTests
    }
    
    @Test
-   public void deactivateTest1()
+   public void finishConstructionTest1()
    {
-      // TODO make sure Board behaves when deactivated
+      // TODO make sure Board behaves when construction is finished
    }
    
 }

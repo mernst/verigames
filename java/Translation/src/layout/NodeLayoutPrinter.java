@@ -153,7 +153,7 @@ class NodeLayoutPrinter extends GraphvizPrinter
     * bottom.
     * 
     * @param b
-    * {@link level.Board#isActive() b.isActive()} must be false.
+    * {@link level.Board#underConstruction() b.underConstruction()} must be false.
     * @param out
     */
    private static void printInvisibleEdges(Board b, PrintStream out)

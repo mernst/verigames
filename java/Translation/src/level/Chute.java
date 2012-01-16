@@ -8,8 +8,8 @@ import java.util.List;
 
 
 /**
- * A mutable chute segment for use in a {@link Board}. Once {@link #isActive()
- * this.isActive()} is false, {@code this} is immutable.<br/>
+ * A mutable chute segment for use in a {@link Board}. Once {@link #underConstruction()
+ * this.underConstruction()} is false, {@code this} is immutable.<br/>
  * <br/>
  * Implements eternal equality because it is mutable, but must be used in
  * {@code Collection}s<br/>
@@ -81,7 +81,7 @@ public class Chute extends graph.Edge<Intersection>
    /**
     * Sets {@code pinch} to the value of the parameter<br/>
     * <br/>
-    * Requires: {@link #isActive() this.isActive()}<br/>
+    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
     * <br/>
     * Modifies: {@code this}
     * 
@@ -89,8 +89,8 @@ public class Chute extends graph.Edge<Intersection>
     */
    public void setPinched(boolean pinched)
    {
-      if (!isActive())
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      if (!underConstruction())
+         throw new IllegalStateException("Mutation attempted on constructed Chute");
       this.pinch = pinched;
       checkRep();
    }
@@ -107,7 +107,7 @@ public class Chute extends graph.Edge<Intersection>
     * Sets the specification field {@code narrow} to the value of the parameter
     * {@code narrow}<br/>
     * <br/>
-    * Requires: {@link #isActive() this.isActive()}<br/>
+    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
     * <br/>
     * Modifies: {@code this}
     * 
@@ -115,8 +115,8 @@ public class Chute extends graph.Edge<Intersection>
     */
    public void setNarrow(boolean narrow)
    {
-      if (!isActive())
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      if (!underConstruction())
+         throw new IllegalStateException("Mutation attempted on constructed Chute");
       this.narrow = narrow;
       checkRep();
    }
@@ -133,7 +133,7 @@ public class Chute extends graph.Edge<Intersection>
     * Sets the specification field {@code editable} to the value of the
     * parameter {@code editable}<br/>
     * <br/>
-    * Requires: {@link #isActive() this.isActive()}<br/>
+    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
     * <br/>
     * Modifies: {@code this}
     * 
@@ -141,8 +141,8 @@ public class Chute extends graph.Edge<Intersection>
     */
    public void setEditable(boolean editable)
    {
-      if (!isActive())
-         throw new IllegalStateException("Mutation attempted on inactive Chute");
+      if (!underConstruction())
+         throw new IllegalStateException("Mutation attempted on constructed Chute");
       
       this.editable = editable;
       checkRep();

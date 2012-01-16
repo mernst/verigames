@@ -91,8 +91,8 @@ public class Board extends Graph<Intersection, Chute>
       // outgoingNode != null <--> nodes contains outgoingNode
       ensure((outgoingNode != null) == nodes.contains(outgoingNode));
       
-      // if this is inactive
-      if (!this.isActive())
+      // if this is constructed
+      if (!this.underConstruction())
       {
          // incomingNode and outgoingNode must be non-null
          ensure(incomingNode != null);

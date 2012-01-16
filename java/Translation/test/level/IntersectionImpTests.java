@@ -90,17 +90,17 @@ public class IntersectionImpTests
       invokeIntersectionMethod(i, "setOutput", new Object[] {
             new Chute(), 0 });
       
-      // i.deactivate();
-      invokeIntersectionMethod(i, "deactivate", new Object[] {});
+      // i.finishConstruction();
+      invokeIntersectionMethod(i, "finishConstruction", new Object[] {});
       
    }
    
    @Test(expected = IllegalStateException.class) public void testDeactivate() throws Throwable
    {
-      // i.deactivate() (second call should fail because it's already inactive)
+      // i.finishConstruction() (second call should fail because it's already inactive)
       try
       {
-         invokeIntersectionMethod(i, "deactivate", new Object[]{});
+         invokeIntersectionMethod(i, "finishConstruction", new Object[]{});
       }
       catch (InvocationTargetException e)
       {

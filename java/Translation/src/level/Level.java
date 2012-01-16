@@ -35,8 +35,8 @@ import level.Intersection.Kind;
  * Specification Field: {@code boardNames} : {@code Map<String, Board>}
  * // maps the name of a method to its {@code Board}
  * <p>
- * Specification Field: {@code active} : {@code boolean} // {@code true} iff
- * {@code this} can still be modified. Once {@code active} is set to
+ * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
+ * {@code this} can still be modified. Once {@code underConstruction} is set to
  * {@code false}, {@code this} becomes immutable.
  * 
  * @author Nathaniel Mote
@@ -49,7 +49,7 @@ public class Level
    // TODO change String, if necessary, to whatever we end up using
    private Map<String, Board> boardNames;
    
-   private boolean active = true;
+   private boolean underConstruction = true;
    
    private static final boolean CHECK_REP_ENABLED = utilities.Misc.CHECK_REP_ENABLED;
    
@@ -84,11 +84,11 @@ public class Level
       }
 
       /*
-       * If this is inactive, all chutes contained in sets contained in
+       * If this is constructed, all chutes contained in sets contained in
        * linkedEdgeClasses must also be contained by some Board in
        * boardNames.values()
        */
-      if (!this.isActive())
+      if (!this.underConstruction())
       {
          Set<Chute> containedInBoards = new HashSet<Chute>();
          for (Board b : boardNames.values())
@@ -265,29 +265,29 @@ public class Level
    }
    
    /**
-    * Returns {@code active}
+    * Returns {@code underConstruction}
     */
-   public boolean isActive()
+   public boolean underConstruction()
    {
-      return active;
+      return underConstruction;
    }
    
    /**
-    * Sets {@code active} to {@code false}, deactivates all contained
-    * {@link Board}s<br/>
+    * Sets {@code underConstruction} to {@code false}, finishes construction on
+    * all contained {@link Board}s<br/>
     * <br/>
     * Requires:<br/>
-    * - {@link #isActive() this.isActive()}<br/>
-    * - all {@code Board}s in {@code boards} are in a state in which they can be
-    * deactivated
+    * - {@link #underConstruction() this.underConstruction()}<br/>
+    * - all {@code Board}s in {@code boards} are in a state in which they can
+    *   finish construction
     */
-   public void deactivate()
+   public void finishConstruction()
    {
-      if (!active)
-         throw new IllegalStateException("Mutation attempted on inactive Level");
-      active = false;
+      if (!underConstruction)
+         throw new IllegalStateException("Mutation attempted on constructed Level");
+      underConstruction = false;
       for (Board b : boardNames.values())
-         b.deactivate();
+         b.finishConstruction();
    }
 
    @Override

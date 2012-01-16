@@ -92,19 +92,19 @@ public class ChuteImpTests
                   Intersection.factory(Intersection.Kind.OUTGOING),
                   0 });
       
-      // c.deactivate();
-      invokeChuteMethod(c, "deactivate", new Object[] {});
+      // c.finishConstruction();
+      invokeChuteMethod(c, "finishConstruction", new Object[] {});
       
    }
    
-   @Test(expected = IllegalStateException.class) public void deactivateTest()
+   @Test(expected = IllegalStateException.class) public void finishConstructionTest()
          throws Throwable
    {
-      // c.deactivate() (calling it a second time should throw an
+      // c.finishConstruction() (calling it a second time should throw an
       // IllegalStateException)
       try
       {
-         invokeChuteMethod(c, "deactivate", new Object[] {});
+         invokeChuteMethod(c, "finishConstruction", new Object[] {});
       }
       catch (InvocationTargetException e)
       {

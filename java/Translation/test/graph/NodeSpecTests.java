@@ -16,7 +16,7 @@ import org.junit.Test;
 public class NodeSpecTests
 {
    /**
-    * Tests that Node.deactivate does not fail when called on a new Node
+    * Tests that Node.finishConstruction does not fail when called on a new Node
     * 
     * @throws InvocationTargetException
     */
@@ -24,11 +24,11 @@ public class NodeSpecTests
    public void testSimpleDeactivate() throws InvocationTargetException
    {
       Node<?> n = new ConcreteNode();
-      invokeMethod(n, "deactivate");
+      invokeMethod(n, "finishConstruction");
    }
    
    /**
-    * Tests that Node.deactivate does not fail when called on a Node with some
+    * Tests that Node.finishConstruction does not fail when called on a Node with some
     * ports filled
     * 
     * @throws InvocationTargetException
@@ -40,7 +40,7 @@ public class NodeSpecTests
       invokeMethod(n, "setInput", new ConcreteEdge(), 1);
       invokeMethod(n, "setInput", new ConcreteEdge(), 0);
       invokeMethod(n, "setOutput", new ConcreteEdge(), 0);
-      invokeMethod(n, "deactivate");
+      invokeMethod(n, "finishConstruction");
    }
    
    /**

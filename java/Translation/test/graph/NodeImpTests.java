@@ -12,7 +12,7 @@ public class NodeImpTests
 {
    
    /**
-    * Tests that deactivate fails when there are empty input ports with index
+    * Tests that finishConstruction fails when there are empty input ports with index
     * less than the highest one
     */
    @Test
@@ -22,7 +22,7 @@ public class NodeImpTests
    }
    
    /**
-    * Tests that deactivate fails when there are empty output ports with index
+    * Tests that finishConstruction fails when there are empty output ports with index
     * less than the highest one.
     * 
     * @throws InvocationTargetException
@@ -43,8 +43,8 @@ public class NodeImpTests
       boolean expectedExceptionThrown = false;
       try
       {
-         // n.deactivate();
-         invokeMethod(n, "deactivate");
+         // n.finishConstruction();
+         invokeMethod(n, "finishConstruction");
       }
       catch (InvocationTargetException e)
       {
