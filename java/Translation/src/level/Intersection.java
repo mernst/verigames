@@ -5,20 +5,51 @@ import static utilities.Misc.ensure;
 import java.util.TreeMap;
 
 /**
- * An intersection between chutes. Mutable until deactivated<br/>
- * <br/>
+ * An intersection between {@link Chute}s. Mutable until deactivated
+ * <p>
  * Uses eternal equality so that it can be used in {@code Collection}s while
- * maintaining mutability<br/>
- * <br/>
+ * maintaining mutability.
+ * <p>
+ * Most {@code Intersection}s simply serve to connect different {@code Chute}s,
+ * indicating a relationship between the types that the {@code Chute}s
+ * represent. However, some special {@code Intersection}s exist:
+ * <ul>
+ * <li>
+ * INCOMING: An INCOMING node is at the top of every {@link Board}. It serves as
+ * the starting point for the topmost {@code Chute}s in the {@code Board} that
+ * represent the types for fields and method parameters.
+ * </li>
+ * <li>
+ * OUTGOING: An OUTGOING node is at the bottom of every {@code Board}. It serves
+ * as the ending point for the bottommost {@code Chute}s in the {@code Board}
+ * that represent the types for fields and return values.
+ * </li>
+ * <li>
+ * SUBNETWORK: A SUBNETWORK node represents a method call. It is essentially a
+ * {@code Board} embedded within another {@code Board}.
+ * </li>
+ * <li>
+ * NULL_TEST: A NULL_TEST ndoe represents an if statement conditional on the
+ * nullness type of a variable. On one side of the branch, the variable is
+ * considered Nullable, and on the other, it is considered NonNull.
+ * </li>
+ * START_XXX_BALL and END: These are used to start and end chutes for the types
+ * of local variables. Local variables don't persist outside of the methods in
+ * which they are contained, so their chutes do not connect to the INCOMING and
+ * OUTGOING nodes. START_NO_BALL is used when a type exists, but nothing about
+ * it is known.
+ * </li>
+ * </ul>
+ * <p>
  * Specification Field: {@code kind} : {@link Intersection.Kind}
- * // represents which kind of {@code Intersection} {@code this} is<br/>
- * <br/>
+ * // represents which kind of {@code Intersection} {@code this} is.
+ * <p>
  * Specification Field: Layout Coordinate : (x: real, y:real) // The coordinates
  * at which {@code this} will be located when its containing {@link Board} is
- * laid out to be played.<br/>
- * <br/>
+ * laid out to be played.
+ * <p>
  * Specification Field: {@code UID} : integer // the unique identifier for this
- * {@code Intersection}
+ * {@code Intersection}.
  * 
  * @author Nathaniel Mote
  */
@@ -248,10 +279,10 @@ public class Intersection extends graph.Node<Chute>
          throw new IllegalArgumentException("Invalid Intersection Kind " + kind
                + " for this implementation");
       
-      intersectionKind = kind;
+      this.intersectionKind = kind;
       
-      UID = nextUID;
-      nextUID += 1;
+      this.UID = Intersection.nextUID;
+      Intersection.nextUID++;
       
       checkRep();
    }
