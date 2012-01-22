@@ -1,3 +1,12 @@
+Update documentation to indicate that Intersections can only be in a single
+board.
+
+--------------------------------------------------------------------------------
+
+Write better error messages across the board.
+
+--------------------------------------------------------------------------------
+
 Add Map KeyFor data to Pipe Jam
    - Update DTD
    - Update object model
