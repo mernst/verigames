@@ -41,6 +41,11 @@
  * <br/>
  * Likewise, the outgoing node should be the ending node for the chutes
  * representing the types of the fields and the return type.
+ * <p>
+ * Only chutes for the type of variables with scope extending outside of the
+ * method should be attached to incoming and outgoing nodes. Chutes representing
+ * the types of local variables should be started with a START_XXX_BALL node and
+ * ended with an END node.
  */
 
 package level;
