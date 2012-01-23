@@ -1,3 +1,8 @@
+Update DTD to reflect the fact that the relation from chutes to variables is not
+a function
+
+--------------------------------------------------------------------------------
+
 Add Map KeyFor data to Pipe Jam
    - Update DTD
    - Update object model
