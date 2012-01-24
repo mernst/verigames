@@ -1,5 +1,6 @@
 package level;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Set;
 import level.Intersection.Kind;
 import utilities.Pair;
 import utilities.Printer;
+
+import nu.xom.*;
 
 public class WorldXMLPrinter extends Printer<World, Void>
 {
@@ -28,56 +31,69 @@ public class WorldXMLPrinter extends Printer<World, Void>
    }
 
    @Override
-   protected void printIntro(World toPrint, PrintStream out, Void data)
-   {
-      out.println("<?xml version=\"1.0\"?>");
-      out.println("<!DOCTYPE world SYSTEM \"world.dtd\">");
-      out.println("<world>");
-   }
-
-   @Override
    protected void printMiddle(World toPrint, PrintStream out, Void data)
    {
+      Element worldElt = new Element("world");
+
       for (Map.Entry<String, Level> entry : toPrint.getLevels().entrySet())
       {
          String name = entry.getKey();
          Level level = entry.getValue();
-         printLevel(level, out, name);
+         worldElt.appendChild(constructLevel(level, name));
+      }
+
+      Document doc = new Document(worldElt);
+      DocType docType = new DocType("world", "world.dtd");
+      doc.insertChild(docType, 0);
+
+      try
+      {
+         Serializer s = new Serializer(out);
+         s.setLineSeparator("\n");
+         s.setIndent(1);
+         s.write(doc);
+      }
+      catch (IOException e)
+      {
+         // if this happens, it's fatal.
+         throw new RuntimeException(e);
       }
    }
 
-   @Override
-   protected void printOutro(World toPrint, PrintStream out, Void data)
+   private Element constructLevel(Level l, String name)
    {
-      out.println("</world>");
+      Element levelElt = new Element("level");
+
+      Attribute nameAttr = new Attribute("name", name);
+      levelElt.addAttribute(nameAttr);
+
+      levelElt.appendChild(constructLinkedEdges(l));
+      levelElt.appendChild(constructBoardsMap(l));
+
+      return levelElt;
    }
 
-   private void printLevel(Level l, PrintStream out, String name)
+   private Element constructLinkedEdges(Level l)
    {
-      out.println("<level name=\"" + name + "\">");
-      printLinkedEdges(l, out);
-      printBoardsMap(l, out);
-      out.println("</level>");
-   }
-
-   private void printLinkedEdges(Level l, PrintStream out)
-   {
-      out.println(" <linked-edges>");
+      Element edgesElt = new Element("linked-edges");
       
       // Output all linked edges explicitly listed in linkedEdgeClasses
       Set<Chute> alreadyPrintedEdges = new HashSet<Chute>();
       for (Set<Chute> set : l.linkedEdgeClasses())
       {
-         out.println("  <edge-set>");
+         Element setElt = new Element("edge-set");
          for (Chute c : set)
          {
             if (c.underConstruction())
                throw new IllegalStateException(
-                     "outputlinkedEdgeClasses called when linkedEdgeClasses contains underConstruction Chute");
-            out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
+                     "constructLinkedEdges called when linkedEdgeClasses contains underConstruction Chute");
+            Element edgeElt = new Element("edgeref");
+            edgeElt.addAttribute(new Attribute("id", "e" + c.getUID()));
+            setElt.appendChild(edgeElt);
+
             alreadyPrintedEdges.add(c);
          }
-         out.println("  </edge-set>");
+         edgesElt.appendChild(setElt);
       }
       
       // Output all remaining edges -- edges not listed are in equivalence
@@ -89,74 +105,101 @@ public class WorldXMLPrinter extends Printer<World, Void>
          {
             if (!alreadyPrintedEdges.contains(c))
             {
-               out.println("  <edge-set>");
+               Element setElt = new Element("edge-set");
                if (c.underConstruction())
                   throw new IllegalStateException(
-                        "outputlinkedEdgeClasses called when linkedEdgeClasses contains underConstruction Chute");
-               out.println("   <edgeref id=\"e" + c.getUID() + "\"/>");
-               out.println("  </edge-set>");
+                        "constructLinkedEdges called when linkedEdgeClasses contains underConstruction Chute");
+               Element edgeElt = new Element("edgeref");
+               edgeElt.addAttribute(new Attribute("id", "e" + c.getUID()));
+               setElt.appendChild(edgeElt);
+               edgesElt.appendChild(setElt);
             }
          }
       }
       
-      out.println(" </linked-edges>");
+      return edgesElt;
    }
 
-   private void printBoardsMap(Level l, PrintStream out)
+   private Element constructBoardsMap(Level l)
    {
       Map<String, Board> boardNames = l.boards();
       
-      out.println(" <boards>");
+      Element boardsElt = new Element("boards");
 
       for (Map.Entry<String, Board> entry : boardNames.entrySet())
       {
          String name = entry.getKey();
          Board board = entry.getValue();
 
-         out.println("  <board name=\"" + name + "\">");
+         Element boardElt = new Element("board");
+         boardElt.addAttribute(new Attribute("name", name));
          
          for (Intersection node : board.getNodes())
          {
             if (node.underConstruction())
                throw new IllegalStateException("underConstruction Intersection in Level while printing XML");
             
-            out.print("   <node kind=\"" + node.getIntersectionKind()+ "\"");
+            Element nodeElt = new Element("node");
+            nodeElt.addAttribute(new Attribute("kind", node.getIntersectionKind().toString()));
+
             if (node.getIntersectionKind() == Kind.SUBNETWORK)
             {
                if (node.isSubnetwork())
-                  out.print(" name=\"" + node.asSubnetwork().getSubnetworkName() + "\"");
+                  nodeElt.addAttribute(new Attribute("name", node.asSubnetwork().getSubnetworkName()));
                else
                   throw new RuntimeException("node " + node + " has kind subnetwork but isSubnetwork returns false");
             }
-            out.println(" id=\"n" + node.getUID() + "\">");
-            out.println("    <input>");
-            
-            Chute input = node.getInput(0);
-            for (int i = 0; input != null; input = node.getInput(++i))
-               out.println("     <port num=\"" + i + "\" edge=\"e"
-                     + input.getUID() + "\"/>");
-            
-            out.println("    </input>");
-            out.println("    <output>");
-            
-            Chute output = node.getOutput(0);
-            for (int i = 0; output != null; output = node.getOutput(++i))
-               out.println("     <port num=\"" + i + "\" edge=\"e"
-                     + output.getUID() + "\"/>");
-            
-            out.println("    </output>");
+            nodeElt.addAttribute(new Attribute("id", "n" + node.getUID()));
+
+            {
+               Element inputElt = new Element("input");
+
+               Chute input = node.getInput(0);
+               for (int i = 0; input != null; input = node.getInput(++i))
+               {
+                  Element portElt = new Element("port");
+                  portElt.addAttribute(new Attribute("num", Integer.toString(i)));
+                  portElt.addAttribute(new Attribute("edge", "e" + input.getUID()));
+                  inputElt.appendChild(portElt);
+               }
+
+               nodeElt.appendChild(inputElt);
+            }
+
+            {
+               Element outputElt = new Element("output");
+
+               Chute output = node.getOutput(0);
+               for (int i = 0; output != null; output = node.getOutput(++i))
+               {
+                  Element portElt = new Element("port");
+                  portElt.addAttribute(new Attribute("num", Integer.toString(i)));
+                  portElt.addAttribute(new Attribute("edge", "e" + Integer.toString(output.getUID())));
+                  outputElt.appendChild(portElt);
+               }
+
+               nodeElt.appendChild(outputElt);
+            }
             
             double x = node.getX();
             double y = node.getY();
             if (x >= 0 && y >= 0)
             {
-               out.println("<layout>");
-               out.printf("<x>%.5f</x>\n", x);
-               out.printf("<y>%.5f</y>\n", y);
-               out.println("</layout>");
+               Element layoutElt = new Element("layout");
+
+               Element xElt = new Element("x");
+               xElt.appendChild(String.format("%.5f", x));
+               layoutElt.appendChild(xElt);
+
+               Element yElt = new Element("y");
+               yElt.appendChild(String.format("%.5f", y));
+               layoutElt.appendChild(yElt);
+
+               nodeElt.appendChild(layoutElt);
             }
             
-            out.println("   </node>");
+            boardElt.appendChild(nodeElt);
+
          }
          
          for (Chute edge : board.getEdges())
@@ -170,46 +213,69 @@ public class WorldXMLPrinter extends Printer<World, Void>
                if (!names.isEmpty())
                   edgeName = names.iterator().next();
             }
+
+            Element edgeElt = new Element("edge");
+            {
+               edgeElt.addAttribute(new Attribute("var", (edgeName == null) ? "null" : edgeName));
+               edgeElt.addAttribute(new Attribute("pinch", Boolean.toString(edge.isPinched())));
+               edgeElt.addAttribute(new Attribute("width", edge.isNarrow() ? "narrow" : "wide"));
+               edgeElt.addAttribute(new Attribute("id", "e" + edge.getUID()));
+            }
             
-            out.println("   <edge var=\"" + edgeName + "\" pinch=\""
-                  + edge.isPinched() + "\" width=\""
-                  + (edge.isNarrow() ? "narrow" : "wide") + "\" id=\"e"
-                  + edge.getUID() + "\">");
-            
-            out.println("    <from>");
-            // TODO do something about this nullness warning
-            out.println("     <noderef id=\"n" + edge.getStart().getUID()
-                  + "\" port=\"" + edge.getStartPort() + "\"/>");
-            out.println("    </from>");
-            out.println("    <to>");
-            // TODO do something about this nullness warning
-            out.println("     <noderef id=\"n" + edge.getEnd().getUID()
-                  + "\" port=\"" + edge.getEndPort() + "\"/>");
-            out.println("    </to>");
+            {
+               Element fromElt = new Element("from");
+
+               Element noderefElt = new Element("noderef");
+               // TODO do something about this nullness warning
+               noderefElt.addAttribute(new Attribute("id", "n" + edge.getStart().getUID()));
+               noderefElt.addAttribute(new Attribute("port", Integer.toString(edge.getStartPort())));
+               fromElt.appendChild(noderefElt);
+
+               edgeElt.appendChild(fromElt);
+            }
+
+            {
+               Element toElt = new Element("to");
+
+               Element noderefElt = new Element("noderef");
+               // TODO do something about this nullness warning
+               noderefElt.addAttribute(new Attribute("id", "n" + edge.getEnd().getUID()));
+               noderefElt.addAttribute(new Attribute("port", Integer.toString(edge.getEndPort())));
+               toElt.appendChild(noderefElt);
+
+               edgeElt.appendChild(toElt);
+            }
 
             // output layout information, if it exists:
             List<Pair<Double, Double>> layout = edge.getLayout();
             if (layout != null)
             {
-               out.println("<edge-layout>");
+               Element edgeLayoutElt = new Element("edge-layout");
 
                for (Pair<Double, Double> point : layout)
                {
-                  out.println("<point>");
-                  out.printf("<x>%.5f</x>\n", point.getFirst());
-                  out.printf("<y>%.5f</y>\n", point.getSecond());
-                  out.println("</point>");
+                  Element pointElt = new Element("point");
+
+                  Element xElt = new Element("x");
+                  xElt.appendChild(String.format("%.5f", point.getFirst()));
+                  pointElt.appendChild(xElt);
+
+                  Element yElt = new Element("y");
+                  yElt.appendChild(String.format("%.5f", point.getSecond()));
+                  pointElt.appendChild(yElt);
+
+                  edgeLayoutElt.appendChild(pointElt);
                }
 
-               out.println("</edge-layout>");
+               edgeElt.appendChild(edgeLayoutElt);
             }
 
-            out.println("   </edge>");
-            
+            boardElt.appendChild(edgeElt);
          }
          
-         out.println("  </board>");
+         boardsElt.appendChild(boardElt);
       }
-      out.println(" </boards>");
+
+      return boardsElt;
    }
 }

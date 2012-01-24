@@ -1,3 +1,12 @@
+Update documentation to indicate that Intersections can only be in a single
+board.
+
+--------------------------------------------------------------------------------
+
+Write better error messages across the board.
+
+--------------------------------------------------------------------------------
+
 Update DTD to reflect the fact that the relation from chutes to variables is not
 a function
 
