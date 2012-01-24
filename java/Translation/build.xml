@@ -24,7 +24,7 @@
 
   <target name="build">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
@@ -34,7 +34,7 @@
 
   <target name="buildall">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
@@ -47,7 +47,7 @@
   <target name="check-nullness" description="Check for nullness errors" depends="clean">
     <mkdir dir="${bin}"/>
     <!-- use jsr308.javac instead of javac -->
-    <jsr308.javac classpath="${lib}/junit-4.8.2.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**,**/BuildingTools.java" includeAntRuntime="false">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**,**/BuildingTools.java" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Astubs=checker-stubs"/>
       <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/binary/jdk.jar"/>
