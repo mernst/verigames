@@ -24,9 +24,4 @@ public class IntroWorld
 
       return w;
    }
-
-   public static void main(String[] args)
-   {
-      new WorldXMLPrinter().print(getWorld(), System.out, null);
-   }
 }
