@@ -72,9 +72,9 @@
   </target>
 
   <target name="test.level">
-    <junit failureProperty="test.failure" fork="yes" dir="${bin}/level">
-      <test name="level.SpecificationTests"/>
-      <test name="level.ImplementationTests"/>
+    <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/level">
+      <test name="verigames.level.SpecificationTests"/>
+      <test name="verigames.level.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -82,15 +82,15 @@
       </classpath>
     </junit>
     <copy file="../../world.dtd" todir="${bin}/level"/>
-    <copy file="${src}/sampleLevels/level/name_replace" todir="${bin}/level"/>
-    <copy file="${src}/sampleLevels/level/names_list" todir="${bin}/level"/>
+    <copy file="${src}/verigames/sampleLevels/level/name_replace" todir="${bin}/verigames/level"/>
+    <copy file="${src}/verigames/sampleLevels/level/names_list" todir="${bin}/verigames/level"/>
   </target>
 
   <target name="test.layout">
-    <copy file="${test}/layout/levelWorld.expected.xml" todir="${bin}/layout"/>
-    <junit failureProperty="test.failure" fork="yes" dir="${bin}/layout">
-      <test name="layout.SpecificationTests"/>
-      <test name="layout.ImplementationTests"/>
+    <copy file="${test}/verigames/layout/levelWorld.expected.xml" todir="${bin}/verigames/layout"/>
+    <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/layout">
+      <test name="verigames.layout.SpecificationTests"/>
+      <test name="verigames.layout.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -100,9 +100,9 @@
   </target>
 
   <target name="test.graph">
-    <junit failureProperty="test.failure" fork="yes" dir="${bin}/graph">
-      <test name="graph.SpecificationTests"/>
-      <test name="graph.ImplementationTests"/>
+    <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/graph">
+      <test name="verigames.graph.SpecificationTests"/>
+      <test name="verigames.graph.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -112,9 +112,9 @@
   </target>
 
   <target name="test.utilities">
-    <junit failureProperty="test.failure" fork="yes" dir="${bin}/utilities">
-      <test name="utilities.SpecificationTests"/>
-      <test name="utilities.ImplementationTests"/>
+    <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/utilities">
+      <test name="verigames.utilities.SpecificationTests"/>
+      <test name="verigames.utilities.ImplementationTests"/>
       <formatter type="plain" usefile="false"/>
       <classpath refid="test.classpath"/>
       <classpath>
@@ -123,7 +123,7 @@
     </junit>
   </target>
 
-  <property name="docPackages" value="graph,layout,level,translation,utilities"/>
+  <property name="docPackages" value="verigames.graph,verigames.layout,verigames.level,verigames.translation,verigames.utilities"/>
 
   <target name="javadoc">
     <javadoc access="public"
