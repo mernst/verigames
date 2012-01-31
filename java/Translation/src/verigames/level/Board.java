@@ -50,6 +50,7 @@ public class Board extends Graph<Intersection, Chute>
    /**
     * Ensures that the representation invariant holds
     */
+   @Override
    protected void checkRep()
    {
       super.checkRep();
@@ -184,7 +185,14 @@ public class Board extends Graph<Intersection, Chute>
 
          outgoingNode = node;
       }
-      
+
+      if (node.getBoard()!=null) {
+          throw new IllegalArgumentException(
+                  "Node is already assigned to a board: " + node);
+      } else {
+          node.setBoard(this);
+      }
+
       super.addNode(node);
    }
 }

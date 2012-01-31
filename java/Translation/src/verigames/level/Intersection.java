@@ -408,4 +408,17 @@ public class Intersection extends verigames.graph.Node<Chute>
    {
       return getIntersectionKind().toString() + "#" + getUID();
    }
+
+   /** Every intersection can be assigned to a board.
+    * Null until it is assigned to a board.
+    */
+   private /*@LazyNonNull*/ Board board;
+
+   public void setBoard(Board p) {
+       board = p;
+   }
+
+   public /*@Nullable*/ Board getBoard() {
+       return board; 
+   }
 }
