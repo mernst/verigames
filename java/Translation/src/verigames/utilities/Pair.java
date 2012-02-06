@@ -8,41 +8,41 @@ package verigames.utilities;
  */
 public class Pair<A,B>
 {
-   private final A first;
-   private final B second;
-
-   public Pair(A first, B second)
-   {
-      this.first = first;
-      this.second = second;
-   }
-
-   public A getFirst()
-   {
-      return first;
-   }
-
-   public B getSecond()
-   {
-      return second;
-   }
-
-   @Override
-   public boolean equals(/*@Nullable*/ Object o)
-   {
-      if (o instanceof Pair)
-      {
-         Pair<?,?> other = (Pair<?,?>) o;
-         return this.getFirst().equals(other.getFirst()) &&
-               this.getSecond().equals(other.getSecond());
-      }
-      else
-         return false;
-   }
-
-   @Override
-   public int hashCode()
-   {
-      return first.hashCode() * 31 + second.hashCode() * 13;
-   }
+  private final A first;
+  private final B second;
+  
+  public Pair(A first, B second)
+  {
+    this.first = first;
+    this.second = second;
+  }
+  
+  public A getFirst()
+  {
+    return first;
+  }
+  
+  public B getSecond()
+  {
+    return second;
+  }
+  
+  @Override
+  public boolean equals(/*@Nullable*/ Object o)
+  {
+    if (o instanceof Pair)
+    {
+      Pair<?,?> other = (Pair<?,?>) o;
+      return this.getFirst().equals(other.getFirst()) &&
+          this.getSecond().equals(other.getSecond());
+    }
+    else
+      return false;
+  }
+  
+  @Override
+  public int hashCode()
+  {
+    return first.hashCode() * 31 + second.hashCode() * 13;
+  }
 }

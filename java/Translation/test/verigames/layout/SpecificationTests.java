@@ -8,5 +8,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ DotParserSpecTests.class, GraphInformationSpecTests.class })
 public class SpecificationTests
 {
-   // Placeholder class
+  // Placeholder class
 }

@@ -19,29 +19,29 @@ import static org.junit.Assert.*;
  */
 public class XMLComparisonTests
 {
-   @Test
-   public void levelWorldTest() throws FileNotFoundException
-   {
-      World w = LevelWorld.getWorld();
-      WorldLayout.layout(w);
-
-      PrintStream out = new PrintStream(new File("levelWorld.actual.xml"));
-      try
-      {
-         new WorldXMLPrinter().print(w, out, null);
-      }
-      finally
-      {
-         out.close();
-      }
-
-      FileCompare.Result result = FileCompare.compareFiles(
-            new File("levelWorld.expected.xml"),
-            new File("levelWorld.actual.xml"));
-
-      assertTrue("Difference at line " + result.getLineNumber() + ":\n" +
-            "Expected: " + result.getFirstLine() + "\n" +
-            "But was : " + result.getSecondLine() + "\n",
-            result.getResult());
-   }
+  @Test
+  public void levelWorldTest() throws FileNotFoundException
+  {
+    World w = LevelWorld.getWorld();
+    WorldLayout.layout(w);
+    
+    PrintStream out = new PrintStream(new File("levelWorld.actual.xml"));
+    try
+    {
+      new WorldXMLPrinter().print(w, out, null);
+    }
+    finally
+    {
+      out.close();
+    }
+    
+    FileCompare.Result result = FileCompare.compareFiles(
+        new File("levelWorld.expected.xml"),
+        new File("levelWorld.actual.xml"));
+    
+    assertTrue("Difference at line " + result.getLineNumber() + ":\n" +
+        "Expected: " + result.getFirstLine() + "\n" +
+        "But was : " + result.getSecondLine() + "\n",
+        result.getResult());
+  }
 }

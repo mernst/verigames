@@ -14,5 +14,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ MultiMapSpecTests.class, MultiBiMapSpecTests.class })
 public class SpecificationTests {
-	// Placeholder class
+  // Placeholder class
 }

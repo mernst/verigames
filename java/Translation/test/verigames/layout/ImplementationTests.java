@@ -8,5 +8,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ XMLComparisonTests.class })
 public class ImplementationTests
 {
-   // Placeholder class
+  // Placeholder class
 }

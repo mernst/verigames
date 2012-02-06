@@ -14,7 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ IntersectionImpTests.class, BoardImpTests.class,
-		ChuteImpTests.class, NullTestImpTests.class })
+  ChuteImpTests.class, NullTestImpTests.class })
 public class ImplementationTests {
-	// Placeholder class
+  // Placeholder class
 }

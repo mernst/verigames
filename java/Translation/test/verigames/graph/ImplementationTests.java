@@ -8,5 +8,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ NodeImpTests.class, EdgeImpTests.class })
 public class ImplementationTests
 {
-   // Placeholder class
+  // Placeholder class
 }

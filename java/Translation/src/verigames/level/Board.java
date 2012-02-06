@@ -39,160 +39,160 @@ import java.util.Set;
 
 public class Board extends Graph<Intersection, Chute>
 {
-   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-   
-   private /*@LazyNonNull*/ Intersection incomingNode;
-   private /*@LazyNonNull*/ Intersection outgoingNode;
-   
-   private final MultiBiMap<String, Chute> nameToChutes;
-   
-
-   /**
-    * Ensures that the representation invariant holds
-    */
-   @Override
-   protected void checkRep()
-   {
-      super.checkRep();
-      
-      if (!CHECK_REP_ENABLED)
-         return;
-      
-      Set<Intersection> nodes = getNodes();
-      
-      // Representation Invariant:
-
-      // if incomingNode is not null, its Kind must be INCOMING
+  private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
+  
+  private /*@LazyNonNull*/ Intersection incomingNode;
+  private /*@LazyNonNull*/ Intersection outgoingNode;
+  
+  private final MultiBiMap<String, Chute> nameToChutes;
+  
+  
+  /**
+   * Ensures that the representation invariant holds
+   */
+  @Override
+  protected void checkRep()
+  {
+    super.checkRep();
+    
+    if (!CHECK_REP_ENABLED)
+      return;
+    
+    Set<Intersection> nodes = getNodes();
+    
+    // Representation Invariant:
+    
+    // if incomingNode is not null, its Kind must be INCOMING
+    if (incomingNode != null)
+      ensure (incomingNode.getIntersectionKind() == Kind.INCOMING);
+    
+    // if outgoingNode is not null, its Kind must be OUTGOING
+    if (outgoingNode != null)
+      ensure (outgoingNode.getIntersectionKind() == Kind.OUTGOING);
+    
+    // if nodes is non-empty, incomingNode must be non-null
+    ensure(nodes.isEmpty() || incomingNode != null);
+    
+    for (Intersection i : nodes)
+    {
+      if (i.getIntersectionKind() == Kind.INCOMING)
+      {
+        // nodes may contain no more than one Node of Kind INCOMING
+        ensure(incomingNode == i);
+      }
+      else if (i.getIntersectionKind() == Kind.OUTGOING)
+      {
+        // nodes may contain no more than one Node of Kind OUTGOING
+        ensure(outgoingNode == i);
+      }
+    }
+    
+    // incomingNode != null <--> nodes contains incomingNode
+    ensure((incomingNode != null) == nodes.contains(incomingNode));
+    // outgoingNode != null <--> nodes contains outgoingNode
+    ensure((outgoingNode != null) == nodes.contains(outgoingNode));
+    
+    // if this is constructed
+    if (!this.underConstruction())
+    {
+      // incomingNode and outgoingNode must be non-null
+      ensure(incomingNode != null);
+      ensure(outgoingNode != null);
+    }
+  }
+  
+  /**
+   * Creates a new, empty {@code Board}
+   */
+  public Board()
+  {
+    nameToChutes = new MultiBiMap<String, Chute>();
+    checkRep();
+  }
+  
+  public void addChuteName(Chute c, String name)
+  {
+    nameToChutes.put(name, c);
+  }
+  
+  public Set<String> getChuteNames(Chute c)
+  {
+    return nameToChutes.inverse().get(c);
+  }
+  
+  public Set<Chute> getNameChutes(String name)
+  {
+    return nameToChutes.get(name);
+  }
+  
+  /**
+   * Returns {@code this}'s {@code incomingNode}, or {@code null} if it does not
+   * have one
+   */
+  public /*@Nullable*/ Intersection getIncomingNode()
+  {
+    return incomingNode;
+  }
+  
+  /**
+   * Returns {@code this}'s {@code outgoingNode}, or {@code null} if it does not
+   * have one
+   */
+  public /*@Nullable*/ Intersection getOutgoingNode()
+  {
+    return outgoingNode;
+  }
+  
+  /**
+   * Adds {@code node} to {@code this}.<br/>
+   * <br/>
+   * Requires:<br/>
+   * - if {@link #getNodes() getNodes()}{@code .isEmpty()}, {@code node} must have
+   * {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING INCOMING}<br/>
+   * - if {@link #getIncomingNode} {@code != null} then {@code node} must not
+   * have {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING
+   * INCOMING}<br/>
+   * - if {@link #getOutgoingNode} {@code != null} then {@code node} must not
+   * have {@link Intersection.Kind Kind} {@link Intersection.Kind#OUTGOING
+   * OUTGOING}<br/>
+   * 
+   * @param node
+   * The {@link Intersection} to add.
+   */
+  @Override
+  public void addNode(Intersection node)
+  {
+    if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
+      throw new IllegalArgumentException(
+          "First node in Board is not of kind INCOMING: " + node);
+    
+    if (node.getIntersectionKind() == Kind.INCOMING)
+    {
       if (incomingNode != null)
-         ensure (incomingNode.getIntersectionKind() == Kind.INCOMING);
-
-      // if outgoingNode is not null, its Kind must be OUTGOING
+        throw new IllegalArgumentException(
+            "Second INCOMING node added (no more than one is legal): " +
+                node);
+      
+      incomingNode = node;
+    }
+    
+    else if (node.getIntersectionKind() == Kind.OUTGOING)
+    {
       if (outgoingNode != null)
-         ensure (outgoingNode.getIntersectionKind() == Kind.OUTGOING);
-
-      // if nodes is non-empty, incomingNode must be non-null
-      ensure(nodes.isEmpty() || incomingNode != null);
+        throw new IllegalArgumentException(
+            "Second OUTGOING node added (no more than one is legal): " +
+                node);
       
-      for (Intersection i : nodes)
-      {
-         if (i.getIntersectionKind() == Kind.INCOMING)
-         {
-            // nodes may contain no more than one Node of Kind INCOMING
-            ensure(incomingNode == i);
-         }
-         else if (i.getIntersectionKind() == Kind.OUTGOING)
-         {
-            // nodes may contain no more than one Node of Kind OUTGOING
-            ensure(outgoingNode == i);
-         }
-      }
-      
-      // incomingNode != null <--> nodes contains incomingNode
-      ensure((incomingNode != null) == nodes.contains(incomingNode));
-      // outgoingNode != null <--> nodes contains outgoingNode
-      ensure((outgoingNode != null) == nodes.contains(outgoingNode));
-      
-      // if this is constructed
-      if (!this.underConstruction())
-      {
-         // incomingNode and outgoingNode must be non-null
-         ensure(incomingNode != null);
-         ensure(outgoingNode != null);
-      }
-   }
-   
-   /**
-    * Creates a new, empty {@code Board}
-    */
-   public Board()
-   {
-      nameToChutes = new MultiBiMap<String, Chute>();
-      checkRep();
-   }
-   
-   public void addChuteName(Chute c, String name)
-   {
-      nameToChutes.put(name, c);
-   }
-   
-   public Set<String> getChuteNames(Chute c)
-   {
-      return nameToChutes.inverse().get(c);
-   }
-   
-   public Set<Chute> getNameChutes(String name)
-   {
-      return nameToChutes.get(name);
-   }
-   
-   /**
-    * Returns {@code this}'s {@code incomingNode}, or {@code null} if it does not
-    * have one
-    */
-   public /*@Nullable*/ Intersection getIncomingNode()
-   {
-      return incomingNode;
-   }
-   
-   /**
-    * Returns {@code this}'s {@code outgoingNode}, or {@code null} if it does not
-    * have one
-    */
-   public /*@Nullable*/ Intersection getOutgoingNode()
-   {
-      return outgoingNode;
-   }
-   
-   /**
-    * Adds {@code node} to {@code this}.<br/>
-    * <br/>
-    * Requires:<br/>
-    * - if {@link #getNodes() getNodes()}{@code .isEmpty()}, {@code node} must have
-    * {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING INCOMING}<br/>
-    * - if {@link #getIncomingNode} {@code != null} then {@code node} must not
-    * have {@link Intersection.Kind Kind} {@link Intersection.Kind#INCOMING
-    * INCOMING}<br/>
-    * - if {@link #getOutgoingNode} {@code != null} then {@code node} must not
-    * have {@link Intersection.Kind Kind} {@link Intersection.Kind#OUTGOING
-    * OUTGOING}<br/>
-    * 
-    * @param node
-    * The {@link Intersection} to add.
-    */
-   @Override
-   public void addNode(Intersection node)
-   {
-      if (incomingNode == null && node.getIntersectionKind() != Kind.INCOMING)
-         throw new IllegalArgumentException(
-               "First node in Board is not of kind INCOMING: " + node);
-      
-      if (node.getIntersectionKind() == Kind.INCOMING)
-      {
-         if (incomingNode != null)
-            throw new IllegalArgumentException(
-                  "Second INCOMING node added (no more than one is legal): " +
-                  node);
-
-         incomingNode = node;
-      }
-
-      else if (node.getIntersectionKind() == Kind.OUTGOING)
-      {
-         if (outgoingNode != null)
-            throw new IllegalArgumentException(
-                  "Second OUTGOING node added (no more than one is legal): " +
-                  node);
-
-         outgoingNode = node;
-      }
-
-      if (node.getBoard()!=null) {
-          throw new IllegalArgumentException(
-                  "Node is already assigned to a board: " + node);
-      } else {
-          node.setBoard(this);
-      }
-
-      super.addNode(node);
-   }
+      outgoingNode = node;
+    }
+    
+    if (node.getBoard()!=null) {
+      throw new IllegalArgumentException(
+          "Node is already assigned to a board: " + node);
+    } else {
+      node.setBoard(this);
+    }
+    
+    super.addNode(node);
+  }
 }
