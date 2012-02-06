@@ -81,7 +81,7 @@
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
-    <copy file="../../world.dtd" todir="${bin}/level"/>
+    <copy file="../../world.dtd" todir="${bin}/verigames/level"/>
     <copy file="${src}/verigames/sampleLevels/level/name_replace" todir="${bin}/verigames/level"/>
     <copy file="${src}/verigames/sampleLevels/level/names_list" todir="${bin}/verigames/level"/>
   </target>
