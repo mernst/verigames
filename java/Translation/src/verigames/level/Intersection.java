@@ -414,7 +414,17 @@ public class Intersection extends verigames.graph.Node<Chute>
     */
    private /*@LazyNonNull*/ Board board;
 
+   /**
+    * Sets the {@link Board} that {@code this} is in. Cannot be changed once
+    * construction is finished.
+    *
+    * @see verigames.graph.Node#underConstruction()
+    * @see verigames.graph.Node#finishConstruction()
+    */
    public void setBoard(Board p) {
+       if (!this.underConstruction())
+           throw new IllegalStateException(
+                   "Mutation attempted on a constructed Intersection");
        board = p;
    }
 
