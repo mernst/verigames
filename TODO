@@ -1,3 +1,11 @@
+Make a sample level that includes maps and KeyFor
+
+--------------------------------------------------------------------------------
+
+Clean up buildfile
+
+--------------------------------------------------------------------------------
+
 Update documentation to indicate that Intersections can only be in a single
 board.
 
@@ -63,25 +71,9 @@ ball to small ball, and change black ball to large ball.
 
 --------------------------------------------------------------------------------
 
-Allow Graphviz to order the input and output ports by representing the incoming
-and outgoing nodes as multiple nodes (one for each port).
-
---------------------------------------------------------------------------------
-
 Make certain edges straighter
    - Select the edges that form a path from a particular input port to a
      particular output port (fuzzy, write a heuristic to figure out which ones
      to straighten)
    - Set the weight of those edges to be higher (Graphviz will lay them out
      straighter)
-
---------------------------------------------------------------------------------
-
-Implement different contexts for Subnetworks (different pipes are visible
-depending on where the subnetwork is)
-
-For example, a subnetwork representing a method call in a different class will
-not (generally) include all the fields of that class as input and output pipes
-
-To do this, just allow empty ports -- come up with some mechanic so that safety
-is still offered (maybe it must explicitly be set to null?)
