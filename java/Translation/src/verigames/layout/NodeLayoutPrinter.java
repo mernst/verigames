@@ -43,7 +43,7 @@ class NodeLayoutPrinter extends GraphvizPrinter
     {
       // sets the width to be max(#input ports, #output ports), as required
       // by the game
-      int width = getMaxPorts(n);
+      int width = GraphvizPrinter.getMaxPorts(n);
       
       // As described in world.dtd, the height of an ordinary node is 2
       // units, while the height of INCOMING and END nodes is 1.  The height
@@ -80,16 +80,6 @@ class NodeLayoutPrinter extends GraphvizPrinter
       
       out.println("" + n.getUID() + " [width = " + width + ", height="
           + height + ", label=\"" + label + "\"];");
-    }
-    
-    /**
-     * Returns max(number of input ports, number of output ports) for {@code n}
-     * 
-     * @param n
-     */
-    private int getMaxPorts(Node<?> n)
-    {
-      return Math.max(n.getInputs().size(), n.getOutputs().size());
     }
   };
   

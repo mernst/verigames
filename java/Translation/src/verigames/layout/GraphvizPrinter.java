@@ -17,11 +17,38 @@ import verigames.utilities.Printer;
  * <p>
  * The UIDs of the nodes are used to identify them. Other than that, the
  * specifics of how a graph is represented are determined by the implementation.
+ * <p>
+ * To provide an implementation of a {@code GraphvizPrinter}, subclasses must do
+ * the following:
+ * <ul>
+ * <li>
+ * Implement {@link #isDigraph(Board)}, {@link #nodeSettings(Board)}, {@link
+ * #edgeSettings(Board)}, {@link #graphSettings(Board)}.
+ * </li>
+ * <li>
+ * Call the constructor with a {@link verigames.utilities.Printer Printer} for
+ * {@code Intersection}s and a {@code Printer} for {@code Chute}s.
+ * </li>
+ * </ul>
  * 
  * @author Nathaniel Mote
  */
 abstract class GraphvizPrinter extends Printer<Board, Void>
 {
+
+  /**
+   * Returns max(number of input ports, number of output ports) for {@code n}.
+   * <p>
+   * Included for use in subclasses
+   *
+   * 
+   * @param n
+   */
+  protected static int getMaxPorts(Node<?> n)
+  {
+    return Math.max(n.getInputs().size(), n.getOutputs().size());
+  }
+    
   private final Printer<Intersection, Board> nodePrinter;
   private final Printer<Chute, Board> edgePrinter;
   
