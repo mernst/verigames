@@ -106,56 +106,56 @@ class EdgeLayoutPrinter extends GraphvizPrinter
    * Graphviz's DOT format, with attributes tailored to the edge layout pass.
    */
   private static final Printer<Chute, Board> edgePrinter = new Printer<Chute, Board>()
-      {
+  {
     @Override
     protected void printMiddle(Chute e, PrintStream out, Board b)
     {
       out.println("" + e.getStart().getUID() + " -- " + e.getEnd().getUID()
           + ";");
     }
-      };
-      
-      /**
-       * Constructs a new {@code EdgeLayoutPrinter}
-       */
-      public EdgeLayoutPrinter()
-      {
-        super(new NodePrinter(), edgePrinter);
-      }
-      
-      @Override
-      protected boolean isDigraph(Board b)
-      {
-        return false;
-      }
-      
-      @Override
-      protected String nodeSettings(Board b)
-      {
-        // shape=circle: makes the nodes circular so that edges avoid them.
-        //
-        // width=1: makes the nodes have a radius of 0.5 inches so that edges stay
-        // that far away from them.
-        return "shape=circle, width=1";
-      }
-      
-      @Override
-      protected String edgeSettings(Board b)
-      {
-        // dirtype=none: Remove the drawings of arrows on the edges. Doing this
-        // gives more regular spline information.
-        //
-        // headclip,tailclip=false: draw edges to the centers of nodes, instead of
-        // stopping at their edges. Important because the nodes are circles, not
-        // points. For an explanation, see nodeSettings.
-        return "dirtype=none, headclip=false, tailclip=false";
-      }
-      
-      @Override
-      protected String graphSettings(Board b)
-      {
-        // splines=true: allows neato to draw curved edges, instead of the default
-        // behavior where all lines are straight.
-        return "splines=true";
-      }
+  };
+
+  /**
+   * Constructs a new {@code EdgeLayoutPrinter}
+   */
+  public EdgeLayoutPrinter()
+  {
+    super(new NodePrinter(), edgePrinter);
+  }
+
+  @Override
+  protected boolean isDigraph(Board b)
+  {
+    return false;
+  }
+
+  @Override
+  protected String nodeSettings(Board b)
+  {
+    // shape=circle: makes the nodes circular so that edges avoid them.
+    //
+    // width=1: makes the nodes have a radius of 0.5 inches so that edges stay
+    // that far away from them.
+    return "shape=circle, width=1";
+  }
+
+  @Override
+  protected String edgeSettings(Board b)
+  {
+    // dirtype=none: Remove the drawings of arrows on the edges. Doing this
+    // gives more regular spline information.
+    //
+    // headclip,tailclip=false: draw edges to the centers of nodes, instead of
+    // stopping at their edges. Important because the nodes are circles, not
+    // points. For an explanation, see nodeSettings.
+    return "dirtype=none, headclip=false, tailclip=false";
+  }
+
+  @Override
+  protected String graphSettings(Board b)
+  {
+    // splines=true: allows neato to draw curved edges, instead of the default
+    // behavior where all lines are straight.
+    return "splines=true";
+  }
 }

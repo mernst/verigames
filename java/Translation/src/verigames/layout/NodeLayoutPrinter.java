@@ -37,7 +37,7 @@ import verigames.utilities.Printer;
 class NodeLayoutPrinter extends GraphvizPrinter
 {
   private static final Printer<Intersection, Board> nodePrinter = new Printer<Intersection, Board>()
-      {
+  {
     @Override
     protected void printMiddle(Intersection n, PrintStream out, Board b)
     {
@@ -91,82 +91,82 @@ class NodeLayoutPrinter extends GraphvizPrinter
     {
       return Math.max(n.getInputs().size(), n.getOutputs().size());
     }
-      };
-      
-      private static final Printer<Chute, Board> edgePrinter = new Printer<Chute, Board>()
-          {
-        @Override
-        protected void printMiddle(Chute e, PrintStream out, Board b)
-        {
-          out.println("" + e.getStart().getUID() + " -> " + e.getEnd().getUID()
-              + ";");
-        }
-          };
-          
-          /**
-           * Constructs a new {@code NodeLayoutPrinter}
-           */
-          public NodeLayoutPrinter()
-          {
-            super(nodePrinter, edgePrinter);
-          }
-          
-          @Override
-          protected boolean isDigraph(Board b)
-          {
-            return true;
-          }
-          
-          @Override
-          protected String nodeSettings(Board b)
-          {
-            // Make nodes rectangular, and don't allow Graphviz to resize them.
-            return "shape=box, fixedsize=true";
-          }
-          
-          @Override
-          protected String edgeSettings(Board b)
-          {
-            return "";
-          }
-          
-          @Override
-          protected String graphSettings(Board b)
-          {
-            // Make both the vertical and horizontal separation between nodes 0.
-            return "nodesep=0, ranksep=0";
-          }
-          
-          @Override
-          protected void printMiddle(Board b, PrintStream out, Void data)
-          {
-            // Do the regular printing, then print the invisible edges
-            super.printMiddle(b, out, data);
-            printInvisibleEdges(b, out);
-          }
-          
-          /**
-           * Prints invisible, weight 0 edges from the incoming node to every other
-           * node, and to the outgoing node from every other node.
-           * <p>
-           * This keeps the incoming node at the top and the outgoing node at the
-           * bottom.
-           * 
-           * @param b
-           * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
-           * @param out
-           */
-          private static void printInvisibleEdges(Board b, PrintStream out)
-          {
-            Intersection incoming = b.getIncomingNode();
-            Intersection outgoing = b.getOutgoingNode();
-            out.println("edge [style=invis, weight=0];");
-            out.println("" + incoming.getUID() + " -> " + outgoing.getUID());
-            for (Intersection n : b.getNodes())
-            {
-              if (n != incoming && n != outgoing)
-                out.println("" + incoming.getUID() + " -> " + n.getUID() + " -> "
-                    + outgoing.getUID());
-            }
-          }
+  };
+  
+  private static final Printer<Chute, Board> edgePrinter = new Printer<Chute, Board>()
+  {
+    @Override
+    protected void printMiddle(Chute e, PrintStream out, Board b)
+    {
+      out.println("" + e.getStart().getUID() + " -> " + e.getEnd().getUID()
+          + ";");
+    }
+  };
+    
+  /**
+   * Constructs a new {@code NodeLayoutPrinter}
+   */
+  public NodeLayoutPrinter()
+  {
+    super(nodePrinter, edgePrinter);
+  }
+  
+  @Override
+  protected boolean isDigraph(Board b)
+  {
+    return true;
+  }
+  
+  @Override
+  protected String nodeSettings(Board b)
+  {
+    // Make nodes rectangular, and don't allow Graphviz to resize them.
+    return "shape=box, fixedsize=true";
+  }
+  
+  @Override
+  protected String edgeSettings(Board b)
+  {
+    return "";
+  }
+  
+  @Override
+  protected String graphSettings(Board b)
+  {
+    // Make both the vertical and horizontal separation between nodes 0.
+    return "nodesep=0, ranksep=0";
+  }
+  
+  @Override
+  protected void printMiddle(Board b, PrintStream out, Void data)
+  {
+    // Do the regular printing, then print the invisible edges
+    super.printMiddle(b, out, data);
+    printInvisibleEdges(b, out);
+  }
+  
+  /**
+   * Prints invisible, weight 0 edges from the incoming node to every other
+   * node, and to the outgoing node from every other node.
+   * <p>
+   * This keeps the incoming node at the top and the outgoing node at the
+   * bottom.
+   * 
+   * @param b
+   * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
+   * @param out
+   */
+  private static void printInvisibleEdges(Board b, PrintStream out)
+  {
+    Intersection incoming = b.getIncomingNode();
+    Intersection outgoing = b.getOutgoingNode();
+    out.println("edge [style=invis, weight=0];");
+    out.println("" + incoming.getUID() + " -> " + outgoing.getUID());
+    for (Intersection n : b.getNodes())
+    {
+      if (n != incoming && n != outgoing)
+        out.println("" + incoming.getUID() + " -> " + n.getUID() + " -> "
+            + outgoing.getUID());
+    }
+  }
 }
