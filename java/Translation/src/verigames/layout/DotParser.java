@@ -387,22 +387,25 @@ class DotParser
   
   private static EdgeRecord parseEdge(String line) throws IllegalLineException
   {
-    // An example of an edge line:
-    //    '   8 -- 10 [pos="37,493 37,493 54,341 54,341"];'
-    //        ^    ^          ^      ^      ^      ^
-    // start node  |         spline   control   points
-    //          end node
+    /* An example of an edge line:
+     *       '   8:o2 -- 10 [pos="37,493 37,493 54,341 54,341"];'
+     *           ^ ^   ^          ^      ^      ^      ^
+     *  start node |  |         spline   control   points
+     *             |  end node
+     *        port number
+     */
     
     // After example has run through tokenizeLine:
-    // [8, --, 10, pos="37,493 37,493 54,341 54,341"]
+    // [8:o2, --, 10, pos="37,493 37,493 54,341 54,341"]
     String[] tokens = tokenizeLine(line);
     
     // there need to be *at least* the 4 tokens shown above
     if (tokens.length < 4)
       throw new IllegalLineException("Edge line without needed attributes: " + line);
     
-    String start = tokens[0];
-    String end = tokens[2];
+    // the port number isn't needed, so we remove it
+    String start = stripPortNumber(tokens[0]);
+    String end = stripPortNumber(tokens[2]);
     
     String pos = null;
     
@@ -476,6 +479,19 @@ class DotParser
     {
       throw new IllegalLineException("Poorly formed line: " + line, e);
     }
+  }
+
+  /**
+   * Takes a {@code String} representing a node and, optionally, a port, and
+   * return just the part representing the node.
+   *
+   * @param in
+   * Must be of the form "[node]:[port]", where [node] and [port] must be
+   * strings of alphanumeric characters.
+   */
+  private static String stripPortNumber(String in)
+  {
+    return in.split(":")[0];
   }
   
   /**
