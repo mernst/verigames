@@ -76,8 +76,50 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       
       double xPoints = xInches * 72d;
       double yPoints = yInches * 72d;
+
+      final String optionsString;
+      {
+        if (usesPorts(n.getIntersectionKind()))
+        {
+          final int maxPorts = GraphvizPrinter.getMaxPorts(n);
+          final int width = maxPorts;
+
+          /* in a "record" shape node, the labels have special meaning, and
+           * define ports. The curly braces control the layout. */
+          String label = "{{"
+              + generatePortList("i",maxPorts) + "}|{"
+              + generatePortList("o",maxPorts) + "}}";
+
+          optionsString = String.format(", shape=record, width=%d label=\"%s\"",
+                                        width, label);
+        }
+        else
+          optionsString = "";
+      }
       
-      out.printf("%d [pos=\"%f,%f\"];\n", n.getUID(), xPoints, yPoints);
+      out.printf("%d [pos=\"%f,%f\"%s];\n", n.getUID(), xPoints, yPoints, optionsString);
+    }
+
+    /**
+     * Generates a list of ports from 0 to (n-1) for use in a label for a
+     * Graphviz record node.
+     *
+     * @param prefix
+     * The string with which to prefix each port number
+     *
+     * @param n
+     * The number of ports to generate
+     */
+    private String generatePortList(String prefix, int n)
+    {
+      String result = "";
+      for (int i = 0; i < n; i++)
+      {
+        result += "<" + prefix + i + ">";
+        if (i != n - 1)
+          result += "|";
+      }
+      return result;
     }
     
     /**
@@ -110,8 +152,37 @@ class EdgeLayoutPrinter extends GraphvizPrinter
     @Override
     protected void printMiddle(Chute e, PrintStream out, Board b)
     {
-      out.println("" + e.getStart().getUID() + " -- " + e.getEnd().getUID()
-          + ";");
+      String start = getNodeString(e.getStart(), "i", e.getStartPort());
+      String end = getNodeString(e.getEnd(), "o", e.getEndPort());
+
+      out.println(start + " -- " + end + ";");
+    }
+
+    /**
+     * Returns a {@code String} representing the given node and, if the node is
+     * represented to Graphviz as having ports, the port number is included,
+     * preceded by the given prefix.
+     *
+     * @param n
+     * The {@link level.Intersection Intersection} to create a {@code String}
+     * representation for.
+     *
+     * @param portPrefix
+     * The text with which to prefix the port number, if a port number needs to
+     * be used. This is to distinguish incoming ports from outgoing ports.
+     *
+     * @param port
+     * The port number for {@code n}
+     */
+    /* This method should be static, but can't be because it's part of an
+     * anonymous class. This should, perhaps, be changed. */
+    private String getNodeString(Intersection n, String portPrefix, int port)
+    {
+      String result = "";
+      result += n.getUID();
+      if (usesPorts(n.getIntersectionKind()))
+        result += ":" + portPrefix + port;
+      return result;
     }
   };
 
@@ -121,6 +192,20 @@ class EdgeLayoutPrinter extends GraphvizPrinter
   public EdgeLayoutPrinter()
   {
     super(new NodePrinter(), edgePrinter);
+  }
+
+  /**
+   * Returns true iff the given {@link Kind} of {@link Intersection} has its
+   * ports represented explicitly when it is printed to DOT.
+   * <p>
+   * Most {@code Intersection}s don't need the port information expressed,
+   * because they are essentially points. However, some are larger, and need to
+   * have chutes connected to different parts of them, so they have their ports
+   * represented explicitly.
+   */
+  private static boolean usesPorts(Kind k)
+  {
+    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBNETWORK;
   }
 
   @Override
