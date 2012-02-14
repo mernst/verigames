@@ -77,6 +77,8 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       double xPoints = xInches * 72d;
       double yPoints = yInches * 72d;
 
+      /* contains extra options, particularly the extra information needed for a
+       * node with ports. */
       final String optionsString;
       {
         if (usesPorts(n.getIntersectionKind()))
@@ -152,8 +154,8 @@ class EdgeLayoutPrinter extends GraphvizPrinter
     @Override
     protected void printMiddle(Chute e, PrintStream out, Board b)
     {
-      String start = getNodeString(e.getStart(), "i", e.getStartPort());
-      String end = getNodeString(e.getEnd(), "o", e.getEndPort());
+      String start = getNodeString(e.getStart(), "o", e.getStartPort());
+      String end = getNodeString(e.getEnd(), "i", e.getEndPort());
 
       out.println(start + " -- " + end + ";");
     }
