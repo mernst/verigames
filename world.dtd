@@ -24,6 +24,7 @@
      <!ATTLIST edge var CDATA #IMPLIED>
      <!ATTLIST edge pinch (true|false) #REQUIRED>
      <!ATTLIST edge width (wide|narrow) #REQUIRED>
+     <!ATTLIST edge buzzsaw (true|false) #REQUIRED>
      <!ATTLIST edge id ID #REQUIRED>
      <!ELEMENT from (noderef)>
      <!ELEMENT to (noderef)>

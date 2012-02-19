@@ -43,6 +43,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
   
   private boolean narrow;
   private boolean editable;
+
+  private boolean buzzsaw;
   
   // should be instantiated as an immutable list
   // TODO enforce length in checkRep
@@ -61,6 +63,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
     
     this.narrow = false;
     this.pinch = false;
+
+    this.buzzsaw = false;
     
     this.UID = Chute.nextUID;
     Chute.nextUID += 1;
@@ -118,6 +122,29 @@ public class Chute extends verigames.graph.Edge<Intersection>
     if (!underConstruction())
       throw new IllegalStateException("Mutation attempted on constructed Chute");
     this.narrow = narrow;
+    checkRep();
+  }
+
+  /**
+   * Returns {@code buzzsaw}
+   */
+  public boolean hasBuzzsaw()
+  {
+    return buzzsaw;
+  }
+
+  /**
+   * Sets {@code buzzsaw}
+   * <br/>
+   * Requires: {@link #underConstruction() this.underConstruction()}<br/>
+   *
+   * @param buzzsaw
+   */
+  public void setBuzzsaw(boolean buzzsaw)
+  {
+    if(!underConstruction())
+      throw new IllegalStateException("Mutation attempted on constructed Chute");
+    this.buzzsaw = buzzsaw;
     checkRep();
   }
   
