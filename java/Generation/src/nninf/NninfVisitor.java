@@ -64,6 +64,9 @@ public class NninfVisitor extends InferenceVisitor {
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
         assert node != null;
 
+        // Also log that there was a method call.
+        logMethodInvocation(node);
+
         ExpressionTree recvTree = TreeUtils.getReceiverTree(node.getMethodSelect());
         if (recvTree != null) {
             AnnotatedTypeMirror recvType = atypeFactory.getAnnotatedType(recvTree);

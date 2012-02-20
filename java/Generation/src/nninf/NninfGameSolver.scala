@@ -10,23 +10,33 @@ import javax.lang.model.element.AnnotationMirror
 
 import verigames.level._
 
-class NninfGameSolver(variables: List[Variable],
-  combvariables: List[CombVariable],
-  constraints: List[Constraint],
-  weights: List[WeightInfo],
-  params: TTIRun)
+class NninfGameSolver(
+    /** All variables used in this program. */
+    variables: List[Variable],
+    /** Empty, b/c there is no viewpoint adaptation (yet?). */
+    combvariables: List[CombVariable],
+    /** All constraints that have to be fulfilled. */
+    constraints: List[Constraint],
+    /** Weighting information. Currently empty & ignored, as a human solves the game. */
+    weights: List[WeightInfo],
+    /** The command-line parameters. */
+    params: TTIRun)
   extends ConstraintSolver(variables, combvariables, constraints, weights, params) {
 
     // TODO: ensure that no CombVariables were created
     // assert combvariables.length == 0
 
     def solve(): Option[Map[AbstractVariable, AnnotationMirror]] = {
+      // Create the world!
+      val world = createWorld()
+      // Assign a layout to the world.
+      verigames.layout.WorldLayout.layout(world)
 
       // TODO: add an option for the file name
       val xmlFile = new java.io.File("World.xml") // params.optWorldXMLFileName)
       // TODO: check for existing file
       val output = new java.io.PrintStream(new java.io.FileOutputStream(xmlFile))
-      new WorldXMLPrinter().print(createWorld(), output, null)
+      new WorldXMLPrinter().print(world, output, null)
       output.close()
 
       // Return as solution a mapping back to the variable IDs. This results in
@@ -45,6 +55,9 @@ class NninfGameSolver(variables: List[Variable],
     // We cannot measure the time used by the human, so just suppress this.
     def timing: String = null
 
+    /**
+     * Create the world!
+     */
     def createWorld(): World = {
       val world = new World()
       createLevels(world)
@@ -73,26 +86,37 @@ class NninfGameSolver(variables: List[Variable],
     val methToBoard = new HashMap[String, Board]
 
     /**
-     * For each slot (i.e. constraint variable) we keep a reference to the
+     * For each constraint variable we keep a reference to the
      * Intersection that should be used as next input.
+     * For local slots that would be unique enough; however, fields and
+     * method parameters/returns occur on multiple boards. Therefore,
+     * the key in the map is a pair of Board and Variable.
      * Output port 0 of the Intersection has to be free.
      */
-    val variableToIntersection = new HashMap[AbstractVariable, Intersection]
+    val boardNVariableToIntersection = new HashMap[(Board, AbstractVariable), Intersection]
 
-
+    /**
+     * Create all necessary levels for the world.
+     */
     def createLevels(world: World) {
+      // First create all the levels and boards.
       createBoards(world)
+      // Then represent all the constraints.
       handleConstraints(world)
+      // Finally, add any necessary plumbing to the end of each board.
       finalizeWorld(world)
     }
 
+    /**
+     * First, go through all variables and create a level for each occurring
+     * class and a board for each occurring method.
+     */
     def createBoards(world: World) { 
-      // First, go through all variables and create a level for each occurring
-      // class and a board for each occurring method.
       variables foreach { cvar => {
         cvar.varpos match {
           case mvar: WithinMethodVP => {
             val fqcname = mvar.getFQClassName
+            // Create/Find the level for the class.
             val level: Level = if (classToLevel.contains(fqcname)) {
                 classToLevel(fqcname)
               } else {
@@ -101,46 +125,54 @@ class NninfGameSolver(variables: List[Variable],
                 l
               }
 
+            // Create/Find the board for the method.
             val msig = mvar.getMethodSignature
             val board: Board = if (methToBoard.contains(msig)) {
                 methToBoard(msig)
               } else {
                 val b = newBoard(level, msig)
                 methToBoard += (msig -> b)
+                // TODO: handle static methods
+                // For each method, create an input and output for the implicit "this".
+                val incoming = b.getIncomingNode()
+                val start = Intersection.factory(Intersection.Kind.CONNECT)
+                b.addNode(start)
+                b.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
+                val outgoing = b.getOutgoingNode()
+                b.addEdge(start, 0, outgoing, outgoing.getInputs().size(), new Chute())
                 b
               }
 
             if (mvar.isInstanceOf[ParameterVP]) {
-              // also for FieldVP, but that's not a InMethodVP...
+              // For each parameter, create a CONNECT Intersection.
+              // Also for FieldVP, but that's not a InMethodVP...
               val incoming = board.getIncomingNode()
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(start)
               board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
-              variableToIntersection += (cvar -> start)
-            } else if (mvar.isInstanceOf[ReturnVP] ||
-                mvar.isInstanceOf[LocalInMethodVP] ||
-                mvar.isInstanceOf[CastInMethodVP] ||
-                mvar.isInstanceOf[InstanceOfInMethodVP]) {
-              // should a local variable start as BLACK/WHITE or NO ball?
-              val input = Intersection.factory(Intersection.Kind.START_NO_BALL)
-              val start = Intersection.factory(Intersection.Kind.CONNECT)
-              board.addNode(input)
-              board.addNode(start)
-              board.addEdge(input, 0, start, 0, new Chute)
-              variableToIntersection += (cvar -> start)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (mvar.isInstanceOf[NewInMethodVP]) {
+              // For object creations, add a START_WHITE_BALL Intersection.
               val input = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
               board.addEdge(input, 0, start, 0, new Chute)
-              variableToIntersection += (cvar -> start)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             } else {
-              println("TODO: unsupported method variable position: " + cvar + " pos: " + cvar.varpos.getClass())
+              // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.
+              // TODO: Should a local variable start as BLACK/WHITE or NO ball?
+              val input = Intersection.factory(Intersection.Kind.START_NO_BALL)
+              val start = Intersection.factory(Intersection.Kind.CONNECT)
+              board.addNode(input)
+              board.addNode(start)
+              board.addEdge(input, 0, start, 0, new Chute)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             }
           }
           case clvar: WithinClassVP => {
             val fqcname = clvar.getFQClassName
+            // Create/Find the level for the class.
             val level: Level = if (classToLevel.contains(fqcname)) {
                 classToLevel(fqcname)
               } else {
@@ -149,6 +181,7 @@ class NninfGameSolver(variables: List[Variable],
                 l
               }
 
+            // Create/Find the top-level board for the class.
             val board: Board = if (classToBoard.contains(fqcname)) {
                 classToBoard(fqcname)
               } else {
@@ -158,29 +191,30 @@ class NninfGameSolver(variables: List[Variable],
               }
 
             if (clvar.isInstanceOf[FieldVP]) {
-              // In the field type
+              // In the field type, just add a CONNECT Intersection.
               val incoming = board.getIncomingNode()
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(start)
               board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
-              variableToIntersection += (cvar -> start)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (clvar.isInstanceOf[NewInFieldInitVP] ||
                 clvar.isInstanceOf[NewInStaticInitVP]) {
+              // For object creations, add a START_WHITE_BALL Intersection.
               val input = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
               board.addEdge(input, 0, start, 0, new Chute)
-              variableToIntersection += (cvar -> start)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (clvar.isInstanceOf[WithinFieldVP] ||
                 clvar.isInstanceOf[WithinStaticInitVP]) {
-              // Things like casts in a field initializer
+              // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.
               val input = Intersection.factory(Intersection.Kind.START_NO_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
               board.addEdge(input, 0, start, 0, new Chute)
-              variableToIntersection += (cvar -> start)
+              boardNVariableToIntersection += ((board, cvar) -> start)
             } else {
               println("TODO: unsupported field variable position: " + cvar + " pos: " + cvar.varpos.getClass())
             }
@@ -192,6 +226,9 @@ class NninfGameSolver(variables: List[Variable],
       }}
     }
 
+    /**
+     * Go through all constraints and add the corresponding piping to the boards.
+     */
     def handleConstraints(world: World) {
       constraints foreach { constraint => {
         constraint match {
@@ -199,15 +236,17 @@ class NninfGameSolver(variables: List[Variable],
             // No need to generate something for trivial super/sub-types.
             if (sup != NninfConstants.NULLABLE &&
                 sub != NninfConstants.NONNULL) {
-              println(sub + " <: " + sup)
 
               if (sub == LiteralNull) {
+                // For "null <: sup" create a black ball falling into sup.
+                // println("null <: " + sup)
+
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
-                val board = variableToBoard(supvar)
+                val board = variablePosToBoard(supvar.varpos)
                 val blackball = Intersection.factory(Intersection.Kind.START_BLACK_BALL)
                 val merge = Intersection.factory(Intersection.Kind.MERGE)
-                val lastIntersection = variableToIntersection(supvar)
+                val lastIntersection = boardNVariableToIntersection((board, supvar))
 
                 board.addNode(blackball)
                 board.addNode(merge)
@@ -215,28 +254,35 @@ class NninfGameSolver(variables: List[Variable],
                 board.addEdge(lastIntersection, 0, merge, 0, new Chute)
                 board.addEdge(blackball, 0, merge, 1, new Chute)
 
-                variableToIntersection.update(supvar, merge)
+                boardNVariableToIntersection.update((board, supvar), merge)
               } else {
+                // Subtypes between arbitrary variables only happens for local variables.
+                // TODO: what happens for "x = o.f"? Do I always create ASSIGNMENT constraints?
+                // What about m(o.f)?
                 // TODO: Let's assume both sub and sup are variables. Other cases?
                 val subvar = sub.asInstanceOf[Variable]
                 val supvar = sup.asInstanceOf[Variable]
                 val board = findBoard(subvar, supvar)
 
-                val merge = Intersection.factory(Intersection.Kind.MERGE)
-                val split = Intersection.factory(Intersection.Kind.SPLIT)
-                val sublast = variableToIntersection(subvar)
-                val suplast = variableToIntersection(supvar)
+                if (board!=null) {
+                  // println(sub + " <: " + sup)
 
-                board.addNode(merge)
-                board.addNode(split)
+                  val merge = Intersection.factory(Intersection.Kind.MERGE)
+                  val split = Intersection.factory(Intersection.Kind.SPLIT)
+                  val sublast = boardNVariableToIntersection((board, subvar))
+                  val suplast = boardNVariableToIntersection((board, supvar))
 
-                // TODO: which variable get's the merge output??
-                board.addEdge(sublast, 0, merge, 0, new Chute)
-                board.addEdge(suplast, 0, split, 0, new Chute)
-                board.addEdge(split, 1, merge, 1, new Chute)
+                  board.addNode(merge)
+                  board.addNode(split)
 
-                variableToIntersection.update(subvar, merge)
-                variableToIntersection.update(supvar, split)
+                  // TODO: which variable get's the merge output??
+                  board.addEdge(sublast, 0, merge, 0, new Chute)
+                  board.addEdge(suplast, 0, split, 0, new Chute)
+                  board.addEdge(split, 1, merge, 1, new Chute)
+
+                  boardNVariableToIntersection.update((board, subvar), merge)
+                  boardNVariableToIntersection.update((board, supvar), split)
+                }
               }
             }
           }
@@ -248,10 +294,10 @@ class NninfGameSolver(variables: List[Variable],
             // TODO: support var!=NULLABLE for now
             if (elr == NninfConstants.NULLABLE) {
               val ellvar = ell.asInstanceOf[Variable]
-              val board = variableToBoard(ellvar);
+              val board = variablePosToBoard(ellvar.varpos);
 
               val con = Intersection.factory(Intersection.Kind.CONNECT)
-              val elllast = variableToIntersection(ellvar)
+              val elllast = boardNVariableToIntersection((board, ellvar))
 
               board.addNode(con)
 
@@ -260,7 +306,7 @@ class NninfGameSolver(variables: List[Variable],
 
               board.addEdge(elllast, 0, con, 0, chute)
 
-              variableToIntersection.update(ellvar, con)
+              boardNVariableToIntersection.update((board, ellvar), con)
             } else {
               println("TODO: uncovered inequality case!")
             }
@@ -271,15 +317,78 @@ class NninfGameSolver(variables: List[Variable],
           case cc: CombineConstraint => {
             println("TODO: combine constraints should never happen!")
           }
+          case CallInstanceMethodConstraint(caller, receiver, methname, tyargs, args, result) => {
+            val callerBoard = variablePosToBoard(caller)
+            val subboard = newSubboard(callerBoard, methname)
+            // The input port to use next
+            var subboardPort = 0
+
+            { // Connect the receiver to input and output 0
+              val receiverVar = receiver.asInstanceOf[Variable]
+              val receiverInt = boardNVariableToIntersection((callerBoard, receiverVar))
+
+              callerBoard.addEdge(receiverInt, 0, subboard, 0, new Chute)
+
+              val con = Intersection.factory(Intersection.Kind.CONNECT)
+              callerBoard.addNode(con)
+              callerBoard.addEdge(subboard, 0, con, 0, new Chute)
+              boardNVariableToIntersection.update((callerBoard, receiverVar), con)
+            }
+            { // TODO: type arguments
+            }
+            { // Connect the arguments as inputs only 
+              for (anarg <- args) {
+                subboardPort += 1
+                val anargVar = anarg.asInstanceOf[Variable]
+                val anargInt = boardNVariableToIntersection((callerBoard, anargVar))
+
+                val split = Intersection.factory(Intersection.Kind.SPLIT)
+
+                callerBoard.addNode(split)
+
+                callerBoard.addEdge(anargInt, 0, split, 0, new Chute)
+                callerBoard.addEdge(split, 1, subboard, subboardPort, new Chute)
+
+                boardNVariableToIntersection.update((callerBoard, anargVar), split)
+              }
+            }
+            { // Connect the result as output only
+              result match {
+                case resvar: Variable => {
+                  if (boardNVariableToIntersection.contains((callerBoard, resvar))) {
+                    // Method was previously called.
+                    val resInt = boardNVariableToIntersection((callerBoard, resvar))
+                    println("rsult intersection: " + resInt)
+                    val merge = Intersection.factory(Intersection.Kind.MERGE)
+                    callerBoard.addNode(merge)
+                    callerBoard.addEdge(subboard, 1, merge, 0, new Chute)
+                    callerBoard.addEdge(resInt, 0, merge, 1, new Chute)
+                    boardNVariableToIntersection.update((callerBoard, resvar), merge)
+                  } else {
+                    val con = Intersection.factory(Intersection.Kind.CONNECT)
+                    callerBoard.addNode(con)
+                    callerBoard.addEdge(subboard, 1, con, 0, new Chute)
+                    boardNVariableToIntersection.update((callerBoard, resvar), con)
+                  }
+                }
+                case _ => {
+                  // Nothing to do for void methods.
+                  // TODO: this is also for pre-annotated return types!
+                }
+              }
+            }
+          }
         }
       }}
     }
 
+    /**
+     * Finalize the world by closing the scope of all variables and adding
+     * the necessary edges to the output.
+     */
     def finalizeWorld(world: World) {
       // Connect all intersections to the corresponding outgoing slot
-      variableToIntersection foreach ( kv => { val (cvar, lastsect) = kv
-        val board = lastsect.getBoard()
-
+      boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
         if (cvar.varpos.isInstanceOf[ReturnVP]) {
           // Should only the return variable be attached to outgoing?
           // Also parameters?
@@ -309,12 +418,7 @@ class NninfGameSolver(variables: List[Variable],
      */
     def newBoard(level: Level, name: String): Board = {
       val b = new Board()
-      val cleanname = name.replace('(', '-')
-              .replace(')', '-')
-              .replace(':', '-')
-              .replace('#', '-')
-              .replace(';', '-')
-              .replace('/', '-')
+      val cleanname = cleanUpForXML(name)
       level.addBoard(cleanname, b)
       
       b.addNode(Intersection.factory(Intersection.Kind.INCOMING))
@@ -323,8 +427,32 @@ class NninfGameSolver(variables: List[Variable],
       b
     }
 
-    def variableToBoard(cvar: Variable): Board = {
-      cvar.varpos match {
+    /**
+     * Sanitize a string to make it a suitable XML identifier.
+     */
+    def cleanUpForXML(name: String): String = {
+      name.replace('(', '-')
+        .replace(')', '-')
+        .replace(':', '-')
+        .replace('#', '-')
+        .replace(';', '-')
+        .replace('/', '-')
+    }
+
+    /**
+     * Create a new subboard on callerBoard.
+     */
+    def newSubboard(callerBoard: Board, called: CalledMethodVP): Subnetwork = {
+      val subboard = Intersection.subnetworkFactory(cleanUpForXML(called.getMethodSignature))
+      callerBoard.addNode(subboard)
+      subboard
+    }
+
+    /**
+     * Look up the board for a given variable position.
+     */
+    def variablePosToBoard(varpos: VariablePosition): Board = {
+      varpos match {
         case mvar: WithinMethodVP => {
           methToBoard(mvar.getMethodSignature)
         }
@@ -332,19 +460,30 @@ class NninfGameSolver(variables: List[Variable],
           classToBoard(clvar.getFQClassName)
         }
         case _ => {
-          println("TODO: only supporting variables within a method" + cvar)
+          println("variablePosToBoard: unhandled position: " + varpos)
           null
         }
       }
     }
 
+    /**
+     * Find the board that should be used for a constraint between two
+     * variables.
+     * 
+     */
     def findBoard(cvar1: Variable, cvar2: Variable): Board = {
-      val board1 = variableToBoard(cvar1)
-      val board2 = variableToBoard(cvar2)
+      val board1 = variablePosToBoard(cvar1.varpos)
+      val board2 = variablePosToBoard(cvar2.varpos)
 
       if (board1==board2) {
         board1
       } else {
+        /* We only need to handle variables that will end up on the same board.
+         * For all other variables, there will be a MethodCall, FieldRead, or FieldUpdate
+         * constraint, that links things together.
+         */
+        null
+        /*
         val cvar1isField = cvar1.varpos.isInstanceOf[FieldVP]
         val cvar2isField = cvar2.varpos.isInstanceOf[FieldVP]
         if (!cvar1isField && !cvar2isField) {
@@ -363,7 +502,7 @@ class NninfGameSolver(variables: List[Variable],
         } else {
           // final case: !cvar1isField && cvar2isField
           board1
-        }
+        }*/
       }
     }
 }
