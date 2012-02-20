@@ -1,4 +1,14 @@
+Clean up XML (coordinate with Tim)
+  - change edge var to name
+  - remove references to ball color and nullness
+
+--------------------------------------------------------------------------------
+
 Make a sample level that includes maps and KeyFor
+
+--------------------------------------------------------------------------------
+
+Make a sample level that has mutual recursion
 
 --------------------------------------------------------------------------------
 
@@ -12,11 +22,6 @@ board.
 --------------------------------------------------------------------------------
 
 Write better error messages across the board.
-
---------------------------------------------------------------------------------
-
-Update DTD to reflect the fact that the relation from chutes to variables is not
-a function
 
 --------------------------------------------------------------------------------
 
