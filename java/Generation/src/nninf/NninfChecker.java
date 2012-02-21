@@ -62,4 +62,9 @@ public class NninfChecker extends BaseTypeChecker implements
     public AnnotationMirror selfQualifier() {
         return this.NONNULL;
     }
+
+    @Override
+    public boolean withCombineConstraints() {
+        return false;
+    }
 }

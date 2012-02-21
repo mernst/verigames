@@ -40,12 +40,14 @@ import java.util.List;
 public class Chute extends verigames.graph.Edge<Intersection>
 {
   private boolean pinch;
-  
+
   private boolean narrow;
   private boolean editable;
 
   private boolean buzzsaw;
-  
+
+  private final String chutename;
+
   // should be instantiated as an immutable list
   // TODO enforce length in checkRep
   private /*@Nullable*/ List<Pair<Double, Double>> layout;
@@ -53,25 +55,40 @@ public class Chute extends verigames.graph.Edge<Intersection>
   private final int UID;
   
   private static int nextUID = 1;
-  
+
+  // Constructor that uses a unique ID as chute name.
+  // TODO: Should we force people to provide a name? I added this
+  // to make the transition easier, but we might not want it.
+  public Chute() {
+    this(null);
+  }
+
   /**
    * Creates a new {@code Chute} object.
+   * 
+   * @param name The name for the chute. If null, a unique ID will be assigned.
    */
-  public Chute()
+  public Chute(/*@Nullable*/ String name)
   {
     this.editable = true;
-    
+
     this.narrow = false;
     this.pinch = false;
 
     this.buzzsaw = false;
-    
+
     this.UID = Chute.nextUID;
     Chute.nextUID += 1;
-    
+
+    if (name!=null) {
+      this.chutename = name;
+    } else {
+      this.chutename = "chute" + UID;
+    }
+
     this.checkRep();
   }
-  
+
   /**
    * Returns {@code pinch}<br/>
    * <br/>
@@ -215,7 +232,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO explicitly document which information is and is not copied.
   public Chute copy()
   {
-    Chute copy = new Chute();
+    Chute copy = new Chute(chutename);
     copy.setNarrow(narrow);
     copy.setPinched(pinch);
     copy.setEditable(editable);
