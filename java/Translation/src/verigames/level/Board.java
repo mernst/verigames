@@ -18,12 +18,6 @@ import java.util.Set;
  * The first node added must be an {@code Intersection} of {@link
  * Intersection.Kind Kind} {@link Intersection.Kind#INCOMING INCOMING}.
  * <p>
- * {@code Chute} names are stored here because there may not be a one-to-one
- * relation between {@code Chute}s and variable names. Most names will have
- * multiple {@code Chute}s, and some {@code Chute}s will have multiple names.
- * Additionally, some {@code Chute}s may have no name at all, and simply
- * represent the type of an unnamed expression.
- * <p>
  * Specification Field: {@code incomingNode} -- {@link Intersection}
  * // the node representing the top of the board, where all the incoming chutes
  * enter. {@code Intersections} of {@code Kind} can be the starting point for an
@@ -110,16 +104,37 @@ public class Board extends Graph<Intersection, Chute>
     checkRep();
   }
   
+  /**
+   * Adds a name to the chute.
+   *
+   * @deprecated
+   * Give {@link Chute}s names/descriptions directly.
+   */
+  @Deprecated
   public void addChuteName(Chute c, String name)
   {
     nameToChutes.put(name, c);
   }
   
+  /**
+   * Gets the names associated with a {@code Chute}.
+   *
+   * @deprecated 
+   * Check {@link Chute} names/descriptions directly.
+   */
+  @Deprecated
   public Set<String> getChuteNames(Chute c)
   {
     return nameToChutes.inverse().get(c);
   }
   
+  /**
+   * Gets the {@code Chute}s associated with a name.
+   *
+   * @deprecated
+   * Check {@link Chute} names/descriptions directly.
+   */
+  @Deprecated
   public Set<Chute> getNameChutes(String name)
   {
     return nameToChutes.get(name);
