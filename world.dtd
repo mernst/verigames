@@ -77,7 +77,8 @@ Requirements not enforced by the DTD:
 
    - All edges are contained in exactly one edge-set
 
-   - All nodes that have kind SUBNETWORK must have a name attribute
+   - All nodes that have kind SUBNETWORK must have a name attribute (and the
+     name attribute is meaningless for other kinds of node)
 
 ================================================================================
 
