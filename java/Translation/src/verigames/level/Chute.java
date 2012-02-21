@@ -46,7 +46,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
   private boolean buzzsaw;
 
-  private final String chutename;
+  private final String description;
 
   // should be instantiated as an immutable list
   // TODO enforce length in checkRep
@@ -66,9 +66,10 @@ public class Chute extends verigames.graph.Edge<Intersection>
   /**
    * Creates a new {@code Chute} object.
    * 
-   * @param name The name for the chute. If null, a unique ID will be assigned.
+   * @param description
+   * The description of this chute. If null, a unique ID will be assigned.
    */
-  public Chute(/*@Nullable*/ String name)
+  public Chute(/*@Nullable*/ String description)
   {
     this.editable = true;
 
@@ -81,9 +82,9 @@ public class Chute extends verigames.graph.Edge<Intersection>
     Chute.nextUID += 1;
 
     if (name!=null) {
-      this.chutename = name;
+      this.description = name;
     } else {
-      this.chutename = "chute" + UID;
+      this.description = "chute" + UID;
     }
 
     this.checkRep();
@@ -215,6 +216,14 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return UID;
   }
+
+  /**
+   * Returns the description of this {@code Chute}
+   */
+  public String getDescription()
+  {
+    return description;
+  }
   
   /**
    * Returns a deep copy of {@code this}.
@@ -232,7 +241,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO explicitly document which information is and is not copied.
   public Chute copy()
   {
-    Chute copy = new Chute(chutename);
+    Chute copy = new Chute(description);
     copy.setNarrow(narrow);
     copy.setPinched(pinch);
     copy.setEditable(editable);
