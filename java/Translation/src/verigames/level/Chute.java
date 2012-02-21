@@ -46,6 +46,15 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
   private boolean buzzsaw;
 
+  /**
+   * The variable ID for the variable represented by this chute.
+   * -1 for chute's without corresponding variable.
+   */
+  private final int variableID;
+
+  /**
+   * A description for the chute, only used for debugging output.
+   */
   private final String description;
 
   // should be instantiated as an immutable list
@@ -60,16 +69,19 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO: Should we force people to provide a name? I added this
   // to make the transition easier, but we might not want it.
   public Chute() {
-    this(null);
+    this(-1, null);
   }
 
   /**
    * Creates a new {@code Chute} object.
-   * 
+   *
+   * @param varID
+   * The variable identifier to use.
+   *
    * @param description
    * The description of this chute. If null, a unique ID will be assigned.
    */
-  public Chute(/*@Nullable*/ String description)
+  public Chute(int varID, /*@Nullable*/ String description)
   {
     this.editable = true;
 
@@ -81,8 +93,9 @@ public class Chute extends verigames.graph.Edge<Intersection>
     this.UID = Chute.nextUID;
     Chute.nextUID += 1;
 
-    if (name!=null) {
-      this.description = name;
+    this.variableID = varID;
+    if (description!=null) {
+      this.description = description;
     } else {
       this.description = "chute" + UID;
     }
@@ -241,7 +254,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO explicitly document which information is and is not copied.
   public Chute copy()
   {
-    Chute copy = new Chute(description);
+    Chute copy = new Chute(variableID, description);
     copy.setNarrow(narrow);
     copy.setPinched(pinch);
     copy.setEditable(editable);

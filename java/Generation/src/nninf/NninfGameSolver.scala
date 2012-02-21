@@ -137,9 +137,13 @@ class NninfGameSolver(
                 val incoming = b.getIncomingNode()
                 val start = Intersection.factory(Intersection.Kind.CONNECT)
                 b.addNode(start)
-                b.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
+                val inthis = new Chute(-1, "this")
+                inthis.setEditable(false)
+                b.addEdge(incoming, incoming.getOutputs().size(), start, 0, inthis)
                 val outgoing = b.getOutgoingNode()
-                b.addEdge(start, 0, outgoing, outgoing.getInputs().size(), new Chute())
+                val outthis = new Chute(-1, "this")
+                outthis.setEditable(false)
+                b.addEdge(start, 0, outgoing, outgoing.getInputs().size(), outthis)
                 b
               }
 
@@ -149,7 +153,7 @@ class NninfGameSolver(
               val incoming = board.getIncomingNode()
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(start)
-              board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
+              board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (mvar.isInstanceOf[NewInMethodVP]) {
               // For object creations, add a START_WHITE_BALL Intersection.
@@ -157,7 +161,7 @@ class NninfGameSolver(
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
-              board.addEdge(input, 0, start, 0, new Chute)
+              board.addEdge(input, 0, start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else {
               // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.
@@ -166,7 +170,7 @@ class NninfGameSolver(
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
-              board.addEdge(input, 0, start, 0, new Chute)
+              board.addEdge(input, 0, start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             }
           }
@@ -195,7 +199,7 @@ class NninfGameSolver(
               val incoming = board.getIncomingNode()
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(start)
-              board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute())
+              board.addEdge(incoming, incoming.getOutputs().size(), start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (clvar.isInstanceOf[NewInFieldInitVP] ||
                 clvar.isInstanceOf[NewInStaticInitVP]) {
@@ -204,7 +208,7 @@ class NninfGameSolver(
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
-              board.addEdge(input, 0, start, 0, new Chute)
+              board.addEdge(input, 0, start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (clvar.isInstanceOf[WithinFieldVP] ||
                 clvar.isInstanceOf[WithinStaticInitVP]) {
@@ -213,7 +217,7 @@ class NninfGameSolver(
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
-              board.addEdge(input, 0, start, 0, new Chute)
+              board.addEdge(input, 0, start, 0, new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else {
               println("TODO: unsupported field variable position: " + cvar + " pos: " + cvar.varpos.getClass())
@@ -251,8 +255,8 @@ class NninfGameSolver(
                 board.addNode(blackball)
                 board.addNode(merge)
 
-                board.addEdge(lastIntersection, 0, merge, 0, new Chute)
-                board.addEdge(blackball, 0, merge, 1, new Chute)
+                board.addEdge(lastIntersection, 0, merge, 0, new Chute(supvar.id, supvar.toString()))
+                board.addEdge(blackball, 0, merge, 1, new Chute(-1, "null literal"))
 
                 boardNVariableToIntersection.update((board, supvar), merge)
               } else {
@@ -276,9 +280,9 @@ class NninfGameSolver(
                   board.addNode(split)
 
                   // TODO: which variable get's the merge output??
-                  board.addEdge(sublast, 0, merge, 0, new Chute)
-                  board.addEdge(suplast, 0, split, 0, new Chute)
-                  board.addEdge(split, 1, merge, 1, new Chute)
+                  board.addEdge(sublast, 0, merge, 0, new Chute(subvar.id, subvar.toString()))
+                  board.addEdge(suplast, 0, split, 0, new Chute(supvar.id, supvar.toString()))
+                  board.addEdge(split, 1, merge, 1, new Chute(supvar.id, supvar.toString()))
 
                   boardNVariableToIntersection.update((board, subvar), merge)
                   boardNVariableToIntersection.update((board, supvar), split)
@@ -287,10 +291,10 @@ class NninfGameSolver(
             }
           }
           case EqualityConstraint(ell, elr) => {
-            println(ell + " == " + elr)
+            println("TODO: " + ell + " == " + elr + " not supported yet!")
           }
           case InequalityConstraint(ell, elr) => {
-            println(ell + " != " + elr)
+            // println(ell + " != " + elr)
             // TODO: support var!=NULLABLE for now
             if (elr == NninfConstants.NULLABLE) {
               val ellvar = ell.asInstanceOf[Variable]
@@ -301,8 +305,9 @@ class NninfGameSolver(
 
               board.addNode(con)
 
-              val chute = new Chute
+              val chute = new Chute(ellvar.id, ellvar.toString())
               chute.setNarrow(true)
+              chute.setEditable(false)
 
               board.addEdge(elllast, 0, con, 0, chute)
 
@@ -327,11 +332,11 @@ class NninfGameSolver(
               val receiverVar = receiver.asInstanceOf[Variable]
               val receiverInt = boardNVariableToIntersection((callerBoard, receiverVar))
 
-              callerBoard.addEdge(receiverInt, 0, subboard, 0, new Chute)
+              callerBoard.addEdge(receiverInt, 0, subboard, 0, new Chute(receiverVar.id, receiverVar.toString()))
 
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               callerBoard.addNode(con)
-              callerBoard.addEdge(subboard, 0, con, 0, new Chute)
+              callerBoard.addEdge(subboard, 0, con, 0, new Chute(receiverVar.id, receiverVar.toString()))
               boardNVariableToIntersection.update((callerBoard, receiverVar), con)
             }
             { // TODO: type arguments
@@ -346,8 +351,8 @@ class NninfGameSolver(
 
                 callerBoard.addNode(split)
 
-                callerBoard.addEdge(anargInt, 0, split, 0, new Chute)
-                callerBoard.addEdge(split, 1, subboard, subboardPort, new Chute)
+                callerBoard.addEdge(anargInt, 0, split, 0, new Chute(anargVar.id, anargVar.toString()))
+                callerBoard.addEdge(split, 1, subboard, subboardPort, new Chute(anargVar.id, anargVar.toString()))
 
                 boardNVariableToIntersection.update((callerBoard, anargVar), split)
               }
@@ -358,16 +363,15 @@ class NninfGameSolver(
                   if (boardNVariableToIntersection.contains((callerBoard, resvar))) {
                     // Method was previously called.
                     val resInt = boardNVariableToIntersection((callerBoard, resvar))
-                    println("rsult intersection: " + resInt)
                     val merge = Intersection.factory(Intersection.Kind.MERGE)
                     callerBoard.addNode(merge)
-                    callerBoard.addEdge(subboard, 1, merge, 0, new Chute)
-                    callerBoard.addEdge(resInt, 0, merge, 1, new Chute)
+                    callerBoard.addEdge(subboard, 1, merge, 0, new Chute(resvar.id, resvar.toString()))
+                    callerBoard.addEdge(resInt, 0, merge, 1, new Chute(resvar.id, resvar.toString()))
                     boardNVariableToIntersection.update((callerBoard, resvar), merge)
                   } else {
                     val con = Intersection.factory(Intersection.Kind.CONNECT)
                     callerBoard.addNode(con)
-                    callerBoard.addEdge(subboard, 1, con, 0, new Chute)
+                    callerBoard.addEdge(subboard, 1, con, 0, new Chute(resvar.id, resvar.toString()))
                     boardNVariableToIntersection.update((callerBoard, resvar), con)
                   }
                 }
@@ -390,17 +394,14 @@ class NninfGameSolver(
       // Connect all intersections to the corresponding outgoing slot
       boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
         if (cvar.varpos.isInstanceOf[ReturnVP]) {
-          // Should only the return variable be attached to outgoing?
-          // Also parameters?
+          // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
-          val chute = new Chute()
-          board.addEdge(lastsect, 0, outgoing, outgoing.getInputs().size(), chute)        
+          board.addEdge(lastsect, 0, outgoing, outgoing.getInputs().size(), new Chute(cvar.id, cvar.toString()))        
         } else {
-          // everything else simply gets terminated
+          // Everything else simply gets terminated.
           val end = Intersection.factory(Intersection.Kind.END)
           board.addNode(end)
-          val chute = new Chute()
-          board.addEdge(lastsect, 0, end, 0, chute)
+          board.addEdge(lastsect, 0, end, 0, new Chute(cvar.id, cvar.toString()))
         }
       })
       
