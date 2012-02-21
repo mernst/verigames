@@ -399,13 +399,13 @@ public class WorldXMLParser
   private static Pair<String, Chute> processEdge(final Element edgeElt, final Board b, final Map<String, Intersection> UIDMap)
   {
     checkName(edgeElt, "edge");
-    final String name;
+    final String description;
     {
-      final Attribute nameAttr = edgeElt.getAttribute("var");
-      if (nameAttr != null)
-        name = nameAttr.getValue();
+      final Attribute descriptionAttr = edgeElt.getAttribute("var");
+      if (descriptionAttr != null)
+        description = descriptionAttr.getValue();
       else
-        name = null;
+        description = null;
     }
 
     final boolean pinch;
@@ -462,7 +462,8 @@ public class WorldXMLParser
     final Intersection end = UIDMap.get(endID.getFirst());
     final int endPort = endID.getSecond();
 
-    final Chute c = new Chute();
+    // TODO change this once variableID is implemented in XML
+    final Chute c = new Chute(-1, description);
     c.setPinched(pinch);
     c.setNarrow(narrow);
     c.setBuzzsaw(buzzsaw);
@@ -473,7 +474,6 @@ public class WorldXMLParser
       c.setEditable(false);
 
     b.addEdge(start, startPort, end, endPort, c);
-    b.addChuteName(c, name);
 
     return Pair.of(UID, c);
   }

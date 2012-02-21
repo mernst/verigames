@@ -207,16 +207,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
         if (edge.underConstruction())
           throw new IllegalStateException("underConstruction Chute in Level while printing XML");
         
-        String edgeName = null;
-        {
-          Set<String> names = board.getChuteNames(edge);
-          if (!names.isEmpty())
-            edgeName = names.iterator().next();
-        }
+        String description = edge.getDescription();
         
         Element edgeElt = new Element("edge");
         {
-          edgeElt.addAttribute(new Attribute("var", (edgeName == null) ? "null" : edgeName));
+          edgeElt.addAttribute(new Attribute("var", description));
           edgeElt.addAttribute(new Attribute("pinch", Boolean.toString(edge.isPinched())));
           edgeElt.addAttribute(new Attribute("width", edge.isNarrow() ? "narrow" : "wide"));
           edgeElt.addAttribute(new Attribute("id", "e" + edge.getUID()));
