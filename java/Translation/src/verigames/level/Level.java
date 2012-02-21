@@ -286,9 +286,57 @@ public class Level
   {
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed Level");
+
+    /* TODO THIS IS A HACK -- FIX IT. Really, makeLinked should be deprecated or
+     * removed, and a different data structure should be used.*/
+    linkChutesWithSameID();
+
     underConstruction = false;
     for (Board b : boardNames.values())
       b.finishConstruction();
+  }
+
+  /**
+   * Links all chutes with the same ID, as long as no chutes are already linked
+   * (if there are chutes already linked, it is assumed that the user wants to
+   * manually link the chutes, so nothing is done).
+   */
+  private void linkChutesWithSameID()
+  {
+    if (linkedEdgeClasses.size() != 0)
+      return;
+    
+    Set<Chute> chutes = getAllChutes();
+
+    // map from variable id to chute
+    Map<Integer, Set<Chute>> IDMap = new LinkedHashMap<Integer, Set<Chute>>();
+    for (Chute c : chutes)
+    {
+      int varID = c.getVariableID();
+      if (IDMap.containsKey(varID))
+        IDMap.get(varID).add(c);
+      else
+      {
+        Set<Chute> set = new LinkedHashSet<Chute>();
+        set.add(c);
+        IDMap.put(c.getVariableID(), set);
+      }
+    }
+
+    for (Map.Entry<Integer, Set<Chute>> entry : IDMap.entrySet())
+    {
+      System.err.println(entry.getKey());
+      if (entry.getKey() != -1)
+        linkedEdgeClasses.add(entry.getValue());
+    }
+  }
+
+  private Set<Chute> getAllChutes()
+  {
+    Set<Chute> chutes = new LinkedHashSet<Chute>();
+    for (Board b : boardNames.values())
+      chutes.addAll(b.getEdges());
+    return chutes;
   }
   
   @Override
