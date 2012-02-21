@@ -4,6 +4,7 @@ import verigames.level.Level;
 import verigames.level.World;
 import verigames.level.WorldXMLPrinter;
 
+@SuppressWarnings("deprecation")
 public class IntroWorld
 {
   public static World getWorld()

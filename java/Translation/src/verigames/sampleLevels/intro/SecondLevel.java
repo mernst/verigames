@@ -13,6 +13,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 
 
+@SuppressWarnings("deprecation")
 public class SecondLevel
 {  
   public static Level makeLevel()

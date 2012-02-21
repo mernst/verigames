@@ -25,6 +25,7 @@ import verigames.level.Level;
 import verigames.level.NullTest;
 
 
+@SuppressWarnings("deprecation")
 public class LevelLevel
 {
   private static final Map<String, Integer> nameToPortMap;

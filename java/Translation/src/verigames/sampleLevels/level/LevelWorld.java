@@ -8,6 +8,7 @@ import verigames.level.World;
 
 
 
+@SuppressWarnings("deprecation")
 public class LevelWorld
 {
   public static World getWorld()

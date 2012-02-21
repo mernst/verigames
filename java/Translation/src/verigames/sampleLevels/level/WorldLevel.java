@@ -26,6 +26,7 @@ import verigames.level.Level;
  * disaster, but bear with me until I figure out good names
  */
 
+@SuppressWarnings("deprecation")
 public class WorldLevel
 {
   private static final Map<String, Integer> nameToPortMap;

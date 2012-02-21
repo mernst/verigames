@@ -11,6 +11,7 @@ import verigames.level.Intersection.Kind;
 import verigames.utilities.BuildingTools;
 
 
+@SuppressWarnings("deprecation")
 public class ChuteLevel
 {
   private static final Map<String, Integer> nameToPortMap;

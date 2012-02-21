@@ -10,6 +10,7 @@ import static verigames.level.Intersection.Kind.*;
 import static verigames.utilities.BuildingTools.*;
 
 
+@SuppressWarnings("deprecation")
 public class FirstLevel
 {
   public static Level makeLevel()

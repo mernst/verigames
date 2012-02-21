@@ -14,6 +14,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 
 
+@SuppressWarnings("deprecation")
 public class SubnetworkLevel
 {
   private static final Map<String, Integer> nameToPortMap;

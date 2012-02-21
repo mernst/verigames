@@ -22,6 +22,7 @@ import verigames.level.Level;
 import verigames.level.Intersection.Kind;
 
 
+@SuppressWarnings("deprecation")
 public class IntersectionLevel
 {
   private static Map<String, Integer> nameToPortMap;

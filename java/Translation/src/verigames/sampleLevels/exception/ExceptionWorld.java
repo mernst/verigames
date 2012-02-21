@@ -7,6 +7,7 @@ import verigames.level.Level;
 import verigames.level.World;
 import verigames.level.Intersection.Kind;
 
+@SuppressWarnings("deprecation")
 public class ExceptionWorld
 {
   public static World getWorld()

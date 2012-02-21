@@ -21,6 +21,7 @@ import verigames.level.Intersection.Kind;
 // methods that perform specific tasks, and as such, it's not very clear, and is
 // unlikely to be useful to clients. However, it can't be package-private
 // because code in multiple packages uses it.
+@SuppressWarnings("deprecation")
 public class BuildingTools
 {
   

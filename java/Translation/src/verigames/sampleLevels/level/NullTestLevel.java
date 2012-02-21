@@ -10,6 +10,7 @@ import verigames.level.Level;
 
 
 
+@SuppressWarnings("deprecation")
 public class NullTestLevel
 {
   public static Level makeLevel()
