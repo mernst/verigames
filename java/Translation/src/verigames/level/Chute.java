@@ -237,6 +237,14 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return description;
   }
+
+  /**
+   * Returns the variable ID of this {@code Chute}
+   */
+  public int getVariableID()
+  {
+    return variableID;
+  }
   
   /**
    * Returns a deep copy of {@code this}.
