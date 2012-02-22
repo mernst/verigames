@@ -45,10 +45,10 @@ import verigames.level.Intersection.Kind;
 
 public class Level
 {
-  private Set<Set<Chute>> linkedEdgeClasses;
+  private final Set<Set<Chute>> linkedEdgeClasses;
   
   // TODO change String, if necessary, to whatever we end up using
-  private Map<String, Board> boardNames;
+  private final Map<String, Board> boardNames;
   
   private boolean underConstruction = true;
   
@@ -325,7 +325,7 @@ public class Level
 
     for (Map.Entry<Integer, Set<Chute>> entry : IDMap.entrySet())
     {
-      System.err.println(entry.getKey());
+      // System.err.println(entry.getKey());
       if (entry.getKey() != -1)
         linkedEdgeClasses.add(entry.getValue());
     }
