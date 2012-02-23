@@ -21,7 +21,8 @@
       <!ELEMENT x (#PCDATA)>
       <!ELEMENT y (#PCDATA)>
     <!ELEMENT edge (from,to, edge-layout?)>
-     <!ATTLIST edge var CDATA #IMPLIED>
+     <!ATTLIST edge description CDATA #REQUIRED>
+     <!ATTLIST edge variableID CDATA #REQUIRED>
      <!ATTLIST edge pinch (true|false) #REQUIRED>
      <!ATTLIST edge width (wide|narrow) #REQUIRED>
      <!ATTLIST edge buzzsaw (true|false) #REQUIRED>
@@ -79,6 +80,8 @@ Requirements not enforced by the DTD:
 
    - All nodes that have kind SUBNETWORK must have a name attribute (and the
      name attribute is meaningless for other kinds of node)
+
+   - variableID must be an integer
 
 ================================================================================
 

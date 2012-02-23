@@ -399,13 +399,22 @@ public class WorldXMLParser
   private static Pair<String, Chute> processEdge(final Element edgeElt, final Board b, final Map<String, Intersection> UIDMap)
   {
     checkName(edgeElt, "edge");
+
     final String description;
     {
-      final Attribute descriptionAttr = edgeElt.getAttribute("var");
-      if (descriptionAttr != null)
-        description = descriptionAttr.getValue();
-      else
-        description = null;
+      final Attribute descriptionAttr = edgeElt.getAttribute("description");
+      description = descriptionAttr.getValue();
+    }
+
+    final int variableID;
+    try
+    {
+      final Attribute variableIDAttr = edgeElt.getAttribute("variableID");
+      variableID = Integer.parseInt(variableIDAttr.getValue());
+    }
+    catch (NumberFormatException e)
+    {
+      throw new RuntimeException("edge variableID attribute contains noninteger data", e);
     }
 
     final boolean pinch;
@@ -462,8 +471,7 @@ public class WorldXMLParser
     final Intersection end = UIDMap.get(endID.getFirst());
     final int endPort = endID.getSecond();
 
-    // TODO change this once variableID is implemented in XML
-    final Chute c = new Chute(-1, description);
+    final Chute c = new Chute(variableID, description);
     c.setPinched(pinch);
     c.setNarrow(narrow);
     c.setBuzzsaw(buzzsaw);
