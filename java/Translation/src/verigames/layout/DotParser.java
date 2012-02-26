@@ -75,6 +75,8 @@ class DotParser
     final GraphInformation.Builder out = new GraphInformation.Builder();
     
     Scanner in = new Scanner(dotOutput);
+
+    NodeDefaults nodeDefaults = new NodeDefaults(null, null);
     
     while (in.hasNextLine())
     {
@@ -101,7 +103,7 @@ class DotParser
       
       try
       {
-        parseLine(line, out);
+        nodeDefaults = parseLine(line, out, nodeDefaults);
       }
       catch (IllegalLineException e)
       {
@@ -130,6 +132,24 @@ class DotParser
     {
       this.name = name;
       this.attributes = attributes;
+    }
+  }
+
+  /**
+   * An immutable record type that stores the default attributes for a node.
+   * <p>
+   * A null reference indicates that there is no default value for a given
+   * attribute.
+   */
+  private static class NodeDefaults
+  {
+    public final /*@Nullable*/ Integer width;
+    public final /*@Nullable*/ Integer height;
+
+    public NodeDefaults(/*@Nullable*/ Integer width, /*@Nullable*/ Integer height)
+    {
+      this.width = width;
+      this.height = height;
     }
   }
   
@@ -162,8 +182,14 @@ class DotParser
    * @param builder
    * The {@link GraphInformation.Builder} to which the data from the parsed
    * line will be added.
+   * @param nodeDefaults
+   * The current default settings for nodes.
+   *
+   * @return
+   * The new default settings for nodes (will be {@code nodeDefaults} unless
+   * {@code line} is a node properties line).
    */
-  private static void parseLine(String line, GraphInformation.Builder builder) throws IllegalLineException
+  private static NodeDefaults parseLine(String line, GraphInformation.Builder builder, NodeDefaults nodeDefaults) throws IllegalLineException
   {
     switch (getLineKind(line))
     {
@@ -173,18 +199,23 @@ class DotParser
           builder.setGraphAttributes(graph);
         break;
       case NODE:
-        NodeRecord node = parseNode(line);
+        NodeRecord node = parseNode(line, nodeDefaults);
         builder.setNodeAttributes(node.name, node.attributes);
         break;
       case EDGE:
         EdgeRecord edge = parseEdge(line);
         builder.setEdgeAttributes(edge.start, edge.end, edge.attributes);
         break;
+      case NODE_PROPERTIES:
+        nodeDefaults = parseNodeDefaults(line, nodeDefaults);
+        break;
       default:
         // Right now, the graph, node, and edge attributes are all the
         // attributes that are used
         break;
     }
+
+    return nodeDefaults;
   }
   
   /**
@@ -302,7 +333,7 @@ class DotParser
    * Must be a valid, logical line of Graphviz output describing attributes of
    * a node.
    */
-  private static NodeRecord parseNode(String line) throws IllegalLineException
+  private static NodeRecord parseNode(String line, NodeDefaults nodeDefaults) throws IllegalLineException
   {
     // an example of a node line:
     // '   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];'
@@ -340,13 +371,29 @@ class DotParser
     // position attribute must be present
     if (pos == null)
       throw new IllegalLineException("No position information: " + line);
+
+    Integer width = parseNullableDimension(widthStr);
+    Integer height = parseNullableDimension(heightStr);
+
+    // if no width or height exists, use the default values.
+    if (width == null)
+      width = nodeDefaults.width;
+    if (height == null)
+      height = nodeDefaults.height;
+
     // either height or width must be present -- if one is absent, it is
     // assumed that the height and width are the same
-    if (heightStr == null && widthStr == null)
+    if (height == null && width == null)
       throw new IllegalLineException("No height/width information: " + line);
+      
+    // We know that either width or height is present from the check above.
+    // If one is present and the other isn't simply use the other's value.
+    if (width == null)
+      width = height;
+    if (height == null)
+      height = width;
     
     // The pos attribute takes the form pos="xx.xx,yy.yy"
-    
     try
     {
       // split around quotes, and take only the xx.xx,yy.yy part
@@ -357,19 +404,6 @@ class DotParser
       
       int x = parseToHundredths(coords[0]);
       int y = parseToHundredths(coords[1]);
-      
-      // We know that either width or height is present from the check above.
-      // If one is present and the other isn't simply use the other's value.
-      // TODO clean up this code:
-      int width = -1;
-      int height = -1;
-      if (widthStr == null)
-        widthStr = heightStr;
-      if (heightStr == null)
-        heightStr = widthStr;
-      
-      width = parseDimension(widthStr);
-      height = parseDimension(heightStr);
       
       return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
     }
@@ -481,6 +515,34 @@ class DotParser
     }
   }
 
+  private static NodeDefaults parseNodeDefaults(String line, NodeDefaults nodeDefaults) throws IllegalLineException
+  {
+    String[] tokens = tokenizeLine(line);
+
+    String widthStr = null;
+    String heightStr = null;
+
+    for (String token : tokens)
+    {
+      if (token.startsWith("width"))
+        widthStr = token;
+      else if (token.startsWith("height"))
+        heightStr = token;
+    }
+
+    // set the width and height
+    Integer width = parseNullableDimension(widthStr);
+    Integer height = parseNullableDimension(heightStr);
+
+    // if a new width or height hasn't been defined, the old one still holds.
+    if (width == null)
+      width = nodeDefaults.width;
+    if (height == null)
+      height = nodeDefaults.height;
+
+    return new NodeDefaults(width, height);
+  }
+
   /**
    * Takes a {@code String} representing a node and, optionally, a port, and
    * return just the part representing the node.
@@ -492,6 +554,18 @@ class DotParser
   private static String stripPortNumber(String in)
   {
     return in.split(":")[0];
+  }
+
+  /**
+   * Behaves as {@link #parseDimension(String)} except that a {@code null}
+   * argument is allowed, in which case {@code null} will be returned.
+   */
+  private static Integer parseNullableDimension(/*@Nullable*/ String dimensionStr) throws IllegalLineException
+  {
+    if (dimensionStr == null)
+      return null;
+    else
+      return parseDimension(dimensionStr);
   }
   
   /**
