@@ -85,6 +85,11 @@ class EdgeLayoutPrinter extends GraphvizPrinter
         {
           final int maxPorts = GraphvizPrinter.getMaxPorts(n);
           final int width = maxPorts;
+          final double height = getIntersectionHeight(n.getIntersectionKind());
+
+          // find the centerpoint of the node
+          xPoints = xPoints + (width * 72d) / 2d;
+          yPoints = yPoints - (height * 72d) / 2d;
 
           /* in a "record" shape node, the labels have special meaning, and
            * define ports. The curly braces control the layout. */
@@ -92,14 +97,24 @@ class EdgeLayoutPrinter extends GraphvizPrinter
               + generatePortList("i",maxPorts) + "}|{"
               + generatePortList("o",maxPorts) + "}}";
 
-          optionsString = String.format(", shape=record, width=%d label=\"%s\"",
-                                        width, label);
+          optionsString = String.format(", shape=record, width=%d, height=%f, label=\"%s\"",
+                                        width, height, label);
         }
         else
           optionsString = "";
       }
       
       out.printf("%d [pos=\"%f,%f\"%s];\n", n.getUID(), xPoints, yPoints, optionsString);
+    }
+
+    private static double getIntersectionHeight(Intersection.Kind kind)
+    {
+      if (!usesPorts(kind))
+        return 0;
+      else if (kind == Intersection.Kind.SUBNETWORK)
+        return 1.46;
+      else
+        return 1;
     }
 
     /**

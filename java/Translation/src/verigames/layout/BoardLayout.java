@@ -137,7 +137,7 @@ public class BoardLayout
     // the height of the board is needed when the origin is moved from the
     // bottom left to the top left.
     int boardHeight = info.getGraphAttributes().getHeight();
-    
+
     // because Graphviz, when using "neato -n" only guarantees that nodes
     // stay in the same locations *relative to each other* and not
     // absolutely, we need to find what the offset is between the original
@@ -146,7 +146,7 @@ public class BoardLayout
     Double yOffset = null;
     
     // the allowed variation for the x and y offsets between loop iterations.
-    final double epsilon = 0.001;
+    final double epsilon = 0.01;
     
     for (Chute c : b.getEdges())
     {
@@ -155,10 +155,39 @@ public class BoardLayout
       
       {
         GraphInformation.NodeAttributes startAttrs = info.getNodeAttributes(startUID);
-        
+
+        // in hundredths of points:
+        final int x,y;
+
+        Intersection startNode = c.getStart();
+        Intersection.Kind startKind = startNode.getIntersectionKind();
+
+        // these nodes are not points
+        /* TODO If this list of Kinds changes, it should only need to change in
+         * one place. Right now, it would need to be changed both here and in
+         * EdgeLayoutPrinter */
+        if (startKind == Intersection.Kind.INCOMING || startKind == Intersection.Kind.OUTGOING || startKind == Intersection.Kind.SUBNETWORK)
+        // Graphviz gives the centerpoint, we want the top left point
+        {
+          // the following quantities in hundredths of points, using the bottom left as the origin.
+          final int centerX, centerY, width, height;
+          centerX = startAttrs.getX();
+          centerY = startAttrs.getY();
+          width = startAttrs.getWidth();
+          height = startAttrs.getHeight();
+
+          x = centerX - width/2;
+          y = centerY + height/2;
+        }
+        else
+        {
+          x = startAttrs.getX();
+          y = startAttrs.getY();
+        }
+
         // gives the coordinates of the start node in game units, with the
         // top left as the origin.
-        Pair<Double, Double> startCoords = hundredthsOfPointsToGameUnits(startAttrs.getX(), startAttrs.getY(), boardHeight);
+        Pair<Double, Double> startCoords = hundredthsOfPointsToGameUnits(x, y, boardHeight);
         
         // finds the difference between what the node coordinates originally
         // were and what they are now according to Graphviz
