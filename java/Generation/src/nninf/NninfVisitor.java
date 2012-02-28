@@ -102,6 +102,34 @@ public class NninfVisitor extends InferenceVisitor {
         return super.visitSynchronized(node, p);
     }
 
+    @Override
+    public Void visitIf(IfTree node, Void p) {
+        checkForNullability(node.getCondition(), "condition.nullable");
+        return super.visitIf(node, p);
+    }
+
+    @Override
+    public Void visitDoWhileLoop(DoWhileLoopTree node, Void p) {
+        checkForNullability(node.getCondition(), "condition.nullable");
+        return super.visitDoWhileLoop(node, p);
+    }
+
+    @Override
+    public Void visitWhileLoop(WhileLoopTree node, Void p) {
+        checkForNullability(node.getCondition(), "condition.nullable");
+        return super.visitWhileLoop(node, p);
+    }
+
+    // Nothing needed for EnhancedForLoop, no boolean get's unboxed there.
+    @Override
+    public Void visitForLoop(ForLoopTree node, Void p) {
+        if (node.getCondition()!=null) {
+            // Condition is null e.g. in "for (;;) {...}"
+            checkForNullability(node.getCondition(), "condition.nullable");
+        }
+        return super.visitForLoop(node, p);
+    }
+
     /** Check for switch statements */
     @Override
     public Void visitSwitch(SwitchTree node, Void p) {
