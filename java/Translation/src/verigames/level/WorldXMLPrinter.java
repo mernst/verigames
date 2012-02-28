@@ -99,7 +99,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
     // Output all remaining edges -- edges not listed are in equivalence
     // classes of size 1
     
-    for (Board b : l.boards().values())
+    for (Board b : l.getBoards().values())
     {
       for (Chute c : b.getEdges())
       {
@@ -122,7 +122,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
   
   private Element constructBoardsMap(Level l)
   {
-    Map<String, Board> boardNames = l.boards();
+    Map<String, Board> boardNames = l.getBoards();
     
     Element boardsElt = new Element("boards");
     

@@ -251,7 +251,7 @@ public class Level
    * returned {@code Map} is backed by {@code this}, so changes in {@code
    * this} will be reflected in the returned {@code Map}.
    */
-  public Map<String, Board> boards()
+  public Map<String, Board> getBoards()
   {
     return Collections.unmodifiableMap(boardNames);
   }
@@ -341,7 +341,7 @@ public class Level
   @Override
   public String toString()
   {
-    return "Level: " + boards().keySet().toString();
+    return "Level: " + getBoards().keySet().toString();
     
   }
 }
