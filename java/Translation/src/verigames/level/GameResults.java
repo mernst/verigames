@@ -75,7 +75,7 @@ public class GameResults
 
     for (Level l : w.getLevels().values())
     {
-      for (Board b : l.boards().values())
+      for (Board b : l.getBoards().values())
       {
         chutes.addAll(b.getEdges());
       }

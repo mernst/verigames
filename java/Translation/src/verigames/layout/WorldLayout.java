@@ -41,7 +41,7 @@ public class WorldLayout
   {
     for (Level l : w.getLevels().values())
     {
-      for (Board b : l.boards().values())
+      for (Board b : l.getBoards().values())
       {
         BoardLayout.layout(b);
       }
