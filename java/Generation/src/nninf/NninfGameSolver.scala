@@ -499,10 +499,18 @@ class NninfGameSolver(
           }
         }
         case (cvar1: Variable, LiteralThis) => {
-          variablePosToBoard(cvar1.varpos)
+          if (cvar1.varpos.isInstanceOf[ParameterVP]) {
+            null
+          } else {
+            variablePosToBoard(cvar1.varpos)
+          }
         }
         case (LiteralThis, cvar2: Variable) => {
-          variablePosToBoard(cvar2.varpos)
+          if (cvar2.varpos.isInstanceOf[ParameterVP]) {
+            null
+          } else {
+            variablePosToBoard(cvar2.varpos)
+          }
         }
       }
     }
