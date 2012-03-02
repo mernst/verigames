@@ -19,7 +19,7 @@ import java.util.List;
  * {@code false} by default.<br/>
  * <br/>
  * Specification Field: {@code narrow} : {@code boolean} // {@code true} iff the
- * chute is currently narrow<br/>
+ * chute is currently narrow. Defaults to {@code true}<br/>
  * <br/>
  * Specification Field: {@code editable} : {@code boolean} // {@code true} iff
  * the player can edit the width of the chute<br/>
@@ -85,7 +85,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     this.editable = true;
 
-    this.narrow = false;
+    this.narrow = true;
     this.pinch = false;
 
     this.buzzsaw = false;
