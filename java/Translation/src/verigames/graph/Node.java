@@ -38,9 +38,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   // contain null.
   // TODO remove warning suppression after JDK is properly annotated
   @SuppressWarnings("nullness")
-  private List</* @Nullable */EdgeType> inputs;
+  private final List</* @Nullable */EdgeType> inputs;
   @SuppressWarnings("nullness")
-  private List</* @Nullable */EdgeType> outputs;
+  private final List</* @Nullable */EdgeType> outputs;
   
   private boolean underConstruction = true;
   
@@ -317,7 +317,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     {
       /*@Nullable*/ EdgeType e = outputs.get(i);
       if (e == null)
-        throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null");
+        throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null. This: " + this);
     }
     
     if (!underConstruction)
