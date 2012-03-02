@@ -1,5 +1,6 @@
 package nninf;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import checkers.basetype.BaseTypeChecker;
@@ -68,10 +69,49 @@ public class NninfVisitor extends InferenceVisitor {
     /** Check for null dereferencing */
     @Override
     public Void visitMemberSelect(MemberSelectTree node, Void p) {
+        // Note that the ordering is important! First receiver expression, then create field access, then inequality.
+        super.visitMemberSelect(node, p);
+        // TODO: How do I decide whether something is a field read or update?
+        // We currently create an access and then a set constraint.
         if (!TreeUtils.isSelfAccess(node)) {
             checkForNullability(node.getExpression(), "dereference.of.nullable");
         }
-        return super.visitMemberSelect(node, p);
+        logFieldAccess(node);
+        return null;
+    }
+
+    /** An identifier is a field access sometimes, i.e. when there is an implicit "this". */
+    @Override
+    public Void visitIdentifier(IdentifierTree node, Void p) {
+        Element elem = TreeUtils.elementFromUse(node);
+        if (elem.getKind().isField() && !node.toString().equals("this")) {
+            logFieldAccess(node);
+        }
+        return super.visitIdentifier(node, p);
+    }
+
+    /** Log all assignments. */
+    @Override
+    public Void visitAssignment(AssignmentTree node, Void p) {
+        super.visitAssignment(node, p);
+        logAssignment(node);
+        return null;
+    }
+
+    /** Log method invocations. */
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
+        logMethodInvocation(node);
+        return super.visitMethodInvocation(node, p);
+    }
+
+    /** Class instantiation is always non-null.
+     * TODO: resolve this automatically?
+     */
+    @Override
+    public Void visitNewClass(NewClassTree node, Void p) {
+        checkForNullability(node, "newclass.null");
+        return super.visitNewClass(node, p);
     }
 
     /** Check for implicit {@code .iterator} call */
@@ -100,6 +140,12 @@ public class NninfVisitor extends InferenceVisitor {
     public Void visitSynchronized(SynchronizedTree node, Void p) {
         checkForNullability(node.getExpression(), "locking.nullable");
         return super.visitSynchronized(node, p);
+    }
+
+    @Override
+    public Void visitConditionalExpression(ConditionalExpressionTree node, Void p) {
+        checkForNullability(node.getCondition(), "condition.nullable");
+        return super.visitConditionalExpression(node, p);
     }
 
     @Override
@@ -177,18 +223,5 @@ public class NninfVisitor extends InferenceVisitor {
         if (NullnessVisitor.isPrimitive(node) && !NullnessVisitor.isPrimitive(node.getExpression()))
             checkForNullability(node.getExpression(), "unboxing.of.nullable");
         return super.visitTypeCast(node, p);
-    }
-
-    /** Log method invocations. */
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
-        logMethodInvocation(node);
-        return super.visitMethodInvocation(node, p);
-    }
-
-    @Override
-    public Void visitNewClass(NewClassTree node, Void p) {
-        checkForNullability(node, "newclass.null");
-        return super.visitNewClass(node, p);
     }
 }
