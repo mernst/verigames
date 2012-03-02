@@ -210,11 +210,11 @@ public class Intersection extends verigames.graph.Node<Chute>
     }
     else
     {
-      // Ensures that the all ports are filled
+      // Ensures that all ports are filled
       
       if (numRequiredInPorts != -1)
       {
-        ensure(usedInPorts == numRequiredInPorts);
+        ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInports: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
         ensure(maxInPorts == numRequiredInPorts);
       }
       

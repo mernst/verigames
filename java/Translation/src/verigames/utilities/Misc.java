@@ -15,7 +15,13 @@ public class Misc
     if (!value)
       throw new AssertionError();
   }
-  
+
+  public static void ensure(boolean value, String msg)
+  {
+    if (!value)
+      throw new AssertionError(msg);
+  }
+
   /**
    * Controls whether checkRep is run in various classes in various packages.
    * However, some classes may ignore this value in favor of their own, for
