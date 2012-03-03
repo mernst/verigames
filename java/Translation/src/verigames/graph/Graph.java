@@ -112,7 +112,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       ensure(this.underConstruction() == n.underConstruction());
     }
   }
-  
+
   /**
    * Adds {@code node} to {@code this}.<br/>
    * <br/>
@@ -134,15 +134,15 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       throw new IllegalStateException("Mutation attempted on an constructed Graph");
     if (!node.underConstruction())
       throw new IllegalStateException("Fully constructed node added to Graph");
-    
+
     if (this.contains(node))
       throw new IllegalArgumentException(
           "this already contains given node");
-    
+
     nodes.add(node);
     checkRep();
   }
-  
+
   /**
    * Adds an edge from {@code startPort} on {@code start} to {@code endPort} on
    * {@code end}.<br/>
@@ -186,7 +186,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       throw new IllegalArgumentException("Fully constructed end node " + end);
     if (!edge.underConstruction())
       throw new IllegalArgumentException("Fully constructed edge " + edge);
-    
+
     if (!this.contains(start))
       throw new IllegalArgumentException(
           "Start node not in this Graph " + start);
