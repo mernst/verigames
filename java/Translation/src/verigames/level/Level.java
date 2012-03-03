@@ -325,8 +325,7 @@ public class Level
 
     for (Map.Entry<Integer, Set<Chute>> entry : IDMap.entrySet())
     {
-      if (entry.getKey() != -1)
-        linkedEdgeClasses.add(entry.getValue());
+      linkedEdgeClasses.add(entry.getValue());
     }
   }
 
