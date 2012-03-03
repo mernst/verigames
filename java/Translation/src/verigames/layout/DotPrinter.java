@@ -105,10 +105,7 @@ class DotPrinter extends AbstractDotPrinter
       String start = getNodeString(e.getStart(), "o", e.getStartPort());
       String end = getNodeString(e.getEnd(), "i", e.getEndPort());
 
-      /* TODO for some reason, if this is a directed graph, there are some weird
-       * gaps between subnetworks and the chutes flowing into them. Investigate
-       * this and fix it, because this really should be a directed graph */
-      out.println(start + " -- " + end + ";");
+      out.println(start + " -> " + end + ";");
     }
 
     /**
@@ -164,7 +161,7 @@ class DotPrinter extends AbstractDotPrinter
   @Override
   protected boolean isDigraph(Board b)
   {
-    return false;
+    return true;
   }
 
   @Override
@@ -180,13 +177,13 @@ class DotPrinter extends AbstractDotPrinter
   @Override
   protected String edgeSettings(Board b)
   {
-    // dirtype=none: Remove the drawings of arrows on the edges. Doing this
-    // gives more regular spline information.
+    // dir=none: Remove the drawings of arrows on the edges. Doing this gives
+    // more regular spline information.
     //
     // headclip,tailclip=false: draw edges to the centers of nodes, instead of
     // stopping at their edges. Important because the nodes are circles, not
     // points. For an explanation, see nodeSettings.
-    return "dirtype=none, headclip=false, tailclip=false";
+    return "dir=none, headclip=false, tailclip=false";
   }
 
   @Override
