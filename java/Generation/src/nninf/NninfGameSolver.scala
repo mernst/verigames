@@ -176,7 +176,7 @@ class NninfGameSolver(
                 val outgoing = getterBoard.getOutgoingNode()
                 val field = Intersection.factory(Intersection.Kind.START_NO_BALL)
                 getterBoard.addNode(field)
-                getterBoard.addEdge(field, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
+                getterBoard.addEdge(field, 0, outgoing, 1 + genericsOffset(cvar), new Chute(cvar.id, cvar.toString()))
               }
 
               // 3. a field setter
@@ -188,7 +188,7 @@ class NninfGameSolver(
                 val outgoing = setterBoard.getOutgoingNode()
                 val field = Intersection.factory(Intersection.Kind.END)
                 setterBoard.addNode(field)
-                setterBoard.addEdge(incoming, 1, field, 0, new Chute(cvar.id, cvar.toString()))
+                setterBoard.addEdge(incoming, 1 + genericsOffset(cvar), field, 0, new Chute(cvar.id, cvar.toString()))
                 // Let's not have an output for setters.
                 // setterBoard.addEdge(field, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
               }
@@ -746,6 +746,20 @@ class NninfGameSolver(
       inthis.setEditable(false)
       inthis.setNarrow(true)
       inthis
+    }
+
+    /** Determine the offset for the generic location of the variable,
+     * that is, if we want to serialize all the variables for input/output
+     * to subboards, what port number should be used.
+     */
+    def genericsOffset(avar: AbstractVariable): Int = {
+      if (avar.pos==null || avar.pos.size==0) {
+        0
+      } else {
+        // Add up the size of the array plus all the elements in the array.
+        // Is this unique?
+        (avar.pos.size /: avar.pos) (_ + _)
+      }
     }
 
     def optimizeWorld(world: World) {/*
