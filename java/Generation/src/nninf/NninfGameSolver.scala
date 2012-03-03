@@ -264,24 +264,21 @@ class NninfGameSolver(
                   val sublast = findIntersection(board, sub)
                   val suplast = findIntersection(board, sup)
 
-                  sub match {
-                    case lit: Literal => {
-                      board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                      board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                  if (isUniqueSlot(sub)) {
+                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
+                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
 
-                      updateIntersection(board, sup, merge)                      
-                    }
-                    case _ => {
-                      val split = Intersection.factory(Intersection.Kind.SPLIT)
-                      board.addNode(split)
+                    updateIntersection(board, sup, merge)                      
+                  } else {
+                    val split = Intersection.factory(Intersection.Kind.SPLIT)
+                    board.addNode(split)
 
-                      board.addEdge(sublast, 0, split, 0, createChute(sub))
-                      board.addEdge(suplast, 0, merge, 0, createChute(sup))
-                      board.addEdge(split, 1, merge, 1, createChute(sub))
+                    board.addEdge(sublast, 0, split, 0, createChute(sub))
+                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                    board.addEdge(split, 1, merge, 1, createChute(sub))
 
-                      updateIntersection(board, sub, split)
-                      updateIntersection(board, sup, merge)
-                    }
+                    updateIntersection(board, sub, split)
+                    updateIntersection(board, sup, merge)
                   }
                 }
               }
@@ -372,21 +369,18 @@ class NninfGameSolver(
                     val recvInt = findIntersection(ctxBoard, recvslot)
                     ctxBoard.addEdge(recvInt, 0, subboard, 0, createChute(recvslot))
 
-                    rightslot match {
-                      case lit: Literal => {
-                        val rightInt = findIntersection(ctxBoard, rightslot)
-                        ctxBoard.addEdge(rightInt, 0, subboard, 1, createChute(rightslot))
-                      }
-                      case _ => {
-                        val rightInt = findIntersection(ctxBoard, rightslot)
-                        val split = Intersection.factory(Intersection.Kind.SPLIT)
-                        ctxBoard.addNode(split)
+                    if (isUniqueSlot(rightslot)) {
+                      val rightInt = findIntersection(ctxBoard, rightslot)
+                      ctxBoard.addEdge(rightInt, 0, subboard, 1, createChute(rightslot))
+                    } else {
+                      val rightInt = findIntersection(ctxBoard, rightslot)
+                      val split = Intersection.factory(Intersection.Kind.SPLIT)
+                      ctxBoard.addNode(split)
 
-                        ctxBoard.addEdge(rightInt, 0, split, 0, createChute(rightslot))
-                        ctxBoard.addEdge(split, 1, subboard, 1, createChute(rightslot))
+                      ctxBoard.addEdge(rightInt, 0, split, 0, createChute(rightslot))
+                      ctxBoard.addEdge(split, 1, subboard, 1, createChute(rightslot))
 
-                        updateIntersection(ctxBoard, rightslot, split)
-                      }
+                      updateIntersection(ctxBoard, rightslot, split)
                     }
 
                     val con = Intersection.factory(Intersection.Kind.CONNECT)
@@ -432,22 +426,19 @@ class NninfGameSolver(
                 subboardPort += 1
 
                 // TODO: merge this with RHS of assignment
-                anarg match {
-                  case lit: Literal => {
-                    val anargInt = findIntersection(callerBoard, anarg)
-                    callerBoard.addEdge(anargInt, 0, subboard, 1, createChute(anarg))
-                  }
-                  case _ => {
-                    val anargInt = findIntersection(callerBoard, anarg)
+                if (isUniqueSlot(anarg)) {
+                  val anargInt = findIntersection(callerBoard, anarg)
+                  callerBoard.addEdge(anargInt, 0, subboard, 1, createChute(anarg))
+                } else {
+                  val anargInt = findIntersection(callerBoard, anarg)
 
-                    val split = Intersection.factory(Intersection.Kind.SPLIT)
-                    callerBoard.addNode(split)
+                  val split = Intersection.factory(Intersection.Kind.SPLIT)
+                  callerBoard.addNode(split)
 
-                    callerBoard.addEdge(anargInt, 0, split, 0, createChute(anarg))
-                    callerBoard.addEdge(split, 1, subboard, subboardPort, createChute(anarg))
+                  callerBoard.addEdge(anargInt, 0, split, 0, createChute(anarg))
+                  callerBoard.addEdge(split, 1, subboard, subboardPort, createChute(anarg))
 
-                    updateIntersection(callerBoard, anarg, split)
-                  }
+                  updateIntersection(callerBoard, anarg, split)
                 }
               }
             }
@@ -644,14 +635,14 @@ class NninfGameSolver(
             null
           }
         }
-        case (cvar1: Variable, lit: Literal) => {
+        case (cvar1: Variable, lit: AbstractLiteral) => {
           if (cvar1.varpos.isInstanceOf[ParameterVP]) {
             null
           } else {
             variablePosToBoard(cvar1.varpos)
           }
         }
-        case (lit: Literal, cvar2: Variable) => {
+        case (lit: AbstractLiteral, cvar2: Variable) => {
           if (cvar2.varpos.isInstanceOf[ParameterVP]) {
             null
           } else {
@@ -672,7 +663,7 @@ class NninfGameSolver(
           board.addNode(res)
           res
         }
-        case lit: Literal => {
+        case lit: AbstractLiteral => {
           // TODO: Are all other literals non-null?
           val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
           board.addNode(res)
@@ -694,13 +685,20 @@ class NninfGameSolver(
         case LiteralNull => {
           // Nothing to do, we're always creating a new black ball
         }
-        case lit: Literal => {
+        case lit: AbstractLiteral => {
           // Also nothing to do for other literals
         }
         case _ => {
           println("updateIntersection: unmatched slot: " + slot)
         }
       }
+    }
+
+    /** For "unique" slots we do not need to create splits, as a new, unique
+     * intersection is generated each time.
+     */
+    def isUniqueSlot(slot: Slot): Boolean = {
+      !(slot.isInstanceOf[Variable] || slot == LiteralThis) 
     }
 
     def createChute(slot: Slot): Chute = {
