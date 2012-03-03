@@ -33,8 +33,8 @@ import java.util.Set;
 
 public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeType>>
 {
-  private Set<NodeType> nodes;
-  private Set<EdgeType> edges;
+  private final Set<NodeType> nodes;
+  private final Set<EdgeType> edges;
   private boolean underConstruction = true;
   
   /**
@@ -216,10 +216,10 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     
     if (start.getOutput(startPort) != null)
       throw new IllegalArgumentException(
-          "Start Node already connected to Edge on given port: " + start.getOutput(startPort));
+          "Start Node already connected to Edge on port " + startPort + ": " + start.getOutput(startPort));
     if (end.getInput(endPort) != null)
       throw new IllegalArgumentException(
-          "End Node already connected to Edge on given port: " + start.getInput(endPort));
+          "End Node already connected to Edge on port " + endPort + ": " + end.getInput(endPort));
     
     edges.add(edge);
     
