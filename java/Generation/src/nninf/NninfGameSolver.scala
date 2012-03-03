@@ -7,6 +7,7 @@ import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
 import verigames.level._
 import checkers.inference.LiteralNull
+import checkers.inference.AbstractLiteral
 
 class NninfGameSolver(
     /** All variables used in this program. */
@@ -169,10 +170,10 @@ class NninfGameSolver(
 
               // 2. a field getter
               {
-                val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
-                val incoming = getterBoard.getIncomingNode()
+                // val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
+                val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
+                val inthis = findIntersection(getterBoard, LiteralThis)
                 val outgoing = getterBoard.getOutgoingNode()
-                getterBoard.addEdge(incoming, 0, outgoing, 0, createThisChute())
                 val field = Intersection.factory(Intersection.Kind.START_NO_BALL)
                 getterBoard.addNode(field)
                 getterBoard.addEdge(field, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
@@ -180,10 +181,11 @@ class NninfGameSolver(
 
               // 3. a field setter
               {
-                val setterBoard = newBoard(level, getFieldSetterName(clvar.asInstanceOf[FieldVP]))
+                // val setterBoard = newBoard(level, getFieldSetterName(clvar.asInstanceOf[FieldVP]))
+                val setterBoard = findOrCreateMethodBoard(clvar, getFieldSetterName(clvar.asInstanceOf[FieldVP]))
+                val inthis = findIntersection(setterBoard, LiteralThis)
                 val incoming = setterBoard.getIncomingNode()
                 val outgoing = setterBoard.getOutgoingNode()
-                setterBoard.addEdge(incoming, 0, outgoing, 0, createThisChute())
                 val field = Intersection.factory(Intersection.Kind.END)
                 setterBoard.addNode(field)
                 setterBoard.addEdge(incoming, 1, field, 0, new Chute(cvar.id, cvar.toString()))
@@ -322,7 +324,7 @@ class NninfGameSolver(
           }
           case FieldAccessConstraint(context, receiver, fieldslot, fieldvp) => {
             val ctxBoard = variablePosToBoard(context)
-            val subboard = newSubboard(ctxBoard, getFieldAccessorName(fieldvp))
+            val subboard = newSubboard(ctxBoard, fieldvp, getFieldAccessorName(fieldvp))
 
             { // Connect the receiver to input and output 0
               val receiverInt = findIntersection(ctxBoard, receiver)
@@ -365,7 +367,7 @@ class NninfGameSolver(
               case fieldvar : Variable => {
                 fieldvar.varpos match {
                   case fvp: FieldVP => {
-                    val subboard = newSubboard(ctxBoard, getFieldSetterName(fvp))
+                    val subboard = newSubboard(ctxBoard, fvp, getFieldSetterName(fvp))
                     val recvInt = findIntersection(ctxBoard, recvslot)
                     ctxBoard.addEdge(recvInt, 0, subboard, 0, createChute(recvslot))
 
@@ -404,7 +406,7 @@ class NninfGameSolver(
           }
           case CallInstanceMethodConstraint(caller, receiver, methname, tyargs, args, result) => {
             val callerBoard = variablePosToBoard(caller)
-            val subboard = newSubboard(callerBoard, methname.getMethodSignature)
+            val subboard = newSubboard(callerBoard, methname, methname.getMethodSignature)
             // The input port to use next
             var subboardPort = 0
 
@@ -482,7 +484,7 @@ class NninfGameSolver(
         if (cvar.varpos.isInstanceOf[ReturnVP]) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
-          board.addEdge(lastsect, 0, outgoing, outgoing.getInputs().size(), new Chute(cvar.id, cvar.toString()))        
+          board.addEdge(lastsect, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))        
         } else {
           // Everything else simply gets terminated.
           val end = Intersection.factory(Intersection.Kind.END)
@@ -494,7 +496,7 @@ class NninfGameSolver(
       boardToSelfIntersection foreach ( kv => { val (board, lastsect) = kv
         val outgoing = board.getOutgoingNode()
         val outthis = createThisChute()
-        board.addEdge(lastsect, 0, outgoing, outgoing.getInputs().size(), outthis)
+        board.addEdge(lastsect, 0, outgoing, 0, outthis)
       })
 
       // Finally, deactivate all levels and add them to the world.
@@ -513,10 +515,10 @@ class NninfGameSolver(
       val b = new Board()
       val cleanname = cleanUpForXML(name)
       level.addBoard(cleanname, b)
-      
+
       b.addNode(Intersection.factory(Intersection.Kind.INCOMING))
       b.addNode(Intersection.factory(Intersection.Kind.OUTGOING))
-      
+
       b
     }
 
@@ -535,9 +537,11 @@ class NninfGameSolver(
     /**
      * Create a new subboard on callerBoard.
      */
-    def newSubboard(callerBoard: Board, called: String): Subnetwork = {
-      val subboard = Intersection.subnetworkFactory(cleanUpForXML(called))
+    def newSubboard(callerBoard: Board, calledvarpos: VariablePosition, calledname: String): Subnetwork = {
+      val subboard = Intersection.subnetworkFactory(cleanUpForXML(calledname))
       callerBoard.addNode(subboard)
+      // Ensure that called board exists, returned board not used.
+      findOrCreateMethodBoard(calledvarpos, calledname)
       subboard
     }
 
@@ -573,17 +577,7 @@ class NninfGameSolver(
       varpos match {
         case mvar: WithinMethodVP => {
           val msig = mvar.getMethodSignature
-
-          if (methToBoard.contains(msig)) {
-            methToBoard(msig)
-          } else {
-            val level = variablePosToLevel(varpos)
-            val b = newBoard(level, msig)
-            methToBoard += (msig -> b)
-            // TODO: handle static methods
-            addThisStart(b)
-            b
-          }
+          findOrCreateMethodBoard(varpos, msig)
         }
         case clvar: WithinClassVP => {
           val fqcname = clvar.getFQClassName
@@ -602,6 +596,19 @@ class NninfGameSolver(
           println("variablePosToBoard: unhandled position: " + varpos)
           null
         }
+      }
+    }
+
+    def findOrCreateMethodBoard(varpos: VariablePosition, sig: String): Board = {
+      if (methToBoard.contains(sig)) {
+        methToBoard(sig)
+      } else {
+        val level = variablePosToLevel(varpos)
+        val b = newBoard(level, sig)
+        methToBoard += (sig -> b)
+        // TODO: handle static methods
+        addThisStart(b)
+        b
       }
     }
 
@@ -707,10 +714,18 @@ class NninfGameSolver(
           new Chute(v.id, v.toString())
         case LiteralThis =>
           createThisChute()
-        case LiteralNull =>
-          new Chute(-2, "null")
-        case Literal(kind, lit) =>
-          new Chute(-3, lit.toString())
+        case LiteralNull => {
+          val res = new Chute(-2, "null")
+          res.setEditable(false)
+          res.setNarrow(false)
+          res
+        }
+        case lit: AbstractLiteral => {
+          val res = new Chute(-3, lit.lit.toString())
+          res.setEditable(false)
+          res.setNarrow(true)
+          res
+        }
         case _ => {
           println("createChute: unmatched slot: " + slot)
           null
