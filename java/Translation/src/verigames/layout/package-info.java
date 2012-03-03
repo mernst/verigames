@@ -80,7 +80,7 @@
  * <li>
  * The first is through the input that Graphviz is given. This is controlled by
  * {@link verigames.layout.GraphvizPrinter}, and its subclasses {@link
- * verigames.layout.EdgeLayoutPrinter} and {@link verigames.layout.NodeLayoutPrinter}. What it
+ * verigames.layout.DotPrinter} and {@link verigames.layout.NodeLayoutPrinter}. What it
  * prints can drastically change the layout, as this determines the behavior of
  * Graphviz itself.
  * <p>

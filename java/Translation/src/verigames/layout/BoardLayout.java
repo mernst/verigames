@@ -45,25 +45,12 @@ public class BoardLayout
    */
   public static void layout(Board b)
   {
-    nodeLayoutPass(b);
-    edgeLayoutPass(b);
-  }
-  
-  /**
-   * Adds node layout information to the nodes in {@code b}.
-   * <p>
-   * Modifies: {@code b}
-   *
-   * @param b
-   */
-  private static void nodeLayoutPass(Board b)
-  {
     GraphInformation info;
     
     // These variables are all just for clarity, so putting them in a block
     // avoids cluttering the namespace
     {
-      GraphvizPrinter printer = new NodeLayoutPrinter();
+      AbstractDotPrinter printer = new DotPrinter();
       String command = "dot";
       GraphvizRunner runner = new GraphvizRunner(printer, command);
       info = runner.run(b);
@@ -108,100 +95,11 @@ public class BoardLayout
       n.setX(((double) xCorner) / 7200d);
       n.setY(((double) yCorner) / 7200d);
     }
-  }
-  
-  /**
-   * Adds edge layout information to the edges in {@code b}, without changing
-   * existing node layout information.
-   * <p>
-   * Modifies: {@code b}
-   *
-   * @param b
-   * Must already have layout information for its nodes.
-   */
-  private static void edgeLayoutPass(Board b)
-  {
-    GraphInformation info;
-    
-    // These variables are all just for clarity, so putting them in a block
-    // avoids cluttering the namespace
-    {
-      GraphvizPrinter printer = new EdgeLayoutPrinter();
-      // neato's -n flag tells it to accept node positions and not to change
-      // them.
-      String command = "neato -n";
-      GraphvizRunner runner = new GraphvizRunner(printer, command);
-      info = runner.run(b);
-    }
-    
-    // the height of the board is needed when the origin is moved from the
-    // bottom left to the top left.
-    int boardHeight = info.getGraphAttributes().getHeight();
 
-    // because Graphviz, when using "neato -n" only guarantees that nodes
-    // stay in the same locations *relative to each other* and not
-    // absolutely, we need to find what the offset is between the original
-    // node location and its laid-out counterpart.
-    Double xOffset = null;
-    Double yOffset = null;
-    
-    // the allowed variation for the x and y offsets between loop iterations.
-    final double epsilon = 0.01;
-    
     for (Chute c : b.getEdges())
     {
       String startUID = Integer.toString(c.getStart().getUID());
       String endUID = Integer.toString(c.getEnd().getUID());
-      
-      {
-        GraphInformation.NodeAttributes startAttrs = info.getNodeAttributes(startUID);
-
-        // in hundredths of points:
-        final int x,y;
-
-        Intersection startNode = c.getStart();
-        Intersection.Kind startKind = startNode.getIntersectionKind();
-
-        // these nodes are not points
-        /* TODO If this list of Kinds changes, it should only need to change in
-         * one place. Right now, it would need to be changed both here and in
-         * EdgeLayoutPrinter */
-        if (startKind == Intersection.Kind.INCOMING || startKind == Intersection.Kind.OUTGOING || startKind == Intersection.Kind.SUBNETWORK)
-        // Graphviz gives the centerpoint, we want the top left point
-        {
-          // the following quantities in hundredths of points, using the bottom left as the origin.
-          final int centerX, centerY, width, height;
-          centerX = startAttrs.getX();
-          centerY = startAttrs.getY();
-          width = startAttrs.getWidth();
-          height = startAttrs.getHeight();
-
-          x = centerX - width/2;
-          y = centerY + height/2;
-        }
-        else
-        {
-          x = startAttrs.getX();
-          y = startAttrs.getY();
-        }
-
-        // gives the coordinates of the start node in game units, with the
-        // top left as the origin.
-        Pair<Double, Double> startCoords = hundredthsOfPointsToGameUnits(x, y, boardHeight);
-        
-        // finds the difference between what the node coordinates originally
-        // were and what they are now according to Graphviz
-        double currentXOffset = c.getStart().getX() - startCoords.getFirst();
-        double currentYOffset = c.getStart().getY() - startCoords.getSecond();
-        
-        if (xOffset == null)
-          xOffset = currentXOffset;
-        if (yOffset == null)
-          yOffset = currentYOffset;
-        
-        ensure(Math.abs(xOffset - currentXOffset) < epsilon);
-        ensure(Math.abs(yOffset - currentYOffset) < epsilon);
-      }
       
       GraphInformation.EdgeAttributes edgeAttrs; 
       
@@ -225,7 +123,7 @@ public class BoardLayout
         Pair<Double, Double> rawCoords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
         
         Pair<Double, Double> coords = new Pair<Double, Double>
-        (rawCoords.getFirst() + xOffset, rawCoords.getSecond() + yOffset);
+        (rawCoords.getFirst(), rawCoords.getSecond());
         
         layout.add(coords);
       }

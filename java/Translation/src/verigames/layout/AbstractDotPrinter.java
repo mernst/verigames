@@ -33,7 +33,7 @@ import verigames.utilities.Printer;
  * 
  * @author Nathaniel Mote
  */
-abstract class GraphvizPrinter extends Printer<Board, Void>
+abstract class AbstractDotPrinter extends Printer<Board, Void>
 {
 
   /**
@@ -62,7 +62,7 @@ abstract class GraphvizPrinter extends Printer<Board, Void>
    * @param edgePrinter
    * The {@link verigames.utilities.Printer} used to output edges
    */
-  protected GraphvizPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
+  protected AbstractDotPrinter(Printer<Intersection, Board> nodePrinter, Printer<Chute, Board> edgePrinter)
   {
     this.nodePrinter = nodePrinter;
     this.edgePrinter = edgePrinter;

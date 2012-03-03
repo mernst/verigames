@@ -14,82 +14,33 @@ import verigames.utilities.Printer;
  * Prints fully constructed {@link verigames.level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
  * <p>
- * This {@link verigames.utilities.Printer Printer} prints for the edge layout phase of
- * the layout -- thus the name {@code EdgeLayoutPrinter}. This is the second
- * phase in the layout process -- the first is laying out the nodes.
- * <p>
- * IMPORTANT: In order for a {@link verigames.level.Board Board} to be printed
- * meaningfully with this printer, it must have complete node layout
- * information.
+ * This {@link verigames.utilities.Printer Printer} prints DOT output for use in
+ * laying out game boards.
  * 
  * @author Nathaniel Mote
  *
  * @see verigames.layout
  */
-class EdgeLayoutPrinter extends GraphvizPrinter
+class DotPrinter extends AbstractDotPrinter
 {
   /**
-   * A class that prints {@link verigames.level.Intersection Intersection} objects to
-   * Graphviz's DOT format, with attributes tailored to the edge layout pass.
-   * <p>
-   * For the edge layout pass, the node coordinates must be printed. To convert
-   * between game coordinates and Graphviz coordinates, the height of the board
-   * is needed. However, calculating this is expensive (linear on the number of
-   * nodes in the {@code Board}), so the result is cached.
-   * <p>
-   * This cache introduces state that should be specific to each {@code
-   * EdgeLayoutPrinter}. Therefore, a new {@code NodePrinter} is created for
-   * every new {@code EdgeLayoutPrinter}.
+   * A class that prints {@link verigames.level.Intersection Intersection}
+   * objects to Graphviz's DOT format.
    */
   private static class NodePrinter extends Printer<Intersection, Board>
   {
-    /**
-     * The height of the current board, in game units. This is needed for the
-     * conversion between coordinate systems, because we have y growing
-     * downards, and Graphviz has y growing upwards.  This must be
-     * precalculated, because at any given time, the total height of a board
-     * cannot be determined quickly.
-     */
-    private double boardHeight = -1d;
-    
-    /**
-     * Used to determine when the boardHeight should be updated. If the {@code
-     * Board} being printed is different from the one referred to here, then
-     * boardHeight must be recalculated.
-     * <p>
-     * Maintained as a weak reference because this reference is only needed to
-     * compare identity, and a reference held here and nowhere else would be
-     * useless, so garbage collection should be allowed.
-     */
-    private WeakReference</*@Nullable*/ Board> currentBoard = new WeakReference</*@Nullable*/ Board>(null);
-    
     @Override
     protected void printMiddle(Intersection n, PrintStream out, Board b)
     {
-      // if the board referred to has been garbage collected,
-      // currentBoard.get() will return null
-      if (b != currentBoard.get())
-        updateBoardHeight(b);
-      
-      double xInches = n.getX();
-      double yInches = boardHeight - n.getY();
-      
-      double xPoints = xInches * 72d;
-      double yPoints = yInches * 72d;
-
       /* contains extra options, particularly the extra information needed for a
        * node with ports. */
       final String optionsString;
       {
         if (usesPorts(n.getIntersectionKind()))
         {
-          final int maxPorts = GraphvizPrinter.getMaxPorts(n);
+          final int maxPorts = AbstractDotPrinter.getMaxPorts(n);
           final int width = maxPorts;
           final double height = getIntersectionHeight(n.getIntersectionKind());
-
-          // find the centerpoint of the node
-          xPoints = xPoints + (width * 72d) / 2d;
-          yPoints = yPoints - (height * 72d) / 2d;
 
           /* in a "record" shape node, the labels have special meaning, and
            * define ports. The curly braces control the layout. */
@@ -97,14 +48,14 @@ class EdgeLayoutPrinter extends GraphvizPrinter
               + generatePortList("i",maxPorts) + "}|{"
               + generatePortList("o",maxPorts) + "}}";
 
-          optionsString = String.format(", shape=record, width=%d, height=%f, label=\"%s\"",
+          optionsString = String.format("[shape=record, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
         }
         else
           optionsString = "";
       }
       
-      out.printf("%d [pos=\"%f,%f\"%s];\n", n.getUID(), xPoints, yPoints, optionsString);
+      out.printf("%d %s;\n", n.getUID(),  optionsString);
     }
 
     private static double getIntersectionHeight(Intersection.Kind kind)
@@ -138,26 +89,6 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       }
       return result;
     }
-    
-    /**
-     * Updates the boardHeight and currentBoard fields to reflect data from
-     * the given Board.
-     */
-    private void updateBoardHeight(Board b)
-    {
-      double minY = Double.MAX_VALUE;
-      double maxY = Double.MIN_VALUE;
-      for (Intersection n : b.getNodes())
-      {
-        double currentY = n.getY();
-        if (currentY < minY)
-          minY = currentY;
-        if (currentY > maxY)
-          maxY = currentY;
-      }
-      boardHeight = maxY - minY;
-      currentBoard = new WeakReference</*@Nullable*/ Board>(b);
-    }
   }
   
   /**
@@ -172,6 +103,9 @@ class EdgeLayoutPrinter extends GraphvizPrinter
       String start = getNodeString(e.getStart(), "o", e.getStartPort());
       String end = getNodeString(e.getEnd(), "i", e.getEndPort());
 
+      /* TODO for some reason, if this is a directed graph, there are some weird
+       * gaps between subnetworks and the chutes flowing into them. Investigate
+       * this and fix it, because this really should be a directed graph */
       out.println(start + " -- " + end + ";");
     }
 
@@ -206,7 +140,7 @@ class EdgeLayoutPrinter extends GraphvizPrinter
   /**
    * Constructs a new {@code EdgeLayoutPrinter}
    */
-  public EdgeLayoutPrinter()
+  public DotPrinter()
   {
     super(new NodePrinter(), edgePrinter);
   }

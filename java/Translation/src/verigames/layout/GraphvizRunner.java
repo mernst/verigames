@@ -20,7 +20,7 @@ import verigames.level.Board;
  */
 class GraphvizRunner
 {
-  private final GraphvizPrinter printer;
+  private final AbstractDotPrinter printer;
   private final String command;
   
   /**
@@ -34,7 +34,7 @@ class GraphvizRunner
    * @param command
    * The Graphviz command line command to run.
    */
-  public GraphvizRunner(GraphvizPrinter printer, String command)
+  public GraphvizRunner(AbstractDotPrinter printer, String command)
   {
     this.printer = printer;
     this.command = command;
