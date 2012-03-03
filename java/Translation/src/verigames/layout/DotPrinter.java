@@ -48,7 +48,7 @@ class DotPrinter extends AbstractDotPrinter
               + generatePortList("i",maxPorts) + "}|{"
               + generatePortList("o",maxPorts) + "}}";
 
-          optionsString = String.format("[shape=record, width=%d, height=%f, label=\"%s\"]",
+          optionsString = String.format("[shape=record, fixedsize=true, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
         }
         else
@@ -64,6 +64,8 @@ class DotPrinter extends AbstractDotPrinter
         return 0;
       else if (kind == Intersection.Kind.SUBNETWORK)
         return 1.46;
+      else if (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING)
+        return 0;
       else
         return 1;
     }
