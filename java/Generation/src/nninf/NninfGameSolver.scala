@@ -260,20 +260,29 @@ class NninfGameSolver(
                   // println(sub + " <: " + sup)
 
                   val merge = Intersection.factory(Intersection.Kind.MERGE)
-                  val split = Intersection.factory(Intersection.Kind.SPLIT)
+                  board.addNode(merge)
                   val sublast = findIntersection(board, sub)
                   val suplast = findIntersection(board, sup)
 
-                  board.addNode(merge)
-                  board.addNode(split)
+                  sub match {
+                    case lit: Literal => {
+                      board.addEdge(sublast, 0, merge, 1, createChute(sub))
+                      board.addEdge(suplast, 0, merge, 0, createChute(sup))
 
-                  // TODO: which variable get's the merge output??
-                  board.addEdge(sublast, 0, split, 0, createChute(sub))
-                  board.addEdge(suplast, 0, merge, 0, createChute(sup))
-                  board.addEdge(split, 1, merge, 1, createChute(sub))
+                      updateIntersection(board, sup, merge)                      
+                    }
+                    case _ => {
+                      val split = Intersection.factory(Intersection.Kind.SPLIT)
+                      board.addNode(split)
 
-                  updateIntersection(board, sub, split)
-                  updateIntersection(board, sup, merge)
+                      board.addEdge(sublast, 0, split, 0, createChute(sub))
+                      board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                      board.addEdge(split, 1, merge, 1, createChute(sub))
+
+                      updateIntersection(board, sub, split)
+                      updateIntersection(board, sup, merge)
+                    }
+                  }
                 }
               }
             }
@@ -364,7 +373,7 @@ class NninfGameSolver(
                     ctxBoard.addEdge(recvInt, 0, subboard, 0, createChute(recvslot))
 
                     rightslot match {
-                      case LiteralNull => {
+                      case lit: Literal => {
                         val rightInt = findIntersection(ctxBoard, rightslot)
                         ctxBoard.addEdge(rightInt, 0, subboard, 1, createChute(rightslot))
                       }
@@ -424,7 +433,7 @@ class NninfGameSolver(
 
                 // TODO: merge this with RHS of assignment
                 anarg match {
-                  case LiteralNull => {
+                  case lit: Literal => {
                     val anargInt = findIntersection(callerBoard, anarg)
                     callerBoard.addEdge(anargInt, 0, subboard, 1, createChute(anarg))
                   }
@@ -617,8 +626,7 @@ class NninfGameSolver(
 
     /**
      * Find the board that should be used for a constraint between two
-     * variables.
-     * 
+     * slots.
      */
     def findBoard(slot1: Slot, slot2: Slot): Board = {
       (slot1, slot2) match {
@@ -636,14 +644,14 @@ class NninfGameSolver(
             null
           }
         }
-        case (cvar1: Variable, LiteralThis) => {
+        case (cvar1: Variable, lit: Literal) => {
           if (cvar1.varpos.isInstanceOf[ParameterVP]) {
             null
           } else {
             variablePosToBoard(cvar1.varpos)
           }
         }
-        case (LiteralThis, cvar2: Variable) => {
+        case (lit: Literal, cvar2: Variable) => {
           if (cvar2.varpos.isInstanceOf[ParameterVP]) {
             null
           } else {
@@ -664,6 +672,12 @@ class NninfGameSolver(
           board.addNode(res)
           res
         }
+        case lit: Literal => {
+          // TODO: Are all other literals non-null?
+          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          board.addNode(res)
+          res
+        }
         case _ => {
           println("findIntersection: unmatched slot: " + slot)
           null
@@ -680,6 +694,9 @@ class NninfGameSolver(
         case LiteralNull => {
           // Nothing to do, we're always creating a new black ball
         }
+        case lit: Literal => {
+          // Also nothing to do for other literals
+        }
         case _ => {
           println("updateIntersection: unmatched slot: " + slot)
         }
@@ -694,6 +711,8 @@ class NninfGameSolver(
           createThisChute()
         case LiteralNull =>
           new Chute(-2, "null")
+        case Literal(kind, lit) =>
+          new Chute(-3, lit.toString())
         case _ => {
           println("createChute: unmatched slot: " + slot)
           null
