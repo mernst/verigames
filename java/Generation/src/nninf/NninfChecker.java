@@ -67,4 +67,14 @@ public class NninfChecker extends BaseTypeChecker implements
     public boolean withCombineConstraints() {
         return false;
     }
+
+    @Override
+    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
+        if (sub.getEffectiveAnnotations().isEmpty() ||
+                sup.getEffectiveAnnotations().isEmpty()) {
+            // TODO: The super method complains about empty annotations. Prevent this.
+            return true;
+        }
+        return super.isSubtype(sub, sup);
+    }
 }
