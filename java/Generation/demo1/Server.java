@@ -8,6 +8,7 @@ import java.io.*;
 import java.awt.*;
 import java.util.*;
 
+@SuppressWarnings({"deprecation", "unchecked"})
 public class Server extends Thread {
     public final static int DEFAULT_PORT = 6789;
     protected int port;
@@ -124,6 +125,7 @@ class Connection extends Thread {
     
     // Provide the service.
     // Read a line, reverse it, send it back.  
+    @SuppressWarnings("deprecation")
     public void run() {
         String line;
         StringBuffer revline;
@@ -188,6 +190,7 @@ class Vulture extends Thread {
     // the GUI List component are within a synchronized block as well.
     // This prevents the Server class from adding a new conenction while
     // we're removing an old one.
+    @SuppressWarnings("deprecation")
     public synchronized void run() {
         for(;;) {
             try { this.wait(5000); } catch (InterruptedException e) { ; }
