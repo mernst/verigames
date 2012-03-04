@@ -25,6 +25,12 @@ import verigames.utilities.Pair;
 public class BoardLayout
 {
   /**
+   * The minimum height that a board should be. If it is less than this height,
+   * it will not display properly in the game.
+   */
+  private static final double MIN_HEIGHT = 7.68;
+
+  /**
    * Should not be called. BoardLayout is simply a collection of static
    * methods.
    */
@@ -133,6 +139,67 @@ public class BoardLayout
       
       c.setLayout(layout);
     }
+
+    scaleUpToMinHeight(b);
+  }
+
+  /**
+   * Scales {@code b} so that its height is at least {@link #MIN_HEIGHT}.
+   * <p>
+   * Modifies {@code b}
+   */
+  private static void scaleUpToMinHeight(Board b)
+  {
+    if (b.getOutgoingNode().getY() < MIN_HEIGHT)
+    {
+      double scaleFactor = MIN_HEIGHT / b.getOutgoingNode().getY();
+
+      scaleBoardVertically(scaleFactor, b);
+    }
+  }
+
+  /**
+   * Scales {@code b} vertically by the given factor.
+   * <p>
+   * Modifies {@code b}
+   */
+  private static void scaleBoardVertically(double scaleFactor, Board b)
+  {
+    for (Intersection n : b.getNodes())
+      scaleNodeY(scaleFactor, n);
+    for (Chute c : b.getEdges())
+      scaleEdgeY(scaleFactor, c);
+  }
+
+  /**
+   * Scales the Y coordinate of the given node by the given factor.
+   * <p>
+   * Modifies {@code node}
+   */
+  private static void scaleNodeY(double scaleFactor, Intersection node)
+  {
+    node.setY(node.getY() * scaleFactor);
+  }
+
+  /**
+   * Scales the Y coordinates of the given edge by the given factor.
+   * <p>
+   * Modifies {@code edge}
+   */
+  private static void scaleEdgeY(double scaleFactor, Chute edge)
+  {
+    List<Pair<Double, Double>> oldLayout = edge.getLayout();
+    List<Pair<Double, Double>> newLayout = new ArrayList<Pair<Double, Double>>();
+    
+    for (Pair<Double, Double> point : oldLayout)
+    {
+      double x = point.getFirst();
+      double y = point.getSecond() * scaleFactor;
+
+      Pair<Double, Double> newPoint = Pair.of(x,y);
+      newLayout.add(newPoint);
+    }
+    edge.setLayout(newLayout);
   }
   
   /**
