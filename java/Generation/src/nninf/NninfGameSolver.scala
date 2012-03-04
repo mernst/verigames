@@ -174,7 +174,7 @@ class NninfGameSolver(
                 val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
                 val inthis = findIntersection(getterBoard, LiteralThis)
                 val outgoing = getterBoard.getOutgoingNode()
-                val field = Intersection.factory(Intersection.Kind.START_NO_BALL)
+                val field = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
                 getterBoard.addNode(field)
                 getterBoard.addEdge(field, 0, outgoing, 1 + genericsOffset(cvar), new Chute(cvar.id, cvar.toString()))
               }
@@ -233,7 +233,6 @@ class NninfGameSolver(
                 sub != NninfConstants.NONNULL) {
 
               if (sub == LiteralNull) {
-                /*
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
 
@@ -251,7 +250,6 @@ class NninfGameSolver(
                 board.addEdge(blackball, 0, merge, 1, new Chute(-1, "null literal"))
 
                 boardNVariableToIntersection.update((board, supvar), merge)
-                */
               } else {
                 // Subtypes between arbitrary variables only happens for local variables.
                 // TODO: what happens for "x = o.f"? Do I always create ASSIGNMENT constraints?
@@ -270,7 +268,12 @@ class NninfGameSolver(
                     board.addEdge(sublast, 0, merge, 1, createChute(sub))
                     board.addEdge(suplast, 0, merge, 0, createChute(sup))
 
-                    updateIntersection(board, sup, merge)                      
+                    updateIntersection(board, sup, merge)
+                  } else if (isUniqueSlot(sup)) {
+                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
+                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+
+                    updateIntersection(board, sub, merge)
                   } else {
                     val split = Intersection.factory(Intersection.Kind.SPLIT)
                     board.addNode(split)
@@ -302,16 +305,11 @@ class NninfGameSolver(
               val chute = new Chute(ellvar.id, ellvar.toString())
               chute.setPinched(true)
 
-              val elllast = if (boardNVariableToIntersection.contains((board, ellvar))) {
-                  boardNVariableToIntersection((board, ellvar))
-                } else {
-                  println("Didn't find connection for: " + ellvar)
-                  null
-                }
+              val elllast = findIntersection(board, ellvar)
 
               board.addEdge(elllast, 0, con, 0, chute)
 
-              boardNVariableToIntersection.update((board, ellvar), con)
+              updateIntersection(board, ellvar, con)
             } else {
               println("TODO: uncovered inequality case!")
             }
@@ -402,7 +400,7 @@ class NninfGameSolver(
             }
           }
           case AssignmentConstraint(context, leftslot, rightslot) => {
-            println("TODO")
+            println("TODO: AssignmentConstraint not handled")
           }
           case CallInstanceMethodConstraint(caller, receiver, methname, tyargs, args, result) => {
             val callerBoard = variablePosToBoard(caller)
@@ -513,6 +511,7 @@ class NninfGameSolver(
      */
     def newBoard(level: Level, name: String): Board = {
       val b = new Board()
+      // println("created board " + b + " with name " + name)
       val cleanname = cleanUpForXML(name)
       level.addBoard(cleanname, b)
 
@@ -634,6 +633,10 @@ class NninfGameSolver(
 
           if (board1==board2) {
             board1
+          // } else if (cvar1.varpos.isInstanceOf[ReturnVP]) {
+          //   board1
+          } else if (cvar2.varpos.isInstanceOf[ReturnVP]) {
+            board2
           } else {
             /* We only need to handle variables that will end up on the same board.
              * For all other variables, there will be a MethodCall, FieldRead, or FieldUpdate
@@ -656,13 +659,24 @@ class NninfGameSolver(
             variablePosToBoard(cvar2.varpos)
           }
         }
+        case (cvar1: Variable, c: Constant) => {
+          variablePosToBoard(cvar1.varpos)
+        }
+        case (c: Constant, cvar2: Variable) => {
+          variablePosToBoard(cvar2.varpos)
+        }
+        case (_, _) => {
+          println("TODO: findBoard unhandled slots: " + slot1 + " and " + slot2)
+          null
+        }
       }
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {
       slot match {
-        case v: Variable =>
+        case v: Variable => {
           boardNVariableToIntersection((board, v))
+        }
         case LiteralThis =>
           boardToSelfIntersection(board)
         case LiteralNull => {
@@ -672,6 +686,16 @@ class NninfGameSolver(
         }
         case lit: AbstractLiteral => {
           // TODO: Are all other literals non-null?
+          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          board.addNode(res)
+          res
+        }
+        case NninfConstants.NULLABLE => {
+          val res = Intersection.factory(Intersection.Kind.START_BLACK_BALL)
+          board.addNode(res)
+          res
+        }
+        case NninfConstants.NONNULL => {
           val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
           board.addNode(res)
           res
@@ -694,6 +718,12 @@ class NninfGameSolver(
         }
         case lit: AbstractLiteral => {
           // Also nothing to do for other literals
+        }
+        case NninfConstants.NULLABLE => {
+          // Nothing to do, we're always creating a new black ball
+        }
+        case NninfConstants.NONNULL => {
+          // Nothing to do, we're always creating a new white ball
         }
         case _ => {
           println("updateIntersection: unmatched slot: " + slot)
@@ -722,6 +752,18 @@ class NninfGameSolver(
         }
         case lit: AbstractLiteral => {
           val res = new Chute(-3, lit.lit.toString())
+          res.setEditable(false)
+          res.setNarrow(true)
+          res
+        }
+        case NninfConstants.NULLABLE => {
+          val res = new Chute(-4, "nullable")
+          res.setEditable(false)
+          res.setNarrow(false)
+          res
+        }
+        case NninfConstants.NONNULL => {
+          val res = new Chute(-5, "nonnull")
           res.setEditable(false)
           res.setNarrow(true)
           res
