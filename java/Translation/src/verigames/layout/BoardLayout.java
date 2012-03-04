@@ -126,10 +126,7 @@ public class BoardLayout
       
       for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
       {
-        Pair<Double, Double> rawCoords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
-        
-        Pair<Double, Double> coords = new Pair<Double, Double>
-        (rawCoords.getFirst(), rawCoords.getSecond());
+        Pair<Double, Double> coords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
         
         layout.add(coords);
       }
@@ -137,6 +134,21 @@ public class BoardLayout
       if (reversed)
         Collections.reverse(layout);
       
+      /* if the start node is an INCOMING node, cheat a little bit and set the
+       * starting y coordinate to 0. It's pretty close to 0 already, but it's
+       * not quite because of some limitations with Graphviz. Because it's so
+       * close, it shouldn't cause any problems with the spline, and it will
+       * look better this way. */
+      if (c.getStart().getIntersectionKind() == Intersection.Kind.INCOMING)
+      {
+        Pair<Double, Double> firstCoord = layout.get(0);
+
+        double x = firstCoord.getFirst();
+        double y = 0;
+
+        layout.set(0, Pair.of(x,y));
+      }
+
       c.setLayout(layout);
     }
 
