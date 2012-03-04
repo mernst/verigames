@@ -48,14 +48,41 @@ class DotPrinter extends AbstractDotPrinter
               + generatePortList("i",maxPorts) + "}|{"
               + generatePortList("o",maxPorts) + "}}";
 
-          optionsString = String.format("[shape=record, width=%d, height=%f, label=\"%s\"]",
+          optionsString = String.format("[shape=record, fixedsize=true, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
         }
         else
           optionsString = "";
       }
+
+      final String prefix;
+      final String suffix;
+      {
+        /* this puts INCOMING and OUTGOING nodes in their own subgraphs.
+         * rank=source/sink ensures that the subgraph is alone in its rank, and
+         * makes that rank the minimum/maximum (respectively) possible. This
+         * enforces the invariant that incoming nodes are at the very top, and
+         * outgoing nodes are at the very bottom. */
+        if (n.getIntersectionKind() == Intersection.Kind.INCOMING)
+        {
+          prefix = "{\ngraph [rank=source];\n";
+          suffix = "}\n";
+        }
+        else if (n.getIntersectionKind() == Intersection.Kind.OUTGOING)
+        {
+          prefix = "{\ngraph [rank=sink];\n";
+          suffix = "}\n";
+        }
+        else
+        {
+          prefix = "";
+          suffix = "";
+        }
+      }
       
+      out.print(prefix);
       out.printf("%d %s;\n", n.getUID(),  optionsString);
+      out.print(suffix);
     }
 
     private static double getIntersectionHeight(Intersection.Kind kind)
@@ -64,6 +91,8 @@ class DotPrinter extends AbstractDotPrinter
         return 0;
       else if (kind == Intersection.Kind.SUBNETWORK)
         return 1.46;
+      else if (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING)
+        return 0;
       else
         return 1;
     }
@@ -100,13 +129,12 @@ class DotPrinter extends AbstractDotPrinter
     @Override
     protected void printMiddle(Chute e, PrintStream out, Board b)
     {
-      String start = getNodeString(e.getStart(), "o", e.getStartPort());
-      String end = getNodeString(e.getEnd(), "i", e.getEndPort());
+      /* the suffix enforces the edge direction -- edges come out of the "south"
+       * side and enter the "north" side of nodes. */
+      String start = getNodeString(e.getStart(), "o", e.getStartPort(), ":s");
+      String end = getNodeString(e.getEnd(), "i", e.getEndPort(), ":n");
 
-      /* TODO for some reason, if this is a directed graph, there are some weird
-       * gaps between subnetworks and the chutes flowing into them. Investigate
-       * this and fix it, because this really should be a directed graph */
-      out.println(start + " -- " + end + ";");
+      out.println(start + " -> " + end + ";");
     }
 
     /**
@@ -127,12 +155,12 @@ class DotPrinter extends AbstractDotPrinter
      */
     /* This method should be static, but can't be because it's part of an
      * anonymous class. This should, perhaps, be changed. */
-    private String getNodeString(Intersection n, String portPrefix, int port)
+    private String getNodeString(Intersection n, String portPrefix, int port, String suffix)
     {
       String result = "";
       result += n.getUID();
       if (usesPorts(n.getIntersectionKind()))
-        result += ":" + portPrefix + port;
+        result += ":" + portPrefix + port + suffix;
       return result;
     }
   };
@@ -162,7 +190,7 @@ class DotPrinter extends AbstractDotPrinter
   @Override
   protected boolean isDigraph(Board b)
   {
-    return false;
+    return true;
   }
 
   @Override
@@ -178,13 +206,13 @@ class DotPrinter extends AbstractDotPrinter
   @Override
   protected String edgeSettings(Board b)
   {
-    // dirtype=none: Remove the drawings of arrows on the edges. Doing this
-    // gives more regular spline information.
+    // dir=none: Remove the drawings of arrows on the edges. Doing this gives
+    // more regular spline information.
     //
     // headclip,tailclip=false: draw edges to the centers of nodes, instead of
     // stopping at their edges. Important because the nodes are circles, not
     // points. For an explanation, see nodeSettings.
-    return "dirtype=none, headclip=false, tailclip=false";
+    return "dir=none, headclip=false, tailclip=false";
   }
 
   @Override

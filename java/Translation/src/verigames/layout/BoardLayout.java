@@ -25,6 +25,12 @@ import verigames.utilities.Pair;
 public class BoardLayout
 {
   /**
+   * The minimum height that a board should be. If it is less than this height,
+   * it will not display properly in the game.
+   */
+  private static final double MIN_HEIGHT = 7.68;
+
+  /**
    * Should not be called. BoardLayout is simply a collection of static
    * methods.
    */
@@ -120,10 +126,7 @@ public class BoardLayout
       
       for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
       {
-        Pair<Double, Double> rawCoords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
-        
-        Pair<Double, Double> coords = new Pair<Double, Double>
-        (rawCoords.getFirst(), rawCoords.getSecond());
+        Pair<Double, Double> coords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
         
         layout.add(coords);
       }
@@ -131,8 +134,84 @@ public class BoardLayout
       if (reversed)
         Collections.reverse(layout);
       
+      /* if the start node is an INCOMING node, cheat a little bit and set the
+       * starting y coordinate to 0. It's pretty close to 0 already, but it's
+       * not quite because of some limitations with Graphviz. Because it's so
+       * close, it shouldn't cause any problems with the spline, and it will
+       * look better this way. */
+      if (c.getStart().getIntersectionKind() == Intersection.Kind.INCOMING)
+      {
+        Pair<Double, Double> firstCoord = layout.get(0);
+
+        double x = firstCoord.getFirst();
+        double y = 0;
+
+        layout.set(0, Pair.of(x,y));
+      }
+
       c.setLayout(layout);
     }
+
+    scaleUpToMinHeight(b);
+  }
+
+  /**
+   * Scales {@code b} so that its height is at least {@link #MIN_HEIGHT}.
+   * <p>
+   * Modifies {@code b}
+   */
+  private static void scaleUpToMinHeight(Board b)
+  {
+    if (b.getOutgoingNode().getY() < MIN_HEIGHT)
+    {
+      double scaleFactor = MIN_HEIGHT / b.getOutgoingNode().getY();
+
+      scaleBoardVertically(scaleFactor, b);
+    }
+  }
+
+  /**
+   * Scales {@code b} vertically by the given factor.
+   * <p>
+   * Modifies {@code b}
+   */
+  private static void scaleBoardVertically(double scaleFactor, Board b)
+  {
+    for (Intersection n : b.getNodes())
+      scaleNodeY(scaleFactor, n);
+    for (Chute c : b.getEdges())
+      scaleEdgeY(scaleFactor, c);
+  }
+
+  /**
+   * Scales the Y coordinate of the given node by the given factor.
+   * <p>
+   * Modifies {@code node}
+   */
+  private static void scaleNodeY(double scaleFactor, Intersection node)
+  {
+    node.setY(node.getY() * scaleFactor);
+  }
+
+  /**
+   * Scales the Y coordinates of the given edge by the given factor.
+   * <p>
+   * Modifies {@code edge}
+   */
+  private static void scaleEdgeY(double scaleFactor, Chute edge)
+  {
+    List<Pair<Double, Double>> oldLayout = edge.getLayout();
+    List<Pair<Double, Double>> newLayout = new ArrayList<Pair<Double, Double>>();
+    
+    for (Pair<Double, Double> point : oldLayout)
+    {
+      double x = point.getFirst();
+      double y = point.getSecond() * scaleFactor;
+
+      Pair<Double, Double> newPoint = Pair.of(x,y);
+      newLayout.add(newPoint);
+    }
+    edge.setLayout(newLayout);
   }
   
   /**
