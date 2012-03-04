@@ -114,73 +114,102 @@ public class NninfVisitor extends InferenceVisitor {
         return super.visitNewClass(node, p);
     }
 
+    @Override
+    public Void visitReturn(ReturnTree node, Void p) {
+        // Don't try to check return expressions for void methods.
+        if (node.getExpression() == null) {
+            return null;
+        }
+
+        scan(node.getExpression(), p);
+
+        MethodTree enclosingMethod =
+            TreeUtils.enclosingMethod(getCurrentPath());
+
+        AnnotatedExecutableType methodType = atypeFactory.getAnnotatedType(enclosingMethod);
+        commonAssignmentCheck(methodType.getReturnType(), node.getExpression(),
+                "return.type.incompatible");
+
+        return null;
+    }
+
     /** Check for implicit {@code .iterator} call */
     @Override
     public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
+        super.visitEnhancedForLoop(node, p);
         checkForNullability(node.getExpression(), "dereference.of.nullable");
-        return super.visitEnhancedForLoop(node, p);
+        return null;
     }
 
     /** Check for array dereferencing */
     @Override
     public Void visitArrayAccess(ArrayAccessTree node, Void p) {
+        super.visitArrayAccess(node, p);
         checkForNullability(node.getExpression(), "accessing.nullable");
-        return super.visitArrayAccess(node, p);
+        return null;
     }
 
     /** Check for thrown exception nullness */
     @Override
     public Void visitThrow(ThrowTree node, Void p) {
+        super.visitThrow(node, p);
         checkForNullability(node.getExpression(), "throwing.nullable");
-        return super.visitThrow(node, p);
+        return null;
     }
 
     /** Check for synchronizing locks */
     @Override
     public Void visitSynchronized(SynchronizedTree node, Void p) {
+        super.visitSynchronized(node, p);
         checkForNullability(node.getExpression(), "locking.nullable");
-        return super.visitSynchronized(node, p);
+        return null;
     }
 
     @Override
     public Void visitConditionalExpression(ConditionalExpressionTree node, Void p) {
+        super.visitConditionalExpression(node, p);
         checkForNullability(node.getCondition(), "condition.nullable");
-        return super.visitConditionalExpression(node, p);
+        return null;
     }
 
     @Override
     public Void visitIf(IfTree node, Void p) {
+        super.visitIf(node, p);
         checkForNullability(node.getCondition(), "condition.nullable");
-        return super.visitIf(node, p);
+        return null;
     }
 
     @Override
     public Void visitDoWhileLoop(DoWhileLoopTree node, Void p) {
+        super.visitDoWhileLoop(node, p);
         checkForNullability(node.getCondition(), "condition.nullable");
-        return super.visitDoWhileLoop(node, p);
+        return null;
     }
 
     @Override
     public Void visitWhileLoop(WhileLoopTree node, Void p) {
+        super.visitWhileLoop(node, p);
         checkForNullability(node.getCondition(), "condition.nullable");
-        return super.visitWhileLoop(node, p);
+        return null;
     }
 
     // Nothing needed for EnhancedForLoop, no boolean get's unboxed there.
     @Override
     public Void visitForLoop(ForLoopTree node, Void p) {
+        super.visitForLoop(node, p);
         if (node.getCondition()!=null) {
             // Condition is null e.g. in "for (;;) {...}"
             checkForNullability(node.getCondition(), "condition.nullable");
         }
-        return super.visitForLoop(node, p);
+        return null;
     }
 
     /** Check for switch statements */
     @Override
     public Void visitSwitch(SwitchTree node, Void p) {
+        super.visitSwitch(node, p);
         checkForNullability(node.getExpression(), "switching.nullable");
-        return super.visitSwitch(node, p);
+        return null;
     }
 
     /**
@@ -188,6 +217,7 @@ public class NninfVisitor extends InferenceVisitor {
      */
     @Override
     public Void visitBinary(BinaryTree node, Void p) {
+        super.visitBinary(node, p);
         final ExpressionTree leftOp = node.getLeftOperand();
         final ExpressionTree rightOp = node.getRightOperand();
 
@@ -196,32 +226,35 @@ public class NninfVisitor extends InferenceVisitor {
             checkForNullability(rightOp, "unboxing.of.nullable");
         }
 
-        return super.visitBinary(node, p);
+        return null;
     }
 
     /** Unboxing case: primitive operation */
     @Override
     public Void visitUnary(UnaryTree node, Void p) {
+        super.visitUnary(node, p);
         checkForNullability(node.getExpression(), "unboxing.of.nullable");
-        return super.visitUnary(node, p);
+        return null;
     }
 
     /** Unboxing case: primitive operation */
     @Override
     public Void visitCompoundAssignment(CompoundAssignmentTree node, Void p) {
+        super.visitCompoundAssignment(node, p);
         // ignore String concatenation
         if (!NullnessVisitor.isString(types, stringType, node)) {
             checkForNullability(node.getVariable(), "unboxing.of.nullable");
             checkForNullability(node.getExpression(), "unboxing.of.nullable");
         }
-        return super.visitCompoundAssignment(node, p);
+        return null;
     }
 
     /** Unboxing case: casting to a primitive */
     @Override
     public Void visitTypeCast(TypeCastTree node, Void p) {
+        super.visitTypeCast(node, p);
         if (NullnessVisitor.isPrimitive(node) && !NullnessVisitor.isPrimitive(node.getExpression()))
             checkForNullability(node.getExpression(), "unboxing.of.nullable");
-        return super.visitTypeCast(node, p);
+        return null;
     }
 }
