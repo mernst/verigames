@@ -214,13 +214,13 @@ public class Intersection extends verigames.graph.Node<Chute>
       
       if (numRequiredInPorts != -1)
       {
-        ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInports: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
+        ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInPorts: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
         ensure(maxInPorts == numRequiredInPorts);
       }
       
       if (numRequiredOutPorts != -1)
       {
-        ensure(usedOutPorts == numRequiredOutPorts);
+        ensure(usedOutPorts == numRequiredOutPorts, "Intersection: " + this + " usedOutPorts: " + usedOutPorts + " numRequiredOutPorts: " + numRequiredOutPorts);
         ensure(maxOutPorts == numRequiredOutPorts);
       }
     }
