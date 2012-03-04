@@ -80,26 +80,7 @@ class DotParser
     
     while (in.hasNextLine())
     {
-      String line = in.nextLine();
-      
-      // if the line is terminated by a \, the next line is logically part of
-      // this line, so stitch them together
-      while (line.charAt(line.length() - 1) == '\\')
-      {
-        String end;
-        try
-        {
-          end = in.nextLine();
-        }
-        catch (NoSuchElementException e)
-        {
-          throw new IllegalArgumentException("Poorly formed input -- \\ found at end of last line", e);
-        }
-        
-        // Join the current line with the next line, and remove the \ at
-        // the end of the current line
-        line = line.substring(0, line.length() - 1) + end;
-      }
+      String line = getNextLogicalLine(in);
       
       try
       {
@@ -115,6 +96,71 @@ class DotParser
       return out.build();
     else
       throw new IllegalArgumentException("Input lacks graph property information");
+  }
+
+  /**
+   * Gets the next logical Graphviz line from the given {@code Scanner}. Joins
+   * lines that are terminated by a backslash, as well as lines that have
+   * unclosed square brackets ([]).
+   */
+  private static String getNextLogicalLine(Scanner in)
+  {
+    String line = getNextCompleteLine(in);
+
+    while (!hasMatchingBrackets(line))
+      line += getNextCompleteLine(in);
+
+    return line;
+  }
+
+  /**
+   * Returns {@code true} if {@code line} has matching square brackets. Usually
+   * returns false otherwise (because really all it's doing is counting the
+   * number of square brackets).
+   */
+  private static boolean hasMatchingBrackets(String line)
+  {
+    int open = 0;
+    int close = 0;
+    for (char c : line.toCharArray())
+    {
+      if (c == '[')
+        open++;
+      else if (c == ']')
+        close++;
+    }
+    return open == close;
+  }
+
+  /**
+   * Gets the next complete Graphviz line from the given {@code Scanner}. Joins
+   * lines that are terminated by a backlash, because this is supposed to escape
+   * the newline.
+   */
+  private static String getNextCompleteLine(Scanner in)
+  {
+    String line = in.nextLine();
+
+    // if the line is terminated by a \, the next line is logically part of this
+    // line, so stitch them together
+    while (line.charAt(line.length() - 1) == '\\')
+    {
+      String end;
+      try
+      {
+        end = in.nextLine();
+      }
+      catch (NoSuchElementException e)
+      {
+        throw new IllegalArgumentException("Poorly formed input -- \\ found at end of last line", e);
+      }
+
+      // Join the current line with the next line, and remove the \ at the end
+      // of the current line
+      line = line.substring(0, line.length() - 1) + end;
+    }
+
+    return line;
   }
   
   private static enum LineKind {GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER}
@@ -235,10 +281,10 @@ class DotParser
     
     try
     {
-      if (tokens[0].equals("}"))
+      if (tokens[0].equals("}") || tokens[0].equals("{"))
         return LineKind.OTHER;
-      // else, there should be at least two tokens ("}" is the only 1-token
-      // line)
+      /* else, there should be at least two tokens ("}" and "{" are the only
+       * 1-token lines) */
       // If the line is the start or end of a graph, return OTHER
       else if ((tokens[0].equals("digraph") || tokens[0].equals("graph")) && tokens[1].equals("{"))
         return LineKind.OTHER;
@@ -293,6 +339,11 @@ class DotParser
     // bounding box attribute is not present in this line, just return null.
     // This may need to be changed if more graph information is desired.
     if (bb == null)
+      return null;
+
+    // Sometimes, an empty bb attribute is given. If this is the case, also
+    // return null.
+    if (bb.equals("bb=\"\""))
       return null;
     
     int xStart;

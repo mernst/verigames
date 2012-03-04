@@ -54,8 +54,35 @@ class DotPrinter extends AbstractDotPrinter
         else
           optionsString = "";
       }
+
+      final String prefix;
+      final String suffix;
+      {
+        /* this puts INCOMING and OUTGOING nodes in their own subgraphs.
+         * rank=source/sink ensures that the subgraph is alone in its rank, and
+         * makes that rank the minimum/maximum (respectively) possible. This
+         * enforces the invariant that incoming nodes are at the very top, and
+         * outgoing nodes are at the very bottom. */
+        if (n.getIntersectionKind() == Intersection.Kind.INCOMING)
+        {
+          prefix = "{\ngraph [rank=source];\n";
+          suffix = "}\n";
+        }
+        else if (n.getIntersectionKind() == Intersection.Kind.OUTGOING)
+        {
+          prefix = "{\ngraph [rank=sink];\n";
+          suffix = "}\n";
+        }
+        else
+        {
+          prefix = "";
+          suffix = "";
+        }
+      }
       
+      out.print(prefix);
       out.printf("%d %s;\n", n.getUID(),  optionsString);
+      out.print(suffix);
     }
 
     private static double getIntersectionHeight(Intersection.Kind kind)
