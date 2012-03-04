@@ -129,8 +129,10 @@ class DotPrinter extends AbstractDotPrinter
     @Override
     protected void printMiddle(Chute e, PrintStream out, Board b)
     {
-      String start = getNodeString(e.getStart(), "o", e.getStartPort());
-      String end = getNodeString(e.getEnd(), "i", e.getEndPort());
+      /* the suffix enforces the edge direction -- edges come out of the "south"
+       * side and enter the "north" side of nodes. */
+      String start = getNodeString(e.getStart(), "o", e.getStartPort(), ":s");
+      String end = getNodeString(e.getEnd(), "i", e.getEndPort(), ":n");
 
       out.println(start + " -> " + end + ";");
     }
@@ -153,12 +155,12 @@ class DotPrinter extends AbstractDotPrinter
      */
     /* This method should be static, but can't be because it's part of an
      * anonymous class. This should, perhaps, be changed. */
-    private String getNodeString(Intersection n, String portPrefix, int port)
+    private String getNodeString(Intersection n, String portPrefix, int port, String suffix)
     {
       String result = "";
       result += n.getUID();
       if (usesPorts(n.getIntersectionKind()))
-        result += ":" + portPrefix + port;
+        result += ":" + portPrefix + port + suffix;
       return result;
     }
   };
