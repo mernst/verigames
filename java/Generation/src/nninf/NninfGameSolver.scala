@@ -430,7 +430,7 @@ class NninfGameSolver(
                 // TODO: merge this with RHS of assignment
                 if (isUniqueSlot(anarg)) {
                   val anargInt = findIntersection(callerBoard, anarg)
-                  callerBoard.addEdge(anargInt, 0, subboard, 1, createChute(anarg))
+                  callerBoard.addEdge(anargInt, 0, subboard, subboardPort, createChute(anarg))
                 } else {
                   val anargInt = findIntersection(callerBoard, anarg)
 
