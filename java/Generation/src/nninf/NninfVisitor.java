@@ -98,11 +98,22 @@ public class NninfVisitor extends InferenceVisitor {
         return null;
     }
 
+    @Override
+    public Void visitVariable(VariableTree node, Void p) {
+        scan(node.getModifiers(), p);
+        scan(node.getType(), p);
+        scan(node.getInitializer(), p);
+
+        return super.visitVariable(node, p);
+    }
+
     /** Log method invocations. */
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
         logMethodInvocation(node);
-        return super.visitMethodInvocation(node, p);
+        super.visitMethodInvocation(node, p);
+        checkForNullability(node.getMethodSelect(), "call.null");
+        return null;
     }
 
     /** Class instantiation is always non-null.
@@ -110,8 +121,9 @@ public class NninfVisitor extends InferenceVisitor {
      */
     @Override
     public Void visitNewClass(NewClassTree node, Void p) {
+        super.visitNewClass(node, p);
         checkForNullability(node, "newclass.null");
-        return super.visitNewClass(node, p);
+        return null;
     }
 
     @Override
