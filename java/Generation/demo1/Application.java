@@ -1,4 +1,4 @@
-class Application1 {
+class Application {
     void main() {
         Storage store = new Storage();
         store.set(new UserData("Demo Name", 44));
