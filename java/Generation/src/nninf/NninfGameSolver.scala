@@ -545,6 +545,9 @@ class NninfGameSolver(
         .replace('#', '-')
         .replace(';', '-')
         .replace('/', '-')
+        // Constructors are named "<init>" and "<cinit>"
+        .replace('<', '-')
+        .replace('>', '-')
     }
 
     /**
