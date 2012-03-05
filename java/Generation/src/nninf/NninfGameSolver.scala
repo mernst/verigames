@@ -548,6 +548,8 @@ class NninfGameSolver(
         // Constructors are named "<init>" and "<cinit>"
         .replace('<', '-')
         .replace('>', '-')
+        // Arrays in bytecode
+        .replace('[', '-')
     }
 
     /**
