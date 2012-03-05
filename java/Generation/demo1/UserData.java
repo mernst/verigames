@@ -6,4 +6,8 @@ class UserData {
         this.name = n;
         this.age = a;
     }
+
+    String getName() {
+        return name;
+    }
 }
