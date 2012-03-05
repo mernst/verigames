@@ -285,6 +285,20 @@ class NninfGameSolver(
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
                   }
+                  
+                  if (sup.isInstanceOf[Variable] &&
+                      sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
+                    val supvar = sup.asInstanceOf[Variable]
+                    val outgoing = board.getOutgoingNode()
+                    val prevout = outgoing.getInput(1)
+                    if (prevout==null) {
+                        board.addEdge(merge, 0, outgoing, 1, new Chute(supvar.id, supvar.toString()))
+                        // The variable is already connected to the end, nothing more to do
+                        boardNVariableToIntersection.remove((board, supvar))
+                    } else {
+                      println("Heeeyy!")
+                    }
+                  }
                 }
               }
             }
@@ -479,16 +493,16 @@ class NninfGameSolver(
     def finalizeWorld(world: World) {
       // Connect all intersections to the corresponding outgoing slot
       boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
-        if (cvar.varpos.isInstanceOf[ReturnVP]) {
+        /*if (cvar.varpos.isInstanceOf[ReturnVP]) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
-          board.addEdge(lastsect, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))        
-        } else {
+          board.addEdge(lastsect, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
+        } else {*/
           // Everything else simply gets terminated.
           val end = Intersection.factory(Intersection.Kind.END)
           board.addNode(end)
           board.addEdge(lastsect, 0, end, 0, new Chute(cvar.id, cvar.toString()))
-        }
+        //}
       })
 
       boardToSelfIntersection foreach ( kv => { val (board, lastsect) = kv
@@ -633,8 +647,8 @@ class NninfGameSolver(
 
           if (board1==board2) {
             board1
-          // } else if (cvar1.varpos.isInstanceOf[ReturnVP]) {
-          //   board1
+          } else if (cvar1.varpos.isInstanceOf[ReturnVP]) {
+             board2
           } else if (cvar2.varpos.isInstanceOf[ReturnVP]) {
             board2
           } else {
@@ -663,6 +677,10 @@ class NninfGameSolver(
           variablePosToBoard(cvar1.varpos)
         }
         case (c: Constant, cvar2: Variable) => {
+          variablePosToBoard(cvar2.varpos)
+        }
+        case (cv: CombVariable, cvar2: Variable) => {
+          // TODO: Combvariables appear for BinaryTrees.
           variablePosToBoard(cvar2.varpos)
         }
         case (_, _) => {
@@ -700,6 +718,12 @@ class NninfGameSolver(
           board.addNode(res)
           res
         }
+        case cv: CombVariable => {
+          // TODO: Combvariables appear for BinaryTrees.
+          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          board.addNode(res)
+          res
+        }
         case _ => {
           println("findIntersection: unmatched slot: " + slot)
           null
@@ -724,6 +748,9 @@ class NninfGameSolver(
         }
         case NninfConstants.NONNULL => {
           // Nothing to do, we're always creating a new white ball
+        }
+        case cv: CombVariable => {
+          // TODO: Combvariables appear for BinaryTrees.
         }
         case _ => {
           println("updateIntersection: unmatched slot: " + slot)
@@ -764,6 +791,13 @@ class NninfGameSolver(
         }
         case NninfConstants.NONNULL => {
           val res = new Chute(-5, "nonnull")
+          res.setEditable(false)
+          res.setNarrow(true)
+          res
+        }
+        case cv: CombVariable => {
+          // TODO: Combvariables appear for BinaryTrees.
+          val res = new Chute(-6, "combvar")
           res.setEditable(false)
           res.setNarrow(true)
           res
