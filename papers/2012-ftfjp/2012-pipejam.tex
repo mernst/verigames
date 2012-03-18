@@ -1,0 +1,191 @@
+\documentclass{sig-alternate}
+
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Verification Games: Making Verification Fun!}
+
+\subtitle{[Project Abstract]}
+
+% \titlenote{A full version of...}}
+
+\numberofauthors{6}
+%
+\author{
+Werner Dietl
+\qquad
+Michael D. Ernst
+\qquad
+Nat Mote
+\qquad
+Brian Walker\\
+%
+{\normalsize
+Programming Languages \& Software Engineering Group,
+University of Washington}\\
+\url{{wmdietl,mernst,nmote,bdwalker}@cs.washington.edu}
+%
+\and
+%
+Seth Cooper
+\qquad
+Timothy Pavlik
+\qquad
+Zoran Popovi\'c\\
+%
+{\normalsize
+Center for Game Science, University of Washington}\\
+\url{{scooper,zoran}@cs.washington.edu},
+\url{timothy.pavlik@gmail.com}
+}
+
+
+%% % 1st. author
+%% \alignauthor
+%% Ben Trovato\titlenote{Dr.~Trovato insisted his name be first.}\\
+%%        \affaddr{Institute for Clarity in Documentation}\\
+%%        \affaddr{1932 Wallamaloo Lane}\\
+%%        \affaddr{Wallamaloo, New Zealand}\\
+%%        \email{trovato@corporation.com}
+%% % 2nd. author
+%% \alignauthor
+%% G.K.M. Tobin\titlenote{The secretary disavows
+%% any knowledge of this author's actions.}\\
+%%        \affaddr{Institute for Clarity in Documentation}\\
+%%        \affaddr{P.O. Box 1212}\\
+%%        \affaddr{Dublin, Ohio 43017-6221}\\
+%%        \email{webmaster@marysville-ohio.com}
+%% % 3rd. author
+%% \alignauthor Lars Th{\o}rv{\"a}ld\titlenote{This author is the
+%% one who did all the really hard work.}\\
+%%        \affaddr{The Th{\o}rv{\"a}ld Group}\\
+%%        \affaddr{1 Th{\o}rv{\"a}ld Circle}\\
+%%        \affaddr{Hekla, Iceland}\\
+%%        \email{larst@affiliation.org}
+%% \and  % use '\and' if you need 'another row' of author names
+%% % 4th. author
+%% \alignauthor Lawrence P. Leipuner\\
+%%        \affaddr{Brookhaven Laboratories}\\
+%%        \affaddr{Brookhaven National Lab}\\
+%%        \affaddr{P.O. Box 5000}\\
+%%        \email{lleipuner@researchlabs.org}
+%% % 5th. author
+%% \alignauthor Sean Fogarty\\
+%%        \affaddr{NASA Ames Research Center}\\
+%%        \affaddr{Moffett Field}\\
+%%        \affaddr{California 94035}\\
+%%        \email{fogartys@amesres.org}
+%% % 6th. author
+%% \alignauthor Charles Palmer\\
+%%        \affaddr{Palmer Research Laboratories}\\
+%%        \affaddr{8600 Datapoint Drive}\\
+%%        \affaddr{San Antonio, Texas 78229}\\
+%%        \email{cpalmer@prl.com}
+%% }
+
+%% \additionalauthors{Additional authors: John Smith (The Th{\o}rv{\"a}ld Group,
+%% email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+%% (The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+
+
+\date{}
+
+\maketitle
+
+\begin{abstract}
+Program verification is the only way to be certain that a given
+piece of software is free of (certain types of) errors --- errors that
+could otherwise disrupt operations in the field.  To date, formal
+verification has been done manually, by specially-trained engineers.  Labor
+costs have heretofore made formal verification too costly to apply beyond
+small, critical software components.
+
+Our goal is to make verification more cost-effective by reducing the skill
+set required for program verification, and increasing the pool of people
+capable of performing program verification.  Our approach is to transform
+the verification task into a visual puzzle task --- a game --- that
+gets solved by people. The solution of the puzzle is then translated
+back into a proof of the verification task.
+The puzzle is engaging and intuitive enough that ordinary people can through
+game-play become experts.  The community of players will grow over
+time and ease the learning curve for novices.
+
+In this paper, we present the Verigames project and our
+Pipe Jam prototype.  Our system maps source code's typeflow properties
+into a network of pipes.
+Pipe widths, which are controlled by the player, directly map to type
+annotations in programs that can be mechanically checked and provide a
+proof of partial correctness.
+This general mechanism can cover a wide variety of the most important
+security issues.
+
+We believe that humans may have an edge over automated systems in
+certain situations, notably when the program is not verifiable.  A
+program is unverifiable when it has a bug, or when it is correct for
+reasons that are beyond the power of the verification system.  In
+either case, the failure is communicated back to an expert, who only
+considers cases that the crowd of players cannot resolve.
+%
+If successful, our approach will reduce the cost of program verification
+and enable it to be applied more broadly.
+
+
+\end{abstract}
+
+% A category with the (minimum) three required fields
+% \category{H.4}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+% \category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+
+% \terms{Theory}
+
+% \keywords{ACM proceedings, \LaTeX, text tagging}
+
+\iffalse
+
+\section{FTfJP 2012 Call for Papers}
+
+From \url{http://www.comp.nus.edu.sg/~ftfjp/}:
+
+\begin{quote}
+Contributions (of up to 6 pages in the ACM 2-column style) are sought
+on open questions, new developments, or interesting new applications
+of formal techniques in the context of Java or similar
+languages. Contributions should not merely present completely finished
+work, but also raise challenging open problems or propose speculative
+new approaches. We particularly welcome contributions that simply
+suggest good topics for discussion at the workshop, or raise issues
+that you feel deserve the attention of the research community.
+\end{quote}
+
+Dates:
+
+abstract submission: 16 March 2012 (anywhere on Earth)\\
+full paper submission: 25 March 2012 (anywhere on Earth)\\
+notification: 29 April 2012\\
+camera-ready paper: TBD\\
+conference date: 12 June 2012\\
+
+\fi
+
+
+\section{Introduction}
+
+\cite{checker-framework-website}
+
+
+\section{Conclusions}
+
+
+\section{Acknowledgments}
+
+
+\bibliographystyle{abbrv}
+\bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types}
+
+
+\balancecolumns
+
+
+\end{document}
