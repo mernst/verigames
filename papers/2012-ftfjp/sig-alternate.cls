@@ -600,7 +600,7 @@
  \let\maketitle\relax
  \let\@maketitle\relax
  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}\gdef\@subtitle{}\let\thanks\relax
- \@copyrightspace}
+ }
 
 %% CHANGES ON NEXT LINES
 \newif\if@ll % to record which version of LaTeX is in use
@@ -844,9 +844,8 @@
 \@float{copyrightbox}[b]
 \begin{center}
 \setlength{\unitlength}{1pc}
-% \begin{picture}(20,5.7) %Space for copyright notice
-\begin{picture}(20, 6.7) %Space for copyright notice
-\put(0,-0.95){\crnotice{\@toappear}}
+\begin{picture}(20,0) %Space for copyright notice
+\put(0,-0){\crnotice{\@toappear}}
 \end{picture}
 \end{center}
 \end@float}
@@ -1431,16 +1430,7 @@
 \def\crdata#1{\global\acmcopyr{#1}}
 \def\permission#1{\global\boilerplate{#1}}
 %
-\global\boilerplate={
-This research was supported by NSF grant CNS-0855252 and Google.
-We thank M. Ali for development and 
-Checker Framework users for feedback.
-% C. S. Gordon and the anonymous reviewers for their comments on
-% earlier versions of the paper;
-% and all the users of the Checker Framework for their input.\\
-\\[5pt]
-%
-Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page.  To copy otherwise, to republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee.\looseness=-1}
+\global\boilerplate={Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page.  To copy otherwise, to republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee.}
 \newtoks\copyrightetc
 \global\copyrightetc{Copyright \the\copyrtyr\ ACM \the\acmcopyr\ ...\$10.00}
 \toappear{\the\boilerplate\par
