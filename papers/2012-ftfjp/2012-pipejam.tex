@@ -1,4 +1,4 @@
-\documentclass{sig-alternate}
+\documentclass[preprint]{sig-alternate}
 
 \usepackage{hyperref}
 \usepackage{microtype}
@@ -8,8 +8,8 @@
 \usepackage{xspace}
 
 %% reference shortcuts
-\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
-\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
 
 % \|name| or \mathid{name} denotes identifiers and slots in formulas
 \def\|#1|{\mathid{#1}}
@@ -46,12 +46,10 @@
 
 \title{Verification Games: Making Verification Fun!}
 
-\subtitle{[Project Abstract]}
+% \subtitle{[Project Abstract]}
 
 % \titlenote{A full version of...}}
 
-\numberofauthors{6}
-%
 \author{
 Werner Dietl
 \qquad
@@ -196,6 +194,12 @@ robust.  These benefits will extend throughout the software
 development lifecycle, because formal specifications make code
 maintenance easier and cheaper.
 
+
+\subsection{Overview}
+
+\todo{This section talks about what we will do. Parts of it is already
+  done and we should be more concrete.}
+
 Our overall goal is to build an end-to-end system that takes as input
 
 \begin{itemize}
@@ -213,8 +217,8 @@ and produces as output
  a proof of correctness that the program satisfies the security property,
  or
 \item
- a specific location (line number and variable name) where the program
- violates the property --- that is, where the program may be insecure.
+ a specific source location where the program violates the property
+ --- that is, where the program may be insecure.
 \end{itemize}
 
 This system will work by automatically converting the program and
@@ -256,6 +260,71 @@ determines which of two fixes to apply: change the code to correct the
 bug, or add an assertion/assumption indicating that the verification
 system should not issue a warning at this particular location.
 
+
+\subsection{Types for program verification}
+
+\todo{How much motivation should we keep for FTfJP?}
+
+We use pluggable type-checking as the underlying verification
+technology.  Type systems are the shining success of program
+verification.  Types are used on a regular basis by ordinary
+programmers who use them to verify the absence of certain types of
+errors.  Programmers write a partial specification in the form of type
+annotations, then a type-checker detects potential errors.  No other
+formal verification approach has seen such widespread adoption.
+
+Pluggable type-checking provides an excellent foundation from which to
+improve upon the limitations of current verification
+approaches. Type-checking is \emph{sound}, so it offers a guarantee.
+Type-checking is \emph{expressive}: it is formally equivalent
+\cite{CurryHoward2006,MartinLoef1984,CoquandHuet1988,Cousot1997,CousotCousot2000,NaikPalsberg2005}
+to any other verification technology, including model-checking and
+theorem-proving.  Type-checking is already \emph{familiar} to every
+developer, and it fits well into the development process.
+Type-checking is \emph{modular}: it can be done on each component of a
+system individually, making it much more scalable.  Related to the
+previous two points, type-checking is \emph{transparent}, which makes
+it easy to use: its error messages tend to be clear, and a small
+change to the application does not make a large, non-local change to
+the type-checking results.  This is relevant both to game players who
+will see the error messages in a different guise, and to verification
+experts who will take over when the game players get stuck.
+Type-checking is \emph{extensible}: even a non-expert can create a
+new, custom type-checker that verifies a domain-specific property of
+interest; a type system that is extensible in this way is called
+``pluggable''~\cite{Bracha2004}.
+
+A type system offers partial verification --- it is designed to detect
+a certain class of errors, and the program may still be subject to
+other errors.  This is the right way to start, because full formal
+verification remains impractical for realistic software.  Furthermore,
+type-checkers are powerful and can check a wide range of important
+properties.  We will build upon the Checker
+Framework~\cite{PapiACPE2008,DietlDEMS2011,checker-framework-website-20100203},
+which can be easily adapted to new verification problems and comes
+with type-checkers that prevent errors due to null pointers;
+initialization; map keys; equality tests and interning; incorrect
+mutation (side effects); concurrency and locking; fake enumerations;
+information flow (trust and security); aliasing; regular expression
+syntax; property files; internationalization; the string
+representation of data; and many more.  \todo{In \secref{todo}} we
+show how the CWE/SANS Top 25 Most Dangerous Software Errors can be
+mapped to type systems.
+
+Type-checkers created using the Checker Framework have been run on at
+least 3 million lines of code and have found hundreds of
+errors~\cite{PapiACPE2008,DietlDEMS2011}.  We propose to scale it up
+even further.  As discussed in \secref{sec:human-advantage},
+whereas the Checker Framework enables the simple creation of type
+\emph{checkers}, general type \emph{inference} remains an unsolved
+problem that can benefit from crowdsourcing.
+By playing the game, the programmer will be effectively choosing types for
+every variable in the program.  The constraints and relationships among
+game elements are representations of the constraints on program types and
+the relationships among program variables.
+
+
+
 \medskip
 
 The remainder of this paper is structured as follows.
@@ -273,25 +342,23 @@ The remainder of this paper is structured as follows.
 \includegraphics[width=.49\textwidth]{images/allUI-world1}%
 \hfill%
 \includegraphics[width=.35\textwidth]{images/world-map}
-
 \end{center}
-\vspace{-10pt}
+
 \caption{
   A view of the Pipe Jam verification game being played.  The underlying
   verification problem is to prove that a part of Pipe Jam itself is free of
   null pointer errors.
   \newline
-  The left screenshot shows the player's view of the game.
-  In the upper right is the board that the player is currently
-  working on (named ``Earth MountRock'').
-  The bottom portion of the screen shows thumbnails of all the
-  other boards in the current level, together with a concise summary of
-  which boards are solved and which are unsolved (the row  of red and green
-  rectangles).  The thumbnail at center left is for panning, which is not
-  needed in
-  this example.  Above it are controls for adding a buzzsaw and for
-  viewing an animation; the current score; and a back button and the
-  collapsed world map.
+  The left screenshot shows the player's view of the game.  In the
+  upper right is the board that the player is currently working on
+  (named ``Earth MountRock'').  The bottom portion of the screen shows
+  thumbnails of all the other boards in the current level, together
+  with a concise summary of which boards are solved and which are
+  unsolved (the row of red and green rectangles).  The thumbnail at
+  center left is for panning, which is not needed in this example.
+  Above it are controls for adding a buzzsaw and for viewing an
+  animation; the current score; and a back button and the collapsed
+  world map.
   \newline
   The right screenshot shows the world map in its expanded state.  The
   world map shows named levels and the dependencies between them, and 
@@ -346,7 +413,7 @@ much easier experienced than textually described.)
 \item[Levels and worlds]
   A world consists of multiple levels.  A player proceeds through the
   world, ``conquering'' each level one by one.  As shown in the world map
-  of Figure~\ref{fig:game-overview}, the levels depend on one another,
+  of \figref{fig:game-overview}, the levels depend on one another,
   which constrains the order in which the player may solve them.  It may
   sometimes be necessary for a player to backtrack to a previous level to
   find a better solution for it, in order to solve a subsequent level.
@@ -359,10 +426,10 @@ much easier experienced than textually described.)
 \hfill%
 \includegraphics[width=.49\textwidth]{images/world1-merge-and-pinch}
 \end{center}
-\vspace{-10pt}
+
 \caption{
   Detail of two boards from the Pipe Jam game shown in
-  Figure~\ref{fig:game-overview}.  The left board demonstrates wide and
+  \figref{fig:game-overview}.  The left board demonstrates wide and
   narrow pipes, pinch points, a merge (near the bottom center), and a
   subnetwork.  The right board demonstrates two collisions, each of which
   prevents the game from being solved.  At the top, a large ball
@@ -379,7 +446,7 @@ much easier experienced than textually described.)
 \item[Linked pipes]
   All the pipes of a given color (in a board or an entire level) have the
   same width.
-  (An example is the two orange pipes in Figure~\ref{fig:game-detail}.)
+  (An example is the two orange pipes in \figref{fig:game-detail}.)
   When the player changes the width of one of these pipes,
   then it also changes the width of all the other pipes of that color.
   When the player changes the width of a give pipe, that change may solve
@@ -389,7 +456,7 @@ much easier experienced than textually described.)
 
 \item[Embedded networks]
   One network can contain another network as a subcomponent.  For example,
-  in Figure~\ref{fig:game-detail}, the left board ``Metal SmeltCity''
+  in \figref{fig:game-detail}, the left board ``Metal SmeltCity''
   contains another board ``Metal SteelTowne'' as a subcomponent.  When
   balls roll through SmeltCity to the subcomponent, they next traverse the
   subcomponent to its end before returning to SmeltCity.  Changes to the
@@ -407,7 +474,7 @@ much easier experienced than textually described.)
   proceed in this case, Pipe Jam contains a ``cheat'' --- the buzzsaw ---
   that any player is allowed to use at any time.  A buzzsaw converts any
   ball that passes by it to a small ball, which can then fit through any
-  pipe.  See Figure~\ref{fig:game-buzzsaw} for an example.
+  pipe.  See \figref{fig:game-buzzsaw} for an example.
   It would be possible to solve any level using sufficiently many buzzsaws,
   without changing the sizes of any pipes.  However, placing a buzzsaw
   costs a large number of points, so players desire to use as few buzzsaws
@@ -425,7 +492,7 @@ much easier experienced than textually described.)
 \hfill%
 \includegraphics[width=.49\textwidth]{images/unsolvable-post-buzzsaw}
 \end{center}
-\vspace{-10pt}
+
 \caption{
   The left board is unsolvable.  The gray pipe cannot be adjusted in width,
   and the black ball will get stuck trying to merge into the narrow blue
@@ -447,11 +514,11 @@ The natural modularity of object-oriented programs, which are composed
 of classes that are composed of methods, makes our game attractive to
 casual gamers who can do a little bit of work and then later come back
 to the game.  However, it is possible for interrelations to cross
-levels --- because of global variable that are used in multiple
+levels --- because of global variables that are used in multiple
 classes, or because of calls from one class to another.
 
 
-In Figure~\ref{fig:game-overview}, the player has not yet solved the
+In \figref{fig:game-overview}, the player has not yet solved the
 game.  The outline color of each board and thumbnail (green or red)
 indicates whether it is solved.  At any time, the player can animate
 the networks, making balls flow along them and seeing the result, but
@@ -478,7 +545,7 @@ as one pipe flowing into another.
 The width of a pipe stands for the type of the variable that the pipe
 represents.  These are not the underlying Java types, but the security
 properties that are represented in the pluggable type system.
-Section~\ref{sec:cwe-sans} gives specific examples, but for
+\secref{sec:cwe-sans} gives specific examples, but for
 concreteness consider a nullness type system: a wide pipe represents a
 variable that is permitted to contain the value \<null>, and a narrow
 pipe represents a variable that is guaranteed to be non-null.  More
@@ -556,73 +623,7 @@ generation is performed on the program.  While still complex, these
 are much simpler than the original program.
 
 
-
-\section{Types for program verification}
-\label{sec:types}
-
-\todo{This motivation might be superfluous for the FTfJP
-  audience. Move into the introduction?}
-
-We use pluggable type-checking as the underlying verification
-technology.  Type systems are the shining success of program
-verification.  Types are used on a regular basis by ordinary
-programmers who use them to verify the absence of certain types of
-errors.  Programmers write a partial specification in the form of type
-annotations, then a type-checker detects potential errors.  No other
-formal verification approach has seen such widespread adoption.
-
-Pluggable type-checking provides an excellent foundation from which to
-improve upon the limitations of current verification
-approaches. Type-checking is \emph{sound}, so it offers a guarantee.
-Type-checking is \emph{expressive}: it is formally equivalent
-\cite{CurryHoward2006,MartinLoef1984,CoquandHuet1988,Cousot1997,CousotCousot2000,NaikPalsberg2005}
-to any other verification technology, including model-checking and
-theorem-proving.  Type-checking is already \emph{familiar} to every
-developer, and it fits well into the development process.
-Type-checking is \emph{modular}: it can be done on each component of a
-system individually, making it much more scalable.  Related to the
-previous two points, type-checking is \emph{transparent}, which makes
-it easy to use: its error messages tend to be clear, and a small
-change to the application does not make a large, non-local change to
-the type-checking results.  This is relevant both to game players who
-will see the error messages in a different guise, and to verification
-experts who will take over when the game players get stuck.
-Type-checking is \emph{extensible}: even a non-expert can create a
-new, custom type-checker that verifies a domain-specific property of
-interest; a type system that is extensible in this way is called
-``pluggable''~\cite{Bracha2004}.
-
-A type system offers partial verification --- it is designed to detect
-a certain class of errors, and the program may still be subject to
-other errors.  This is the right way to start, because full formal
-verification remains impractical for realistic software.  Furthermore,
-type-checkers are powerful and can check a wide range of important
-properties.  We will build upon the Checker
-Framework~\cite{PapiACPE2008,DietlDEMS2011,checker-framework-website-20100203},
-which can be easily adapted to new verification problems and comes
-with type-checkers that prevent errors due to null pointers;
-initialization; map keys; equality tests and interning; incorrect
-mutation (side effects); concurrency and locking; fake enumerations;
-information flow (trust and security); aliasing; regular expression
-syntax; property files; internationalization; the string
-representation of data; and many more.  Below we show how the CWE/SANS
-Top 25 Most Dangerous Software Errors can be mapped to type systems.
-
-Type-checkers created using the Checker Framework have been run on at
-least 3 million lines of code and have found hundreds of
-errors~\cite{PapiACPE2008,DietlDEMS2011}.  We propose to scale it up
-even further.  As discussed in Section~\ref{sec:human-advantage},
-whereas the Checker Framework enables the simple creation of type
-\emph{checkers}, general type \emph{inference} remains an unsolved
-problem that can benefit from crowdsourcing.
-By playing the game, the programmer will be effectively choosing types for
-every variable in the program.  The constraints and relationships among
-game elements are representations of the constraints on program types and
-the relationships among program variables.
-
-
 \subsection{Mapping security vulnerabilities to game puzzles}
-\label{sec:cwe-sans}
 
 \todo{I don't want to list all 25 type systems. Some of these
   descriptions need to be adapted more.}
@@ -670,30 +671,6 @@ give three rules that handle all the situations.
 \end{itemize}
 
 
-\subsection{Open Verification Puzzles: Crowdsourcing programs}
-
-\todo{This feels out of place here.  Move it to elsewhere?}
-
-Once we have determined the efficacy of the game towards verifying our
-programs, we will commence the stage of open-software challenges.  At
-that point we will create a game portal where anyone can submit the
-software they would like to be verified.  The submittal process will
-have two very important aspects: (1) software translation will be done
-on the client side, assuring all submitters that their entire code has
-been converted into an uninterpretable representation
-(privacy-preserving), (2) the verification process will be free,
-removing any initiation hesitation.
-
-
-Our team will serve as a curator of puzzles, selecting ones that
-would be most informative to the effectiveness of the game, and
-those that would contribute the most towards collective mastery
-development of the players.
-
-We will also enable third-parties to provide monetized incentives
-towards verifying their own programs creating the market and
-contributing to the incentives of existing game experts.
-See Section~\ref{sec:maximizing-players}.
 
 
 \subsection{Simplifying the type constraints and the game puzzles}
@@ -718,110 +695,62 @@ or at least do not flow into strings used for other purposes.  A third
 reason is that we will use highly-effective analyses that determine an
 answer for most of the program.
 
-We first discuss the inherent limitations of type inference tools and the
-need for human attention (Section~\ref{sec:human-advantage}).  Then, we
-discuss three complementary varieties of type inference tools that we plan
-to build and integrate into our system.
-
-
-
-
-\subsubsection{Human advantage}
-\label{sec:human-advantage}
-
 The game player is accomplishing the task of type inference:  creating an
 annotation for each variable declaration in the program, that gives
 additional information about that variable's type.  Examples are whether
 the variable is permitted to hold the value \<null>, and whether the
-variable is permitted to be mutated; Section~\ref{sec:types} has additional
-examples.
+variable is permitted to be mutated.
 
 Type inference tools exist that can infer type annotations for unannotated
 code.  Whereas type \emph{checking} is largely a solved problem, type
 \emph{inference} emphatically is not.
-We mention three problems with these tools.
-\begin{itemize}
-\item
-  The tools are difficult to build and must be created anew for every
-  different type system.  Attempts to create a general type inference
-  framework, such as CQual~\cite{FosterFFA99,foster:pldi02,FosterJKA2006}
-  and JQual~\cite{GreenfieldboyceF2005,GreenfieldboyceF2007}, have not yet
-  proved widely applicable or practical.  Thus, inference tools do not
-  exist for many important type systems, even those for which type checkers
-  exist.
 
-\item
-  The tools are not scalable to large codebases.  The most precise
-  inference tools perform whole-program analyses, so they require a full
-  program rather than being able to process a module at a time.  An
-  alternative is to provide them with manually-written or -verified
-  annotations for libraries such as Java's JDK, but this is not practical
-  in general and can cause a loss of precision.
+\todo{Move this paragraph somewhere. Maybe related work?}
+Even the most precise available inference tools leave much room for
+improvement.  For example, the state of the art tool for inferring
+nullness properties is the
+Julia~\cite{julia-web-interface,Spoto2008,Spoto10:LPAR,Spoto10,SpotoE2011}
+tool for Java.  It can prove about 98\% of all dereferences in a
+program to be safe --- that is, it proves that no \<null> value ever
+flows to those dereferences, so those dereferences cannot result in a
+null pointer exception at run time.  However, this leaves 2\% of
+dereferences for a programmer to manually check --- some may be
+erroneous code that might fail at run time, but most are probably safe
+even though Julia is unable to infer such properties.  A humans'
+insight and higher powers of reasoning are required.  As another
+example, a state-of-the-art tool for inferring mutability (whether
+side effects are permitted/performed) is
+Javarifier~\cite{Quinonez2008,QuinonezTE2008} for the
+Javari~\cite{BirkaE2004,TschantzE2005,Tschantz2006} type system, but
+it, too, suffers imprecision due to its conservative analysis.  An
+earlier inference system for
+Javari~\cite{GreenfieldboyceF2005,GreenfieldboyceF2007} achieved even
+worse results, with precision of about 70\% (compared to Julia's 100\%
+precision and 98\% recall).
 
-\item
-  Even the most precise available inference tools leave much room for
-  improvement.  For example, the state of the art tool for inferring
-  nullness properties is the
-  Julia~\cite{julia-web-interface,Spoto2008,Spoto10:LPAR,Spoto10,SpotoE2011}
-  tool for Java.  It can prove about 98\% of all dereferences in a program
-  to be safe --- that is, it proves that no \<null> value ever flows to
-  those dereferences, so those dereferences cannot result in a null pointer
-  exception at run time.  However, this leaves 2\% of dereferences for a
-  programmer to manually check --- some may be erroneous code that might
-  fail at run time, but most are probably safe even though Julia is unable
-  to infer such properties.  A human's insight and higher powers of
-  reasoning are required.  As another example, a state-of-the-art tool for
-  inferring mutability (whether side effects are permitted/performed) is
-  Javarifier~\cite{Quinonez2008,QuinonezTE2008} for the
-  Javari~\cite{BirkaE2004,TschantzE2005,Tschantz2006} type system, but it,
-  too, suffers imprecision due to its conservative analysis.  An earlier
-  inference system for
-  Javari~\cite{GreenfieldboyceF2005,GreenfieldboyceF2007} achieved even
-  worse results, with precision of about 70\% (compared to Julia's 100\%
-  precision and 98\% recall).
 
-\end{itemize}
-
-Automated analysis and crowdsourcing are complementary.  In particular,
-% in later levels of the game
-we can run the best available practical inference tool before the player
-starts, and use that as the initial configuration that the player attempts
-to improve.  This leverages human intuition exactly where it is needed.  In
-particular, every formal analysis has a limited vocabulary of properties
-that it can express, which limits the properties that it can prove.  It is
-an unavoidable fact, related to the undecidability of the halting problem,
-that for every conservative (sound) program analysis, there are programs
-that never go wrong at run time but that the program analysis rejects as
-potentially erroneous.  We hope that humans will be able to overcome these
-limitations via higher-level reasoning, pattern-matching, and heuristics to
-guide themselves through very large search spaces.
+Automated analysis and crowdsourcing are complementary.  In
+particular, we can run the best available practical inference tool
+before the player starts, and use that as the initial configuration
+that the player attempts to improve.  This leverages human intuition
+exactly where it is needed.  In particular, every formal analysis has
+a limited vocabulary of properties that it can express, which limits
+the properties that it can prove.  It is an unavoidable fact, related
+to the undecidability of the halting problem, that for every
+conservative (sound) program analysis, there are programs that never
+go wrong at run time but that the program analysis rejects as
+potentially erroneous.  We hope that humans will be able to overcome
+these limitations via higher-level reasoning, pattern-matching, and
+heuristics to guide themselves through very large search spaces.
 
 % Are there "verification savants" much as there are for protein folding?
-
-
-
-\subsubsection{Type inference framework}
-\label{sec:type-inference}
-
-Because we would not have time to create 25 new type inference tools, we
-will instead create a new type inference framework for this project.  It
-will generalize existing specific type inference tools in the same way that
-our Checker Framework tool generalized existing specific type-checking
-tools.  This will make it easy to quickly create a type inference tool that
-corresponds to a given type system.
-
-We will build upon our experience with
-the Checker Framework, and also upon our other previous work in type
-inference, which is reviewed below.
-Combining these gives us a good chance of success at this challenging task.
-
 
 
 
 \section{Game mechanics}
 \label{sec:game}
 
-\todo{Cut this down to for the FTfJP audience.}
+\todo{Cut this down to for the FTfJP audience?}
 
 In order to significantly increase the accessibility of this problem
 to a non-expert audience, and consequently enable crowd-sourcing of
@@ -949,11 +878,81 @@ years).
 The only way to accurately assess the emergence of expertise in the
 player population is to measure their performance on hard verification
 puzzles.  Once assessed, the key game design question is how to modify
-the game towards improved performance.  Our team has shown with Foldit
-game that our approach of iterative game sensitivity analysis is
-capable of finding modification that significantly improve performance
-over time.
+the game towards improved performance.  Our team has shown with the
+Foldit game that our approach of iterative game sensitivity analysis
+is capable of finding modifications that significantly improve
+performance over time.
 
+
+\subsection{Open Verification Puzzles: Crowdsourcing programs}
+
+Once we have determined the efficacy of the game towards verifying our
+programs, we will commence the stage of open-software challenges.  At
+that point we will create a game portal where anyone can submit the
+software they would like to be verified.  The submittal process will
+have two very important aspects: (1) software translation will be done
+on the client side, assuring all submitters that their entire code has
+been converted into an uninterpretable representation
+(privacy-preserving), (2) the verification process will be free,
+removing any initiation hesitation.
+
+Our team will serve as a curator of puzzles, selecting ones that would
+be most informative to the effectiveness of the game, and those that
+would contribute the most towards collective mastery development of
+the players.
+
+We will also enable third-parties to provide monetized incentives
+towards verifying their own programs creating the market and
+contributing to the incentives of existing game experts.
+
+
+\section{Implementation}
+\label{sec:impl}
+
+\todo{What is a good title for this section? Should it come earlier?}
+
+\todo{We could give an overview of the constraint generation from
+  \cite{DietlEM2011} and/or describe the workflow on the website?}
+
+
+Because we would not have time to create 25 new type inference tools, we
+will instead create a new type inference framework for this project.  It
+will generalize existing specific type inference tools in the same way that
+our Checker Framework tool generalized existing specific type-checking
+tools.  This will make it easy to quickly create a type inference tool that
+corresponds to a given type system.
+
+We will build upon our experience with the Checker Framework, and also
+upon our other previous work in type inference, which is reviewed
+below.
+
+Much of the proposed work for the type inference framework mirrors
+that we have done for the Checker Framework, our type checking
+framework: supporting rich type hierarchies and backward
+compatibility; infrastructure that manages generics instead of forcing
+the inference system designer to do so; declarative syntax for
+inference rules including a common syntax with that for type checkers;
+etc.  One that is worth mentioning is implementing multiple individual
+checkers for maximally different type systems before finalizing the
+framework design.  This worked very well while building the Checker
+Framework, which has since evolved nonetheless.  Finalizing the
+framework too early suffers the risk of being over fitted to one
+specific type system or view of type inference.  The remainder of this
+section focuses on issues specific to type inference.
+
+The type inference framework will share code with the Checker
+Framework.  This reduces effort, increases reliability and
+functionality, and makes the system more familiar to users.  The
+Javarifier design, implementation, and evaluation taught us a lot
+about both the algorithms and how to build a type inference system,
+but we do not expect to reuse any of the Javarifier code --- we will
+start over from scratch to build a greatly improved system.  (The
+Javarifier implementation will be extremely useful for regression
+testing, however.)  The result is that a programmer will be able to
+construct a type inference system as easily as a type checker --- and
+with much the same code.  As with the Checker Framework, a programmer
+will use declarative mechanisms where possible, and will override a
+few methods when the type system was not anticipated by the framework.
 
 
 \section{Related work}
@@ -962,32 +961,52 @@ over time.
 In the following we discuss related work along two axes: type
 inference and program verification.
 
+\todo{This section is way too detailed.}
+
+
 \subsection{Type inference}
 \label{sec:type-inference-previous}
 
-Our type inference framework will take advantage of insights we have gained
-during several previous projects.
+\todo{This is a review of our previous work, not general work on type
+  inference. Change title or contents?}
 
-The most closely related is the Javarifier type inference
-algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari language for
-reference immutability~\cite{BirkaE2004,TschantzE2005}.  A Javari
-type-checker is implemented using Java annotations and the Checker
-Framework~\cite{PapiACPE2008}.  Javarifier is sound (its results
-type-check) and precise (making any more references \codeid{@Readonly} causes
-the program not to type-check).  Javarifier handles the full Java language
-including generics, wildcards, and arrays.  It infers a rich, practical
-type system that includes parametric polymorphism over mutability and
-permits excluding fields from an object's abstract state.
-Javarifier~\cite{Tschantz2006} is orders of magnitude more scalable than
-other type inference systems such as JQual~\cite{GreenfieldboyceF2007},
-even though JQual handles less of Java and less of Javari.  There are
-algorithmic reasons for this, such as that Javarifier employs context
-sensitivity exactly where the program needs it.  For example, it takes
-advantage of generics that are already in the program (or that are inferred
-by a separate tool~\cite{DonovanKTE2004,KiezunETF2007}), in addition to
+Our type inference framework will take advantage of insights we have
+gained during several previous projects.
+
+The most closely related previous experience is building an inference
+tool \cite{DietlEM2011} for an ownership type system
+\cite{DietlPhD09}.  One particular problem with the inference of
+ownership type systems is that multiple valid solutions exist and that
+the programmer needs to be able to express design intent.  Our tool
+generates type constraints by traversing the abstract syntax tree and
+encodes heuristics by giving weights to solutions.  It then encodes
+the constraints as a Max-SAT problem and uses an off-the-shelf solver
+to find a solution with an optimal weighting.  Our inference is a
+tunable, iterative approach, in which the programmer finds the desired
+annotations by tuning the heuristics, adding partial annotations, and
+fixing bugs in the program.
+
+We will also build on our previous experience with the Javarifier type
+inference algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari
+language for reference immutability~\cite{BirkaE2004,TschantzE2005}.
+A Javari type-checker is implemented using Java annotations and the
+Checker Framework~\cite{PapiACPE2008}.  Javarifier is sound (its
+results type-check) and precise (making any more references
+\codeid{@Readonly} causes the program not to type-check).  Javarifier
+handles the full Java language including generics, wildcards, and
+arrays.  It infers a rich, practical type system that includes
+parametric polymorphism over mutability and permits excluding fields
+from an object's abstract state.  Javarifier~\cite{Tschantz2006} is
+orders of magnitude more scalable than other type inference systems
+such as JQual~\cite{GreenfieldboyceF2007}, even though JQual handles
+less of Java and less of Javari.  There are algorithmic reasons for
+this, such as that Javarifier employs context sensitivity exactly
+where the program needs it.  For example, it takes advantage of
+generics that are already in the program (or that are inferred by a
+separate tool~\cite{DonovanKTE2004,KiezunETF2007}), in addition to
 using more general context-sensitivity elsewhere.  There are also
-implementation reasons, such as better abstractions and handling more of
-the Java language.
+implementation reasons, such as better abstractions and handling more
+of the Java language.
 
 The Checker Framework already supports flow-sensitive analysis, which has
 many benefits.
@@ -1011,28 +1030,14 @@ The Checker Framework's flow-sensitivity framework was general enough to
 extend with a few lines of code to create a proof-of-concept typestate
 analysis.
 
-We will also build on our previous experience \cite{DietlEM2011} with
-building an inference tool for an ownership type system
-\cite{DietlPhD09}.
-One particular problem with the inference of ownership type systems is
-that multiple valid solutions exist and that the programmer needs to
-be able to express design intent.
-Our tool generates type constraints by traversing the abstract syntax
-tree and encodes heuristics by giving weights to solutions.
-It then encodes the constraints as a Max-SAT problem and uses an
-off-the-shelf solver to find a solution with an optimal weighting.
-Our inference is a tunable, iterative approach, in which the
-programmer finds the desired annotations by tuning the heuristics,
-adding partial annotations, and fixing bugs in the program.
-
 We have also implemented a combined static and dynamic mutability
-analysis~\cite{ArtziKGE2007}.  Its judicious
-use of expensive static analyses makes it competitive with much more
-sophisticated analyses~\cite{SalcianuR2005} at a fraction of the cost.  The
-static component soundly infers immutability, and the novel dynamic
-component soundly infers mutability.  Overall, the approach combines
-multiple lightweight, scalable analyses in stages, with each stage refining
-the overall result.  The resulting analysis is scalable and combines the
+analysis~\cite{ArtziKGE2007}.  Its judicious use of expensive static
+analyses makes it competitive with much more sophisticated
+analyses~\cite{SalcianuR2005} at a fraction of the cost.  The static
+component soundly infers immutability, and the novel dynamic component
+soundly infers mutability.  Overall, the approach combines multiple
+lightweight, scalable analyses in stages, with each stage refining the
+overall result.  The resulting analysis is scalable and combines the
 strengths of its component analyses.
 
 In previous work, we inferred abstract types~\cite{GuoPME2006} via a
@@ -1077,24 +1082,8 @@ require a high skill level --- 6 months of training is considered a lower
 bound to use a theorem-prover, and model checkers also have a significant
 learning curve.
 
-\nocite{taintdroid}
-\nocite{enckunderstanding}
-\nocite{encksemantic}
-\nocite{interapp}
-\nocite{belong}
-\nocite{curbing}
-\nocite{enckstudy}
-\nocite{redelegation}
-\nocite{demystified}
-\nocite{appfence}
-\nocite{livshitsreflection}
-\nocite{pios}
-\nocite{pointless}
-\nocite{panorama}
-\nocite{rifle}
 
-We now discuss selected previous work in 
-static program analysis.
+We now discuss selected previous work in static program analysis.
 
 
 
@@ -1257,12 +1246,12 @@ engineer, we hope to make our tool more widely applicable.
 
 \section{Acknowledgments}
 
+Mention funding?
 
-\cite{checker-framework-website}
 
 
 \bibliographystyle{abbrv}
-\bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types}
+\bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types,pag,sideeff,refs}
 
 
 \balancecolumns
