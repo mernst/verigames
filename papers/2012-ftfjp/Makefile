@@ -2,11 +2,6 @@
 # Make will silently continue if that file does not exist.
 -include Makefile.user
 
-# Mac OS X users may need to add to Makefile.user:
-#  LATEX = /usr/texbin/latex
-#  PDFLATEX = /usr/texbin/pdflatex
-#  BIBTEX = /usr/texbin/bibtex
-LATEX ?= latex
 PDFLATEX ?= pdflatex
 BIBTEX ?= bibtex
 
@@ -36,28 +31,19 @@ clean:
 %.ps: %.png
 	pngtopnm $< | pnmtops -noturn > $@
 
-.PRECIOUS: %.dvi
-%.dvi: %.tex $(FIGS) %.bbl
-	${LATEX} $<
-	${LATEX} $<
-	${LATEX} $<
+.PRECIOUS: %.pdf
+%.pdf: %.tex $(FIGS) %.bbl
+	${PDFLATEX} $<
+	${PDFLATEX} $<
+	while grep "Rerun to get" $(basename $<).log; do ${PDFLATEX} '$(basename $<).tex'; done
+	${PDFLATEX} $<
 
 %.bbl: %.tex bib-update
-	${LATEX} $<
+	${PDFLATEX} $<
 	${BIBTEX} $(basename $<)
-
-%.ps: %.dvi
-	dvips -P cmz -t letter -o $@ $<
-
-%.pdf: %.tex $(FIGS) %.bbl
-	${PDFLATEX} '$(basename $<).tex'
-	while grep "Rerun to get" $(basename $<).log; do ${PDFLATEX} '$(basename $<).tex'; done
 
 %.eps: %.gnuplot
 	gnuplot $<
-
-xdvi:
-	xdvi ${NAME}.dvi > /dev/null &
 
 TAGS: ${TEX_FILES}
 	etags ${TEX_FILES}
