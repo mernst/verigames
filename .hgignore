@@ -9,6 +9,12 @@ java/Generation/bin/
 java/Generation/.cache
 java/Generation/.scala_dependencies
 
+papers/2012-ftfjp/2012-pipejam.bbl
+papers/2012-ftfjp/2012-pipejam.dvi
+papers/2012-ftfjp/2012-pipejam.pdf
+papers/2012-ftfjp/bib
+
+
 syntax: glob
 *.aux
 *.blg
