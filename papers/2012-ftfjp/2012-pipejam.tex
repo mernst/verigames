@@ -41,6 +41,9 @@
 \renewenvironment{enumerate}{\Enumerate\Nospacing}{\endlist}
 \renewenvironment{description}{\Description\Nospacing}{\endlist}
 
+% Reduce indentation in lists.
+\setlength{\leftmargini}{.75\leftmargini}
+
 
 \begin{document}
 
@@ -1335,6 +1338,7 @@ that make the specific properties that \astree{} checks easy to verify.
 % Mention funding?
 
 
+\enlargethispage{10pt}
 
 \bibliographystyle{abbrv}
 \bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types,pag,sideeff,refs}
