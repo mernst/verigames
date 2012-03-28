@@ -26,7 +26,7 @@ We'll need these algorithms:
 
 
 Verigames:  with only 2 values, why can't we solve the constraints in
-linear time?
+linear time?  We can, if the constraints are solveable.
 
 The answer is that the constraints are not solvable, in general.
 
@@ -38,6 +38,11 @@ Or, the player needs to find the place that an exception (cast) is needed.
 
 Gameplay needs to specify when you drop a ball for type-based simulation.
 Usually, but not always...
+
+===========================================================================
+
+Optimization ideas:
+ * remove empty pipes, that Werner adds for convenience.
 
 ===========================================================================
 
