@@ -213,6 +213,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
           edgeElt.addAttribute(new Attribute("variableID", Integer.toString(edge.getVariableID())));
           edgeElt.addAttribute(new Attribute("pinch", Boolean.toString(edge.isPinched())));
           edgeElt.addAttribute(new Attribute("width", edge.isNarrow() ? "narrow" : "wide"));
+          edgeElt.addAttribute(new Attribute("editable", Boolean.toString(edge.isEditable())));
           edgeElt.addAttribute(new Attribute("id", "e" + edge.getUID()));
           edgeElt.addAttribute(new Attribute("buzzsaw", Boolean.toString(edge.hasBuzzsaw())));
         }

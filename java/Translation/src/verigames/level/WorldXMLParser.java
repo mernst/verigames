@@ -429,6 +429,12 @@ public class WorldXMLParser
       narrow = widthAttr.getValue().equals("narrow");
     }
 
+    final boolean editable;
+    {
+      final Attribute editableAttr = edgeElt.getAttribute("editable");
+      editable = Boolean.parseBoolean(editableAttr.getValue());
+    }
+
     final boolean buzzsaw;
     {
       final Attribute buzzsawAttr = edgeElt.getAttribute("buzzsaw");
@@ -474,13 +480,11 @@ public class WorldXMLParser
     final Chute c = new Chute(variableID, description);
     c.setPinched(pinch);
     c.setNarrow(narrow);
+    c.setEditable(editable);
     c.setBuzzsaw(buzzsaw);
     if (layout != null)
       c.setLayout(layout);
     
-    if (start.isBallSizeTest())
-      c.setEditable(false);
-
     b.addEdge(start, startPort, end, endPort, c);
 
     return Pair.of(UID, c);
