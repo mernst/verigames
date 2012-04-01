@@ -89,6 +89,9 @@ public class Intersection extends verigames.graph.Node<Chute>
      * Represents a black (null) ball being dropped into the top of a chute.
      */
     START_LARGE_BALL(0, 1),
+    /** A node that represents a start ball that changes size depending on the
+     * width of the chute below it */
+    START_PIPE_DEPENDENT_BALL(0,1),
     /** Represents a chute with no ball dropping into it */
     START_NO_BALL(0, 1),
     /** Terminate a chute */
