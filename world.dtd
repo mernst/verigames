@@ -9,7 +9,7 @@
    <!ELEMENT board (node*,edge*)>
     <!ATTLIST board name ID #REQUIRED>
     <!ELEMENT node (input,output,layout?)>
-     <!ATTLIST node kind (INCOMING|OUTGOING|SPLIT|NULL_TEST|MERGE|START_WHITE_BALL|START_BLACK_BALL|START_NO_BALL|END|SUBNETWORK|CONNECT) #REQUIRED>
+     <!ATTLIST node kind (INCOMING|OUTGOING|SPLIT|GET|BALL_SIZE_TEST|MERGE|START_SMALL_BALL|START_LARGE_BALL|START_NO_BALL|END|SUBBOARD|CONNECT) #REQUIRED>
      <!ATTLIST node id ID #REQUIRED>
      <!ATTLIST node name IDREF #IMPLIED>
      <!ELEMENT input (port*)>
@@ -20,11 +20,12 @@
      <!ELEMENT layout (x,y)>
       <!ELEMENT x (#PCDATA)>
       <!ELEMENT y (#PCDATA)>
-    <!ELEMENT edge (from,to, edge-layout?)>
+    <!ELEMENT edge (from,to,pinstripe*,edge-layout?)>
      <!ATTLIST edge description CDATA #REQUIRED>
      <!ATTLIST edge variableID CDATA #REQUIRED>
      <!ATTLIST edge pinch (true|false) #REQUIRED>
      <!ATTLIST edge width (wide|narrow) #REQUIRED>
+     <!ATTLIST edge editable (true|false) #REQUIRED>
      <!ATTLIST edge buzzsaw (true|false) #REQUIRED>
      <!ATTLIST edge id ID #REQUIRED>
      <!ELEMENT from (noderef)>
@@ -32,6 +33,8 @@
       <!ELEMENT noderef EMPTY>
        <!ATTLIST noderef id IDREF #REQUIRED>
        <!ATTLIST noderef port CDATA #REQUIRED>
+     <!ELEMENT pinstripe EMPTY>
+      <!ATTLIST pinstripe color CDATA #REQUIRED>
      <!ELEMENT edge-layout (point,(point,point,point)*)>
       <!ELEMENT point (x,y)>
 
