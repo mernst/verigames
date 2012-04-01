@@ -70,7 +70,7 @@ public class ThirdLevel
       Chute top = new Chute();
       b.addEdge(incoming, 0, end, 0, top);
       
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       b.addNode(start);
       
       Chute bottom = new Chute();
@@ -119,7 +119,7 @@ public class ThirdLevel
     
     // Add return value chute:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       b.addNode(start);
       
       b.addEdge(start, 0, outgoing, 3, new Chute());
@@ -133,7 +133,7 @@ public class ThirdLevel
     Intersection incoming = b.getIncomingNode();
     Intersection outgoing = b.getOutgoingNode();
     
-    Intersection foo = subnetworkFactory("Third.foo");
+    Intersection foo = subboardFactory("Third.foo");
     b.addNode(foo);
     
     // Add field1 chutes:
@@ -257,7 +257,7 @@ public class ThirdLevel
     Intersection incoming = b.getIncomingNode();
     Intersection outgoing = b.getOutgoingNode();
     
-    Intersection bar = subnetworkFactory("Third.bar");
+    Intersection bar = subboardFactory("Third.bar");
     b.addNode(bar);
     
     // Add field1 chutes:
@@ -304,7 +304,7 @@ public class ThirdLevel
     
     // Add first bar argument:
     {
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       b.addNode(start);
       
       Chute c = new Chute();
@@ -315,7 +315,7 @@ public class ThirdLevel
     
     // Add second bar argument:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       b.addNode(start);
       
       Chute c = new Chute();

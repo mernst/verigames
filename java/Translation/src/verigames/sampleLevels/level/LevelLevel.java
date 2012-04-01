@@ -1,14 +1,14 @@
 package verigames.sampleLevels.level;
 
 import static verigames.level.Intersection.factory;
-import static verigames.level.Intersection.subnetworkFactory;
+import static verigames.level.Intersection.subboardFactory;
 import static verigames.level.Intersection.Kind.END;
 import static verigames.level.Intersection.Kind.MERGE;
-import static verigames.level.Intersection.Kind.NULL_TEST;
+import static verigames.level.Intersection.Kind.BALL_SIZE_TEST;
 import static verigames.level.Intersection.Kind.SPLIT;
-import static verigames.level.Intersection.Kind.START_BLACK_BALL;
+import static verigames.level.Intersection.Kind.START_LARGE_BALL;
 import static verigames.level.Intersection.Kind.START_NO_BALL;
-import static verigames.level.Intersection.Kind.START_WHITE_BALL;
+import static verigames.level.Intersection.Kind.START_SMALL_BALL;
 import static verigames.utilities.BuildingTools.addField;
 import static verigames.utilities.BuildingTools.connectFields;
 import static verigames.utilities.BuildingTools.initializeBoard;
@@ -68,10 +68,10 @@ public class LevelLevel
   {
     Board constructor = initializeBoard(level, "Level.constructor");
     
-    addField(constructor, fieldToChute, nameToPortMap, "linkedEdgeClasses", START_WHITE_BALL);
+    addField(constructor, fieldToChute, nameToPortMap, "linkedEdgeClasses", START_SMALL_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "linkedEdgeClasses.elts", START_NO_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "linkedEdgeClasses.elts.elts", START_NO_BALL);
-    addField(constructor, fieldToChute, nameToPortMap, "boardNames", START_WHITE_BALL);
+    addField(constructor, fieldToChute, nameToPortMap, "boardNames", START_SMALL_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "boardNames.keys", START_NO_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "boardNames.values", START_NO_BALL);
     
@@ -157,7 +157,7 @@ public class LevelLevel
       
       // connect newEquivClass base chutes:
       {
-        Intersection start = factory(START_WHITE_BALL);
+        Intersection start = factory(START_SMALL_BALL);
         Intersection split = factory(SPLIT);
         Intersection end = factory(END);
         
@@ -256,7 +256,7 @@ public class LevelLevel
     
     // connect toRemove base chute:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       Intersection end = factory(END);
       makeLinked.addNode(start);
       makeLinked.addNode(end);
@@ -452,7 +452,7 @@ public class LevelLevel
     
     // add return base chute:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       boards.addNode(start);
       
       boards.addEdge(start, 0, outgoing, 6, new Chute());
@@ -483,7 +483,7 @@ public class LevelLevel
     {
       Intersection split = factory(SPLIT);
       Intersection merge = factory(MERGE);
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       getBoard.addNode(split);
       getBoard.addNode(merge);
       getBoard.addNode(start);
@@ -535,8 +535,8 @@ public class LevelLevel
     Intersection incoming = outXML.getIncomingNode();
     Intersection outgoing = outXML.getOutgoingNode();
     
-    Intersection linkedOut = subnetworkFactory("Level.outputLinkedEdgeClasses");
-    Intersection boardsOut = subnetworkFactory("Level.outputBoardsMap");
+    Intersection linkedOut = subboardFactory("Level.outputLinkedEdgeClasses");
+    Intersection boardsOut = subboardFactory("Level.outputBoardsMap");
     outXML.addNode(linkedOut);
     outXML.addNode(boardsOut);
     
@@ -603,7 +603,7 @@ public class LevelLevel
     Intersection incoming = outLinked.getIncomingNode();
     Intersection outgoing = outLinked.getOutgoingNode();
     
-    Intersection boards = subnetworkFactory("Level.boards");
+    Intersection boards = subboardFactory("Level.boards");
     outLinked.addNode(boards);
     
     // connect all boardNames chutes
@@ -736,7 +736,7 @@ public class LevelLevel
       Chute alreadyPrinted = new Chute();
       alreadyPrinted.setPinched(true);
       
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       Intersection end = factory(END);
       outLinked.addNode(start);
       outLinked.addNode(end);
@@ -795,7 +795,7 @@ public class LevelLevel
     
     // connect Board.getEdges subnetwork and its return values
     {
-      Intersection getEdges = subnetworkFactory("Board.getEdges");
+      Intersection getEdges = subboardFactory("Board.getEdges");
       outLinked.addNode(getEdges);
       
       // connect base chute:
@@ -862,7 +862,7 @@ public class LevelLevel
     
     // connect keySet chute:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       Intersection end = factory(END);
       boardsOut.addNode(start);
       boardsOut.addNode(end);
@@ -899,7 +899,7 @@ public class LevelLevel
     // connect boardNames.values and board chutes:
     {
       Intersection split = factory(SPLIT);
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       Intersection merge = factory(MERGE);
       Intersection end = factory(END);
       boardsOut.addNode(split);
@@ -947,7 +947,7 @@ public class LevelLevel
     for (String subnetworkName : new String[] { "Board.getNodes",
     "Board.getEdges" })
     {
-      Intersection sub = subnetworkFactory(subnetworkName);
+      Intersection sub = subboardFactory(subnetworkName);
       boardsOut.addNode(sub);
       
       // connect base chutes:
@@ -991,12 +991,12 @@ public class LevelLevel
       String varName = subnetworkName.equals("Intersection.getInputChute") ? "input"
           : "output";
       
-      Intersection topSubnetwork = subnetworkFactory(subnetworkName);
-      Intersection bottomSubnetwork = subnetworkFactory(subnetworkName);
+      Intersection topSubnetwork = subboardFactory(subnetworkName);
+      Intersection bottomSubnetwork = subboardFactory(subnetworkName);
       boardsOut.addNode(topSubnetwork);
       boardsOut.addNode(bottomSubnetwork);
       
-      NullTest split = factory(NULL_TEST).asNullTest();
+      NullTest split = factory(BALL_SIZE_TEST).asBallSizeTest();
       Intersection endLeft = factory(END);
       Intersection end = factory(END);
       Intersection merge = factory(MERGE);
@@ -1033,7 +1033,7 @@ public class LevelLevel
     for (String subnetworkName : new String[] { "Chute.getStart",
     "Chute.getEnd" })
     {
-      Intersection sub = subnetworkFactory(subnetworkName);
+      Intersection sub = subboardFactory(subnetworkName);
       Intersection end = factory(END);
       boardsOut.addNode(sub);
       boardsOut.addNode(end);

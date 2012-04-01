@@ -45,7 +45,7 @@ public class LevelXMLTests
     Board constructor = new Board();
     constructor.addNode(Intersection.factory(Kind.INCOMING));
     Intersection start = Intersection
-        .factory(Kind.START_BLACK_BALL);
+        .factory(Kind.START_LARGE_BALL);
     constructor.addNode(start);
     Intersection outgoing = Intersection.factory(Kind.OUTGOING);
     constructor.addNode(outgoing);
@@ -59,7 +59,7 @@ public class LevelXMLTests
     Intersection incoming = Intersection.factory(Kind.INCOMING);
     Intersection end = Intersection.factory(Kind.END);
     Intersection restart = Intersection
-        .factory(Kind.START_WHITE_BALL);
+        .factory(Kind.START_SMALL_BALL);
     Intersection out = Intersection.factory(Kind.OUTGOING);
     
     Board method = new Board();

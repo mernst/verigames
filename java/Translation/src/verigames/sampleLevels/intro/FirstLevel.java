@@ -28,7 +28,7 @@ public class FirstLevel
     
     Intersection outgoing = b.getOutgoingNode();
     
-    Intersection startLeft = factory(START_WHITE_BALL);
+    Intersection startLeft = factory(START_SMALL_BALL);
     Intersection startRight = factory(START_NO_BALL);
     b.addNode(startLeft);
     b.addNode(startRight);

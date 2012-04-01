@@ -28,7 +28,7 @@ public class IntersectionSpecTests
   {
     assertFalse(
         "isSubnetwork should return false on a regular Intersection.",
-        (Intersection.factory(Kind.MERGE)).isSubnetwork());
+        (Intersection.factory(Kind.MERGE)).isSubboard());
   }
   
   /**
@@ -37,7 +37,7 @@ public class IntersectionSpecTests
   @Test public void isNullTestTest()
   {
     assertFalse("isNullTest should return false on a regular Intersection.",
-        (Intersection.factory(Kind.MERGE)).isNullTest());
+        (Intersection.factory(Kind.MERGE)).isBallSizeTest());
   }
   
   /**

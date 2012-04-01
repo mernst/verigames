@@ -20,7 +20,7 @@ public class ExceptionWorld
     b.addNode(incoming);
     b.addNode(outgoing);
     
-    Intersection start = Intersection.factory(Kind.START_BLACK_BALL);
+    Intersection start = Intersection.factory(Kind.START_LARGE_BALL);
     Intersection merge = Intersection.factory(Kind.MERGE);
     b.addNode(start);
     b.addNode(merge);

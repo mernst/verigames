@@ -40,7 +40,7 @@ public class NullTestLevel
     
     Intersection outgoing = getChute.getOutgoingNode();
     
-    Intersection getOut = subnetworkFactory("Intersection.getOutputChute");
+    Intersection getOut = subboardFactory("Intersection.getOutputChute");
     getChute.addNode(getOut);
     getChute.addEdge(getOut, 0, outgoing, 0, new Chute());
   }
@@ -59,7 +59,7 @@ public class NullTestLevel
     
     Intersection incoming = setChute.getIncomingNode();
     
-    Intersection setOut = subnetworkFactory("Intersection.setOutputChute");
+    Intersection setOut = subboardFactory("Intersection.setOutputChute");
     Intersection split = factory(SPLIT);
     Intersection end = factory(END);
     setChute.addNode(setOut);

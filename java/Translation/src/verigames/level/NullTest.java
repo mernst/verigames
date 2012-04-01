@@ -2,7 +2,7 @@ package verigames.level;
 
 /**
  * An {@link Intersection} subclass that represents
- * {@link Intersection.Kind#NULL_TEST NULL_TEST} {@link Intersection.Kind Kind}s
+ * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST} {@link Intersection.Kind Kind}s
  * of {@code Intersection}.<br/>
  * <br/>
  * The output chute in port 0 represents the "not null" branch of this test<br/>
@@ -52,17 +52,17 @@ public class NullTest extends Intersection
   
   /**
    * Creates a new {@link Intersection} of {@link Intersection.Kind Kind}
-   * {@link Intersection.Kind#NULL_TEST NULL_TEST}
+   * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST}
    */
   protected NullTest()
   {
-    super(Kind.NULL_TEST);
+    super(Kind.BALL_SIZE_TEST);
     checkRep();
   }
   
   /**
    * Returns {@code true} iff {@code kind} is
-   * {@link Intersection.Kind#NULL_TEST NULL_TEST}, indicating that this
+   * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST}, indicating that this
    * implementation supports only {@code NULL_TEST}.
    * 
    * @param kind
@@ -70,13 +70,13 @@ public class NullTest extends Intersection
   @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
   {
     // this implementation supports only NULL_TEST
-    return kind == Kind.NULL_TEST;
+    return kind == Kind.BALL_SIZE_TEST;
   }
   
   /**
    * Returns {@code true} to indicate that {@code this} is a {@code NullTest}.
    */
-  @Override public boolean isNullTest()
+  @Override public boolean isBallSizeTest()
   {
     return true;
   }
@@ -84,7 +84,7 @@ public class NullTest extends Intersection
   /**
    * Returns {@code this}
    */
-  @Override public NullTest asNullTest()
+  @Override public NullTest asBallSizeTest()
   {
     return this;
   }

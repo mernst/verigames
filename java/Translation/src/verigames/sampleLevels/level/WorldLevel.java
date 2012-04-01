@@ -1,12 +1,12 @@
 package verigames.sampleLevels.level;
 
 import static verigames.level.Intersection.factory;
-import static verigames.level.Intersection.subnetworkFactory;
+import static verigames.level.Intersection.subboardFactory;
 import static verigames.level.Intersection.Kind.END;
 import static verigames.level.Intersection.Kind.MERGE;
 import static verigames.level.Intersection.Kind.SPLIT;
 import static verigames.level.Intersection.Kind.START_NO_BALL;
-import static verigames.level.Intersection.Kind.START_WHITE_BALL;
+import static verigames.level.Intersection.Kind.START_SMALL_BALL;
 import static verigames.utilities.BuildingTools.addField;
 import static verigames.utilities.BuildingTools.connectFields;
 import static verigames.utilities.BuildingTools.initializeBoard;
@@ -56,7 +56,7 @@ public class WorldLevel
   {
     Board constructor = initializeBoard(level, "World.constructor");
     
-    addField(constructor, fieldToChute, nameToPortMap, "nameToLevel", START_WHITE_BALL);
+    addField(constructor, fieldToChute, nameToPortMap, "nameToLevel", START_SMALL_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "nameToLevel.keys", START_NO_BALL);
     addField(constructor, fieldToChute, nameToPortMap, "nameToLevel.values", START_NO_BALL);
   }
@@ -141,7 +141,7 @@ public class WorldLevel
     
     // make chute representing nameToLevel.values() return value
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       Intersection end = factory(END);
       output.addNode(start);
       output.addNode(end);
@@ -179,7 +179,7 @@ public class WorldLevel
     {
       Intersection split = factory(SPLIT);
       Intersection end = factory(END);
-      Intersection out = subnetworkFactory("Level.outputXML");
+      Intersection out = subboardFactory("Level.outputXML");
       output.addNode(split);
       output.addNode(end);
       output.addNode(out);

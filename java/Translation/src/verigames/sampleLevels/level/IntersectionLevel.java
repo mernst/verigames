@@ -1,13 +1,13 @@
 package verigames.sampleLevels.level;
 
 import static verigames.level.Intersection.factory;
-import static verigames.level.Intersection.subnetworkFactory;
+import static verigames.level.Intersection.subboardFactory;
 import static verigames.level.Intersection.Kind.END;
 import static verigames.level.Intersection.Kind.MERGE;
 import static verigames.level.Intersection.Kind.SPLIT;
-import static verigames.level.Intersection.Kind.START_BLACK_BALL;
+import static verigames.level.Intersection.Kind.START_LARGE_BALL;
 import static verigames.level.Intersection.Kind.START_NO_BALL;
-import static verigames.level.Intersection.Kind.START_WHITE_BALL;
+import static verigames.level.Intersection.Kind.START_SMALL_BALL;
 import static verigames.utilities.BuildingTools.connectFields;
 import static verigames.utilities.BuildingTools.initializeBoard;
 
@@ -67,8 +67,8 @@ public class IntersectionLevel
     factory.addNode(incoming);
     factory.addNode(outgoing);
     
-    Intersection startLeft = Intersection.factory(Kind.START_WHITE_BALL);
-    Intersection startRight = Intersection.factory(Kind.START_WHITE_BALL);
+    Intersection startLeft = Intersection.factory(Kind.START_SMALL_BALL);
+    Intersection startRight = Intersection.factory(Kind.START_SMALL_BALL);
     factory.addNode(startLeft);
     factory.addNode(startRight);
     
@@ -94,7 +94,7 @@ public class IntersectionLevel
     subFac.addNode(incoming);
     subFac.addNode(outgoing);
     
-    Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+    Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
     subFac.addNode(start);
     
     Chute ret = new Chute();
@@ -124,7 +124,7 @@ public class IntersectionLevel
     // list aux chutes:
     {
       Intersection merge = Intersection.factory(Kind.MERGE);
-      Intersection start = Intersection.factory(Kind.START_BLACK_BALL);
+      Intersection start = Intersection.factory(Kind.START_LARGE_BALL);
       pad.addNode(merge);
       pad.addNode(start);
       
@@ -151,7 +151,7 @@ public class IntersectionLevel
     
     // Add inputChutes base chutes:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       constructor.addNode(start);
       
       String name = "inputChutes";
@@ -177,7 +177,7 @@ public class IntersectionLevel
     
     // Add outputChutes base chutes:
     {
-      Intersection start = factory(START_WHITE_BALL);
+      Intersection start = factory(START_SMALL_BALL);
       constructor.addNode(start);
       
       String name = "outputChutes";
@@ -210,7 +210,7 @@ public class IntersectionLevel
     Intersection incoming = setIn.getIncomingNode();
     Intersection outgoing = setIn.getOutgoingNode();
     
-    Intersection padSub = subnetworkFactory("Intersection.padToLength");
+    Intersection padSub = subboardFactory("Intersection.padToLength");
     setIn.addNode(padSub);
     
     // connect input base chutes:
@@ -266,7 +266,7 @@ public class IntersectionLevel
     Intersection incoming = setOut.getIncomingNode();
     Intersection outgoing = setOut.getOutgoingNode();
     
-    Intersection padSub = subnetworkFactory("Intersection.padToLength");
+    Intersection padSub = subboardFactory("Intersection.padToLength");
     setOut.addNode(padSub);
     
     // connect output base chutes:
@@ -341,7 +341,7 @@ public class IntersectionLevel
       getIn.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
       
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       getIn.addNode(start);
       
       Chute inBetween = new Chute();
@@ -383,7 +383,7 @@ public class IntersectionLevel
       getOut.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
       
-      Intersection start = factory(START_BLACK_BALL);
+      Intersection start = factory(START_LARGE_BALL);
       getOut.addNode(start);
       
       Chute inBetween = new Chute();

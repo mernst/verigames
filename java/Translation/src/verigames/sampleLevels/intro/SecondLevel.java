@@ -43,7 +43,7 @@ public class SecondLevel
     fieldToChute.put("field1", field1);
     fieldToChute.put("field2", field2);
     
-    Intersection left = factory(START_WHITE_BALL);
+    Intersection left = factory(START_SMALL_BALL);
     Intersection right = factory(START_NO_BALL);
     b.addNode(left);
     b.addNode(right);

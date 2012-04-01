@@ -142,10 +142,10 @@ public class WorldXMLPrinter extends Printer<World, Void>
         Element nodeElt = new Element("node");
         nodeElt.addAttribute(new Attribute("kind", node.getIntersectionKind().toString()));
         
-        if (node.getIntersectionKind() == Kind.SUBNETWORK)
+        if (node.getIntersectionKind() == Kind.SUBBOARD)
         {
-          if (node.isSubnetwork())
-            nodeElt.addAttribute(new Attribute("name", node.asSubnetwork().getSubnetworkName()));
+          if (node.isSubboard())
+            nodeElt.addAttribute(new Attribute("name", node.asSubboard().getSubnetworkName()));
           else
             throw new RuntimeException("node " + node + " has kind subnetwork but isSubnetwork returns false");
         }

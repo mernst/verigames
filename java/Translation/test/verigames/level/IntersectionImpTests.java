@@ -23,7 +23,7 @@ public class IntersectionImpTests
    */
   @Test(expected = IllegalArgumentException.class) public void testConstructorFailure1()
   {
-    Intersection.factory(Kind.SUBNETWORK);
+    Intersection.factory(Kind.SUBBOARD);
   }
   
   /**
@@ -31,7 +31,7 @@ public class IntersectionImpTests
    */
   @Test(expected = IllegalStateException.class) public void testAsSubnetworkFailure()
   {
-    (Intersection.factory(Kind.INCOMING)).asSubnetwork();
+    (Intersection.factory(Kind.INCOMING)).asSubboard();
   }
   
   /**
@@ -39,7 +39,7 @@ public class IntersectionImpTests
    */
   @Test(expected = IllegalStateException.class) public void testAsNullTestFailure()
   {
-    (Intersection.factory(Kind.INCOMING)).asNullTest();
+    (Intersection.factory(Kind.INCOMING)).asBallSizeTest();
   }
   
   private Intersection i;

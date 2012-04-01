@@ -306,12 +306,12 @@ public class WorldXMLParser
     final Intersection intersection;
     switch (kind)
     {
-      case SUBNETWORK:
+      case SUBBOARD:
         final Attribute nameAttr = nodeElt.getAttribute("name");
         if (nameAttr == null)
-          throw new RuntimeException("Subnetwork node does not have a name attribute");
+          throw new RuntimeException("Subboard node does not have a name attribute");
         final String name = nameAttr.getValue();
-        intersection = Intersection.subnetworkFactory(name);
+        intersection = Intersection.subboardFactory(name);
         break;
       default:
         intersection = Intersection.factory(kind);
@@ -478,7 +478,7 @@ public class WorldXMLParser
     if (layout != null)
       c.setLayout(layout);
     
-    if (start.isNullTest())
+    if (start.isBallSizeTest())
       c.setEditable(false);
 
     b.addEdge(start, startPort, end, endPort, c);

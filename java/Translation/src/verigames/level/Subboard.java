@@ -2,7 +2,7 @@ package verigames.level;
 
 /**
  * An {@link Intersection} subclass that represents a
- * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}. Because {@code SUBNETWORK}s
+ * {@link Intersection.Kind#SUBBOARD SUBNETWORK}. Because {@code SUBNETWORK}s
  * represent more information than other {@code Intersection}s, they are
  * implemented separately.<br/>
  * <br/>
@@ -12,27 +12,27 @@ package verigames.level;
  * @author Nathaniel Mote
  */
 
-public class Subnetwork extends Intersection
+public class Subboard extends Intersection
 {
   private final String subnetworkName;
   
   /**
    * Creates a new {@link Intersection} with {@link Intersection.Kind Kind}
-   * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}.<br/>
+   * {@link Intersection.Kind#SUBBOARD SUBNETWORK}.<br/>
    * <br/>
    * {@code this} represents a call to the method with name {@code methodName}.
    * @param methodName
    * The name of the method to which {@code this} refers.
    */
-  protected Subnetwork(String methodName)
+  protected Subboard(String methodName)
   {
-    super(Kind.SUBNETWORK);
+    super(Kind.SUBBOARD);
     subnetworkName = methodName;
   }
   
   /**
    * Returns {@code true} iff {@code kind} is
-   * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}, indicating that this
+   * {@link Intersection.Kind#SUBBOARD SUBNETWORK}, indicating that this
    * implementation supports only {@code SUBNETWORK}s<br/>
    * 
    * @param kind
@@ -40,14 +40,14 @@ public class Subnetwork extends Intersection
   @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
   {
     // This implementation supports only the SUBNETWORK kind
-    return kind == Kind.SUBNETWORK;
+    return kind == Kind.SUBBOARD;
   }
   
   /**
    * Returns {@code true} to indicate that {@code this} is a
-   * {@link Intersection.Kind#SUBNETWORK SUBNETWORK}.
+   * {@link Intersection.Kind#SUBBOARD SUBNETWORK}.
    */
-  @Override public boolean isSubnetwork()
+  @Override public boolean isSubboard()
   {
     return true;
   }
@@ -55,7 +55,7 @@ public class Subnetwork extends Intersection
   /**
    * Returns {@code this}
    */
-  @Override public Subnetwork asSubnetwork()
+  @Override public Subboard asSubboard()
   {
     return this;
   }

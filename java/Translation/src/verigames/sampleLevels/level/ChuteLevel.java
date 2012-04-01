@@ -69,7 +69,7 @@ public class ChuteLevel
       String name = "aux";
       Chute auxArg = new Chute();
       
-      Intersection nullTest = Intersection.factory(Kind.NULL_TEST);
+      Intersection nullTest = Intersection.factory(Kind.BALL_SIZE_TEST);
       constructor.addNode(nullTest);
       constructor.addEdge(incoming, 1, nullTest, 0, auxArg);
       constructor.addChuteName(auxArg, name);
@@ -161,8 +161,8 @@ public class ChuteLevel
     // Construct start and end chutes
     {
       Intersection startStart = Intersection
-          .factory(Kind.START_BLACK_BALL);
-      Intersection endStart = Intersection.factory(Kind.START_BLACK_BALL);
+          .factory(Kind.START_LARGE_BALL);
+      Intersection endStart = Intersection.factory(Kind.START_LARGE_BALL);
       constructor.addNode(startStart);
       constructor.addNode(endStart);
       
@@ -180,8 +180,8 @@ public class ChuteLevel
     
     // Construct auxiliaryChutes (the field) base chutes
     {
-      Intersection startLeft = Intersection.factory(Kind.START_WHITE_BALL);
-      Intersection startRight = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection startLeft = Intersection.factory(Kind.START_SMALL_BALL);
+      Intersection startRight = Intersection.factory(Kind.START_SMALL_BALL);
       constructor.addNode(startLeft);
       constructor.addNode(startRight);
       
@@ -444,9 +444,9 @@ public class ChuteLevel
     copy.addNode(incoming);
     copy.addNode(outgoing);
     
-    Intersection copySub = Intersection.subnetworkFactory("Chute.copy");
+    Intersection copySub = Intersection.subboardFactory("Chute.copy");
     Intersection constructorSub = Intersection
-        .subnetworkFactory("Chute.constructor");
+        .subboardFactory("Chute.constructor");
     copy.addNode(copySub);
     copy.addNode(constructorSub);
     
@@ -532,7 +532,7 @@ public class ChuteLevel
     
     // Add copyAuxChutes base chute:
     {
-      Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
       copy.addNode(start);
       
       Chute copyAux = new Chute();
@@ -563,7 +563,7 @@ public class ChuteLevel
     
     // Add return value:
     {
-      Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
       copy.addNode(start);
       
       Chute ret = new Chute();
@@ -624,7 +624,7 @@ public class ChuteLevel
     
     // Connect return value base chute
     {
-      Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
       getAux.addNode(start);
       
       Chute ret = new Chute();
@@ -645,8 +645,8 @@ public class ChuteLevel
     travAux.addNode(incoming);
     travAux.addNode(outgoing);
     
-    Intersection auxChutesSub = Intersection.subnetworkFactory("Chute.getAuxiliaryChutes");
-    Intersection travSub = Intersection.subnetworkFactory("Chute.traverseAuxChutes");
+    Intersection auxChutesSub = Intersection.subboardFactory("Chute.getAuxiliaryChutes");
+    Intersection travSub = Intersection.subboardFactory("Chute.traverseAuxChutes");
     travAux.addNode(auxChutesSub);
     travAux.addNode(travSub);
     
@@ -732,7 +732,7 @@ public class ChuteLevel
     
     // allAuxChuteTraversals base chute:
     {
-      Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
       Intersection end = Intersection.factory(Kind.END);
       travAux.addNode(start);
       travAux.addNode(end);
@@ -800,7 +800,7 @@ public class ChuteLevel
     
     // return value base chute:
     {
-      Intersection start = Intersection.factory(Kind.START_WHITE_BALL);
+      Intersection start = Intersection.factory(Kind.START_SMALL_BALL);
       travAux.addNode(start);
       
       Chute ret = new Chute();

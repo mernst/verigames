@@ -89,7 +89,7 @@ class DotPrinter extends AbstractDotPrinter
     {
       if (!usesPorts(kind))
         return 0;
-      else if (kind == Intersection.Kind.SUBNETWORK)
+      else if (kind == Intersection.Kind.SUBBOARD)
         return 1.46;
       else if (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING)
         return 0;
@@ -184,7 +184,7 @@ class DotPrinter extends AbstractDotPrinter
    */
   private static boolean usesPorts(Kind k)
   {
-    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBNETWORK;
+    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBBOARD;
   }
 
   @Override

@@ -127,7 +127,7 @@ public class ChuteImpTests
     // c.setStart(Intersection.intersectionFactory(Intersection.Kind.START_WHITE_BALL),0);
     try
     {
-      invokeChuteMethod(c, "setStart", new Object[] {Intersection.factory(Intersection.Kind.START_WHITE_BALL), 0});
+      invokeChuteMethod(c, "setStart", new Object[] {Intersection.factory(Intersection.Kind.START_SMALL_BALL), 0});
     }
     catch (InvocationTargetException e)
     {

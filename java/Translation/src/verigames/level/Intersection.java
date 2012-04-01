@@ -64,6 +64,8 @@ public class Intersection extends verigames.graph.Node<Chute>
    */
   public static enum Kind
   {
+    /** The node used for Map.get */
+    GET(4,1),
     /** The start point of chutes that enter the board on the top */
     INCOMING(0, -1),
     /** The end point of chutes that exit the board on the bottom */
@@ -78,21 +80,21 @@ public class Intersection extends verigames.graph.Node<Chute>
      */
     CONNECT(1, 1),
     /** Represents a split due to testing for null */
-    NULL_TEST(1, 2),
+    BALL_SIZE_TEST(1, 2),
     /**
      * Represents a white (not null) ball being dropped into the top a chute.
      */
-    START_WHITE_BALL(0, 1),
+    START_SMALL_BALL(0, 1),
     /**
      * Represents a black (null) ball being dropped into the top of a chute.
      */
-    START_BLACK_BALL(0, 1),
+    START_LARGE_BALL(0, 1),
     /** Represents a chute with no ball dropping into it */
     START_NO_BALL(0, 1),
     /** Terminate a chute */
     END(1, 0),
     /** Represents a method call */
-    SUBNETWORK(-1, -1);
+    SUBBOARD(-1, -1);
     
     /**
      * The number of input ports that an {@link Intersection} of this {@code
@@ -231,30 +233,30 @@ public class Intersection extends verigames.graph.Node<Chute>
    * Returns an {@code Intersection} of the {@link Intersection.Kind Kind}
    * {@code kind}<br/>
    * <br/>
-   * Requires: {@code kind !=} {@link Kind#SUBNETWORK SUBNETWORK} (use
-   * {@link #subnetworkFactory(java.lang.String) subnetworkFactory})
+   * Requires: {@code kind !=} {@link Kind#SUBBOARD SUBNETWORK} (use
+   * {@link #subboardFactory(java.lang.String) subnetworkFactory})
    * 
    * @param kind
    */
   public static Intersection factory(Kind kind)
   {
-    if (kind == Kind.SUBNETWORK)
+    if (kind == Kind.SUBBOARD)
       throw new IllegalArgumentException(
           "intersectionFactory passed Kind.SUBNETWORK. Use subnetworkFactory instead.");
-    else if (kind == Kind.NULL_TEST)
+    else if (kind == Kind.BALL_SIZE_TEST)
       return new NullTest();
     else
       return new Intersection(kind);
   }
   
   /**
-   * Returns a {@link Subnetwork} representing a method with {@code methodName}
+   * Returns a {@link Subboard} representing a method with {@code methodName}
    * 
    * @param methodName
    */
-  public static Subnetwork subnetworkFactory(String methodName)
+  public static Subboard subboardFactory(String methodName)
   {
-    return new Subnetwork(methodName);
+    return new Subboard(methodName);
   }
   
   /**
@@ -293,7 +295,7 @@ public class Intersection extends verigames.graph.Node<Chute>
    * {@code Intersection}.<br/>
    * <br/>
    * This implementation supports all {@link Intersection.Kind Kind}s except
-   * {@link Kind#SUBNETWORK SUBNETWORK} and {@link Kind#NULL_TEST NULL_TEST}
+   * {@link Kind#SUBBOARD SUBNETWORK} and {@link Kind#BALL_SIZE_TEST NULL_TEST}
    * 
    * @param kind
    */
@@ -301,7 +303,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     // this implementation supports every Intersection kind except for
     // SUBNETWORK and NULL_TEST
-    return kind != Kind.SUBNETWORK && kind != Kind.NULL_TEST;
+    return kind != Kind.SUBBOARD && kind != Kind.BALL_SIZE_TEST;
   }
   
   /**
@@ -357,29 +359,29 @@ public class Intersection extends verigames.graph.Node<Chute>
   }
   
   /**
-   * Returns {@code true} iff {@code this} is a {@link Subnetwork}.
+   * Returns {@code true} iff {@code this} is a {@link Subboard}.
    */
-  public boolean isSubnetwork()
+  public boolean isSubboard()
   {
     return false;
   }
   
   /**
-   * Returns {@code this} as a {@link Subnetwork}<br/>
+   * Returns {@code this} as a {@link Subboard}<br/>
    * <br/>
-   * Requires: {@link #isSubnetwork()}
+   * Requires: {@link #isSubboard()}
    */
-  public Subnetwork asSubnetwork()
+  public Subboard asSubboard()
   {
     // Is this the right exception to throw?
     throw new IllegalStateException(
-        "asSubnetwork called on an Intersection not of Subnetwork kind");
+        "asSubnetwork called on an Intersection not of Subboard kind");
   }
   
   /**
    * Returns {@code true} iff this is a {@link NullTest}
    */
-  public boolean isNullTest()
+  public boolean isBallSizeTest()
   {
     return false;
   }
@@ -387,9 +389,9 @@ public class Intersection extends verigames.graph.Node<Chute>
   /**
    * Returns {@code this} as a {@link NullTest}<br/>
    * <br/>
-   * Requires: {@link #isSubnetwork()}
+   * Requires: {@link #isSubboard()}
    */
-  public NullTest asNullTest()
+  public NullTest asBallSizeTest()
   {
     throw new IllegalStateException(
         "asNullTest called on an Intersection not of NullTest kind");
