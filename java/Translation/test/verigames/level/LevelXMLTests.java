@@ -70,6 +70,8 @@ public class LevelXMLTests
     
     Chute c2 = new Chute();
     Chute c3 = new Chute();
+    c2.setNarrow(false);
+    c3.setNarrow(false);
     
     method.addEdge(incoming, 0, end, 0, c2);
     method.addChuteName(c2, "s");
