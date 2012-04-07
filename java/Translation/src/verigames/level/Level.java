@@ -281,6 +281,7 @@ public class Level
    * - {@link #underConstruction() this.underConstruction()}<br/>
    * - all {@code Board}s in {@code boards} are in a state in which they can
    *   finish construction
+   * - All chutes that have been linked must have the same width.
    */
   public void finishConstruction()
   {
@@ -294,6 +295,30 @@ public class Level
     underConstruction = false;
     for (Board b : boardNames.values())
       b.finishConstruction();
+    
+    /* Make sure that all chutes that are linked to each other have the same
+     * width. */
+    for (Set<Chute> linkedChutes : linkedEdgeClasses)
+    {
+      Boolean isNarrow = null;
+
+      /* This is kept so that a detailed error message explaining which chutes
+       * differ can be printed if there is an error. */
+      Chute initialChute = null;
+      for (Chute c : linkedChutes)
+      {
+        if (isNarrow == null)
+        {
+          isNarrow = c.isNarrow();
+          initialChute = c;
+        }
+
+        if (c.isNarrow() != isNarrow)
+          throw new IllegalStateException(
+              "Two linked chutes have different widths: " +
+              initialChute + " and " + c);
+      }
+    }
   }
 
   /**
