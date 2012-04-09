@@ -174,7 +174,7 @@ class NninfGameSolver(
                 val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
                 val inthis = findIntersection(getterBoard, LiteralThis)
                 val outgoing = getterBoard.getOutgoingNode()
-                val field = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
+                val field = Intersection.factory(Intersection.Kind.START_PIPE_DEPENDENT_BALL)
                 getterBoard.addNode(field)
                 getterBoard.addEdge(field, 0, outgoing, 1 + genericsOffset(cvar), new Chute(cvar.id, cvar.toString()))
               }
