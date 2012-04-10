@@ -73,9 +73,7 @@ public class NninfVisitor extends InferenceVisitor {
         super.visitMemberSelect(node, p);
         // TODO: How do I decide whether something is a field read or update?
         // We currently create an access and then a set constraint.
-        if (!TreeUtils.isSelfAccess(node)) {
-            checkForNullability(node.getExpression(), "dereference.of.nullable");
-        }
+        checkForNullability(node.getExpression(), "dereference.of.nullable");
         logFieldAccess(node);
         return null;
     }
