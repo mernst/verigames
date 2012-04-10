@@ -133,7 +133,7 @@ class NninfGameSolver(
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (mvar.isInstanceOf[NewInMethodVP]) {
               // For object creations, add a START_WHITE_BALL Intersection.
-              val input = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+              val input = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
@@ -174,7 +174,7 @@ class NninfGameSolver(
                 val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
                 val inthis = findIntersection(getterBoard, LiteralThis)
                 val outgoing = getterBoard.getOutgoingNode()
-                val field = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+                val field = Intersection.factory(Intersection.Kind.START_PIPE_DEPENDENT_BALL)
                 getterBoard.addNode(field)
                 getterBoard.addEdge(field, 0, outgoing, 1 + genericsOffset(cvar), new Chute(cvar.id, cvar.toString()))
               }
@@ -195,7 +195,7 @@ class NninfGameSolver(
             } else if (clvar.isInstanceOf[NewInFieldInitVP] ||
                 clvar.isInstanceOf[NewInStaticInitVP]) {
               // For object creations, add a START_WHITE_BALL Intersection.
-              val input = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+              val input = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(input)
               board.addNode(start)
@@ -239,7 +239,7 @@ class NninfGameSolver(
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
                 val board = variablePosToBoard(supvar.varpos)
-                val blackball = Intersection.factory(Intersection.Kind.START_BLACK_BALL)
+                val blackball = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
                 val merge = Intersection.factory(Intersection.Kind.MERGE)
                 val lastIntersection = boardNVariableToIntersection((board, supvar))
 
@@ -555,8 +555,8 @@ class NninfGameSolver(
     /**
      * Create a new subboard on callerBoard.
      */
-    def newSubboard(callerBoard: Board, calledvarpos: VariablePosition, calledname: String): Subnetwork = {
-      val subboard = Intersection.subnetworkFactory(cleanUpForXML(calledname))
+    def newSubboard(callerBoard: Board, calledvarpos: VariablePosition, calledname: String): Subboard = {
+      val subboard = Intersection.subboardFactory(cleanUpForXML(calledname))
       callerBoard.addNode(subboard)
       // Ensure that called board exists, returned board not used.
       findOrCreateMethodBoard(calledvarpos, calledname)
@@ -703,29 +703,29 @@ class NninfGameSolver(
         case LiteralThis =>
           boardToSelfIntersection(board)
         case LiteralNull => {
-          val res = Intersection.factory(Intersection.Kind.START_BLACK_BALL)
+          val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
           board.addNode(res)
           res
         }
         case lit: AbstractLiteral => {
           // TODO: Are all other literals non-null?
-          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
           board.addNode(res)
           res
         }
         case NninfConstants.NULLABLE => {
-          val res = Intersection.factory(Intersection.Kind.START_BLACK_BALL)
+          val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
           board.addNode(res)
           res
         }
         case NninfConstants.NONNULL => {
-          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
           board.addNode(res)
           res
         }
         case cv: CombVariable => {
           // TODO: Combvariables appear for BinaryTrees.
-          val res = Intersection.factory(Intersection.Kind.START_WHITE_BALL)
+          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
           board.addNode(res)
           res
         }
