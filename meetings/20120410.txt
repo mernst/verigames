@@ -1,0 +1,74 @@
+Meeting of Tuesday, April 10, 2012
+
+We need to prepare for the demo of 4/26, when the PM (Drew Dean) visits us.
+Here are some items, many of which are needed for that meeting.
+
+Brian:
+ * more polished website for uploading files
+ * document how others can update the website (upload code, etc.)
+ * make the website run the type-checker on annotated code, and have a
+   way to see the results
+
+Zoran:
+ * design for social website
+
+Werner:
+ * document inference framework, so others can start to use it to
+   enhance the nullness level creation or to build levels for new type
+   systems
+
+Eric:
+ * level creation for Regex type system
+
+Tyler:
+ * level creation for SQL type system
+
+Steph:
+ * make nullness level creation produce Map.get nodes
+
+Tim:
+ * implement Map.get nodes in game (behavior and visuals, including trouble
+   points when stamps don't match up)
+ * To add stamps (stars) to a pipe, click on a stamp icon like the buzzsaw,
+   then click on a pipe, then either a color picker or click on a second pipe.
+ * Here are two shortcuts:
+    * Steph had a good idea about clicking the "star question-mark" graphic in
+      the box.  This is a more direct, one-click way to add the 
+    * Making a Map.get output pipe narrow both narrows the Map.Value type, and
+      also adds the needed stamps on the actual key argument
+ * scale up map visuals to handle big maps
+ * improve loading time
+    * gzip the XML:  reading compressed bits, then uncompressing in memory,
+      tends to be faster
+    * in the future, split the XML into multiple pieces so each level can
+      be loaded into the game independently, and the player can start
+      playing some level immediately.  The main XML file needs to indicate
+      which levels are solved, so the map can be drawn.  Determining
+      whether a change in one level causes/eliminates conflicts in other
+      levels probably requires the whole world to be loaded, but that can
+      happen in the background while the player is playing one level.
+
+Nat:
+ * XML format needs to indicate which pipes have map type and thus are a
+   reasonable color for a stamp (eventually, we want to generalize this, of
+   course)
+ * need to figure out how to translate back from XML to @KeyFor code
+   annotations -- @KeyFor requires a variable name as an argument.
+ * For the future, think about a tool for splitting the XML file into parts.
+
+Other things that need to be done:
+ * manually test a game on small examples -- for playability, but also for
+   whether the result type-checks
+ * create a testing framework for level creation.  For example, it could
+   specify goal XML files, sans layout info.
+ * augment the Annotation File Utilities, in ways that are essential for
+   the success of our project.
+    * The AFU tools do not supports to adding arbitrary casts to source code.
+       * Need a file format and actual insertion.
+       * Are function calls (e.g., asRegex) also needed?  Assume "no", to start.
+       * Werner's new reporting tool can identify all the locations of casts.
+    * Handle wildcard bounds, which are currently ignored by the AFU.
+ * Do a crowd-sourced experiment with solvability (findability of injected bugs)
+    * null type system is poor because of need for flow-sensitivity, maps, etc.
+    * SQL or Regex type system might be better
+It would be great to have people step forward to take these on.
