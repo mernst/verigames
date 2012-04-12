@@ -263,20 +263,24 @@ class NninfGameSolver(
             // println(ell + " != " + elr)
             // TODO: support var!=NULLABLE for now
             if (elr == NninfConstants.NULLABLE) {
-              val ellvar = ell.asInstanceOf[Variable]
-              val board = variablePosToBoard(ctx);
+              if (ell == LiteralThis) {
+                // Nothing to do if the LHS is "this", always non-null.
+              } else {
+                val ellvar = ell.asInstanceOf[Variable]
+                val board = variablePosToBoard(ctx);
 
-              val con = Intersection.factory(Intersection.Kind.CONNECT)
-              board.addNode(con)
+                val con = Intersection.factory(Intersection.Kind.CONNECT)
+                board.addNode(con)
 
-              val chute = new Chute(ellvar.id, ellvar.toString())
-              chute.setPinched(true)
+                val chute = new Chute(ellvar.id, ellvar.toString())
+                chute.setPinched(true)
 
-              val elllast = findIntersection(board, ellvar)
+                val elllast = findIntersection(board, ellvar)
 
-              board.addEdge(elllast, 0, con, 0, chute)
+                board.addEdge(elllast, 0, con, 0, chute)
 
-              updateIntersection(board, ellvar, con)
+                updateIntersection(board, ellvar, con)
+              }
             } else {
               println("TODO: uncovered inequality case!")
             }
