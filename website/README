@@ -1,0 +1,53 @@
+
+--------------------------------
+Site Location:
+
+The current location of the site is on the abstract.cs.washington.edu server under the path /homes/abstract/bdwalker/www
+
+The permissions group is set to the verigames group with read, write and execute permissions.  The user permissions allow only for read and execute. 
+
+--------------------------------
+
+Site Structure:
+
+The root contains several files as well as directories.  The files and their descriptions are as follows:
+
+index.php:  This is the homepage and currently provides the user with a way to upload their files.  
+
+results.html: This site is where the user will be redirected after completing a game.  Here they can see the marked up code they uploaded with the results from the game. 
+
+removeAll.php: A script to remove all the contents of the upload folder. See Misc. below. 
+
+
+There are also eight main folders in the root directory.  They are as follows:
+
+flash_files:  Stores all the flash related content for the site, including the webgame.swf file which is the game flash file. 
+
+scripts: Holds all the main Javascript and PHP scripts used by the site. 
+
+samples:  Holds any sample .xml files that allow a user to play a game without uploading their own content. 
+
+styles: Holds all the .css stylesheets for the site.  The name of the css stylesheet should correpsond directly with the page they define the style for. 
+
+uploads:  This folder stores any files uploaded by a user of the site.  The folder will contain subfolder with unique guid's.  In each folder all of the file the user uploaded and any of the output produced by the parsers and the world.xml will be located. Any error text will also be located in this folder. 
+
+JQueryUI: This is a folder that stores the JQuery framework.  JQuery is a downloadable Javascript framework that can be downloaded from www.jquery.com
+
+java: Stores all the java code required for the site.  
+
+resources: Stores all the media files for the site design. (background images, button images, logos, etc.)
+--------------------------------
+
+Updating:
+
+To update the main webgame.swf all that is needed is to replace the file located in flash_files in the root directory. As long as the interface with webgame.html hasn't changed then no further changes are required. However, if webgame.html, the page that references webgame.swf, needs to be modified then please let me know and I'll make the necessary changes. 
+
+The other most common file that will likely need to be updated on a regular basis is verigames.jar.  This file is located in the java file in the root directory.  Currently, only Werner Dietl has permissions to change this file. 
+
+
+--------------------------------
+
+Misc.
+
+removeAll.php:
+There is a script file entitle removeAll.php in the root directory of the site.  If you browse to this page in a browser it will remove all the folder in the uploads folder.  This is used as a quick way to clean out the uploads folder during testing.  This will remove ALL folders in the uploads directory. Make sure that if you use this script that you really want to clear the contents.  This will obviously be removed before the site goes live, but it is nice to have in the meantime.  
