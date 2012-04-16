@@ -1,6 +1,13 @@
-Clean up XML (coordinate with Tim)
-  - change edge var to name
-  - remove references to ball color and nullness
+Make port API use strings instead of numbers.
+
+--------------------------------------------------------------------------------
+
+Clean up and document all the code
+
+--------------------------------------------------------------------------------
+
+Implement a check that ensures that the number of ports used on a subboard
+matches the number of ports on its corresponding board.
 
 --------------------------------------------------------------------------------
 
@@ -26,25 +33,13 @@ Write better error messages across the board.
 --------------------------------------------------------------------------------
 
 Add Map KeyFor data to Pipe Jam
-   - Update DTD
-   - Update object model
-
---------------------------------------------------------------------------------
-
-Add representation for buzzsaw and info string containing location of element in
-source
-
---------------------------------------------------------------------------------
-
-Add XML parsing capability -- bring in XML library (XOM?)
+  - Add list of in-scope maps to every chute (a list of possible maps that the
+    chute can be listed as a key for)
+  - Turn XML result data into useful KeyFor annotations
 
 --------------------------------------------------------------------------------
 
 Change Intersection layout API to be more consistent with Chute's?
-
---------------------------------------------------------------------------------
-
-See if edge width can be increased
 
 --------------------------------------------------------------------------------
 
@@ -62,7 +57,7 @@ Test NullTest setOutput for failure
 
 --------------------------------------------------------------------------------
 
-Write tests for the layout package
+Write more tests for the layout package
 
 --------------------------------------------------------------------------------
 
