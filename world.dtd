@@ -2,7 +2,13 @@
  <!ELEMENT level (linked-edges,boards)>
   <!ATTLIST level name CDATA #REQUIRED>
   <!ELEMENT linked-edges (edge-set*)>
-   <!ELEMENT edge-set (edgeref*)>
+   <!ELEMENT edge-set (stamp*,edgeref*)>
+    <!ATTLIST edge-set id ID #REQUIRED>
+    <!-- refers to a possible edge-set with whose color this edge-set can be stamped with -->
+    <!ELEMENT stamp EMPTY>
+     <!-- stamp ID must refer to an edge-set ID -->
+     <!ATTLIST stamp id IDREF #REQUIRED>
+     <!ATTLIST stamp active (true|false) #REQUIRED>
     <!ELEMENT edgeref EMPTY>
      <!ATTLIST edgeref id IDREF #REQUIRED>
   <!ELEMENT boards (board*)>
@@ -20,7 +26,7 @@
      <!ELEMENT layout (x,y)>
       <!ELEMENT x (#PCDATA)>
       <!ELEMENT y (#PCDATA)>
-    <!ELEMENT edge (from,to,pinstripe*,edge-layout?)>
+    <!ELEMENT edge (from,to,edge-layout?)>
      <!ATTLIST edge description CDATA #REQUIRED>
      <!ATTLIST edge variableID CDATA #REQUIRED>
      <!ATTLIST edge pinch (true|false) #REQUIRED>
@@ -33,8 +39,6 @@
       <!ELEMENT noderef EMPTY>
        <!ATTLIST noderef id IDREF #REQUIRED>
        <!ATTLIST noderef port CDATA #REQUIRED>
-     <!ELEMENT pinstripe EMPTY>
-      <!ATTLIST pinstripe color CDATA #REQUIRED>
      <!ELEMENT edge-layout (point,(point,point,point)*)>
       <!ELEMENT point (x,y)>
 
