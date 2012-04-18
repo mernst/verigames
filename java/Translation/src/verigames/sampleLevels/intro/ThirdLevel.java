@@ -68,12 +68,15 @@ public class ThirdLevel
       b.addNode(end);
       
       Chute top = new Chute();
+      top.setNarrow(false);
+
       b.addEdge(incoming, 0, end, 0, top);
       
       Intersection start = factory(START_LARGE_BALL);
       b.addNode(start);
       
       Chute bottom = new Chute();
+      bottom.setNarrow(false);
       b.addEdge(start, 0, outgoing, 0, bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field1"));
