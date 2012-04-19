@@ -1,6 +1,9 @@
+package verigames.utilities;
+
 /**
  * @author Brian Walker
  */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
