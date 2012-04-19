@@ -102,16 +102,57 @@ function addButton(event) {
 	newId = "button"+count;
 	count+=1;
 	
-	$('#buttons').append($("<div>"+
-							"<input type='file' name='file[]'/><a href='#' id="+ newId + " class='common_style'>Remove</a>" + 
+	$('#buttons').append($("<div style='height:30px;'> <div style='position:absolute;left:10;'><a id='test_button' href='#'>Choose File</a></div>"+
+							"<input style='z-index:10;' type='file' name='file[]' multiple='multiple'/><a href='#' id="+ newId + " class='common_style'>Remove</a>" + 
 						   "</div>"));
 		
 	attachObservers(newId);
 
 }
 
+function testUpload(event){
+	$.ajax({
+		url: "./scripts/guid.php"
+	}).done(function(guid){
+		
+		$('#file_upload').uploadifySettings('folder', '../uploads/'+guid);
+		$('#file_upload').uploadifyUpload();
+	});
+}	
+
+function updateStatus(event, data){
+	
+}
+	
+function quickPlay(event){
+	window.open('./flash_files/webgame.html?sample=sample1.xml');
+}	
+	
+function highlight(event){
+	$(this).css("background-color", "white");
+}
+
 window.onload = function() {
 	attachMouseoverObserver("button");
+	attachMouseoverObserver("test_button");
+	$('#uploadIt').bind('click', testUpload);
 	$('#submit_button').bind('click', showProgress);
 	$('#button').bind('click', addButton);
+	$('#play').bind('click', quickPlay);
+	$('#play').bind('hover', $(this).css("background-color", "white"));
+  	$('#file_upload').uploadify({
+  	  'uploader'  : './uploadify/uploadify.swf',
+  	  'script'    : './scripts/pipejam_test.php',
+  	  'cancelImg' : './uploadify/cancel.png',
+  	  'multi'	  : true,
+  	  'fileExt'   : '*.zip;*.java;*.jar',
+  	  'fileDesc' : 'Java Source Files',
+  	  'sizeLimit' : 10485760,
+  	  'width'	  : 200,
+  	  'auto'      : false,
+  	  'queueID'   : 'queue',
+  	  'queueSizeLimit' : 10,
+  	  'simUploadLimit' : 10,
+  	  'onAllComplete' : updateStatus
+ 	 });
 }
