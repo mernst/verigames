@@ -32,4 +32,18 @@ public class Basic {
           b.m();
       }
   }
+  
+  void get() {
+	  Map<Basic, Basic> map = new HashMap<Basic, Basic>();
+	  @KeyFor("map") Basic key = new Basic();
+	  Basic notKey = new Basic();
+	  
+	  Basic c = map.get(notKey);
+
+      //:: error: (receiver.null)
+	  c.m();
+	  
+	  Basic d = map.get(key);
+	  d.m();
+  }
 }
