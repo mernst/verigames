@@ -1,0 +1,21 @@
+package nninf.quals;
+
+import java.lang.annotation.Target;
+
+import checkers.quals.InvisibleQualifier;
+import checkers.quals.SubtypeOf;
+import checkers.quals.TypeQualifier;
+
+/**
+ * A special annotation intended solely for representing an unqualified type in
+ * the qualifier hierarchy, as an argument to {@link SubtypeOf#value()},
+ * in the type qualifiers declarations.
+ *
+ * <p>
+ * Programmers cannot write this in source code.
+ */
+@TypeQualifier
+@InvisibleQualifier
+@SubtypeOf({})
+@Target({}) // empty target prevents programmers from writing this in a program
+public @interface Unqualified { }
