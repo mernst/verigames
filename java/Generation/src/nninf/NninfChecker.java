@@ -3,8 +3,10 @@ package nninf;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 
+import nninf.quals.KeyFor;
 import nninf.quals.NonNull;
 import nninf.quals.Nullable;
+import nninf.quals.Unqualified;
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
@@ -17,7 +19,7 @@ import checkers.util.AnnotationUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 
-@TypeQualifiers({ NonNull.class, Nullable.class })
+@TypeQualifiers({ NonNull.class, Nullable.class, Unqualified.class, KeyFor.class })
 public class NninfChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
     public AnnotationMirror NULLABLE, NONNULL;
