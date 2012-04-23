@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 
-import checkers.nullness.MapGetHeuristics;
 import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
@@ -24,7 +23,7 @@ public class NninfAnnotatedTypeFactory extends AnnotatedTypeFactory {
         super(checker, root);
 
         this.checker = checker;
-        
+
         // TODO: why is this not a KeyForAnnotatedTypeFactory?
         // What qualifiers does it insert? The qualifier hierarchy is null.
         AnnotatedTypeFactory mapGetFactory = new AnnotatedTypeFactory(checker.getProcessingEnvironment(), null, root, null);
@@ -57,8 +56,7 @@ public class NninfAnnotatedTypeFactory extends AnnotatedTypeFactory {
             // type.addAnnotation(checker.NULLABLE);
         }
     }
-    
-    
+
     /*
      * It looks like BaseTypeVisitor will call this method in visitMethodInvocation?
      * So do we need to do anything else?
@@ -74,13 +72,6 @@ public class NninfAnnotatedTypeFactory extends AnnotatedTypeFactory {
 
         TreePath path = this.getPath(tree);
         if (path!=null) {
-        	/* The above check for null ensures that Issue 109 does not arise.
-        	 * TODO: I'm a bit concerned about one aspect: it looks like the field
-        	 * initializer is used to determine the type of a read field. Why is this
-        	 * not just using the declared type of the field?
-        	 * Could this lead to confusion for programmers?
-        	 * I think skipping the mapGetHeuristics is always a safe option.
-        	 */
             mapGetHeuristics.handle(path, method);
         }
         return mfuPair;
