@@ -68,7 +68,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // Constructor that uses a unique ID as chute name.
   // TODO: Should we force people to provide a name? I added this
   // to make the transition easier, but we might not want it.
-  public Chute() {
+  public Chute()
+  {
     this(-1, null);
   }
 
@@ -94,9 +95,12 @@ public class Chute extends verigames.graph.Edge<Intersection>
     Chute.nextUID += 1;
 
     this.variableID = varID;
-    if (description!=null) {
+    if (description!=null)
+    {
       this.description = description;
-    } else {
+    }
+    else
+    {
       this.description = "chute" + UID;
     }
 
