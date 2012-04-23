@@ -1,24 +1,27 @@
 <html>
 	<head>
-		<title>PipeJam File Upload</title>
-		<link rel=StyleSheet href="./styles/pipejam.css">
+		<title>PipeJam</title>
+		<link rel=StyleSheet href="./styles/index.css">
+		<link rel=StyleSheet href="./uploadify/uploadify.css">
 		<script type="text/javascript" src="./scripts/spin.js"></script>
 		<script type="text/javascript" src="./scripts/index.js"></script>
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
   		<script type="text/javascript" src="./jqueryUI/js/jquery-1.7.1.min.js"></script>
 		<script type="text/javascript" src="./jqueryUI/js/jquery-ui-1.8.18.custom.min.js"></script>
+		<script type="text/javascript" src="./uploadify/swfobject.js"></script>
+		<script type="text/javascript" src="./uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 	</head>
 	<body>
 	<div id="container">
 		<div id="masthead">
 			<div id="logo_holder">
-				<img id="logo" src="./resources/PipeJamLogo2.png" width="250" height="110"></img>
+				<img id="logo" src="./resources/PipeJamLogo3.png" width="323" height="89"></img>
 			</div>
 		</div>
 		<div id="button_bar">
 			<div id="button_group">
-				<span id="play" class="buttons">
-					Play Now
+				<span id="play" title="Play A Demo Game" class="buttons">
+					Play Demo
 				</span>
 				<span id="help" class="buttons">
 					Help
@@ -30,20 +33,28 @@
 		</div>
 		<div id="content">
 			<div id="welcome">
+				<h3>Welcome!</h3>				<p>
+					Welcome to PipeJam! The game that allows you to verify your code while you play. 
+					You have several options to begin, you can select from our example files 					below or choose to upload your own Java program.  PipeJam will convert your files					into a puzzle game that will annotate your code as you play.  Once you are finished 					solving the puzzle, you will be taken to a results page where you can view the results.
+				</p>
+				<p>					You can choose to upload .java, .zip or .jar files.  Be sure to include all the files that					are required to compile your program.  If you choose to upload a zip file then it should					contain all the files necessary to run your program.  Once you have uploaded your files and we 					have confirmed they were uploaded and compiled successfully, you will be taken to the 					game.
+				</p>
 			</div>
 			<div id="upload">
-				<form action="./scripts/pipejam.php" id="file_form" method="post" enctype="multipart/form-data">
-					<fieldset id="resources">
-					<legend> Choose .java, .jar or .zip file(s) to upload: </legend>
-						<div id="buttons">			
-						</div>
-					<a id="button" class="common_style" href="#">Add files</a></br>
-					</fieldset>
-					<div id="samples">You can play a sample game 
-						<a href="./flash_files/webgame.html?sample=sample1.xml">here</a>
+				<h3>File Upload</h3>
+				<p>
+					Choose a type checker to use and then select your own files to upload or select from one of our samples. </br>
+				</p>
+					<div id="queue">	
+						<p>
+							Type Checker: 
+							<select>
+								<option value="null_checker">Null Check</option>
+							</select>
+						</p>
+						<input type="file" name="file[]" id="file_upload"/>
 					</div>
-					<input id='submit_button' type="submit" name="submit_button" value="Upload File(s)"/>
-				</form>
+					<span id="uploadIt">Upload Files</span>
 				<div id='progress'><div id='spinner'></div></div>
 				<div id="message">
 				</div>

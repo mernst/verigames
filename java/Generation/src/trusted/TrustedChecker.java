@@ -1,12 +1,11 @@
-package nninf;
+package trusted;
+
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 
-import nninf.quals.KeyFor;
-import nninf.quals.NonNull;
-import nninf.quals.Nullable;
-import nninf.quals.Unqualified;
+import trusted.quals.Trusted;
+import trusted.quals.Untrusted;
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
@@ -19,28 +18,28 @@ import checkers.util.AnnotationUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 
-@TypeQualifiers({ NonNull.class, Nullable.class, Unqualified.class, KeyFor.class })
-public class NninfChecker extends BaseTypeChecker implements
+@TypeQualifiers({ Trusted.class, Untrusted.class })
+public class TrustedChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
-    public AnnotationMirror NULLABLE, NONNULL;
+    public AnnotationMirror UNTRUSTED, TRUSTED;
 
     @Override
     public void initChecker(ProcessingEnvironment env) {
         super.initChecker(env);
         AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
-        NULLABLE = annoFactory.fromClass(Nullable.class);
-        NONNULL = annoFactory.fromClass(NonNull.class);
+        UNTRUSTED = annoFactory.fromClass(Untrusted.class);
+        TRUSTED = annoFactory.fromClass(Trusted.class);
     }
 
     @Override
     public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
-        return new NninfAnnotatedTypeFactory(this, root);
+        return new TrustedAnnotatedTypeFactory(this, root);
     }
 
     @Override
-    protected NninfVisitor createSourceVisitor(CompilationUnitTree root) {
+    protected TrustedVisitor createSourceVisitor(CompilationUnitTree root) {
         // The false turns off inference and enables checking the type system.
-        return new NninfVisitor(this, root, this, false);
+        return new TrustedVisitor(this, root, this, false);
     }
 
     @Override
@@ -57,12 +56,12 @@ public class NninfChecker extends BaseTypeChecker implements
 
     @Override
     public AnnotationMirror defaultQualifier() {
-        return this.NULLABLE;
+        return this.UNTRUSTED;
     }
 
     @Override
     public AnnotationMirror selfQualifier() {
-        return this.NONNULL;
+        return this.TRUSTED;
     }
 
     @Override
