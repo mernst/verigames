@@ -72,7 +72,7 @@ import com.sun.source.util.TreePath;
     private final ExecutableElement mapGet;
 
     public MapGetHeuristics(ProcessingEnvironment env,
-    		NninfAnnotatedTypeFactory factory,
+            NninfAnnotatedTypeFactory factory,
             AnnotatedTypeFactory keyForFactory) {
         this.env = env;
         this.factory = factory;
