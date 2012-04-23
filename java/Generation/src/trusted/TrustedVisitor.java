@@ -1,16 +1,9 @@
 package trusted;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceVisitor;
-import checkers.nullness.NullnessVisitor;
-import checkers.source.Result;
-import checkers.types.AnnotatedTypeMirror;
-import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
-import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
 

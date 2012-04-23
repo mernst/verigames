@@ -15,10 +15,22 @@ public class Basic {
       //:: error: (argument.type.incompatible)
       foo(b);
 
+      concat(s);
+
       b = c;
 
       // flow refines b -> ok
-      foo(b);
+      foo(b);      
+  }
+ 
+  void concat(String s) {
+	  String a = "trusted";
+	  String b = "trusted";
+	  
+	  @Trusted String safe = a + b;
+	  
+	  //:: error: (assignment.type.incompatible)
+	  @Trusted String unsafe = a + s;
   }
 
   String foo(@Trusted String s2) {
