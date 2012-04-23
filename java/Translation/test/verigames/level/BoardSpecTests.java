@@ -88,16 +88,16 @@ public class BoardSpecTests
   {
     board.addNode(incoming);
     board.addNode(outgoing);
-    board.addEdge(incoming, 3, outgoing, 5, chute1);
+    board.addEdge(incoming, "3", outgoing, "5", chute1);
     
     // verify that the connections between the chute and nodes have all been
     // made properly
-    assertEquals(incoming.getOutput(3), chute1);
-    assertEquals(outgoing.getInput(5), chute1);
+    assertEquals(incoming.getOutput("3"), chute1);
+    assertEquals(outgoing.getInput("5"), chute1);
     assertEquals(chute1.getStart(), incoming);
-    assertEquals(chute1.getStartPort(), 3);
+    assertEquals(chute1.getStartPort(), "3");
     assertEquals(chute1.getEnd(), outgoing);
-    assertEquals(chute1.getEndPort(), 5);
+    assertEquals(chute1.getEndPort(), "5");
   }
   
   @Test

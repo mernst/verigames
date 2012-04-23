@@ -29,21 +29,29 @@ import java.util.TreeMap;
  * @param <EdgeType>
  * @author Nathaniel Mote
  */
-
+// TODO add documentation about new String node identifiers (such as that they
+// are stored in sorted order).
 public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
 {
-  
-  // Elements are Nullable so that edges can be added in any order. Empty ports
-  // are represented by null. Once underConstruction is false, neither list can
-  // contain null.
-  // TODO remove warning suppression after JDK is properly annotated
-  @SuppressWarnings("nullness")
-  private final List</* @Nullable */EdgeType> inputs;
-  @SuppressWarnings("nullness")
-  private final List</* @Nullable */EdgeType> outputs;
+  /**
+   * Stores the input ports.<p>
+   *
+   * Use of a {@code TreeMap} is enforced because it stores its entries in
+   * sorted order.
+   */
+  private final TreeMap<String, EdgeType> inputs;
+
+  /**
+   * Stores the output ports.<p>
+   *
+   * Use of a {@code TreeMap} is enforced because it stores its entries in
+   * sorted order.
+   */
+  private final TreeMap<String, EdgeType> outputs;
   
   private boolean underConstruction = true;
   
+  // TODO update rep invariant
   /*
    * Representation Invariant:
    * 
@@ -68,16 +76,11 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (!CHECK_REP_ENABLED)
       return;
     
-    if (underConstruction)
+    if (!underConstruction)
     {
-      ensure(isLastEltNonNull(inputs));
-      ensure(isLastEltNonNull(outputs));
-    }
-    else
-    {
-      for (/*@Nullable*/ EdgeType e : inputs)
+      for (EdgeType e : inputs.values())
         ensure(e != null);
-      for (/*@Nullable*/ EdgeType e : outputs)
+      for (EdgeType e : outputs.values())
         ensure(e != null);
     }
     
@@ -92,21 +95,10 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     // and checkRep is called from the methods that perform those operations.
   }
   
-  /**
-   * Returns {@code true} iff the last element in {@code list} is non-null, or
-   * {@code list} is empty.
-   * 
-   * @param list
-   */
-  private static <E> boolean isLastEltNonNull(List<E> list)
-  {
-    return list.isEmpty() || list.get(list.size() - 1) != null;
-  }
-  
   public Node()
   {
-    inputs = new ArrayList</* @Nullable */EdgeType>();
-    outputs = new ArrayList</* @Nullable */EdgeType>();
+    inputs = new TreeMap<String, EdgeType>();
+    outputs = new TreeMap<String, EdgeType>();
   }
   
   /**
@@ -129,7 +121,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * implementation enforces no restrictions on what ports are valid (other
    * than that they must be nonnegative), but subclasses may.<br/>
    */
-  protected void setInput(EdgeType input, int port)
+  protected void setInput(EdgeType input, String port)
   {
     if (!underConstruction)
       throw new IllegalStateException(
@@ -139,11 +131,15 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (getInput(port) != null)
       throw new IllegalArgumentException("Input port at port " + port + " already used");
     
-    padToLength(inputs, port + 1);
-    inputs.set(port, input);
+    inputs.put(port, input);
     checkRep();
   }
-  
+
+  @Deprecated
+  protected void setInput(EdgeType input, int port)
+  {
+    setInput(input, Integer.toString(port));
+  }
   
   /**
    * Adds the given edge to {@code outputs} with the given port number.<br/>
@@ -165,7 +161,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * implementation enforces no restrictions on what ports are valid (other
    * than that they must be nonnegative), but subclasses may.<br/>
    */
-  protected void setOutput(EdgeType output, int port)
+  protected void setOutput(EdgeType output, String port)
   {
     if (!underConstruction)
       throw new IllegalStateException(
@@ -175,10 +171,15 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (getOutput(port) != null)
       throw new IllegalArgumentException("Output port at port " + port + " already used");
     
-    padToLength(outputs, port + 1);
-    outputs.set(port, output);
+    outputs.put(port, output);
     checkRep();
   }
+
+  @Deprecated
+  protected void setOutput(EdgeType output, int port)
+  {
+    setOutput(output, Integer.toString(port));
+  }
   
   /**
    * Returns the edge at the given port, or {@code null} if none exists.
@@ -186,9 +187,15 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * @param port
    * {@code port >= 0}
    */
+  public /*@Nullable*/ EdgeType getInput(String port)
+  {
+    return inputs.get(port);
+  }
+
+  @Deprecated
   public /*@Nullable*/ EdgeType getInput(int port)
   {
-    return get(inputs, port);
+    return getInput(Integer.toString(port));
   }
   
   /**
@@ -197,30 +204,15 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * @param port
    * {@code port >= 0}
    */
+  public /*@Nullable*/ EdgeType getOutput(String port)
+  {
+    return outputs.get(port);
+  }
+
+  @Deprecated
   public /*@Nullable*/ EdgeType getOutput(int port)
   {
-    return get(outputs, port);
-  }
-  
-  /**
-   * Returns the element in {@code from} at {@code index}, or {@code null} if
-   * none exists.
-   * 
-   * @param from
-   * The list to query
-   * @param index
-   *
-   * @throws IndexOutOfBoundsException
-   * If index is negative.
-   */
-  private static <E> /*@Nullable*/ E get(List<E> from, int index)
-  {
-    if (index < 0)
-      throw new IndexOutOfBoundsException();
-    else if (index >= from.size())
-      return null;
-    else
-      return from.get(index);
+    return getOutput(Integer.toString(port));
   }
   
   /**
@@ -228,9 +220,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
    * affected by future changes to each other.
    */
-  public TreeMap<Integer, /*@NonNull*/ EdgeType> getInputs()
+  public TreeMap<String, /*@NonNull*/ EdgeType> getInputs()
   {
-    return getMapFromList(inputs);
+    return new TreeMap<String, /*@NonNull*/ EdgeType>(inputs);
   }
   
   /**
@@ -238,51 +230,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
    * affected by future changes to each other.
    */
-  public TreeMap<Integer, /*@NonNull*/ EdgeType> getOutputs()
+  public TreeMap<String, /*@NonNull*/ EdgeType> getOutputs()
   {
-    return getMapFromList(outputs);
-  }
-  
-  /**
-   * Returns a {@code TreeMap<Integer, E>} from indices to non-null elements.
-   * No index that would map to a null element is included.
-   * 
-   * @param list
-   * The {@code List} from which to create the returned {@code Map}
-   */
-  private static <E> TreeMap<Integer, /*@NonNull*/ E> getMapFromList(List</*@Nullable*/ E> list)
-  {
-    TreeMap<Integer, /*@NonNull*/ E> toReturn = new TreeMap<Integer, /*@NonNull*/ E>();
-    
-    int index = 0;
-    for (/*@Nullable*/ E edge : list)
-    {
-      if (edge != null)
-        toReturn.put(index, edge);
-      index++;
-    }
-    
-    return toReturn;
-  }
-  
-  /**
-   * Ensures that {@code list.size() >= length} by padding {@code list} with
-   * {@code null}<br/>
-   * <br/>
-   * Modifies: {@code list}
-   * 
-   * @param list
-   * the {@code List} to pad
-   * @param length
-   * the minimum length that {@code list} is guaranteed to have after this
-   * method exits
-   */
-  // TODO change after JDK is properly annotated
-  @SuppressWarnings("nullness")
-  private static <E> void padToLength(List</* @Nullable */E> list, int length)
-  {
-    while (list.size() < length)
-      list.add(null);
+    return new TreeMap<String, /*@NonNull*/ EdgeType>(outputs);
   }
   
   /**
@@ -306,22 +256,10 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    */
   protected void finishConstruction()
   {
-    for (int i = 0; i < inputs.size(); i++)
-    {
-      /*@Nullable*/ EdgeType e = inputs.get(i);
-      if (e == null)
-        throw new IllegalStateException("Edge " + e + " at port " + i + " in inputs is null");
-    }
-    
-    for (int i = 0; i < outputs.size(); i++)
-    {
-      /*@Nullable*/ EdgeType e = outputs.get(i);
-      if (e == null)
-        throw new IllegalStateException("Edge " + e + " at port " + i + " in outputs is null. This: " + this);
-    }
-    
+    // TODO update error message
     if (!underConstruction)
       throw new IllegalStateException("Deactivation attempted on already constructed Node " + this);
+
     underConstruction = false;
     checkRep();
   }
@@ -351,14 +289,13 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   /**
    * no null keys or values
    */
-  private static <EdgeType extends Edge<?>> String portMapToString(Map<Integer, EdgeType> map)
+  private static <EdgeType extends Edge<?>> String portMapToString(Map<String, EdgeType> map)
   {
     StringBuilder builder = new StringBuilder();
     
-    for (Map.Entry<Integer, EdgeType> entry : map.entrySet())
+    for (Map.Entry<String, EdgeType> entry : map.entrySet())
     {
-      // auto unboxing should be fine because there should be no null keys
-      int port = entry.getKey();
+      String port = entry.getKey();
       EdgeType edge = entry.getValue();
       
       builder.append("port " + port + ": " + edge.shallowToString() + ", ");

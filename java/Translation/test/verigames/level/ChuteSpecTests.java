@@ -105,35 +105,17 @@ public class ChuteSpecTests
     assertNull(chute.getStart());
     assertNull(chute.getEnd());
     
-    // chute.setStart(incoming, 4);
-    for (Method m : chuteMethods)
-    {
-      if (m.getName().equals("setStart"))
-      {
-        m.setAccessible(true);
-        Object[] args = { incoming, 4 };
-        m.invoke(chute, args);
-      }
-    }
-    
+    chute.setStart(incoming, "4");
+
     assertEquals(chute.getStart(), incoming);
-    assertEquals(chute.getStartPort(), 4);
+    assertEquals(chute.getStartPort(), "4");
     
     assertNull(chute.getEnd());
     
-    // chute.setEnd(outgoing, 7);
-    for (Method m : chuteMethods)
-    {
-      if (m.getName().equals("setEnd"))
-      {
-        m.setAccessible(true);
-        Object[] args = { outgoing, 7 };
-        m.invoke(chute, args);
-      }
-    }
+    chute.setEnd(outgoing, "7");
     
     assertEquals(chute.getEnd(), outgoing);
-    assertEquals(chute.getEndPort(), 7);
+    assertEquals(chute.getEndPort(), "7");
   }
   
   /**

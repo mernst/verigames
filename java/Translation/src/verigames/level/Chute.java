@@ -280,4 +280,25 @@ public class Chute extends verigames.graph.Edge<Intersection>
     
     return "Chute#" + getUID() + " (" + propertyString + ")";
   }
+
+  /* These are overridden to facilitate testing. Overriding gives the tests
+   * (which are in this package) access to these protected methods that would
+   * otherwise be members of the superclass, and thus inaccessible. */
+  @Override
+  protected void setEnd(Intersection n, String port)
+  {
+    super.setEnd(n, port);
+  }
+
+  @Override
+  protected void setStart(Intersection n, String port)
+  {
+    super.setStart(n, port);
+  }
+
+  @Override
+  protected void finishConstruction()
+  {
+    super.finishConstruction();
+  }
 }

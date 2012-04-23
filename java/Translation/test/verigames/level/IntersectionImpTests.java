@@ -78,22 +78,17 @@ public class IntersectionImpTests
           + " does not exist");
       }
   
-  @Before public void initIntersection() throws IllegalArgumentException,
+  @Before
+  public void initIntersection() throws IllegalArgumentException,
   IllegalAccessException, InvocationTargetException
   {
     i = Intersection.factory(Kind.CONNECT);
     
-    // i.setInput(new Chute(null, true, true, null), 0);
-    invokeIntersectionMethod(i, "setInput", new Object[] {
-        new Chute(), 0 });
+    i.setInput(new Chute(), "0");
     
-    // i.setOutput(new Chute(null, true, true, null), 0);
-    invokeIntersectionMethod(i, "setOutput", new Object[] {
-        new Chute(), 0 });
+    i.setOutput(new Chute(), "0");
     
-    // i.finishConstruction();
-    invokeIntersectionMethod(i, "finishConstruction", new Object[] {});
-    
+    i.finishConstruction();
   }
   
   @Test(expected = IllegalStateException.class) public void testDeactivate() throws Throwable
@@ -113,37 +108,15 @@ public class IntersectionImpTests
     }
   }
   
-  @Test(expected = IllegalStateException.class) public void setInputTest() throws Throwable
+  @Test(expected = IllegalStateException.class)
+  public void setInputTest()
   {
-    // i.setInput(new Chute(null, true, true, null), 0);
-    try
-    {
-      invokeIntersectionMethod(i, "setInput", new Object[]{new Chute(), 0});
-    }
-    catch (InvocationTargetException e)
-    {
-      throw e.getCause();
-    }
-    catch (Exception e)
-    {
-      fail();
-    }
+    i.setInput(new Chute(), "0");
   }
   
-  @Test(expected = IllegalStateException.class) public void setOutputTest() throws Throwable
+  @Test(expected = IllegalStateException.class)
+  public void setOutputTest() throws Throwable
   {
-    // i.setOutput(new Chute(null, true, true, null), 0);
-    try
-    {
-      invokeIntersectionMethod(i, "setOutput", new Object[]{new Chute(), 0});
-    }
-    catch (InvocationTargetException e)
-    {
-      throw e.getCause();
-    }
-    catch (Exception e)
-    {
-      fail();
-    }
+    i.setOutput(new Chute(), "0");
   }
 }

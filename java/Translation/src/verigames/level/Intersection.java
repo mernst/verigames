@@ -183,51 +183,35 @@ public class Intersection extends verigames.graph.Node<Chute>
     int numRequiredInPorts = intersectionKind.getNumberOfInputPorts();
     int numRequiredOutPorts = intersectionKind.getNumberOfOutputPorts();
     
-    TreeMap<Integer, Chute> inputChutes = getInputs();
-    TreeMap<Integer, Chute> outputChutes = getOutputs();
+    TreeMap<String, Chute> inputChutes = getInputs();
+    TreeMap<String, Chute> outputChutes = getOutputs();
     
     int usedInPorts = inputChutes.size();
     int usedOutPorts = outputChutes.size();
     
-    // the size of the ports list, based on the highest index
-    int maxInPorts = inputChutes.isEmpty() ? 0 : inputChutes.lastKey() + 1;
-    int maxOutPorts = outputChutes.isEmpty() ? 0 : outputChutes.lastKey() + 1;
-    
     if (underConstruction())
     {
       /*
-       * Ensures that both the highest port number plus one and the number of
-       * used input/output ports can be no greater than the value returned by
-       * getNumberOfInputPorts() and getNumberOfOutputPorts().
+       * Ensures that the number of used input/output ports is no greater than
+       * the value returned by getNumberOfInputPorts() and
+       * getNumberOfOutputPorts().
        */
       
       if (numRequiredInPorts != -1)
-      {
         ensure(usedInPorts <= numRequiredInPorts);
-        ensure(maxInPorts <= numRequiredInPorts);
-      }
       
       if (numRequiredOutPorts != -1)
-      {
         ensure(usedOutPorts <= numRequiredOutPorts);
-        ensure(maxOutPorts <= numRequiredOutPorts);
-      }
     }
     else
     {
       // Ensures that all ports are filled
       
       if (numRequiredInPorts != -1)
-      {
         ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInPorts: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
-        ensure(maxInPorts == numRequiredInPorts);
-      }
       
       if (numRequiredOutPorts != -1)
-      {
         ensure(usedOutPorts == numRequiredOutPorts, "Intersection: " + this + " usedOutPorts: " + usedOutPorts + " numRequiredOutPorts: " + numRequiredOutPorts);
-        ensure(maxOutPorts == numRequiredOutPorts);
-      }
     }
     
   }
@@ -435,5 +419,26 @@ public class Intersection extends verigames.graph.Node<Chute>
   
   public /*@Nullable*/ Board getBoard() {
     return board; 
+  }
+
+  /* These are overridden to facilitate testing. Overriding gives the tests
+   * (which are in this package) access to these protected methods that would
+   * otherwise be members of the superclass, and thus inaccessible. */
+  @Override
+  protected void setOutput(Chute output, String port)
+  {
+    super.setOutput(output, port);
+  }
+
+  @Override
+  protected void setInput(Chute input, String port)
+  {
+    super.setInput(input, port);
+  }
+
+  @Override
+  protected void finishConstruction()
+  {
+    super.finishConstruction();
   }
 }
