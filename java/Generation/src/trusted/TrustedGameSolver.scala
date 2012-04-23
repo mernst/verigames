@@ -6,6 +6,7 @@ import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
 import verigames.level._
+import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
 import games.GameSolver
 
@@ -185,8 +186,8 @@ class TrustedGameSolver(
                 sub != TrustedConstants.TRUSTED) {
 
               if (sub == TrustedConstants.UNTRUSTED) {
-                // For "untrusted <: sup" create a black ball falling into sup.
-                // println("untrusted <: " + sup)
+                // For "null <: sup" create a black ball falling into sup.
+                // println("null <: " + sup)
 
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
@@ -604,18 +605,10 @@ class TrustedGameSolver(
         case v: Variable => {
           boardNVariableToIntersection((board, v))
         }
-        case LiteralThis =>
-          boardToSelfIntersection(board)
-        case LiteralNull => {
-          val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
-          board.addNode(res)
-          res
-        }
-        case lit: AbstractLiteral => {
-          // TODO: Are all other literals non-null?
-          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-          board.addNode(res)
-          res
+	    case lit: AbstractLiteral => {
+    	  val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
+    	  board.addNode(res)
+    	  res
         }
         case TrustedConstants.UNTRUSTED => {
           val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
@@ -644,14 +637,6 @@ class TrustedGameSolver(
       slot match {
         case v: Variable =>
           boardNVariableToIntersection.update((board, v), inters)
-        case LiteralThis =>
-          boardToSelfIntersection.update(board, inters)
-        case LiteralNull => {
-          // Nothing to do, we're always creating a new black ball
-        }
-        case lit: AbstractLiteral => {
-          // Also nothing to do for other literals
-        }
         case TrustedConstants.UNTRUSTED => {
           // Nothing to do, we're always creating a new black ball
         }
@@ -678,14 +663,6 @@ class TrustedGameSolver(
       slot match {
         case v: Variable =>
           new Chute(v.id, v.toString())
-        case LiteralThis =>
-          createThisChute()
-        case LiteralNull => {
-          val res = new Chute(-2, "null")
-          res.setEditable(false)
-          res.setNarrow(false)
-          res
-        }
         case lit: AbstractLiteral => {
           val res = new Chute(-3, lit.lit.toString())
           res.setEditable(false)
@@ -693,13 +670,13 @@ class TrustedGameSolver(
           res
         }
         case TrustedConstants.UNTRUSTED => {
-          val res = new Chute(-4, "nullable")
+          val res = new Chute(-4, "untrusted")
           res.setEditable(false)
           res.setNarrow(false)
           res
         }
         case TrustedConstants.TRUSTED => {
-          val res = new Chute(-5, "nonnull")
+          val res = new Chute(-5, "trusted")
           res.setEditable(false)
           res.setNarrow(true)
           res

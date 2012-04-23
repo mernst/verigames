@@ -21,10 +21,7 @@ import com.sun.source.tree.Tree;
 @TypeQualifier
 @SubtypeOf(Untrusted.class)
 @ImplicitFor(
-    types={TypeKind.PACKAGE},
-    typeClasses={AnnotatedPrimitiveType.class},
     trees={
-        Tree.Kind.PLUS,
         Tree.Kind.STRING_LITERAL
     })
 public @interface Trusted {}

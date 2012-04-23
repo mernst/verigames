@@ -1,6 +1,7 @@
 package trusted;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 
 import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
@@ -22,16 +23,13 @@ public class TrustedAnnotatedTypeFactory extends AnnotatedTypeFactory {
 
     @Override
     protected void annotateImplicit(Tree tree, AnnotatedTypeMirror type) {
+    	System.out.println("Tree: " + tree.getKind() + ", class: " + tree.toString());
         if (!type.isAnnotated()) {
-            // Why are these needed?? The first should be an ImplicitFor from
-            // NonNull, the second one should come from the
-            // DefaultQualifierInHierarchy.
-            System.out.println("Tree without annotation (trusted): " + tree.getKind());
-
-            if (tree.getKind() == Tree.Kind.NEW_CLASS) {
+            System.out.println("Tree without annotation (trusted2): " + tree.getKind());
+            
+            if (tree.getKind() == Tree.Kind.STRING_LITERAL) {
                 type.addAnnotation(checker.TRUSTED);
-            } else if (tree.getKind() == Tree.Kind.NULL_LITERAL) {
-                type.addAnnotation(checker.UNTRUSTED);
+                System.out.println("Annotating String: " + tree.toString() + " as trusted.");
             }
         }
     }
