@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 
 import checkers.quals.SubtypeOf;
 import checkers.quals.TypeQualifier;
-import checkers.quals.Unqualified;
 
 
 /**
@@ -38,7 +37,7 @@ import checkers.quals.Unqualified;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 @TypeQualifier
-@SubtypeOf(Unqualified.class)
+@SubtypeOf(UnknownKeyFor.class)
 public @interface KeyFor {
     /**
      * Java expression(s) that evaluate to a map for which the annotated type is a key.
