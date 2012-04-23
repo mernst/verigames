@@ -67,21 +67,46 @@ public class WorldXMLPrinter extends Printer<World, Void>
     Attribute nameAttr = new Attribute("name", name);
     levelElt.addAttribute(nameAttr);
     
-    levelElt.appendChild(constructLinkedEdges(l));
+    levelElt.appendChild(constructLinkedEdges(l, name));
     levelElt.appendChild(constructBoardsMap(l));
     
     return levelElt;
   }
+
+  private Set<String> usedLinkedEdgeIDs = new HashSet<String>();
   
-  private Element constructLinkedEdges(Level l)
+  private Element constructLinkedEdges(Level l, String name)
   {
     Element edgesElt = new Element("linked-edges");
     
     // Output all linked edges explicitly listed in linkedEdgeClasses
     Set<Chute> alreadyPrintedEdges = new HashSet<Chute>();
+
+    // TODO: This is an arbitrary number assigned to each edge-set to identify
+    // it for stamping. This should probably be changed to just be the
+    // variableID associated with the linkedEdgeSet, but for now this will work
+    // so that the XML at least validates.
+    int edgeSetNumber = 0;
     for (Set<Chute> set : l.linkedEdgeClasses())
     {
       Element setElt = new Element("edge-set");
+
+      // find an unused string for the edge-set ID. There is very small
+      // probability that there will be collisions, as there would have to be
+      // some really bizarre level names, but it's still possible.
+      String edgeSetID = name + edgeSetNumber;
+      while (usedLinkedEdgeIDs.contains(edgeSetID))
+      {
+        edgeSetNumber++;
+        edgeSetID = name + edgeSetNumber;
+      }
+      // TODO associate linked edge sets with their ID somehow, so that they can
+      // be referred to when needed.
+      
+      setElt.addAttribute(new Attribute("id", edgeSetID));
+
+      // TODO add stamp elements here
+
       for (Chute c : set)
       {
         if (c.underConstruction())
@@ -94,8 +119,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
         alreadyPrintedEdges.add(c);
       }
       edgesElt.appendChild(setElt);
+
+      edgeSetNumber++;
     }
     
+    // TODO remove code cloning:
     // Output all remaining edges -- edges not listed are in equivalence
     // classes of size 1
     
@@ -106,6 +134,16 @@ public class WorldXMLPrinter extends Printer<World, Void>
         if (!alreadyPrintedEdges.contains(c))
         {
           Element setElt = new Element("edge-set");
+
+          String edgeSetID = name + edgeSetNumber;
+          while (usedLinkedEdgeIDs.contains(edgeSetID))
+          {
+            edgeSetNumber++;
+            edgeSetID = name + edgeSetNumber;
+          }
+
+          setElt.addAttribute(new Attribute("id", edgeSetID));
+
           if (c.underConstruction())
             throw new IllegalStateException(
                 "constructLinkedEdges called when linkedEdgeClasses contains underConstruction Chute");
@@ -114,6 +152,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
           setElt.appendChild(edgeElt);
           edgesElt.appendChild(setElt);
         }
+
+        edgeSetNumber++;
       }
     }
     
