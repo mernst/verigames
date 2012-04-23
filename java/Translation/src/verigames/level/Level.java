@@ -115,6 +115,8 @@ public class Level
     boardNames = new LinkedHashMap<String, Board>();
     checkRep();
   }
+
+  private boolean makeLinkedCalled = false;
   
   /**
    * Makes it so that the given {@link Chute}s are equivalent under the
@@ -134,8 +136,10 @@ public class Level
    * 
    * @see #makeLinked(Set)
    */
+  @Deprecated
   public void makeLinked(Chute... toLink)
   {
+    makeLinkedCalled = true;
     if (toLink.length > 1)
     {
       /*
@@ -178,16 +182,17 @@ public class Level
    * @param toLink
    * @see #makeLinked(Chute...)
    */
+  @Deprecated
   public void makeLinked(Set<Chute> toLink)
   {
     makeLinked(toLink.toArray(new Chute[0]));
   }
   
-  
   /**
    * Returns {@code true} iff all of the {@code Chute}s in {@code chutes} are linked.
    * @param chutes
    */
+  @Deprecated
   public boolean areLinked(Set<Chute> chutes)
   {
     // A single chute is always linked to itself
@@ -322,13 +327,13 @@ public class Level
   }
 
   /**
-   * Links all chutes with the same ID, as long as no chutes are already linked
-   * (if there are chutes already linked, it is assumed that the user wants to
-   * manually link the chutes, so nothing is done).
+   * Links all chutes with the same ID, as long as makeLinked has not been
+   * called (if there are chutes already linked, it is assumed that the user
+   * wants to manually link the chutes, so nothing is done).
    */
   private void linkChutesWithSameID()
   {
-    if (linkedEdgeClasses.size() != 0)
+    if (makeLinkedCalled)
       return;
     
     Set<Chute> chutes = getAllChutes();
