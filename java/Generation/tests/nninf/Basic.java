@@ -8,8 +8,6 @@ public class Basic {
       b.m();
 
       b = new Basic();
-      // TODO: creates an error without flow
-      //:: error: (dereference.of.nullable)
       b.m();
 
       //:: error: (dereference.of.nullable)
@@ -21,18 +19,18 @@ public class Basic {
 
   void bar() {
       //:: error: (assignment.type.incompatible)
-      @NonNull Basic b = null;
+      @NonNull Basic local = null;
 
       if (4 != 9) {
-          b = new Basic();
-          b.m();
+          local = new Basic();
+          local.m();
       }
 
       // OK, b is declared NonNull
-      b.m();
+      local.m();
 
-      if (b!=null) {
-          b.m();
+      if (local!=null) {
+          local.m();
       }
   }
 
