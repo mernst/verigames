@@ -90,21 +90,13 @@ public class IntersectionSpecTests
   @Test public void getInputTest() throws IllegalAccessException,
   InvocationTargetException
   {
-    assertNull(j.getInput(5));
+    assertNull(j.getInput("5"));
     
-    for (Method m : intersectionMethods)
-    {
-      if (m.getName().equals("setInput"))
-      {
-        m.setAccessible(true);
-        Object[] args = { chute1, 5 };
-        m.invoke(j, args);
-      }
-    }
+    j.setInput(chute1, "5");
     
-    assertEquals(j.getInput(5), chute1);
-    assertNull(j.getInput(1));
-    assertNull(j.getInput(7));
+    assertEquals(j.getInput("5"), chute1);
+    assertNull(j.getInput("1"));
+    assertNull(j.getInput("7"));
   }
   
   /**
@@ -113,20 +105,12 @@ public class IntersectionSpecTests
   @Test public void getOutputTest() throws IllegalAccessException,
   InvocationTargetException
   {
-    assertNull(i.getOutput(5));
+    assertNull(i.getOutput("5"));
+
+    i.setOutput(chute1, "5");
     
-    for (Method m : intersectionMethods)
-    {
-      if (m.getName().equals("setOutput"))
-      {
-        m.setAccessible(true);
-        Object[] args = { chute1, 5 };
-        m.invoke(i, args);
-      }
-    }
-    
-    assertEquals(i.getOutput(5), chute1);
-    assertNull(i.getOutput(1));
-    assertNull(i.getOutput(7));
+    assertEquals(i.getOutput("5"), chute1);
+    assertNull(i.getOutput("1"));
+    assertNull(i.getOutput("7"));
   }
 }

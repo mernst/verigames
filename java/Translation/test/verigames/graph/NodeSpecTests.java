@@ -114,22 +114,25 @@ public class NodeSpecTests
   
   private void testGetXXXputs(boolean input) throws InvocationTargetException
   {
-    String setMethodName = input ? "setInput" : "setOutput";
-    
-    Node<?> n = new ConcreteNode();
+    Node<ConcreteEdge> n = new ConcreteNode();
     
     // Tests that get___s() works with empty edge set
     assertTrue((input ? n.getInputs() : n.getOutputs()).isEmpty());
     
-    Map<Integer, Edge<?>> portToChute = new HashMap<Integer, Edge<?>>();
-    portToChute.put(3, new ConcreteEdge());
-    portToChute.put(100, new ConcreteEdge());
-    portToChute.put(0, new ConcreteEdge());
+    Map<String, ConcreteEdge> portToChute = new HashMap<String, ConcreteEdge>();
+    portToChute.put("3", new ConcreteEdge());
+    portToChute.put("100", new ConcreteEdge());
+    portToChute.put("0", new ConcreteEdge());
     
-    for (Map.Entry<Integer, Edge<?>> entry : portToChute.entrySet())
-      invokeMethod(n, setMethodName, entry.getValue(), entry.getKey());
+    for (Map.Entry<String, ConcreteEdge> entry : portToChute.entrySet())
+    {
+      if (input)
+        n.setInput(entry.getValue(), entry.getKey());
+      else
+        n.setOutput(entry.getValue(), entry.getKey());
+    }
     
-    TreeMap<Integer, ? extends Edge<?>> inputs = input ? n.getInputs() : n.getOutputs();
+    TreeMap<String, ConcreteEdge> inputs = input ? n.getInputs() : n.getOutputs();
     
     assertEquals(portToChute, inputs);
   }

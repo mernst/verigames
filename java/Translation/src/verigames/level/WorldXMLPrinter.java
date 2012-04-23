@@ -224,7 +224,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
           Element noderefElt = new Element("noderef");
           // TODO do something about this nullness warning
           noderefElt.addAttribute(new Attribute("id", "n" + edge.getStart().getUID()));
-          noderefElt.addAttribute(new Attribute("port", Integer.toString(edge.getStartPort())));
+          noderefElt.addAttribute(new Attribute("port", edge.getStartPort()));
           fromElt.appendChild(noderefElt);
           
           edgeElt.appendChild(fromElt);
@@ -236,7 +236,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
           Element noderefElt = new Element("noderef");
           // TODO do something about this nullness warning
           noderefElt.addAttribute(new Attribute("id", "n" + edge.getEnd().getUID()));
-          noderefElt.addAttribute(new Attribute("port", Integer.toString(edge.getEndPort())));
+          noderefElt.addAttribute(new Attribute("port", edge.getEndPort()));
           toElt.appendChild(noderefElt);
           
           edgeElt.appendChild(toElt);

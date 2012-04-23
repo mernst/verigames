@@ -26,13 +26,14 @@ import checkers.nullness.quals.AssertNonNullAfter;
  * The type of nodes that {@code this} can attach to.
  * @author Nathaniel Mote
  */
+// TODO update all the documentation related to the new port API
 public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 {
   /**
    * Must be not null when {@code Edge} construction is finished. Equivalently,
    * if an {@code Edge} is not underConstruction, this field must be not null.
    * <p>
-   * {@code start==null} <--> {@code startPort==-1} <--> start has not been
+   * {@code start==null} <--> {@code startPort==null} <--> start has not been
    * initialized
    */
   private /*@LazyNonNull*/ NodeType start;
@@ -42,16 +43,16 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * if an {@code Edge} is not underConstruction, this field must
    * not be -1.
    * <p>
-   * {@code start==null} <--> {@code startPort==-1} <--> start has not been
+   * {@code start==null} <--> {@code startPort==null} <--> start has not been
    * initialized
    */
-  private int startPort = -1;
+  private String startPort = null;
   
   /**
    * Must be not null when {@code Edge} construction is finished. Equivalently,
    * if an {@code Edge} is not underConstruction, this field must be not null.
    * <p>
-   * {@code end==null} <--> {@code endPort==-1} <--> end has not been
+   * {@code end==null} <--> {@code endPort==null} <--> end has not been
    * initialized
    */
   private /*@LazyNonNull*/ NodeType end;
@@ -60,10 +61,10 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * Must not be -1 when {@code Edge} construction is finished. Equivalently,
    * if an {@code Edge} is not underConstruction, this field must not be -1.
    * <p>
-   * {@code end==null} <--> {@code endPort==-1} <--> end has not been
+   * {@code end==null} <--> {@code endPort==null} <--> end has not been
    * initialized
    */
-  private int endPort = -1;
+  private String endPort = null;
   
   private boolean underConstruction = true;
   
@@ -80,10 +81,10 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     // Representation Invariant:
     
     // start == null <--> startPort == -1
-    ensure((start == null) == (startPort == -1));
+    ensure((start == null) == (startPort == null));
     
     // end == null <--> endPort == null
-    ensure((end == null) == (endPort == -1));
+    ensure((end == null) == (endPort == null));
     
     /*
      * If !underConstruction, start and end must be non-null, and startPort and endPort
@@ -93,8 +94,8 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     {
       ensure(start != null);
       ensure(end != null);
-      ensure(startPort != -1);
-      ensure(endPort != -1);
+      ensure(startPort != null);
+      ensure(endPort != null);
     }
     
     /*
@@ -128,9 +129,9 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * Requires:<br/>
    * - {@code this} has a start node
    */
-  public int getStartPort()
+  public String getStartPort()
   {
-    if (start == null)
+    if (startPort == null)
       throw new IllegalStateException("No start node");
     return startPort;
   }
@@ -149,9 +150,9 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * Requires:<br/>
    * - {@code this} has an end node
    */
-  public int getEndPort()
+  public String getEndPort()
   {
-    if (end == null)
+    if (endPort == null)
       throw new IllegalStateException("No end node");
     return endPort;
   }
@@ -170,7 +171,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * what ports may be used, but subclasses may.
    */
   @AssertNonNullAfter({ "start" })
-  protected void setStart(NodeType startNode, int port)
+  protected void setStart(NodeType startNode, String port)
   {
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed Edge");
@@ -180,6 +181,12 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     this.start = startNode;
     this.startPort = port;
     checkRep();
+  }
+
+  @Deprecated
+  protected void setStart(NodeType startNode, int port)
+  {
+    setStart(startNode, Integer.toString(port));
   }
   
   /**
@@ -196,7 +203,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * what ports may be used, but subclasses may.
    */
   @AssertNonNullAfter({ "end" })
-  protected void setEnd(NodeType endNode, int port)
+  protected void setEnd(NodeType endNode, String port)
   {
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed Edge");
@@ -206,6 +213,12 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     this.end = endNode;
     this.endPort = port;
     checkRep();
+  }
+
+  @Deprecated
+  protected void setEnd(NodeType endNode, int port)
+  {
+    setEnd(endNode, Integer.toString(port));
   }
   
   /**

@@ -88,23 +88,23 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     
     for (NodeType n : nodes)
     {
-      for (Map.Entry<Integer, /*@NonNull*/ EdgeType> entry : n.getOutputs().entrySet())
+      for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getOutputs().entrySet())
       {
         EdgeType e = entry.getValue();
-        int nodePort = entry.getKey();
+        String nodePort = entry.getKey();
         
         // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
-        ensure(nodePort == e.getStartPort());
+        ensure(nodePort.equals(e.getStartPort()));
         ensure(e.getStart() == n);
       }
       
-      for (Map.Entry<Integer, /*@NonNull*/ EdgeType> entry : n.getInputs().entrySet())
+      for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getInputs().entrySet())
       {
         EdgeType e = entry.getValue();
-        int nodePort = entry.getKey();
+        String nodePort = entry.getKey();
         
         // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
-        ensure(nodePort == e.getEndPort());
+        ensure(nodePort.equals(e.getEndPort()));
         ensure(e.getEnd() == n);
       }
       
@@ -175,9 +175,10 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    * restrictions on what edges can be added or what nodes they can be
    * connected to, but subclasses may.
    */
-  public void addEdge(NodeType start, int startPort, NodeType end, int endPort,
+  public void addEdge(NodeType start, String startPort, NodeType end, String endPort,
       EdgeType edge)
   {
+    // begin precondition checks
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on an constructed Graph");
     if (!start.underConstruction())
@@ -220,7 +221,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     if (end.getInput(endPort) != null)
       throw new IllegalArgumentException(
           "End Node already connected to Edge on port " + endPort + ": " + end.getInput(endPort));
-    
+    // end precondition checks
+
     edges.add(edge);
     
     start.setOutput(edge, startPort);
@@ -230,6 +232,12 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     edge.setEnd(end, endPort);
     
     checkRep();
+  }
+
+  @Deprecated
+  public void addEdge(NodeType start, int startPort, NodeType end, int endPort, EdgeType edge)
+  {
+    addEdge(start, Integer.toString(startPort), end, Integer.toString(endPort), edge);
   }
   
   /**

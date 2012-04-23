@@ -155,7 +155,7 @@ class DotPrinter extends AbstractDotPrinter
      */
     /* This method should be static, but can't be because it's part of an
      * anonymous class. This should, perhaps, be changed. */
-    private String getNodeString(Intersection n, String portPrefix, int port, String suffix)
+    private String getNodeString(Intersection n, String portPrefix, String port, String suffix)
     {
       String result = "";
       result += n.getUID();

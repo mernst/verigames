@@ -71,31 +71,17 @@ public class ChuteImpTests
           + " does not exist");
       }
   
-  @Before public void initC() throws IllegalArgumentException,
-  IllegalAccessException, InvocationTargetException
+  @Before
+  public void initC() throws IllegalArgumentException
   {
     c = new Chute();
     c.setEditable(false);
     
-    // c.setStart(Intersection.intersectionFactory(Intersection.Kind.INCOMING),0);
-    invokeChuteMethod(
-        c,
-        "setStart",
-        new Object[] {
-            Intersection.factory(Intersection.Kind.INCOMING),
-            0 });
+    c.setStart(Intersection.factory(Intersection.Kind.INCOMING), "0");
     
-    // c.setEnd(Intersection.intersectionFactory(Intersection.Kind.OUTGOING));
-    invokeChuteMethod(
-        c,
-        "setEnd",
-        new Object[] {
-            Intersection.factory(Intersection.Kind.OUTGOING),
-            0 });
+    c.setEnd(Intersection.factory(Intersection.Kind.OUTGOING), "0");
     
-    // c.finishConstruction();
-    invokeChuteMethod(c, "finishConstruction", new Object[] {});
-    
+    c.finishConstruction();
   }
   
   @Test(expected = IllegalStateException.class) public void finishConstructionTest()
@@ -122,37 +108,15 @@ public class ChuteImpTests
     c.setNarrow(true);
   }
   
-  @Test(expected = IllegalStateException.class) public void setStartTest() throws Throwable
+  @Test(expected = IllegalStateException.class)
+  public void setStartTest()
   {
-    // c.setStart(Intersection.intersectionFactory(Intersection.Kind.START_WHITE_BALL),0);
-    try
-    {
-      invokeChuteMethod(c, "setStart", new Object[] {Intersection.factory(Intersection.Kind.START_SMALL_BALL), 0});
-    }
-    catch (InvocationTargetException e)
-    {
-      throw e.getCause();
-    }
-    catch (Exception e)
-    {
-      fail();
-    }
+    c.setStart(Intersection.factory(Intersection.Kind.START_SMALL_BALL), "0");
   }
   
-  @Test(expected = IllegalStateException.class) public void setEndTest() throws Throwable
+  @Test(expected = IllegalStateException.class)
+  public void setEndTest() throws Throwable
   {
-    // c.setEnd(Intersection.intersectionFactory(Intersection.Kind.END),0);
-    try
-    {
-      invokeChuteMethod(c, "setEnd", new Object[] {Intersection.factory(Intersection.Kind.END), 0});
-    }
-    catch (InvocationTargetException e)
-    {
-      throw e.getCause();
-    }
-    catch (Exception e)
-    {
-      fail();
-    }
+    c.setEnd(Intersection.factory(Intersection.Kind.END), "0");
   }
 }
