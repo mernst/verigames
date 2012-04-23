@@ -6,7 +6,8 @@ import javax.lang.model.element.AnnotationMirror;
 import nninf.quals.KeyFor;
 import nninf.quals.NonNull;
 import nninf.quals.Nullable;
-import nninf.quals.Unqualified;
+import nninf.quals.UnknownKeyFor;
+
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
@@ -16,13 +17,14 @@ import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
 import checkers.util.AnnotationUtils;
+import checkers.util.MultiGraphQualifierHierarchy;
 
 import com.sun.source.tree.CompilationUnitTree;
 
-@TypeQualifiers({ NonNull.class, Nullable.class, Unqualified.class, KeyFor.class })
+@TypeQualifiers({ NonNull.class, Nullable.class, UnknownKeyFor.class, KeyFor.class })
 public class NninfChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
-    public AnnotationMirror NULLABLE, NONNULL;
+    public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
     @Override
     public void initChecker(ProcessingEnvironment env) {
@@ -30,11 +32,18 @@ public class NninfChecker extends BaseTypeChecker implements
         AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
         NULLABLE = annoFactory.fromClass(Nullable.class);
         NONNULL = annoFactory.fromClass(NonNull.class);
+        UNKNOWNKEYFOR = annoFactory.fromClass(UnknownKeyFor.class);
+        KEYFOR = annoFactory.fromClass(KeyFor.class);
     }
 
     @Override
     public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new NninfAnnotatedTypeFactory(this, root);
+    }
+
+    @Override
+    protected MultiGraphQualifierHierarchy.MultiGraphFactory createQualifierHierarchyFactory() {
+        return new MultiGraphQualifierHierarchy.MultiGraphFactory(this);
     }
 
     @Override

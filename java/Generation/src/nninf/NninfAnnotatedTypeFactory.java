@@ -1,20 +1,20 @@
 package nninf;
 
+import java.util.Collections;
 import java.util.List;
 
-import javax.lang.model.element.Element;
-
+import checkers.quals.DefaultLocation;
 import checkers.types.AnnotatedTypeFactory;
+import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.util.Pair;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 
-public class NninfAnnotatedTypeFactory extends AnnotatedTypeFactory {
+public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfChecker> {
     NninfChecker checker;
     MapGetHeuristics mapGetHeuristics;
 
@@ -29,41 +29,18 @@ public class NninfAnnotatedTypeFactory extends AnnotatedTypeFactory {
         AnnotatedTypeFactory mapGetFactory = new AnnotatedTypeFactory(checker.getProcessingEnvironment(), null, root, null);
         mapGetHeuristics = new MapGetHeuristics(env, this, mapGetFactory);
 
-        postInit();
-    }
+        addAliasedAnnotation(checkers.nullness.quals.NonNull.class, checker.NONNULL);
+        addAliasedAnnotation(checkers.nullness.quals.Nullable.class, checker.NULLABLE);
+        addAliasedAnnotation(checkers.nullness.quals.KeyFor.class, checker.KEYFOR);
+        addAliasedAnnotation(checkers.quals.Unqualified.class, checker.UNKNOWNKEYFOR);
 
-    @Override
-    protected void annotateImplicit(Tree tree, AnnotatedTypeMirror type) {
-        if (!type.isAnnotated()) {
-            // Why are these needed?? The first should be an ImplicitFor from
-            // NonNull, the second one should come from the
-            // DefaultQualifierInHierarchy.
-            System.out.println("Tree without annotation: " + tree.getKind());
-
-            if (tree.getKind() == Tree.Kind.NEW_CLASS) {
-                type.addAnnotation(checker.NONNULL);
-            } else if (tree.getKind() == Tree.Kind.NULL_LITERAL) {
-                type.addAnnotation(checker.NULLABLE);
-            }
-        }
-    }
-
-    @Override
-    protected void annotateImplicit(Element elt, AnnotatedTypeMirror type) {
-        if (!type.isAnnotated()) {
-            // System.out.println("Element without annotation: " +
-            // elt.getKind());
-            // type.addAnnotation(checker.NULLABLE);
-        }
+        // defaults = new QualifierDefaults(this, this.annotations);
+        defaults.addAbsoluteDefault(checker.NONNULL, Collections.singleton(DefaultLocation.ALL_EXCEPT_LOCALS));
+        defaults.setLocalVariableDefault(Collections.singleton(checker.NULLABLE));
     }
 
     /*
-     * It looks like BaseTypeVisitor will call this method in visitMethodInvocation?
-     * So do we need to do anything else?
-     * 
-     * 
-     * (non-Javadoc)
-     * @see checkers.types.AnnotatedTypeFactory#methodFromUse(com.sun.source.tree.MethodInvocationTree)
+     * Handle Map.get heuristics.
      */
     @Override
     public Pair<AnnotatedExecutableType, List<AnnotatedTypeMirror>> methodFromUse(MethodInvocationTree tree) {
