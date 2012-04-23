@@ -12,7 +12,6 @@ import checkers.source.Result;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.InternalUtils;
 import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
@@ -115,16 +114,14 @@ public class NninfVisitor extends InferenceVisitor {
     /** Log method invocations. */
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
-    	// TODO detect calls to get.
-    	ProcessingEnvironment env = nninfchecker.getProcessingEnvironment();
-    	ExecutableElement mapGet =  TreeUtils.getMethod("java.util.Map", "get", 1, env);
+        ProcessingEnvironment env = nninfchecker.getProcessingEnvironment();
+        ExecutableElement mapGet =  TreeUtils.getMethod("java.util.Map", "get", 1, env);
         if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
-        	// We are in a call to get. 
+            // TODO: log the call to Map.get. 
         } else {
-        	logMethodInvocation(node);
+            logMethodInvocation(node);
         }
         super.visitMethodInvocation(node, p);
-        checkForNullability(node.getMethodSelect(), "call.null");
         return null;
     }
 
