@@ -4,9 +4,9 @@
 # We are in the scripts directory
 mydir=`dirname $0`
 
-# the root (all-projects) is up 4 levels
+# the root (all-projects) is up 2 levels
 
-root=`cd $mydir/../../../..; pwd`
+root=`cd $mydir/../..; pwd`
 # echo $root
 
 tmp=/tmp
