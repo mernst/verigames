@@ -22,15 +22,15 @@ public class Basic {
       // flow refines b -> ok
       foo(b);      
   }
- 
+
   void concat(String s) {
-	  String a = "trusted";
-	  String b = "trusted";
-	  
-	  @Trusted String safe = a + b;
-	  
-	  //:: error: (assignment.type.incompatible)
-	  @Trusted String unsafe = a + s;
+      String a = "trusted";
+      String b = "trusted";
+
+      @Trusted String safe = a + b;
+
+      //:: error: (assignment.type.incompatible)
+      @Trusted String unsafe = a + s;
   }
 
   String foo(@Trusted String s2) {
