@@ -66,7 +66,7 @@ class TrustedGameSolver(
      * First, go through all variables and create a level for each occurring
      * class and a board for each occurring method.
      */
-    def createBoards(world: World) { 
+    def createBoards(world: World) {
       variables foreach { cvar => {
         cvar.varpos match {
           case mvar: WithinMethodVP => {
@@ -74,7 +74,7 @@ class TrustedGameSolver(
 
             // Create/Find the board for the method.
             // val msig = mvar.getMethodSignature
-            val board: Board = variablePosToBoard(mvar) 
+            val board: Board = variablePosToBoard(mvar)
 
             if (mvar.isInstanceOf[ParameterVP]) {
               // For each parameter, create a CONNECT Intersection.
@@ -108,7 +108,7 @@ class TrustedGameSolver(
             val level: Level = variablePosToLevel(clvar)
 
             // Create/Find the top-level board for the class.
-            val board: Board = variablePosToBoard(clvar) 
+            val board: Board = variablePosToBoard(clvar)
 
             if (clvar.isInstanceOf[FieldVP]) {
               // For a field type, create three things.
@@ -238,7 +238,7 @@ class TrustedGameSolver(
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
                   }
-                  
+
                   if (sup.isInstanceOf[Variable] &&
                       sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
                     val supvar = sup.asInstanceOf[Variable]
@@ -268,7 +268,7 @@ class TrustedGameSolver(
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               ctxBoard.addNode(con)
               ctxBoard.addEdge(subboard, 0, con, 0, createChute(receiver))
-              
+
               updateIntersection(ctxBoard, receiver, con)
             }
             { // Connect the result as output only
@@ -335,6 +335,33 @@ class TrustedGameSolver(
               }
             }
           }
+          case EqualityConstraint(leftslot, rightslot) => {
+            if (rightslot == TrustedConstants.UNTRUSTED ||
+                rightslot == TrustedConstants.TRUSTED) {
+              // Assume leftslot is a variable. Alternatives?
+              val leftvar = leftslot.asInstanceOf[Variable]
+              val board = variablePosToBoard(leftvar.varpos)
+              val con = Intersection.factory(Intersection.Kind.CONNECT)
+              val lastIntersection = boardNVariableToIntersection((board, leftvar))
+
+              board.addNode(con)
+
+              val pipe = new Chute(leftvar.id, leftvar.toString())
+
+              if (rightslot == TrustedConstants.UNTRUSTED) {
+                pipe.setNarrow(false)
+              } else {
+                pipe.setNarrow(true)
+              }
+              pipe.setEditable(false)
+
+              board.addEdge(lastIntersection, 0, con, 0, pipe)
+
+              boardNVariableToIntersection.update((board, leftvar), con)
+            } else {
+              println("TODO: EqualityConstraint not handled: " + constraint)
+            }
+          }
           case AssignmentConstraint(context, leftslot, rightslot) => {
             println("TODO: AssignmentConstraint not handled")
           }
@@ -352,12 +379,12 @@ class TrustedGameSolver(
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               callerBoard.addNode(con)
               callerBoard.addEdge(subboard, 0, con, 0, createChute(receiver))
-              
+
               updateIntersection(callerBoard, receiver, con)
             }
             { // TODO: type arguments
             }
-            { // Connect the arguments as inputs only 
+            { // Connect the arguments as inputs only
               for (anarg <- args) {
                 subboardPort += 1
 
@@ -542,7 +569,7 @@ class TrustedGameSolver(
       board.addNode(start)
       val inthis = createThisChute()
       board.addEdge(incoming, incoming.getOutputs().size(), start, 0, inthis)
-      boardToSelfIntersection += (board -> start)   
+      boardToSelfIntersection += (board -> start)
     }
 
     /**
@@ -605,10 +632,13 @@ class TrustedGameSolver(
         case v: Variable => {
           boardNVariableToIntersection((board, v))
         }
-	    case lit: AbstractLiteral => {
-    	  val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-    	  board.addNode(res)
-    	  res
+        case LiteralThis => {
+          boardToSelfIntersection(board)
+        }
+        case lit: AbstractLiteral => {
+          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
+          board.addNode(res)
+          res
         }
         case TrustedConstants.UNTRUSTED => {
           val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
@@ -643,6 +673,9 @@ class TrustedGameSolver(
         case TrustedConstants.TRUSTED => {
           // Nothing to do, we're always creating a new white ball
         }
+        case LiteralThis => {
+          boardToSelfIntersection.update(board, inters)
+        }
         case cv: CombVariable => {
           // TODO: Combvariables appear for BinaryTrees.
         }
@@ -656,13 +689,17 @@ class TrustedGameSolver(
      * intersection is generated each time.
      */
     def isUniqueSlot(slot: Slot): Boolean = {
-      !(slot.isInstanceOf[Variable] || slot == LiteralThis) 
+      !(slot.isInstanceOf[Variable] || slot == LiteralThis)
     }
 
     def createChute(slot: Slot): Chute = {
       slot match {
-        case v: Variable =>
+        case v: Variable => {
           new Chute(v.id, v.toString())
+        }
+        case LiteralThis => {
+          createThisChute()
+        }
         case lit: AbstractLiteral => {
           val res = new Chute(-3, lit.lit.toString())
           res.setEditable(false)
@@ -698,6 +735,7 @@ class TrustedGameSolver(
     def createThisChute(): Chute = {
       val inthis = new Chute(-1, "this")
       inthis.setEditable(false)
+      // TODO: why is "this" always trusted?
       inthis.setNarrow(true)
       inthis
     }
