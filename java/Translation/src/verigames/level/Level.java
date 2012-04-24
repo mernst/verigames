@@ -39,21 +39,21 @@ import verigames.level.Intersection.Kind;
  * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
  * {@code this} can still be modified. Once {@code underConstruction} is set to
  * {@code false}, {@code this} becomes immutable.
- * 
+ *
  * @author Nathaniel Mote
  */
 
 public class Level
 {
   private final Set<Set<Chute>> linkedEdgeClasses;
-  
+
   // TODO change String, if necessary, to whatever we end up using
   private final Map<String, Board> boardNames;
-  
+
   private boolean underConstruction = true;
-  
+
   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   /**
    * Enforces the Representation Invariant
    */
@@ -62,7 +62,7 @@ public class Level
     // Representation Invariant:
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     Set<Chute> encountered = new HashSet<Chute>();
     for (Set<Chute> s : linkedEdgeClasses)
     {
@@ -73,8 +73,8 @@ public class Level
        * is linked to itself need not be represented)
        */
       ensure(s.size() > 1);
-      
-      
+
+
       // No chute can be contained in more than one set in
       // linkedEdgeClasses
       for (Chute c : s)
@@ -83,7 +83,7 @@ public class Level
         encountered.add(c);
       }
     }
-    
+
     /*
      * If this is constructed, all chutes contained in sets contained in
      * linkedEdgeClasses must also be contained by some Board in
@@ -97,14 +97,14 @@ public class Level
         for (Chute c : b.getEdges())
           containedInBoards.add(c);
       }
-      
+
       // make sure that the chutes in linkedEdgeClasses are a subset of the
       // chutes in boardNames
       ensure(containedInBoards.containsAll(encountered));
     }
-    
+
   }
-  
+
   /**
    * Creates a new {@code Level} with an empty {@code linkedEdgeClasses},
    * {@code boards}, and {@code boardNames}
@@ -117,7 +117,7 @@ public class Level
   }
 
   private boolean makeLinkedCalled = false;
-  
+
   /**
    * Makes it so that the given {@link Chute}s are equivalent under the
    * relation R defined for {@code linkedEdgeClasses}. In other words, for all
@@ -130,10 +130,10 @@ public class Level
    * <br/>
    * Runs in O(m*n) time, where m is {@code linkedEdgeClasses.size()} and n is
    * {@code toLink.length}
-   * 
+   *
    * @param toLink
    * The {@code Chute}s to make equivalent under the equivalence relation R
-   * 
+   *
    * @see #makeLinked(Set)
    */
   @Deprecated
@@ -148,14 +148,14 @@ public class Level
        * class
        */
       Set<Set<Chute>> toRemove = new LinkedHashSet<Set<Chute>>();
-      
+
       /*
        * The new equivalence class to be added to linkedEdgeClasses. It will
        * at least have all of the elements in toLink.
        */
       Set<Chute> newEquivClass = new LinkedHashSet<Chute>(
           Arrays.asList(toLink));
-      
+
       for (Set<Chute> linked : linkedEdgeClasses)
       {
         for (Chute c : toLink)
@@ -167,18 +167,18 @@ public class Level
           }
         }
       }
-      
+
       linkedEdgeClasses.removeAll(toRemove);
-      
+
       linkedEdgeClasses.add(newEquivClass);
       checkRep();
     }
   }
-  
+
   /**
    * Functions identically to {@link #makeLinked(Chute...)}, except the
    * elements to link are specified by a {@code Set} instead of an array
-   * 
+   *
    * @param toLink
    * @see #makeLinked(Chute...)
    */
@@ -187,7 +187,7 @@ public class Level
   {
     makeLinked(toLink.toArray(new Chute[0]));
   }
-  
+
   /**
    * Returns {@code true} iff all of the {@code Chute}s in {@code chutes} are linked.
    * @param chutes
@@ -198,7 +198,7 @@ public class Level
     // A single chute is always linked to itself
     if (chutes.size() == 1)
       return true;
-    
+
     for (Set<Chute> s : linkedEdgeClasses)
     {
       if (s.containsAll(chutes))
@@ -206,7 +206,7 @@ public class Level
     }
     return false;
   }
-  
+
   /**
    * Returns a copy of {@code linkedEdgeClasses}. Structurally modifying the
    * returned {@code Set}, or any of the {@code Set}s it contains, will have
@@ -218,22 +218,22 @@ public class Level
   protected Set<Set<Chute>> linkedEdgeClasses()
   {
     final Set<Set<Chute>> copy = new LinkedHashSet<Set<Chute>>();
-    
+
     for (Set<Chute> linkedChutes : linkedEdgeClasses)
     {
       copy.add(new LinkedHashSet<Chute>(linkedChutes));
     }
-    
+
     return copy;
   }
-  
-  
+
+
   /**
    * Adds {@code b} to {@code boards}, and adds the mapping from {@code name}
    * to {@code b} to {@code boardNames}<br/>
    * <br/>
    * Modifies: {@code this}<br/>
-   * 
+   *
    * @param b
    * The {@link Board} to add to {@code boards}. Must not be contained in
    * {@code boards}
@@ -250,7 +250,7 @@ public class Level
     boardNames.put(name, b);
     checkRep();
   }
-  
+
   /**
    * Return an unmodifiable {@code Map} view on {@code boardNames}. The
    * returned {@code Map} is backed by {@code this}, so changes in {@code
@@ -260,7 +260,7 @@ public class Level
   {
     return Collections.unmodifiableMap(boardNames);
   }
-  
+
   /**
    * Returns the {@code Board} to which {@code name} maps in {@code
    * boardNames}, or {@code null} if it maps to nothing
@@ -269,7 +269,7 @@ public class Level
   {
     return boardNames.get(name);
   }
-  
+
   /**
    * Returns {@code underConstruction}
    */
@@ -277,7 +277,7 @@ public class Level
   {
     return underConstruction;
   }
-  
+
   /**
    * Sets {@code underConstruction} to {@code false}, finishes construction on
    * all contained {@link Board}s<br/>
@@ -300,7 +300,7 @@ public class Level
     underConstruction = false;
     for (Board b : boardNames.values())
       b.finishConstruction();
-    
+
     /* Make sure that all chutes that are linked to each other have the same
      * width. */
     for (Set<Chute> linkedChutes : linkedEdgeClasses)
@@ -335,7 +335,7 @@ public class Level
   {
     if (makeLinkedCalled)
       return;
-    
+
     Set<Chute> chutes = getAllChutes();
 
     // map from variable id to chute
@@ -366,11 +366,10 @@ public class Level
       chutes.addAll(b.getEdges());
     return chutes;
   }
-  
+
   @Override
   public String toString()
   {
     return "Level: " + getBoards().keySet().toString();
-    
   }
 }

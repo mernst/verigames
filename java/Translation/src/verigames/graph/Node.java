@@ -25,7 +25,7 @@ import java.util.TreeMap;
  * Subclasses may enforce restrictions on the connections made to {@link Edge}s.
  * In particular, there may be restrictions on the number of ports particular
  * {@code Node}s have available.
- * 
+ *
  * @param <EdgeType>
  * @author Nathaniel Mote
  */
@@ -48,26 +48,26 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * sorted order.
    */
   private final TreeMap<String, EdgeType> outputs;
-  
+
   private boolean underConstruction = true;
-  
+
   // TODO update rep invariant
   /*
    * Representation Invariant:
-   * 
+   *
    * - if !inputs.isEmpty(), then inputs.get(inputs.size()-1) != null
-   * 
+   *
    * - if !outputs.isEmpty(), then outputs.get(outputs.size()-1) != null
-   * 
+   *
    * In other words, the last element in inputs and outputs must not be null
-   * 
+   *
    * - If !underConstruction:
    *    - no edge in inputs or outputs may be null
-   * 
+   *
    */
-  
+
   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   /**
    * Ensures that the representation invariant holds
    */
@@ -75,7 +75,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     if (!underConstruction)
     {
       for (EdgeType e : inputs.values())
@@ -83,7 +83,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
       for (EdgeType e : outputs.values())
         ensure(e != null);
     }
-    
+
     // Note: Graph is responsible for ensuring that a particular node's
     // connections match that of the edges it is connected to (that is, the
     // edges that this is connected to must also be connected to this at the
@@ -94,13 +94,13 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     // vice versa, simply because one operation must be done before the other,
     // and checkRep is called from the methods that perform those operations.
   }
-  
+
   public Node()
   {
     inputs = new TreeMap<String, EdgeType>();
     outputs = new TreeMap<String, EdgeType>();
   }
-  
+
   /**
    * Adds the given edge to {@code inputs} with the given port number.<br/>
    * <br/>
@@ -111,7 +111,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * <p>
    * Requires: There must not already be an {@link Edge} at the given input
    * port.
-   * 
+   *
    * @param input
    * The edge to attach to {@code this} as an input. This implementation does
    * not restrict what edges may be attached, but subclasses may.
@@ -126,11 +126,11 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (!underConstruction)
       throw new IllegalStateException(
           "Mutation attempted on constructed Node");
-    
+
     // TODO check that port is nonnegative
     if (getInput(port) != null)
       throw new IllegalArgumentException("Input port at port " + port + " already used");
-    
+
     inputs.put(port, input);
     checkRep();
   }
@@ -140,7 +140,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     setInput(input, Integer.toString(port));
   }
-  
+
   /**
    * Adds the given edge to {@code outputs} with the given port number.<br/>
    * <br/>
@@ -151,7 +151,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    * <p>
    * Requires: There must not already be an {@link Edge} at the given output
    * port.
-   * 
+   *
    * @param output
    * The edge to attach to {@code this} as an output. This implementation does
    * not restrict what edges may be attached, but subclasses may.
@@ -166,11 +166,11 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (!underConstruction)
       throw new IllegalStateException(
           "Mutation attempted on constructed Node");
-    
+
     // TODO check that port is nonnegative
     if (getOutput(port) != null)
       throw new IllegalArgumentException("Output port at port " + port + " already used");
-    
+
     outputs.put(port, output);
     checkRep();
   }
@@ -180,7 +180,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     setOutput(output, Integer.toString(port));
   }
-  
+
   /**
    * Returns the edge at the given port, or {@code null} if none exists.
    * <p>
@@ -197,7 +197,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     return getInput(Integer.toString(port));
   }
-  
+
   /**
    * Returns the edge at the given port, or {@code null} if none exists.
    * <p>
@@ -214,7 +214,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     return getOutput(Integer.toString(port));
   }
-  
+
   /**
    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to input
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
@@ -224,7 +224,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     return new TreeMap<String, /*@NonNull*/ EdgeType>(inputs);
   }
-  
+
   /**
    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to output
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
@@ -234,7 +234,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     return new TreeMap<String, /*@NonNull*/ EdgeType>(outputs);
   }
-  
+
   /**
    * Returns {@code underConstruction}
    */
@@ -242,7 +242,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   {
     return underConstruction;
   }
-  
+
   /**
    * Sets {@code underConstruction} to {@code false}<br/>
    * <br/>
@@ -263,7 +263,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     underConstruction = false;
     checkRep();
   }
-  
+
   /**
    * Returns a {@code String} representation of {@code this} that does not
    * include its connections to {@link Edge Edges}.
@@ -274,7 +274,7 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     // implementation doesn't have much identifying information.
     return super.toString();
   }
-  
+
   @Override
   public String toString()
   {
@@ -285,25 +285,25 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     builder.append(portMapToString(getOutputs()));
     return builder.toString();
   }
-  
+
   /**
    * no null keys or values
    */
   private static <EdgeType extends Edge<?>> String portMapToString(Map<String, EdgeType> map)
   {
     StringBuilder builder = new StringBuilder();
-    
+
     for (Map.Entry<String, EdgeType> entry : map.entrySet())
     {
       String port = entry.getKey();
       EdgeType edge = entry.getValue();
-      
+
       builder.append("port " + port + ": " + edge.shallowToString() + ", ");
     }
-    
+
     if (builder.length() >= 2)
       builder.delete(builder.length() - 2, builder.length());
-    
+
     return "[" + builder.toString() + "]";
   }
 }

@@ -33,7 +33,7 @@ import java.util.List;
  * <br/>
  * Except in corner cases, {@code pinch} --> {@code narrow}. This is not,
  * however, enforced.<br/>
- * 
+ *
  * @author Nathaniel Mote
  */
 
@@ -60,9 +60,9 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // should be instantiated as an immutable list
   // TODO enforce length in checkRep
   private /*@Nullable*/ List<Pair<Double, Double>> layout;
-  
+
   private final int UID;
-  
+
   private static int nextUID = 1;
 
   // Constructor that uses a unique ID as chute name.
@@ -116,14 +116,14 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return pinch;
   }
-  
+
   /**
    * Sets {@code pinch} to the value of the parameter<br/>
    * <br/>
    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
    * <br/>
    * Modifies: {@code this}
-   * 
+   *
    * @param pinched
    */
   public void setPinched(boolean pinched)
@@ -133,7 +133,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
     this.pinch = pinched;
     checkRep();
   }
-  
+
   /**
    * Returns {@code narrow}
    */
@@ -141,7 +141,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return narrow;
   }
-  
+
   /**
    * Sets the specification field {@code narrow} to the value of the parameter
    * {@code narrow}<br/>
@@ -149,7 +149,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
    * <br/>
    * Modifies: {@code this}
-   * 
+   *
    * @param narrow
    */
   public void setNarrow(boolean narrow)
@@ -182,7 +182,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
     this.buzzsaw = buzzsaw;
     checkRep();
   }
-  
+
   /**
    * Returns {@code editable}
    */
@@ -190,7 +190,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return editable;
   }
-  
+
   /**
    * Sets the specification field {@code editable} to the value of the
    * parameter {@code editable}<br/>
@@ -198,34 +198,34 @@ public class Chute extends verigames.graph.Edge<Intersection>
    * Requires: {@link #underConstruction() this.underConstruction()}<br/>
    * <br/>
    * Modifies: {@code this}
-   * 
+   *
    * @param editable
    */
   public void setEditable(boolean editable)
   {
     if (!underConstruction())
       throw new IllegalStateException("Mutation attempted on constructed Chute");
-    
+
     this.editable = editable;
     checkRep();
   }
-  
+
   public void setLayout(List<Pair<Double, Double>> layout)
   {
     if (layout.size() < 4 || layout.size() % 3 != 1)
       throw new IllegalArgumentException("Number of points (" +
           layout.size() +
           ") illegal -- must be of the form 3n + 1 where n is a positive integer");
-    
+
     this.layout = Collections.unmodifiableList(
         new ArrayList<Pair<Double,Double>>(layout));
   }
-  
+
   public /*@Nullable*/ List<Pair<Double, Double>> getLayout()
   {
     return this.layout;
   }
-  
+
   /**
    * Returns {@code UID}
    */
@@ -249,7 +249,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   {
     return variableID;
   }
-  
+
   /**
    * Returns a deep copy of {@code this}.
    * <p>
@@ -270,19 +270,19 @@ public class Chute extends verigames.graph.Edge<Intersection>
     copy.setNarrow(narrow);
     copy.setPinched(pinch);
     copy.setEditable(editable);
-    
+
     return copy;
   }
-  
+
   @Override
   protected String shallowToString()
   {
     String propertyString = isNarrow() ? "Narrow" : "Wide";
-    
+
     if (isPinched())
       propertyString += ", Pinched";
-    
-    return "Chute#" + getUID() + " (" + propertyString + ")";
+
+    return "Chute#" + getUID() + ", VarID#" + variableID + " [" + description + "] (" + propertyString + ")";
   }
 
   /* These are overridden to facilitate testing. Overriding gives the tests

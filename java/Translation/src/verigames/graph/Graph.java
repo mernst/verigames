@@ -22,12 +22,12 @@ import java.util.Set;
  * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
  * {@code this} can still be modified. Once {@code underConstruction} is set to
  * {@code false}, {@code this} becomes immutable.
- * 
+ *
  * @param <NodeType>
  * The type of the nodes in {@code this}. Its edge type must be {@code EdgeType}
  * @param <EdgeType>
  * The type of the edges in {@code this}. Its node type must be {@code NodeType}
- * 
+ *
  * @author Nathaniel Mote
  */
 
@@ -36,7 +36,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   private final Set<NodeType> nodes;
   private final Set<EdgeType> edges;
   private boolean underConstruction = true;
-  
+
   /**
    * Constructs a new, underConstruction {@code Graph} with no nodes or edges.
    */
@@ -45,9 +45,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     nodes = new LinkedHashSet<NodeType>();
     edges = new LinkedHashSet<EdgeType>();
   }
-  
+
   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   /**
    * Ensures that the representation invariant holds.
    */
@@ -55,14 +55,14 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     // Representation Invariant:
-    
+
     // nodes != null:
     ensure(nodes != null);
     // edges != null
     ensure(edges != null);
-    
+
     // for all n in nodes; e in edges:
     // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
     // e.getEnd() == n <--> n.getInput(e.getEndPort()) == e
@@ -75,39 +75,39 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
       ensure(n != null);
       // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
       ensure(n.getOutput(e.getStartPort()) == e);
-      
+
       n = e.getEnd();
       // e.getEnd() != null
       ensure(n != null);
       // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
       ensure(n.getInput(e.getEndPort()) == e);
-      
+
       // this.underConstruction() == e.underConstruction()
       ensure(this.underConstruction() == e.underConstruction());
     }
-    
+
     for (NodeType n : nodes)
     {
       for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getOutputs().entrySet())
       {
         EdgeType e = entry.getValue();
         String nodePort = entry.getKey();
-        
+
         // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
         ensure(nodePort.equals(e.getStartPort()));
         ensure(e.getStart() == n);
       }
-      
+
       for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getInputs().entrySet())
       {
         EdgeType e = entry.getValue();
         String nodePort = entry.getKey();
-        
+
         // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
         ensure(nodePort.equals(e.getEndPort()));
         ensure(e.getEnd() == n);
       }
-      
+
       // this.underConstruction() == n.underConstruction()
       ensure(this.underConstruction() == n.underConstruction());
     }
@@ -123,7 +123,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    * restrictions on nodes to be added.<br/>
    * <br/>
    * Modifies: {@code this}
-   * 
+   *
    * @param node
    * The node to add. Must be underConstruction, must not be contained in {@code this},
    * and must implement eternal equality.
@@ -152,7 +152,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
    * <br/>
    * Requires:<br/>
    * - {@link #underConstruction()}<br/>
-   * 
+   *
    * @param start
    * The node at which the edge will start. Must be underConstruction, and must be
    * contained in {@code this}.
@@ -201,20 +201,20 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     {
       /*@Nullable*/ NodeType oldStart = edge.getStart();
       /*@Nullable*/ NodeType oldEnd = edge.getEnd();
-      
+
       String message = "Given Edge already connected to Node";
       if (oldStart != null && oldEnd != null)
         message += "s"; // pluralize "Node"
       message += ":";
-      
+
       if (oldStart != null)
         message += " start " + oldStart;
       if (oldEnd != null)
         message += " end " + oldEnd;
-      
+
       throw new IllegalArgumentException(message);
     }
-    
+
     if (start.getOutput(startPort) != null)
       throw new IllegalArgumentException(
           "Start Node already connected to Edge on port " + startPort + ": " + start.getOutput(startPort));
@@ -224,13 +224,13 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     // end precondition checks
 
     edges.add(edge);
-    
+
     start.setOutput(edge, startPort);
     end.setInput(edge, endPort);
-    
+
     edge.setStart(start, startPort);
     edge.setEnd(end, endPort);
-    
+
     checkRep();
   }
 
@@ -239,7 +239,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     addEdge(start, Integer.toString(startPort), end, Integer.toString(endPort), edge);
   }
-  
+
   /**
    * Returns the cardinality of {@code nodes}.<br/>
    * <br/>
@@ -249,7 +249,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return nodes.size();
   }
-  
+
   /**
    * Returns the cardinality of {@code edges}<br/>
    * <br/>
@@ -259,7 +259,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return edges.size();
   }
-  
+
   /**
    * Returns a {@code Set<NodeType>} with all nodes in {@code this}. The
    * returned set will not be affected by future changes to {@code this}, and
@@ -269,7 +269,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return new LinkedHashSet<NodeType>(nodes);
   }
-  
+
   /**
    * Returns a {@code Set<EdgeType>} with all edge objects in {@code this}. The returned set
    * will not be affected by future changes to {@code this}, and changes to the
@@ -279,7 +279,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return new LinkedHashSet<EdgeType>(edges);
   }
-  
+
   /**
    * Returns {@code true} iff {@code nodes} contains {@code elt} or
    * {@code edges} contains {@code elt}<br/>
@@ -291,7 +291,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return nodes.contains(elt) || edges.contains(elt);
   }
-  
+
   /**
    * Returns {@code underConstruction}
    */
@@ -299,7 +299,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   {
     return underConstruction;
   }
-  
+
   /**
    * Sets underConstruction to {@code false}<br/>
    * <br/>
@@ -319,5 +319,5 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     }
     checkRep();
   }
-  
+
 }

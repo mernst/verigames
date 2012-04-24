@@ -21,7 +21,7 @@ import checkers.nullness.quals.AssertNonNullAfter;
  * {@code this} can be part of a {@link verigames.graph.Graph Graph} that is still under
  * construction. Once {@code underConstruction} is set to {@code false}, {@code this}
  * becomes immutable.
- * 
+ *
  * @param <NodeType>
  * The type of nodes that {@code this} can attach to.
  * @author Nathaniel Mote
@@ -37,7 +37,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * initialized
    */
   private /*@LazyNonNull*/ NodeType start;
-  
+
   /**
    * Must not be -1 when {@code Edge} construction is finished.  Equivalently,
    * if an {@code Edge} is not underConstruction, this field must
@@ -47,7 +47,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * initialized
    */
   private String startPort = null;
-  
+
   /**
    * Must be not null when {@code Edge} construction is finished. Equivalently,
    * if an {@code Edge} is not underConstruction, this field must be not null.
@@ -56,7 +56,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * initialized
    */
   private /*@LazyNonNull*/ NodeType end;
-  
+
   /**
    * Must not be -1 when {@code Edge} construction is finished. Equivalently,
    * if an {@code Edge} is not underConstruction, this field must not be -1.
@@ -65,11 +65,11 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * initialized
    */
   private String endPort = null;
-  
+
   private boolean underConstruction = true;
-  
+
   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   /**
    * Ensures that the representation invariant holds.
    */
@@ -77,15 +77,15 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     // Representation Invariant:
-    
+
     // start == null <--> startPort == -1
     ensure((start == null) == (startPort == null));
-    
+
     // end == null <--> endPort == null
     ensure((end == null) == (endPort == null));
-    
+
     /*
      * If !underConstruction, start and end must be non-null, and startPort and endPort
      * must not equal -1
@@ -97,13 +97,13 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       ensure(startPort != null);
       ensure(endPort != null);
     }
-    
+
     /*
      * The port numbers used must be valid port numbers for the nodes used.
      * The default implementation enforces no such restrictions, but
      * subclasses may.
      */
-    
+
     // Note: Graph is responsible for ensuring that a particular edge's
     // connections match those of the nodes it is connected to (that is, the
     // output edge connected to start at startPort must be this, and likewise
@@ -114,7 +114,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     // vice versa, simply because one operation must be done before the other,
     // and checkRep is called from the methods that perform those operations.
   }
-  
+
   /**
    * Returns {@code start}, or {@code null} if {@code start} does not exist
    */
@@ -122,7 +122,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     return start;
   }
-  
+
   /**
    * Returns {@code startPort}<br/>
    * <br/>
@@ -135,7 +135,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       throw new IllegalStateException("No start node");
     return startPort;
   }
-  
+
   /**
    * Returns {@code end}, or {@code null} if {@code end} does not exist
    */
@@ -143,7 +143,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     return end;
   }
-  
+
   /**
    * Returns {@code endPort}<br/>
    * <br/>
@@ -156,13 +156,13 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       throw new IllegalStateException("No end node");
     return endPort;
   }
-  
+
   /**
    * Sets {@code start} to the {@code startNode}, replacing {@code start}'s old
    * value, if it exists<br/>
-   * 
+   *
    * Modifies: {@code this}
-   * 
+   *
    * @param startNode
    * The node to set to {@code start}. Must not be {@code null}.
    * @param port
@@ -177,7 +177,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       throw new IllegalStateException("Mutation attempted on constructed Edge");
     if (startNode == null)
       throw new IllegalArgumentException("node is null");
-    
+
     this.start = startNode;
     this.startPort = port;
     checkRep();
@@ -188,13 +188,13 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     setStart(startNode, Integer.toString(port));
   }
-  
+
   /**
    * Sets {@code end} to the {@code endNode}, replacing {@code end}'s old
    * value, if it exists<br/>
-   * 
+   *
    * Modifies: {@code this}
-   * 
+   *
    * @param endNode
    * The node to set to {@code end}. Must not be {@code null}.
    * @param port
@@ -209,7 +209,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
       throw new IllegalStateException("Mutation attempted on constructed Edge");
     if (endNode == null)
       throw new IllegalArgumentException("node is null");
-    
+
     this.end = endNode;
     this.endPort = port;
     checkRep();
@@ -220,7 +220,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     setEnd(endNode, Integer.toString(port));
   }
-  
+
   /**
    * Returns {@code underConstruction}
    */
@@ -228,7 +228,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
   {
     return underConstruction;
   }
-  
+
   /**
    * Sets {@code underConstruction} to {@code false}<br/>
    * <br/>
@@ -247,7 +247,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     underConstruction = false;
     checkRep();
   }
-  
+
   /**
    * Returns a {@code String} representation of {@code this} that does not
    * include its connections to {@link Node Nodes}.
@@ -258,7 +258,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     // implementation doesn't have much identifying information.
     return super.toString();
   }
-  
+
   @Override
   public String toString()
   {
