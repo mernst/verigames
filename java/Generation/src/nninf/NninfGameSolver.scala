@@ -66,7 +66,7 @@ class NninfGameSolver(
      * First, go through all variables and create a level for each occurring
      * class and a board for each occurring method.
      */
-    def createBoards(world: World) { 
+    def createBoards(world: World) {
       variables foreach { cvar => {
         cvar.varpos match {
           case mvar: WithinMethodVP => {
@@ -74,7 +74,7 @@ class NninfGameSolver(
 
             // Create/Find the board for the method.
             // val msig = mvar.getMethodSignature
-            val board: Board = variablePosToBoard(mvar) 
+            val board: Board = variablePosToBoard(mvar)
 
             if (mvar.isInstanceOf[ParameterVP]) {
               // For each parameter, create a CONNECT Intersection.
@@ -108,7 +108,7 @@ class NninfGameSolver(
             val level: Level = variablePosToLevel(clvar)
 
             // Create/Find the top-level board for the class.
-            val board: Board = variablePosToBoard(clvar) 
+            val board: Board = variablePosToBoard(clvar)
 
             if (clvar.isInstanceOf[FieldVP]) {
               // For a field type, create three things.
@@ -238,7 +238,7 @@ class NninfGameSolver(
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
                   }
-                  
+
                   if (sup.isInstanceOf[Variable] &&
                       sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
                     val supvar = sup.asInstanceOf[Variable]
@@ -303,7 +303,7 @@ class NninfGameSolver(
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               ctxBoard.addNode(con)
               ctxBoard.addEdge(subboard, 0, con, 0, createChute(receiver))
-              
+
               updateIntersection(ctxBoard, receiver, con)
             }
             { // Connect the result as output only
@@ -387,12 +387,12 @@ class NninfGameSolver(
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               callerBoard.addNode(con)
               callerBoard.addEdge(subboard, 0, con, 0, createChute(receiver))
-              
+
               updateIntersection(callerBoard, receiver, con)
             }
             { // TODO: type arguments
             }
-            { // Connect the arguments as inputs only 
+            { // Connect the arguments as inputs only
               for (anarg <- args) {
                 subboardPort += 1
 
@@ -577,7 +577,7 @@ class NninfGameSolver(
       board.addNode(start)
       val inthis = createThisChute()
       board.addEdge(incoming, incoming.getOutputs().size(), start, 0, inthis)
-      boardToSelfIntersection += (board -> start)   
+      boardToSelfIntersection += (board -> start)
     }
 
     /**
@@ -640,8 +640,9 @@ class NninfGameSolver(
         case v: Variable => {
           boardNVariableToIntersection((board, v))
         }
-        case LiteralThis =>
+        case LiteralThis => {
           boardToSelfIntersection(board)
+        }
         case LiteralNull => {
           val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
           board.addNode(res)
@@ -678,10 +679,12 @@ class NninfGameSolver(
 
     def updateIntersection(board: Board, slot: Slot, inters: Intersection) {
       slot match {
-        case v: Variable =>
+        case v: Variable => {
           boardNVariableToIntersection.update((board, v), inters)
-        case LiteralThis =>
+        }
+        case LiteralThis => {
           boardToSelfIntersection.update(board, inters)
+        }
         case LiteralNull => {
           // Nothing to do, we're always creating a new black ball
         }
@@ -707,15 +710,17 @@ class NninfGameSolver(
      * intersection is generated each time.
      */
     def isUniqueSlot(slot: Slot): Boolean = {
-      !(slot.isInstanceOf[Variable] || slot == LiteralThis) 
+      !(slot.isInstanceOf[Variable] || slot == LiteralThis)
     }
 
     def createChute(slot: Slot): Chute = {
       slot match {
-        case v: Variable =>
+        case v: Variable => {
           new Chute(v.id, v.toString())
-        case LiteralThis =>
+        }
+        case LiteralThis => {
           createThisChute()
+        }
         case LiteralNull => {
           val res = new Chute(-2, "null")
           res.setEditable(false)
