@@ -10,6 +10,20 @@ John Cheng (technical SETA)
 
 ===========================================================================
 
+Verigames simplifications (optimizations) to perform:
+ * peephole optimizations
+ * pinch points in a row (or dominated)
+ * eliminate boards if never called AND has no pinch points
+ * remove pipes?
+ * remove stubs where the ball rolls to the end of a pipe (the pipe
+   ends before the bottom of the board)
+ * any pipe that is guaranteed to succeed
+ * usused pipes (example: K in Map<K,V>?)
+ * leave some easy stuff so people feel like they are making progress?
+ * enable gradaton in scoring
+
+===========================================================================
+
 Verigames deliverables for Nat and Steph:
   file formats
   data structures
