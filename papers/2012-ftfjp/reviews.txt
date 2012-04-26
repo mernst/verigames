@@ -1,0 +1,148 @@
+Subject: FTfJP2012 notification for paper 11
+From: FTfJP2012 <ftfjp2012@easychair.org>
+To: "Michael D. Ernst" <mernst@cs.washington.edu>
+Date: Wed, 25 Apr 2012 16:08:15 +0100
+
+Re: Verification Games: Making Verification Fun!
+
+Dear Michael D. Ernst,
+
+Thank you for your submission to FTfJP 2012 workskop.
+
+We are pleased to inform you that your paper has
+been accepted for presentation at our workshop.
+Please find attached the reviews from the program
+committee. We hope you will take into consideration
+the reviewers comments during the revision of your paper.
+
+As the workshop will be published by ACM Press, we
+shall be glad if you can prepare for a camera-ready
+copy of the paper, according to the following
+instructions.
+
+  http://www.acm.org/publications/gi-proceedings
+
+The deadline for camera-ready paper is 14May2012.
+You can have upto 8 pages ACM format for the
+final paper.
+
+In due course, you will receive a request for signed
+copyright transfer. It is very important that
+you return the signed copyright transfer on a
+timely basis, since your paper cannot be
+published without it.
+
+Another important thing to prepare is to sort out the
+workshop/conference registration and hotel booking
+at your earliest convenience, via the site below:
+
+ http://pldi12.cs.purdue.edu/content/registration
+
+Lastly, we look forward to seeing you soon at
+FTfJP workshop on 12June in Beijing!
+
+Yours Sincerely,
+Aquinas and Wei-Ngan
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents an approach to perform formal verification via crowdsourcing. The main idea is to take a program verification instance that consists of a program and a property of interest and convert to a game that is played by a human. If the human solves the game, then we have a proof of correctness of the program with respect to the property, otherwise, the program could be buggy. Essentially, the solution to the game is automatically translated into a set of type annotations that are checked by a type checker.
+
+The idea in this paper is quite interesting, but there are somel things that are unclear from the paper. The most notable of these are:
+1)	While it is clear as to how one computes proofs of correctness, I’m unsure about how one find bugs using this approach. It would be nice if the authors can illustrate how their approach works with an example, in particular for buggy programs. How does one obtain a defect trace or test inputs that prove the presence of a property violation?
+2)	Is there a connection between difficulty of program verification instance and difficulty of a game?
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 2 (accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents the Verification Games project, and in particular
+the Pipe Jam prototype. The goal of the project is to transform a
+verification problem, expressed as a type inference problem for a
+given Java program, into a puzzle-style game. Beating the game then
+corresponds to proving that the property holds for the given program,
+while failing to do so may indiscriminately indicate a bug or an
+incompleteness in the type system.
+
+The approach is certainly interesting and relevant to the
+workshop. Bringing verification to the masses is an important and very
+much open problem, and this work seems to make a convincing step in
+the right direction.  The paper is well written and to the point, and
+I recommend its acceptance to FTfJP.
+
+I was not able to find a downloadable version of Pipe Jam to
+experiment with it, which is a shame. It would be great to have such a
+version available for the workshop, to generate discussion.
+
+
+
+Minor comments:
+
+- This form of crowd-sourcing has been exploited before with great
+success in molecular biology, with the game foldit. Some of the authors
+of the present paper contributed to its creation, and I was surprised
+to find no mention of foldit in the paper.
+
+- 1st § of the introduction: "Current approaches" is repeated 3 times in
+3 consecutive sentences, and "current" 4 times.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 3 (strong accept)
+REVIEWER'S CONFIDENCE: 2 (medium)
+
+SUMMARY
+
+The authors describe a technique of reducing a program verification
+task to a system of connected visual puzzles.
+
+EVALUATION
+
++ A wonderful and useful idea.  What a great collaboration
+  between PL and Gaming!
++ well written
++ well executed
+
+- The game play was not explained very much.  It would be nice to
+  have at least a video.  Also, it was not clear how names ""Crash
+  Wreckage" etc were assigned.  Ideally the names would reflect the
+  program structure and not be arbitrary humorous names.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 3 (strong accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents a very interesting idea on formal verification, 
+which tries to build the connection between the formal verification 
+and the game. Unlike doing some tough tasks like the current verification 
+process, in this work, people can verify a program by playing a well 
+designed game, and therefore have lots of fun.
+
+The presented work starts a new angle for re-considering the current 
+formal verification work, and could open a door for making end-users 
+involve in the formal verification, which seems impossible for current 
+formal verification activities. 
+
+One concern regarding the work is how to handle large scale programs 
+by the verification game?
