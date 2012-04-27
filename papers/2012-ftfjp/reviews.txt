@@ -53,11 +53,24 @@ AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walk
 OVERALL RATING: 1 (weak accept)
 REVIEWER'S CONFIDENCE: 3 (high)
 
-This paper presents an approach to perform formal verification via crowdsourcing. The main idea is to take a program verification instance that consists of a program and a property of interest and convert to a game that is played by a human. If the human solves the game, then we have a proof of correctness of the program with respect to the property, otherwise, the program could be buggy. Essentially, the solution to the game is automatically translated into a set of type annotations that are checked by a type checker.
+This paper presents an approach to perform formal verification via
+crowdsourcing. The main idea is to take a program verification instance
+that consists of a program and a property of interest and convert to a game
+that is played by a human. If the human solves the game, then we have a
+proof of correctness of the program with respect to the property,
+otherwise, the program could be buggy. Essentially, the solution to the
+game is automatically translated into a set of type annotations that are
+checked by a type checker.
 
-The idea in this paper is quite interesting, but there are somel things that are unclear from the paper. The most notable of these are:
-1)	While it is clear as to how one computes proofs of correctness, I’m unsure about how one find bugs using this approach. It would be nice if the authors can illustrate how their approach works with an example, in particular for buggy programs. How does one obtain a defect trace or test inputs that prove the presence of a property violation?
-2)	Is there a connection between difficulty of program verification instance and difficulty of a game?
+The idea in this paper is quite interesting, but there are somel things
+that are unclear from the paper. The most notable of these are:
+1)	While it is clear as to how one computes proofs of correctness, I’m
+unsure about how one find bugs using this approach. It would be nice if the
+authors can illustrate how their approach works with an example, in
+particular for buggy programs. How does one obtain a defect trace or test
+inputs that prove the presence of a property violation?
+2)	Is there a connection between difficulty of program verification
+instance and difficulty of a game?
 
 
 ----------------------- REVIEW 2 ---------------------
