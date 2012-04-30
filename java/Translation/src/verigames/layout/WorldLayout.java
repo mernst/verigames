@@ -37,6 +37,7 @@ public class WorldLayout
    *
    * @see BoardLayout#layout(verigames.level.Board) BoardLayout.layout(Board)
    */
+  // TODO docuemnt that all levels in w must not be under construction
   public static void layout(World w)
   {
     for (Level l : w.getLevels().values())

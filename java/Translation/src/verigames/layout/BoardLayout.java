@@ -49,6 +49,7 @@ public class BoardLayout
    *
    * @see WorldLayout#layout(verigames.level.World) WorldLayout.layout(World)
    */
+  // TODO docuemnt that b must not be under construction
   public static void layout(Board b)
   {
     GraphInformation info;
