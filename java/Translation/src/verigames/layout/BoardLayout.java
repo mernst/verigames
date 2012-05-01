@@ -1,5 +1,8 @@
 package verigames.layout;
 
+import static verigames.layout.Misc.getIntersectionHeight;
+import static verigames.layout.Misc.usesPorts;
+import static verigames.level.Intersection.Kind.*;
 import static verigames.utilities.Misc.ensure;
 
 import java.util.ArrayList;
@@ -8,6 +11,7 @@ import java.util.List;
 
 import verigames.level.Board;
 import verigames.level.Chute;
+import verigames.level.Intersection.Kind;
 import verigames.level.Intersection;
 import verigames.utilities.Pair;
 
@@ -181,7 +185,7 @@ public class BoardLayout
     for (Intersection n : b.getNodes())
       scaleNodeY(scaleFactor, n);
     for (Chute c : b.getEdges())
-      scaleEdgeY(scaleFactor, c);
+      scaleEdgeY(c);
   }
 
   /**
@@ -195,19 +199,54 @@ public class BoardLayout
   }
 
   /**
-   * Scales the Y coordinates of the given edge by the given factor.
+   * Scales the Y coordinates of the given edge to reach the Y coordinates of
+   * its endpoints.
    * <p>
    * Modifies {@code edge}
    */
-  private static void scaleEdgeY(double scaleFactor, Chute edge)
+  private static void scaleEdgeY(Chute edge)
+  {
+    Intersection start = edge.getStart();
+    Intersection end = edge.getEnd();
+
+    Kind startKind = start.getIntersectionKind();
+
+    double startHeight;
+    // TODO update to include GET node once the rest of layout behaves properly
+    // with it
+    if (startKind == SUBBOARD)
+      startHeight = getIntersectionHeight(SUBBOARD);
+    else
+      startHeight = 0;
+    
+    // the place where the edge should start is the y coordinate of the start
+    // node plus its height, because the y coordinate refers to the top of the
+    // node.
+    double startY = start.getY() + startHeight;
+    double endY = end.getY();
+
+    scaleEdgeY(startY, endY, edge);
+  }
+
+  /**
+   * Scales the Y coordinates of the given edge so that the top is at {@code
+   * start} and the bottom is at {@code end}
+   */
+  private static void scaleEdgeY(double start, double end, Chute edge)
   {
     List<Pair<Double, Double>> oldLayout = edge.getLayout();
+    double oldStart = oldLayout.get(0).getSecond();
+    double oldEnd = oldLayout.get(oldLayout.size() - 1).getSecond();
+    
+    double factor = (end - start) / (oldEnd - oldStart);
+    double offset = start - factor * oldStart;
+
     List<Pair<Double, Double>> newLayout = new ArrayList<Pair<Double, Double>>();
     
     for (Pair<Double, Double> point : oldLayout)
     {
       double x = point.getFirst();
-      double y = point.getSecond() * scaleFactor;
+      double y = point.getSecond() * factor + offset;
 
       Pair<Double, Double> newPoint = Pair.of(x,y);
       newLayout.add(newPoint);

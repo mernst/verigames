@@ -16,7 +16,8 @@ public class LayoutImpTests
   /**
    * The current height of a subboard, as rendered by the game
    */
-  private static double SUBBOARD_HEIGHT = 1.46;
+  private static final double SUBBOARD_HEIGHT =
+      Misc.getIntersectionHeight(Intersection.Kind.SUBBOARD);
 
   /**
    * Addresses a bug where y coordinates of short boards would be scaled
