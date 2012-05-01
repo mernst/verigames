@@ -1,5 +1,8 @@
 package verigames.layout;
 
+import static verigames.layout.Misc.getIntersectionHeight;
+import static verigames.layout.Misc.usesPorts;
+
 import java.io.PrintStream;
 import java.lang.ref.WeakReference;
 
@@ -85,19 +88,6 @@ class DotPrinter extends AbstractDotPrinter
       out.print(suffix);
     }
 
-    // TODO add documentation and add support for GET nodes
-    private static double getIntersectionHeight(Intersection.Kind kind)
-    {
-      if (!usesPorts(kind))
-        return 0;
-      else if (kind == Intersection.Kind.SUBBOARD)
-        return 1.46;
-      else if (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING)
-        return 0;
-      else
-        return 1;
-    }
-
     /**
      * Generates a list of ports from 0 to (n-1) for use in a label for a
      * Graphviz record node.
@@ -172,20 +162,6 @@ class DotPrinter extends AbstractDotPrinter
   public DotPrinter()
   {
     super(new NodePrinter(), edgePrinter);
-  }
-
-  /**
-   * Returns true iff the given {@link Kind} of {@link Intersection} has its
-   * ports represented explicitly when it is printed to DOT.
-   * <p>
-   * Most {@code Intersection}s don't need the port information expressed,
-   * because they are essentially points. However, some are larger, and need to
-   * have chutes connected to different parts of them, so they have their ports
-   * represented explicitly.
-   */
-  private static boolean usesPorts(Kind k)
-  {
-    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBBOARD;
   }
 
   @Override
