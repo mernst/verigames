@@ -54,6 +54,8 @@ import java.util.TreeMap;
  * 
  * @author Nathaniel Mote
  */
+// TODO document which kind of coordinate system this uses for layout (where the
+// origin is, whether coordinates represent top-left or center...)
 
 public class Intersection extends verigames.graph.Node<Chute>
 {

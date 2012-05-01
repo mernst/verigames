@@ -85,6 +85,7 @@ class DotPrinter extends AbstractDotPrinter
       out.print(suffix);
     }
 
+    // TODO add documentation and add support for GET nodes
     private static double getIntersectionHeight(Intersection.Kind kind)
     {
       if (!usesPorts(kind))
