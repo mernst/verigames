@@ -47,13 +47,15 @@ abstract class GameSolver(
       val res = new HashMap[AbstractVariable, AnnotationMirror]
       variables foreach { v => {
         res += (v -> v.getAnnotation())
-      }} 
+      }}
       Some(res.toMap)
     }
 
     // InferenceMain already measures the time that the solver overall takes.
     // We cannot measure the time used by the human, so just suppress this.
     def timing: String = null
+
+    def version: String = "GameSolver version 0.1"
 
     /**
      * Create the world!
