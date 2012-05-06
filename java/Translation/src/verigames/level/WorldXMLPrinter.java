@@ -15,6 +15,8 @@ import nu.xom.*;
 
 public class WorldXMLPrinter extends Printer<World, Void>
 {
+  public static final int version = 1;
+
   /**
    * Prints the XML representation for {@code toPrint}<br/>
    * 
@@ -34,6 +36,8 @@ public class WorldXMLPrinter extends Printer<World, Void>
   protected void printMiddle(World toPrint, PrintStream out, Void data)
   {
     Element worldElt = new Element("world");
+    Attribute versionAttr = new Attribute("version", Integer.toString(version));
+    worldElt.addAttribute(versionAttr);
     
     for (Map.Entry<String, Level> entry : toPrint.getLevels().entrySet())
     {

@@ -15,6 +15,8 @@ import verigames.utilities.Pair;
  */
 public class WorldXMLParser
 {
+  public static final int version = 1;
+
   /**
    * Parses the text from {@code in} as XML, and returns a {@link World} object
    * representing the same information.
@@ -61,6 +63,16 @@ public class WorldXMLParser
   private static World processWorld(final Element worldElt)
   {
     checkName(worldElt, "world");
+
+    // check version
+    {
+      Attribute versionAttr = worldElt.getAttribute("version");
+      int XMLVersion = Integer.parseInt(versionAttr.getValue());
+
+      if (XMLVersion != version)
+        throw new IllegalArgumentException("Parser expected version " + version
+            +" but XML is version " + XMLVersion);
+    }
 
     final World w = new World();
 

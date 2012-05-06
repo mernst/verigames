@@ -1,4 +1,5 @@
 <!ELEMENT world (level*)>
+ <!ATTLIST world version (1) #REQUIRED>
  <!ELEMENT level (linked-edges,boards)>
   <!ATTLIST level name CDATA #REQUIRED>
   <!ELEMENT linked-edges (edge-set*)>
