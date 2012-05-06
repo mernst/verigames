@@ -62,6 +62,8 @@ class NninfGameSolver(
      */
     val boardToSelfIntersection = new HashMap[Board, Intersection]
 
+    override def version: String = super.version + "\nNninfGameSolver version 0.1"
+
     /**
      * First, go through all variables and create a level for each occurring
      * class and a board for each occurring method.
