@@ -21,6 +21,13 @@ public class Basic {
 
       // flow refines b -> ok
       foo(b);      
+      
+      TestInterface interf = new TestClass();
+
+      //:: error: (argument.type.incompatible)      
+      interf.myMethod(s);
+      
+      interf.myMethod(b);
   }
 
   void concat(String s) {
@@ -35,5 +42,16 @@ public class Basic {
 
   String foo(@Trusted String s2) {
       return s2;
+  }
+  
+
+  interface TestInterface {
+	  public void myMethod(@Trusted String s);
+  }
+
+  class TestClass implements TestInterface {
+	  public void myMethod(String s) {
+		  return;
+	  }
   }
 }
