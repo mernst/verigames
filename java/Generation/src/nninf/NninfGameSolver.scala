@@ -10,18 +10,7 @@ import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
 import games.GameSolver
 
-class NninfGameSolver(
-    /** All variables used in this program. */
-    variables: List[Variable],
-    /** Empty, b/c there is no viewpoint adaptation (yet?). */
-    combvariables: List[CombVariable],
-    /** All constraints that have to be fulfilled. */
-    constraints: List[Constraint],
-    /** Weighting information. Currently empty & ignored, as a human solves the game. */
-    weights: List[WeightInfo],
-    /** The command-line parameters. */
-    params: TTIRun)
-  extends GameSolver(variables, combvariables, constraints, weights, params) {
+class NninfGameSolver extends GameSolver {
 
     // TODO: ensure that no CombVariables were created
     // assert combvariables.length == 0

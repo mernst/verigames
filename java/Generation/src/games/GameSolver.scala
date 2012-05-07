@@ -12,20 +12,36 @@ import checkers.inference.AbstractLiteral
 /**
  * An abstract base class for all game solvers.
  */
-abstract class GameSolver(
-    /** All variables used in this program. */
-    variables: List[Variable],
-    /** Empty, b/c there is no viewpoint adaptation (yet?). */
-    combvariables: List[CombVariable],
-    /** All constraints that have to be fulfilled. */
-    constraints: List[Constraint],
-    /** Weighting information. Currently empty & ignored, as a human solves the game. */
-    weights: List[WeightInfo],
-    /** The command-line parameters. */
-    params: TTIRun)
-  extends ConstraintSolver(variables, combvariables, constraints, weights, params) {
+abstract class GameSolver extends ConstraintSolver {
 
-    def solve(): Option[Map[AbstractVariable, AnnotationMirror]] = {
+    /** All variables used in this program. */
+    var variables: List[Variable] = null
+
+    /** Empty, b/c there is no viewpoint adaptation (yet?). */
+    var combvariables: List[CombVariable] = null
+
+    /** All constraints that have to be fulfilled. */
+    var constraints: List[Constraint] = null
+
+    /** Weighting information. Currently empty & ignored, as a human solves the game. */
+    var weights: List[WeightInfo] = null
+
+    /** The command-line parameters. */
+    var params: TTIRun = null
+
+
+    def solve(variables: List[Variable],
+    combvariables: List[CombVariable],
+    constraints: List[Constraint],
+    weights: List[WeightInfo],
+    params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
+
+      this.variables = variables
+      this.combvariables = combvariables
+      this.constraints = constraints
+      this.weights = weights
+      this.params = params
+
       // Create the world!
       val world = createWorld()
 
@@ -55,7 +71,9 @@ abstract class GameSolver(
     // We cannot measure the time used by the human, so just suppress this.
     def timing: String = null
 
-    def version: String = "GameSolver version 0.1"
+    def version: String = "GameSolver version 0.1\n" +
+      "WorldXMLPrinter version " + WorldXMLPrinter.version +
+      " WorldXMLParser version " + WorldXMLParser.version
 
     /**
      * Create the world!
