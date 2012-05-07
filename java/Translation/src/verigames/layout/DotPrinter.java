@@ -124,8 +124,9 @@ class DotPrinter extends AbstractDotPrinter
        * side and enter the "north" side of nodes. */
       String start = getNodeString(e.getStart(), "o", e.getStartPort(), ":s");
       String end = getNodeString(e.getEnd(), "i", e.getEndPort(), ":n");
+      String label = Integer.toString(e.getUID());
 
-      out.println(start + " -> " + end + ";");
+      out.println(start + " -> " + end + " [label=" + label + "];");
     }
 
     /**

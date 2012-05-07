@@ -205,14 +205,12 @@ class DotParser
    */
   private static class EdgeRecord
   {
-    public final String start;
-    public final String end;
+    public final String label;
     public final GraphInformation.EdgeAttributes attributes;
     
-    public EdgeRecord(String start, String end, GraphInformation.EdgeAttributes attributes)
+    public EdgeRecord(String label, GraphInformation.EdgeAttributes attributes)
     {
-      this.start = start;
-      this.end = end;
+      this.label = label;
       this.attributes = attributes;
     }
   }
@@ -250,7 +248,7 @@ class DotParser
         break;
       case EDGE:
         EdgeRecord edge = parseEdge(line);
-        builder.setEdgeAttributes(edge.start, edge.end, edge.attributes);
+        builder.setEdgeAttributes(edge.label, edge.attributes);
         break;
       case NODE_PROPERTIES:
         nodeDefaults = parseNodeDefaults(line, nodeDefaults);
@@ -488,11 +486,8 @@ class DotParser
     if (tokens.length < 4)
       throw new IllegalLineException("Edge line without needed attributes: " + line);
     
-    // the port number isn't needed, so we remove it
-    String start = stripPortNumber(tokens[0]);
-    String end = stripPortNumber(tokens[2]);
-    
     String pos = null;
+    String labelString = null;
     
     // search for a position attribute, starting at the token after the end
     // node id
@@ -502,17 +497,29 @@ class DotParser
       
       if (cur.matches("^pos=.*"))
         pos = cur;
+      if (cur.matches("^label=.*"))
+        labelString = cur;
     }
     
     if (pos == null)
       throw new IllegalLineException("No position information: " + line);
+
+    if (labelString == null)
+      throw new IllegalLineException("No label information: " + line);
     
     // The pos attribute takes the form
     // pos="xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy"
     // where the number of points is at least 4, and congruent to 1 (mod 3)
+    //
+    // The label attribute takes the form
+    // label=
     
     try
     {
+      // get the label by splitting around the equals sign, removiong quotes,
+      // and trimming whitespace.
+      String label = labelString.split("=")[1].replace("\"", "").trim();
+
       // split around quotes, and take only the part with coordinates
       String coordsString = pos.split("\"")[1];
       
@@ -554,7 +561,7 @@ class DotParser
             ") -- must be greater than 1 and congruent to 1 (mod 3): " +
             line);
       
-      return new EdgeRecord(start, end, new GraphInformation.EdgeAttributes(points));
+      return new EdgeRecord(label, new GraphInformation.EdgeAttributes(points));
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -592,19 +599,6 @@ class DotParser
       height = nodeDefaults.height;
 
     return new NodeDefaults(width, height);
-  }
-
-  /**
-   * Takes a {@code String} representing a node and, optionally, a port, and
-   * return just the part representing the node.
-   *
-   * @param in
-   * Must be of the form "[node]:[port]", where [node] and [port] must be
-   * strings of alphanumeric characters.
-   */
-  private static String stripPortNumber(String in)
-  {
-    return in.split(":")[0];
   }
 
   /**

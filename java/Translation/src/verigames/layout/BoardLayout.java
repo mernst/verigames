@@ -109,24 +109,12 @@ public class BoardLayout
 
     for (Chute c : b.getEdges())
     {
-      String startUID = Integer.toString(c.getStart().getUID());
-      String endUID = Integer.toString(c.getEnd().getUID());
+      String chuteUID = Integer.toString(c.getUID());
       
       GraphInformation.EdgeAttributes edgeAttrs; 
       
-      boolean reversed;
-      
-      if (info.containsEdge(startUID, endUID))
-      {
-        edgeAttrs = info.getEdgeAttributes(startUID, endUID);
-        reversed = false;
-      }
-      else
-      {
-        edgeAttrs = info.getEdgeAttributes(endUID, startUID);
-        reversed = true;
-      }
-      
+      edgeAttrs = info.getEdgeAttributes(chuteUID);
+
       List<Pair<Double, Double>> layout = new ArrayList<Pair<Double, Double>>();
       
       for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
@@ -135,9 +123,6 @@ public class BoardLayout
         
         layout.add(coords);
       }
-      
-      if (reversed)
-        Collections.reverse(layout);
       
       /* if the start node is an INCOMING node, cheat a little bit and set the
        * starting y coordinate to 0. It's pretty close to 0 already, but it's

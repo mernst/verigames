@@ -30,7 +30,7 @@ class GraphInformation
 {
   private final GraphAttributes graphAttributes;
   private final Map<String, NodeAttributes> nodeAttributes;
-  private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
+  private final Map<String, EdgeAttributes> edgeAttributes;
   
   /**
    * Creates a new GraphInformation object with the given mappings from Node
@@ -39,7 +39,7 @@ class GraphInformation
    * Private because it can only be created by a {@code Builder}
    */
   private GraphInformation(GraphAttributes graphAttributes,
-      Map<String, NodeAttributes> nodeAttributes, Map<Pair<String, String>, EdgeAttributes> edgeAttributes)
+      Map<String, NodeAttributes> nodeAttributes, Map<String, EdgeAttributes> edgeAttributes)
   {
     this.graphAttributes = graphAttributes;
     
@@ -47,7 +47,7 @@ class GraphInformation
         .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
     
     this.edgeAttributes = Collections.unmodifiableMap(
-        new HashMap<Pair<String, String>, EdgeAttributes>(edgeAttributes));
+        new HashMap<String, EdgeAttributes>(edgeAttributes));
   }
   
   /**
@@ -84,13 +84,13 @@ class GraphInformation
    * @param startNode
    * @param endNode
    */
-  public EdgeAttributes getEdgeAttributes(String startNode, String endNode)
+  public EdgeAttributes getEdgeAttributes(String label)
   {
-    if (!this.containsEdge(startNode, endNode))
-      throw new IllegalArgumentException("No edge from \"" + startNode +
-          "\" to \"" + endNode + "\"");
+    if (!this.containsEdge(label))
+      throw new IllegalArgumentException("No edge with label \"" + label +
+          "\"");
     
-    return edgeAttributes.get(new Pair<String, String>(startNode, endNode));
+    return edgeAttributes.get(label);
   }
   
   /**
@@ -107,7 +107,7 @@ class GraphInformation
    * Returns a {@code Set<Pair<String, String>>} containing all of the edges in
    * {@code this}.
    */
-  public Set<Pair<String, String>> getEdges()
+  public Set<String> getEdges()
   {
     // wrap it as unmodifiable once more in case the implementation changes,
     // even though edgeAttributes is also unmodifiable.
@@ -132,10 +132,9 @@ class GraphInformation
    * @param startNode
    * @param endNode
    */
-  public boolean containsEdge(String startNode, String endNode)
+  public boolean containsEdge(String label)
   {
-    return edgeAttributes.containsKey(new Pair<String, String>(startNode,
-        endNode));
+    return edgeAttributes.containsKey(label);
   }
   
   /**
@@ -183,12 +182,12 @@ class GraphInformation
   {
     private /*@LazyNonNull*/ GraphAttributes graphAttributes;
     private final Map<String, NodeAttributes> nodeAttributes;
-    private final Map<Pair<String, String>, EdgeAttributes> edgeAttributes;
+    private final Map<String, EdgeAttributes> edgeAttributes;
     
     public Builder()
     {
       nodeAttributes = new HashMap<String, NodeAttributes>();
-      edgeAttributes = new HashMap<Pair<String, String>, EdgeAttributes>();
+      edgeAttributes = new HashMap<String, EdgeAttributes>();
       graphAttributes = null;
     }
     
@@ -238,9 +237,9 @@ class GraphInformation
      * @param endNode
      * The ID of the ending node for this edge.
      */
-    public void setEdgeAttributes(String startNode, String endNode, EdgeAttributes attributes)
+    public void setEdgeAttributes(String label, EdgeAttributes attributes)
     {
-      edgeAttributes.put(new Pair<String, String>(startNode, endNode), attributes);
+      edgeAttributes.put(label, attributes);
     }
     
     /**
