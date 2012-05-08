@@ -1,4 +1,4 @@
-package nninf;
+package sqltrusted;
 
 import java.io.File;
 import java.util.Collection;
@@ -9,8 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import checkers.util.test.ParameterizedCheckerTest;
 
-
-public class NninfTests {
+public class SqlTrustedTests {
 
     public static void main(String[] args) {
         org.junit.runner.JUnitCore jc = new org.junit.runner.JUnitCore();
@@ -31,12 +30,12 @@ public class NninfTests {
 
     public static class Tests extends ParameterizedCheckerTest {
         public Tests(File testFile) {
-            super(testFile, "nninf.NninfChecker", "nninf", "-Anomsgtext");
+            super(testFile, "sqltrusted.SqlTrustedChecker", "sqltrusted", "-Anomsgtext");
         }
 
         @Parameters
         public static Collection<Object[]> data() {
-            return testFiles("nninf");
+            return testFiles("sqltrusted");
         }
     }
 }

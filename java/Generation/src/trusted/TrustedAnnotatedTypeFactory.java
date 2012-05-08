@@ -1,7 +1,5 @@
 package trusted;
 
-import trusted.quals.Trusted;
-import trusted.quals.Untrusted;
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
@@ -39,10 +37,10 @@ public class TrustedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Trust
 	            AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
 	            AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());
 	
-	            if (lExpr.hasAnnotation(Trusted.class) && rExpr.hasAnnotation(Trusted.class)) {
-	            	type.addAnnotation(Trusted.class);
+	            if (lExpr.hasAnnotation(checker.TRUSTED) && rExpr.hasAnnotation(checker.TRUSTED)) {
+	            	type.addAnnotation(checker.TRUSTED);
 	            } else {
-	            	type.addAnnotation(Untrusted.class);
+	            	type.addAnnotation(checker.UNTRUSTED);
 	            }
 	        }
 	        return super.visitBinary(tree, type);
