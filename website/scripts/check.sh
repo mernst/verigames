@@ -1,4 +1,4 @@
-export CLASSPATH=../java/verigames.jar
+CLASSPATH=../../java/Generation/bin/:../java/verigames.jar
 
 # This actually creates ambiguity between nullness and nninf!
 # export jsr308_imports=checkers.interning.quals.*:checkers.nullness.quals.*:checkers.regex.quals.*:checkers.signature.quals.*
@@ -13,6 +13,8 @@ if [ "$ME" == "check-nninf.sh" ] ; then
   eval "$JAVAC -processor nninf.NninfChecker $*";
 elif [ "$ME" == "check-trusted.sh" ] ; then
   eval "$JAVAC -processor trusted.TrustedChecker $*";
+elif [ "$ME" == "check-sqltrusted.sh" ] ; then
+  eval "$JAVAC -processor sqltrusted.SqlTrustedChecker $*";
 else
   echo "Incorrect usage: $ME";
 fi

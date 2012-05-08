@@ -1,6 +1,8 @@
 package sqltrusted;
 
 import trusted.TrustedChecker;
+import trusted.quals.Trusted;
+import trusted.quals.Untrusted;
 import sqltrusted.quals.SqlTrusted;
 import sqltrusted.quals.SqlUntrusted;
 
@@ -16,9 +18,9 @@ public class SqlTrustedChecker extends TrustedChecker implements
         InferenceTypeChecker {
 
     @Override
-    public void initChecker(ProcessingEnvironment env) {
+    protected void setAnnotations() {
     	AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
-        initChecker(env, annoFactory.fromClass(SqlTrusted.class), annoFactory.fromClass(SqlUntrusted.class));
+        UNTRUSTED = annoFactory.fromClass(SqlUntrusted.class);
+        TRUSTED = annoFactory.fromClass(SqlTrusted.class);
     }
-
 }

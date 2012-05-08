@@ -1,7 +1,5 @@
 package trusted;
 
-import trusted.quals.Trusted;
-import trusted.quals.Untrusted;
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;

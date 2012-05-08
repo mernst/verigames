@@ -25,14 +25,14 @@ public class TrustedChecker extends BaseTypeChecker implements
 
     @Override
     public void initChecker(ProcessingEnvironment env) {
-    	AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
-        initChecker(env, annoFactory.fromClass(Trusted.class), annoFactory.fromClass(Untrusted.class));
+    	super.initChecker(env);
+    	setAnnotations();
     }
     
-    public void initChecker(ProcessingEnvironment env, AnnotationMirror trusted, AnnotationMirror untrusted) {
-    	super.initChecker(env);
-        UNTRUSTED = untrusted;
-        TRUSTED = trusted;
+    protected void setAnnotations() {
+    	AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
+        UNTRUSTED = annoFactory.fromClass(Untrusted.class);
+        TRUSTED = annoFactory.fromClass(Trusted.class);
     }
 
     @Override
