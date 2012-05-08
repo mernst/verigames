@@ -2,8 +2,8 @@
  * Contains classes that add layout information to a board using Graphviz.
  * <p>
  * The layout tools all require that Graphviz be installed on the system. In
- * particular, the "dot" tool (one of Graphviz's layout algorithms) must be
- * invokable from the command line.
+ * particular, the "dot" tool (one of Graphviz's layout tools) must be invokable
+ * from the command line.
  * <p>
  * On a modern machine, the layout tool should be able to lay out a moderately
  * sized world (~50 boards) in no more than a second. This time should increase
@@ -36,40 +36,12 @@
  * <p>
  * <h3>Layout algorithm:</h3>
  * <p>
- * The layout is performed in a somewhat unusual way, due to the specific
- * requirements of this problem, which are documented in world.dtd at the top
- * level of this repository.
- * <p>
- * The algorithm makes two layout passes -- one where the nodes are assigned
- * coordinates, and one where the edge paths are found.
- * <p>
- * The reason for this is the way the code enforces the game's requirement that
- * nodes be a certain distance apart. Graphviz does not have a way to express
- * this requirement directly, so instead the first layout pass uses unnaturally
- * large nodes, where the width and height of a node encode the minimum distance
- * to the right and to the bottom, respectively, that another node can be from
- * it. The top left corner is then considered the node's position. This produces
- * a node layout that satisfies the game's requirements, but the resulting
- * layout has essentially garbage edge paths. This is because there is a
- * requirement that nodes be a certain distance from each other, depending on
- * the type of the node. The most precise way to express this requirement is to
- * simply represent each node as a rectangle.
- * <p>
- * However, in the game, most nodes are discrete points. They simply indicate
- * where one or more edges terminate, and typically have no graphical
- * representation beyond that (some nodes are an exception to this, but they are
- * less common). Edges must start and end exactly at the positions of their
- * nodes. However, in the layout above, edges start and end at the edges of the
- * rectangles (it is also possible to make them start and end at the center of
- * the rectangles, but that doesn't solve the problem -- the node coordinates
- * are considered to be the top left).
- * <p>
- * Because of this, we run Graphviz a second time. This time, the node positions
- * from the first pass are used, and Graphviz is instructed not to change them.
- * Most nodes are effectively discrete points (though they are not always
- * represented that way -- see {@link verigames.layout.NodeLayoutPrinter} for details),
- * with edges going from node to node. So, given the node positions, Graphviz
- * simply lays out the edges, and the spline control points are harvested.
+ * Layout is performed in a single pass using the dot tool, which lays out
+ * directed graphs hierarchically. Subboard and Get nodes, which have non-zero
+ * dimensions, are represented to Graphviz as "record" nodes, and are given
+ * ports. Other nodes, which are not visually represented in the game (they are
+ * just points where edges connect), are represented as circles. This makes dot
+ * route the edges away from the nodes to reduce confusion.
  * <p>
  * <h3>Making changes:</h3>
  * <p>
@@ -79,10 +51,9 @@
  * <ol>
  * <li>
  * The first is through the input that Graphviz is given. This is controlled by
- * {@link verigames.layout.GraphvizPrinter}, and its subclasses {@link
- * verigames.layout.DotPrinter} and {@link verigames.layout.NodeLayoutPrinter}. What it
- * prints can drastically change the layout, as this determines the behavior of
- * Graphviz itself.
+ * {@link verigames.layout.AbstractDotPrinter}, and its subclass {@link
+ * verigames.layout.DotPrinter}. What it prints can drastically change the
+ * layout, as this determines the behavior of Graphviz itself.
  * <p>
  * The attributes that can be included are described <a
  * href="http://www.graphviz.org/content/attrs">here</a>.
@@ -93,10 +64,11 @@
  * {@link verigames.layout.BoardLayout}.
  * <p>
  * If more information is needed from the Graphviz output, three things must be
- * done. First, {@link verigames.layout.GraphInformation} must be updated to store the
- * required data. Second, {@link verigames.layout.DotParser} must be updated to parse the
- * required information and store it to {@code GraphInformation}. Then, {@link
- * verigames.layout.BoardLayout} must be updated to use the new information.
+ * done. First, {@link verigames.layout.GraphInformation} must be updated to
+ * store the required data. Second, {@link verigames.layout.DotParser} must be
+ * updated to parse the required information and store it to {@code
+ * GraphInformation}. Then, {@link verigames.layout.BoardLayout} must be updated
+ * to use the new information.
  * </li>
  * </ol>
  */

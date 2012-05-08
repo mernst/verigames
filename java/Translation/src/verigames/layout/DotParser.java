@@ -72,10 +72,15 @@ class DotParser
    */
   public static GraphInformation parse(String dotOutput)
   {
+    // the builder that is used to construct the returned GraphInformation
     final GraphInformation.Builder out = new GraphInformation.Builder();
     
     Scanner in = new Scanner(dotOutput);
 
+    // Stores the default attributes for a node. Graphviz can simply state what
+    // the defaults are, and then until they are updated, all following nodes
+    // are assumed to have these default attributes, unless otherwise stated.
+    // So, it's important to keep track of these defaults.
     NodeDefaults nodeDefaults = new NodeDefaults(null, null);
     
     while (in.hasNextLine())
@@ -105,8 +110,12 @@ class DotParser
    */
   private static String getNextLogicalLine(Scanner in)
   {
+    // get the next complete line. newlines can be escaped by a backslash, so
+    // this gets the next line, ignoring escaped newlines.
     String line = getNextCompleteLine(in);
 
+    // if this line doesn't have matching brackets, append the next line,
+    // because the next one logically belongs with this one.
     while (!hasMatchingBrackets(line))
       line += getNextCompleteLine(in);
 
@@ -152,7 +161,8 @@ class DotParser
       }
       catch (NoSuchElementException e)
       {
-        throw new IllegalArgumentException("Poorly formed input -- \\ found at end of last line", e);
+        throw new IllegalArgumentException(
+            "Poorly formed input -- \\ found at end of last line", e);
       }
 
       // Join the current line with the next line, and remove the \ at the end
@@ -162,9 +172,14 @@ class DotParser
 
     return line;
   }
-  
-  private static enum LineKind {GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER}
-  
+
+  /**
+   * An enum used to describe the nature of a line of input. Used to direct
+   * parsing.
+   */
+  private static enum LineKind
+      { GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER }
+
   /**
    * An immutable record type that stores the name of a node along with its
    * attributes.
@@ -198,7 +213,7 @@ class DotParser
       this.height = height;
     }
   }
-  
+
   /**
    * An immutable record type that stores the start and end nodes of an edge
    * along with its attributes.
@@ -233,12 +248,17 @@ class DotParser
    * The new default settings for nodes (will be {@code nodeDefaults} unless
    * {@code line} is a node properties line).
    */
-  private static NodeDefaults parseLine(String line, GraphInformation.Builder builder, NodeDefaults nodeDefaults) throws IllegalLineException
+  private static NodeDefaults parseLine(String line,
+                                        GraphInformation.Builder builder,
+                                        NodeDefaults nodeDefaults)
+                                        throws IllegalLineException
   {
     switch (getLineKind(line))
     {
       case GRAPH_PROPERTIES:
         GraphInformation.GraphAttributes graph = parseGraphAttributes(line);
+        // graph can be null if the graph attributes on this line are not
+        // relevant
         if (graph != null)
           builder.setGraphAttributes(graph);
         break;
@@ -284,7 +304,8 @@ class DotParser
       /* else, there should be at least two tokens ("}" and "{" are the only
        * 1-token lines) */
       // If the line is the start or end of a graph, return OTHER
-      else if ((tokens[0].equals("digraph") || tokens[0].equals("graph")) && tokens[1].equals("{"))
+      else if ((tokens[0].equals("digraph") || tokens[0].equals("graph")) &&
+                tokens[1].equals("{"))
         return LineKind.OTHER;
       else if (tokens[0].equals("graph"))
         return LineKind.GRAPH_PROPERTIES;
@@ -329,7 +350,7 @@ class DotParser
     
     for (String s : tokens)
     {
-      if (s.matches("^bb=.*"))
+      if (s.startsWith("bb="))
         bb = s;
     }
     
@@ -361,28 +382,33 @@ class DotParser
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw new IllegalLineException("bounding box attribute poorly formed: " + line);
+      throw new IllegalLineException("bounding box attribute poorly formed: " +
+                                     line);
     }
     catch (NumberFormatException e)
     {
-      throw new IllegalLineException("bounding box attribute poorly formed: " + line);
+      throw new IllegalLineException("bounding box attribute poorly formed: " +
+                                     line);
     }
     
     if (xStart != 0 || yStart != 0)
-      throw new IllegalLineException("bottom-left corner of bounding box not at (0,0) -- it is (" + xStart + "," + yStart + ")");
+      throw new IllegalLineException(
+          "bottom-left corner of bounding box not at (0,0) -- it is (" +
+          xStart + "," + yStart + ")");
     
     return new GraphInformation.GraphAttributes(xEnd, yEnd);
   }
   
   /**
-   * Takes a logical Graphviz line representing a node and returns a NodeRecord
-   * object containing the information from it.
+   * Takes a logical Graphviz line representing a node and returns a {@link
+   * NodeRecord NodeRecord} object containing the information from it.
    * 
    * @param line
    * Must be a valid, logical line of Graphviz output describing attributes of
    * a node.
    */
-  private static NodeRecord parseNode(String line, NodeDefaults nodeDefaults) throws IllegalLineException
+  private static NodeRecord parseNode(String line, NodeDefaults nodeDefaults)
+      throws IllegalLineException
   {
     // an example of a node line:
     // '   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];'
@@ -407,13 +433,13 @@ class DotParser
     for (String cur : tokens)
     {
       // if the string starts with "pos"
-      if (cur.matches("^pos=.*"))
+      if (cur.startsWith("pos="))
         pos=cur;
       
-      if (cur.matches("^width=.*"))
+      if (cur.startsWith("width="))
         widthStr=cur;
       
-      if (cur.matches("^height=.*"))
+      if (cur.startsWith("height="))
         heightStr=cur;
     }
     
@@ -421,8 +447,8 @@ class DotParser
     if (pos == null)
       throw new IllegalLineException("No position information: " + line);
 
-    Integer width = parseNullableDimension(widthStr);
-    Integer height = parseNullableDimension(heightStr);
+    /*@Nullable*/ Integer width = parseNullableDimension(widthStr);
+    /*@Nullable*/ Integer height = parseNullableDimension(heightStr);
 
     // if no width or height exists, use the default values.
     if (width == null)
@@ -468,6 +494,14 @@ class DotParser
     }
   }
   
+  /**
+   * Takes a logical Graphviz line representing an edge and returns an {@link
+   * EdgeRecord EdgeRecord} object containing the relevant information from it.
+   *
+   * @param line
+   * Must be a valid, logical line of Graphviz output describing attributes of
+   * an edge.
+   */
   private static EdgeRecord parseEdge(String line) throws IllegalLineException
   {
     /* An example of an edge line:
@@ -495,9 +529,9 @@ class DotParser
     {
       String cur = tokens[i];
       
-      if (cur.matches("^pos=.*"))
+      if (cur.startsWith("pos="))
         pos = cur;
-      if (cur.matches("^label=.*"))
+      if (cur.startsWith("label="))
         labelString = cur;
     }
     
@@ -512,12 +546,12 @@ class DotParser
     // where the number of points is at least 4, and congruent to 1 (mod 3)
     //
     // The label attribute takes the form
-    // label=
+    // label=45
     
     try
     {
-      // get the label by splitting around the equals sign, removiong quotes,
-      // and trimming whitespace.
+      // get the label by splitting around the equals sign, removing quotes, and
+      // trimming whitespace.
       String label = labelString.split("=")[1].replace("\"", "").trim();
 
       // split around quotes, and take only the part with coordinates
@@ -573,7 +607,17 @@ class DotParser
     }
   }
 
-  private static NodeDefaults parseNodeDefaults(String line, NodeDefaults nodeDefaults) throws IllegalLineException
+  /**
+   * Takes a logical Graphviz line representing node defaults and returns a
+   * {@link NodeDefaults NodeDefaults} object containing the information from it
+   *
+   * @param line
+   * Must be a valid, logical line of Graphviz output describing default
+   * attributes for nodes.
+   */
+  private static NodeDefaults parseNodeDefaults(String line,
+                                                NodeDefaults nodeDefaults)
+                                                throws IllegalLineException
   {
     String[] tokens = tokenizeLine(line);
 
@@ -605,7 +649,8 @@ class DotParser
    * Behaves as {@link #parseDimension(String)} except that a {@code null}
    * argument is allowed, in which case {@code null} will be returned.
    */
-  private static Integer parseNullableDimension(/*@Nullable*/ String dimensionStr) throws IllegalLineException
+  private static /*@Nullable*/ Integer parseNullableDimension(
+      /*@Nullable*/ String dimensionStr) throws IllegalLineException
   {
     if (dimensionStr == null)
       return null;

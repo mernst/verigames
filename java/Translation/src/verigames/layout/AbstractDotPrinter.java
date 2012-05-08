@@ -15,11 +15,11 @@ import verigames.utilities.Printer;
  * Prints fully constructed {@link verigames.level.Board Board} objects in Graphviz's <a
  * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
  * <p>
- * The UIDs of the nodes are used to identify them. Other than that, the
- * specifics of how a graph is represented are determined by the implementation.
+ * Other than that, the specifics of how a graph is represented are determined
+ * by the implementation.
  * <p>
- * To provide an implementation of a {@code GraphvizPrinter}, subclasses must do
- * the following:
+ * To provide an implementation of an {@code AbstractDotPrinter}, subclasses
+ * must do the following:
  * <ul>
  * <li>
  * Implement {@link #isDigraph(Board)}, {@link #nodeSettings(Board)}, {@link
@@ -27,7 +27,7 @@ import verigames.utilities.Printer;
  * </li>
  * <li>
  * Call the constructor with a {@link verigames.utilities.Printer Printer} for
- * {@code Intersection}s and a {@code Printer} for {@code Chute}s.
+ * {@link Intersection}s and a {@code Printer} for {@link Chute}s.
  * </li>
  * </ul>
  * 
@@ -49,8 +49,23 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
     return Math.max(n.getInputs().size(), n.getOutputs().size());
   }
     
+  /**
+   * The {@link Printer} used for printing {@link Intersection}s.
+   */
   private final Printer<Intersection, Board> nodePrinter;
+  /**
+   * The {@link Printer} used for printing {@link Chute}s.
+   */
   private final Printer<Chute, Board> edgePrinter;
+  
+  /**
+   * Stores whether the graph currently being printed is a directed graph.
+   *
+   * Used essentially as a cache for {@link #isDigraph()}, so that the method is
+   * called only once per print. This shields from inconsistent implementations,
+   * and ensures that each call to print has a consistent edgeop, for example.
+   */
+  private boolean isDigraph;
   
   /**
    * Constructs a new GraphvizPrinter.
@@ -68,8 +83,6 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
     this.edgePrinter = edgePrinter;
   }
   
-  private boolean isDigraph;
-  
   /**
    * {@inheritDoc}
    * 
@@ -82,6 +95,8 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
     if (b.underConstruction())
       throw new IllegalArgumentException("b.underConstruction()");
     
+    // set the field isDigraph so that the method does not need to be called
+    // again during printing
     this.isDigraph = isDigraph(b);
     
     super.print(b, out, data);
@@ -96,7 +111,16 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
   @Override
   protected void printIntro(Board b, PrintStream out, Void data)
   {
-    out.println((isDigraph ? "digraph" : "graph") + " {");
+    if (b.underConstruction())
+      throw new IllegalArgumentException("b.underConstruction()");
+
+    String graphKind;
+    if (this.isDigraph)
+      graphKind = "digraph";
+    else
+      graphKind = "graph";
+
+    out.println(graphKind + " {");
     
     out.println("node [" + nodeSettings(b) + "];");
     
@@ -110,7 +134,7 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
    * as a directed graph.
    */
   // Note -- this should not be called directly. Instead, the field isDigraph
-  // should be used. It is updated every time print is called. Using this
+  // should be used. It is updated every time print is called. Using the field
   // ensures consistent results, even if the subclass's implementation of
   // isDigraph is inconsistent (i.e. returns different values for the same
   // {@code Board}).

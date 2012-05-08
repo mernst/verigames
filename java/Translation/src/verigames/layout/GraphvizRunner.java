@@ -64,7 +64,7 @@ class GraphvizRunner
     
     outputBoard(b, process.getOutputStream());
     
-    String output = getOutput(process.getInputStream());
+    String dotOutput = getOutput(process.getInputStream());
     
     // Waits for the dot process to exit and checks its exit value
     int exitValue;
@@ -80,7 +80,7 @@ class GraphvizRunner
     if (exitValue != 0)
       throw new RuntimeException("dot exited abnormally: exit code " + exitValue);
     
-    return DotParser.parse(output);
+    return DotParser.parse(dotOutput);
   }
   
   /**

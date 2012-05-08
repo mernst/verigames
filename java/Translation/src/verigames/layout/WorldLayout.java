@@ -4,6 +4,8 @@ import verigames.level.Board;
 import verigames.level.Level;
 import verigames.level.World;
 
+import java.util.Map;
+
 /**
  * Adds layout information to a {@link verigames.level.World World} using Graphviz.
  * <p>
@@ -33,11 +35,11 @@ public class WorldLayout
    * Modifies: {@code w}
    *
    * @param w
-   * The {@link verigames.level.World} to lay out.
+   * The {@link verigames.level.World} to lay out. All {@link
+   * verigames.level.Level Level}s must not be under construction.
    *
    * @see BoardLayout#layout(verigames.level.Board) BoardLayout.layout(Board)
    */
-  // TODO docuemnt that all levels in w must not be under construction
   public static void layout(World w)
   {
     for (Level l : w.getLevels().values())
@@ -46,6 +48,21 @@ public class WorldLayout
       {
         BoardLayout.layout(b);
       }
+    }
+  }
+
+  /**
+   * Throws an IllegalArgumentException if {@code w} contains any levels that
+   * are under construction. Otherwise, does nothing.
+   */
+  private static void checkNotUnderConstruction(World w)
+  {
+    for (Map.Entry<String, Level> entry : w.getLevels().entrySet())
+    {
+      String name = entry.getKey();
+      Level l = entry.getValue();
+      if (l.underConstruction())
+        throw new IllegalArgumentException("Level " + name + " is under construction");
     }
   }
 }

@@ -3,7 +3,8 @@ suited to our needs) -- "dot" -- draws hierarchical graphs, with parent nodes
 strictly above child nodes. 
 
 The row of nodes in which a nodes lies is its "rank."
-For example, the top row of nodes is rank 0 -- these nodes have no children.
+This is roughly how rank works:
+The top row of nodes is rank 0 -- these nodes have no parents.
 Rank 1 consists only of children of rank 0
 Rank 2 consists only of children of ranks 0 and 1
 etc.
@@ -30,41 +31,3 @@ node refers to its center.
 
 The game expresses position in game units. The top left is the origin, with X
 and Y values increasing to the right and down, respectively.
-
---------------------------------------------------------------------------------
-
-Preliminary graph layout algorithm:
-
-Make invisible, weight=0 edges from the incoming node to every other node, and
-to the outgoing node from every other node. This does nothing except enforce
-ranking -- The incoming node is always alone in rank 0, and the outgoing node
-is always alone in the last rank.
-
-Feed the generated graph in DOT format to the "dot" tool, then parse the
-coordinates of the nodes in the returned graph.
-
-follow the following algorithm to translate the coordinates to those that the
-game uses:
-
-incoming node.pos = (0,0)
-outgoing node.x = 0;
-
-int boardHeight (points) = get the board height
-
-for each node n
-
-   // gives the location of the center of the node in points, using the top
-   // left corner of the board as the origin
-   int(points) xIn = n.DOTx
-   int(points) yIn = boardHeight - n.DOTy
-
-   int(points) width = n.DOTwidth * (72 points) / (1 inch)
-   int(points) height = n.DOTheight * (72 points) / (1 inch)
-
-   // gives the location of the top left corner of the node, using the top left
-   // corner of the board as the origin
-   int(points) xCorner = xIn - (width / 2)
-   int(points) yCorner = yIn - (height / 2)
-
-   n.x = xCorner / 72 // floating point division, not integer division
-   n.y = yCorner / 72 // floating point division, not integer division

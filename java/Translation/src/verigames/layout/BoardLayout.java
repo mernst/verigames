@@ -16,10 +16,12 @@ import verigames.level.Intersection;
 import verigames.utilities.Pair;
 
 /**
- * Adds layout information to a {@link verigames.level.Board Board} using Graphviz.
+ * Adds layout information to a {@link verigames.level.Board Board} using
+ * Graphviz.
  * <p>
  * This class does not represent an object -- it simply encapsulates the {@link
- * #layout(verigames.level.Board) layout(Board)} method. As such, it is not instantiable.
+ * #layout(verigames.level.Board) layout(Board)} method. As such, it is not
+ * instantiable.
  *
  * @see WorldLayout
  * 
@@ -31,6 +33,8 @@ public class BoardLayout
   /**
    * The minimum height that a board should be. If it is less than this height,
    * it will not display properly in the game.
+   *
+   * This is used to determine when a board should have its height scaled up.
    */
   private static final double MIN_HEIGHT = 7.68;
 
@@ -42,39 +46,47 @@ public class BoardLayout
   {
     throw new RuntimeException("Uninstantiable");
   }
-  
+
   /**
    * Adds layout information to {@code b} using Graphviz.
    * <p>
    * Modifies: {@code b}
    * 
    * @param b
-   * The {@link verigames.level.Board} to lay out.
+   * The {@link verigames.level.Board} to lay out. {@link
+   * verigames.level.Board#underConstruction() b.underConstruction()} must be
+   * false.
    *
    * @see WorldLayout#layout(verigames.level.World) WorldLayout.layout(World)
    */
-  // TODO docuemnt that b must not be under construction
   public static void layout(Board b)
   {
-    GraphInformation info;
-    
+    if (b.underConstruction())
+      throw new IllegalArgumentException("b is under construction");
+
+    final GraphInformation info;
+
     // These variables are all just for clarity, so putting them in a block
     // avoids cluttering the namespace
     {
       AbstractDotPrinter printer = new DotPrinter();
       String command = "dot";
+
+      // the runner prints output according to the printer and then parses it
+      // and returns the result as a GraphInformation structure
       GraphvizRunner runner = new GraphvizRunner(printer, command);
       info = runner.run(b);
     }
-    
+
     // the height of the board is needed when the origin is moved from the
     // bottom left to the top left.
     int boardHeight = info.getGraphAttributes().getHeight();
-    
+
+    // harvest the node layout information
     for (Intersection n : b.getNodes())
     {
       int UID = n.getUID();
-      
+
       GraphInformation.NodeAttributes nodeAttrs;
       try
       {
@@ -107,20 +119,24 @@ public class BoardLayout
       n.setY(((double) yCorner) / 7200d);
     }
 
+    // harvest the edge layout information
     for (Chute c : b.getEdges())
     {
+      // get the chute UID. The printer uses this as a label to identify chutes.
       String chuteUID = Integer.toString(c.getUID());
       
-      GraphInformation.EdgeAttributes edgeAttrs; 
-      
-      edgeAttrs = info.getEdgeAttributes(chuteUID);
+      GraphInformation.EdgeAttributes edgeAttrs =
+          info.getEdgeAttributes(chuteUID);
 
       List<Pair<Double, Double>> layout = new ArrayList<Pair<Double, Double>>();
       
       for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
       {
-        Pair<Double, Double> coords = hundredthsOfPointsToGameUnits(edgeAttrs.getX(i), edgeAttrs.getY(i), boardHeight);
-        
+        Pair<Double, Double> coords =
+            hundredthsOfPointsToGameUnits(edgeAttrs.getX(i),
+                                          edgeAttrs.getY(i),
+                                          boardHeight);
+
         layout.add(coords);
       }
       
@@ -142,6 +158,7 @@ public class BoardLayout
       c.setLayout(layout);
     }
 
+    // scales up to the minimum height if the board is too short
     scaleUpToMinHeight(b);
   }
 
@@ -167,6 +184,8 @@ public class BoardLayout
    */
   private static void scaleBoardVertically(double scaleFactor, Board b)
   {
+    // first scale the node coordinates up by the scale factor, then scale and
+    // translate the edges to match their intersections.
     for (Intersection n : b.getNodes())
       scaleNodeY(scaleFactor, n);
     for (Chute c : b.getEdges())
@@ -223,11 +242,13 @@ public class BoardLayout
     double oldStart = oldLayout.get(0).getSecond();
     double oldEnd = oldLayout.get(oldLayout.size() - 1).getSecond();
     
+    // figure out the scale factor and the offset for the linear transformation
     double factor = (end - start) / (oldEnd - oldStart);
     double offset = start - factor * oldStart;
 
     List<Pair<Double, Double>> newLayout = new ArrayList<Pair<Double, Double>>();
     
+    // loop through and transform each y coordinate
     for (Pair<Double, Double> point : oldLayout)
     {
       double x = point.getFirst();
@@ -245,11 +266,12 @@ public class BoardLayout
    */
   private static Pair<Double, Double> hundredthsOfPointsToGameUnits(int x, int y, int boardHeight)
   {
+    // change the location of the origin
     y = boardHeight - y;
     
     double xResult = ((double) x / 7200d);
     double yResult = ((double) y / 7200d);
     
-    return new Pair<Double, Double>(xResult, yResult);
+    return Pair.of(xResult, yResult);
   }
 }

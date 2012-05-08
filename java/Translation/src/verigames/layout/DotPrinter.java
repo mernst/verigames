@@ -14,8 +14,9 @@ import verigames.level.Intersection.Kind;
 import verigames.utilities.Printer;
 
 /**
- * Prints fully constructed {@link verigames.level.Board Board} objects in Graphviz's <a
- * href="http://en.wikipedia.org/wiki/DOT_language">DOT format</a>.
+ * Prints fully constructed {@link verigames.level.Board Board} objects in
+ * Graphviz's <a href="http://en.wikipedia.org/wiki/DOT_language">DOT
+ * format</a>.
  * <p>
  * This {@link verigames.utilities.Printer Printer} prints DOT output for use in
  * laying out game boards.
@@ -60,29 +61,27 @@ class DotPrinter extends AbstractDotPrinter
 
       final String prefix;
       final String suffix;
+      /* this puts INCOMING and OUTGOING nodes in their own subgraphs.
+       * rank=source/sink ensures that the subgraph is alone in its rank, and
+       * makes that rank the minimum/maximum (respectively) possible. This
+       * enforces the invariant that incoming nodes are at the very top, and
+       * outgoing nodes are at the very bottom. */
+      if (n.getIntersectionKind() == Intersection.Kind.INCOMING)
       {
-        /* this puts INCOMING and OUTGOING nodes in their own subgraphs.
-         * rank=source/sink ensures that the subgraph is alone in its rank, and
-         * makes that rank the minimum/maximum (respectively) possible. This
-         * enforces the invariant that incoming nodes are at the very top, and
-         * outgoing nodes are at the very bottom. */
-        if (n.getIntersectionKind() == Intersection.Kind.INCOMING)
-        {
-          prefix = "{\ngraph [rank=source];\n";
-          suffix = "}\n";
-        }
-        else if (n.getIntersectionKind() == Intersection.Kind.OUTGOING)
-        {
-          prefix = "{\ngraph [rank=sink];\n";
-          suffix = "}\n";
-        }
-        else
-        {
-          prefix = "";
-          suffix = "";
-        }
+        prefix = "{\ngraph [rank=source];\n";
+        suffix = "}\n";
       }
-      
+      else if (n.getIntersectionKind() == Intersection.Kind.OUTGOING)
+      {
+        prefix = "{\ngraph [rank=sink];\n";
+        suffix = "}\n";
+      }
+      else
+      {
+        prefix = "";
+        suffix = "";
+      }
+
       out.print(prefix);
       out.printf("%d %s;\n", n.getUID(),  optionsString);
       out.print(suffix);

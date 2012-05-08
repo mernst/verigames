@@ -39,7 +39,8 @@ class GraphInformation
    * Private because it can only be created by a {@code Builder}
    */
   private GraphInformation(GraphAttributes graphAttributes,
-      Map<String, NodeAttributes> nodeAttributes, Map<String, EdgeAttributes> edgeAttributes)
+                           Map<String, NodeAttributes> nodeAttributes,
+                           Map<String, EdgeAttributes> edgeAttributes)
   {
     this.graphAttributes = graphAttributes;
     
@@ -78,11 +79,9 @@ class GraphInformation
   /**
    * Returns the attributes of the given edge.
    * <p>
-   * {@code this} must contain an edge from {@code startNode} to {@code
-   * endNode}
+   * {@code this} must contain an edge labeled {@code label}.
    *
-   * @param startNode
-   * @param endNode
+   * @param label
    */
   public EdgeAttributes getEdgeAttributes(String label)
   {
@@ -126,11 +125,10 @@ class GraphInformation
   }
   
   /**
-   * Returns {@code true} iff {@code this} contains an edge from {@code
-   * startNode} to {@code endNode}
+   * Returns {@code true} iff {@code this} contains an edge labeled {@code
+   * label}
    * 
-   * @param startNode
-   * @param endNode
+   * @param label
    */
   public boolean containsEdge(String label)
   {
@@ -229,13 +227,10 @@ class GraphInformation
     }
     
     /**
-     * Sets the attributes associated with the edge from {@code startNode} to
-     * {@code endNode}
+     * Sets the attributes associated with the edge labeled {@code label}.
      *
-     * @param startNode
-     * The ID of the starting node for this edge.
-     * @param endNode
-     * The ID of the ending node for this edge.
+     * @param label
+     * The label for this edge
      */
     public void setEdgeAttributes(String label, EdgeAttributes attributes)
     {
