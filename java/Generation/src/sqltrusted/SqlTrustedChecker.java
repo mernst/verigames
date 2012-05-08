@@ -17,7 +17,7 @@ public class SqlTrustedChecker extends TrustedChecker implements
 
     @Override
     public void initChecker(ProcessingEnvironment env) {
-    	AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
+        AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
         initChecker(env, annoFactory.fromClass(SqlTrusted.class), annoFactory.fromClass(SqlUntrusted.class));
     }
 
