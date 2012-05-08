@@ -1,6 +1,5 @@
 package sqltrusted.quals;
 
-import trusted.quals.Trusted;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

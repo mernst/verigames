@@ -28,9 +28,9 @@ public class TrustedChecker extends BaseTypeChecker implements
     	super.initChecker(env);
     	setAnnotations();
     }
-    
+
     protected void setAnnotations() {
-    	AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
+        AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
         UNTRUSTED = annoFactory.fromClass(Untrusted.class);
         TRUSTED = annoFactory.fromClass(Trusted.class);
     }

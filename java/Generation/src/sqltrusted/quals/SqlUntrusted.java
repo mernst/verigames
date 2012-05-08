@@ -1,7 +1,5 @@
 package sqltrusted.quals;
 
-import trusted.quals.Trusted;
-
 import java.lang.annotation.*;
 
 import checkers.quals.DefaultQualifierInHierarchy;
