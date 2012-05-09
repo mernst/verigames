@@ -15,14 +15,14 @@ import verigames.level.Board;
  * <p>
  * Graphviz must be installed on the system, and the tool used must be invokable
  * from the command line.
- * 
+ *
  * @author Nathaniel Mote
  */
 class GraphvizRunner
 {
   private final AbstractDotPrinter printer;
   private final String command;
-  
+
   /**
    * Constructs a new {@code GraphvizRunner} object that runs the given
    * Graphviz command, and writes output with the given GraphvizPrinter.
@@ -39,7 +39,7 @@ class GraphvizRunner
     this.printer = printer;
     this.command = command;
   }
-  
+
   /**
    * Runs Graphviz on {@code b} and returns the output as a {@link
    * GraphInformation} object.
@@ -61,11 +61,11 @@ class GraphvizRunner
           "\" command. Check that Graphviz is installed and that \"" +
           command + "\" is in the current process's path", e);
     }
-    
+
     outputBoard(b, process.getOutputStream());
-    
+
     String dotOutput = getOutput(process.getInputStream());
-    
+
     // Waits for the dot process to exit and checks its exit value
     int exitValue;
     try
@@ -79,10 +79,10 @@ class GraphvizRunner
     }
     if (exitValue != 0)
       throw new RuntimeException("dot exited abnormally: exit code " + exitValue);
-    
+
     return DotParser.parse(dotOutput);
   }
-  
+
   /**
    * Prints {@code b} in the DOT language to {@code os}, then closes {@code os}
    * <p>
@@ -97,7 +97,7 @@ class GraphvizRunner
     // PrintStream closes its underlying OutputStream when closed
     out.close();
   }
-  
+
   /**
    * Parses the text from {@code is} using {@code DotParser} and outputs the
    * results.
@@ -105,13 +105,13 @@ class GraphvizRunner
   private String getOutput(InputStream is)
   {
     StringBuilder processOutput = new StringBuilder();
-    
+
     Scanner in = new Scanner(is);
     while (in.hasNextLine())
       processOutput.append(in.nextLine() + "\n");
     // Scanner closes its underlying InputStream when closed
     in.close();
-    
+
     return processOutput.toString();
   }
 }

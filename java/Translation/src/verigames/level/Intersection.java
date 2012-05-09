@@ -51,7 +51,7 @@ import java.util.TreeMap;
  * <p>
  * Specification Field: {@code UID} : integer // the unique identifier for this
  * {@code Intersection}.
- * 
+ *
  * @author Nathaniel Mote
  */
 // TODO document which kind of coordinate system this uses for layout (where the
@@ -100,7 +100,7 @@ public class Intersection extends verigames.graph.Node<Chute>
     END(1, 0),
     /** Represents a method call */
     SUBBOARD(-1, -1);
-    
+
     /**
      * The number of input ports that an {@link Intersection} of this {@code
      * Kind} must have. {@code -1} if there is no restriction.
@@ -111,7 +111,7 @@ public class Intersection extends verigames.graph.Node<Chute>
      * Kind} must have. {@code -1} if there is no restriction.
      */
     private final int numOutputPorts;
-    
+
     /**
      * Constructs a new {@code Kind} enum object.
      *
@@ -128,7 +128,7 @@ public class Intersection extends verigames.graph.Node<Chute>
       this.numInputPorts = numInputPorts;
       this.numOutputPorts = numOutputPorts;
     }
-    
+
     /**
      * Returns the number of input ports that an {@link Intersection} of this
      * {@code Kind} must have, or {@code -1} if there is no restriction.
@@ -137,7 +137,7 @@ public class Intersection extends verigames.graph.Node<Chute>
     {
       return this.numInputPorts;
     }
-    
+
     /**
      * Returns the number of output ports that an {@link Intersection} of this
      * {@code Kind} must have, or {@code -1} if there is no restriction.
@@ -147,50 +147,50 @@ public class Intersection extends verigames.graph.Node<Chute>
       return this.numOutputPorts;
     }
   };
-  
+
   private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   private final Kind intersectionKind;
-  
+
   private double x = -1d;
   private double y = -1d;
-  
+
   private final int UID;
-  
+
   private static int nextUID = 0;
-  
+
   /*
    * Representation Invariant:
-   * 
+   *
    * When underConstruction, both the highest port number plus one and the number of used
    * input/output ports can be no greater than the value returned by
    * getNumberOfInputPorts() and getNumberOfOutputPorts().
-   * 
+   *
    * When constructed, both the highest port number plus one and the number of
    * used input/output ports must be exactly equal to the value returned by
    * getNumberOf____Ports(),
    */
-  
+
   /**
    * checks that the rep invariant holds
    */
   @Override protected void checkRep()
   {
     super.checkRep();
-    
+
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     // The total number of ports that this Kind of Intersection can have
     int numRequiredInPorts = intersectionKind.getNumberOfInputPorts();
     int numRequiredOutPorts = intersectionKind.getNumberOfOutputPorts();
-    
+
     TreeMap<String, Chute> inputChutes = getInputs();
     TreeMap<String, Chute> outputChutes = getOutputs();
-    
+
     int usedInPorts = inputChutes.size();
     int usedOutPorts = outputChutes.size();
-    
+
     if (underConstruction())
     {
       /*
@@ -198,33 +198,33 @@ public class Intersection extends verigames.graph.Node<Chute>
        * the value returned by getNumberOfInputPorts() and
        * getNumberOfOutputPorts().
        */
-      
+
       if (numRequiredInPorts != -1)
         ensure(usedInPorts <= numRequiredInPorts);
-      
+
       if (numRequiredOutPorts != -1)
         ensure(usedOutPorts <= numRequiredOutPorts);
     }
     else
     {
       // Ensures that all ports are filled
-      
+
       if (numRequiredInPorts != -1)
         ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInPorts: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
-      
+
       if (numRequiredOutPorts != -1)
         ensure(usedOutPorts == numRequiredOutPorts, "Intersection: " + this + " usedOutPorts: " + usedOutPorts + " numRequiredOutPorts: " + numRequiredOutPorts);
     }
-    
+
   }
-  
+
   /**
    * Returns an {@code Intersection} of the {@link Intersection.Kind Kind}
    * {@code kind}<br/>
    * <br/>
    * Requires: {@code kind !=} {@link Kind#SUBBOARD SUBNETWORK} (use
    * {@link #subboardFactory(java.lang.String) subnetworkFactory})
-   * 
+   *
    * @param kind
    */
   public static Intersection factory(Kind kind)
@@ -237,17 +237,17 @@ public class Intersection extends verigames.graph.Node<Chute>
     else
       return new Intersection(kind);
   }
-  
+
   /**
    * Returns a {@link Subboard} representing a method with {@code methodName}
-   * 
+   *
    * @param methodName
    */
   public static Subboard subboardFactory(String methodName)
   {
     return new Subboard(methodName);
   }
-  
+
   /**
    * Creates a new {@code Intersection} of the given {@code Kind} with empty
    * input and output ports<br/>
@@ -258,34 +258,34 @@ public class Intersection extends verigames.graph.Node<Chute>
    * Subclasses calling this constructor override
    * {@link #checkIntersectionKind(Kind)} to change the restrictions on what
    * {@link Intersection.Kind Kind}s can be used.
-   * 
+   *
    * @param kind
    * The kind of {@code Intersection} to create
-   * 
+   *
    */
   protected Intersection(Kind kind)
   {
-    
+
     if (!checkIntersectionKind(kind)) // if kind is not a valid Kind for this
       // implementation of Intersection
       throw new IllegalArgumentException("Invalid Intersection Kind " + kind
           + " for this implementation");
-    
+
     this.intersectionKind = kind;
-    
+
     this.UID = Intersection.nextUID;
     Intersection.nextUID++;
-    
+
     checkRep();
   }
-  
+
   /**
    * Returns true iff {@code kind} is valid for this implementation of
    * {@code Intersection}.<br/>
    * <br/>
    * This implementation supports all {@link Intersection.Kind Kind}s except
    * {@link Kind#SUBBOARD SUBNETWORK} and {@link Kind#BALL_SIZE_TEST NULL_TEST}
-   * 
+   *
    * @param kind
    */
   protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
@@ -294,7 +294,7 @@ public class Intersection extends verigames.graph.Node<Chute>
     // SUBNETWORK and NULL_TEST
     return kind != Kind.SUBBOARD && kind != Kind.BALL_SIZE_TEST;
   }
-  
+
   /**
    * Returns {@code intersectionKind}
    */
@@ -302,7 +302,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return intersectionKind;
   }
-  
+
   /**
    * Sets the x coordinate that {@code this} is to appear at to {@code x}.
    *
@@ -315,7 +315,7 @@ public class Intersection extends verigames.graph.Node<Chute>
       throw new IllegalArgumentException("x value of " + x + " illegal -- must be nonnegative");
     this.x = x;
   }
-  
+
   /**
    * Returns the x coordinate that {@code this} is to appear at, or -1 if none
    * has been set.
@@ -324,7 +324,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return x;
   }
-  
+
   /**
    * Sets the y coordinate that {@code this} is to appear at to {@code y}.
    *
@@ -337,7 +337,7 @@ public class Intersection extends verigames.graph.Node<Chute>
       throw new IllegalArgumentException("y value of " + y + " illegal -- must be nonnegative");
     this.y = y;
   }
-  
+
   /**
    * Returns the y coordinate that {@code this} is to appear at, or -1 if none
    * has been set.
@@ -346,7 +346,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return y;
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} is a {@link Subboard}.
    */
@@ -354,7 +354,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return false;
   }
-  
+
   /**
    * Returns {@code this} as a {@link Subboard}<br/>
    * <br/>
@@ -366,7 +366,7 @@ public class Intersection extends verigames.graph.Node<Chute>
     throw new IllegalStateException(
         "asSubnetwork called on an Intersection not of Subboard kind");
   }
-  
+
   /**
    * Returns {@code true} iff this is a {@link NullTest}
    */
@@ -374,7 +374,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return false;
   }
-  
+
   /**
    * Returns {@code this} as a {@link NullTest}<br/>
    * <br/>
@@ -385,7 +385,7 @@ public class Intersection extends verigames.graph.Node<Chute>
     throw new IllegalStateException(
         "asNullTest called on an Intersection not of NullTest kind");
   }
-  
+
   /**
    * Returns {@code UID}
    */
@@ -393,18 +393,18 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     return UID;
   }
-  
+
   @Override
   protected String shallowToString()
   {
     return getIntersectionKind().toString() + "#" + getUID();
   }
-  
+
   /** Every intersection can be assigned to a board.
    * Null until it is assigned to a board.
    */
   private /*@LazyNonNull*/ Board board;
-  
+
   /**
    * Sets the {@link Board} that {@code this} is in. Cannot be changed once
    * construction is finished.
@@ -418,9 +418,9 @@ public class Intersection extends verigames.graph.Node<Chute>
           "Mutation attempted on a constructed Intersection");
     board = p;
   }
-  
+
   public /*@Nullable*/ Board getBoard() {
-    return board; 
+    return board;
   }
 
   /* These are overridden to facilitate testing. Overriding gives the tests
