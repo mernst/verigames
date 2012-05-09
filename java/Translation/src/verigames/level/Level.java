@@ -343,13 +343,19 @@ public class Level
     for (Chute c : chutes)
     {
       int varID = c.getVariableID();
-      if (IDMap.containsKey(varID))
-        IDMap.get(varID).add(c);
-      else
+      if (varID >= 0)
       {
-        Set<Chute> set = new LinkedHashSet<Chute>();
-        set.add(c);
-        IDMap.put(c.getVariableID(), set);
+        // Chutes with negative ID are special and should never be linked.
+        if (IDMap.containsKey(varID))
+        {
+          IDMap.get(varID).add(c);
+        }
+        else
+        {
+          Set<Chute> set = new LinkedHashSet<Chute>();
+          set.add(c);
+          IDMap.put(c.getVariableID(), set);
+        }
       }
     }
 

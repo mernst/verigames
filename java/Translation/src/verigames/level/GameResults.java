@@ -24,7 +24,7 @@ public class GameResults
     World w = new WorldXMLParser().parse(in);
     return chuteWidth(w);
   }
-  
+
   /**
    * Processes the given {@link World} and returns information about the widths
    * of {@code Chute}s.
@@ -41,7 +41,7 @@ public class GameResults
   public static Map<Integer, Boolean> chuteWidth(World w)
   {
     Set<Chute> chutes = getChutes(w);
-    
+
     final Map<Integer, Boolean> widths = new LinkedHashMap<Integer, Boolean>();
 
     for (Chute c : chutes)
@@ -49,7 +49,7 @@ public class GameResults
       int varID = c.getVariableID();
       boolean isNarrow = c.isNarrow();
 
-      if (varID != -1)
+      if (varID >= 0)
       {
         // if this variableID is already in the mapping, just check that it's
         // not contradictory
