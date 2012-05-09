@@ -36,6 +36,8 @@ class NninfGameSolver extends GameSolver {
                 val supvar = sup.asInstanceOf[Variable]
                 val board = variablePosToBoard(supvar.varpos)
                 val blackball = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
+                val blackballchute = new Chute(-1, "null literal")
+                blackballchute.setEditable(false)
                 val merge = Intersection.factory(Intersection.Kind.MERGE)
                 val lastIntersection = boardNVariableToIntersection((board, supvar))
 
@@ -43,7 +45,7 @@ class NninfGameSolver extends GameSolver {
                 board.addNode(merge)
 
                 board.addEdge(lastIntersection, 0, merge, 0, new Chute(supvar.id, supvar.toString()))
-                board.addEdge(blackball, 0, merge, 1, new Chute(-1, "null literal"))
+                board.addEdge(blackball, 0, merge, 1, blackballchute)
 
                 boardNVariableToIntersection.update((board, supvar), merge)
               } else {
