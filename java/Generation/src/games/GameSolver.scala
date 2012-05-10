@@ -78,12 +78,15 @@ abstract class GameSolver extends ConstraintSolver {
       this.weights = weights
       this.params = params
 
+      println("Creating world")
       // Create the world!
       val world = createWorld()
 
+      println("Determining layout")
       // Assign a layout to the world.
       verigames.layout.WorldLayout.layout(world)
 
+      println("Writing XML output")
       // TODO: add an option for the file name
       val xmlFile = new java.io.File("World.xml") // params.optWorldXMLFileName)
       // TODO: check for existing file
@@ -247,6 +250,11 @@ abstract class GameSolver extends ConstraintSolver {
      */
     def handleConstraints(world: World) {
       constraints foreach { constraint => {
+        handleConstraint(world, constraint)
+      }}
+    }
+
+    def handleConstraint(world: World, constraint: Constraint) {
         constraint match {
           case comp: ComparableConstraint => {
             println("TODO: support comparable constraints!")
@@ -406,7 +414,6 @@ abstract class GameSolver extends ConstraintSolver {
             // Don't do anything here and hope the subclass does something.
           }
         }
-      }}
     }
 
     /**

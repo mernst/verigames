@@ -20,8 +20,7 @@ class NninfGameSolver extends GameSolver {
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */
-    override def handleConstraints(world: World) {
-      constraints foreach { constraint => {
+    override def handleConstraint(world: World, constraint: Constraint) {
         constraint match {
           case SubtypeConstraint(sub, sup) => {
             // No need to generate something for trivial super/sub-types.
@@ -101,7 +100,7 @@ class NninfGameSolver extends GameSolver {
               }
             }
           }
-          case EqualityConstraint(leftslot, rightslot) => {
+          case EqualityConstraint(leftslot, rightslot) => {/*
             if (rightslot == NninfConstants.NONNULL ||
                 rightslot == NninfConstants.NULLABLE) {
               // Assume leftslot is a variable. Alternatives?
@@ -126,7 +125,7 @@ class NninfGameSolver extends GameSolver {
               boardNVariableToIntersection.update((board, leftvar), con)
             } else {
               println("TODO: EqualityConstraint not handled: " + constraint)
-            }
+            }*/
           }
           case InequalityConstraint(ctx, ell, elr) => {
             // println(ell + " != " + elr)
@@ -134,6 +133,8 @@ class NninfGameSolver extends GameSolver {
             if (elr == NninfConstants.NULLABLE) {
               if (ell == LiteralThis) {
                 // Nothing to do if the LHS is "this", always non-null.
+              } else if (ell.isInstanceOf[Constant]){
+                // TODO
               } else {
                 val ellvar = ell.asInstanceOf[Variable]
                 val board = variablePosToBoard(ctx);
@@ -155,10 +156,9 @@ class NninfGameSolver extends GameSolver {
             }
           }
           case _ => {
-            super.handleConstraints(world)
+            super.handleConstraint(world, constraint)
           }
         }
-      }}
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {
