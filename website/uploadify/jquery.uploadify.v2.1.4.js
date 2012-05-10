@@ -35,8 +35,8 @@ if(jQuery)(
 					expressInstall  : null, // The path to the express install swf file
 					folder          : '', // The path to the upload folder
 					height          : 30, // The height of the flash button
-					width           : 120, // The width of the flash button
-					cancelImg       : 'cancel.png', // The path to the cancel image for the default file queue item container
+					width           : 100, // The width of the flash button
+					cancelImg       : 'cancelred.png', // The path to the cancel image for the default file queue item container
 					wmode           : 'opaque', // The wmode of the flash file
 					scriptAccess    : 'always', // Set to "always" to allow script access across domains
 					fileDataName    : 'file', // The name of the file collection object in the backend upload script

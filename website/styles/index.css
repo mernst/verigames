@@ -6,6 +6,20 @@
     position:relative;
 }
 
+#upload_options{
+	padding:10px;
+	width: 740px;
+	border-style:solid;
+	border-color:#313131;
+	border-width:2px;
+	height:30px;
+	background-color:#efefef;
+}
+
+#selected_checker{
+	margin-top:5px
+}
+
 #masthead{
 	margin-left:0px;
     margin-right:0px;
@@ -18,14 +32,14 @@
 
 #logo_holder{
     width:830px;
-    padding-top:7px;
     margin-left:auto;
     margin-right:auto;
 }
 
 .buttons{
     float:left;
-    margin-left:150px;
+    margin-left:100px;
+    margin-bottom:30px;
     height:100%;
     padding-top:10px;
    	cursor:pointer;
@@ -36,10 +50,60 @@
 	
 }
 
+#options{
+	margin-left:30px;
+	float:left;
+	width:300px;
+	margin-top:5px;
+}
+
+#typechecker{
+	height:20px;
+	padding:5px;
+	text-align:center;
+	width:130px;
+	border-style:solid;
+	border-color:#313131;
+	background-color:#555555;
+	color: white;
+	border-width:1px;
+	float:left;
+	margin-right:0px;
+	border-radius:4px 0px 0px 4px;
+	margin-left:30px;
+}
+
+#select_typechecker{
+	height:29px;
+	border-radius: 0px 4px 4px 0px;
+	border-style:solid;
+	border-width:1px;
+	border-left: none;
+	width:10px;
+	border-color:#313131;
+	margin-left:0px;
+	float:left;
+	margin-right:15px;
+}
+
+.type_option_class{
+	display:none;
+	height:20px;
+	background:white;
+	border-style:solid;
+	border-width:1px;
+	width: 140px;
+	border-color:#313131;
+	text-align:center;
+	padding:5px;
+}
+
 #queue{
+	clear: both;
 	width: 400px;
 	overflow:auto;
 	margin:10px;
+	margin-left:0px;
 	margin-bottom:30px;
 }
 #button_group{
@@ -92,6 +156,7 @@ html,body{
     height:100%;
 }
 
+
 body{
     font-family: Helvetica;
     margin:0px;
@@ -120,15 +185,10 @@ body{
     border-width: 6px;
     margin-left:auto;
     margin-right:auto;
-    margin-top: 15px;
+    margin-top: 30px;
     background-color:white;
     padding:10px;
     color: rgb(79,79,79);
-}
-
-#progress{
-	margin-top:30px;
-	width:25%;
 }
 
 #spinner{
@@ -139,6 +199,10 @@ body{
 
 h3{
     font-weight:normal;
+}
+
+#uploadIt{
+    cursor:pointer;
 }
 
 #samples{
