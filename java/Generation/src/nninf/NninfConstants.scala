@@ -10,4 +10,6 @@ object NninfConstants {
   val rc = InferenceMain.getRealChecker.asInstanceOf[NninfChecker]
   val NULLABLE = Constant(rc.NULLABLE)
   val NONNULL = Constant(rc.NONNULL)
+  //val KEYFOR = Constant(rc.KEYFOR)
+  //val UNKNOWNKEYFOR = Constant(rc.UNKNOWNKEYFOR)
 }

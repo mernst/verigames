@@ -21,7 +21,7 @@ import checkers.util.MultiGraphQualifierHierarchy;
 
 import com.sun.source.tree.CompilationUnitTree;
 
-@TypeQualifiers({ NonNull.class, Nullable.class, UnknownKeyFor.class, KeyFor.class })
+@TypeQualifiers({ NonNull.class, Nullable.class/*, UnknownKeyFor.class, KeyFor.class*/ })
 public class NninfChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
@@ -32,8 +32,8 @@ public class NninfChecker extends BaseTypeChecker implements
         AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
         NULLABLE = annoFactory.fromClass(Nullable.class);
         NONNULL = annoFactory.fromClass(NonNull.class);
-        UNKNOWNKEYFOR = annoFactory.fromClass(UnknownKeyFor.class);
-        KEYFOR = annoFactory.fromClass(KeyFor.class);
+        // UNKNOWNKEYFOR = annoFactory.fromClass(UnknownKeyFor.class);
+        // KEYFOR = annoFactory.fromClass(KeyFor.class);
     }
 
     @Override
