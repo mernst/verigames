@@ -57,7 +57,7 @@ jar -uf $jar `find . -name "*.class"`
 cd $root/plume-lib/bin-eclipse
 jar -uf $jar `find . -name "*.class"`
 
-cd $root/checker-inference/bin
+cd $root/checker-framework-inference/bin
 jar -uf $jar `find . -name "*.class"`
 
 cd $root/verigames/java/Generation/bin
