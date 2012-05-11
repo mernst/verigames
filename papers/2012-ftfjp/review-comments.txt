@@ -1,0 +1,138 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents an approach to perform formal verification via
+crowdsourcing. The main idea is to take a program verification instance
+that consists of a program and a property of interest and convert to a game
+that is played by a human. If the human solves the game, then we have a
+proof of correctness of the program with respect to the property,
+otherwise, the program could be buggy. Essentially, the solution to the
+game is automatically translated into a set of type annotations that are
+checked by a type checker.
+
+The idea in this paper is quite interesting, but there are somel things
+that are unclear from the paper. The most notable of these are:
+1)	While it is clear as to how one computes proofs of correctness, I’m
+unsure about how one find bugs using this approach. It would be nice if the
+authors can illustrate how their approach works with an example, in
+particular for buggy programs. How does one obtain a defect trace or test
+inputs that prove the presence of a property violation?
+
+WMD: I'm not quite sure what the confusion is: we are using a type
+checker, which will precisely tell the programmer where a mismatch
+occurred. What can we do about this?
+
+
+2)	Is there a connection between difficulty of program verification
+instance and difficulty of a game?
+
+WMD: I'm also not sure what to say about this. How do you measure the
+difficulty? Should we mention this as future work?
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 2 (accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents the Verification Games project, and in particular
+the Pipe Jam prototype. The goal of the project is to transform a
+verification problem, expressed as a type inference problem for a
+given Java program, into a puzzle-style game. Beating the game then
+corresponds to proving that the property holds for the given program,
+while failing to do so may indiscriminately indicate a bug or an
+incompleteness in the type system.
+
+The approach is certainly interesting and relevant to the
+workshop. Bringing verification to the masses is an important and very
+much open problem, and this work seems to make a convincing step in
+the right direction.  The paper is well written and to the point, and
+I recommend its acceptance to FTfJP.
+
+I was not able to find a downloadable version of Pipe Jam to
+experiment with it, which is a shame. It would be great to have such a
+version available for the workshop, to generate discussion.
+
+WMD: We will have a URL in the paper where there will be at least a
+video.
+
+
+Minor comments:
+
+- This form of crowd-sourcing has been exploited before with great
+success in molecular biology, with the game foldit. Some of the authors
+of the present paper contributed to its creation, and I was surprised
+to find no mention of foldit in the paper.
+
+WMD: I added Section 3.3 "Game-based expert development" back into the
+text. Should we add even more about game play?
+
+
+
+- 1st § of the introduction: "Current approaches" is repeated 3 times in
+3 consecutive sentences, and "current" 4 times.
+
+WMD: Added a todo comment. Is this style re-enforcing the point?
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 3 (strong accept)
+REVIEWER'S CONFIDENCE: 2 (medium)
+
+SUMMARY
+
+The authors describe a technique of reducing a program verification
+task to a system of connected visual puzzles.
+
+EVALUATION
+
++ A wonderful and useful idea.  What a great collaboration
+  between PL and Gaming!
++ well written
++ well executed
+
+- The game play was not explained very much.  It would be nice to
+  have at least a video.  Also, it was not clear how names ""Crash
+  Wreckage" etc were assigned.  Ideally the names would reflect the
+  program structure and not be arbitrary humorous names.
+
+WMD: Added homepage URL where we'll have a video.
+WMD: Added a todo for the names and program structure.
+
+
+----------------------- REVIEW 4 ---------------------
+PAPER: 11
+TITLE: Verification Games: Making Verification Fun!
+AUTHORS: Werner Dietl, Stephanie Dietzel, Michael D. Ernst, Nat Mote, Brian Walker, Seth Cooper, Timothy Pavlik and Zoran Popovic
+
+OVERALL RATING: 3 (strong accept)
+REVIEWER'S CONFIDENCE: 3 (high)
+
+This paper presents a very interesting idea on formal verification, 
+which tries to build the connection between the formal verification 
+and the game. Unlike doing some tough tasks like the current verification 
+process, in this work, people can verify a program by playing a well 
+designed game, and therefore have lots of fun.
+
+The presented work starts a new angle for re-considering the current 
+formal verification work, and could open a door for making end-users 
+involve in the formal verification, which seems impossible for current 
+formal verification activities. 
+
+One concern regarding the work is how to handle large scale programs 
+by the verification game?
+
+WMD: We describe the board-level-world separation. Should we talk
+about future layering mechanisms?
