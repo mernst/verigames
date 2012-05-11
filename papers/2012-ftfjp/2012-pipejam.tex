@@ -1,4 +1,4 @@
-\documentclass[preprint]{sig-alternate}
+\documentclass{sig-alternate}
 
 \usepackage{hyperref}
 \hypersetup {
@@ -10,6 +10,10 @@
     breaklinks=true,
     hypertexnames=false,
 }
+
+\conferenceinfo{FTfJP'12,}{June 12, 2012, Beijing, China}
+\CopyrightYear{2012}
+\crdata{978-1-4503-1272-1/12/06}
 
 \usepackage{microtype}
 \usepackage{color}
@@ -30,8 +34,8 @@
 
 
 %% Comment out one of these two definitions.
-\newcommand{\todo}[1]{\relax}
-% \newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
+% \newcommand{\todo}[1]{\relax}
+\newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
 
 \newcommand{\Popovic}{Popovi\'c\xspace}
 
@@ -169,6 +173,8 @@ testing are incomplete.  Current approaches that rely on manual
 verification by skilled users are extremely expensive.  
 Current approaches are not capable of keeping up with the
 current and future rate of software production.
+\todo{Reviewer 2 didn't like the repetition of ``Current approaches''
+  and ``current''. Do we want to change this?}
 
 Our approach is to remap the problem into a more accessible
 form, and use an engaging game to develop a significantly larger
@@ -257,8 +263,6 @@ the program.
 
 \subsection{Types for program verification}
 
-\todo{How much motivation should we keep for FTfJP?}
-
 We use pluggable type-checking as the underlying verification
 technology.  Type systems are the shining success of program
 verification.  Types are used on a regular basis by ordinary
@@ -296,7 +300,7 @@ other errors.  This is the right way to start, because full formal
 verification remains impractical for realistic software.  Furthermore,
 type-checkers are powerful and can check a wide range of important
 properties.  Our system is built upon the Checker
-Framework~\cite{checker-framework-website-20100203},
+Framework~\cite{checker-framework-website},
 which has found hundreds of errors in millions of lines of
 code~\cite{PapiACPE2008,DietlDEMS2011}.  It can be easily adapted to new
 verification problems and comes
@@ -330,13 +334,14 @@ either case, the failure is communicated back to an expert, who only
 considers cases that the crowd of players cannot resolve.
 
 
-
-\todo{
 \medskip
 
-The remainder of this paper is structured as follows.
-\todo{Write.}}
-
+The remainder of this paper is organized as follows.
+\secref{sec:pipejam} explains the Pipe Jam game mechanics.
+\secref{sec:mapping} discusses the translation of a program and
+property into a Pipe Jam game.
+Finally, \secref{sec:related-work} discusses related
+work and \secref{sec:conclusions} concludes.
 
 
 
@@ -538,6 +543,7 @@ complementary.
 
 
 \section{Mapping a program and a property into the Pipe Jam game}
+\label{sec:mapping}
 
 We now explain, at a high level, our algorithm for translating a
 verification problem --- that is, a program and a property that may be
@@ -576,6 +582,13 @@ When there is a procedure call to a pre-annotated library routine,
 then its constraints are integrated directly into the network, to
 avoid a proliferation of subcomponents in the network.
 
+\todo{From review 3: explain the change of names from source code to
+  game. Would here be good? Or only/also in \figref{fig:game-overview}?}
+\todo{From review 3: the reviewer said ``Ideally the names would
+  reflect the program structure and not be arbitrary humorous names.''
+  This is actually not what we want: the player does not gain any
+  knowledge of the program structure. Where should we address this?}
+
 The world map is a dependence graph among classes or, equivalently, a
 call graph.  It ensures that callees are annotated before callers,
 though it accommodates mutual dependences.
@@ -596,7 +609,7 @@ state of error messages for type inference systems.  Once our system is
 fielded, then whenever many
 players, or a known successful player, uses a buzzsaw, a trained
 programmer can examine the code to understand the code at that
-location property.  The programmer determines whether the code is
+location properly.  The programmer determines whether the code is
 correct and needs a trusted assumption, or the code has a bug and
 should be fixed.  The game players have focused the scarce, expensive
 resource (expert programmer time) exactly where it is most
@@ -635,9 +648,6 @@ are much simpler than the original program.
 
 \subsection{Mapping security vulnerabilities to game puzzles}
 
-\todo{I don't want to list all 25 type systems. Some of these
-  descriptions need to be adapted more.}
-
 We have set ourselves the initial goal of formally verifying that Java
 programs are free of the errors
 listed in the CWE/SANS Top 25 Most Dangerous Software Errors
@@ -650,7 +660,7 @@ instantiated for the errors on the list.  Instantiation requires
 creating a \emph{type system} that can detect the error or verify its
 absence, and a \emph{mapping} from the type system to our Pipe Jam
 game.  The mapping into Pipe Jam is generally straightforward.  We
-give three rules that handle most the situations.
+give three rules that handle most situations.
 %
 \begin{itemize}
 \item
@@ -727,7 +737,6 @@ Type inference tools exist that can infer type annotations for unannotated
 code.  Whereas type \emph{checking} is largely a solved problem, type
 \emph{inference} emphatically is not.
 
-\todo{Move this paragraph somewhere. Maybe related work?}
 Even the most precise available inference tools leave much room for
 improvement.  For example, the state of the art tool for inferring
 nullness properties is the
@@ -871,41 +880,42 @@ heuristics to guide themselves through very large search spaces.
 %   initially just exploring the options would be captivating enough to
 %   retain the interest of the player.
 % \end{description}
-% 
-% 
-% \subsection{Game-based expert development}
-% \label{sec:expert-development}
-% 
-% A highly-engaging game is capable of drawing in a number of new
-% players.  However, if the process of play does not produce increased
-% skills, and improvement (both individual and collective) on ability to
-% solve verification puzzles, then even a massive population of active
-% players will be useless towards the software verification goal.
-% Without significant increase of verification puzzle experts worldwide,
-% we will not be able to make a quantum leap in the code quality
-% compared to the status quo.  This challenge is common to all games
-% that attempt to solve hard problems.  Foldit, a proteomics game,
-% effectively created the genre of games that solve hard problems.
-% Prior to Foldit, it has not been known whether it is even possible to
-% elevate human expertise on a particular domain to the point that it
-% can disrupt the current scientific process and produce outcomes that
-% present significant scientific advances.  In the past few years, based
-% on the success of Foldit, several researchers have developed games
-% aimed at solving hard problems in science and engineering.  Still to
-% date, Foldit remains the only game with strong indisputable evidence
-% of emergent expertise and outcomes that advanced the science
-% (discoveries published in three Nature papers published in under 2
-% years).
-% 
-% The only way to accurately assess the emergence of expertise in the
-% player population is to measure their performance on hard verification
-% puzzles.  Once assessed, the key game design question is how to modify
-% the game towards improved performance.  Our team has shown with the
-% Foldit game that our approach of iterative game sensitivity analysis
-% is capable of finding modifications that significantly improve
-% performance over time.
-% 
-% 
+
+
+\subsection{Game-based expert development}
+ 
+A highly-engaging game is capable of drawing in a number of new
+players.  However, if the process of play does not produce increased
+skills, and improvement (both individual and collective) on ability to
+solve verification puzzles, then even a massive population of active
+players will be useless towards the software verification goal.
+Without significant increase of verification puzzle experts worldwide,
+we will not be able to make a quantum leap in the code quality
+compared to the status quo.  This challenge is common to all games
+that attempt to solve hard problems.  Foldit, a proteomics game,
+effectively created the genre of games that solve hard problems.
+\todo{What are good Foldit citations? The proposal never has any next
+  to the project name... how about \cite{cooper10challenge,cooper11analysis}}
+Prior to Foldit, it has not been known whether it is even possible to
+elevate human expertise on a particular domain to the point that it
+can disrupt the current scientific process and produce outcomes that
+present significant scientific advances.  In the past few years, based
+on the success of Foldit, several researchers have developed games
+aimed at solving hard problems in science and engineering.  Still to
+date, Foldit remains the only game with strong indisputable evidence
+of emergent expertise and outcomes that advanced the science
+(discoveries published in three Nature papers published in under 2
+years).
+ 
+The only way to accurately assess the emergence of expertise in the
+player population is to measure their performance on hard verification
+puzzles.  Once assessed, the key game design question is how to modify
+the game towards improved performance.  Our team has shown with the
+Foldit game that our approach of iterative game sensitivity analysis
+is capable of finding modifications that significantly improve
+performance over time.
+ 
+ 
 % \subsection{Open Verification Puzzles: Crowdsourcing programs}
 % 
 % Once we have determined the efficacy of the game towards verifying our
@@ -982,8 +992,6 @@ heuristics to guide themselves through very large search spaces.
 
 In the following we discuss related work along two axes: type
 inference and program verification.
-
-\todo{This section is way too detailed.}
 
 
 % \subsection{Type inference}
@@ -1104,7 +1112,6 @@ require a high skill level --- 6 months of training is considered a lower
 bound to use a theorem-prover, and model checkers also have a significant
 learning curve.
 
-Space restrictions permit us to mention related work only briefly.
 
 \emph{Automatic verification} is the gold standard.  One good example is
 Saturn~\cite{AikenBDDHH2007}, a precise and scalable static analysis
@@ -1340,15 +1347,25 @@ that make the specific properties that \astree{} checks easy to verify.
 
 
 
-% \section{Conclusions}
-% 
-% 
-% \section{Acknowledgments}
-% 
-% Mention funding?
+\section{Conclusions}
+\label{sec:conclusions}
+
+In this paper we summarize the current status of the Verification
+Games project.
+Future work will focus on both the verification and game play aspects,
+for example, expressing more properties, scaling up, adjusting game
+play difficulty and interest, and play testing.
+More information and a demonstration video can be found at the project
+homepage at
+\url{http://www.cs.washington.edu/TODO}.
+\todo{Create project homepage and update URL.}
 
 
-\enlargethispage{10pt}
+\section*{Acknowledgments}
+ 
+\todo{Mention funding?}
+
+
 
 \bibliographystyle{abbrv}
 \bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types,pag,sideeff,refs}
