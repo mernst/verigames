@@ -30,7 +30,7 @@ public class SqlTrustedTests {
 
     public static class Tests extends ParameterizedCheckerTest {
         public Tests(File testFile) {
-            super(testFile, "sqltrusted.SqlTrustedChecker", "sqltrusted", "-Anomsgtext");
+            super(testFile, SqlTrustedChecker.class.getName(), "sqltrusted", "-Anomsgtext");
         }
 
         @Parameters
