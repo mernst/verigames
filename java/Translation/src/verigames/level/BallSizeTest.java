@@ -1,82 +1,87 @@
 package verigames.level;
 
 /**
- * An {@link Intersection} subclass that represents
- * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST} {@link Intersection.Kind Kind}s
- * of {@code Intersection}.<br/>
+ * An {@link Intersection} subclass that represents {@link
+ * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST} {@link Intersection.Kind
+ * Kind}s of {@code Intersection}.<br/>
  * <br/>
- * The output chute in port 0 represents the "not null" branch of this test<br/>
+ * The output chute in port 0 represents the "small ball" branch of this test<br/>
  * <br/>
- * The output chute in port 1 represents the "null" branch of this test<br/>
+ * The output chute in port 1 represents the "big ball" branch of this test<br/>
  * 
  * @author Nathaniel Mote
  */
 
-public class NullTest extends Intersection
+public class BallSizeTest extends Intersection
 {
   
   /*
    * Representation Invariant (in addition to the superclass rep invariant):
    * 
-   * The output chute in port 0 is the "non-null" chute and must be uneditable
+   * The output chute in port 0 is the "small ball" chute and must be uneditable
    * and narrow
    * 
-   * The output chute in port 1 is the "null" chute and must be uneditable and
+   * The output chute in port 1 is the "big ball" chute and must be uneditable and
    * wide
    */
   
-  private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
+  private static final boolean CHECK_REP_ENABLED =
+      verigames.utilities.Misc.CHECK_REP_ENABLED;
   
   /**
    * Checks that the representation invariant holds
    */
-  @Override protected void checkRep()
+  @Override
+  protected void checkRep()
   {
     super.checkRep();
     
     if (!CHECK_REP_ENABLED)
       return;
     
-    Chute nonNullChute = getNonNullChute();
+    Chute nonNullChute = getNarrowChute();
     if (nonNullChute != null
         && (nonNullChute.isEditable() || !nonNullChute.isNarrow()))
       throw new RuntimeException(
-          "NullTest's NonNull chute does not have the proper settings");
+          "BallSizeTest's NonNull chute does not have the proper settings");
     
-    Chute nullChute = getNullChute();
+    Chute nullChute = getWideChute();
     if (nullChute != null && (nullChute.isEditable() || nullChute.isNarrow()))
       throw new RuntimeException(
-          "NullTest's Null chute does not have the proper settings");
+          "BallSizeTest's Null chute does not have the proper settings");
     
   }
   
   /**
-   * Creates a new {@link Intersection} of {@link Intersection.Kind Kind}
-   * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST}
+   * Creates a new {@link Intersection} of {@link Intersection.Kind Kind} {@link
+   * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST}
    */
-  protected NullTest()
+  protected BallSizeTest()
   {
     super(Kind.BALL_SIZE_TEST);
     checkRep();
   }
-  
+
   /**
-   * Returns {@code true} iff {@code kind} is
-   * {@link Intersection.Kind#BALL_SIZE_TEST NULL_TEST}, indicating that this
-   * implementation supports only {@code NULL_TEST}.
+   * Returns {@code true} iff {@code kind} is {@link
+   * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST}, indicating that this
+   * implementation supports only {@code BALL_SIZE_TEST}.
    * 
    * @param kind
    */
-  @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
+  @Override
+  protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
   {
-    // this implementation supports only NULL_TEST
+    // this implementation supports only BALL_SIZE_TEST
     return kind == Kind.BALL_SIZE_TEST;
   }
   
   /**
-   * Returns {@code true} to indicate that {@code this} is a {@code NullTest}.
+   * Returns {@code true} to indicate that {@code this} is a {@code
+   * BallSizeTest}.
    */
-  @Override public boolean isBallSizeTest()
+  @Override
+  public boolean isBallSizeTest()
   {
     return true;
   }
@@ -84,7 +89,8 @@ public class NullTest extends Intersection
   /**
    * Returns {@code this}
    */
-  @Override public NullTest asBallSizeTest()
+  @Override
+  public BallSizeTest asBallSizeTest()
   {
     return this;
   }
@@ -95,7 +101,7 @@ public class NullTest extends Intersection
    * {@link Intersection}, only "null balls" will roll down the returned
    * {@link Chute}.
    */
-  public /*@Nullable*/ Chute getNullChute()
+  public /*@Nullable*/ Chute getWideChute()
   {
     return getOutput(1);
   }
@@ -110,7 +116,7 @@ public class NullTest extends Intersection
    * Modifies: {@code this}<br/>
    * @param chute
    */
-  protected void setNullChute(Chute chute)
+  protected void setWideChute(Chute chute)
   {
     if (chute.isEditable())
       throw new IllegalArgumentException(
@@ -128,7 +134,7 @@ public class NullTest extends Intersection
    * this {@link Intersection}, only "non-null balls" will roll down the
    * returned {@link Chute}.
    */
-  public /*@Nullable*/ Chute getNonNullChute()
+  public /*@Nullable*/ Chute getNarrowChute()
   {
     return getOutput(0);
   }
@@ -143,14 +149,14 @@ public class NullTest extends Intersection
    * Modifies: {@code this}<br/>
    * @param chute
    */
-  protected void setNonNullChute(Chute chute)
+  protected void setNarrowChute(Chute chute)
   {
     if (chute.isEditable())
       throw new IllegalArgumentException(
-          "Chute passed to setNonNullChute must not be editable");
+          "Chute passed to setNarrowChute must not be editable");
     if (!chute.isNarrow())
       throw new IllegalArgumentException(
-          "Chute passed to setNonNullChute must be narrow");
+          "Chute passed to setNarrowChute must be narrow");
     
     super.setOutput(chute, 0);
     checkRep();
@@ -174,14 +180,14 @@ public class NullTest extends Intersection
     switch (port)
     {
       case 0:
-        setNonNullChute(output);
+        setNarrowChute(output);
         break;
       case 1:
-        setNullChute(output);
+        setWideChute(output);
         break;
       default:
         throw new IllegalArgumentException("port " + port
-            + " out of bounds for NullTest node");
+            + " out of bounds for BallSizeTest node");
     }
   }
 }

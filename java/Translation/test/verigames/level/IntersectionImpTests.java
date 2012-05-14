@@ -29,15 +29,15 @@ public class IntersectionImpTests
   /**
    * Tests that asSubnetwork fails on Intersection instances
    */
-  @Test(expected = IllegalStateException.class) public void testAsSubnetworkFailure()
+  @Test(expected = IllegalStateException.class) public void testAsSubboardFailure()
   {
     (Intersection.factory(Kind.INCOMING)).asSubboard();
   }
   
   /**
-   * Tests that asNullTest fails on Intersection instances
+   * Tests that asBallSizeTest fails on Intersection instances
    */
-  @Test(expected = IllegalStateException.class) public void testAsNullTestFailure()
+  @Test(expected = IllegalStateException.class) public void testAsBallSizeTestFailure()
   {
     (Intersection.factory(Kind.INCOMING)).asBallSizeTest();
   }

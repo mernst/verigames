@@ -10,16 +10,14 @@ import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 
-import verigames.level.Chute;
-import verigames.level.Intersection;
-import verigames.level.NullTest;
+import verigames.level.*;
 import verigames.level.Intersection.Kind;
 
-public class NullTestImpTests
+public class BallSizeTestImpTests
 {  
-  public NullTest n;
+  public BallSizeTest n;
   
-  public static Method[] nullTestMethods = NullTest.class.getDeclaredMethods();
+  public static Method[] nullTestMethods = BallSizeTest.class.getDeclaredMethods();
   
   @Before public void init()
   {
@@ -27,7 +25,7 @@ public class NullTestImpTests
   }
   
   /**
-   * Tests that when an editable chute is passed into the setNullChute setter,
+   * Tests that when an editable chute is passed into the setWideChute setter,
    * it throws an IllegalArgumentException.
    */
   @Test public void testUneditableNull()
@@ -37,21 +35,20 @@ public class NullTestImpTests
     
     boolean exceptionThrown = false;
     
-    // n.setNullChute(uneditable)
     try
     {
-      runMethod(n, "setNullChute", new Object[] {uneditable});
-    } catch (Throwable e)
+      n.setWideChute(uneditable);
+    }
+    catch (IllegalArgumentException e)
     {
-      if (e instanceof IllegalArgumentException)
-        exceptionThrown = true;
+      exceptionThrown = true;
     }
     assertTrue("IllegalArgumentException not thrown when expected",
         exceptionThrown);
   }
   
   /**
-   * Tests that when an editable chute is passed into the setNonNullChute
+   * Tests that when an editable chute is passed into the setNarrowChute
    * setter, it throws an IllegalArgumentException
    */
   @Test public void testUneditableNonNull()
@@ -61,21 +58,20 @@ public class NullTestImpTests
     
     boolean exceptionThrown = false;
     
-    // n.setNonNullChute(uneditable)
     try
     {
-      runMethod(n, "setNonNullChute", new Object[] {uneditable});
-    } catch (Throwable e)
+      n.setNarrowChute(uneditable);
+    }
+    catch (IllegalArgumentException e)
     {
-      if (e instanceof IllegalArgumentException)
-        exceptionThrown = true;
+      exceptionThrown = true;
     }
     assertTrue("IllegalArgumentException not thrown when expected",
         exceptionThrown);
   }
   
   /**
-   * Tests that when a narrow chute is passed into the setNullChute setter, it
+   * Tests that when a narrow chute is passed into the setWideChute setter, it
    * throws an IllegalArgumentException
    */
   @Test public void testNarrowNull()
@@ -86,21 +82,20 @@ public class NullTestImpTests
     
     boolean exceptionThrown = false;
     
-    // n.setNonNullChute(narrow)
     try
     {
-      runMethod(n, "setNullChute", new Object[] {narrow});
-    } catch (Throwable e)
+      n.setWideChute(narrow);
+    }
+    catch (IllegalArgumentException e)
     {
-      if (e instanceof IllegalArgumentException)
-        exceptionThrown = true;
+      exceptionThrown = true;
     }
     assertTrue("IllegalArgumentException not thrown when expected",
         exceptionThrown);
   }
   
   /**
-   * Tests that when a wide chute is passed into the setNonNullChute setter, it
+   * Tests that when a wide chute is passed into the setNarrowChute setter, it
    * throws an IllegalArgumentException
    */
   @Test public void testWideNonNull()
@@ -111,14 +106,13 @@ public class NullTestImpTests
     
     boolean exceptionThrown = false;
     
-    // n.setNonNullChute(wide)
     try
     {
-      runMethod(n, "setNonNullChute", new Object[] {wide});
-    } catch (Throwable e)
+       n.setNarrowChute(wide);
+    }
+    catch (IllegalArgumentException e)
     {
-      if (e instanceof IllegalArgumentException)
-        exceptionThrown = true;
+      exceptionThrown = true;
     }
     assertTrue("IllegalArgumentException not thrown when expected",
         exceptionThrown);
@@ -128,31 +122,32 @@ public class NullTestImpTests
    * Tests that when a chute is mutated after adding that checkRep()
    * catches it later
    */
-  @Test public void testCheckRep() throws Throwable
+  @Test
+  public void testCheckRep() throws IllegalAccessException
   {
     boolean checkRepEnabled = true;
     
-    // checkRepEnabled = NullTest.CHECK_REP_ENABLED
-    Field[] fields = NullTest.class.getDeclaredFields();
+    // checkRepEnabled = BallSizeTest.CHECK_REP_ENABLED
+    Field[] fields = BallSizeTest.class.getDeclaredFields();
     for (Field f : fields)
     {
       if (f.getName().equals("CHECK_REP_ENABLED"))
       {
         f.setAccessible(true);
-        checkRepEnabled = (Boolean) f.get(NullTest.class);
+        checkRepEnabled = (Boolean) f.get(BallSizeTest.class);
       }
     }
     
     if (checkRepEnabled)
     {
-      NullTest n = Intersection.factory(Kind.BALL_SIZE_TEST).asBallSizeTest();
+      BallSizeTest n = Intersection.factory(Kind.BALL_SIZE_TEST).asBallSizeTest();
       
       Chute wide = new Chute();
       wide.setNarrow(false);
       wide.setEditable(false);
       
-      // n.setNullChute(wide)
-      runMethod(n, "setNullChute", new Object[] {wide});
+      // n.setWideChute(wide)
+      n.setWideChute(wide);
       
       wide.setNarrow(true);
       
@@ -160,17 +155,17 @@ public class NullTestImpTests
       narrow.setNarrow(true);
       narrow.setEditable(false);
       
-      // n.setNonNullChute(narrow)
+      // n.setNarrowChute(narrow)
       // should throw RuntimeException when checkRep catches the mutation to
       // wide
       boolean expectedExceptionThrown = false;
       try
       {
-        runMethod(n, "setNonNullChute", new Object[] {narrow});
-      } catch (Throwable e)
+        n.setNarrowChute(narrow);
+      }
+      catch (RuntimeException e)
       {
-        if (e instanceof RuntimeException)
-          expectedExceptionThrown = true;
+        expectedExceptionThrown = true;
       }
       assertTrue(expectedExceptionThrown);
     }
@@ -182,7 +177,7 @@ public class NullTestImpTests
    * I know this is not awesome style, but subverting access control is
    * necessarily a little bit hackish, and it's just a test
    */
-  private static void runMethod(NullTest receiver, String methodName,
+  private static void runMethod(BallSizeTest receiver, String methodName,
       Object[] args) throws Throwable
       {
     boolean methodRun = false;

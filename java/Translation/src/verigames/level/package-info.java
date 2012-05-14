@@ -31,8 +31,8 @@
  * <p>
  * An {@code Intersection} is the terminating point for a {@code Chute}.
  * Typically, it is no more than that, though in the cases of {@link
- * verigames.level.Subboard Subboard} and {@link verigames.level.NullTest
- * NullTest}, more meaning is carried.
+ * verigames.level.Subboard Subboard} and {@link verigames.level.BallSizeTest
+ * BallSizeTest}, more meaning is carried.
  * <p>
  * Every {@code Board} has two special {@code Intersection}s: The incoming one
  * and the outgoing one.
