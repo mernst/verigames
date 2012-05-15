@@ -561,7 +561,7 @@ complementary.
 \section{Mapping a program and a property into the Pipe Jam game}
 \label{sec:mapping}
 
-We now explain, at a high level, our algorithm for translating a
+We now explain, at a high level, our approach for translating a
 verification problem --- that is, a program and a property that may be
 true of the program --- into an instance of the Pipe Jam game.
 
@@ -598,13 +598,6 @@ When there is a procedure call to a pre-annotated library routine,
 then its constraints are integrated directly into the network, to
 avoid a proliferation of subcomponents in the network.
 
-\todo{From review 3: explain the change of names from source code to
-  game. Would here be good? Or only/also in \figref{fig:game-overview}?}
-\todo{From review 3: the reviewer said ``Ideally the names would
-  reflect the program structure and not be arbitrary humorous names.''
-  This is actually not what we want: the player does not gain any
-  knowledge of the program structure. Where should we address this?}
-
 The world map is a dependence graph among classes or, equivalently, a
 call graph.  It ensures that callees are annotated before callers,
 though it accommodates mutual dependences.
@@ -624,8 +617,8 @@ more effective than any inference tool, as evidenced by the sorry
 state of error messages for type inference systems.  Once our system is
 fielded, then whenever many
 players, or a known successful player, uses a buzzsaw, a trained
-programmer can examine the code to understand the code at that
-location properly.  The programmer determines whether the code is
+programmer can examine the code at that
+location.  The programmer determines whether the code is
 correct and needs a trusted assumption, or the code has a bug and
 should be fixed.  The game players have focused the scarce, expensive
 resource (expert programmer time) exactly where it is most
@@ -638,6 +631,12 @@ needed.\footnote{One can imagine other game mechanics for expert
   than for a complete failure to solve the level), and would be
   verified by a programmer.}
 
+The names for levels and boards are chosen arbitrarily, but are intended to
+be memorable.  Names from the original source code would not be meaningful
+to the players and might even confuse them.  The players have no knowledge
+of computing, of the application domain of the program, or of its source
+code.  The owner of the source code also might not wish for its structure
+to be leaked to the players.
 
 \paragraph{Distinction from dataflow}
 The Pipe Jam game does not actually represent dataflow, but a
@@ -654,7 +653,7 @@ type (e.g., \<int>) can never hold \<null>.
 
 
 Although programs very frequently contain loops in their dataflow,
-cycles in a single board do not occur, because the network is really
+cycles in type flow on a single board do not occur, because the network is really
 about relationships and flows between types and variables, not just
 between specific data values.  Put more technically, it encodes the
 type constraints that arise when syntax-directed type constraint
@@ -695,7 +694,7 @@ give three rules that handle most situations.
   \<this> within a constructor); and whether the referent is a key in
   a given map (this enables precise analysis of \<Map.get()> calls).
   In this case, a different physical representation is required for
-  the different properties.
+  the different orthogonal properties.
 
   We represent the primary or most important property as pipe/ball
   size, and the others as different colors or textures that are
@@ -704,7 +703,7 @@ give three rules that handle most situations.
   complex example is whether a value is present as a key in a map.
   Suppose there is a map whose pipe is blue.  Then keys (pipes) that are
   guaranteed to be present in that map get a blue stripe.  This shows
-  to the user the relationship between different values.
+  the relationship between different values.
 \end{itemize}
 
 In some cases, a particularly sophisticated type system requires
@@ -719,6 +718,7 @@ type is narrow.  In our experience with over a dozen pluggable
 type-checkers, the nullness type system has the most complexities such as
 these, because programmers use \<null> to represent many special cases and
 because they can check for it at run time.
+Other type systems, such as those for security, are relatively simpler.
 
 
 \subsection{Simplifying the type constraints and the game puzzles}
@@ -726,7 +726,7 @@ because they can check for it at run time.
 
 Even a multitude of game players would have trouble verifying a
 5-million-line program with respect to 25 distinct type systems.
-Therefore, we propose to simplify the problem before presenting it to the
+Therefore, as future work we propose to simplify the problem before presenting it to the
 players.  We will do so by pre-determining the types for a subset of
 variables in the program.  Then, the players only need to find types for
 the remainder of the program.  We will use the best program analysis tools
@@ -740,7 +740,7 @@ but most variables in a program are of other types.  A second reason is
 that many values are restricted to a small part of the program.  In a
 correct program, user input strings are validated near where they are read,
 or at least do not flow into strings used for other purposes.  A third
-reason is that we will use highly-effective analyses that determine an
+reason is that highly-effective analyses exist that determine an
 answer for most of the program.
 
 The game player is accomplishing the task of type inference:  creating an
@@ -749,10 +749,8 @@ additional information about that variable's type.  Examples are whether
 the variable is permitted to hold the value \<null>, and whether the
 variable is permitted to be mutated.
 
-Type inference tools exist that can infer type annotations for unannotated
-code.  Whereas type \emph{checking} is largely a solved problem, type
+Whereas type \emph{checking} is largely a solved problem, type
 \emph{inference} emphatically is not.
-
 Even the most precise available inference tools leave much room for
 improvement.  For example, the state of the art tool for inferring
 nullness properties is the
@@ -763,7 +761,7 @@ flows to those dereferences, so those dereferences cannot result in a
 null pointer exception at run time.  However, this leaves 2\% of
 dereferences for a programmer to manually check --- some may be
 erroneous code that might fail at run time, but most are probably safe
-even though Julia is unable to infer such properties.  A humans'
+even though Julia is unable to infer such properties.  Human
 insight and higher powers of reasoning are required.  As another
 example, a state-of-the-art tool for inferring mutability (whether
 side effects are permitted/performed) is
@@ -900,14 +898,13 @@ heuristics to guide themselves through very large search spaces.
 
 \subsection{Game-based expert development}
  
-A highly-engaging game is capable of drawing in a number of new
+An engaging game is capable of drawing in many new
 players.  However, if the process of play does not produce increased
 skills, and improvement (both individual and collective) on ability to
 solve verification puzzles, then even a massive population of active
-players will be useless towards the software verification goal.
-Without significant increase of verification puzzle experts worldwide,
-we will not be able to make a quantum leap in the code quality
-compared to the status quo.  This challenge is common to all games
+players will not achieve our software verification goal.
+We need significantly more verification puzzle experts.
+This challenge is common to all games
 that attempt to solve hard problems.  Foldit~\cite{cooper10challenge,cooper11analysis}, a proteomics game,
 effectively created the genre of games that solve hard problems.
 Prior to Foldit, it has not been known whether it is even possible to
@@ -916,7 +913,7 @@ can disrupt the current scientific process and produce outcomes that
 present significant scientific advances.  In the past few years, based
 on the success of Foldit, several researchers have developed games
 aimed at solving hard problems in science and engineering.  Still to
-date, Foldit remains the only game with strong indisputable evidence
+date, Foldit remains the only game with indisputable evidence
 of emergent expertise and outcomes that advanced the science
 (discoveries published in three Nature papers published in under 2
 years).
@@ -924,10 +921,9 @@ years).
 The only way to accurately assess the emergence of expertise in the
 player population is to measure their performance on hard verification
 puzzles.  Once assessed, the key game design question is how to modify
-the game towards improved performance.  Our team has shown with the
-Foldit game that our approach of iterative game sensitivity analysis
-is capable of finding modifications that significantly improve
-performance over time.
+the game towards improved performance.  We plan an approach of iterative
+game sensitivity analysis, which will lead us to modifications that improve
+performance over time, as it did with Foldit.
  
  
 % \subsection{Open Verification Puzzles: Crowdsourcing programs}
@@ -1364,7 +1360,7 @@ that make the specific properties that \astree{} checks easy to verify.
 \section{Conclusions}
 \label{sec:conclusions}
 
-In this paper we summarize the current status of the Verification
+This paper summarized the current status of the Verification
 Games project.
 Future work will focus on both the verification and game play aspects,
 for example, expressing more properties, scaling up, adjusting game
@@ -1379,7 +1375,7 @@ homepage at
  
 This work was supported by DARPA Grant FA8750-11-2-0221.  Brian Britigan
 and Marianne Lee drew the Pipe Jam art.  We thank Drew Dean for his
-encouragement, support, and feedback.
+encouragement and feedback.
 
 
 
@@ -1398,3 +1394,7 @@ encouragement, support, and feedback.
 %%% mode: auto-fill
 %%% mode: flyspell on
 %%% End:
+
+%  LocalWords:  Popovi 'c TBD ly un CWE typeflow pipejam MountRock unsolve
+%  LocalWords:  SmeltCity SteelTowne Buzzsaws buzzsaws pre LOC L4 HOL Coq
+%  LocalWords:  microkernel Compcert SDV 1K 30K FA8750 Britigan
