@@ -15,6 +15,7 @@ import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.Trees;
 
 public class NninfVisitor extends InferenceVisitor {
 
@@ -35,6 +36,22 @@ public class NninfVisitor extends InferenceVisitor {
     private void checkForNullability(ExpressionTree tree, /*@CompilerMessageKey*/ String errMsg) {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(tree);
         mainIsNot(type, nninfchecker.NULLABLE, errMsg, tree);
+    }
+    
+    @Override
+    public Void visitBlock(BlockTree node, Void p) {
+    	Trees trees = Trees.instance(checker.getProcessingEnvironment());
+    	Scope scope = trees.getScope(getCurrentPath());
+    	System.out.println();
+    	for(Element elm : scope.getLocalElements()){
+    		System.out.println(""+ elm.getSimpleName() + ": "+ elm.getKind()+", "+elm.asType());
+    		//for enclosing scope
+    			//find all maps with the same key type as the elm
+    			//loop through getLocalElements checking
+    			// if I find one, log constraint.
+    			// update scope = scope.enclosingScope
+    	}
+    	return super.visitBlock(node, p);
     }
 
     /**
