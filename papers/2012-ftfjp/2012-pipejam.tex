@@ -247,10 +247,14 @@ for this.
 There is no \emph{a priori} way to know which of the two reasons lies
 behind a verification failure --- equivalently, an un-solvable game
 level.  A fielded version of our system would present each verification failure to a human
-verification expert.  The human examines the source code and
-determines which of two fixes to apply: change the code to correct the
+verification expert.  The human examines the source code and the type
+error, then determines which of two fixes to apply: change the code to correct the
 bug, or add an assertion/assumption indicating that the verification
 system should not issue a warning at this particular location.
+As with any other conservative type checker, a type error indicates an
+inconsistency between parts of the program, but does not prove that an
+error exists, nor does it provide a defect trace or test inputs that
+trigger a property violation at run time.
 
 
 Even when players (who have become game experts over time) cannot fully
@@ -601,6 +605,12 @@ avoid a proliferation of subcomponents in the network.
 The world map is a dependence graph among classes or, equivalently, a
 call graph.  It ensures that callees are annotated before callers,
 though it accommodates mutual dependences.
+We take advantage of the decomposition of object-oriented programs
+into parts that can be specified, implemented, understood, and reused
+individually.  This should help players just as it helps programmers.  We
+may introduce new levels of abstraction (such as dividing the world into
+continents) to leverage modules within a program that are larger than
+classes.
 
 Linked pipes that are of the same color represent different
 occurrences of the same variable or of two variables whose types must
@@ -635,7 +645,8 @@ The names for levels and boards are chosen arbitrarily, but are intended to
 be memorable.  Names from the original source code would not be meaningful
 to the players and might even confuse them.  The players have no knowledge
 of computing, of the application domain of the program, or of its source
-code.  The owner of the source code also might not wish for its structure
+code.  The owner of the source code also might not wish for its identity or
+details about its design
 to be leaked to the players.
 
 \paragraph{Distinction from dataflow}
@@ -743,6 +754,15 @@ or at least do not flow into strings used for other purposes.  A third
 reason is that highly-effective analyses exist that determine an
 answer for most of the program.
 
+We plan to evaluate how much simplification is optimal for players.  When a
+part of the code is difficult to verify, its context can provide critical
+clues, and it would be counterproductive to remove all of that and leave
+players just an abstract, unsolvable core.  On the other hand, players will
+become bored and jaded if they are required to perform rote actions.  At
+the same time, a game should have some easily-solved parts, to keep players
+engaged and to give them a feeling of forward progress.
+
+
 The game player is accomplishing the task of type inference:  creating an
 annotation for each variable declaration in the program, that gives
 additional information about that variable's type.  Examples are whether
@@ -789,6 +809,7 @@ these limitations via higher-level reasoning, pattern-matching, and
 heuristics to guide themselves through very large search spaces.
 
 % Are there "verification savants" much as there are for protein folding?
+
 
 
 
@@ -896,8 +917,31 @@ heuristics to guide themselves through very large search spaces.
 % \end{description}
 
 
-\subsection{Game-based expert development}
+\subsection{Human advantage and game-based expert development}
  
+When the game has a buzzsaw-free solution, then that solution can be found
+both automatically and very quickly:  compute all pipes reachable by any
+large ball, and make those wide.  We do not believe that game players will
+have any advantage over program analysis in such circumstances.  However,
+our experience with pluggable type-checking so far leads us to expect that
+few if any programs will verify without buzzsaws --- that is, without any
+trusted assumptions or suppressed warnings.  It is our hope --- yet to be
+validated experimentally --- that people will have an advantage when a
+program is \emph{not} verifiable.  Perhaps people will observe the
+structure of the game, observe animated executions, notice patterns (such
+as that only small balls ever go down a particular chute, so the buzzsaw
+wouldn't actually have any effect and so can be placed for free), and use
+their intuition to find the smallest number of buzzsaws that can be placed.
+This will be more useful to the verification expert than an automated tool
+that chooses an arbitrary location at which to report a type conflict.
+The verification expert can also communicate back to the players, if they
+choose poorly, by preventing a buzzsaw from being placed at a particular
+location, or by adding a test case for the players to observe.
+
+We expect that in general, problems that are harder for verification
+experts will be more challenging to players.  We will evaluate which
+problems are more difficult in each domain.
+
 An engaging game is capable of drawing in many new
 players.  However, if the process of play does not produce increased
 skills, and improvement (both individual and collective) on ability to
