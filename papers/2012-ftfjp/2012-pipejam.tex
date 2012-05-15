@@ -6,7 +6,7 @@
       Nathaniel Mote, Brian Walker, Seth Cooper, Timothy Pavlik, Zoran
       Popovi\'c},
     pdftitle={Verification Games: Making Verification Fun},
-    pdfsubject={FTfJP 2012 submission},
+    pdfsubject={FTfJP 2012},
     breaklinks=true,
     hypertexnames=false,
 }
@@ -35,7 +35,7 @@
 
 %% Comment out one of these two definitions.
 % \newcommand{\todo}[1]{\relax}
-\newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
+% \newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
 
 \newcommand{\Popovic}{Popovi\'c\xspace}
 
@@ -313,7 +313,7 @@ mutation (side effects); concurrency and locking; fake enumerations;
 information flow (trust and security); aliasing; regular expression
 syntax; property files; internationalization; the string
 representation of data; and many more.  We have mapped the CWE/SANS Top 25
-Most Dangerous Software Errors (\url{http://cwe.mitre.org/top25/?2011})
+Most Dangerous Software Errors\footnote{\url{http://cwe.mitre.org/top25/?2011}}
 to type systems.
 
 Our system maps source code's typeflow properties
@@ -412,7 +412,8 @@ flow into one another.
 The basic idea behind Pipe Jam is simple and lends itself to quick
 learning and enjoyable play.  We now explain some additional game
 mechanics that add interest and challenge.  (These game mechanics are
-much easier experienced than textually described.\todo{Reference video})
+much easier experienced than textually described. See a video at the
+project homepage\footnote{\url{http://www.cs.washington.edu/verigames}.}.)
 
 \begin{description}
 
@@ -676,8 +677,8 @@ are much simpler than the original program.
 
 We have set ourselves the initial goal of formally verifying that Java
 programs are free of the errors
-listed in the CWE/SANS Top 25 Most Dangerous Software Errors
-(\url{http://cwe.mitre.org/top25/?2011}).  It is, in its own words,
+listed in the CWE/SANS Top 25 Most Dangerous Software
+Errors\footnote{\url{http://cwe.mitre.org/top25/?2011}}.  It is, in its own words,
 ``a list of the most widespread and critical errors that can lead to
 serious vulnerabilities in software.''
 
@@ -949,7 +950,9 @@ solve verification puzzles, then even a massive population of active
 players will not achieve our software verification goal.
 We need significantly more verification puzzle experts.
 This challenge is common to all games
-that attempt to solve hard problems.  Foldit~\cite{cooper10challenge,cooper11analysis}, a proteomics game,
+that attempt to solve hard problems.
+Foldit~\cite{cooper10predicting,cooper10challenge,cooper11analysis,cooper11phd},
+a proteomics game,
 effectively created the genre of games that solve hard problems.
 Prior to Foldit, it has not been known whether it is even possible to
 elevate human expertise on a particular domain to the point that it
@@ -958,10 +961,8 @@ present significant scientific advances.  In the past few years, based
 on the success of Foldit, several researchers have developed games
 aimed at solving hard problems in science and engineering.  Still to
 date, Foldit remains the only game with indisputable evidence
-of emergent expertise and outcomes that advanced the science
-(discoveries published in three Nature papers published in under 2
-years).
- 
+of emergent expertise and outcomes that advanced the science.
+
 The only way to accurately assess the emergence of expertise in the
 player population is to measure their performance on hard verification
 puzzles.  Once assessed, the key game design question is how to modify
@@ -1044,13 +1045,40 @@ performance over time, as it did with Foldit.
 \section{Related work}
 \label{sec:related-work}
 
-In the following we discuss related work along two axes: type
-inference and program verification.
+%% In the following we discuss related work along two axes: type
+%% inference and program verification.
+
+%% \subsection{Type inference}
+%% \label{sec:type-inference-previous}
+
+%% Our most closely related previous experience is building an inference
+%% tool \cite{DietlEM2011} for an ownership type system
+%% \cite{DietlPhD09}.  One particular problem with the inference of
+%% ownership type systems is that multiple valid solutions exist and that
+%% the programmer needs to be able to express design intent.  Our tool
+%% generates type constraints by traversing the abstract syntax tree and
+%% encodes heuristics by giving weights to solutions.  It then encodes
+%% the constraints as a Max-SAT problem and uses an off-the-shelf solver
+%% to find a solution with an optimal weighting.  Our inference is a
+%% tunable, iterative approach, in which the programmer finds the desired
+%% annotations by tuning the heuristics, adding partial annotations, and
+%% fixing bugs in the program.
+
+%% We also build on our previous experience with the Javarifier type
+%% inference algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari
+%% language for reference immutability~\cite{BirkaE2004,TschantzE2005}.
+%% A Javari type-checker is implemented using Java annotations and the
+%% Checker Framework~\cite{PapiACPE2008}.  Javarifier is sound (its
+%% results type-check) and precise (making any more references
+%% \codeid{@Readonly} causes the program not to type-check).  Javarifier
+%% handles the full Java language including generics, wildcards, and
+%% arrays.  It infers a rich, practical type system that includes
+%% parametric polymorphism over mutability and permits excluding fields
+%% from an object's abstract state. It takes advantage of
+%% generics that are already in the program (or that are inferred by a
+%% separate tool~\cite{DonovanKTE2004,KiezunETF2007}).
 
 
-% \subsection{Type inference}
-% \label{sec:type-inference-previous}
-% 
 % \todo{This is a review of our previous work, not general work on type
 %   inference. Change title or contents?}
 % 
@@ -1142,9 +1170,9 @@ inference and program verification.
 % interned.  But other solutions exist in which guarantees can be made.
 % These result in a modified program, either by refactoring or by introducing
 % type qualifiers.
-% 
-% 
-% \subsection{Program verification}
+
+ 
+%% \subsection{Program verification}
 
 Currently, there is no rapid, cost-effective approach for establishing that
 an application is safe.  Testing and dynamic analysis are pragmatic and
@@ -1399,6 +1427,16 @@ that make the specific properties that \astree{} checks easy to verify.
 % However, by providing simple extensibility for the verification
 % engineer, we hope to make our tool more widely applicable.
 
+\medskip
+
+See our previous work on a type inference
+algorithm~\cite{DietlEM2011} for the Generic Universe Types
+ownership type system~\cite{DietlPhD09}
+and the Javarifier type inference
+algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari language
+for reference immutability~\cite{BirkaE2004,TschantzE2005}
+for additional pointers to relevant literature.
+
 
 
 \section{Conclusions}
@@ -1410,9 +1448,7 @@ Future work will focus on both the verification and game play aspects,
 for example, expressing more properties, scaling up, adjusting game
 play difficulty and interest, and play testing.
 More information and a demonstration video can be found at the project
-homepage at
-\url{http://www.cs.washington.edu/TODO}.
-\todo{Create project homepage and update URL.}
+homepage\footnote{\url{http://www.cs.washington.edu/verigames}}.
 
 
 \section*{Acknowledgments}
@@ -1422,7 +1458,7 @@ and Marianne Lee drew the Pipe Jam art.  We thank Drew Dean for his
 encouragement and feedback.
 
 
-
+\pagebreak
 \bibliographystyle{abbrv}
 \bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types,pag,sideeff,refs}
 
