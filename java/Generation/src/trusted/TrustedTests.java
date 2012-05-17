@@ -31,7 +31,7 @@ public class TrustedTests {
 
     public static class Tests extends ParameterizedCheckerTest {
         public Tests(File testFile) {
-            super(testFile, "trusted.TrustedChecker", "trusted", "-Anomsgtext");
+            super(testFile, TrustedChecker.class.getName(), "trusted", "-Anomsgtext");
         }
 
         @Parameters

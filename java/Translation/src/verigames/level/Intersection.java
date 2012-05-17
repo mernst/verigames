@@ -233,7 +233,7 @@ public class Intersection extends verigames.graph.Node<Chute>
       throw new IllegalArgumentException(
           "intersectionFactory passed Kind.SUBNETWORK. Use subnetworkFactory instead.");
     else if (kind == Kind.BALL_SIZE_TEST)
-      return new NullTest();
+      return new BallSizeTest();
     else
       return new Intersection(kind);
   }
@@ -368,7 +368,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   }
 
   /**
-   * Returns {@code true} iff this is a {@link NullTest}
+   * Returns {@code true} iff this is a {@link BallSizeTest}
    */
   public boolean isBallSizeTest()
   {
@@ -376,14 +376,14 @@ public class Intersection extends verigames.graph.Node<Chute>
   }
 
   /**
-   * Returns {@code this} as a {@link NullTest}<br/>
+   * Returns {@code this} as a {@link BallSizeTest}<br/>
    * <br/>
    * Requires: {@link #isSubboard()}
    */
-  public NullTest asBallSizeTest()
+  public BallSizeTest asBallSizeTest()
   {
     throw new IllegalStateException(
-        "asNullTest called on an Intersection not of NullTest kind");
+        "asBallSizeTest called on an Intersection not of BallSizeTest kind");
   }
 
   /**

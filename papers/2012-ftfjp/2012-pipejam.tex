@@ -1,4 +1,4 @@
-\documentclass[preprint]{sig-alternate}
+\documentclass{sig-alternate}
 
 \usepackage{hyperref}
 \hypersetup {
@@ -6,10 +6,14 @@
       Nathaniel Mote, Brian Walker, Seth Cooper, Timothy Pavlik, Zoran
       Popovi\'c},
     pdftitle={Verification Games: Making Verification Fun},
-    pdfsubject={FTfJP 2012 submission},
+    pdfsubject={FTfJP 2012},
     breaklinks=true,
     hypertexnames=false,
 }
+
+\conferenceinfo{FTfJP'12,}{June 12, 2012, Beijing, China}
+\CopyrightYear{2012}
+\crdata{978-1-4503-1272-1/12/06}
 
 \usepackage{microtype}
 \usepackage{color}
@@ -30,7 +34,7 @@
 
 
 %% Comment out one of these two definitions.
-\newcommand{\todo}[1]{\relax}
+% \newcommand{\todo}[1]{\relax}
 % \newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
 
 \newcommand{\Popovic}{Popovi\'c\xspace}
@@ -101,7 +105,7 @@ Center for Game Science, University of Washington}\\
 Program verification is the only way to be certain that a given
 piece of software is free of (certain types of) errors --- errors that
 could otherwise disrupt operations in the field.  To date, formal
-verification has been done manually, by specially-trained engineers.  Labor
+verification has been done by specially-trained engineers.  Labor
 costs have heretofore made formal verification too costly to apply beyond
 small, critical software components.
 
@@ -167,8 +171,8 @@ Our aim is to change the way that software is verified, to enable
 inexpensive formal verification.  Current approaches that rely on
 testing are incomplete.  Current approaches that rely on manual
 verification by skilled users are extremely expensive.  
-Current approaches are not capable of keeping up with the
-current and future rate of software production.
+None of these approaches is capable of keeping up with the
+rate of software production.
 
 Our approach is to remap the problem into a more accessible
 form, and use an engaging game to develop a significantly larger
@@ -243,21 +247,24 @@ for this.
 There is no \emph{a priori} way to know which of the two reasons lies
 behind a verification failure --- equivalently, an un-solvable game
 level.  A fielded version of our system would present each verification failure to a human
-verification expert.  The human examines the source code and
-determines which of two fixes to apply: change the code to correct the
+verification expert.  The human examines the source code and the type
+error, then determines which of two fixes to apply: change the code to correct the
 bug, or add an assertion/assumption indicating that the verification
 system should not issue a warning at this particular location.
+As with any other conservative type checker, a type error indicates an
+inconsistency between parts of the program, but does not prove that an
+error exists, nor does it provide a defect trace or test inputs that
+trigger a property violation at run time.
 
 
-Even when game-developed experts cannot fully verify
-a program, the impact of this paradigm can be significant.  Even
+Even when players (who have become game experts over time) cannot fully
+verify a program,
 partial verification has great value: it permits the valuable time of
-highly-skilled engineers to be focused on the most important parts of
+highly-skilled engineers to be focused on the most important and
+difficult-to-verify parts of
 the program.
 
 \subsection{Types for program verification}
-
-\todo{How much motivation should we keep for FTfJP?}
 
 We use pluggable type-checking as the underlying verification
 technology.  Type systems are the shining success of program
@@ -296,17 +303,17 @@ other errors.  This is the right way to start, because full formal
 verification remains impractical for realistic software.  Furthermore,
 type-checkers are powerful and can check a wide range of important
 properties.  Our system is built upon the Checker
-Framework~\cite{checker-framework-website-20100203},
+Framework~\cite{checker-framework-website},
 which has found hundreds of errors in millions of lines of
 code~\cite{PapiACPE2008,DietlDEMS2011}.  It can be easily adapted to new
 verification problems and comes
-with type-checkers that prevent errors due to null pointers;
+with type-checkers that prevent errors due to:  null pointers;
 initialization; map keys; equality tests and interning; incorrect
 mutation (side effects); concurrency and locking; fake enumerations;
 information flow (trust and security); aliasing; regular expression
 syntax; property files; internationalization; the string
 representation of data; and many more.  We have mapped the CWE/SANS Top 25
-Most Dangerous Software Errors (\url{http://cwe.mitre.org/top25/?2011})
+Most Dangerous Software Errors\footnote{\url{http://cwe.mitre.org/top25/?2011}}
 to type systems.
 
 Our system maps source code's typeflow properties
@@ -317,8 +324,8 @@ proof of partial correctness.
 The constraints and relationships among
 game elements are representations of the constraints on program types and
 the relationships among program variables.
-By playing the game, the programmer is effectively choosing types for
-every variable in the program.
+By playing the game, the programmer is effectively choosing a type for
+each variable in the program.
 This is valuable because general type inference with precise error messages
 remains an unsolved problem that can benefit from crowdsourcing.
 
@@ -330,13 +337,14 @@ either case, the failure is communicated back to an expert, who only
 considers cases that the crowd of players cannot resolve.
 
 
-
-\todo{
 \medskip
 
-The remainder of this paper is structured as follows.
-\todo{Write.}}
-
+The remainder of this paper is organized as follows.
+\secref{sec:pipejam} explains the Pipe Jam game mechanics.
+\secref{sec:mapping} discusses the translation of a program and
+property into a Pipe Jam game.
+Finally, \secref{sec:related-work} discusses related
+work and \secref{sec:conclusions} concludes.
 
 
 
@@ -359,12 +367,12 @@ The remainder of this paper is structured as follows.
   The left screenshot shows the player's view of the game.  In the
   upper right is the board that the player is currently working on
   (named ``Earth MountRock'').  The bottom portion of the screen shows
-  thumbnails of all the other boards in the current level, together
+  thumbnails of the other boards in the current level, together
   with a concise summary of which boards are solved and which are
   unsolved (the row of red and green rectangles).  The thumbnail at
   center left is for panning, which is not needed in this example.
   Above it are controls for adding a buzzsaw and for viewing an
-  animation; the current score; and a back button and the collapsed
+  animation.  Above those are the current score; a back button, the collapsed
   world map.
   \newline
   The right screenshot shows the world map in its expanded state.  The
@@ -397,27 +405,34 @@ pinch points.)  Likewise, some balls are large and cannot be adjusted;
 see Figures \ref{fig:game-detail} and~\ref{fig:game-buzzsaw} for
 examples of balls (atop gray pipes) that are fixed to be large.  The
 puzzle is solved when the player has chosen widths that are consistent
-with all the constraints, including both fixed sizes and which pipes
+with all the constraints.  The constraints include both fixed pipe sizes
+and which pipes
 flow into one another.
 
 The basic idea behind Pipe Jam is simple and lends itself to quick
 learning and enjoyable play.  We now explain some additional game
 mechanics that add interest and challenge.  (These game mechanics are
-much easier experienced than textually described.)
+much easier experienced than textually described. See a video at the
+project homepage\footnote{\url{http://www.cs.washington.edu/verigames}}.)
 
 \begin{description}
 
-\item[Boards and levels]
+\item[Boards]
   A Pipe Jam game is divided into boards, levels, and worlds.  A board is a
-  single network of pipes.  A level consists of a set of boards.  The level
-  is solved when all of the boards in it have been solved.  As explained
+  single network of pipes.  Examples appear in
+  Figures~\ref{fig:game-detail} and~\ref{fig:game-buzzsaw}.
+
+\item[Levels]
+  A level consists of a set of boards.  The left side of
+  Figure~\ref{fig:game-overview} shows a level being played.  A level
+  is solved when all of the boards in it are solved.  As explained
   below (``linked pipes''), actions on one board can affect another board:
   the player must solve all of them simultaneously, not one after the other
   independently.
 
-\item[Levels and worlds]
+\item[Worlds]
   A world consists of multiple levels.  A player proceeds through the
-  world, ``conquering'' each level one by one.  As shown in the world map
+  world, solving each level one by one.  As shown in the world map
   of \figref{fig:game-overview}, the levels depend on one another,
   which constrains the order in which the player may solve them.  It may
   sometimes be necessary for a player to backtrack to a previous level to
@@ -431,6 +446,7 @@ much easier experienced than textually described.)
 \hfill%
 \includegraphics[width=.49\textwidth]{images/world1-merge-and-pinch}
 \end{center}
+\vspace{10pt}
 
 \caption{
   Detail of two boards from the Pipe Jam game shown in
@@ -470,7 +486,7 @@ much easier experienced than textually described.)
   relationships among boards that the player must satisfy.
   The embedded network may come from the same level, or any level that
   does not follow the current one on the world map.  Mutually dependent
-  classes can be processed in either order.  In the worst case, a player
+  levels can be processed in either order.  In the worst case, a player
   may need to visit each one multiple times.
 
 \item[Buzzsaws:  Exceptions to the laws of physics]
@@ -484,8 +500,18 @@ much easier experienced than textually described.)
   without changing the sizes of any pipes.  However, placing a buzzsaw
   costs a large number of points, so players desire to use as few buzzsaws
   as possible.
-  \todo{I think this last sentence is the first mention of
-    points. Maybe this should be introduced earlier?}
+
+\item[Scoring]
+  A given board, level, or world may have multiple solutions.  Each
+  configuration of pipe widths earns the player a different number of
+  points.  Criteria in determining the score include
+  % , in decreasing order of importance: 
+  the number of unsolved levels in a world, unsolved boards in a level, and
+  collisions in a board; the number of buzzsaws used; and widths of pipes
+  (more points are earned for large pipes entering a board and narrow pipes
+  exiting a board).  These criteria favor solving the underlying
+  verification problem; avoiding assumptions or type loopholes in the
+  proof; and creating type annotations that favor reuse of components.
 
 \end{description}
 
@@ -516,15 +542,15 @@ much easier experienced than textually described.)
 
 
 The natural modularity of object-oriented programs, which are composed
-of classes that are composed of methods, makes our game attractive to
-casual gamers who can do a little bit of work and then later come back
+of classes that are composed of methods, enables a 
+casual gamer to do a little bit of work and then later come back
 to the game.  However, it is possible for interrelations to cross
 levels --- because of global variables that are used in multiple
 classes, or because of calls from one class to another.
 
 
 In \figref{fig:game-overview}, the player has not yet solved the
-game.  The outline color of each board and thumbnail (green or red)
+game.  The green or red outline color of each board/thumbnail
 indicates whether it is solved.  At any time, the player can animate
 the networks, making balls flow along them and seeing the result, but
 the colored borders give immediate visual feedback.  We plan to
@@ -538,8 +564,9 @@ complementary.
 
 
 \section{Mapping a program and a property into the Pipe Jam game}
+\label{sec:mapping}
 
-We now explain, at a high level, our algorithm for translating a
+We now explain, at a high level, our approach for translating a
 verification problem --- that is, a program and a property that may be
 true of the program --- into an instance of the Pipe Jam game.
 
@@ -579,6 +606,12 @@ avoid a proliferation of subcomponents in the network.
 The world map is a dependence graph among classes or, equivalently, a
 call graph.  It ensures that callees are annotated before callers,
 though it accommodates mutual dependences.
+We take advantage of the decomposition of object-oriented programs
+into parts that can be specified, implemented, understood, and reused
+individually.  This should help players just as it helps programmers.  We
+may introduce new levels of abstraction (such as dividing the world into
+continents) to leverage modules within a program that are larger than
+classes.
 
 Linked pipes that are of the same color represent different
 occurrences of the same variable or of two variables whose types must
@@ -595,8 +628,8 @@ more effective than any inference tool, as evidenced by the sorry
 state of error messages for type inference systems.  Once our system is
 fielded, then whenever many
 players, or a known successful player, uses a buzzsaw, a trained
-programmer can examine the code to understand the code at that
-location property.  The programmer determines whether the code is
+programmer can examine the code at that
+location.  The programmer determines whether the code is
 correct and needs a trusted assumption, or the code has a bug and
 should be fixed.  The game players have focused the scarce, expensive
 resource (expert programmer time) exactly where it is most
@@ -609,6 +642,13 @@ needed.\footnote{One can imagine other game mechanics for expert
   than for a complete failure to solve the level), and would be
   verified by a programmer.}
 
+The names for levels and boards are chosen arbitrarily, but are intended to
+be memorable.  Names from the original source code would not be meaningful
+to the players and might even confuse them.  The players have no knowledge
+of computing, of the application domain of the program, or of its source
+code.  The owner of the source code also might not wish for its identity or
+details about its design
+to be leaked to the players.
 
 \paragraph{Distinction from dataflow}
 The Pipe Jam game does not actually represent dataflow, but a
@@ -625,7 +665,7 @@ type (e.g., \<int>) can never hold \<null>.
 
 
 Although programs very frequently contain loops in their dataflow,
-cycles in a single board do not occur, because the network is really
+cycles in type flow on a single board do not occur, because the network is really
 about relationships and flows between types and variables, not just
 between specific data values.  Put more technically, it encodes the
 type constraints that arise when syntax-directed type constraint
@@ -635,13 +675,10 @@ are much simpler than the original program.
 
 \subsection{Mapping security vulnerabilities to game puzzles}
 
-\todo{I don't want to list all 25 type systems. Some of these
-  descriptions need to be adapted more.}
-
 We have set ourselves the initial goal of formally verifying that Java
 programs are free of the errors
-listed in the CWE/SANS Top 25 Most Dangerous Software Errors
-(\url{http://cwe.mitre.org/top25/?2011}).  It is, in its own words,
+listed in the CWE/SANS Top 25 Most Dangerous Software
+Errors\footnote{\url{http://cwe.mitre.org/top25/?2011}}.  It is, in its own words,
 ``a list of the most widespread and critical errors that can lead to
 serious vulnerabilities in software.''
 
@@ -650,7 +687,7 @@ instantiated for the errors on the list.  Instantiation requires
 creating a \emph{type system} that can detect the error or verify its
 absence, and a \emph{mapping} from the type system to our Pipe Jam
 game.  The mapping into Pipe Jam is generally straightforward.  We
-give three rules that handle most the situations.
+give three rules that handle most situations.
 %
 \begin{itemize}
 \item
@@ -669,7 +706,7 @@ give three rules that handle most the situations.
   \<this> within a constructor); and whether the referent is a key in
   a given map (this enables precise analysis of \<Map.get()> calls).
   In this case, a different physical representation is required for
-  the different properties.
+  the different orthogonal properties.
 
   We represent the primary or most important property as pipe/ball
   size, and the others as different colors or textures that are
@@ -678,7 +715,7 @@ give three rules that handle most the situations.
   complex example is whether a value is present as a key in a map.
   Suppose there is a map whose pipe is blue.  Then keys (pipes) that are
   guaranteed to be present in that map get a blue stripe.  This shows
-  to the user the relationship between different values.
+  the relationship between different values.
 \end{itemize}
 
 In some cases, a particularly sophisticated type system requires
@@ -693,6 +730,7 @@ type is narrow.  In our experience with over a dozen pluggable
 type-checkers, the nullness type system has the most complexities such as
 these, because programmers use \<null> to represent many special cases and
 because they can check for it at run time.
+Other type systems, such as those for security, are relatively simpler.
 
 
 \subsection{Simplifying the type constraints and the game puzzles}
@@ -700,7 +738,7 @@ because they can check for it at run time.
 
 Even a multitude of game players would have trouble verifying a
 5-million-line program with respect to 25 distinct type systems.
-Therefore, we propose to simplify the problem before presenting it to the
+Therefore, as future work we propose to simplify the problem before presenting it to the
 players.  We will do so by pre-determining the types for a subset of
 variables in the program.  Then, the players only need to find types for
 the remainder of the program.  We will use the best program analysis tools
@@ -714,8 +752,17 @@ but most variables in a program are of other types.  A second reason is
 that many values are restricted to a small part of the program.  In a
 correct program, user input strings are validated near where they are read,
 or at least do not flow into strings used for other purposes.  A third
-reason is that we will use highly-effective analyses that determine an
+reason is that highly-effective analyses exist that determine an
 answer for most of the program.
+
+We plan to evaluate how much simplification is optimal for players.  When a
+part of the code is difficult to verify, its context can provide critical
+clues, and it would be counterproductive to remove all of that and leave
+players just an abstract, unsolvable core.  On the other hand, players will
+become bored and jaded if they are required to perform rote actions.  At
+the same time, a game should have some easily-solved parts, to keep players
+engaged and to give them a feeling of forward progress.
+
 
 The game player is accomplishing the task of type inference:  creating an
 annotation for each variable declaration in the program, that gives
@@ -723,11 +770,8 @@ additional information about that variable's type.  Examples are whether
 the variable is permitted to hold the value \<null>, and whether the
 variable is permitted to be mutated.
 
-Type inference tools exist that can infer type annotations for unannotated
-code.  Whereas type \emph{checking} is largely a solved problem, type
+Whereas type \emph{checking} is largely a solved problem, type
 \emph{inference} emphatically is not.
-
-\todo{Move this paragraph somewhere. Maybe related work?}
 Even the most precise available inference tools leave much room for
 improvement.  For example, the state of the art tool for inferring
 nullness properties is the
@@ -738,7 +782,7 @@ flows to those dereferences, so those dereferences cannot result in a
 null pointer exception at run time.  However, this leaves 2\% of
 dereferences for a programmer to manually check --- some may be
 erroneous code that might fail at run time, but most are probably safe
-even though Julia is unable to infer such properties.  A humans'
+even though Julia is unable to infer such properties.  Human
 insight and higher powers of reasoning are required.  As another
 example, a state-of-the-art tool for inferring mutability (whether
 side effects are permitted/performed) is
@@ -766,6 +810,7 @@ these limitations via higher-level reasoning, pattern-matching, and
 heuristics to guide themselves through very large search spaces.
 
 % Are there "verification savants" much as there are for protein folding?
+
 
 
 
@@ -871,41 +916,61 @@ heuristics to guide themselves through very large search spaces.
 %   initially just exploring the options would be captivating enough to
 %   retain the interest of the player.
 % \end{description}
-% 
-% 
-% \subsection{Game-based expert development}
-% \label{sec:expert-development}
-% 
-% A highly-engaging game is capable of drawing in a number of new
-% players.  However, if the process of play does not produce increased
-% skills, and improvement (both individual and collective) on ability to
-% solve verification puzzles, then even a massive population of active
-% players will be useless towards the software verification goal.
-% Without significant increase of verification puzzle experts worldwide,
-% we will not be able to make a quantum leap in the code quality
-% compared to the status quo.  This challenge is common to all games
-% that attempt to solve hard problems.  Foldit, a proteomics game,
-% effectively created the genre of games that solve hard problems.
-% Prior to Foldit, it has not been known whether it is even possible to
-% elevate human expertise on a particular domain to the point that it
-% can disrupt the current scientific process and produce outcomes that
-% present significant scientific advances.  In the past few years, based
-% on the success of Foldit, several researchers have developed games
-% aimed at solving hard problems in science and engineering.  Still to
-% date, Foldit remains the only game with strong indisputable evidence
-% of emergent expertise and outcomes that advanced the science
-% (discoveries published in three Nature papers published in under 2
-% years).
-% 
-% The only way to accurately assess the emergence of expertise in the
-% player population is to measure their performance on hard verification
-% puzzles.  Once assessed, the key game design question is how to modify
-% the game towards improved performance.  Our team has shown with the
-% Foldit game that our approach of iterative game sensitivity analysis
-% is capable of finding modifications that significantly improve
-% performance over time.
-% 
-% 
+
+
+\subsection{Human advantage and game-based expert development}
+ 
+When the game has a buzzsaw-free solution, then that solution can be found
+both automatically and very quickly:  compute all pipes reachable by any
+large ball, and make those wide.  We do not believe that game players will
+have any advantage over program analysis in such circumstances.  However,
+our experience with pluggable type-checking so far leads us to expect that
+few if any programs will verify without buzzsaws --- that is, without any
+trusted assumptions or suppressed warnings.  It is our hope --- yet to be
+validated experimentally --- that people will have an advantage when a
+program is \emph{not} verifiable.  Perhaps people will observe the
+structure of the game, observe animated executions, notice patterns (such
+as that only small balls ever go down a particular chute, so the buzzsaw
+wouldn't actually have any effect and so can be placed for free), and use
+their intuition to find the smallest number of buzzsaws that can be placed.
+This will be more useful to the verification expert than an automated tool
+that chooses an arbitrary location at which to report a type conflict.
+The verification expert can also communicate back to the players, if they
+choose poorly, by preventing a buzzsaw from being placed at a particular
+location, or by adding a test case for the players to observe.
+
+We expect that in general, problems that are harder for verification
+experts will be more challenging to players.  We will evaluate which
+problems are more difficult in each domain.
+
+An engaging game is capable of drawing in many new
+players.  However, if the process of play does not produce increased
+skills, and improvement (both individual and collective) on ability to
+solve verification puzzles, then even a massive population of active
+players will not achieve our software verification goal.
+We need significantly more verification puzzle experts.
+This challenge is common to all games
+that attempt to solve hard problems.
+Foldit~\cite{cooper10predicting,cooper10challenge,cooper11analysis,cooper11phd},
+a proteomics game,
+effectively created the genre of games that solve hard problems.
+Prior to Foldit, it has not been known whether it is even possible to
+elevate human expertise on a particular domain to the point that it
+can disrupt the current scientific process and produce outcomes that
+present significant scientific advances.  In the past few years, based
+on the success of Foldit, several researchers have developed games
+aimed at solving hard problems in science and engineering.  Still to
+date, Foldit remains the only game with indisputable evidence
+of emergent expertise and outcomes that advanced the science.
+
+The only way to accurately assess the emergence of expertise in the
+player population is to measure their performance on hard verification
+puzzles.  Once assessed, the key game design question is how to modify
+the game towards improved performance.  We plan an approach of iterative
+game sensitivity analysis, which will lead us to modifications that improve
+performance over time, as it did with Foldit.
+ 
+ 
 % \subsection{Open Verification Puzzles: Crowdsourcing programs}
 % 
 % Once we have determined the efficacy of the game towards verifying our
@@ -980,15 +1045,40 @@ heuristics to guide themselves through very large search spaces.
 \section{Related work}
 \label{sec:related-work}
 
-In the following we discuss related work along two axes: type
-inference and program verification.
+%% In the following we discuss related work along two axes: type
+%% inference and program verification.
 
-\todo{This section is way too detailed.}
+%% \subsection{Type inference}
+%% \label{sec:type-inference-previous}
+
+%% Our most closely related previous experience is building an inference
+%% tool \cite{DietlEM2011} for an ownership type system
+%% \cite{DietlPhD09}.  One particular problem with the inference of
+%% ownership type systems is that multiple valid solutions exist and that
+%% the programmer needs to be able to express design intent.  Our tool
+%% generates type constraints by traversing the abstract syntax tree and
+%% encodes heuristics by giving weights to solutions.  It then encodes
+%% the constraints as a Max-SAT problem and uses an off-the-shelf solver
+%% to find a solution with an optimal weighting.  Our inference is a
+%% tunable, iterative approach, in which the programmer finds the desired
+%% annotations by tuning the heuristics, adding partial annotations, and
+%% fixing bugs in the program.
+
+%% We also build on our previous experience with the Javarifier type
+%% inference algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari
+%% language for reference immutability~\cite{BirkaE2004,TschantzE2005}.
+%% A Javari type-checker is implemented using Java annotations and the
+%% Checker Framework~\cite{PapiACPE2008}.  Javarifier is sound (its
+%% results type-check) and precise (making any more references
+%% \codeid{@Readonly} causes the program not to type-check).  Javarifier
+%% handles the full Java language including generics, wildcards, and
+%% arrays.  It infers a rich, practical type system that includes
+%% parametric polymorphism over mutability and permits excluding fields
+%% from an object's abstract state. It takes advantage of
+%% generics that are already in the program (or that are inferred by a
+%% separate tool~\cite{DonovanKTE2004,KiezunETF2007}).
 
 
-% \subsection{Type inference}
-% \label{sec:type-inference-previous}
-% 
 % \todo{This is a review of our previous work, not general work on type
 %   inference. Change title or contents?}
 % 
@@ -1080,9 +1170,9 @@ inference and program verification.
 % interned.  But other solutions exist in which guarantees can be made.
 % These result in a modified program, either by refactoring or by introducing
 % type qualifiers.
-% 
-% 
-% \subsection{Program verification}
+
+ 
+%% \subsection{Program verification}
 
 Currently, there is no rapid, cost-effective approach for establishing that
 an application is safe.  Testing and dynamic analysis are pragmatic and
@@ -1104,7 +1194,6 @@ require a high skill level --- 6 months of training is considered a lower
 bound to use a theorem-prover, and model checkers also have a significant
 learning curve.
 
-Space restrictions permit us to mention related work only briefly.
 
 \emph{Automatic verification} is the gold standard.  One good example is
 Saturn~\cite{AikenBDDHH2007}, a precise and scalable static analysis
@@ -1338,18 +1427,38 @@ that make the specific properties that \astree{} checks easy to verify.
 % However, by providing simple extensibility for the verification
 % engineer, we hope to make our tool more widely applicable.
 
+\medskip
+
+See our previous work on a type inference
+algorithm~\cite{DietlEM2011} for the Generic Universe Types
+ownership type system~\cite{DietlPhD09}
+and the Javarifier type inference
+algorithm~\cite{Tschantz2006,QuinonezTE2008} for the Javari language
+for reference immutability~\cite{BirkaE2004,TschantzE2005}
+for additional pointers to relevant literature.
 
 
-% \section{Conclusions}
-% 
-% 
-% \section{Acknowledgments}
-% 
-% Mention funding?
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+This paper summarized the current status of the Verification
+Games project.
+Future work will focus on both the verification and game play aspects,
+for example, expressing more properties, scaling up, adjusting game
+play difficulty and interest, and play testing.
+More information and a demonstration video can be found at the project
+homepage\footnote{\url{http://www.cs.washington.edu/verigames}}.
 
 
-\enlargethispage{10pt}
+\section*{Acknowledgments}
+ 
+This work was supported by DARPA Grant FA8750-11-2-0221.  Brian Britigan
+and Marianne Lee drew the Pipe Jam art.  We thank Drew Dean for his
+encouragement and feedback.
 
+
+\pagebreak
 \bibliographystyle{abbrv}
 \bibliography{2012-pipejam,bibstring-abbrev,ernst,invariants,other,types,pag,sideeff,refs}
 
@@ -1365,3 +1474,7 @@ that make the specific properties that \astree{} checks easy to verify.
 %%% mode: auto-fill
 %%% mode: flyspell on
 %%% End:
+
+%  LocalWords:  Popovi 'c TBD ly un CWE typeflow pipejam MountRock unsolve
+%  LocalWords:  SmeltCity SteelTowne Buzzsaws buzzsaws pre LOC L4 HOL Coq
+%  LocalWords:  microkernel Compcert SDV 1K 30K FA8750 Britigan

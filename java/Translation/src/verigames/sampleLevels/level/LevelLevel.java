@@ -18,11 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import verigames.level.Board;
-import verigames.level.Chute;
-import verigames.level.Intersection;
-import verigames.level.Level;
-import verigames.level.NullTest;
+import verigames.level.*;
 
 
 @SuppressWarnings("deprecation")
@@ -996,7 +992,7 @@ public class LevelLevel
       boardsOut.addNode(topSubnetwork);
       boardsOut.addNode(bottomSubnetwork);
       
-      NullTest split = factory(BALL_SIZE_TEST).asBallSizeTest();
+      BallSizeTest split = factory(BALL_SIZE_TEST).asBallSizeTest();
       Intersection endLeft = factory(END);
       Intersection end = factory(END);
       Intersection merge = factory(MERGE);

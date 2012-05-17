@@ -1,6 +1,6 @@
 <?php
 $file_path = $_REQUEST["path"];
-chdir("/homes/abstract/bdwalker/www/uploads/");
+chdir("/homes/abstract/bdwalker/www/live/uploads/");
 if(file_exists('./'.$file_path)){
 	$contents = file_get_contents('./'.$file_path);
 	print($contents);

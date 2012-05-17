@@ -1,7 +1,8 @@
 //keeps track of the number of files to be uploaded
 var count = 1;
-
-
+var uploadGUID = -1;
+var PHP_SCRIPT= "./scripts/pipejam.php"; //this should be treated as a constant
+var UPLOADIFY_LOC = "./uploadify/uploadify.swf"; //this should be treated as a constant
 /*
 * Function to attach observers to the "remove" button that will appear in 
 * the file upload box.  It will cause the button to be underlines when the
@@ -58,101 +59,161 @@ function checkForValidFiles(inputFiles) {
 	return 1;
 }
 
+function showSpinner(targetId){
+	var opts = {
+  		lines: 12, // The number of lines to draw
+ 		length: 7, // The length of each line
+  		width: 2, // The line thickness
+  		radius: 5, // The radius of the inner circle
+  		color: '#ffffff', // #rgb or #rrggbb
+  		speed: 3, // Rounds per second
+  		trail: 60, // Afterglow percentage
+  		shadow: false, // Whether to render a shadow
+  		hwaccel: false, // Whether to use hardware acceleration
+  		top:'0px',
+  		left:'100px'
+	};
+	var target = document.getElementById(targetId);
+	var spinner = new Spinner(opts).spin(target);
+}
 
-function showProgress(event) {
-	event.preventDefault();
-	var result = checkForValidFiles($(':file'));
-	$("#message").html('');
-	if(result == 1) {
-		var opts = {
-	  		lines: 12, // The number of lines to draw
-	 		length: 7, // The length of each line
-	  		width: 2, // The line thickness
-	  		radius: 6, // The radius of the inner circle
-	  		color: '#2659E5', // #rgb or #rrggbb
-	  		speed: 2, // Rounds per second
-	  		trail: 60, // Afterglow percentage
-	  		shadow: false, // Whether to render a shadow
-	  		hwaccel: false // Whether to use hardware acceleration
-		};
-		var target = document.getElementById('spinner');
-		var spinner = new Spinner(opts).spin(target);
-		
-		
-		message = "Uploading Files, Please Wait";
-		$("#message").append(message);
-		document.getElementById("file_form").submit();
-	}else {
-		message = "Please select a file";
-		$("#message").append(message);
+
+function uploadFiles(event) {
+    if($('#file_upload').uploadifySettings('queueSize') > 0) {
+      	$(this).modal();
+      	showSpinner('upload-spin');
+      	var upload = $.ajax({
+      		url: "./scripts/guid.php"
+      	})
+      	
+      	upload.done(function(guid) {
+      		uploadGUID = guid;
+      		$('#file_upload').uploadifySettings('folder', "/"+guid);
+      		$('#file_upload').uploadifyUpload();
+      	});
+     }
+}	
+
+function checkUpload(event, ID, fileObj, response, data) {
+	if(response !== "SUCCESS") {
+		$('#file_upload').uploadifyClearQueue();
+	} else {
+	   //print error
 	}
 }
 
 
-/*
-* function to add a new file upload button. This is called as the result of the
-* user selecting to "Add additional files" from the upload selection box.  
-*/
-function addButton(event) {
 
-	//create new <div> with browse button and remove button
-	var newButton, div, remove, newId;
-	
-
-	newId = "button"+count;
-	count+=1;
-	
-	$('#buttons').append($("<div style='height:30px;'> <div style='position:absolute;left:10;'><a id='test_button' href='#'>Choose File</a></div>"+
-							"<input style='z-index:10;' type='file' name='file[]' multiple='multiple'/><a href='#' id="+ newId + " class='common_style'>Remove</a>" + 
-						   "</div>"));
-		
-	attachObservers(newId);
-
-}
-
-function testUpload(event){
-	$.ajax({
-		url: "./scripts/guid.php"
-	}).done(function(guid){
-		
-		$('#file_upload').uploadifySettings('folder', '../uploads/'+guid);
-		$('#file_upload').uploadifyUpload();
+function compileFiles() {
+	showSpinner("compile-spin");
+	var request = $.ajax({
+		url: PHP_SCRIPT,
+		type: "POST",
+		data: {"function":"compile", "guid":uploadGUID}
 	});
-}	
+	request.done(function(response) {
+		if(response === "SUCCESS") {
+			$('#compile-spin').html("<img style='opacity:1.0' width='25' height='25' src='./resources/success.png'/>");
+			createXML();
+		} else {
+			$('#compile-spin').html("<a style='color:red' target='_blank' href='scripts/error_display.php?file=compile_output.txt&id="
+			 + uploadGUID + "\'>Error</a>");
+				
+		}
+	});
+}
 
-function updateStatus(event, data){
+function unzipFiles(event) {
+	$('#upload-spin').html("<img style='opacity:1.0' width='25' height='25' src='./resources/success.png'/>");
+	showSpinner("unzip-spin");
+	var request = $.ajax({
+		url: PHP_SCRIPT,
+		type:"POST",
+		data:{"function":"unzip", "guid": uploadGUID}
+	});
 	
+	request.done(function(response) {
+		if(response === "SUCCESS") {
+			$('#unzip-spin').html("<img style='opacity:1.0' width='25' height='25' src='./resources/success.png'/>");
+			compileFiles();
+		}
+	});	
 }
-	
-function quickPlay(event){
-	window.open('./flash_files/webgame.html?sample=sample1.xml');
-}	
-	
-function highlight(event){
-	$(this).css("background-color", "white");
+
+function createXML() {
+	showSpinner("verify-spin");
+	var typeChecker = $('option:selected').val();
+	var request = $.ajax({
+		url: PHP_SCRIPT,
+	 	type: "POST",
+		data: {"function":"xml", "guid":uploadGUID, "script":typeChecker}
+	});
+	request.done(function(response) {
+		if(response === "SUCCESS") {
+			$('#verify-spin').html("<img width='25' height='25' src='./resources/success.png'/>");
+			cleanup();
+		}else{
+			$('#verify-spin').html("<a style='color:red' target='_blank' href='scripts/error_display.php?file="+response+"&id="
+			 + uploadGUID + "\'>Error</a>"); 
+		}
+	});
 }
+
+function cleanup(all) {
+    //if not passed, default to false
+    all = typeof all !== 'undefined' ? all : false;
+    
+    //if true is passed then the entire directory should be removed
+    var toCall = (all)?"cleanup_all":"cleanup";
+	$.ajax({
+		url:PHP_SCRIPT,
+		type: "POST",
+		data: {"function":toCall, "guid": uploadGUID}
+	}).done(function(response) {
+	   if(response !== "all_removed") 
+	       playGame();
+	});
+}
+
+function playGame(){
+    var typeChecker = $('option:selected').val();
+	window.location = "webgame.php?id=" + uploadGUID + "&checker=" + typeChecker;
+}
+
+function showOptions(event) {
+	position = $(this).offset();
+	labelPosition = $('#typechecker').position();
+	labelWidth = $('#typechecker').outerWidth();
+	buttonWidth = $('#select_typechecker').outerWidth();
+	totalWidth = labelWidth + buttonWidth;
+	totalHeight = $('#typechecker').height();
+	$('#type_options').position({
+		top:	labelPosition.top + totalHeight,
+		left:	labelPosition.left
+	});
+}
+
 
 window.onload = function() {
 	attachMouseoverObserver("button");
 	attachMouseoverObserver("test_button");
-	$('#uploadIt').bind('click', testUpload);
-	$('#submit_button').bind('click', showProgress);
-	$('#button').bind('click', addButton);
-	$('#play').bind('click', quickPlay);
-	$('#play').bind('hover', $(this).css("background-color", "white"));
+	$('#uploadIt').bind('click', uploadFiles);
+	$('#select_typechecker').bind('click', showOptions);
   	$('#file_upload').uploadify({
-  	  'uploader'  : './uploadify/uploadify.swf',
-  	  'script'    : './scripts/pipejam_test.php',
-  	  'cancelImg' : './uploadify/cancel.png',
+  	  'uploader'  : UPLOADIFY_LOC,
+  	  'script'    : PHP_SCRIPT,
+  	  'removeCompleted' : false,
+  	  'cancelImg' : './uploadify/cancelred.png',
   	  'multi'	  : true,
   	  'fileExt'   : '*.zip;*.java;*.jar',
   	  'fileDesc' : 'Java Source Files',
   	  'sizeLimit' : 10485760,
-  	  'width'	  : 200,
+  	  'width'	  : 134,
   	  'auto'      : false,
   	  'queueID'   : 'queue',
   	  'queueSizeLimit' : 10,
   	  'simUploadLimit' : 10,
-  	  'onAllComplete' : updateStatus
+  	  'onComplete' : checkUpload,
+  	  'onAllComplete' : unzipFiles
  	 });
 }

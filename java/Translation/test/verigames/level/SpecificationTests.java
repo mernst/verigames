@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ ChuteSpecTests.class, BoardSpecTests.class,
-  IntersectionSpecTests.class, NullTestSpecTests.class,
+  IntersectionSpecTests.class, BallSizeTestSpecTests.class,
   LevelSpecTests.class, LevelXMLTests.class })
 public class SpecificationTests {
   // Placeholder class
