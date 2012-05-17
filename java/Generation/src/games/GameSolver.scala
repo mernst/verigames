@@ -446,16 +446,16 @@ abstract class GameSolver extends ConstraintSolver {
     def finalizeWorld(world: World) {
       // Connect all intersections to the corresponding outgoing slot
       boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
-        /*if (cvar.varpos.isInstanceOf[ReturnVP]) {
+        if (cvar.varpos.isInstanceOf[ReturnVP]) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
           board.addEdge(lastsect, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
-        } else {*/
+        } else {
           // Everything else simply gets terminated.
           val end = Intersection.factory(Intersection.Kind.END)
           board.addNode(end)
           board.addEdge(lastsect, 0, end, 0, new Chute(cvar.id, cvar.toString()))
-        //}
+        }
       })
 
       boardToSelfIntersection foreach ( kv => { val (board, lastsect) = kv

@@ -17,6 +17,8 @@ class NninfGameSolver extends GameSolver {
 
     override def version: String = super.version + "\nNninfGameSolver version 0.1"
 
+    var oldMerge : Intersection = null
+    
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */
@@ -26,18 +28,19 @@ class NninfGameSolver extends GameSolver {
             // No need to generate something for trivial super/sub-types.
             if (sup != NninfConstants.NULLABLE &&
                 sub != NninfConstants.NONNULL) {
-
+              var merge : Intersection = null
+              var board : Board = null
               if (sub == LiteralNull) {
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
 
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
-                val board = variablePosToBoard(supvar.varpos)
+                board = variablePosToBoard(supvar.varpos)
                 val blackball = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
                 val blackballchute = new Chute(-1, "null literal")
                 blackballchute.setEditable(false)
-                val merge = Intersection.factory(Intersection.Kind.MERGE)
+                merge = Intersection.factory(Intersection.Kind.MERGE)
                 val lastIntersection = boardNVariableToIntersection((board, supvar))
 
                 board.addNode(blackball)
@@ -51,12 +54,12 @@ class NninfGameSolver extends GameSolver {
                 // Subtypes between arbitrary variables only happens for local variables.
                 // TODO: what happens for "x = o.f"? Do I always create ASSIGNMENT constraints?
                 // What about m(o.f)?
-                val board = findBoard(sub, sup)
+                board = findBoard(sub, sup)
 
                 if (board!=null) {
                   // println(sub + " <: " + sup)
 
-                  val merge = Intersection.factory(Intersection.Kind.MERGE)
+                  merge = Intersection.factory(Intersection.Kind.MERGE)
                   board.addNode(merge)
                   val sublast = findIntersection(board, sub)
                   val suplast = findIntersection(board, sup)
@@ -71,6 +74,14 @@ class NninfGameSolver extends GameSolver {
                     board.addEdge(suplast, 0, merge, 0, createChute(sup))
 
                     updateIntersection(board, sub, merge)
+                  } else if (sup.isInstanceOf[Variable] &&
+                		  	 sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
+                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
+                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+
+                    updateIntersection(board, sup, merge)
+                    if (sub.isInstanceOf[Variable])
+                      boardNVariableToIntersection.remove((board, sub.asInstanceOf[Variable]))
                   } else {
                     val split = Intersection.factory(Intersection.Kind.SPLIT)
                     board.addNode(split)
@@ -81,20 +92,6 @@ class NninfGameSolver extends GameSolver {
 
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
-                  }
-
-                  if (sup.isInstanceOf[Variable] &&
-                      sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
-                    val supvar = sup.asInstanceOf[Variable]
-                    val outgoing = board.getOutgoingNode()
-                    val prevout = outgoing.getInput(1)
-                    if (prevout==null) {
-                        board.addEdge(merge, 0, outgoing, 1, new Chute(supvar.id, supvar.toString()))
-                        // The variable is already connected to the end, nothing more to do
-                        boardNVariableToIntersection.remove((board, supvar))
-                    } else {
-                      println("Heeeyy!")
-                    }
                   }
                 }
               }
