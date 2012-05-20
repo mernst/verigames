@@ -7,6 +7,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/checker-framework-inference"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/checkers"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/verigames-translation"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
