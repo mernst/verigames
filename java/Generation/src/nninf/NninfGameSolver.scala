@@ -74,14 +74,6 @@ class NninfGameSolver extends GameSolver {
                     board.addEdge(suplast, 0, merge, 0, createChute(sup))
 
                     updateIntersection(board, sub, merge)
-                  } else if (sup.isInstanceOf[Variable] &&
-                		  	 sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
-                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
-
-                    updateIntersection(board, sup, merge)
-                    if (sub.isInstanceOf[Variable])
-                      boardNVariableToIntersection.remove((board, sub.asInstanceOf[Variable]))
                   } else {
                     val split = Intersection.factory(Intersection.Kind.SPLIT)
                     board.addNode(split)
