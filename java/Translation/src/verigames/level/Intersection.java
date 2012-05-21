@@ -185,11 +185,11 @@ public class Intersection extends verigames.graph.Node<Chute>
     int numRequiredInPorts = intersectionKind.getNumberOfInputPorts();
     int numRequiredOutPorts = intersectionKind.getNumberOfOutputPorts();
 
-    TreeMap<String, Chute> inputChutes = getInputs();
-    TreeMap<String, Chute> outputChutes = getOutputs();
+    List<String> inputPorts = getInputIDs();
+    List<String> outputPorts = getOutputIDs();
 
-    int usedInPorts = inputChutes.size();
-    int usedOutPorts = outputChutes.size();
+    int usedInPorts = inputPorts.size();
+    int usedOutPorts = outputPorts.size();
 
     if (underConstruction())
     {

@@ -88,20 +88,18 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
 
     for (NodeType n : nodes)
     {
-      for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getOutputs().entrySet())
+      for (String nodePort : n.getOutputIDs())
       {
-        EdgeType e = entry.getValue();
-        String nodePort = entry.getKey();
+        EdgeType e = n.getOutput(nodePort);
 
         // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
         ensure(nodePort.equals(e.getStartPort()));
         ensure(e.getStart() == n);
       }
 
-      for (Map.Entry<String, /*@NonNull*/ EdgeType> entry : n.getInputs().entrySet())
+      for (String nodePort : n.getInputIDs())
       {
-        EdgeType e = entry.getValue();
-        String nodePort = entry.getKey();
+        EdgeType e = n.getInput(nodePort);
 
         // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
         ensure(nodePort.equals(e.getEndPort()));

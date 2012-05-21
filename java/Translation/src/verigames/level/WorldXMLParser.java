@@ -123,6 +123,9 @@ public class WorldXMLParser
       linkedEdges = processLinkedEdges(linkedEdgesElt);
     }
 
+    // TODO remove call to makeLinked once the transition has been fully made.
+    // It remains to support parsing of old sample levels that still link chutes
+    // with makeLinked, rather than implicitly linking via variableID.
     for (Set<String> UIDSet : linkedEdges)
     {
       Set<Chute> chutes = new LinkedHashSet<Chute>();
@@ -469,14 +472,14 @@ public class WorldXMLParser
     }
 
     // pair of XML UID for an Intersection and port
-    final Pair<String, Integer> startID;
+    final Pair<String, String> startID;
     {
       final Element fromElt = edgeElt.getFirstChildElement("from");
       final Element noderefElt = fromElt.getFirstChildElement("noderef");
       startID = processNodeRef(noderefElt);
     }
 
-    final Pair<String, Integer> endID;
+    final Pair<String, String> endID;
     {
       final Element toElt = edgeElt.getFirstChildElement("to");
       final Element noderefElt = toElt.getFirstChildElement("noderef");
@@ -484,10 +487,10 @@ public class WorldXMLParser
     }
 
     final Intersection start = UIDMap.get(startID.getFirst());
-    final int startPort = startID.getSecond();
+    final String startPort = startID.getSecond();
 
     final Intersection end = UIDMap.get(endID.getFirst());
-    final int endPort = endID.getSecond();
+    final String endPort = endID.getSecond();
 
     final Chute c = new Chute(variableID, description);
     c.setPinched(pinch);
@@ -497,13 +500,12 @@ public class WorldXMLParser
     if (layout != null)
       c.setLayout(layout);
     
-    // TODO update to String ports
     b.addEdge(start, startPort, end, endPort, c);
 
     return Pair.of(UID, c);
   }
 
-  private static Pair<String, Integer> processNodeRef(Element nodeRef)
+  private static Pair<String, String> processNodeRef(Element nodeRef)
   {
     checkName(nodeRef, "noderef");
 
@@ -513,11 +515,18 @@ public class WorldXMLParser
       ID = IDAttr.getValue();
     }
 
-    final int port;
-    try
+    final String port;
     {
       final Attribute portAttr = nodeRef.getAttribute("port");
-      port = Integer.parseInt(portAttr.getValue());
+      port = portAttr.getValue();
+    }
+
+    // TODO if String IDs are adopted in XML, remove check that ports are
+    // integer values
+    try
+    {
+      // Make sure that the port is a valid int
+      Integer.parseInt(port);
     }
     catch (NumberFormatException e)
     {

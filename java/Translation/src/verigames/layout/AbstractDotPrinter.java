@@ -46,7 +46,7 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
    */
   protected static int getMaxPorts(Node<?> n)
   {
-    return Math.max(n.getInputs().size(), n.getOutputs().size());
+    return Math.max(n.getInputIDs().size(), n.getOutputIDs().size());
   }
     
   /**
