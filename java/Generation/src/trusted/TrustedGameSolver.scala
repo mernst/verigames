@@ -17,6 +17,8 @@ class TrustedGameSolver extends GameSolver {
 
     override def version: String = super.version + "\nTrustedGameSolver version 0.1"
 
+    var otherReturn : Slot = null
+    
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */
@@ -79,20 +81,6 @@ class TrustedGameSolver extends GameSolver {
 
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
-                  }
-
-                  if (sup.isInstanceOf[Variable] &&
-                      sup.asInstanceOf[Variable].varpos.isInstanceOf[ReturnVP]) {
-                    val supvar = sup.asInstanceOf[Variable]
-                    val outgoing = board.getOutgoingNode()
-                    val prevout = outgoing.getInput(1)
-                    if (prevout==null) {
-                        board.addEdge(merge, 0, outgoing, 1, new Chute(supvar.id, supvar.toString()))
-                        // The variable is already connected to the end, nothing more to do
-                        boardNVariableToIntersection.remove((board, supvar))
-                    } else {
-                      println("Heeeyy!")
-                    }
                   }
                 }
               }

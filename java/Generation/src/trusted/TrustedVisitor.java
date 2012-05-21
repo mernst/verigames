@@ -1,11 +1,11 @@
 package trusted;
 
 import checkers.basetype.BaseTypeChecker;
-import checkers.inference.InferenceVisitor;
+import games.GameVisitor;
 
 import com.sun.source.tree.*;
 
-public class TrustedVisitor extends InferenceVisitor {
+public class TrustedVisitor extends GameVisitor {
 
     public TrustedVisitor(BaseTypeChecker checker, CompilationUnitTree root,
             TrustedChecker trustedchecker, boolean infer) {

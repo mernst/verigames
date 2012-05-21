@@ -102,15 +102,6 @@ public class NninfVisitor extends InferenceVisitor {
         return null;
     }
 
-    @Override
-    public Void visitVariable(VariableTree node, Void p) {
-        scan(node.getModifiers(), p);
-        scan(node.getType(), p);
-        scan(node.getInitializer(), p);
-
-        return super.visitVariable(node, p);
-    }
-
     /** Log method invocations. */
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
