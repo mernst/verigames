@@ -198,17 +198,13 @@ public class WorldXMLPrinter extends Printer<World, Void>
         {
           Element inputElt = new Element("input");
           
-          // TODO perhaps use the actual Strings as port IDs?
-          int portNum = 0;
           for (String ID : node.getInputIDs())
           {
             Chute input = node.getInput(ID);
             Element portElt = new Element("port");
-            portElt.addAttribute(new Attribute("num", Integer.toString(portNum)));
+            portElt.addAttribute(new Attribute("num", ID));
             portElt.addAttribute(new Attribute("edge", "e" + input.getUID()));
             inputElt.appendChild(portElt);
-            
-            portNum++;
           }
           
           nodeElt.appendChild(inputElt);
@@ -217,17 +213,13 @@ public class WorldXMLPrinter extends Printer<World, Void>
         {
           Element outputElt = new Element("output");
           
-          // TODO perhaps use the actual Strings as port IDs?
-          int portNum = 0;
           for (String ID : node.getOutputIDs())
           {
             Chute output = node.getOutput(ID);
             Element portElt = new Element("port");
-            portElt.addAttribute(new Attribute("num", Integer.toString(portNum)));
+            portElt.addAttribute(new Attribute("num", ID));
             portElt.addAttribute(new Attribute("edge", "e" + Integer.toString(output.getUID())));
             outputElt.appendChild(portElt);
-
-            portNum++;
           }
           
           nodeElt.appendChild(outputElt);

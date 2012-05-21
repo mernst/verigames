@@ -521,18 +521,6 @@ public class WorldXMLParser
       port = portAttr.getValue();
     }
 
-    // TODO if String IDs are adopted in XML, remove check that ports are
-    // integer values
-    try
-    {
-      // Make sure that the port is a valid int
-      Integer.parseInt(port);
-    }
-    catch (NumberFormatException e)
-    {
-      throw new RuntimeException("port attribute of noderef did not contain an integer", e);
-    }
-    
     return Pair.of(ID, port);
   }
 
