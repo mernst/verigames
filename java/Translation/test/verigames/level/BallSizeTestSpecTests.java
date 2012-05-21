@@ -13,6 +13,9 @@ import verigames.level.Intersection.Kind;
 
 public class BallSizeTestSpecTests
 {
+  private static final String SMALL_PORT = "small";
+  private static final String LARGE_PORT = "large";
+
   /**
    * Tests that the custom accessors access the right output port, as defined
    * in the class spec
@@ -35,7 +38,7 @@ public class BallSizeTestSpecTests
     assertEquals(nt.getNarrowChute(), nonNull);
     assertEquals(nt.getWideChute(), nullable);
     
-    assertEquals(nt.getOutput(0), nonNull);
-    assertEquals(nt.getOutput(1), nullable);
+    assertEquals(nt.getOutput(SMALL_PORT), nonNull);
+    assertEquals(nt.getOutput(LARGE_PORT), nullable);
   }
 }

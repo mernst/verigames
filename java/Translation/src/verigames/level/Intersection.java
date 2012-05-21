@@ -2,7 +2,7 @@ package verigames.level;
 
 import static verigames.utilities.Misc.ensure;
 
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * An intersection between {@link Chute}s. Mutable until construction is
@@ -301,6 +301,36 @@ public class Intersection extends verigames.graph.Node<Chute>
   public Kind getIntersectionKind()
   {
     return intersectionKind;
+  }
+
+  /**
+   * Returns a {@code List<String>} containing all of the input port IDs for
+   * this {@code Intersection}.<p>
+   *
+   * Returns the port IDs in the order in which they should appear when
+   * connected in game. This is typically alphabetical order, but is not always.
+   */
+  @Override
+  public List<String> getInputIDs()
+  {
+    List<String> portsList = new ArrayList<String>(super.getInputIDs());
+    Collections.sort(portsList);
+    return Collections.unmodifiableList(portsList);
+  }
+
+  /**
+   * Returns a {@code List<String>} containing all of the output port IDs for
+   * this {@code Intersection}.<p>
+   *
+   * Returns the port IDs in the order in which they should appear when
+   * connected in game. This is typically alphabetical order, but is not always.
+   */
+  @Override
+  public List<String> getOutputIDs()
+  {
+    List<String> portsList = new ArrayList<String>(super.getOutputIDs());
+    Collections.sort(portsList);
+    return Collections.unmodifiableList(portsList);
   }
 
   /**

@@ -1,29 +1,41 @@
 package verigames.level;
 
+import java.util.*;
+
 /**
  * An {@link Intersection} subclass that represents {@link
  * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST} {@link Intersection.Kind
  * Kind}s of {@code Intersection}.<br/>
  * <br/>
- * The output chute in port 0 represents the "small ball" branch of this test<br/>
+ * The output chute in port "small" represents the "small ball" branch of this
+ * test<br/>
  * <br/>
- * The output chute in port 1 represents the "big ball" branch of this test<br/>
- * 
+ * The output chute in port "large" represents the "big ball" branch of this
+ * test<br/>
+ *
  * @author Nathaniel Mote
  */
 
 public class BallSizeTest extends Intersection
 {
-  
   /*
    * Representation Invariant (in addition to the superclass rep invariant):
    * 
-   * The output chute in port 0 is the "small ball" chute and must be uneditable
-   * and narrow
+   * The output chute in port "small" is the "small ball" chute and must be
+   * uneditable and narrow
    * 
-   * The output chute in port 1 is the "big ball" chute and must be uneditable and
-   * wide
+   * The output chute in port "large" is the "big ball" chute and must be
+   * uneditable and wide
    */
+
+  private static final String SMALL_PORT = "small";
+  private static final String LARGE_PORT = "large";
+
+  // TODO remove old port numbers when possible
+  @Deprecated
+  private static final String SMALL_PORT_OLD = "0";
+  @Deprecated
+  private static final String LARGE_PORT_OLD = "1";
   
   private static final boolean CHECK_REP_ENABLED =
       verigames.utilities.Misc.CHECK_REP_ENABLED;
@@ -103,7 +115,7 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getWideChute()
   {
-    return getOutput(1);
+    return getOutput(LARGE_PORT);
   }
   
   /**
@@ -124,7 +136,7 @@ public class BallSizeTest extends Intersection
     if (chute.isNarrow())
       throw new IllegalArgumentException(
           "Chute passed to setNullChute must not be narrow");
-    super.setOutput(chute, 1);
+    super.setOutput(chute, LARGE_PORT);
     checkRep();
   }
   
@@ -136,7 +148,7 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getNarrowChute()
   {
-    return getOutput(0);
+    return getOutput(SMALL_PORT);
   }
   
   /**
@@ -158,7 +170,7 @@ public class BallSizeTest extends Intersection
       throw new IllegalArgumentException(
           "Chute passed to setNarrowChute must be narrow");
     
-    super.setOutput(chute, 0);
+    super.setOutput(chute, SMALL_PORT);
     checkRep();
   }
   
@@ -166,28 +178,84 @@ public class BallSizeTest extends Intersection
    * {@inheritDoc}
    * 
    * @param port
-   * The output port to which {@code output} will be attached. Must be 0 or 1.<br/>
+   * The output port to which {@code output} will be attached. Must be "small"
+   * or "large".<p>
+   *
+   * Deprecated support still exists for old port numbers, so "0" instead of
+   * "small" and "1" instead of "large" can be used. However, support for this
+   * is transitional and will be removed soon.
+   *
    * @param output
    * The chute to attach.<br/>
    * Requires:<br/>
-   * - {@link Chute#isEditable() !chute.isEditable()}<br/>
-   * - if {@code port} is 0: {@link Chute#isNarrow() chute.isNarrow()}<br/>
-   * - if {@code port} is 1: {@link Chute#isNarrow() !chute.isNarrow()}<br/>
+   * - {@link Chute#isEditable() !output.isEditable()}<br/>
+   * - if {@code port} is "small": {@link Chute#isNarrow()
+   *   output.isNarrow()}<br/>
+   * - if {@code port} is "large": {@link Chute#isNarrow()
+   *   !output.isNarrow()}<br/>
    */
+  @Override
+  protected void setOutput(Chute output, String port)
+  {
+    // retains support for old port numbers in string form
+    if (port.equals(SMALL_PORT))
+      setNarrowChute(output);
+    else if (port.equals(LARGE_PORT))
+      setWideChute(output);
+    // TODO remove old port support. This support is a hack
+    else if (port.equals(SMALL_PORT_OLD))
+    {
+      if (output.isEditable())
+        throw new IllegalArgumentException(
+            "Chute passed to setNarrowChute must not be editable");
+      if (!output.isNarrow())
+        throw new IllegalArgumentException(
+            "Chute passed to setNarrowChute must be narrow");
+      super.setOutput(output, port);
+      checkRep();
+    }
+    else if (port.equals(LARGE_PORT_OLD))
+    {
+      if (output.isEditable())
+        throw new IllegalArgumentException(
+            "Chute passed to setNullChute must not be editable");
+      if (output.isNarrow())
+        throw new IllegalArgumentException(
+            "Chute passed to setNullChute must not be narrow");
+      super.setOutput(output, port);
+    }
+    else
+      throw new IllegalArgumentException("port " + port
+          + " illegal for BallSizeTest node");
+  }
+
   @Override
   protected void setOutput(Chute output, int port)
   {
-    switch (port)
-    {
-      case 0:
-        setNarrowChute(output);
-        break;
-      case 1:
-        setWideChute(output);
-        break;
-      default:
-        throw new IllegalArgumentException("port " + port
-            + " out of bounds for BallSizeTest node");
-    }
+    setOutput(output, Integer.toString(port));
+  }
+
+  @Override
+  public List<String> getOutputIDs()
+  {
+    List<String> unorderedPortsList = super.getOutputIDs();
+    List<String> portsList = new ArrayList<String>();
+
+    // Check if the list of port IDs contains each possible port ID, then add
+    // them in the proper order (the first output port is implicitly the small
+    // one, the second the large).
+
+    if (unorderedPortsList.contains(SMALL_PORT))
+      portsList.add(SMALL_PORT);
+    // TODO remove support for old port IDs
+    else if (unorderedPortsList.contains(SMALL_PORT_OLD))
+      portsList.add(SMALL_PORT_OLD);
+
+    if (unorderedPortsList.contains(LARGE_PORT))
+      portsList.add(LARGE_PORT);
+    else if (unorderedPortsList.contains(LARGE_PORT_OLD))
+      portsList.add(LARGE_PORT_OLD);
+
+    return Collections.unmodifiableList(portsList);
   }
 }

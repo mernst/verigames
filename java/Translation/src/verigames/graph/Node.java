@@ -2,10 +2,7 @@ package verigames.graph;
 
 import static verigames.utilities.Misc.ensure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * An immutable record type representing a node for a {@link verigames.graph.Graph
@@ -216,23 +213,71 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   }
 
   /**
+   * Deprecated. {@link #getInputIDs()} is preferred because the node ordering
+   * is more flexible.<p>
+   *
    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to input
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
    * affected by future changes to each other.
    */
+  @Deprecated
   public TreeMap<String, /*@NonNull*/ EdgeType> getInputs()
   {
     return new TreeMap<String, /*@NonNull*/ EdgeType>(inputs);
   }
 
   /**
+   * Deprecated. {@link #getOutputIDs()} is preferred because the node ordering
+   * is more flexible.<p>
+   *
    * Returns a {@code TreeMap<Integer, EdgeType> m} from port number to output
    * edge. All keys are nonnegative. {@code m} and {@code this} will not be
    * affected by future changes to each other.
    */
+  @Deprecated
   public TreeMap<String, /*@NonNull*/ EdgeType> getOutputs()
   {
     return new TreeMap<String, /*@NonNull*/ EdgeType>(outputs);
+  }
+
+  /**
+   * Returns a {@code List<String>} containing all of the input port IDs for
+   * this {@code Node}.<p>
+   *
+   * It is guaranteed that a call to {@link #getInput(String)} will succeed when
+   * passed any element in the returned {@code List} as an argument.<p>
+   *
+   * The order in which they appear will be consistent (that is, if no input
+   * ports have been added between two calls, the order will be the same).
+   * Beyond this, there is no guarantee of order, though implementations may
+   * provide a stronger guarantee.
+   */
+  public List<String> getInputIDs()
+  {
+    List<String> portsList = new ArrayList<String>();
+    for (String port : inputs.keySet())
+      portsList.add(port);
+    return Collections.unmodifiableList(portsList);
+  }
+
+  /**
+   * Returns a {@code List<String>} containing all of the output port IDs for
+   * this {@code Node}.<p>
+   *
+   * It is guaranteed that a call to {@link #getInput(String)} will succeed when
+   * passed any element in the returned {@code List} as an argument.<p>
+   *
+   * The order in which they appear will be consistent (that is, if no output
+   * ports have been added between two calls, the order will be the same).
+   * Beyond this, there is no guarantee of order, though implementations may
+   * provide a stronger guarantee.
+   */
+  public List<String> getOutputIDs()
+  {
+    List<String> portsList = new ArrayList<String>();
+    for (String port : outputs.keySet())
+      portsList.add(port);
+    return Collections.unmodifiableList(portsList);
   }
 
   /**

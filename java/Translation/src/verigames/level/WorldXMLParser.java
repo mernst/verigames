@@ -497,6 +497,7 @@ public class WorldXMLParser
     if (layout != null)
       c.setLayout(layout);
     
+    // TODO update to String ports
     b.addEdge(start, startPort, end, endPort, c);
 
     return Pair.of(UID, c);
