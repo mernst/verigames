@@ -1012,11 +1012,11 @@ public class LevelLevel
       leftTop.setEditable(false);
       Chute leftBottom = new Chute();
       
-      boardsOut.addEdge(topSubnetwork, 0, split, 0, top);
-      boardsOut.addEdge(split, 1, merge, 1, right);
-      boardsOut.addEdge(split, 0, endLeft, 0, leftTop);
-      boardsOut.addEdge(bottomSubnetwork, 0, merge, 0, leftBottom);
-      boardsOut.addEdge(merge, 0, end, 0, bottom);
+      boardsOut.addEdge(topSubnetwork, "0", split, "0", top);
+      boardsOut.addEdge(split, "large", merge, "1", right);
+      boardsOut.addEdge(split, "small", endLeft, "0", leftTop);
+      boardsOut.addEdge(bottomSubnetwork, "0", merge, "0", leftBottom);
+      boardsOut.addEdge(merge, "0", end, "0", bottom);
       
       boardsOut.addChuteName(top, varName);
       boardsOut.addChuteName(right, varName);

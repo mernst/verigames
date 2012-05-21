@@ -71,7 +71,7 @@ public class ChuteLevel
       
       Intersection nullTest = Intersection.factory(Kind.BALL_SIZE_TEST);
       constructor.addNode(nullTest);
-      constructor.addEdge(incoming, 1, nullTest, 0, auxArg);
+      constructor.addEdge(incoming, "1", nullTest, "0", auxArg);
       constructor.addChuteName(auxArg, name);
       
       Chute auxNullBranch = new Chute();
@@ -81,14 +81,14 @@ public class ChuteLevel
       Intersection merge = Intersection.factory(Kind.MERGE);
       constructor.addNode(merge);
       
-      constructor.addEdge(nullTest, 1, merge, 1, auxNullBranch);
+      constructor.addEdge(nullTest, "large", merge, "1", auxNullBranch);
       constructor.addChuteName(auxNullBranch, name);
       
       Intersection end = Intersection.factory(Kind.END);
       constructor.addNode(end);
       
       Chute auxArg2 = new Chute();
-      constructor.addEdge(merge, 0, end, 0, auxArg2);
+      constructor.addEdge(merge, "0", end, "0", auxArg2);
       constructor.addChuteName(auxArg2, name);
       
       level.makeLinked(auxArg, auxArg2);
@@ -100,7 +100,7 @@ public class ChuteLevel
       Intersection split = Intersection.factory(Kind.SPLIT);
       constructor.addNode(split);
       
-      constructor.addEdge(nullTest, 0, split, 0, auxNotNullBranch);
+      constructor.addEdge(nullTest, "small", split, "0", auxNotNullBranch);
       constructor.addChuteName(auxNotNullBranch, name);
       
       Intersection otherEnd = Intersection.factory(Kind.END);

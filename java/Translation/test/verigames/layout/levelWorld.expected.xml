@@ -218,8 +218,8 @@
       <port num="0" edge="e2"/>
      </input>
      <output>
-      <port num="0" edge="e5"/>
-      <port num="1" edge="e3"/>
+      <port num="small" edge="e5"/>
+      <port num="large" edge="e3"/>
      </output>
      <layout>
       <x>1.00000</x>
@@ -477,7 +477,7 @@
     </edge>
     <edge description="chute3" variableID="-1" pinch="false" width="wide" editable="false" id="e3" buzzsaw="false">
      <from>
-      <noderef id="n2" port="1"/>
+      <noderef id="n2" port="large"/>
      </from>
      <to>
       <noderef id="n3" port="1"/>
@@ -541,7 +541,7 @@
     </edge>
     <edge description="chute5" variableID="-1" pinch="false" width="narrow" editable="false" id="e5" buzzsaw="false">
      <from>
-      <noderef id="n2" port="0"/>
+      <noderef id="n2" port="small"/>
      </from>
      <to>
       <noderef id="n5" port="0"/>
@@ -17802,8 +17802,8 @@
       <port num="0" edge="e458"/>
      </input>
      <output>
-      <port num="0" edge="e461"/>
-      <port num="1" edge="e459"/>
+      <port num="small" edge="e461"/>
+      <port num="large" edge="e459"/>
      </output>
      <layout>
       <x>16.58333</x>
@@ -17868,8 +17868,8 @@
       <port num="0" edge="e463"/>
      </input>
      <output>
-      <port num="0" edge="e466"/>
-      <port num="1" edge="e464"/>
+      <port num="small" edge="e466"/>
+      <port num="large" edge="e464"/>
      </output>
      <layout>
       <x>19.06944</x>
@@ -18741,7 +18741,7 @@
     </edge>
     <edge description="chute459" variableID="-1" pinch="false" width="wide" editable="false" id="e459" buzzsaw="false">
      <from>
-      <noderef id="n284" port="1"/>
+      <noderef id="n284" port="large"/>
      </from>
      <to>
       <noderef id="n287" port="1"/>
@@ -18767,7 +18767,7 @@
     </edge>
     <edge description="chute461" variableID="-1" pinch="true" width="narrow" editable="false" id="e461" buzzsaw="false">
      <from>
-      <noderef id="n284" port="0"/>
+      <noderef id="n284" port="small"/>
      </from>
      <to>
       <noderef id="n285" port="0"/>
@@ -18871,7 +18871,7 @@
     </edge>
     <edge description="chute464" variableID="-1" pinch="false" width="wide" editable="false" id="e464" buzzsaw="false">
      <from>
-      <noderef id="n290" port="1"/>
+      <noderef id="n290" port="large"/>
      </from>
      <to>
       <noderef id="n293" port="1"/>
@@ -18909,7 +18909,7 @@
     </edge>
     <edge description="chute466" variableID="-1" pinch="true" width="narrow" editable="false" id="e466" buzzsaw="false">
      <from>
-      <noderef id="n290" port="0"/>
+      <noderef id="n290" port="small"/>
      </from>
      <to>
       <noderef id="n291" port="0"/>
