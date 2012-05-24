@@ -18,7 +18,7 @@ class NninfGameSolver extends GameSolver {
     override def version: String = super.version + "\nNninfGameSolver version 0.1"
 
     var oldMerge : Intersection = null
-    
+
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */
@@ -46,8 +46,8 @@ class NninfGameSolver extends GameSolver {
                 board.addNode(blackball)
                 board.addNode(merge)
 
-                board.addEdge(lastIntersection, 0, merge, 0, new Chute(supvar.id, supvar.toString()))
-                board.addEdge(blackball, 0, merge, 1, blackballchute)
+                board.addEdge(lastIntersection, "output", merge, "left", new Chute(supvar.id, supvar.toString()))
+                board.addEdge(blackball, "output", merge, "right", blackballchute)
 
                 boardNVariableToIntersection.update((board, supvar), merge)
               } else {
@@ -65,22 +65,22 @@ class NninfGameSolver extends GameSolver {
                   val suplast = findIntersection(board, sup)
 
                   if (isUniqueSlot(sub)) {
-                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                    board.addEdge(sublast, "output", merge, "left", createChute(sub))
+                    board.addEdge(suplast, "output", merge, "right", createChute(sup))
 
                     updateIntersection(board, sup, merge)
                   } else if (isUniqueSlot(sup)) {
-                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                    board.addEdge(sublast, "output", merge, "left", createChute(sub))
+                    board.addEdge(suplast, "output", merge, "right", createChute(sup))
 
                     updateIntersection(board, sub, merge)
                   } else {
                     val split = Intersection.factory(Intersection.Kind.SPLIT)
                     board.addNode(split)
 
-                    board.addEdge(sublast, 0, split, 0, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
-                    board.addEdge(split, 1, merge, 1, createChute(sub))
+                    board.addEdge(sublast, "output", split, "input", createChute(sub))
+                    board.addEdge(suplast, "output", merge, "left", createChute(sup))
+                    board.addEdge(split, "split", merge, "right", createChute(sub))
 
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
@@ -136,7 +136,7 @@ class NninfGameSolver extends GameSolver {
 
                 val elllast = findIntersection(board, ellvar)
 
-                board.addEdge(elllast, 0, con, 0, chute)
+                board.addEdge(elllast, "output", con, "input", chute)
 
                 updateIntersection(board, ellvar, con)
               }
