@@ -52,7 +52,9 @@ class GraphvizRunner
     Process process;
     try
     {
-      process = Runtime.getRuntime().exec(command);
+      ProcessBuilder pc = new ProcessBuilder(command);
+      pc.redirectErrorStream(true);
+      process = pc.start();
     }
     catch (IOException e)
     {
@@ -78,7 +80,7 @@ class GraphvizRunner
       throw new RuntimeException(e);
     }
     if (exitValue != 0)
-      throw new RuntimeException("dot exited abnormally: exit code " + exitValue);
+      throw new RuntimeException("dot exited abnormally: exit code " + exitValue + " dot output: " + dotOutput);
 
     return DotParser.parse(dotOutput);
   }
