@@ -1,7 +1,11 @@
 package nninf;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -15,6 +19,7 @@ import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.Trees;
 
 public class NninfVisitor extends InferenceVisitor {
 
@@ -36,6 +41,56 @@ public class NninfVisitor extends InferenceVisitor {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(tree);
         mainIsNot(type, nninfchecker.NULLABLE, errMsg, tree);
     }
+    
+    @Override
+    public Void visitBlock(BlockTree node, Void p) {
+    	/*
+    	Trees trees = Trees.instance(checker.getProcessingEnvironment());
+    	Scope scope = trees.getScope(getCurrentPath());
+    	System.out.println();
+    	Set<Element> variables = new HashSet<Element>();
+    	Set<Element> maps = new HashSet<Element>();
+    	
+    	// Variables within the block.
+    	for(StatementTree tree: node.getStatements()){
+    		if(tree instanceof VariableTree){
+    			//System.out.println(""+ vTree.getName()+": "+vTree.getKind()+", "+ vTree.getType());
+    			variables.add(TreeUtils.elementFromDeclaration((VariableTree) tree));
+    		}
+    	}
+    	
+    	// Variables outside the block.
+    	while(scope.getEnclosingScope() != null) {
+	    	for(Element elm : scope.getLocalElements()){
+	    		//System.out.println(""+ elm.getSimpleName() + ": "+ elm.getKind()+", "+elm.asType());
+	    		if(elm.getKind() == ElementKind.FIELD
+	    				|| elm.getKind() == ElementKind.LOCAL_VARIABLE
+	    				|| elm.getKind() == ElementKind.PARAMETER) { // RESOURCE_VARIABLE?
+	    			variables.add(elm);
+	    		}
+	    		
+	    		// Get the fields
+	    		if(elm.getKind() == ElementKind.CLASS){
+	    			//System.out.println("Class enclosed Elements");
+	    			for(Element field: elm.getEnclosedElements()){
+	    				if(field.getKind() == ElementKind.FIELD) {
+	    					 //System.out.println(""+ field.getSimpleName() + ": "+ field.getKind()+", "+field.asType());
+	    					variables.add(field);
+	    				}
+	    			}
+	    			//System.out.println("End Class enclosed Elements");
+	    		}
+	    	}
+    		scope = scope.getEnclosingScope();
+    	}
+    	System.out.println("variables set: ");
+    	for(Element elm: variables){
+    		System.out.println(""+ elm.getSimpleName() + ": "+ elm.getKind()+", "+elm.asType());
+    		
+    	}
+    	*/
+    	return super.visitBlock(node, p);
+    }
 
     /**
      * Nninf does not use receiver annotations, forbid them.
@@ -46,7 +101,7 @@ public class NninfVisitor extends InferenceVisitor {
             checker.report(Result.failure("receiver.annotations.forbidden"),
                     node);
         }
-
+        
         return super.visitMethod(node, p);
     }
 
