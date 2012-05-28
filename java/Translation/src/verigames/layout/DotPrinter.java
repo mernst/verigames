@@ -5,6 +5,7 @@ import static verigames.layout.Misc.usesPorts;
 
 import java.io.PrintStream;
 import java.lang.ref.WeakReference;
+import java.util.*;
 
 import verigames.graph.Node;
 import verigames.level.Board;
@@ -49,8 +50,8 @@ class DotPrinter extends AbstractDotPrinter
           /* in a "record" shape node, the labels have special meaning, and
            * define ports. The curly braces control the layout. */
           String label = "{{"
-              + generatePortList("i",maxPorts) + "}|{"
-              + generatePortList("o",maxPorts) + "}}";
+              + generatePortList(true, n) + "}|{"
+              + generatePortList(false, n) + "}}";
 
           optionsString = String.format("[shape=record, fixedsize=true, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
@@ -88,24 +89,56 @@ class DotPrinter extends AbstractDotPrinter
     }
 
     /**
-     * Generates a list of ports from 0 to (n-1) for use in a label for a
-     * Graphviz record node.
+     * Generates a list of ports for the given {@link
+     * verigames.level.Intersection Intersection}. For any given {@code
+     * Intersection}, returns the same number of nodes for both the input and
+     * output ports. This is so that the input and output ports have an even
+     * amount of spacing even if there are different numbers of input and output
+     * ports for a given node.
      *
-     * @param prefix
-     * The string with which to prefix each port number
+     * @param isInput
+     * A {@code boolean} indicating whether to generate a list of input ports or
+     * output ports. If {@code true}, the port IDs will be taken from the list
+     * of input ports, and each will be prefixed by the character 'i'.
+     * Otherwise, the port IDs will be taken from the list of output ports, and
+     * each will be prefixed by the character 'o'.
      *
      * @param n
-     * The number of ports to generate
+     * The {@link verigames.level.Intersection Intersection} to 
+     *
      */
-    private String generatePortList(String prefix, int n)
+    private String generatePortList(boolean input, Intersection n)
     {
-      String result = "";
-      for (int i = 0; i < n; i++)
+      String prefix;
+      List<String> portsList;
+      if (input)
       {
-        result += "<" + prefix + i + ">";
-        if (i != n - 1)
+        prefix = "i";
+        portsList = n.getInputIDs();
+      }
+      else
+      {
+        prefix = "o";
+        portsList = n.getOutputIDs();
+      }
+
+      String result = "";
+      for (int i = 0 ; i < portsList.size(); i++)
+      {
+        String port = portsList.get(i);
+        result += "<" + prefix + port + ">";
+        if (i != portsList.size() - 1)
           result += "|";
       }
+
+      // add the filler ports
+      int numPorts = AbstractDotPrinter.getMaxPorts(n);
+      for (int i = portsList.size(); i < numPorts; i++)
+      {
+        // mark the port with an x to indicate that it is just a filler
+        result += "|<x" + i + ">";
+      }
+
       return result;
     }
   }
