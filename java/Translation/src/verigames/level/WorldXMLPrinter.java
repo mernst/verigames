@@ -13,6 +13,7 @@ import verigames.utilities.Printer;
 
 import nu.xom.*;
 
+// TODO add lots of documentation
 public class WorldXMLPrinter extends Printer<World, Void>
 {
   public static final int version = 1;

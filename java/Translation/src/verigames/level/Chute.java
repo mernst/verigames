@@ -65,9 +65,12 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
   private static int nextUID = 1;
 
-  // Constructor that uses a unique ID as chute name.
-  // TODO: Should we force people to provide a name? I added this
-  // to make the transition easier, but we might not want it.
+  /**
+   * Constructor that creates a chute with a variableID equal to -1 and an
+   * automatically generated, unique description.
+   */
+  // TODO: Should we force people to provide a description? I added this to make
+  // the transition easier, but we might not want it.
   public Chute()
   {
     this(-1, null);
@@ -80,7 +83,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
    * The variable identifier to use.
    *
    * @param description
-   * The description of this chute. If null, a unique ID will be assigned.
+   * The description of this chute. If null, a unique description will be
+   * generated.
    */
   public Chute(int varID, /*@Nullable*/ String description)
   {
@@ -95,7 +99,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
     Chute.nextUID += 1;
 
     this.variableID = varID;
-    if (description!=null)
+    if (description != null)
     {
       this.description = description;
     }

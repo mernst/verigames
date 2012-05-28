@@ -47,7 +47,6 @@ public class Level
 {
   private final Set<Set<Chute>> linkedEdgeClasses;
 
-  // TODO change String, if necessary, to whatever we end up using
   private final Map<String, Board> boardNames;
 
   private boolean underConstruction = true;
@@ -72,14 +71,14 @@ public class Level
        * No set in linkedEdgeClasses may have size 1 (the fact that a chute
        * is linked to itself need not be represented)
        */
-      ensure(s.size() > 1);
-
+      ensure(s.size() > 1, "(internal error) linked edge set exists of size 1");
 
       // No chute can be contained in more than one set in
       // linkedEdgeClasses
       for (Chute c : s)
       {
-        ensure(!encountered.contains(c));
+        ensure(!encountered.contains(c), "(internal error) Chute " + c +
+            " is present in multiple linked edge sets");
         encountered.add(c);
       }
     }
@@ -100,9 +99,10 @@ public class Level
 
       // make sure that the chutes in linkedEdgeClasses are a subset of the
       // chutes in boardNames
-      ensure(containedInBoards.containsAll(encountered));
+      ensure(containedInBoards.containsAll(encountered),
+          "A Chute in a linked edge set is not contained in any Board" +
+          " in this level");
     }
-
   }
 
   /**

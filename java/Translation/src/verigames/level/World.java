@@ -29,14 +29,16 @@ public class World
    * Adds {@code level} to {@code this}, with {@code name} as its name.
    *
    * @param level
-   * The {@link Level} to add. {@link Level#underConstruction() !level.underConstruction()}
+   * The {@link Level} to add. {@link Level#underConstruction()
+   * !level.underConstruction()}
    * @param name
    * The name to associate with {@code level}.
    */
   public void addLevel(String name, Level level)
   {
     if (level.underConstruction())
-      throw new IllegalArgumentException("underConstruction Level added to World");
+      throw new IllegalArgumentException(
+          "underConstruction Level added to World");
     nameToLevel.put(name, level);
   }
 

@@ -13,6 +13,7 @@ import verigames.utilities.Pair;
  *
  * @author Nathaniel Mote
  */
+// TODO document internal methods more thoroughly.
 public class WorldXMLParser
 {
   public static final int version = 1;
@@ -210,7 +211,14 @@ public class WorldXMLParser
             Collections.unmodifiableMap(chuteUIDs));
   }
 
-  // TODO make sure to document this monster return type
+  /**
+   * Processes a board XML element.<p>
+   *
+   * Returns a pair. The first item is itself a pair containing the name of the
+   * board along with the {@link verigames.level.Board Board} itself. The second
+   * element is a map from XML UIDs to the {@link verigames.level.Chute Chute}s
+   * they identify
+   */
   private static Pair<Pair<String, Board>, Map<String, Chute>> processBoard(final Element boardElt)
   {
     checkName(boardElt, "board");

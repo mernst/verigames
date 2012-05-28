@@ -26,13 +26,13 @@ import java.util.*;
  * that represent the types for fields and return values.
  * </li>
  * <li>
- * SUBNETWORK: A SUBNETWORK node represents a method call. It is essentially a
+ * SUBBOARD: A SUBBOARD node represents a method call. It is essentially a
  * {@code Board} embedded within another {@code Board}.
  * </li>
  * <li>
- * NULL_TEST: A NULL_TEST ndoe represents an if statement conditional on the
- * nullness type of a variable. On one side of the branch, the variable is
- * considered Nullable, and on the other, it is considered NonNull.
+ * BALL_SIZE_TEST: A BALL_SIZE_TEST ndoe represents an if statement conditional
+ * on the nullness type of a variable. On one side of the branch, the variable
+ * is considered Nullable, and on the other, it is considered NonNull.
  * </li>
  * START_XXX_BALL and END: These are used to start and end chutes for the types
  * of local variables. Local variables don't persist outside of the methods in
@@ -47,15 +47,15 @@ import java.util.*;
  * <p>
  * Specification Field: Layout Coordinate : (x: real, y:real) // The coordinates
  * at which {@code this} will be located when its containing {@link Board} is
- * laid out to be played.
+ * laid out to be played. These layout coordinates are in game units. The origin
+ * is at the top-left, y coordinates grow downard, and the coordinates represent
+ * the top-left point of the intersections.
  * <p>
  * Specification Field: {@code UID} : integer // the unique identifier for this
  * {@code Intersection}.
  *
  * @author Nathaniel Mote
  */
-// TODO document which kind of coordinate system this uses for layout (where the
-// origin is, whether coordinates represent top-left or center...)
 
 public class Intersection extends verigames.graph.Node<Chute>
 {
@@ -76,22 +76,16 @@ public class Intersection extends verigames.graph.Node<Chute>
     SPLIT(1, 2),
     /** An intersection where two chutes merge into one */
     MERGE(2, 1),
-    /**
-     * Simply connects one chute to another. Can be optimized away after, but
-     * I think it will be convenient to have during construction.
-     */
+    /** Simply connects one chute to another */
     CONNECT(1, 1),
     /** Represents a split due to testing for null */
     BALL_SIZE_TEST(1, 2),
-    /**
-     * Represents a white (not null) ball being dropped into the top a chute.
+    /** Represents a white (not null) ball being dropped into the top a chute.
      */
     START_SMALL_BALL(0, 1),
-    /**
-     * Represents a black (null) ball being dropped into the top of a chute.
-     */
+    /** Represents a black (null) ball being dropped into the top of a chute. */
     START_LARGE_BALL(0, 1),
-    /** A node that represents a start ball that changes size depending on the
+    /**A node that represents a start ball that changes size depending on the
      * width of the chute below it */
     START_PIPE_DEPENDENT_BALL(0,1),
     /** Represents a chute with no ball dropping into it */
@@ -200,22 +194,29 @@ public class Intersection extends verigames.graph.Node<Chute>
        */
 
       if (numRequiredInPorts != -1)
-        ensure(usedInPorts <= numRequiredInPorts);
+        ensure(usedInPorts <= numRequiredInPorts,
+            "Too many input ports used for a(n) " + intersectionKind +
+            " Intersection");
 
       if (numRequiredOutPorts != -1)
-        ensure(usedOutPorts <= numRequiredOutPorts);
+        ensure(usedOutPorts <= numRequiredOutPorts,
+            "Too many output ports used for a(n) " + intersectionKind +
+            " Intersection");
     }
     else
     {
-      // Ensures that all ports are filled
+      // Because construction is finished, all ports must be filled.
 
       if (numRequiredInPorts != -1)
-        ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this + " usedInPorts: " + usedInPorts + " numRequiredInPorts: " + numRequiredInPorts);
+        ensure(usedInPorts == numRequiredInPorts, "Intersection: " + this +
+            " usedInPorts: " + usedInPorts + " numRequiredInPorts: " +
+            numRequiredInPorts);
 
       if (numRequiredOutPorts != -1)
-        ensure(usedOutPorts == numRequiredOutPorts, "Intersection: " + this + " usedOutPorts: " + usedOutPorts + " numRequiredOutPorts: " + numRequiredOutPorts);
+        ensure(usedOutPorts == numRequiredOutPorts, "Intersection: " + this +
+            " usedOutPorts: " + usedOutPorts + " numRequiredOutPorts: " +
+            numRequiredOutPorts);
     }
-
   }
 
   /**
@@ -265,7 +266,6 @@ public class Intersection extends verigames.graph.Node<Chute>
    */
   protected Intersection(Kind kind)
   {
-
     if (!checkIntersectionKind(kind)) // if kind is not a valid Kind for this
       // implementation of Intersection
       throw new IllegalArgumentException("Invalid Intersection Kind " + kind
@@ -284,14 +284,15 @@ public class Intersection extends verigames.graph.Node<Chute>
    * {@code Intersection}.<br/>
    * <br/>
    * This implementation supports all {@link Intersection.Kind Kind}s except
-   * {@link Kind#SUBBOARD SUBNETWORK} and {@link Kind#BALL_SIZE_TEST NULL_TEST}
+   * {@link Kind#SUBBOARD SUBNETWORK} and {@link Kind#BALL_SIZE_TEST
+   * BALL_SIZE_TEST}
    *
    * @param kind
    */
   protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
   {
     // this implementation supports every Intersection kind except for
-    // SUBNETWORK and NULL_TEST
+    // SUBBOARD and BALL_SIZE_TEST
     return kind != Kind.SUBBOARD && kind != Kind.BALL_SIZE_TEST;
   }
 
@@ -307,8 +308,8 @@ public class Intersection extends verigames.graph.Node<Chute>
    * Returns a {@code List<String>} containing all of the input port IDs for
    * this {@code Intersection}.<p>
    *
-   * Returns the port IDs in the order in which they should appear when
-   * connected in game. This is typically alphabetical order, but is not always.
+   * Returns the port IDs in the order in which they should appear in XML. This
+   * is typically alphabetical order, but is not always.
    */
   @Override
   public List<String> getInputIDs()
@@ -322,8 +323,8 @@ public class Intersection extends verigames.graph.Node<Chute>
    * Returns a {@code List<String>} containing all of the output port IDs for
    * this {@code Intersection}.<p>
    *
-   * Returns the port IDs in the order in which they should appear when
-   * connected in game. This is typically alphabetical order, but is not always.
+   * Returns the port IDs in the order in which they should appear in XML. This
+   * is typically alphabetical order, but is not always.
    */
   @Override
   public List<String> getOutputIDs()
@@ -394,7 +395,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     // Is this the right exception to throw?
     throw new IllegalStateException(
-        "asSubnetwork called on an Intersection not of Subboard kind");
+        "asSubboard called on an Intersection not of Subboard kind");
   }
 
   /**
@@ -408,7 +409,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   /**
    * Returns {@code this} as a {@link BallSizeTest}<br/>
    * <br/>
-   * Requires: {@link #isSubboard()}
+   * Requires: {@link #isBallSizeTest()}
    */
   public BallSizeTest asBallSizeTest()
   {
