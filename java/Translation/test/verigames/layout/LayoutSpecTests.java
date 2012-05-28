@@ -13,6 +13,32 @@ import static verigames.level.Intersection.Kind.*;
  */
 public class LayoutSpecTests
 {
+  /**
+   * Addresses a bug where layout would fail if arbitrary Strings (rather than
+   * String representations of ints) were used as ports for subboards or other
+   * nodes that are not represented to dot as discrete points, such as incoming,
+   * outgoing, and get nodes.
+   */
+  @Test
+  public void stringPortsTest()
+  {
+    Board b = new Board();
+
+    Intersection incoming = Intersection.factory(INCOMING);
+    Intersection outgoing = Intersection.factory(OUTGOING);
+    b.addNode(incoming);
+    b.addNode(outgoing);
+
+    Intersection subboard = Intersection.subboardFactory("test");
+    b.addNode(subboard);
+
+    b.addEdge(incoming, "asdf", subboard, "bth", new Chute(-1, ""));
+    b.addEdge(subboard, "34h", outgoing, "hkbf", new Chute(-1, ""));
+
+    b.finishConstruction();
+
+    BoardLayout.layout(b);
+  }
   
   /**
    * Addresses a bug that occured when intersections were connected by more than
