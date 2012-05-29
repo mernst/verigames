@@ -208,6 +208,21 @@ public class Level
   }
 
   /**
+   * Adds the pipe identified by {@code stamp} to the list of "colors" with
+   * which the pipe identified by {@code pipe} can be stamped.<p>
+   *
+   * It is extremely important not to mix up the order of the parameters. To be
+   * clear, the first pipe will be able to be stamped by the color belonging to
+   * the second pipe. The first receives the {@code @KeyFor} annotation in the
+   * nullness type system.
+   */
+  public void addPossibleStamping(int pipe, int stamp)
+  {
+    // TODO implement
+    throw new RuntimeException("not yet implemented");
+  }
+
+  /**
    * Returns a copy of {@code linkedEdgeClasses}. Structurally modifying the
    * returned {@code Set}, or any of the {@code Set}s it contains, will have
    * no effect on {@code this}.
