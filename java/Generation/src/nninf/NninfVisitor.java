@@ -1,12 +1,19 @@
 package nninf;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import checkers.basetype.BaseTypeChecker;
@@ -16,6 +23,7 @@ import checkers.source.Result;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
+import checkers.util.ElementUtils;
 import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
@@ -44,18 +52,24 @@ public class NninfVisitor extends InferenceVisitor {
     
     @Override
     public Void visitBlock(BlockTree node, Void p) {
-    	/*
     	Trees trees = Trees.instance(checker.getProcessingEnvironment());
     	Scope scope = trees.getScope(getCurrentPath());
     	System.out.println();
-    	Set<Element> variables = new HashSet<Element>();
-    	Set<Element> maps = new HashSet<Element>();
+    	Set<Element> variables = new HashSet<Element>(); // Variables accessible within the block
+    	Set<Element> maps = new HashSet<Element>(); // Maps accessible within the block
+    	
+    	TypeElement mapElt = 
+    		checker.getProcessingEnvironment().getElementUtils().getTypeElement("java.util.Map");
+    	TypeMirror mapType = types.erasure(mapElt.asType());
     	
     	// Variables within the block.
     	for(StatementTree tree: node.getStatements()){
     		if(tree instanceof VariableTree){
-    			//System.out.println(""+ vTree.getName()+": "+vTree.getKind()+", "+ vTree.getType());
-    			variables.add(TreeUtils.elementFromDeclaration((VariableTree) tree));
+    			Element elm = TreeUtils.elementFromDeclaration((VariableTree) tree);
+    			variables.add(elm);
+    			if (types.isSubtype(types.erasure(elm.asType()), mapType)) {
+    				maps.add(elm);
+    			}
     		}
     	}
     	
@@ -67,6 +81,9 @@ public class NninfVisitor extends InferenceVisitor {
 	    				|| elm.getKind() == ElementKind.LOCAL_VARIABLE
 	    				|| elm.getKind() == ElementKind.PARAMETER) { // RESOURCE_VARIABLE?
 	    			variables.add(elm);
+	    			if (types.isSubtype(types.erasure(elm.asType()), mapType)) {
+	    				maps.add(elm);
+	    			}
 	    		}
 	    		
 	    		// Get the fields
@@ -75,20 +92,52 @@ public class NninfVisitor extends InferenceVisitor {
 	    			for(Element field: elm.getEnclosedElements()){
 	    				if(field.getKind() == ElementKind.FIELD) {
 	    					 //System.out.println(""+ field.getSimpleName() + ": "+ field.getKind()+", "+field.asType());
-	    					variables.add(field);
+	    	    			variables.add(field);
+	    	    			if (types.isSubtype(types.erasure(field.asType()), mapType)) {
+	    	    				maps.add(field);
+	    	    			}
 	    				}
 	    			}
-	    			//System.out.println("End Class enclosed Elements");
 	    		}
 	    	}
     		scope = scope.getEnclosingScope();
     	}
+    	/*
     	System.out.println("variables set: ");
     	for(Element elm: variables){
     		System.out.println(""+ elm.getSimpleName() + ": "+ elm.getKind()+", "+elm.asType());
     		
     	}
+    	System.out.println("map set: ");
+    	for(Element elm: maps){
+    		System.out.println(""+ elm.getSimpleName() + ": "+ elm.getKind()+", "+elm.asType());
+    		
+    	}
     	*/
+    	for(Element var: variables) {
+    		Element keyElement;
+    		TypeMirror type = var.asType();	
+    		// Check for boxed types. Ex. int can be a key for Map<Integer,String>.
+			if(type.getKind().isPrimitive()) {
+				PrimitiveType pType= (PrimitiveType) type;
+				keyElement = types.boxedClass(pType);
+			} else {
+				keyElement = var;
+			}
+    		for(Element map: maps) {
+        		if(map.asType().getKind() == TypeKind.DECLARED){
+        			DeclaredType dType = (DeclaredType) map.asType();
+        			List<? extends TypeMirror> list= dType.getTypeArguments();
+        			if(list.size() > 0) {
+        				if(types.isSubtype(keyElement.asType(), list.get(0))){
+        					// log possible KeyFor constraint.
+        					System.out.println(var + " is a possible @KeyFor " + map);
+        				}
+        			}
+        		}
+    			
+    		}
+    	}
     	return super.visitBlock(node, p);
     }
 
