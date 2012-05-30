@@ -1,8 +1,19 @@
 package nninf;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import checkers.basetype.BaseTypeChecker;
@@ -12,9 +23,11 @@ import checkers.source.Result;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
+import checkers.util.ElementUtils;
 import checkers.util.TreeUtils;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.Trees;
 
 public class NninfVisitor extends InferenceVisitor {
 
@@ -36,6 +49,84 @@ public class NninfVisitor extends InferenceVisitor {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(tree);
         mainIsNot(type, nninfchecker.NULLABLE, errMsg, tree);
     }
+    
+    @Override
+    public Void visitBlock(BlockTree node, Void p) {
+    	if(infer) {
+	    	Trees trees = Trees.instance(checker.getProcessingEnvironment());
+	    	Scope scope = trees.getScope(getCurrentPath());
+	    	System.out.println();
+	    	Set<Element> variables = new HashSet<Element>(); // Variables accessible from within the block
+	    	Set<Element> maps = new HashSet<Element>(); // Maps accessible within the block
+	    	
+	    	TypeElement mapElt = 
+	    		checker.getProcessingEnvironment().getElementUtils().getTypeElement("java.util.Map");
+	    	TypeMirror mapType = types.erasure(mapElt.asType());
+	    	
+	    	// Variables within the block.
+	    	for(StatementTree tree: node.getStatements()){
+	    		if(tree instanceof VariableTree){
+	    			Element elm = TreeUtils.elementFromDeclaration((VariableTree) tree);
+	    			variables.add(elm);
+	    			if (types.isSubtype(types.erasure(elm.asType()), mapType)) {
+	    				maps.add(elm);
+	    			}
+	    		}
+	    	}
+	    	
+	    	// Variables outside the block.
+	    	while(scope.getEnclosingScope() != null) {
+		    	for(Element elm : scope.getLocalElements()){
+		    		if(elm.getKind() == ElementKind.FIELD
+		    				|| elm.getKind() == ElementKind.LOCAL_VARIABLE
+		    				|| elm.getKind() == ElementKind.PARAMETER) { // RESOURCE_VARIABLE?
+		    			variables.add(elm); // This may be unnecessary.
+		    			if (types.isSubtype(types.erasure(elm.asType()), mapType)) {
+		    				maps.add(elm);
+		    			}
+		    		}
+		    		
+		    		// Get the fields
+		    		if(elm.getKind() == ElementKind.CLASS){
+		    			for(Element field: elm.getEnclosedElements()){
+		    				if(field.getKind() == ElementKind.FIELD) {
+		    	    			variables.add(field);
+		    	    			if (types.isSubtype(types.erasure(field.asType()), mapType)) {
+		    	    				maps.add(field);
+		    	    			}
+		    				}
+		    			}
+		    		}
+		    	}
+	    		scope = scope.getEnclosingScope();
+	    	}
+	    	for(Element var: variables) {
+	    		Element keyElement;
+	    		TypeMirror type = var.asType();	
+	    		// Check for boxed types. Ex. int can be a key for Map<Integer,String>.
+				if(type.getKind().isPrimitive()) {
+					PrimitiveType pType= (PrimitiveType) type;
+					keyElement = types.boxedClass(pType);
+				} else {
+					keyElement = var;
+				}
+	    		for(Element map: maps) {
+	        		if(map.asType().getKind() == TypeKind.DECLARED){
+	        			DeclaredType dType = (DeclaredType) map.asType();
+	        			List<? extends TypeMirror> list= dType.getTypeArguments();
+	        			if(list.size() > 0) {
+	        				if(types.isSubtype(keyElement.asType(), list.get(0))){
+	        					// log possible KeyFor constraint.
+	        					//System.out.println(var + " is a possible @KeyFor " + map);
+	        				}
+	        			}
+	        		}
+	    			
+	    		}
+	    	}
+    	}
+    	return super.visitBlock(node, p);
+    }
 
     /**
      * Nninf does not use receiver annotations, forbid them.
@@ -46,7 +137,7 @@ public class NninfVisitor extends InferenceVisitor {
             checker.report(Result.failure("receiver.annotations.forbidden"),
                     node);
         }
-
+        
         return super.visitMethod(node, p);
     }
 
