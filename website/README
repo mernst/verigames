@@ -50,4 +50,79 @@ The other most common file that will likely need to be updated on a regular basi
 Misc.
 
 removeAll.php:
-There is a script file entitle removeAll.php in the root directory of the site.  If you browse to this page in a browser it will remove all the folder in the uploads folder.  This is used as a quick way to clean out the uploads folder during testing.  This will remove ALL folders in the uploads directory. Make sure that if you use this script that you really want to clear the contents.  This will obviously be removed before the site goes live, but it is nice to have in the meantime.  
+There is a script file entitle removeAll.php in the root directory of the site.  If you browse to this page in a browser it will remove all the folder in the uploads folder.  This is used as a quick way to clean out the uploads folder during testing.  This will remove ALL folders in the uploads directory. Make sure that if you use this script that you really want to clear the contents.  This will obviously be removed before the site goes live, but it is nice to have in the meantime.
+
+
+--------------------------------
+
+Website Setup Instructions For Linux:
+
+
+Step 1: Download Dependencies:
+
+Required Dependencies:
+
+- GraphViz must be installed
+- JDK 7
+- Scala
+- Flash
+- GraphViz
+
+The easiest way to get Flash is to use the "Ubuntu Software Center" and search for "restricted". Then install the Ubuntu
+Restricted Extras. This includes Java, Flash and other fun stuff. 
+
+To install the remaining dependencies, enter the following into a terminal window:
+
+sudo apt-get php5
+sudo apt-get apache2
+sudo apt-get install libapache2-mod-php5
+sudo apt-get graphviz
+sudo /etc/init.d/apache2 restart
+
+
+Step 2:
+
+Download the most recent backup of the production/development site from the current host.  This is currently 
+abstract.cs.washington.edu/~bdwalker.  The backups are kept in a folder called "backups" in the sites root
+directory.  They will be time stamped so it will be easy to determine the most recent backup.  If you would like
+to use the most current version of the site then go to abstract.cs.washington.edu/~bdwalker/publish.php and 
+backup the desired site.  This will create a .zip file of the entire site contents.  Once completed you can then
+download the most recent version.  
+
+Once downloaded simply extract the contents and move them to the corresponding folder on your computer.  On Ubuntu
+web files should be placed in /var/www. 
+
+Step 3:
+
+Download the appropriate JDK 7 binaries for your computer framework.  You will also need to download the Scala binaries 
+from http://www.scala-lang.org/downloads. 
+
+Once downloaded, they will both need to be placed in the parent directory of the website.  In Ubuntu
+the JDK 7 framework and the Scala framework should be placed in the /var folder or in the parent folder
+of where you placed the web files.  
+
+You will need to manually adjust the paths in the shell script files and the globals.php file.  These 
+are all located in the scripts folder in the website directory.  These should be updated to point
+to the JDK 7 framework and the Scala framework in the parent directory. The globals.php file is located
+in the scripts folder and the shell scripts are located in the scripts folder in a folder called typecheckers. 
+You should only need to adjust the path for JDK 7 in the globals.php file and you should only need to update
+the Scala path in the shell scripts. 
+
+Permissions:
+
+The uploads folder needs full write permissions, as does the scripts folder. The scripts folder will eventually
+need only read and execute but that will require I change a few things.  All the other folders should have read
+and execute. 
+
+
+Step 4:
+
+You should now be able to use the site.  Open a browser and enter localhost into the address bar and press Enter. 
+You should now see the PipeJam homepage. 
+
+
+Please let me know if any of this is unclear or didn't work for you so I can update as appropriate. 
+bdwalker@cs.washington.edu
+
+
+  
