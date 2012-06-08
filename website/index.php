@@ -3,8 +3,7 @@
 ?>
 			<title>PipeJam</title>
 			<link rel=StyleSheet href="./uploadify/uploadify.css">
-			<script type="text/javascript" src="./uploadify/swfobject.js"></script>
-			<script type="text/javascript" src="./uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+			<script type="text/javascript" src="./uploadify/jquery.uploadify-3.1.min.js"></script>
 			<script type="text/javascript" src="./scripts/index.js"></script>
 <?php
 	include("./scripts/header.php");
@@ -33,6 +32,11 @@
 						<select id='typechecker_options'>
 							<option value="infer-nninf.sh">Nullness Checker</option>
 							<option value="infer-trusted.sh">Trusted Checker</option>
+						</select>
+						
+						Theme Options:
+						<select id='skin_options'>
+						    <option value="pipes">Pipe Theme</option>
 						</select>
 					</div>
 					

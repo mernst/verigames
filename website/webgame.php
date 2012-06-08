@@ -40,9 +40,9 @@
         	
         	var xmlLoc, uniqueFolder, checker;
         	checker = paramMap["checker"];
-        	if(paramMap["sample"]){
+        	if (paramMap["sample"]) {
         		xmlLoc = "./samples/" + paramMap["sample"];
-        	}else if(paramMap["id"]){
+        	} else if(paramMap["id"]) {
         		xmlLoc = "./uploads/" + paramMap["id"] + "/World.zip";
         		uniqueFolder = paramMap["id"];
         	}
@@ -64,7 +64,7 @@
             attributes.align = "middle";
             attributes.margin= "30px";
             swfobject.embedSWF(
-                "./flash_files/WebGame.swf?version=6g", "flashContent", 
+                "./flash_files/WebGame.swf?version=6h", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
@@ -77,33 +77,33 @@
 			
 			function receiveUpdatedXML(updated_xml, quit) {
 				// Process XML here:
-				if(uniqueFolder){
+				if (uniqueFolder) {
 					saveXML(updated_xml, quit);
 					
 				//is sample file 
-				}else if(quit){
+				} else if(quit) {
 					window.location = "./index.php";
 				}
 			}
 			
-			function saveXML(xml, quit){
-				new Ajax.Request("./scripts/parseXML.php",{
+			function saveXML(xml, quit) {
+				new Ajax.Request("./scripts/utilities.php", {
 					method:"post",
-					parameters:{"folder":uniqueFolder, "xml":xml},
+					parameters:{ "function" : "uploadXML", "id" : uniqueFolder, "xml" : xml},
 					onSuccess: function(ajax){
 						if (quit) {
-							window.location = "./results.php?id="+uniqueFolder + "&checker=" + checker;
+							window.location = "./results.php?id=" + uniqueFolder + "&checker=" + checker;
 						}
 					},
-					onFailure: function(ajax){
+					onFailure: function (ajax) {
 						alert("There was a problem with the Ajax request");
 					}
 				});
 			}
 			
-			function parseParameters(paramArray){
+			function parseParameters(paramArray) {
 				var paramMap = new Array();
-				for(var i = 0; i < paramArray.length; i++){
+				for (var i = 0; i < paramArray.length; i++) {
 					var param = paramArray[i].split("=");
 					paramMap[param[0]] = param[1];
 				}
