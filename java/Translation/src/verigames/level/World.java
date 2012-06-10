@@ -52,22 +52,6 @@ public class World
     return Collections.unmodifiableMap(nameToLevel);
   }
 
-  /**
-   * Prints the XML for this {@code World}.
-   * <p>
-   * Deprecated. Instead, a {@link WorldXMLPrinter} should be used.
-   * <p>
-   * This method now uses a {@code WorldXMLPrinter} to do its printing.
-   *
-   * @param out
-   * The {@code PrintStream} to which the XML will be printed. Must be open.
-   */
-  @Deprecated
-  public void outputXML(PrintStream out)
-  {
-    new WorldXMLPrinter().print(this, out, null);
-  }
-
   @Override
   public String toString()
   {
