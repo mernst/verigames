@@ -3,55 +3,70 @@ package verigames.level;
 import static verigames.utilities.Misc.ensure;
 
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import verigames.level.Intersection.Kind;
 
-
 /**
  * A mutable level for Pipe Jam. A {@code Level} consists of any number of
- * {@link Board}s, each associated with a unique name.
- * <p>
+ * {@link Board}s, each associated with a unique name.  * <p>
+ *
  * A {@code Level} also keeps track of which {@link Chute}s in the contained
- * {@code Board}s are linked (see below).
- * <p>
- * Specification Field: {@code linkedEdgeClasses} : {@code Set<Set<Chute>>}
- * // Contains equivalence classes of {@code Chute}s, as defined by the
- * following equivalence relation
- * <p>
+ * {@code Board}s are linked (see below).  * <p>
+ *
+ * Specification Field: {@code linkedEdgeClasses} : {@code Set<Set<Chute>>} //
+ * Contains equivalence classes of {@code Chute}s, as defined by the following
+ * equivalence relation * <p>
+ *
  * Let R be the maximal equivalence relation on the set of all {@code Chute}s
- * such that:<br/>
- * aRb --> a and b necessarily have the same width. That is, when a changes
- * width, b must follow, and vice-versa.
- * <p>
- * Specification Field: {@code boards} : {@code Set<Board>}
- * // represents the set of all boards in this level
- * <p>
- * Specification Field: {@code boardNames} : {@code Map<String, Board>}
- * // maps the name of a method to its {@code Board}
- * <p>
- * Specification Field: {@code underConstruction} : {@code boolean} // {@code true} iff
- * {@code this} can still be modified. Once {@code underConstruction} is set to
- * {@code false}, {@code this} becomes immutable.
+ * such that:<br/> aRb --> a and b necessarily have the same width. That is,
+ * when a changes width, b must follow, and vice-versa.  * <p>
+ *
+ * Specification Field: {@code boards} : {@code Set<Board>} // represents the
+ * set of all boards in this level * <p>
+ *
+ * Specification Field: {@code boardNames} : {@code Map<String, Board>} // maps
+ * the name of a method to its {@code Board} * <p>
+ *
+ * Specification Field: {@code underConstruction} : {@code boolean} // {@code
+ * true} iff {@code this} can still be modified. Once {@code underConstruction}
+ * is set to {@code false}, {@code this} becomes immutable.
  *
  * @author Nathaniel Mote
  */
 
 public class Level
 {
+  /**
+   * Deprecated. This functionality will be represented implicitly by the
+   * variableID of chutes, the linked chute sets will be generated upon XML
+   * printing.<p>
+   *
+   * Right now, makeLinked is still supported, but when it is removed, this can
+   * be done away with (after the appropriate updates to the XML IO tools).
+   */
+  @Deprecated
   private final Set<Set<Chute>> linkedEdgeClasses;
 
   private final Map<String, Board> boardNames;
 
+  /**
+   * Contains information about which pipes can be stamped with the colors of
+   * which other pipes in the game. It is a map from variableID to a set of
+   * variableIDs with which it can be stamped.<p>
+   *
+   * This is for map.get in the nullness type system. For any given pipe, this
+   * indicates which other pipes it can be stamped with. This is equivalent to
+   * saying that for any given variable, this indicates what variables could
+   * potentially be keys for it. Obviously, only when the key is a variableID
+   * belonging to a Map object will the corresponding set be non-empty.
+   */
+  private final Map<Integer, Set<Integer>> stampSets;
+
   private boolean underConstruction = true;
 
-  private static final boolean CHECK_REP_ENABLED = verigames.utilities.Misc.CHECK_REP_ENABLED;
+  private static final boolean CHECK_REP_ENABLED =
+      verigames.utilities.Misc.CHECK_REP_ENABLED;
 
   /**
    * Enforces the Representation Invariant
@@ -113,6 +128,7 @@ public class Level
   {
     linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
     boardNames = new LinkedHashMap<String, Board>();
+    stampSets = new LinkedHashMap<Integer, Set<Integer>>();
     checkRep();
   }
 
@@ -218,18 +234,31 @@ public class Level
    */
   public void addPossibleStamping(int pipe, int stamp)
   {
-    // TODO implement
-    throw new RuntimeException("not yet implemented");
+    if (stampSets.containsKey(pipe))
+    {
+      stampSets.get(pipe).add(stamp);
+    }
+    else
+    {
+      Set<Integer> set = new LinkedHashSet<Integer>();
+      set.add(stamp);
+      stampSets.put(pipe, set);
+    }
   }
 
   /**
    * Returns a copy of {@code linkedEdgeClasses}. Structurally modifying the
    * returned {@code Set}, or any of the {@code Set}s it contains, will have
-   * no effect on {@code this}.
+   * no effect on {@code this}.<p>
+   *
+   * @deprecated This has been replaced by an implicit representation of chute
+   * links. Now, any chutes with the same variableID are considered linked, and
+   * a client can figure this out without an explicit representation.
    */
   // protected because most clients shouldn't need this -- areLinked should be
   // adequate. However, if this turns out to be untrue, access may be
   // increased.
+  @Deprecated
   protected Set<Set<Chute>> linkedEdgeClasses()
   {
     final Set<Set<Chute>> copy = new LinkedHashSet<Set<Chute>>();
