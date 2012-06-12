@@ -600,7 +600,7 @@
  \let\maketitle\relax
  \let\@maketitle\relax
  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}\gdef\@subtitle{}\let\thanks\relax
- }
+ \@copyrightspace}
 
 %% CHANGES ON NEXT LINES
 \newif\if@ll % to record which version of LaTeX is in use
@@ -844,8 +844,8 @@
 \@float{copyrightbox}[b]
 \begin{center}
 \setlength{\unitlength}{1pc}
-\begin{picture}(20,0) %Space for copyright notice
-\put(0,-0){\crnotice{\@toappear}}
+\begin{picture}(20,6) %Space for copyright notice
+\put(0,-0.95){\crnotice{\@toappear}}
 \end{picture}
 \end{center}
 \end@float}
