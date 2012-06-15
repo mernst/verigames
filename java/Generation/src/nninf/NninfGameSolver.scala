@@ -17,8 +17,6 @@ class NninfGameSolver extends GameSolver {
 
     override def version: String = super.version + "\nNninfGameSolver version 0.1"
 
-    var oldMerge : Intersection = null
-
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */

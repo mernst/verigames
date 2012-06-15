@@ -154,7 +154,7 @@ abstract class GameSolver extends ConstraintSolver {
               board.addNode(start)
               board.addEdge(incoming, "output-"+incoming.getOutputIDs().size(), start, "input", new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
-            } else if (mvar.isInstanceOf[NewInMethodVP]) {
+            } else if (mvar.isInstanceOf[NewInMethodVP]) { 
               // For object creations, add a START_WHITE_BALL Intersection.
               val input = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
               val start = Intersection.factory(Intersection.Kind.CONNECT)

@@ -1,13 +1,13 @@
 package nninf;
 
+import games.GameVisitor;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
@@ -15,7 +15,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import checkers.basetype.BaseTypeChecker;
-import checkers.inference.InferenceVisitor;
 import checkers.nullness.NullnessVisitor;
 import checkers.source.Result;
 import checkers.types.AnnotatedTypeMirror;
@@ -26,7 +25,7 @@ import checkers.util.TreeUtils;
 import com.sun.source.tree.*;
 import com.sun.source.util.Trees;
 
-public class NninfVisitor extends InferenceVisitor {
+public class NninfVisitor extends GameVisitor {
 
     private final NninfChecker nninfchecker;
     private final TypeMirror stringType;
