@@ -11,13 +11,4 @@ public class TrustedVisitor extends GameVisitor {
             TrustedChecker trustedchecker, boolean infer) {
         super(checker, root, infer);
     }
-
-    /** Log method invocations. */
-    // TODO: Add a GameVisitor that does the field/method logging.
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
-        logMethodInvocation(node);
-        super.visitMethodInvocation(node, p);
-        return null;
-    }
 }

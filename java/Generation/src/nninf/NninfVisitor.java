@@ -172,37 +172,6 @@ public class NninfVisitor extends InferenceVisitor {
         return null;
     }
 
-    /** An identifier is a field access sometimes, i.e. when there is an implicit "this". */
-    @Override
-    public Void visitIdentifier(IdentifierTree node, Void p) {
-        Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() && !node.toString().equals("this")) {
-            logFieldAccess(node);
-        }
-        return super.visitIdentifier(node, p);
-    }
-
-    /** Log all assignments. */
-    @Override
-    public Void visitAssignment(AssignmentTree node, Void p) {
-        super.visitAssignment(node, p);
-        logAssignment(node);
-        return null;
-    }
-
-    /** Log method invocations. */
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
-        ProcessingEnvironment env = nninfchecker.getProcessingEnvironment();
-        ExecutableElement mapGet =  TreeUtils.getMethod("java.util.Map", "get", 1, env);
-        if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
-            // TODO: log the call to Map.get.
-        } else {
-            logMethodInvocation(node);
-        }
-        super.visitMethodInvocation(node, p);
-        return null;
-    }
 
     /** Class instantiation is always non-null.
      * TODO: resolve this automatically?
@@ -214,24 +183,7 @@ public class NninfVisitor extends InferenceVisitor {
         return null;
     }
 
-    @Override
-    public Void visitReturn(ReturnTree node, Void p) {
-        // Don't try to check return expressions for void methods.
-        if (node.getExpression() == null) {
-            return null;
-        }
 
-        scan(node.getExpression(), p);
-
-        MethodTree enclosingMethod =
-            TreeUtils.enclosingMethod(getCurrentPath());
-
-        AnnotatedExecutableType methodType = atypeFactory.getAnnotatedType(enclosingMethod);
-        commonAssignmentCheck(methodType.getReturnType(), node.getExpression(),
-                "return.type.incompatible");
-
-        return null;
-    }
 
     /** Check for implicit {@code .iterator} call */
     @Override

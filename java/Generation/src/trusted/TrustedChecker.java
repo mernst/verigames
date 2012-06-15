@@ -18,6 +18,14 @@ import checkers.util.AnnotationUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 
+/**
+ * 
+ * The Trusted checker is a generic checker for expressing objects as "trusted" or not.
+ * It should most likely be only used abstractly; specific subtypes with their own
+ * qualifiers should be created to represent most categories of trusted (e.g. for SQL
+ * or OS commands).
+ * 
+ */
 @TypeQualifiers({ Trusted.class, Untrusted.class })
 public class TrustedChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
