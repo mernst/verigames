@@ -18,6 +18,11 @@ Charles River Analytics:  adaptive scheduling:  assign games to players
   Sean Guarino: PI (design & planning)
   Will Dorin:  (implementation)
 
+Other performers:
+  BBN: Ron Watro <rwatro@bbn.com>
+  UCLA: Jens Palsberg (compilers)
+  Galois: Joe Hurd <joe@galois.com>
+
 ===========================================================================
 
 Verigames simplifications (optimizations) to perform:
