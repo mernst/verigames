@@ -1,0 +1,65 @@
+Thanks for the extensive conceptualization document.  I have some questions
+about it.
+
+Page 9 talks about a "common Game Data model defined in the Game Web
+services API architecture", but this model is not mentioned again in the
+document.  What information will be stored/represented by this model?  What
+purpose does it serve?
+
+Page 10 says, "Java or PHP-based technologies are preferred for this
+application", but I'm uncertain as to the referent of "this application".
+Are you talking about the CMS only, or the integration website, or the
+games themselves as well?  We plan to use Flash for our game; if we do
+migrate to a different language, it would probably be to HTML5 and
+JavaScript.
+
+Page 11 says, "The games will need to be compatible with the Gaming
+Website architecture and APIs", but I didn't find a definition of this
+architecture nor a description of the Gaming Website APIs.
+
+Page 11 says, "Adaptive scheduling of games and game levels will be
+implemented externally."  Who will implement this functionality:  the
+integrator or the TA1 (game) teams?
+
+I had similar questions at many other places in the document.  I would
+personally find it helpful if you could find all the uses of passive voice,
+and replace them all by active voice that indicates a specific actor who is
+responsible.
+
+Along similar lines, section 1.5 gives "Issues for the Next Phases of the
+Application".  It seems that some of these are risks that are borne by the
+integration team, and others are borne by the TA1 (game) teams.  If you
+could split these apart, that would help me focus on the parts of the
+document that are of most interest to me.  It would also help us to be
+clear, from the beginning, about responsibilities, so that issues don't
+fall through the cracks until it is too late.
+
+Page 15 says, "Capability C1 (gaming community creation) can be provided by
+using an off-the-shelf CMS and existing components."  I'm a bit concerned
+about lack of integration with the game, and lack of access during
+gameplay.  In a vibrant community, players connect with one another, and
+learn from one another, during gameplay.  This requires chat functionality
+integrated with the game, among other features.  Task requirement 4.4.28 on
+page 85 states "It is assumed that blog will be a standalone system", which
+seems to re-iterate lack of tight integration with gameplay.  Task
+requirement 4.4.53 is even more concerning:  "Software verification games
+for PC are implemented externally, so playing them is out of scope for this
+conceptualization."  Task requirement 4.4.33 ("Platform messaging") is also
+silent about integration with the game screen.  Does the integrator provide
+an extra frame around the game?  Is messaging embedded inside the game
+somehow -- say, in an extra window the game screen needs to make space for?
+Do players have to select a different browser tab?  The latter would be bad
+since the players wouldn't be able to see both the game and the messages
+that refer to the game.  What about sharing of scripts and other game
+elements?  If communication is clumsy, creating a community will be
+problematic.
+
+Page 20 says, "The System can automatically calculate skills of each user
+based on their game play" and "The system can automatically schedule games
+for a set of users by Adaptive Scheduling".  Who is responsible for this --
+the integrator or the TA1 (game) team for the particular game?
+
+As a general comment, I had to keep referring back to other parts of the
+document to remind myself what "M1", "M2", etc. mean.  It might be nice to
+give them more intuitive names, such as a single English word instead of a
+digit between 1 and 5.
