@@ -19,9 +19,16 @@ Charles River Analytics:  adaptive scheduling:  assign games to players
   Will Dorin:  (implementation)
 
 Other performers:
+TA1 (games):
+  UW: 
   BBN: Ron Watro <rwatro@bbn.com>
-  UCLA: Jens Palsberg (compilers)
   Galois: Joe Hurd <joe@galois.com>
+  SRI: 
+  Kestrel: Cordell Green
+TA2 (compilers):
+  UCLA: Jens Palsberg (compilers) + Illinois + Bell Labs
+TA3 (integration):
+  TopCoder
 
 ===========================================================================
 
