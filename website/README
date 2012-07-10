@@ -138,15 +138,14 @@ Required Dependencies:
 - Flash
 - GraphViz
 
+Ubuntu instructions for installing dependencies:
+
 The easiest way to get Flash is to use the "Ubuntu Software Center" and search for "restricted". Then install the Ubuntu
 Restricted Extras. This includes Java, Flash and other fun stuff. 
 
 To install the remaining dependencies, enter the following into a terminal window:
 
-sudo apt-get php5
-sudo apt-get apache2
-sudo apt-get install libapache2-mod-php5
-sudo apt-get graphviz
+sudo apt-get install php5 apache2 libapache2-mod-php5 graphviz
 sudo /etc/init.d/apache2 restart
 
 
