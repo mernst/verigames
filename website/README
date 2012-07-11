@@ -151,15 +151,12 @@ sudo /etc/init.d/apache2 restart
 
 Step 2:
 
-Download the most recent backup of the production/development site from the current host.  This is currently 
-abstract.cs.washington.edu/~bdwalker.  The backups are kept in a folder called "backups" in the sites root
-directory.  They will be time stamped so it will be easy to determine the most recent backup.  If you would like
-to use the most current version of the site then go to abstract.cs.washington.edu/~bdwalker/publish.php and 
-backup the desired site.  This will create a .zip file of the entire site contents.  Once completed you can then
-download the most recent version.  
+Download a recent copy of the website.  This can be accomplished by selecting a backup from the following site:
 
-Once downloaded simply extract the contents and move them to the corresponding folder on your computer.  On Ubuntu
-web files should be placed in /var/www. 
+	http://abstract.cs.washington.edu/~bdwalker/publish.php
+
+Click any of the listed backups to download a .zip file with the entire contents of the site. Once downloaded extract 
+the contents to /var/www (Ubuntu). 
 
 Step 3:
 
