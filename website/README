@@ -2,18 +2,21 @@
 --------------------------------
 Site Location:
 
-The current location of the site is on the abstract.cs.washington.edu server under the path 
-/homes/abstract/bdwalker/www
+The Pipe Jam website is:
+http://abstract.cs.washington.edu/~bdwalker/
 
-The permissions group is set to the verigames group with read, write and execute permissions.  
+The content is found in directory
+/homes/abstract/bdwalker/www
+on abstract.cs.washington.edu
+
+The verigames group has permission to read, write and execute this directory.
 The user permissions allow only for read and execute. 
 
 --------------------------------
 
 Site Structure:
 
-The root contains several files as well as directories.  The files and their descriptions 
-are as follows:
+The directory contains the following top-level files:
 
 index.php:  This is the home page and currently provides the user with a way to upload their files.  
 
@@ -27,7 +30,7 @@ well as manages the game settings and resulting xml files.
 
 
 
-There are also nine main folders in the root directory.  They are as follows:
+There are also nine main folders in the root directory:
 
 flash_files:  Stores all the flash related content for the site, including the webgame.swf file 
 which is the game flash file. 
@@ -140,8 +143,8 @@ Required Dependencies:
 
 Ubuntu instructions for installing dependencies:
 
-The easiest way to get Flash is to use the "Ubuntu Software Center" and search for "restricted". Then install the Ubuntu
-Restricted Extras. This includes Java, Flash and other fun stuff. 
+Install the "Ubuntu Restricted Extras" package, which includes Flash, Java,
+and other fun stuff.  (You can obtain in via the "Ubuntu Software Center".)
 
 To install the remaining dependencies, enter the following into a terminal window:
 
@@ -165,8 +168,7 @@ Download the appropriate JDK 7 binaries for your computer framework.
 Install Scala.
 The easiest way is:
   sudo apt-get install scala
-Alternately, download the Scala binaries 
-from http://www.scala-lang.org/downloads
+Alternately, download Scala binaries from http://www.scala-lang.org/downloads
 
 Once downloaded, both Java and Scala binaries need to be placed in the parent directory of the website.  In Ubuntu
 the JDK 7 framework and the Scala framework should be placed in the /var folder or in the parent folder
