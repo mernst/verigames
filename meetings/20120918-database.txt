@@ -23,3 +23,11 @@ Program analysis storage requirements:
 Game storage requirements:
  * The flash game itself, which will be served to players
  * Logging of player actions (could be stored at UW instead)
+
+
+Zoran says:
+The key thing is that we have the ability to query in realtime the data of
+last 2 levels, and at the same time get full history data at a slower pace
+where time is not critical.  That often means two layers of the data, with
+the first layer being soft of a buffer: limited memory most recent stuff
+that can be read quickly.
