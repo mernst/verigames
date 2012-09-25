@@ -1,6 +1,6 @@
-To run the nullness checker, you must have an environment variable named
-$CHECKERS storing the location of the checkers folder in your copy of the
-checker framework.
+To build the project, you must have an environment variable named $CHECKERS
+storing the location of the checkers folder in your copy of the checker
+framework.
 
 To use the layout module, you must have Graphviz (graphviz.org) installed, and
 its "dot" tool must be callable from the command line.
