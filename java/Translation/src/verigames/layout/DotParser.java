@@ -781,17 +781,9 @@ class DotParser
    */
   private static String[] splitAroundWhitespace(String in)
   {
-    // Split the input around whitespace
-    String[] result = in.split("[\\s]+");
-
-    /* If the first thing in the String is whitespace, there will be an empty
-     * String at the beginning of the resulting array. If this is the case,
-     * remove it.
-     *
-     * There is no issue with whitespace at the end of the line -- the regular
-     * expression around which we split takes care of it */
-    if (result.length > 0 && result[0].length() == 0)
-      result = Arrays.copyOfRange(result, 1, result.length);
+    // Split the input around whitespace, after removing leading and trailing
+    // whitespace.
+    String[] result = in.trim().split("[\\s]+");
 
     return result;
   }
