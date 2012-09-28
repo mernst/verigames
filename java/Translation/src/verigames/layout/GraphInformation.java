@@ -411,7 +411,7 @@ class GraphInformation
      * <p>
      * Must have length congruent to 1 (mod 3), as enforced by Graphviz.
      */
-    private final List<Point> controlPoints;
+    private final List<GraphvizPointCoordinate> controlPoints;
     
     private void checkRep()
     {
@@ -425,7 +425,7 @@ class GraphInformation
      * The control points for this edge's b-spline. {@code points.size() % 3}
      * must equal {@code 1}.
      */
-    public EdgeAttributes(List<Point> points)
+    public EdgeAttributes(List<GraphvizPointCoordinate> points)
     {
       if (points.size() % 3 != 1)
         throw new IllegalArgumentException("Size of argument is " +
@@ -434,29 +434,17 @@ class GraphInformation
       
       // Creates a new list containing the elements in points, where the only
       // view on it is an unmodifiable view. In effect, make it immutable.
-      this.controlPoints = Collections.unmodifiableList(new ArrayList<Point>(points));
+      this.controlPoints = Collections.unmodifiableList(new ArrayList<GraphvizPointCoordinate>(points));
       
       checkRep();
     }
-    
-    public Point getPoint(int index)
+
+    public GraphvizPointCoordinate getCoordinates(int index)
     {
       checkBounds(index);
       return controlPoints.get(index);
     }
-    
-    public int getX(int index)
-    {
-      checkBounds(index);
-      return controlPoints.get(index).getX();
-    }
-    
-    public int getY(int index)
-    {
-      checkBounds(index);
-      return controlPoints.get(index).getY();
-    }
-    
+
     private void checkBounds(int index)
     {
       if (index >= controlPoints.size())
@@ -488,53 +476,6 @@ class GraphInformation
     public int hashCode()
     {
       return controlPoints.hashCode();
-    }
-  }
-  
-  /**
-   * An immutable record type representing a 2D point.
-   * <p>
-   * Stores integer x and y values that are values in hundredths of points.
-   */
-  public static class Point
-  {
-    private final int x;
-    private final int y;
-    
-    public Point(int x, int y)
-    {
-      this.x = x;
-      this.y = y;
-    }
-    
-    public int getY()
-    {
-      return y;
-    }
-    
-    public int getX()
-    {
-      return x;
-    }
-    
-    @Override
-    public boolean equals(/*@Nullable*/ Object o)
-    {
-      if (o instanceof Point)
-      {
-        Point p = (Point) o;
-        return this.y == p.y && this.x == p.x;
-      }
-      else
-      {
-        return false;
-      }
-    }
-    
-    @Override
-    public int hashCode()
-    {
-      return x * 31 + y;
     }
   }
 }

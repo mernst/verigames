@@ -1,5 +1,6 @@
 package verigames.level;
 
+import verigames.layout.GameCoordinate;
 import verigames.utilities.Pair;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
   // should be instantiated as an immutable list
   // TODO enforce length in checkRep
-  private /*@Nullable*/ List<Pair<Double, Double>> layout;
+  private /*@Nullable*/ List<GameCoordinate> layout;
 
   private final int UID;
 
@@ -214,7 +215,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
     checkRep();
   }
 
-  public void setLayout(List<Pair<Double, Double>> layout)
+  public void setLayout(List<GameCoordinate> layout)
   {
     if (layout.size() < 4 || layout.size() % 3 != 1)
       throw new IllegalArgumentException("Number of points (" +
@@ -222,10 +223,10 @@ public class Chute extends verigames.graph.Edge<Intersection>
           ") illegal -- must be of the form 3n + 1 where n is a positive integer");
 
     this.layout = Collections.unmodifiableList(
-        new ArrayList<Pair<Double,Double>>(layout));
+        new ArrayList<GameCoordinate>(layout));
   }
 
-  public /*@Nullable*/ List<Pair<Double, Double>> getLayout()
+  public /*@Nullable*/ List<GameCoordinate> getLayout()
   {
     return this.layout;
   }

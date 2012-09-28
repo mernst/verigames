@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import verigames.layout.DotParser;
 import verigames.layout.GraphInformation;
+import verigames.layout.GraphvizPointCoordinate;
 
 import static org.junit.Assert.*;
 import static verigames.layout.GraphInformation.*;
@@ -41,12 +42,12 @@ public class DotParserSpecTests
     builder.setNodeAttributes("10", new NodeAttributes(8264, 30400, 7200, 14400));
     builder.setNodeAttributes("11", new NodeAttributes(12964, 15200, 14400, 14400));
     builder.setNodeAttributes("12", new NodeAttributes(15864, 30400, 7200, 14400));
-    
-    builder.setEdgeAttributes("hi", new EdgeAttributes(Arrays.asList(new Point(9258, 38356), new Point(9256, 38341), new Point(9254, 38326), new Point(9252, 38310))));
-    builder.setEdgeAttributes("8", new EdgeAttributes(Arrays.asList(new Point(11466, 38367), new Point(11501, 38108), new Point(11534, 37852), new Point(11564, 37600), new Point(11879, 34938), new Point(12259, 28668), new Point(12544, 23436))));
-    builder.setEdgeAttributes("asdf", new EdgeAttributes(Arrays.asList(new Point(12964, 7986), new Point(12964, 7969), new Point(12964, 7953), new Point(12964, 7937))));
-    builder.setEdgeAttributes("je", new EdgeAttributes(Arrays.asList(new Point(14481, 23156), new Point(14479, 23141), new Point(14476, 23126), new Point(14473, 23110))));
-    
+
+    builder.setEdgeAttributes("hi", new EdgeAttributes(Arrays.asList(new GraphvizPointCoordinate(9258, 38356), new GraphvizPointCoordinate(9256, 38341), new GraphvizPointCoordinate(9254, 38326), new GraphvizPointCoordinate(9252, 38310))));
+    builder.setEdgeAttributes("8", new EdgeAttributes(Arrays.asList(new GraphvizPointCoordinate(11466, 38367), new GraphvizPointCoordinate(11501, 38108), new GraphvizPointCoordinate(11534, 37852), new GraphvizPointCoordinate(11564, 37600), new GraphvizPointCoordinate(11879, 34938), new GraphvizPointCoordinate(12259, 28668), new GraphvizPointCoordinate(12544, 23436))));
+    builder.setEdgeAttributes("asdf", new EdgeAttributes(Arrays.asList(new GraphvizPointCoordinate(12964, 7986), new GraphvizPointCoordinate(12964, 7969), new GraphvizPointCoordinate(12964, 7953), new GraphvizPointCoordinate(12964, 7937))));
+    builder.setEdgeAttributes("je", new EdgeAttributes(Arrays.asList(new GraphvizPointCoordinate(14481, 23156), new GraphvizPointCoordinate(14479, 23141), new GraphvizPointCoordinate(14476, 23126), new GraphvizPointCoordinate(14473, 23110))));
+
     testOutput = builder.build();
   }
   

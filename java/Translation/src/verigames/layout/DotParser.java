@@ -563,7 +563,7 @@ class DotParser
       // xx.xx,yy.yy
       String[] coords = coordsString.split("\\s");
 
-      List<GraphInformation.Point> points = new ArrayList<GraphInformation.Point>();
+      List<GraphvizPointCoordinate> points = new ArrayList<GraphvizPointCoordinate>();
       for (String XYString: coords)
       {
         if (XYString.length() != 0)
@@ -583,7 +583,7 @@ class DotParser
             int x = parseToHundredths(XY[0]);
             int y = parseToHundredths(XY[1]);
 
-            points.add(new GraphInformation.Point(x, y));
+            points.add(new GraphvizPointCoordinate(x, y));
           }
         }
       }

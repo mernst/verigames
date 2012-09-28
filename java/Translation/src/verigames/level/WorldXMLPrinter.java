@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import verigames.layout.GameCoordinate;
 import verigames.level.Intersection.Kind;
 import verigames.utilities.Pair;
 import verigames.utilities.Printer;
@@ -288,21 +289,21 @@ public class WorldXMLPrinter extends Printer<World, Void>
         }
         
         // output layout information, if it exists:
-        List<Pair<Double, Double>> layout = edge.getLayout();
+        List<GameCoordinate> layout = edge.getLayout();
         if (layout != null)
         {
           Element edgeLayoutElt = new Element("edge-layout");
           
-          for (Pair<Double, Double> point : layout)
+          for (GameCoordinate point : layout)
           {
             Element pointElt = new Element("point");
             
             Element xElt = new Element("x");
-            xElt.appendChild(String.format("%.5f", point.getFirst()));
+            xElt.appendChild(String.format("%.5f", point.getX()));
             pointElt.appendChild(xElt);
             
             Element yElt = new Element("y");
-            yElt.appendChild(String.format("%.5f", point.getSecond()));
+            yElt.appendChild(String.format("%.5f", point.getY()));
             pointElt.appendChild(yElt);
             
             edgeLayoutElt.appendChild(pointElt);

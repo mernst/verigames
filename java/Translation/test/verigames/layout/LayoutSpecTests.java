@@ -70,11 +70,11 @@ public class LayoutSpecTests
       BoardLayout.layout(b);
     }
 
-    List<Pair<Double, Double>> layout1 = c1.getLayout();
-    List<Pair<Double, Double>> layout2 = c2.getLayout();
+    List<GameCoordinate> layout1 = c1.getLayout();
+    List<GameCoordinate> layout2 = c2.getLayout();
 
-    double c1X = layout1.get(0).getFirst();
-    double c2X = layout2.get(0).getFirst();
+    double c1X = layout1.get(0).getX();
+    double c2X = layout2.get(0).getX();
 
     // make sure that the first x value in each list of spline coordinates is
     // not the same. This is a good enough to tell if the layout is basically

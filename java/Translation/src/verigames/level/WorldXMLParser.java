@@ -5,6 +5,7 @@ import java.util.*;
 
 import nu.xom.*;
 
+import verigames.layout.GameCoordinate;
 import verigames.utilities.Pair;
 
 /**
@@ -317,9 +318,9 @@ public class WorldXMLParser
       }
       else
       {
-        final Pair<Double, Double> result = processLayoutPoint(layoutElt);
-        x = result.getFirst();
-        y = result.getSecond();
+        final GameCoordinate result = processLayoutPoint(layoutElt);
+        x = result.getX();
+        y = result.getY();
       }
     }
 
@@ -356,7 +357,7 @@ public class WorldXMLParser
     return Pair.of(UID, intersection);
   }
 
-  private static Pair<Double, Double> processLayoutPoint(Element layoutElt)
+  private static GameCoordinate processLayoutPoint(Element layoutElt)
   {
     {
       final String eltName = layoutElt.getLocalName();
@@ -376,7 +377,7 @@ public class WorldXMLParser
       y = processCoordinate(yElt);
     }
 
-    return Pair.of(x,y);
+    return new GameCoordinate(x, y);
   }
 
   private static double processCoordinate(Element coordElt)
@@ -470,7 +471,7 @@ public class WorldXMLParser
       UID = UIDAttr.getValue();
     }
 
-    final List<Pair<Double, Double>> layout;
+    final List<GameCoordinate> layout;
     {
       final Element layoutElt = edgeElt.getFirstChildElement("edge-layout");
       if (layoutElt == null)
@@ -532,18 +533,18 @@ public class WorldXMLParser
     return Pair.of(ID, port);
   }
 
-  private static List<Pair<Double, Double>> processEdgeLayout(Element layoutElt)
+  private static List<GameCoordinate> processEdgeLayout(Element layoutElt)
   {
     checkName(layoutElt, "edge-layout");
 
-    final List<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
+    final List<GameCoordinate> result = new ArrayList<GameCoordinate>();
 
     final Elements pointElts = layoutElt.getChildElements();
 
     for (int i = 0; i < pointElts.size(); i++)
     {
       Element pointElt = pointElts.get(i);
-      Pair<Double, Double> point = processLayoutPoint(pointElt);
+      GameCoordinate point = processLayoutPoint(pointElt);
       result.add(point);
     }
 
