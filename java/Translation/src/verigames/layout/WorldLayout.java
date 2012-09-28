@@ -13,7 +13,7 @@ import java.util.Map;
  * #layout(verigames.level.World) layout(World)} method. As such, it is not instantiable.
  *
  * @see BoardLayout
- * 
+ *
  * @author Nathaniel Mote
  */
 public class WorldLayout
@@ -26,7 +26,7 @@ public class WorldLayout
   {
     throw new RuntimeException("Uninstantiable");
   }
-  
+
   /**
    * Adds layout information to all of the {@link verigames.level.Board Board}s contained
    * in {@code w} using {@link BoardLayout#layout(verigames.level.Board)
@@ -42,6 +42,7 @@ public class WorldLayout
    */
   public static void layout(World w)
   {
+    checkNotUnderConstruction(w);
     for (Level l : w.getLevels().values())
     {
       for (Board b : l.getBoards().values())
