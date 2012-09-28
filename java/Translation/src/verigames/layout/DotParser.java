@@ -14,9 +14,10 @@ import java.util.Scanner;
  * This class does not represent an object -- it simply encapsulates the {@link
  * #parse(String) parse(String)} method. As such, it is not instantiable.
  * <p>
- * Currently, it includes the dimensions of the graph's bounding box, as well as
- * the dimensions and position of the nodes and the spline control points for
- * the edges. However, more information may be added at a later date.
+ * Currently, the {@code GraphInformation} object returned by the parse method
+ * includes the dimensions of the graph's bounding box, as well as the
+ * dimensions and position of the nodes and the spline control points for the
+ * edges. However, more information may be added at a later date.
  * <p>
  * Spline control points preceded by an 'e' or an 's' are NOT included in the
  * returned layout information. Points of that kind define the location of the
@@ -175,10 +176,17 @@ class DotParser
 
   /**
    * An enum used to describe the nature of a line of input. Used to direct
-   * parsing.
+   * parsing.<p>
+   *
+   * Currently, not all of these line kinds are parsed -- some of them contain
+   * information that is not needed.
    */
   private static enum LineKind
       { GRAPH_PROPERTIES, NODE_PROPERTIES, EDGE_PROPERTIES, NODE, EDGE, OTHER }
+
+  /* The three following classes are record types used to return richer
+   * information from the parsing methods than can be stored in the
+   * GraphInformation record types. */
 
   /**
    * An immutable record type that stores the name of a node along with its
@@ -336,14 +344,14 @@ class DotParser
    */
   private static /*@Nullable*/ GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
   {
-    // sample line: "  graph [bb="0,0,216.69,528"];"
+    // sample line: '  graph [bb="0,0,216.69,528"];'
 
     // split the string into tokens, stripping extraneous characters
     // sample line would become:
     // [graph, bb="0,0,216.69,528"]
     String[] tokens = tokenizeLine(line);
 
-    if(tokens.length < 2 || !tokens[0].equals("graph"))
+    if (tokens.length < 2 || !tokens[0].equals("graph"))
       throw new IllegalLineException("\"" + line + "\" is not a valid graph attributes line");
 
     String bb = null;
@@ -432,14 +440,13 @@ class DotParser
     // Search for specific attributes:
     for (String cur : tokens)
     {
-      // if the string starts with "pos"
       if (cur.startsWith("pos="))
         pos=cur;
 
-      if (cur.startsWith("width="))
+      else if (cur.startsWith("width="))
         widthStr=cur;
 
-      if (cur.startsWith("height="))
+      else if (cur.startsWith("height="))
         heightStr=cur;
     }
 
@@ -484,13 +491,13 @@ class DotParser
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      throw new IllegalLineException("Poorly formed line: " + line);
+      throw new IllegalLineException("Poorly formed line: " + line, e);
     }
     // parseToHundredth throws {@code NumberFormatException}s if it fails to
     // parse the numbers.
     catch (NumberFormatException e)
     {
-      throw new IllegalLineException("Poorly formed line: " + line);
+      throw new IllegalLineException("Poorly formed line: " + line, e);
     }
   }
 
@@ -509,7 +516,7 @@ class DotParser
      *           ^ ^   ^          ^      ^      ^      ^
      *  start node |  |         spline   control   points
      *             |  end node
-     *        port number
+     *      port identifier
      */
 
     // After example has run through tokenizeLine:
@@ -659,20 +666,19 @@ class DotParser
   }
 
   /**
-   * Takes a text representation of a decimal number and returns an {@code
-   * int} 7200 times larger. Rounds to the nearest integer.
-   * <p>
    * Used for converting height and width dimensions from inches to hundredths
-   * of points.
+   * of points.<p>
+   *
+   * The width and height attributes take the form width=ww.ww or width="ww.ww".
+   * This method takes a string in this form and returns the number represented
+   * by the ww.ww portion, multiplied by 7200 and rounded to the nearest
+   * integer.
+   *
+   * Graphviz gives dimensions in inches, and this converts them to hundredths
+   * of points (1 inch = 72 points = 7200 hundredths of points)
    */
   private static int parseDimension(String dimensionStr) throws IllegalLineException
   {
-    // The width and height attributes take the form width=ww.ww or
-    // width="ww.ww"
-    //
-    // Graphviz gives them in inches, but they must be converted to
-    // hundredths of points (1 inch = 72 points = 7200 hundredths of points)
-
     // If the string contains quotes, strip them.
     dimensionStr = dimensionStr.replaceAll("\"", "");
 
@@ -719,25 +725,25 @@ class DotParser
     int endIndex = 0;
     boolean inQuotedString = false;
 
-    // strategy:
-    // increment endIndex until unquoted whitespace is encountered. When this
-    // occurs, take the String from startIndex (inclusive) to endIndex
-    // (exclusive), and add it to the token list. Then, set startIndex to
-    // endIndex and continue.
+    /* strategy:
+     * increment endIndex until unquoted whitespace is encountered. When this
+     * occurs, take the String from startIndex (inclusive) to endIndex
+     * (exclusive), and add it to the token list. Then, set startIndex to
+     * endIndex, skip any whitespace, and continue. */
     while(endIndex < line.length())
     {
       char currentChar = line.charAt(endIndex);
 
       if (Character.isWhitespace(currentChar) && !inQuotedString)
       {
-        // if we're at the start of a token, and it's whitespace, simply
-        // move past it
+        // search for the start of a token by moving past whitespace
         if (startIndex == endIndex)
         {
           startIndex++;
           endIndex++;
         }
-        // otherwise, this token needs to be processed
+        // if we're not searching for the start of a token, we've reached the
+        // whitespace terminating a token
         else
         {
           tokens.add(line.substring(startIndex, endIndex));
@@ -761,7 +767,9 @@ class DotParser
 
     // remove trailing commas at the end of tokens
     for(int i = 0; i < tokens.size(); i++)
+    {
       tokens.set(i, tokens.get(i).replaceAll(",$", ""));
+    }
 
     return tokens.toArray(new String[0]);
   }
@@ -776,9 +784,12 @@ class DotParser
     // Split the input around whitespace
     String[] result = in.split("[\\s]+");
 
-    // If the first thing in the String is whitespace, there will be an empty
-    // String at the beginning of the resulting array. If this is the case,
-    // remove it.
+    /* If the first thing in the String is whitespace, there will be an empty
+     * String at the beginning of the resulting array. If this is the case,
+     * remove it.
+     *
+     * There is no issue with whitespace at the end of the line -- the regular
+     * expression around which we split takes care of it */
     if (result.length > 0 && result[0].length() == 0)
       result = Arrays.copyOfRange(result, 1, result.length);
 

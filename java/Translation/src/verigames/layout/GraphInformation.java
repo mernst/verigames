@@ -23,15 +23,17 @@ import checkers.nullness.quals.AssertNonNullIfTrue;
  * of an edge, and this structure reflects this decision. Therefore, when
  * accessing the edges of an undirected graph, it is prudent to check both
  * directions.
- * 
+ *
  * @author Nathaniel Mote
  */
 class GraphInformation
 {
   private final GraphAttributes graphAttributes;
+  /** Map from the name of a node to its attributes */
   private final Map<String, NodeAttributes> nodeAttributes;
+  /** Map from an edge's label to its attributes */
   private final Map<String, EdgeAttributes> edgeAttributes;
-  
+
   /**
    * Creates a new GraphInformation object with the given mappings from Node
    * UID to Intersection.
@@ -173,27 +175,28 @@ class GraphInformation
   
   /**
    * A {@code Builder} for a {@code GraphInformation} object.
-   * 
+   *
    * @author Nathaniel Mote
    */
   public static class Builder
   {
-    private /*@LazyNonNull*/ GraphAttributes graphAttributes;
+    /* these fields are the same as those of GraphInformation itself, except
+     * that these are intended to be mutated. */
+    private /*@LazyNonNull*/ GraphAttributes graphAttributes = null;
     private final Map<String, NodeAttributes> nodeAttributes;
     private final Map<String, EdgeAttributes> edgeAttributes;
-    
+
     public Builder()
     {
       nodeAttributes = new HashMap<String, NodeAttributes>();
       edgeAttributes = new HashMap<String, EdgeAttributes>();
-      graphAttributes = null;
     }
-    
+
     /**
      * Sets the properties of this graph to those defined by
      * {@code attributes}.
      * <p>
-     * 
+     *
      * @return the previous GraphAttributes object, or null if none existed
      */
     // This may need to be changed somehow because graph attributes can be
@@ -282,23 +285,19 @@ class GraphInformation
     {
       return height;
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object other)
     {
-      if (other instanceof GraphAttributes)
-      {
-        GraphAttributes g = (GraphAttributes) other;
-        
-        return this.getHeight() == g.getHeight()
-            && this.getWidth() == g.getWidth();
-      }
-      else
-      {
+      if (!(other instanceof GraphAttributes))
         return false;
-      }
+
+      GraphAttributes g = (GraphAttributes) other;
+
+      return this.getHeight() == g.getHeight()
+          && this.getWidth() == g.getWidth();
     }
-    
+
     @Override
     public int hashCode()
     {

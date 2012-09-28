@@ -88,6 +88,7 @@ class DotPrinter extends AbstractDotPrinter
       out.print(suffix);
     }
 
+    // TODO add example of output
     /**
      * Generates a list of ports for the given {@link
      * verigames.level.Intersection Intersection}. For any given {@code
@@ -104,7 +105,8 @@ class DotPrinter extends AbstractDotPrinter
      * each will be prefixed by the character 'o'.
      *
      * @param n
-     * The {@link verigames.level.Intersection Intersection} to 
+     * The {@link verigames.level.Intersection Intersection} for which the ports
+     * list should be generated
      *
      */
     private String generatePortList(boolean input, Intersection n)
@@ -122,13 +124,13 @@ class DotPrinter extends AbstractDotPrinter
         portsList = n.getOutputIDs();
       }
 
-      String result = "";
+      StringBuilder result = new StringBuilder();
       for (int i = 0 ; i < portsList.size(); i++)
       {
         String port = portsList.get(i);
-        result += "<" + prefix + port + ">";
+        result.append("<" + prefix + port + ">");
         if (i != portsList.size() - 1)
-          result += "|";
+          result.append("|");
       }
 
       // add the filler ports
@@ -136,17 +138,18 @@ class DotPrinter extends AbstractDotPrinter
       for (int i = portsList.size(); i < numPorts; i++)
       {
         // mark the port with an x to indicate that it is just a filler
-        result += "|<x" + i + ">";
+        result.append("|<x" + i + ">");
       }
 
-      return result;
+      return result.toString();
     }
   }
-  
+
   /**
    * An {@code Object} that prints {@link verigames.level.Chute Chute} objects to
    * Graphviz's DOT format, with attributes tailored to the edge layout pass.
    */
+  // TODO consider naming this class
   private static final Printer<Chute, Board> edgePrinter = new Printer<Chute, Board>()
   {
     @Override
