@@ -3,14 +3,13 @@
 Site Location:
 
 The Pipe Jam website is:
-http://abstract.cs.washington.edu/~bdwalker/
+http://gamesweb.cs.washington.edu/games/verigames/pipejam/
 
 The content is found in directory
-/homes/abstract/bdwalker/www
-on abstract.cs.washington.edu
+/www/htdocs/games/verigames/pipejam
+on gamesweb.cs.washington.edu
 
-The verigames group has permission to read, write and execute this directory.
-The user permissions allow only for read and execute. 
+For now, there are global permissions to read, write and execute this directory.
 
 --------------------------------
 
@@ -156,7 +155,7 @@ Step 2:
 
 Download a recent copy of the website.  This can be accomplished by selecting a backup from the following site:
 
-	http://abstract.cs.washington.edu/~bdwalker/publish.php
+	http://gamesweb.cs.washington.edu/games/verigames/pipejam/publish.php
 
 Click any of the listed backups to download a .zip file with the entire contents of the site. Once downloaded extract 
 the contents to /var/www (Ubuntu). 
