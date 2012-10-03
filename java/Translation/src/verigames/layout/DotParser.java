@@ -78,19 +78,13 @@ class DotParser
 
     Scanner in = new Scanner(dotOutput);
 
-    // Stores the default attributes for a node. Graphviz can simply state what
-    // the defaults are, and then until they are updated, all following nodes
-    // are assumed to have these default attributes, unless otherwise stated.
-    // So, it's important to keep track of these defaults.
-    NodeDefaults nodeDefaults = new NodeDefaults(null, null);
-
     while (in.hasNextLine())
     {
       String line = getNextLogicalLine(in);
 
       try
       {
-        nodeDefaults = parseLine(line, out, nodeDefaults);
+        parseLine(line, out);
       }
       catch (IllegalLineException e)
       {
@@ -195,30 +189,12 @@ class DotParser
   private static class NodeRecord
   {
     public final String name;
-    public final GraphInformation.NodeAttributes attributes;
+    public final GraphInformation.NullableNodeAttributes attributes;
 
-    public NodeRecord(String name, GraphInformation.NodeAttributes attributes)
+    public NodeRecord(String name, GraphInformation.NullableNodeAttributes attributes)
     {
       this.name = name;
       this.attributes = attributes;
-    }
-  }
-
-  /**
-   * An immutable record type that stores the default attributes for a node.
-   * <p>
-   * A null reference indicates that there is no default value for a given
-   * attribute.
-   */
-  private static class NodeDefaults
-  {
-    public final /*@Nullable*/ Integer width;
-    public final /*@Nullable*/ Integer height;
-
-    public NodeDefaults(/*@Nullable*/ Integer width, /*@Nullable*/ Integer height)
-    {
-      this.width = width;
-      this.height = height;
     }
   }
 
@@ -256,9 +232,7 @@ class DotParser
    * The new default settings for nodes (will be {@code nodeDefaults} unless
    * {@code line} is a node properties line).
    */
-  private static NodeDefaults parseLine(String line,
-                                        GraphInformation.Builder builder,
-                                        NodeDefaults nodeDefaults)
+  private static void parseLine(String line, GraphInformation.Builder builder)
                                         throws IllegalLineException
   {
     switch (getLineKind(line))
@@ -271,7 +245,7 @@ class DotParser
           builder.setGraphAttributes(graph);
         break;
       case NODE:
-        NodeRecord node = parseNode(line, nodeDefaults);
+        NodeRecord node = parseNode(line);
         builder.setNodeAttributes(node.name, node.attributes);
         break;
       case EDGE:
@@ -279,15 +253,14 @@ class DotParser
         builder.setEdgeAttributes(edge.label, edge.attributes);
         break;
       case NODE_PROPERTIES:
-        nodeDefaults = parseNodeDefaults(line, nodeDefaults);
+        GraphInformation.NodeDefaults nodeDefaults = parseNodeDefaults(line);
+        builder.setNodeDefaults(nodeDefaults);
         break;
       default:
         // Right now, the graph, node, and edge attributes are all the
         // attributes that are used
         break;
     }
-
-    return nodeDefaults;
   }
 
   /**
@@ -415,8 +388,7 @@ class DotParser
    * Must be a valid, logical line of Graphviz output describing attributes of
    * a node.
    */
-  private static NodeRecord parseNode(String line, NodeDefaults nodeDefaults)
-      throws IllegalLineException
+  private static NodeRecord parseNode(String line) throws IllegalLineException
   {
     // an example of a node line:
     // '   9 [label=OUTGOING9, width=1, height=1, pos="129.64,36"];'
@@ -457,24 +429,6 @@ class DotParser
     /*@Nullable*/ Integer width = parseNullableDimension(widthStr);
     /*@Nullable*/ Integer height = parseNullableDimension(heightStr);
 
-    // if no width or height exists, use the default values.
-    if (width == null)
-      width = nodeDefaults.width;
-    if (height == null)
-      height = nodeDefaults.height;
-
-    // either height or width must be present -- if one is absent, it is
-    // assumed that the height and width are the same
-    if (height == null && width == null)
-      throw new IllegalLineException("No height/width information: " + line);
-
-    // We know that either width or height is present from the check above.
-    // If one is present and the other isn't simply use the other's value.
-    if (width == null)
-      width = height;
-    if (height == null)
-      height = width;
-
     // The pos attribute takes the form pos="xx.xx,yy.yy"
     try
     {
@@ -487,7 +441,7 @@ class DotParser
       int x = parseToHundredths(coords[0]);
       int y = parseToHundredths(coords[1]);
 
-      return new NodeRecord(name, new GraphInformation.NodeAttributes(x, y, width, height));
+      return new NodeRecord(name, new GraphInformation.NullableNodeAttributes(x, y, width, height));
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -616,14 +570,13 @@ class DotParser
 
   /**
    * Takes a logical Graphviz line representing node defaults and returns a
-   * {@link NodeDefaults NodeDefaults} object containing the information from it
+   * {@link GraphInformation.NodeDefaults NodeDefaults} object containing the information from it
    *
    * @param line
    * Must be a valid, logical line of Graphviz output describing default
    * attributes for nodes.
    */
-  private static NodeDefaults parseNodeDefaults(String line,
-                                                NodeDefaults nodeDefaults)
+  private static GraphInformation.NodeDefaults parseNodeDefaults(String line)
                                                 throws IllegalLineException
   {
     String[] tokens = tokenizeLine(line);
@@ -643,13 +596,7 @@ class DotParser
     Integer width = parseNullableDimension(widthStr);
     Integer height = parseNullableDimension(heightStr);
 
-    // if a new width or height hasn't been defined, the old one still holds.
-    if (width == null)
-      width = nodeDefaults.width;
-    if (height == null)
-      height = nodeDefaults.height;
-
-    return new NodeDefaults(width, height);
+    return new GraphInformation.NodeDefaults(width, height);
   }
 
   /**

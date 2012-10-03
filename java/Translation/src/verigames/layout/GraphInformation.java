@@ -180,16 +180,20 @@ class GraphInformation
    */
   public static class Builder
   {
-    /* these fields are the same as those of GraphInformation itself, except
-     * that these are intended to be mutated. */
+    /* these first three fields are the same as those of GraphInformation
+     * itself, except that these are intended to be mutated. */
     private /*@LazyNonNull*/ GraphAttributes graphAttributes = null;
     private final Map<String, NodeAttributes> nodeAttributes;
     private final Map<String, EdgeAttributes> edgeAttributes;
+
+    private NodeDefaults nodeDefaults;
 
     public Builder()
     {
       nodeAttributes = new HashMap<String, NodeAttributes>();
       edgeAttributes = new HashMap<String, EdgeAttributes>();
+      // no node defaults
+      nodeDefaults = new NodeDefaults(null, null);
     }
 
     /**
@@ -220,15 +224,51 @@ class GraphInformation
     {
       return graphAttributes != null;
     }
-    
+
+    /**
+     * Sets the node defaults. These defaults will be used whenever an {@link
+     * AbstractNodeAttributes} object does not have a necessary field.
+     *
+     * If a default is not given, the previous default for that setting is used.
+     */
+    public void setNodeDefaults(NodeDefaults newDefaults)
+    {
+      this.nodeDefaults = this.nodeDefaults.mergeWith(newDefaults);
+    }
+
     /**
      * Sets the attributes associated with the node with the given name.
      */
-    public void setNodeAttributes(String name, NodeAttributes attributes)
+    public void setNodeAttributes(String name, AbstractNodeAttributes<?> attributes)
     {
-      nodeAttributes.put(name, attributes);
+      NodeAttributes mergedAttributes = mergeAttributes(attributes, nodeDefaults);
+      nodeAttributes.put(name, mergedAttributes);
     }
-    
+
+    private static NodeAttributes mergeAttributes(AbstractNodeAttributes<?> attributes, NodeDefaults defaults)
+    {
+      Integer x = attributes.getX();
+      Integer y = attributes.getY();
+      Integer width = attributes.getWidth();
+      Integer height = attributes.getHeight();
+
+      if (width == null)
+        width = defaults.getWidth();
+      if (height == null)
+        height = defaults.getHeight();
+
+      if (x == null)
+        throw new IllegalArgumentException("x is unset and not provided by default attributes " + defaults);
+      if (y == null)
+        throw new IllegalArgumentException("y is unset and not provided by default attributes " + defaults);
+      if (width == null)
+        throw new IllegalArgumentException("width is unset and not provided by default attributes " + defaults);
+      if (height == null)
+        throw new IllegalArgumentException("height is unset and not provided by default attributes " + defaults);
+
+      return new NodeAttributes(x, y, width, height);
+    }
+
     /**
      * Sets the attributes associated with the edge labeled {@code label}.
      *
@@ -254,7 +294,57 @@ class GraphInformation
       return new GraphInformation(graphAttributes, nodeAttributes, edgeAttributes);
     }
   }
-  
+
+  /**
+   * Defines an immutable object that stores the default attributes for a node.
+   * <p>
+   * A null reference indicates that there is no default value for a given
+   * attribute.
+   */
+  public static class NodeDefaults
+  {
+    private final /*@Nullable*/ Integer width;
+    private final /*@Nullable*/ Integer height;
+
+    public NodeDefaults(/*@Nullable*/ Integer width, /*@Nullable*/ Integer height)
+    {
+      this.width = width;
+      this.height = height;
+    }
+
+    public /*@Nullable*/ Integer getWidth()
+    {
+      return this.width;
+    }
+
+    public /*@Nullable*/ Integer getHeight()
+    {
+      return this.height;
+    }
+
+    /**
+     * Returns a new {@code NodeDefaults} object equivalent to {@code
+     * newDefaults}, but with any {@code null} field replaced with its value in
+     * this object
+     */
+    public NodeDefaults mergeWith(NodeDefaults newDefaults)
+    {
+      /*@Nullable*/ Integer width = newDefaults.getWidth();
+      /*@Nullable*/ Integer height = newDefaults.getHeight();
+      if (width == null)
+        width = this.getWidth();
+      if (height == null)
+        height = this.getHeight();
+
+      return new NodeDefaults(width, height);
+    }
+
+    public String toString()
+    {
+      return "NodeDefaults<width=" + getWidth() + ", height=" + getHeight() + ">";
+    }
+  }
+
   /**
    * An immutable record type that stores the width and the height of a
    * Graphviz graph in hundredths of points
@@ -366,7 +456,7 @@ class GraphInformation
     {
       if (other instanceof AbstractNodeAttributes)
       {
-        AbstractNodeAttributes g = (AbstractNodeAttributes) other;
+        AbstractNodeAttributes<?> g = (AbstractNodeAttributes<?>) other;
 
         return this.getX().equals(g.getX())
             && this.getY().equals(g.getY())
