@@ -14,8 +14,9 @@ import static org.junit.Assert.*;
  * Tests that the XML produced after a World is laid out is consistent with past
  * results.
  *
- * Based on output from graphviz version 2.26.3 (20100126.1600). A failure on a
- * different version is not necessarily an indicator of a defect in the code.
+ * Based on output from graphviz version 2.26.3 (20100126.1600) on the
+ * department research lab machines. A failure on a different version or machine
+ * is not necessarily an indicator of a defect in the code.
  */
 public class XMLComparisonTests
 {
