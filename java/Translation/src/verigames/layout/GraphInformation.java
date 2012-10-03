@@ -310,74 +310,75 @@ class GraphInformation
       return "width=" + getWidth() + ";height=" + getHeight();
     }
   }
-  
+
   /**
    * An immutable record type containing attributes of a particular node
    */
-  public static class NodeAttributes
+  protected static abstract class AbstractNodeAttributes<E extends /*@Nullable*/ Integer>
   {
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
-    
-    public NodeAttributes(int x, int y, int width, int height)
+    private final E x;
+    private final E y;
+    private final E width;
+    private final E height;
+
+    public AbstractNodeAttributes(E x, E y, E width, E height)
     {
       this.x = x;
       this.y = y;
       this.width = width;
       this.height = height;
     }
-    
+
     /**
      * Returns the x coordinate of the center of this node, in hundredths of points.
      */
-    public int getX()
+    public E getX()
     {
       return x;
     }
-    
+
     /**
      * Returns the y coordinate of the center of this node, in hundredths of points.
      */
-    public int getY()
+    public E getY()
     {
       return y;
     }
-    
+
     /**
      * Returns the width of this node, in hundredths of points.
      */
-    public int getWidth()
+    public E getWidth()
     {
       return width;
     }
-    
+
     /**
      * Returns the height of this node, in hundredths of points.
      */
-    public int getHeight()
+    public E getHeight()
     {
       return height;
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object other)
     {
-      if (other instanceof NodeAttributes)
+      if (other instanceof AbstractNodeAttributes)
       {
-        NodeAttributes g = (NodeAttributes) other;
-        
-        return this.getX() == g.getX() && this.getY() == g.getY()
-            && this.getHeight() == g.getHeight()
-            && this.getWidth() == g.getWidth();
+        AbstractNodeAttributes g = (AbstractNodeAttributes) other;
+
+        return this.getX().equals(g.getX())
+            && this.getY().equals(g.getY())
+            && this.getHeight().equals(g.getHeight())
+            && this.getWidth().equals(g.getWidth());
       }
       else
       {
         return false;
       }
     }
-    
+
     @Override
     public int hashCode()
     {
@@ -390,7 +391,7 @@ class GraphInformation
       hashCode += getHeight();
       return hashCode;
     }
-    
+
     @Override
     public String toString()
     {
@@ -398,7 +399,23 @@ class GraphInformation
           ";height=" + getHeight();
     }
   }
-  
+
+  public static class NodeAttributes extends AbstractNodeAttributes<Integer>
+  {
+    public NodeAttributes(Integer x, Integer y, Integer width, Integer height)
+    {
+      super(x, y, width, height);
+    }
+  }
+
+  public static class NullableNodeAttributes extends AbstractNodeAttributes</*@Nullable*/ Integer>
+  {
+    public NullableNodeAttributes(/*Nullable*/ Integer x, /*Nullable*/ Integer y, /*Nullable*/ Integer width, /*Nullable*/ Integer height)
+    {
+      super(x, y, width, height);
+    }
+  }
+
   /**
    * An immutable record type containing attributes of a particular edge
    */
