@@ -1,11 +1,7 @@
 package verigames.layout;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Parses text in DOT format and returns the results as a {@link
@@ -327,13 +323,9 @@ class DotParser
     if (tokens.length < 2 || !tokens[0].equals("graph"))
       throw new IllegalLineException("\"" + line + "\" is not a valid graph attributes line");
 
-    String bb = null;
+    Map<String, String> mappings = lineMappings(tokens);
 
-    for (String s : tokens)
-    {
-      if (s.startsWith("bb="))
-        bb = s;
-    }
+    String bb = mappings.get("bb");
 
     // Graph attributes may be spread across multiple lines, so if the
     // bounding box attribute is not present in this line, just return null.
@@ -343,7 +335,7 @@ class DotParser
 
     // Sometimes, an empty bb attribute is given. If this is the case, also
     // return null.
-    if (bb.equals("bb=\"\""))
+    if (bb.equals(""))
       return null;
 
     int xStart;
@@ -353,8 +345,8 @@ class DotParser
 
     try
     {
-      // take the text inside the quotes and split around commas
-      String[] bbCoords = bb.split("\"")[1].split(",");
+      // take the coordinates string and split around commas
+      String[] bbCoords = bb.split(",");
 
       xStart = parseToHundredths(bbCoords[0]);
       yStart = parseToHundredths(bbCoords[1]);
@@ -397,30 +389,18 @@ class DotParser
 
     // split the string into tokens, stripping extraneous characters
     // sample line would become:
-    // [label=OUTGOING9, width=1, height=1, pos="129.64,36"]
+    // [9, label=OUTGOING9, width=1, height=1, pos="129.64,36"]
     String[] tokens = tokenizeLine(line);
 
     if (tokens.length == 0)
       throw new IllegalLineException("empty line: " + line);
 
     String name = tokens[0];
+    Map<String, String> mappings = lineMappings(tokens);
 
-    String widthStr = null;
-    String heightStr = null;
-    String pos = null;
-
-    // Search for specific attributes:
-    for (String cur : tokens)
-    {
-      if (cur.startsWith("pos="))
-        pos=cur;
-
-      else if (cur.startsWith("width="))
-        widthStr=cur;
-
-      else if (cur.startsWith("height="))
-        heightStr=cur;
-    }
+    String widthStr = mappings.get("width");
+    String heightStr = mappings.get("height");
+    String pos = mappings.get("pos");
 
     // position attribute must be present
     if (pos == null)
@@ -429,14 +409,11 @@ class DotParser
     /*@Nullable*/ Integer width = parseNullableDimension(widthStr);
     /*@Nullable*/ Integer height = parseNullableDimension(heightStr);
 
-    // The pos attribute takes the form pos="xx.xx,yy.yy"
+    // The pos attribute takes the form xx.xx,yy.yy
     try
     {
-      // split around quotes, and take only the xx.xx,yy.yy part
-      String coordsStr = pos.split("\"")[1];
-
       // split around comma, to get [xx.xx, yy.yy]
-      String[] coords = coordsStr.split(",");
+      String[] coords = pos.split(",");
 
       int x = parseToHundredths(coords[0]);
       int y = parseToHundredths(coords[1]);
@@ -467,8 +444,8 @@ class DotParser
   {
     /* An example of an edge line:
      *       '   8:o2 -- 10 [pos="37,493 37,493 54,341 54,341"];'
-     *           ^ ^   ^          ^      ^      ^      ^
-     *  start node |  |         spline   control   points
+     *           ^ ^     ^        ^      ^      ^      ^
+     *  start node |     |      spline   control   points
      *             |  end node
      *      port identifier
      */
@@ -476,25 +453,14 @@ class DotParser
     // After example has run through tokenizeLine:
     // [8:o2, --, 10, pos="37,493 37,493 54,341 54,341"]
     String[] tokens = tokenizeLine(line);
+    Map<String, String> mappings = lineMappings(tokens);
 
     // there need to be *at least* the 4 tokens shown above
     if (tokens.length < 4)
       throw new IllegalLineException("Edge line without needed attributes: " + line);
 
-    String pos = null;
-    String labelString = null;
-
-    // search for a position attribute, starting at the token after the end
-    // node id
-    for (int i = 3; i < tokens.length; i++)
-    {
-      String cur = tokens[i];
-
-      if (cur.startsWith("pos="))
-        pos = cur;
-      if (cur.startsWith("label="))
-        labelString = cur;
-    }
+    String pos = mappings.get("pos");
+    String labelString = mappings.get("label");
 
     if (pos == null)
       throw new IllegalLineException("No position information: " + line);
@@ -503,26 +469,23 @@ class DotParser
       throw new IllegalLineException("No label information: " + line);
 
     // The pos attribute takes the form
-    // pos="xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy"
+    // 'xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy'
     // where the number of points is at least 4, and congruent to 1 (mod 3)
     //
     // The label attribute takes the form
-    // label=45
+    // '45'
 
     try
     {
       // get the label by splitting around the equals sign, removing quotes, and
       // trimming whitespace.
-      String label = labelString.split("=")[1].replace("\"", "").trim();
-
-      // split around quotes, and take only the part with coordinates
-      String coordsString = pos.split("\"")[1];
+      String label = labelString.trim();
 
       // splits
       // xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy xx.xx,yy.yy
       // around whitespace, so each entry is
       // xx.xx,yy.yy
-      String[] coords = coordsString.split("\\s");
+      String[] coords = pos.split("\\s");
 
       List<GraphvizPointCoordinate> points = new ArrayList<GraphvizPointCoordinate>();
       for (String XYString: coords)
@@ -580,17 +543,10 @@ class DotParser
                                                 throws IllegalLineException
   {
     String[] tokens = tokenizeLine(line);
+    Map<String, String> mappings = lineMappings(tokens);
 
-    String widthStr = null;
-    String heightStr = null;
-
-    for (String token : tokens)
-    {
-      if (token.startsWith("width"))
-        widthStr = token;
-      else if (token.startsWith("height"))
-        heightStr = token;
-    }
+    String widthStr = mappings.get("width");
+    String heightStr = mappings.get("height");
 
     // set the width and height
     Integer width = parseNullableDimension(widthStr);
@@ -616,29 +572,22 @@ class DotParser
    * Used for converting height and width dimensions from inches to hundredths
    * of points.<p>
    *
-   * The width and height attributes take the form width=ww.ww or width="ww.ww".
-   * This method takes a string in this form and returns the number represented
-   * by the ww.ww portion, multiplied by 7200 and rounded to the nearest
-   * integer.
+   * The width and height attributes take the form ww.ww. This method takes a
+   * string in this forma nd returns the number represented, multiplied by 7200
+   * and rounded to the nearest integer.
    *
    * Graphviz gives dimensions in inches, and this converts them to hundredths
    * of points (1 inch = 72 points = 7200 hundredths of points)
    */
+  // TODO perhaps unify with parseToHundredth()?
   private static int parseDimension(String dimensionStr) throws IllegalLineException
   {
-    // If the string contains quotes, strip them.
-    dimensionStr = dimensionStr.replaceAll("\"", "");
-
     // a BigDecimal is used instead of a double so that there can be no loss
     // of precision
     BigDecimal dimInches;
     try
     {
-      dimInches = new BigDecimal(dimensionStr.split("=")[1]);
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
-      throw new IllegalLineException("Poorly formed attribute: " + dimensionStr, e);
+      dimInches = new BigDecimal(dimensionStr);
     }
     catch (NumberFormatException e)
     {
@@ -649,6 +598,43 @@ class DotParser
 
     // rounds by adding 0.5, then taking the floor
     return dimension.add(new BigDecimal("0.5")).intValue();
+  }
+
+  /**
+   * Takes an {@code Array} of tokens for the line and return any mappings
+   * indicated by tokens with an '=' character in them.<p>
+   *
+   * This method returns a {@code Map} where each key corresponds to the part of
+   * a token before the first '=' character, and the value is the part after the
+   * first '=' character. If the value is surrounded by quotes, those are
+   * removed.
+   */
+  private static Map<String, String> lineMappings(String[] tokens)
+  {
+    Map<String, String> result = new HashMap<String, String>();
+
+    for (String token : tokens)
+    {
+      String[] parts = token.split("=", 2);
+      if (parts.length == 2)
+      {
+        String key = parts[0];
+
+        String untrimmedValue = parts[1];
+        String value;
+        // if it starts and ends with quotes, remove the outer quotes
+        if (untrimmedValue.charAt(0) == '"' &&
+            untrimmedValue.charAt(untrimmedValue.length() - 1) == '"')
+          // remove quotes at the beginning and end of the line
+          value = untrimmedValue.replaceAll("^\"|\"$", "");
+        else
+          value = untrimmedValue;
+
+        result.put(key, value);
+      }
+    }
+
+    return result;
   }
 
   /**
