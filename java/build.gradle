@@ -1,0 +1,141 @@
+apply plugin: 'scala'
+
+//Verigames - build.gradle
+//This script allows you to compile and jar the java/scala components of the verigames
+//project
+
+//gradle jar will create a standalone jar that includes most dependencies (outside of
+//scala which is used to run the jar, see website/typecheckers/scripts/infer-nninf.sh)
+
+//In this project compileJava depends on compileScala (it's usually the other way around
+//in a gradle build).  This means to compile (but not package) verigames
+//you should run "gradle compileJava"
+
+
+//Note:  For this setup to work you must use the allJar target in checker-framework-inference
+//as well as fall the instructions for building the checker framework from source, see:
+//http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#build-source
+
+//TODO: It seems like, at the moment this script doesn't do a great job of detecting
+//      when we do not need to recompile
+
+//TODO: currently there are tests for the Translation subproject, but we have not added
+//      support for them here
+
+//Questions: Mail jburke@cs.washington.edu
+
+//NEED TO USE THE PATHS OF GRADLE VARS IN SUBPROJECTS RATHER THAN CONSTRUCTING THEM IN 
+// MULTIPLE PLACES
+//(e.g. look at Generation/build.gradle, not construction of classpath should be required)
+
+def env         = System.getenv()
+def jsr308Dir   = env["JSR308"]
+def checkersDir = env["CHECKERS"]
+def checkerInference = env["CHECKERS_INFERENCE"] ?: "$jsr308Dir/checker-framework-inference"
+
+println '===================================='
+println '            Verigames               '
+println '===================================='
+println ''
+println '-------------------------------'
+println 'Important Environment Variables'
+println '-------------------------------'
+println 'jsr308:   ' + jsr308Dir
+println 'checkers: ' + checkersDir
+println ''
+
+//Closure that creates a file from a base directory and a name of the file in that directory
+def fromBaseDir   = { baseDir, child -> new File(baseDir, child)  }
+
+//A function that, given a file name, creates a file object of that name with 
+//jsr308Dir as its parent
+def jsr308Child   = fromBaseDir.curry(jsr308Dir)   
+
+
+//A function that, given a file name, creates a file object of that name with 
+//checkersDir as its parent
+def checkersChild = fromBaseDir.curry(checkersDir) 
+
+def afuDir        = jsr308Child("annotation-tools/annotation-file-utilities") 
+
+//A function that, given a file name, creates a file object of that name with 
+//afuDir as its parent
+def afuChild      = fromBaseDir.curry(afuDir)
+
+def cfiAll        = jsr308Child("checker-framework-inference/checker-framework-inference-all.jar").getAbsolutePath()
+
+//Apply the following settings to all subprojects
+subprojects {
+    //Very similar to checker-framework-inference
+    //perhaps create a project encompassing both
+    apply plugin: 'scala'
+    
+	def classpath = files(
+		jsr308Child("checker-framework-inference/checker-framework-inference-all.jar").getAbsolutePath()
+	)
+			
+	sourceSets {
+		 main {
+	       scala {
+	           exclude "**/*.java"
+	       }
+	       
+	       java {
+	           exclude "**/*.scala" //Unnecessary I guess
+	       }
+	       
+	   	   compileClasspath += classpath
+    	}    
+	}
+			
+	repositories {
+	    mavenCentral()
+	}
+	
+	dependencies {
+	    // Libraries needed to run the scala tools
+	    scalaTools 'org.scala-lang:scala-compiler:2.9.2'
+	    scalaTools 'org.scala-lang:scala-library:2.9.2'
+	    
+	    // Libraries needed for scala api
+	    compile 'org.scala-lang:scala-library:2.9.2'
+	    compile 'org.scala-lang:scala-compiler:2.9.2'
+	}
+	
+	tasks.compileJava {
+  	 description = 'Compiles both the scala and java files for this project using the checker framework compiler and the scala compiler'
+	  options.fork = true
+	  options.compilerArgs = [
+	  	  '-version',
+	      '-implicit:class',
+	      '-Awarns', '-Xmaxwarns', '10000',
+	      "-Xbootclasspath/p:$checkersDir/jdk/jdk.jar"]
+	  options.forkOptions.executable="$checkersDir/binary/javac"
+	}
+	
+	tasks.compileScala {
+		description = 'Compiles only the scala files for this project.  If you\'d like to compile both Scala and Java use the compileJava task.'
+	}
+	
+	//Switch the compilation order to compile the Scala classes then the Java classes
+	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values - 'compileJava'  
+	tasks.compileJava.dependsOn compileScala   
+}
+
+def toJar = [zipTree(cfiAll).matching { exclude 'META-INF' }, 
+			 zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' }, 
+			 zipTree("Translation/bin/libs/Translation.jar").matching { exclude 'META-INF' },
+			 zipTree("Translation/lib/xom-1.2.7.jar").matching { exclude 'META-INF' }, //Add this to Translation.jar
+			]
+
+//Combine all the files in the jars spe
+tasks.jar {
+    description = 'Builds verigames.jar and places it in the the directory this script resides in.  This jar includes all dependencies (except for scala).'
+	destinationDir projectDir
+	archiveName "verigames.jar"
+	from toJar
+} dependsOn(compileScala, project(":Translation").tasks.jar, project(":Generation").tasks.jar)
+
+tasks.clean {
+	delete += "verigames.jar"
+}
