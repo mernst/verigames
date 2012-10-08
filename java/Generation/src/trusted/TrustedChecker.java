@@ -3,6 +3,7 @@ package trusted;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.util.Elements;
 
 import trusted.quals.Trusted;
 import trusted.quals.Untrusted;
@@ -32,15 +33,15 @@ public class TrustedChecker extends BaseTypeChecker implements
     public AnnotationMirror UNTRUSTED, TRUSTED;
 
     @Override
-    public void initChecker(ProcessingEnvironment env) {
-    	super.initChecker(env);
+    public void initChecker() {
+    	super.initChecker();
     	setAnnotations();
     }
 
     protected void setAnnotations() {
-        AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
-        UNTRUSTED = annoFactory.fromClass(Untrusted.class);
-        TRUSTED = annoFactory.fromClass(Trusted.class);
+        final Elements elements = processingEnv.getElementUtils();
+        UNTRUSTED = AnnotationUtils.fromClass(elements, Untrusted.class);
+        TRUSTED   = AnnotationUtils.fromClass(elements, Trusted.class);
     }
 
     @Override
@@ -54,11 +55,11 @@ public class TrustedChecker extends BaseTypeChecker implements
         return new TrustedVisitor(this, root, this, false);
     }
 
-    @Override
-    public boolean isValidUse(AnnotatedDeclaredType declarationType,
-            AnnotatedDeclaredType useType) {
-        return true;
-    }
+//    @Override
+//    public boolean isValidUse(AnnotatedDeclaredType declarationType,
+//            AnnotatedDeclaredType useType) {
+//        return true;
+//    }
 
     @Override
     public boolean needsAnnotation(AnnotatedTypeMirror ty) {
@@ -80,14 +81,14 @@ public class TrustedChecker extends BaseTypeChecker implements
     public boolean withCombineConstraints() {
         return false;
     }
-
-    @Override
-    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
-        if (sub.getEffectiveAnnotations().isEmpty() ||
-                sup.getEffectiveAnnotations().isEmpty()) {
-            // TODO: The super method complains about empty annotations. Prevent this.
-            return true;
-        }
-        return super.isSubtype(sub, sup);
-    }
+//
+//    @Override
+//    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
+//        if (sub.getEffectiveAnnotations().isEmpty() ||
+//                sup.getEffectiveAnnotations().isEmpty()) {
+//            // TODO: The super method complains about empty annotations. Prevent this.
+//            return true;
+//        }
+//        return super.isSubtype(sub, sup);
+//    }
 }

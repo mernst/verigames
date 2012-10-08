@@ -82,7 +82,7 @@ public class BallSizeTest extends Intersection
    * @param kind
    */
   @Override
-  protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
+  protected boolean checkIntersectionKind(/*@Raw*/ BallSizeTest this, Kind kind)
   {
     // this implementation supports only BALL_SIZE_TEST
     return kind == Kind.BALL_SIZE_TEST;

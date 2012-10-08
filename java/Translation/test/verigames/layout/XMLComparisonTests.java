@@ -23,10 +23,12 @@ public class XMLComparisonTests
   @Test
   public void levelWorldTest() throws FileNotFoundException
   {
-    World w = LevelWorld.getWorld();
+    final File expectedOutput = new File("levelWorld.expected.xml");
+    final File actualOutput   = new File("levelWorld.actual.xml");
+    final World w = LevelWorld.getWorld();
     WorldLayout.layout(w);
     
-    PrintStream out = new PrintStream(new File("levelWorld.actual.xml"));
+    PrintStream out = new PrintStream(actualOutput);
     try
     {
       new WorldXMLPrinter().print(w, out, null);
@@ -38,11 +40,14 @@ public class XMLComparisonTests
     
     FileCompare.Result result = FileCompare.compareFiles(
         new File("levelWorld.expected.xml"),
-        new File("levelWorld.actual.xml"));
+            actualOutput);
     
     assertTrue("Difference at line " + result.getLineNumber() + ":\n" +
-        "Expected: " + result.getFirstLine() + "\n" +
-        "But was : " + result.getSecondLine() + "\n",
+        "Expected: " + result.getFirstLine() + "\n"  +
+        "But was : " + result.getSecondLine() + "\n" +
+        "For files:\n" +
+        "    expected =" + expectedOutput.getAbsolutePath() + "\n" +
+        "    actual   =" + actualOutput.getAbsolutePath()   + "\n",
         result.getResult());
   }
 }

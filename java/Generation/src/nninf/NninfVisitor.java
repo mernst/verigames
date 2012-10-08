@@ -129,9 +129,14 @@ public class NninfVisitor extends GameVisitor {
      */
     @Override
     public Void visitMethod(MethodTree node, Void p) {
-        if (!node.getReceiverAnnotations().isEmpty()) {
-            checker.report(Result.failure("receiver.annotations.forbidden"),
-                    node);
+        final VariableTree receiverParam = node.getReceiverParameter();
+        if(receiverParam != null) { //TODO: CAN THIS BE NULL?
+            final AnnotatedTypeMirror typeMirror = atypeFactory.getAnnotatedType(receiverParam);
+
+            if (!typeMirror.getAnnotations().isEmpty()) {
+                checker.report(Result.failure("receiver.annotations.forbidden"),
+                        node);
+            }
         }
 
         return super.visitMethod(node, p);
@@ -141,9 +146,8 @@ public class NninfVisitor extends GameVisitor {
      * Ignore method receiver annotations.
      */
     @Override
-    protected boolean checkMethodInvocability(AnnotatedExecutableType method,
+    protected void checkMethodInvocability(AnnotatedExecutableType method,
             MethodInvocationTree node) {
-        return true;
     }
 
     /**

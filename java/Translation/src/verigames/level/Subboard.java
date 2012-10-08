@@ -37,7 +37,7 @@ public class Subboard extends Intersection
    * 
    * @param kind
    */
-  @Override protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
+  @Override protected boolean checkIntersectionKind(/*@Raw*/ Subboard this, Kind kind)
   {
     // This implementation supports only the SUBNETWORK kind
     return kind == Kind.SUBBOARD;
