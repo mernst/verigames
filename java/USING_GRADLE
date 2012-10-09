@@ -1,0 +1,49 @@
+To use Gradle: At the moment you MUST have the checker-framework built from
+source as described in:
+http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#build-source
+You must have the JSR308 and CHECKERS environment variables set as described in
+the manual.
+
+Download from: http://www.gradle.org/ Note:  I have a version with read/execute
+permissions available at: /homes/gws/jburke/gradle/current The executable is
+merely a script that runs a java jar so you should only have to download,
+unzip, and add the bin directory to your path.
+
+Please read the comments at the top of the build scripts for more information
+on running them but a quick description appears below.  Gradle works much like
+Ant with "Tasks" replacing "Targets" and Groovy replacing xml (plus a lot of
+nice features like dependency resolution). Note:  The exact behavior of these
+scripts will likely be tweaked in the future.  They currently do not support
+tests.
+
+Checker Framework Inference gradle compileJava - Compiles BOTH scala and java
+files in the src directory.
+
+gradle jar - Creates a jar of ONLY checker-framework-inference code
+
+gradle allJar - If you have the standard JSR308 layout (i.e. a jsr308 dir with
+jsr308-langotols, annotation-file-utilities, checker-framework, and
+checker-framework-inference source projects in it) and all but the inference
+project are built then this will create a "fat jar" with all of the relevant
+dependencies for checker-framework-inference except scala (since you run the
+project through the scala command these are unnecessary).
+
+gradle clean - removes all built files including jars
+
+
+Verigames: There are 4 files related to gradle in verigames.  java/build.gradle
+is the parent project that allows both java/Generation and java/Translation to
+be built via gradle.
+
+gradle compileJava - Compiles both scala and java files in the Generation and
+Translation
+
+gradle jar - Create a "fat jar" there is no "allJar" because Generation and
+Translation can be used to create their own standalone jars individuall.  This
+requires that you have already called the allJar task in
+Checker-Framework-Inference although this requirement is likely to be relaxed
+in the future.
+
+gradle clean - removes built files including jars
+
+The build.gradle files in Generation and Translation also has similar tasks.
