@@ -4,10 +4,20 @@ http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#bu
 You must have the JSR308 and CHECKERS environment variables set as described in
 the manual.
 
+You must also download plume-lib, documented here, and place it in your $JSR308
+folder:
+http://plume-lib.googlecode.com/hg/README.html
+
 Download from: http://www.gradle.org/ Note:  I have a version with read/execute
 permissions available at: /homes/gws/jburke/gradle/current The executable is
 merely a script that runs a java jar so you should only have to download,
 unzip, and add the bin directory to your path.
+
+You must also check out and build checker-framework-inference source:
+cd $JSR308
+hg clone https://code.google.com/p/checker-framework-inference/
+cd checker-framework-inference
+gradle allJars
 
 Please read the comments at the top of the build scripts for more information
 on running them but a quick description appears below.  Gradle works much like
