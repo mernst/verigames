@@ -76,9 +76,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (!underConstruction)
     {
       for (EdgeType e : inputs.values())
-        ensure(e != null);
+        ensure(e != null, "node input list has a null edge");
       for (EdgeType e : outputs.values())
-        ensure(e != null);
+        ensure(e != null, "node output list has a null edge");
     }
 
     // Note: Graph is responsible for ensuring that a particular node's

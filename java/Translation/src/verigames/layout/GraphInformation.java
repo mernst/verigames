@@ -518,12 +518,14 @@ class GraphInformation
      * Must have length congruent to 1 (mod 3), as enforced by Graphviz.
      */
     private final List<GraphvizPointCoordinate> controlPoints;
-    
+
     private void checkRep()
     {
-      ensure(controlPoints.size() % 3 == 1);
+      ensure(controlPoints.size() % 3 == 1,
+          "Graphviz requires that the number of layout control points (" +
+          controlPoints.size() + ") be congruent to 1 (mod 3)");
     }
-    
+
     /**
      * Constructs a new {@code EdgeAttributes} object.
      * <p>
