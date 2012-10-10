@@ -15,6 +15,8 @@
       <compilerarg line="-Awarns -Xmaxwarns 10000"/>
       <compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar"/>
       <compilerarg value="-XDTA:spacesincomments"/>
+      <!-- import nullness annotations -->
+      <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
       <!-- ^ included so that Eclipse's formatter, which inserts spaces in annotation comments, can still be used -->
       <classpath>
         <pathelement location="${env.CHECKERS}/checkers.jar"/>
@@ -24,23 +26,23 @@
 
   <target name="build">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <jsr308.javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
       </src>
-    </javac>
+    </jsr308.javac>
   </target>
 
   <target name="buildall">
     <mkdir dir="${bin}"/>
-    <javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <jsr308.javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
         <pathelement path="${test}"/>
       </src>
-    </javac>
+    </jsr308.javac>
   </target>
 
   <!-- check-nullness target checks nullness on every file in the src folder, except the sampleLevels package -->
@@ -51,7 +53,6 @@
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Astubs=checker-stubs"/>
       <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/binary/jdk.jar"/>
-      <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
       <!-- optional, to not check library bodies: <compilerarg value="-AskipClasses=^(java\.awt\.|javax\.swing\.)"/> -->
     </jsr308.javac>
   </target>
