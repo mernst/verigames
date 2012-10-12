@@ -115,7 +115,7 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getWideChute()
   {
-    return getOutput(LARGE_PORT);
+    return getOneOfOutput(LARGE_PORT, LARGE_PORT_OLD);
   }
   
   /**
@@ -148,9 +148,22 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getNarrowChute()
   {
-    return getOutput(SMALL_PORT);
+    return getOneOfOutput(SMALL_PORT, SMALL_PORT_OLD);
   }
-  
+
+  /**
+   * Returns getOutput(firstChoice), if non-null. Else, returns
+   * getOuptut(secondChoice)
+   */
+  private /*@Nullable*/ Chute getOneOfOutput(String firstChoice, String secondChoice)
+  {
+    Chute first = getOutput(firstChoice);
+    if (first != null)
+      return first;
+    else
+      return getOutput(secondChoice);
+  }
+
   /**
    * Sets {@code chute} to the not-null branch<br/>
    * <br/>
