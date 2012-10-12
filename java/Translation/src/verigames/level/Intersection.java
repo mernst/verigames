@@ -324,7 +324,10 @@ public class Intersection extends verigames.graph.Node<Chute>
    * this {@code Intersection}.<p>
    *
    * Returns the port IDs in the order in which they should appear in XML. This
-   * is typically alphabetical order, but is not always.
+   * is typically alphabetical order, but is not always.<p>
+   *
+   * In particular, the {@link BallSizeTest} subclass implements a different
+   * order for output port IDs
    */
   @Override
   public List<String> getOutputIDs()
