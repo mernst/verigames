@@ -232,7 +232,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     if (kind == Kind.SUBBOARD)
       throw new IllegalArgumentException(
-          "intersectionFactory passed Kind.SUBNETWORK. Use subnetworkFactory instead.");
+          "intersectionFactory passed Kind.SUBBOARD. Use subboardFactory instead.");
     else if (kind == Kind.BALL_SIZE_TEST)
       return new BallSizeTest();
     else
