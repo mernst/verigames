@@ -57,8 +57,6 @@ public class Board extends Graph<Intersection, Chute>
     if (!CHECK_REP_ENABLED)
       return;
 
-    // TODO maybe make sure that this is a DAG?
-
     Set<Intersection> nodes = getNodes();
 
     // Representation Invariant:
@@ -229,5 +227,18 @@ public class Board extends Graph<Intersection, Chute>
     }
 
     super.addNode(node);
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @throws {@link CycleException} if the graph contains a cycle.
+   */
+  @Override
+  public void finishConstruction()
+  {
+    super.finishConstruction();
+    if (!this.isAcyclic())
+      throw new CycleException();
   }
 }

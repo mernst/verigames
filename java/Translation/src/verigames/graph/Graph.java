@@ -2,9 +2,7 @@ package verigames.graph;
 
 import static verigames.utilities.Misc.ensure;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A mutable graph structure capable of storing data in both the edges and the
@@ -309,6 +307,80 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   public boolean contains(Object elt)
   {
     return nodes.contains(elt) || edges.contains(elt);
+  }
+
+  /**
+   * Returns true if and only if this graph is acyclic.<p>
+   *
+   * This is currently {@code protected} because it is a costly operation and it
+   * is not clear that it needs to be exposed to clients. It is currently used
+   * only in subclasses, but it may be exposed publicly if need be.
+   */
+  protected boolean isAcyclic()
+  {
+    /* Strategy: Attempt a topological sort. If it succeeds, there are no
+     * cycles. If it fails, there are cycles. Runs in O(n+e) time, where n is
+     * the number of nodes, and e is the number of edges */
+
+    /* Adapted from Data Structures and Algorithm Analysis in Java 2E (Weiss) */ 
+    // maps from node to its indegree
+    Map<NodeType, Integer> indegreeMap = getIndegrees();
+
+    Queue<NodeType> indegreeZero = new LinkedList<NodeType>();
+
+    for (Map.Entry<NodeType, Integer> entry : indegreeMap.entrySet())
+    {
+      NodeType n = entry.getKey();
+      int indegree = entry.getValue();
+
+      if (indegree == 0)
+        indegreeZero.add(n);
+    }
+
+    int removedNodeCount = 0;
+
+    // while nodes with indegree 0 remain
+    while (!indegreeZero.isEmpty())
+    {
+      NodeType n = indegreeZero.remove();
+      removedNodeCount++;
+
+      for (String portID : n.getOutputIDs())
+      {
+        EdgeType e = n.getOutput(portID);
+        NodeType nextNode = e.getEnd();
+
+        // decrement the next node's indegree
+        int nextNodeIndegree = indegreeMap.get(nextNode) - 1;
+        indegreeMap.put(nextNode, nextNodeIndegree);
+
+        if (nextNodeIndegree < 0)
+          throw new RuntimeException(
+              "internal error: negative indegree calculated");
+
+        if (nextNodeIndegree == 0)
+          indegreeZero.add(nextNode);
+      }
+    }
+
+    return removedNodeCount == nodesSize();
+  }
+
+  /**
+   * Returns a mutable map from indegree to a set of nodes that have that
+   * indegree.
+   */
+  private Map<NodeType, Integer> getIndegrees()
+  {
+    Map<NodeType, Integer> m = new HashMap<NodeType, Integer>();
+
+    for (NodeType n : getNodes())
+    {
+      int indegree = n.getInputIDs().size();
+      m.put(n, indegree);
+    }
+
+    return m;
   }
 
   /**
