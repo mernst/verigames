@@ -453,7 +453,8 @@ abstract class GameSolver extends ConstraintSolver {
      */
     def finalizeWorld(world: World) {
       // Connect all intersections to the corresponding outgoing slot
-      boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
+      // boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
+        boardNVariableToIntersection foreach { case ((board, cvar), lastsect) => {
         if (cvar.varpos.isInstanceOf[ReturnVP]) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
@@ -464,20 +465,19 @@ abstract class GameSolver extends ConstraintSolver {
           board.addNode(end)
           board.addEdge(lastsect, "output", end, "input", new Chute(cvar.id, cvar.toString()))
         }
-      })
+      }}
 
-      boardToSelfIntersection foreach ( kv => { val (board, lastsect) = kv
+      boardToSelfIntersection foreach { case (board, lastsect) =>
         val outgoing = board.getOutgoingNode()
         val outthis = createThisChute()
         board.addEdge(lastsect, "output", outgoing, "input", outthis)
-      })
+      }
 
       // Finally, deactivate all levels and add them to the world.
-      // The first line must be doable somehow nicer.
-      classToLevel foreach ( kv => { val (cname, level) = kv
+      classToLevel foreach { case (cname, level) =>
           level.finishConstruction()
           world.addLevel(cname, level)
-      })
+      }
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection
