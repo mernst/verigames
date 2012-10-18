@@ -301,9 +301,8 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    */
   protected void finishConstruction()
   {
-    // TODO update error message
     if (!underConstruction)
-      throw new IllegalStateException("Deactivation attempted on already constructed Node " + this);
+      throw new IllegalStateException("Attempt to finish construction made Node that has already been finished: " + this);
 
     underConstruction = false;
     checkRep();
