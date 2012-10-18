@@ -42,12 +42,6 @@ public class XMLComparisonTests
         new File("levelWorld.expected.xml"),
             actualOutput);
     
-    assertTrue("Difference at line " + result.getLineNumber() + ":\n" +
-        "Expected: " + result.getFirstLine() + "\n"  +
-        "But was : " + result.getSecondLine() + "\n" +
-        "For files:\n" +
-        "    expected =" + expectedOutput.getAbsolutePath() + "\n" +
-        "    actual   =" + actualOutput.getAbsolutePath()   + "\n",
-        result.getResult());
+    assertTrue(result.toString(), result.getResult());
   }
 }
