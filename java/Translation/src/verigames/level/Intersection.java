@@ -289,7 +289,7 @@ public class Intersection extends verigames.graph.Node<Chute>
    *
    * @param kind
    */
-  protected boolean checkIntersectionKind(/*@Raw*/ Intersection this, Kind kind)
+  protected boolean checkIntersectionKind(/*>>> @Raw Intersection this,*/ Kind kind)
   {
     // this implementation supports every Intersection kind except for
     // SUBBOARD and BALL_SIZE_TEST

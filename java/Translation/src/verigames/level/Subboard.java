@@ -8,14 +8,14 @@ package verigames.level;
  * <br/>
  * Specification Field: {@code subnetworkName}: {@code String}
  * // The name of the method to which {@code this} represents a call.<br/>
- * 
+ *
  * @author Nathaniel Mote
  */
 
 public class Subboard extends Intersection
 {
   private final String subnetworkName;
-  
+
   /**
    * Creates a new {@link Intersection} with {@link Intersection.Kind Kind}
    * {@link Intersection.Kind#SUBBOARD SUBNETWORK}.<br/>
@@ -29,20 +29,20 @@ public class Subboard extends Intersection
     super(Kind.SUBBOARD);
     subnetworkName = methodName;
   }
-  
+
   /**
    * Returns {@code true} iff {@code kind} is
    * {@link Intersection.Kind#SUBBOARD SUBNETWORK}, indicating that this
    * implementation supports only {@code SUBNETWORK}s<br/>
-   * 
+   *
    * @param kind
    */
-  @Override protected boolean checkIntersectionKind(/*@Raw*/ Subboard this, Kind kind)
+  @Override protected boolean checkIntersectionKind(/*>>> @Raw Subboard this,*/ Kind kind)
   {
     // This implementation supports only the SUBNETWORK kind
     return kind == Kind.SUBBOARD;
   }
-  
+
   /**
    * Returns {@code true} to indicate that {@code this} is a
    * {@link Intersection.Kind#SUBBOARD SUBNETWORK}.
@@ -51,7 +51,7 @@ public class Subboard extends Intersection
   {
     return true;
   }
-  
+
   /**
    * Returns {@code this}
    */
@@ -59,7 +59,7 @@ public class Subboard extends Intersection
   {
     return this;
   }
-  
+
   /**
    * Returns {@code subnetworkName}
    */
