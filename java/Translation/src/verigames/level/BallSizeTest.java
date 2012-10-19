@@ -2,6 +2,10 @@ package verigames.level;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An {@link Intersection} subclass that represents {@link
  * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST} {@link Intersection.Kind

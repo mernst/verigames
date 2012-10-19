@@ -4,6 +4,10 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An intersection between {@link Chute}s. Mutable until construction is
  * finished.

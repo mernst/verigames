@@ -1,5 +1,9 @@
 package verigames.layout;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * A record type that stores coordinates in hundredths of points. A point is
  * 1/72 inch, and is one of the units that Graphviz uses.<p>

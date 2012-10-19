@@ -4,6 +4,10 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An immutable record type representing a node for a {@link verigames.graph.Graph
  * Graph}.

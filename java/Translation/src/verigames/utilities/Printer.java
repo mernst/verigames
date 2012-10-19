@@ -2,6 +2,10 @@ package verigames.utilities;
 
 import java.io.PrintStream;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * Prints objects of type {@code E}. Subclasses must, minimally, provide an
  * implementation for {@link #printMiddle printMiddle}.<br/>
@@ -11,7 +15,7 @@ import java.io.PrintStream;
  * <br/>
  * Subclasses can override {@link #print print}, typically this will not be
  * necessary.
- * 
+ *
  * @param <E>
  * The type of the object to be printed
  * @param <T>
@@ -28,7 +32,7 @@ public abstract class Printer<E, T extends /*@Nullable*/ Object>
    * <br/>
    * By default, calls {@link #printIntro}, {@link #printMiddle}, then
    * {@link #printOutro}.
-   * 
+   *
    * @param toPrint
    * The object to print
    * @param out
@@ -42,7 +46,7 @@ public abstract class Printer<E, T extends /*@Nullable*/ Object>
     printMiddle(toPrint, out, data);
     printOutro(toPrint, out, data);
   }
-  
+
   /**
    * Prints the intro. By default, does nothing, but subclasses may override
    * it.
@@ -54,7 +58,7 @@ public abstract class Printer<E, T extends /*@Nullable*/ Object>
    * Optional extra data to use while printing.
    */
   protected void printIntro(E toPrint, PrintStream out, T data) { }
-  
+
   /**
    * Prints the main part. Subclasses must provide an implementation for this
    * method.
@@ -66,7 +70,7 @@ public abstract class Printer<E, T extends /*@Nullable*/ Object>
    * Optional extra data to use while printing.
    */
   protected abstract void printMiddle(E toPrint, PrintStream out, T data);
-  
+
   /**
    * Prints the outro. By default, does nothing, but subclasses may override
    * it.
