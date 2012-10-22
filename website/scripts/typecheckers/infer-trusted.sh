@@ -7,4 +7,4 @@ export JAVA_OPTS="-ea -server -Xmx1024m -Xms512m -Xss1m
 
 ME=`basename $0`
 
-  $SCALA checkers.inference.TTIRun --checker trusted.TrustedChecker --visitor trusted.TrustedVisitor --solver trusted.TrustedGameSolver --weightmgr nninf.NninfWeightManager $*;
+  $SCALA checkers.inference.TTIRun --checker trusted.TrustedChecker --visitor trusted.TrustedVisitor --solver trusted.TrustedGameSolver $*;
