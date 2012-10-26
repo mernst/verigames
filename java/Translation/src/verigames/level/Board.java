@@ -8,6 +8,10 @@ import verigames.utilities.MultiBiMap;
 
 import java.util.Set;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * A board for Pipe Jam. It is a {@link verigames.graph.Graph Graph} with {@link
  * Intersection}s as nodes and {@link Chute}s as edges. It stores data in both

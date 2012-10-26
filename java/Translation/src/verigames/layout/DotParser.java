@@ -3,6 +3,10 @@ package verigames.layout;
 import java.math.BigDecimal;
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * Parses text in DOT format and returns the results as a {@link
  * GraphInformation} object.

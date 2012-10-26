@@ -1,12 +1,9 @@
 package verigames.layout;
 
 import static verigames.layout.Misc.getIntersectionHeight;
-import static verigames.layout.Misc.usesPorts;
 import static verigames.level.Intersection.Kind.*;
-import static verigames.utilities.Misc.ensure;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import verigames.level.Board;
@@ -100,20 +97,20 @@ public class BoardLayout
         throw new RuntimeException(
             "Internal error -- node in Board not present in Graphviz output", e);
       }
-      
+
       // gives the location of the center of the node in hundredths of
       // points, using the top left corner of the board as the origin
       int xIn = nodeAttrs.getX();
       int yIn = boardHeight - nodeAttrs.getY();
-      
+
       // gives the width and height of the node in hundredths of points
       int width = nodeAttrs.getWidth();
       int height = nodeAttrs.getHeight();
-      
+
       // gives the upper left hand corner of the node in hundredths of points.
       int xCorner = xIn - (width / 2);
       int yCorner = yIn - (height / 2);
-      
+
       n.setX(((double) xCorner) / 7200d);
       n.setY(((double) yCorner) / 7200d);
     }
@@ -219,7 +216,7 @@ public class BoardLayout
       startHeight = getIntersectionHeight(SUBBOARD);
     else
       startHeight = 0;
-    
+
     // the place where the edge should start is the y coordinate of the start
     // node plus its height, because the y coordinate refers to the top of the
     // node.
@@ -238,13 +235,13 @@ public class BoardLayout
     List<GameCoordinate> oldLayout = edge.getLayout();
     double oldStart = oldLayout.get(0).getY();
     double oldEnd = oldLayout.get(oldLayout.size() - 1).getY();
-    
+
     // figure out the scale factor and the offset for the linear transformation
     double factor = (end - start) / (oldEnd - oldStart);
     double offset = start - factor * oldStart;
 
     List<GameCoordinate> newLayout = new ArrayList<GameCoordinate>();
-    
+
     // loop through and transform each y coordinate
     for (GameCoordinate point : oldLayout)
     {

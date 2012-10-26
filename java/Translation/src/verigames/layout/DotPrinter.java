@@ -4,14 +4,11 @@ import static verigames.layout.Misc.getIntersectionHeight;
 import static verigames.layout.Misc.usesPorts;
 
 import java.io.PrintStream;
-import java.lang.ref.WeakReference;
 import java.util.*;
 
-import verigames.graph.Node;
 import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
-import verigames.level.Intersection.Kind;
 import verigames.utilities.Printer;
 
 /**
@@ -21,7 +18,7 @@ import verigames.utilities.Printer;
  * <p>
  * This {@link verigames.utilities.Printer Printer} prints DOT output for use in
  * laying out game boards.
- * 
+ *
  * @author Nathaniel Mote
  *
  * @see verigames.layout

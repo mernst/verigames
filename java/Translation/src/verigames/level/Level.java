@@ -2,10 +2,11 @@ package verigames.level;
 
 import static verigames.utilities.Misc.ensure;
 
-import java.io.PrintStream;
 import java.util.*;
 
-import verigames.level.Intersection.Kind;
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * A mutable level for Pipe Jam. A {@code Level} consists of any number of

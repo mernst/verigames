@@ -1,5 +1,9 @@
 package verigames.utilities;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An immutable record type representing a pair of arbitrary elements.
  * <p>
@@ -18,23 +22,23 @@ public class Pair<A,B>
   {
     return new Pair<A,B>(first, second);
   }
-  
+
   public Pair(A first, B second)
   {
     this.first = first;
     this.second = second;
   }
-  
+
   public A getFirst()
   {
     return first;
   }
-  
+
   public B getSecond()
   {
     return second;
   }
-  
+
   @Override
   public boolean equals(/*@Nullable*/ Object o)
   {
@@ -47,7 +51,7 @@ public class Pair<A,B>
     else
       return false;
   }
-  
+
   @Override
   public int hashCode()
   {

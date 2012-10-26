@@ -2,11 +2,13 @@ package verigames.layout;
 
 import static verigames.utilities.Misc.ensure;
 
-import verigames.utilities.Pair;
-
 import java.util.*;
 
 import checkers.nullness.quals.AssertNonNullIfTrue;
+
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * An immutable class that stores information about a Graphviz graph.
@@ -45,17 +47,17 @@ class GraphInformation
                            Map<String, EdgeAttributes> edgeAttributes)
   {
     this.graphAttributes = graphAttributes;
-    
+
     this.nodeAttributes = Collections
         .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
-    
+
     this.edgeAttributes = Collections.unmodifiableMap(
         new HashMap<String, EdgeAttributes>(edgeAttributes));
   }
-  
+
   /**
    * Returns the attributes of the node with the given name.
-   * 
+   *
    * @param name
    * {@link #containsNode(String) containsNode(name)} must be true.
    *
@@ -66,10 +68,10 @@ class GraphInformation
   {
     if (!this.containsNode(name))
       throw new IllegalArgumentException("!this.containsNode(" + name + ")");
-    
+
     return nodeAttributes.get(name);
   }
-  
+
   /**
    * Returns the attributes of the graph itself.
    */
@@ -77,7 +79,7 @@ class GraphInformation
   {
     return graphAttributes;
   }
-  
+
   /**
    * Returns the attributes of the given edge.
    * <p>
@@ -90,10 +92,10 @@ class GraphInformation
     if (!this.containsEdge(label))
       throw new IllegalArgumentException("No edge with label \"" + label +
           "\"");
-    
+
     return edgeAttributes.get(label);
   }
-  
+
   /**
    * Returns a {@code Set<String>} containing all of the nodes in {@code this}.
    */
@@ -103,7 +105,7 @@ class GraphInformation
     // even though nodeAttributes is also unmodifiable.
     return Collections.unmodifiableSet(nodeAttributes.keySet());
   }
-  
+
   /**
    * Returns a {@code Set<Pair<String, String>>} containing all of the edges in
    * {@code this}.
@@ -114,29 +116,29 @@ class GraphInformation
     // even though edgeAttributes is also unmodifiable.
     return Collections.unmodifiableSet(edgeAttributes.keySet());
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} contains attributes for a node of
    * the given name
-   * 
+   *
    * @param name
    */
   public boolean containsNode(String name)
   {
     return nodeAttributes.containsKey(name);
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} contains an edge labeled {@code
    * label}
-   * 
+   *
    * @param label
    */
   public boolean containsEdge(String label)
   {
     return edgeAttributes.containsKey(label);
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} and {@code other} are equal in
    * value.
@@ -147,7 +149,7 @@ class GraphInformation
     if (other instanceof GraphInformation)
     {
       GraphInformation g = (GraphInformation) other;
-      
+
       return this.getGraphAttributes().equals(g.getGraphAttributes())
           && this.nodeAttributes.equals(g.nodeAttributes)
           && this.edgeAttributes.equals(g.edgeAttributes);
@@ -157,7 +159,7 @@ class GraphInformation
       return false;
     }
   }
-  
+
   @Override
   public int hashCode()
   {
@@ -165,14 +167,14 @@ class GraphInformation
         nodeAttributes.hashCode() * 31 +
         edgeAttributes.hashCode();
   }
-  
+
   @Override
   public String toString()
   {
     return "graph:" + graphAttributes.toString() + ";nodes:" +
         nodeAttributes.toString();
   }
-  
+
   /**
    * A {@code Builder} for a {@code GraphInformation} object.
    *
@@ -210,12 +212,12 @@ class GraphInformation
     public /*@Nullable*/ GraphAttributes setGraphAttributes(GraphAttributes attributes)
     {
       GraphAttributes oldAttrs = this.graphAttributes;
-      
+
       this.graphAttributes = attributes;
-      
+
       return oldAttrs;
     }
-    
+
     /**
      * Returns true iff the graph attributes have been set
      */
@@ -279,7 +281,7 @@ class GraphInformation
     {
       edgeAttributes.put(label, attributes);
     }
-    
+
     /**
      * Returns a GraphInformation object with the attributes that have been added to
      * this {@code Builder}.
@@ -290,7 +292,7 @@ class GraphInformation
     {
       if (!areGraphAttributesSet())
         throw new IllegalStateException("graph attributes not yet set");
-      
+
       return new GraphInformation(graphAttributes, nodeAttributes, edgeAttributes);
     }
   }
@@ -339,6 +341,7 @@ class GraphInformation
       return new NodeDefaults(width, height);
     }
 
+    @Override
     public String toString()
     {
       return "NodeDefaults<width=" + getWidth() + ", height=" + getHeight() + ">";
@@ -353,13 +356,13 @@ class GraphInformation
   {
     private final int width;
     private final int height;
-    
+
     public GraphAttributes(int width, int height)
     {
       this.width = width;
       this.height = height;
     }
-    
+
     /**
      * Returns the width of the graph.
      */
@@ -367,7 +370,7 @@ class GraphInformation
     {
       return width;
     }
-    
+
     /**
      * Returns the height of the graph.
      */
@@ -393,7 +396,7 @@ class GraphInformation
     {
       return width * 97 + height;
     }
-    
+
     @Override
     public String toString()
     {
@@ -539,11 +542,11 @@ class GraphInformation
         throw new IllegalArgumentException("Size of argument is " +
             points.size() + ". " + points.size() + " % 3 = " +
             (points.size() % 3) + " != 1");
-      
+
       // Creates a new list containing the elements in points, where the only
       // view on it is an unmodifiable view. In effect, make it immutable.
       this.controlPoints = Collections.unmodifiableList(new ArrayList<GraphvizPointCoordinate>(points));
-      
+
       checkRep();
     }
 
@@ -559,19 +562,19 @@ class GraphInformation
         throw new IndexOutOfBoundsException("index " + index + " >= size ("
             + controlPoints.size() + ")");
     }
-    
+
     public int controlPointCount()
     {
       return controlPoints.size();
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object o)
     {
       if (o instanceof EdgeAttributes)
       {
         EdgeAttributes e = (EdgeAttributes) o;
-        
+
         return this.controlPoints.equals(e.controlPoints);
       }
       else
@@ -579,7 +582,7 @@ class GraphInformation
         return false;
       }
     }
-    
+
     @Override
     public int hashCode()
     {
