@@ -3,11 +3,11 @@
 Site Location:
 
 The Pipe Jam website is:
-http://gamesweb.cs.washington.edu/games/verigames/pipejam/
+http://verigames-dev.cs.washington.edu/
 
 The content is found in directory
-/www/htdocs/games/verigames/pipejam
-on gamesweb.cs.washington.edu
+/www/htdocs/
+on verigames-dev.cs.washington.edu
 
 For now, there are global permissions to read, write and execute this directory.
 
@@ -155,7 +155,7 @@ Step 2:
 
 Download a recent copy of the website.  This can be accomplished by selecting a backup from the following site:
 
-	http://gamesweb.cs.washington.edu/games/verigames/pipejam/publish.php
+	http://verigames-dev.cs.washington.edu/demo/publish.php
 
 Click any of the listed backups to download a .zip file with the entire contents of the site. Once downloaded extract 
 the contents to /var/www (Ubuntu). 
