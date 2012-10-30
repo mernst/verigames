@@ -13,7 +13,6 @@ import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection.Kind;
 import verigames.level.Intersection;
-import verigames.utilities.Pair;
 
 /**
  * Adds layout information to a {@link verigames.level.Board Board} using
@@ -24,7 +23,7 @@ import verigames.utilities.Pair;
  * instantiable.
  *
  * @see WorldLayout
- * 
+ *
  * @author Nathaniel Mote
  */
 // TODO document all variables with error-prone units using the units checker
@@ -51,7 +50,7 @@ public class BoardLayout
    * Adds layout information to {@code b} using Graphviz.
    * <p>
    * Modifies: {@code b}
-   * 
+   *
    * @param b
    * The {@link verigames.level.Board} to lay out. {@link
    * verigames.level.Board#underConstruction() b.underConstruction()} must be
@@ -124,22 +123,20 @@ public class BoardLayout
     {
       // get the chute UID. The printer uses this as a label to identify chutes.
       String chuteUID = Integer.toString(c.getUID());
-      
+
       GraphInformation.EdgeAttributes edgeAttrs =
           info.getEdgeAttributes(chuteUID);
 
-      List<Pair<Double, Double>> layout = new ArrayList<Pair<Double, Double>>();
-      
+      List<GameCoordinate> layout = new ArrayList<GameCoordinate>();
+
       for (int i = 0; i < edgeAttrs.controlPointCount(); i++)
       {
-        Pair<Double, Double> coords =
-            hundredthsOfPointsToGameUnits(edgeAttrs.getX(i),
-                                          edgeAttrs.getY(i),
-                                          boardHeight);
+        GameCoordinate coords =
+            edgeAttrs.getCoordinates(i).toGameCoordinate(boardHeight);
 
         layout.add(coords);
       }
-      
+
       /* if the start node is an INCOMING node, cheat a little bit and set the
        * starting y coordinate to 0. It's pretty close to 0 already, but it's
        * not quite because of some limitations with Graphviz. Because it's so
@@ -147,12 +144,12 @@ public class BoardLayout
        * look better this way. */
       if (c.getStart().getIntersectionKind() == Intersection.Kind.INCOMING)
       {
-        Pair<Double, Double> firstCoord = layout.get(0);
+        GameCoordinate firstCoord = layout.get(0);
 
-        double x = firstCoord.getFirst();
+        double x = firstCoord.getX();
         double y = 0;
 
-        layout.set(0, Pair.of(x,y));
+        layout.set(0, new GameCoordinate(x,y));
       }
 
       c.setLayout(layout);
@@ -215,14 +212,8 @@ public class BoardLayout
 
     Kind startKind = start.getIntersectionKind();
 
-    double startHeight;
-    // TODO update to include GET node once the rest of layout behaves properly
-    // with it
-    if (startKind == SUBBOARD)
-      startHeight = getIntersectionHeight(SUBBOARD);
-    else
-      startHeight = 0;
-    
+    double startHeight = getIntersectionHeight(startKind);
+
     // the place where the edge should start is the y coordinate of the start
     // node plus its height, because the y coordinate refers to the top of the
     // node.
@@ -238,40 +229,25 @@ public class BoardLayout
    */
   private static void scaleEdgeY(double start, double end, Chute edge)
   {
-    List<Pair<Double, Double>> oldLayout = edge.getLayout();
-    double oldStart = oldLayout.get(0).getSecond();
-    double oldEnd = oldLayout.get(oldLayout.size() - 1).getSecond();
-    
+    List<GameCoordinate> oldLayout = edge.getLayout();
+    double oldStart = oldLayout.get(0).getY();
+    double oldEnd = oldLayout.get(oldLayout.size() - 1).getY();
+
     // figure out the scale factor and the offset for the linear transformation
     double factor = (end - start) / (oldEnd - oldStart);
     double offset = start - factor * oldStart;
 
-    List<Pair<Double, Double>> newLayout = new ArrayList<Pair<Double, Double>>();
-    
-    // loop through and transform each y coordinate
-    for (Pair<Double, Double> point : oldLayout)
-    {
-      double x = point.getFirst();
-      double y = point.getSecond() * factor + offset;
+    List<GameCoordinate> newLayout = new ArrayList<GameCoordinate>();
 
-      Pair<Double, Double> newPoint = Pair.of(x,y);
+    // loop through and transform each y coordinate
+    for (GameCoordinate point : oldLayout)
+    {
+      double x = point.getX();
+      double y = point.getY() * factor + offset;
+
+      GameCoordinate newPoint = new GameCoordinate(x,y);
       newLayout.add(newPoint);
     }
     edge.setLayout(newLayout);
-  }
-  
-  /**
-   * Converts coordinates from hundredths of points, using the bottom left as
-   * the origin, to game units using the top left as the origin.
-   */
-  private static Pair<Double, Double> hundredthsOfPointsToGameUnits(int x, int y, int boardHeight)
-  {
-    // change the location of the origin
-    y = boardHeight - y;
-    
-    double xResult = ((double) x / 7200d);
-    double yResult = ((double) y / 7200d);
-    
-    return Pair.of(xResult, yResult);
   }
 }

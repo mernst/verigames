@@ -8,10 +8,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import verigames.level.Board;
-import verigames.level.Chute;
-import verigames.level.Intersection;
-import verigames.level.Intersection.Kind;
+import verigames.level.*;
+import verigames.level.Intersection.*;
 
 public class BoardSpecTests
 {
@@ -22,9 +20,13 @@ public class BoardSpecTests
   public Intersection outgoing;
   public Intersection split;
   public Intersection merge;
+  public Intersection connect;
   
   public Chute chute1;
   public Chute chute2;
+  public Chute chute3;
+  public Chute chute4;
+  public Chute chute5;
   
   @Before public void initBoards()
   {
@@ -34,9 +36,13 @@ public class BoardSpecTests
     outgoing = Intersection.factory(Kind.OUTGOING);
     split = Intersection.factory(Kind.SPLIT);
     merge = Intersection.factory(Kind.MERGE);
+    connect = Intersection.factory(Kind.CONNECT);
     
     chute1 = new Chute();
     chute2 = new Chute();
+    chute3 = new Chute();
+    chute4 = new Chute();
+    chute5 = new Chute();
   }
   
   // tests the contains method
@@ -99,11 +105,22 @@ public class BoardSpecTests
     assertEquals(chute1.getEnd(), outgoing);
     assertEquals(chute1.getEndPort(), "5");
   }
-  
-  @Test
-  public void finishConstructionTest1()
+
+  @Test (expected=CycleException.class)
+  public void cyclicGraphTest()
   {
-    // TODO make sure Board behaves when construction is finished
+    board.addNode(incoming);
+    board.addNode(outgoing);
+    board.addNode(split);
+    board.addNode(merge);
+    board.addNode(connect);
+
+    board.addEdge(incoming, "a", merge, "foo", chute1);
+    board.addEdge(merge, "baz", connect, "asdf", chute2);
+    board.addEdge(connect, "bnm", split, "hjweq", chute3);
+    board.addEdge(split, "db", outgoing, "e", chute4);
+    board.addEdge(split, "c", merge, "bfb", chute5);
+
+    board.finishConstruction();
   }
-  
 }

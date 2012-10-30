@@ -2,7 +2,9 @@ package verigames.graph;
 
 import static verigames.utilities.Misc.ensure;
 
-import checkers.nullness.quals.AssertNonNullAfter;
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * An immutable record type representing an edge for a {@link verigames.graph.Graph
@@ -80,11 +82,14 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
 
     // Representation Invariant:
 
-    // start == null <--> startPort == -1
-    ensure((start == null) == (startPort == null));
+    // start == null <--> startPort == null
+    ensure((start == null) == (startPort == null),
+        "start <" + start + "> must be null iff startPort <" + startPort +
+        "> is null");
 
     // end == null <--> endPort == null
-    ensure((end == null) == (endPort == null));
+    ensure((end == null) == (endPort == null),
+        "end <" + end + "> must be null iff endPort <" + endPort + "> is null");
 
     /*
      * If !underConstruction, start and end must be non-null, and startPort and endPort
@@ -92,10 +97,14 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
      */
     if (!underConstruction)
     {
-      ensure(start != null);
-      ensure(end != null);
-      ensure(startPort != null);
-      ensure(endPort != null);
+      ensure(start != null,
+          "start node must not be null in a fully constructed Edge");
+      ensure(end != null,
+          "end node must not be null in a fully constructed Edge");
+      ensure(startPort != null,
+          "startPort must not be null in a fully constructed Edge");
+      ensure(endPort != null,
+          "endPort must not be null in a fully constructed Edge");
     }
 
     /*
@@ -170,7 +179,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * number for {@code startNode}. {@link verigames.graph.Node Node} does not restrict
    * what ports may be used, but subclasses may.
    */
-  @AssertNonNullAfter({ "start" })
+  /*>>> @AssertNonNullAfter({ "start" }) */
   protected void setStart(NodeType startNode, String port)
   {
     if (!underConstruction)
@@ -202,7 +211,7 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
    * number for {@code endNode}. {@link verigames.graph.Node Node} does not restrict
    * what ports may be used, but subclasses may.
    */
-  @AssertNonNullAfter({ "end" })
+  /*>>> @AssertNonNullAfter({ "end" }) */
   protected void setEnd(NodeType endNode, String port)
   {
     if (!underConstruction)

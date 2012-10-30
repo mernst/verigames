@@ -4,6 +4,10 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An immutable record type representing a node for a {@link verigames.graph.Graph
  * Graph}.
@@ -76,9 +80,9 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     if (!underConstruction)
     {
       for (EdgeType e : inputs.values())
-        ensure(e != null);
+        ensure(e != null, "node input list has a null edge");
       for (EdgeType e : outputs.values())
-        ensure(e != null);
+        ensure(e != null, "node output list has a null edge");
     }
 
     // Note: Graph is responsible for ensuring that a particular node's
@@ -301,9 +305,8 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
    */
   protected void finishConstruction()
   {
-    // TODO update error message
     if (!underConstruction)
-      throw new IllegalStateException("Deactivation attempted on already constructed Node " + this);
+      throw new IllegalStateException("Attempt to finish construction made Node that has already been finished: " + this);
 
     underConstruction = false;
     checkRep();

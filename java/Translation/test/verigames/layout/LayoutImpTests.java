@@ -51,13 +51,13 @@ public class LayoutImpTests
       BoardLayout.layout(b);
     }
 
-    List<Pair<Double, Double>> layout1 = c1.getLayout();
-    List<Pair<Double, Double>> layout2 = c2.getLayout();
+    List<GameCoordinate> layout1 = c1.getLayout();
+    List<GameCoordinate> layout2 = c2.getLayout();
 
     // get the last y coordinate of the first chute and the first y coordinate
     // of the second chute
-    double c1Y = layout1.get(layout1.size() - 1).getSecond();
-    double c2Y = layout2.get(0).getSecond();
+    double c1Y = layout1.get(layout1.size() - 1).getY();
+    double c2Y = layout2.get(0).getY();
 
     // make sure that these differ by roughly the height of a subboard.
     assertEquals(
@@ -109,13 +109,13 @@ public class LayoutImpTests
       BoardLayout.layout(b);
     }
 
-    List<Pair<Double, Double>> layout1 = c1.getLayout();
-    List<Pair<Double, Double>> layout2 = c2.getLayout();
+    List<GameCoordinate> layout1 = c1.getLayout();
+    List<GameCoordinate> layout2 = c2.getLayout();
 
     // get the last y coordinate of the first chute and the first y coordinate
     // of the second chute
-    double c1Y = layout1.get(layout1.size() - 1).getSecond();
-    double c2Y = layout2.get(0).getSecond();
+    double c1Y = layout1.get(layout1.size() - 1).getY();
+    double c2Y = layout2.get(0).getY();
 
     // make sure that these differ by roughly the height of a subboard.
     assertEquals(

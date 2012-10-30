@@ -66,11 +66,6 @@ they are in the same package as their test targets.
 
 --------------------------------------------------------------------------------
 
-Change null test node to something that does not refer to null, change white
-ball to small ball, and change black ball to large ball.
-
---------------------------------------------------------------------------------
-
 Make certain edges straighter
    - Select the edges that form a path from a particular input port to a
      particular output port (fuzzy, write a heuristic to figure out which ones

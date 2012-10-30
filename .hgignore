@@ -8,6 +8,8 @@ java/DO_NOT_DELETE_Speculation_Translation
 java/Generation/bin/
 java/Generation/.cache
 java/Generation/.scala_dependencies
+java/build
+java/verigames.jar
 
 papers/2012-ftfjp/2012-pipejam.bbl
 papers/2012-ftfjp/2012-pipejam.dvi
@@ -22,3 +24,4 @@ syntax: glob
 *.out
 *~
 .#*
+.gradle

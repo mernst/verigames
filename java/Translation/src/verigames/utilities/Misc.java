@@ -8,19 +8,6 @@ public class Misc
 {
   /**
    * Intended to be a substitute for assert, except I don't want to have to
-   * make sure the -ea flag is turned on in order to get these checks.<p>
-   *
-   * Use, instead {@link #ensure(boolean, String)} and include an error message.
-   */
-  @Deprecated
-  public static void ensure(boolean value)
-  {
-    if (!value)
-      throw new AssertionError();
-  }
-
-  /**
-   * Intended to be a substitute for assert, except I don't want to have to
    * make sure the -ea flag is turned on in order to get these checks.
    */
   public static void ensure(boolean value, String msg)

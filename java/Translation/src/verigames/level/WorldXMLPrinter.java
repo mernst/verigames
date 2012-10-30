@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import verigames.layout.GameCoordinate;
 import verigames.level.Intersection.Kind;
-import verigames.utilities.Pair;
 import verigames.utilities.Printer;
 
 import nu.xom.*;
@@ -20,10 +20,10 @@ public class WorldXMLPrinter extends Printer<World, Void>
 
   /**
    * Prints the XML representation for {@code toPrint}<br/>
-   * 
+   *
    * @param toPrint
    * The {@link World} to print
-   * 
+   *
    * @param out
    * The {@code PrintStream} to which the XML will be printed. Must be open.
    */
@@ -32,25 +32,25 @@ public class WorldXMLPrinter extends Printer<World, Void>
   {
     super.print(toPrint, out, data);
   }
-  
+
   @Override
   protected void printMiddle(World toPrint, PrintStream out, Void data)
   {
     Element worldElt = new Element("world");
     Attribute versionAttr = new Attribute("version", Integer.toString(version));
     worldElt.addAttribute(versionAttr);
-    
+
     for (Map.Entry<String, Level> entry : toPrint.getLevels().entrySet())
     {
       String name = entry.getKey();
       Level level = entry.getValue();
       worldElt.appendChild(constructLevel(level, name));
     }
-    
+
     Document doc = new Document(worldElt);
     DocType docType = new DocType("world", "world.dtd");
     doc.insertChild(docType, 0);
-    
+
     try
     {
       Serializer s = new Serializer(out);
@@ -64,26 +64,26 @@ public class WorldXMLPrinter extends Printer<World, Void>
       throw new RuntimeException(e);
     }
   }
-  
+
   private Element constructLevel(Level l, String name)
   {
     Element levelElt = new Element("level");
-    
+
     Attribute nameAttr = new Attribute("name", name);
     levelElt.addAttribute(nameAttr);
-    
+
     levelElt.appendChild(constructLinkedEdges(l, name));
     levelElt.appendChild(constructBoardsMap(l));
-    
+
     return levelElt;
   }
 
-  private Set<String> usedLinkedEdgeIDs = new HashSet<String>();
-  
+  private final Set<String> usedLinkedEdgeIDs = new HashSet<String>();
+
   private Element constructLinkedEdges(Level l, String name)
   {
     Element edgesElt = new Element("linked-edges");
-    
+
     // Output all linked edges explicitly listed in linkedEdgeClasses
     Set<Chute> alreadyPrintedEdges = new HashSet<Chute>();
 
@@ -107,7 +107,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
       }
       // TODO associate linked edge sets with their ID somehow, so that they can
       // be referred to when needed.
-      
+
       setElt.addAttribute(new Attribute("id", edgeSetID));
 
       // TODO add stamp elements here
@@ -120,18 +120,18 @@ public class WorldXMLPrinter extends Printer<World, Void>
         Element edgeElt = new Element("edgeref");
         edgeElt.addAttribute(new Attribute("id", "e" + c.getUID()));
         setElt.appendChild(edgeElt);
-        
+
         alreadyPrintedEdges.add(c);
       }
       edgesElt.appendChild(setElt);
 
       edgeSetNumber++;
     }
-    
+
     // TODO remove code cloning:
     // Output all remaining edges -- edges not listed are in equivalence
     // classes of size 1
-    
+
     for (Board b : l.getBoards().values())
     {
       for (Chute c : b.getEdges())
@@ -161,32 +161,32 @@ public class WorldXMLPrinter extends Printer<World, Void>
         edgeSetNumber++;
       }
     }
-    
+
     return edgesElt;
   }
-  
+
   private Element constructBoardsMap(Level l)
   {
     Map<String, Board> boardNames = l.getBoards();
-    
+
     Element boardsElt = new Element("boards");
-    
+
     for (Map.Entry<String, Board> entry : boardNames.entrySet())
     {
       String name = entry.getKey();
       Board board = entry.getValue();
-      
+
       Element boardElt = new Element("board");
       boardElt.addAttribute(new Attribute("name", name));
-      
+
       for (Intersection node : board.getNodes())
       {
         if (node.underConstruction())
           throw new IllegalStateException("underConstruction Intersection in Level while printing XML");
-        
+
         Element nodeElt = new Element("node");
         nodeElt.addAttribute(new Attribute("kind", node.getIntersectionKind().toString()));
-        
+
         if (node.getIntersectionKind() == Kind.SUBBOARD)
         {
           if (node.isSubboard())
@@ -195,10 +195,10 @@ public class WorldXMLPrinter extends Printer<World, Void>
             throw new RuntimeException("node " + node + " has kind subnetwork but isSubnetwork returns false");
         }
         nodeElt.addAttribute(new Attribute("id", "n" + node.getUID()));
-        
+
         {
           Element inputElt = new Element("input");
-          
+
           for (String ID : node.getInputIDs())
           {
             Chute input = node.getInput(ID);
@@ -207,13 +207,13 @@ public class WorldXMLPrinter extends Printer<World, Void>
             portElt.addAttribute(new Attribute("edge", "e" + input.getUID()));
             inputElt.appendChild(portElt);
           }
-          
+
           nodeElt.appendChild(inputElt);
         }
-        
+
         {
           Element outputElt = new Element("output");
-          
+
           for (String ID : node.getOutputIDs())
           {
             Chute output = node.getOutput(ID);
@@ -222,36 +222,36 @@ public class WorldXMLPrinter extends Printer<World, Void>
             portElt.addAttribute(new Attribute("edge", "e" + Integer.toString(output.getUID())));
             outputElt.appendChild(portElt);
           }
-          
+
           nodeElt.appendChild(outputElt);
         }
-        
+
         double x = node.getX();
         double y = node.getY();
         if (x >= 0 && y >= 0)
         {
           Element layoutElt = new Element("layout");
-          
+
           Element xElt = new Element("x");
           xElt.appendChild(String.format("%.5f", x));
           layoutElt.appendChild(xElt);
-          
+
           Element yElt = new Element("y");
           yElt.appendChild(String.format("%.5f", y));
           layoutElt.appendChild(yElt);
-          
+
           nodeElt.appendChild(layoutElt);
         }
-        
+
         boardElt.appendChild(nodeElt);
-        
+
       }
-      
+
       for (Chute edge : board.getEdges())
       {
         if (edge.underConstruction())
           throw new IllegalStateException("underConstruction Chute in Level while printing XML");
-        
+
         Element edgeElt = new Element("edge");
         {
           edgeElt.addAttribute(new Attribute("description", edge.getDescription()));
@@ -262,61 +262,61 @@ public class WorldXMLPrinter extends Printer<World, Void>
           edgeElt.addAttribute(new Attribute("id", "e" + edge.getUID()));
           edgeElt.addAttribute(new Attribute("buzzsaw", Boolean.toString(edge.hasBuzzsaw())));
         }
-        
+
         {
           Element fromElt = new Element("from");
-          
+
           Element noderefElt = new Element("noderef");
           // TODO do something about this nullness warning
           noderefElt.addAttribute(new Attribute("id", "n" + edge.getStart().getUID()));
           noderefElt.addAttribute(new Attribute("port", edge.getStartPort()));
           fromElt.appendChild(noderefElt);
-          
+
           edgeElt.appendChild(fromElt);
         }
-        
+
         {
           Element toElt = new Element("to");
-          
+
           Element noderefElt = new Element("noderef");
           // TODO do something about this nullness warning
           noderefElt.addAttribute(new Attribute("id", "n" + edge.getEnd().getUID()));
           noderefElt.addAttribute(new Attribute("port", edge.getEndPort()));
           toElt.appendChild(noderefElt);
-          
+
           edgeElt.appendChild(toElt);
         }
-        
+
         // output layout information, if it exists:
-        List<Pair<Double, Double>> layout = edge.getLayout();
+        List<GameCoordinate> layout = edge.getLayout();
         if (layout != null)
         {
           Element edgeLayoutElt = new Element("edge-layout");
-          
-          for (Pair<Double, Double> point : layout)
+
+          for (GameCoordinate point : layout)
           {
             Element pointElt = new Element("point");
-            
+
             Element xElt = new Element("x");
-            xElt.appendChild(String.format("%.5f", point.getFirst()));
+            xElt.appendChild(String.format("%.5f", point.getX()));
             pointElt.appendChild(xElt);
-            
+
             Element yElt = new Element("y");
-            yElt.appendChild(String.format("%.5f", point.getSecond()));
+            yElt.appendChild(String.format("%.5f", point.getY()));
             pointElt.appendChild(yElt);
-            
+
             edgeLayoutElt.appendChild(pointElt);
           }
-          
+
           edgeElt.appendChild(edgeLayoutElt);
         }
-        
+
         boardElt.appendChild(edgeElt);
       }
-      
+
       boardsElt.appendChild(boardElt);
     }
-    
+
     return boardsElt;
   }
 }

@@ -1,6 +1,5 @@
 package nninf;
 
-import java.util.Collections;
 import java.util.List;
 
 import checkers.quals.DefaultLocation;
@@ -8,6 +7,7 @@ import checkers.types.AnnotatedTypeFactory;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
+import checkers.types.GeneralAnnotatedTypeFactory;
 import checkers.util.Pair;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -26,17 +26,16 @@ public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfCh
 
         // TODO: why is this not a KeyForAnnotatedTypeFactory?
         // What qualifiers does it insert? The qualifier hierarchy is null.
-        AnnotatedTypeFactory mapGetFactory = new AnnotatedTypeFactory(checker.getProcessingEnvironment(), null, root, null);
-        mapGetHeuristics = new MapGetHeuristics(env, this, mapGetFactory);
+        GeneralAnnotatedTypeFactory mapGetFactory = new GeneralAnnotatedTypeFactory(checker, root);
+        mapGetHeuristics = new MapGetHeuristics(processingEnv, this, mapGetFactory);
 
-        addAliasedAnnotation(checkers.nullness.quals.NonNull.class, checker.NONNULL);
+        addAliasedAnnotation(checkers.nullness.quals.NonNull.class,  checker.NONNULL);
         addAliasedAnnotation(checkers.nullness.quals.Nullable.class, checker.NULLABLE);
-        addAliasedAnnotation(checkers.nullness.quals.KeyFor.class, checker.KEYFOR);
-        addAliasedAnnotation(checkers.quals.Unqualified.class, checker.UNKNOWNKEYFOR);
+        addAliasedAnnotation(checkers.nullness.quals.KeyFor.class,   checker.KEYFOR);
+        addAliasedAnnotation(checkers.quals.Unqualified.class,       checker.UNKNOWNKEYFOR);
 
-        // defaults = new QualifierDefaults(this, this.annotations);
-        defaults.addAbsoluteDefault(checker.NONNULL, Collections.singleton(DefaultLocation.ALL_EXCEPT_LOCALS));
-        defaults.setLocalVariableDefault(Collections.singleton(checker.NULLABLE));
+        defaults.addAbsoluteDefault(checker.NONNULL,  DefaultLocation.OTHERWISE);
+        defaults.addAbsoluteDefault(checker.NULLABLE, DefaultLocation.LOCALS);
     }
 
     /*

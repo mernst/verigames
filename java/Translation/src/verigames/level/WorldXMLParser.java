@@ -5,7 +5,12 @@ import java.util.*;
 
 import nu.xom.*;
 
+import verigames.layout.GameCoordinate;
 import verigames.utilities.Pair;
+
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * An object that parses verigames XML documents and returns a corresponding
@@ -38,7 +43,7 @@ public class WorldXMLParser
     final Builder parser = new Builder(true);
 
     final Document doc;
-    
+
     try
     {
       doc = parser.build(in);
@@ -103,7 +108,7 @@ public class WorldXMLParser
       Attribute nameAttr = levelElt.getAttribute("name");
       name = nameAttr.getValue();
     }
-    
+
     /* the boards must be processed first because Level requires that edges
      * already be present before makeLinked is called with them as arguments.*/
     final Pair<Map<String, Board>, Map<String, Chute>> p = processBoards(levelElt.getFirstChildElement("boards"));
@@ -134,7 +139,7 @@ public class WorldXMLParser
         chutes.add(chuteUIDs.get(UID));
       level.makeLinked(chutes);
     }
-      
+
     return Pair.of(name, level);
   }
 
@@ -177,7 +182,7 @@ public class WorldXMLParser
   private static String processEdgeref(final Element edgerefElt)
   {
     checkName(edgerefElt, "edgeref");
-    
+
     final Attribute idAttr = edgerefElt.getAttribute("id");
     return idAttr.getValue();
   }
@@ -222,7 +227,7 @@ public class WorldXMLParser
   private static Pair<Pair<String, Board>, Map<String, Chute>> processBoard(final Element boardElt)
   {
     checkName(boardElt, "board");
-    
+
     final String name;
     {
       final Attribute nameAttr = boardElt.getAttribute("name");
@@ -317,9 +322,9 @@ public class WorldXMLParser
       }
       else
       {
-        final Pair<Double, Double> result = processLayoutPoint(layoutElt);
-        x = result.getFirst();
-        y = result.getSecond();
+        final GameCoordinate result = processLayoutPoint(layoutElt);
+        x = result.getX();
+        y = result.getY();
       }
     }
 
@@ -356,14 +361,14 @@ public class WorldXMLParser
     return Pair.of(UID, intersection);
   }
 
-  private static Pair<Double, Double> processLayoutPoint(Element layoutElt)
+  private static GameCoordinate processLayoutPoint(Element layoutElt)
   {
     {
       final String eltName = layoutElt.getLocalName();
       if (!(eltName.equals("layout") || eltName.equals("point")))
         throw new RuntimeException("Encountered " + eltName + " when point or layout was expected");
     }
-    
+
     final double x;
     {
       final Element xElt = layoutElt.getFirstChildElement("x");
@@ -376,7 +381,7 @@ public class WorldXMLParser
       y = processCoordinate(yElt);
     }
 
-    return Pair.of(x,y);
+    return new GameCoordinate(x, y);
   }
 
   private static double processCoordinate(Element coordElt)
@@ -470,7 +475,7 @@ public class WorldXMLParser
       UID = UIDAttr.getValue();
     }
 
-    final List<Pair<Double, Double>> layout;
+    final List<GameCoordinate> layout;
     {
       final Element layoutElt = edgeElt.getFirstChildElement("edge-layout");
       if (layoutElt == null)
@@ -507,7 +512,7 @@ public class WorldXMLParser
     c.setBuzzsaw(buzzsaw);
     if (layout != null)
       c.setLayout(layout);
-    
+
     b.addEdge(start, startPort, end, endPort, c);
 
     return Pair.of(UID, c);
@@ -532,18 +537,18 @@ public class WorldXMLParser
     return Pair.of(ID, port);
   }
 
-  private static List<Pair<Double, Double>> processEdgeLayout(Element layoutElt)
+  private static List<GameCoordinate> processEdgeLayout(Element layoutElt)
   {
     checkName(layoutElt, "edge-layout");
 
-    final List<Pair<Double, Double>> result = new ArrayList<Pair<Double, Double>>();
+    final List<GameCoordinate> result = new ArrayList<GameCoordinate>();
 
     final Elements pointElts = layoutElt.getChildElements();
 
     for (int i = 0; i < pointElts.size(); i++)
     {
       Element pointElt = pointElts.get(i);
-      Pair<Double, Double> point = processLayoutPoint(pointElt);
+      GameCoordinate point = processLayoutPoint(pointElt);
       result.add(point);
     }
 

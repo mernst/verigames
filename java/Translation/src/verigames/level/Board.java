@@ -8,6 +8,10 @@ import verigames.utilities.MultiBiMap;
 
 import java.util.Set;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * A board for Pipe Jam. It is a {@link verigames.graph.Graph Graph} with {@link
  * Intersection}s as nodes and {@link Chute}s as edges. It stores data in both
@@ -56,8 +60,6 @@ public class Board extends Graph<Intersection, Chute>
 
     if (!CHECK_REP_ENABLED)
       return;
-
-    // TODO maybe make sure that this is a DAG?
 
     Set<Intersection> nodes = getNodes();
 
@@ -229,5 +231,18 @@ public class Board extends Graph<Intersection, Chute>
     }
 
     super.addNode(node);
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @throws {@link CycleException} if the graph contains a cycle.
+   */
+  @Override
+  public void finishConstruction()
+  {
+    super.finishConstruction();
+    if (!this.isAcyclic())
+      throw new CycleException();
   }
 }

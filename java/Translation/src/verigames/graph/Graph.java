@@ -2,9 +2,11 @@ package verigames.graph;
 
 import static verigames.utilities.Misc.ensure;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * A mutable graph structure capable of storing data in both the edges and the
@@ -59,9 +61,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     // Representation Invariant:
 
     // nodes != null:
-    ensure(nodes != null);
+    ensure(nodes != null, "Graph node set must not be null");
     // edges != null
-    ensure(edges != null);
+    ensure(edges != null, "Graph edge set must not be null");
 
     // for all n in nodes; e in edges:
     // e.getStart() == n <--> n.getOutput(e.getStartPort()) == e
@@ -72,18 +74,25 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     {
       NodeType n = e.getStart();
       // e.getStart() != null
-      ensure(n != null);
+      ensure(n != null, "Edge <" + e + "> in Graph has a null start node");
       // e.getStart() == n --> n.getOutput(e.getStartPort()) == e
-      ensure(n.getOutput(e.getStartPort()) == e);
+      ensure(n.getOutput(e.getStartPort()) == e,
+          "Edge e <" + e + ">' start Node <" + n +
+          "> does not list e as an output");
 
       n = e.getEnd();
       // e.getEnd() != null
-      ensure(n != null);
+      ensure(n != null, "Edge <" + e + "> in Graph has a null end node");
       // e.getEnd() == n --> n.getInput(e.getEndPort()) == e
-      ensure(n.getInput(e.getEndPort()) == e);
+      ensure(n.getInput(e.getEndPort()) == e,
+          "Edge e <" + e + ">'s end Node <" + n +
+          "> does not list e as an input");
 
       // this.underConstruction() == e.underConstruction()
-      ensure(this.underConstruction() == e.underConstruction());
+      ensure(this.underConstruction() == e.underConstruction(),
+          "Graph and Edge do not agree about whether they are under " +
+          "construction: Graph: " + this.underConstruction() + " Edge: " +
+          e.underConstruction());
     }
 
     for (NodeType n : nodes)
@@ -93,8 +102,14 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
         EdgeType e = n.getOutput(nodePort);
 
         // e.getStart() == n <-- n.getOutput(e.getStartPort()) == e
-        ensure(nodePort.equals(e.getStartPort()));
-        ensure(e.getStart() == n);
+        ensure(nodePort.equals(e.getStartPort()),
+            "Port ID recorded in node <" + nodePort +
+            "> does not match port ID recorded in edge <" + e.getStartPort()
+            + ">");
+
+        ensure(e.getStart() == n, "node <" + n +
+            "> should be equal to its output edge's start node <" +
+            e.getStart() + ">");
       }
 
       for (String nodePort : n.getInputIDs())
@@ -102,12 +117,20 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
         EdgeType e = n.getInput(nodePort);
 
         // e.getEnd() == n <-- n.getInput(e.getEndPort()) == e
-        ensure(nodePort.equals(e.getEndPort()));
-        ensure(e.getEnd() == n);
+        ensure(nodePort.equals(e.getEndPort()),
+            "Port ID recorded in node <" + nodePort +
+            "> does not match port ID recorded in edge <" + e.getEndPort()
+            + ">");
+        ensure(e.getEnd() == n, "node <" + n +
+            "> should be equal to its input edge's end node <" +
+            e.getEnd() + ">");
       }
 
       // this.underConstruction() == n.underConstruction()
-      ensure(this.underConstruction() == n.underConstruction());
+      ensure(this.underConstruction() == n.underConstruction(),
+          "Graph and Node do not agree about whether they are under " +
+          "construction: Graph: " + this.underConstruction() + " Node: " +
+          n.underConstruction());
     }
   }
 
@@ -288,6 +311,80 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
   public boolean contains(Object elt)
   {
     return nodes.contains(elt) || edges.contains(elt);
+  }
+
+  /**
+   * Returns true if and only if this graph is acyclic.<p>
+   *
+   * This is currently {@code protected} because it is a costly operation and it
+   * is not clear that it needs to be exposed to clients. It is currently used
+   * only in subclasses, but it may be exposed publicly if need be.
+   */
+  protected boolean isAcyclic()
+  {
+    /* Strategy: Attempt a topological sort. If it succeeds, there are no
+     * cycles. If it fails, there are cycles. Runs in O(n+e) time, where n is
+     * the number of nodes, and e is the number of edges */
+
+    /* Adapted from Data Structures and Algorithm Analysis in Java 2E (Weiss) */
+    // maps from node to its indegree
+    Map<NodeType, Integer> indegreeMap = getIndegrees();
+
+    Queue<NodeType> indegreeZero = new LinkedList<NodeType>();
+
+    for (Map.Entry<NodeType, Integer> entry : indegreeMap.entrySet())
+    {
+      NodeType n = entry.getKey();
+      int indegree = entry.getValue();
+
+      if (indegree == 0)
+        indegreeZero.add(n);
+    }
+
+    int removedNodeCount = 0;
+
+    // while nodes with indegree 0 remain
+    while (!indegreeZero.isEmpty())
+    {
+      NodeType n = indegreeZero.remove();
+      removedNodeCount++;
+
+      for (String portID : n.getOutputIDs())
+      {
+        EdgeType e = n.getOutput(portID);
+        NodeType nextNode = e.getEnd();
+
+        // decrement the next node's indegree
+        int nextNodeIndegree = indegreeMap.get(nextNode) - 1;
+        indegreeMap.put(nextNode, nextNodeIndegree);
+
+        if (nextNodeIndegree < 0)
+          throw new RuntimeException(
+              "internal error: negative indegree calculated");
+
+        if (nextNodeIndegree == 0)
+          indegreeZero.add(nextNode);
+      }
+    }
+
+    return removedNodeCount == nodesSize();
+  }
+
+  /**
+   * Returns a mutable map from indegree to a set of nodes that have that
+   * indegree.
+   */
+  private Map<NodeType, Integer> getIndegrees()
+  {
+    Map<NodeType, Integer> m = new HashMap<NodeType, Integer>();
+
+    for (NodeType n : getNodes())
+    {
+      int indegree = n.getInputIDs().size();
+      m.put(n, indegree);
+    }
+
+    return m;
   }
 
   /**

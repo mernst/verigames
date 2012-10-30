@@ -2,6 +2,7 @@ package nninf;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.util.Elements;
 
 import nninf.quals.KeyFor;
 import nninf.quals.NonNull;
@@ -26,12 +27,18 @@ public class NninfChecker extends BaseTypeChecker implements
         InferenceTypeChecker {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
+    public void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        initChecker(); //TODO: DECIDE IF ALL InferenceTypeCheckers are going to be Checkers and add a good spot for this
+    }
+
     @Override
-    public void initChecker(ProcessingEnvironment env) {
-        super.initChecker(env);
-        AnnotationUtils annoFactory = AnnotationUtils.getInstance(env);
-        NULLABLE = annoFactory.fromClass(Nullable.class);
-        NONNULL = annoFactory.fromClass(NonNull.class);
+    public void initChecker() {
+        super.initChecker();
+        final Elements elements = processingEnv.getElementUtils();
+
+        NULLABLE = AnnotationUtils.fromClass(elements, Nullable.class);
+        NONNULL  = AnnotationUtils.fromClass(elements, NonNull.class);
         // UNKNOWNKEYFOR = annoFactory.fromClass(UnknownKeyFor.class);
         // KEYFOR = annoFactory.fromClass(KeyFor.class);
     }
@@ -50,12 +57,6 @@ public class NninfChecker extends BaseTypeChecker implements
     protected NninfVisitor createSourceVisitor(CompilationUnitTree root) {
         // The false turns off inference and enables checking the type system.
         return new NninfVisitor(this, root, this, false);
-    }
-
-    @Override
-    public boolean isValidUse(AnnotatedDeclaredType declarationType,
-            AnnotatedDeclaredType useType) {
-        return true;
     }
 
     @Override
@@ -79,13 +80,13 @@ public class NninfChecker extends BaseTypeChecker implements
         return false;
     }
 
-    @Override
-    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
-        if (sub.getEffectiveAnnotations().isEmpty() ||
-                sup.getEffectiveAnnotations().isEmpty()) {
-            // TODO: The super method complains about empty annotations. Prevent this.
-            return true;
-        }
-        return super.isSubtype(sub, sup);
-    }
+    //@Override
+//    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
+//        if (sub.getEffectiveAnnotations().isEmpty() ||
+//                sup.getEffectiveAnnotations().isEmpty()) {
+//            // TODO: The super method complains about empty annotations. Prevent this.
+//            return true;
+//        }
+//        return super.isSubtype(sub, sup);
+//    }
 }

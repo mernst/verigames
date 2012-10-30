@@ -139,5 +139,22 @@ public class FileCompare
     {
       return secondLine;
     }
+
+    /**
+     * If the comparison yielded no differences, returns a message stating this.
+     * Otherwise, returns a message indicating where the difference occurred.
+     */
+    public String toString()
+    {
+      if (getResult())
+        return "No differences found\n";
+      else
+        return "Difference at line " + getLineNumber() + ":\n" +
+            "Expected: " + getFirstLine() + "\n"  +
+            "But was : " + getSecondLine() + "\n" +
+            "For files:\n" +
+            "    expected = " + getFirstFile().getAbsolutePath() + "\n" +
+            "    actual   = " + getSecondFile().getAbsolutePath()   + "\n";
+    }
   }
 }

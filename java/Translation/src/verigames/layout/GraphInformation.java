@@ -2,11 +2,13 @@ package verigames.layout;
 
 import static verigames.utilities.Misc.ensure;
 
-import verigames.utilities.Pair;
-
 import java.util.*;
 
 import checkers.nullness.quals.AssertNonNullIfTrue;
+
+/*>>>
+import checkers.nullness.quals.*;
+*/
 
 /**
  * An immutable class that stores information about a Graphviz graph.
@@ -23,15 +25,17 @@ import checkers.nullness.quals.AssertNonNullIfTrue;
  * of an edge, and this structure reflects this decision. Therefore, when
  * accessing the edges of an undirected graph, it is prudent to check both
  * directions.
- * 
+ *
  * @author Nathaniel Mote
  */
 class GraphInformation
 {
   private final GraphAttributes graphAttributes;
+  /** Map from the name of a node to its attributes */
   private final Map<String, NodeAttributes> nodeAttributes;
+  /** Map from an edge's label to its attributes */
   private final Map<String, EdgeAttributes> edgeAttributes;
-  
+
   /**
    * Creates a new GraphInformation object with the given mappings from Node
    * UID to Intersection.
@@ -43,17 +47,17 @@ class GraphInformation
                            Map<String, EdgeAttributes> edgeAttributes)
   {
     this.graphAttributes = graphAttributes;
-    
+
     this.nodeAttributes = Collections
         .unmodifiableMap(new HashMap<String, NodeAttributes>(nodeAttributes));
-    
+
     this.edgeAttributes = Collections.unmodifiableMap(
         new HashMap<String, EdgeAttributes>(edgeAttributes));
   }
-  
+
   /**
    * Returns the attributes of the node with the given name.
-   * 
+   *
    * @param name
    * {@link #containsNode(String) containsNode(name)} must be true.
    *
@@ -64,10 +68,10 @@ class GraphInformation
   {
     if (!this.containsNode(name))
       throw new IllegalArgumentException("!this.containsNode(" + name + ")");
-    
+
     return nodeAttributes.get(name);
   }
-  
+
   /**
    * Returns the attributes of the graph itself.
    */
@@ -75,7 +79,7 @@ class GraphInformation
   {
     return graphAttributes;
   }
-  
+
   /**
    * Returns the attributes of the given edge.
    * <p>
@@ -88,10 +92,10 @@ class GraphInformation
     if (!this.containsEdge(label))
       throw new IllegalArgumentException("No edge with label \"" + label +
           "\"");
-    
+
     return edgeAttributes.get(label);
   }
-  
+
   /**
    * Returns a {@code Set<String>} containing all of the nodes in {@code this}.
    */
@@ -101,7 +105,7 @@ class GraphInformation
     // even though nodeAttributes is also unmodifiable.
     return Collections.unmodifiableSet(nodeAttributes.keySet());
   }
-  
+
   /**
    * Returns a {@code Set<Pair<String, String>>} containing all of the edges in
    * {@code this}.
@@ -112,29 +116,29 @@ class GraphInformation
     // even though edgeAttributes is also unmodifiable.
     return Collections.unmodifiableSet(edgeAttributes.keySet());
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} contains attributes for a node of
    * the given name
-   * 
+   *
    * @param name
    */
   public boolean containsNode(String name)
   {
     return nodeAttributes.containsKey(name);
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} contains an edge labeled {@code
    * label}
-   * 
+   *
    * @param label
    */
   public boolean containsEdge(String label)
   {
     return edgeAttributes.containsKey(label);
   }
-  
+
   /**
    * Returns {@code true} iff {@code this} and {@code other} are equal in
    * value.
@@ -145,7 +149,7 @@ class GraphInformation
     if (other instanceof GraphInformation)
     {
       GraphInformation g = (GraphInformation) other;
-      
+
       return this.getGraphAttributes().equals(g.getGraphAttributes())
           && this.nodeAttributes.equals(g.nodeAttributes)
           && this.edgeAttributes.equals(g.edgeAttributes);
@@ -155,7 +159,7 @@ class GraphInformation
       return false;
     }
   }
-  
+
   @Override
   public int hashCode()
   {
@@ -163,37 +167,42 @@ class GraphInformation
         nodeAttributes.hashCode() * 31 +
         edgeAttributes.hashCode();
   }
-  
+
   @Override
   public String toString()
   {
     return "graph:" + graphAttributes.toString() + ";nodes:" +
         nodeAttributes.toString();
   }
-  
+
   /**
    * A {@code Builder} for a {@code GraphInformation} object.
-   * 
+   *
    * @author Nathaniel Mote
    */
   public static class Builder
   {
-    private /*@LazyNonNull*/ GraphAttributes graphAttributes;
+    /* these first three fields are the same as those of GraphInformation
+     * itself, except that these are intended to be mutated. */
+    private /*@LazyNonNull*/ GraphAttributes graphAttributes = null;
     private final Map<String, NodeAttributes> nodeAttributes;
     private final Map<String, EdgeAttributes> edgeAttributes;
-    
+
+    private NodeDefaults nodeDefaults;
+
     public Builder()
     {
       nodeAttributes = new HashMap<String, NodeAttributes>();
       edgeAttributes = new HashMap<String, EdgeAttributes>();
-      graphAttributes = null;
+      // no node defaults
+      nodeDefaults = new NodeDefaults(null, null);
     }
-    
+
     /**
      * Sets the properties of this graph to those defined by
      * {@code attributes}.
      * <p>
-     * 
+     *
      * @return the previous GraphAttributes object, or null if none existed
      */
     // This may need to be changed somehow because graph attributes can be
@@ -203,12 +212,12 @@ class GraphInformation
     public /*@Nullable*/ GraphAttributes setGraphAttributes(GraphAttributes attributes)
     {
       GraphAttributes oldAttrs = this.graphAttributes;
-      
+
       this.graphAttributes = attributes;
-      
+
       return oldAttrs;
     }
-    
+
     /**
      * Returns true iff the graph attributes have been set
      */
@@ -217,15 +226,51 @@ class GraphInformation
     {
       return graphAttributes != null;
     }
-    
+
+    /**
+     * Sets the node defaults. These defaults will be used whenever an {@link
+     * AbstractNodeAttributes} object does not have a necessary field.
+     *
+     * If a default is not given, the previous default for that setting is used.
+     */
+    public void setNodeDefaults(NodeDefaults newDefaults)
+    {
+      this.nodeDefaults = this.nodeDefaults.mergeWith(newDefaults);
+    }
+
     /**
      * Sets the attributes associated with the node with the given name.
      */
-    public void setNodeAttributes(String name, NodeAttributes attributes)
+    public void setNodeAttributes(String name, AbstractNodeAttributes<?> attributes)
     {
-      nodeAttributes.put(name, attributes);
+      NodeAttributes mergedAttributes = mergeAttributes(attributes, nodeDefaults);
+      nodeAttributes.put(name, mergedAttributes);
     }
-    
+
+    private static NodeAttributes mergeAttributes(AbstractNodeAttributes<?> attributes, NodeDefaults defaults)
+    {
+      Integer x = attributes.getX();
+      Integer y = attributes.getY();
+      Integer width = attributes.getWidth();
+      Integer height = attributes.getHeight();
+
+      if (width == null)
+        width = defaults.getWidth();
+      if (height == null)
+        height = defaults.getHeight();
+
+      if (x == null)
+        throw new IllegalArgumentException("x is unset and not provided by default attributes " + defaults);
+      if (y == null)
+        throw new IllegalArgumentException("y is unset and not provided by default attributes " + defaults);
+      if (width == null)
+        throw new IllegalArgumentException("width is unset and not provided by default attributes " + defaults);
+      if (height == null)
+        throw new IllegalArgumentException("height is unset and not provided by default attributes " + defaults);
+
+      return new NodeAttributes(x, y, width, height);
+    }
+
     /**
      * Sets the attributes associated with the edge labeled {@code label}.
      *
@@ -236,7 +281,7 @@ class GraphInformation
     {
       edgeAttributes.put(label, attributes);
     }
-    
+
     /**
      * Returns a GraphInformation object with the attributes that have been added to
      * this {@code Builder}.
@@ -247,11 +292,62 @@ class GraphInformation
     {
       if (!areGraphAttributesSet())
         throw new IllegalStateException("graph attributes not yet set");
-      
+
       return new GraphInformation(graphAttributes, nodeAttributes, edgeAttributes);
     }
   }
-  
+
+  /**
+   * Defines an immutable object that stores the default attributes for a node.
+   * <p>
+   * A null reference indicates that there is no default value for a given
+   * attribute.
+   */
+  public static class NodeDefaults
+  {
+    private final /*@Nullable*/ Integer width;
+    private final /*@Nullable*/ Integer height;
+
+    public NodeDefaults(/*@Nullable*/ Integer width, /*@Nullable*/ Integer height)
+    {
+      this.width = width;
+      this.height = height;
+    }
+
+    public /*@Nullable*/ Integer getWidth()
+    {
+      return this.width;
+    }
+
+    public /*@Nullable*/ Integer getHeight()
+    {
+      return this.height;
+    }
+
+    /**
+     * Returns a new {@code NodeDefaults} object equivalent to {@code
+     * newDefaults}, but with any {@code null} field replaced with its value in
+     * this object
+     */
+    public NodeDefaults mergeWith(NodeDefaults newDefaults)
+    {
+      /*@Nullable*/ Integer width = newDefaults.getWidth();
+      /*@Nullable*/ Integer height = newDefaults.getHeight();
+      if (width == null)
+        width = this.getWidth();
+      if (height == null)
+        height = this.getHeight();
+
+      return new NodeDefaults(width, height);
+    }
+
+    @Override
+    public String toString()
+    {
+      return "NodeDefaults<width=" + getWidth() + ", height=" + getHeight() + ">";
+    }
+  }
+
   /**
    * An immutable record type that stores the width and the height of a
    * Graphviz graph in hundredths of points
@@ -260,13 +356,13 @@ class GraphInformation
   {
     private final int width;
     private final int height;
-    
+
     public GraphAttributes(int width, int height)
     {
       this.width = width;
       this.height = height;
     }
-    
+
     /**
      * Returns the width of the graph.
      */
@@ -274,7 +370,7 @@ class GraphInformation
     {
       return width;
     }
-    
+
     /**
      * Returns the height of the graph.
      */
@@ -282,103 +378,100 @@ class GraphInformation
     {
       return height;
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object other)
     {
-      if (other instanceof GraphAttributes)
-      {
-        GraphAttributes g = (GraphAttributes) other;
-        
-        return this.getHeight() == g.getHeight()
-            && this.getWidth() == g.getWidth();
-      }
-      else
-      {
+      if (!(other instanceof GraphAttributes))
         return false;
-      }
+
+      GraphAttributes g = (GraphAttributes) other;
+
+      return this.getHeight() == g.getHeight()
+          && this.getWidth() == g.getWidth();
     }
-    
+
     @Override
     public int hashCode()
     {
       return width * 97 + height;
     }
-    
+
     @Override
     public String toString()
     {
       return "width=" + getWidth() + ";height=" + getHeight();
     }
   }
-  
+
   /**
    * An immutable record type containing attributes of a particular node
    */
-  public static class NodeAttributes
+  protected static abstract class AbstractNodeAttributes<E extends /*@Nullable*/ Integer>
   {
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
-    
-    public NodeAttributes(int x, int y, int width, int height)
+    private final E x;
+    private final E y;
+    private final E width;
+    private final E height;
+
+    public AbstractNodeAttributes(E x, E y, E width, E height)
     {
       this.x = x;
       this.y = y;
       this.width = width;
       this.height = height;
     }
-    
+
     /**
      * Returns the x coordinate of the center of this node, in hundredths of points.
      */
-    public int getX()
+    public E getX()
     {
       return x;
     }
-    
+
     /**
      * Returns the y coordinate of the center of this node, in hundredths of points.
      */
-    public int getY()
+    public E getY()
     {
       return y;
     }
-    
+
     /**
      * Returns the width of this node, in hundredths of points.
      */
-    public int getWidth()
+    public E getWidth()
     {
       return width;
     }
-    
+
     /**
      * Returns the height of this node, in hundredths of points.
      */
-    public int getHeight()
+    public E getHeight()
     {
       return height;
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object other)
     {
-      if (other instanceof NodeAttributes)
+      if (other instanceof AbstractNodeAttributes)
       {
-        NodeAttributes g = (NodeAttributes) other;
-        
-        return this.getX() == g.getX() && this.getY() == g.getY()
-            && this.getHeight() == g.getHeight()
-            && this.getWidth() == g.getWidth();
+        AbstractNodeAttributes<?> g = (AbstractNodeAttributes<?>) other;
+
+        return this.getX().equals(g.getX())
+            && this.getY().equals(g.getY())
+            && this.getHeight().equals(g.getHeight())
+            && this.getWidth().equals(g.getWidth());
       }
       else
       {
         return false;
       }
     }
-    
+
     @Override
     public int hashCode()
     {
@@ -391,7 +484,7 @@ class GraphInformation
       hashCode += getHeight();
       return hashCode;
     }
-    
+
     @Override
     public String toString()
     {
@@ -399,7 +492,23 @@ class GraphInformation
           ";height=" + getHeight();
     }
   }
-  
+
+  public static class NodeAttributes extends AbstractNodeAttributes<Integer>
+  {
+    public NodeAttributes(Integer x, Integer y, Integer width, Integer height)
+    {
+      super(x, y, width, height);
+    }
+  }
+
+  public static class NullableNodeAttributes extends AbstractNodeAttributes</*@Nullable*/ Integer>
+  {
+    public NullableNodeAttributes(/*Nullable*/ Integer x, /*Nullable*/ Integer y, /*Nullable*/ Integer width, /*Nullable*/ Integer height)
+    {
+      super(x, y, width, height);
+    }
+  }
+
   /**
    * An immutable record type containing attributes of a particular edge
    */
@@ -411,13 +520,15 @@ class GraphInformation
      * <p>
      * Must have length congruent to 1 (mod 3), as enforced by Graphviz.
      */
-    private final List<Point> controlPoints;
-    
+    private final List<GraphvizPointCoordinate> controlPoints;
+
     private void checkRep()
     {
-      ensure(controlPoints.size() % 3 == 1);
+      ensure(controlPoints.size() % 3 == 1,
+          "Graphviz requires that the number of layout control points (" +
+          controlPoints.size() + ") be congruent to 1 (mod 3)");
     }
-    
+
     /**
      * Constructs a new {@code EdgeAttributes} object.
      * <p>
@@ -425,57 +536,45 @@ class GraphInformation
      * The control points for this edge's b-spline. {@code points.size() % 3}
      * must equal {@code 1}.
      */
-    public EdgeAttributes(List<Point> points)
+    public EdgeAttributes(List<GraphvizPointCoordinate> points)
     {
       if (points.size() % 3 != 1)
         throw new IllegalArgumentException("Size of argument is " +
             points.size() + ". " + points.size() + " % 3 = " +
             (points.size() % 3) + " != 1");
-      
+
       // Creates a new list containing the elements in points, where the only
       // view on it is an unmodifiable view. In effect, make it immutable.
-      this.controlPoints = Collections.unmodifiableList(new ArrayList<Point>(points));
-      
+      this.controlPoints = Collections.unmodifiableList(new ArrayList<GraphvizPointCoordinate>(points));
+
       checkRep();
     }
-    
-    public Point getPoint(int index)
+
+    public GraphvizPointCoordinate getCoordinates(int index)
     {
       checkBounds(index);
       return controlPoints.get(index);
     }
-    
-    public int getX(int index)
-    {
-      checkBounds(index);
-      return controlPoints.get(index).getX();
-    }
-    
-    public int getY(int index)
-    {
-      checkBounds(index);
-      return controlPoints.get(index).getY();
-    }
-    
+
     private void checkBounds(int index)
     {
       if (index >= controlPoints.size())
         throw new IndexOutOfBoundsException("index " + index + " >= size ("
             + controlPoints.size() + ")");
     }
-    
+
     public int controlPointCount()
     {
       return controlPoints.size();
     }
-    
+
     @Override
     public boolean equals(/*@Nullable*/ Object o)
     {
       if (o instanceof EdgeAttributes)
       {
         EdgeAttributes e = (EdgeAttributes) o;
-        
+
         return this.controlPoints.equals(e.controlPoints);
       }
       else
@@ -483,58 +582,11 @@ class GraphInformation
         return false;
       }
     }
-    
+
     @Override
     public int hashCode()
     {
       return controlPoints.hashCode();
-    }
-  }
-  
-  /**
-   * An immutable record type representing a 2D point.
-   * <p>
-   * Stores integer x and y values that are values in hundredths of points.
-   */
-  public static class Point
-  {
-    private final int x;
-    private final int y;
-    
-    public Point(int x, int y)
-    {
-      this.x = x;
-      this.y = y;
-    }
-    
-    public int getY()
-    {
-      return y;
-    }
-    
-    public int getX()
-    {
-      return x;
-    }
-    
-    @Override
-    public boolean equals(/*@Nullable*/ Object o)
-    {
-      if (o instanceof Point)
-      {
-        Point p = (Point) o;
-        return this.y == p.y && this.x == p.x;
-      }
-      else
-      {
-        return false;
-      }
-    }
-    
-    @Override
-    public int hashCode()
-    {
-      return x * 31 + y;
     }
   }
 }

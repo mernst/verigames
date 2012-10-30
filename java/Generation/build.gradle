@@ -1,0 +1,33 @@
+//This script inherits many settings from java/build.gradle
+sourceSets {
+	main {
+		scala {
+			srcDir 'src'
+		}
+
+		java {
+			srcDir 'src'
+		}
+
+        output.classesDir "bin"
+	   	compileClasspath += files(new File(project(':Translation').projectDir, 'bin/classes/main'))
+	}
+}
+
+buildDir = 'bin'
+
+tasks.compileJava {
+	options.forkOptions.jvmArgs += '-J-Djsr308_imports=checkers.interning.quals.*:checkers.regex.quals.*:checkers.signature.quals.*:checkers.compilermsgs.quals.*'
+	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values + 
+												 ':Translation:compileJava' 
+											     ':Translation:compileScala'
+	tasks.compileJava.taskDependencies.values = compileJava.taskDependencies.values + 
+												 ':Translation:compileJava' 
+											     ':Translation:compileScala'
+}
+
+// IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely 
+// recursive jar task that will fill up your hard drive (eventually)
+tasks.jar {
+	exclude("dependency-cache", "libs", "tmp")
+}

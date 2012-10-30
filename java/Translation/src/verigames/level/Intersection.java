@@ -4,6 +4,10 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An intersection between {@link Chute}s. Mutable until construction is
  * finished.
@@ -232,7 +236,7 @@ public class Intersection extends verigames.graph.Node<Chute>
   {
     if (kind == Kind.SUBBOARD)
       throw new IllegalArgumentException(
-          "intersectionFactory passed Kind.SUBNETWORK. Use subnetworkFactory instead.");
+          "intersectionFactory passed Kind.SUBBOARD. Use subboardFactory instead.");
     else if (kind == Kind.BALL_SIZE_TEST)
       return new BallSizeTest();
     else
@@ -289,7 +293,7 @@ public class Intersection extends verigames.graph.Node<Chute>
    *
    * @param kind
    */
-  protected boolean checkIntersectionKind(Kind kind) /*@Raw*/
+  protected boolean checkIntersectionKind(/*>>> @Raw Intersection this,*/ Kind kind)
   {
     // this implementation supports every Intersection kind except for
     // SUBBOARD and BALL_SIZE_TEST
@@ -324,7 +328,10 @@ public class Intersection extends verigames.graph.Node<Chute>
    * this {@code Intersection}.<p>
    *
    * Returns the port IDs in the order in which they should appear in XML. This
-   * is typically alphabetical order, but is not always.
+   * is typically alphabetical order, but is not always.<p>
+   *
+   * In particular, the {@link BallSizeTest} subclass implements a different
+   * order for output port IDs
    */
   @Override
   public List<String> getOutputIDs()
