@@ -212,14 +212,8 @@ public class BoardLayout
 
     Kind startKind = start.getIntersectionKind();
 
-    double startHeight;
-    // TODO update to include GET node once the rest of layout behaves properly
-    // with it
-    if (startKind == SUBBOARD)
-      startHeight = getIntersectionHeight(SUBBOARD);
-    else
-      startHeight = 0;
-    
+    double startHeight = getIntersectionHeight(startKind);
+
     // the place where the edge should start is the y coordinate of the start
     // node plus its height, because the y coordinate refers to the top of the
     // node.

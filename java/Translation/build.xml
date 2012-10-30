@@ -89,6 +89,7 @@
 
   <target name="test.layout">
     <copy file="${test}/verigames/layout/levelWorld.expected.xml" todir="${bin}/verigames/layout"/>
+    <copy file="${test}/verigames/layout/GETLayoutTest.expected.xml" todir="${bin}/verigames/layout"/>
     <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/layout">
       <test name="verigames.layout.SpecificationTests"/>
       <test name="verigames.layout.ImplementationTests"/>

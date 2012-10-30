@@ -8,17 +8,16 @@ import verigames.level.Intersection.Kind;
  */
 class Misc
 {
-  // TODO add documentation and add support for GET nodes
   protected static double getIntersectionHeight(Kind kind)
   {
     if (!usesPorts(kind))
-      return 0;
-    else if (kind == Kind.SUBBOARD)
+      return 0.0;
+    else if (kind == Kind.SUBBOARD || kind == Kind.GET)
       return 1.46;
     else if (kind == Kind.INCOMING || kind == Kind.OUTGOING)
-      return 0;
+      return 0.0;
     else
-      return 1;
+      return 1.0;
   }
 
   /**
@@ -32,6 +31,6 @@ class Misc
    */
   protected static boolean usesPorts(Kind k)
   {
-    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBBOARD;
+    return k == Kind.INCOMING || k == Kind.OUTGOING || k == Kind.SUBBOARD || k == Kind.GET;
   }
 }
