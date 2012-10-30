@@ -2,6 +2,10 @@ package verigames.level;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * An {@link Intersection} subclass that represents {@link
  * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST} {@link Intersection.Kind
@@ -20,10 +24,10 @@ public class BallSizeTest extends Intersection
 {
   /*
    * Representation Invariant (in addition to the superclass rep invariant):
-   * 
+   *
    * The output chute in port "small" is the "small ball" chute and must be
    * uneditable and narrow
-   * 
+   *
    * The output chute in port "large" is the "big ball" chute and must be
    * uneditable and wide
    */
@@ -36,10 +40,10 @@ public class BallSizeTest extends Intersection
   private static final String SMALL_PORT_OLD = "0";
   @Deprecated
   private static final String LARGE_PORT_OLD = "1";
-  
+
   private static final boolean CHECK_REP_ENABLED =
       verigames.utilities.Misc.CHECK_REP_ENABLED;
-  
+
   /**
    * Checks that the representation invariant holds
    */
@@ -47,23 +51,23 @@ public class BallSizeTest extends Intersection
   protected void checkRep()
   {
     super.checkRep();
-    
+
     if (!CHECK_REP_ENABLED)
       return;
-    
+
     Chute nonNullChute = getNarrowChute();
     if (nonNullChute != null
         && (nonNullChute.isEditable() || !nonNullChute.isNarrow()))
       throw new RuntimeException(
           "BallSizeTest's NonNull chute does not have the proper settings");
-    
+
     Chute nullChute = getWideChute();
     if (nullChute != null && (nullChute.isEditable() || nullChute.isNarrow()))
       throw new RuntimeException(
           "BallSizeTest's Null chute does not have the proper settings");
-    
+
   }
-  
+
   /**
    * Creates a new {@link Intersection} of {@link Intersection.Kind Kind} {@link
    * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST}
@@ -78,16 +82,16 @@ public class BallSizeTest extends Intersection
    * Returns {@code true} iff {@code kind} is {@link
    * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST}, indicating that this
    * implementation supports only {@code BALL_SIZE_TEST}.
-   * 
+   *
    * @param kind
    */
   @Override
-  protected boolean checkIntersectionKind(/*@Raw*/ BallSizeTest this, Kind kind)
+  protected boolean checkIntersectionKind(/*>>> @Raw BallSizeTest this,*/ Kind kind)
   {
     // this implementation supports only BALL_SIZE_TEST
     return kind == Kind.BALL_SIZE_TEST;
   }
-  
+
   /**
    * Returns {@code true} to indicate that {@code this} is a {@code
    * BallSizeTest}.
@@ -97,7 +101,7 @@ public class BallSizeTest extends Intersection
   {
     return true;
   }
-  
+
   /**
    * Returns {@code this}
    */
@@ -106,7 +110,7 @@ public class BallSizeTest extends Intersection
   {
     return this;
   }
-  
+
   /**
    * Returns the {@link Chute} (or {@code null} if none exists) associated with
    * the null branch of this test. That is, in the game, after reaching this
@@ -117,7 +121,7 @@ public class BallSizeTest extends Intersection
   {
     return getOneOfOutput(LARGE_PORT, LARGE_PORT_OLD);
   }
-  
+
   /**
    * Sets {@code chute} to the null branch<br/>
    * <br/>
@@ -139,7 +143,7 @@ public class BallSizeTest extends Intersection
     super.setOutput(chute, LARGE_PORT);
     checkRep();
   }
-  
+
   /**
    * Returns the {@link Chute} (or {@code null} if none exists) associated with
    * the not-null branch of this test. That is, in the game, after reaching
@@ -182,14 +186,14 @@ public class BallSizeTest extends Intersection
     if (!chute.isNarrow())
       throw new IllegalArgumentException(
           "Chute passed to setNarrowChute must be narrow");
-    
+
     super.setOutput(chute, SMALL_PORT);
     checkRep();
   }
-  
+
   /**
    * {@inheritDoc}
-   * 
+   *
    * @param port
    * The output port to which {@code output} will be attached. Must be "small"
    * or "large".<p>

@@ -4,6 +4,10 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+/*>>>
+import checkers.nullness.quals.*;
+*/
+
 /**
  * A mutable graph structure capable of storing data in both the edges and the
  * nodes. It keeps track of the specific node ports to which edges attach.
@@ -322,7 +326,7 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
      * cycles. If it fails, there are cycles. Runs in O(n+e) time, where n is
      * the number of nodes, and e is the number of edges */
 
-    /* Adapted from Data Structures and Algorithm Analysis in Java 2E (Weiss) */ 
+    /* Adapted from Data Structures and Algorithm Analysis in Java 2E (Weiss) */
     // maps from node to its indegree
     Map<NodeType, Integer> indegreeMap = getIndegrees();
 

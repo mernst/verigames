@@ -3,12 +3,10 @@ package verigames.layout;
 
 import java.io.PrintStream;
 
-import verigames.graph.Edge;
 import verigames.graph.Node;
 import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
-import verigames.level.Intersection.Kind;
 import verigames.utilities.Printer;
 
 /**
@@ -30,7 +28,7 @@ import verigames.utilities.Printer;
  * {@link Intersection}s and a {@code Printer} for {@link Chute}s.
  * </li>
  * </ul>
- * 
+ *
  * @author Nathaniel Mote
  */
 abstract class AbstractDotPrinter extends Printer<Board, Void>
@@ -41,14 +39,14 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
    * <p>
    * Included for use in subclasses
    *
-   * 
+   *
    * @param n
    */
   protected static int getMaxPorts(Node<?> n)
   {
     return Math.max(n.getInputIDs().size(), n.getOutputIDs().size());
   }
-    
+
   /**
    * The {@link Printer} used for printing {@link Intersection}s.
    */
@@ -57,7 +55,7 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
    * The {@link Printer} used for printing {@link Chute}s.
    */
   private final Printer<Chute, Board> edgePrinter;
-  
+
   /**
    * Stores whether the graph currently being printed is a directed graph.
    *
@@ -66,7 +64,7 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
    * and ensures that each call to print has a consistent edgeop, for example.
    */
   private boolean isDigraph;
-  
+
   /**
    * Constructs a new GraphvizPrinter.
    *
@@ -82,10 +80,10 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
     this.nodePrinter = nodePrinter;
     this.edgePrinter = edgePrinter;
   }
-  
+
   /**
    * {@inheritDoc}
-   * 
+   *
    * @param b
    * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
    */
@@ -94,17 +92,17 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
   {
     if (b.underConstruction())
       throw new IllegalArgumentException("b.underConstruction()");
-    
+
     // set the field isDigraph so that the method does not need to be called
     // again during printing
     this.isDigraph = isDigraph(b);
-    
+
     super.print(b, out, data);
   }
-  
+
   /**
    * {@inheritDoc}
-   * 
+   *
    * @param b
    * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
    */
@@ -121,14 +119,14 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
       graphKind = "graph";
 
     out.println(graphKind + " {");
-    
+
     out.println("node [" + nodeSettings(b) + "];");
-    
+
     out.println("edge [" + edgeSettings(b) + "];");
-    
+
     out.println("graph [" + graphSettings(b) + "];");
   }
-  
+
   /**
    * Returns {@code true} iff the {@link verigames.level.Board Board} should be printed
    * as a directed graph.
@@ -139,28 +137,28 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
   // isDigraph is inconsistent (i.e. returns different values for the same
   // {@code Board}).
   protected abstract boolean isDigraph(Board b);
-  
+
   /**
    * Returns the {@code String} listing the default settings for a node in the
    * printed graph, or an empty {@code String} if no settings are to be defined.
    */
   protected abstract String nodeSettings(Board b);
-  
+
   /**
    * Returns the {@code String} listing the default settings for a edge in the
    * printed graph, or an empty {@code String} if no settings are to be defined.
    */
   protected abstract String edgeSettings(Board b);
-  
+
   /**
    * Returns the {@code String} listing the settings for the printed graph, or
    * an empty {@code String} if no settings are to be defined.
    */
   protected abstract String graphSettings(Board b);
-  
+
   /**
    * {@inheritDoc}
-   * 
+   *
    * @param b
    * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
    */
@@ -168,13 +166,13 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
   protected void printMiddle(Board b, PrintStream out, Void data)
   {
     printNodes(b, out);
-    
+
     printEdges(b, out);
   }
-  
+
   /**
    * Prints {@code b}'s nodes to {@code out} in the DOT language
-   * 
+   *
    * @param b
    * @param out
    */
@@ -185,10 +183,10 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
       nodePrinter.print(n, out, b);
     }
   }
-  
+
   /**
    * Prints {@code b}'s edges to {@code out} in the DOT language
-   * 
+   *
    * @param b
    * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
    * @param out
@@ -200,10 +198,10 @@ abstract class AbstractDotPrinter extends Printer<Board, Void>
       edgePrinter.print(e, out, b);
     }
   }
-  
+
   /**
    * {@inheritDoc}
-   * 
+   *
    * @param b
    * {@link verigames.level.Board#underConstruction() b.underConstruction()} must be false.
    */

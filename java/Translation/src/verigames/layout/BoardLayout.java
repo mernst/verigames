@@ -232,13 +232,13 @@ public class BoardLayout
     List<GameCoordinate> oldLayout = edge.getLayout();
     double oldStart = oldLayout.get(0).getY();
     double oldEnd = oldLayout.get(oldLayout.size() - 1).getY();
-    
+
     // figure out the scale factor and the offset for the linear transformation
     double factor = (end - start) / (oldEnd - oldStart);
     double offset = start - factor * oldStart;
 
     List<GameCoordinate> newLayout = new ArrayList<GameCoordinate>();
-    
+
     // loop through and transform each y coordinate
     for (GameCoordinate point : oldLayout)
     {
