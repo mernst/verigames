@@ -18,6 +18,12 @@ import xml.etree.ElementTree as ET
 #			"trusted": ["trusted.TrustedChecker", "trusted.TrustedVisitor"],
 #			"foo": ["foo.FooChecker", "foo.FooVisitor"] }
 #
+# 3) create an entry in 'solverArgs' which states where to find its GameSolver
+#
+#	solverArgs = {"nninf": ["nninf.NninfGameSolver"],
+#			"trusted" : ["trusted.TrustedGameSolver"],
+#			"foo": ["foo.FooGameSolver"] }
+#
 #Now you can call it by using:
 #
 #	python commandTest.py -c foo
