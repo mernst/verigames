@@ -14,7 +14,9 @@ public class TrustedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Trust
     public TrustedAnnotatedTypeFactory(TrustedChecker checker,
             CompilationUnitTree root) {
         super(checker, root);
-        postInit();
+        if(root != null && this.checker.currentPath != null) {
+        	postInit();
+        }
     }
 
     @Override
