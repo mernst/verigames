@@ -1,33 +1,121 @@
+def env         = System.getenv()
+def jsr308Dir   = env["JSR308"]
+def checkersDir = env["CHECKERS"]
+
 //This script inherits many settings from java/build.gradle
 sourceSets {
-	main {
-		scala {
-			srcDir 'src'
-		}
+    main {
+        scala {
+            srcDir 'src'
+        }
 
-		java {
-			srcDir 'src'
-		}
+        java {
+            srcDir 'src'
+        }
 
         output.classesDir "bin"
-	   	compileClasspath += files(new File(project(':Translation').projectDir, 'bin/classes/main'))
-	}
+        compileClasspath += files(new File(project(':Translation').projectDir, 'bin/classes/main'))
+        runtimeClasspath += compileClasspath
+    }
 }
 
 buildDir = 'bin'
 
 tasks.compileJava {
-	options.forkOptions.jvmArgs += '-J-Djsr308_imports=checkers.interning.quals.*:checkers.regex.quals.*:checkers.signature.quals.*:checkers.compilermsgs.quals.*'
-	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values + 
-												 ':Translation:compileJava' 
-											     ':Translation:compileScala'
-	tasks.compileJava.taskDependencies.values = compileJava.taskDependencies.values + 
-												 ':Translation:compileJava' 
-											     ':Translation:compileScala'
+    options.forkOptions.jvmArgs += '-J-Djsr308_imports=checkers.interning.quals.*:checkers.regex.quals.*:checkers.signature.quals.*:checkers.compilermsgs.quals.*'
+    tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values + 
+                                                 ':Translation:compileJava' 
+                                                 ':Translation:compileScala'
+    tasks.compileJava.taskDependencies.values = compileJava.taskDependencies.values + 
+                                                 ':Translation:compileJava' 
+                                                 ':Translation:compileScala'
 }
 
 // IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely 
 // recursive jar task that will fill up your hard drive (eventually)
 tasks.jar {
-	exclude("dependency-cache", "libs", "tmp")
+    exclude("dependency-cache", "libs", "tmp")
+}
+
+//Properties used by the infer task (see the description in infer)
+def infCheckerKey = 'infChecker'
+def infArgsKey    = 'infArgs'
+def debugInfKey   = 'debugInf'
+
+class CheckerDef {
+	//how the checker is specified on the command line
+    public final String command;
+    
+    //fully qualified checker class name
+    public final String checker;
+    
+    //fully qualified visitor class name
+    public final String visitor;
+    
+    //fully qualified solver class name
+    public final String solver;
+    
+    CheckerDef(command, checker, visitor, solver) {
+        this.command = command;
+        this.checker = checker;
+        this.visitor = visitor;
+        this.solver  = solver;
+    }
+}
+
+//Current checkers that are supported
+//A map from checkerDef.command : checkerDef 
+def checkerMap = [
+    new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver'    ),
+    new CheckerDef('trusted',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver')
+].collectEntries{[it.command, it]} 
+
+tasks.add(name:'infer', type : JavaExec ) {
+  	description = 'Runs an inference checker over the specified Java files.  Use as follows:\n'            +
+  				  "\tgradle infer -P $infCheckerKey=<checkerToUse> -P $infArgsKey=\"<srcFiles>\"\n"        +
+  				  "\t$infCheckerKey  - Choose on of [" + checkerMap.keySet().join(", ") + ']\n'            +
+  				  "\t$infArgsKey     - Space separated source files to infer over.  If you specify"        +
+  				                       'more than one file they must be surrounded by quotes(")\n'         +
+  				  "\t$debugInfKey    - An optional parameter, setting it to \"true\" will cause the "      +
+  				  					  'checker to be run with remote debugging enabled.  Default=false. true or false.'
+  				                  
+	def rootProps     = getRootProject().getProperties()
+	def checkerDef    = checkerMap.get( rootProps.get(infCheckerKey) ) ?: checkerMap['nullness'];
+	def inferenceArgs = rootProps.get( infArgsKey ) 
+	def debug         = false
+	if(rootProps.containsKey( debugInfKey ) && rootProps.get( debugInfKey ).equals("true")) {
+		debug = true
+	}
+
+    main      = 'checkers.inference.TTIRun'
+    classpath = sourceSets.main.runtimeClasspath //By default this includes compile time dependencies
+    args      += '--checker'
+    args      += checkerDef.checker
+    args      += '--visitor'
+    args      += checkerDef.visitor
+    args      += '--solver'
+    args      += checkerDef.solver
+    args      += inferenceArgs
+            
+    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/jsr308-all.jar:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
+    if( debug ) {
+        jvmArgs += ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
+    }
+}
+
+tasks.infer.doFirst {
+	def rootProps = getRootProject().getProperties()
+	
+    if ( !rootProps.containsKey( infCheckerKey )) {
+        throw new IllegalArgumentException("You must specify an inference checker to use e.g.:\n\t -P infChecker=<checker to use>");
+    }
+    
+    if ( !checkerMap.containsKey( rootProps.get( infCheckerKey ) )) {
+        throw new IllegalArgumentException("You must specify a valid inference checker to use.  Checker specified=" + rootProps.get("infChecker") + 
+        								   "valid checkers=[ " + checkerMap.keySet().join(", ") + " ]") 
+    }
+    
+    if ( !rootProps.containsKey( infArgsKey ) ) { 
+        throw new IllegalArgumentException("You must specify file arguments to infer over via:\n\t -P infArgs=<File(s) To Infer Over>");
+    }
 }
