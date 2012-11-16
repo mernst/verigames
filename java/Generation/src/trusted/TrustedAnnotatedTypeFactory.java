@@ -14,6 +14,7 @@ public class TrustedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Trust
     public TrustedAnnotatedTypeFactory(TrustedChecker checker,
             CompilationUnitTree root) {
         super(checker, root);
+        postInit();
     }
 
     @Override
