@@ -26,6 +26,9 @@ nice features like dependency resolution). Note:  The exact behavior of these
 scripts will likely be tweaked in the future.  They currently do not support
 tests.
 
+NOTE:  You can always see the documentation of all tasks for a gradle project
+by executing: gradle tasks
+
 Checker Framework Inference gradle compileJava - Compiles BOTH scala and java
 files in the src directory.
 
@@ -55,5 +58,36 @@ Checker-Framework-Inference although this requirement is likely to be relaxed
 in the future.
 
 gradle clean - removes built files including jars
+
+gradle infer - Run an inference checker and generate a game world.
+
+    -P will pass through a parameter to the Gradle project (NOT the JVM or 
+    the task itself).  
+
+    infChecker - indicates the checker to use (the trusted checker in this case)  
+    This parameter currently supports the values "nullness" and "trusted".  To 
+    add another checker you need only to add it to a map that is laid out in 
+    the java/Generation/build.gradle script (it's usage will be obvious).
+
+    infArgs - at this point is just a string that is appended to the invocation 
+    of TTIRun (which launches the checker).  Currently you should put all the 
+    files you want checked in this argument in the following manner: 
+    "file1.java file2.java file3.java", the spaces and quotations are 
+    necessary.  In the future it would be nice to change this to a sourcepath 
+    argument or something more sophisticated but this will get you up and 
+    running for now.
+
+    debugInf - That will cause TTIRun to be executed with the variables:
+    '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    This will let you hook a debugger to port 5005 in order to debug code 
+    executed by verigames.  When I debug I generally use the following 
+    command:
+    
+    gradle --daemon --stacktrace infer -P debugInf=true -P infChecker=trusted 
+           -P infArgs="/Users/jburke/Documents/tmp/Test.java"
+
+    Note:  gradle -daemon will save you a fair bit of time.  I don't use the 
+    gradle --debug flag because that adds a bunch of gradle logging that we 
+    generally don't want to see.
 
 The build.gradle files in Generation and Translation also has similar tasks.
