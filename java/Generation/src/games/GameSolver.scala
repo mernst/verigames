@@ -3,6 +3,7 @@ package games
 import checkers.inference._
 import checkers.util.AnnotationUtils
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.LinkedHashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
 import verigames.level._
@@ -34,7 +35,7 @@ abstract class GameSolver extends ConstraintSolver {
      * The key is the fully-qualified class name and the
      * value is the corresponding level.
      */
-    val classToLevel = new HashMap[String, Level]
+    val classToLevel = new LinkedHashMap[String, Level]
 
     /**
      * We generate one board for every class that contains the field
@@ -42,13 +43,13 @@ abstract class GameSolver extends ConstraintSolver {
      * The key is the fully-qualified class name and the
      * value is the corresponding board.
      */
-    val classToBoard = new HashMap[String, Board]
+    val classToBoard = new LinkedHashMap[String, Board]
 
     /** We generate a separate board for every method within a class.
      * The key is the fully-qualified class name followed by the method
      * signature and the value is the corresponding board.
      */
-    val methToBoard = new HashMap[String, Board]
+    val methToBoard = new LinkedHashMap[String, Board]
 
     /**
      * For each constraint variable we keep a reference to the
@@ -58,12 +59,12 @@ abstract class GameSolver extends ConstraintSolver {
      * the key in the map is a pair of Board and Variable.
      * Output port 0 of the Intersection has to be free.
      */
-    val boardNVariableToIntersection = new HashMap[(Board, AbstractVariable), Intersection]
+    val boardNVariableToIntersection = new LinkedHashMap[(Board, AbstractVariable), Intersection]
 
     /**
      * Mapping from a board to the Intersection that represents the "this" literal.
      */
-    val boardToSelfIntersection = new HashMap[Board, Intersection]
+    val boardToSelfIntersection = new LinkedHashMap[Board, Intersection]
 
 
     def solve(variables: List[Variable],
