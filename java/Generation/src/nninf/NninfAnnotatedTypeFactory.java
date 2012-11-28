@@ -36,6 +36,10 @@ public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfCh
 
         defaults.addAbsoluteDefault(checker.NONNULL,  DefaultLocation.OTHERWISE);
         defaults.addAbsoluteDefault(checker.NULLABLE, DefaultLocation.LOCALS);
+        
+        if(root != null && this.checker.currentPath != null) {
+        	postInit();
+        }
     }
 
     /*
