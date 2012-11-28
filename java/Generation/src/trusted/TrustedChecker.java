@@ -1,6 +1,8 @@
 package trusted;
 
 
+import games.GameChecker;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.util.Elements;
@@ -12,6 +14,7 @@ import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
 import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
+import checkers.types.TypeHierarchy;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
@@ -28,8 +31,7 @@ import com.sun.source.tree.CompilationUnitTree;
  * 
  */
 @TypeQualifiers({ Trusted.class, Untrusted.class })
-public class TrustedChecker extends BaseTypeChecker implements
-        InferenceTypeChecker {
+public class TrustedChecker extends GameChecker {
     public AnnotationMirror UNTRUSTED, TRUSTED;
 
     @Override
@@ -81,14 +83,5 @@ public class TrustedChecker extends BaseTypeChecker implements
     public boolean withCombineConstraints() {
         return false;
     }
-//
-//    @Override
-//    public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
-//        if (sub.getEffectiveAnnotations().isEmpty() ||
-//                sup.getEffectiveAnnotations().isEmpty()) {
-//            // TODO: The super method complains about empty annotations. Prevent this.
-//            return true;
-//        }
-//        return super.isSubtype(sub, sup);
-//    }
+    
 }

@@ -1,5 +1,7 @@
 package nninf;
 
+import games.GameChecker;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.util.Elements;
@@ -23,8 +25,7 @@ import checkers.util.MultiGraphQualifierHierarchy;
 import com.sun.source.tree.CompilationUnitTree;
 
 @TypeQualifiers({ NonNull.class, Nullable.class/*, UnknownKeyFor.class, KeyFor.class*/ })
-public class NninfChecker extends BaseTypeChecker implements
-        InferenceTypeChecker {
+public class NninfChecker extends GameChecker {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
     public void init(ProcessingEnvironment processingEnv) {
