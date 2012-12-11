@@ -257,6 +257,7 @@ abstract class GameSolver extends ConstraintSolver {
 
 
     val ParamInPort     = "inParam"
+    val ParamOutPort    = "outParam"
     val ReceiverInPort  = "inReceiver"
     val ReceiverOutPort = "outReceiver"
     val ReturnOutPort   = "outputReturn"
@@ -359,38 +360,125 @@ abstract class GameSolver extends ConstraintSolver {
             // The input port to use next
             var subboardPort = 0
 
-            { // Connect the receiver to input and output 0
-              val receiverInt = findIntersection(callerBoard, receiver)
+            // to avoid problems with aliased arguments, we split before
+            // connecting each argument, and the next time the aliased argument
+            // is used, we grab the split at the top, instead of pulling it up
+            // from the output
+            val localIntersectionMap = new LinkedHashMap[Slot, Intersection]
+            // stores all of the outputs from this subboard. Because aliased
+            // arguments result in multiple outputs, we need to store a list.
+            val outputMap = new LinkedHashMap[Slot, List[Intersection]]
+            // checks localIntersection map for already-used arguments. If
+            // nothing, uses the regular findIntersection method
+            def localFindIntersection(slot: Slot): Intersection = {
+              localIntersectionMap.get(slot) match {
+                case Some(intersection) => intersection
+                case None => findIntersection(callerBoard, slot)
+              }
+            }
 
-              callerBoard.addEdge(receiverInt, "output", subboard, ReceiverInPort, createChute(receiver))
+            def addToOutputMap(slot: Slot, intersection: Intersection) = {
+              outputMap.get(slot) match {
+                case Some(list) => outputMap.update(slot, intersection::list)
+                case None => outputMap.update(slot, List(intersection))
+              }
+            }
+
+            /*{ // Connect the receiver to input and output 0
+              val receiverIntersection = findIntersection(callerBoard, receiver)
+
+              callerBoard.addEdge(receiverIntersection, "output", subboard, ReceiverInPort, createChute(receiver))
 
               val con = Intersection.factory(Intersection.Kind.CONNECT)
               callerBoard.addNode(con)
               callerBoard.addEdge(subboard, ReceiverOutPort, con, "input", createChute(receiver))
 
               updateIntersection(callerBoard, receiver, con)
-            }
+            }*/
             { // TODO: type arguments
             }
-            { // Connect the arguments as inputs only
-              for (anarg <- args) {
+            { // treat the receiver like any other argument
+              for (anarg <- (receiver::args)) {
                 subboardPort += 1
 
                 // TODO: merge this with RHS of assignment
                 if (isUniqueSlot(anarg)) {
+                  // since this argument was just a literal or something like
+                  // it, it won't be used again, so we'll just connect it all
+                  // the way through and stick an END node at the bottom.
+                  // TODO reduce repetition with else branch
                   val anargInt = findIntersection(callerBoard, anarg)
                   callerBoard.addEdge(anargInt, "output", subboard, ParamInPort + subboardPort, createChute(anarg))
+                  val endIntersection = Intersection.factory(Intersection.Kind.END)
+                  callerBoard.addEdge(subboard, ParamOutPort + subboardPort, Intersection.factory(Intersection.Kind.END), "input", createChute(anarg))
                 } else {
-                  val anargInt = findIntersection(callerBoard, anarg)
+                  val anargInt = localFindIntersection(anarg)
 
+                  // split, so we can use one end of the split to connect any
+                  // other aliased arguments to the subboard, too.
                   val split = Intersection.factory(Intersection.Kind.SPLIT)
                   callerBoard.addNode(split)
 
-                  callerBoard.addEdge(anargInt, "output", split, "input", createChute(anarg))
-                  callerBoard.addEdge(split, "split", subboard, ParamInPort + subboardPort, createChute(anarg))
+                  callerBoard.addEdge(anargInt, "toSplit", split, "input", createChute(anarg))
 
-                  updateIntersection(callerBoard, anarg, split)
+                  callerBoard.addEdge(split, "toSubBoard", subboard, ParamInPort + subboardPort, createChute(anarg))
+
+                  // if this argument is aliased, next time it will connect to
+                  // the split
+                  localIntersectionMap.update(anarg, split)
+
+                  val outputIntersection = Intersection.factory(Intersection.Kind.CONNECT)
+
+                  callerBoard.addNode(outputIntersection)
+                  callerBoard.addEdge(subboard, ParamOutPort + subboardPort, outputIntersection, "input", createChute(anarg))
+                  addToOutputMap(anarg, outputIntersection)
+
+                  //updateIntersection(callerBoard, anarg, split)
                 }
+              }
+
+              // clean up:
+              // - add end nodes to all of the splits above the subboard that
+              //   are unused
+              // - merge any outputs that correspond to the same argument
+              // - call updateIntersection for each argument
+
+              // everything in this map is a split with only one output filled
+              for ((slot, split) <- localIntersectionMap) {
+                val end = Intersection.factory(Intersection.Kind.END)
+                callerBoard.addNode(end)
+                callerBoard.addEdge(split, "toEnd", end, "input", createChute(slot))
+              }
+
+              // Arguments:
+              // - list of intersections
+              // - a factory with which new chutes can be created
+              //
+              // Effects:
+              // adds enough merges to merge the intersections into a single
+              // pipe
+              //
+              // Returns: the single node resulting from this process (which may
+              // be a merge node, or may be another node, if no merges were
+              // needed)
+              //
+              // Mutates: callerBoard
+              def merge(intersections: List[Intersection], chuteFactory: () => Chute): Intersection = intersections match {
+                // if there's only one intersection, just return that one
+                case hd::Nil => hd
+                case first::second::tl => {
+                  val mergeIntersection = Intersection.factory(Intersection.Kind.MERGE)
+                  callerBoard.addNode(mergeIntersection)
+                  callerBoard.addEdge(first, "toMerge", mergeIntersection, "first", chuteFactory())
+                  callerBoard.addEdge(second, "toMerge", mergeIntersection, "second", chuteFactory())
+                  merge(mergeIntersection::tl, chuteFactory)
+                }
+                case Nil => throw new IllegalArgumentException("empty list passed to merge")
+              }
+
+              for ((slot, subboardOutputs) <- outputMap) {
+                val mergedIntersection = merge(subboardOutputs, () => createChute(slot))
+                updateIntersection(callerBoard, slot, mergedIntersection)
               }
             }
             { // Connect the result as output only
@@ -665,9 +753,18 @@ abstract class GameSolver extends ConstraintSolver {
         .replace('[', '-')
     }
 
-    /** For "unique" slots we do not need to create splits, as a new, unique
-     * intersection is generated each time.
+    /**
+     * Indicates whether the given slot is something that can never be referred
+     * to again in the program.
+     *
+     * For example, if the slot is a variable, this will return false, because a
+     * variable can be used numerous times in a single program.
+     *
+     * If it is, for example, a literal integer, this method will return true,
+     * because a literal represents something different each time it is used.
      */
+    // TODO this documentation is still terrible, mostly because I don't think I
+    // completely understand what's going on here.
     def isUniqueSlot(slot: Slot): Boolean = {
       !(slot.isInstanceOf[Variable] || slot == LiteralThis)
     }
