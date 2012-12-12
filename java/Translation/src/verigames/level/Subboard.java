@@ -67,6 +67,8 @@ public class Subboard extends Intersection
   /**
    * Returns {@code subnetworkName}
    */
+  // TODO change to Subboard -- this apparently missed the refactoring a while
+  // ago
   public String getSubnetworkName()
   {
     return subnetworkName;
