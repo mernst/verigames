@@ -548,6 +548,9 @@ abstract class GameSolver extends ConstraintSolver {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
           board.addEdge(lastsect, "output", outgoing, ReturnOutPort, new Chute(cvar.id, cvar.toString()))
+        } else if (cvar.varpos.isInstanceOf[ParameterVP]) {
+          val outgoing = board.getOutgoingNode()
+          board.addEdge(lastsect, "output", outgoing, ParamOutPort + outgoing.getOutputIDs.size(), new Chute(cvar.id, cvar.toString()))
         } else {
           // Everything else simply gets terminated.
           val end = Intersection.factory(Intersection.Kind.END)
