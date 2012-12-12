@@ -30,6 +30,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
   @Override
   public void print(World toPrint, PrintStream out, Void data)
   {
+    toPrint.validateSubboardReferences();
     super.print(toPrint, out, data);
   }
 
