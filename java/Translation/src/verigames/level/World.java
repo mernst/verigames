@@ -110,14 +110,14 @@ public class World
           if (!boardInputs.equals(subboardInputs))
             throw new IllegalStateException(String.format("subboard %s does " +
                 "not have the same input port identifiers as board: subboard " +
-                "has: %s, board has: %s", name, boardInputs.toString(),
-                subboardInputs.toString()));
+                "has: %s, board has: %s", name, subboardInputs.toString(),
+                boardInputs.toString()));
 
           if (!boardOutputs.equals(subboardOutputs))
             throw new IllegalStateException(String.format("subboard %s does " +
                 "not have the same output port identifiers as board: subboard " +
-                "has: %s, board has: %s", name, boardOutputs.toString(),
-                subboardOutputs.toString()));
+                "has: %s, board has: %s", name, subboardOutputs.toString(),
+                boardOutputs.toString()));
         }
       }
     }
