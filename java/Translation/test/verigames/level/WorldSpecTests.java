@@ -7,6 +7,7 @@ import org.junit.*;
 import verigames.level.*;
 
 import java.io.*;
+import java.util.*;
 
 public class WorldSpecTests
 {
@@ -54,8 +55,42 @@ public class WorldSpecTests
     triggerException(w);
   }
 
-  /** returns a board that contains only the given Intersection */
+  @Test(expected = IllegalStateException.class)
+  public void testInconsistentInputPortIdentifiers()
+  {
+    Board first = boardFactory(Intersection.factory(Intersection.Kind.SPLIT), 1, 2, Arrays.asList("1"), Arrays.asList("1", "2"));
+    Board second = boardFactory(Intersection.subboardFactory("name1"), 1, 2, Arrays.asList("one"), Arrays.asList("1", "2"));
+
+    World w = makeWorldWithBoards("name1", first, "name2", second);
+
+    triggerException(w);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testInconsistentOutputPortIdentifiers()
+  {
+    Board first = boardFactory(Intersection.factory(Intersection.Kind.SPLIT), 1, 2, Arrays.asList("1"), Arrays.asList("1", "2"));
+    Board second = boardFactory(Intersection.subboardFactory("name1"), 1, 2, Arrays.asList("1"), Arrays.asList("1", "two"));
+
+    World w = makeWorldWithBoards("name1", first, "name2", second);
+
+    triggerException(w);
+  }
+
   private Board boardFactory(Intersection intersection, int numInPorts, int numOutPorts)
+  {
+    List<String> inPorts = new ArrayList<String>();
+    List<String> outPorts = new ArrayList<String>();
+    for (int i = 0; i < numInPorts; i++)
+      inPorts.add(Integer.toString(i));
+    for (int i = 0; i < numOutPorts; i++)
+      outPorts.add(Integer.toString(i));
+
+    return boardFactory(intersection, numInPorts, numOutPorts, inPorts, outPorts);
+  }
+
+  /** returns a board that contains only the given Intersection */
+  private Board boardFactory(Intersection intersection, int numInPorts, int numOutPorts, List<String> inPorts, List<String> outPorts)
   {
     Board b = new Board();
     Intersection incoming = Intersection.factory(Intersection.Kind.INCOMING);
@@ -67,12 +102,12 @@ public class WorldSpecTests
 
     for (int i = 0; i < numInPorts; i++)
     {
-      String portStr = Integer.toString(i);
+      String portStr = inPorts.get(i);
       b.addEdge(incoming, portStr, intersection, portStr, new Chute());
     }
     for (int i = 0; i < numOutPorts; i++)
     {
-      String portStr = Integer.toString(i);
+      String portStr = outPorts.get(i);
       b.addEdge(intersection, portStr, outgoing, portStr, new Chute());
     }
 

@@ -50,14 +50,16 @@ public class World
   }
 
   /**
-   * Throws IllegalStateException the subboard references aren't consistent.
+   * Throws IllegalStateException if the following conditions are not met:
    *
    * Every board needs to have a unique name.
    *
    * Every subboard needs to refer to an identically named board.
    *
-   * Additionally, every subboard must have the same number of input/output
-   * ports as the board to which it refers
+   * Every subboard must have the same number of input/output
+   * ports as the board to which it refers.
+   *
+   * Every subboard's port identifiers must match those of its referent.
    */
   public void validateSubboardReferences()
   {
@@ -91,19 +93,31 @@ public class World
 
           Board referent = boards.get(name);
 
-          int boardInputs = referent.getIncomingNode().getOutputIDs().size();
-          int boardOutputs = referent.getOutgoingNode().getInputIDs().size();
-          int subboardInputs = s.getInputIDs().size();
-          int subboardOutputs = s.getOutputIDs().size();
+          List<String> boardInputs = referent.getIncomingNode().getOutputIDs();
+          List<String> boardOutputs = referent.getOutgoingNode().getInputIDs();
+          List<String> subboardInputs = s.getInputIDs();
+          List<String> subboardOutputs = s.getOutputIDs();
 
-          if (boardInputs != subboardInputs)
+          if (boardInputs.size() != subboardInputs.size())
             throw new IllegalStateException("subboard " + name + " has " +
-                subboardInputs + " inputs but its referent has " + boardInputs +
-                " inputs");
-          if (boardOutputs != subboardOutputs)
+                subboardInputs.size() + " inputs but its referent has " +
+                boardInputs.size() + " inputs");
+          if (boardOutputs.size() != subboardOutputs.size())
             throw new IllegalStateException("subboard " + name + " has " +
-                subboardOutputs + " outputs but its referent has " +
-                boardOutputs + " outputs");
+                subboardOutputs.size() + " outputs but its referent has " +
+                boardOutputs.size() + " outputs");
+
+          if (!boardInputs.equals(subboardInputs))
+            throw new IllegalStateException(String.format("subboard %s does " +
+                "not have the same input port identifiers as board: subboard " +
+                "has: %s, board has: %s", name, boardInputs.toString(),
+                subboardInputs.toString()));
+
+          if (!boardOutputs.equals(subboardOutputs))
+            throw new IllegalStateException(String.format("subboard %s does " +
+                "not have the same output port identifiers as board: subboard " +
+                "has: %s, board has: %s", name, boardOutputs.toString(),
+                subboardOutputs.toString()));
         }
       }
     }
