@@ -38,6 +38,7 @@
     <mkdir dir="${bin}"/>
     <jsr308.javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
+      <compilerarg value="-J-Djsr308_imports=checkers.interning.quals.*:checkers.nullness.quals.*:checkers.regex.quals.*:checkers.signature.quals.*"/>
       <src>
         <pathelement path="${src}"/>
         <pathelement path="${test}"/>

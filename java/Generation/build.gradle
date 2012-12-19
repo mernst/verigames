@@ -73,7 +73,7 @@ def checkerMap = [
 tasks.add(name:'infer', type : JavaExec ) {
   	description = 'Runs an inference checker over the specified Java files.  Use as follows:\n'            +
   				  "\tgradle infer -P $infCheckerKey=<checkerToUse> -P $infArgsKey=\"<srcFiles>\"\n"        +
-  				  "\t$infCheckerKey  - Choose on of [" + checkerMap.keySet().join(", ") + ']\n'            +
+  				  "\t$infCheckerKey  - Choose one of [" + checkerMap.keySet().join(", ") + ']\n'            +
   				  "\t$infArgsKey     - Space separated source files to infer over.  If you specify"        +
   				                       'more than one file they must be surrounded by quotes(")\n'         +
   				  "\t$debugInfKey    - An optional parameter, setting it to \"true\" will cause the "      +
@@ -96,8 +96,9 @@ tasks.add(name:'infer', type : JavaExec ) {
     args      += '--solver'
     args      += checkerDef.solver
     args      += inferenceArgs
-            
-    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/jsr308-all.jar:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
+
+    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/javac.jar:$checkersDir/binary/jdk7.jar:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
+
     if( debug ) {
         jvmArgs += ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']
     }
