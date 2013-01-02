@@ -7,26 +7,27 @@
   <property name="doc" location="doc"/>
   <property environment="env"/>
 
+  <property name="checkers.jar" location="${env.CHECKERS}/binary/checkers.jar"/>
+
   <presetdef name="jsr308.javac">
-    <javac fork="yes">
+    <javac fork="yes" executable="${env.CHECKERS}/binary/javac">
       <!-- JSR308 related compiler arguments -->
       <compilerarg value="-version"/>
       <compilerarg value="-implicit:class"/>
       <compilerarg line="-Awarns -Xmaxwarns 10000"/>
-      <compilerarg value="-J-Xbootclasspath/p:${env.CHECKERS}/binary/jsr308-all.jar"/>
       <compilerarg value="-XDTA:spacesincomments"/>
       <!-- import nullness annotations -->
       <compilerarg value="-J-Djsr308_imports=checkers.nullness.quals.*"/>
       <!-- ^ included so that Eclipse's formatter, which inserts spaces in annotation comments, can still be used -->
       <classpath>
-        <pathelement location="${env.CHECKERS}/checkers.jar"/>
+        <pathelement location="${checkers.jar}"/>
       </classpath>
     </javac>
   </presetdef>
 
   <target name="build">
     <mkdir dir="${bin}"/>
-    <jsr308.javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <src>
         <pathelement path="${src}"/>
@@ -36,7 +37,7 @@
 
   <target name="buildall">
     <mkdir dir="${bin}"/>
-    <jsr308.javac classpath="${env.CHECKERS}/checkers.jar;${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
+    <jsr308.javac classpath="${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" destdir="${bin}" includeAntRuntime="false" debug="true">
       <compilerarg value="-Xlint"/>
       <compilerarg value="-J-Djsr308_imports=checkers.interning.quals.*:checkers.nullness.quals.*:checkers.regex.quals.*:checkers.signature.quals.*"/>
       <src>
@@ -53,7 +54,6 @@
     <jsr308.javac classpath="${lib}/junit-4.8.2.jar;${lib}/xom-1.2.7.jar" srcdir="${src}" destdir="${bin}" excludes="**/sampleLevels/**,**/BuildingTools.java" includeAntRuntime="false">
       <compilerarg line="-processor checkers.nullness.NullnessChecker"/>
       <compilerarg value="-Astubs=checker-stubs"/>
-      <compilerarg value="-Xbootclasspath/p:${env.CHECKERS}/binary/jdk.jar"/>
       <!-- optional, to not check library bodies: <compilerarg value="-AskipClasses=^(java\.awt\.|javax\.swing\.)"/> -->
     </jsr308.javac>
   </target>
@@ -131,7 +131,7 @@
   <target name="javadoc">
     <javadoc access="public"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
+             classpath="${lib}/junit-4.8.2.jar:${checkers.jar}"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -149,7 +149,7 @@
   <target name="javadoc.protected">
     <javadoc access="protected"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
+             classpath="${lib}/junit-4.8.2.jar:${checkers.jar}"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -167,7 +167,7 @@
   <target name="javadoc.package">
     <javadoc access="package"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
+             classpath="${lib}/junit-4.8.2.jar:${checkers.jar}"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
@@ -185,7 +185,7 @@
   <target name="javadoc.private">
     <javadoc access="private"
              author="true"
-             classpath="${lib}/junit-4.8.2.jar:${env.CHECKERS}/checkers.jar"
+             classpath="${lib}/junit-4.8.2.jar:${checkers.jar}"
              destdir="${doc}"
              nodeprecated="false"
              nodeprecatedlist="false"
