@@ -42,6 +42,48 @@ def infCheckerKey = 'infChecker'
 def infArgsKey    = 'infArgs'
 def debugInfKey   = 'debugInf'
 
+
+//TODO: ALL OF THE CODE FOR JREVERSION AND JREJARNAME IS DUPLICATED FROM CFI
+//Used to determine which version of the jdk<v>.jar to use when building and running
+//Checker Framework Inference. If this "CFI_JRE_VERSION" variable is left unset then it will be
+//determined based on the the version of the currently running JVM
+def jreVersion  = {
+    def envJreVersion = env["CFI_JRE_VERSION"];
+    if(envJreVersion == null) {
+        def jreVersionStr  = System.getProperty("java.version");
+        def matches        = ( jreVersionStr =~ /^(\d\.\d+)\..*$/ )
+
+        final double jreVer;
+        if(matches.matches()) {
+            jreVer = Double.parseDouble(matches.group(1));
+        } else {
+            throw new RuntimeException("Could not determine version from property java.version=" + jreVersionStr);
+        }
+
+        return jreVer
+    } else {
+        return envJreVersion;
+    }
+}.call()
+
+/**
+ * Returns jdk6.jar or jdk7.jar depending on whether or not you are using jre 1.6.x (or earlier) or jre 1.7.x
+ * TODO: This is basically a copy of logic found in CheckerMain (and in Verigames/build.gradle), find a way
+ * TODO: to unify these?
+ */
+def jreJarName = {
+    final String fileName;
+    if(jreVersion == 1.4 || jreVersion == 1.5 || jreVersion == 1.6) {
+        fileName = "jdk6.jar";
+    } else if(jreVersion == 1.7) {
+        fileName = "jdk7.jar";
+    } else {
+        throw new RuntimeException("Unsupported JRE version: " + jreVersion);
+    }
+
+    return fileName;
+}.call()
+
 class CheckerDef {
 	//how the checker is specified on the command line
     public final String command;
@@ -97,7 +139,7 @@ tasks.add(name:'infer', type : JavaExec ) {
     args      += checkerDef.solver
     args      += inferenceArgs
 
-    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/javac.jar:$checkersDir/binary/jdk7.jar:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
+    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/javac.jar:$checkersDir/binary/$jreJarName:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
 
     if( debug ) {
         jvmArgs += ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']

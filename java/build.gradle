@@ -122,8 +122,7 @@ subprojects {
 	  options.compilerArgs = [
 	  	  '-version',
 	      '-implicit:class',
-	      '-Awarns', '-Xmaxwarns', '10000',
-	      "-Xbootclasspath/p:$checkersDir/jdk/jdk.jar"]
+	      '-Awarns', '-Xmaxwarns', '10000']
 	  options.forkOptions.executable="$checkersDir/binary/javac"
 	}
 	
