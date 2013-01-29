@@ -359,16 +359,48 @@ abstract class GameSolver extends ConstraintSolver {
             // The input port to use next
             var subboardPort = 0
 
+            // to avoid problems with aliased arguments, we split before
+            // connecting each argument, and the next time the aliased argument
+            // is used, we grab the split at the top, instead of pulling it up
+            // from the output
+            // TODO integrate this into more than just the receiver, once
+            // arguments flow through boards.
+            val localIntersectionMap = new LinkedHashMap[Slot, Intersection]
+            // stores all of the outputs from this subboard. Because aliased
+            // arguments result in multiple outputs, we need to store a list.
+            val outputMap = new LinkedHashMap[Slot, List[Intersection]]
+            // checks localIntersection map for already-used arguments. If
+            // nothing, uses the regular findIntersection method
+            def localFindIntersection(slot: Slot): Intersection = {
+              localIntersectionMap.get(slot) match {
+                case Some(intersection) => intersection
+                case None => findIntersection(callerBoard, slot)
+              }
+            }
+            def addToOutputMap(slot: Slot, intersection: Intersection) = {
+              outputMap.get(slot) match {
+                case Some(list) => outputMap.update(slot, intersection::list)
+                case None => outputMap.update(slot, List(intersection))
+              }
+            }
+
             { // Connect the receiver to input and output 0
-              val receiverInt = findIntersection(callerBoard, receiver)
+              val receiverIntersection = localFindIntersection(receiver)
 
-              callerBoard.addEdge(receiverInt, "output", subboard, ReceiverInPort, createChute(receiver))
+              // split so that if the argument is aliased, we have something
+              // above the subboard to connect to.
+              val split = Intersection.factory(Intersection.Kind.SPLIT)
+              callerBoard.addNode(split)
+              callerBoard.addEdge(receiverIntersection, "toSplit", split, "input", createChute(receiver))
+              callerBoard.addEdge(split, "toSubboard", subboard, ReceiverInPort, createChute(receiver))
+              localIntersectionMap.update(receiver, split)
 
-              val con = Intersection.factory(Intersection.Kind.CONNECT)
-              callerBoard.addNode(con)
-              callerBoard.addEdge(subboard, ReceiverOutPort, con, "input", createChute(receiver))
+              // pipe the receiver through the subboard
+              val connect = Intersection.factory(Intersection.Kind.CONNECT)
+              callerBoard.addNode(connect)
+              callerBoard.addEdge(subboard, ReceiverOutPort, connect, "input", createChute(receiver))
 
-              updateIntersection(callerBoard, receiver, con)
+              addToOutputMap(receiver, connect)
             }
             { // TODO: type arguments
             }
@@ -378,10 +410,10 @@ abstract class GameSolver extends ConstraintSolver {
 
                 // TODO: merge this with RHS of assignment
                 if (isUniqueSlot(anarg)) {
-                  val anargInt = findIntersection(callerBoard, anarg)
+                  val anargInt = localFindIntersection(anarg)
                   callerBoard.addEdge(anargInt, "output", subboard, ParamInPort + subboardPort, createChute(anarg))
                 } else {
-                  val anargInt = findIntersection(callerBoard, anarg)
+                  val anargInt = localFindIntersection(anarg)
 
                   val split = Intersection.factory(Intersection.Kind.SPLIT)
                   callerBoard.addNode(split)
@@ -389,8 +421,57 @@ abstract class GameSolver extends ConstraintSolver {
                   callerBoard.addEdge(anargInt, "output", split, "input", createChute(anarg))
                   callerBoard.addEdge(split, "split", subboard, ParamInPort + subboardPort, createChute(anarg))
 
+                  // it's a bit of a hack to update both the local and the
+                  // global intersection maps, but it won't be necessary once
+                  // all arguments are piped through
+                  localIntersectionMap.update(anarg, split)
                   updateIntersection(callerBoard, anarg, split)
                 }
+              }
+
+              // clean up:
+              // - add end nodes to all of the splits above the subboard that
+              //   are unused
+              // - merge any outputs that correspond to the same argument
+              // - call updateIntersection for each argument
+
+              // the receiver is currently the only argument that is piped
+              // through and split on the top, so it's the only one that could
+              // have dangling splits above the subboard.
+              val receiverSplit = localIntersectionMap.getOrElse(receiver, null)
+              val end = Intersection.factory(Intersection.Kind.END)
+              callerBoard.addNode(end)
+              callerBoard.addEdge(receiverSplit, "toEnd", end, "input", createChute(receiver))
+
+              // Arguments:
+              // - list of intersections
+              // - a factory with which new chutes can be created
+              //
+              // Effects:
+              // adds enough merges to merge the intersections into a single
+              // pipe
+              //
+              // Returns: the single node resulting from this process (which may
+              // be a merge node, or may be another node, if no merges were
+              // needed)
+              //
+              // Mutates: callerBoard
+              def merge(intersections: List[Intersection], chuteFactory: () => Chute): Intersection = intersections match {
+                // if there's only one intersection, just return that one
+                case hd::Nil => hd
+                case first::second::tl => {
+                  val mergeIntersection = Intersection.factory(Intersection.Kind.MERGE)
+                  callerBoard.addNode(mergeIntersection)
+                  callerBoard.addEdge(first, "toMerge", mergeIntersection, "first", chuteFactory())
+                  callerBoard.addEdge(second, "toMerge", mergeIntersection, "second", chuteFactory())
+                  merge(mergeIntersection::tl, chuteFactory)
+                }
+                case Nil => throw new IllegalArgumentException("empty list passed to merge")
+              }
+
+              for ((slot, subboardOutputs) <- outputMap) {
+                val mergedIntersection = merge(subboardOutputs, () => createChute(slot))
+                updateIntersection(callerBoard, slot, mergedIntersection)
               }
             }
             { // Connect the result as output only
