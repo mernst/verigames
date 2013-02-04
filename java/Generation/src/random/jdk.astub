@@ -1,0 +1,40 @@
+import random.quals.*;
+
+package java.security;
+
+class SecureRandom {
+	public @Random boolean nextBoolean();
+	public @Random float nextFloat();
+	public @Random double nextDouble();
+	public @Random double nextGaussian();
+	public @Random long nextLong();
+	public @Random int nextInt();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,7 +22,6 @@ public class OsTrustedChecker extends TrustedChecker implements
 
     @Override
     protected void setAnnotations() {
-    	System.out.println("OSTRUSTEDCHECKER!!!!");
         final Elements elements = processingEnv.getElementUtils();      //TODO: Makes you think a utils is being returned
 
         UNTRUSTED = AnnotationUtils.fromClass(elements, OsUntrusted.class);
