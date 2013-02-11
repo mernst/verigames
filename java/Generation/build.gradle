@@ -109,7 +109,13 @@ class CheckerDef {
 //A map from checkerDef.command : checkerDef 
 def checkerMap = [
     new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver'    ),
-    new CheckerDef('trusted',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver')
+    new CheckerDef('trusted',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('random',  'random.RandomChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('encrypted',  'encrypted.EncryptedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('filetype',  'filetype.SafeFileTypeChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('hardcoded',  'hardcoded.HardCodedChecker', 'hardcoded.HardCodedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('ostrusted',  'ostrusted.OsTrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('salt',  'salt.HashWithSaltChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
 ].collectEntries{[it.command, it]} 
 
 tasks.add(name:'infer', type : JavaExec ) {
