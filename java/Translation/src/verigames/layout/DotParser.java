@@ -315,7 +315,7 @@ class DotParser
    * Must be a valid, logical line of Graphviz output describing attributes of
    * the graph itself (as oppose to particular edges or nodes).
    */
-  private static /*@Nullable*/ GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
+  private static GraphInformation./*@Nullable*/ GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
   {
     // sample line: '  graph [bb="0,0,216.69,528"];'
 
