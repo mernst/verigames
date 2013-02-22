@@ -35,7 +35,6 @@ class NninfGameSolver extends GameSolver {
               if (sub == LiteralNull) {
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
-            	//println(sup)
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
                 board = variablePosToBoard(supvar.varpos)
