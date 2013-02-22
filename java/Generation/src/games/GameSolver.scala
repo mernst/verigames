@@ -200,7 +200,7 @@ abstract class GameSolver extends ConstraintSolver {
                 val outgoing = getterBoard.getOutgoingNode()
                 val field = Intersection.factory(Intersection.Kind.START_PIPE_DEPENDENT_BALL)
                 getterBoard.addNode(field)
-                getterBoard.addEdge(field, "output", outgoing, InputPort + (1 + genericsOffset(cvar)), new Chute(cvar.id, cvar.toString()))
+                getterBoard.addEdge(field, "output", outgoing, ReturnOutPort, new Chute(cvar.id, cvar.toString()))
               }
 
               // 3. a field setter
@@ -322,14 +322,14 @@ abstract class GameSolver extends ConstraintSolver {
 
                     if (isUniqueSlot(rightslot)) {
                       val rightInt = findIntersection(ctxBoard, rightslot)
-                      ctxBoard.addEdge(rightInt, "output", subboard, ParamInPort + "0", createChute(rightslot))
+                      ctxBoard.addEdge(rightInt, "output", subboard, OutputPort + (1 + genericsOffset(fieldvar)), createChute(rightslot))
                     } else {
                       val rightInt = findIntersection(ctxBoard, rightslot)
                       val split = Intersection.factory(Intersection.Kind.SPLIT)
                       ctxBoard.addNode(split)
 
                       ctxBoard.addEdge(rightInt, "output", split, "input", createChute(rightslot))
-                      ctxBoard.addEdge(split, "split", subboard, ParamInPort + "0", createChute(rightslot))
+                      ctxBoard.addEdge(split, "split", subboard, OutputPort + (1 + genericsOffset(fieldvar)), createChute(rightslot))
 
                       updateIntersection(ctxBoard, rightslot, split)
                     }
@@ -471,7 +471,7 @@ abstract class GameSolver extends ConstraintSolver {
       boardToSelfIntersection foreach { case (board, lastsect) =>
         val outgoing = board.getOutgoingNode()
         val outthis = createThisChute()
-        board.addEdge(lastsect, "output", outgoing, "input", outthis)
+        board.addEdge(lastsect, "output", outgoing, ReceiverOutPort, outthis)
       }
 
       // Finally, deactivate all levels and add them to the world.

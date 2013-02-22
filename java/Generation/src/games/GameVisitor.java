@@ -66,12 +66,19 @@ public class GameVisitor extends InferenceVisitor {
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
         ProcessingEnvironment env = checker.getProcessingEnvironment();
         ExecutableElement mapGet =  TreeUtils.getMethod("java.util.Map", "get", 1, env);
+        /*Element elem = TreeUtils.elementFromUse(node.getMethodSelect()).getEnclosingElement();
+        System.out.println("Elem: " + elem);
+        System.out.println("Kind: " + elem.getKind());
+        if (elem.getKind().isField()) {
+        	System.out.println("inside: " + elem);
+        	logFieldAccess(node);
+        }*/
+        super.visitMethodInvocation(node, p);
         if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
             // TODO: log the call to Map.get.
         } else {
             logMethodInvocation(node);
         }
-        super.visitMethodInvocation(node, p);
         return null;
     }
     
