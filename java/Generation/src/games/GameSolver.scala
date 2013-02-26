@@ -150,10 +150,11 @@ abstract class GameSolver extends ConstraintSolver {
             if (mvar.isInstanceOf[ParameterVP]) {
               // For each parameter, create a CONNECT Intersection.
               // Also for FieldVP, but that's not a InMethodVP...
+              val param = mvar.asInstanceOf[ParameterVP]
               val incoming = board.getIncomingNode()
               val start = Intersection.factory(Intersection.Kind.CONNECT)
               board.addNode(start)
-              board.addEdge(incoming, ParamInPort+incoming.getOutputIDs().size(), start, "input", new Chute(cvar.id, cvar.toString()))
+              board.addEdge(incoming, ParamInPort+param.id, start, "input", new Chute(cvar.id, cvar.toString()))
               boardNVariableToIntersection += ((board, cvar) -> start)
             } else if (mvar.isInstanceOf[NewInMethodVP]) { 
               // For object creations, add a START_WHITE_BALL Intersection.
@@ -374,8 +375,7 @@ abstract class GameSolver extends ConstraintSolver {
             }
             { // Connect the arguments as inputs only
               for (anarg <- args) {
-                subboardPort += 1
-
+                println(anarg)
                 // TODO: merge this with RHS of assignment
                 if (isUniqueSlot(anarg)) {
                   val anargInt = findIntersection(callerBoard, anarg)
@@ -391,6 +391,7 @@ abstract class GameSolver extends ConstraintSolver {
 
                   updateIntersection(callerBoard, anarg, split)
                 }
+                subboardPort += 1
               }
             }
             { // Connect the result as output only
