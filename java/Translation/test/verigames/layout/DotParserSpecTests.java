@@ -57,7 +57,7 @@ public class DotParserSpecTests
   @Test
   public void simpleTest()
   {
-    assertEquals(testOutput, DotParser.parse(testInput));
+    assertEquals(testOutput, new DotParser().parse(testInput));
   }
   
   /**
@@ -82,6 +82,6 @@ public class DotParserSpecTests
     
     GraphInformation output = builder.build();
     
-    assertEquals(output, DotParser.parse(input));
+    assertEquals(output, new DotParser().parse(input));
   }
 }
