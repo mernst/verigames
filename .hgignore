@@ -10,6 +10,9 @@ java/Generation/.cache
 java/Generation/.scala_dependencies
 java/build
 java/verigames.jar
+java/test/.*/actual_.*xml
+java/test/.*/actual_.*txt
+java/test/.*/diff_.*txt
 
 papers/2012-ftfjp/2012-pipejam.bbl
 papers/2012-ftfjp/2012-pipejam.dvi
