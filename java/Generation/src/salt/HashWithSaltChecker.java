@@ -2,7 +2,7 @@ package salt;
 
 import trusted.TrustedChecker;
 import salt.quals.OneWayHashWithSalt;
-import salt.quals.OneWayHash;
+import salt.quals.MaybeHash;
 
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
@@ -16,7 +16,7 @@ import javax.lang.model.util.Elements;
  * [25] CWE-759  Use of a One-Way Hash without a Salt
  */
 
-@TypeQualifiers({ OneWayHashWithSalt.class, OneWayHash.class })
+@TypeQualifiers({ OneWayHashWithSalt.class, MaybeHash.class })
 public class HashWithSaltChecker extends TrustedChecker implements
         InferenceTypeChecker {
 
@@ -24,7 +24,7 @@ public class HashWithSaltChecker extends TrustedChecker implements
     protected void setAnnotations() {
         final Elements elements = processingEnv.getElementUtils();      //TODO: Makes you think a utils is being returned
 
-        UNTRUSTED = AnnotationUtils.fromClass(elements, OneWayHash.class);
+        UNTRUSTED = AnnotationUtils.fromClass(elements, MaybeHash.class);
         TRUSTED   = AnnotationUtils.fromClass(elements, OneWayHashWithSalt.class);
     }
 }

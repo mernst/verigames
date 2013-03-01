@@ -109,7 +109,9 @@ class CheckerDef {
 //A map from checkerDef.command : checkerDef 
 def checkerMap = [
     new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver'    ),
+    new CheckerDef('nullnessTest', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'test.TestGameSolver'    ),
     new CheckerDef('trusted',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('trustedTest',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'test.TestGameSolver'),
     new CheckerDef('random',  'random.RandomChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('encrypted',  'encrypted.EncryptedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('filetype',  'filetype.SafeFileTypeChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
