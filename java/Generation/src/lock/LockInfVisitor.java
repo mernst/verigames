@@ -46,13 +46,13 @@ public class LockInfVisitor extends GameVisitor {
 		super(checker, root, infer);
 
 		this.lockChecker = lockChecker;
-		this.lockatypeFactory = (LockInfAnnotatedTypeFactory) atypeFactory;
+		this.lockatypeFactory = (LockInfAnnotatedTypeFactory) lockChecker.createFactory(root);
 	}
 
 
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
-        AnnotatedTypeMirror type = lockatypeFactory.getAnnotatedType(node);
+        AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node);
         String lock = objectGuardedByLock(type);
         if ( "this".equals(lock)) {
         	lock = receiver(node);
@@ -65,7 +65,7 @@ public class LockInfVisitor extends GameVisitor {
 
     @Override
     public Void visitMemberSelect(MemberSelectTree node, Void p) {
-        AnnotatedTypeMirror type = lockatypeFactory.getAnnotatedType(node);
+        AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node);
         String lock = objectGuardedByLock(type);
         if ( "this".equals(lock)) {
         	lock = receiver(node);

@@ -118,6 +118,7 @@ def checkerMap = [
     new CheckerDef('hardcoded',  'hardcoded.HardCodedChecker', 'hardcoded.HardCodedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('ostrusted',  'ostrusted.OsTrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('salt',  'salt.HashWithSaltChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
+    new CheckerDef('lock',  'lock.LockInfChecker', 'lock.LockInfVisitor', 'lock.LockInfGameSolver'),
 ].collectEntries{[it.command, it]} 
 
 tasks.add(name:'infer', type : JavaExec ) {
