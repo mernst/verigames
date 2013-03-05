@@ -51,7 +51,7 @@ If a player cannot complete a level, he has the option to place a buzz saw. A
 buzz saw is placed on a pipe, and it transforms all large balls that flow
 through it into small balls. This allows a player to remove trouble spots.
 However, because this is not a real solution, players are discouraged from using
-more buzz saws than necessary.
+more buzz saws than necessary by penalizing them with lower scores.
 
 The effect of the buzz saw mechanic is that a player can identify situations in
 which a solution is impossible (or difficult) and that information can be
@@ -299,7 +299,62 @@ classes much cleaner.
 
 e. Unsolvable games
 
-buzzsaws
+Ideally, a game will conclude when the player provides a solution to it. This
+translates directly to a proof of correctness for the source program, as it
+provides annotations that will cause a type checker to succeed. For example, if
+a user solves a game based on the nullness type system, the solution will
+translate back to nullness annotations for the source program. The nullness
+checker will succeed when typechecking this annotated source, proving that the
+program cannot throw a NullPointerException at runtime.
+
+Often, however, the player is unable to solve the game. The player indicates
+this by placing a buzz saw on a pipe. The buzz saw turns large balls into small
+balls, so a wide pipe with a buzz saw can flow into a narrow pipe.
+
+Games that are impossible to solve are caused by one of two things:
+
+The first is the case where the conflict(s) that they discover correspond to
+defects in the code that could lead to a failure at runtime. For the nullness
+type system, this means that a NullPointerException could be thrown at runtime.
+Catching defects such as these is the purpose of a type system.
+
+The second is the case where the conflict(s) that they discover do not
+correspond to defects that could lead to a runtime failure. Rather, the
+conflicts arise simply because the type system is not sufficiently expressive to
+typecheck the program. Fundamentally, all type systems must reject some correct
+programs, so this case will inevitably arise. Of the three possible game
+outcomes, this is the least useful.
+
+f. Practicality and Applications
+
+As stated above, there are three possible conclusions to a game:
+
+(1) The player provides a complete solution.
+
+(2) The player cannot solve the game, and this corresponds to a defect.
+
+(3) The player cannot solve the game, but this is only due to the type system's
+lack of expressiveness, and the code is, in reality, correct.
+
+Practically speaking, we do not believe that the game will be particularly
+useful in cases (1) and (3). In the case where a solution can be found, we
+believe that users will have no advantage over existing type inference
+algorithms. In the third case, despite the fact that the type system cannot
+prove a program correct, no real defect is present, so no real benefit is gained
+from the analysis.
+
+(2) is the interesting case. Existing type inference algorithms do not provide
+particularly useful output when a solution cannot be found, so it can be
+difficult to determine exactly where the problem lies.
+
+By placing buzz saws strategically, we expect that humans will be able to
+provide some useful information about the location of bugs. When a player places
+a buzz saw, she must place it judiciously in order to maximize her score.
+Because the location of the buzz saw corresponds to a specific location in code,
+the maintainers of the software can analyze that particular part and determine
+whether a real defect exists.
+
+(TODO do we have evidence to support this hypothesis?)
 
 --------------------------------------------------------------------------------
 
@@ -335,11 +390,29 @@ in some locations unlinked from others. This would allow the game and the player
 to be aware of the more precise type recognized by the nullness type system, as
 in the above example.
 
-keyfor
+b. KeyFor
 
-optimizer
+The nullness type system provides a related but orthogonal type system for
+keeping track of variables which are known to be keys for a Map. Because Map.get
+returns null if the given key does not exist, every result of a Map.get would
+have to be nullable without this mechanism.
 
-new game style
+If a call to Map.get is made where the argument has the type @KeyFor(mapName),
+and the map's value type is NonNull, then the result of the method call is
+NonNull.
+
+We would like to incorporate this mechanism into the game. Currently, the game
+side has an implementation, and the XML game format allows for it, but the
+GameSolver cannot generate games that use it.
+
+Flow sensitivity is required to properly implement this mechanism because many
+variables are not keys for a map when they are initialized. Instead, they are
+initialized and later added to the map, at which point a flow sensitive analysis
+could refine their types. (TODO is this correct?)
+
+c. Game optimizer
+
+d. New game style
 
 --------------------------------------------------------------------------------
 
