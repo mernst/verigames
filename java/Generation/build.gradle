@@ -1,6 +1,5 @@
-def env         = System.getenv()
-def jsr308Dir   = env["JSR308"]
-def checkersDir = env["CHECKERS"]
+
+def classDirs = files(new File(project(':Translation').projectDir, 'bin/classes/main'))
 
 //This script inherits many settings from java/build.gradle
 sourceSets {
@@ -14,7 +13,7 @@ sourceSets {
         }
 
         output.classesDir "bin"
-        compileClasspath += files(new File(project(':Translation').projectDir, 'bin/classes/main'))
+        compileClasspath += classDirs
         runtimeClasspath += compileClasspath
     }
 }
@@ -41,62 +40,21 @@ tasks.jar {
 def infCheckerKey = 'infChecker'
 def infArgsKey    = 'infArgs'
 def debugInfKey   = 'debugInf'
-
-
-//TODO: ALL OF THE CODE FOR JREVERSION AND JREJARNAME IS DUPLICATED FROM CFI
-//Used to determine which version of the jdk<v>.jar to use when building and running
-//Checker Framework Inference. If this "CFI_JRE_VERSION" variable is left unset then it will be
-//determined based on the the version of the currently running JVM
-def jreVersion  = {
-    def envJreVersion = env["CFI_JRE_VERSION"];
-    if(envJreVersion == null) {
-        def jreVersionStr  = System.getProperty("java.version");
-        def matches        = ( jreVersionStr =~ /^(\d\.\d+)\..*$/ )
-
-        final double jreVer;
-        if(matches.matches()) {
-            jreVer = Double.parseDouble(matches.group(1));
-        } else {
-            throw new RuntimeException("Could not determine version from property java.version=" + jreVersionStr);
-        }
-
-        return jreVer
-    } else {
-        return envJreVersion;
-    }
-}.call()
-
-/**
- * Returns jdk6.jar or jdk7.jar depending on whether or not you are using jre 1.6.x (or earlier) or jre 1.7.x
- * TODO: This is basically a copy of logic found in CheckerMain (and in Verigames/build.gradle), find a way
- * TODO: to unify these?
- */
-def jreJarName = {
-    final String fileName;
-    if(jreVersion == 1.4 || jreVersion == 1.5 || jreVersion == 1.6) {
-        fileName = "jdk6.jar";
-    } else if(jreVersion == 1.7) {
-        fileName = "jdk7.jar";
-    } else {
-        throw new RuntimeException("Unsupported JRE version: " + jreVersion);
-    }
-
-    return fileName;
-}.call()
+def useDistKey    = 'useDist'
 
 class CheckerDef {
 	//how the checker is specified on the command line
     public final String command;
-    
+
     //fully qualified checker class name
     public final String checker;
-    
+
     //fully qualified visitor class name
     public final String visitor;
-    
+
     //fully qualified solver class name
     public final String solver;
-    
+
     CheckerDef(command, checker, visitor, solver) {
         this.command = command;
         this.checker = checker;
@@ -106,7 +64,7 @@ class CheckerDef {
 }
 
 //Current checkers that are supported
-//A map from checkerDef.command : checkerDef 
+//A map from checkerDef.command : checkerDef
 def checkerMap = [
     new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver'    ),
     new CheckerDef('nullnessTest', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'test.TestGameSolver'    ),
@@ -119,27 +77,33 @@ def checkerMap = [
     new CheckerDef('ostrusted',  'ostrusted.OsTrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('salt',  'salt.HashWithSaltChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('lock',  'lock.LockInfChecker', 'lock.LockInfVisitor', 'lock.LockInfGameSolver'),
-].collectEntries{[it.command, it]} 
+].collectEntries{[it.command, it]}
 
 tasks.add(name:'infer', type : JavaExec ) {
   	description = 'Runs an inference checker over the specified Java files.  Use as follows:\n'            +
   				  "\tgradle infer -P $infCheckerKey=<checkerToUse> -P $infArgsKey=\"<srcFiles>\"\n"        +
-  				  "\t$infCheckerKey  - Choose one of [" + checkerMap.keySet().join(", ") + ']\n'            +
+  				  "\t$infCheckerKey  - Choose one of [" + checkerMap.keySet().join(", ") + ']\n'           +
   				  "\t$infArgsKey     - Space separated source files to infer over.  If you specify"        +
   				                       'more than one file they must be surrounded by quotes(")\n'         +
   				  "\t$debugInfKey    - An optional parameter, setting it to \"true\" will cause the "      +
   				  					  'checker to be run with remote debugging enabled.  Default=false. true or false.'
-  				                  
+                  "\t$useDistKey     - Setting useDist to true causes the infer task to run using prebuilt jars in the " +
+                                      "build/dist directory rather than the class files in the classes directory."
+
 	def rootProps     = getRootProject().getProperties()
 	def checkerDef    = checkerMap.get( rootProps.get(infCheckerKey) ) ?: checkerMap['nullness'];
-	def inferenceArgs = rootProps.get( infArgsKey ) 
+	def inferenceArgs = rootProps.get( infArgsKey )
 	def debug         = false
 	if(rootProps.containsKey( debugInfKey ) && rootProps.get( debugInfKey ).equals("true")) {
 		debug = true
 	}
 
+    def useDist       = false
+    if(rootProps.containsKey( useDistKey ) && rootProps.get( useDistKey ).equals("true")) {
+        useDist = true
+    }
+
     main      = 'checkers.inference.TTIRun'
-    classpath = sourceSets.main.runtimeClasspath //By default this includes compile time dependencies
     args      += '--checker'
     args      += checkerDef.checker
     args      += '--visitor'
@@ -148,7 +112,23 @@ tasks.add(name:'infer', type : JavaExec ) {
     args      += checkerDef.solver
     args      += inferenceArgs
 
-    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:$checkersDir/binary/javac.jar:$checkersDir/binary/$jreJarName:" + sourceSets.main.runtimeClasspath.getAsPath(), '-Dscala.usejavacp=true']
+    ext.bcp = files("../dist/javac.jar", "../dist/$jreJarName")
+    ext.bcp += sourceSets.main.runtimeClasspath
+    if(useDist) {
+        bcp -= classDirs
+        bcp -= files('bin', 'bin/resources/main')
+        bcp += fileTree('../dist') {
+            include '**/*.jar'
+            exclude 'javac.jar'
+            exclude 'jdk*.jar'
+        }
+    }
+
+    if (debug) {
+        println "Runtime class path contains:\n" + bcp
+    }
+
+    jvmArgs += ['-ea', '-server', '-Xmx1024m', '-Xms512m', '-Xss1m', "-Xbootclasspath/p:" + bcp.getAsPath(), '-Dscala.usejavacp=true']
 
     if( debug ) {
         jvmArgs += ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005']

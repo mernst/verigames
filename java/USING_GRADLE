@@ -4,10 +4,6 @@ http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#bu
 You must have the JSR308 and CHECKERS environment variables set as described in
 the manual.
 
-You must also download plume-lib, documented here, and place it in your $JSR308
-folder:
-http://plume-lib.googlecode.com/hg/README.html
-
 Download from: http://www.gradle.org/ Note:  I have a version with read/execute
 permissions available at: /homes/gws/jburke/gradle/current The executable is
 merely a script that runs a java jar so you should only have to download,
@@ -17,7 +13,7 @@ You must also check out and build checker-framework-inference source:
 cd $JSR308
 hg clone https://code.google.com/p/checker-framework-inference/
 cd checker-framework-inference
-gradle allJars
+gradle dist
 
 Please read the comments at the top of the build scripts for more information
 on running them but a quick description appears below.  Gradle works much like
@@ -27,22 +23,20 @@ scripts will likely be tweaked in the future.  They currently do not support
 tests.
 
 NOTE:  You can always see the documentation of all tasks for a gradle project
-by executing: gradle tasks
+by executing: gradle -q tasks
 
-Checker Framework Inference gradle compileJava - Compiles BOTH scala and java
-files in the src directory.
+In the Checker Framework Inference directory, the command gradle compileJava will  
+compile BOTH the scala and java files in the src directory.
 
 gradle jar - Creates a jar of ONLY checker-framework-inference code
 
-gradle allJar - If you have the standard JSR308 layout (i.e. a jsr308 dir with
+gradle dist - If you have the standard JSR308 layout (i.e. a jsr308 dir with
 jsr308-langotols, annotation-file-utilities, checker-framework, and
-checker-framework-inference source projects in it) and all but the inference
-project are built then this will create a "fat jar" with all of the relevant
-dependencies for checker-framework-inference except scala (since you run the
-project through the scala command these are unnecessary).
+checker-framework-inference source projects in it) and all of the projects are built,
+then this will compile verigames and move all relevant jars (including scala jars)
+into the dist directory.
 
 gradle clean - removes all built files including jars
-
 
 Verigames: There are 4 files related to gradle in verigames.  java/build.gradle
 is the parent project that allows both java/Generation and java/Translation to
@@ -76,6 +70,11 @@ gradle infer - Run an inference checker and generate a game world.
     necessary.  In the future it would be nice to change this to a sourcepath 
     argument or something more sophisticated but this will get you up and 
     running for now.
+    
+    useDist - rather than use the class files in the generation and translation
+    files, if you said useDist to true, you will run the infer task using the
+    jars in the dist folder.  This causes the infer task to be invoked very
+    similarly to how it is on the Verigames website.
 
     debugInf - That will cause TTIRun to be executed with the variables:
     '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
