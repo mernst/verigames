@@ -26,7 +26,7 @@ do
 	length="${#f}"
 	numDots=`expr 60 - ${length}`
 	dots=""
-	if [ $length -lt 40 ]
+	if [ $length -lt 60 ]
 	then
         for i in $(seq 1 $numDots)
 		do 
@@ -61,7 +61,19 @@ do
 	echo $f
 done
 
-echo "Total Files: "$count" Passed: "$passed" Failed: "$failed
+msg=$count" Total Files "$passed" Passed "$failed" Failed"
+length="${#msg}"
+numSpaces=`expr 67 - ${length}`
+spaces=""
+if [ $length -lt 67 ]
+	then
+        for i in $(seq 1 $numSpaces)
+	    do 
+        	spaces="_$spaces"
+		done
+fi
+
+echo $spaces$msg
 
 if $success ; 
 	then
