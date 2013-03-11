@@ -44,7 +44,7 @@ do
 			failed=`expr ${failed} + 1`
 		else 
 			files[$count]=$f$dots"passed!"
-			success=`expr ${failed} + 1`
+			passed=`expr ${passed} + 1`
 	fi
 	
     count=`expr ${count} + 1`
