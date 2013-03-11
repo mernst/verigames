@@ -104,8 +104,7 @@ def cfiJarChild   = fromBaseDir.curry(cfiDist)
 def bcpJars = [cfiJarChild("javac.jar").getAbsolutePath(), cfiJarChild(jreJarName).getAbsolutePath()]
 def cpJars  = ["checker-framework-inference.jar",
                "checkers.jar",
-               "annotation-file-utilities.jar",
-               "javaparser.jar"].collect { cfiJarChild(it).getAbsolutePath() }
+               "annotation-file-utilities.jar"].collect { cfiJarChild(it).getAbsolutePath() }
 
 //Apply the following settings to all subprojects
 subprojects {
