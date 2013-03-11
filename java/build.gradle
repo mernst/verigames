@@ -92,11 +92,12 @@ println ''
 //Closure that creates a file from a base directory and a name of the file in that directory
 def fromBaseDir   = { baseDir, child -> new File(baseDir, child)  }
 
-//A function that, given a file name, creates a file object of that name with 
+//A function that, given a file name, creates a file object of that name with
 //jsr308Dir as its parent
-def jsr308Child   = fromBaseDir.curry(jsr308Dir)   
+def jsr308Child   = fromBaseDir.curry(jsr308Dir)
 
-def cfiDist       = jsr308Child("checker-framework-inference/build/dist")
+def cfiDist       = checkerInference + "/dist"
+
 def cfiJarChild   = fromBaseDir.curry(cfiDist)
 
 //These are listed explicitly rather than created via fileTree in order to preserve order for classpath
