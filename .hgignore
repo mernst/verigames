@@ -13,6 +13,7 @@ java/verigames.jar
 java/test/.*/actual_.*xml
 java/test/.*/actual_.*txt
 java/test/.*/diff_.*txt
+java/dist
 
 papers/2012-ftfjp/2012-pipejam.bbl
 papers/2012-ftfjp/2012-pipejam.dvi
