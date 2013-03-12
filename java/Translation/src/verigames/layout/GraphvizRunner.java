@@ -22,6 +22,7 @@ class GraphvizRunner
 {
   private final AbstractDotPrinter printer;
   private final String command;
+  private final AbstractDotParser parser;
 
   /**
    * Constructs a new {@code GraphvizRunner} object that runs the given
@@ -34,10 +35,11 @@ class GraphvizRunner
    * @param command
    * The Graphviz command line command to run.
    */
-  public GraphvizRunner(AbstractDotPrinter printer, String command)
+  public GraphvizRunner(AbstractDotPrinter printer, String command, AbstractDotParser parser)
   {
     this.printer = printer;
     this.command = command;
+    this.parser = parser;
   }
 
   /**
@@ -86,7 +88,7 @@ class GraphvizRunner
           "-------------- error  --------------\n" +
           errorOutput);
 
-    return DotParser.parse(dotOutput);
+    return parser.parse(dotOutput);
   }
 
   /**

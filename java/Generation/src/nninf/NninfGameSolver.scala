@@ -23,6 +23,10 @@ class NninfGameSolver extends GameSolver {
     override def handleConstraint(world: World, constraint: Constraint) {
         constraint match {
           case SubtypeConstraint(sub, sup) => {
+            // TODO: CombVariables should be handled by flow sensitivity. Should revisit this when flow
+            // sensitivity is integrated.
+            if (sup.isInstanceOf[CombVariable])
+              return;
             // No need to generate something for trivial super/sub-types.
             if (sup != NninfConstants.NULLABLE &&
                 sub != NninfConstants.NONNULL) {
@@ -31,7 +35,6 @@ class NninfGameSolver extends GameSolver {
               if (sub == LiteralNull) {
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
-
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
                 board = variablePosToBoard(supvar.varpos)

@@ -70,10 +70,11 @@ public class BoardLayout
     {
       AbstractDotPrinter printer = new DotPrinter();
       String command = "dot";
+      AbstractDotParser parser = new DotParser();
 
       // the runner prints output according to the printer and then parses it
       // and returns the result as a GraphInformation structure
-      GraphvizRunner runner = new GraphvizRunner(printer, command);
+      GraphvizRunner runner = new GraphvizRunner(printer, command, parser);
       info = runner.run(b);
     }
 

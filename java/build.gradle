@@ -4,16 +4,16 @@ apply plugin: 'scala'
 //This script allows you to compile and jar the java/scala components of the verigames
 //project
 
-//gradle jar will create a standalone jar that includes most dependencies (outside of
-//scala which is used to run the jar, see website/typecheckers/scripts/infer-nninf.sh)
+//gradle dist will create a distribution directory with all the relevant jars in it
 //You can now run the inference checkers via the command 'gradle infer'
+//You can also run inference tasks using the scripts in the dist/scripts directory
 
 //In this project compileJava depends on compileScala (it's usually the other way around
 //in a gradle build).  This means to compile (but not package) verigames
 //you should run "gradle compileJava"
 
 
-//Note:  For this setup to work you must use the allJar target in checker-framework-inference
+//Note:  For this setup to work you must use the dist target in checker-framework-inference
 //as well as fall the instructions for building the checker framework from source, see:
 //http://types.cs.washington.edu/checker-framework/current/checkers-manual.html#build-source
 
@@ -34,6 +34,50 @@ def jsr308Dir   = env["JSR308"]
 def checkersDir = env["CHECKERS"]
 def checkerInference = env["CHECKERS_INFERENCE"] ?: "$jsr308Dir/checker-framework-inference"
 
+project.ext {
+    //TODO: ALL OF THE CODE FOR JREVERSION AND JREJARNAME IS DUPLICATED FROM CFI
+    //Used to determine which version of the jdk<v>.jar to use when building and running
+    //Checker Framework Inference. If this "CFI_JRE_VERSION" variable is left unset then it will be
+    //determined based on the the version of the currently running JVM
+    jreVersion  = {
+        def envJreVersion = env["CFI_JRE_VERSION"];
+        if(envJreVersion == null) {
+            def jreVersionStr  = System.getProperty("java.version");
+            def matches        = ( jreVersionStr =~ /^(\d\.\d+)\..*$/ )
+
+            final double jreVer;
+            if(matches.matches()) {
+                jreVer = Double.parseDouble(matches.group(1));
+            } else {
+                throw new RuntimeException("Could not determine version from property java.version=" + jreVersionStr);
+            }
+
+            return jreVer
+        } else {
+            return envJreVersion;
+        }
+    }.call()
+
+    /**
+     * Returns jdk6.jar or jdk7.jar depending on whether or not you are using jre 1.6.x (or earlier) or jre 1.7.x
+     * TODO: This is basically a copy of logic found in CheckerMain (and in Verigames/build.gradle), find a way
+     * TODO: to unify these?
+     */
+    jreJarName = {
+        final String fileName;
+        if(jreVersion == 1.7) {
+            fileName = "jdk7.jar";
+        } else {
+            throw new RuntimeException("Unsupported JRE version: " + jreVersion);
+        }
+
+        return fileName;
+    }.call()
+
+    scalaDeps = null
+}
+
+
 println '===================================='
 println '            Verigames               '
 println '===================================='
@@ -48,34 +92,28 @@ println ''
 //Closure that creates a file from a base directory and a name of the file in that directory
 def fromBaseDir   = { baseDir, child -> new File(baseDir, child)  }
 
-//A function that, given a file name, creates a file object of that name with 
+//A function that, given a file name, creates a file object of that name with
 //jsr308Dir as its parent
-def jsr308Child   = fromBaseDir.curry(jsr308Dir)   
+def jsr308Child   = fromBaseDir.curry(jsr308Dir)
 
+def cfiDist       = checkerInference + "/dist"
 
-//A function that, given a file name, creates a file object of that name with 
-//checkersDir as its parent
-def checkersChild = fromBaseDir.curry(checkersDir) 
+def cfiJarChild   = fromBaseDir.curry(cfiDist)
 
-def afuDir        = jsr308Child("annotation-tools/annotation-file-utilities") 
-
-//A function that, given a file name, creates a file object of that name with 
-//afuDir as its parent
-def afuChild      = fromBaseDir.curry(afuDir)
-
-def cfiAll        = jsr308Child("checker-framework-inference/checker-framework-inference-all.jar").getAbsolutePath()
+//These are listed explicitly rather than created via fileTree in order to preserve order for classpath
+def bcpJars = [cfiJarChild("javac.jar").getAbsolutePath(), cfiJarChild(jreJarName).getAbsolutePath()]
+def cpJars  = ["checker-framework-inference.jar",
+               "checkers.jar",
+               "annotation-file-utilities.jar"].collect { cfiJarChild(it).getAbsolutePath() }
 
 //Apply the following settings to all subprojects
 subprojects {
-
     //Very similar to checker-framework-inference
     //perhaps create a project encompassing both
     apply plugin: 'scala'
-    
-    def cfiJar = cfiAll
-	def classpath = files(
-		jsr308Child("checker-framework-inference/checker-framework-inference-all.jar").getAbsolutePath()
-	)
+
+    ext.dist = file("dist")
+	def classpath = files(cpJars)
 			
 	sourceSets {
 		 main {
@@ -99,21 +137,19 @@ subprojects {
 	    // Libraries needed to run the scala tools
 	    scalaTools 'org.scala-lang:scala-compiler:2.9.2'
 	    scalaTools 'org.scala-lang:scala-library:2.9.2'
-	    
 
-	    
 	    // Libraries needed for scala api
 	    compile 'org.scala-lang:scala-library:2.9.2'
 	    compile 'org.scala-lang:scala-compiler:2.9.2'
 	    
 	    //To ensure that we have all appropriate runtime dependencies I have inclduded
 	    //all of the libraries included by the scala shell script
-		runtime 'org.scala-lang:scala-dbc:2.9.2'
+		//runtime 'org.scala-lang:scala-dbc:2.9.2'
 		runtime 'org.scala-lang:scala-library:2.9.2'
-		runtime 'org.scala-lang:scala-partest:2.9.2'
+		//runtime 'org.scala-lang:scala-partest:2.9.2'
 		//runtime 'org.scala-lang:scalacheck:2.9.2'
 		runtime 'org.scala-lang:scalap:2.9.2'
-		runtime 'org.scala-lang:scala-swing:2.9.2'
+		//runtime 'org.scala-lang:scala-swing:2.9.2'
 	}
 	
 	tasks.compileJava {
@@ -122,6 +158,7 @@ subprojects {
 	  options.compilerArgs = [
 	  	  '-version',
 	      '-implicit:class',
+          '-AprintErrorStack',
 	      '-Awarns', '-Xmaxwarns', '10000']
 	  options.forkOptions.executable="$checkersDir/binary/javac"
 	}
@@ -135,8 +172,7 @@ subprojects {
 	tasks.compileJava.dependsOn compileScala   
 }
 
-def toJar = [zipTree(cfiAll).matching { exclude 'META-INF' }, 
-			 zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' }, 
+def toJar = [zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' },
 			 zipTree("Translation/bin/libs/Translation.jar").matching { exclude 'META-INF' },
 			 zipTree("Translation/lib/xom-1.2.7.jar").matching { exclude 'META-INF' }, //Add this to Translation.jar
 			]
@@ -151,4 +187,24 @@ tasks.jar {
 
 tasks.clean {
 	delete += "verigames.jar"
+    delete += fileTree('dist') {
+        include '**/*.jar'
+    }
 }
+
+task copyScala(type : Copy) {
+    description = "If your Checker Framework project is fully built, this task " +
+            "will copy the javac.jar and any jdk*.jar(s) from Checker Framework into" +
+            "this project directory."
+    from tasks.getByPath(':Generation:compileJava').getClasspath().filter({f -> f.getName().startsWith("scala-")})
+    into file('dist/scala_lib')
+}
+
+task dist(type : Copy) {
+    description = "If your Checker Framework project is fully built, this task " +
+            "will copy the javac.jar and any jdk*.jar(s) from Checker Framework into" +
+            "this project directory."
+
+    from files(bcpJars + cpJars + file('verigames.jar'))
+    into file('dist')
+} dependsOn(jar, copyScala)

@@ -29,17 +29,8 @@ import checkers.nullness.quals.*;
  * because it doesn't match the format of what Graphviz outputs.
  */
 
-class DotParser
+class DotParser extends AbstractDotParser
 {
-  /**
-   * This class is simply a container for the static {@link #parse(String)}
-   * method, so it cannot be instantiated.
-   */
-  private DotParser()
-  {
-    throw new RuntimeException("Uninstantiable");
-  }
-
   /**
    * An {@code Exception} that is thrown when a bad line of DOT is encountered.
    * It should only be used internally to ensure that errors are handled and
@@ -71,7 +62,7 @@ class DotParser
    * @param dotOutput
    * Must be well-formed output from dot.
    */
-  public static GraphInformation parse(String dotOutput)
+  public GraphInformation parse(String dotOutput)
   {
     // the builder that is used to construct the returned GraphInformation
     final GraphInformation.Builder out = new GraphInformation.Builder();
@@ -315,7 +306,7 @@ class DotParser
    * Must be a valid, logical line of Graphviz output describing attributes of
    * the graph itself (as oppose to particular edges or nodes).
    */
-  private static /*@Nullable*/ GraphInformation.GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
+  private static GraphInformation./*@Nullable*/ GraphAttributes parseGraphAttributes(String line) throws IllegalLineException
   {
     // sample line: '  graph [bb="0,0,216.69,528"];'
 
