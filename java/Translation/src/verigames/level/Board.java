@@ -234,6 +234,21 @@ public class Board extends Graph<Intersection, Chute>
     super.addNode(node);
   }
 
+
+  //The methods below here are all just sugar for commonly used sequences of instructions
+  //in GameSolver and it's subclasses
+
+  /**
+   * Creates an intersection of the given kind.  Adds it to the board and then returns it.
+   * @param kind The Intersection kind of the node to be created
+   * @return A new node that has already been added to the board and has type kind
+   */
+  public Intersection addNode(final Intersection.Kind kind) {
+      final Intersection node = Intersection.factory(kind);
+      addNode(node);
+      return node;
+  }
+
  /**
   * Create the intersection nodes for start and end and add them to the board.  Then add
   * an edge to the board from start to end using the given ports and chute.
@@ -247,8 +262,7 @@ public class Board extends Graph<Intersection, Chute>
   public Pair<Intersection, Intersection> add(final Intersection.Kind start, final String startPort,
                                               final Intersection.Kind end,   final String endPort,
                                               final Chute chute) {
-    final Intersection startInt = Intersection.factory(start);
-    addNode(startInt);
+    final Intersection startInt = addNode(start);
     return add(startInt, startPort, end, endPort, chute);
   }
 
@@ -265,8 +279,7 @@ public class Board extends Graph<Intersection, Chute>
   public Pair<Intersection, Intersection> add(final Intersection startInt, final String startPort,
                                                final Intersection.Kind end, final String endPort,
                                                final Chute chute) {
-    final Intersection endInt = Intersection.factory(end);
-    addNode(endInt);
+    final Intersection endInt = addNode(end);
     return add(startInt, startPort, endInt, endPort, chute);
   }
 
@@ -283,8 +296,7 @@ public class Board extends Graph<Intersection, Chute>
   public Pair<Intersection, Intersection> add(final Intersection.Kind start, final String startPort,
                                                final Intersection endInt,     final String endPort,
                                                final Chute chute) {
-    final Intersection startInt = Intersection.factory(start);
-    addNode(startInt);
+    final Intersection startInt = addNode(start);
     return add(startInt, startPort, endInt, endPort, chute);
   }
 
