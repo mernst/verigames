@@ -5,6 +5,7 @@ import static verigames.utilities.Misc.ensure;
 import verigames.graph.Graph;
 import verigames.level.Intersection.Kind;
 import verigames.utilities.MultiBiMap;
+import verigames.utilities.Pair;
 
 import java.util.Set;
 
@@ -231,6 +232,76 @@ public class Board extends Graph<Intersection, Chute>
     }
 
     super.addNode(node);
+  }
+
+ /**
+  * Create the intersection nodes for start and end and add them to the board.  Then add
+  * an edge to the board from start to end using the given ports and chute.
+  * @param start Kind of start node to be created
+  * @param startPort Port of start node
+  * @param end Kind of end node to be created
+  * @param endPort Port of end node
+  * @param chute
+  * @return A pair of newly created nodes which have been added to the board with an edge between them: Pair(startNode, endNode)
+  */
+  public Pair<Intersection, Intersection> add(final Intersection.Kind start, final String startPort,
+                                              final Intersection.Kind end,   final String endPort,
+                                              final Chute chute) {
+    final Intersection startInt = Intersection.factory(start);
+    addNode(startInt);
+    return add(startInt, startPort, end, endPort, chute);
+  }
+
+  /**
+   * Create an intersection node for the given end kind and add it to the board.
+   * Then add an edge to the board from start to end using the given ports and chute.
+   * @param startInt Start node that has already been created, will be added to the board if it hasn't been already
+   * @param startPort Port of start node
+   * @param end Kind of end node to be created
+   * @param endPort Port of end node
+   * @param chute
+   * @return The pair of nodes which have been added to the board with an edge between them: Pair(startNode, endNode)
+   */
+  public Pair<Intersection, Intersection> add(final Intersection startInt, final String startPort,
+                                               final Intersection.Kind end, final String endPort,
+                                               final Chute chute) {
+    final Intersection endInt = Intersection.factory(end);
+    addNode(endInt);
+    return add(startInt, startPort, endInt, endPort, chute);
+  }
+
+    /**
+     * Create an intersection node for the given start kind and add it to the board.  Then add
+     * an edge to the board from start to end using the given ports and chute.
+     * @param start Kind of start node to be created
+     * @param startPort Port of start node
+     * @param endInt End node that has already been created, will be added to the board if it hasn't been already
+     * @param endPort Port of end node
+     * @param chute
+     * @return The pair of nodes which have been added to the board with an edge between them: Pair(startNode, endNode)
+     */
+  public Pair<Intersection, Intersection> add(final Intersection.Kind start, final String startPort,
+                                               final Intersection endInt,     final String endPort,
+                                               final Chute chute) {
+    final Intersection startInt = Intersection.factory(start);
+    addNode(startInt);
+    return add(startInt, startPort, endInt, endPort, chute);
+  }
+
+    /**
+     * Then add an edge from startInt to endInt to the board
+     * @param startInt Start node that has already been created, will be added to the board if it hasn't been already
+     * @param startPort Port of start node
+     * @param endInt End node that has already been created, will be added to the board if it hasn't been already
+     * @param endPort Port of end node
+     * @param chute
+     * @return The pair of nodes which have been added to the board with an edge between them: Pair(startNode, endNode)
+     */
+  public Pair<Intersection, Intersection> add(final Intersection startInt, final String startPort,
+                                               final Intersection endInt,   final String endPort,
+                                               final Chute chute) {
+      addEdge(startInt, startPort, endInt, endPort, chute);
+      return Pair.of(startInt, endInt);
   }
 
   /**
