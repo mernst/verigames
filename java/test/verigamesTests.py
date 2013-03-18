@@ -29,6 +29,9 @@ import xml.etree.ElementTree as ET
 #	python commandTest.py -c foo
 #
 
+thisFile = os.path.realpath(__file__)
+parent   = os.path.dirname(thisFile)
+
 allCheckers = ["nullness", "trusted"]
 checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor"],
 		"trusted": ["trusted.TrustedChecker", "trusted.TrustedVisitor"] }
@@ -86,6 +89,12 @@ def compare_results(expectedName, actualName, diffName):
 		d.close()
 	return same
 
+def checker_to_args(checkerName):
+    chArgs = checkerArgs[checkerName]
+    soArgs = solverArgs[checkerName]
+    executable = os.path(parent, "..", "dist", "inference.sh")
+    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], "--visitor", chArgs[1], "--solver", soArgs[0] ]
+
 def main():
 	p = optparse.OptionParser()
 	p.add_option('--checker', '-c', default="all", help="The type system to use: nninf, trusted, or all. Default is all")
@@ -117,8 +126,7 @@ def main():
 		scriptName = "./testScript.sh"
 	
 	os.putenv("JAVA", os.getenv("JAVA_HOME") + "/bin/java")
-	os.putenv("SCALA", os.getenv("SCALA_HOME") + "/bin/scala")
-	os.putenv("CLASSPATH", "../verigames.jar")
+	os.putenv("SCALA", os.getenv("SCALA_HOME") + "/bin/scala")\
 
 	failingTests = []
 	os.chdir("..")
@@ -131,10 +139,11 @@ def main():
 		diffName=""
 		for test in get_immediate_subdirectories("test/" + testsuite + "Tests"):
 			print str(test)
-			javaFiles = get_all_java_files("test/" + testsuite +"Tests/" + test)
+			testSuiteTests = os.path.abspath(os.path.join(parent, testsuite + "Tests", test))
+			javaFiles = get_all_java_files(testSuiteTests)
 			for checker in checkers:
 				if testsuite == "xml" :
-					expectedName = "test/xmlTests/" + test + "/expected_" + checker + ".xml"
+					expectedName = "xmlTests/" + test + "/expected_" + checker + ".xml"
 					# Check that an expected file for this checker/test combination exists
 					if os.path.isfile(expectedName):
 						numTests = numTests + 1
@@ -142,17 +151,20 @@ def main():
 						diffName = cwd + "/test/xmlTests/" + test + "/diff_" + checker + ".txt"
 						# Run the test
 						with open(os.devnull, "w") as outfile:
-							ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker, "-P", "infArgs=" + javaFiles], stdout=outfile)
+							args = checker_to_args(checker) + javaFiles
+							ret = subprocess.call(args, stdout=outfile)
 							if ret != 0: # Error
 								numErrors = numErrors + 1
 								print "Error: " + test + " for " + checker + " returned error code " + str(ret)
-							else: 
+							else:
 								subprocess.call(["rm", "Generation/inference.jaif"]) # cleanup
 								subprocess.call(["mv", "Generation/World.xml", actualName]) # organize
 
 								# Remove layout information
 								remove_layout(expectedName)
 								remove_layout(actualName)
+					else:
+					    raise Exception("Couldn't find expected file: " + expectedName)
 
 				elif testsuite == "constraint":
 					expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
@@ -170,6 +182,8 @@ def main():
 								print "Error: " + test + " for " + checker + " returned error code " + str(ret)
 							else:
 								subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
+					else:
+					    raise Exception("Couldn't find expected file: " + expectedName)
 
 				# Compare the results
 				if os.path.isfile(expectedName) and not ret:
