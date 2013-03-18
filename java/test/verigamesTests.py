@@ -164,7 +164,7 @@ def main():
 								remove_layout(expectedName)
 								remove_layout(actualName)
 					else:
-					    raise Exception("Couldn't find expected file: " + expectedName)
+					    print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
 
 				elif testsuite == "constraint":
 					expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
@@ -183,7 +183,7 @@ def main():
 							else:
 								subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
 					else:
-					    raise Exception("Couldn't find expected file: " + expectedName)
+					    print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
 
 				# Compare the results
 				if os.path.isfile(expectedName) and not ret:
