@@ -26,8 +26,8 @@ public class LevelImpTests
     c1 = new Chute();
     c2 = new Chute();
 
-    b.addEdge(incoming, 0, outgoing, 0, c1);
-    b.addEdge(incoming, 1, outgoing, 1, c2);
+    b.addEdge(incoming, "0", outgoing, "0", c1);
+    b.addEdge(incoming, "1", outgoing, "1", c2);
 
     l.makeLinked(c1,c2);
   }

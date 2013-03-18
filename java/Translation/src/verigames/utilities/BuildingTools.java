@@ -47,24 +47,24 @@ public class BuildingTools
   /**
    * Adds a field of the given name to the given {@link verigames.level.Board Board}.
    */
-  public static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPortMap, String name, Kind kind)
+  public static void addField(Board b, Map<String, Chute> fieldToChute, Map<String, String> nameToPortMap, String name, Kind kind)
   {
     Intersection start = factory(kind);
     b.addNode(start);
     
     Chute chute = new Chute();
-    b.addEdge(start, 0, b.getOutgoingNode(), nameToPortMap.get(name), chute);
+    b.addEdge(start, "0", b.getOutgoingNode(), nameToPortMap.get(name), chute);
     b.addChuteName(chute, name);
     fieldToChute.put(name, chute);
   }
   
-  public static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, Map<String, Integer> nameToPort, String... fieldNames)
+  public static void connectFields(Board b, Level level, Map<String, Chute> fieldToChute, Map<String, String> nameToPort, String... fieldNames)
   {  
     for (String name : fieldNames)
       connectField(b, nameToPort.get(name), name, level, fieldToChute);
   }
   
-  private static void connectField(Board b, int port, String name, Level level, Map<String, Chute> fieldToChute)
+  private static void connectField(Board b, String port, String name, Level level, Map<String, Chute> fieldToChute)
   {
     Chute newChute = fieldToChute.get(name).copy();
     

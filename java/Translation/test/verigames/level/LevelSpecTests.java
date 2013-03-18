@@ -44,7 +44,7 @@ public class LevelSpecTests
     b.addNode(out);
     
     for (int i = 0; i < chutes.length; i++)
-      b.addEdge(in, i, out, i, chutes[i]);
+      b.addEdge(in, Integer.toString(i), out, Integer.toString(i), chutes[i]);
     
     l = new Level();
     l.addBoard("asdf", b);

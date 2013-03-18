@@ -255,12 +255,6 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     checkRep();
   }
 
-  @Deprecated
-  public void addEdge(NodeType start, int startPort, NodeType end, int endPort, EdgeType edge)
-  {
-    addEdge(start, Integer.toString(startPort), end, Integer.toString(endPort), edge);
-  }
-
   /**
    * Returns the cardinality of {@code nodes}.<br/>
    * <br/>

@@ -28,14 +28,14 @@ public class ExceptionWorld
     Chute top = new Chute();
     Chute bottom = top.copy();
     bottom.setPinched(true);
-    b.addEdge(incoming, 0, merge, 0, top);
+    b.addEdge(incoming, "0", merge, "0", top);
     b.addChuteName(top, "var");
-    b.addEdge(merge, 0, outgoing, 0, bottom);
+    b.addEdge(merge, "0", outgoing, "0", bottom);
     b.addChuteName(bottom, "var");
     l.makeLinked(top, bottom);
     
     Chute right = new Chute();
-    b.addEdge(start, 0, merge, 1, right);
+    b.addEdge(start, "0", merge, "1", right);
     
     l.addBoard("Placeholder", b);
     l.finishConstruction();

@@ -24,7 +24,7 @@ public class EdgeImpTests
   {
     Edge<?> e = new ConcreteEdge();
     
-    invokeMethod(e, "setStart", new ConcreteNode(), 0);
+    invokeMethod(e, "setStart", new ConcreteNode(), "0");
     
     assertDeactivateFailure(e);
   }
@@ -34,7 +34,7 @@ public class EdgeImpTests
   {
     Edge<?> e = new ConcreteEdge();
     
-    invokeMethod(e, "setEnd", new ConcreteNode(), 0);
+    invokeMethod(e, "setEnd", new ConcreteNode(), "0");
     
     assertDeactivateFailure(e);
   }
