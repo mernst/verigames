@@ -1,0 +1,17 @@
+Constraints:
+equality constraint: Variable 1 at class FieldInitCast field g cast 0; tree String = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Variable 0 at class FieldInitCast field f; tree Object  <:  Variable 1 at class FieldInitCast field g cast 0; tree String
+
+field access constraint; context class FieldInitCast field g constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldInitCast field f; tree Object pos: class FieldInitCast field f
+
+equality constraint: Variable 1 at class FieldInitCast field g cast 0; tree String = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Variable 1 at class FieldInitCast field g cast 0; tree String  <:  Variable 2 at class FieldInitCast field g; tree String
+
+equality constraint: Variable 1 at class FieldInitCast field g cast 0; tree String = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Variable 0 at class FieldInitCast field f; tree Object  <:  Variable 1 at class FieldInitCast field g cast 0; tree String
+
+field access constraint; context class FieldInitCast field g constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldInitCast field f; tree Object pos: class FieldInitCast field f
+

@@ -1,0 +1,39 @@
+Constraints:
+inequality constraint at method Other#m2():Ljava/lang/Object; constraint position: Variable 2 at method Other#m2():Ljava/lang/Object; creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 2 at method Other#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 1 at method Other#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 4 at method Other#m3(LOther;):V creation 0; tree Object  <:  Variable 0 at method Other#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 4 at method Other#m3(LOther;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method Other#m3(LOther;):V constraint position; receiver slot: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other; called method: method Other#m1(Ljava/lang/Object;):V(List(Variable 4 at method Other#m3(LOther;):V creation 0; tree Object)) result: Constant(@nninf.quals.Nullable)
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method Other#m3(LOther;):V constraint position; receiver slot: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other; called method: method Other#m2():Ljava/lang/Object;() result: Variable 1 at method Other#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 1 at method Other#m2():Ljava/lang/Object; return type; tree Object  <:  Variable 5 at method Other#m3(LOther;):V local variable x(0); tree Object
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method Other#m3(LOther;):V constraint position; receiver slot: Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other; called method: method Other#m2():Ljava/lang/Object;() result: Variable 1 at method Other#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at method Other#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+inequality constraint at method CallOther#foo(LOther;):V constraint position: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallOther#foo(LOther;):V constraint position; receiver slot: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other; called method: method Other#m1(Ljava/lang/Object;):V(List(Literal(NULL_LITERAL, "null"))) result: Constant(@nninf.quals.Nullable)
+
+inequality constraint at method CallOther#foo(LOther;):V constraint position: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallOther#foo(LOther;):V constraint position; receiver slot: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other; called method: method Other#m2():Ljava/lang/Object;() result: Variable 1 at method Other#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other  <:  Variable 3 at method Other#m3(LOther;):V parameter 0; tree Other
+
+inequality constraint at method CallOther#foo(LOther;):V constraint position: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallOther#foo(LOther;):V constraint position; receiver slot: Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other; called method: method Other#m3(LOther;):V(List(Variable 6 at method CallOther#foo(LOther;):V parameter 0; tree Other)) result: Constant(@nninf.quals.Nullable)
+

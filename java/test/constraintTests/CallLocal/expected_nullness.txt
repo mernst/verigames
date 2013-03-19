@@ -1,0 +1,23 @@
+Constraints:
+inequality constraint at method CallLocal#m2():Ljava/lang/Object; constraint position: Variable 2 at method CallLocal#m2():Ljava/lang/Object; creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 2 at method CallLocal#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 1 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 4 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object  <:  Variable 0 at method CallLocal#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+inequality constraint at method CallLocal#m3(LCallLocal;):V constraint position: Variable 4 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method CallLocal#m3(LCallLocal;):V constraint position: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallLocal#m3(LCallLocal;):V constraint position; receiver slot: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; called method: method CallLocal#m1(Ljava/lang/Object;):V(List(Variable 4 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object)) result: Constant(@nninf.quals.Nullable)
+
+inequality constraint at method CallLocal#m3(LCallLocal;):V constraint position: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallLocal#m3(LCallLocal;):V constraint position; receiver slot: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; called method: method CallLocal#m2():Ljava/lang/Object;() result: Variable 1 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 1 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object  <:  Variable 5 at method CallLocal#m3(LCallLocal;):V local variable x(0); tree Object
+
+inequality constraint at method CallLocal#m3(LCallLocal;):V constraint position: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallLocal#m3(LCallLocal;):V constraint position; receiver slot: Variable 3 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; called method: method CallLocal#m2():Ljava/lang/Object;() result: Variable 1 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object
+

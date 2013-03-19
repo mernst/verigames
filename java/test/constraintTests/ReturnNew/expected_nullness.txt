@@ -1,0 +1,5 @@
+Constraints:
+inequality constraint at method ReturnNew#m():Ljava/lang/Object; constraint position: Variable 1 at method ReturnNew#m():Ljava/lang/Object; creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 1 at method ReturnNew#m():Ljava/lang/Object; creation 0; tree Object  <:  Variable 0 at method ReturnNew#m():Ljava/lang/Object; return type; tree Object
+

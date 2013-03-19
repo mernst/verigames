@@ -1,0 +1,9 @@
+Constraints:
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldInit field f1; tree Object
+
+inequality constraint at class FieldInit field f2 constraint position: Variable 1 at class FieldInit field f2 creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 1 at class FieldInit field f2 creation 0; tree Object  <:  Variable 2 at class FieldInit field f2; tree Object
+
+inequality constraint at class FieldInit field f2 constraint position: Variable 1 at class FieldInit field f2 creation 0; tree Object != Constant(@nninf.quals.Nullable)
+

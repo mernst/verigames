@@ -1,0 +1,13 @@
+Constraints:
+subtype constraint: Literal(STRING_LITERAL, "ha")  <:  Variable 0 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; return type; tree String
+
+subtype constraint: Literal(STRING_LITERAL, "dude")  <:  Variable 1 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; parameter 0; tree String
+
+call instance method constraint; caller method Literals#call():V constraint position; receiver slot: Literal(OTHER, "this"); called method: method Literals#m(Ljava/lang/String;):Ljava/lang/String;(List(Literal(STRING_LITERAL, "dude"))) result: Variable 0 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; return type; tree String
+
+subtype constraint: Variable 0 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; return type; tree String  <:  Variable 2 at method Literals#call():V local variable s(0); tree String
+
+subtype constraint: Literal(STRING_LITERAL, "dude")  <:  Variable 1 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; parameter 0; tree String
+
+call instance method constraint; caller method Literals#call():V constraint position; receiver slot: Literal(OTHER, "this"); called method: method Literals#m(Ljava/lang/String;):Ljava/lang/String;(List(Literal(STRING_LITERAL, "dude"))) result: Variable 0 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; return type; tree String
+

@@ -1,0 +1,7 @@
+Constraints:
+call instance method constraint; caller method Primitive#call():V constraint position; receiver slot: Literal(OTHER, "this"); called method: method Primitive#m(I):I() result: null
+
+call instance method constraint; caller method Primitive#call():V constraint position; receiver slot: Literal(OTHER, "this"); called method: method Primitive#m(I):I() result: null
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class Primitive field o; tree Object
+

@@ -1,0 +1,71 @@
+Constraints:
+subtype constraint: Variable 1 at method FieldWrite#m():V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+
+field access constraint; context method FieldWrite#m():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+inequality constraint at method FieldWrite#m():V constraint position: Variable 1 at method FieldWrite#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+assignment constraint; context method FieldWrite#m():V constraint position; receiver slot: Literal(OTHER, "this") field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 1 at method FieldWrite#m():V creation 0; tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+
+field access constraint; context method FieldWrite#n():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+assignment constraint; context method FieldWrite#n():V constraint position; receiver slot: Literal(OTHER, "this") field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+
+subtype constraint: Variable 3 at method FWOther#write1():V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+
+field access constraint; context method FWOther#write1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+
+inequality constraint at method FWOther#write1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+inequality constraint at method FWOther#write1():V constraint position: Variable 3 at method FWOther#write1():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+assignment constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 3 at method FWOther#write1():V creation 0; tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+
+field access constraint; context method FWOther#write1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+
+inequality constraint at method FWOther#write1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+assignment constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+
+subtype constraint: Variable 0 at class FieldWrite field f; tree Object  <:  Variable 4 at method FWOther#read1():V local variable x(0); tree Object
+
+field access constraint; context method FWOther#read1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+
+inequality constraint at method FWOther#read1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#read1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+subtype constraint: Variable 0 at class FieldWrite field f; tree Object  <:  Variable 4 at method FWOther#read1():V local variable x(0); tree Object
+
+field access constraint; context method FWOther#read1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+
+inequality constraint at method FWOther#read1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#read1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+subtype constraint: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+
+inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+assignment constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+
+inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite != Constant(@nninf.quals.Nullable)
+
+field access constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+
+assignment constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+

@@ -1,0 +1,11 @@
+Constraints:
+inequality constraint at method Second#m(Z):V constraint position: Variable 0 at method Second#m(Z):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 0 at method Second#m(Z):V creation 0; tree Object  <:  Variable 1 at method Second#m(Z):V local variable o(0); tree Object
+
+inequality constraint at method Second#m(Z):V constraint position: Variable 0 at method Second#m(Z):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 1 at method Second#m(Z):V local variable o(0); tree Object
+
+subtype constraint: Variable 1 at method Second#m(Z):V local variable o(0); tree Object  <:  Variable 2 at method Second#m(Z):V local variable y(0); tree Object
+

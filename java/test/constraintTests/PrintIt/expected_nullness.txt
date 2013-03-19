@@ -1,0 +1,13 @@
+Constraints:
+inequality constraint at method PrintIt#m():V constraint position: Variable 0 at method PrintIt#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 0 at method PrintIt#m():V creation 0; tree Object  <:  Variable 1 at method PrintIt#m():V local variable o(0); tree Object
+
+inequality constraint at method PrintIt#m():V constraint position: Variable 0 at method PrintIt#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: CombVariable #2  <:  Constant(@nninf.quals.Nullable)
+
+inequality constraint at method PrintIt#m():V constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method PrintIt#m():V constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+

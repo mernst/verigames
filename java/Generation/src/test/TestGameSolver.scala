@@ -23,6 +23,10 @@ class TestGameSolver extends GameSolver {
     weights: List[WeightInfo],
     params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
       
+      // Do nothing.
+      println ("checking for env")
+      println (System.getenv("HOME"))
+      println (System.getenv("ACTUAL_PATH"))
       writeToFile(outputName, "Constraints:\n")
       
       super.solve(variables, combvariables, constraints, weights, params)

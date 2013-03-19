@@ -1,0 +1,9 @@
+Constraints:
+inequality constraint at method First#m():V constraint position: Variable 0 at method First#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 0 at method First#m():V creation 0; tree Object  <:  Variable 1 at method First#m():V local variable o(0); tree Object
+
+inequality constraint at method First#m():V constraint position: Variable 0 at method First#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 1 at method First#m():V local variable o(0); tree Object
+
