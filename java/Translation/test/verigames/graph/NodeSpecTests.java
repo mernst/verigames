@@ -38,9 +38,9 @@ public class NodeSpecTests
   public void testDeactivate() throws InvocationTargetException
   {
     Node<?> n = new ConcreteNode();
-    invokeMethod(n, "setInput", new ConcreteEdge(), 1);
-    invokeMethod(n, "setInput", new ConcreteEdge(), 0);
-    invokeMethod(n, "setOutput", new ConcreteEdge(), 0);
+    invokeMethod(n, "setInput", new ConcreteEdge(), "1");
+    invokeMethod(n, "setInput", new ConcreteEdge(), "0");
+    invokeMethod(n, "setOutput", new ConcreteEdge(), "0");
     invokeMethod(n, "finishConstruction");
   }
   
@@ -78,20 +78,20 @@ public class NodeSpecTests
     
     Node<?> n = new ConcreteNode();
     
-    Map<Integer, Edge<?>> portToChute = new LinkedHashMap<Integer, Edge<?>>();
-    portToChute.put(5, new ConcreteEdge());
-    portToChute.put(2, new ConcreteEdge());
-    portToChute.put(10, new ConcreteEdge());
+    Map<String, Edge<?>> portToChute = new LinkedHashMap<String, Edge<?>>();
+    portToChute.put("5", new ConcreteEdge());
+    portToChute.put("2", new ConcreteEdge());
+    portToChute.put("10", new ConcreteEdge());
     
-    for (Map.Entry<Integer, Edge<?>> entry : portToChute.entrySet())
+    for (Map.Entry<String, Edge<?>> entry : portToChute.entrySet())
     {
       invokeMethod(n, setMethodName, entry.getValue(), entry.getKey());
     }
     
     for (int i = 0; i <= 10; i++)
     {
-      Edge<?> e = input ? n.getInput(i) : n.getOutput(i);
-      assertEquals(portToChute.get(i), e);
+      Edge<?> e = input ? n.getInput(Integer.toString(i)) : n.getOutput(Integer.toString(i));
+      assertEquals(portToChute.get(Integer.toString(i)), e);
     }
   }
   

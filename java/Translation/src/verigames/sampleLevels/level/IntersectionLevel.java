@@ -25,14 +25,14 @@ import verigames.level.Intersection.Kind;
 @SuppressWarnings("deprecation")
 public class IntersectionLevel
 {
-  private static Map<String, Integer> nameToPortMap;
+  private static Map<String, String> nameToPortMap;
   static
   {
-    nameToPortMap = new LinkedHashMap<String, Integer>();
-    nameToPortMap.put("inputChutes", 0);
-    nameToPortMap.put("inputChutes.elts", 1);
-    nameToPortMap.put("outputChutes", 2);
-    nameToPortMap.put("outputChutes.elts", 3);
+    nameToPortMap = new LinkedHashMap<String, String>();
+    nameToPortMap.put("inputChutes", "0");
+    nameToPortMap.put("inputChutes.elts", "1");
+    nameToPortMap.put("outputChutes", "2");
+    nameToPortMap.put("outputChutes.elts", "3");
   }
   
   public static Level makeLevel()
@@ -79,9 +79,9 @@ public class IntersectionLevel
     Chute right = new Chute();
     Chute bottom = new Chute();
     
-    factory.addEdge(startLeft, 0, merge, 0, left);
-    factory.addEdge(startRight, 0, merge, 1, right);
-    factory.addEdge(merge, 0, outgoing, 0, bottom);
+    factory.addEdge(startLeft, "0", merge, "0", left);
+    factory.addEdge(startRight, "0", merge, "1", right);
+    factory.addEdge(merge, "0", outgoing, "0", bottom);
   }
   
   private static void addSubnetworkFactory(Level level)
@@ -98,7 +98,7 @@ public class IntersectionLevel
     subFac.addNode(start);
     
     Chute ret = new Chute();
-    subFac.addEdge(start, 0, outgoing, 0, ret);
+    subFac.addEdge(start, "0", outgoing, "0", ret);
   }
   
   private static void addPadToLength(Level level)
@@ -117,7 +117,7 @@ public class IntersectionLevel
       list.setPinched(true);
       String name = "list";
       
-      pad.addEdge(incoming, 0, end, 0, list);
+      pad.addEdge(incoming, "0", end, "0", list);
       pad.addChuteName(list, name);
     }
     
@@ -132,14 +132,14 @@ public class IntersectionLevel
       Chute bottom = top.copy();
       String name = "list.elts";
       
-      pad.addEdge(incoming, 1, merge, 0, top);
-      pad.addEdge(merge, 0, outgoing, 0, bottom);
+      pad.addEdge(incoming, "1", merge, "0", top);
+      pad.addEdge(merge, "0", outgoing, "0", bottom);
       pad.addChuteName(top, name);
       pad.addChuteName(bottom, name);
       level.makeLinked(top, bottom);
       
       Chute add = new Chute();
-      pad.addEdge(start, 0, merge, 1, add);
+      pad.addEdge(start, "0", merge, "1", add);
     }
   }
   
@@ -158,7 +158,7 @@ public class IntersectionLevel
       Chute chute = new Chute();
       fieldToChute.put(name, chute);
       
-      constructor.addEdge(start, 0, outgoing, 0, chute);
+      constructor.addEdge(start, "0", outgoing, "0", chute);
       constructor.addChuteName(chute, name);
     }
     
@@ -171,7 +171,7 @@ public class IntersectionLevel
       Chute chute = new Chute();
       fieldToChute.put(name, chute);
       
-      constructor.addEdge(start, 0, outgoing, 1, chute);
+      constructor.addEdge(start, "0", outgoing, "1", chute);
       constructor.addChuteName(chute, name);
     }
     
@@ -184,7 +184,7 @@ public class IntersectionLevel
       Chute chute = new Chute();
       fieldToChute.put(name, chute);
       
-      constructor.addEdge(start, 0, outgoing, 2, chute);
+      constructor.addEdge(start, "0", outgoing, "2", chute);
       constructor.addChuteName(chute, name);
     }
     
@@ -197,7 +197,7 @@ public class IntersectionLevel
       Chute chute = new Chute();
       fieldToChute.put(name, chute);
       
-      constructor.addEdge(start, 0, outgoing, 3, chute);
+      constructor.addEdge(start, "0", outgoing, "3", chute);
       constructor.addChuteName(chute, name);
     }
   }
@@ -222,14 +222,14 @@ public class IntersectionLevel
       Chute top = new Chute();
       Chute bottom = top.copy();
       bottom.setPinched(true);
-      setIn.addEdge(incoming, 0, split, 0, top);
-      setIn.addEdge(split, 0, outgoing, 0, bottom);
+      setIn.addEdge(incoming, "0", split, "0", top);
+      setIn.addEdge(split, "0", outgoing, "0", bottom);
       setIn.addChuteName(top, name);
       setIn.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
       
       Chute middle = new Chute();
-      setIn.addEdge(split, 1, padSub, 0, middle);
+      setIn.addEdge(split, "1", padSub, "0", middle);
     }
     
     // connect input aux and argument chutes:
@@ -242,16 +242,16 @@ public class IntersectionLevel
       Chute middle = top.copy();
       Chute bottom = top.copy();
       
-      setIn.addEdge(incoming, 1, padSub, 1, top);
-      setIn.addEdge(padSub, 0, merge, 0, middle);
-      setIn.addEdge(merge, 0, outgoing, 1, bottom);
+      setIn.addEdge(incoming, "1", padSub, "1", top);
+      setIn.addEdge(padSub, "0", merge, "0", middle);
+      setIn.addEdge(merge, "0", outgoing, "1", bottom);
       setIn.addChuteName(top, name);
       setIn.addChuteName(middle, name);
       setIn.addChuteName(bottom, name);
       level.makeLinked(top, middle, bottom, fieldToChute.get(name));
       
       Chute arg = new Chute();
-      setIn.addEdge(incoming, 4, merge, 1, arg);
+      setIn.addEdge(incoming, "4", merge, "1", arg);
     }
     
     // connect other chutes:
@@ -278,14 +278,14 @@ public class IntersectionLevel
       Chute top = new Chute();
       Chute bottom = top.copy();
       bottom.setPinched(true);
-      setOut.addEdge(incoming, 2, split, 0, top);
-      setOut.addEdge(split, 0, outgoing, 2, bottom);
+      setOut.addEdge(incoming, "2", split, "0", top);
+      setOut.addEdge(split, "0", outgoing, "2", bottom);
       setOut.addChuteName(top, name);
       setOut.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
       
       Chute middle = new Chute();
-      setOut.addEdge(split, 1, padSub, 0, middle);
+      setOut.addEdge(split, "1", padSub, "0", middle);
     }
     
     // connect output aux and argument chutes:
@@ -298,16 +298,16 @@ public class IntersectionLevel
       Chute middle = top.copy();
       Chute bottom = top.copy();
       
-      setOut.addEdge(incoming, 3, padSub, 1, top);
-      setOut.addEdge(padSub, 0, merge, 0, middle);
-      setOut.addEdge(merge, 0, outgoing, 3, bottom);
+      setOut.addEdge(incoming, "3", padSub, "1", top);
+      setOut.addEdge(padSub, "0", merge, "0", middle);
+      setOut.addEdge(merge, "0", outgoing, "3", bottom);
       setOut.addChuteName(top, name);
       setOut.addChuteName(middle, name);
       setOut.addChuteName(bottom, name);
       level.makeLinked(top, middle, bottom, fieldToChute.get(name));
       
       Chute arg = new Chute();
-      setOut.addEdge(incoming, 4, merge, 1, arg);
+      setOut.addEdge(incoming, "4", merge, "1", arg);
     }
     
     // connect other chutes:
@@ -335,8 +335,8 @@ public class IntersectionLevel
       Chute top = new Chute();
       Chute bottom = top.copy();
       
-      getIn.addEdge(incoming, 1, split, 0, top);
-      getIn.addEdge(split, 0, outgoing, 1, bottom);
+      getIn.addEdge(incoming, "1", split, "0", top);
+      getIn.addEdge(split, "0", outgoing, "1", bottom);
       getIn.addChuteName(top, name);
       getIn.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
@@ -348,9 +348,9 @@ public class IntersectionLevel
       Chute right = new Chute();
       Chute ret = new Chute();
       
-      getIn.addEdge(split, 1, merge, 0, inBetween);
-      getIn.addEdge(start, 0, merge, 1, right);
-      getIn.addEdge(merge, 0, outgoing, 4, ret);
+      getIn.addEdge(split, "1", merge, "0", inBetween);
+      getIn.addEdge(start, "0", merge, "1", right);
+      getIn.addEdge(merge, "0", outgoing, "4", ret);
     }
     
     // connect other chutes:
@@ -377,8 +377,8 @@ public class IntersectionLevel
       Chute top = new Chute();
       Chute bottom = top.copy();
       
-      getOut.addEdge(incoming, 3, split, 0, top);
-      getOut.addEdge(split, 0, outgoing, 3, bottom);
+      getOut.addEdge(incoming, "3", split, "0", top);
+      getOut.addEdge(split, "0", outgoing, "3", bottom);
       getOut.addChuteName(top, name);
       getOut.addChuteName(bottom, name);
       level.makeLinked(top, bottom, fieldToChute.get(name));
@@ -390,9 +390,9 @@ public class IntersectionLevel
       Chute right = new Chute();
       Chute ret = new Chute();
       
-      getOut.addEdge(split, 1, merge, 0, inBetween);
-      getOut.addEdge(start, 0, merge, 1, right);
-      getOut.addEdge(merge, 0, outgoing, 4, ret);
+      getOut.addEdge(split, "1", merge, "0", inBetween);
+      getOut.addEdge(start, "0", merge, "1", right);
+      getOut.addEdge(merge, "0", outgoing, "4", ret);
     }
     
     // connect other chutes:

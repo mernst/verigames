@@ -1,0 +1,3 @@
+Constraints:
+subtype constraint: Variable 1 at method ReturnNew#m():Ljava/lang/Object; creation 0; tree Object  <:  Variable 0 at method ReturnNew#m():Ljava/lang/Object; return type; tree Object
+

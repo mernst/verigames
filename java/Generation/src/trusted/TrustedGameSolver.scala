@@ -43,8 +43,8 @@ class TrustedGameSolver extends GameSolver {
                 board.addNode(blackball)
                 board.addNode(merge)
 
-                board.addEdge(lastIntersection, 0, merge, 0, new Chute(supvar.id, supvar.toString()))
-                board.addEdge(blackball, 0, merge, 1, new Chute(-1, "untrusted string"))
+                board.addEdge(lastIntersection, "0", merge, "0", new Chute(supvar.id, supvar.toString()))
+                board.addEdge(blackball, "0", merge, "1", new Chute(-1, "untrusted string"))
 
                 boardNVariableToIntersection.update((board, supvar), merge)
               } else {
@@ -62,22 +62,22 @@ class TrustedGameSolver extends GameSolver {
                   val suplast = findIntersection(board, sup)
 
                   if (isUniqueSlot(sub)) {
-                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                    board.addEdge(sublast, "0", merge, "1", createChute(sub))
+                    board.addEdge(suplast, "0", merge, "0", createChute(sup))
 
                     updateIntersection(board, sup, merge)
                   } else if (isUniqueSlot(sup)) {
-                    board.addEdge(sublast, 0, merge, 1, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
+                    board.addEdge(sublast, "0", merge, "1", createChute(sub))
+                    board.addEdge(suplast, "0", merge, "0", createChute(sup))
 
                     updateIntersection(board, sub, merge)
                   } else {
                     val split = Intersection.factory(Intersection.Kind.SPLIT)
                     board.addNode(split)
 
-                    board.addEdge(sublast, 0, split, 0, createChute(sub))
-                    board.addEdge(suplast, 0, merge, 0, createChute(sup))
-                    board.addEdge(split, 1, merge, 1, createChute(sub))
+                    board.addEdge(sublast, "0", split, "0", createChute(sub))
+                    board.addEdge(suplast, "0", merge, "0", createChute(sup))
+                    board.addEdge(split, "1", merge, "1", createChute(sub))
 
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
@@ -106,7 +106,7 @@ class TrustedGameSolver extends GameSolver {
               }
               pipe.setEditable(false)
 
-              board.addEdge(lastIntersection, 0, con, 0, pipe)
+              board.addEdge(lastIntersection, "0", con, "0", pipe)
 
               boardNVariableToIntersection.update((board, leftvar), con)
             } else {
@@ -132,7 +132,7 @@ class TrustedGameSolver extends GameSolver {
 
                 val elllast = findIntersection(board, ellvar)
 
-                board.addEdge(elllast, 0, con, 0, chute)
+                board.addEdge(elllast, "0", con, "0", chute)
 
                 updateIntersection(board, ellvar, con)
               }

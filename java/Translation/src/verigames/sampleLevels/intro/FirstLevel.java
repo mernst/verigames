@@ -51,11 +51,11 @@ public class FirstLevel
     bottomLeft.setPinched(true);
     bottomRight.setPinched(true);
     
-    b.addEdge(startLeft, 0, split, 0, topLeft);
-    b.addEdge(split, 0, outgoing, 0, bottomLeft);
-    b.addEdge(split, 1, merge, 0, new Chute());
-    b.addEdge(startRight, 0, merge, 1, topRight);
-    b.addEdge(merge, 0, outgoing, 1, bottomRight);
+    b.addEdge(startLeft, "0", split, "0", topLeft);
+    b.addEdge(split, "0", outgoing, "0", bottomLeft);
+    b.addEdge(split, "1", merge, "0", new Chute());
+    b.addEdge(startRight, "0", merge, "1", topRight);
+    b.addEdge(merge, "0", outgoing, "1", bottomRight);
     
     parent.makeLinked(topLeft, bottomLeft);
     parent.makeLinked(topRight, bottomRight);

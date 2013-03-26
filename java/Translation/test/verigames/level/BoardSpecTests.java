@@ -59,7 +59,7 @@ public class BoardSpecTests
     board.addNode(split);
     assertTrue("board should contain split node", board.contains(split));
     
-    board.addEdge(incoming, 0, split, 0, chute1);
+    board.addEdge(incoming, "0", split, "0", chute1);
     assertTrue("board should contain chute1", board.contains(chute1));
     
   }

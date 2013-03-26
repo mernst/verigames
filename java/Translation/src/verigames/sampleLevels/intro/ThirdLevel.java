@@ -50,9 +50,9 @@ public class ThirdLevel
     field2.setNarrow(true);
     field3.setNarrow(false);
     
-    b.addEdge(incoming, 0, outgoing, 0, field1);
-    b.addEdge(incoming, 1, outgoing, 1, field2);
-    b.addEdge(incoming, 2, outgoing, 2, field3);
+    b.addEdge(incoming, "0", outgoing, "0", field1);
+    b.addEdge(incoming, "1", outgoing, "1", field2);
+    b.addEdge(incoming, "2", outgoing, "2", field3);
   }
   
   private static void addFoo(Level parent, Map<String, Chute> fieldToChute)
@@ -70,14 +70,14 @@ public class ThirdLevel
       Chute top = new Chute();
       top.setNarrow(false);
 
-      b.addEdge(incoming, 0, end, 0, top);
+      b.addEdge(incoming, "0", end, "0", top);
       
       Intersection start = factory(START_LARGE_BALL);
       b.addNode(start);
       
       Chute bottom = new Chute();
       bottom.setNarrow(false);
-      b.addEdge(start, 0, outgoing, 0, bottom);
+      b.addEdge(start, "0", outgoing, "0", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field1"));
     }
@@ -94,9 +94,9 @@ public class ThirdLevel
       bottom.setNarrow(true);
       right.setNarrow(true);
       
-      b.addEdge(incoming, 1, split, 0, top);
-      b.addEdge(split, 0, outgoing, 1, bottom);
-      b.addEdge(split, 1, outgoing, 4, right);
+      b.addEdge(incoming, "1", split, "0", top);
+      b.addEdge(split, "0", outgoing, "1", bottom);
+      b.addEdge(split, "1", outgoing, "4", right);
       
       parent.makeLinked(top, bottom, right, fieldToChute.get("field2"));
     }
@@ -113,9 +113,9 @@ public class ThirdLevel
       bottom.setNarrow(false);
       right.setNarrow(false);
       
-      b.addEdge(incoming, 2, split, 0, top);
-      b.addEdge(split, 0, outgoing, 2, bottom);
-      b.addEdge(split, 1, outgoing, 5, right);
+      b.addEdge(incoming, "2", split, "0", top);
+      b.addEdge(split, "0", outgoing, "2", bottom);
+      b.addEdge(split, "1", outgoing, "5", right);
       
       parent.makeLinked(top, bottom, right, fieldToChute.get("field3"));
     }
@@ -125,7 +125,7 @@ public class ThirdLevel
       Intersection start = factory(START_SMALL_BALL);
       b.addNode(start);
       
-      b.addEdge(start, 0, outgoing, 3, new Chute());
+      b.addEdge(start, "0", outgoing, "3", new Chute());
     }
   }
   
@@ -147,8 +147,8 @@ public class ThirdLevel
       top.setNarrow(false);
       bottom.setNarrow(false);
       
-      b.addEdge(incoming, 0, foo, 0, top);
-      b.addEdge(foo, 0, outgoing, 0, bottom);
+      b.addEdge(incoming, "0", foo, "0", top);
+      b.addEdge(foo, "0", outgoing, "0", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field1"));
     }
@@ -161,8 +161,8 @@ public class ThirdLevel
       top.setNarrow(true);
       bottom.setNarrow(true);
       
-      b.addEdge(incoming, 1, foo, 1, top);
-      b.addEdge(foo, 1, outgoing, 1, bottom);
+      b.addEdge(incoming, "1", foo, "1", top);
+      b.addEdge(foo, "1", outgoing, "1", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field2"));
     }
@@ -175,8 +175,8 @@ public class ThirdLevel
       top.setNarrow(false);
       bottom.setNarrow(false);
       
-      b.addEdge(incoming, 2, foo, 2, top);
-      b.addEdge(foo, 2, outgoing, 2, bottom);
+      b.addEdge(incoming, "2", foo, "2", top);
+      b.addEdge(foo, "2", outgoing, "2", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field3"));
     }
@@ -191,7 +191,7 @@ public class ThirdLevel
       
       chute.setPinched(true);
       
-      b.addEdge(foo, 3, end, 0, chute);
+      b.addEdge(foo, "3", end, "0", chute);
     }
     
     // Add second foo return value chute and first argument chute:
@@ -207,15 +207,15 @@ public class ThirdLevel
       top.setNarrow(true);
       bottom.setNarrow(true);
       
-      b.addEdge(foo, 4, merge, 0, top);
-      b.addEdge(merge, 0, end, 0, bottom);
+      b.addEdge(foo, "4", merge, "0", top);
+      b.addEdge(merge, "0", end, "0", bottom);
       
       parent.makeLinked(top, bottom);
       
       Chute arg = new Chute();
       arg.setNarrow(false);
       
-      b.addEdge(incoming, 3, merge, 1, arg);
+      b.addEdge(incoming, "3", merge, "1", arg);
     }
     
     // Add third foo return value chute, second argument chute, and return
@@ -236,20 +236,20 @@ public class ThirdLevel
       middle.setNarrow(false);
       bottom.setNarrow(false);
       
-      b.addEdge(foo, 5, merge, 0, top);
-      b.addEdge(merge, 0, split, 0, middle);
-      b.addEdge(split, 0, end, 0, bottom);
+      b.addEdge(foo, "5", merge, "0", top);
+      b.addEdge(merge, "0", split, "0", middle);
+      b.addEdge(split, "0", end, "0", bottom);
       
       parent.makeLinked(top, bottom, middle);
       
       Chute arg = new Chute();
       arg.setNarrow(true);
-      b.addEdge(incoming, 4, merge, 1, arg);
+      b.addEdge(incoming, "4", merge, "1", arg);
       
       Chute ret = new Chute();
       ret.setNarrow(false);
       ret.setPinched(true);
-      b.addEdge(split, 1, outgoing, 3, ret);
+      b.addEdge(split, "1", outgoing, "3", ret);
     }
   }
   
@@ -271,8 +271,8 @@ public class ThirdLevel
       top.setNarrow(false);
       bottom.setNarrow(false);
       
-      b.addEdge(incoming, 0, bar, 0, top);
-      b.addEdge(bar, 0, outgoing, 0, bottom);
+      b.addEdge(incoming, "0", bar, "0", top);
+      b.addEdge(bar, "0", outgoing, "0", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field1"));
     }
@@ -285,8 +285,8 @@ public class ThirdLevel
       top.setNarrow(true);
       bottom.setNarrow(true);
       
-      b.addEdge(incoming, 1, bar, 1, top);
-      b.addEdge(bar, 1, outgoing, 1, bottom);
+      b.addEdge(incoming, "1", bar, "1", top);
+      b.addEdge(bar, "1", outgoing, "1", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field2"));
     }
@@ -299,8 +299,8 @@ public class ThirdLevel
       top.setNarrow(false);
       bottom.setNarrow(false);
       
-      b.addEdge(incoming, 2, bar, 2, top);
-      b.addEdge(bar, 2, outgoing, 2, bottom);
+      b.addEdge(incoming, "2", bar, "2", top);
+      b.addEdge(bar, "2", outgoing, "2", bottom);
       
       parent.makeLinked(top, bottom, fieldToChute.get("field3"));
     }
@@ -313,7 +313,7 @@ public class ThirdLevel
       Chute c = new Chute();
       c.setNarrow(false);
       
-      b.addEdge(start, 0, bar, 3, c);
+      b.addEdge(start, "0", bar, "3", c);
     }
     
     // Add second bar argument:
@@ -324,7 +324,7 @@ public class ThirdLevel
       Chute c = new Chute();
       c.setNarrow(true);
       
-      b.addEdge(start, 0, bar, 4, c);
+      b.addEdge(start, "0", bar, "4", c);
     }
     
     // Add return value:
@@ -332,7 +332,7 @@ public class ThirdLevel
       Chute c = new Chute();
       c.setNarrow(false);
       
-      b.addEdge(bar, 3, outgoing, 3, c);
+      b.addEdge(bar, "3", outgoing, "3", c);
     }
   }
 }

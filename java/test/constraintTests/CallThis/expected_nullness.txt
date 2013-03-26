@@ -1,0 +1,35 @@
+Constraints:
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class CallThis field o; tree Object
+
+inequality constraint at method CallThis#m2():Ljava/lang/Object; constraint position: Variable 3 at method CallThis#m2():Ljava/lang/Object; creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 3 at method CallThis#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 2 at method CallThis#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 5 at method CallThis#m3(LCallThis;):V creation 0; tree Object  <:  Variable 1 at method CallThis#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+inequality constraint at method CallThis#m3(LCallThis;):V constraint position: Variable 5 at method CallThis#m3(LCallThis;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Literal(OTHER, "this"); called method: method CallThis#m1(Ljava/lang/Object;):V(List(Variable 5 at method CallThis#m3(LCallThis;):V creation 0; tree Object)) result: Constant(@nninf.quals.Nullable)
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 1 at method CallThis#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Literal(OTHER, "this"); called method: method CallThis#m1(Ljava/lang/Object;):V(List(Literal(OTHER, "this"))) result: Constant(@nninf.quals.Nullable)
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 1 at method CallThis#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+inequality constraint at method CallThis#m3(LCallThis;):V constraint position: Variable 4 at method CallThis#m3(LCallThis;):V parameter 0; tree CallThis != Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Variable 4 at method CallThis#m3(LCallThis;):V parameter 0; tree CallThis; called method: method CallThis#m1(Ljava/lang/Object;):V(List(Literal(OTHER, "this"))) result: Constant(@nninf.quals.Nullable)
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 1 at method CallThis#m1(Ljava/lang/Object;):V parameter 0; tree Object
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Literal(OTHER, "this"); called method: method CallThis#m1(Ljava/lang/Object;):V(List(Literal(OTHER, "this"))) result: Constant(@nninf.quals.Nullable)
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Literal(OTHER, "this"); called method: method CallThis#m2():Ljava/lang/Object;() result: Variable 2 at method CallThis#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 2 at method CallThis#m2():Ljava/lang/Object; return type; tree Object  <:  Variable 6 at method CallThis#m3(LCallThis;):V local variable x(0); tree Object
+
+call instance method constraint; caller method CallThis#m3(LCallThis;):V constraint position; receiver slot: Literal(OTHER, "this"); called method: method CallThis#m2():Ljava/lang/Object;() result: Variable 2 at method CallThis#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 7 at method CallThis#m3(LCallThis;):V local variable y(0); tree Object
+

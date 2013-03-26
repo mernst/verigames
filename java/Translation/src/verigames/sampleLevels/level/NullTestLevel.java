@@ -42,7 +42,7 @@ public class NullTestLevel
     
     Intersection getOut = subboardFactory("Intersection.getOutputChute");
     getChute.addNode(getOut);
-    getChute.addEdge(getOut, 0, outgoing, 0, new Chute());
+    getChute.addEdge(getOut, "0", outgoing, "0", new Chute());
   }
   
   /**
@@ -70,12 +70,12 @@ public class NullTestLevel
     Chute bottom = top.copy();
     String name = "chute";
     
-    setChute.addEdge(incoming, 0, split, 0, top);
-    setChute.addEdge(split, 1, end, 0, bottom);
+    setChute.addEdge(incoming, "0", split, "0", top);
+    setChute.addEdge(split, "1", end, "0", bottom);
     setChute.addChuteName(top, name);
     setChute.addChuteName(bottom, name);
     level.makeLinked(top, bottom);
     
-    setChute.addEdge(split, 0, setOut, 0, new Chute());
+    setChute.addEdge(split, "0", setOut, "0", new Chute());
   }
 }

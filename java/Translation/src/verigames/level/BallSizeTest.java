@@ -6,6 +6,9 @@ import java.util.*;
 import checkers.nullness.quals.*;
 */
 
+// TODO check if there is cleanup needed here after the deprecated int port
+// removal
+
 /**
  * An {@link Intersection} subclass that represents {@link
  * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST} {@link Intersection.Kind
@@ -34,12 +37,6 @@ public class BallSizeTest extends Intersection
 
   private static final String SMALL_PORT = "small";
   private static final String LARGE_PORT = "large";
-
-  // TODO remove old port numbers when possible
-  @Deprecated
-  private static final String SMALL_PORT_OLD = "0";
-  @Deprecated
-  private static final String LARGE_PORT_OLD = "1";
 
   private static final boolean CHECK_REP_ENABLED =
       verigames.utilities.Misc.CHECK_REP_ENABLED;
@@ -119,7 +116,7 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getWideChute()
   {
-    return getOneOfOutput(LARGE_PORT, LARGE_PORT_OLD);
+    return getOutput(LARGE_PORT);
   }
 
   /**
@@ -152,20 +149,7 @@ public class BallSizeTest extends Intersection
    */
   public /*@Nullable*/ Chute getNarrowChute()
   {
-    return getOneOfOutput(SMALL_PORT, SMALL_PORT_OLD);
-  }
-
-  /**
-   * Returns getOutput(firstChoice), if non-null. Else, returns
-   * getOuptut(secondChoice)
-   */
-  private /*@Nullable*/ Chute getOneOfOutput(String firstChoice, String secondChoice)
-  {
-    Chute first = getOutput(firstChoice);
-    if (first != null)
-      return first;
-    else
-      return getOutput(secondChoice);
+    return getOutput(SMALL_PORT);
   }
 
   /**
@@ -214,42 +198,13 @@ public class BallSizeTest extends Intersection
   @Override
   protected void setOutput(Chute output, String port)
   {
-    // retains support for old port numbers in string form
     if (port.equals(SMALL_PORT))
       setNarrowChute(output);
     else if (port.equals(LARGE_PORT))
       setWideChute(output);
-    // TODO remove old port support. This support is a hack
-    else if (port.equals(SMALL_PORT_OLD))
-    {
-      if (output.isEditable())
-        throw new IllegalArgumentException(
-            "Chute passed to setNarrowChute must not be editable");
-      if (!output.isNarrow())
-        throw new IllegalArgumentException(
-            "Chute passed to setNarrowChute must be narrow");
-      super.setOutput(output, port);
-      checkRep();
-    }
-    else if (port.equals(LARGE_PORT_OLD))
-    {
-      if (output.isEditable())
-        throw new IllegalArgumentException(
-            "Chute passed to setNullChute must not be editable");
-      if (output.isNarrow())
-        throw new IllegalArgumentException(
-            "Chute passed to setNullChute must not be narrow");
-      super.setOutput(output, port);
-    }
     else
       throw new IllegalArgumentException("port " + port
           + " illegal for BallSizeTest node");
-  }
-
-  @Override
-  protected void setOutput(Chute output, int port)
-  {
-    setOutput(output, Integer.toString(port));
   }
 
   @Override
@@ -264,14 +219,9 @@ public class BallSizeTest extends Intersection
 
     if (unorderedPortsList.contains(SMALL_PORT))
       portsList.add(SMALL_PORT);
-    // TODO remove support for old port IDs
-    else if (unorderedPortsList.contains(SMALL_PORT_OLD))
-      portsList.add(SMALL_PORT_OLD);
 
     if (unorderedPortsList.contains(LARGE_PORT))
       portsList.add(LARGE_PORT);
-    else if (unorderedPortsList.contains(LARGE_PORT_OLD))
-      portsList.add(LARGE_PORT_OLD);
 
     return Collections.unmodifiableList(portsList);
   }

@@ -17,11 +17,11 @@ import verigames.level.Level;
 @SuppressWarnings("deprecation")
 public class SubnetworkLevel
 {
-  private static final Map<String, Integer> nameToPortMap;
+  private static final Map<String, String> nameToPortMap;
   static
   {
-    nameToPortMap = new LinkedHashMap<String, Integer>();
-    nameToPortMap.put("name", 0);
+    nameToPortMap = new LinkedHashMap<String, String>();
+    nameToPortMap.put("name", "0");
   }
   
   public static Level makeLevel()
@@ -49,8 +49,8 @@ public class SubnetworkLevel
         Chute bottom = top.copy();
         String name = "methodName";
         
-        constructor.addEdge(incoming, 0, split, 0, top);
-        constructor.addEdge(split, 1, end, 0, bottom);
+        constructor.addEdge(incoming, "0", split, "0", top);
+        constructor.addEdge(split, "1", end, "0", bottom);
         constructor.addChuteName(top, name);
         constructor.addChuteName(bottom, name);
         
@@ -59,7 +59,7 @@ public class SubnetworkLevel
       
       // make name chute:
       nameChute = new Chute();
-      constructor.addEdge(split, 0, outgoing, 0, nameChute);
+      constructor.addEdge(split, "0", outgoing, "0", nameChute);
       constructor.addChuteName(nameChute, "name");
     }
     
@@ -77,13 +77,13 @@ public class SubnetworkLevel
       Chute bottom = top.copy();
       String name = "name";
       
-      subnetworkName.addEdge(incoming, 0, split, 0, top);
-      subnetworkName.addEdge(split, 0, outgoing, 0, bottom);
+      subnetworkName.addEdge(incoming, "0", split, "0", top);
+      subnetworkName.addEdge(split, "0", outgoing, "0", bottom);
       subnetworkName.addChuteName(top, name);
       subnetworkName.addChuteName(bottom, name);
       l.makeLinked(top, bottom, nameChute);
       
-      subnetworkName.addEdge(split, 1, outgoing, 1, new Chute());
+      subnetworkName.addEdge(split, "1", outgoing, "1", new Chute());
     }
     
     return l;

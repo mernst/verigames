@@ -192,12 +192,6 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     checkRep();
   }
 
-  @Deprecated
-  protected void setStart(NodeType startNode, int port)
-  {
-    setStart(startNode, Integer.toString(port));
-  }
-
   /**
    * Sets {@code end} to the {@code endNode}, replacing {@code end}'s old
    * value, if it exists<br/>
@@ -222,12 +216,6 @@ public abstract class Edge<NodeType extends Node<? extends Edge<NodeType>>>
     this.end = endNode;
     this.endPort = port;
     checkRep();
-  }
-
-  @Deprecated
-  protected void setEnd(NodeType endNode, int port)
-  {
-    setEnd(endNode, Integer.toString(port));
   }
 
   /**

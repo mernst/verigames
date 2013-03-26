@@ -48,8 +48,8 @@ public class SecondLevel
     b.addNode(left);
     b.addNode(right);
     
-    b.addEdge(left, 0, outgoing, 0, field1);
-    b.addEdge(right, 0, outgoing, 1, field2);
+    b.addEdge(left, "0", outgoing, "0", field1);
+    b.addEdge(right, "0", outgoing, "1", field2);
   }
   
   private static void addFirstBoard(Level parent, Map<String, Chute> fieldToChute)
@@ -63,7 +63,7 @@ public class SecondLevel
       Chute field1 = new Chute();
       field1.setNarrow(true);
       field1.setPinched(true);
-      b.addEdge(incoming, 0, outgoing, 0, field1);
+      b.addEdge(incoming, "0", outgoing, "0", field1);
       parent.makeLinked(field1, fieldToChute.get("field1"));
     }
     
@@ -76,14 +76,14 @@ public class SecondLevel
       Chute field2bottom = new Chute();
       field2bottom.setNarrow(true);
       
-      b.addEdge(incoming, 1, merge, 0, field2top);
-      b.addEdge(merge, 0, outgoing, 1, field2bottom);
+      b.addEdge(incoming, "1", merge, "0", field2top);
+      b.addEdge(merge, "0", outgoing, "1", field2bottom);
       parent.makeLinked(field2top, field2bottom, fieldToChute.get("field2"));
       
       Chute arg = new Chute();
       arg.setNarrow(false);
       
-      b.addEdge(incoming, 2, merge, 1, arg);
+      b.addEdge(incoming, "2", merge, "1", arg);
     }
   }
   
@@ -98,7 +98,7 @@ public class SecondLevel
       Chute field1 = new Chute();
       field1.setNarrow(true);
       field1.setPinched(true);
-      b.addEdge(incoming, 0, outgoing, 0, field1);
+      b.addEdge(incoming, "0", outgoing, "0", field1);
       parent.makeLinked(field1, fieldToChute.get("field1"));
     }
     
@@ -112,14 +112,14 @@ public class SecondLevel
       Chute field2bottom = new Chute();
       field2bottom.setNarrow(true);
       
-      b.addEdge(incoming, 1, split, 0, field2top);
-      b.addEdge(split, 0, outgoing, 1, field2bottom);
+      b.addEdge(incoming, "1", split, "0", field2top);
+      b.addEdge(split, "0", outgoing, "1", field2bottom);
       parent.makeLinked(field2top, field2bottom, fieldToChute.get("field2"));
       
       Chute ret = new Chute();
       ret.setNarrow(false);
       
-      b.addEdge(split, 1, outgoing, 2, ret);
+      b.addEdge(split, "1", outgoing, "2", ret);
     }
   }
 }

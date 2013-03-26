@@ -84,7 +84,7 @@ public class BoardImpTests
    */
   @Test(expected = IllegalArgumentException.class) public void testAddEdge1()
   {
-    testObjs.board.addEdge(testObjs.incoming, 0, testObjs.outgoing, 0,
+    testObjs.board.addEdge(testObjs.incoming, "0", testObjs.outgoing, "0",
         testObjs.chute1);
   }
   
@@ -102,7 +102,7 @@ public class BoardImpTests
     {
       fail("Unit test failed on configuration");
     }
-    testObjs.board.addEdge(testObjs.split, 0, testObjs.outgoing, 0, testObjs.chute1);
+    testObjs.board.addEdge(testObjs.split, "0", testObjs.outgoing, "0", testObjs.chute1);
   }
   
   /**
@@ -119,7 +119,7 @@ public class BoardImpTests
     {
       fail("Unit test failed on configuration");
     }
-    testObjs.board.addEdge(testObjs.incoming, 0, testObjs.merge, 0, testObjs.chute1);
+    testObjs.board.addEdge(testObjs.incoming, "0", testObjs.merge, "0", testObjs.chute1);
   }
   
   /**
@@ -133,12 +133,12 @@ public class BoardImpTests
       testObjs.board.addNode(testObjs.merge);
       testObjs.board.addNode(testObjs.split);
       testObjs.board.addNode(testObjs.outgoing);
-      testObjs.board.addEdge(testObjs.incoming, 0, testObjs.merge, 0, testObjs.chute1);
+      testObjs.board.addEdge(testObjs.incoming, "0", testObjs.merge, "0", testObjs.chute1);
     }
     catch (Exception e)
     {
       fail("Unit test failed on configuration");
     }
-    testObjs.board.addEdge(testObjs.split, 0, testObjs.outgoing, 0, testObjs.chute1);
+    testObjs.board.addEdge(testObjs.split, "0", testObjs.outgoing, "0", testObjs.chute1);
   }
 }

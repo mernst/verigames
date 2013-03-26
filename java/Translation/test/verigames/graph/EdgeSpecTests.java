@@ -16,8 +16,8 @@ public class EdgeSpecTests
   {
     Edge<?> e = new ConcreteEdge();
     
-    invokeMethod(e, "setStart", new ConcreteNode(), 0);
-    invokeMethod(e, "setEnd", new ConcreteNode(), 0);
+    invokeMethod(e, "setStart", new ConcreteNode(), "0");
+    invokeMethod(e, "setEnd", new ConcreteNode(), "0");
     invokeMethod(e, "finishConstruction");
   }
 }

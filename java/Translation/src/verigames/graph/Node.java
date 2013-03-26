@@ -136,12 +136,6 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     checkRep();
   }
 
-  @Deprecated
-  protected void setInput(EdgeType input, int port)
-  {
-    setInput(input, Integer.toString(port));
-  }
-
   /**
    * Adds the given edge to {@code outputs} with the given port number.<br/>
    * <br/>
@@ -176,12 +170,6 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     checkRep();
   }
 
-  @Deprecated
-  protected void setOutput(EdgeType output, int port)
-  {
-    setOutput(output, Integer.toString(port));
-  }
-
   /**
    * Returns the edge at the given port, or {@code null} if none exists.
    * <p>
@@ -193,12 +181,6 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
     return inputs.get(port);
   }
 
-  @Deprecated
-  public /*@Nullable*/ EdgeType getInput(int port)
-  {
-    return getInput(Integer.toString(port));
-  }
-
   /**
    * Returns the edge at the given port, or {@code null} if none exists.
    * <p>
@@ -208,12 +190,6 @@ public abstract class Node<EdgeType extends Edge<? extends Node<EdgeType>>>
   public /*@Nullable*/ EdgeType getOutput(String port)
   {
     return outputs.get(port);
-  }
-
-  @Deprecated
-  public /*@Nullable*/ EdgeType getOutput(int port)
-  {
-    return getOutput(Integer.toString(port));
   }
 
   /**
