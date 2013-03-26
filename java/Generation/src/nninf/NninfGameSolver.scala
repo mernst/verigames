@@ -9,6 +9,8 @@ import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
 import games.GameSolver
+import util.VGJavaConversions._
+import Intersection.Kind._
 
 class NninfGameSolver extends GameSolver {
 
@@ -40,17 +42,14 @@ class NninfGameSolver extends GameSolver {
                 // Assume sup is a variable. Alternatives?
                 val supvar = sup.asInstanceOf[Variable]
                 board = variablePosToBoard(supvar.varpos)
-                val blackball = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
+
+                val lastIntersection = boardNVariableToIntersection((board, supvar))
+                val merge = board.add(lastIntersection, "output", MERGE, "left", toChute(supvar))._2
+
                 val blackballchute = new Chute(-1, "null literal")
                 blackballchute.setEditable(false)
-                merge = Intersection.factory(Intersection.Kind.MERGE)
-                val lastIntersection = boardNVariableToIntersection((board, supvar))
 
-                board.addNode(blackball)
-                board.addNode(merge)
-
-                board.addEdge(lastIntersection, "output", merge, "left", new Chute(supvar.id, supvar.toString()))
-                board.addEdge(blackball, "output", merge, "right", blackballchute)
+                val blackball  = board.add(Intersection.Kind.START_LARGE_BALL, "output", merge, "right", blackballchute)._1
 
                 boardNVariableToIntersection.update((board, supvar), merge)
               } else {
@@ -78,12 +77,12 @@ class NninfGameSolver extends GameSolver {
                   board.addNode(merge)
 
                   if (isUniqueSlot(sub)) {
-                    board.addEdge(sublast, "output", merge, "left", createChute(sub))
+                    board.addEdge(sublast, "output", merge, "left",  createChute(sub))
                     board.addEdge(suplast, "output", merge, "right", createChute(sup))
 
                     updateIntersection(board, sup, merge)
                   } else if (isUniqueSlot(sup)) {
-                    board.addEdge(sublast, "output", merge, "left", createChute(sub))
+                    board.addEdge(sublast, "output", merge, "left",  createChute(sub))
                     board.addEdge(suplast, "output", merge, "right", createChute(sup))
 
                     updateIntersection(board, sub, merge)
@@ -92,8 +91,8 @@ class NninfGameSolver extends GameSolver {
                     board.addNode(split)
 
                     board.addEdge(sublast, "output", split, "input", createChute(sub))
-                    board.addEdge(suplast, "output", merge, "left", createChute(sup))
-                    board.addEdge(split, "split", merge, "right", createChute(sub))
+                    board.addEdge(suplast, "output", merge, "left",  createChute(sup))
+                    board.addEdge(split,   "split",  merge, "right", createChute(sub))
 
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
@@ -140,17 +139,12 @@ class NninfGameSolver extends GameSolver {
               } else {
                 val ellvar = ell.asInstanceOf[Variable]
                 val board = variablePosToBoard(ctx);
-
-                val con = Intersection.factory(Intersection.Kind.CONNECT)
-                board.addNode(con)
-
-                val chute = new Chute(ellvar.id, ellvar.toString())
-                chute.setPinched(true)
-
                 val elllast = findIntersection(board, ellvar)
 
-                board.addEdge(elllast, "output", con, "input", chute)
+                val chute = toChute(ellvar)
+                chute.setPinched(true)
 
+                val con = board.add(elllast, "output", CONNECT, "input", chute)._2
                 updateIntersection(board, ellvar, con)
               }
             } else {
@@ -166,39 +160,16 @@ class NninfGameSolver extends GameSolver {
 
     def findIntersection(board: Board, slot: Slot): Intersection = {
       slot match {
-        case v: Variable => {
-          boardNVariableToIntersection((board, v))
-        }
-        case LiteralThis => {
-          boardToSelfIntersection(board)
-        }
-        case LiteralNull => {
-          val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
-          board.addNode(res)
-          res
-        }
-        case lit: AbstractLiteral => {
-          // TODO: Are all other literals non-null?
-          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-          board.addNode(res)
-          res
-        }
-        case NninfConstants.NULLABLE => {
-          val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
-          board.addNode(res)
-          res
-        }
-        case NninfConstants.NONNULL => {
-          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-          board.addNode(res)
-          res
-        }
-        case cv: CombVariable => {
-          // TODO: Combvariables appear for BinaryTrees.
-          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-          board.addNode(res)
-          res
-        }
+        case v: Variable =>  boardNVariableToIntersection((board, v))
+        case LiteralThis =>  boardToSelfIntersection(board)
+
+        case LiteralNull             => board.addNode(START_LARGE_BALL)
+        case NninfConstants.NULLABLE => board.addNode(START_LARGE_BALL)
+
+        case lit: AbstractLiteral    => board.addNode(START_SMALL_BALL)  // TODO: Are all other literals non-null?
+        case NninfConstants.NONNULL  => board.addNode(START_SMALL_BALL)
+        case cv: CombVariable        => board.addNode(START_SMALL_BALL)  // TODO: Combvariables appear for BinaryTrees.
+
         case _ => {
           println("findIntersection: unmatched slot: " + slot)
           null
@@ -208,30 +179,17 @@ class NninfGameSolver extends GameSolver {
 
     def updateIntersection(board: Board, slot: Slot, inters: Intersection) {
       slot match {
-        case v: Variable => {
-          boardNVariableToIntersection.update((board, v), inters)
-        }
-        case LiteralThis => {
-          boardToSelfIntersection.update(board, inters)
-        }
-        case LiteralNull => {
-          // Nothing to do, we're always creating a new black ball
-        }
-        case lit: AbstractLiteral => {
-          // Also nothing to do for other literals
-        }
-        case NninfConstants.NULLABLE => {
-          // Nothing to do, we're always creating a new black ball
-        }
-        case NninfConstants.NONNULL => {
-          // Nothing to do, we're always creating a new white ball
-        }
-        case cv: CombVariable => {
-          // TODO: Combvariables appear for BinaryTrees.
-        }
-        case _ => {
-          println("updateIntersection: unmatched slot: " + slot)
-        }
+        case v: Variable =>  boardNVariableToIntersection.update((board, v), inters)
+        case LiteralThis =>  boardToSelfIntersection.update(board, inters)
+
+        case LiteralNull             => // Nothing to do, we're always creating a new black ball
+        case lit: AbstractLiteral    => // Also nothing to do for other literals
+        case NninfConstants.NULLABLE => // Nothing to do, we're always creating a new black ball
+        case NninfConstants.NONNULL  => // Nothing to do, we're always creating a new white ball
+        case cv: CombVariable        => // TODO: Combvariables appear for BinaryTrees.
+
+        case _ =>  println("updateIntersection: unmatched slot: " + slot)
+
       }
     }
 

@@ -1,5 +1,7 @@
 
-def classDirs = files(new File(project(':Translation').projectDir, 'bin/classes/main'))
+def classDirs = files(new File(project(':Translation').projectDir, 'bin/classes/main'),
+                      new File(project(':Translation').projectDir, 'lib/xom-1.2.7.jar'))
+
 
 //This script inherits many settings from java/build.gradle
 sourceSets {

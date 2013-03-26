@@ -25,6 +25,12 @@ do
 	#create dot string for fileName.......status!
 	length="${#f}"
 	numDots=`expr 60 - ${length}`
+
+	if [ $numDots -lt 1 ]
+	then
+	    numDots=1
+	fi
+
 	dots=""
 	if [ $length -lt 60 ]
 	then
@@ -33,7 +39,6 @@ do
     		dots=$dots"." 
 		done
 	fi
-	
 	
 	eval sh $distDir"/scripts/inferNullness.sh "$f
 	

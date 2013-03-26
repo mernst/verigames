@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_06.jdk/Contents/Home
-export DIST_DIR=/Users/jburke/Documents/projects/jsr308/verigames/java/build/dist
-export SCALA_LIB=/Users/jburke/Documents/scala/current/lib
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_06.jdk/Contents/Home
+export DIST_DIR=/Users/rigsby/verigames/java/dist
+export SCALA_LIB=/usr/local/Cellar/scala/2.9.2/libexec/lib/
 
 SCALA_LIBS=("scala-library.jar" "scala-compiler.jar")
 

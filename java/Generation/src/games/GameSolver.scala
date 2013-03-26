@@ -9,6 +9,7 @@ import javax.lang.model.element.AnnotationMirror
 import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
+import util.VGJavaConversions._
 import scala.collection.mutable.Queue
 
 /**
