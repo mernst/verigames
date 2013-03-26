@@ -9,6 +9,7 @@ import javax.lang.model.element.AnnotationMirror
 import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
+import scala.collection.mutable.Queue
 
 /**
  * An abstract base class for all game solvers.
@@ -250,9 +251,23 @@ abstract class GameSolver extends ConstraintSolver {
      * Go through all constraints and add the corresponding piping to the boards.
      */
     def handleConstraints(world: World) {
+      var workQueue = new Queue[Constraint]
       constraints foreach { constraint => {
-        handleConstraint(world, constraint)
+        workQueue += constraint
       }}
+      while (!workQueue.isEmpty) {
+        val initialSize = workQueue.size
+        var i = 0
+        for (i <- 1 to initialSize) {
+          val constraint = workQueue.dequeue
+          if (!handleConstraint(world, constraint)) {
+            workQueue += constraint
+          }
+        }
+        if (workQueue.size == initialSize) {
+          throw new IllegalStateException("Constraints not solvable: " + workQueue)
+        }
+      }
     }
 
 
@@ -263,7 +278,12 @@ abstract class GameSolver extends ConstraintSolver {
     val OutputPort      = "output_"            //TODO: Standardize on a scheme
     val InputPort       = "input_"
 
-    def handleConstraint(world: World, constraint: Constraint) {
+    /*
+     * Handles a constraint (adding necessary nodes and edges) for the given world.
+     * Returns true if the constraint was successfully handled. Does not mutate and returns
+     * false if the constraint was not successfully handled.
+     */ 
+    def handleConstraint(world: World, constraint: Constraint): Boolean = {
         constraint match {
           case comp: ComparableConstraint => {
             println("TODO: support comparable constraints!")
@@ -504,6 +524,7 @@ abstract class GameSolver extends ConstraintSolver {
             // Don't do anything here and hope the subclass does something.
           }
         }
+        return true
     }
 
     /**

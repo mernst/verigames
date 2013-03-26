@@ -22,7 +22,7 @@ class TrustedGameSolver extends GameSolver {
     /**
      * Go through all constraints and add the corresponding piping to the boards.
      */
-    override def handleConstraint(world: World, constraint: Constraint) {
+    override def handleConstraint(world: World, constraint: Constraint): Boolean = {
         constraint match {
           case SubtypeConstraint(sub, sup) => {
             // No need to generate something for trivial super/sub-types.
@@ -141,9 +141,10 @@ class TrustedGameSolver extends GameSolver {
             }
           }
           case _ => {
-            super.handleConstraint(world, constraint)
+            return super.handleConstraint(world, constraint)
           }
         }
+        return true
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {

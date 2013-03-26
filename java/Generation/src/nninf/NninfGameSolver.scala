@@ -19,14 +19,16 @@ class NninfGameSolver extends GameSolver {
 
     /**
      * Go through all constraints and add the corresponding piping to the boards.
+     * Returns true if the constraint was successfully handled. Does not mutate and returns
+     * false if the constraint was not successfully handled. 
      */
-    override def handleConstraint(world: World, constraint: Constraint) {
+    override def handleConstraint(world: World, constraint: Constraint): Boolean = {
         constraint match {
           case SubtypeConstraint(sub, sup) => {
             // TODO: CombVariables should be handled by flow sensitivity. Should revisit this when flow
             // sensitivity is integrated.
             if (sup.isInstanceOf[CombVariable])
-              return;
+              return true;
             // No need to generate something for trivial super/sub-types.
             if (sup != NninfConstants.NULLABLE &&
                 sub != NninfConstants.NONNULL) {
@@ -60,10 +62,20 @@ class NninfGameSolver extends GameSolver {
                 if (board!=null) {
                   // println(sub + " <: " + sup)
 
+                  
+                  var sublast : Intersection = null
+                  var suplast : Intersection = null
+                  try {
+                	sublast = findIntersection(board, sub)
+                	suplast = findIntersection(board, sup)
+                  } catch {
+                    case e : NoSuchElementException => {
+                      return false
+                    }
+                  }
+                  
                   merge = Intersection.factory(Intersection.Kind.MERGE)
                   board.addNode(merge)
-                  val sublast = findIntersection(board, sub)
-                  val suplast = findIntersection(board, sup)
 
                   if (isUniqueSlot(sub)) {
                     board.addEdge(sublast, "output", merge, "left", createChute(sub))
@@ -146,9 +158,10 @@ class NninfGameSolver extends GameSolver {
             }
           }
           case _ => {
-            super.handleConstraint(world, constraint)
+            return super.handleConstraint(world, constraint)
           }
         }
+        return true
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {

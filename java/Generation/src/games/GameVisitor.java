@@ -35,10 +35,12 @@ public class GameVisitor extends InferenceVisitor {
 	 */
     @Override
     public Void visitVariable(VariableTree node, Void p) {
+        /* TODO: Re-orderings were causing duplicate constraints. Revisit whether we can do
+         * this smarter. 
         scan(node.getModifiers(), p);
         scan(node.getType(), p);
         scan(node.getInitializer(), p);
-
+        */
         return super.visitVariable(node, p);
     }
     

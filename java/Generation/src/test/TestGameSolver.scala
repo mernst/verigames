@@ -38,8 +38,9 @@ class TestGameSolver extends GameSolver {
 	/**
      * Go through all constraints and add the corresponding piping to the boards.
      */
-    override def handleConstraint(world: World, constraint: Constraint) {
+    override def handleConstraint(world: World, constraint: Constraint): Boolean = {
     	appendToFile(outputName, constraint.toString() + "\n")
+    	return true
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {
