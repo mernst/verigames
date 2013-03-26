@@ -61,7 +61,6 @@ class NninfGameSolver extends GameSolver {
                 if (board!=null) {
                   // println(sub + " <: " + sup)
 
-                  
                   var sublast : Intersection = null
                   var suplast : Intersection = null
                   try {
