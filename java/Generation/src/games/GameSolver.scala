@@ -510,7 +510,7 @@ abstract class GameSolver extends ConstraintSolver {
       // Connect all intersections to the corresponding outgoing slot
       // boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
         boardNVariableToIntersection foreach { case ((board, cvar), lastsect) => {
-        if (cvar.varpos.isInstanceOf[ReturnVP]) {
+        if (cvar.varpos.isInstanceOf[ReturnVP] && variablePosToBoard(cvar.varpos) == board) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
           board.addEdge(lastsect, "output", outgoing, ReturnOutPort, toChute(cvar))
