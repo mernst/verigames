@@ -1,0 +1,17 @@
+Re-use two materials, one for texture, one for flat fills.
+
+NGon
+	Add shapeHittest()
+	Calculate more accurate bounds
+
+Fill
+	Finish off trapezoidalisation in Fill.
+
+RoundedRectangle
+	Create
+	
+Stroke
+	Handle closed strokes
+	Handle gaps (more performant for multiple moveTo/lineTo combinations).
+
+	
