@@ -14,6 +14,8 @@ package scenes.game.components
 	
 	
 	import assets.AssetInterface;
+	import flash.events.MouseEvent;
+	import starling.core.Starling;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -61,7 +63,7 @@ package scenes.game.components
 		public function GridViewPanel()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
 	
@@ -84,6 +86,7 @@ package scenes.game.components
 			content.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
 		protected var startingPoint:Point;
@@ -133,19 +136,7 @@ package scenes.game.components
 							var delta:Point = touches[0].getMovement(parent);
 							var newX:Number = content.x + delta.x;
 							var newY:Number = content.y + delta.y;
-	
-							if(newX > clipRect.width*0.75)
-								newX = clipRect.width*0.75;
-							else if(newX < -.5*content.width)
-								newX = -.5*content.width;
-									
-							if(newY > clipRect.height*0.75)
-								newY = clipRect.height*0.75;
-							else if(newY < -(content.height - .5*clipRect.height))
-								newY = -(content.height - .5*clipRect.height);
-
-							content.x = newX;
-							content.y = newY;
+							moveContent(newX, newY);
 						}
 					}
 					else if (touches.length == 2)
@@ -181,35 +172,8 @@ package scenes.game.components
 						
 						// scale
 						var sizeDiff:Number = currentVector.length / previousVector.length;
-	
-						var newScaleX:Number = content.scaleX*sizeDiff;
-						var newScaleY:Number = content.scaleY*sizeDiff;
-						if(newScaleX > 2.5 &&  newScaleX > newScaleY)
-						{
-							newScaleX = 2.5;
-							sizeDiff = newScaleX/content.scaleX;
-							newScaleY = content.scaleY*sizeDiff;
-						}
-						else if(newScaleY > 2.5)
-						{
-							newScaleY = 2.5;
-							sizeDiff = newScaleY/content.scaleY;
-							newScaleX = content.scaleX*sizeDiff;
-						}
-						else if(newScaleX < minScaleX &&  newScaleX < newScaleY)
-						{
-							newScaleX = minScaleX;
-							sizeDiff = newScaleX/content.scaleX;
-							newScaleY = content.scaleY*sizeDiff;
-						}
-						else if(newScaleY < minScaleY)
-						{
-							newScaleY = minScaleY;
-							sizeDiff = newScaleY/content.scaleY;
-							newScaleX = content.scaleX*sizeDiff;
-						}
-						content.scaleX = newScaleX;
-						content.scaleY = newScaleY;
+						
+						scaleContent(sizeDiff);
 						
 	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
 	//					content.x = currentCenterPt.x - previousCenterPt.x;
@@ -228,9 +192,72 @@ package scenes.game.components
 			// alpha = touch ? 0.8 : 1.0;
 		}
 
+		private function onMouseWheel(evt:MouseEvent):void
+		{
+			var delta:Number = evt.delta;
+			scaleContent(1.00 + delta / 100.0);
+		}
+		
+		private function moveContent(newX:Number, newY:Number):void
+		{
+			if(newX > clipRect.width*0.75)
+				newX = clipRect.width*0.75;
+			else if(newX < -.5*content.width)
+				newX = -.5*content.width;
+			
+			if(newY > clipRect.height*0.75)
+				newY = clipRect.height*0.75;
+			else if(newY < -(content.height - .5*clipRect.height))
+				newY = -(content.height - .5*clipRect.height);
+			
+			content.x = newX;
+			content.y = newY;
+		}
+		
+		private function scaleContent(sizeDiff:Number):void
+		{
+			var newScaleX:Number = content.scaleX*sizeDiff;
+			var newScaleY:Number = content.scaleY*sizeDiff;
+			if(newScaleX > 2.5 &&  newScaleX > newScaleY)
+			{
+				newScaleX = 2.5;
+				sizeDiff = newScaleX/content.scaleX;
+				newScaleY = content.scaleY*sizeDiff;
+			}
+			else if(newScaleY > 2.5)
+			{
+				newScaleY = 2.5;
+				sizeDiff = newScaleY/content.scaleY;
+				newScaleX = content.scaleX*sizeDiff;
+			}
+			else if(newScaleX < minScaleX &&  newScaleX < newScaleY)
+			{
+				newScaleX = minScaleX;
+				sizeDiff = newScaleX/content.scaleX;
+				newScaleY = content.scaleY*sizeDiff;
+			}
+			else if(newScaleY < minScaleY)
+			{
+				newScaleY = minScaleY;
+				sizeDiff = newScaleY/content.scaleY;
+				newScaleX = content.scaleX*sizeDiff;
+			}
+			
+			var oldTopLeft:Point = new Point( -content.x, -content.y);
+			// To zoom to center, offset the content X, Y before scaling
+			var dX:Number = (1.0 - newScaleX / content.scaleX) * content.width / 2;
+			var dY:Number = (1.0 - newScaleY / content.scaleY) * content.height / 2;
+			content.x += dX;
+			content.y += dY;
+			
+			// Now perform scaling
+			content.scaleX = newScaleX;
+			content.scaleY = newScaleY;
+		}
 		
 		private function onRemovedFromStage():void
 		{
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
