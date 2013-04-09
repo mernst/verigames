@@ -16,6 +16,7 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import flash.events.MouseEvent;
 	import starling.core.Starling;
+	import utilities.XMath;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -40,16 +41,7 @@ package scenes.game.components
 	{
 		protected var m_currentLevel:Level;
 		
-		public var m_gameSurface:Sprite;
-		protected var m_gameSurfaceBorder:uint = 25;
-		
-		protected var nextButtonBottomOffset:int;
-		protected var backButtonBottomOffset:int;
-		protected var buttomBottomBorder:int = 60;
-
 		protected var content:BaseComponent;
-		
-		protected var m_currentTouchObject:GameNode;
 		
 		protected var quad:Quad;
 		protected var minScaleX:Number;
@@ -66,7 +58,6 @@ package scenes.game.components
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
-	
 		private function onAddedToStage():void
 		{
 			currentMode = NORMAL_MODE;
@@ -84,6 +75,7 @@ package scenes.game.components
 			minScaleX = minScaleY = 0.25;
 			
 			content.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -134,8 +126,9 @@ package scenes.game.components
 						if(touches[0].target is starling.display.Image || touches[0].target is starling.display.Image)
 						{
 							var delta:Point = touches[0].getMovement(parent);
-							var newX:Number = content.x + delta.x;
-							var newY:Number = content.y + delta.y;
+							var viewRect:Rectangle = getViewInContentSpace();
+							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
+							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
 							moveContent(newX, newY);
 						}
 					}
@@ -198,20 +191,17 @@ package scenes.game.components
 			scaleContent(1.00 + delta / 100.0);
 		}
 		
+		private static const VIEW_PADDING:Number = 10;
 		private function moveContent(newX:Number, newY:Number):void
 		{
-			if(newX > clipRect.width*0.75)
-				newX = clipRect.width*0.75;
-			else if(newX < -.5*content.width)
-				newX = -.5*content.width;
+			var moveBounds:Rectangle = content.getBounds(this);
+			moveBounds.x -= content.x;
+			moveBounds.y -= content.y;
 			
-			if(newY > clipRect.height*0.75)
-				newY = clipRect.height*0.75;
-			else if(newY < -(content.height - .5*clipRect.height))
-				newY = -(content.height - .5*clipRect.height);
+			newX = XMath.clamp(newX, moveBounds.x / content.scaleX, (moveBounds.x + moveBounds.width) / content.scaleX);
+			newY = XMath.clamp(newY, moveBounds.y / content.scaleY, (moveBounds.y + moveBounds.height) / content.scaleY);
 			
-			content.x = newX;
-			content.y = newY;
+			panTo(newX, newY);
 		}
 		
 		private function scaleContent(sizeDiff:Number):void
@@ -243,16 +233,31 @@ package scenes.game.components
 				newScaleX = content.scaleX*sizeDiff;
 			}
 			
-			var oldTopLeft:Point = new Point( -content.x, -content.y);
-			// To zoom to center, offset the content X, Y before scaling
-			var dX:Number = (1.0 - newScaleX / content.scaleX) * content.width / 2;
-			var dY:Number = (1.0 - newScaleY / content.scaleY) * content.height / 2;
-			content.x += dX;
-			content.y += dY;
-			
-			// Now perform scaling
+			var origViewCoords:Rectangle = getViewInContentSpace();
+			// Perform scaling
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
+			var newViewCoords:Rectangle = getViewInContentSpace();
+			
+			// Adjust so that original centered point is still in the middle
+			var dX:Number = origViewCoords.x + origViewCoords.width / 2 - (newViewCoords.x + newViewCoords.width / 2);
+			var dY:Number = origViewCoords.y + origViewCoords.height / 2 - (newViewCoords.y + newViewCoords.height / 2);
+			
+			content.x -= dX * content.scaleX;
+			content.y -= dY * content.scaleY;
+		}
+		
+		private function getViewInContentSpace():Rectangle
+		{
+			return new Rectangle(-content.x / content.scaleX, -content.y / content.scaleY, clipRect.width / content.scaleX, clipRect.height / content.scaleY);
+		}
+		
+		private function makeQuad(qx:Number, qy:Number, color:Number = 0xFFFF00, size:Number = 5):void
+		{
+			var myQuad:Quad = new Quad(size, size, color);
+			myQuad.x = qx;
+			myQuad.y = qy;
+			content.addChild(myQuad);
 		}
 		
 		private function onRemovedFromStage():void
@@ -320,11 +325,9 @@ package scenes.game.components
 
 		}
 		
-		protected var updateCount:uint = 0;
-		private var nodePlacedCount:int = -50;
 		public function onEnterFrame(event:Event):void
 		{
-
+			
 		}
 		
 		public function displayTextMetadata(textParent:XML):void
@@ -332,13 +335,24 @@ package scenes.game.components
 		
 		}
 		
+		/**
+		 * Pans the current view to the given point (point is in content-space)
+		 * @param	panX
+		 * @param	panY
+		 */
+		public function panTo(panX:Number, panY:Number):void
+		{
+			content.x = (-panX* content.scaleX + clipRect.width/2) ;
+			content.y = (-panY* content.scaleY + clipRect.height/2) ;
+		}
+		
+		/**
+		 * Centers the current view on the input component
+		 * @param	component
+		 */
 		public function centerOnNode(component:GameNode):void
 		{
-			content.scaleX = content.scaleY = 1;
-
-			content.x = -component.x + clipRect.width/2;
-			content.y = -component.y + clipRect.height/2;
-			
+			panTo(component.x + component.width / 2, component.y + component.height / 2);
 		}
 	}
 }
