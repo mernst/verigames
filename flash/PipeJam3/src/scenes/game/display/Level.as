@@ -169,8 +169,12 @@ package scenes.game.display
 					trace("missing edgeSetLayoutXML " + edgeSet.id);
 				
 				//grab an example edge for it's attributes
-				var sampleEdge:Edge = edgeDictionary[edgeSet.edge_ids[0]];
-				var gameNodeSet:GameNode = new GameNode(edgeSetLayoutXML, edgeSet, sampleEdge);
+				var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
+				for each (var edgeId:String in edgeSet.edge_ids) {
+					edgeSetEdges.push(edgeDictionary[edgeId]);
+				}
+				
+				var gameNodeSet:GameNode = new GameNode(edgeSetLayoutXML, edgeSet, edgeSetEdges);
 				m_nodeList.push(gameNodeSet);
 				gameNodeSetDictionary[edgeSet.id] = gameNodeSet;
 			}

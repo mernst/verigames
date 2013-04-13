@@ -1,6 +1,8 @@
 package scenes.game.components
 {
 	import assets.AssetInterface;
+	import assets.AssetsFont;
+	import scenes.game.display.GameEdgeContainer;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.GameNode;
@@ -16,15 +18,12 @@ package scenes.game.components
 	import starling.textures.Texture;
 	
 	public class GameControlPanel extends BaseComponent
-	{
+	{	
 		/** Graphical object showing user's score */
 		protected var scorePanel:Sprite;
 		
-		/** Text label for SCORE */
-		protected var score_title_textfield:TextField;
-		
 		/** Text showing current score on score_pane */
-		protected var scoreTextfield:TextField;
+		protected var scoreTextfield:TextFieldWrapper;
 		
 		/** Button allowing user to place a buzzsaw on the current board */
 		public var buzzsaw_button:Image;
@@ -43,7 +42,7 @@ package scenes.game.components
 		
 		/** Button to save XML and return to end to end system */
 		protected var submit_button:Image;
-				
+		
 		/** Score of the player */
 		protected var current_score:int = 0;
 		
@@ -65,13 +64,11 @@ package scenes.game.components
 			backgroundImage.height = 320;
 			addChild(backgroundImage);
 			
-			
-			scoreTextfield = new TextField(width, width, "0", "Verdana", 45);
-			scoreTextfield.color = 0xff0000;
-			scoreTextfield.x = 0; 
-			scoreTextfield.y = -35;
+			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xFF0000);
+			scoreTextfield.x = -5; 
+			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
 			addChild(scoreTextfield);
-
+			
 			scorePanel = new Sprite();
 			scorePanel.x = 5; 
 			scorePanel.y = 77.8; 
@@ -96,7 +93,7 @@ package scenes.game.components
 		public function updateScore(level:Level):void 
 		{
 			
-			/* Current scoring:
+			/* Old scoring:
 			* 
 			For pipes:
 			No points for any red pipe.
@@ -117,6 +114,15 @@ package scenes.game.components
 			For each exception to the laws of physics:
 			-50 points
 			*/
+			
+			/*
+			 * New Scoring:
+			 *
+			 * +25 for wide inputs
+			 * +25 for narrow outputs
+			 * -75 for errors
+			*/
+			
 			//Quad(width-scorePanel.x*2, 200, 0xfff000)
 			scorePanel.removeChildren(1);
 			var currentPosition:Number = scorePanel.height;
@@ -131,65 +137,31 @@ package scenes.game.components
 			ScoreBlock.maxWidth = scorePanel.width - 30;
 			var blockXPos:Number = scorePanel.width/2 - 10;
 			
+			prev_score = current_score;
+			var wideInputs:int = 0;
+			var narrowOutputs:int = 0;
+			var errors:int = 0;
 			for each(var nodeSet:GameNode in level.m_nodeList)
 			{
 				var scoreBlock:ScoreBlock = new ScoreBlock(nodeSet);
 				scoreBlock.x = scoreBlock.x + blockXPos + Math.random()*2;
-				
-
-				
 				scoreBlock.y = currentPosition - scoreBlock.height;
 				currentPosition -= scoreBlock.height;
 				scorePanel.addChild(scoreBlock);
-				
-				
+				if (nodeSet.isWide()) {
+					wideInputs += nodeSet.m_numIncomingNodeEdges;
+				} else {
+					narrowOutputs += nodeSet.m_numOutgoingNodeEdges;
+				}
+				for each (var incomingEdge:GameEdgeContainer in nodeSet.m_incomingEdges) {
+					if (incomingEdge.hasError()) {
+						errors++;
+					}
+				}
 			}
-//			prev_score = current_score;
-//			var my_score:int = 0;
-//			for each (var my_level:Level in m_world.levels) {
-//				if (!my_level.failed) {
-//					my_score += 100;
-//				}
-//				for each (var my_board:Board in my_level.boards) {
-//					if (my_board.trouble_points.length == 0) {
-//						my_score += 30;
-//					}
-////					for each (var my_pipe:Pipe in my_board.pipes) {
-////						if (my_pipe.has_buzzsaw) {
-////							my_score -= 50;
-////						}
-////						if (!my_pipe.failed) {
-////							my_score += 1;
-////							
-////							var is_input:Boolean = false;
-////							if (my_pipe.associated_edge.from_node.kind == NodeTypes.INCOMING) {
-////								is_input = true;
-////							}
-////							
-////							var is_output:Boolean = false;
-////							if (my_pipe.associated_edge.to_node.kind == NodeTypes.OUTGOING) {
-////								is_output = true;
-////							}
-////							
-////							if (is_input && (my_pipe.is_wide)) {
-////								my_score += 10;
-////							} else if (is_input && (!my_pipe.is_wide)) {
-////								my_score += 5;
-////							}
-////							
-////							if (is_output && (my_pipe.is_wide)) {
-////								my_score += 5;
-////							} else if (is_output && (!my_pipe.is_wide)) {
-////								my_score += 10;
-////							}
-////						}
-////					}
-//				}
-//			}
-			
-//			current_score = my_score;
-			
-			scoreTextfield.text = current_score.toString();
+			trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			current_score = Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			TextFactory.getInstance().updateText(scoreTextfield, current_score.toString());
 		}
 		
 //		public function onSaveButtonClick(e:TouchEvent):void {

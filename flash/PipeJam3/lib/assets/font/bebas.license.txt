@@ -1,8 +1,16 @@
-Author: Ryoichi Tsunekawa, Bagel & Co. Type Foundry
+**Author**
 
-Filename: BEBAS___.TTF
+Ryoichi Tsunekawa
+Bagel & Co. Type Foundry
 
-URL: http://www.dafont.com/bebas.font
+**Filename**
 
-License:
+BEBAS___.TTF
+
+**URL**
+
+http://www.dafont.com/bebas.font
+
+**License**
+
 Freeware

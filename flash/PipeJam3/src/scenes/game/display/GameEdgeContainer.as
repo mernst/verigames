@@ -26,7 +26,6 @@ package scenes.game.display
 		
 		private var m_nodeExtensionDistance:Number = 5;
 		
-		
 		public var m_originalEdge:Boolean;
 		
 		//use for figuring out closest wall
@@ -623,6 +622,11 @@ package scenes.game.display
 			m_toNode.draw();
 		}
 		
+		public function hasError():Boolean
+		{
+			return (m_fromNode.isWide() && !m_toNode.isWide());
+		}
+		
 		public function onEnterFrame():void
 		{					
 			if(m_isDirty)
@@ -634,11 +638,14 @@ package scenes.game.display
 				
 				for each(var joint:GameEdgeJoint in m_edgeJoints)
 				{
-					if(m_fromNode.isWide() && !m_toNode.isWide())
+					if (hasError())
+					{
 						joint.m_showError = true;
+					}
 					else
+					{
 						joint.m_showError = false;
-					
+					}
 					joint.m_isDirty = true;
 				}
 				
