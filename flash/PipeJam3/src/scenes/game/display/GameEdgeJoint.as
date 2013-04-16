@@ -210,10 +210,10 @@ package scenes.game.display
 		
 		override public function isWide():Boolean
 		{
-	//		if(!m_isLastJoint)
+			//if(!m_isLastJoint)
 				return m_toComponent.isWide();
-	//		else
-	//			return m_fromComponent.isWide();
+			//else
+			//	return m_fromComponent.isWide();
 		}
 		
 		override public function getColor():int
@@ -221,8 +221,7 @@ package scenes.game.display
 			if(m_isLastJoint && m_showError)
 				return 0xff0000;
 			else
-				return 0x00ff00;
-				
+				return m_toComponent.getColor();
 		}
 		
 		public function onEnterFrame(event:Event):void

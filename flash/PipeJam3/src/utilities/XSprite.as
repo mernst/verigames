@@ -7,6 +7,7 @@ package utilities
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import starling.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
@@ -81,7 +82,7 @@ package utilities
 			return (cc & 0xFF);
 		}
 		
-		public static function applyColorTransform(obj:DisplayObject, color:uint):void
+		public static function applyColorTransform(obj:flash.display.DisplayObject, color:uint):void
 		{
 			var trans:ColorTransform = obj.transform.colorTransform;
 			trans.redMultiplier = extractRed(color) / 255.0;
@@ -90,14 +91,14 @@ package utilities
 			obj.transform.colorTransform = trans;
 		}
 				
-		public static function removeAllChildren(doc:DisplayObjectContainer):void
+		public static function removeAllChildren(doc:flash.display.DisplayObjectContainer):void
 		{
 			while (doc.numChildren > 0) {
 				doc.removeChildAt(0);
 			}
 		}
 
-		public static function setupDisplayObject(obj:DisplayObject, x:Number, y:Number, sz:Number):void
+		public static function setupDisplayObject(obj:flash.display.DisplayObject, x:Number, y:Number, sz:Number):void
 		{
 			obj.x = x;
 			obj.y = y;
@@ -134,9 +135,15 @@ package utilities
 				states = [btn.upState, btn.overState, btn.downState];
 			}
 			
-			for each (var state:DisplayObject in states) {
+			for each (var state:flash.display.DisplayObject in states) {
 				func(state);
 			}
+		}
+		
+		public static function setPivotCenter(obj:starling.display.DisplayObject):void
+		{
+			obj.pivotX = int(obj.width / 2);
+			obj.pivotY = int(obj.height / 2);
 		}
 	}
 }

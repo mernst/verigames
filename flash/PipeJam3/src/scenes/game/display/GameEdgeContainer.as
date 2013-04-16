@@ -50,7 +50,7 @@ package scenes.game.display
 			
 			m_startPoint = edgeArray[0];
 			m_endPoint = edgeArray[edgeArray.length-1];
-						
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -243,18 +243,18 @@ package scenes.game.display
 				var startPoint:Point = m_jointPoints[segIndex];
 				var endPoint:Point = m_jointPoints[segIndex+1];
 
-				if(startPoint.x < endPoint.x || startPoint.y < endPoint.y)
-				{
+				//if(startPoint.x < endPoint.x || startPoint.y < endPoint.y)
+				//{
 					segment.updateSegment(startPoint, endPoint);
 					segment.x = m_jointPoints[segIndex].x;
 					segment.y = m_jointPoints[segIndex].y;
-				}
-				else
-				{
-					segment.updateSegment(endPoint, startPoint);
-					segment.x = m_jointPoints[segIndex+1].x;
-					segment.y = m_jointPoints[segIndex+1].y;
-				}
+				//}
+				//else
+				//{
+					//segment.updateSegment(endPoint, startPoint);
+					//segment.x = m_jointPoints[segIndex+1].x;
+					//segment.y = m_jointPoints[segIndex+1].y;
+				//}
 				addChild(segment);
 				
 				var joint:GameEdgeJoint = m_edgeJoints[segIndex];

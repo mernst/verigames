@@ -27,8 +27,8 @@ package scenes.game.display
 		protected var m_edgeSet:EdgeSetRef;
 		public var m_shape:Shape;
 		
-		private var imageWidth:uint = 10;
-		private var imageHeight:uint = 10;
+		private var imageWidth:Number = 100.0;
+		private var imageHeight:Number = 100.0;
 		public var m_numIncomingNodeEdges:int;
 		public var m_numOutgoingNodeEdges:int;
 		private var m_id:String;
@@ -77,12 +77,16 @@ package scenes.game.display
 					if(attr.@name == 'width')
 					{
 						var widthXML:XML = attr.string[0];
-						imageWidth = widthXML.toString();
+						if (!isNaN(Number(widthXML.toString()))) {
+							imageWidth = widthXML.toString();
+						}
 					}
 					else if(attr.@name == 'height')
 					{
 						var heightXML:XML = attr.string[0];
-						imageHeight = heightXML.toString();
+						if (!isNaN(Number(heightXML.toString()))) {
+							imageHeight = heightXML.toString();
+						}
 					}
 				}
 			}
@@ -307,14 +311,15 @@ package scenes.game.display
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
-			if (wideScore > narrowScore) {
-				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-				addChild(m_star);
-			} else if (narrowScore > wideScore) {
-				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-				addChild(m_star);
+			if (m_editable) { // don't display a score star if not editable (no point, user may be confused)
+				if (wideScore > narrowScore) {
+					m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
+					addChild(m_star);
+				} else if (narrowScore > wideScore) {
+					m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
+					addChild(m_star);
+				}
 			}
-			
 			
 			//			var number:String = ""+m_id.substring(4);
 			//			var txt:TextField = new TextField(m_shape.width, m_shape.height, number, "Veranda", 6); 

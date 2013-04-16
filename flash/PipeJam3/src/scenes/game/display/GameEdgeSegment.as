@@ -1,6 +1,10 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
 	import flash.geom.Point;
+	import starling.display.Image;
+	import starling.textures.Texture;
+	import utilities.XSprite;
 	
 	import scenes.BaseComponent;
 	
@@ -14,6 +18,9 @@ package scenes.game.display
 
 	public class GameEdgeSegment extends GameComponent
 	{
+		private static const ARROW_SPACING:Number = 5.0;
+		private static const ARROW_WIDTH:Number = 2.0;
+		
 		private var m_quad:Quad;
 		protected var m_parentEdge:GameEdgeContainer;
 		public var m_endPt:Point;
@@ -24,6 +31,7 @@ package scenes.game.display
 		public var m_isLastSegment:Boolean;
 		
 		public var currentTouch:Touch;
+		private var m_arrows:Vector.<Image> = new Vector.<Image>();
 		
 		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _fromNode:GameNode, _toNode:GameNode, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
 		{
@@ -121,9 +129,18 @@ package scenes.game.display
 		
 		public function draw():void
 		{
+			// Remove/dispose of arrows
+			for each (var arr:Image in m_arrows) {
+				if (arr.parent) {
+					arr.parent.removeChild(arr);
+					arr = null;
+				}
+			}
+			m_arrows = new Vector.<Image>();
+			
 			var color:int = getColor();
 			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-
+			
 			removeChildren();
 			
 			if(m_endPt.x != 0 && m_endPt.y !=0)
@@ -161,6 +178,42 @@ package scenes.game.display
 			}
 			
 			addChild(m_quad);
+			
+			// Create/add arrows
+			var numArr:int = Math.floor(m_endPt.length / ARROW_SPACING);
+			if (numArr > 0) {
+				var currX:Number, currY:Number, dX:Number, dY:Number, myAng:Number;
+				dX = m_endPt.x / m_endPt.length;
+				dY = m_endPt.y / m_endPt.length;
+				myAng = Math.atan2(dY, dX);
+				var arrHeight:Number = GameEdgeContainer.WIDE_WIDTH;
+				currX = (dX * ARROW_SPACING) / 2.0 + arrHeight * Math.sin(myAng) / 2.0;
+				currY = (dY * ARROW_SPACING) / 2.0 - arrHeight * Math.cos(myAng) / 2.0;
+				for (var i:int = 0; i < numArr; i++) {
+					var myText:Texture;
+					if (m_parentEdge.hasError()) {
+						myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xffff0000);
+					} else {
+						myText  = AssetInterface.getTexture("Game", "ChevronClass");
+					}
+					var myArr:Image = new Image(myText);
+					myArr.touchable = false;
+					myArr.width = ARROW_WIDTH;
+					myArr.height = arrHeight + 1.0;
+					XSprite.setPivotCenter(myArr);
+					if (isHover) {
+						trace("dX/dY/ang:" + dX + " " + dY + " " + (Math.atan2(dY, dX) * 180 / Math.PI));
+						trace("endPt:" + m_endPt.toString());
+					}
+					myArr.x = currX + this.x;
+					myArr.y = currY + this.y;
+					myArr.rotation = myAng;
+					currX += ARROW_SPACING * dX;
+					currY += ARROW_SPACING * dY;
+					m_parentEdge.addChild(myArr);
+					m_arrows.push(myArr);
+				}
+			}
 		}
 		
 		public function drawDiagonalLine(p1:Point, p2:Point, width:Number=1, color:uint=0x000000):Quad
