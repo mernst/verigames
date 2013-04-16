@@ -122,21 +122,16 @@ package scenes.game.display
 			level_has_been_solved_before = false;
 			levels_that_depend_on_this_level = new Vector.<Level>();
 			levels_that_this_level_depends_on = new Vector.<Level>();
-				
-		}
-		
-		public function initialize():void
-		{
-
-			m_edgeVector = new Vector.<GameEdgeContainer>;
-			setDisplayData();
-			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 		}
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			m_edgeVector = new Vector.<GameEdgeContainer>;
+			setDisplayData();
+
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
+			
 			selectedComponents = new Vector.<GameComponent>;
 			var count:int = 0;
 			var maxCount:int = 150;

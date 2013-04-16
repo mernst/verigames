@@ -23,8 +23,8 @@ package assets
 		[Embed(source="../../../lib/assets/menus/NewLevel.png")]
 		public var NewLevelButtonClass:Class;
 		
-		[Embed(source="../../../lib/assets/menus/Continue.png")]
-		public var ContinueButtonClass:Class;
+		[Embed(source="../../../lib/assets/menus/BackToGame.png")]
+		public var BackToGameButtonClass:Class;
 		
 		[Embed(source="../../../lib/assets/menus/Tutorial.png")]
 		public var TutorialButtonClass:Class;
@@ -37,5 +37,8 @@ package assets
 		
 		[Embed(source="../../../lib/assets/menus/SignIn.png")]
 		public var SignInButtonClass:Class;
+		
+		[Embed(source="../../../lib/assets/menus/NextLevel.png")]
+		public var NextLevelButtonClass:Class;
 	}
 }

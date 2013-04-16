@@ -2,13 +2,15 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import scenes.game.display.GameEdgeContainer;
 	
 	import scenes.BaseComponent;
+	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.ScoreBlock;
+	import scenes.game.display.World;
 	
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -30,6 +32,9 @@ package scenes.game.components
 		
 		/** Button to bring the user back to the previous board */
 		public var back_button:Image;
+		
+		/** Button to bring the up the menu */
+		public var menu_button:Button;
 		
 		/** Button to save to XML */
 		protected var exit_button:Image;
@@ -75,6 +80,20 @@ package scenes.game.components
 			var quad:Quad = new Quad(width-scorePanel.x*2, 190, 0x000000);
 			scorePanel.addChild(quad);
 			addChild(scorePanel);
+			
+			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
+			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
+			
+			menu_button = new Button(menuButtonUp, "", menuButtonClick);
+			menu_button.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
+			menu_button.x = 15;
+			menu_button.y = 275;
+			addChild(menu_button);
+		}
+		
+		private function onMenuButtonTriggered():void
+		{
+			dispatchEvent(new Event(World.SHOW_GAME_MENU, true));
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void
