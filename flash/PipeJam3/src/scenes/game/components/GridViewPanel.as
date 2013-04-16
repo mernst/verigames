@@ -49,9 +49,10 @@ package scenes.game.components
 		protected var minScaleY:Number;
 		
 		protected var currentMode:int;
-		protected var NORMAL_MODE:int = 0;
-		protected var MOVING_MODE:int = 1;
-		protected var SELECTING_MODE:int = 2;
+		protected static const NORMAL_MODE:int = 0;
+		protected static const MOVING_MODE:int = 1;
+		protected static const SELECTING_MODE:int = 2;
+		private static const MAX_SCALE:Number = 5.0;
 		
 		public function GridViewPanel()
 		{
@@ -247,15 +248,15 @@ package scenes.game.components
 			var oldScaleY:Number = content.scaleY;
 			var newScaleX:Number = content.scaleX*sizeDiff;
 			var newScaleY:Number = content.scaleY*sizeDiff;
-			if(newScaleX > 2.5 &&  newScaleX > newScaleY)
+			if(newScaleX > MAX_SCALE &&  newScaleX > newScaleY)
 			{
-				newScaleX = 2.5;
+				newScaleX = MAX_SCALE;
 				sizeDiff = newScaleX/content.scaleX;
 				newScaleY = content.scaleY*sizeDiff;
 			}
-			else if(newScaleY > 2.5)
+			else if(newScaleY > MAX_SCALE)
 			{
-				newScaleY = 2.5;
+				newScaleY = MAX_SCALE;
 				sizeDiff = newScaleY/content.scaleY;
 				newScaleX = content.scaleX*sizeDiff;
 			}
