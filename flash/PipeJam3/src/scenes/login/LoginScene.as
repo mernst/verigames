@@ -83,7 +83,6 @@ package scenes.login
 		protected override function addedToStage(event:starling.events.Event):void
 		{
 			Security.loadPolicyFile(PROXY_URL + "/crossdomain.xml");
-			Security.showSettings();
 			
 			super.addedToStage(event);
 //			var background:Image = new Image(AssetInterface.getTexture("Game", "BoxesStartScreenImageClass"));
@@ -249,9 +248,9 @@ package scenes.login
 			}
 			str += msg;
 			trace(str);
-			if(ExternalInterface.available){
-				ExternalInterface.call("console.log", str);
-			}
+//			if(ExternalInterface.available){
+//				ExternalInterface.call("console.log", str);
+//			}
 		}
 
 		private function onAdvancedButton(e:starling.events.Event):void
@@ -342,7 +341,7 @@ package scenes.login
 		
 		private function securityErrorHandler(ev:flash.events.SecurityErrorEvent):void
 		{
-			log(ev.text);
+			trace("security error " + ev.text);
 //			inputInfo.text = ev.text;
 		}
 		
@@ -354,7 +353,7 @@ package scenes.login
 		
 		private function ioErrorHandler(ev:flash.events.IOErrorEvent):void
 		{
-			log(ev.text);
+			trace(ev.text);
 			m_currentRequestType = 0;
 //			outputInfo.text = ev.text;
 		}

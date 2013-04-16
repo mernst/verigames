@@ -5,10 +5,10 @@ package assets
 		// Bitmaps
 		
 		//Splash Screen
-		[Embed(source="../../lib/assets/TrafficSplashScreen.png")]
+		[Embed(source="../lib/assets/TrafficSplashScreen.png")]
 		public var TrafficJamTitleScreenImageClass:Class;
 		
-		[Embed(source="../../lib/assets/BoxesStartScreen.jpg")]
+		[Embed(source="../lib/assets/BoxesStartScreen.jpg")]
 		public var BoxesStartScreenImageClass:Class;
 		
 		[Embed(source="../../lib/assets/BoxesGamePanelBackground.jpg")]

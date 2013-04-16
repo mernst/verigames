@@ -44,6 +44,8 @@ package assets
 		private var worldMapAssetEmbeds_2x:WorldMapAssetEmbeds_2x;
 		private var loginAssetEmbeds_1x:LoginAssetEmbeds_1x;
 		private var loginAssetEmbeds_2x:LoginAssetEmbeds_2x;
+		private var menuAssetEmbeds_1x:MenuAssetEmbeds_1x;
+		private var menuAssetEmbeds_2x:MenuAssetEmbeds_2x;
         
         public static function getTexture(file:String, name:String):Texture
         {

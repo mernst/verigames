@@ -160,7 +160,6 @@ package scenes.game.display
 			//create node for sets
 			m_nodeList = new Vector.<GameNode>; 
 			var gameNodeSetDictionary:Dictionary = new Dictionary;
-			
 			for each(var edgeSet:EdgeSetRef in edgeSetDictionary)
 			{
 				//find the layout information for the node
@@ -168,57 +167,67 @@ package scenes.game.display
 				if(edgeSetLayoutXML == null)
 					trace("missing edgeSetLayoutXML " + edgeSet.id);
 				
-				//grab an example edge for it's attributes
+				//grab an example edge for it's attributes FIX - use constraints xml file
 				var sampleEdge:Edge = edgeDictionary[edgeSet.edge_ids[0]];
 				var gameNodeSet:GameNode = new GameNode(edgeSetLayoutXML, edgeSet, sampleEdge);
 				m_nodeList.push(gameNodeSet);
 				gameNodeSetDictionary[edgeSet.id] = gameNodeSet;
+				
+				trace(gameNodeSet.boundingBox.x + " " + gameNodeSet.boundingBox.y);
+				count++;
+			//	if(count >20)
+			//		break;
 			}
 			
 			trace("gamenodeset count = " + m_nodeList.length);
 	
-			var edgeArrays:Array = findEdges(m_levelLayoutXML, m_gameNodeDictionary);
+			var edgeXMLList:XMLList = m_levelLayoutXML.edge;
 			
-			trace("top level edge count = " + edgeArrays.length);
-			if(edgeArrays && edgeArrays.length > 0)
-			{
-				for each(var edgeArray:Array in edgeArrays)
-				{
-					var fromEdgeID:String = edgeArray[edgeArray.length-2];
-					var toEdgeID:String = edgeArray[edgeArray.length-1];
-					edgeArray.splice(-2, 2); //remove last two
-					var fromEdgeSetID:String = edgeSetDictionary[fromEdgeID].id;
-					var toEdgeSetID:String = edgeSetDictionary[toEdgeID].id;
 
-					//normalize edge Array, and then slide game edge to right x,y value
-					var minX:Number = Number.POSITIVE_INFINITY;
-					var minY:Number = Number.POSITIVE_INFINITY;
-					
-					//find min values, and then adjust by that
-					for(var index:int = 0; index<edgeArray.length; index++)
-					{
-						if(minX > edgeArray[index].x)
-							minX = edgeArray[index].x;
-						if(minY > edgeArray[index].y)
-							minY = edgeArray[index].y;
-					}
-					
-					for(var i:int = 0; i<edgeArray.length; i++)
-					{
-						edgeArray[i].x -= minX;
-						edgeArray[i].y -= minY;
-					}
-					
-					var fromNodeSet:GameNode = gameNodeSetDictionary[fromEdgeSetID];
-					var toNodeSet:GameNode = gameNodeSetDictionary[toEdgeSetID];
-					
-					var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, fromNodeSet, toNodeSet);
-					newGameEdge.globalPosition = new Point(minX, minY);
-					m_edgeVector.push(newGameEdge);
-					fromNodeSet.setOutgoingEdge(newGameEdge);
-					toNodeSet.setIncomingEdge(newGameEdge);
-				}				
-			}		
+			for each(var edgeXML:XML in edgeXMLList)
+			{
+				var fromEdgeID:String = edgeXML.@from;
+				var toEdgeID:String = edgeXML.@to;
+				var fromEdgeSetID:String = edgeSetDictionary[fromEdgeID].id;
+				var toEdgeSetID:String = edgeSetDictionary[toEdgeID].id;
+
+				//normalize edge Array, and then slide game edge to right x,y value
+				var minX:Number = Number.POSITIVE_INFINITY;
+				var minY:Number = Number.POSITIVE_INFINITY;
+				
+				//create edge array
+				var edgeArray:Array = new Array;
+				
+				var edgePoints:XMLList = edgeXML.point;
+				for each(var pointXML:XML in edgePoints)
+				{
+					var pt:Point = new Point(pointXML.@x, pointXML.@y);
+					edgeArray.push(pt);
+				}
+				//find min values, and then adjust by that
+				for(var index:int = 0; index<edgeArray.length; index++)
+				{
+					if(minX > edgeArray[index].x)
+						minX = edgeArray[index].x;
+					if(minY > edgeArray[index].y)
+						minY = edgeArray[index].y;
+				}
+				
+				for(var i:int = 0; i<edgeArray.length; i++)
+				{
+					edgeArray[i].x -= minX;
+					edgeArray[i].y -= minY;
+				}
+				
+				var fromNodeSet:GameNode = gameNodeSetDictionary[fromEdgeSetID];
+				var toNodeSet:GameNode = gameNodeSetDictionary[toEdgeSetID];
+				
+				var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, fromNodeSet, toNodeSet);
+				newGameEdge.globalPosition = new Point(minX, minY);
+				m_edgeVector.push(newGameEdge);
+				fromNodeSet.setOutgoingEdge(newGameEdge);
+				toNodeSet.setIncomingEdge(newGameEdge);
+			}				
 			
 			draw();
 			addEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
@@ -264,69 +273,6 @@ package scenes.game.display
 					var x:int = 3;
 				}
 			}
-		}
-		
-		//collects edges as a series of arrays that contain the edge points
-		public function findEdges(graphXML:XML, gameNodeDictionary:Dictionary):Array
-		{
-			var edgeList:XMLList = graphXML.graph.edge;
-			var edgeArray:Array = new Array;
-			
-			for each(var edgeXML:XML in edgeList)
-			{
-				var toID:String = edgeXML.@to;
-				var fromID:String = edgeXML.@from;
-				
-				var posList:String = edgeXML.attr.string;
-				var startPos:int = 2; //avoid starting 'e,'
-				var endPos:int = posList.length;
-				//parse off start and end points, and add to array in order
-				var xEnd:int = posList.indexOf(',', startPos);
-				var yEnd:int = posList.indexOf(' ', xEnd);
-				var endPoint:Point = new Point(new Number(posList.substring(startPos, xEnd)),
-					new Number(posList.substring(xEnd+1, yEnd)));
-				startPos = yEnd+1;
-				xEnd = posList.indexOf(',', startPos);
-				yEnd = posList.indexOf(' ', xEnd);
-				
-				if(yEnd == -1)
-				{
-					trace("bad edge " + toID + " to " + fromID);
-					continue;
-				}
-				var startPoint:Point = new Point(new Number(posList.substring(startPos, xEnd)),
-					new Number(posList.substring(xEnd+1, yEnd)));
-				startPos = yEnd+1;
-				
-				var newEdge:Array = new Array;
-				
-				newEdge.push(startPoint);
-				
-				while(startPos > 0)
-				{
-					xEnd = posList.indexOf(',', startPos);
-					yEnd = posList.indexOf(' ', xEnd);
-					
-					
-					if(xEnd != -1 && yEnd != -1)
-					{
-						var newPoint:Point = new Point(new Number(posList.substring(startPos, xEnd)),
-							new Number(posList.substring(xEnd+1, yEnd)));
-						newEdge.push(newPoint);
-						
-					}
-					startPos = yEnd+1;
-				}
-				newEdge.push(endPoint);
-				//stick these on the end, but remove before drawing
-				newEdge.push(fromID);
-				newEdge.push(toID);
-				
-				edgeArray.push(newEdge);
-			}
-			
-			edgeList = null;
-			return edgeArray;
 		}
 	
 		//assume this only generates on toggle width events
@@ -533,7 +479,7 @@ package scenes.game.display
 		
 		public function findEdgeSetLayoutInfo(name:String):XML
 		{
-			var edgeSetList:XMLList = m_levelLayoutXML.graph.node;
+			var edgeSetList:XMLList = m_levelLayoutXML.edgeset;
 			for each(var layout:XML in edgeSetList)
 			{
 				//contains the name, and it's at the end to avoid matches like level_name1

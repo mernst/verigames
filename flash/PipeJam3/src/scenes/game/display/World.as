@@ -116,23 +116,23 @@ package scenes.game.display
 			gameControlPanel.x = edgeSetGraphViewPanel.width;
 			addChild(gameControlPanel);
 			
-			var arrowRightUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightUpClass");
-			var arrowRightClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightClickClass");
-			
-			right_arrow_button = new Button(arrowRightUp, "", arrowRightClick);
-			right_arrow_button.addEventListener(Event.TRIGGERED, onArrowRightButtonTriggered);
-			right_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - 4;
-			right_arrow_button.y = 280 - 5;
-			addChild(right_arrow_button);
-			
-			var arrowLeftUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftUpClass");
-			var arrowLeftClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftClickClass");
-			
-			left_arrow_button = new Button(arrowLeftUp, "", arrowLeftClick);
-			left_arrow_button.addEventListener(Event.TRIGGERED, onArrowLeftButtonTriggered);
-			left_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - left_arrow_button.width - 8;
-			left_arrow_button.y = right_arrow_button.y;
-			addChild(left_arrow_button);
+//			var arrowRightUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightUpClass");
+//			var arrowRightClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightClickClass");
+//			
+//			right_arrow_button = new Button(arrowRightUp, "", arrowRightClick);
+//			right_arrow_button.addEventListener(Event.TRIGGERED, onArrowRightButtonTriggered);
+//			right_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - 4;
+//			right_arrow_button.y = 280 - 5;
+//			addChild(right_arrow_button);
+//			
+//			var arrowLeftUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftUpClass");
+//			var arrowLeftClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftClickClass");
+//			
+//			left_arrow_button = new Button(arrowLeftUp, "", arrowLeftClick);
+//			left_arrow_button.addEventListener(Event.TRIGGERED, onArrowLeftButtonTriggered);
+//			left_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - left_arrow_button.width - 8;
+//			left_arrow_button.y = right_arrow_button.y;
+//			addChild(left_arrow_button);
 			
 			selectLevel(firstLevel);
 			
@@ -232,13 +232,13 @@ package scenes.game.display
 		
 		public function findLevelLayout(name:String):XML
 		{
-			var layoutList:XMLList = m_layoutXML.graph.node;
+			var layoutList:XMLList = m_layoutXML.level;
 			for each(var layout:XML in layoutList)
 			{
 				//contains the name, and it's at the end to avoid matches like level_name1
 				var levelName:String = layout.@id;
-				var matchIndex:int = levelName.indexOf("level_"+name);
-				if(matchIndex != -1 && matchIndex+("level_"+name).length == levelName.length)
+				var matchIndex:int = levelName.indexOf(name);
+				if(matchIndex != -1 && matchIndex+(name).length == levelName.length)
 					return layout;
 			}
 			

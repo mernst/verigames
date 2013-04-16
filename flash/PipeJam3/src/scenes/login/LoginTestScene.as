@@ -43,10 +43,6 @@ package scenes.login
 		protected var playerNumber:TextField;
 		protected var inputInfo:TextField;
 		protected var outputInfo:TextField;
-		
-//		protected var apiURL:String = "http://128.208.6.231:8001";
-		protected var apiURL:String = "http://128.95.2.112:8001";
-//		protected var apiURL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:80";
 	
 		protected var GAME_ID:int = 1;
 		
@@ -314,9 +310,9 @@ package scenes.login
 			}
 			str += msg;
 			trace(str);
-			if(ExternalInterface.available){
-				ExternalInterface.call("console.log", str);
-			}
+//			if(ExternalInterface.available){
+//				ExternalInterface.call("console.log", str);
+//			}
 		}
 
 		
@@ -400,7 +396,7 @@ package scenes.login
 //				}
 //			);
 //			doRestCall1(apiURL+request,method);
-			var urlRequest:URLRequest = new URLRequest(apiURL+request);
+			var urlRequest:URLRequest = new URLRequest(PROXY_URL+request);
 			
 			if(method == URLRequestMethod.GET)
 				urlRequest.method = method;

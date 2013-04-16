@@ -17,6 +17,7 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import events.MoveEvent;
+	import flash.geom.Rectangle;
 	
 	public class GameNode extends GameComponent
 	{
@@ -41,6 +42,7 @@ package scenes.game.display
 		
 		private var m_nodeXML:XML;
 		private var m_edgeArray:Array;
+		var boundingBox:Rectangle;
 		public var globalPosition:Point;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		
@@ -61,23 +63,11 @@ package scenes.game.display
 			
 			if(m_nodeXML)
 			{
-				var position:Point = findNodePosition(m_nodeXML);
-				globalPosition = new Point(position.x, position.y);
+				boundingBox = findBoundingBox(m_nodeXML);
+				globalPosition = new Point(boundingBox.x, boundingBox.y);
 				m_id = m_nodeXML.@id;
-				var attrList:XMLList = m_nodeXML.attr;
-				for each(var attr:XML in attrList)
-				{
-					if(attr.@name == 'width')
-					{
-						var widthXML:XML = attr.string[0];
-						imageWidth = widthXML.toString();
-					}
-					else if(attr.@name == 'height')
-					{
-						var heightXML:XML = attr.string[0];
-						imageHeight = heightXML.toString();
-					}
-				}
+				imageWidth = boundingBox.width;
+				imageHeight = boundingBox.height;
 			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

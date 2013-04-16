@@ -5,7 +5,7 @@ package assets
 		[Embed(source="../../../lib/assets/world.png")]
 		public var WorldImageClass:Class;
 		
-		[Embed(source="../../../lib/assets/castle.png")]
+		[Embed(source="../../lib/assets/castle.png")]
 		public var CastleImageClass:Class;
 		
 		[Embed(source="../../../lib/assets/pawn.png")]

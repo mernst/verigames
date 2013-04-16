@@ -60,6 +60,8 @@ package scenes.game.display
 		{
 			createOriginalChildren();
 			positionOriginalChildren();
+
+			rubberBandEdge(new Point(), true);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(CREATE_JOINT, onCreateJoint);
 			m_isDirty = true;
@@ -376,7 +378,7 @@ package scenes.game.display
 			positionChildren();
 			m_isDirty = true;
 		}
-		//create edge, using the 7 segment model
+		//create edge
 		private function createJointPointsArray():void
 		{
 			m_jointPoints = new Array(6);
@@ -396,19 +398,15 @@ package scenes.game.display
 			{
 				case LEFT_WALL:
 					m_jointPoints[nodeIndex] = new Point(joint.x - m_nodeExtensionDistance, joint.y);
-			//		m_jointPoints[extensionIndex] = new Point(joint.x - m_nodeExtensionDistance, joint.y);
 					break;
 				case RIGHT_WALL:
 					m_jointPoints[nodeIndex] = new Point(joint.x + m_nodeExtensionDistance, joint.y);
-			//		m_jointPoints[extensionIndex] = new Point(joint.x + m_nodeExtensionDistance, joint.y);
 					break;
 				case TOP_WALL:
 					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y - m_nodeExtensionDistance);
-			//		m_jointPoints[extensionIndex] = new Point(joint.x, joint.y - m_nodeExtensionDistance);
 					break;
 				case BOTTOM_WALL:
 					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y + m_nodeExtensionDistance);
-			//		m_jointPoints[extensionIndex] = new Point(joint.x, joint.y + m_nodeExtensionDistance);
 					break;
 			}
 		}
@@ -418,195 +416,26 @@ package scenes.game.display
 		{
 			var xDistance:Number = m_jointPoints[4].x - m_jointPoints[1].x;
 			var yDistance:Number = m_jointPoints[4].y - m_jointPoints[1].y;
-			switch(m_startJoint.m_closestWall)
-			{
-//				case LEFT_WALL:
-//					setLeftWallOutputConnection(xDistance, yDistance);
-//					break;
-				case RIGHT_WALL:
-					setRightWallOutputConnection(xDistance, yDistance);
-					break;
-//				case TOP_WALL:
-//					setTopWallOutputConnection(xDistance, yDistance);
-//					break;
-//				case BOTTOM_WALL:
-//					setBottomWallOutputConnection(xDistance, yDistance);
-//					break;
-			}
-		}
-		
-		private function setLeftWallOutputConnection(xDistance:Number, yDistance:Number):void
-		{
-			var gStartPt:Point = localToGlobal(m_jointPoints[2]);
-			var gEndPt:Point = localToGlobal(m_jointPoints[5]);
-			var gToNodeTopPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x, m_toNode.y));
-			var gToNodeBottomPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x+m_toNode.width, m_toNode.y+m_toNode.height));
-			var gFromNodeTopPt:Point = m_fromNode.parent.localToGlobal(new Point(m_fromNode.x, m_fromNode.y));
-			var gFromNodeBottomPt:Point = m_fromNode.parent.localToGlobal(new Point(m_fromNode.x+m_fromNode.width, m_fromNode.y+m_fromNode.height));
-			
-			switch(m_endJoint.m_closestWall)
-			{
-				case LEFT_WALL:
-					//need to go around the from node using the shortest route (based on start joint location)
-					var yLLInc:Number;
-					if(gEndPt.y < gStartPt.y)
-						yLLInc = gFromNodeTopPt.y - gStartPt.y - .5*m_nodeExtensionDistance;
-					else
-						yLLInc = gFromNodeBottomPt.y - gStartPt.y + .5*m_nodeExtensionDistance;
-					
-					m_jointPoints[2] = new Point(m_jointPoints[2].x, m_jointPoints[2].y + yLLInc);
-					m_jointPoints[3] = new Point(m_jointPoints[5].x, m_jointPoints[2].y + yLLInc);
-					break;
-//				case RIGHT_WALL:
-//					//need to go around both the to and from nodes
-//					//tunnel through middle? If there's room, we are good, else find top or bottom distance
-//					if(!((gFromNodeTopPt.y > gToNodeBottomPt.y + 2*m_nodeExtensionDistance)
-//						|| (gFromNodeBottomPt.y < gToNodeTopPt.y - 2*m_nodeExtensionDistance)))
-//					{
-//						var yLRInc:Number;
-//						if(Math.abs(gStartPt.y-gFromNodeTopPt.y) < Math.abs(gStartPt.y-gFromNodeBottomPt.y))
-//						{
-//							if(gFromNodeTopPt.y < gToNodeTopPt.y)
-//								yLRInc = -(Math.abs(gStartPt.y-gFromNodeTopPt.y) + .5*m_nodeExtensionDistance);
-//							else
-//								yLRInc = -(Math.abs(gStartPt.y-gToNodeTopPt.y) + .5*m_nodeExtensionDistance);
-//						}
-//						else
-//						{
-//							if(gFromNodeBottomPt.y > gToNodeBottomPt.y)
-//								yLRInc = -(Math.abs(gStartPt.y-gFromNodeBottomPt.y) + .5*m_nodeExtensionDistance);
-//							else
-//								yLRInc = -(Math.abs(gStartPt.y-gToNodeBottomPt.y) + .5*m_nodeExtensionDistance);
-//						}
-//						
-//						m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[2].y + yLRInc);
-//						m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[2].y + yLRInc);						
-//					}
-//					else
-//					{
-//						m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[2].y + yDistance/2);
-//						m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y - yDistance/2);
-//					}
-//					break;
-//				case TOP_WALL:
-//				case BOTTOM_WALL:
-//					m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[2].y + yDistance);
-//					m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y);
-//					break;
-			}
-		}
-		
-		private function setRightWallOutputConnection(xDistance:Number, yDistance:Number):void
-		{
-			switch(m_endJoint.m_closestWall)
-			{
-				case LEFT_WALL:
-					m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + yDistance/2);
-					m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - yDistance/2);
-					break;
-//				case RIGHT_WALL:
-//					//need to go around the to node using the shortest route (based on end joint location)
-//					var gEndPt:Point = localToGlobal(m_jointPoints[5]);
-//					var gToNodeTopPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x, m_toNode.y));
-//					var gToNodeBottomPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x+m_toNode.width, m_toNode.y+m_toNode.height));
-//					
-//					var yLRInc:Number;
-//					if(Math.abs(gEndPt.y-gToNodeTopPt.y) < Math.abs(gEndPt.y-gToNodeBottomPt.y))
-//						yLRInc = -(Math.abs(gEndPt.y-gToNodeTopPt.y) + .5*m_nodeExtensionDistance);
-//					else
-//						yLRInc = Math.abs(gEndPt.y-gToNodeBottomPt.y) + .5*m_nodeExtensionDistance;
-//					
-//					m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[5].y + yLRInc);
-//					m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y + yLRInc);
-//					break;
-//				case TOP_WALL:
-//				case BOTTOM_WALL:
-//					m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[2].y + yDistance);
-//					m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y);
-//					break;
-			}
-		}
-		
-		private function setTopWallOutputConnection(xDistance:Number, yDistance:Number):void
-		{
-			switch(m_endJoint.m_closestWall)
-			{
-				case LEFT_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y-yDistance);
-					break;
-				case RIGHT_WALL:
-					//need to go around the to node using the shortest route (based on end joint location)
-					var gStartPt:Point = localToGlobal(m_jointPoints[2]);
-					var gEndPt:Point = localToGlobal(m_jointPoints[5]);
-					var gToNodeTopPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x, m_toNode.y));
-					var gToNodeBottomPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x+m_toNode.width, m_toNode.y+m_toNode.height));
-					
-					var yLRInc:Number;
-					if(gStartPt.y < gToNodeBottomPt.y)
-						yLRInc = -(Math.abs(gEndPt.y-gToNodeTopPt.y) + .5*m_nodeExtensionDistance);
-					else
-						yLRInc = Math.abs(gEndPt.y-gToNodeBottomPt.y) + .5*m_nodeExtensionDistance;
-					
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y + yLRInc);
-					//need a 9th joint??
-					var newPt:Point = m_jointPoints[5].clone();
-					m_jointPoints[8] = m_jointPoints[7];
-					m_jointPoints[7] = m_jointPoints[6];
-					m_jointPoints[6] = newPt;
-					m_jointPoints[5].y = m_jointPoints[5].y + yLRInc;
-					
-					break;
-				case TOP_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y);
-				case BOTTOM_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y);
-					break;
-			}
+			setBottomWallOutputConnection(xDistance, yDistance);
+
 		}
 		
 		private function setBottomWallOutputConnection(xDistance:Number, yDistance:Number):void
 		{
-			switch(m_endJoint.m_closestWall)
-			{
-				case LEFT_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x, m_jointPoints[5].y-yDistance);
-					break;
-				case RIGHT_WALL:
-					//need to go around the to node using the shortest route (based on end joint location)
-					var gStartPt:Point = localToGlobal(m_jointPoints[2]);
-					var gEndPt:Point = localToGlobal(m_jointPoints[5]);
-					var gToNodeTopPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x, m_toNode.y));
-					var gToNodeBottomPt:Point = m_toNode.parent.localToGlobal(new Point(m_toNode.x+m_toNode.width, m_toNode.y+m_toNode.height));
-					
-					var yLRInc:Number;
-					if(gStartPt.y < gToNodeBottomPt.y)
-						yLRInc = -(Math.abs(gEndPt.y-gToNodeTopPt.y) + .5*m_nodeExtensionDistance);
-					else
-						yLRInc = Math.abs(gEndPt.y-gToNodeBottomPt.y) + .5*m_nodeExtensionDistance;
-					
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y + yLRInc);
-					//need a 9th joint??
-					var newPt:Point = m_jointPoints[5].clone();
-					m_jointPoints[8] = m_jointPoints[7];
-					m_jointPoints[7] = m_jointPoints[6];
-					m_jointPoints[6] = newPt;
-					m_jointPoints[5].y = m_jointPoints[5].y + yLRInc;
-					
-					break;
-				case TOP_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y);
-				case BOTTOM_WALL:
-					m_jointPoints[3] = new Point(m_jointPoints[2].x + xDistance/2, m_jointPoints[2].y);
-					m_jointPoints[4] = new Point(m_jointPoints[5].x - xDistance/2, m_jointPoints[5].y);
-					break;
-			}
+			var gStartPt:Point = localToGlobal(m_jointPoints[1]);
+			var gEndPt:Point = localToGlobal(m_jointPoints[4]);
+			var gToNodeLeftSide:Number = m_toNode.x;
+			var gToNodeRightSide:Number = m_toNode.x+m_toNode.width;
+			var gToNodeTopSide:Number = m_toNode.y;
+			var gToNodeBottomSide:Number = m_toNode.y+m_toNode.height;
+			var gFromNodeLeftSide:Number = m_fromNode.x;
+			var gFromNodeRightSide:Number = m_fromNode.x+m_fromNode.width;
+			var gFromNodeTopSide:Number = m_fromNode.y;
+			var gFromNodeBottomSide:Number = m_fromNode.y+m_fromNode.height;
+
+			//this is really simple compared to how it was, is this really right
+			m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
+			m_jointPoints[3] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[4].y);						
 		}
 		
 		override public function componentSelected(isSelected:Boolean):void

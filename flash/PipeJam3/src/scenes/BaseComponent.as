@@ -96,47 +96,20 @@ package scenes
 			super.dispose();
 		}
 		
-		public function findBoundingBox(edgeSetLayoutXML:XML):Rectangle
-		{
-			var i:int = 0;
-			while(edgeSetLayoutXML.graph.attr[i].@name != "bb")
-				i++;
-			var edgeSetBBString:String = edgeSetLayoutXML.graph.attr[i].string;
-			
+		public function findBoundingBox(componentXML:XML):Rectangle
+		{			
 			var bb:Rectangle = new Rectangle;
-			var startPos:Number = 0;
-			for(var index:int=0; index<4; index++)
-			{
-				var numEnd:int = edgeSetBBString.indexOf(',', startPos);
-				var num:Number;
-				if(numEnd != -1) 
-					num = Number(edgeSetBBString.substring(startPos, numEnd));
-				else
-					num = Number(edgeSetBBString.substring(startPos));
-				startPos = numEnd+1;
-				switch(index)
-				{
-					case 0: bb.x = num; break;
-					case 1: bb.y = num; break;
-					case 2: bb.width = num - bb.x; break;
-					case 3: bb.height = num - bb.y; break;
-				}
-			}
+			bb.x = componentXML.@left;
+			bb.y = componentXML.@top;
+			bb.width = componentXML.@right - componentXML.@left;
+			bb.height = componentXML.@bottom - componentXML.@top;
+
 			return bb;
 		}
 		
-		public function findNodePosition(edgeSetLayoutXML:XML):Point
+		public function findNodePosition(componentXML:XML):Point
 		{
-			var i:int = 0;
-			var attrList:XMLList = edgeSetLayoutXML.attr;
-			while(attrList[i].@name != "pos")
-				i++;
-			var edgeSetPosString:String = edgeSetLayoutXML.attr[i].string;
-			
-			var pos:Point = new Point;
-			var numEnd:int = edgeSetPosString.indexOf(',');
-			pos.x = Number(edgeSetPosString.substring(0, numEnd));
-			pos.y = Number(edgeSetPosString.substring(numEnd+1));
+			var pos:Point = new Point(componentXML.@top, componentXML.@left);
 			
 			return pos;
 		}

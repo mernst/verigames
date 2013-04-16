@@ -41,9 +41,9 @@ package scenes.game.display
 			m_isDirty = true;
 			
 			if(fromComponent is GameNode)
-				m_closestWall = GameEdgeContainer.RIGHT_WALL;
+				m_closestWall = GameEdgeContainer.BOTTOM_WALL;
 			else if(toComponent is GameNode)
-				m_closestWall = GameEdgeContainer.LEFT_WALL;
+				m_closestWall = GameEdgeContainer.TOP_WALL;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -155,13 +155,13 @@ package scenes.game.display
 						{
 							//left wall closest
 							jointUpdatedGlobalPt.x = containerGlobalPt.x;
-							m_closestWall = GameEdgeContainer.LEFT_WALL;
+							m_closestWall = GameEdgeContainer.BOTTOM_WALL;
 						}
 						else
 						{
 							//right wall closest
 							jointUpdatedGlobalPt.x = boundsGlobalPt.x;
-							m_closestWall = GameEdgeContainer.RIGHT_WALL;
+							m_closestWall = GameEdgeContainer.TOP_WALL;
 						}
 						
 						var finalPt:Point = parent.globalToLocal(jointUpdatedGlobalPt);
