@@ -1,28 +1,18 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	
 	import flash.external.ExternalInterface;
-	import flash.geom.Rectangle;
-	import flash.text.TextField;
 	import flash.utils.Dictionary;
-	
-	import graph.BoardNodes;
-	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
-	
 	import scenes.BaseComponent;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	
 	import starling.display.Button;
 	import starling.display.Image;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
-	
 	import system.Simulator;
 	
 	/**

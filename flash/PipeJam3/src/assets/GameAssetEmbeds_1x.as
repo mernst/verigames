@@ -78,6 +78,12 @@ package assets
 		[Embed(source = '../../lib/assets/StreetEnd.png')]
 		public var StreetEndClass:Class;
 		
+		[Embed(source = "../../lib/assets/Chevron.png")]
+		public var ChevronClass:Class;
+		
+		[Embed(source="../../lib/assets/Star.png")]
+		public var StarClass:Class;
+		
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]

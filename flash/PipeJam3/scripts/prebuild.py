@@ -1,11 +1,12 @@
 import datetime, os, sys
 
 if sys.platform == 'win32':
-	buildversion = os.popen('SubWCRev .').read().split('\n')[2].split()[-1] or 'unknown'
+	hgcmd = 'hg id -i';
 else:
-	buildversion = os.popen('bash -l -c "svnversion ."').read().strip() or 'unknown'
+	hgcmd = 'bash -l -c "hg id -i"';
 
-builddate = datetime.date.today().strftime('%Y-%m-%d')
+buildversion = os.popen(hgcmd).read().strip() or 'unknown'
+builddate = datetime.date.today().strftime('%Y%m%d')
 
 f = open(os.path.normpath('src/BuildInfo.as'), 'w')
 f.write('''\
@@ -16,13 +17,13 @@ f.write('''\
 
 
 
-package
+package BaseGame.Build
 {
 	public class BuildInfo
 	{
-		public static const VERSION:String = "%s";
 		public static const DATE:String = "%s";
+		public static const VERSION:String = "%s";
 	}
 }
-''' % (buildversion, builddate))
+''' % (builddate, buildversion))
 f.close()

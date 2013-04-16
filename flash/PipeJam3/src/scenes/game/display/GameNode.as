@@ -1,7 +1,11 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import graph.NodeTypes;
+	import starling.display.Image;
+	import starling.textures.Texture;
 	
 	import graph.Edge;
 	import graph.EdgeSetRef;
@@ -26,8 +30,11 @@ package scenes.game.display
 		
 		private var imageWidth:uint = 10;
 		private var imageHeight:uint = 10;
+		public var m_numIncomingNodeEdges:int;
+		public var m_numOutgoingNodeEdges:int;
 		private var m_id:String;
-		private var m_edge:Edge;
+		private var m_edgeSetEdges:Vector.<Edge>;
+		private var m_editable:Boolean;
 		
 		public var positionPoint:Point;
 		
@@ -48,12 +55,12 @@ package scenes.game.display
 		
 		public var addedToStage:Boolean = false;
 		
-		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef, edge:Edge)
+		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef, edgeSetEdges:Vector.<Edge>)
 		{
 			super();
 			m_nodeXML = nodeXML;
 			m_edgeSet = edgeSet;
-			m_edge = edge;
+			m_edgeSetEdges = edgeSetEdges;
 			
 			m_currentNodeNumber = nextNodeNumber++;			
 			
@@ -70,8 +77,29 @@ package scenes.game.display
 				imageHeight = boundingBox.height;
 			}
 			
+			if (m_edgeSetEdges.length == 0) {
+				throw new Error("GameNode created with no associated edge objects");
+			}
+			m_editable = m_edgeSetEdges[0].editable;
+			m_numIncomingNodeEdges = m_numOutgoingNodeEdges = 0;
+			for each (var myEdge:Edge in m_edgeSetEdges) {
+				if (myEdge.is_wide != isWide()) {
+					trace("WARNING: Edge id " + myEdge.edge_id + " isWide doesn't match edgeSet value = " + isWide().toString);
+				}
+				if (myEdge.editable != m_editable) {
+					trace("WARNING: Edge id " + myEdge.edge_id + " editable doesn't match edgeSet value = " + m_editable.toString);
+					m_editable = true; // default to editable for this case (at least one edge = editable, whole edgeSet = editable)
+				}
+				if (myEdge.from_port.node.kind == NodeTypes.INCOMING) {
+					m_numIncomingNodeEdges++;
+				}
+				if (myEdge.to_port.node.kind == NodeTypes.OUTGOING) {
+					m_numOutgoingNodeEdges++;
+				}
+			}
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
 		public function onAddedToStage(event:starling.events.Event):void
@@ -116,14 +144,17 @@ package scenes.game.display
 				{
 					//clear selections on all actions with no shift key
 					dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
-					if(m_edge.editable)
+					if(m_editable)
 					{
-						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, m_edgeSet));
 						m_isDirty = true;
 						for each(var oedge:GameEdgeContainer in this.m_outgoingEdges)
 						oedge.m_isDirty = true;
 						for each(var iedge:GameEdgeContainer in this.m_incomingEdges)
 						iedge.m_isDirty = true;
+						// Need to dispatch AFTER marking dirty, this will trigger the score update
+						// (we don't want to update the score with old values, we only know they're old
+						// if we properly mark them dirty first)
+						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, m_edgeSet));
 					}
 					
 				}
@@ -238,10 +269,10 @@ package scenes.game.display
 			return false;
 		}
 		
+		private var m_star:ScoreStar;
 		public function draw():void
 		{
 			var color:uint = getColor();
-			
 			
 			m_shape = new Shape;
 			if(color == WIDE_COLOR)
@@ -262,11 +293,39 @@ package scenes.game.display
 			}
 			
 			addChild(m_shape);
+			
+			
+			var wideScore:Number = getWideScore();
+			var narrowScore:Number = getNarrowScore();
+			if (wideScore > narrowScore) {
+				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
+				addChild(m_star);
+			} else if (narrowScore > wideScore) {
+				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
+				addChild(m_star);
+			}
+			
+			
 			//			var number:String = ""+m_id.substring(4);
 			//			var txt:TextField = new TextField(m_shape.width, m_shape.height, number, "Veranda", 6); 
 			//			txt.y = 0;
 			//			txt.x = 0;
 			//			m_shape.addChild(txt);
+		}
+		
+		public function getWideScore():Number
+		{
+			return Constants.WIDE_INPUT_POINTS * m_numIncomingNodeEdges;
+		}
+		
+		public function getNarrowScore():Number
+		{
+			return Constants.NARROW_OUTPUT_POINTS * m_numOutgoingNodeEdges;
+		}
+		
+		public function getScore():Number
+		{
+			return isWide() ? getWideScore() : getNarrowScore();
 		}
 		
 		public function findGroup(dictionary:Dictionary):void
@@ -288,12 +347,12 @@ package scenes.game.display
 		
 		override public function isWide():Boolean
 		{
-			return m_edge.is_wide;
+			return m_edgeSetEdges[0].is_wide;
 		}
 		
 		override public function getColor():int
 		{
-			if(m_edge.editable)
+			if(m_editable)
 			{
 				if(isWide())
 					return WIDE_COLOR;
