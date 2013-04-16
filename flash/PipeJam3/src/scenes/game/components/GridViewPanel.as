@@ -16,6 +16,7 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import flash.events.MouseEvent;
 	import starling.core.Starling;
+	import starling.display.DisplayObjectContainer;
 	import utilities.XMath;
 	
 	import flash.geom.Point;
@@ -161,7 +162,7 @@ package scenes.game.components
 						y = (currentPosA.y + currentPosB.y) * 0.5;
 						
 						// rotate
-					//	rotation += deltaAngle;
+						//	rotation += deltaAngle;
 						
 						// scale
 						var sizeDiff:Number = currentVector.length / previousVector.length;
@@ -187,11 +188,43 @@ package scenes.game.components
 
 		private function onMouseWheel(evt:MouseEvent):void
 		{
+			
+			
+			//scaleContent(1.0/content.scaleX);
 			var delta:Number = evt.delta;
-			scaleContent(1.00 + delta / 100.0);
+			
+			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
+			const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
+					Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
+			
+			localMouse.x *= native2Starling.x;
+			localMouse.y *= native2Starling.y;
+			
+			// Now localSpace is in local coordinates (relative to this instance of GridViewPanel).
+			// Next, we'll convert to content space
+			var prevMouse:Point = new Point(localMouse.x - content.x, localMouse.y - content.y);
+			prevMouse.x /= content.scaleX;
+			prevMouse.y /= content.scaleY;
+			
+			// Now we have the mouse location in current content space.
+			// We want this location to not move after scaling
+			
+			// Scale content
+			scaleContent(1.00 + 2 * delta / 100.0);
+			
+			// Calculate new location of previous mouse
+			var newMouse:Point = new Point(localMouse.x - content.x, localMouse.y - content.y);
+			newMouse.x /= content.scaleX;
+			newMouse.y /= content.scaleY;
+			
+			// Move by offset so that the point the mouse is centered on remains in same place
+			// (scaling is performed relative to this location)
+			var viewRect:Rectangle = getViewInContentSpace();
+			var newX:Number = viewRect.x + viewRect.width / 2 + (prevMouse.x - newMouse.x);// / content.scaleX;
+			var newY:Number = viewRect.y + viewRect.height / 2 + (prevMouse.y - newMouse.y);// / content.scaleY;
+			moveContent(newX, newY);
 		}
 		
-		private static const VIEW_PADDING:Number = 10;
 		private function moveContent(newX:Number, newY:Number):void
 		{
 			var moveBounds:Rectangle = content.getBounds(this);
@@ -204,8 +237,14 @@ package scenes.game.components
 			panTo(newX, newY);
 		}
 		
+		/**
+		 * Scale the content by the given scale factor (sizeDiff of 1.5 = 150% the original size)
+		 * @param	sizeDiff Size difference factor, 1.5 = 150% of original size
+		 */
 		private function scaleContent(sizeDiff:Number):void
 		{
+			var oldScaleX:Number = content.scaleX;
+			var oldScaleY:Number = content.scaleY;
 			var newScaleX:Number = content.scaleX*sizeDiff;
 			var newScaleY:Number = content.scaleY*sizeDiff;
 			if(newScaleX > 2.5 &&  newScaleX > newScaleY)
