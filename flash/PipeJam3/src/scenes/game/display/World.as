@@ -14,6 +14,7 @@ package scenes.game.display
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import system.Simulator;
+	import scenes.game.components.InGameMenuBox;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -74,6 +75,9 @@ package scenes.game.display
 		protected var right_arrow_button:Button;
 		protected var left_arrow_button:Button;
 		
+		public static var SHOW_GAME_MENU:String = "show_game_menu";
+		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
+		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -106,42 +110,20 @@ package scenes.game.display
 			gameControlPanel.x = edgeSetGraphViewPanel.width;
 			addChild(gameControlPanel);
 			
-//			var arrowRightUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightUpClass");
-//			var arrowRightClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowRightClickClass");
-//			
-//			right_arrow_button = new Button(arrowRightUp, "", arrowRightClick);
-//			right_arrow_button.addEventListener(Event.TRIGGERED, onArrowRightButtonTriggered);
-//			right_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - 4;
-//			right_arrow_button.y = 280 - 5;
-//			addChild(right_arrow_button);
-//			
-//			var arrowLeftUp:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftUpClass");
-//			var arrowLeftClick:Texture = AssetInterface.getTexture("GameControlPanel", "ArrowLeftClickClass");
-//			
-//			left_arrow_button = new Button(arrowLeftUp, "", arrowLeftClick);
-//			left_arrow_button.addEventListener(Event.TRIGGERED, onArrowLeftButtonTriggered);
-//			left_arrow_button.x = gameControlPanel.x + gameControlPanel.width/2 - left_arrow_button.width - 8;
-//			left_arrow_button.y = right_arrow_button.y;
-//			addChild(left_arrow_button);
-			
 			selectLevel(firstLevel);
 			
 			addEventListener(Level.SCORE_CHANGED, onScoreChange);
 			addEventListener(Level.CENTER_ON_NODE, onCenterOnNodeEvent);
+			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
+			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 		}
 		
-		private function onArrowRightButtonTriggered():void
+		private function onShowGameMenuEvent():void
 		{
-			currentLevelNumber = (currentLevelNumber + 1) % levels.length;
-			selectLevel(levels[currentLevelNumber]);
-		}
-		
-		private function onArrowLeftButtonTriggered():void
-		{
-			currentLevelNumber--;
-			if (currentLevelNumber<0)
-				currentLevelNumber = levels.length -1
-			selectLevel(levels[currentLevelNumber]);
+			var inGameMenuBox:InGameMenuBox = new InGameMenuBox();
+			addChild(inGameMenuBox);
+			inGameMenuBox.x = 150;
+			inGameMenuBox.y = 20;
 		}
 		
 		private function onScoreChange(e:Event):void
@@ -157,6 +139,12 @@ package scenes.game.display
 			{
 				edgeSetGraphViewPanel.centerOnNode(component);
 			}
+		}
+		
+		private function onNextLevel(e:starling.events.Event):void
+		{
+			currentLevelNumber = (currentLevelNumber + 1) % levels.length;
+			selectLevel(levels[currentLevelNumber]);
 		}
 		
 		
@@ -175,7 +163,6 @@ package scenes.game.display
 						
 			selecting_level = false;
 						
-			active_level.initialize();
 			edgeSetGraphViewPanel.loadLevel(active_level);
 			gameControlPanel.updateScore(active_level);
 		}
