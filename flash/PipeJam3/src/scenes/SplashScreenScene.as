@@ -10,8 +10,10 @@ package scenes
 	public class SplashScreenScene extends Scene
 	{
 		/** Start button image */
-		protected var start_button:Button;
-		protected var login_button:Button;
+		protected var play_button:Button;
+		protected var signin_button:Button;
+		protected var tutorial_button:Button;
+		protected var demo_button:Button;
 	
 		public function SplashScreenScene(game:PipeJamGame)
 		{
@@ -29,38 +31,66 @@ package scenes
 			background.blendMode = BlendMode.NONE;
 			addChild(background);
 			
-			var startButtonUp:Texture = AssetInterface.getTexture("Game", "StartButtonTrafficImageClass");
-			var startButtonClick:Texture = AssetInterface.getTexture("Game", "StartButtonTrafficClickImageClass");
+			var signinButtonUp:Texture = AssetInterface.getTexture("Menu", "SignInButtonClass");
+			var signinButtonClick:Texture = AssetInterface.getTexture("Menu", "SignInButtonClass");
 
-			start_button = new Button(startButtonUp, "", startButtonClick);
-			start_button.addEventListener(Event.TRIGGERED, onStartBoxButtonTriggered);
-			start_button.x = width/2 - start_button.width/2;
-			start_button.y = height - 100;
-			addChild(start_button);
+			signin_button = new Button(signinButtonUp, "", signinButtonClick);
+			signin_button.addEventListener(Event.TRIGGERED, onSignInButtonTriggered);
+			signin_button.x = width/2 - signin_button.width/2;
+			signin_button.y = 60;
+			addChild(signin_button);
 			
-			login_button = new Button(startButtonUp, "", startButtonClick);
-			login_button.addEventListener(Event.TRIGGERED, onLoginButtonTriggered);
-			login_button.x = width/2 - start_button.width/2;
-			login_button.y = height - 50;
-			addChild(login_button);
+			var playButtonUp:Texture = AssetInterface.getTexture("Menu", "PlayButtonClass");
+			var playButtonClick:Texture = AssetInterface.getTexture("Menu", "PlayButtonClass");
+			
+			play_button = new Button(playButtonUp, "", playButtonClick);
+			play_button.addEventListener(Event.TRIGGERED, onPlayButtonTriggered);
+			play_button.x = width/2 - play_button.width/2;
+			play_button.y = 110;
+			addChild(play_button);
+			
+			var tutorialButtonUp:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
+			var tutorialButtonClick:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
+			
+			tutorial_button = new Button(tutorialButtonUp, "", tutorialButtonClick);
+			tutorial_button.addEventListener(Event.TRIGGERED, onTutorialButtonTriggered);
+			tutorial_button.x = width/2 - tutorial_button.width/2;
+			tutorial_button.y = 160;
+			addChild(tutorial_button);
+			
+			var demoButtonUp:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
+			var demoButtonClick:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
+			
+			demo_button = new Button(demoButtonUp, "", demoButtonClick);
+			demo_button.addEventListener(Event.TRIGGERED, onDemoButtonTriggered);
+			demo_button.x = width/2 - demo_button.width/2;
+			demo_button.y = 210;
+			addChild(demo_button);
 		}
 		
 		protected  override function removedFromStage(event:starling.events.Event):void
 		{
+			
 		}
 		
+		protected function onSignInButtonTriggered(e:Event):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LoginScene"));
+		}
 		
-		protected function onStartBoxButtonTriggered(e:Event):void
+		protected function onPlayButtonTriggered(e:Event):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
-		protected function onLoginButtonTriggered(e:Event):void
+		protected function onTutorialButtonTriggered(e:Event):void
 		{
-	//		if(e.)
-	//			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LoginTestScene"));
-	//		else
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LoginScene"));
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+		}
+		
+		protected function onDemoButtonTriggered(e:Event):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}
 }

@@ -25,7 +25,6 @@
 			private var originalViewPort:Rectangle;
 			
 			public function init():void {
-				trace(Security.sandboxType);
 
 				//set up the main controller
 				stage.scaleMode = StageScaleMode.NO_SCALE;
