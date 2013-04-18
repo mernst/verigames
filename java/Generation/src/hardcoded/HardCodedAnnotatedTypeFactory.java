@@ -40,7 +40,7 @@ public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Har
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());
 
-                if (lExpr.hasAnnotation(checker.NOTHARDCODED) && rExpr.hasAnnotation(checker.NOTHARDCODED)) {
+                if (lExpr.hasAnnotation(checker.NOTHARDCODED) || rExpr.hasAnnotation(checker.NOTHARDCODED)) {
                     type.addAnnotation(checker.NOTHARDCODED);
                 } else {
                     type.addAnnotation(checker.MAYBEHARDCODED);
