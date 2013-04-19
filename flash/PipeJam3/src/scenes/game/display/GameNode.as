@@ -1,27 +1,29 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
+	import events.MoveEvent;
+	
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import graph.NodeTypes;
-	import starling.display.Image;
-	import starling.textures.Texture;
 	
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.Network;
+	import graph.NodeTypes;
 	import graph.Port;
 	
 	import scenes.BaseComponent;
 	
 	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
 	import starling.display.Shape;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import events.MoveEvent;
-	import flash.geom.Rectangle;
+	import starling.textures.Texture;
 	
 	public class GameNode extends GameComponent
 	{
@@ -223,28 +225,42 @@ package scenes.game.display
 			}
 		}
 		
+		//adds edge to outgoing edge method (unless currently in vector), then sorts
 		public function setOutgoingEdge(edge:GameEdgeContainer):void
 		{
-			m_outgoingEdges.push(edge);
-			//extend the start point into the node
-			var startPoint:Point = edge.m_edgeArray[0];
-			var newStartPoint:Point = startPoint.clone();
-			newStartPoint.x -= 1;
-			//add the startPoint in to the front of the array two more times (bezier curve requires three points) and then create a new start point
-			edge.m_edgeArray.splice(0, 0, newStartPoint, startPoint, startPoint);
+			if(m_outgoingEdges.indexOf(edge) == -1)
+				m_outgoingEdges.push(edge);
+			edge.outgoingEdgePosition = m_outgoingEdges.length-1;
+			//I want the edges to be in ascending order according to x position, so do that here
+			m_outgoingEdges.sort(sortOutgoingXPositions);
+			
 		}
 		
+		protected function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
+		{
+			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
+				return -1;
+			else
+				return 1;
+		}
+		
+		//adds edge to incoming edge method (unless currently in vector), then sorts
 		public function setIncomingEdge(edge:GameEdgeContainer):void
 		{
-			m_incomingEdges.push(edge);
-			//extend the end point into the node
-			var endPoint:Point = edge.m_edgeArray[edge.m_edgeArray.length-1];
-			var newEndPoint:Point = endPoint.clone();
-			newEndPoint.x += 1;
-			//add the startPoint in to the front of the array two more times (bezier curve requires three points) and then create a new start point
-			edge.m_edgeArray.splice(edge.m_edgeArray.length, 0, newEndPoint, newEndPoint, newEndPoint);
+			if(m_incomingEdges.indexOf(edge) == -1)
+				m_incomingEdges.push(edge);
+			edge.incomingEdgePosition = m_incomingEdges.length-1;
+			//I want the edges to be in ascending order according to x position, so do that here
+			m_incomingEdges.sort(sortIncomingXPositions);
 		}
 		
+		protected function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
+		{
+			if(x.m_edgeArray[x.m_edgeArray.length-1].x < y.m_edgeArray[y.m_edgeArray.length-1].x)
+				return -1;
+			else
+				return 1;
+		}
 		public function onEnterFrame(event:Event):void
 		{
 			if(m_isDirty)

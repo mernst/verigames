@@ -150,17 +150,10 @@ package scenes.game.display
 		
 		private function selectLevel(newLevel:Level):void
 		{
-			var _level:Level = newLevel;
-			if (selecting_level || newLevel == active_level) {
+			if (newLevel == active_level) {
 				return;
-			}
-			selecting_level = true;
-			var old_level:Level = active_level;
-			if (old_level)
-				removeChild(old_level);
-			
+			}	
 			active_level = newLevel;
-			selecting_level = false;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.updateScore(newLevel);

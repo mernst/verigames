@@ -339,7 +339,7 @@ package scenes.game.components
 			if(m_currentLevel)
 			{
 				m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
-				m_currentLevel.removeFromParent(true);
+				content.removeChild(m_currentLevel);
 			}
 			m_currentLevel = level;
 			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
