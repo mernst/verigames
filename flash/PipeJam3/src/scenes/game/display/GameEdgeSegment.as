@@ -1,11 +1,15 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import starling.display.DisplayObject;
+	import starling.display.graphics.Fill;
 	import starling.display.Image;
 	import starling.textures.Texture;
+	import starling.display.shaders.fragment.TextureVertexColorFragmentShader;
+	import utilities.XMath;
 	import utilities.XSprite;
-	
 	import scenes.BaseComponent;
 	
 	import starling.display.Quad;
@@ -14,7 +18,6 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-
 
 	public class GameEdgeSegment extends GameComponent
 	{
@@ -31,7 +34,7 @@ package scenes.game.display
 		public var m_isLastSegment:Boolean;
 		
 		public var currentTouch:Touch;
-		private var m_arrows:Vector.<Image> = new Vector.<Image>();
+		private var m_arrows:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 		
 		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _fromNode:GameNode, _toNode:GameNode, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
 		{
@@ -130,18 +133,15 @@ package scenes.game.display
 		public function draw():void
 		{
 			// Remove/dispose of arrows
-			for each (var arr:Image in m_arrows) {
-				if (arr.parent) {
-					arr.parent.removeChild(arr);
-					arr = null;
-				}
+			for each (var arr:DisplayObject in m_arrows) {
+				arr.removeFromParent(true);
 			}
-			m_arrows = new Vector.<Image>();
+			m_arrows = new Vector.<DisplayObject>();
 			
 			var color:int = getColor();
 			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			
-			removeChildren();
+			disposeChildren();
 			
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
@@ -187,8 +187,8 @@ package scenes.game.display
 				dY = m_endPt.y / m_endPt.length;
 				myAng = Math.atan2(dY, dX);
 				var arrHeight:Number = GameEdgeContainer.WIDE_WIDTH;
-				currX = (dX * ARROW_SPACING) / 2.0 + arrHeight * Math.sin(myAng) / 2.0;
-				currY = (dY * ARROW_SPACING) / 2.0 - arrHeight * Math.cos(myAng) / 2.0;
+				currX = (dX * ARROW_SPACING) / 2.0 + /*arrHeight*/lineSize * Math.sin(myAng) / 2.0;
+				currY = (dY * ARROW_SPACING) / 2.0 - /*arrHeight*/lineSize * Math.cos(myAng) / 2.0;
 				for (var i:int = 0; i < numArr; i++) {
 					var myText:Texture;
 					if (m_parentEdge.hasError()) {
@@ -196,15 +196,24 @@ package scenes.game.display
 					} else {
 						myText  = AssetInterface.getTexture("Game", "ChevronClass");
 					}
+					
 					var myArr:Image = new Image(myText);
+					// Adjust the texture coordinates such that when we scale the arrow's
+					// height to equal lineSize, we show the correct pct of the arrow's
+					// texture (this acts like a clipRect such that the arrow's texture
+					// doesn't spill outside of the edge itself
+					var pctText:Number = lineSize / (1.2 * arrHeight);
+					myArr.setTexCoords(0, new Point(0, 0.5 - pctText/2)); //topleft
+					myArr.setTexCoords(1, new Point(1, 0.5 - pctText/2)); //topright
+					myArr.setTexCoords(2, new Point(0, 0.5 + pctText/2)); //bottomleft
+					myArr.setTexCoords(3, new Point(1, 0.5 + pctText / 2)); //bottomright
+					
 					myArr.touchable = false;
+					
 					myArr.width = ARROW_WIDTH;
-					myArr.height = arrHeight + 1.0;
+					myArr.height = lineSize;
+					
 					XSprite.setPivotCenter(myArr);
-					if (isHover) {
-						trace("dX/dY/ang:" + dX + " " + dY + " " + (Math.atan2(dY, dX) * 180 / Math.PI));
-						trace("endPt:" + m_endPt.toString());
-					}
 					myArr.x = currX + this.x;
 					myArr.y = currY + this.y;
 					myArr.rotation = myAng;
@@ -214,6 +223,15 @@ package scenes.game.display
 					m_arrows.push(myArr);
 				}
 			}
+		}
+		
+		private static function fillUV(tx:Number, ty:Number, rot:Number, tex:Texture):Matrix
+		{
+			var ret:Matrix = new Matrix();
+			ret.rotate(XMath.degreesToRadians(rot));
+			ret.translate(tx, ty);
+			ret.scale(1.0 / tex.width, 1.0 / tex.height);
+			return ret;
 		}
 		
 		public function drawDiagonalLine(p1:Point, p2:Point, width:Number=1, color:uint=0x000000):Quad

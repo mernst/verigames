@@ -3,6 +3,7 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import com.greensock.TweenLite;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import utilities.XMath;
 	
@@ -96,8 +97,8 @@ package scenes.game.components
 			
 			scoreBlockContainer = new Sprite();
 			scorePanel.addChild(scoreBlockContainer);
-			
-			//scorePanel.clipRect = new Rectangle(0, 0, SCORE_PANEL_AREA.width - 2 * PAD, SCORE_PANEL_AREA.height - 2 * PAD);
+			var topLeftScorePanel:Point = scorePanel.localToGlobal(new Point(0, 0));
+			scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, scorePanel.width, scorePanel.height);
 			
 			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
 			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");

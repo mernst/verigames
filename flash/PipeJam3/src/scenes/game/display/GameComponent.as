@@ -15,7 +15,6 @@ package scenes.game.display
 		
 		protected var m_fromComponent:GameComponent;
 		protected var m_toComponent:GameComponent;
-
 		
 		public static var NARROW_COLOR:uint = 0x1A85FF;
 		public static var WIDE_COLOR:uint = 0x3427FF;
@@ -26,7 +25,6 @@ package scenes.game.display
 		static protected var darkColorMaterial:StandardMaterial = null;
 		static protected var unadjustableColorMaterial:StandardMaterial = null;
 		static protected var selectedColorMaterial:StandardMaterial = null;
-
 		
 		public function GameComponent()
 		{

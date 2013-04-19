@@ -158,10 +158,11 @@ package scenes.game.display
 			if(m_recreateEdge)
 			{
 				m_recreateEdge = false;
+				disposeChildren();
+				
 				m_edgeSegments = new Vector.<GameEdgeSegment>;			
 				m_edgeJoints = new Vector.<GameEdgeJoint>;
 				
-				removeChildren();
 				//reused, so already added
 				m_edgeJoints.push(m_startJoint);
 				

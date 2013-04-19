@@ -25,7 +25,18 @@ package scenes
 		{
 			super();
 		}
-				
+		
+		public function disposeChildren():void
+		{
+			while (this.numChildren > 0) {
+				var obj:DisplayObject = getChildAt(0);
+				if (obj is BaseComponent) {
+					(obj as BaseComponent).disposeChildren();
+				}
+				obj.removeFromParent(true);
+			}
+		}
+		
 		public override function render(support:RenderSupport, alpha:Number):void
 		{
 			if (mClipRect == null) super.render(support, alpha);
