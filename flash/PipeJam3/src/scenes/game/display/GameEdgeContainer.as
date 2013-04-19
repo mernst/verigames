@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import flash.geom.Point;
 	
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Shape;
 	import starling.events.Event;
 	
@@ -19,13 +20,14 @@ package scenes.game.display
 		//save start and end points, so we can remake line
 		private var m_startPoint:Point;
 		private var m_endPoint:Point;
-		private var m_startJoint:GameEdgeJoint;
-		private var m_endJoint:GameEdgeJoint;
+		public var m_startJoint:GameEdgeJoint;
+		public var m_endJoint:GameEdgeJoint;
 		
 		private var m_jointPoints:Array;
 		
-		private var m_nodeExtensionDistance:Number = 5;
-		
+		private var m_nodeExtensionDistance:Number = 3;
+		public var incomingEdgePosition:int;
+		public var outgoingEdgePosition:int;
 		public var m_originalEdge:Boolean;
 		
 		//use for figuring out closest wall
@@ -163,7 +165,7 @@ package scenes.game.display
 				m_edgeSegments = new Vector.<GameEdgeSegment>;			
 				m_edgeJoints = new Vector.<GameEdgeJoint>;
 				
-				//reused, so already added
+
 				m_edgeJoints.push(m_startJoint);
 				
 				var previousSegment:GameComponent = m_fromNode;
@@ -396,17 +398,11 @@ package scenes.game.display
 			m_jointPoints[startIndex] = new Point(joint.x, joint.y);
 			switch(joint.m_closestWall)
 			{
-				case LEFT_WALL:
-					m_jointPoints[nodeIndex] = new Point(joint.x - m_nodeExtensionDistance, joint.y);
-					break;
-				case RIGHT_WALL:
-					m_jointPoints[nodeIndex] = new Point(joint.x + m_nodeExtensionDistance, joint.y);
-					break;
 				case TOP_WALL:
-					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y - m_nodeExtensionDistance);
+					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y - m_nodeExtensionDistance - incomingEdgePosition*3);
 					break;
 				case BOTTOM_WALL:
-					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y + m_nodeExtensionDistance);
+					m_jointPoints[nodeIndex] = new Point(joint.x, joint.y + m_nodeExtensionDistance + outgoingEdgePosition*3);
 					break;
 			}
 		}
@@ -501,6 +497,32 @@ package scenes.game.display
 				
 				m_isDirty = false;
 			}
+		}
+		
+		// point should be in local coordinates
+		public function setStartPosition(newPoint:Point):void
+		{
+			m_startJoint.x = newPoint.x;
+			m_startJoint.y = newPoint.y;
+		}
+		
+		// point should be in local coordinates
+		public function setEndPosition(newPoint:Point):void
+		{
+			m_endJoint.x = newPoint.x;
+			m_endJoint.y = newPoint.y;
+		}
+		
+		public function setOriginalStartPosition(newPoint:Point):void
+		{
+			m_startJoint.m_originalPoint.x = newPoint.x;
+			m_startJoint.m_originalPoint..y = newPoint.y;
+		}
+		
+		public function setOriginalEndPosition(newPoint:Point):void
+		{
+			m_endJoint.m_originalPoint.x = newPoint.x;
+			m_endJoint.m_originalPoint.y = newPoint.y;
 		}
 	}
 }

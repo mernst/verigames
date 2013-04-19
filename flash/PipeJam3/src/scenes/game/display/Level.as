@@ -123,6 +123,7 @@ package scenes.game.display
 			levels_that_depend_on_this_level = new Vector.<Level>();
 			levels_that_this_level_depends_on = new Vector.<Level>();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
 		}
 		
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -130,7 +131,6 @@ package scenes.game.display
 			m_edgeVector = new Vector.<GameEdgeContainer>;
 			setDisplayData();
 
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
 			
 			selectedComponents = new Vector.<GameComponent>;
 			var count:int = 0;
@@ -182,7 +182,6 @@ package scenes.game.display
 	
 			var edgeXMLList:XMLList = m_levelLayoutXML.edge;
 			
-
 			for each(var edgeXML:XML in edgeXMLList)
 			{
 				var fromEdgeID:String = edgeXML.@from;

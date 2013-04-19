@@ -1,24 +1,34 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
 	import starling.display.graphics.Fill;
-	import starling.display.Image;
-	import starling.textures.Texture;
+	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
+	import flash.utils.getQualifiedClassName;
 	import starling.display.shaders.fragment.TextureVertexColorFragmentShader;
 	import utilities.XMath;
-	import utilities.XSprite;
 	import scenes.BaseComponent;
 	
+	import starling.core.RenderSupport;
+	import starling.core.starling_internal;
+	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Shape;
+	import starling.errors.AbstractClassError;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-
+	import starling.filters.FragmentFilter;
+	import starling.textures.Texture;
+	import starling.utils.MatrixUtil;
+	
+	import utilities.XSprite;
 	public class GameEdgeSegment extends GameComponent
 	{
 		private static const ARROW_SPACING:Number = 5.0;
@@ -27,6 +37,7 @@ package scenes.game.display
 		private var m_quad:Quad;
 		protected var m_parentEdge:GameEdgeContainer;
 		public var m_endPt:Point;
+		public var m_currentRect:Rectangle;
 		
 		public var index:int;
 		
@@ -47,6 +58,7 @@ package scenes.game.display
 			m_isLastSegment = _isLastSegment;
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
+			m_currentRect = new Rectangle(0,0,0,0);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -126,7 +138,17 @@ package scenes.game.display
 		public function updateSegment(startPt:Point, endPt:Point):void
 		{
 			m_endPt = endPt.subtract(startPt);
-			
+			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			if(m_endPt.x != 0)
+			{
+				m_currentRect.width = m_endPt.x;
+				m_currentRect.height = lineSize;
+			}
+			else
+			{
+				m_currentRect.width = lineSize;
+				m_currentRect.height = m_endPt.y;				
+			}
 			m_isDirty = true;
 		}
 		
@@ -298,5 +320,41 @@ package scenes.game.display
 				m_isDirty = false;
 			}
 		}
+		
+//		public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
+//		{
+//			var glocalPoint1:Point = localToGlobal(localPoint);
+//			//			trace(localPoint.x + " " + localPoint.y);
+//			var rectPt1:Point = new Point(x, y);
+//			var grectPt1:Point = parent.localToGlobal(rectPt1);
+//			var rectPt2:Point = new Point(x+width, y+height);
+//			var grectPt2:Point = parent.localToGlobal(rectPt2);
+//			
+//			var rectPt3:Point = new Point(parent.x, parent.y);
+//			var grectPt3:Point = localToGlobal(rectPt3);
+//			
+//			var rectPt4:Point = new Point(parent.parent.x, parent.parent.y);
+//			var grectPt4:Point = localToGlobal(rectPt4);
+//			
+//			
+//			var rect:Rectangle = new Rectangle(grectPt1.x-10, grectPt1.y-10, grectPt2.x-grectPt1.x+10, grectPt2.y-grectPt1.y+10);
+//			if (rect.containsPoint(glocalPoint1))
+//				trace("hit");
+//			else
+//			{
+//			//			{
+//							trace((grectPt1.x-10)+ " " + (grectPt1.y-10)+ " " + (grectPt2.x-grectPt1.x+10)+ " " + (grectPt2.y-grectPt1.y+10));
+//			//				trace(grectPt3.x+ " " + grectPt3.y+ " " + grectPt4.x+ " " + grectPt4.y);
+//			//				//				trace(x + " " + y + " " + width + " " + height);
+//							trace(glocalPoint1.x + " " + glocalPoint1.y);
+//			}
+//			return super.hitTest(localPoint, forTouch);
+//			//			}
+//			//			else
+//			//			{
+//			//				trace("hit");
+//			//				return super.hitTest(localPoint, forTouch);
+//			//			}
+//		}
 	}
 }
