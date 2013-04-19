@@ -294,18 +294,16 @@ package scenes.game.display
 			
 			addChild(m_shape);
 			
-			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
-			if (m_editable) { // don't display a score star if not editable (no point, user may be confused)
-				if (wideScore > narrowScore) {
-					m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-					addChild(m_star);
-				} else if (narrowScore > wideScore) {
-					m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-					addChild(m_star);
-				}
+			if (wideScore > narrowScore) {
+				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
+				addChild(m_star);
+			} else if (narrowScore > wideScore) {
+				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
+				addChild(m_star);
 			}
+			useHandCursor = m_editable;
 			
 			//			var number:String = ""+m_id.substring(4);
 			//			var txt:TextField = new TextField(m_shape.width, m_shape.height, number, "Veranda", 6); 
@@ -314,19 +312,22 @@ package scenes.game.display
 			//			m_shape.addChild(txt);
 		}
 		
-		public function getWideScore():Number
+		override public function getWideScore():Number
 		{
-			return Constants.WIDE_INPUT_POINTS * m_numIncomingNodeEdges;
+			if (!m_editable) { // don't assign scores for gray boxes (it would just confuse the user)
+				return 0;
+			} else {
+				return Constants.WIDE_INPUT_POINTS * Math.max(0, m_numIncomingNodeEdges - m_numOutgoingNodeEdges);
+			}
 		}
 		
-		public function getNarrowScore():Number
+		override public function getNarrowScore():Number
 		{
-			return Constants.NARROW_OUTPUT_POINTS * m_numOutgoingNodeEdges;
-		}
-		
-		public function getScore():Number
-		{
-			return isWide() ? getWideScore() : getNarrowScore();
+			if (!m_editable) { // don't assign scores for gray boxes (it would just confuse the user)
+				return 0;
+			} else {
+				return Constants.NARROW_OUTPUT_POINTS * Math.max(0, m_numOutgoingNodeEdges - m_numIncomingNodeEdges);
+			}
 		}
 		
 		public function findGroup(dictionary:Dictionary):void
@@ -346,6 +347,11 @@ package scenes.game.display
 			}
 		}
 		
+		public function isEditable():Boolean
+		{
+			return m_editable;
+		}
+		
 		override public function isWide():Boolean
 		{
 			return m_edgeSetEdges[0].is_wide;
@@ -355,13 +361,19 @@ package scenes.game.display
 		{
 			if(m_editable)
 			{
-				if(isWide())
+				if (isWide())
+				{
 					return WIDE_COLOR;
+				}
 				else
+				{
 					return NARROW_COLOR;
+				}
 			}
 			else
+			{
 				return UNADJUSTABLE_COLOR;
+			}
 		}
 	}
 }

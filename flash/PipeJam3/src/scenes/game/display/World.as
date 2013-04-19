@@ -113,7 +113,7 @@ package scenes.game.display
 			selectLevel(firstLevel);
 			
 			addEventListener(Level.SCORE_CHANGED, onScoreChange);
-			addEventListener(Level.CENTER_ON_NODE, onCenterOnNodeEvent);
+			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
 			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 		}
@@ -134,10 +134,10 @@ package scenes.game.display
 		
 		private function onCenterOnNodeEvent(e:starling.events.Event):void
 		{
-			var component:GameNode = e.data as GameNode;
+			var component:GameComponent = e.data as GameComponent;
 			if(component)
 			{
-				edgeSetGraphViewPanel.centerOnNode(component);
+				edgeSetGraphViewPanel.centerOnComponent(component);
 			}
 		}
 		
@@ -151,7 +151,7 @@ package scenes.game.display
 		private function selectLevel(newLevel:Level):void
 		{
 			var _level:Level = newLevel;
-			if (selecting_level || _level == active_level) {
+			if (selecting_level || newLevel == active_level) {
 				return;
 			}
 			selecting_level = true;
@@ -159,19 +159,21 @@ package scenes.game.display
 			if (old_level)
 				removeChild(old_level);
 			
-			active_level = _level;
-						
+			active_level = newLevel;
 			selecting_level = false;
-						
-			edgeSetGraphViewPanel.loadLevel(active_level);
-			gameControlPanel.updateScore(active_level);
+			
+			edgeSetGraphViewPanel.loadLevel(newLevel);
+			gameControlPanel.updateScore(newLevel);
+			
+			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
+			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
 		}
 		
 
 		
 		private function onRemovedFromStage():void
 		{
-			removeEventListener(Level.CENTER_ON_NODE, onCenterOnNodeEvent);
+			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
 		}
 		
 		public function createWorld(worldNodesDictionary:Dictionary):void

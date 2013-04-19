@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import assets.AssetsFont;
 	import scenes.game.display.GameComponent;
 	
 	import starling.display.Quad;
@@ -10,59 +11,49 @@ package scenes.game.display
 	
 	public class ScoreBlock extends GameComponent
 	{
-		public static var wideHeight:Number;
-		public static var narrowHeight:Number;
+		public static const WIDTH:Number = 15;
+		public static const VERTICAL_GAP:Number = 1;
+		private static const MIN_HEIGHT:Number = 5;
 		
-		public static var maxWidth:Number;
+		/** Component associated with this score, GameNodes have points for wide inputs/narrow outputs
+		 * while GameEdgeContainers have negative points for errrors */
+		private var m_gameComponent:GameComponent;
 		
-		protected var m_node:GameNode;
+		/** Text showing current score on score_pane */
+		private var m_text:TextFieldWrapper;
 		
-		public function ScoreBlock(node:GameNode)
+		public function ScoreBlock(gameComponent:GameComponent)
 		{
-			m_node = node;
-			var color:uint = 0;
-			if(node.isWide() == false)
-			{
-				for each(var edge:GameEdgeContainer in node.m_incomingEdges)
-				{
-					if(edge.m_fromNode && edge.m_fromNode.isWide())
-					{
-						color = 0xff0000;
-						break;
-					}
-				}
-			}
-			if(color == 0)
-				color = node.getColor();
-			
-			var blockHeight:Number = node.isWide() ? wideHeight : narrowHeight;
-			var blockWidth:Number = node.height < maxWidth ? node.height : maxWidth;
+			m_gameComponent = gameComponent;
+			var blockHeight:Number = Math.abs(gameComponent.getScore()) - VERTICAL_GAP;
+			blockHeight = Math.max(blockHeight, MIN_HEIGHT);
+			var blockWidth:Number = WIDTH;
 			var outline:Quad = new Quad(blockWidth, blockHeight, 0x000000);
-			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, color);
+			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.getColor());
 			//set center point offset
 			addChild(outline);
 			addChild(quad);
 			quad.x = .5;
 			quad.y = .5;
 			
-			this.x = -node.height/2;
+			m_text = TextFactory.getInstance().createTextField(gameComponent.getScore().toString(), AssetsFont.FONT_NUMERIC, blockWidth, blockHeight, MIN_HEIGHT, 0x00000);
+			m_text.x = -5; 
+			TextFactory.getInstance().updateAlign(m_text, 2, 1);
+			addChild(m_text);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
-
 		}
 		
 		public function onAddedToStage(event:starling.events.Event):void
 		{
 			addEventListener(TouchEvent.TOUCH, onTouch);
-
+			this.useHandCursor = true;
 			m_isDirty = true;
-			
 		}
 		
 		private function onRemovedFromStage():void
 		{
-			
 			removeEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
@@ -73,9 +64,8 @@ package scenes.game.display
 			{
 				if (touches.length == 1)
 				{
-					dispatchEvent(new Event(Level.CENTER_ON_NODE, true, m_node));
+					dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, m_gameComponent));
 				}
-
 			}
 		}
 	}

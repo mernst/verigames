@@ -95,7 +95,7 @@ package scenes.game.display
 		public static var EDGE_SET_CHANGED:String = "edge_set_changed";
 		public static var MOVE_EVENT:String = "move_event";
 		public static var SCORE_CHANGED:String = "score_changed";
-		public static var CENTER_ON_NODE:String = "center_on_node";
+		public static var CENTER_ON_COMPONENT:String = "center_on_component";
 		
 		public var m_levelLayoutXML:XML;
 		private var m_gameNodeDictionary:Dictionary;

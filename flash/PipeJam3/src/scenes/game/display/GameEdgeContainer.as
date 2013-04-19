@@ -451,9 +451,29 @@ package scenes.game.display
 			m_toNode.draw();
 		}
 		
+		override public function getScore():Number
+		{
+			return hasError() ? Constants.ERROR_POINTS : 0;
+		}
+		
+		override public function getWideScore():Number
+		{
+			return getScore();
+		}
+		
+		override public function getNarrowScore():Number
+		{
+			return getScore();
+		}
+		
 		public function hasError():Boolean
 		{
 			return (m_fromNode.isWide() && !m_toNode.isWide());
+		}
+		
+		override public function getColor():int
+		{
+			return hasError() ? 0xFF0000 : super.getColor();
 		}
 		
 		public function onEnterFrame():void

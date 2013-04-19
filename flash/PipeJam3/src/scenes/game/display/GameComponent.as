@@ -68,6 +68,21 @@ package scenes.game.display
 			return 0;
 		}
 		
+		public function getScore():Number
+		{
+			return isWide() ? getWideScore() : getNarrowScore();
+		}
+		
+		public function getWideScore():Number
+		{
+			return 0;
+		}
+		
+		public function getNarrowScore():Number
+		{
+			return 0;
+		}
+		
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;

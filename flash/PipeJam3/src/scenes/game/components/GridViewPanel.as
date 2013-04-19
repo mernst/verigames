@@ -15,6 +15,7 @@ package scenes.game.components
 	
 	import assets.AssetInterface;
 	import flash.events.MouseEvent;
+	import scenes.game.display.GameComponent;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import utilities.XMath;
@@ -40,6 +41,9 @@ package scenes.game.components
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
 	{
+		private static const WIDTH:Number = 384;
+		private static const HEIGHT:Number = Constants.GameHeight;
+		
 		protected var m_currentLevel:Level;
 		
 		protected var content:BaseComponent;
@@ -65,7 +69,8 @@ package scenes.game.components
 			currentMode = NORMAL_MODE;
 			var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
 			var backgroundImage:Image = new Image(background);
-			backgroundImage.height = 320;
+			backgroundImage.width = WIDTH;
+			backgroundImage.height = HEIGHT;
 			addChild(backgroundImage);
 			content = new BaseComponent;
 			addChild(content);
@@ -390,7 +395,7 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		public function centerOnNode(component:GameNode):void
+		public function centerOnComponent(component:GameComponent):void
 		{
 			panTo(component.x + component.width / 2, component.y + component.height / 2);
 		}
