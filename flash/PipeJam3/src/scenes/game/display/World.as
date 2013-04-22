@@ -3,6 +3,7 @@ package scenes.game.display
 	import assets.AssetInterface;
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
+	import flash.events.Event;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
@@ -97,8 +98,8 @@ package scenes.game.display
 			createWorld(m_network.LevelNodesDictionary);
 			m_simulator = new Simulator(m_network);
 
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
+			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
 		
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -126,7 +127,7 @@ package scenes.game.display
 			inGameMenuBox.y = 20;
 		}
 		
-		private function onScoreChange(e:Event):void
+		private function onScoreChange(e:starling.events.Event):void
 		{
 			var level:Level = e.data as Level;
 			gameControlPanel.updateScore(level);
@@ -243,7 +244,7 @@ package scenes.game.display
 					succeeded = true;
 					outputXmlToJavascript();
 					if (!world_has_been_solved_before) {
-						var event:Event = new Event("PIPEJAM.WORLD_COMPLETE", true);
+						var event:starling.events.Event = new starling.events.Event("PIPEJAM.WORLD_COMPLETE", true);
 						dispatchEvent(event);
 					}
 					world_has_been_solved_before = true;

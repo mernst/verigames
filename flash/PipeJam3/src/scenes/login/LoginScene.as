@@ -69,7 +69,6 @@ package scenes.login
 		public var RANDOM_REQUEST:int = 11;
 		protected var m_currentRequestType:int = 0;
 		
-		private var dgArray:Array = ['Pavement','Pavementss']; 
 		private var newPlayer:Boolean = false;
 		private var getLevels:Boolean = false;
 		private var chooseLevel:Boolean = false;
