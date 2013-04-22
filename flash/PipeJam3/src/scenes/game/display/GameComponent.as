@@ -16,9 +16,11 @@ package scenes.game.display
 		protected var m_fromComponent:GameComponent;
 		protected var m_toComponent:GameComponent;
 		
-		public static var NARROW_COLOR:uint = 0x1A85FF;
-		public static var WIDE_COLOR:uint = 0x3427FF;
-		public static var UNADJUSTABLE_COLOR:uint = 0x3A3F4C;
+		public static var NARROW_COLOR:uint = 0x5B74B8;// 0x1A85FF;
+		public static var WIDE_COLOR:uint = 0xAEBEE0;// 0x3427FF;
+		public static var UNADJUSTABLE_COLOR:uint = 0x6E6F71;// 0x3A3F4C;
+		public static var ERROR_COLOR:uint = 0xE92227;
+		public static var SCORE_COLOR:uint = 0xFFDC1A;
 		
 		static protected var fillMaterial:StandardMaterial = null;
 		static protected var lightColorMaterial:StandardMaterial = null;

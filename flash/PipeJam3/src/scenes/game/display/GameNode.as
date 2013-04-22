@@ -301,6 +301,13 @@ package scenes.game.display
 			m_shape.graphics.drawRoundRect(0,0, imageWidth, imageHeight, 1);
 			m_shape.graphics.endFill();
 			
+			if (false)//!isWide())
+			{
+				// Draw inner black outline to appear smaller if this is a narrow node
+				m_shape.graphics.lineStyle(1.5, 0x0);
+				m_shape.graphics.drawRoundRect(1.0 , 1.0, imageWidth - 2.0, imageHeight - 2.0, 1);
+			}
+			
 			if(m_isSelected && !isTempSelection)
 			{
 				m_shape.graphics.beginMaterialFill(selectedColorMaterial);

@@ -199,11 +199,11 @@ package scenes.game.display
 				currY = (dY * ARROW_SPACING) / 2.0 - (lineSize/1.05) * Math.cos(myAng) / 2.0;
 				for (var i:int = 0; i < numArr; i++) {
 					var myText:Texture;
-					if (m_parentEdge.hasError()) {
-						myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xffff0000);
-					} else {
+					//if (m_parentEdge.hasError()) {
+					//	myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xFF000000 + ERROR_COLOR);
+					//} else {
 						myText  = AssetInterface.getTexture("Game", "ChevronClass");
-					}
+					//}
 					
 					var myArr:Image = new Image(myText);
 					// Adjust the texture coordinates such that when we scale the arrow's
@@ -292,10 +292,14 @@ package scenes.game.display
 		
 		override public function getColor():int
 		{
-			if(m_isLastSegment)
+			if (m_parentEdge.hasError()) {
+				return ERROR_COLOR;
+			}
+			if (m_isLastSegment) {
 				return m_toComponent.getColor();
-			else
+			} else {
 				return m_fromComponent.getColor();
+			}
 		}
 		
 		public function onEnterFrame(event:Event):void
