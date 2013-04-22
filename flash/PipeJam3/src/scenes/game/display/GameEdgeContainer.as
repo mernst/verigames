@@ -116,7 +116,7 @@ package scenes.game.display
 					var segment:GameEdgeSegment;
 					var isLastSegment:Boolean = false;
 					//check to see if we are at the end of the edges
-					if(index+4 > m_edgeArray.length)
+					if(index+1 == m_edgeArray.length)
 						isLastSegment = true;
 					
 					segment = new GameEdgeSegment(this, m_fromNode, m_toNode, isLastSegment, isLastSegment);
@@ -132,7 +132,7 @@ package scenes.game.display
 						else
 						{
 							connectionJoint = true;
-							joint = new GameEdgeJoint(this, previousSegment, segment, isLastSegment, connectionJoint);
+							joint = new GameEdgeJoint(this, previousSegment, segment, false, connectionJoint);
 							m_startJoint = joint;
 						}
 					}

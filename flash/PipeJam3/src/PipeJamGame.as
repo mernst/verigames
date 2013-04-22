@@ -13,6 +13,7 @@ package
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import flash.events.Event;
 	import starling.text.TextField;
 	import starling.utils.VAlign;
 
@@ -48,7 +49,6 @@ package
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
-
 		}
 		
 		
@@ -63,6 +63,7 @@ package
 		{
 			
 		}
+		
 		
 		/**
 		 * This prints any debug messages to Javascript if embedded in a webpage with a script "printDebug(msg)"
