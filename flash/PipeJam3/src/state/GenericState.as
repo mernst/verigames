@@ -1,9 +1,8 @@
 package state 
 {
-	import starling.display.Sprite;
 	import flash.events.Event;
-	import mx.core.UIComponent;
 	import starling.display.DisplayObject;
+	import starling.display.Sprite;
 	
 	public class GenericState extends Sprite
 	{
