@@ -9,9 +9,9 @@ package scenes.game.display
 	import scenes.*;
 	import flash.utils.Dictionary;
 	
-	import utilities.Geometry;
-	import utilities.XMath;
-	import utilities.XSprite;
+	import utils.Geometry;
+	import utils.XMath;
+	import utils.XSprite;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;

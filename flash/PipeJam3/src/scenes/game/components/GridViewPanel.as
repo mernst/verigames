@@ -18,7 +18,7 @@ package scenes.game.components
 	import scenes.game.display.GameComponent;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
-	import utilities.XMath;
+	import utils.XMath;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;

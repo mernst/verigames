@@ -2,7 +2,7 @@ package tasks
 {
 	import graph.LevelNodes;
 	import graph.Network;
-	import utilities.LevelLayout;
+	import utils.LevelLayout;
 	
 	public class ParseLevelXMLTask extends Task 
 	{

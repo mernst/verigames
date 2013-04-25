@@ -1,7 +1,7 @@
 package graph 
 {
-	import utilities.NameObfuscater;
-	import utilities.XString;
+	import utils.NameObfuscater;
+	import utils.XString;
 	
 	import flash.utils.Dictionary;
 	

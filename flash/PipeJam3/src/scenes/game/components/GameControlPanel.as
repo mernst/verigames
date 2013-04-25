@@ -6,7 +6,7 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import scenes.game.display.GameComponent;
-	import utilities.XMath;
+	import utils.XMath;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.GameEdgeContainer;

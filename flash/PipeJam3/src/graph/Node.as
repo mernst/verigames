@@ -4,7 +4,7 @@ package graph
 	
 	import system.VerigameServerConstants;
 	
-	import utilities.Metadata;
+	import utils.Metadata;
 	
 	import flash.geom.Point;
 	

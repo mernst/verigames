@@ -1,4 +1,4 @@
-package utilities 
+package utils 
 {
 	// FROM: http://lab.polygonal.de/?p=162
 

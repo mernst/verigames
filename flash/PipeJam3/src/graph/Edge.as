@@ -4,8 +4,8 @@ package graph
 	
 	import graph.Node;
 	import system.VerigameServerConstants;
-	import utilities.Geometry;
-	import utilities.Metadata;
+	import utils.Geometry;
+	import utils.Metadata;
 	
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;

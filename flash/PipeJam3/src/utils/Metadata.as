@@ -1,4 +1,4 @@
-package utilities
+package utils
 {
 	/**
 	 * Class to store arbitary data, such ass the attributes of an XML object where are fields are not necessarily known

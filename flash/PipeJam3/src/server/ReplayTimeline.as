@@ -14,7 +14,7 @@ package server
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Dictionary;
-	import utilities.XSprite;
+	import utils.XSprite;
 	import flash.display.Bitmap;
 	
 	public class ReplayTimeline extends Sprite

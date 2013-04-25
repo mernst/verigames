@@ -2,7 +2,7 @@ package graph
 {
 
 	import flash.utils.Dictionary;
-	import utilities.NameObfuscater;
+	import utils.NameObfuscater;
 	
 	public class LevelNodes
 	{

@@ -12,8 +12,8 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import utilities.XMath;
-	import utilities.XSprite;
+	import utils.XMath;
+	import utils.XSprite;
 	
 	public class GameEdgeSegment extends GameComponent
 	{

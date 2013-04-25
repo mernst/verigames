@@ -3,7 +3,7 @@ package scenes.game.components
 	import scenes.game.display.Pipe;
 	import graph.StampRef;
 	import events.StampChangeEvent;
-	import utilities.XSprite;
+	import utils.XSprite;
 
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;

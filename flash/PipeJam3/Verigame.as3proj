@@ -20,6 +20,7 @@
     <class path="external" />
     <class path="external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src" />
     <class path="external\Hi-ReS-Stats-master\src" />
+    <class path="external\Feathers 1.0.1\source" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -58,6 +59,7 @@
     <element path="external\cgs-common\CGSCommon.swc" />
     <element path="external\Starling-Extension-Graphics\extension\bin\Starling-Extension-Graphics.swc" />
     <element path="external\Starling-Framework\starling\bin\starling.swc" />
+    <element path="external\Feathers 1.0.1\swc\feathers.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
