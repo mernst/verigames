@@ -470,7 +470,7 @@ package scenes.game.display
 		
 		override public function getColor():int
 		{
-			return hasError() ? 0xFF0000 : super.getColor();
+			return hasError() ? ERROR_COLOR : super.getColor();
 		}
 		
 		public function onEnterFrame():void

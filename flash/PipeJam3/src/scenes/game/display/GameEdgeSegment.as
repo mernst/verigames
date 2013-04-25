@@ -1,34 +1,20 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import starling.display.DisplayObject;
-	import starling.display.graphics.Fill;
 	import flash.geom.Rectangle;
-	import flash.system.Capabilities;
-	import flash.utils.getQualifiedClassName;
-	import starling.display.shaders.fragment.TextureVertexColorFragmentShader;
-	import utilities.XMath;
-	import scenes.BaseComponent;
-	
-	import starling.core.RenderSupport;
-	import starling.core.starling_internal;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.display.Shape;
-	import starling.errors.AbstractClassError;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.FragmentFilter;
 	import starling.textures.Texture;
-	import starling.utils.MatrixUtil;
-	
+	import utilities.XMath;
 	import utilities.XSprite;
+	
 	public class GameEdgeSegment extends GameComponent
 	{
 		private static const ARROW_SPACING:Number = 5.0;
@@ -169,33 +155,33 @@ package scenes.game.display
 			{
 				var startPt:Point = new Point(0,0);
 				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, color);
-				m_quad.x = -lineSize/2;
+				m_quad.x = -lineSize/2.0;
 				m_quad.y = 0;
 			}
 			else if(m_endPt.x != 0)
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(m_endPt.x, lineSize+1, 0xeeeeee);
-					m_quad.y = -lineSize/2 - 0.5;
+					m_quad = new Quad(m_endPt.x, lineSize+1.0, 0xeeeeee);
+					m_quad.y = -lineSize/2.0 - 0.5;
 					m_quad.x = 0;
 					addChild(m_quad);
 				}
 				m_quad = new Quad(m_endPt.x, lineSize, color);
-				m_quad.y = -lineSize/2;
+				m_quad.y = -lineSize/2.0;
 				m_quad.x = 0;
 			}
 			else
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(lineSize+1, m_endPt.y, 0xeeeeee);
-					m_quad.y = -lineSize/2;
-					m_quad.x =  -1;
+					m_quad = new Quad(lineSize+1.0, m_endPt.y, 0xeeeeee);
+					m_quad.y = -lineSize/2.0;
+					m_quad.x =  -1.0;
 					addChild(m_quad);
 				}
 				m_quad = new Quad(lineSize, m_endPt.y, color);
-				m_quad.x = -lineSize/2;
+				m_quad.x = -lineSize/2.0;
 				m_quad.y = 0;
 			}
 			
@@ -209,31 +195,31 @@ package scenes.game.display
 				dY = m_endPt.y / m_endPt.length;
 				myAng = Math.atan2(dY, dX);
 				var arrHeight:Number = GameEdgeContainer.WIDE_WIDTH;
-				currX = (dX * ARROW_SPACING) / 2.0 + /*arrHeight*/lineSize * Math.sin(myAng) / 2.0;
-				currY = (dY * ARROW_SPACING) / 2.0 - /*arrHeight*/lineSize * Math.cos(myAng) / 2.0;
+				currX = (dX * ARROW_SPACING) / 2.0 + (lineSize/1.05) * Math.sin(myAng) / 2.0;
+				currY = (dY * ARROW_SPACING) / 2.0 - (lineSize/1.05) * Math.cos(myAng) / 2.0;
 				for (var i:int = 0; i < numArr; i++) {
 					var myText:Texture;
-					if (m_parentEdge.hasError()) {
-						myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xffff0000);
-					} else {
+					//if (m_parentEdge.hasError()) {
+					//	myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xFF000000 + ERROR_COLOR);
+					//} else {
 						myText  = AssetInterface.getTexture("Game", "ChevronClass");
-					}
+					//}
 					
 					var myArr:Image = new Image(myText);
 					// Adjust the texture coordinates such that when we scale the arrow's
 					// height to equal lineSize, we show the correct pct of the arrow's
 					// texture (this acts like a clipRect such that the arrow's texture
 					// doesn't spill outside of the edge itself
-					var pctText:Number = lineSize / (1.2 * arrHeight);
-					myArr.setTexCoords(0, new Point(0, 0.5 - pctText/2)); //topleft
-					myArr.setTexCoords(1, new Point(1, 0.5 - pctText/2)); //topright
-					myArr.setTexCoords(2, new Point(0, 0.5 + pctText/2)); //bottomleft
-					myArr.setTexCoords(3, new Point(1, 0.5 + pctText / 2)); //bottomright
+					var pctText:Number = lineSize / (1.5 * arrHeight);
+					myArr.setTexCoords(0, new Point(0, 0.5 - pctText/2.0)); //topleft
+					myArr.setTexCoords(1, new Point(1, 0.5 - pctText/2.0)); //topright
+					myArr.setTexCoords(2, new Point(0, 0.5 + pctText/2.0)); //bottomleft
+					myArr.setTexCoords(3, new Point(1, 0.5 + pctText/2.0)); //bottomright
 					
 					myArr.touchable = false;
 					
 					myArr.width = ARROW_WIDTH;
-					myArr.height = lineSize;
+					myArr.height = lineSize*1.05;
 					
 					XSprite.setPivotCenter(myArr);
 					myArr.x = currX + this.x;
@@ -306,10 +292,14 @@ package scenes.game.display
 		
 		override public function getColor():int
 		{
-			if(m_isLastSegment)
+			if (m_parentEdge.hasError()) {
+				return ERROR_COLOR;
+			}
+			if (m_isLastSegment) {
 				return m_toComponent.getColor();
-			else
+			} else {
 				return m_fromComponent.getColor();
+			}
 		}
 		
 		public function onEnterFrame(event:Event):void

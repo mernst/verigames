@@ -5,6 +5,7 @@ package scenes.game.components
 	import com.greensock.TweenLite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import scenes.game.display.GameComponent;
 	import utilities.XMath;
 	
 	import scenes.BaseComponent;
@@ -37,6 +38,14 @@ package scenes.game.components
 		/** Graphical object, child of scorePanel to hold all scoreBlocks */
 		protected var scoreBlockContainer:Sprite;
 		
+		/** Dashed line indicated the score starting point (score = 0), 
+		 *  the current level of score (score blocks minus error blocks) 
+		 *  and associated textLabel showing the zero/current score, respectively */
+		private var m_scoreBaseline:Sprite;
+		private var m_scoreCurrentLine:Sprite;
+		private var m_scoreBlockBaselineLabel:TextFieldWrapper;
+		private var m_scoreBlockCurrentLabel:TextFieldWrapper;
+		
 		/** Text showing current score on score_pane */
 		protected var scoreTextfield:TextFieldWrapper;
 		
@@ -67,6 +76,9 @@ package scenes.game.components
 		/** Most recent score of the player (could be used to animate between the two, but currently is not) */
 		protected var prev_score:int = 0;
 		
+		/** All the score blocks visible in the scoring pane used to show current/potential scoring for certain nodes/edges */
+		private var m_scoreBlocks:Vector.<ScoreBlock> = new Vector.<ScoreBlock>();
+		
 		protected var m_initialized:Boolean = false;
 		
 		public function GameControlPanel()
@@ -83,7 +95,7 @@ package scenes.game.components
 			backgroundImage.height = HEIGHT;
 			addChild(backgroundImage);
 			
-			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xFF0000);
+			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 40, 25, GameComponent.SCORE_COLOR);
 			scoreTextfield.x = -5; 
 			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
 			addChild(scoreTextfield);
@@ -99,6 +111,42 @@ package scenes.game.components
 			scorePanel.addChild(scoreBlockContainer);
 			var topLeftScorePanel:Point = scorePanel.localToGlobal(new Point(0, 0));
 			scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, scorePanel.width, scorePanel.height);
+			
+			m_scoreBaseline = new Sprite();
+			m_scoreCurrentLine = new Sprite();
+			const DOTTED_LINE_SEGS:int = 5;
+			const BASELINE_TOTAL_WIDTH:Number = 2.5 * ScoreBlock.WIDTH;
+			const SEG_WIDTH:Number = BASELINE_TOTAL_WIDTH / (2.0 * DOTTED_LINE_SEGS - 1);
+			const SEG_HEIGHT:Number = 1.0;
+			const START_X:Number = 2 * ScoreBlock.WIDTH;
+			for (var i:int = 0; i < DOTTED_LINE_SEGS; i++)
+			{
+				// Baseline
+				var line:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, 0xFFFFFF);
+				line.x = START_X + 2 * i * SEG_WIDTH;
+				line.y = SCORE_PANEL_AREA.height - 2 * PAD - SEG_HEIGHT / 2.0;
+				m_scoreBaseline.addChild(line);
+				// Current line
+				var line2:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, GameComponent.SCORE_COLOR);
+				line2.x = START_X + 2 * i * SEG_WIDTH;
+				line2.y = SCORE_PANEL_AREA.height - 2 * PAD - SEG_HEIGHT / 2.0;
+				m_scoreCurrentLine.addChild(line2);
+			}
+			const TEXT_SIZE:Number = 8.0;
+			m_scoreBlockBaselineLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, 0xFFFFFF);
+			m_scoreBlockBaselineLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
+			m_scoreBlockBaselineLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
+			TextFactory.getInstance().updateAlign(m_scoreBlockBaselineLabel, 0, 1);
+			m_scoreBaseline.addChild(m_scoreBlockBaselineLabel);
+			
+			m_scoreBlockCurrentLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, GameComponent.SCORE_COLOR);
+			m_scoreBlockCurrentLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
+			m_scoreBlockCurrentLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
+			TextFactory.getInstance().updateAlign(m_scoreBlockCurrentLabel, 0, 1);
+			m_scoreCurrentLine.addChild(m_scoreBlockCurrentLabel);
+			
+			scoreBlockContainer.addChild(m_scoreBaseline);
+			scoreBlockContainer.addChild(m_scoreCurrentLine);
 			
 			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
 			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
@@ -206,63 +254,69 @@ package scenes.game.components
 			trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
 			current_score = Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
 			TextFactory.getInstance().updateText(scoreTextfield, current_score.toString());
+			TextFactory.getInstance().updateText(m_scoreBlockCurrentLabel, current_score.toString());
 			
-			scoreBlockContainer.removeChildren();
-			// Pass over nodes involved in scoring and create scoring blocks for them
-			if (scoringNodes.length + potentialScoringNodes.length + errorEdges.length > 0) {
-				var currentY:Number = SCORE_PANEL_AREA.height - 2 * PAD;
-				var currentX:Number = 0.5 * ScoreBlock.WIDTH;
-				var maxBlockHeight:Number = (SCORE_PANEL_AREA.height - 5) / scoringNodes.length;
-				maxBlockHeight = XMath.clamp(maxBlockHeight, 3, 10);
-				var scoreNode:GameNode, scoreBlock:ScoreBlock;
-				for each (scoreNode in potentialScoringNodes) {
-					scoreBlock = new ScoreBlock(scoreNode);
-					scoreBlock.x = currentX;
-					scoreBlock.y = currentY - scoreBlock.height;
-					currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-					scoreBlockContainer.addChild(scoreBlock);
-				}
-				currentY = SCORE_PANEL_AREA.height - 2 * PAD;
-				currentX += 1.5 * ScoreBlock.WIDTH;
-				for each (scoreNode in scoringNodes) {
-					scoreBlock = new ScoreBlock(scoreNode);
-					scoreBlock.x = currentX;
-					scoreBlock.y = currentY - scoreBlock.height;
-					currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-					scoreBlockContainer.addChild(scoreBlock);
-				}
-				currentY += ScoreBlock.VERTICAL_GAP;
-				currentX += 1.5 * ScoreBlock.WIDTH;
-				for each (var scoreEdge:GameEdgeContainer in errorEdges) {
-					scoreBlock = new ScoreBlock(scoreEdge);
-					scoreBlock.x = currentX;
-					scoreBlock.y = currentY;
-					currentY += scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-					scoreBlockContainer.addChild(scoreBlock);
-				}
-				
-				var blocksBounds:Rectangle = scoreBlockContainer.getBounds(scorePanel);
-				// Adjust bounds to be relative to top left=(0,0) and unscaled (scaleX,Y=1)
-				var adjustedBounds:Rectangle = blocksBounds.clone();
-				adjustedBounds.x -= scoreBlockContainer.x;
-				adjustedBounds.x /= scoreBlockContainer.scaleX;
-				adjustedBounds.y -= scoreBlockContainer.y;
-				adjustedBounds.y /= scoreBlockContainer.scaleY;
-				adjustedBounds.width /= scoreBlockContainer.scaleX;
-				adjustedBounds.height /= scoreBlockContainer.scaleY;
-				
-				// Tween to make this fit the area we want it to, ONLY IF OFF SCREEN
-				TweenLite.killTweensOf(scoreBlockContainer);
-				//var newScaleX:Number = (SCORE_PANEL_AREA.width - 2 * PAD) / blocksBounds.width;
-				var newScaleY:Number = Math.min(SCORE_PANEL_MAX_SCALEY, (SCORE_PANEL_AREA.height - 2 * PAD) / adjustedBounds.height);
-				//var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
-				var newY:Number = SCORE_PANEL_AREA.height - 2 * PAD - adjustedBounds.bottom * newScaleY; // sits on the bottom
-				// Only move the score blocks around/scale if some of the blocks are offscreen (out of score panel area)
-				if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD) {
-					TweenLite.to(scoreBlockContainer, 1.5, {/*x:newX,*/ y:newY, /*scaleX:newScaleX,*/ scaleY: newScaleY, delay: 0.5 } );
-				}
+			for each (var block:ScoreBlock in m_scoreBlocks) {
+				block.removeFromParent(true);
 			}
+			m_scoreBlocks = new Vector.<ScoreBlock>();
 			
+			var currentY:Number = SCORE_PANEL_AREA.height - 2 * PAD;
+			var currentX:Number = 0.5 * ScoreBlock.WIDTH;
+			// Pass over nodes involved in scoring and create scoring blocks for them
+			var maxBlockHeight:Number = (SCORE_PANEL_AREA.height - 5) / Math.max(scoringNodes.length, 1);
+			maxBlockHeight = XMath.clamp(maxBlockHeight, 3, 10);
+			var scoreNode:GameNode, scoreBlock:ScoreBlock;
+			for each (scoreNode in potentialScoringNodes) {
+				scoreBlock = new ScoreBlock(scoreNode);
+				scoreBlock.x = currentX;
+				scoreBlock.y = currentY - scoreBlock.height;
+				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				m_scoreBlocks.push(scoreBlock);
+				scoreBlockContainer.addChildAt(scoreBlock, 0);
+			}
+			currentY = SCORE_PANEL_AREA.height - 2 * PAD;
+			currentX += 1.5 * ScoreBlock.WIDTH;
+			for each (scoreNode in scoringNodes) {
+				scoreBlock = new ScoreBlock(scoreNode);
+				scoreBlock.x = currentX;
+				scoreBlock.y = currentY - scoreBlock.height;
+				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				m_scoreBlocks.push(scoreBlock);
+				scoreBlockContainer.addChildAt(scoreBlock, 0);
+			}
+			currentY += ScoreBlock.VERTICAL_GAP;
+			currentX += 1.5 * ScoreBlock.WIDTH;
+			for each (var scoreEdge:GameEdgeContainer in errorEdges) {
+				scoreBlock = new ScoreBlock(scoreEdge);
+				scoreBlock.x = currentX;
+				scoreBlock.y = currentY;
+				currentY += scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				m_scoreBlocks.push(scoreBlock);
+				scoreBlockContainer.addChildAt(scoreBlock, 0);
+			}
+			m_scoreCurrentLine.y = (currentY - ScoreBlock.VERTICAL_GAP) - (SCORE_PANEL_AREA.height - 2 * PAD);
+			
+			var blocksBounds:Rectangle = scoreBlockContainer.getBounds(scorePanel);
+			// Adjust bounds to be relative to top left=(0,0) and unscaled (scaleX,Y=1)
+			var adjustedBounds:Rectangle = blocksBounds.clone();
+			adjustedBounds.x -= scoreBlockContainer.x;
+			adjustedBounds.x /= scoreBlockContainer.scaleX;
+			adjustedBounds.y -= scoreBlockContainer.y;
+			adjustedBounds.y /= scoreBlockContainer.scaleY;
+			adjustedBounds.width /= scoreBlockContainer.scaleX;
+			adjustedBounds.height /= scoreBlockContainer.scaleY;
+			
+			// Tween to make this fit the area we want it to, ONLY IF OFF SCREEN
+			TweenLite.killTweensOf(scoreBlockContainer);
+			//var newScaleX:Number = (SCORE_PANEL_AREA.width - 2 * PAD) / blocksBounds.width;
+			var newScaleY:Number = Math.min(SCORE_PANEL_MAX_SCALEY, (SCORE_PANEL_AREA.height - 2 * PAD) / adjustedBounds.height);
+			//var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
+			var newY:Number = SCORE_PANEL_AREA.height - 2 * PAD - adjustedBounds.bottom * newScaleY; // sits on the bottom
+			// Only move the score blocks around/scale if some of the blocks are offscreen (out of score panel area)
+			if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD) {
+				TweenLite.to(scoreBlockContainer, 1.5, {/*x:newX,*/ y:newY, /*scaleX:newScaleX,*/ scaleY: newScaleY, delay: 0.5 } );
+			}
 		}
 		
 //		public function onSaveButtonClick(e:TouchEvent):void {

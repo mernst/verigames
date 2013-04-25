@@ -341,7 +341,7 @@ package scenes.game.display
 		override public function getColor():int
 		{
 			if(m_isLastJoint && m_showError)
-				return 0xff0000;
+				return ERROR_COLOR;
 			else
 				if(m_isLastJoint)
 					return m_toComponent.getColor();
