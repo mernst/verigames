@@ -5,11 +5,6 @@ package scenes.login
 	import flash.events.Event;
 	import flash.net.*;
 	
-	import framework.controller.Controller;
-	import framework.view.html.*;
-	import framework.view.html.Navigator;
-	import framework.view.html.Window;
-	
 	import mx.controls.TextArea;
 	
 	import scenes.Scene;

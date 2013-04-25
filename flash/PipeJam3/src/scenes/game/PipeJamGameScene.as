@@ -136,8 +136,6 @@ package scenes.game
 				{
 					fz.addEventListener(flash.events.Event.COMPLETE, callback);
 					fz.load(new URLRequest(fileName));
-					//loader.addEventListener(flash.events.Event.COMPLETE, callback);
-					//loader.load(new URLRequest(fileName));
 					break;
 				}
 				case USE_URL:
@@ -150,7 +148,6 @@ package scenes.game
 		}
 		
 		public function onLayoutLoaded(byteArray:ByteArray):void {
-			layoutLoader.removeEventListener(flash.events.Event.COMPLETE, onLayoutLoaded);
 			m_worldLayout = new XML(byteArray); 
 			m_layoutLoaded = true;
 			//call, but probably wait on xml
@@ -158,7 +155,6 @@ package scenes.game
 		}
 		
 		public function onConstraintsLoaded(byteArray:ByteArray):void {
-			constraintsLoader.removeEventListener(flash.events.Event.COMPLETE, onConstraintsLoaded);
 			m_worldConstraints = new XML(byteArray); 
 			m_constraintsLoaded = true;
 			//call, but probably wait on xml
@@ -166,7 +162,6 @@ package scenes.game
 		}
 		
 		public function onWorldLoaded(byteArray:ByteArray):void { 
-			worldFileLoader.removeEventListener(flash.events.Event.COMPLETE, onWorldLoaded);
 			var worldXML:XML  = new XML(byteArray); 
 			m_worldLoaded = true;
 			parseXML(worldXML);
