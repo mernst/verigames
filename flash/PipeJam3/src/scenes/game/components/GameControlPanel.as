@@ -101,12 +101,14 @@ package scenes.game.components
 			scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, scorePanel.width, scorePanel.height);
 			
 			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
-			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
+			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
 			
 			menu_button = new Button(menuButtonUp, "", menuButtonClick);
 			menu_button.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			menu_button.x = 15;
 			menu_button.y = 275;
+			menu_button.width *= .5;
+			menu_button.height *= .5;
 			addChild(menu_button);
 		}
 		

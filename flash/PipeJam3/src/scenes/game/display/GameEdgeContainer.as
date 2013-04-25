@@ -477,6 +477,7 @@ package scenes.game.display
 		{					
 			if(m_isDirty)
 			{
+				trace("dirty edge");
 				for each(var edgeSegment:GameEdgeSegment in m_edgeSegments)
 				{
 					edgeSegment.m_isDirty = true;

@@ -4,6 +4,7 @@ package
 	
 	import scenes.*;
 	import scenes.game.*;
+	import scenes.splashscreen.*;
 	import scenes.login.*;
 	
 	import server.LoggingServerInterface;
@@ -45,7 +46,6 @@ package
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			scenesToCreate["LoginScene"] = LoginScene;
-			scenesToCreate["LoginTestScene"] = LoginTestScene;
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
