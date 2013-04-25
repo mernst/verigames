@@ -149,12 +149,14 @@ package scenes.game.components
 			scoreBlockContainer.addChild(m_scoreCurrentLine);
 			
 			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
-			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
+			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
 			
 			menu_button = new Button(menuButtonUp, "", menuButtonClick);
 			menu_button.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			menu_button.x = 15;
 			menu_button.y = 275;
+			menu_button.width *= .5;
+			menu_button.height *= .5;
 			addChild(menu_button);
 		}
 		

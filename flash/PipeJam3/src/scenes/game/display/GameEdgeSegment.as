@@ -310,41 +310,5 @@ package scenes.game.display
 				m_isDirty = false;
 			}
 		}
-		
-//		public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
-//		{
-//			var glocalPoint1:Point = localToGlobal(localPoint);
-//			//			trace(localPoint.x + " " + localPoint.y);
-//			var rectPt1:Point = new Point(x, y);
-//			var grectPt1:Point = parent.localToGlobal(rectPt1);
-//			var rectPt2:Point = new Point(x+width, y+height);
-//			var grectPt2:Point = parent.localToGlobal(rectPt2);
-//			
-//			var rectPt3:Point = new Point(parent.x, parent.y);
-//			var grectPt3:Point = localToGlobal(rectPt3);
-//			
-//			var rectPt4:Point = new Point(parent.parent.x, parent.parent.y);
-//			var grectPt4:Point = localToGlobal(rectPt4);
-//			
-//			
-//			var rect:Rectangle = new Rectangle(grectPt1.x-10, grectPt1.y-10, grectPt2.x-grectPt1.x+10, grectPt2.y-grectPt1.y+10);
-//			if (rect.containsPoint(glocalPoint1))
-//				trace("hit");
-//			else
-//			{
-//			//			{
-//							trace((grectPt1.x-10)+ " " + (grectPt1.y-10)+ " " + (grectPt2.x-grectPt1.x+10)+ " " + (grectPt2.y-grectPt1.y+10));
-//			//				trace(grectPt3.x+ " " + grectPt3.y+ " " + grectPt4.x+ " " + grectPt4.y);
-//			//				//				trace(x + " " + y + " " + width + " " + height);
-//							trace(glocalPoint1.x + " " + glocalPoint1.y);
-//			}
-//			return super.hitTest(localPoint, forTouch);
-//			//			}
-//			//			else
-//			//			{
-//			//				trace("hit");
-//			//				return super.hitTest(localPoint, forTouch);
-//			//			}
-//		}
 	}
 }
