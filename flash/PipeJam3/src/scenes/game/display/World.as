@@ -153,7 +153,10 @@ package scenes.game.display
 		{
 			if (newLevel == active_level) {
 				return;
-			}	
+			}
+			//if (active_level != null) {
+			//	active_level.dispose();
+			//}
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);

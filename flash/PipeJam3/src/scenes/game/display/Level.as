@@ -245,6 +245,17 @@ package scenes.game.display
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
+			//dispose();
+		}
+		
+		override public function dispose():void
+		{
+			if (m_disposed) {
+				return;
+			}
+			
+			disposeChildren();
+			
 			removeEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
@@ -252,19 +263,21 @@ package scenes.game.display
 			removeEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(Level.MOVE_EVENT, onMoveEvent);
 			
-			for each(var gameNodeSet:GameNode in m_nodeList)
-			gameNodeSet.removeFromParent(true);
+			for each(var gameNodeSet:GameNode in m_nodeList) {
+				gameNodeSet.removeFromParent(true);
+			}
 			
 			m_nodeList = null;
 			m_gameNodeDictionary = null;
 			
-			for each(var gameEdge:GameEdgeContainer in m_edgeVector)
-			gameEdge.removeFromParent(true);
+			for each(var gameEdge:GameEdgeContainer in m_edgeVector) {
+				gameEdge.removeFromParent(true);
+			}
 			
 			m_edgeVector = null;
-			this.removeChildren();
+			
+			super.dispose();
 		}
-		
 		
 		private function onTouch(event:TouchEvent):void
 		{

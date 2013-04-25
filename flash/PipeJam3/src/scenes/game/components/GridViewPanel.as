@@ -307,10 +307,25 @@ package scenes.game.components
 		
 		private function onRemovedFromStage():void
 		{
-			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			//
+		}
+		
+		override public function dispose():void
+		{
+			if (m_disposed) {
+				return;
+			}
+			if (Starling.current && Starling.current.nativeStage) {
+				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			}
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			content.removeEventListener(TouchEvent.TOUCH, onTouch);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			if (content) {
+				content.removeEventListener(TouchEvent.TOUCH, onTouch);
+			}
+			if (stage) {
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			}
+			super.dispose();
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void

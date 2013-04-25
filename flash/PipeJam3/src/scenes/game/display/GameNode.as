@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import starling.display.DisplayObject;
 	
 	import events.MoveEvent;
 	
@@ -113,12 +114,24 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
+			//dispose();
+		}
+		
+		override public function dispose():void
+		{
+			if (m_disposed) {
+				return;
+			}
+			disposeChildren();
 			m_shape.removeChildren(0, -1, true);
 			m_shape.dispose();
-			removeChildren(0, -1, true);
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			removeEventListener(TouchEvent.TOUCH, onTouch);
-			
+			if (hasEventListener(Event.ENTER_FRAME)) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+			if (hasEventListener(TouchEvent.TOUCH)) {
+				removeEventListener(TouchEvent.TOUCH, onTouch);
+			}
+			super.dispose();
 		}
 		
 		private var isTempSelection:Boolean = false;

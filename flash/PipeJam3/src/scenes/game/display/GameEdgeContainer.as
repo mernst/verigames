@@ -71,13 +71,26 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
-			this.removeChildren(0, -1, true);
+			//dispose();
+		}
+		
+		override public function dispose():void
+		{
+			if (m_disposed) {
+				return;
+			}
+			disposeChildren();
 			
 			m_edgeSegments = null;
 			m_edgeJoints = null;
 			
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			removeEventListener(CREATE_JOINT, onCreateJoint);
+			if (hasEventListener(Event.ENTER_FRAME)) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+			if (hasEventListener(CREATE_JOINT)) {
+				removeEventListener(CREATE_JOINT, onCreateJoint);
+			}
+			super.dispose();
 		}
 		
 		private function onCreateJoint(event:Event):void

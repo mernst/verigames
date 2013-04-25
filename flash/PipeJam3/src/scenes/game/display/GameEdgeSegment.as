@@ -57,9 +57,22 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
-			this.removeChildren(0, -1, true);
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			removeEventListener(TouchEvent.TOUCH, onTouch);
+			//dispose();
+		}
+		
+		override public function dispose():void
+		{
+			if (m_disposed) {
+				return;
+			}
+			disposeChildren();
+			if (hasEventListener(Event.ENTER_FRAME)) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+			if (hasEventListener(TouchEvent.TOUCH)) {
+				removeEventListener(TouchEvent.TOUCH, onTouch);
+			}
+			super.dispose();
 		}
 		
 		private var isMoving:Boolean = false;
@@ -68,8 +81,6 @@ package scenes.game.display
 		{
 			if(m_isNodeExtensionSegment)
 				return;
-			
-
 			
 			var touches:Vector.<Touch> = event.touches;
 			if(event.getTouches(this, TouchPhase.ENDED).length)
@@ -188,7 +199,11 @@ package scenes.game.display
 			addChild(m_quad);
 			
 			// Create/add arrows
-			var numArr:int = Math.floor(m_endPt.length / ARROW_SPACING);
+			var numArr:int = 0;// Math.floor(m_endPt.length / ARROW_SPACING);
+			// If zero Arrows, check if just one would fit, and if so add it
+			if ((numArr == 0) && (m_endPt.length > ARROW_WIDTH)) {
+				numArr = 0;// 1;
+			}
 			if (numArr > 0) {
 				var currX:Number, currY:Number, dX:Number, dY:Number, myAng:Number;
 				dX = m_endPt.x / m_endPt.length;
