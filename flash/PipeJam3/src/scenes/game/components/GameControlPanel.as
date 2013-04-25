@@ -115,7 +115,7 @@ package scenes.game.components
 			m_scoreBaseline = new Sprite();
 			m_scoreCurrentLine = new Sprite();
 			const DOTTED_LINE_SEGS:int = 5;
-			const BASELINE_TOTAL_WIDTH:Number = 2.5 * ScoreBlock.WIDTH;
+			const BASELINE_TOTAL_WIDTH:Number = 2.75 * ScoreBlock.WIDTH;
 			const SEG_WIDTH:Number = BASELINE_TOTAL_WIDTH / (2.0 * DOTTED_LINE_SEGS - 1);
 			const SEG_HEIGHT:Number = 1.0;
 			const START_X:Number = 2 * ScoreBlock.WIDTH;
@@ -124,12 +124,12 @@ package scenes.game.components
 				// Baseline
 				var line:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, 0xFFFFFF);
 				line.x = START_X + 2 * i * SEG_WIDTH;
-				line.y = SCORE_PANEL_AREA.height - 2 * PAD - SEG_HEIGHT / 2.0;
+				line.y = SCORE_PANEL_AREA.height - 2 * PAD;
 				m_scoreBaseline.addChild(line);
 				// Current line
 				var line2:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, GameComponent.SCORE_COLOR);
 				line2.x = START_X + 2 * i * SEG_WIDTH;
-				line2.y = SCORE_PANEL_AREA.height - 2 * PAD - SEG_HEIGHT / 2.0;
+				line2.y = SCORE_PANEL_AREA.height - 2 * PAD;
 				m_scoreCurrentLine.addChild(line2);
 			}
 			const TEXT_SIZE:Number = 8.0;
@@ -274,7 +274,7 @@ package scenes.game.components
 				scoreBlockContainer.addChildAt(scoreBlock, 0);
 			}
 			currentY = SCORE_PANEL_AREA.height - 2 * PAD;
-			currentX += 1.5 * ScoreBlock.WIDTH;
+			currentX += 1.75 * ScoreBlock.WIDTH;
 			for each (scoreNode in scoringNodes) {
 				scoreBlock = new ScoreBlock(scoreNode);
 				scoreBlock.x = currentX;
@@ -284,7 +284,7 @@ package scenes.game.components
 				scoreBlockContainer.addChildAt(scoreBlock, 0);
 			}
 			currentY += ScoreBlock.VERTICAL_GAP;
-			currentX += 1.5 * ScoreBlock.WIDTH;
+			currentX += 1.25 * ScoreBlock.WIDTH;
 			for each (var scoreEdge:GameEdgeContainer in errorEdges) {
 				scoreBlock = new ScoreBlock(scoreEdge);
 				scoreBlock.x = currentX;

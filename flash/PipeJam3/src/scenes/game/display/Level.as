@@ -126,6 +126,11 @@ package scenes.game.display
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
 		}
 		
+		public function takeSnapshot():LevelNodes
+		{
+			return levelNodes.clone();
+		}
+		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 			m_edgeVector = new Vector.<GameEdgeContainer>;
@@ -235,7 +240,7 @@ package scenes.game.display
 			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
-			
+			takeSnapshot();
 		}	
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void

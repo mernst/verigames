@@ -45,7 +45,7 @@ package graph
 			if (obfuscator) {
 				new_board_name = obfuscator.getBoardName(_original_board_name, original_level_name);
 			}
-			 return boardNodesDictionary[new_board_name];
+			return boardNodesDictionary[new_board_name];
 		}
 		
 		public function getNode(_original_board_name:String, _node_id:String):Node {
@@ -57,6 +57,11 @@ package graph
 				return (boardNodesDictionary[new_board_name] as BoardNodes).nodeDictionary[_node_id];
 			}
 			return null;
+		}
+		
+		public function clone():LevelNodes
+		{
+			return this;
 		}
 		
 	}
