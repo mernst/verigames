@@ -53,25 +53,13 @@ package scenes.game.display
 			m_startPoint = edgeArray[0];
 			m_endPoint = edgeArray[edgeArray.length-1];
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
-		}
-		
-		public function onAddedToStage(event:starling.events.Event):void
-		{
 			createOriginalChildren();
 			positionOriginalChildren();
 
 			rubberBandEdge(new Point(), true);
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(CREATE_JOINT, onCreateJoint);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			m_isDirty = true;
-			
-		}
-		
-		private function onRemovedFromStage():void
-		{
-			//dispose();
 		}
 		
 		override public function dispose():void
@@ -79,14 +67,12 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
-			disposeChildren();
-			
-			m_edgeSegments = null;
-			m_edgeJoints = null;
-			
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
+			disposeChildren();
+			m_edgeSegments = null;
+			m_edgeJoints = null;
 			if (hasEventListener(CREATE_JOINT)) {
 				removeEventListener(CREATE_JOINT, onCreateJoint);
 			}

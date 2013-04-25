@@ -43,13 +43,6 @@ package scenes.game.display
 			m_originalPoint = new Point;
 			m_isDirty = true;
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
-		}
-		
-		public function onAddedToStage(event:starling.events.Event):void
-		{
-			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			m_isDirty = true;
@@ -66,19 +59,26 @@ package scenes.game.display
 				var inode:GameNode = m_toComponent as GameNode;
 				m_position = inode.m_incomingEdges.indexOf(parent);
 			}
-			
 		}
 		
-		private function onRemovedFromStage():void
+		override public function dispose():void
 		{
-			this.removeChildren(0, -1, true);
+			if (m_disposed) {
+				return;
+			}
+			if (hasEventListener(Event.ENTER_FRAME)) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+			if (hasEventListener(TouchEvent.TOUCH)) {
+				removeEventListener(TouchEvent.TOUCH, onTouch);
+			}
+			disposeChildren();
 			if(m_shape)
 			{
 				m_shape.removeChildren(0, -1, true);
 				m_shape.dispose();
 			}
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			removeEventListener(TouchEvent.TOUCH, onTouch);
+			super.dispose();
 		}
 		
 		private var isMoving:Boolean = false;

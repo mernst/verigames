@@ -44,20 +44,9 @@ package scenes.game.display
 			m_isLastSegment = _isLastSegment;
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
-			m_currentRect = new Rectangle(0,0,0,0);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
-		}
-		
-		public function onAddedToStage(event:starling.events.Event):void
-		{
+			m_currentRect = new Rectangle(0, 0, 0, 0);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
-		}
-		
-		private function onRemovedFromStage():void
-		{
-			//dispose();
 		}
 		
 		override public function dispose():void
@@ -65,13 +54,13 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
-			disposeChildren();
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
 			if (hasEventListener(TouchEvent.TOUCH)) {
 				removeEventListener(TouchEvent.TOUCH, onTouch);
 			}
+			disposeChildren();
 			super.dispose();
 		}
 		

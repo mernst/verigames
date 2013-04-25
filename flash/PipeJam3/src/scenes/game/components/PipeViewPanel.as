@@ -21,7 +21,7 @@ package scenes.game.components
 		public function PipeViewPanel()
 		{
 			super();
-						
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
@@ -29,6 +29,7 @@ package scenes.game.components
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(Board.BOARD_SCROLLED, onBoardScrolled);	
 			m_needsUpdate = true;

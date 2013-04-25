@@ -41,20 +41,19 @@ package scenes.game.display
 			TextFactory.getInstance().updateAlign(m_text, 2, 1);
 			addChild(m_text);
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
-		}
-		
-		public function onAddedToStage(event:starling.events.Event):void
-		{
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			this.useHandCursor = true;
 			m_isDirty = true;
 		}
 		
-		private function onRemovedFromStage():void
+		override public function dispose():void
 		{
-			removeEventListener(TouchEvent.TOUCH, onTouch);
+			disposeChildren();
+			m_text = null;
+			if (hasEventListener(TouchEvent.TOUCH)) {
+				removeEventListener(TouchEvent.TOUCH, onTouch);
+			}
+			super.dispose();
 		}
 		
 		private function onTouch(event:TouchEvent):void

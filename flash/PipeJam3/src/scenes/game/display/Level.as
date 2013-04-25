@@ -133,9 +133,9 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			m_edgeVector = new Vector.<GameEdgeContainer>;
 			setDisplayData();
-
 			
 			selectedComponents = new Vector.<GameComponent>;
 			var count:int = 0;

@@ -101,20 +101,9 @@ package scenes.game.display
 				}
 			}
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-		
-		public function onAddedToStage(event:starling.events.Event):void
-		{
 			draw();
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
-		}
-		
-		private function onRemovedFromStage():void
-		{
-			//dispose();
 		}
 		
 		override public function dispose():void

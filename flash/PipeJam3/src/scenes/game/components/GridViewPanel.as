@@ -60,12 +60,6 @@ package scenes.game.components
 		
 		public function GridViewPanel()
 		{
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-		}
-		
-		private function onAddedToStage():void
-		{
 			currentMode = NORMAL_MODE;
 			var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
 			var backgroundImage:Image = new Image(background);
@@ -81,8 +75,14 @@ package scenes.game.components
 			quad = new Quad(10, 10, 0xff0000);
 			minScaleX = minScaleY = 0.25;
 			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		private function onAddedToStage():void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			content.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);

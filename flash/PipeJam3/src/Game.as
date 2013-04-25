@@ -57,6 +57,7 @@ package
         
 		protected function onAddedToStage(event:Event):void
         {
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
         
 		protected function onRemovedFromStage(event:Event):void

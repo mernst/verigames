@@ -22,12 +22,7 @@ package scenes.game.display
 			super();
 			m_score = score;
 			m_color = color;
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
-		public function onAddedToStage(event:Event):void
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
 			var colorWithAlpha:uint = 0xFF000000 + m_color;
 			var starTexture:Texture = AssetInterface.getTextureColorAll("Game", "StarClass", colorWithAlpha);
 			m_starImage = new Image(starTexture);
@@ -41,6 +36,20 @@ package scenes.game.display
 			addChild(m_text);
 			
 			scaleX = scaleY = 0.2;
+		}
+		
+		override public function dispose():void
+		{
+			removeChildren(0, -1, true);
+			if (m_text) {
+				m_text.dispose();
+				m_text = null;
+			}
+			if (m_starImage) {
+				m_starImage.dispose();
+				m_starImage = null;
+			}
+			super.dispose();
 		}
 		
 		public function setScore(newScore:String):void
