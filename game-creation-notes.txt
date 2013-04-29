@@ -1,23 +1,27 @@
-This document contains notes on how we want to map type systems to game worlds.
+This document contains notes on how we use type systems to map programs to game
+worlds.
 
 --------------------------------------------------------------------------------
 
 Table of Contents
 
-1. Game Overview
-2. Concepts for Code-to-game Conversion
-3. Details of Code-to-game Conversion
+1. Overview
+2. Code-to-game Conversion: Conceptual level
+3. Code-to-game Conversion: Implementation
 4. Future Work
 5. Glossary
 
 --------------------------------------------------------------------------------
 
-1. Game Overview
+1. Overview
 
-We choose to map type systems consisting of only two types onto a puzzle game
-made up of pipes and balls. An overview of the mapping follows:
+This section will be largely redundant if you have read our FTFJP 2012 paper.
 
-Pipes correspond to a place in code where a type annotation can be written. A
+We map type systems consisting of only two types onto a puzzle game made up of
+pipes and balls. An overview of the mapping follows:
+
+A pipe corresponds to a single type in a variable declaration (though with flow
+sensitivity a single variable declaration can correspond to multiple pipes). A
 wide pipe represents the more permissive of the two annotations (such as
 Nullable in the nullness type system), and a narrow pipe represents the more
 restrictive (such as NonNull).
@@ -59,7 +63,7 @@ reported back to the maintainers of the code on which the game is based.
 
 --------------------------------------------------------------------------------
 
-2. Concepts for Code-to-game Conversion
+2. Code-to-game Conversion: Conceptual level
 
 This section will summarize, conceptually, how Java code is translated into a
 game world. The next section will describe the technical details of how this is
@@ -67,33 +71,51 @@ accomplished.
 
 a. Pipes and Balls
 
+Pipes appear in boards, and can typically be made wide or narrow by the player.
+In some cases, the pipes are locked as either wide or narrow.
+
+Pipes can be linked, meaning that they are necessarily of the same width. When
+two pipes are linked, changing the width of one causes the width of the other to
+change, as well.
+
+Pipes can interact with each other through several basic mechanics. The simplest
+ones are splits and merges (more will be introduced in later sections). When
+there is a split, a single pipe above is connected to two pipes below. When a
+ball passes through, it is cloned, and sent through both output pipes.
+Similarly, a merge connects two pipes above to one below. The game takes the
+larger of the two input balls and uses that as the output of the intersection.
+
+
 Any place where a type annotation can be written is translated into a pipe (TODO
 is this strictly correct? Are there places where type annotations can be written
-that we do not generate pipes for?). Pipes can be linked, meaning that they are
-necessarily of the same width. When two pipes are linked, changing the width of
-one causes the width of the other to change, as well.
+that we do not generate pipes for?).
 
 Note that because a pipe is generated for every place that a type annotation can
 be written, a variable declaration can result in more than one pipe being
 generated, if it includes type parameters. For example, (in most type systems)
 the declaration "String foo;" would result in the generation of a single pipe,
 whereas the statement "Map<String, Integer> bar;" would cause three pipes to be
-generated (TODO find out if this is actually done right now).
+generated (though as of April 2013, this does not work).
 
 TODO: paragraph on balls -- I (Nat) honestly don't understand what, exactly,
 balls mean. They seem to be some strange hybrid of types and values, and (even
 after years on the project) I have yet to put my finger on exactly what they
 are. Are they just a visualizing aid or are they something more?
 
-Pipes can interact with each other, just as variables in a program can. The
-basic building blocks of pipe interaction are splits and merges.
+Basic interactions between variables in a program are translated as splits and
+merges.
 
-A pipe can merge with another (such as when a conditional assignment occurs in
-the code). When this happens, the balls flowing through them merge and the
-resulting ball is the largest of the two.
+One example where a merge would occur is when a conditional assignment occurs in
+the code. Because the value after the assignment could be either the original
+value (if the condition is false), or the new value (if the condition is true),
+the pipes merge and the output pipe.
 
-Likewise, a pipe can split (this sometimes occurs when a variable is used). In
-this case, the ball is cloned and sent down both pipes.
+A split would occur when a variable is used. For example, if it is assigned to
+another variable, its pipe would split, because it would then be representing
+two variables, and each must have its own pipe.
+
+Splits and merges happen in other cases, but these are the simplest (other uses
+will be described in section 3).
 
 Based on the above, we can translate a few simple statements into a game part
 for the nullness type system:
@@ -130,24 +152,25 @@ representing foo. Once the variables go out of scope, their pipes are ended.
 
 b. Boards and Subboards
 
-Methods are translated into boards. A board is a single rectangle made up of
-interconnected pipes.
+A board is a single rectangle made up of interconnected pipes. Boards commonly
+have pipes attached to the top and/or bottom (called input or output pipes), but
+not always. A board is solved when there are no conflicts remaining on it, where
+a conflict is a place where a ball would get stuck.
 
-Just as a method has arguments and return values, a board has input pipes and
-output pipes. The input pipes are all of the pipes for the receiver and the
-arguments, in order.
+A subboard is where a board is referenced within another board. A subboard must
+have the same number of inputs and outputs as the board that it references. The
+game represents a subboard as a thumbnail of the board that it references.
 
-The outputs are all of the inputs (more on that below) and the pipe(s) for the
-return type.
 
-When a method is called, a subboard is inserted into that method's board. A
-subboard is simply a thumbnail version of the board that represents the called
-method. The inputs and outputs of the subboard are connected to the appropriate
-pipes in the caller's board.
+Each method in a program is transformed into a board. Each method call is
+transformed into a subboard referring to the called method's board. Pipe(s) for
+a method's arguments, including the receiver, are attached as input pipes. All
+of the input pipes are also attached as output pipes. The pipe(s) for the return
+value are additionally attached as output pipes.
 
-The reason that all of the input pipes are also output is that a method could
-impose constraints on the pipe width, and we have decided that it should be
-immediately obvious when a ball gets stuck in a subboard. So, instead of
+The reason that all of the input pipes are also output pipes is that a method
+could impose constraints on the pipe width, and we have decided that it should
+be immediately obvious when a ball gets stuck in a subboard. So, instead of
 splitting a variable's pipes, continuing them on one side, and connecting them
 to the subboard, we simply connect them to the subboard and continue them at the
 bottom, as though they simply passed through the subboard. (Note: actually,
@@ -160,10 +183,15 @@ and below a subboard.
 
 c. Pinch points and pipe width constraints
 
-There are some scenarios in which the pipe width needs to be constrained in a
-certain place. For example, in the nullness type system, when a variable is
-dereferenced it must be nonnull. This means that we need a way to require balls
-flowing through a pipe to be small in certain locations.
+Sometimes pipes are locked as narrow or wide, and sometimes they contain pinch
+points through which large balls cannot flow (TODO: why can't we just lock the
+pipe as narrow instead of using a pinch point?)
+
+Pinch points or locked pipes are used when the pipe width needs to be
+constrained in a certain place because of the semantics of the program. For
+example, in the nullness type system, when a variable is dereferenced it must be
+nonnull. This means that we need a way to require balls flowing through a pipe
+to be small in certain locations.
 
 Our initial strategy was to place a pinch point in a variable's pipe whenever
 values in it are required to be of the more restrictive of the two types in the
@@ -297,7 +325,15 @@ classes much cleaner.
 
 (TODO: find out what the current implementation actually does.)
 
-e. Unsolvable games
+e. Unsolvable games (Buzz saws)
+
+Buzz saws are a special tool a player can use when the game cannot be otherwise
+solved (or the player does not know how to solve it otherwise). The player
+places the buzz saw over a pipe, and any balls that fall through it are converted
+to small balls. This can be used to eliminate conflicts, where a large ball
+would get stuck at a pinch point or at the top of a small pipe. The buzz saw
+comes with a large point penalty to discourage excessive use.
+
 
 Ideally, a game will conclude when the player provides a solution to it. This
 translates directly to a proof of correctness for the source program, as it
@@ -308,8 +344,7 @@ checker will succeed when typechecking this annotated source, proving that the
 program cannot throw a NullPointerException at runtime.
 
 Often, however, the player is unable to solve the game. The player indicates
-this by placing a buzz saw on a pipe. The buzz saw turns large balls into small
-balls, so a wide pipe with a buzz saw can flow into a narrow pipe.
+this by placing a buzz saw on a pipe.
 
 Games that are impossible to solve are caused by one of two things:
 
@@ -325,7 +360,8 @@ typecheck the program. Fundamentally, all type systems must reject some correct
 programs, so this case will inevitably arise. Of the three possible game
 outcomes, this is the least useful.
 
-f. Practicality and Applications
+f. Practicality and Applications (TODO should this be broken out into its own
+section?)
 
 As stated above, there are three possible conclusions to a game:
 
@@ -358,7 +394,7 @@ whether a real defect exists.
 
 --------------------------------------------------------------------------------
 
-3. Details of Code-to-game Conversion
+3. Code-to-game Conversion: Implementation
 
 problems with aliased arguments
 
