@@ -17,10 +17,10 @@ package scenes.game.display
 	
 	public class GameEdgeSegment extends GameComponent
 	{
-		private static const ARROW_SPACING:Number = 5.0;
-		private static const ARROW_WIDTH:Number = 2.0;
+		private static const ARROW_SCALEX:Number = 0.2;
 		
 		private var m_quad:Quad;
+		private var m_arrowImg:Image;
 		protected var m_parentEdge:GameEdgeContainer;
 		public var m_endPt:Point;
 		public var m_currentRect:Rectangle;
@@ -32,6 +32,10 @@ package scenes.game.display
 		
 		public var currentTouch:Touch;
 		private var m_arrows:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+		private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
+		{
+			ARROW_TEXT.repeat = true;
+		}
 		
 		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _fromNode:GameNode, _toNode:GameNode, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
 		{
@@ -54,6 +58,13 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
+			for each (var arr:DisplayObject in m_arrows) {
+				arr.removeFromParent(true);
+			}
+			m_arrows = null;
+			m_parentEdge = null;
+			m_fromComponent = null;
+			m_toComponent = null;
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
@@ -110,7 +121,7 @@ package scenes.game.display
 				{
 					if(!isMoving)
 						isMoving = true;
-
+					
 					var currentMoveLocation:Point = touches[0].getLocation(this);
 					var previousLocation:Point = touches[0].getPreviousLocation(this);
 					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);		
@@ -151,6 +162,8 @@ package scenes.game.display
 			
 			disposeChildren();
 			
+			var pctTextWidth:Number;
+			var pctTextHeight:Number;
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
 				var startPt:Point = new Point(0,0);
@@ -162,79 +175,70 @@ package scenes.game.display
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(m_endPt.x, lineSize+1.0, 0xeeeeee);
-					m_quad.y = -lineSize/2.0 - 0.5;
+					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + 1.0, 0xeeeeee);
+					m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+					m_quad.y = (m_endPt.x > 0) ? -(lineSize+1.0)/2.0 : (lineSize+1.0)/2.0;
 					m_quad.x = 0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(m_endPt.x, lineSize, color);
-				m_quad.y = -lineSize/2.0;
+				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
+				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.x = 0;
+				
+				// Create/add arrows
+				m_arrowImg = new Image(ARROW_TEXT);
+				pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
+				pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+				m_arrowImg.width = Math.abs(m_endPt.x);
+				m_arrowImg.height = lineSize;
+				
+				m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+				m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+				m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+				m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+				
+				m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+				m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
+				m_arrowImg.x = 0;
 			}
 			else
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(lineSize+1.0, m_endPt.y, 0xeeeeee);
-					m_quad.y = -lineSize/2.0;
-					m_quad.x =  -1.0;
+					m_quad = new Quad(lineSize + 1.0, Math.abs(m_endPt.y), 0xeeeeee);
+					m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
+					m_quad.y = -0.5;
+					m_quad.x = (m_endPt.y > 0) ? -(lineSize+1.0)/2.0 : (lineSize+1.0)/2.0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(lineSize, m_endPt.y, color);
-				m_quad.x = -lineSize/2.0;
+				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
+				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
+				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.y = 0;
+				
+				// Create/add arrows
+				m_arrowImg = new Image(ARROW_TEXT);
+				pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
+				pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+				m_arrowImg.width = Math.abs(m_endPt.y);
+				m_arrowImg.height = lineSize;
+				
+				m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+				m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+				m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+				m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+				
+				m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
+				m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
+				m_arrowImg.y = 0;
 			}
 			
 			addChild(m_quad);
+			if (m_arrowImg) {
+				addChild(m_arrowImg);
+			}
 			
-			// Create/add arrows
-			var numArr:int = 0;// Math.floor(m_endPt.length / ARROW_SPACING);
-			// If zero Arrows, check if just one would fit, and if so add it
-			if ((numArr == 0) && (m_endPt.length > ARROW_WIDTH)) {
-				numArr = 0;// 1;
-			}
-			if (numArr > 0) {
-				var currX:Number, currY:Number, dX:Number, dY:Number, myAng:Number;
-				dX = m_endPt.x / m_endPt.length;
-				dY = m_endPt.y / m_endPt.length;
-				myAng = Math.atan2(dY, dX);
-				var arrHeight:Number = GameEdgeContainer.WIDE_WIDTH;
-				currX = (dX * ARROW_SPACING) / 2.0 + (lineSize/1.05) * Math.sin(myAng) / 2.0;
-				currY = (dY * ARROW_SPACING) / 2.0 - (lineSize/1.05) * Math.cos(myAng) / 2.0;
-				for (var i:int = 0; i < numArr; i++) {
-					var myText:Texture;
-					//if (m_parentEdge.hasError()) {
-					//	myText = AssetInterface.getTextureColorAll("Game", "ChevronClass", 0xFF000000 + ERROR_COLOR);
-					//} else {
-						myText  = AssetInterface.getTexture("Game", "ChevronClass");
-					//}
-					
-					var myArr:Image = new Image(myText);
-					// Adjust the texture coordinates such that when we scale the arrow's
-					// height to equal lineSize, we show the correct pct of the arrow's
-					// texture (this acts like a clipRect such that the arrow's texture
-					// doesn't spill outside of the edge itself
-					var pctText:Number = lineSize / (1.5 * arrHeight);
-					myArr.setTexCoords(0, new Point(0, 0.5 - pctText/2.0)); //topleft
-					myArr.setTexCoords(1, new Point(1, 0.5 - pctText/2.0)); //topright
-					myArr.setTexCoords(2, new Point(0, 0.5 + pctText/2.0)); //bottomleft
-					myArr.setTexCoords(3, new Point(1, 0.5 + pctText/2.0)); //bottomright
-					
-					myArr.touchable = false;
-					
-					myArr.width = ARROW_WIDTH;
-					myArr.height = lineSize*1.05;
-					
-					XSprite.setPivotCenter(myArr);
-					myArr.x = currX + this.x;
-					myArr.y = currY + this.y;
-					myArr.rotation = myAng;
-					currX += ARROW_SPACING * dX;
-					currY += ARROW_SPACING * dY;
-					m_parentEdge.addChild(myArr);
-					m_arrows.push(myArr);
-				}
-			}
 		}
 		
 		private static function fillUV(tx:Number, ty:Number, rot:Number, tex:Texture):Matrix
