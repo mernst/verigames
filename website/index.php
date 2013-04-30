@@ -1,26 +1,35 @@
 <?php
     include("./scripts/common_include.php");
+	include("./scripts/globals.php");
 ?>
 			<title>PipeJam</title>
+			<link rel=StyleSheet href="./styles/index.css">
 			<link rel=StyleSheet href="./uploadify/uploadify.css">
 			<script type="text/javascript" src="./uploadify/jquery.uploadify-3.1.min.js"></script>
-			<script type="text/javascript" src="./scripts/index.js"></script>
+			<script type="text/javascript" src="./scripts/upload.js"></script>
+			<script type="text/javascript" src="./scripts/compile.js"></script>
+			<script type="text/javascript" src="./scripts/createXML.js"></script>
+			<script type="text/javascript" src="./scripts/main.js"></script>
 <?php
 	include("./scripts/header.php");
 ?>
 		<div id="content">
 			<div id="welcome">
-				<h3>Welcome!</h3>				<p>
+				<h3>Welcome!</h3>
+				<p>
 					Welcome to PipeJam! The game that allows you to verify your code while you play. 
-					You have several options to begin, you can select from our example files 					below or choose to upload your own Java program.  PipeJam will convert your files					into a puzzle game that will annotate your code as you play.  Once you are finished 					solving the puzzle, you will be taken to a results page where you can view the results.
+				 	PipeJam will convert your files into a puzzle game that will annotate your code
+				 	as you play.  Once finished, you can view and download your annotated code.
 				</p>
-				<p>					You can choose to upload .java, .zip or .jar files.  Be sure to include all the files that					are required to compile your program.  If you choose to upload a zip file then it should					contain all the files necessary to run your program.  Once you have uploaded your files and we 					have confirmed they were uploaded and compiled successfully, you will be taken to the 					game.
+				<p>
+					You can choose to upload .java, .zip or .jar files.  Be sure to include all the files that
+					are required to compile your program. 
 				</p>
 			</div>
 			<div id="upload">
 				<h3>File Upload</h3>
 				<p>
-					Choose a type checker to use and then select your own files to upload or select from one of our samples. <br/>
+					Choose a type checker and theme then select your files to upload. <br/>
 				</p>
 					
 				<div id="upload_options"> 
@@ -33,19 +42,11 @@
 							<option value="infer-nninf.sh">Nullness Checker</option>
 							<option value="infer-trusted.sh">Trusted Checker</option>
 						</select>
-						
-						Theme Options:
-						<select id='skin_options'>
-						    <option value="pipes">Pipe Theme</option>
-						</select>
-					</div>
-					
+     					</div>
 				</div>
 				<div id="queue">	
 				</div>
 				<span id="uploadIt">Upload Files</span>
-				<div id='progress'><div id='spinner'></div></div>
-				<div id="message">
 				</div>
 			</div>
 		</div>

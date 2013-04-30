@@ -1,3 +1,7 @@
+Purpose:
+
+This code base will upload java files, compile them, create game xml files, and then upload them to the
+game database.
 
 --------------------------------
 Site Location:
@@ -5,13 +9,14 @@ Site Location:
 The Pipe Jam website is:
 http://verigames-dev.cs.washington.edu/
 
-The content is found in directory
-/www/htdocs/
+This content is found in directory
+/www/htdocs/demo/upload/
 on verigames-dev.cs.washington.edu
 
-For now, there are global permissions to read, write and execute this directory.
+For now, there are global permissions to read, write and execute this directory. You need
+the uploads and scripts directory to have write permissions, and all scripts to have execute permissions.
 
-To upload an XML file:
+To upload an XML file directly into the "classic" game:
 https://verigames-dev.cs.washington.edu/admin/demo/
 
 --------------------------------
@@ -22,32 +27,20 @@ The directory contains the following top-level files:
 
 index.php:  This is the home page and currently provides the user with a way to upload their files.  
 
-results.html: This site is where the user will be redirected after completing a game.  Here they 
-can see the marked up code they uploaded with the results from the game. 
-
 removeAll.php: A script to remove all the contents of the upload folder. See Misc. below.
 
-webpage.html: This is the site that contains the actual PipeJam game. It loads the flash .swf as 
-well as manages the game settings and resulting xml files.  
+and a few other top-level files worth keeping, maybe.
 
-
-
-There are also nine main folders in the root directory:
-
-flash_files:  Stores all the flash related content for the site, including the webgame.swf file 
-which is the game flash file. 
+There are also seven main folders in the root directory:
 
 scripts: Holds all the main Javascript and PHP scripts used by the site. 
-
-samples:  Holds any sample .xml files that allow a user to play a game without uploading their
-own content. 
 
 styles: Holds all the .css stylesheets for the site.  The name of the css stylesheet should correspond
 directly with the page they define the style for. 
 
 uploads:  This folder stores any files uploaded by a user of the site.  The folder will contain 
-sub-folder with unique guid's.  In each folder all of the file the user uploaded and any of the
-output produced by the parsers and the world.xml will be located. Any error text will also be
+sub-folder with unique guid's.  In each folder all of the files the user uploaded, any of the
+output produced by the parsers, and the game files will be located. Any error text will also be
 located in this folder. 
 
 JQueryUI: This is a folder that stores the JQuery framework.  JQuery is a downloadable Javascript
@@ -70,18 +63,15 @@ Below are some important files not mentioned above.  The majority of the functio
 in the php files and JavaScript files in the scripts folder.  There are four main files that do the
 vast majority of the heavy lifting:
 
-pipejam.php: This file is responsible for the initial verification and upload process.  It accepts
-Ajax requests from index.js with the user selected upload files.  It will then move them to their 
-unique directory, unzip them, compile them and then call the script that generates the xml that will
-be fed into the game.  This is the first place to look if there appears to be problems with the initial
-upload process on the homepage.  
+index.php: The homepage.  
 
-index.js: This is the corresponding JavaScript file for the homepage.  It sends the Ajax requests to
-pipejam.php with the files the user selected to upload.  It also controls the behavior of the uploadify
-object, which is responsible for the file uploads.  It also contains the bindings for the buttons on the
-homepage as well as handling the behavior of the Ajax responses.  It also calls the modal window that 
-displays the status of the uploads.  The modal window is not actually defined in this file but is instead
-defined in jQuery.modal.js.  
+scripts/main.js: This is the corresponding JavaScript file for the homepage.  It contains an 'onLoad' function
+that is called when the page is loaded, and which starts the process, by calling the controller.php file.
+
+scripts/controller.php: The main controller interface for JavaScript->php communication, plus all php functions.
+PHP is required for those things that JavaScript can't do, such as disk access and exec calls.
+
+scripts/upload.js, compile.js, and createXML.js - JavaScripts that handle the related parts of the pipeline.
 
 results.js:  This is the JavaScript file responsible for displaying the files on the results page.  It 
 sends an Ajax request to annotate.php as well as utilities.php (to print the contents of a file).  It 
@@ -103,21 +93,13 @@ there is a problem. It is likely that one of these are responsible.
 
 
 ---------------------------------
-
 Updating:
 
-To update the main webgame.swf all that is needed is to replace the file located in flash_files in
-the root directory. As long as the interface with webgame.html hasn't changed then no further changes
-are required. However, if webgame.html, the page that references webgame.swf, needs to be modified
-then please let me know and I'll make the necessary changes. 
-
-The other most common file that will likely need to be updated on a regular basis is verigames.jar.  
-This file is located in the java file in the root directory.  Currently, only Werner Dietl has permissions
-to change this file. 
+The most common file that will likely need to be updated on a regular basis is verigames.jar.  
+This file is located in the java file in the root directory.
 
 
 --------------------------------
-
 Misc.
 
 removeAll.php:
@@ -129,6 +111,7 @@ removed before the site goes live, but it is nice to have in the meantime.
 
 
 --------------------------------
+!!Unverified other misc. information left here
 
 Website Setup Instructions For Linux:
 
@@ -137,11 +120,9 @@ Step 1: Download Dependencies:
 
 Required Dependencies:
 
-- GraphViz must be installed
+- GraphViz - must be installed (Not needed in the long run, but right now PipeJam Classic layout info is still generated using it.)
 - JDK 7
 - Scala
-- Flash
-- GraphViz
 
 Ubuntu instructions for installing dependencies:
 

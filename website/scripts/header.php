@@ -9,17 +9,14 @@
       	</div>
       	<div id="button_bar">
       		<div id="button_group">
-      		    <span id="home" title="Home" class="buttons">
-      		        <a style='color:white;text-decoration:none;' href='./index.php'>Home</a>
-                </span>
-      			<span id="play" title="Play A Demo Game" class="buttons">
-      				<a style='color:white;text-decoration:none;' target="_blank"href='./webgame.php?sample=sample.zip'>Play Demo</a>
-      			</span>
-      			<span id="help" class="buttons">
+      		    <div id="home" title="Home" class="buttons">
+      		        Home
+                </div>
+      			<div id="help" class="buttons">
       				Help
-      			</span>
-      			<span id="contact" class="buttons">
+      			</div>
+      			<div id="about" class="buttons">
       				About
-      			</span>
+      			</div>
       		</div>
       	</div>

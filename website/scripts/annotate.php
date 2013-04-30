@@ -31,7 +31,7 @@ function createUpdatedXML($id, $checker) {
     
     //move world.dtd to corresponding guid folder
     $moveWorld = "cp " . DTD_FILE . " " . $path . '/' . DTD_FILE . " 2> " .
-        $path . '/' . XML_VALIDATION_ERROR;
+		$path . '/' . XML_VALIDATION_ERROR;
     exec($moveWorld);
     
     //create updated jaif file
