@@ -13,6 +13,7 @@ define('DIRECTORY', realpath("../uploads/"));
 define('INFERENCE_LOC', "../scripts/inference.jaif");
 define('WORLD_XML_LOC', "../scripts/World.xml");
 define('VERIGAMES_JAR', "../java/verigames.jar");
+define('MAP_JAR', "../java/map.jar");
 define('TYPECHECKER_LOC', '../scripts/typecheckers/');
 
 //file locations
