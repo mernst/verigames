@@ -18,6 +18,7 @@ package scenes.game.display
 	public class GameEdgeSegment extends GameComponent
 	{
 		private static const ARROW_SCALEX:Number = 0.2;
+		private static const MIN_ARROW_SIZE:Number = 10;
 		
 		private var m_quad:Quad;
 		private var m_arrowImg:Image;
@@ -31,7 +32,6 @@ package scenes.game.display
 		public var m_isLastSegment:Boolean;
 		
 		public var currentTouch:Touch;
-		private var m_arrows:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 		private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
 		{
 			ARROW_TEXT.repeat = true;
@@ -58,10 +58,6 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
-			for each (var arr:DisplayObject in m_arrows) {
-				arr.removeFromParent(true);
-			}
-			m_arrows = null;
 			m_parentEdge = null;
 			m_fromComponent = null;
 			m_toComponent = null;
@@ -151,15 +147,17 @@ package scenes.game.display
 		
 		public function draw():void
 		{
-			// Remove/dispose of arrows
-			for each (var arr:DisplayObject in m_arrows) {
-				arr.removeFromParent(true);
-			}
-			m_arrows = new Vector.<DisplayObject>();
-			
 			var color:int = getColor();
 			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			
+			if (m_arrowImg) {
+				m_arrowImg.removeFromParent(true);
+				m_arrowImg = null;
+			}
+			if (m_quad) {
+				m_quad.removeFromParent(true);
+				m_quad = null;
+			}
 			disposeChildren();
 			
 			var pctTextWidth:Number;
@@ -186,21 +184,23 @@ package scenes.game.display
 				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.x = 0;
 				
-				// Create/add arrows
-				m_arrowImg = new Image(ARROW_TEXT);
-				pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
-				pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-				m_arrowImg.width = Math.abs(m_endPt.x);
-				m_arrowImg.height = lineSize;
-				
-				m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-				m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-				m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-				m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-				
-				m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-				m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-				m_arrowImg.x = 0;
+				// Create/add arrows if segment is long enough to display them
+				if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
+					m_arrowImg = new Image(ARROW_TEXT);
+					pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
+					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					m_arrowImg.width = Math.abs(m_endPt.x);
+					m_arrowImg.height = lineSize;
+					
+					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					
+					m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+					m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
+					m_arrowImg.x = 0;
+				}
 			}
 			else
 			{
@@ -217,21 +217,23 @@ package scenes.game.display
 				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.y = 0;
 				
-				// Create/add arrows
-				m_arrowImg = new Image(ARROW_TEXT);
-				pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
-				pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-				m_arrowImg.width = Math.abs(m_endPt.y);
-				m_arrowImg.height = lineSize;
-				
-				m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-				m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-				m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-				m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-				
-				m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
-				m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
-				m_arrowImg.y = 0;
+				// Create/add arrows if segment is long enough to display them
+				if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
+					m_arrowImg = new Image(ARROW_TEXT);
+					pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
+					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					m_arrowImg.width = Math.abs(m_endPt.y);
+					m_arrowImg.height = lineSize;
+					
+					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					
+					m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
+					m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
+					m_arrowImg.y = 0;
+				}
 			}
 			
 			addChild(m_quad);
