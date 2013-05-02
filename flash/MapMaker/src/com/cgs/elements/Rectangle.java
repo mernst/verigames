@@ -8,11 +8,8 @@ public class Rectangle {
 	public double width;
 	public double height;
 	
-	//use these to keep original values
-	public double dx;
-	public double dy;
-	public double dwidth;
-	public double dheight;
+	public double finalXPos;
+	public double finalYPos;
 	
 	public Rectangle()
 	{
@@ -20,10 +17,6 @@ public class Rectangle {
 		y = 0;
 		width = 0;
 		height = 0;
-		dx = 0;
-		dy = 0;
-		dwidth = 0;
-		dheight = 0;
 	}
 	
 	public Rectangle(int _x, int _y, int _width, int _height)
@@ -34,16 +27,14 @@ public class Rectangle {
 		height = _height;
 	}
 	
-	public Rectangle(double _x, double _y, double _width, double _height)
+	public String toAttributeString()
 	{
-		dx = _x;
-		dy = _y;
-		dwidth = _width;
-		dheight = _height;
-		x = (int)dx;
-		y = (int)dy;
-		width = (int)dwidth;
-		height = (int)dheight;
+		String attributeString = "top=\"" + finalYPos + "\""
+									+ " left=\"" + finalXPos + "\""
+									+ " bottom=\"" + (finalYPos+height) + "\""
+									+ " right=\"" + (finalXPos+width) + "\"";
+		
+		return attributeString;
 	}
 	
 	public String toString()
