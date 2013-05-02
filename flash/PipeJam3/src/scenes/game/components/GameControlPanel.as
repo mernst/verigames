@@ -153,10 +153,10 @@ package scenes.game.components
 			
 			menu_button = new Button(menuButtonUp, "", menuButtonClick);
 			menu_button.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			menu_button.x = 15;
-			menu_button.y = 275;
 			menu_button.width *= .5;
 			menu_button.height *= .5;
+			menu_button.x = (width - menu_button.width)/2;
+			menu_button.y = 278;
 			addChild(menu_button);
 		}
 		

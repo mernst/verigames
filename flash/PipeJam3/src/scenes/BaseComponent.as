@@ -14,7 +14,7 @@ package scenes
 	import starling.errors.MissingContextError;
 	import starling.textures.Texture;
 
-	public class BaseComponent extends Sprite
+	public class BaseComponent extends starling.display.Sprite
 	{	
 		private var mClipRect:Rectangle;
 		

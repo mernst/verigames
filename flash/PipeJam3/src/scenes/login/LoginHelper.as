@@ -10,11 +10,6 @@ package scenes.login
 	import flash.text.*;
 	import flash.utils.*;
 	
-	import mx.messaging.messages.HTTPRequestMessage;
-	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
-	import mx.rpc.http.HTTPService;
-	
 	import starling.events.*;
 
 	public class LoginHelper
@@ -39,6 +34,8 @@ package scenes.login
 		public var ACTIVATE_ALL_LEVELS:int = 9;
 		public var DEACTIVATE_ALL_LEVELS:int = 10;
 		public var RANDOM_REQUEST:int = 11;
+		public var GET_LEVEL_METADATA:int = 12;
+		
 		protected var m_currentRequestType:int = 0;
 		
 		static public var EVENT_COMPLETE:int = 1;
@@ -72,13 +69,13 @@ package scenes.login
 		}
 		
 		
-		protected function onActivatePlayer(callback:Function):void
+		public function onActivatePlayer(callback:Function):void
 		{
 			sendMessage(ACTIVATE_PLAYER);
 			m_currentCallback = callback;
 		}
 		
-		protected function onDeactivatePlayer(callback:Function):void
+		public function onDeactivatePlayer(callback:Function):void
 		{
 			sendMessage(DEACTIVATE_PLAYER);
 			m_currentCallback = callback;
@@ -102,17 +99,25 @@ package scenes.login
 			m_currentCallback = callback;
 		}
 		
-		private function onStartLevel(callback:Function):void
+		public function onStartLevel(callback:Function):void
 		{
 			sendMessage(START_LEVEL);	
 			m_currentCallback = callback;
 		}	
 		
-		private function onStopLevel(callback:Function):void
+		public function onStopLevel(callback:Function):void
 		{
 			sendMessage(STOP_LEVEL);
 			m_currentCallback = callback;
+		}
+		
+		public function onGetLevelMetadata(callback:Function, levelID:String = null):void
+		{
+			if(levelID != null)
+				currentLevel = levelID;
 			
+			sendMessage(GET_LEVEL_METADATA);
+			m_currentCallback = callback;
 		}
 		
 		protected function onActivateLevel(callback:Function):void
@@ -221,6 +226,10 @@ package scenes.login
 					request = "/ra/games/"+GAME_ID+"/deactivateAllLevels&method=PUT";
 					method = URLRequestMethod.POST; 
 					break;
+				case GET_LEVEL_METADATA:
+					request = "/ra/games/"+GAME_ID+"/levels/"+currentLevel+"/metadata&method=GET";
+					method = URLRequestMethod.POST; 
+					break;
 //				case RANDOM_REQUEST:
 //					request = playerNumber.text;
 //					method = URLRequestMethod.POST; 
@@ -282,12 +291,6 @@ package scenes.login
 			trace("in complete " + e.target.data);
 			m_currentRequestType = 0;
 			m_currentCallback(EVENT_COMPLETE, e);
-		}
-		
-		private function resultHandler(ev :mx.rpc.events.ResultEvent):void
-		{
-			var x:mx.rpc.events.ResultEvent = ev;
-			trace("in result");
 		}
 	}
 }

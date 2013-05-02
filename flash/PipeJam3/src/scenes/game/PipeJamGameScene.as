@@ -29,12 +29,9 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		public var worldFile:String = //"../SampleWorlds/DemoWorld/SethsLevel.zip";//
-		"../SampleWorlds/DemoWorld/DemoWorld.zip";
-		public var layoutFile:String = //"../SampleWorlds/DemoWorld/SethsLevelGraph.zip";//
-		"../SampleWorlds/DemoWorld/DemoWorldGraph.zip";
-		public var constraintsFile:String = //"../SampleWorlds/DemoWorld/SethsLevelConstraints.zip";//
-		"../SampleWorlds/DemoWorld/DemoWorldConstraints.zip";
+		public var worldFile:String = "../SampleWorlds/DemoWorld/SethsLevel.zip";
+		public var layoutFile:String = "../SampleWorlds/DemoWorld/SethsLevelGraph.zip";
+		public var constraintsFile:String = "../SampleWorlds/DemoWorld/SethsLevelConstraints.zip";
 		private var world_zip_file_to_be_played:String;// = "../SampleWorlds/DemoWorld.zip";
 		public var m_worldXML:XML;
 		public var m_worldLayout:XML;

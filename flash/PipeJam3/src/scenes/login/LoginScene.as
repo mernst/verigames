@@ -5,8 +5,6 @@ package scenes.login
 	import flash.events.Event;
 	import flash.net.*;
 	
-	import mx.controls.TextArea;
-	
 	import scenes.Scene;
 	
 	import flash.text.TextField;

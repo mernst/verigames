@@ -41,7 +41,8 @@ package scenes.splashscreen
 		protected var theme:AeonDesktopTheme;
 		
 		protected var levelList:List = null;
-		protected var matchArray:Array = null;
+		protected var levelMetadataArray:Array = null;
+		protected var matchArrayObjects:Array = null;
 		
 		public function SplashScreenMenuBox(parent:SplashScreenScene)
 		{
@@ -125,8 +126,34 @@ package scenes.splashscreen
 			backgroundImage.height = 200;
 			m_levelMenu.addChild(backgroundImage);
 			
+			//create a title
+			var titleTextfield:TextFieldWrapper = TextFactory.getInstance().createTextField("Levels", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xeeeeee);
+			titleTextfield.x = -5; 
+			TextFactory.getInstance().updateAlign(titleTextfield, 1, 1);
+			m_levelMenu.addChild(titleTextfield);
+
+			levelList = new List;
+			levelList.y = 75;
+			levelList.x = 10;
+			levelList.width = 125;
+			levelList.itemRendererProperties.height = 10;
+			
+			m_levelMenu.addChild(levelList);
+			levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
+			levelList.validate();
+			
+			var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
+			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
+			
+			var exit_button:Button = new Button(exitButtonUp, "", exitButtonClick);
+			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
+			exit_button.x = 10;
+			exit_button.y = 150;
+			exit_button.width *= .38;
+			exit_button.height *= .38;
+			m_levelMenu.addChild(exit_button);
+			
 			m_levelMenu.visible = false;
-			loginHelper.onRequestLevels(onRequestLevels);
 			//use this for testing without any connection
 //			onRequestLevels(LoginHelper.EVENT_COMPLETE, null)
 		}
@@ -135,43 +162,55 @@ package scenes.splashscreen
 		{
 			if(result == LoginHelper.EVENT_COMPLETE)
 			{
-				matchArray = new Array("test", "bob", "joe", "fred");
+				levelMetadataArray = new Array("test", "bob", "joe", "fred"); //dummy values for testing
 				if(e != null)
 				{
 					var levels:Object = JSON.parse(e.target.data);
-					var matchArrayObjects:Array = levels.matches;
-					matchArray.length = 0;
-					for(var i:int = 0; i< matchArrayObjects.length; i++)
-					 matchArray.push(matchArrayObjects[i].levelId);
+					matchArrayObjects = levels.matches;
+					//clear out old metadata
+					levelMetadataArray = new Array;
+					//now query for the metadata for those levels
+					trace(matchArrayObjects.length);
+					//can't send these all at once (login helper wouldn't like it), so send first here
+					if(matchArrayObjects.length > 0)
+						loginHelper.onGetLevelMetadata(onGetLevelMetadataComplete, matchArrayObjects[0].levelId);
 				}
-				//create a title
-				var titleTextfield:TextFieldWrapper = TextFactory.getInstance().createTextField("Levels", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xeeeeee);
-				titleTextfield.x = -5; 
-				TextFactory.getInstance().updateAlign(titleTextfield, 1, 1);
-				m_levelMenu.addChild(titleTextfield);
-				
-				// Creating the dataprovider
-				var matchCollection:ListCollection = new ListCollection(matchArray);
-				levelList = new List;
-				levelList.y = 75;
-				levelList.x = 10;
-				levelList.width = 125;
-				levelList.itemRendererProperties.height = 10;
-				levelList.dataProvider = matchCollection;
-				
-				m_levelMenu.addChild(levelList);
-				levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
-				levelList.validate();
-				
-				var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-				var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-				
-				var exit_button:Button = new Button(exitButtonUp, "", exitButtonClick);
-				exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
-				exit_button.x = 10;
-				exit_button.y = 150;
-				m_levelMenu.addChild(exit_button);
-				
+				else
+					onGetLevelMetadataComplete(LoginHelper.EVENT_COMPLETE, null);
+			}
+		}
+		
+		protected function onGetLevelMetadataComplete(result:int, e:flash.events.Event):void
+		{
+			if(result == LoginHelper.EVENT_COMPLETE)
+			{
+				if(e != null)
+				{
+					var levels:Object = JSON.parse(e.target.data);
+					var levelMetadata:Object = levels.metadata;
+					
+					if(levelMetadata && levelMetadata.properties && levelMetadata.properties.name)
+						levelMetadataArray.push(levelMetadata.properties.name);
+					else
+						levelMetadataArray.push("Foo");
+				}
+			
+				if(levelMetadataArray.length == matchArrayObjects.length)
+				{
+					//we are done, show everything
+					// Creating the dataprovider
+					var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
+					levelList.dataProvider = matchCollection;
+					
+					m_mainMenu.visible = false;
+					m_levelMenu.visible = true;
+				}
+				else //send the next request
+					loginHelper.onGetLevelMetadata(onGetLevelMetadataComplete,  matchArrayObjects[levelMetadataArray.length].levelId);
+			}
+			else
+			{
+				//report error!
 			}
 		}
 		
@@ -186,8 +225,7 @@ package scenes.splashscreen
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			LoginHelper.levelNumberString = matchArray[levelList.selectedIndex];
-			LoginHelper.levelNumberString = null;
+			LoginHelper.levelNumberString = matchArrayObjects[levelList.selectedIndex].levelID;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			
@@ -236,10 +274,7 @@ package scenes.splashscreen
 				
 			}
 			
-			m_mainMenu.visible = false;
-			m_levelMenu.visible = true;
-
-			
+			loginHelper.onRequestLevels(onRequestLevels);
 		}
 		
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
