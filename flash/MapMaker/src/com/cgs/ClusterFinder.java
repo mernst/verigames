@@ -17,9 +17,10 @@ import com.cgs.elements.*;
 
 public class ClusterFinder extends FileHandler
 {
-	protected Map<String,NodeElement> edgeIDtoNodeHashMap;
+	protected Map<String, EdgeSetElement> edgeIDtoNodeHashMap;
 	protected Map<String, NodeElement> nodeHashMap;
 	protected Map<String, EdgeElement> edgeHashMap;
+	protected Map<String, BoardInfo> boardHashMap;
 	
 	protected Hashtable<String, String> addedEdgeHashMap;
 
@@ -50,9 +51,10 @@ public class ClusterFinder extends FileHandler
 	{
 		super(filename, outfilename);
 		
-		edgeIDtoNodeHashMap = new HashMap<String, NodeElement>();
+		edgeIDtoNodeHashMap = new HashMap<String, EdgeSetElement>();
 		nodeHashMap = new HashMap<String, NodeElement>();
 		edgeHashMap = new HashMap<String, EdgeElement>();
+		boardHashMap = new HashMap<String, BoardInfo>();
 		addedEdgeHashMap = new Hashtable<String, String>();
 	
 	}
@@ -75,20 +77,24 @@ public class ClusterFinder extends FileHandler
 			 
 					if (qName.equalsIgnoreCase("level")) {
 						String levelName = attributes.getValue("name");
-						currentLevel = new NodeElement(levelName);
+						currentLevel = new LevelElement(levelName);
 						graph.addNode(currentLevel);
 					}
 					else if (qName.equalsIgnoreCase("edge-set")) {
 						String id = attributes.getValue("id");
-						currentNode = new NodeElement(id);
+						currentEdgeSet = new EdgeSetElement(id);
 						currentLevel.addNode(currentNode);
 					}
 					else if (qName.equalsIgnoreCase("edgeref")) {
 						String id = attributes.getValue("id");
-						edgeIDtoNodeHashMap.put(id, currentNode);
-						currentNode.addNode(new NodeElement(id));
+						edgeIDtoNodeHashMap.put(id, currentEdgeSet);
+						currentEdgeSet.addNode(new EdgeRefElement(id));
 					}
-					 
+					else if (qName.equalsIgnoreCase("board")) {
+						String bName = attributes.getValue("name");
+						currentBoard = new BoardInfo(bName, currentLevel.id);
+						boardHashMap.put(currentLevel.id + "_" + bName, currentBoard);
+					}
 					else if (qName.equalsIgnoreCase("input")) {
 						inInputNode = true;
 					}
@@ -98,14 +104,20 @@ public class ClusterFinder extends FileHandler
 					else if (qName.equalsIgnoreCase("port")) {
 						String num = attributes.getValue("num");
 						String edgeID = attributes.getValue("edge");
-						if(inInputNode == true)
+						if (inInputNode == true) {
 							currentNode.addIncomingPort(num, edgeID);
-						else
+							if (currentNode.kind.equalsIgnoreCase("outgoing"))
+								currentBoard.associateOutgoingEdgeId(num, edgeID);
+						} else {
 							currentNode.addOutgoingPort(num, edgeID);
+							if (currentNode.kind.equalsIgnoreCase("incoming"))
+								currentBoard.associateIncomingEdgeId(num, edgeID);
+						}
 					}
 					else if (qName.equalsIgnoreCase("node")) {
 						String id = attributes.getValue("id");
-						currentNode = new NodeElement(id);
+						String kind = attributes.getValue("kind");
+						currentNode = new NodeElement(id, kind);
 					}
 					else if (qName.equalsIgnoreCase("edge")) {
 						String id = attributes.getValue("id");
@@ -164,6 +176,13 @@ public class ClusterFinder extends FileHandler
 			NodeElement node = nodeHashMap.get(portInfo.ID);
 			
 			//we are ignoring both incoming and outgoing node types. Yes?
+			// TODO: need to link edges coming to/from subboards nodes with 
+			// their incoming/outgoing edge counterparts
+			// i.e. edge e1 from port=0 of n1 to port=0 of n2
+			// (n2 is subnet node of board "b1")
+			// board b1 has an incoming edge e2 from port=0
+			// Need to link e1 -> e2! If e1 has a wide ball and e2 is narrow
+			// this needs to be an error.
 			if(node.outgoingPorts != null)
 			{
 				NodeElement keySet = edgeIDtoNodeHashMap.get(key);
@@ -174,6 +193,9 @@ public class ClusterFinder extends FileHandler
 					if(keySet.id != valueSet.id)
 					{
 						//check to see if we've already added this edge
+						// TODO: no longer perform this way, there may be multiple 
+						// edges linking two edge sets, or an edge linking and edge-set
+						// to itself!
 						String resultValue = addedEdgeHashMap.get(keySet.id + "->" + valueSet.id);
 						if(resultValue == null)
 						{

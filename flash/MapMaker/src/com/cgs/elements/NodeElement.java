@@ -6,6 +6,7 @@ import java.util.Comparator;
 public class NodeElement extends Element
 {
 	public String id;
+	public String kind;
 	public ArrayList<NodeElement> nodes;
 	public ArrayList<EdgeElement> edges;
 	
@@ -19,6 +20,16 @@ public class NodeElement extends Element
 	{
 		super();
 		id = _id;
+		kind = "";
+		nodes = new ArrayList<NodeElement>();
+		edges = new ArrayList<EdgeElement>();
+	}
+	
+	public NodeElement(String _id, String _kind)
+	{
+		super();
+		id = _id;
+		kind = _kind;
 		nodes = new ArrayList<NodeElement>();
 		edges = new ArrayList<EdgeElement>();
 	}

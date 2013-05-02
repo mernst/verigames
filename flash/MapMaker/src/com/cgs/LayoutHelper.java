@@ -68,7 +68,7 @@ public class LayoutHelper  extends FileHandler
 						String nodeName = attributes.getValue("id");
 						if(nodeName.indexOf("_level_") != -1)
 						{
-							currentLevel = new NodeElement(nodeName);
+							currentLevel = new LevelElement(nodeName);
 							currentNode = currentLevel; 
 							graph.addNode(currentLevel);
 							inNode = true;
