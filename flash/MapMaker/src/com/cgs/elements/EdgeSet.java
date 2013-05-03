@@ -7,8 +7,8 @@ public class EdgeSet extends Element
 {
 	protected ArrayList<EdgeElement> edges;
 	
-	public ArrayList<EdgeSetEdge> inputEdgeSetEdges;
-	public ArrayList<EdgeSetEdge> outputEdgeSetEdges;
+	public ArrayList<GridLine> inputGridLines;
+	public ArrayList<GridLine> outputGridLines;
 	
 	//used for seth conversion, as an anchor for edges that connect to this edgeset
 	public NodeElement node;
@@ -26,8 +26,8 @@ public class EdgeSet extends Element
 	{
 		super(_id);
 		edges = new ArrayList<EdgeElement>();
-		inputEdgeSetEdges = new ArrayList<EdgeSetEdge>();
-		outputEdgeSetEdges = new ArrayList<EdgeSetEdge>();
+		inputGridLines = new ArrayList<GridLine>();
+		outputGridLines = new ArrayList<GridLine>();
 
 		boundingBox = new Rectangle();
 		
@@ -41,16 +41,18 @@ public class EdgeSet extends Element
 		edges.add(edge);
 	}
 	
-	public void addInputEdgeSetEdge(EdgeSetEdge edgeSetEdge)
+	public void addInputGridLine(GridLine edgeSetEdge)
 	{
-		edgeSetEdge.inputPosition = inputEdgeSetEdges.size();
-		inputEdgeSetEdges.add(edgeSetEdge);
+		// TODO: THIS MUST MATCH THE OUTPUT GRIDLINE CORRESPONDING TO AN EDGE ID FROM THE ORIGINAL GRAPH
+		edgeSetEdge.inputPosition = inputGridLines.size();
+		inputGridLines.add(edgeSetEdge);
 	}
 	
-	public void addOutputEdgeSetEdge(EdgeSetEdge edgeSetEdge)
+	public void addOutputGridLine(GridLine edgeSetEdge)
 	{
-		edgeSetEdge.outputPosition = outputEdgeSetEdges.size();
-		outputEdgeSetEdges.add(edgeSetEdge);
+		// TODO: THIS MUST MATCH THE INPUT GRIDLINE CORRESPONDING TO AN EDGE ID FROM THE ORIGINAL GRAPH
+		edgeSetEdge.outputPosition = outputGridLines.size();
+		outputGridLines.add(edgeSetEdge);
 	}
 	
 	//We want to find those edgesets that should be included in the constraints file.
@@ -84,10 +86,13 @@ public class EdgeSet extends Element
 		 out.append("<edgeset id=\""+id+"\" ");
 		 out.append(boundingBox.toAttributeString());
 		 out.append("/>\r");
-		 
-		 for(int i = 0; i<outputEdgeSetEdges.size(); i++)
+		 for(int i = 0; i<inputGridLines.size(); i++)
 		 {
-			writeEdge(outputEdgeSetEdges.get(i), out);
+			 writeEdge(inputGridLines.get(i), out);
+		 }
+		 for(int i = 0; i<outputGridLines.size(); i++)
+		 {
+			writeEdge(outputGridLines.get(i), out);
 		 }
 	}
 	
@@ -122,29 +127,41 @@ public class EdgeSet extends Element
 			 out.append("</to>\r");
 			 out.append("</edge>\r");
 			 
-			 for(int i = 0; i<outputEdgeSetEdges.size(); i++)
+			 for(int i = 0; i<outputGridLines.size(); i++)
 			 {
-				writeEdge(outputEdgeSetEdges.get(i), out);
+				writeEdge(outputGridLines.get(i), out);
 			 }
 		}
 	}
 	
-	public void writeEdge(EdgeSetEdge edgeSetEdge, StringBuffer out)
+	public void writeEdge(GridLine line, StringBuffer out)
 	{
-		EdgeSet fromEdgeSet = edgeSetEdge.fromEdgeSet;
-		String fromNodeID = fromEdgeSet.id;
-		EdgeSet toEdgeSet = edgeSetEdge.toEdgeSet;
-		String toNodeID = toEdgeSet.id;
-		out.append("<edge from=\"" + fromNodeID + "\" to=\"" + toNodeID + "\">\r");
-		
-		int numOutputNodes = edgeSetEdge.fromEdgeSet.outputEdgeSetEdges.size();
-		double startPointX = fromEdgeSet.boundingBox.finalXPos+((double)fromEdgeSet.boundingBox.width*(edgeSetEdge.outputPosition+1)/(numOutputNodes+1));
-		double startPointY = fromEdgeSet.boundingBox.finalYPos+fromEdgeSet.boundingBox.height;
-		
-		int numInputNodes = edgeSetEdge.toEdgeSet.inputEdgeSetEdges.size();
-		double endPointX = toEdgeSet.boundingBox.finalXPos+toEdgeSet.boundingBox.width*(edgeSetEdge.inputPosition+1)/(numInputNodes+1);
-		double endPointY = toEdgeSet.boundingBox.finalYPos;
-		
+		JointElement joint = line.joint;
+		EdgeSet edgeSet = line.edgeSet;
+		String fromID;
+		String toID;
+		double startPointX;
+		double startPointY;
+		double endPointX;
+		double endPointY;
+		if (line.jointToEdgeSet) {
+			fromID = line.joint.id;
+			toID = line.edgeSet.id;
+			
+			int numInputLines = line.edgeSet.inputGridLines.size();
+			endPointX = line.edgeSet.boundingBox.finalXPos+line.edgeSet.boundingBox.width*(line.inputPosition+1)/(numInputLines+1);
+			endPointY = line.edgeSet.boundingBox.finalYPos;
+			
+			int numOutputLines = line.joint.outputPorts.size();
+			startPointX = line.joint.boundingBox.finalXPos+((double)fromEdgeSet.boundingBox.width*(line.outputPosition+1)/(numOutputLines+1));
+			startPointY = endPointY - 1;// TODO: For now, place just above the output edgeSet
+			
+			
+		} else {
+			fromID = line.edgeSet.id;
+			toID = line.joint.id;
+		}
+		out.append("<edge from=\"" + fromID + "\" to=\"" + toID + "\">\r");
 		out.append("<point x=\"" + startPointX + "\" y=\"" + startPointY + "\"/>\r");
 		out.append("<point x=\"" + endPointX + "\" y=\"" + endPointY + "\"/>\r");
 		out.append("</edge>\r");

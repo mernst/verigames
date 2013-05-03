@@ -6,34 +6,34 @@ public class BoardInfo
 {
 	public String boardName;
 	public String levelName;
-	private Hashtable<String, String> incomingPortToEdgeIdHashMap;
-	private Hashtable<String, String> outgoingPortToEdgeIdHashMap;
+	private Hashtable<String, Port> incomingPortHashMap;
+	private Hashtable<String, Port> outgoingPortHashMap;
 	
 	public BoardInfo(String _boardName, String _levelName)
 	{
 		boardName = _boardName;
 		levelName = _levelName;
-		incomingPortToEdgeIdHashMap = new Hashtable<String, String>();
-		outgoingPortToEdgeIdHashMap = new Hashtable<String, String>();
+		incomingPortHashMap = new Hashtable<String, Port>();
+		outgoingPortHashMap = new Hashtable<String, Port>();
 	}
 	
-	public void associateIncomingEdgeId(String portNum, String edgeID)
+	public void associateIncomingPort(Port port)
 	{
-		incomingPortToEdgeIdHashMap.put(portNum, edgeID);
+		incomingPortHashMap.put(port.portNumber, port);
 	}
 	
-	public void associateOutgoingEdgeId(String portNum, String edgeID)
+	public void associateOutgoingPort(Port port)
 	{
-		outgoingPortToEdgeIdHashMap.put(portNum, edgeID);
+		outgoingPortHashMap.put(port.portNumber, port);
 	}
 	
-	public String getEdgeIdForIncomingPort(String portNum)
+	public Port getIncomingPort(String portNum)
 	{
-		return incomingPortToEdgeIdHashMap.get(portNum);
+		return incomingPortHashMap.get(portNum);
 	}
 	
-	public String getEdgeIdForOutgoingPort(String portNum)
+	public Port getOutgoingPort(String portNum)
 	{
-		return outgoingPortToEdgeIdHashMap.get(portNum);
+		return outgoingPortHashMap.get(portNum);
 	}
 }

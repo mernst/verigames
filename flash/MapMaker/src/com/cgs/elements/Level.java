@@ -85,7 +85,6 @@ public class Level extends Element
 		}
 	}
 	
-
 	public void markStartEdgeSets()
 	{
 		  for(int i = 0; i<edgesets.size(); i++)
