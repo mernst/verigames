@@ -65,24 +65,41 @@ package scenes.game
 		
 		protected override function addedToStage(event:starling.events.Event):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			super.addedToStage(event);
-			if(LoginHelper.levelNumberString != null) //load from MongoDB
-			{
-				loadType = USE_DATABASE;
-				worldFileLoader = new URLLoader();
-				loadFile(worldFileLoader, LoginHelper.levelNumberString+"/xml", onWorldLoaded);
-				layoutLoader = new URLLoader();
-				loadFile(layoutLoader, LoginHelper.levelNumberString+"/layout", onLayoutLoaded);
-				constraintsLoader = new URLLoader();
-				loadFile(constraintsLoader, LoginHelper.levelNumberString+"/constraints", onConstraintsLoaded);
-			}
-			else if (!world_zip_file_to_be_played)
+//			if(loginHelper.levelObject != null) //load from MongoDB
+//			{
+//				loadType = USE_DATABASE;
+//				worldFileLoader = new URLLoader();
+//				loadFile(worldFileLoader, "/level/" + loginHelper.levelObject.xmlID+"/xml", onNetworkWorldLoaded);
+//				layoutLoader = new URLLoader();
+//				loadFile(layoutLoader, "/level/" + loginHelper.levelObject.layoutID+"/layout", onNetworkLayoutLoaded);
+//				constraintsLoader = new URLLoader();
+//				loadFile(constraintsLoader, "/level/" + loginHelper.levelObject.constraintsID+"/constraints", onNetworkConstraintsLoaded);
+//				
+//				//null this out after use
+//				loginHelper.levelObject = null;
+//			}
+//			else 
+				if (!world_zip_file_to_be_played)
 			{
 				loadType = USE_LOCAL;
 				
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				var fileName:String = obj["files"];
-				if(fileName && fileName.length > 0)
+				if(loginHelper.levelObject != null) //load from MongoDB
+				{
+					loadType = USE_DATABASE;
+					worldFile = "/level/" + loginHelper.levelObject.xmlID+"/xml";
+					layoutFile = "/level/" + loginHelper.levelObject.layoutID+"/layout";
+					constraintsFile = "/level/" + loginHelper.levelObject.constraintsID+"/constraints";	
+					
+					m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
+					
+					//null this out after use
+					loginHelper.levelObject = null;
+				}
+				else if(fileName && fileName.length > 0)
 				{
 					worldFile = "../SampleWorlds/DemoWorld/"+fileName+".zip";
 					layoutFile = "../SampleWorlds/DemoWorld/"+fileName+"Graph.zip";
@@ -128,8 +145,8 @@ package scenes.game
 			{
 				case USE_DATABASE:
 				{
-					loader.addEventListener(flash.events.Event.COMPLETE, callback);
-					loader.load(new URLRequest(LoginHelper.PROXY_URL +"/" +fileName+ "&method=DATABASE"));
+					fz.addEventListener(flash.events.Event.COMPLETE, callback);
+					fz.load(new URLRequest(LoginHelper.PROXY_URL +fileName+ "&method=DATABASE"));
 					break;
 				}
 				case USE_LOCAL:
@@ -145,6 +162,30 @@ package scenes.game
 					break;
 				}
 			}
+		}
+		
+		public function onNetworkLayoutLoaded(e:flash.events.Event):void {
+			//need to handle errors...
+			trace(e.target.data);
+			m_worldLayout = new XML(e.target.data); 
+			m_layoutLoaded = true;
+			//call, but probably wait on xml
+			tasksComplete();
+		}
+		
+		public function onNetworkConstraintsLoaded(e:flash.events.Event):void {
+			trace(e.target.data);
+			m_worldConstraints = new XML(e.target.data); 
+			m_constraintsLoaded = true;
+			//call, but probably wait on xml
+			tasksComplete();
+		}
+		
+		public function onNetworkWorldLoaded(e:flash.events.Event):void { 
+			trace(e.target.data);
+			var worldXML:XML  = new XML(e.target.data); 
+			m_worldLoaded = true;
+			parseXML(worldXML);
 		}
 		
 		public function onLayoutLoaded(byteArray:ByteArray):void {
