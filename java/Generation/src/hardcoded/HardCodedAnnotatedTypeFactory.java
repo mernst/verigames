@@ -30,7 +30,7 @@ public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Har
         }
 
         /**
-         * Handles String concatenation; only @Trusted + @Trusted = @Trusted.
+         * Handles String concatenation; at least one @Trusted + @Trusted = @Trusted.
          * Any other concatenation results in @Untursted.
          */
         @Override

@@ -1,5 +1,18 @@
 import random.quals.*;
 
+
+package java.util;
+
+class Random {
+	public @MaybeRandom boolean nextBoolean();
+	public @MaybeRandom float nextFloat();
+	public @MaybeRandom double nextDouble();
+	public @MaybeRandom double nextGaussian();
+	public @MaybeRandom long nextLong();
+	public @MaybeRandom int nextInt();
+}
+
+
 package java.security;
 
 class SecureRandom {
