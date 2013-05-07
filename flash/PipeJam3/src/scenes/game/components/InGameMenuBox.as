@@ -5,6 +5,7 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.display.Button;
 	import scenes.game.display.World;
+	import scenes.game.display.Level;
 	import starling.events.Event;
 	import events.NavigationEvent;
 
@@ -102,20 +103,18 @@ package scenes.game.components
 		
 		private function onSaveButtonTriggered():void
 		{
-			// TODO Auto Generated method stub
+			dispatchEvent(new starling.events.Event(Level.SAVE_LOCALLY, true, this));
 			
 		}
 		
 		private function onSubmitScoreButtonTriggered():void
 		{
-			// TODO Auto Generated method stub
-			
+			dispatchEvent(new starling.events.Event(Level.SUBMIT_SCORE, true, this));
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void
 		{
-			// TODO Auto Generated method stub
-			
+			dispatchEvent(new starling.events.Event(Level.SAVE_LAYOUT, true, this));
 		}
 		
 		private function onBackToGameButtonTriggered():void

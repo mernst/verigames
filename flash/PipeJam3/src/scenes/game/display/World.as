@@ -117,6 +117,10 @@ package scenes.game.display
 			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
 			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
+			
+			addEventListener(Level.SAVE_LAYOUT, onSaveLayoutFile);
+			addEventListener(Level.SUBMIT_SCORE, onSubmitScore);
+			addEventListener(Level.SAVE_LOCALLY, onSaveLocally);
 		}
 		
 		private function onShowGameMenuEvent():void
@@ -125,6 +129,24 @@ package scenes.game.display
 			addChild(inGameMenuBox);
 			inGameMenuBox.x = 150;
 			inGameMenuBox.y = 20;
+		}
+		
+		public function onSaveLayoutFile(event:starling.events.Event):void
+		{
+			if(active_level != null)
+				active_level.onSaveLayoutFile(event);
+		}
+		
+		public function onSubmitScore(event:starling.events.Event):void
+		{
+			if(active_level != null)
+				active_level.onSubmitScore(event);
+		}
+		
+		public function onSaveLocally(event:starling.events.Event):void
+		{
+			if(active_level != null)
+				active_level.onSaveLocally(event);
 		}
 		
 		private function onScoreChange(e:starling.events.Event):void

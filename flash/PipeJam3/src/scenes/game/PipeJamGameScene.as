@@ -67,21 +67,8 @@ package scenes.game
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			super.addedToStage(event);
-//			if(loginHelper.levelObject != null) //load from MongoDB
-//			{
-//				loadType = USE_DATABASE;
-//				worldFileLoader = new URLLoader();
-//				loadFile(worldFileLoader, "/level/" + loginHelper.levelObject.xmlID+"/xml", onNetworkWorldLoaded);
-//				layoutLoader = new URLLoader();
-//				loadFile(layoutLoader, "/level/" + loginHelper.levelObject.layoutID+"/layout", onNetworkLayoutLoaded);
-//				constraintsLoader = new URLLoader();
-//				loadFile(constraintsLoader, "/level/" + loginHelper.levelObject.constraintsID+"/constraints", onNetworkConstraintsLoaded);
-//				
-//				//null this out after use
-//				loginHelper.levelObject = null;
-//			}
-//			else 
-				if (!world_zip_file_to_be_played)
+			
+			if (!world_zip_file_to_be_played)
 			{
 				loadType = USE_LOCAL;
 				
@@ -162,30 +149,6 @@ package scenes.game
 					break;
 				}
 			}
-		}
-		
-		public function onNetworkLayoutLoaded(e:flash.events.Event):void {
-			//need to handle errors...
-			trace(e.target.data);
-			m_worldLayout = new XML(e.target.data); 
-			m_layoutLoaded = true;
-			//call, but probably wait on xml
-			tasksComplete();
-		}
-		
-		public function onNetworkConstraintsLoaded(e:flash.events.Event):void {
-			trace(e.target.data);
-			m_worldConstraints = new XML(e.target.data); 
-			m_constraintsLoaded = true;
-			//call, but probably wait on xml
-			tasksComplete();
-		}
-		
-		public function onNetworkWorldLoaded(e:flash.events.Event):void { 
-			trace(e.target.data);
-			var worldXML:XML  = new XML(e.target.data); 
-			m_worldLoaded = true;
-			parseXML(worldXML);
 		}
 		
 		public function onLayoutLoaded(byteArray:ByteArray):void {
@@ -279,10 +242,7 @@ package scenes.game
 				trace("everything loaded");
 				if(nextParseState)
 					nextParseState.removeFromParent();
-				
-				//			var levelName:String = world_nodes.worldNodeNameArray[0];
-				//			edgeSetGraphViewPanel.loadLevel(world_nodes.worldNodesDictionary[levelName]);
-				
+								
 				active_world = createWorldFromNodes(m_network, m_worldXML, m_worldLayout, m_worldConstraints);		
 				
 				addChild(active_world);

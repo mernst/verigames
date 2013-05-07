@@ -36,6 +36,8 @@ package scenes.login
 		public var RANDOM_REQUEST:int = 11;
 		public var GET_LEVEL_METADATA:int = 12;
 		public var GET_ALL_LEVEL_METADATA:int = 13;
+		public var SAVE_LAYOUT:int = 14;
+		public var REFUSE_LEVELS:int = 15;
 		
 		protected var m_currentRequestType:int = 0;
 		
@@ -46,8 +48,10 @@ package scenes.login
 		//static public var PROXY_URL:String = "http://128.208.6.231:8001";
 		static public var PROXY_URL:String = "http://128.95.2.112:8001";
 		//		protected var apiURL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:80";
+		
 		private var m_currentCallback:Function;
 		private var m_levelCallback:Function;
+		private var onRequestLevelFinishedCallback:Function;
 		
 		protected static var loginHelper:LoginHelper = null;		
 
@@ -73,7 +77,7 @@ package scenes.login
 			sendMessage(GET_ALL_LEVEL_METADATA);
 		}
 		
-		//connect to the db and get a list of levels
+		//called when level metadata is loaded 
 		public function setLevelMetadataFromCurrent(result:int, e:flash.events.Event):void
 		{
 			levelVector = currentJSONObjects;
@@ -98,6 +102,12 @@ package scenes.login
 		protected function waitForLevelVector(event:flash.events.Event):void
 		{
 			onGetLevelMetadata(m_levelCallback);
+		}
+		
+		public function saveLayoutFile(m_levelLayoutXML:XML):void
+		{
+			//need to set up proxy server to save this, and add in save constraints file when saving score
+			//sendMessage(SAVE_LAYOUT, m_levelLayoutXML.toString());
 		}
 		
 		protected function onCreateNewPlayer(callback:Function):void
@@ -125,10 +135,23 @@ package scenes.login
 			m_currentCallback = callback;
 		}
 		
+		//store the callback, before calling we want to send a refuse message to the RA
+		//so that levels can be played by more than one player at any one time
+		//i.e. we don't care if there's duplication in level playing
 		public function onRequestLevels(callback:Function):void
 		{
+			onRequestLevelFinishedCallback = callback;
+			m_currentCallback = onRequestLevelFinished;
 			sendMessage(REQUEST_LEVELS);
-			m_currentCallback = callback;
+		}
+		
+		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
+		{
+			//handle callback ourselves since we want to use request info, not refuse;
+			m_currentCallback = null;
+			m_currentRequestType = 0;
+			onRequestLevelFinishedCallback(result, e);
+			sendMessage(REFUSE_LEVELS);
 		}
 		
 		private function onCreateRandomLevel(callback:Function):void
@@ -194,7 +217,7 @@ package scenes.login
 		}
 
 		
-		protected function sendMessage(type:int, info:String = ""):void
+		protected function sendMessage(type:int, info:String = null):void
 		{
 			var request:String;
 			var method:String;
@@ -231,7 +254,11 @@ package scenes.login
 				case REQUEST_LEVELS:
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match";
 					method = URLRequestMethod.POST; 
-					break; 
+					break;
+				case REFUSE_LEVELS:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/refused&method=PUT";
+					method = URLRequestMethod.POST; 
+					break;
 				case START_LEVEL:
 				request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+currentLevel+"/started&method=PUT";
 					method = URLRequestMethod.POST; 
@@ -264,6 +291,10 @@ package scenes.login
 					request = "/metadata&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
+				case SAVE_LAYOUT:
+					request = "/saveLayout&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
 //				case RANDOM_REQUEST:
 //					request = playerNumber.text;
 //					method = URLRequestMethod.POST; 
@@ -277,6 +308,8 @@ package scenes.login
 			else
 			{
 				urlRequest.method = URLRequestMethod.POST;
+				if(info != null)
+					urlRequest.data = info;
 			}
 			var loader:URLLoader = new URLLoader();
 			configureListeners(loader);
