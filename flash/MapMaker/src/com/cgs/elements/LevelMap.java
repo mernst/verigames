@@ -79,15 +79,15 @@ public class LevelMap
 		//note - input ports are behind this edgeset
 		for(int i = 0; i<edgeSet.inputGridLines.size(); i++)
 		{
-			EdgeSet newEdgeSet = edgeSet.inputGridLines.get(i).fromEdgeSet;
-			if(newEdgeSet.isPlaced == false)
+			JointElement inJoint = edgeSet.inputGridLines.get(i).joint;
+			if(inJoint.isPlaced == false)
 			{
-				newEdgeSet.boundingBox.y = currentRow - 2;
-				newEdgeSet.isPlaced = true;
+				inJoint.boundingBox.y = currentRow - 2;
+				inJoint.isPlaced = true;
 				if(minimumRow > currentRow)
 					minimumRow = currentRow;
 				int newCurrentRow  = currentRow - 2;
-				int newMinimumRow = placeConnectedEdgeSets(newEdgeSet, newCurrentRow, minimumRow);
+				int newMinimumRow = placeConnectedEdgeSets(inJoint, newCurrentRow, minimumRow);
 				if(minimumRow > newMinimumRow)
 					minimumRow = newMinimumRow;
 			}

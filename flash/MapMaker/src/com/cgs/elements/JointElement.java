@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class JointElement extends NodeElement
 {
+	public Rectangle boundingBox;
+	public Boolean isPlaced;
+	
 	/**
 	 * Create Joint using nodes's input/output ports
 	 * @param _nodeToCreateFrom
@@ -13,6 +16,8 @@ public class JointElement extends NodeElement
 		super(_nodeToCreateFrom.id);
 		this.inputPorts = _nodeToCreateFrom.inputPorts;
 		this.outputPorts = _nodeToCreateFrom.outputPorts;
+		boundingBox = new Rectangle();
+		isPlaced = false;
 	}
 	
 	/**
