@@ -194,10 +194,6 @@ package scenes.game
 			}
 			else
 				trace("zip failed");
-			
-			//call, but probably wait on xml
-			tasksComplete();
-			
 		}
 		
 		private function constraintsZipLoaded(e:flash.events.Event):void {
@@ -210,10 +206,6 @@ package scenes.game
 			}
 			else
 				trace("zip failed");
-			
-			//call, but probably wait on xml
-			tasksComplete();
-			
 		}
 		
 		public function parseXML(world_xml:XML):void

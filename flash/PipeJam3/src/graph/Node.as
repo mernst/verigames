@@ -63,6 +63,8 @@ package graph
 					if (String(_metadata.data.id).length > 0)
 						node_id = String(_metadata.data.id);
 			}
+			
+			metadata = null;
 			incoming_ports = new Vector.<Port>();
 			outgoing_ports = new Vector.<Port>();
 		}

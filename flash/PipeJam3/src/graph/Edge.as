@@ -151,6 +151,7 @@ package graph
 				}
 			}
 			
+			metadata = null;
 			// Default is to add control points to make a straight line between endpoints
 			spline_control_points = _spline_control_points;
 			if (!spline_control_points) {
