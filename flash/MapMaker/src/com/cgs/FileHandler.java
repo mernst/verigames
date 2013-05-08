@@ -16,7 +16,7 @@ public class FileHandler {
 	protected NodeElement graph;
 	
 	//used to build up current element
-	protected BoardInfo currentBoard;
+	protected NodeElement currentLevel;
 	protected NodeElement currentNode;
 	protected EdgeElement currentEdge;
 	

@@ -37,15 +37,15 @@ public class LevelMap
 	public void sizeClusters()
 	{
 		//set sizes based on # of connections
-		for(int edgeSetIndex = 0; edgeSetIndex < level.edgesets.size(); edgeSetIndex++)
+		for(int nodeIndex = 0; nodeIndex < level.edgesets.size(); nodeIndex++)
 		{
-			EdgeSet edgeset = level.edgesets.get(edgeSetIndex);
+			EdgeSet edgeset = level.edgesets.get(nodeIndex);
 				
 			//assign heights and widths
-			if(edgeset.inputGridLines.size() > edgeset.outputGridLines.size())
-				edgeset.boundingBox.width = edgeset.inputGridLines.size();
-			else if(edgeset.outputGridLines.size() > 1)
-				edgeset.boundingBox.width = edgeset.outputGridLines.size();
+			if(edgeset.inputEdgeSetEdges.size() > edgeset.outputEdgeSetEdges.size())
+				edgeset.boundingBox.width = edgeset.inputEdgeSetEdges.size();
+			else if(edgeset.outputEdgeSetEdges.size() > 1)
+				edgeset.boundingBox.width = edgeset.outputEdgeSetEdges.size();
 			else
 				edgeset.boundingBox.width = 1;
 			
@@ -77,25 +77,25 @@ public class LevelMap
 	protected int placeConnectedEdgeSets(EdgeSet edgeSet, int currentRow, int minimumRow)
 	{
 		//note - input ports are behind this edgeset
-		for(int i = 0; i<edgeSet.inputGridLines.size(); i++)
+		for(int i = 0; i<edgeSet.inputEdgeSetEdges.size(); i++)
 		{
-			JointElement inJoint = edgeSet.inputGridLines.get(i).joint;
-			if(inJoint.isPlaced == false)
+			EdgeSet newEdgeSet = edgeSet.inputEdgeSetEdges.get(i).fromEdgeSet;
+			if(newEdgeSet.isPlaced == false)
 			{
-				inJoint.boundingBox.y = currentRow - 2;
-				inJoint.isPlaced = true;
+				newEdgeSet.boundingBox.y = currentRow - 2;
+				newEdgeSet.isPlaced = true;
 				if(minimumRow > currentRow)
 					minimumRow = currentRow;
 				int newCurrentRow  = currentRow - 2;
-				int newMinimumRow = placeConnectedEdgeSets(inJoint, newCurrentRow, minimumRow);
+				int newMinimumRow = placeConnectedEdgeSets(newEdgeSet, newCurrentRow, minimumRow);
 				if(minimumRow > newMinimumRow)
 					minimumRow = newMinimumRow;
 			}
 		}
 		
-		for(int i = 0; i<edgeSet.outputGridLines.size(); i++)
+		for(int i = 0; i<edgeSet.outputEdgeSetEdges.size(); i++)
 		{
-			EdgeSet newEdgeSet = edgeSet.outputGridLines.get(i).edgeSet;
+			EdgeSet newEdgeSet = edgeSet.outputEdgeSetEdges.get(i).toEdgeSet;
 			if(newEdgeSet.isPlaced == false)
 			{
 				newEdgeSet.boundingBox.y = currentRow + 2;
@@ -151,12 +151,12 @@ public class LevelMap
 
 			//shorten edges by having them in the same row as one they connect to, if possible
 			//check only the first port, live with the others where ever they connect
-			if(edgeSet.outputGridLines.size() > 0)
+			if(edgeSet.outputEdgeSetEdges.size() > 0)
 			{
-				GridLine outputEdgeSetEdge = edgeSet.outputGridLines.get(0);
+				EdgeSetEdge outputEdgeSetEdge = edgeSet.outputEdgeSetEdges.get(0);
 				int currentColumn = edgeSet.boundingBox.x;
 				int currentRow = edgeSet.boundingBox.y;
-				int possibleColumn = outputEdgeSetEdge.edgeSet.boundingBox.x;
+				int possibleColumn = outputEdgeSetEdge.toEdgeSet.boundingBox.x;
 				//try to place it in exact right spot, and if that doesn't work, back out toward original position
 				while(possibleColumn > currentColumn && nodeArray[possibleColumn][currentRow] != null)
 				{
@@ -181,9 +181,9 @@ public class LevelMap
 
 			//shorten edges by having them in the same row as one they connect to, if possible
 			//check only the first port, live with the others where ever they connect
-			if(edgeSet.inputGridLines.size() > 0)
+			if(edgeSet.inputEdgeSetEdges.size() > 0)
 			{
-				GridLine inputEdgeSetEdge = edgeSet.inputGridLines.get(0);
+				EdgeSetEdge inputEdgeSetEdge = edgeSet.inputEdgeSetEdges.get(0);
 				int currentColumn = edgeSet.boundingBox.x;
 				int currentRow = edgeSet.boundingBox.y;
 				int possibleColumn = inputEdgeSetEdge.fromEdgeSet.boundingBox.x;
@@ -214,21 +214,21 @@ public class LevelMap
 			EdgeSet edgeSet = level.edgesets.get(i);
 			
 			//trace backward connections. Check to make sure higher row has higher connection else switch.
-			if(edgeSet.inputGridLines.size() > 1)
+			if(edgeSet.inputEdgeSetEdges.size() > 1)
 			{
 				//organize connections by comparing starting node's rank with neighbor
 				//loop through those above you, remember the currently highest rank, and switch with that at the end
-				for(int j = 0; j<edgeSet.inputGridLines.size(); j++)
+				for(int j = 0; j<edgeSet.inputEdgeSetEdges.size(); j++)
 				{
-					EdgeSet fromEdgeSet = edgeSet.inputGridLines.get(j).fromEdgeSet;
-					int currentHighestRow = edgeSet.inputGridLines.get(j).inputPosition;
+					EdgeSet fromEdgeSet = edgeSet.inputEdgeSetEdges.get(j).fromEdgeSet;
+					int currentHighestRow = edgeSet.inputEdgeSetEdges.get(j).inputPosition;
 					int highestEdgePosition = 0;
-					for(int k = j+1; k<edgeSet.inputGridLines.size(); k++)
+					for(int k = j+1; k<edgeSet.inputEdgeSetEdges.size(); k++)
 					{							
-						EdgeSet nextEdgeSet = edgeSet.inputGridLines.get(k).fromEdgeSet;
+						EdgeSet nextEdgeSet = edgeSet.inputEdgeSetEdges.get(k).fromEdgeSet;
 						if(fromEdgeSet != null && nextEdgeSet != null)
 						{
-							int nextEdgeSetRow = edgeSet.inputGridLines.get(k).inputPosition;
+							int nextEdgeSetRow = edgeSet.inputEdgeSetEdges.get(k).inputPosition;
 							
 							if(currentHighestRow < nextEdgeSetRow)
 							{
@@ -239,10 +239,10 @@ public class LevelMap
 					}
 					if(highestEdgePosition != 0)
 					{
-						GridLine jEdgeSetEdge = edgeSet.inputGridLines.get(j);
-						GridLine kEdgeSetEdge = edgeSet.inputGridLines.get(highestEdgePosition);
-						edgeSet.inputGridLines.set(j, kEdgeSetEdge);
-						edgeSet.inputGridLines.set(highestEdgePosition, jEdgeSetEdge);
+						EdgeSetEdge jEdgeSetEdge = edgeSet.inputEdgeSetEdges.get(j);
+						EdgeSetEdge kEdgeSetEdge = edgeSet.inputEdgeSetEdges.get(highestEdgePosition);
+						edgeSet.inputEdgeSetEdges.set(j, kEdgeSetEdge);
+						edgeSet.inputEdgeSetEdges.set(highestEdgePosition, jEdgeSetEdge);
 						int oldJPos = jEdgeSetEdge.inputPosition;
 						jEdgeSetEdge.inputPosition = kEdgeSetEdge.inputPosition;
 						kEdgeSetEdge.inputPosition = oldJPos;
@@ -253,21 +253,21 @@ public class LevelMap
 			
 			//trace forward connections. Check to make sure higher row has higher connection else switch.
 			//trace backward connections. Check to make sure higher row has higher connection else switch.
-			if(edgeSet.outputGridLines.size() > 1)
+			if(edgeSet.outputEdgeSetEdges.size() > 1)
 			{
 				//organize connections by comparing starting node's rank with neighbor
 				//loop through those above you, remember the currently highest rank, and switch with that at the end
-				for(int j = 0; j<edgeSet.outputGridLines.size(); j++)
+				for(int j = 0; j<edgeSet.outputEdgeSetEdges.size(); j++)
 				{
-					EdgeSet fromEdgeSet = edgeSet.outputGridLines.get(j).edgeSet;
-					int currentHighestRow = edgeSet.outputGridLines.get(j).outputPosition;
+					EdgeSet fromEdgeSet = edgeSet.outputEdgeSetEdges.get(j).toEdgeSet;
+					int currentHighestRow = edgeSet.outputEdgeSetEdges.get(j).outputPosition;
 					int highestEdgePosition = 0;
-					for(int k = j+1; k<edgeSet.outputGridLines.size(); k++)
+					for(int k = j+1; k<edgeSet.outputEdgeSetEdges.size(); k++)
 					{							
-						EdgeSet nextEdgeSet = edgeSet.outputGridLines.get(k).edgeSet;
+						EdgeSet nextEdgeSet = edgeSet.outputEdgeSetEdges.get(k).toEdgeSet;
 						if(fromEdgeSet != null && nextEdgeSet != null)
 						{
-							int nextEdgeSetRow = edgeSet.outputGridLines.get(k).outputPosition;
+							int nextEdgeSetRow = edgeSet.outputEdgeSetEdges.get(k).outputPosition;
 							
 							if(currentHighestRow < nextEdgeSetRow)
 							{
@@ -278,10 +278,10 @@ public class LevelMap
 					}
 					if(highestEdgePosition != 0)
 					{
-						GridLine jEdgeSetEdge = edgeSet.outputGridLines.get(j);
-						GridLine kEdgeSetEdge = edgeSet.outputGridLines.get(highestEdgePosition);
-						edgeSet.outputGridLines.set(j, kEdgeSetEdge);
-						edgeSet.outputGridLines.set(highestEdgePosition, jEdgeSetEdge);
+						EdgeSetEdge jEdgeSetEdge = edgeSet.outputEdgeSetEdges.get(j);
+						EdgeSetEdge kEdgeSetEdge = edgeSet.outputEdgeSetEdges.get(highestEdgePosition);
+						edgeSet.outputEdgeSetEdges.set(j, kEdgeSetEdge);
+						edgeSet.outputEdgeSetEdges.set(highestEdgePosition, jEdgeSetEdge);
 						int oldJPos = jEdgeSetEdge.outputPosition;
 						jEdgeSetEdge.outputPosition = kEdgeSetEdge.outputPosition;
 						kEdgeSetEdge.outputPosition = oldJPos;
@@ -396,8 +396,5 @@ public class LevelMap
 			edgeSet.boundingBox.finalXPos = columnStartingPos[edgeSet.boundingBox.x] + centeringAmount;
 			edgeSet.boundingBox.finalYPos = edgeSet.boundingBox.y;
 		}
-		
-		//now layout the joints in between these
-		
 	}
 }

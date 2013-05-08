@@ -3,7 +3,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ArrayList;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -28,9 +27,6 @@ public class MapMaker
 {
 	public HashMap<String, EdgeElement> edges;
 	protected HashMap<String, String> addedEdgeHashMap;
-	protected HashMap<String, GridLine> addedLineHashMap;
-	protected Map<String, BoardInfo> boardHashMap;
-	protected Map<String, ArrayList<JointElement>> nodeIdToJointListHashMap;
 	
 	protected Graph graph;
 	
@@ -39,7 +35,6 @@ public class MapMaker
 	protected EdgeSet currentEdgeSet;
 	protected NodeElement currentNode;
 	protected EdgeElement currentEdge;
-	protected BoardInfo currentBoard;
 	
 	protected String attributeKey;
 	protected boolean inNode = false;
@@ -121,7 +116,7 @@ public class MapMaker
 			  {
 				  runSaxParser(inputFile);
 				  attachNodes();
-				  createJointsAndGridlinesFromEdges(edges);
+				  removeDuplicateEdges(edges);
 				  
 				  LayoutHelper lh = new LayoutHelper();
 				  lh.organizeNodes(graph); 
@@ -141,7 +136,7 @@ public class MapMaker
 			  {
 				  runSaxParser(inputFile);
 				  attachNodes();
-				  createJointsAndGridlinesFromEdges(edges);
+				  removeDuplicateEdges(edges);
 				  
 				  ConstraintHelper ch = new ConstraintHelper();
 				  ch.attachNodes();
@@ -192,11 +187,6 @@ public class MapMaker
 						edges.put(id, edge);
 						edge.parent = currentEdgeSet;
 					}
-					else if (qName.equalsIgnoreCase("board")) {
-						String bName = attributes.getValue("name");
-						currentBoard = new BoardInfo(bName, currentLevel.id);
-						boardHashMap.put(currentLevel.id + "_" + bName, currentBoard);
-					}
 					else if (qName.equalsIgnoreCase("node")) {
 						String id = attributes.getValue("id");
 						String kind = attributes.getValue("kind");
@@ -217,18 +207,12 @@ public class MapMaker
 							Port port = edge.outputPort;
 							currentNode.addInputPort(port);
 							port.setNode(currentNode);
-							if (currentNode.kind.equalsIgnoreCase("outgoing")) {
-								currentBoard.associateOutgoingPort(port);
-							}
 						}
 						else
 						{
 							Port port = edge.inputPort;
 							currentNode.addOutputPort(port);
 							port.setNode(currentNode);
-							if (currentNode.kind.equalsIgnoreCase("incoming")) {
-								currentBoard.associateIncomingPort(port);
-							}
 						}
 					}
 					else if (qName.equalsIgnoreCase("edge")) {
@@ -281,8 +265,9 @@ public class MapMaker
 		graph.attachNodes();
 	}
 	
-	//create Joints, add to hashmap. Create GridLines, associate with 
-	public void createJointsAndGridlinesFromEdges(HashMap<String, EdgeElement> edges)
+	//add edges to hashmap, if they don't exist, else edge as duplicate
+	//also, tell input and output edges sets about the edge
+	public void removeDuplicateEdges(HashMap<String, EdgeElement> edges)
 	{
 		Collection<EdgeElement> values = edges.values();
 		
@@ -290,154 +275,35 @@ public class MapMaker
 		for(Iterator<EdgeElement> iter = values.iterator(); iter.hasNext();)
 		{
 			edge = iter.next();
-			
-			if (edge.inputPort.connectedNode != null) {
-				NodeElement iNode = edge.inputPort.connectedNode;
-				// Check to see if joint(s) have been created for this node
-				ArrayList<JointElement> iJoints = nodeIdToJointListHashMap.get(iNode.id);
-				if (iJoints == null) {
-					// If not, create joint(s)
-					iJoints = makeJointsFromNode(iNode, boardHashMap);
-					nodeIdToJointListHashMap.put(iNode.id, iJoints);
-					// iJoints: Joints going FROM other edges TO this edge
-					// for joint in iJoints
-					//   for port in joint.incomingPorts
-					//     createLine: other edges -> iNode
-					//   for port in joint.outgoingPorts
-					//     createLine: iNode -> this edge
-					for(int jindx=0; jindx<iJoints.size(); jindx++) {
-						JointElement ijoint = iJoints.get(jindx);
-						// Note: only MERGE would have multiple input ports, most likely there will be only one
-						for(int inport=0; inport<ijoint.inputPorts.size(); inport++) {
-							Port port = ijoint.inputPorts.get(inport);
-							GridLine line = createLine(port, ijoint, false);
-							//Associate line with Port, this is easier than using a Map since we would need 
-							// multiple keys (for subboards, there are multiple lines per node)
-							port.connectedLine = line;
-							//addedEdgeHashMap.put(edge.parent.id + "->" + edge.parent.id, edge.id);
-						}
-						// Note: only SPLIT would have multiple output ports, most likely there will be only one
-						for(int outport=0; outport<ijoint.outputPorts.size(); outport++) {
-							Port port = ijoint.outputPorts.get(outport);
-							GridLine line = createLine(port, ijoint, true);
-							//Associate line with Port, this is easier than using a Map since we would need 
-							// multiple keys (for subboards, there are multiple lines per node)
-							port.connectedLine = line;
-							//addedEdgeHashMap.put(edge.parent.id + "->" + edge.parent.id, edge.id);
-						}//ijoint.outputPorts port loop
-					}//iJoints loop
-				}//if no iJoints
-			}//if input node
-			if (edge.outputPort.connectedNode != null) {
-				NodeElement oNode = edge.outputPort.connectedNode;
-				// Check to see if joint(s) have been created for this node
-				ArrayList<JointElement> oJoints = nodeIdToJointListHashMap.get(oNode.id);
-				if (oJoints == null) {
-					// If not, create joint(s)
-					oJoints = makeJointsFromNode(oNode, boardHashMap);
-					nodeIdToJointListHashMap.put(oNode.id, oJoints);
-					// oJoints: Joints going FROM this edge TO other edges
-					// for joint in oJoints
-					//   for port in joint.incomingPorts
-					//     createLine: this edge -> oNode
-					//   for port in joint.outgoingPorts
-					//     createLine: oNode -> other edges
-					for(int jindx=0; jindx<oJoints.size(); jindx++) {
-						JointElement ojoint = oJoints.get(jindx);
-						// Note: only MERGE would have multiple input ports, most likely there will be only one
-						for(int inport=0; inport<ojoint.inputPorts.size(); inport++) {
-							Port port = ojoint.inputPorts.get(inport);
-							GridLine line = createLine(port, ojoint, false);
-							//Associate line with Port, this is easier than using a Map since we would need 
-							// multiple keys (for subboards, there are multiple lines per node)
-							port.connectedLine = line;
-							//addedEdgeHashMap.put(edge.parent.id + "->" + edge.parent.id, edge.id);
-						}
-						// Note: only SPLIT would have multiple output ports, most likely there will be only one
-						for(int outport=0; outport<ojoint.outputPorts.size(); outport++) {
-							Port port = ojoint.outputPorts.get(outport);
-							GridLine line = createLine(port, ojoint, true);
-							//Associate line with Port, this is easier than using a Map since we would need 
-							// multiple keys (for subboards, there are multiple lines per node)
-							port.connectedLine = line;
-							//addedEdgeHashMap.put(edge.parent.id + "->" + edge.parent.id, edge.id);
-						}//ojoint.outputPorts loop
-					}//oJoints loop
-				}//if no oJoints
-			}//if output node
-		}//iterate over all edges
-	}
-	
-	/**
-	 * Creates a Joint(s) based on input node. Note that only SUBBOARD node creates multiple joints
-	 * @param node Node to create joints from
-	 * @return List of joints created
-	 */
-	private static ArrayList<JointElement> makeJointsFromNode(NodeElement node, Map<String, BoardInfo> boardHashMap)
-	{
-		ArrayList<JointElement> joints = new ArrayList<JointElement>();
-		JointElement joint;
-		if (node instanceof SubboardNodeElement) {
-			SubboardNodeElement subnode = (SubboardNodeElement) node;
-			BoardInfo board = boardHashMap.get(subnode.levelID + "_" + subnode.boardID);
-			if (board == null) {
-				System.out.println("WARNING: Corresponding BOARD name not found for SUBBOARD node: " + subnode.levelID + "." + subnode.boardID);
-				return joints;
-			}
-			// Only multiple joints for SUBBOARD - one for each input and output
-			for(int iport=0; iport<node.inputPorts.size(); iport++)
+			if(edge.outputPort.connectedNode != null)
 			{
-				Port outerIncomingPort = node.inputPorts.get(iport);
-				ArrayList<Port> iPorts = new ArrayList<Port>();
-				iPorts.add(outerIncomingPort);
-				// Find corresponding INCOMING pipe inside actual BOARD
-				Port innerIncomingSubboardPort = board.getIncomingPort(outerIncomingPort.portNumber);
-				if (innerIncomingSubboardPort == null) {
-					System.out.println("WARNING: SUBBOARD node incoming port:'" + outerIncomingPort.portNumber + "' not found for board: " + subnode.levelID + "." + subnode.boardID);
-					continue;
+				NodeElement node = edge.outputPort.connectedNode;
+
+				if(node.outputPorts != null)
+				{
+					for(int index=0; index<node.outputPorts.size(); index++)
+					{
+						EdgeElement outputEdge = node.outputPorts.get(index).connectedEdge;
+						if(edge.parent.id != outputEdge.parent.id)
+						{
+							//check to see if we've already added this edge, if so, mark current as duplicate
+							String resultValue = addedEdgeHashMap.get(edge.parent.id + "->" + outputEdge.parent.id);
+							if(resultValue != null)
+								edge.isDuplicate = true;
+							else
+							{
+								addedEdgeHashMap.put(edge.parent.id + "->" + outputEdge.parent.id, edge.id);
+								EdgeSetEdge edgeSetEdge = new EdgeSetEdge(edge.parent.id + "->" + outputEdge.parent.id,
+										(EdgeSet)edge.parent, (EdgeSet)outputEdge.parent);
+								((EdgeSet)edge.parent).addOutputEdgeSetEdge(edgeSetEdge);
+								((EdgeSet)outputEdge.parent).addInputEdgeSetEdge(edgeSetEdge);
+							}
+						}
+					}
 				}
-				ArrayList<Port> oPorts = new ArrayList<Port>();
-				oPorts.add(innerIncomingSubboardPort);
-				joint = new JointElement(node, iPorts, oPorts);
-				joints.add(joint);
 			}
-			for(int oport=0; oport<node.outputPorts.size(); oport++)
-			{
-				Port outerOutgoingPort = node.outputPorts.get(oport);
-				ArrayList<Port> oPorts = new ArrayList<Port>();
-				oPorts.add(outerOutgoingPort);
-				// Find corresponding OUTGOING pipe inside actual BOARD
-				Port innerOutgoingSubboardPort = board.getOutgoingPort(outerOutgoingPort.portNumber);
-				if (innerOutgoingSubboardPort == null) {
-					System.out.println("WARNING: SUBBOARD node outgoing port:'" + outerOutgoingPort.portNumber + "' not found for board: " + subnode.levelID + "." + subnode.boardID);
-					continue;
-				}
-				ArrayList<Port> iPorts = new ArrayList<Port>();
-				iPorts.add(innerOutgoingSubboardPort);
-				joint = new JointElement(node, iPorts, oPorts);
-				joints.add(joint);
-			}
-		} else if (node.kind.equalsIgnoreCase("get")) {
-			// TODO: GET node may also require multiple joints
-			joint = new JointElement(node);
-			joints.add(joint);
-		} else {
-			// Create one joint for the corresponding node
-			joint = new JointElement(node);
-			joints.add(joint);
+			else
+				System.out.println("ee"+edge.id);
 		}
-		return joints;
 	}
-	
-	private GridLine createLine(Port port, JointElement joint, Boolean jointToEdgeSet)
-	{
-		EdgeSet edgeSet = edgeIDtoEdgeSet.get(port.connectedEdge.id);
-		if (edgeSet == null) {
-			System.out.println("WARNING: Edge found w/out associated EdgeSet: id=" + port.connectedEdge.id);
-			return null;
-		}
-		GridLine line = new GridLine(port.connectedNode.id, edgeSet, joint, jointToEdgeSet);
-		return line;
-	}
-	
 }

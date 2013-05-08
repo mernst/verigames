@@ -7,7 +7,6 @@ public class Port extends Element
 	
 	public EdgeElement connectedEdge;
 	public NodeElement connectedNode;
-	public GridLine connectedLine;
 	
 	public Port(String _edgeID)
 	{
