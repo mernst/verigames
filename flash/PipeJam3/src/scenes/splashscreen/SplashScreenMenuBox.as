@@ -43,6 +43,7 @@ package scenes.splashscreen
 		protected var levelList:List = null;
 		protected var levelMetadataArray:Array = null;
 		protected var matchArrayObjects:Array = null;
+		protected var matchArrayMetadata:Array = null;
 		
 		public function SplashScreenMenuBox(parent:SplashScreenScene)
 		{
@@ -167,51 +168,56 @@ package scenes.splashscreen
 				{
 					var levels:Object = JSON.parse(e.target.data);
 					matchArrayObjects = levels.matches;
+					matchArrayMetadata = new Array();
 					//clear out old metadata
 					levelMetadataArray = new Array;
 					//now query for the metadata for those levels
 					trace(matchArrayObjects.length);
-					//can't send these all at once (login helper wouldn't like it), so send first here
+					//check with the login helper to make sure it has name data before going on
 					if(matchArrayObjects.length > 0)
-						loginHelper.onGetLevelMetadata(onGetLevelMetadataComplete, matchArrayObjects[0].levelId);
+						loginHelper.onGetLevelMetadata(onGetLevelMetadataComplete);
+					else
+						trace("No level available");
 				}
 				else
-					onGetLevelMetadataComplete(LoginHelper.EVENT_COMPLETE, null);
+					onGetLevelMetadataComplete(null);
 			}
 		}
 		
-		protected function onGetLevelMetadataComplete(result:int, e:flash.events.Event):void
+		protected function onGetLevelMetadataComplete(levelMetadataVector:Vector.<Object>):void
 		{
-			if(result == LoginHelper.EVENT_COMPLETE)
+			for(var i:int = 0; i<matchArrayObjects.length; i++)
 			{
-				if(e != null)
-				{
-					var levels:Object = JSON.parse(e.target.data);
-					var levelMetadata:Object = levels.metadata;
-					
-					if(levelMetadata && levelMetadata.properties && levelMetadata.properties.name)
-						levelMetadataArray.push(levelMetadata.properties.name);
-					else
-						levelMetadataArray.push("Foo");
-				}
+				var match:Object = matchArrayObjects[i];
+				var levelName:String = fileLevelNameFromMatch(match, levelMetadataVector);
+				levelMetadataArray.push(levelName);
+			}
 			
-				if(levelMetadataArray.length == matchArrayObjects.length)
-				{
-					//we are done, show everything
-					// Creating the dataprovider
-					var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
-					levelList.dataProvider = matchCollection;
-					
-					m_mainMenu.visible = false;
-					m_levelMenu.visible = true;
-				}
-				else //send the next request
-					loginHelper.onGetLevelMetadata(onGetLevelMetadataComplete,  matchArrayObjects[levelMetadataArray.length].levelId);
-			}
-			else
+			//we are done, show everything
+			// Creating the dataprovider
+			var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
+			levelList.dataProvider = matchCollection;
+			
+			m_mainMenu.visible = false;
+			m_levelMenu.visible = true;
+
+		}
+		
+		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>):String
+		{
+			var levelCount:int = 1; //use if we don't find a match
+			for(var i:int=0; i<levelMetadataVector.length;i++)
 			{
-				//report error!
+				var obj:Object = levelMetadataVector[i];
+				if(match.levelId == obj.levelId)
+				{
+					matchArrayMetadata.push(obj);
+					return obj.name;
+				}
 			}
+			var levelName:String = "Level " + levelCount;
+			levelCount++;
+			return levelName;
 		}
 		
 		protected function onSignInButtonTriggered(e:starling.events.Event):void
@@ -225,12 +231,9 @@ package scenes.splashscreen
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			LoginHelper.levelNumberString = matchArrayObjects[levelList.selectedIndex].levelID;
+			LoginHelper.getLoginHelper().levelObject = matchArrayMetadata[levelList.selectedIndex];
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-			
-			//null this out after use
-			LoginHelper.levelNumberString = null;
 		}
 		
 		private function onExitButtonTriggered():void

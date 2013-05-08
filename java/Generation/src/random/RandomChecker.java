@@ -6,9 +6,12 @@ import random.quals.MaybeRandom;
 
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
+import checkers.types.AnnotatedTypeFactory;
 import checkers.util.AnnotationUtils;
 
 import javax.lang.model.util.Elements;
+
+import com.sun.source.tree.CompilationUnitTree;
 
 /**
  * 
@@ -26,5 +29,10 @@ public class RandomChecker extends TrustedChecker implements
 
         UNTRUSTED = AnnotationUtils.fromClass(elements, MaybeRandom.class);
         TRUSTED   = AnnotationUtils.fromClass(elements, Random.class);
+    }
+
+    @Override
+    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+        return new RandomAnnotatedTypeFactory(this, root);
     }
 }

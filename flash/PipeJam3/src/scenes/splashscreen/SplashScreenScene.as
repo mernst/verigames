@@ -7,6 +7,7 @@ package scenes.splashscreen
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
+	import scenes.login.LoginHelper;
 	
 	import scenes.Scene;
 	
@@ -20,11 +21,13 @@ package scenes.splashscreen
 	{
 
 		protected var startMenuBox:SplashScreenMenuBox;
-	
+		
 		public function SplashScreenScene(game:PipeJamGame)
 		{
 			super(game);
 			
+			//start this loading so we don't have to wait so long
+			LoginHelper.getLoginHelper().getLevelMetadata();
 
 		}
 		

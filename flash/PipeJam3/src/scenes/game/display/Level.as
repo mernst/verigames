@@ -23,6 +23,8 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
+	import scenes.login.LoginHelper;
+	
 	/**
 	 * Level contains multiple boards that each contain multiple pipes
 	 */
@@ -97,6 +99,10 @@ package scenes.game.display
 		public static var SCORE_CHANGED:String = "score_changed";
 		public static var CENTER_ON_COMPONENT:String = "center_on_component";
 		
+		public static var SAVE_LAYOUT:String = "save_layout";
+		public static var SUBMIT_SCORE:String = "submit_score";
+		public static var SAVE_LOCALLY:String = "save_locally";
+		
 		public var m_levelLayoutXML:XML;
 		private var m_gameNodeDictionary:Dictionary;
 		public var m_nodeList:Vector.<GameNode>;
@@ -138,8 +144,7 @@ package scenes.game.display
 			setDisplayData();
 			
 			selectedComponents = new Vector.<GameComponent>;
-			var count:int = 0;
-			var maxCount:int = 150;
+
 			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
 			{
 				for each(var node:Node in boardNode.nodeDictionary)
@@ -159,7 +164,7 @@ package scenes.game.display
 			
 			//create node for sets
 			m_nodeList = new Vector.<GameNode>; 
-			var gameNodeSetDictionary:Dictionary = new Dictionary;
+			m_gameNodeDictionary = new Dictionary;
 			for each(var edgeSet:EdgeSetRef in edgeSetDictionary)
 			{
 				//find the layout information for the node
@@ -175,12 +180,9 @@ package scenes.game.display
 				
 				var gameNodeSet:GameNode = new GameNode(edgeSetLayoutXML, edgeSet, edgeSetEdges);
 				m_nodeList.push(gameNodeSet);
-				gameNodeSetDictionary[edgeSet.id] = gameNodeSet;
+				m_gameNodeDictionary[edgeSet.id] = gameNodeSet;
 				
 				trace(gameNodeSet.boundingBox.x + " " + gameNodeSet.boundingBox.y);
-				count++;
-			//	if(count >20)
-			//		break;
 			}
 			
 			trace("gamenodeset count = " + m_nodeList.length);
@@ -222,8 +224,8 @@ package scenes.game.display
 					edgeArray[i].y -= minY;
 				}
 				
-				var fromNodeSet:GameNode = gameNodeSetDictionary[fromEdgeSetID];
-				var toNodeSet:GameNode = gameNodeSetDictionary[toEdgeSetID];
+				var fromNodeSet:GameNode = m_gameNodeDictionary[fromEdgeSetID];
+				var toNodeSet:GameNode = m_gameNodeDictionary[toEdgeSetID];
 				
 				var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, fromNodeSet, toNodeSet);
 				newGameEdge.globalPosition = new Point(minX, minY);
@@ -239,13 +241,75 @@ package scenes.game.display
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
 			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
+			
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
+			
 			takeSnapshot();
 		}	
+		
+		public function onSaveLayoutFile(event:starling.events.Event):void
+		{
+			updateLayoutXML();
+			
+			m_levelLayoutXML.@id = "Layout " + (Math.round(Math.random()*1000));
+			LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXML);
+			
+		}
+		
+		
+		public function onSubmitScore(event:starling.events.Event):void
+		{
+
+		}
+		
+		public function onSaveLocally(event:starling.events.Event):void
+		{
+
+		}
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
 			//dispose();
+		}
+		
+		public function updateLayoutXML():void
+		{
+			var children:XMLList = m_levelLayoutXML.children();
+			for each(var child:XML in children)
+			{
+				var childName:String = child.localName();
+				if(childName.indexOf("edgeset") != -1)
+				{
+					var childID:String = child.@id;
+					var edgeSet:GameNode = m_gameNodeDictionary[childID];
+					child.@top = edgeSet.y;
+					child.@left = edgeSet.x;
+				}
+				else if(childName.indexOf("edge") != -1)
+				{
+					//TODO - fix this when we know what we are doing with the new layout file
+				}
+			}
+		}
+		
+		public function updateConstraintXML():void
+		{
+			var children:XMLList = m_levelLayoutXML.children();
+			for each(var child:XML in children)
+			{
+				var childName:String = child.localName();
+				if(childName.indexOf("edgeset") != -1)
+				{
+					var childID:String = child.@id;
+					var edgeSet:GameNode = m_gameNodeDictionary[childID];
+					child.@top = edgeSet.y;
+					child.@left = edgeSet.x;
+				}
+				else if(childName.indexOf("edge") != -1)
+				{
+					//TODO - fix this when we know what we are doing with the new layout file
+				}
+			}
 		}
 		
 		override public function dispose():void
@@ -498,7 +562,6 @@ package scenes.game.display
 			var edgeSetList:XMLList = m_levelLayoutXML.edgeset;
 			for each(var layout:XML in edgeSetList)
 			{
-				//contains the name, and it's at the end to avoid matches like level_name1
 				var levelName:String = layout.@id;
 				
 				if(levelName == name)

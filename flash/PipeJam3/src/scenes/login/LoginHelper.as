@@ -16,7 +16,7 @@ package scenes.login
 	{
 		protected var GAME_ID:int = 1;
 		public var playerID:String = "51365e65e4b0ad10f4079c88";
-		public static var levelNumberString:String = null;
+		public var levelObject:Object = null;
 		
 		public var numLevels:int = 5;
 		public var currentLevel:String;
@@ -35,6 +35,9 @@ package scenes.login
 		public var DEACTIVATE_ALL_LEVELS:int = 10;
 		public var RANDOM_REQUEST:int = 11;
 		public var GET_LEVEL_METADATA:int = 12;
+		public var GET_ALL_LEVEL_METADATA:int = 13;
+		public var SAVE_LAYOUT:int = 14;
+		public var REFUSE_LEVELS:int = 15;
 		
 		protected var m_currentRequestType:int = 0;
 		
@@ -45,10 +48,15 @@ package scenes.login
 		//static public var PROXY_URL:String = "http://128.208.6.231:8001";
 		static public var PROXY_URL:String = "http://128.95.2.112:8001";
 		//		protected var apiURL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:80";
+		
 		private var m_currentCallback:Function;
+		private var m_levelCallback:Function;
+		private var onRequestLevelFinishedCallback:Function;
 		
 		protected static var loginHelper:LoginHelper = null;		
 
+		protected var levelVector:Vector.<Object> = null;
+		protected var currentJSONObjects:Vector.<Object> = null
 		
 		public static function getLoginHelper():LoginHelper
 		{
@@ -60,6 +68,46 @@ package scenes.login
 		
 		public function LoginHelper()
 		{
+		}
+		
+		//connect to the db and get a list of levels
+		public function getLevelMetadata():void
+		{
+			m_currentCallback = setLevelMetadataFromCurrent;
+			sendMessage(GET_ALL_LEVEL_METADATA);
+		}
+		
+		//called when level metadata is loaded 
+		public function setLevelMetadataFromCurrent(result:int, e:flash.events.Event):void
+		{
+			levelVector = currentJSONObjects;
+			m_currentCallback = null;
+		}
+		
+		
+		public function onGetLevelMetadata(callback:Function):void
+		{
+			if(levelVector == null)
+			{
+				m_levelCallback = callback;
+				//wait for levelVector to be non-null
+				var timer : Timer = new Timer (100, 1);
+				timer.addEventListener (TimerEvent.TIMER, waitForLevelVector);
+				timer.start();
+			}
+			else
+				callback(levelVector);
+		}
+		
+		protected function waitForLevelVector(event:flash.events.Event):void
+		{
+			onGetLevelMetadata(m_levelCallback);
+		}
+		
+		public function saveLayoutFile(m_levelLayoutXML:XML):void
+		{
+			//need to set up proxy server to save this, and add in save constraints file when saving score
+			//sendMessage(SAVE_LAYOUT, m_levelLayoutXML.toString());
 		}
 		
 		protected function onCreateNewPlayer(callback:Function):void
@@ -87,10 +135,23 @@ package scenes.login
 			m_currentCallback = callback;
 		}
 		
+		//store the callback, before calling we want to send a refuse message to the RA
+		//so that levels can be played by more than one player at any one time
+		//i.e. we don't care if there's duplication in level playing
 		public function onRequestLevels(callback:Function):void
 		{
+			onRequestLevelFinishedCallback = callback;
+			m_currentCallback = onRequestLevelFinished;
 			sendMessage(REQUEST_LEVELS);
-			m_currentCallback = callback;
+		}
+		
+		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
+		{
+			//handle callback ourselves since we want to use request info, not refuse;
+			m_currentCallback = null;
+			m_currentRequestType = 0;
+			onRequestLevelFinishedCallback(result, e);
+			sendMessage(REFUSE_LEVELS);
 		}
 		
 		private function onCreateRandomLevel(callback:Function):void
@@ -111,14 +172,6 @@ package scenes.login
 			m_currentCallback = callback;
 		}
 		
-		public function onGetLevelMetadata(callback:Function, levelID:String = null):void
-		{
-			if(levelID != null)
-				currentLevel = levelID;
-			
-			sendMessage(GET_LEVEL_METADATA);
-			m_currentCallback = callback;
-		}
 		
 		protected function onActivateLevel(callback:Function):void
 		{
@@ -164,7 +217,7 @@ package scenes.login
 		}
 
 		
-		protected function sendMessage(type:int, info:String = ""):void
+		protected function sendMessage(type:int, info:String = null):void
 		{
 			var request:String;
 			var method:String;
@@ -201,7 +254,11 @@ package scenes.login
 				case REQUEST_LEVELS:
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match";
 					method = URLRequestMethod.POST; 
-					break; 
+					break;
+				case REFUSE_LEVELS:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/refused&method=PUT";
+					method = URLRequestMethod.POST; 
+					break;
 				case START_LEVEL:
 				request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+currentLevel+"/started&method=PUT";
 					method = URLRequestMethod.POST; 
@@ -230,6 +287,14 @@ package scenes.login
 					request = "/ra/games/"+GAME_ID+"/levels/"+currentLevel+"/metadata&method=GET";
 					method = URLRequestMethod.POST; 
 					break;
+				case GET_ALL_LEVEL_METADATA:
+					request = "/metadata&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case SAVE_LAYOUT:
+					request = "/saveLayout&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
 //				case RANDOM_REQUEST:
 //					request = playerNumber.text;
 //					method = URLRequestMethod.POST; 
@@ -243,10 +308,9 @@ package scenes.login
 			else
 			{
 				urlRequest.method = URLRequestMethod.POST;
-				urlRequest.requestHeaders.push(new URLRequestHeader("X-HTTP-Method-Override",  method));
+				if(info != null)
+					urlRequest.data = info;
 			}
-			urlRequest.data = new Object();
-			urlRequest.data.abc = "abc";
 			var loader:URLLoader = new URLLoader();
 			configureListeners(loader);
 			
@@ -289,8 +353,27 @@ package scenes.login
 		private function completeHandler(e:flash.events.Event):void
 		{
 			trace("in complete " + e.target.data);
+			var objString:String = e.target.data;
+			var startIndex:int = 0;
+			var index:int = objString.indexOf("_id", 10); //skip past beginning of string
+			if(index != -1) //assume it a JSON database string, and parse it
+			{
+				var endIndex:int = objString.lastIndexOf("}", index);
+				currentJSONObjects = new Vector.<Object>;
+				while(endIndex != -1)
+				{
+					currentJSONObjects.push(JSON.parse(objString.substring(startIndex, endIndex+1)));
+					startIndex = endIndex+1;
+					index = objString.indexOf("_id", endIndex+20);
+					endIndex = objString.lastIndexOf("}", index);
+				}
+				currentJSONObjects.push(JSON.parse(objString.substring(startIndex)));
+				
+				setLevelMetadataFromCurrent(EVENT_COMPLETE, e);
+			}
+			else if(m_currentCallback != null)
+				m_currentCallback(EVENT_COMPLETE, e);
 			m_currentRequestType = 0;
-			m_currentCallback(EVENT_COMPLETE, e);
 		}
 	}
 }

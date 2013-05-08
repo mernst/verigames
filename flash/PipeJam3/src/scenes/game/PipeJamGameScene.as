@@ -65,24 +65,28 @@ package scenes.game
 		
 		protected override function addedToStage(event:starling.events.Event):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			super.addedToStage(event);
-			if(LoginHelper.levelNumberString != null) //load from MongoDB
-			{
-				loadType = USE_DATABASE;
-				worldFileLoader = new URLLoader();
-				loadFile(worldFileLoader, LoginHelper.levelNumberString+"/xml", onWorldLoaded);
-				layoutLoader = new URLLoader();
-				loadFile(layoutLoader, LoginHelper.levelNumberString+"/layout", onLayoutLoaded);
-				constraintsLoader = new URLLoader();
-				loadFile(constraintsLoader, LoginHelper.levelNumberString+"/constraints", onConstraintsLoaded);
-			}
-			else if (!world_zip_file_to_be_played)
+			
+			if (!world_zip_file_to_be_played)
 			{
 				loadType = USE_LOCAL;
 				
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				var fileName:String = obj["files"];
-				if(fileName && fileName.length > 0)
+				if(loginHelper.levelObject != null) //load from MongoDB
+				{
+					loadType = USE_DATABASE;
+					worldFile = "/level/" + loginHelper.levelObject.xmlID+"/xml";
+					layoutFile = "/level/" + loginHelper.levelObject.layoutID+"/layout";
+					constraintsFile = "/level/" + loginHelper.levelObject.constraintsID+"/constraints";	
+					
+					m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
+					
+					//null this out after use
+					loginHelper.levelObject = null;
+				}
+				else if(fileName && fileName.length > 0)
 				{
 					worldFile = "../SampleWorlds/DemoWorld/"+fileName+".zip";
 					layoutFile = "../SampleWorlds/DemoWorld/"+fileName+"Graph.zip";
@@ -128,8 +132,8 @@ package scenes.game
 			{
 				case USE_DATABASE:
 				{
-					loader.addEventListener(flash.events.Event.COMPLETE, callback);
-					loader.load(new URLRequest(LoginHelper.PROXY_URL +"/" +fileName+ "&method=DATABASE"));
+					fz.addEventListener(flash.events.Event.COMPLETE, callback);
+					fz.load(new URLRequest(LoginHelper.PROXY_URL +fileName+ "&method=DATABASE"));
 					break;
 				}
 				case USE_LOCAL:
@@ -238,10 +242,7 @@ package scenes.game
 				trace("everything loaded");
 				if(nextParseState)
 					nextParseState.removeFromParent();
-				
-				//			var levelName:String = world_nodes.worldNodeNameArray[0];
-				//			edgeSetGraphViewPanel.loadLevel(world_nodes.worldNodesDictionary[levelName]);
-				
+								
 				active_world = createWorldFromNodes(m_network, m_worldXML, m_worldLayout, m_worldConstraints);		
 				
 				addChild(active_world);
