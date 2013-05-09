@@ -84,6 +84,30 @@ package assets
 		[Embed(source="../../lib/assets/Star.png")]
 		public var StarClass:Class;
 		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading1.png")]
+		public var Loading1Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading2.png")]
+		public var Loading2Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading3.png")]
+		public var Loading3Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading4.png")]
+		public var Loading4Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading5.png")]
+		public var Loading5Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading6.png")]
+		public var Loading6Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading7.png")]
+		public var Loading7Class:Class;
+		
+		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
+		public var Loading8Class:Class;
+		
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]

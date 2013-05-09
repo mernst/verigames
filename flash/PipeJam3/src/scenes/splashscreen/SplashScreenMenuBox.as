@@ -198,6 +198,8 @@ package scenes.splashscreen
 			var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
 			levelList.dataProvider = matchCollection;
 			
+			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+			
 			m_mainMenu.visible = false;
 			m_levelMenu.visible = true;
 
@@ -276,7 +278,7 @@ package scenes.splashscreen
 				m_levelMenu.y = m_mainMenu.y;
 				
 			}
-			
+			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			loginHelper.onRequestLevels(onRequestLevels);
 		}
 		

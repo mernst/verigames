@@ -30,9 +30,6 @@ package
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
 		
-		/** True to not output any trace statements. */
-		public static var SUPPRESS_TRACE_STATEMENTS:Boolean = true;
-		
 		public function PipeJamGame()
 		{
 			super();

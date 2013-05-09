@@ -428,7 +428,6 @@ package scenes.game.display
 			var gFromNodeTopSide:Number = m_fromNode.y;
 			var gFromNodeBottomSide:Number = m_fromNode.y+m_fromNode.height;
 
-			//this is really simple compared to how it was, is this really right
 			m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
 			m_jointPoints[3] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[4].y);						
 		}
