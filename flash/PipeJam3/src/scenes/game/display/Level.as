@@ -182,7 +182,7 @@ package scenes.game.display
 				m_nodeList.push(gameNodeSet);
 				m_gameNodeDictionary[edgeSet.id] = gameNodeSet;
 				
-				trace(gameNodeSet.boundingBox.x + " " + gameNodeSet.boundingBox.y);
+	//			trace(gameNodeSet.boundingBox.x + " " + gameNodeSet.boundingBox.y);
 			}
 			
 			trace("gamenodeset count = " + m_nodeList.length);
