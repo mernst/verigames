@@ -10,19 +10,20 @@ package
     import flash.utils.getDefinitionByName;
     import flash.utils.getQualifiedClassName;
     
+    import scenes.BaseComponent;
     import scenes.Scene;
     
     import starling.core.Starling;
     import starling.display.BlendMode;
     import starling.display.Button;
     import starling.display.Image;
+    import starling.display.MovieClip;
     import starling.display.Sprite;
     import starling.events.Event;
     import starling.events.KeyboardEvent;
     import starling.text.TextField;
     import starling.textures.Texture;
     import starling.utils.VAlign;
-    import scenes.BaseComponent;
 
     public class Game extends BaseComponent
     {
@@ -30,6 +31,13 @@ package
         protected var mCurrentScene:Scene;
 		protected var scenesToCreate:Dictionary = new Dictionary;
 		protected var sceneDictionary:Dictionary = new Dictionary;
+		
+		protected var busyAnimationImages:Vector.<Texture> = null;
+		protected var busyAnimationMovieClip:MovieClip;
+		
+		public static var START_BUSY_ANIMATION:String = "startBusyAnimation";
+		public static var STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
+
 		
 		public static var SUPPRESS_TRACE_STATEMENTS:Boolean = true;
 		
@@ -47,12 +55,26 @@ package
 			addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			
+			addEventListener(START_BUSY_ANIMATION, onStartBusyAnimation);
+			addEventListener(STOP_BUSY_ANIMATION, onStopBusyAnimation);
         }
 		
 		protected function prepareAssets():void
 		{
 			assets.AssetInterface.prepareSounds();
 		   assets.AssetInterface.loadBitmapFont("Game","DesyrelTexture", "DesyrelXml");	
+		   
+		   //load images if we haven't
+		   if(busyAnimationImages == null)
+		   {
+				busyAnimationImages = new Vector.<Texture>();
+				for(var i:int = 1; i<9; i++)
+			   		busyAnimationImages.push(AssetInterface.getTexture("Game", "Loading"+i+"Class"));
+				busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
+				
+			   
+		   }
 		}
         
 		protected function onAddedToStage(event:Event):void
@@ -90,8 +112,23 @@ package
 				sceneDictionary[name] = mCurrentScene;
 				mCurrentScene.setPosition(0,0,480,320);
 			}
-            addChild(mCurrentScene);
+			
+			addChildAt(mCurrentScene, 0);
         }
+		
+		public function onStartBusyAnimation(e:Event):void
+		{
+			busyAnimationMovieClip.x = (width-busyAnimationMovieClip.width)/2;
+			busyAnimationMovieClip.y = (height-busyAnimationMovieClip.height)/2;
+			addChild(busyAnimationMovieClip);
+			Starling.juggler.add(this.busyAnimationMovieClip);
+		}
+		
+		public function onStopBusyAnimation(e:Event):void
+		{
+			removeChild(busyAnimationMovieClip);
+			Starling.juggler.remove(this.busyAnimationMovieClip);
+		}
 		
 		/**
 		 * This prints any debug messages to Javascript if embedded in a webpage with a script "printDebug(msg)"

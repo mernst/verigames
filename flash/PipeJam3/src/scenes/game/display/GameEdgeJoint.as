@@ -15,7 +15,6 @@ package scenes.game.display
 
 	public class GameEdgeJoint extends GameComponent
 	{		
-		private var m_shape:Shape;
 		public var m_showError:Boolean = false;
 		private var m_isLastJoint:Boolean;
 		private var m_isConnectionJoint:Boolean;
@@ -29,6 +28,7 @@ package scenes.game.display
 
 		public var count:int = 0;
 		private var m_quad:Quad;
+		private var m_highlightQuad:Quad;
 		
 		
 		public function GameEdgeJoint(parentEdge:GameEdgeContainer, fromComponent:GameComponent, toComponent:GameComponent, isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
@@ -73,11 +73,11 @@ package scenes.game.display
 				removeEventListener(TouchEvent.TOUCH, onTouch);
 			}
 			disposeChildren();
-			if(m_shape)
-			{
-				m_shape.removeChildren(0, -1, true);
-				m_shape.dispose();
-			}
+			if(m_highlightQuad)
+				m_highlightQuad.dispose();
+			if(m_quad)
+				m_quad.dispose();
+
 			super.dispose();
 		}
 		
@@ -303,18 +303,19 @@ package scenes.game.display
 			color = getColor();
 		
 			removeChildren();
-			if(m_shape)
-			{
-				m_shape.removeChildren(0, -1, true);
-				m_shape.dispose();
-			}
 
+			if(m_quad)
+				m_quad.dispose();
+			if(m_highlightQuad)
+				m_highlightQuad.dispose();
+			
 			if(isHover)
 			{
-				m_quad = new Quad(lineSize+1, lineSize+1, 0xeeeeee);
-				m_quad.x = -lineSize;
-				m_quad.y = -lineSize;
-				addChild(m_quad);
+
+				m_highlightQuad = new Quad(lineSize+1, lineSize+1, 0xeeeeee);
+				m_highlightQuad.x = -lineSize;
+				m_highlightQuad.y = -lineSize;
+				addChild(m_highlightQuad);
 			}
 			m_quad = new Quad(lineSize, lineSize, color);
 			m_quad.x = -lineSize/2;

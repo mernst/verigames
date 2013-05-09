@@ -16,9 +16,9 @@ package scenes.game
 	import scenes.game.display.World;
 	import scenes.login.LoginHelper;
 	
+	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
-	import starling.core.Starling;
 	
 	import state.ParseXMLState;
 	
@@ -56,7 +56,7 @@ package scenes.game
 		protected var start_button:Button;
 		private var active_world:World;
 		private var m_network:Network;
-		
+				
 	
 		public function PipeJamGameScene(game:PipeJamGame)
 		{
@@ -67,7 +67,8 @@ package scenes.game
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			super.addedToStage(event);
-			
+			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
+
 			if (!world_zip_file_to_be_played)
 			{
 				loadType = USE_LOCAL;

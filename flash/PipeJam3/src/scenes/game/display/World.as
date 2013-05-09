@@ -176,9 +176,7 @@ package scenes.game.display
 			if (newLevel == active_level) {
 				return;
 			}
-			//if (active_level != null) {
-			//	active_level.dispose();
-			//}
+
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);
@@ -186,6 +184,7 @@ package scenes.game.display
 			
 			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
 			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
+			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		
 
@@ -193,6 +192,11 @@ package scenes.game.display
 		private function onRemovedFromStage():void
 		{
 			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
+			if(active_level)
+				removeChild(active_level, true);
+			m_network = null;
+			world_xml = null;
+			m_layoutXML = null;
 		}
 		
 		public function createWorld(worldNodesDictionary:Dictionary):void

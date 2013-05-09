@@ -269,7 +269,6 @@ package scenes.game.display
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
-			//dispose();
 		}
 		
 		public function updateLayoutXML():void
