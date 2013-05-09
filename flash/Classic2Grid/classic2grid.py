@@ -11,13 +11,19 @@ class Port:
 
 
 ### Dictionaries ###
-# boardedges[levelname][boardname][0][portnum] = incoming ports
-# boardedges[levelname][boardname][1][portnum] = outgoing ports
+# boardedges[levelname][boardname][0][portnum] = incoming port
+# boardedges[levelname][boardname][1][portnum] = outgoing port
 boardedges = {}
 
 # edgesets[edgeid][0] = edge set id
 # edgesets[edgeid][1] = edge set port
 edgesets = {}
+
+# numedgesetedges[edgesetid] = # of edgerefs in this edge-set
+numedgesetedges = {}
+
+# extraedgesetlines[edgesetid] = Array of extra lines generated from SUBBOARD nodes connecting to INCOMING/OUTGOING edges
+extraedgesetlines = {}
 
 # nodekinds[nodeid] = node kind
 nodekinds = {}
@@ -58,35 +64,19 @@ def getboardedge(lname, bname, inout, portnum):
 # Output joint XML for a given SUBBOARD node's input or output port
 def port2joint(nid, input, portnum, edgeid, otherlineid=None):
 	suffix = '__OUT__'
+	inputs = 0
+	outputs = 0
 	if input:
+		inputs = 1
 		suffix = '__IN__'
+		if otherlineid:
+			outputs = 1
+	else:
+		outputs = 1
+		if otherlineid:
+			inputs = 1
 	jointid = nid + suffix + portnum
-	out = '    <joint id="%s">\n' % jointid
-	if input:
-		out += '      <input>\n'
-		suffix = '__OUT__'
-	else:
-		if otherlineid:
-			out += '      <input>\n'
-			out += '        <port num="0" line="%s"/>\n' % otherlineid
-			out += '      </input>\n'
-		else:
-			out += '      <input/>\n'
-		out += '      <output>\n'
-		suffix = '__IN__'
-	lineid = edgeid + suffix
-	out += '        <port num="0" line="%s"/>\n' % lineid
-	if input:
-		out += '      </input>\n'
-		if otherlineid:
-			out += '      <output>\n'
-			out += '        <port num="0" line="%s"/>\n' % otherlineid
-			out += '      </output>\n'
-		else:
-			out += '      <output/>\n'
-	else:
-		out += '      </output>\n'
-	out += '    </joint>\n'
+	out = '    <joint id="%s" inputs="%s" outputs="%s"/>\n' % (jointid, inputs, outputs)
 	return out
 
 # Create the line XML for a line leading from a joint to a box
@@ -139,10 +129,8 @@ for lx in wx.getElementsByTagName('level'):
 				for px in nx.getElementsByTagName('input')[0].getElementsByTagName('port'):
 					port = Port(px.attributes['num'].value, px.attributes['edge'].value, nid)
 					addboardedge(lname, bname, 1, port)
-
 # Step 2: Convert line by line to Grid XML:
-#	a) <edge-set> becomes <box> (same id used)
-#	b) <node> becomes <joint>
+#	a) <node> becomes <joint>
 #		* ids are all the same EXCEPT for SUBBOARD, INCOMING, OUTGOING
 #		* These special <node>s generate one <joint> per
 #		* input port and output port and connect to
@@ -154,6 +142,7 @@ for lx in wx.getElementsByTagName('level'):
 #		* outputs: 'n751__IN__0', 'n751__IN__1', etc
 #		* where n751 is the original node id for the
 #		* SUBBOARD node
+#   b) <edge-set> becomes <box> (same id used)
 #	c) <edge> becomes 2 separate <line>s
 #		* The <line> corresponding to the <edge> input
 #		* with id = e1 (going from n1 to n2) would be:
@@ -174,13 +163,14 @@ for lx in wx.getElementsByTagName('level'):
 	# Reset level-specific dictionaries
 	edgesets = {}
 	nodekinds = {}
+	numedgesetedges = {}
+	extraedgesetlines = {}
 	# Node ids for SUBBOARDS, INCOMING, and OUTGOING nodes that correspond to multiple joints (instead of exactly one)
 	lname = lx.attributes['name'].value
 	out += '  <level id="Application">\n'
-	# 2a: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
+	# Gather the associated edge ids for edgesets dictionary
 	for esx in lx.getElementsByTagName('edge-set'):
 		edgesetid = esx.attributes['id'].value
-		out += '    <box id="%s"/>\n' % edgesetid
 		edgesetport = 0
 		for ex in esx.getElementsByTagName('edgeref'):
 			edgeid = ex.attributes['id'].value
@@ -188,7 +178,8 @@ for lx in wx.getElementsByTagName('level'):
 			edgesets[edgeid].append(edgesetid)
 			edgesets[edgeid].append(edgesetport)
 			edgesetport += 1
-	# 2b: Replace <node> with <joint>, making one <joint> per in/out for SUBBOARD, INCOMING, OUTGOING nodes
+		numedgesetedges[edgesetid] = edgesetport
+	# 2a: Replace <node> with <joint>, making one <joint> per in/out for SUBBOARD, INCOMING, OUTGOING nodes
 	# for subboards, also create lines between subboard joint and inner incoming/outgoing edges within the board
 	extrasubboardlines = ""
 	for nx in lx.getElementsByTagName('node'):
@@ -210,9 +201,12 @@ for lx in wx.getElementsByTagName('level'):
 						print 'Edge set not found for edge: %s' % edgeport.edgeid
 						continue
 					setid = edgesets.get(edgeport.edgeid)[0]
-					setport = edgesets.get(edgeport.edgeid)[1]
 					fromnid = nid + '__IN__' + portnum
-					lineid = '%s->%s' % (fromnid, setid)
+					lineid = '%s___%s' % (fromnid, setid)
+					if extraedgesetlines.get(setid) is None:
+						extraedgesetlines[setid] = []
+					setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
+					extraedgesetlines[setid].append(lineid)
 					extrasubboardlines += makeline2box(lineid, fromnid, '0', setid, setport)
 					out += port2joint(nid, True, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 				else:
@@ -231,30 +225,30 @@ for lx in wx.getElementsByTagName('level'):
 						print 'Edge set not found for edge: %s' % edgeport.edgeid
 						continue
 					setid = edgesets.get(edgeport.edgeid)[0]
-					setport = edgesets.get(edgeport.edgeid)[1]
 					tonid = nid + '__OUT__' + portnum
-					lineid = '%s->%s' % (setid, tonid)
+					lineid = '%s___%s' % (setid, tonid)
+					if extraedgesetlines.get(setid) is None:
+						extraedgesetlines[setid] = []
+					setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
+					extraedgesetlines[setid].append(lineid)
 					extrasubboardlines += makeline2joint(lineid, tonid, '0', setid, setport)
 					out += port2joint(nid, False, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 				else:
 					out += port2joint(nid, False, px.attributes['num'].value, px.attributes['edge'].value)
 		else:
-			out += '    <joint id="%s">\n' % nid
-			# Process inputs, replacing port 'edge' attribute with 'line'
-			out += '      <input>\n'
-			for px in nx.getElementsByTagName('input')[0].getElementsByTagName('port'):
-				# The edge is broken into two lines, the one going OUT of the box (into this joint) has id suffix __OUT__
-				lineid = px.attributes['edge'].value + "__OUT__"
-				out += '        <port num="%s" line="%s"/>\n' % (px.attributes['num'].value, lineid)
-			out += '      </input>\n'
-			# Process outputs, replacing port 'edge' attribute with 'line'
-			out += '      <output>\n'
-			for px in nx.getElementsByTagName('output')[0].getElementsByTagName('port'):
-				# The edge is broken into two lines, the one coming INTO the box (out of this joint) has id suffix __IN__
-				lineid = px.attributes['edge'].value + "__IN__"
-				out += '        <port num="%s" line="%s"/>\n' % (px.attributes['num'].value, lineid)
-			out += '      </output>\n'
-			out += '    </joint>\n'
+			numinputs = len(nx.getElementsByTagName('input')[0].getElementsByTagName('port'))
+			numoutputs = len(nx.getElementsByTagName('output')[0].getElementsByTagName('port'))
+			out += '    <joint id="%s" inputs="%s" outputs="%s"/>\n' % (nid, numinputs, numoutputs)
+	# 2b: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
+	for esx in lx.getElementsByTagName('edge-set'):
+		edgesetid = esx.attributes['id'].value
+		# The box will have X number of lines coming from the original edges of the edge set
+		# PLUS any lines coming from other edge sets that connect thru SUBBOARD nodes
+		extraports = 0
+		if extraedgesetlines.get(edgesetid) is not None:
+			extraports = len(extraedgesetlines.get(edgesetid))
+		edgesetports = numedgesetedges[edgesetid] + extraports
+		out += '    <box id="%s" lines="%s"/>\n' % (edgesetid, edgesetports)
 	# 2c: Replace <edge> with __IN__ <line> and __OUT__ <line>
 	for ex in lx.getElementsByTagName('edge'):
 		edgeid = ex.attributes['id'].value
