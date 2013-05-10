@@ -32,6 +32,8 @@
 		public var m_isLastSegment:Boolean;
 		
 		public var currentTouch:Touch;
+		public var currentDragSegment:Boolean = false;
+		
 		private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
 		{
 			ARROW_TEXT.repeat = true;
@@ -44,6 +46,7 @@
 			m_parentEdge = _parentEdge;
 			m_fromComponent = _fromNode;
 			m_toComponent = _toNode;
+			
 			m_isNodeExtensionSegment = _isNodeExtensionSegment;
 			m_isLastSegment = _isLastSegment;
 			m_isDirty = false;
@@ -55,7 +58,8 @@
 		
 		override public function dispose():void
 		{
-			if (m_disposed) {
+			//if we are the currentDragSegment we will be re-added, so keep original values
+			if (m_disposed || currentDragSegment) {
 				return;
 			}
 			m_parentEdge = null;
@@ -120,8 +124,10 @@
 					
 					var currentMoveLocation:Point = touches[0].getLocation(this);
 					var previousLocation:Point = touches[0].getPreviousLocation(this);
-					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);		
+					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);	
+					currentDragSegment = true;
 					m_parentEdge.rubberBandEdgeSegment(updatePoint, this);
+					currentDragSegment = false;
 
 					
 				}
