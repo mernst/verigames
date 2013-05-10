@@ -208,6 +208,9 @@ for lx in gx.getElementsByTagName('level'):
 				if edgex is None:
 					print 'Warning: no edge found for id %s' % layout.id
 					continue
+				# Remove any current layout points, we only want the new layout points to be saved
+				for oldptx in edgex.getElementsByTagName('point'):
+					edgex.removeChild(oldptx)
 				for pt in layout.points:
 					ptx = allxml.createElement('point')
 					ptx.setAttribute('x', tostr(pt.x))
@@ -221,6 +224,10 @@ for lx in gx.getElementsByTagName('level'):
 					continue
 				nodex.setAttribute('x', tostr(layout.pos.x))
 				nodex.setAttribute('y', tostr(layout.pos.y))
+				if 'width' in nodex.attributes.keys():
+					nodex.removeAttribute('width')
+				if 'height' in nodex.attributes.keys():
+					nodex.removeAttribute('height')
 				if layout.width is not None:
 					nodex.setAttribute('width', tostr(layout.width))
 				if layout.height is not None:
