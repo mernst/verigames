@@ -81,9 +81,7 @@ package scenes.game
 					worldFile = "/level/" + loginHelper.levelObject.xmlID+"/xml";
 					layoutFile = "/level/" + loginHelper.levelObject.layoutID+"/layout";
 					constraintsFile = "/level/" + loginHelper.levelObject.constraintsID+"/constraints";	
-					
-					m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
-					
+										
 					//null this out after use
 					loginHelper.levelObject = null;
 				}
@@ -94,6 +92,7 @@ package scenes.game
 					constraintsFile = "../SampleWorlds/DemoWorld/"+fileName+"Constraints.zip";
 				}
 				
+				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
 			
 				fz1 = new FZip();
 				loadFile(null, worldFile, worldZipLoaded, fz1);
