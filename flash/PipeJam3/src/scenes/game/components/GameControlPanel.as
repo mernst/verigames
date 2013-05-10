@@ -220,7 +220,7 @@ package scenes.game.components
 			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			// Pass over all nodes, find nodes involved in scoring
-			for each(var nodeSet:GameNode in level.m_nodeList)
+			for each(var nodeSet:GameNode in level.getNodes())
 			{
 				if (nodeSet.isEditable()) { // Decision: don't score nodes that you can't change unless they have errors
 					if (nodeSet.isWide()) {

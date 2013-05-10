@@ -117,20 +117,20 @@ package scenes
 			this.y = _y;
 		}
 		
-		public function findBoundingBox(componentXML:XML):Rectangle
+		public static function findBoundingBox(componentXML:XML):Rectangle
 		{			
 			var bb:Rectangle = new Rectangle;
-			bb.x = componentXML.@left;
-			bb.y = componentXML.@top;
-			bb.width = componentXML.@right - componentXML.@left;
-			bb.height = componentXML.@bottom - componentXML.@top;
-
+			bb.x = componentXML.@x;
+			bb.y = componentXML.@y;
+			bb.width = componentXML.@width;
+			bb.height = componentXML.@height;
+			
 			return bb;
 		}
 		
 		public function findNodePosition(componentXML:XML):Point
 		{
-			var pos:Point = new Point(componentXML.@top, componentXML.@left);
+			var pos:Point = new Point(componentXML.@x, componentXML.@y);
 			
 			return pos;
 		}

@@ -25,13 +25,12 @@ package scenes.game.display
 		
 		protected var m_parentEdge:GameEdgeContainer;
 		public var m_closestWall:int = 0;
-
+		
 		public var count:int = 0;
 		private var m_quad:Quad;
 		private var m_highlightQuad:Quad;
 		
-		
-		public function GameEdgeJoint(parentEdge:GameEdgeContainer, fromComponent:GameComponent, toComponent:GameComponent, isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
+		public function GameEdgeJoint(fromComponent:GameComponent, toComponent:GameComponent, parentEdge:GameEdgeContainer = null, isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
 		{
 			super();
 			
@@ -271,8 +270,9 @@ package scenes.game.display
 					node.setOutgoingEdge(iNextEdge);
 				}
 			}
-			
-			m_parentEdge.rubberBandEdge(updatePoint, isOutgoingEdge);
+			if (m_parentEdge) {
+				m_parentEdge.rubberBandEdge(updatePoint, isOutgoingEdge);
+			}
 		}
 		
 

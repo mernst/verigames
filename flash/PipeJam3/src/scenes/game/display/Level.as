@@ -71,7 +71,6 @@ package scenes.game.display
 		 * an X coordinate on the world map */
 		public var rank_index:uint = 0;
 		
-		
 		/** The icon associated with this level on the world map */
 		public var level_icon:WorldMapLevelImage;
 						
@@ -79,15 +78,13 @@ package scenes.game.display
 		public var levelNodes:LevelNodes;
 		
 		private var m_edgeSetLayoutXML:XML;
-		private var m_edgeVector:Vector.<GameEdgeContainer>;
-
-		protected var edgeDictionary:Dictionary = new Dictionary;
-		protected var edgeSetDictionary:Dictionary = new Dictionary;
-				
+		
+		private var edgeDictionary:Dictionary = new Dictionary;
+		private var edgeSetDictionary:Dictionary = new Dictionary;
+		
 		private var selectedComponents:Vector.<GameComponent>;
 		
-		protected var marqueeRect:starling.display.Shape = new starling.display.Shape;
-		
+		private var marqueeRect:starling.display.Shape = new starling.display.Shape;
 		
 		public static var LEVEL_SELECTED:String = "level_selected";
 		public static var COMPONENT_SELECTED:String = "component_selected";
@@ -103,10 +100,16 @@ package scenes.game.display
 		public static var SUBMIT_SCORE:String = "submit_score";
 		public static var SAVE_LOCALLY:String = "save_locally";
 		
-		public var m_levelLayoutXML:XML;
-		private var m_gameNodeDictionary:Dictionary;
-		public var m_nodeList:Vector.<GameNode>;
-		public var m_boundingBox:Rectangle;
+		private var m_levelLayoutXML:XML;
+		
+		private var boxDictionary:Dictionary;
+		private var jointDictionary:Dictionary;
+		
+		private var m_nodeList:Vector.<GameNode>;
+		private var m_edgeList:Vector.<GameEdgeContainer>;
+		private var m_jointList:Vector.<GameJointNode>;
+		
+		private var m_boundingBox:Rectangle;
 		
 		/**
 		 * Level contains multiple boards that each contain multiple pipes
@@ -140,7 +143,7 @@ package scenes.game.display
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			m_edgeVector = new Vector.<GameEdgeContainer>;
+			m_edgeList = new Vector.<GameEdgeContainer>;
 			setDisplayData();
 			
 			selectedComponents = new Vector.<GameComponent>;
@@ -159,18 +162,20 @@ package scenes.game.display
 				}
 			}
 			trace(m_levelLayoutXML.@id);
-			//find bounding box, to set scale
-			m_boundingBox = findBoundingBox(m_levelLayoutXML);
+			
+			var minX:Number, minY:Number, maxX:Number, maxY:Number;
+			minX = minY = maxX = maxY = 0;
 			
 			//create node for sets
-			m_nodeList = new Vector.<GameNode>; 
-			m_gameNodeDictionary = new Dictionary;
-			for each(var edgeSet:EdgeSetRef in edgeSetDictionary)
+			m_nodeList = new Vector.<GameNode>(); 
+			boxDictionary = new Dictionary();
+			// Process <box> 's
+			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
-				//find the layout information for the node
-				var edgeSetLayoutXML:XML = findEdgeSetLayoutInfo(edgeSet.id);
-				if(edgeSetLayoutXML == null)
-					trace("missing edgeSetLayoutXML " + edgeSet.id);
+				if (!edgeSetDictionary.hasOwnProperty(boxLayoutXML.@id)) {
+					throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
+				}
+				var edgeSet:EdgeSetRef = edgeSetDictionary[boxLayoutXML.@id];
 				
 				//grab an example edge for it's attributes FIX - use constraints xml file
 				var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
@@ -178,27 +183,67 @@ package scenes.game.display
 					edgeSetEdges.push(edgeDictionary[edgeId]);
 				}
 				
-				var gameNodeSet:GameNode = new GameNode(edgeSetLayoutXML, edgeSet, edgeSetEdges);
-				m_nodeList.push(gameNodeSet);
-				m_gameNodeDictionary[edgeSet.id] = gameNodeSet;
+				var gameNode:GameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
+				m_nodeList.push(gameNode);
+				boxDictionary[edgeSet.id] = gameNode;
 				
-	//			trace(gameNodeSet.boundingBox.x + " " + gameNodeSet.boundingBox.y);
+				minX = Math.min(minX, gameNode.boundingBox.left);
+				minY = Math.min(minY, gameNode.boundingBox.top);
+				maxX = Math.max(maxX, gameNode.boundingBox.right);
+				maxY = Math.max(maxY, gameNode.boundingBox.bottom);
+			}
+			trace("gamenodeset count = " + m_nodeList.length);
+			
+			m_jointList = new Vector.<GameJointNode>();
+			jointDictionary = new Dictionary();
+			// Process <joint> 's
+			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
+			{
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML.id, jointLayoutXML);
+				m_jointList.push(joint);
+				jointDictionary[joint.id] = joint;
+				
+				minX = Math.min(minX, joint.boundingBox.left);
+				minY = Math.min(minY, joint.boundingBox.top);
+				maxX = Math.max(maxX, joint.boundingBox.right);
+				maxY = Math.max(maxY, joint.boundingBox.bottom);
 			}
 			
-			trace("gamenodeset count = " + m_nodeList.length);
-	
-			var edgeXMLList:XMLList = m_levelLayoutXML.edge;
-			
-			for each(var edgeXML:XML in edgeXMLList)
+			// Process <line> 's
+			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
+				var edgeFromBox:XMLList = edgeXML.frombox;
+				var edgeToJoint:XMLList = edgeXML.tojoint;
+				var edgeFromJoint:XMLList = edgeXML.fromjoint;
+				var edgeToBox:XMLList = edgeXML.tobox;
+				var myNode:GameNode;
+				var myJoint:GameJointNode;
+				var dir:String;
+				var boxId:String, jointId:String;
+				if ((edgeFromBox.length == 1) && (edgeToJoint.length == 1)) {
+					dir = GameEdgeContainer.DIR_BOX_TO_JOINT;
+					myNode = boxDictionary[edgeFromBox[0].id];
+					myJoint = jointDictionary[edgeToJoint[0].id];
+				} else if ((edgeFromJoint.length == 1) && (edgeToBox.length == 1)) {
+					dir = GameEdgeContainer.DIR_JOINT_TO_BOX;
+					myNode = boxDictionary[edgeToBox[0].id];
+					myJoint = jointDictionary[edgeFromJoint[0].id];
+				} else {
+					throw new Error("Line found with unsupported to/from, must be from a joint to a box or vice-versa");
+				}
+				
+				/*
 				var fromEdgeID:String = edgeXML.@from;
 				var toEdgeID:String = edgeXML.@to;
 				var fromEdgeSetID:String = edgeSetDictionary[fromEdgeID].id;
 				var toEdgeSetID:String = edgeSetDictionary[toEdgeID].id;
-
+				*/
+				
 				//normalize edge Array, and then slide game edge to right x,y value
-				var minX:Number = Number.POSITIVE_INFINITY;
-				var minY:Number = Number.POSITIVE_INFINITY;
+				var minXedge:Number = Number.POSITIVE_INFINITY;
+				var minYedge:Number = Number.POSITIVE_INFINITY;
+				var maxXedge:Number = Number.NEGATIVE_INFINITY;
+				var maxYedge:Number = Number.NEGATIVE_INFINITY;
 				
 				//create edge array
 				var edgeArray:Array = new Array;
@@ -208,31 +253,37 @@ package scenes.game.display
 				{
 					var pt:Point = new Point(pointXML.@x, pointXML.@y);
 					edgeArray.push(pt);
+					minXedge = Math.min(minXedge, pt.x);
+					minYedge = Math.min(minYedge, pt.y);
+					maxXedge = Math.max(maxXedge, pt.x);
+					maxYedge = Math.max(maxYedge, pt.y);
 				}
-				//find min values, and then adjust by that
-				for(var index:int = 0; index<edgeArray.length; index++)
-				{
-					if(minX > edgeArray[index].x)
-						minX = edgeArray[index].x;
-					if(minY > edgeArray[index].y)
-						minY = edgeArray[index].y;
-				}
-				
+				//adjust by min
 				for(var i:int = 0; i<edgeArray.length; i++)
 				{
-					edgeArray[i].x -= minX;
-					edgeArray[i].y -= minY;
+					edgeArray[i].x -= minXedge;
+					edgeArray[i].y -= minYedge;
 				}
 				
-				var fromNodeSet:GameNode = m_gameNodeDictionary[fromEdgeSetID];
-				var toNodeSet:GameNode = m_gameNodeDictionary[toEdgeSetID];
-				
-				var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, fromNodeSet, toNodeSet);
+				var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, myNode, myJoint, dir);
 				newGameEdge.globalPosition = new Point(minX, minY);
-				m_edgeVector.push(newGameEdge);
-				fromNodeSet.setOutgoingEdge(newGameEdge);
-				toNodeSet.setIncomingEdge(newGameEdge);
-			}				
+				m_edgeList.push(newGameEdge);
+				if (newGameEdge.toBox) {
+					myJoint.setOutgoingEdge(newGameEdge);
+					myNode.setIncomingEdge(newGameEdge);
+				} else {
+					myNode.setOutgoingEdge(newGameEdge);
+					myJoint.setIncomingEdge(newGameEdge);
+				}
+				
+				minX = Math.min(minX, minXedge);
+				minY = Math.min(minY, minYedge);
+				maxX = Math.max(maxX, maxXedge);
+				maxY = Math.max(maxY, maxYedge);
+			}
+			
+			//set bounds based on largest x, y found in boxes, joints, edges
+			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			draw();
 			addEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
@@ -280,7 +331,7 @@ package scenes.game.display
 				if(childName.indexOf("edgeset") != -1)
 				{
 					var childID:String = child.@id;
-					var edgeSet:GameNode = m_gameNodeDictionary[childID];
+					var edgeSet:GameNode = boxDictionary[childID];
 					child.@top = edgeSet.y;
 					child.@left = edgeSet.x;
 				}
@@ -297,10 +348,10 @@ package scenes.game.display
 			for each(var child:XML in children)
 			{
 				var childName:String = child.localName();
-				if(childName.indexOf("edgeset") != -1)
+				if(childName.indexOf("box") != -1)
 				{
 					var childID:String = child.@id;
-					var edgeSet:GameNode = m_gameNodeDictionary[childID];
+					var edgeSet:GameNode = boxDictionary[childID];
 					child.@top = edgeSet.y;
 					child.@left = edgeSet.x;
 				}
@@ -331,13 +382,13 @@ package scenes.game.display
 			}
 			
 			m_nodeList = null;
-			m_gameNodeDictionary = null;
+			boxDictionary = null;
 			
-			for each(var gameEdge:GameEdgeContainer in m_edgeVector) {
+			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
 				gameEdge.removeFromParent(true);
 			}
 			
-			m_edgeVector = null;
+			m_edgeList = null;
 			
 			super.dispose();
 		}
@@ -380,7 +431,7 @@ package scenes.game.display
 				//push any connecting edges that have both connected nodes selected
 				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
 				{
-					var connectedNode:GameNode = edge.m_fromNode;
+					var connectedNode:GameNode = edge.m_node;
 					if(selectedComponents.indexOf(connectedNode) != -1)
 					{
 						if(selectedComponents.indexOf(edge) == -1)
@@ -390,8 +441,8 @@ package scenes.game.display
 				}
 				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
 				{
-					var connectedNode1:GameNode = edge1.m_toNode;
-					if(selectedComponents.indexOf(connectedNode1) != -1)
+					var connectedJoint:GameJointNode = edge1.m_joint;
+					if(selectedComponents.indexOf(connectedJoint) != -1)
 					{
 						if(selectedComponents.indexOf(edge1) == -1)
 							selectedComponents.push(edge1);
@@ -527,16 +578,23 @@ package scenes.game.display
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
 			var count:int = 1
-			for each(var gameNodeSet:GameNode in m_nodeList)
+			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNodeSet.x = gameNodeSet.globalPosition.x - m_boundingBox.x;
-				gameNodeSet.y = gameNodeSet.globalPosition.y - m_boundingBox.y;
-				addChild(gameNodeSet);
-				gameNodeSet.addedToStage = true;
+				gameNode.x = gameNode.boundingBox.x - m_boundingBox.x;
+				gameNode.y = gameNode.boundingBox.y - m_boundingBox.y;
+				addChild(gameNode);
 				count++;
 			}
-
-			for each(var gameEdge:GameEdgeContainer in m_edgeVector)
+			
+			for each(var gameJoint:GameJointNode in m_jointList)
+			{
+				gameJoint.x = gameJoint.boundingBox.x - m_boundingBox.x;
+				gameJoint.y = gameJoint.boundingBox.y - m_boundingBox.y;
+				addChild(gameJoint);
+				count++;
+			}
+			
+			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
 			//	if(gameEdge.m_fromNode.m_outgoingEdges.indexOf(gameEdge) > 2)
 				{
@@ -558,18 +616,18 @@ package scenes.game.display
 		
 		public function findEdgeSetLayoutInfo(name:String):XML
 		{
-			var edgeSetList:XMLList = m_levelLayoutXML.edgeset;
-			for each(var layout:XML in edgeSetList)
+			var boxList:XMLList = m_levelLayoutXML.box;
+			for each(var layout:XML in boxList)
 			{
 				var levelName:String = layout.@id;
 				
 				if(levelName == name)
 				{
-					edgeSetList = null;
+					boxList = null;
 					return layout;
 				}
 			}
-			edgeSetList = null;
+			boxList = null;
 			return null;
 		}
 		
@@ -619,6 +677,11 @@ package scenes.game.display
 			}
 			
 			
+		}
+		
+		public function getNodes():Vector.<GameNode>
+		{
+			return m_nodeList;
 		}
 	}
 }

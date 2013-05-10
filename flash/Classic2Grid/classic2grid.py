@@ -167,7 +167,7 @@ for lx in wx.getElementsByTagName('level'):
 	extraedgesetlines = {}
 	# Node ids for SUBBOARDS, INCOMING, and OUTGOING nodes that correspond to multiple joints (instead of exactly one)
 	lname = lx.attributes['name'].value
-	out += '  <level id="Application">\n'
+	out += '  <level id="%s">\n' % lname
 	# Gather the associated edge ids for edgesets dictionary
 	for esx in lx.getElementsByTagName('edge-set'):
 		edgesetid = esx.attributes['id'].value

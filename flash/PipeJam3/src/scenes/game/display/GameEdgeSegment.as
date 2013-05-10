@@ -30,6 +30,7 @@
 		
 		public var m_isNodeExtensionSegment:Boolean;
 		public var m_isLastSegment:Boolean;
+		private var m_dir:String;
 		
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
@@ -39,13 +40,19 @@
 			ARROW_TEXT.repeat = true;
 		}
 		
-		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _fromNode:GameNode, _toNode:GameNode, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
+		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _node:GameNode, _joint:GameJointNode, _dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
 		{
 			super();
 			
 			m_parentEdge = _parentEdge;
-			m_fromComponent = _fromNode;
-			m_toComponent = _toNode;
+			m_dir = _dir;
+			if (m_dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
+				m_fromComponent = _node;
+				m_toComponent = _joint;
+			} else {
+				m_fromComponent = _joint;
+				m_toComponent = _node;
+			}
 			
 			m_isNodeExtensionSegment = _isNodeExtensionSegment;
 			m_isLastSegment = _isLastSegment;

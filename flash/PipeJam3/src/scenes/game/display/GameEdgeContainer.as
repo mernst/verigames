@@ -8,8 +8,9 @@ package scenes.game.display
 	
 	public class GameEdgeContainer extends GameComponent
 	{
-		public var m_fromNode:GameNode;
-		public var m_toNode:GameNode;
+		public var m_node:GameNode;
+		public var m_joint:GameJointNode;
+		private var m_dir:String;
 		
 		public var m_edgeArray:Array;
 		public var globalPosition:Point;
@@ -41,13 +42,16 @@ package scenes.game.display
 		public static var NARROW_WIDTH:int = 1;
 		
 		public static var CREATE_JOINT:String = "create_joint";
+		public static var DIR_BOX_TO_JOINT:String = "2joint";
+		public static var DIR_JOINT_TO_BOX:String = "2box";
 		
-		public function GameEdgeContainer(edgeArray:Array, fromNode:GameNode, toNode:GameNode)
+		public function GameEdgeContainer(edgeArray:Array, node:GameNode, joint:GameJointNode, dir:String)
 		{
 			super();
 			m_edgeArray = edgeArray;
-			m_fromNode = fromNode;
-			m_toNode = toNode;
+			m_node = node;
+			m_joint = joint;
+			m_dir = dir;
 			m_originalEdge = true;
 			
 			m_startPoint = edgeArray[0];
@@ -108,7 +112,7 @@ package scenes.game.display
 				m_edgeSegments = new Vector.<GameEdgeSegment>;			
 				m_edgeJoints = new Vector.<GameEdgeJoint>;
 				
-				var previousSegment:GameComponent = m_fromNode;
+				var previousSegment:GameComponent = m_node;
 				//draw each edge segment separately, move to where they should be, and add them
 				for(var index:int = 1; index<m_edgeArray.length; index+=3)
 				{
@@ -118,7 +122,7 @@ package scenes.game.display
 					if(index+1 == m_edgeArray.length)
 						isLastSegment = true;
 					
-					segment = new GameEdgeSegment(this, m_fromNode, m_toNode, isLastSegment, isLastSegment);
+					segment = new GameEdgeSegment(this, m_node, m_joint, m_dir, isLastSegment, isLastSegment);
 					m_edgeSegments.push(segment);
 					
 					//add joint at start of segment
@@ -131,12 +135,12 @@ package scenes.game.display
 						else
 						{
 							connectionJoint = true;
-							joint = new GameEdgeJoint(this, previousSegment, segment, false, connectionJoint);
+							joint = new GameEdgeJoint(previousSegment, segment, this, false, connectionJoint);
 							m_startJoint = joint;
 						}
 					}
 					else
-						joint = new GameEdgeJoint(this, previousSegment, segment, isLastSegment, connectionJoint);
+						joint = new GameEdgeJoint(previousSegment, segment, this, isLastSegment, connectionJoint);
 					
 					joint.count = index;
 					m_edgeJoints.push(joint);
@@ -147,7 +151,7 @@ package scenes.game.display
 					m_edgeJoints.push(m_endJoint);
 				else
 				{
-					m_endJoint = new GameEdgeJoint(this, previousSegment, m_toNode, false, true);
+					m_endJoint = new GameEdgeJoint(previousSegment, m_joint, this, false, true);
 					m_edgeJoints.push(m_endJoint);
 				}
 			}
@@ -167,7 +171,7 @@ package scenes.game.display
 
 				m_edgeJoints.push(m_startJoint);
 				
-				var previousSegment:GameComponent = m_fromNode;
+				var previousSegment:GameComponent = m_node;
 				//draw each edge segment separately, move to where they should be, and add them
 				for(var index:int = 1; index<m_jointPoints.length; index++)
 				{
@@ -184,7 +188,7 @@ package scenes.game.display
 					if(index-1 == segmentIndex)
 						segment = currentDragSegment;
 					else
-						segment = new GameEdgeSegment(this, m_fromNode, m_toNode, isNodeExtensionSegment, islastSegment);
+						segment = new GameEdgeSegment(this, m_node, m_joint, m_dir, isNodeExtensionSegment, islastSegment);
 					segment.index = index-1;
 					m_edgeSegments.push(segment);
 					addChild(segment);
@@ -196,7 +200,7 @@ package scenes.game.display
 					if(index+1 == m_jointPoints.length)
 						joint = m_endJoint;
 					else
-						joint = new GameEdgeJoint(this, previousSegment, segment, isMarkerJoint, false);
+						joint = new GameEdgeJoint(previousSegment, segment, this, isMarkerJoint, false);
 					addChild(joint);
 					joint.count = index;
 					m_edgeJoints.push(joint);
@@ -419,14 +423,14 @@ package scenes.game.display
 		{
 			var gStartPt:Point = localToGlobal(m_jointPoints[1]);
 			var gEndPt:Point = localToGlobal(m_jointPoints[4]);
-			var gToNodeLeftSide:Number = m_toNode.x;
-			var gToNodeRightSide:Number = m_toNode.x+m_toNode.width;
-			var gToNodeTopSide:Number = m_toNode.y;
-			var gToNodeBottomSide:Number = m_toNode.y+m_toNode.height;
-			var gFromNodeLeftSide:Number = m_fromNode.x;
-			var gFromNodeRightSide:Number = m_fromNode.x+m_fromNode.width;
-			var gFromNodeTopSide:Number = m_fromNode.y;
-			var gFromNodeBottomSide:Number = m_fromNode.y+m_fromNode.height;
+			var gToNodeLeftSide:Number = m_joint.x;
+			var gToNodeRightSide:Number = m_joint.x+m_joint.width;
+			var gToNodeTopSide:Number = m_joint.y;
+			var gToNodeBottomSide:Number = m_joint.y+m_joint.height;
+			var gFromNodeLeftSide:Number = m_node.x;
+			var gFromNodeRightSide:Number = m_node.x+m_node.width;
+			var gFromNodeTopSide:Number = m_node.y;
+			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
 
 			m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
 			m_jointPoints[3] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[4].y);						
@@ -443,7 +447,7 @@ package scenes.game.display
 			onEnterFrame();
 			
 			//redraw connection node
-			m_toNode.draw();
+			m_joint.draw();
 		}
 		
 		override public function getScore():Number
@@ -463,7 +467,12 @@ package scenes.game.display
 		
 		public function hasError():Boolean
 		{
-			return (m_fromNode.isWide() && !m_toNode.isWide());
+			if (toJoint) {
+				// Edges going into joints can't fail
+				return false;
+			} else {
+				return (!m_node.isWide() && m_joint.isWide());
+			}
 		}
 		
 		override public function getColor():int
@@ -521,6 +530,32 @@ package scenes.game.display
 		{
 			m_endJoint.m_originalPoint.x = newPoint.x;
 			m_endJoint.m_originalPoint.y = newPoint.y;
+		}
+		
+		public function get toBox():Boolean
+		{
+			return (m_dir == DIR_JOINT_TO_BOX);
+		}
+		
+		public function get toJoint():Boolean
+		{
+			return (m_dir == DIR_BOX_TO_JOINT);
+		}
+		
+		public static function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
+		{
+			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
+				return -1;
+			else
+				return 1;
+		}
+		
+		public static function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
+		{
+			if(x.m_edgeArray[x.m_edgeArray.length-1].x < y.m_edgeArray[y.m_edgeArray.length-1].x)
+				return -1;
+			else
+				return 1;
 		}
 	}
 }

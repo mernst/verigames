@@ -35,7 +35,7 @@ package scenes.game.display
 		private var imageHeight:Number = 100.0;
 		public var m_numIncomingNodeEdges:int;
 		public var m_numOutgoingNodeEdges:int;
-		private var m_id:String;
+		public var id:String;
 		private var m_edgeSetEdges:Vector.<Edge>;
 		private var m_editable:Boolean;
 		
@@ -46,17 +46,10 @@ package scenes.game.display
 		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
 		public var m_incomingEdges:Vector.<GameEdgeContainer>;
 		
-		protected static var nextNodeNumber:int = 0;
-		
-		public var m_currentNodeNumber:int;
-		
 		private var m_nodeXML:XML;
 		private var m_edgeArray:Array;
 		public var boundingBox:Rectangle;
-		public var globalPosition:Point;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
-		
-		public var addedToStage:Boolean = false;
 		
 		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef, edgeSetEdges:Vector.<Edge>)
 		{
@@ -65,20 +58,14 @@ package scenes.game.display
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
 			
-			m_currentNodeNumber = nextNodeNumber++;			
-			
 			m_gameEdges = new Vector.<GameEdgeContainer>;
 			m_outgoingEdges = new Vector.<GameEdgeContainer>;
 			m_incomingEdges = new Vector.<GameEdgeContainer>;
 			
-			if(m_nodeXML)
-			{
-				boundingBox = findBoundingBox(m_nodeXML);
-				globalPosition = new Point(boundingBox.x, boundingBox.y);
-				m_id = m_nodeXML.@id;
-				imageWidth = boundingBox.width;
-				imageHeight = boundingBox.height;
-			}
+			boundingBox = findBoundingBox(m_nodeXML);
+			id = m_nodeXML.@id;
+			imageWidth = boundingBox.width;
+			imageHeight = boundingBox.height;
 			
 			if (m_edgeSetEdges.length == 0) {
 				throw new Error("GameNode created with no associated edge objects");
@@ -234,16 +221,8 @@ package scenes.game.display
 				m_outgoingEdges.push(edge);
 			edge.outgoingEdgePosition = m_outgoingEdges.length-1;
 			//I want the edges to be in ascending order according to x position, so do that here
-			m_outgoingEdges.sort(sortOutgoingXPositions);
+			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			
-		}
-		
-		protected function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
-		{
-			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
-				return -1;
-			else
-				return 1;
 		}
 		
 		//adds edge to incoming edge method (unless currently in vector), then sorts
@@ -253,16 +232,9 @@ package scenes.game.display
 				m_incomingEdges.push(edge);
 			edge.incomingEdgePosition = m_incomingEdges.length-1;
 			//I want the edges to be in ascending order according to x position, so do that here
-			m_incomingEdges.sort(sortIncomingXPositions);
+			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
 		}
 		
-		protected function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
-		{
-			if(x.m_edgeArray[x.m_edgeArray.length-1].x < y.m_edgeArray[y.m_edgeArray.length-1].x)
-				return -1;
-			else
-				return 1;
-		}
 		public function onEnterFrame(event:Event):void
 		{
 			if(m_isDirty)
@@ -357,18 +329,24 @@ package scenes.game.display
 		
 		public function findGroup(dictionary:Dictionary):void
 		{
-			dictionary[m_currentNodeNumber] = this;
+			dictionary[id] = this;
 			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
 			{
-				var node:GameNode = oedge1.m_toNode;
-				if(dictionary[node.m_currentNodeNumber] == null)
-					node.findGroup(dictionary);
+				var oJoint:GameJointNode = oedge1.m_joint;
+				for each(var oedge2:GameEdgeContainer in oJoint.m_outgoingEdges)
+				{
+					if(dictionary[oedge2.m_node.id] == null)
+						oedge2.m_node.findGroup(dictionary);
+				}
 			}
 			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
 			{
-				var inode:GameNode = iedge1.m_fromNode;
-				if(dictionary[inode.m_currentNodeNumber] == null)
-					inode.findGroup(dictionary);
+				var iJoint:GameJointNode = iedge1.m_joint;
+				for each(var iedge2:GameEdgeContainer in iJoint.m_incomingEdges)
+				{
+					if(dictionary[iedge2.m_node.id] == null)
+						iedge2.m_node.findGroup(dictionary);
+				}
 			}
 		}
 		
