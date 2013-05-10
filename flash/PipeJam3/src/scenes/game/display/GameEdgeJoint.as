@@ -278,7 +278,10 @@ package scenes.game.display
 
 		protected function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
-			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
+			var pt1:Point = x.localToGlobal(new Point(x.m_startJoint.x, x.m_startJoint.y));
+			var pt2:Point = y.localToGlobal(new Point(y.m_startJoint.x, y.m_startJoint.y));
+			//	trace(pt1.x + " " +pt2.x);
+			if(pt1.x < pt2.x)
 				return -1;
 			else
 				return 1;
