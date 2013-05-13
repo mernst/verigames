@@ -26,12 +26,13 @@ edge2linexml = {}
 # node2xml[levelid][dotnodestring] = box/joint xml element
 node2xml = {}
 
-### Regex ###
-dotre = re.compile(r'^\s*([^\s]*) \[pos="([^\s]*)", width=".*", height=".*"\];\s*$')
-
 # convert to string
 def tostr(thing):
 	return '%s' % thing
+
+# convert points (default for pos information) to inches (default for width, height information)
+def pts2inches(pts):
+	return float(pts) / 72.0
 
 # Creates the input and output labels to be referenced like ports in the "record" style dot nodes
 def createportlabels(inports, outports, id=None, verbose=False):
@@ -56,6 +57,56 @@ def createportlabels(inports, outports, id=None, verbose=False):
 	label += '}}'
 	return label
 
+# helper method to read the awful dot format of attributes i.e. 'node_n1 [attrib1=this, attrib2="1,2,3", attrib3=somethingelse]'
+# and return a dictionary of keys -> values
+def parseattrib(attr):
+	attr = attr.lstrip('[').rstrip(']')
+	eqs = attr.split('=')
+	attribs = {}
+	if len(eqs) == 0:
+		print "Couldn't process dot output: %s" % line
+		return attribs
+	akey = eqs[0]
+	for i in range(1, len(eqs)):
+		lastcomma = eqs[i].rfind(',')
+		if i == len(eqs) - 1:
+			# Hard code only the salient attributes that we want
+			if (akey.lower() == 'pos') or (akey.lower() == 'width') or (akey.lower() == 'height') or (akey.lower() == 'bb'):
+				attribs[akey] = eqs[i].strip().strip('"').lstrip('e,')
+		elif lastcomma == -1:
+			break
+		else:
+			# Hard code only the salient attributes that we want
+			if (akey.lower() == 'pos') or (akey.lower() == 'width') or (akey.lower() == 'height') or (akey.lower() == 'bb'):
+				attribs[akey] = eqs[i][:lastcomma].strip().strip('"').lstrip('e,')
+			akey = eqs[i][(lastcomma+1):].strip()
+			if len(akey) == 0:
+				break
+	return attribs
+
+# get the bounding box for the graph as 2 element array of points
+def parsebb(line):
+	line = line.strip()
+	lcurl = line.find('{')
+	if lcurl > -1:
+		line = line[(lcurl+1):].strip()
+	if line.find('graph') == 0:
+		lb = line.find('[')
+	else:
+		return None
+	attr = line[lb:]
+	attribs = parseattrib(attr)
+	if attribs.get('bb'):
+		pts = attribs.get('bb').split(',')
+		if len(pts) == 4:
+			x1 = pts2inches(float(pts[0]))
+			y1 = pts2inches(float(pts[1]))
+			x2 = pts2inches(float(pts[2]))
+			y2 = pts2inches(float(pts[3]))
+			return [Point(x1, y1), Point(x2, y2)]
+	print '2'
+	return None
+
 # Parse the dot width/height/position/points information and return a DotLayout object
 def parsedot(line):
 	line = line.strip()
@@ -66,26 +117,8 @@ def parsedot(line):
 		print "Couldn't process dot output: %s" % line
 		return None
 	id = line[:lb].strip()
-	attr = line[lb:].lstrip('[').rstrip(']')
-	eqs = attr.split('=')
-	if len(eqs) == 0:
-		print "Couldn't process dot output: %s" % line
-		return None
-	akey = eqs[0]
-	attribs = {}
-	for i in range(1, len(eqs)):
-		lastcomma = eqs[i].rfind(',')
-		if i == len(eqs) - 1:
-			if (akey.lower() == 'pos') or (akey.lower() == 'width') or (akey.lower() == 'height'):
-				attribs[akey] = eqs[i].strip().strip('"').lstrip('e,')
-		elif lastcomma == -1:
-			break
-		else:
-			if (akey.lower() == 'pos') or (akey.lower() == 'width') or (akey.lower() == 'height'):
-				attribs[akey] = eqs[i][:lastcomma].strip().strip('"').lstrip('e,')
-			akey = eqs[i][(lastcomma+1):].strip()
-			if len(akey) == 0:
-				break
+	attr = line[lb:]
+	attribs = parseattrib(attr)
 	if attribs.get('pos'):
 		pos = attribs.get('pos')
 		if pos.count(',') > 1:
@@ -93,14 +126,22 @@ def parsedot(line):
 			pts = []
 			for pair in pos.split(' '):
 				if len(pair.split(',')) == 2:
-					pts.append(Point(float(pair.split(',')[0].strip()), float(pair.split(',')[1].strip())))
+					posx = float(pair.split(',')[0].strip())
+					posy = float(pair.split(',')[1].strip())
+					posx = pts2inches(posx)
+					posy = pts2inches(posy)
+					pts.append(Point(posx, posy))
 				else:
 					print 'Warning: couldnt process pts "%s" len()=%s pos "%s" for id: "%s"' % (pair, len(pair.split(',')), pos, id)
 					continue
 			return DotLayout(id, None, None, None, pts)
 		elif pos.count(',') == 1:
 			if len(pos.split(',')) == 2:
-				pos = Point(float(pos.split(',')[0].strip()), float(pos.split(',')[1].strip()))
+				posx = float(pos.split(',')[0].strip())
+				posy = float(pos.split(',')[1].strip())
+				posx = pts2inches(posx)
+				posy = pts2inches(posy)
+				pos = Point(posx, posy)
 			else:
 				print 'Warning: bad pos field found "%s" for id: %s' % (pos, id)
 				return None
@@ -140,11 +181,15 @@ for lx in gx.getElementsByTagName('level'):
 	dotin += '    splines=spline\n'
 	dotin += '  ];\n'
 	dotin += '  node [\n'
-#	dotin += '    fontsize=25.0,\n'
+	dotin += '    fontsize=14.0,\n'
 #	dotin += '    width=0.5,\n'
 #	dotin += '    height=1.0,\n'
 	dotin += '    "fixed-size"=true,\n'
 	dotin += '    shape=record\n'
+	dotin += '  ];\n'
+	dotin += '  edge [\n'
+	dotin += '    arrowhead=none,\n'
+	dotin += '    arrowtail=none\n'
 	dotin += '  ];\n'
 	for jx in lx.getElementsByTagName('joint'):
 		jid = jx.attributes['id'].value
@@ -195,8 +240,20 @@ for lx in gx.getElementsByTagName('level'):
 	dotoutput = ' '.join(dotoutput.split()) #get rid of any runs of spaces, newlines, etc
 	# Get rid of dot's "continue on next line" character '\' while preserving pos="N,N N,N" formatting
 	dotoutput = dotoutput.replace(', \\', ',').replace('\\ ,', ',').replace(' \\ ', ' ').replace('\\', '')
+	# Put pairs together that may have been separated
+	dotoutput = dotoutput.replace(' , ', ',').replace(', ', ',').replace(' ,', ',')
 	dotelms = dotoutput.split(";") #split each element on its own line
+	
 	linenum = 0
+	for line in dotelms[:3]:
+		bb = parsebb(line)
+		if bb is not None:
+			#print 'Bounding Box: %s,%s %s,%s' % (bb[0].x, bb[0].y, bb[1].x, bb[1].y)
+			break
+	if bb is None:
+		print 'Warning: No bounding box found in graph. Creating dummy bb = 0,0 to 500,500'
+		bb = [Point(0,0), Point(500,500)]
+	maxy = bb[1].y
 	for line in dotelms:
 		layout = parsedot(line)
 		if layout is not None:
@@ -214,7 +271,7 @@ for lx in gx.getElementsByTagName('level'):
 				for pt in layout.points:
 					ptx = allxml.createElement('point')
 					ptx.setAttribute('x', tostr(pt.x))
-					ptx.setAttribute('y', tostr(pt.y))
+					ptx.setAttribute('y', tostr(maxy - pt.y))
 					edgex.appendChild(ptx)
 			elif layout.pos is not None:
 				# Output node position
@@ -223,7 +280,7 @@ for lx in gx.getElementsByTagName('level'):
 					print 'Warning: no node found for id %s' % layout.id
 					continue
 				nodex.setAttribute('x', tostr(layout.pos.x))
-				nodex.setAttribute('y', tostr(layout.pos.y))
+				nodex.setAttribute('y', tostr(maxy - layout.pos.y))
 				if 'width' in nodex.attributes.keys():
 					nodex.removeAttribute('width')
 				if 'height' in nodex.attributes.keys():
