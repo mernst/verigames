@@ -172,11 +172,11 @@ package scenes.game.display
 			// Process <box> 's
 			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
-				if (!edgeSetDictionary.hasOwnProperty(boxLayoutXML.@id)) {
+				var edgeid:String = boxLayoutXML.@id;
+				if (!edgeSetDictionary.hasOwnProperty(edgeid)) {
 					throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
 				}
-				var edgeSet:EdgeSetRef = edgeSetDictionary[boxLayoutXML.@id];
-				
+				var edgeSet:EdgeSetRef = edgeSetDictionary[edgeid];
 				//grab an example edge for it's attributes FIX - use constraints xml file
 				var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
 				for each (var edgeId:String in edgeSet.edge_ids) {
@@ -199,7 +199,7 @@ package scenes.game.display
 			// Process <joint> 's
 			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
 			{
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML.id, jointLayoutXML);
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML.@id, jointLayoutXML);
 				m_jointList.push(joint);
 				jointDictionary[joint.id] = joint;
 				
@@ -212,24 +212,28 @@ package scenes.game.display
 			// Process <line> 's
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var edgeFromBox:XMLList = edgeXML.frombox;
-				var edgeToJoint:XMLList = edgeXML.tojoint;
-				var edgeFromJoint:XMLList = edgeXML.fromjoint;
-				var edgeToBox:XMLList = edgeXML.tobox;
+				var edgeFromBox:XML = edgeXML.frombox[0];
+				var edgeToJoint:XML = edgeXML.tojoint[0];
+				var edgeFromJoint:XML = edgeXML.fromjoint[0];
+				var edgeToBox:XML = edgeXML.tobox[0];
 				var myNode:GameNode;
 				var myJoint:GameJointNode;
 				var dir:String;
 				var boxId:String, jointId:String;
-				if ((edgeFromBox.length == 1) && (edgeToJoint.length == 1)) {
+				if (edgeFromBox && edgeToJoint) {
 					dir = GameEdgeContainer.DIR_BOX_TO_JOINT;
-					myNode = boxDictionary[edgeFromBox[0].id];
-					myJoint = jointDictionary[edgeToJoint[0].id];
-				} else if ((edgeFromJoint.length == 1) && (edgeToBox.length == 1)) {
+					boxId = edgeFromBox.@id;
+					jointId = edgeToJoint.@id;
+					myNode = boxDictionary[boxId];
+					myJoint = jointDictionary[jointId];
+				} else if (edgeFromJoint && edgeToBox) {
 					dir = GameEdgeContainer.DIR_JOINT_TO_BOX;
-					myNode = boxDictionary[edgeToBox[0].id];
-					myJoint = jointDictionary[edgeFromJoint[0].id];
+					boxId = edgeToBox.@id;
+					jointId = edgeFromJoint.@id;
+					myNode = boxDictionary[boxId];
+					myJoint = jointDictionary[jointId];
 				} else {
-					throw new Error("Line found with unsupported to/from, must be from a joint to a box or vice-versa");
+					throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
 				}
 				
 				/*

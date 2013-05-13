@@ -383,6 +383,7 @@ package scenes.game.display
 			positionChildren();
 			m_isDirty = true;
 		}
+		
 		//create edge
 		private function createJointPointsArray():void
 		{
