@@ -1,1 +1,3 @@
-<graph id="world"><level id="Connection"></level></graph>
+<graph id="world">
+ <level name="Connection"/>
+</graph>
