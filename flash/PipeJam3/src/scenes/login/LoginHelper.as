@@ -352,28 +352,35 @@ package scenes.login
 		
 		private function completeHandler(e:flash.events.Event):void
 		{
-			trace("in complete " + e.target.data);
-			var objString:String = e.target.data;
-			var startIndex:int = 0;
-			var index:int = objString.indexOf("_id", 10); //skip past beginning of string
-			if(index != -1) //assume it a JSON database string, and parse it
+			try
 			{
-				var endIndex:int = objString.lastIndexOf("}", index);
-				currentJSONObjects = new Vector.<Object>;
-				while(endIndex != -1)
+				trace("in complete " + e.target.data);
+				var objString:String = e.target.data;
+				var startIndex:int = 0;
+				var index:int = objString.indexOf("_id", 10); //skip past beginning of string
+				if(index != -1) //assume it a JSON database string, and parse it
 				{
-					currentJSONObjects.push(JSON.parse(objString.substring(startIndex, endIndex+1)));
-					startIndex = endIndex+1;
-					index = objString.indexOf("_id", endIndex+20);
-					endIndex = objString.lastIndexOf("}", index);
+					var endIndex:int = objString.lastIndexOf("}", index);
+					currentJSONObjects = new Vector.<Object>;
+					while(endIndex != -1)
+					{
+						currentJSONObjects.push(JSON.parse(objString.substring(startIndex, endIndex+1)));
+						startIndex = endIndex+1;
+						index = objString.indexOf("_id", endIndex+20);
+						endIndex = objString.lastIndexOf("}", index);
+					}
+					currentJSONObjects.push(JSON.parse(objString.substring(startIndex)));
+					
+					setLevelMetadataFromCurrent(EVENT_COMPLETE, e);
 				}
-				currentJSONObjects.push(JSON.parse(objString.substring(startIndex)));
-				
-				setLevelMetadataFromCurrent(EVENT_COMPLETE, e);
+				else if(m_currentCallback != null)
+					m_currentCallback(EVENT_COMPLETE, e);
+				m_currentRequestType = 0;
 			}
-			else if(m_currentCallback != null)
-				m_currentCallback(EVENT_COMPLETE, e);
-			m_currentRequestType = 0;
+			catch(err:Error)
+			{
+				trace("ERROR: failure in complete handler");
+			}
 		}
 	}
 }
