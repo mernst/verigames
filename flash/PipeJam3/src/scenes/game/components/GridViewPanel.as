@@ -56,7 +56,7 @@ package scenes.game.components
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
-		private static const MAX_SCALE:Number = 5.0;
+		private static const MAX_SCALE:Number = 50.0;
 		
 		public function GridViewPanel()
 		{
@@ -369,13 +369,13 @@ package scenes.game.components
 			{
 				content.scaleX = content.scaleY = (this.clipRect.width)/content.width;
 				if(content.scaleX > 3)
-					content.scaleX = content.scaleY = 3; //just limit it from being really big
+					content.scaleX = content.scaleY = MAX_SCALE; //just limit it from being really big
 			}
 			else
 			{
 				content.scaleX = content.scaleY = (this.clipRect.height)/content.height;
 				if(content.scaleX > 3)
-					content.scaleX = content.scaleY = 3; //just limit it from being really big
+					content.scaleX = content.scaleY = MAX_SCALE; //just limit it from being really big
 			}
 			
 			if(content.scaleX < minScaleX)

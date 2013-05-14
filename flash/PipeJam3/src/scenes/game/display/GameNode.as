@@ -26,46 +26,25 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	public class GameNode extends GameComponent
+	public class GameNode extends GameNodeBase
 	{
 		protected var m_edgeSet:EdgeSetRef;
-		public var m_shape:Shape;
 		
-		private var imageWidth:Number = 100.0;
-		private var imageHeight:Number = 100.0;
 		public var m_numIncomingNodeEdges:int;
 		public var m_numOutgoingNodeEdges:int;
-		public var id:String;
+
 		private var m_edgeSetEdges:Vector.<Edge>;
-		private var m_editable:Boolean;
 		
-		public var positionPoint:Point;
-		
-		protected var m_gameEdges:Vector.<GameEdgeContainer>;
-		
-		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
-		public var m_incomingEdges:Vector.<GameEdgeContainer>;
-		
-		private var m_nodeXML:XML;
-		private var m_edgeArray:Array;
-		public var boundingBox:Rectangle;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		
 		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef, edgeSetEdges:Vector.<Edge>)
 		{
-			super();
-			m_nodeXML = nodeXML;
+			super(nodeXML);
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
-			
-			m_gameEdges = new Vector.<GameEdgeContainer>;
-			m_outgoingEdges = new Vector.<GameEdgeContainer>;
-			m_incomingEdges = new Vector.<GameEdgeContainer>;
-			
-			boundingBox = findBoundingBox(m_nodeXML);
-			id = m_nodeXML.@id;
-			imageWidth = boundingBox.width;
-			imageHeight = boundingBox.height;
+
+			shapeWidth = m_boundingBox.width;
+			shapeHeight = m_boundingBox.height;
 			
 			if (m_edgeSetEdges.length == 0) {
 				throw new Error("GameNode created with no associated edge objects");
@@ -89,161 +68,9 @@ package scenes.game.display
 			}
 			
 			draw();
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
-		override public function dispose():void
-		{
-			if (m_disposed) {
-				return;
-			}
-			disposeChildren();
-			m_shape.removeChildren(0, -1, true);
-			m_shape.dispose();
-			if (hasEventListener(Event.ENTER_FRAME)) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
-			if (hasEventListener(TouchEvent.TOUCH)) {
-				removeEventListener(TouchEvent.TOUCH, onTouch);
-			}
-			super.dispose();
-		}
-		
-		private var isTempSelection:Boolean = false;
-		private var isMoving:Boolean = false;
-		private function onTouch(event:TouchEvent):void
-		{
-			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length)
-			{
-				if(isMoving) //if we were moving, stop it, and exit
-				{
-					isMoving = false;
-					if(isTempSelection)
-					{
-						isTempSelection = false;
-						this.componentSelected(false);
-						dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
-					}
-					return;
-				}
-				
-				//if shift key, select, else change size
-				var touch:Touch = touches[0];
-				if(!event.shiftKey)
-				{
-					//clear selections on all actions with no shift key
-					dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
-					if(m_editable)
-					{
-						m_isDirty = true;
-						for each(var oedge:GameEdgeContainer in this.m_outgoingEdges)
-						oedge.m_isDirty = true;
-						for each(var iedge:GameEdgeContainer in this.m_incomingEdges)
-						iedge.m_isDirty = true;
-						// Need to dispatch AFTER marking dirty, this will trigger the score update
-						// (we don't want to update the score with old values, we only know they're old
-						// if we properly mark them dirty first)
-						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, m_edgeSet));
-					}
-					
-				}
-				else //shift key down
-				{
-					if(touch.tapCount == 1)
-						componentSelected(!m_isSelected);	
-					else //select whole group
-					{
-						if(m_isSelected) //we were selected on the first click
-							dispatchEvent(new starling.events.Event(Level.GROUP_SELECTED, true, this));
-						else
-							dispatchEvent(new starling.events.Event(Level.GROUP_UNSELECTED, true, this));
-					}
-				}
-			}
-			else if(event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					if(!m_isSelected) //set up immediate drag here
-					{
-						//deselect everything else if shift key up
-						if(!event.shiftKey)
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
-						
-						isTempSelection = true;
-						this.componentSelected(true);
-						dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
-					}
 
-					isMoving = true;
-					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, touches[0]));
-
-				}
-			}
-		}
-		
-		override public function componentMoved(delta:Point):void
-		{
-			super.componentMoved(delta);
-			
-			rubberBandEdges(delta);
-		}
-		
-		protected function rubberBandEdges(endPt:Point):void
-		{
-			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
-			{
-				oedge1.rubberBandEdge(endPt, true);
-			}
-			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
-			{
-				iedge1.rubberBandEdge(endPt, false);
-			}
-		}
-		
-		public function drawEdges(rubberBanding:Boolean = false):void
-		{
-			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
-			{
-				oedge1.draw();
-			}
-			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
-			{
-				iedge1.draw();
-			}
-		}
-		
-		//adds edge to outgoing edge method (unless currently in vector), then sorts
-		public function setOutgoingEdge(edge:GameEdgeContainer):void
-		{
-			if(m_outgoingEdges.indexOf(edge) == -1)
-				m_outgoingEdges.push(edge);
-			edge.outgoingEdgePosition = m_outgoingEdges.length-1;
-			//I want the edges to be in ascending order according to x position, so do that here
-			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
-			
-		}
-		
-		//adds edge to incoming edge method (unless currently in vector), then sorts
-		public function setIncomingEdge(edge:GameEdgeContainer):void
-		{
-			if(m_incomingEdges.indexOf(edge) == -1)
-				m_incomingEdges.push(edge);
-			edge.incomingEdgePosition = m_incomingEdges.length-1;
-			//I want the edges to be in ascending order according to x position, so do that here
-			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
-		}
-		
-		public function onEnterFrame(event:Event):void
-		{
-			if(m_isDirty)
-			{
-				removeChildren();
-				draw();
-				m_isDirty = false;
-			}
-		}
 		
 		public function isStartingNode():Boolean
 		{			
@@ -260,7 +87,7 @@ package scenes.game.display
 		}
 		
 		private var m_star:ScoreStar;
-		public function draw():void
+		override public function draw():void
 		{
 			var color:uint = getColor();
 			
@@ -272,20 +99,20 @@ package scenes.game.display
 			else if(color == UNADJUSTABLE_COLOR)
 				m_shape.graphics.beginMaterialFill(unadjustableColorMaterial);
 			
-			m_shape.graphics.drawRoundRect(0, 0, imageWidth, imageHeight, 1.0);
+			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, .2);
 			m_shape.graphics.endFill();
 			
 			if (false)// !isWide())
 			{
 				// Draw inner black outline to appear smaller if this is a narrow node
 				m_shape.graphics.lineStyle(1.5, 0x0);
-				m_shape.graphics.drawRoundRect(1.0, 1.0, (imageWidth - 2.0), (imageHeight - 2.0), 1.0);
+				m_shape.graphics.drawRoundRect(1.0, 1.0, (shapeWidth - 2.0), (shapeHeight - 2.0), .2);
 			}
 			
 			if(m_isSelected && !isTempSelection)
 			{
 				m_shape.graphics.beginMaterialFill(selectedColorMaterial);
-				m_shape.graphics.drawRect(0, 0, imageWidth, imageHeight);
+				m_shape.graphics.drawRect(0, 0, shapeWidth, shapeHeight);
 				m_shape.graphics.endFill();
 			}
 			
@@ -326,41 +153,18 @@ package scenes.game.display
 				return Constants.NARROW_OUTPUT_POINTS * Math.max(0, m_numOutgoingNodeEdges - m_numIncomingNodeEdges);
 			}
 		}
-		
-		public function findGroup(dictionary:Dictionary):void
-		{
-			dictionary[id] = this;
-			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
-			{
-				var oJoint:GameJointNode = oedge1.m_joint;
-				for each(var oedge2:GameEdgeContainer in oJoint.m_outgoingEdges)
-				{
-					if(dictionary[oedge2.m_node.id] == null)
-						oedge2.m_node.findGroup(dictionary);
-				}
-			}
-			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
-			{
-				var iJoint:GameJointNode = iedge1.m_joint;
-				for each(var iedge2:GameEdgeContainer in iJoint.m_incomingEdges)
-				{
-					if(dictionary[iedge2.m_node.id] == null)
-						iedge2.m_node.findGroup(dictionary);
-				}
-			}
-		}
-		
+
 		public function isEditable():Boolean
 		{
 			return m_editable;
 		}
 		
-		override public function isWide():Boolean
+		public function isWide():Boolean
 		{
 			return m_edgeSetEdges[0].is_wide;
 		}
 		
-		override public function getColor():int
+		public function getColor():int
 		{
 			if(m_editable)
 			{

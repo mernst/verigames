@@ -131,23 +131,18 @@ package scenes.game.display
 			level_has_been_solved_before = false;
 			levels_that_depend_on_this_level = new Vector.<Level>();
 			levels_that_this_level_depends_on = new Vector.<Level>();
+			
+			initialize();
+
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
 		}
 		
-		public function takeSnapshot():LevelNodes
+		protected function initialize():void
 		{
-			return levelNodes.clone();
-		}
-		
-		protected function onAddedToStage(event:starling.events.Event):void
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			m_edgeList = new Vector.<GameEdgeContainer>;
-			setDisplayData();
-			
 			selectedComponents = new Vector.<GameComponent>;
-
+			
 			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
 			{
 				for each(var node:Node in boardNode.nodeDictionary)
@@ -187,10 +182,11 @@ package scenes.game.display
 				m_nodeList.push(gameNode);
 				boxDictionary[edgeSet.id] = gameNode;
 				
-				minX = Math.min(minX, gameNode.boundingBox.left);
-				minY = Math.min(minY, gameNode.boundingBox.top);
-				maxX = Math.max(maxX, gameNode.boundingBox.right);
-				maxY = Math.max(maxY, gameNode.boundingBox.bottom);
+				minX = Math.min(minX, gameNode.m_boundingBox.left);
+				minY = Math.min(minY, gameNode.m_boundingBox.top);
+				maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+				maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -199,14 +195,14 @@ package scenes.game.display
 			// Process <joint> 's
 			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
 			{
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML.@id, jointLayoutXML);
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML);
 				m_jointList.push(joint);
-				jointDictionary[joint.id] = joint;
+				jointDictionary[joint.m_id] = joint;
 				
-				minX = Math.min(minX, joint.boundingBox.left);
-				minY = Math.min(minY, joint.boundingBox.top);
-				maxX = Math.max(maxX, joint.boundingBox.right);
-				maxY = Math.max(maxY, joint.boundingBox.bottom);
+				minX = Math.min(minX, joint.m_boundingBox.left);
+				minY = Math.min(minY, joint.m_boundingBox.top);
+				maxX = Math.max(maxX, joint.m_boundingBox.right);
+				maxY = Math.max(maxY, joint.m_boundingBox.bottom);
 			}
 			
 			// Process <line> 's
@@ -269,33 +265,42 @@ package scenes.game.display
 					edgeArray[i].y -= minYedge;
 				}
 				
-				var newGameEdge:GameEdgeContainer = new GameEdgeContainer(edgeArray, myNode, myJoint, dir);
-				newGameEdge.globalPosition = new Point(minX, minY);
+				var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
+				var newGameEdge:GameEdgeContainer;
+				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir);
+				else
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir);
 				m_edgeList.push(newGameEdge);
-				if (newGameEdge.toBox) {
-					myJoint.setOutgoingEdge(newGameEdge);
-					myNode.setIncomingEdge(newGameEdge);
-				} else {
-					myNode.setOutgoingEdge(newGameEdge);
-					myJoint.setIncomingEdge(newGameEdge);
-				}
 				
 				minX = Math.min(minX, minXedge);
 				minY = Math.min(minY, minYedge);
 				maxX = Math.max(maxX, maxXedge);
 				maxY = Math.max(maxY, maxYedge);
 			}
-			
+			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
-			draw();
 			addEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
 			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
+		}
+		
+		public function takeSnapshot():LevelNodes
+		{
+			return levelNodes.clone();
+		}
+		
+		protected function onAddedToStage(event:starling.events.Event):void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			setDisplayData();
+			
+			draw();
 			
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
 			
@@ -428,57 +433,57 @@ package scenes.game.display
 		//data object should be in final selected/unselected state
 		private function onComponentSelectionChanged(component:GameNode):void
 		{		
-			if(component.m_isSelected)
-			{
-				if(selectedComponents.indexOf(component) == -1)
-					selectedComponents.push(component);
-				//push any connecting edges that have both connected nodes selected
-				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
-				{
-					var connectedNode:GameNode = edge.m_node;
-					if(selectedComponents.indexOf(connectedNode) != -1)
-					{
-						if(selectedComponents.indexOf(edge) == -1)
-							selectedComponents.push(edge);
-						edge.componentSelected(true);
-					}
-				}
-				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
-				{
-					var connectedJoint:GameJointNode = edge1.m_joint;
-					if(selectedComponents.indexOf(connectedJoint) != -1)
-					{
-						if(selectedComponents.indexOf(edge1) == -1)
-							selectedComponents.push(edge1);
-						edge1.componentSelected(true);
-					}
-				}
-			}
-			else
-			{
-				var index:int = selectedComponents.indexOf(component);
-				if(index != -1)
-					selectedComponents.splice(index, 1);
-				
-				for each(var edge2:GameEdgeContainer in component.m_incomingEdges)
-				{
-					if(selectedComponents.indexOf(edge2) != -1)
-					{
-						var edgeIndex:int = selectedComponents.indexOf(edge2);
-						selectedComponents.splice(edgeIndex, 1);
-						edge2.componentSelected(false);
-					}
-				}
-				for each(var edge3:GameEdgeContainer in component.m_outgoingEdges)
-				{
-					if(selectedComponents.indexOf(edge3) != -1)
-					{
-						var edgeIndex1:int = selectedComponents.indexOf(edge3);
-						selectedComponents.splice(edgeIndex1, 1);
-						edge3.componentSelected(false);
-					}
-				}
-			}
+//			if(component.m_isSelected)
+//			{
+//				if(selectedComponents.indexOf(component) == -1)
+//					selectedComponents.push(component);
+//				//push any connecting edges that have both connected nodes selected
+//				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
+//				{
+//					var connectedNode:GameNode = edge.m_node;
+//					if(selectedComponents.indexOf(connectedNode) != -1)
+//					{
+//						if(selectedComponents.indexOf(edge) == -1)
+//							selectedComponents.push(edge);
+//						edge.componentSelected(true);
+//					}
+//				}
+//				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
+//				{
+//					var connectedJoint:GameJointNode = edge1.m_joint;
+//					if(selectedComponents.indexOf(connectedJoint) != -1)
+//					{
+//						if(selectedComponents.indexOf(edge1) == -1)
+//							selectedComponents.push(edge1);
+//						edge1.componentSelected(true);
+//					}
+//				}
+//			}
+//			else
+//			{
+//				var index:int = selectedComponents.indexOf(component);
+//				if(index != -1)
+//					selectedComponents.splice(index, 1);
+//				
+//				for each(var edge2:GameEdgeContainer in component.m_incomingEdges)
+//				{
+//					if(selectedComponents.indexOf(edge2) != -1)
+//					{
+//						var edgeIndex:int = selectedComponents.indexOf(edge2);
+//						selectedComponents.splice(edgeIndex, 1);
+//						edge2.componentSelected(false);
+//					}
+//				}
+//				for each(var edge3:GameEdgeContainer in component.m_outgoingEdges)
+//				{
+//					if(selectedComponents.indexOf(edge3) != -1)
+//					{
+//						var edgeIndex1:int = selectedComponents.indexOf(edge3);
+//						selectedComponents.splice(edgeIndex1, 1);
+//						edge3.componentSelected(false);
+//					}
+//				}
+//			}
 		}
 		
 		private function onComponentSelection(e:starling.events.Event):void
@@ -558,56 +563,44 @@ package scenes.game.display
 			var q:Quad = new Quad(1, 1, 0xff0000);
 			p.x = 0;
 			p.y = 0;
-			q.x = m_boundingBox.width-1;
-			q.y = m_boundingBox.height-1;
+			q.x = (m_boundingBox.width-1);
+			q.y = (m_boundingBox.height-1);
 			
 			addChild(p);
 			addChild(q);
-			
-//			//bound out temp boundaries
-//			//add two lines at opposite corners to cause the size to be right
-//			var p1:Quad = new Quad(2*m_boundingBox.width, 1, 0xff0000);
-//			var q1:Quad = new Quad(2*m_boundingBox.width, 1, 0xff0000);
-//			p1.x = -0.5*m_boundingBox.width;
-//			p1.y = -0.5*m_boundingBox.height;
-//			q1.x = -0.5*m_boundingBox.width;
-//			q1.y = 1.5*m_boundingBox.height;
-//			
-//			addChild(q1);
-//			addChild(p1);
-			
-
+			trace("Bounding Box " + m_boundingBox.width + "  " + m_boundingBox.height);
 			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
-			var count:int = 1
+			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.boundingBox.x - m_boundingBox.x;
-				gameNode.y = gameNode.boundingBox.y - m_boundingBox.y;
+				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
+				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
 				addChild(gameNode);
-				count++;
+				nodeCount++;
 			}
 			
+			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.boundingBox.x - m_boundingBox.x;
-				gameJoint.y = gameJoint.boundingBox.y - m_boundingBox.y;
+				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
+				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
 				addChild(gameJoint);
-				count++;
+				jointCount++;
 			}
 			
+			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-			//	if(gameEdge.m_fromNode.m_outgoingEdges.indexOf(gameEdge) > 2)
-				{
-					gameEdge.x = gameEdge.globalPosition.x - m_boundingBox.x;
-					gameEdge.y = gameEdge.globalPosition.y - m_boundingBox.y;
-					addChild(gameEdge);
-					count++;
-				}
+				addChild(gameEdge);
+				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
+				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
+				trace(gameEdge.x + " " + gameEdge.y);
+				edgeCount++;
 			}
+			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
 		}
 		
 		

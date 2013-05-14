@@ -30,13 +30,10 @@ package scenes.game.display
 		private var m_quad:Quad;
 		private var m_highlightQuad:Quad;
 		
-		public function GameEdgeJoint(fromComponent:GameComponent, toComponent:GameComponent, parentEdge:GameEdgeContainer = null, isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
+		public function GameEdgeJoint(isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
 		{
-			super();
+			super("");
 			
-			m_parentEdge = parentEdge;
-			m_fromComponent = fromComponent;
-			m_toComponent = toComponent;
 			m_isLastJoint = isLastJoint;
 			m_isConnectionJoint = isConnectionJoint;
 			m_originalPoint = new Point;
@@ -45,19 +42,6 @@ package scenes.game.display
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			m_isDirty = true;
-			
-			if(m_fromComponent is GameNode)
-			{
-				m_closestWall = GameEdgeContainer.BOTTOM_WALL;
-				var node:GameNode = m_fromComponent as GameNode;
-				m_position = node.m_outgoingEdges.indexOf(parent);
-			}
-			else if(m_toComponent is GameNode)
-			{
-				m_closestWall = GameEdgeContainer.TOP_WALL;
-				var inode:GameNode = m_toComponent as GameNode;
-				m_position = inode.m_incomingEdges.indexOf(parent);
-			}
 		}
 		
 		override public function dispose():void
@@ -123,19 +107,19 @@ package scenes.game.display
 						isMoving = true;
 						m_originalPoint.x = x; 
 						m_originalPoint.y = y;
-						if(m_fromComponent is GameNode)
-						{
-							m_closestWall = GameEdgeContainer.BOTTOM_WALL;
-							var node:GameNode = m_fromComponent as GameNode;
-							m_position = node.m_outgoingEdges.indexOf(parent);
-						}
-						else if(m_toComponent is GameNode)
-						{
-							m_closestWall = GameEdgeContainer.TOP_WALL;
-							var inode:GameNode = m_toComponent as GameNode;
-							m_position = inode.m_incomingEdges.indexOf(parent);
-							trace(m_position + " " + x);
-						}
+//						if(m_fromComponent is GameNode)
+//						{
+//							m_closestWall = GameEdgeContainer.BOTTOM_WALL;
+//							var node:GameNode = m_fromComponent as GameNode;
+//							m_position = node.m_outgoingEdges.indexOf(parent);
+//						}
+//						else if(m_toComponent is GameNode)
+//						{
+//							m_closestWall = GameEdgeContainer.TOP_WALL;
+//							var inode:GameNode = m_toComponent as GameNode;
+//							m_position = inode.m_incomingEdges.indexOf(parent);
+//							trace(m_position + " " + x);
+//						}
 					}
 					
 					var currentMoveLocation:Point = touches[0].getLocation(this);
@@ -153,10 +137,10 @@ package scenes.game.display
 		protected function trackConnector(currentMoveLocation:Point, previousLocation:Point):void
 		{
 			var containerComponent:GameComponent;
-			if(m_fromComponent is GameNode)
-				containerComponent = m_fromComponent;
-			else 
-				containerComponent = m_toComponent;
+//			if(m_fromComponent is GameNode)
+//				containerComponent = m_fromComponent;
+//			else 
+//				containerComponent = m_toComponent;
 			
 			var startPt:Point = new Point(x,y);
 			
@@ -195,7 +179,7 @@ package scenes.game.display
 			var finalPt:Point = parent.globalToLocal(jointUpdatedGlobalPt);
 			var updatePoint:Point = finalPt.subtract(startPt);	
 			
-			var isOutgoingEdge:Boolean = m_fromComponent is GameNode ? true : false;
+			var isOutgoingEdge:Boolean;// = m_fromComponent is GameNode ? true : false;
 			
 			//now compare current point with other connection points, and if we've overlapped one of them, switch places
 			//moving towards the right
@@ -301,9 +285,11 @@ package scenes.game.display
 	
 		public function draw():void
 		{
-			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+//			if(!this.m_isConnectionJoint)
+//				return;
+			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int;
-			color = getColor();
+			color = 0x00ff00;//getColor();
 		
 			removeChildren();
 
@@ -332,25 +318,6 @@ package scenes.game.display
 //			txt.x = 1;
 //			m_shape.addChild(txt);
 //			addChild(m_shape);
-		}
-		
-		override public function isWide():Boolean
-		{
-			if(m_isLastJoint)
-				return m_toComponent.isWide();
-			else
-				return m_fromComponent.isWide();
-		}
-		
-		override public function getColor():int
-		{
-			if(m_isLastJoint && m_showError)
-				return ERROR_COLOR;
-			else
-				if(m_isLastJoint)
-					return m_toComponent.getColor();
-				else
-					return m_fromComponent.getColor();
 		}
 		
 		public function onEnterFrame(event:Event):void
