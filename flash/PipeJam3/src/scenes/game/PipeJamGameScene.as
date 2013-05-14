@@ -29,9 +29,9 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		public var worldFile:String = "../SampleWorlds/DemoWorld/UserData.zip";
-		public var layoutFile:String = "../SampleWorlds/DemoWorld/UserDataGraph.zip";
-		public var constraintsFile:String = "../SampleWorlds/DemoWorld/UserDataConstraints.zip";
+		public var worldFile:String = "../SampleWorlds/DemoWorld/Application1.zip";
+		public var layoutFile:String = "../SampleWorlds/DemoWorld/Application1Graph.zip";
+		public var constraintsFile:String = "../SampleWorlds/DemoWorld/Application1Constraints.zip";
 		private var world_zip_file_to_be_played:String;// = "../SampleWorlds/DemoWorld.zip";
 		public var m_worldXML:XML;
 		public var m_worldLayout:XML;
@@ -56,8 +56,7 @@ package scenes.game
 		protected var start_button:Button;
 		private var active_world:World;
 		private var m_network:Network;
-				
-	
+		
 		public function PipeJamGameScene(game:PipeJamGame)
 		{
 			super(game);

@@ -37,19 +37,23 @@ package scenes.game.display
 		
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		
-		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef, edgeSetEdges:Vector.<Edge>)
+		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
 			super(nodeXML);
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
-
+			
 			shapeWidth = m_boundingBox.width;
 			shapeHeight = m_boundingBox.height;
 			
-			if (m_edgeSetEdges.length == 0) {
-				throw new Error("GameNode created with no associated edge objects");
+			if (m_edgeSetEdges == null) {
+				m_edgeSetEdges = new Vector.<Edge>();
 			}
-			m_editable = m_edgeSetEdges[0].editable;
+			if (m_edgeSetEdges.length == 0) {
+				m_editable = false;
+			} else {
+				m_editable = m_edgeSetEdges[0].editable;
+			}
 			m_numIncomingNodeEdges = m_numOutgoingNodeEdges = 0;
 			for each (var myEdge:Edge in m_edgeSetEdges) {
 				if (myEdge.is_wide != isWide()) {

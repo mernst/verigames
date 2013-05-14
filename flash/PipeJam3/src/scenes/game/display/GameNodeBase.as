@@ -24,7 +24,6 @@ package scenes.game.display
 		public var m_incomingEdges:Vector.<GameEdgeContainer>;
 		
 		protected var m_gameEdges:Vector.<GameEdgeContainer>;
-
 		
 		public function GameNodeBase(_layoutXML:XML)
 		{

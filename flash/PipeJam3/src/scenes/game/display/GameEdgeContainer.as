@@ -54,7 +54,9 @@ package scenes.game.display
 			m_toComponent = toComponent;
 			m_dir = dir;
 			m_originalEdge = true;
-			
+			if (!toComponent) {
+				var d = 1;
+			}
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			

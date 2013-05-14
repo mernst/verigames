@@ -167,20 +167,33 @@ package scenes.game.display
 			// Process <box> 's
 			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
-				var edgeid:String = boxLayoutXML.@id;
-				if (!edgeSetDictionary.hasOwnProperty(edgeid)) {
-					throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
+				var boxEdgeSetId:String = boxLayoutXML.@id;
+				var gameNode:GameNode;
+				if (!edgeSetDictionary.hasOwnProperty(boxEdgeSetId)) {
+					// TODO: If we have another level with this subboard, produce a link here:
+					if (boxEdgeSetId.indexOf("EXT___") == 0) {
+						// Found a reference to an external SUBBOARD, create fixed node
+						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
+						var isStarting:Boolean = false;
+						if (boxEdgeSetId.indexOf("___OUT___") > -1) {
+							isWide = false;
+							isStarting = true;
+						}
+						gameNode = new GameNodeFixed(boxLayoutXML, isWide, isStarting);
+					} else {
+						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
+					}
+				} else {
+					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
+					//grab an example edge for it's attributes FIX - use constraints xml file
+					var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
+					for each (var myEdgeId:String in edgeSet.edge_ids) {
+						edgeSetEdges.push(edgeDictionary[myEdgeId]);
+					}
+					gameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
 				}
-				var edgeSet:EdgeSetRef = edgeSetDictionary[edgeid];
-				//grab an example edge for it's attributes FIX - use constraints xml file
-				var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
-				for each (var edgeId:String in edgeSet.edge_ids) {
-					edgeSetEdges.push(edgeDictionary[edgeId]);
-				}
-				
-				var gameNode:GameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
 				m_nodeList.push(gameNode);
-				boxDictionary[edgeSet.id] = gameNode;
+				boxDictionary[boxEdgeSetId] = gameNode;
 				
 				minX = Math.min(minX, gameNode.m_boundingBox.left);
 				minY = Math.min(minY, gameNode.m_boundingBox.top);
