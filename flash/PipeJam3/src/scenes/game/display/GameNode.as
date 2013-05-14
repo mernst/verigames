@@ -106,7 +106,7 @@ package scenes.game.display
 			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, .2);
 			m_shape.graphics.endFill();
 			
-			if (false)// !isWide())
+			if (!isWide())
 			{
 				// Draw inner black outline to appear smaller if this is a narrow node
 				m_shape.graphics.lineStyle(1.5, 0x0);
@@ -122,15 +122,15 @@ package scenes.game.display
 			
 			addChild(m_shape);
 			
-			var wideScore:Number = getWideScore();
-			var narrowScore:Number = getNarrowScore();
-			if (wideScore > narrowScore) {
-				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-				addChild(m_star);
-			} else if (narrowScore > wideScore) {
-				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-				addChild(m_star);
-			}
+//			var wideScore:Number = getWideScore();
+//			var narrowScore:Number = getNarrowScore();
+//			if (wideScore > narrowScore) {
+//				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
+//				addChild(m_star);
+//			} else if (narrowScore > wideScore) {
+//				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
+//				addChild(m_star);
+//			}
 			useHandCursor = m_editable;
 			
 			//			var number:String = ""+m_id.substring(4);
@@ -157,34 +157,10 @@ package scenes.game.display
 				return Constants.NARROW_OUTPUT_POINTS * Math.max(0, m_numOutgoingNodeEdges - m_numIncomingNodeEdges);
 			}
 		}
-
-		public function isEditable():Boolean
-		{
-			return m_editable;
-		}
 		
-		public function isWide():Boolean
+		override public function isWide():Boolean
 		{
-			return m_edgeSetEdges[0].is_wide;
-		}
-		
-		public function getColor():int
-		{
-			if(m_editable)
-			{
-				if (isWide())
-				{
-					return WIDE_COLOR;
-				}
-				else
-				{
-					return NARROW_COLOR;
-				}
-			}
-			else
-			{
-				return UNADJUSTABLE_COLOR;
-			}
+			return m_isWide;
 		}
 	}
 }

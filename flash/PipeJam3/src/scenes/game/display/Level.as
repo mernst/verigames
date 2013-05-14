@@ -245,13 +245,6 @@ package scenes.game.display
 					throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
 				}
 				
-				/*
-				var fromEdgeID:String = edgeXML.@from;
-				var toEdgeID:String = edgeXML.@to;
-				var fromEdgeSetID:String = edgeSetDictionary[fromEdgeID].id;
-				var toEdgeSetID:String = edgeSetDictionary[toEdgeID].id;
-				*/
-				
 				//normalize edge Array, and then slide game edge to right x,y value
 				var minXedge:Number = Number.POSITIVE_INFINITY;
 				var minYedge:Number = Number.POSITIVE_INFINITY;
@@ -430,92 +423,92 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(e:starling.events.Event):void
 		{
-			var edgeSet:EdgeSetRef = e.data as EdgeSetRef;
-			
-			for each (var edgeID:String in edgeSet.edge_ids)
-			{
-				var edge:Edge = this.edgeDictionary[edgeID];
-				if(edge != null)
-				{
-					edge.is_wide = !edge.is_wide;
-				}
-			}
+//			var edgeSet:EdgeSetRef = e.data as EdgeSetRef;
+//			
+//			for each (var edgeID:String in edgeSet.edge_ids)
+//			{
+//				var edge:Edge = this.edgeDictionary[edgeID];
+//				if(edge != null)
+//				{
+//					edge.is_wide = !edge.is_wide;
+//				}
+//			}
 			dispatchEvent(new Event(Level.SCORE_CHANGED, true, this));
 		}
 		
 		//data object should be in final selected/unselected state
-		private function onComponentSelectionChanged(component:GameNode):void
+		private function onComponentSelectionChanged(component:GameNodeBase):void
 		{		
-//			if(component.m_isSelected)
-//			{
-//				if(selectedComponents.indexOf(component) == -1)
-//					selectedComponents.push(component);
-//				//push any connecting edges that have both connected nodes selected
-//				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
-//				{
-//					var connectedNode:GameNode = edge.m_node;
-//					if(selectedComponents.indexOf(connectedNode) != -1)
-//					{
-//						if(selectedComponents.indexOf(edge) == -1)
-//							selectedComponents.push(edge);
-//						edge.componentSelected(true);
-//					}
-//				}
-//				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
-//				{
-//					var connectedJoint:GameJointNode = edge1.m_joint;
-//					if(selectedComponents.indexOf(connectedJoint) != -1)
-//					{
-//						if(selectedComponents.indexOf(edge1) == -1)
-//							selectedComponents.push(edge1);
-//						edge1.componentSelected(true);
-//					}
-//				}
-//			}
-//			else
-//			{
-//				var index:int = selectedComponents.indexOf(component);
-//				if(index != -1)
-//					selectedComponents.splice(index, 1);
-//				
-//				for each(var edge2:GameEdgeContainer in component.m_incomingEdges)
-//				{
-//					if(selectedComponents.indexOf(edge2) != -1)
-//					{
-//						var edgeIndex:int = selectedComponents.indexOf(edge2);
-//						selectedComponents.splice(edgeIndex, 1);
-//						edge2.componentSelected(false);
-//					}
-//				}
-//				for each(var edge3:GameEdgeContainer in component.m_outgoingEdges)
-//				{
-//					if(selectedComponents.indexOf(edge3) != -1)
-//					{
-//						var edgeIndex1:int = selectedComponents.indexOf(edge3);
-//						selectedComponents.splice(edgeIndex1, 1);
-//						edge3.componentSelected(false);
-//					}
-//				}
-//			}
+			if(component.m_isSelected)
+			{
+				if(selectedComponents.indexOf(component) == -1)
+					selectedComponents.push(component);
+				//push any connecting edges that have both connected nodes selected
+				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
+				{
+					var fromComponent:GameNodeBase = edge.m_fromComponent;
+					if(selectedComponents.indexOf(fromComponent) != -1)
+					{
+						if(selectedComponents.indexOf(edge) == -1)
+							selectedComponents.push(edge);
+						edge.componentSelected(true);
+					}
+				}
+				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
+				{
+					var toComponent:GameNodeBase = edge1.m_toComponent;
+					if(selectedComponents.indexOf(toComponent) != -1)
+					{
+						if(selectedComponents.indexOf(edge1) == -1)
+							selectedComponents.push(edge1);
+						edge1.componentSelected(true);
+					}
+				}
+			}
+			else
+			{
+				var index:int = selectedComponents.indexOf(component);
+				if(index != -1)
+					selectedComponents.splice(index, 1);
+				
+				for each(var edge2:GameEdgeContainer in component.m_incomingEdges)
+				{
+					if(selectedComponents.indexOf(edge2) != -1)
+					{
+						var edgeIndex:int = selectedComponents.indexOf(edge2);
+						selectedComponents.splice(edgeIndex, 1);
+						edge2.componentSelected(false);
+					}
+				}
+				for each(var edge3:GameEdgeContainer in component.m_outgoingEdges)
+				{
+					if(selectedComponents.indexOf(edge3) != -1)
+					{
+						var edgeIndex1:int = selectedComponents.indexOf(edge3);
+						selectedComponents.splice(edgeIndex1, 1);
+						edge3.componentSelected(false);
+					}
+				}
+			}
 		}
 		
 		private function onComponentSelection(e:starling.events.Event):void
 		{
-			var component:GameNode = e.data as GameNode;
+			var component:GameNodeBase = e.data as GameNodeBase;
 			if(component)
 				onComponentSelectionChanged(component);
 		}
 		
 		private function onUnselectComponent(e:starling.events.Event):void
 		{
-			var component:GameNode = e.data as GameNode;
+			var component:GameNodeBase = e.data as GameNodeBase;
 			if(component)
 				onComponentSelectionChanged(component);
 		}
 		
 		private function onGroupSelection(e:starling.events.Event):void
 		{
-			var component:GameNode = e.data as GameNode;
+			var component:GameNodeBase = e.data as GameNodeBase;
 			var groupDictionary:Dictionary = new Dictionary;
 			component.findGroup(groupDictionary);
 			
@@ -524,23 +517,23 @@ package scenes.game.display
 				if(selectedComponents.indexOf(comp) == -1)
 				{
 					comp.componentSelected(true);
-					if(comp is GameNode)
-						onComponentSelectionChanged(comp as GameNode);
+					if(comp is GameNodeBase)
+						onComponentSelectionChanged(comp as GameNodeBase);
 				}
 			}
 		}
 		
 		private function onGroupUnselection(e:starling.events.Event):void
 		{
-			var component:GameNode = e.data as GameNode;
+			var component:GameNodeBase = e.data as GameNodeBase;
 			var groupDictionary:Dictionary = new Dictionary;
 			component.findGroup(groupDictionary);
 			
 			for each(var comp:GameComponent in groupDictionary)
 			{
 				comp.componentSelected(false);
-				if(comp is GameNode)
-					onComponentSelectionChanged(comp as GameNode);
+				if(comp is GameNodeBase)
+					onComponentSelectionChanged(comp as GameNodeBase);
 			}
 		}
 		
@@ -550,8 +543,8 @@ package scenes.game.display
 			{
 				var comp:GameComponent = selectedComponents[0];
 				comp.componentSelected(false);
-				if(comp is GameNode)
-					onComponentSelectionChanged(comp as GameNode);
+				if(comp is GameNodeBase)
+					onComponentSelectionChanged(comp as GameNodeBase);
 			}
 		}
 		
@@ -598,8 +591,8 @@ package scenes.game.display
 			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
-				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
+				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameJoint.m_boundingBox.width/2;
+				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameJoint.m_boundingBox.height/2;
 				addChild(gameJoint);
 				jointCount++;
 			}
@@ -607,11 +600,10 @@ package scenes.game.display
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
+				edgeCount++;
 				addChild(gameEdge);
 				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
 				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
-				trace(gameEdge.x + " " + gameEdge.y);
-				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
 		}
@@ -646,7 +638,7 @@ package scenes.game.display
 			if(startingPoint != null)
 			{
 				marqueeRect.removeChildren();
-				marqueeRect.graphics.lineStyle(1, 0xffffff);
+				marqueeRect.graphics.lineStyle(.1, 0xffffff);
 				marqueeRect.graphics.moveTo(0,0);
 				var pt1:Point = globalToLocal(startingPoint);
 				var pt2:Point = globalToLocal(currentPoint);

@@ -56,6 +56,12 @@
 
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
+		}
+		
+		protected function onAddedToStage(event:starling.events.Event):void
+		{
+			m_isDirty = true;
 		}
 		
 		override public function dispose():void
@@ -137,14 +143,12 @@
 		public function updateSegment(startPt:Point, endPt:Point):void
 		{
 			m_endPt = endPt.subtract(startPt);
-
 			m_isDirty = true;
 		}
-		
+
 		public function draw():void
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			m_color = 0x0000ff;
 			if (m_arrowImg) {
 				m_arrowImg.removeFromParent(true);
 				m_arrowImg = null;
