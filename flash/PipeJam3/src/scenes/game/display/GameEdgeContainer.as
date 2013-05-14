@@ -29,7 +29,6 @@ package scenes.game.display
 		
 		public var incomingEdgePosition:int;
 		public var outgoingEdgePosition:int;
-		public var m_originalEdge:Boolean;
 		
 		//use for figuring out closest wall
 		public static var LEFT_WALL:int = 1;
@@ -53,7 +52,6 @@ package scenes.game.display
 			m_fromComponent = fromComponent;
 			m_toComponent = toComponent;
 			m_dir = dir;
-			m_originalEdge = true;
 			if (!toComponent) {
 				var d = 1;
 			}
@@ -76,12 +74,20 @@ package scenes.game.display
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			//fix up end connection point (start is at y=0) and adjust bounding box if needed
+			//fix up connection points and adjust bounding box if needed
 			m_boundingBox.y = m_fromComponent.y + m_fromComponent.height;
 			m_boundingBox.height = m_toComponent.y - m_boundingBox.y;
+			m_startPoint.y = 0;
 			m_endPoint.y =  m_boundingBox.height;
 			
 			positionChildren();
+			
+			//touch up color and width
+			setIncomingColor(m_fromComponent.getColor());
+			setOutgoingColor(m_toComponent.getColor());
+			
+			setIncomingWidth(m_fromComponent.m_isWide);
+			setOutgoingWidth(m_toComponent.m_isWide);
 		}
 		
 		override public function dispose():void
@@ -167,9 +173,11 @@ package scenes.game.display
 
 			var previousSegment:GameEdgeSegment = null;
 			//move each segment to where they should be, and add them, then add front joint
-			var segIndex:int = 0;
+			var a:int = 0;
+			var b:int = 1;
+			
 			var segment:GameEdgeSegment;
-			for(; segIndex<m_edgeSegments.length; segIndex++)
+			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
 				var startPoint:Point = m_jointPoints[segIndex];
@@ -182,19 +190,17 @@ package scenes.game.display
 				addChild(segment);
 				
 				var joint:GameEdgeJoint = m_edgeJoints[segIndex];
-				if(segIndex != 0)
-				{ 
-					joint.x = m_jointPoints[segIndex].x;
-					joint.y = m_jointPoints[segIndex].y;
-				}
+				joint.x = m_jointPoints[segIndex].x;
+				joint.y = m_jointPoints[segIndex].y;
+				
 				addChild(joint);
 			}
 			
 			//deal with last joint special, since it's at the end of a segment
-			var lastJoint:GameEdgeJoint = m_edgeJoints[segIndex];
+			var lastJoint:GameEdgeJoint = m_edgeJoints[m_edgeSegments.length];
 			//add joint at end
-			lastJoint.x = m_jointPoints[segIndex].x;
-			lastJoint.y = m_jointPoints[segIndex].y;
+			lastJoint.x = m_jointPoints[m_edgeSegments.length].x;
+			lastJoint.y = m_jointPoints[m_edgeSegments.length].y;
 			addChild(lastJoint);
 		}
 		
@@ -202,22 +208,15 @@ package scenes.game.display
 		{
 			if(!m_isSelected)
 			{
-				if(m_originalEdge)
-				{
-					removeChildren();
-					m_originalEdge = false;
-					m_edgeSegments = null;
-				}
-				
 				if(isOutgoing)
 				{
-					m_startJoint.x = m_startJoint.x + deltaPoint.x;
-					m_startJoint.y = m_startJoint.y + deltaPoint.y;
+					m_startPoint.x = m_startPoint.x + deltaPoint.x;
+					m_startPoint.y = m_startPoint.y + deltaPoint.y;
 				}
 				else
 				{
-					m_endJoint.x = m_endJoint.x+deltaPoint.x;
-					m_endJoint.y = m_endJoint.y+deltaPoint.y;
+					m_endPoint.x = m_endPoint.x+deltaPoint.x;
+					m_endPoint.y = m_endPoint.y+deltaPoint.y;
 				}
 
 				positionChildren();
@@ -228,10 +227,6 @@ package scenes.game.display
 		
 		public function rubberBandEdgeSegment(deltaPoint:Point, segment:GameEdgeSegment):void 
 		{
-			//probably should somehow make this work
-			if(this.m_originalEdge)
-				return;
-			
 			//update both end joints, and then redraw
 			var segmentIndex:int = m_edgeSegments.indexOf(segment);
 			//if connected to end segment, add a expansion joint in between. Test both ends.
@@ -298,7 +293,6 @@ package scenes.game.display
 			
 		}
 		
-		//nodeExtension and the extensionExtension are the same to start
 		private function makeInitialNodesAndExtension(connectionPoint:Point, startIndex:int, nodeIndex:int, isStartPoint:Boolean):void
 		{
 			m_jointPoints[startIndex] = connectionPoint.clone();
@@ -329,9 +323,17 @@ package scenes.game.display
 //			var gFromNodeRightSide:Number = m_node.x+m_node.width;
 //			var gFromNodeTopSide:Number = m_node.y;
 //			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
-//
-			m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
-			m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);						
+
+			if(m_jointPoints[1].y > m_jointPoints[4].y)
+			{
+				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
+				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
+			}
+			else
+			{
+				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
+				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
+			}
 		}
 		
 		override public function componentSelected(isSelected:Boolean):void
@@ -343,7 +345,8 @@ package scenes.game.display
 		//only use if the container it's self draws specific items.
 		public function draw():void
 		{
-
+//			var quad:Quad = new Quad(this.m_boundingBox.width, this.m_boundingBox.height, 0xff0000);
+//			addChild(quad);
 		}
 		
 		override public function getScore():Number
@@ -452,16 +455,106 @@ package scenes.game.display
 		}
 		
 		//set children's width, based on incoming and outgoing component
-		public function setWidth(isWide:Boolean):void
+		public function setIncomingWidth(isWide:Boolean):void
 		{
-			m_isWide = isWide;
+			if(m_edgeSegments != null)
+				for(var segIndex:int = 0; segIndex<m_edgeSegments.length-1; segIndex++)
+				{
+					var segment:GameEdgeSegment = m_edgeSegments[segIndex];
+					if(segment.m_isWide != isWide)
+					{
+						segment.m_isWide = isWide;
+						segment.m_isDirty = true;
+					}
+				}
+			
+			if(m_edgeJoints != null)
+				for(var jointIndex:int = 0; jointIndex<this.m_edgeJoints.length-1; jointIndex++)
+				{
+					var joint:GameEdgeJoint = m_edgeJoints[jointIndex];
+					if(joint.m_isWide != isWide)
+					{
+						joint.m_isWide = isWide;
+						joint.m_isDirty = true;
+					}
+				}
+		}
+		
+		//set children's width, based on incoming and outgoing component
+		public function setOutgoingWidth(isWide:Boolean):void
+		{
+			if(m_edgeSegments != null)
+			{
+				var segment:GameEdgeSegment = m_edgeSegments[m_edgeSegments.length-1];
+				if(segment.m_isWide != isWide)
+				{
+					segment.m_isWide = isWide;
+					segment.m_isDirty = true;
+				}
+			}
+
+			if(m_edgeJoints != null)
+			{
+				var joint:GameEdgeJoint = m_edgeJoints[m_edgeJoints.length-1];
+				if(joint.m_isWide != isWide)
+				{
+					joint.m_isWide = isWide;
+					joint.m_isDirty = true;
+				}
+			}
 		}
 		
 		//set children's color, based on incoming and outgoing component and error condition
-		public function setColor():void
+		public function setIncomingColor(color:int):void
 		{
-			m_color = 0x00ff00;
+			if(m_edgeSegments != null)
+				for(var segIndex:int; segIndex<m_edgeSegments.length-1; segIndex++)
+				{
+					var segment:GameEdgeSegment = m_edgeSegments[segIndex];
+					if(segment.m_color != color)
+					{
+						segment.m_color = color;
+						segment.m_isDirty = true;
+					}
+				}
+			
+			if(m_edgeJoints != null)
+				for(var jointIndex:int; jointIndex<this.m_edgeJoints.length-1; jointIndex++)
+				{
+					var joint:GameEdgeJoint = m_edgeJoints[jointIndex];
+					if(joint.m_color != color)
+					{
+						joint.m_color = color;
+						joint.m_isDirty = true;
+					}
+				}
 		}
 		
+		//set children's color, based on incoming and outgoing component and error condition
+		public function setOutgoingColor(color:int):void
+		{
+			if(m_edgeSegments != null)
+			{
+				var segment:GameEdgeSegment = m_edgeSegments[m_edgeSegments.length-1];
+				if(segment.m_color != color)
+				{
+					segment.m_color = color;
+					segment.m_isDirty = true;
+				}
+			}
+			
+			if(m_edgeJoints != null)
+			{
+				var joint:GameEdgeJoint = m_edgeJoints[m_edgeJoints.length-1];
+					if(joint.m_color != color)
+				{
+					joint.m_color = color;
+					joint.m_isDirty = true;
+				}
+			}
+
+		}
+		
+
 	}
 }

@@ -41,7 +41,6 @@ package scenes.game.display
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
-			m_isDirty = true;
 		}
 		
 		override public function dispose():void
@@ -285,11 +284,7 @@ package scenes.game.display
 	
 		public function draw():void
 		{
-//			if(!this.m_isConnectionJoint)
-//				return;
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			var color:int;
-			color = 0x00ff00;//getColor();
 		
 			removeChildren();
 
@@ -306,9 +301,9 @@ package scenes.game.display
 				m_highlightQuad.y = -lineSize;
 				addChild(m_highlightQuad);
 			}
-			m_quad = new Quad(lineSize, lineSize, color);
+			m_quad = new Quad(lineSize, lineSize, m_color);
 			m_quad.x = -lineSize/2;
-			m_quad.y = -lineSize/2;
+			m_quad.y = 0;
 			addChild(m_quad);
 			
 

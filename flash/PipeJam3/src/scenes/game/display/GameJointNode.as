@@ -25,7 +25,7 @@ package scenes.game.display
 			addChild(m_quad);
 		}
 		
-		public function isWide():Boolean
+		override public function isWide():Boolean
 		{
 			// Joint's output is wide is any inputs are wide
 			var wide:Boolean = false;
@@ -35,7 +35,7 @@ package scenes.game.display
 			return wide;
 		}
 		
-		public function getColor():int
+		override public function getColor():int
 		{
 			return 0xAAAAAA;
 		}
