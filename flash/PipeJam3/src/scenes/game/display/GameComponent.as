@@ -7,14 +7,20 @@ package scenes.game.display
 	import starling.display.DisplayObjectContainer;
 	import starling.display.materials.StandardMaterial;
 	import starling.events.Event;
+	import flash.geom.Rectangle;
 	
 	public class GameComponent extends BaseComponent
 	{
+		
+		public var m_id:String;
+		
 		public var m_isSelected:Boolean;
 		public var m_isDirty:Boolean = false;
+				
+		public var m_boundingBox:Rectangle;
 		
-		protected var m_fromComponent:GameComponent;
-		protected var m_toComponent:GameComponent;
+		public var m_isWide:Boolean;
+		public var m_color:int;
 		
 		public static var NARROW_COLOR:uint = 0x5B74B8;// 0x1A85FF;
 		public static var WIDE_COLOR:uint = 0xAEBEE0;// 0x3427FF;
@@ -28,9 +34,11 @@ package scenes.game.display
 		static protected var unadjustableColorMaterial:StandardMaterial = null;
 		static protected var selectedColorMaterial:StandardMaterial = null;
 		
-		public function GameComponent()
+		public function GameComponent(_id:String)
 		{
 			super();
+			
+			m_id = _id;
 			m_isSelected = false;
 			
 			if(fillMaterial == null)
@@ -52,25 +60,15 @@ package scenes.game.display
 			}
 		}
 		
-		public function isWide():Boolean
-		{
-			return false;
-		}
-		
 		public function componentMoved(delta:Point):void
 		{
 			x += delta.x;
 			y += delta.y;
 		}
 		
-		public function getColor():int
-		{
-			return 0;
-		}
-		
 		public function getScore():Number
 		{
-			return isWide() ? getWideScore() : getNarrowScore();
+			return m_isWide ? getWideScore() : getNarrowScore();
 		}
 		
 		public function getWideScore():Number

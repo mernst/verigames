@@ -1,9 +1,11 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -12,6 +14,7 @@
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	
 	import utils.XMath;
 	import utils.XSprite;
 	
@@ -22,7 +25,7 @@
 		
 		private var m_quad:Quad;
 		private var m_arrowImg:Image;
-		protected var m_parentEdge:GameEdgeContainer;
+		
 		public var m_endPt:Point;
 		public var m_currentRect:Rectangle;
 		
@@ -40,25 +43,17 @@
 			ARROW_TEXT.repeat = true;
 		}
 		
-		public function GameEdgeSegment(_parentEdge:GameEdgeContainer, _node:GameNode, _joint:GameJointNode, _dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
 		{
-			super();
+			super("");
 			
-			m_parentEdge = _parentEdge;
 			m_dir = _dir;
-			if (m_dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				m_fromComponent = _node;
-				m_toComponent = _joint;
-			} else {
-				m_fromComponent = _joint;
-				m_toComponent = _node;
-			}
-			
 			m_isNodeExtensionSegment = _isNodeExtensionSegment;
 			m_isLastSegment = _isLastSegment;
+			
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
-			m_currentRect = new Rectangle(0, 0, 0, 0);
+
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
@@ -69,9 +64,7 @@
 			if (m_disposed || currentDragSegment) {
 				return;
 			}
-			m_parentEdge = null;
-			m_fromComponent = null;
-			m_toComponent = null;
+
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
@@ -110,7 +103,7 @@
 			
 			if(event.getTouches(this, TouchPhase.HOVER).length)
 			{
-				if (touches.length == 1 && event.shiftKey && !m_parentEdge.m_originalEdge)
+				if (touches.length == 1 && event.shiftKey)
 				{
 					m_isDirty = true;
 					isHover = true;
@@ -133,7 +126,7 @@
 					var previousLocation:Point = touches[0].getPreviousLocation(this);
 					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);	
 					currentDragSegment = true;
-					m_parentEdge.rubberBandEdgeSegment(updatePoint, this);
+	//				m_parentEdge.rubberBandEdgeSegment(updatePoint, this);
 					currentDragSegment = false;
 
 					
@@ -144,25 +137,14 @@
 		public function updateSegment(startPt:Point, endPt:Point):void
 		{
 			m_endPt = endPt.subtract(startPt);
-			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			if(m_endPt.x != 0)
-			{
-				m_currentRect.width = m_endPt.x;
-				m_currentRect.height = lineSize;
-			}
-			else
-			{
-				m_currentRect.width = lineSize;
-				m_currentRect.height = m_endPt.y;				
-			}
+
 			m_isDirty = true;
 		}
 		
 		public function draw():void
 		{
-			var color:int = getColor();
-			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			
+			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			m_color = 0x0000ff;
 			if (m_arrowImg) {
 				m_arrowImg.removeFromParent(true);
 				m_arrowImg = null;
@@ -178,7 +160,7 @@
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
 				var startPt:Point = new Point(0,0);
-				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, color);
+				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, m_color);
 				m_quad.x = -lineSize/2.0;
 				m_quad.y = 0;
 			}
@@ -192,28 +174,28 @@
 					m_quad.x = 0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
+				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, m_color);
 				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
 				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.x = 0;
 				
 				// Create/add arrows if segment is long enough to display them
-				if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
-					m_arrowImg = new Image(ARROW_TEXT);
-					pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
-					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-					m_arrowImg.width = Math.abs(m_endPt.x);
-					m_arrowImg.height = lineSize;
-					
-					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-					
-					m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-					m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-					m_arrowImg.x = 0;
-				}
+//				if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
+//					m_arrowImg = new Image(ARROW_TEXT);
+//					pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
+//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+//					m_arrowImg.width = Math.abs(m_endPt.x);
+//					m_arrowImg.height = lineSize;
+//					
+//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+//					
+//					m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+//					m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
+//					m_arrowImg.x = 0;
+//				}
 			}
 			else
 			{
@@ -225,28 +207,35 @@
 					m_quad.x = (m_endPt.y > 0) ? -(lineSize+1.0)/2.0 : (lineSize+1.0)/2.0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
+				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), m_color);
 				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
 				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.y = 0;
 				
+//				for(var i:int = 5; i<Math.abs(m_endPt.y); i+=5)
+//				{
+//					var quad1:Quad = new Quad(lineSize*2, lineSize*2, 0x0000ff);
+//					addChild(quad1);
+//					quad1.y = i;
+//				}
 				// Create/add arrows if segment is long enough to display them
-				if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
-					m_arrowImg = new Image(ARROW_TEXT);
-					pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
-					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-					m_arrowImg.width = Math.abs(m_endPt.y);
-					m_arrowImg.height = lineSize;
-					
-					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-					
-					m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
-					m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
-					m_arrowImg.y = 0;
-				}
+//				if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
+//					m_arrowImg = new Image(ARROW_TEXT);
+//					pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
+//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+//					m_arrowImg.width = Math.abs(m_endPt.y);
+//					m_arrowImg.height = lineSize;
+//					
+//					var q:Number = 0.5 - pctTextHeight/2.0;
+//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+//					
+//					m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
+//					m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
+//					m_arrowImg.y = 0;
+//				}
 			}
 			
 			addChild(m_quad);
@@ -303,26 +292,6 @@
 			q.rotation = theta;
 			
 			return q;
-		}
-		
-		override public function isWide():Boolean
-		{
-			if(m_isLastSegment)
-				return m_toComponent.isWide();
-			else
-				return m_fromComponent.isWide();
-		}
-		
-		override public function getColor():int
-		{
-			if (m_parentEdge.hasError()) {
-				return ERROR_COLOR;
-			}
-			if (m_isLastSegment) {
-				return m_toComponent.getColor();
-			} else {
-				return m_fromComponent.getColor();
-			}
 		}
 		
 		public function onEnterFrame(event:Event):void

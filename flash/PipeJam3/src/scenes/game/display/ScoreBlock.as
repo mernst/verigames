@@ -24,12 +24,14 @@ package scenes.game.display
 		
 		public function ScoreBlock(gameComponent:GameComponent)
 		{
+			super("");
+			
 			m_gameComponent = gameComponent;
 			var blockHeight:Number = Math.abs(gameComponent.getScore()) - VERTICAL_GAP;
 			blockHeight = Math.max(blockHeight, MIN_HEIGHT);
 			var blockWidth:Number = WIDTH;
 			var outline:Quad = new Quad(blockWidth, blockHeight, 0x000000);
-			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.getColor());
+			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.m_color);
 			//set center point offset
 			addChild(outline);
 			addChild(quad);
