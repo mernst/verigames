@@ -32,6 +32,14 @@ node2xml = {}
 def tostr(thing):
 	return '%s' % thing
 
+# substitute characters that dot doesn't like, output is a string dot will like
+def sanitize(thing):
+	return thing.replace('-','_DSH_')
+	
+# replace characters that dot doesn't like, output is original unsanitized string
+def desanitize(thing):
+	return thing.replace('_DSH_','-')
+
 # convert points (default for pos information) to inches (default for width, height information)
 def pts2inches(pts):
 	return float(pts) / 72.0
@@ -208,27 +216,27 @@ for lx in gx.getElementsByTagName('level'):
 		jout = int(jx.attributes['outputs'].value)
 		jwidth = max(jin, jout)
 		jlabel = createportlabels(jin, jout, None, verbose)
-		nodeid = 'J_%s' % jid
+		nodeid = 'J_%s' % sanitize(jid)
 		dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth, jlabel)
 		node2xml[lname][nodeid] = jx
 	for bx in lx.getElementsByTagName('box'):
 		bid = bx.attributes['id'].value
 		blines = int(bx.attributes['lines'].value)
 		blabel = createportlabels(blines, blines, bid, verbose)
-		nodeid = 'B_%s' % bid
+		nodeid = 'B_%s' % sanitize(bid)
 		dotin += '  %s [width=%s,height=1.0,label="%s"];\n' % (nodeid, blines, blabel)
 		node2xml[lname][nodeid] = bx
 	for linex in lx.getElementsByTagName('line'):
 		lid = linex.attributes['id'].value
 		if (len(linex.getElementsByTagName('fromjoint')) == 1) and (len(linex.getElementsByTagName('tobox')) == 1):
-			fromid = 'J_%s' % linex.getElementsByTagName('fromjoint')[0].attributes['id'].value
+			fromid = 'J_%s' % sanitize(linex.getElementsByTagName('fromjoint')[0].attributes['id'].value)
 			fromport = linex.getElementsByTagName('fromjoint')[0].attributes['port'].value
-			toid = 'B_%s' % linex.getElementsByTagName('tobox')[0].attributes['id'].value
+			toid = 'B_%s' % sanitize(linex.getElementsByTagName('tobox')[0].attributes['id'].value)
 			toport = linex.getElementsByTagName('tobox')[0].attributes['port'].value
 		elif (len(linex.getElementsByTagName('frombox')) == 1) and (len(linex.getElementsByTagName('tojoint')) == 1):
-			fromid = 'B_%s' % linex.getElementsByTagName('frombox')[0].attributes['id'].value
+			fromid = 'B_%s' % sanitize(linex.getElementsByTagName('frombox')[0].attributes['id'].value)
 			fromport = linex.getElementsByTagName('frombox')[0].attributes['port'].value
-			toid = 'J_%s' % linex.getElementsByTagName('tojoint')[0].attributes['id'].value
+			toid = 'J_%s' % sanitize(linex.getElementsByTagName('tojoint')[0].attributes['id'].value)
 			toport = linex.getElementsByTagName('tojoint')[0].attributes['port'].value
 		else:
 			print 'Warning: unsupported input/outputs for line id: %s' % lid
