@@ -26,6 +26,8 @@ edge2linexml = {}
 # node2xml[levelid][dotnodestring] = box/joint xml element
 node2xml = {}
 
+
+### Helper functions ###
 # convert to string
 def tostr(thing):
 	return '%s' % thing
@@ -57,7 +59,7 @@ def createportlabels(inports, outports, id=None, verbose=False):
 	label += '}}'
 	return label
 
-# helper method to read the awful dot format of attributes i.e. 'node_n1 [attrib1=this, attrib2="1,2,3", attrib3=somethingelse]'
+# read the awful dot format of attributes i.e. 'node_n1 [attrib1=this, attrib2="1,2,3", attrib3=somethingelse]'
 # and return a dictionary of keys -> values
 def parseattrib(attr):
 	attr = attr.lstrip('[').rstrip(']')
@@ -157,16 +159,25 @@ def parsedot(line):
 	print "Couldn't process dot output: %s" % line
 	return None
 
+
 ### Main function ###
-if (len(sys.argv) != 2) and (len(sys.argv) != 3):
-	print 'Usage: %s [name of INPUT grid XML to be laid out, omitting ".xml" extension] [optional: OUTPUT xml name, if none overwrite input] \nEx: To parse Test.xml run: %s Test' % (sys.argv[0], sys.argv[0])
+if (len(sys.argv) < 2) or (len(sys.argv) > 4):
+	print '\n\nUsage: %s input_file [output_file] [-o]\n\n  input_file: name of INPUT grid XML to be laid out, omitting ".xml" extension\n  output_file: (optional) OUTPUT xml/dot file name prefix, if none overwrite input xml file\n  -o (optional) to write dot layout input and output files including pdf of graph for each level\n\n\nEx: To parse Test.xml and output TestGraph.xml run: %s Test TestGraph\n' % (sys.argv[0], sys.argv[0])
 	quit()
+verbose = True # fixedsize=True should mean that labeling nodes and ports shouldn't affect node sizes
+outputdotfiles = False
+for myarg in sys.argv:
+	if myarg == '-o':
+		outputdotfiles = True
 allxml = parse(sys.argv[1] + '.xml')
 graphs = allxml.getElementsByTagName('graph')
 if len(graphs) != 1:
 	print 'Warning: expecting 1 graph, found %d, processing only the first graph' % len(graphs)
 gx = graphs[0]
-
+if len(sys.argv) == 2:
+	outfile = sys.argv[1]
+else:
+	outfile = sys.argv[2]
 for lx in gx.getElementsByTagName('level'):
 	lname = lx.attributes['id'].value
 	edge2linexml[lname] = {}
@@ -184,7 +195,7 @@ for lx in gx.getElementsByTagName('level'):
 	dotin += '    fontsize=14.0,\n'
 #	dotin += '    width=0.5,\n'
 #	dotin += '    height=1.0,\n'
-	dotin += '    "fixed-size"=true,\n'
+	dotin += '    fixedsize=true,\n'
 	dotin += '    shape=record\n'
 	dotin += '  ];\n'
 	dotin += '  edge [\n'
@@ -196,14 +207,14 @@ for lx in gx.getElementsByTagName('level'):
 		jin = int(jx.attributes['inputs'].value)
 		jout = int(jx.attributes['outputs'].value)
 		jwidth = max(jin, jout)
-		jlabel = createportlabels(jin, jout)
+		jlabel = createportlabels(jin, jout, None, verbose)
 		nodeid = 'J_%s' % jid
 		dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth, jlabel)
 		node2xml[lname][nodeid] = jx
 	for bx in lx.getElementsByTagName('box'):
 		bid = bx.attributes['id'].value
 		blines = int(bx.attributes['lines'].value)
-		blabel = createportlabels(blines, blines, bid)
+		blabel = createportlabels(blines, blines, bid, verbose)
 		nodeid = 'B_%s' % bid
 		dotin += '  %s [width=%s,height=1.0,label="%s"];\n' % (nodeid, blines, blabel)
 		node2xml[lname][nodeid] = bx
@@ -226,17 +237,23 @@ for lx in gx.getElementsByTagName('level'):
 		edge2linexml[lname][edgeid] = linex
 		dotin += '  %s;\n' % (edgeid)
 	dotin += '}'
-	dotinfilename = '%s-%s-in.dot' % (sys.argv[1], lname)
+	dotinfilename = '%s-%s-in.dot' % (outfile, lname)
 	writedot = open(dotinfilename,'w')
 	writedot.write(dotin)
 	writedot.close()
 	dotcmd = os.popen('dot ' + dotinfilename)
 	dotoutput = dotcmd.read()
 	dotcmd.close()
-	dotoutfilename = '%s-%s-out.dot' % (sys.argv[1], lname)
-	writedot = open(dotoutfilename,'w')
-	writedot.write(dotoutput)
-	writedot.close()
+	if outputdotfiles:
+		dotcmd = os.popen('dot -Tpdf -o%s.pdf %s' % (outfile, dotinfilename))
+		dotcmd.read()
+		dotcmd.close()
+		dotoutfilename = '%s-%s-out.dot' % (outfile, lname)
+		writedot = open(dotoutfilename,'w')
+		writedot.write(dotoutput)
+		writedot.close()
+	else:
+		os.remove(dotinfilename)
 	dotoutput = ' '.join(dotoutput.split()) #get rid of any runs of spaces, newlines, etc
 	# Get rid of dot's "continue on next line" character '\' while preserving pos="N,N N,N" formatting
 	dotoutput = dotoutput.replace(', \\', ',').replace('\\ ,', ',').replace(' \\ ', ' ').replace('\\', '')
@@ -291,10 +308,6 @@ for lx in gx.getElementsByTagName('level'):
 					nodex.setAttribute('height', tostr(layout.height))
 			else:
 				print 'Warning: bad layout created for line: %s' % line
-if len(sys.argv) == 2:
-	outfile = sys.argv[1] + '.xml'
-else:
-	outfile = sys.argv[2] + '.xml'
-writelayout = open(outfile,'w')
+writelayout = open(outfile + '.xml','w')
 writelayout.write(gx.toxml())
 writelayout.close()
