@@ -253,7 +253,7 @@ for lx in gx.getElementsByTagName('level'):
 	dotoutput = dotcmd.read()
 	dotcmd.close()
 	if outputdotfiles:
-		dotcmd = os.popen('dot -Tpdf -o%s.pdf %s' % (outfile, dotinfilename))
+		dotcmd = os.popen('dot -Tpdf -o%s-%s.pdf %s' % (outfile, lname, dotinfilename))
 		dotcmd.read()
 		dotcmd.close()
 		dotoutfilename = '%s-%s-out.dot' % (outfile, lname)
