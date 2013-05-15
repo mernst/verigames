@@ -50,18 +50,18 @@ package scenes.game.display
 				m_edgeSetEdges = new Vector.<Edge>();
 			}
 			if (m_edgeSetEdges.length == 0) {
-				m_editable = false;
+				m_isEditable = false;
 			} else {
-				m_editable = m_edgeSetEdges[0].editable;
+				m_isEditable = m_edgeSetEdges[0].editable;
 			}
 			m_numIncomingNodeEdges = m_numOutgoingNodeEdges = 0;
 			for each (var myEdge:Edge in m_edgeSetEdges) {
 				if (myEdge.is_wide != isWide()) {
 					trace("WARNING: Edge id " + myEdge.edge_id + " isWide doesn't match edgeSet value = " + isWide().toString);
 				}
-				if (myEdge.editable != m_editable) {
-					trace("WARNING: Edge id " + myEdge.edge_id + " editable doesn't match edgeSet value = " + m_editable.toString);
-					m_editable = true; // default to editable for this case (at least one edge = editable, whole edgeSet = editable)
+				if (myEdge.editable != m_isEditable) {
+					trace("WARNING: Edge id " + myEdge.edge_id + " editable doesn't match edgeSet value = " + m_isEditable.toString);
+					m_isEditable = true; // default to editable for this case (at least one edge = editable, whole edgeSet = editable)
 				}
 				if (myEdge.from_port.node.kind == NodeTypes.INCOMING) {
 					m_numIncomingNodeEdges++;
@@ -100,8 +100,10 @@ package scenes.game.display
 				m_shape.graphics.beginMaterialFill(darkColorMaterial);
 			else if(color == NARROW_COLOR)
 				m_shape.graphics.beginMaterialFill(lightColorMaterial);
-			else if(color == UNADJUSTABLE_COLOR)
-				m_shape.graphics.beginMaterialFill(unadjustableColorMaterial);
+			else if(color == UNADJUSTABLE_WIDE_COLOR)
+				m_shape.graphics.beginMaterialFill(unadjustableWideColorMaterial);
+			else if(color == UNADJUSTABLE_NARROW_COLOR)
+				m_shape.graphics.beginMaterialFill(unadjustableNarrowColorMaterial);
 			
 			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
 			m_shape.graphics.endFill();
@@ -136,7 +138,7 @@ package scenes.game.display
 				m_star.x = m_star.y = m_boundingBox.height/8.0;
 				addChild(m_star);
 			}
-			useHandCursor = m_editable;
+			useHandCursor = m_isEditable;
 			
 			//			var number:String = ""+m_id.substring(4);
 			//			var txt:TextField = new TextField(m_shape.width, m_shape.height, number, "Veranda", 6); 
@@ -147,7 +149,7 @@ package scenes.game.display
 		
 		override public function getWideScore():Number
 		{
-			if (!m_editable) { // don't assign scores for gray boxes (it would just confuse the user)
+			if (!m_isEditable) { // don't assign scores for gray boxes (it would just confuse the user)
 				return 0;
 			} else {
 				return Constants.WIDE_INPUT_POINTS * Math.max(0, m_numIncomingNodeEdges - m_numOutgoingNodeEdges);
@@ -156,7 +158,7 @@ package scenes.game.display
 		
 		override public function getNarrowScore():Number
 		{
-			if (!m_editable) { // don't assign scores for gray boxes (it would just confuse the user)
+			if (!m_isEditable) { // don't assign scores for gray boxes (it would just confuse the user)
 				return 0;
 			} else {
 				return Constants.NARROW_OUTPUT_POINTS * Math.max(0, m_numOutgoingNodeEdges - m_numIncomingNodeEdges);

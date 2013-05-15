@@ -16,14 +16,13 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	import scenes.game.components.WorldMapLevelImage;
+	import scenes.login.LoginHelper;
 	
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	
-	import scenes.login.LoginHelper;
 	
 	/**
 	 * Level contains multiple boards that each contain multiple pipes
@@ -104,6 +103,7 @@ package scenes.game.display
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
+		private var edgeContainerDictionary:Dictionary;
 		
 		private var m_nodeList:Vector.<GameNode>;
 		private var m_edgeList:Vector.<GameEdgeContainer>;
@@ -164,6 +164,8 @@ package scenes.game.display
 			//create node for sets
 			m_nodeList = new Vector.<GameNode>(); 
 			boxDictionary = new Dictionary();
+			edgeContainerDictionary = new Dictionary();
+
 			// Process <box> 's
 			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
@@ -273,11 +275,30 @@ package scenes.game.display
 				
 				var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
 				var newGameEdge:GameEdgeContainer;
-				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir);
+				// get editable property from related edge for end segment/joint
+				var edgeContainerID:String = edgeXML.@id;
+				var index:int = edgeContainerID.indexOf('__');
+				var edgeID:String = edgeContainerID.substring(0, index);
+				var newEdge:Edge = this.edgeDictionary[edgeID];
+				var componentEditable:Boolean;
+				if(newEdge)
+					componentEditable = newEdge.editable;
 				else
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir);
+				{
+					//TODO:
+					// if we get here it's because this is a line derived from a subboard, and I don't know 
+					//how to decide if a subboard should be editable. Right now I vote not.
+					componentEditable = false;
+				}
+				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, componentEditable, componentEditable);
+				else
+				{
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, componentEditable, myNode.m_isEditable);
+				}
 				m_edgeList.push(newGameEdge);
+				
+				edgeContainerDictionary[edgeContainerID] = newGameEdge;
 				
 				minX = Math.min(minX, minXedge);
 				minY = Math.min(minY, minYedge);
@@ -425,16 +446,24 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(e:starling.events.Event):void
 		{
-//			var edgeSet:EdgeSetRef = e.data as EdgeSetRef;
-//			
-//			for each (var edgeID:String in edgeSet.edge_ids)
-//			{
-//				var edge:Edge = this.edgeDictionary[edgeID];
-//				if(edge != null)
-//				{
-//					edge.is_wide = !edge.is_wide;
-//				}
-//			}
+			var edgeSetID:String = e.data as String;
+			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
+			for each (var edgeID:String in edgeSet.edge_ids)
+			{
+				var edge:Edge = this.edgeDictionary[edgeID];
+				if(edge != null)
+				{
+					edge.is_wide = !edge.is_wide;
+				}
+				var outID:String = edgeID+"__OUT__";
+				var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
+				if(outgoingGameEdgeContainer)
+					outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+				var inID:String = edgeID+"__IN__";
+				var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
+				if(incomingGameEdgeContainer)
+					incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+			}
 			dispatchEvent(new Event(Level.SCORE_CHANGED, true, this));
 		}
 		
@@ -567,12 +596,12 @@ package scenes.game.display
 		public function draw():void
 		{
 			//add two quads at opposite corners to cause the size to be right
-			var p:Quad = new Quad(1, 1, 0xff0000);
-			var q:Quad = new Quad(1, 1, 0xff0000);
+			var p:Quad = new Quad(.1, .1, 0xff0000);
+			var q:Quad = new Quad(.1, .1, 0xff0000);
 			p.x = 0;
 			p.y = 0;
-			q.x = (m_boundingBox.width-1);
-			q.y = (m_boundingBox.height-1);
+			q.x = (m_boundingBox.width-.1);
+			q.y = (m_boundingBox.height-.1);
 			
 			addChild(p);
 			addChild(q);

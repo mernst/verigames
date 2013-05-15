@@ -17,8 +17,6 @@ package scenes.game.display
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
 
-		protected var m_editable:Boolean;
-
 		protected var m_layoutXML:XML;
 		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
 		public var m_incomingEdges:Vector.<GameEdgeContainer>;
@@ -85,18 +83,18 @@ package scenes.game.display
 				{
 					//clear selections on all actions with no shift key
 					dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
-					if(m_editable)
+					if(m_isEditable)
 					{
 						m_isWide = !m_isWide;
 						m_isDirty = true;
-						for each(var oedge:GameEdgeContainer in this.m_outgoingEdges)
-							oedge.setIncomingWidth(m_isWide);
-						for each(var iedge:GameEdgeContainer in this.m_incomingEdges)
-							iedge.setOutgoingWidth(m_isWide);
+//						for each(var oedge:GameEdgeContainer in this.m_outgoingEdges)
+//							oedge.setIncomingWidth(m_isWide);
+//						for each(var iedge:GameEdgeContainer in this.m_incomingEdges)
+//							iedge.setOutgoingWidth(m_isWide);
 						// Need to dispatch AFTER setting width, this will trigger the score update
 						// (we don't want to update the score with old values, we only know they're old
 						// if we properly mark them dirty first)
-						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, null));
+						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, m_id));
 					}
 					
 				}
@@ -189,8 +187,7 @@ package scenes.game.display
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			
-			//push color and size info
-			edge.setIncomingColor(getColor());
+			//push size info
 			edge.setIncomingWidth(m_isWide);
 			
 		}
@@ -204,8 +201,7 @@ package scenes.game.display
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
 			
-			//push color and size info
-			edge.setOutgoingColor(getColor());
+			//push size info
 			edge.setOutgoingWidth(m_isWide);
 		}
 		
@@ -230,39 +226,6 @@ package scenes.game.display
 //						iedge2.m_node.findGroup(dictionary);
 //				}
 //			}
-		}
-		
-		public function isEditable():Boolean
-		{
-			return m_editable;
-		}
-		
-		//override this
-		public function isWide():Boolean
-		{
-			return false;
-		}
-		
-		public function getColor():int
-		{
-			if(m_editable)
-			{
-				if (isWide())
-				{
-					m_color = WIDE_COLOR;
-					return WIDE_COLOR;
-				}
-				else
-				{
-					m_color = NARROW_COLOR;
-					return NARROW_COLOR;
-				}
-			}
-			else
-			{
-				m_color = UNADJUSTABLE_COLOR;
-				return UNADJUSTABLE_COLOR;
-			}
 		}
 	}
 }

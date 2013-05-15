@@ -31,7 +31,7 @@ package scenes.game.display
 			blockHeight = Math.max(blockHeight, MIN_HEIGHT);
 			var blockWidth:Number = WIDTH;
 			var outline:Quad = new Quad(blockWidth, blockHeight, 0x000000);
-			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.m_color);
+			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, getColor());
 			//set center point offset
 			addChild(outline);
 			addChild(quad);

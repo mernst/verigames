@@ -357,7 +357,7 @@ package scenes.login
 				trace("in complete " + e.target.data);
 				var objString:String = e.target.data;
 				var startIndex:int = 0;
-				var index:int = objString.indexOf("_id", 10); //skip past beginning of string
+				var index:int = objString.indexOf("{ \"_id", 10); //skip past beginning of string
 				if(index != -1) //assume it a JSON database string, and parse it
 				{
 					var endIndex:int = objString.lastIndexOf("}", index);

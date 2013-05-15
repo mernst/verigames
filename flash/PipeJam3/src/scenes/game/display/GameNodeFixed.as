@@ -9,7 +9,7 @@ package scenes.game.display
 		public function GameNodeFixed(_layoutXML:XML, _isWide:Boolean, _isStartingNode:Boolean) 
 		{
 			super(_layoutXML);
-			m_editable = false;
+			m_isEditable = false;
 			m_isWide = _isWide;
 			m_isStartingNode = _isStartingNode;
 		}

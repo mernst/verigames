@@ -19,19 +19,23 @@ package scenes.game.display
 				
 		public var m_boundingBox:Rectangle;
 		
+		//these are here in that they determine color, so all screen objects need them set
 		public var m_isWide:Boolean;
-		public var m_color:int;
-		
+		public var m_isEditable:Boolean;
+		public var m_shouldShowError:Boolean;
+
 		public static var NARROW_COLOR:uint = 0x5B74B8;// 0x1A85FF;
 		public static var WIDE_COLOR:uint = 0xAEBEE0;// 0x3427FF;
-		public static var UNADJUSTABLE_COLOR:uint = 0x6E6F71;// 0x3A3F4C;
+		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x6E6F71;// 0x3A3F4C;
+		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xAAAAAA;// 0x3A3F4C;
 		public static var ERROR_COLOR:uint = 0xE92227;
 		public static var SCORE_COLOR:uint = 0xFFDC1A;
 		
 		static protected var fillMaterial:StandardMaterial = null;
 		static protected var lightColorMaterial:StandardMaterial = null;
 		static protected var darkColorMaterial:StandardMaterial = null;
-		static protected var unadjustableColorMaterial:StandardMaterial = null;
+		static protected var unadjustableWideColorMaterial:StandardMaterial = null;
+		static protected var unadjustableNarrowColorMaterial:StandardMaterial = null;
 		static protected var selectedColorMaterial:StandardMaterial = null;
 		
 		public function GameComponent(_id:String)
@@ -52,8 +56,11 @@ package scenes.game.display
 				darkColorMaterial = new StandardMaterial;
 				darkColorMaterial.color = WIDE_COLOR;
 				
-				unadjustableColorMaterial = new StandardMaterial;
-				unadjustableColorMaterial.color = UNADJUSTABLE_COLOR;
+				unadjustableWideColorMaterial = new StandardMaterial;
+				unadjustableWideColorMaterial.color = UNADJUSTABLE_WIDE_COLOR;
+				
+				unadjustableNarrowColorMaterial = new StandardMaterial;
+				unadjustableNarrowColorMaterial.color = UNADJUSTABLE_NARROW_COLOR;
 				
 				selectedColorMaterial = new StandardMaterial;
 				selectedColorMaterial.color = 0xeeeeee;
@@ -81,6 +88,11 @@ package scenes.game.display
 			return 0;
 		}
 		
+		public function hasError():Boolean
+		{
+			return false;
+		}
+		
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;
@@ -105,6 +117,38 @@ package scenes.game.display
 			}
 			
 			return pt;
+		}
+		
+		public function isEditable():Boolean
+		{
+			return m_isEditable;
+		}
+		
+		//override this
+		public function isWide():Boolean
+		{
+			return m_isWide;
+		}
+		
+		//set children's color, based on incoming and outgoing component and error condition
+		public function getColor():int
+		{
+			if(m_shouldShowError && hasError())
+				return ERROR_COLOR;
+			if(m_isEditable == true)
+			{
+				if(m_isWide == true)
+					return WIDE_COLOR;
+				else
+					return NARROW_COLOR;
+			}
+			else //not adjustable
+			{
+				if(m_isWide == true)
+					return UNADJUSTABLE_WIDE_COLOR;
+				else
+					return UNADJUSTABLE_NARROW_COLOR;				
+			}
 		}
 	}
 }

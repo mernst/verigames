@@ -53,6 +53,9 @@
 			
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
+			
+			//default to true
+			m_isEditable = true;
 
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -132,7 +135,7 @@
 					var previousLocation:Point = touches[0].getPreviousLocation(this);
 					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);	
 					currentDragSegment = true;
-	//				m_parentEdge.rubberBandEdgeSegment(updatePoint, this);
+					(parent as GameEdgeContainer).rubberBandEdgeSegment(updatePoint, this);
 					currentDragSegment = false;
 
 					
@@ -149,6 +152,8 @@
 		public function draw():void
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			var color:int = getColor();
+			
 			if (m_arrowImg) {
 				m_arrowImg.removeFromParent(true);
 				m_arrowImg = null;
@@ -164,7 +169,7 @@
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
 				var startPt:Point = new Point(0,0);
-				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, m_color);
+				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, color);
 				m_quad.x = -lineSize/2.0;
 				m_quad.y = 0;
 			}
@@ -172,13 +177,13 @@
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + 1.0, 0xeeeeee);
+					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + .1, 0xeeeeee);
 					m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-					m_quad.y = (m_endPt.x > 0) ? -(lineSize+1.0)/2.0 : (lineSize+1.0)/2.0;
+					m_quad.y = (m_endPt.x > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
 					m_quad.x = 0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, m_color);
+				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
 				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
 				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.x = 0;
@@ -205,13 +210,13 @@
 			{
 				if(isHover)
 				{
-					m_quad = new Quad(lineSize + 1.0, Math.abs(m_endPt.y), 0xeeeeee);
+					m_quad = new Quad(lineSize + .1, Math.abs(m_endPt.y), 0xeeeeee);
 					m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-					m_quad.y = -0.5;
-					m_quad.x = (m_endPt.y > 0) ? -(lineSize+1.0)/2.0 : (lineSize+1.0)/2.0;
+					m_quad.y = -0.05;
+					m_quad.x = (m_endPt.y > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
 					addChild(m_quad);
 				}
-				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), m_color);
+				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
 				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
 				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.y = 0;
