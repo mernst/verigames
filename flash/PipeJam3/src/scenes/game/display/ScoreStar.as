@@ -27,7 +27,7 @@ package scenes.game.display
 			var starTexture:Texture = AssetInterface.getTextureColorAll("Game", "StarClass", colorWithAlpha);
 			m_starImage = new Image(starTexture);
 			m_starImage.width = m_starImage.height = SIZE;
-			m_starImage.filter = BlurFilter.createDropShadow(1, Math.PI/4, 0x0, 1, 1.0, 0.5);
+			m_starImage.filter = BlurFilter.createDropShadow(SIZE/25, Math.PI/4, 0x0, 1, 1.0, 0.5);
 			addChildAt(m_starImage, 0);
 			
 			m_text = TextFactory.getInstance().createTextField(m_score.toString(), AssetsFont.FONT_NUMERIC, 0.8*SIZE, 0.8*SIZE, 0.6*SIZE, 0xFFFFFF);

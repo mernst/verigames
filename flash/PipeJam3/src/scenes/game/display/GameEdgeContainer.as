@@ -343,8 +343,12 @@ package scenes.game.display
 		//only use if the container it's self draws specific items.
 		public function draw():void
 		{
-//			var quad:Quad = new Quad(this.m_boundingBox.width, this.m_boundingBox.height, 0xff0000);
-//			addChild(quad);
+			for each (var seg:GameEdgeSegment in m_edgeSegments) {
+				seg.draw();
+			}
+			for each (var joint:GameEdgeJoint in m_edgeJoints) {
+				joint.draw();
+			}
 		}
 		
 		override public function getScore():Number

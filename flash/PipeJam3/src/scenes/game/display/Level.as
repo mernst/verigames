@@ -304,6 +304,7 @@ package scenes.game.display
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
 			setDisplayData();
 			
 			draw();
@@ -335,6 +336,7 @@ package scenes.game.display
 		
 		protected function onRemovedFromStage(event:starling.events.Event):void
 		{
+			//disposeChildren();
 		}
 		
 		public function updateLayoutXML():void
@@ -583,7 +585,8 @@ package scenes.game.display
 			for each(var gameNode:GameNode in m_nodeList)
 			{
 				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
-				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
+				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height / 2;
+				gameNode.draw();
 				addChild(gameNode);
 				nodeCount++;
 			}
@@ -593,6 +596,7 @@ package scenes.game.display
 			{
 				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameJoint.m_boundingBox.width/2;
 				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameJoint.m_boundingBox.height/2;
+				gameJoint.draw();
 				addChild(gameJoint);
 				jointCount++;
 			}
@@ -600,10 +604,11 @@ package scenes.game.display
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				edgeCount++;
+				gameEdge.draw();
 				addChild(gameEdge);
 				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
 				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
+				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
 		}

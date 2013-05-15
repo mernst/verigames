@@ -103,14 +103,14 @@ package scenes.game.display
 			else if(color == UNADJUSTABLE_COLOR)
 				m_shape.graphics.beginMaterialFill(unadjustableColorMaterial);
 			
-			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, .2);
+			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
 			m_shape.graphics.endFill();
 			
 			if (!isWide())
 			{
 				// Draw inner black outline to appear smaller if this is a narrow node
 				m_shape.graphics.lineStyle(1.5, 0x0);
-				m_shape.graphics.drawRoundRect(1.0, 1.0, (shapeWidth - 2.0), (shapeHeight - 2.0), .2);
+				m_shape.graphics.drawRoundRect(1.0, 1.0, (shapeWidth - 2.0), (shapeHeight - 2.0), shapeHeight/5.0);
 			}
 			
 			if(m_isSelected && !isTempSelection)
@@ -122,15 +122,20 @@ package scenes.game.display
 			
 			addChild(m_shape);
 			
-//			var wideScore:Number = getWideScore();
-//			var narrowScore:Number = getNarrowScore();
-//			if (wideScore > narrowScore) {
-//				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-//				addChild(m_star);
-//			} else if (narrowScore > wideScore) {
-//				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-//				addChild(m_star);
-//			}
+			var wideScore:Number = getWideScore();
+			var narrowScore:Number = getNarrowScore();
+			if (wideScore > narrowScore) {
+				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
+				m_star.width = m_star.height = m_boundingBox.height/2.0;
+				m_star.x = m_star.y = m_boundingBox.height/8.0;
+				addChild(m_star);
+			} else if (narrowScore > wideScore) {
+				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
+				m_star.width = m_star.height = 0.5;
+				m_star.width = m_star.height = m_boundingBox.height/2.0;
+				m_star.x = m_star.y = m_boundingBox.height/8.0;
+				addChild(m_star);
+			}
 			useHandCursor = m_editable;
 			
 			//			var number:String = ""+m_id.substring(4);

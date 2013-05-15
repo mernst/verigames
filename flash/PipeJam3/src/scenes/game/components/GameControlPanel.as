@@ -25,7 +25,7 @@ package scenes.game.components
 	import starling.textures.Texture;
 	
 	public class GameControlPanel extends BaseComponent
-	{	
+	{
 		private static const WIDTH:Number = 96;
 		private static const HEIGHT:Number = Constants.GameHeight;
 		private static const SCORE_PANEL_AREA:Rectangle = new Rectangle(3, 65, WIDTH - 3, 266.5 - 65);
@@ -314,7 +314,9 @@ package scenes.game.components
 			//var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
 			var newY:Number = SCORE_PANEL_AREA.height - 2 * PAD - adjustedBounds.bottom * newScaleY; // sits on the bottom
 			// Only move the score blocks around/scale if some of the blocks are offscreen (out of score panel area)
-			if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD) {
+			// OR if was shrunk below 100% and doesn't need to be
+			if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD
+				|| ((scoreBlockContainer.scaleY < 1.0) && (newScaleY > scoreBlockContainer.scaleY))) {
 				TweenLite.to(scoreBlockContainer, 1.5, {/*x:newX,*/ y:newY, /*scaleX:newScaleX,*/ scaleY: newScaleY, delay: 0.5 } );
 			}
 		}

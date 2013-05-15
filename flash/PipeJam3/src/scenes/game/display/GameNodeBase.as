@@ -47,8 +47,10 @@ package scenes.game.display
 				return;
 			}
 			disposeChildren();
-			m_shape.removeChildren(0, -1, true);
-			m_shape.dispose();
+			if (m_shape) {
+				m_shape.removeChildren(0, -1, true);
+				m_shape.dispose();
+			}
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
