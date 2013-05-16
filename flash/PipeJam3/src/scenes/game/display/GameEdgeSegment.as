@@ -33,7 +33,7 @@
 		
 		public var m_isNodeExtensionSegment:Boolean;
 		public var m_isLastSegment:Boolean;
-		private var m_dir:String;
+		public var m_dir:String;
 		
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
