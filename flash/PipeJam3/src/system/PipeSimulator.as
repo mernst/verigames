@@ -1,6 +1,5 @@
 package system 
 {	
-	import flashx.textLayout.operations.PasteOperation;
 	import graph.LevelNodes;
 	import graph.Network;
 	import mx.events.PropertyChangeEvent;
@@ -39,16 +38,14 @@ package system
 		/* The world in which the PipeSimulator detects trouble points */
 		private var network:Network;
 		
-		/* A map from boardname to a list that contains the trouble points 
+		/* A map from boardname to an Array that contains the trouble points 
 		 * associated with that level. 
 		 * 
-		 * The list has exactly two elements. The first element is a list 
-		 * of Port trouble points. The second is a list of Edge trouble points.
+		 * The Array has exactly two elements. The first element is a Dictionary 
+		 * of Port trouble points. The second is a Dictionary of Edge trouble points.
 		 */
 		private var boardToTroublePoints:Dictionary;
-		
-		private var listPortTroublePoints:Vector.<Node>;
-		private var listEdgeTroublePoints:Vector.<Edge>;
+		private var prevBoardToTroublePoints:Dictionary;
 		
 		/**
 		 * Simulates the ball types for each edge in the given network
@@ -58,13 +55,24 @@ package system
 		{
 			network = _network;
 			boardToTroublePoints = new Dictionary();
-			
+			// TODO: globally mark Edges and Ports has_error = true
 			var boards_in_prog:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			for (var levelName:String in network.LevelNodesDictionary) {
 				var levelNodes:LevelNodes = network.LevelNodesDictionary[levelName] as LevelNodes;
 				for (var boardName:String in levelNodes.boardNodesDictionary) {
 					var board:BoardNodes = levelNodes.boardNodesDictionary[boardName] as BoardNodes;
-					boardToTroublePoints[board.board_name] = simulateBoard(board, boards_in_prog);
+					var tpArr:Array = simulateBoard(board, boards_in_prog);
+					var portTpDict:Dictionary = tpArr[0] as Dictionary;
+					var edgeTpDict:Dictionary = tpArr[1] as Dictionary;
+					for (var portId:String in portTpDict) {
+						var portToMark:Port = portTpDict[portId] as Port;
+						portToMark.has_error = true;
+					}
+					for (var edgeId:String in edgeTpDict) {
+						var edgeToMark:Edge = edgeTpDict[edgeId] as Edge;
+						edgeToMark.has_error = true;
+					}
+					boardToTroublePoints[board.board_name] = tpArr;
 				}
 			}
 		}
@@ -78,7 +86,19 @@ package system
 		 * @param	edgeSetId Corresponding to box clicked
 		 * @param	levelToSimulate To simulate a given level, "" to simulate all in world
 		 */
-		public function updateOnBoxSizeChange(edgeSetId:String, levelToSimulate:String = ""):void {
+		public function updateOnBoxSizeChange(edgeSetId:String, levelToSimulate:String = ""):SimulatorResults {
+			// Copy previous trouble points
+			prevBoardToTroublePoints = new Dictionary();
+			for (var boardName:String in boardToTroublePoints) {
+				var tpArr:Array = boardToTroublePoints[boardName] as Array;
+				var portTpDict:Dictionary = tpArr[0] as Dictionary;
+				var edgeTpDict:Dictionary = tpArr[1] as Dictionary;
+				var portTpDictCopy:Dictionary = cloneDict(portTpDict);
+				var edgeTpDictCopy:Dictionary = cloneDict(edgeTpDict);
+				var tpArrCopy:Array = new Array(portTpDictCopy, edgeTpDictCopy);
+				prevBoardToTroublePoints[boardName] = tpArrCopy;
+			}
+			
 			var boardsToSim:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			for (var levelName:String in network.LevelNodesDictionary) {
 				if ((levelToSimulate.length == 0) || (levelName == levelToSimulate)) {
@@ -99,6 +119,59 @@ package system
 					boardToTroublePoints[simBoard.board_name] = simulateBoard(simBoard, boards_in_prog, boards_touched);
 				}
 			}
+			
+			var newEdgeTp:Vector.<Edge> = new Vector.<Edge>();
+			var newPortTp:Vector.<Port> = new Vector.<Port>();
+			var removeEdgeTp:Vector.<Edge> = new Vector.<Edge>();
+			var removePortTp:Vector.<Port> = new Vector.<Port>();
+			for each (var boardTouched:BoardNodes in boards_touched) {
+				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0]
+				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1]
+				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0]
+				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1]
+				// check new tp, if they weren't in old Dict then they are new
+				for (var portId:String in newPortTpDict) {
+					if (!prevPortTpDict.hasOwnProperty(portId)) {
+						newPortTp.push(newPortTpDict[portId] as Port);
+					} else {
+						// get rid of this entry, since it appears in both we don't care about it
+						delete prevPortTpDict[portId];
+					}
+				}
+				for (var edgeId:String in newEdgeTpDict) {
+					if (!prevEdgeTpDict.hasOwnProperty(edgeId)) {
+						newEdgeTp.push(newPortTpDict[edgeId] as Edge);
+					} else {
+						// get rid of this entry, since it appears in both we don't care about it
+						delete prevEdgeTpDict[edgeId];
+					}
+				}
+				// Now all that's left in prevPortTpDict and prevEdgeTpDict should be TP that should be removed
+				for (var portId:String in prevPortTpDict) {
+					if (newPortTpDict.hasOwnProperty(portId)) {
+						throw new Error("Shouldn't happen!");
+					}
+					removePortTp.push(prevPortTpDict[portId] as Port);
+				}
+				for (var edgeId:String in prevEdgeTpDict) {
+					if (newEdgeTpDict.hasOwnProperty(edgeId)) {
+						throw new Error("Shouldn't happen!");
+					}
+					removeEdgeTp.push(prevEdgeTpDict[edgeId] as Edge);
+				}
+			}
+			
+			var results:SimulatorResults = new SimulatorResults(newPortTp, removePortTp, newEdgeTp, removeEdgeTp);
+			return results;
+		}
+		
+		private static function cloneDict(dict:Dictionary):Dictionary
+		{
+			var newDict:Dictionary = new Dictionary();
+			for (var oldKey in dict) {
+				newDict[oldKey] = dict[oldKey];
+			}
+			return newDict;
 		}
 		
 		/**
@@ -149,8 +222,8 @@ package system
 				}
 			}
 			
-			var listPortTroublePoints:Vector.<Port> = new Vector.<Port>(); //ports with trouble points
-			var listEdgeTroublePoints:Vector.<Edge> = new Vector.<Edge>(); //edges with trouble points
+			var listPortTroublePoints:Dictionary = new Dictionary();
+			var listEdgeTroublePoints:Dictionary = new Dictionary();
 			
 			var dict:Dictionary = sim_board.startingEdgeDictionary; 
 			if (isEmpty(dict)) { // Nothing to compute on "Start" level. 
@@ -226,9 +299,7 @@ package system
 								switch (out_type) {
 									case Edge.BALL_TYPE_WIDE:
 										if (!subnet_port.edge.is_wide) {
-											if (listPortTroublePoints.indexOf(subnet_port) == -1) {
-												listPortTroublePoints.push(subnet_port);
-											}
+											addTpPort(listPortTroublePoints, subnet_port);
 											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 										} else {
 											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
@@ -239,9 +310,7 @@ package system
 									break;
 									case Edge.BALL_TYPE_WIDE_AND_NARROW:
 										if (!subnet_port.edge.is_wide) {
-											if (listPortTroublePoints.indexOf(subnet_port) == -1) {
-												listPortTroublePoints.push(subnet_port);
-											}
+											addTpPort(listPortTroublePoints, subnet_port);
 											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 										} else {
 											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
@@ -314,9 +383,7 @@ package system
 						break;
 						case Edge.BALL_TYPE_WIDE:
 							if (edge.has_pinch) {
-								if (listEdgeTroublePoints.indexOf(edge) == -1) {
-									listEdgeTroublePoints.push(edge);
-								}
+								addTpEdge(listEdgeTroublePoints, edge);
 								outgoing_ball_type = Edge.BALL_TYPE_NONE;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE;
@@ -324,9 +391,7 @@ package system
 						break;
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
 							if (edge.has_pinch) {
-								if (listEdgeTroublePoints.indexOf(edge) == -1) {
-									listEdgeTroublePoints.push(edge);
-								}
+								addTpEdge(listEdgeTroublePoints, edge);
 								outgoing_ball_type = Edge.BALL_TYPE_NARROW;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
@@ -369,10 +434,8 @@ package system
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-								break;
+									addTpPort(listPortTroublePoints, edge.to_port);
+									break;
 							}
 						}
 					}
@@ -408,12 +471,8 @@ package system
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
 									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
-										if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-											listPortTroublePoints.push(edge.to_port);
-										}
-										if (listPortTroublePoints.indexOf(outgoingMergeEdge.from_port) == -1) {
-											listPortTroublePoints.push(outgoingMergeEdge.from_port);
-										}
+										addTpPort(listPortTroublePoints, edge.to_port);
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
 									} else {
 										wide_ball_into_next_edge = true;
 									}
@@ -423,12 +482,8 @@ package system
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
 									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
-										if (listPortTroublePoints.indexOf(other_edge.to_port) == -1) {
-											listPortTroublePoints.push(other_edge.to_port);
-										}
-										if (listPortTroublePoints.indexOf(outgoingMergeEdge.from_port) == -1) {
-											listPortTroublePoints.push(outgoingMergeEdge.from_port);
-										}
+										addTpPort(listPortTroublePoints, other_edge.to_port);
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
 									} else {
 										wide_ball_into_next_edge = true;
 									}
@@ -465,21 +520,13 @@ package system
 						if ( !node.outgoing_ports[0].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[0]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[0]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[0]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[0]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:
@@ -494,21 +541,13 @@ package system
 						if ( !node.outgoing_ports[1].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[1]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[1]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
 									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[1]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[1]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
 									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:
@@ -560,16 +599,14 @@ package system
 								switch (edge.exit_ball_type) {
 									case Edge.BALL_TYPE_WIDE:
 									case Edge.BALL_TYPE_WIDE_AND_NARROW:
-										if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-											listPortTroublePoints.push(edge.to_port);
-										}
-									break;
+										addTpPort(listPortTroublePoints, edge.to_port);
+										break;
 								}
 							}
 							var my_exit_ball:uint = node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
 							if (!node.outgoing_ports[0].edge.is_wide && ((my_exit_ball == Edge.BALL_TYPE_WIDE) || (my_exit_ball == Edge.BALL_TYPE_WIDE_AND_NARROW))) {
 								node.outgoing_ports[0].edge.enter_ball_type == Edge.BALL_TYPE_NONE;
-								listPortTroublePoints.push(node.outgoing_ports[0]);
+								addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 							} else {
 								node.outgoing_ports[0].edge.enter_ball_type = my_exit_ball;
 							}
@@ -583,21 +620,13 @@ package system
 						if ( !node.outgoing_ports[0].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[0]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[0]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
-										listPortTroublePoints.push(edge.to_port);
-									}
-									if (listPortTroublePoints.indexOf(node.outgoing_ports[0]) == -1) {
-										listPortTroublePoints.push(node.outgoing_ports[0]);
-									}
+									addTpPort(listPortTroublePoints, edge.to_port);
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:
@@ -696,6 +725,16 @@ package system
 			result1[0] = listPortTroublePoints;
 			result1[1] = listEdgeTroublePoints;
 			return result1;
+		}
+		
+		private static function addTpPort(tpDictionary:Dictionary, port:Port):void
+		{
+			tpDictionary[port.toString()] = port;
+		}
+		
+		private static function addTpEdge(tpDictionary:Dictionary, edge:Edge):void
+		{
+			tpDictionary[edge.edge_id] = edge;
 		}
 		
 		/* Checks if a given dictionary is empty or not. 

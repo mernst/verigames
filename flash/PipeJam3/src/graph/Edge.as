@@ -93,11 +93,12 @@ package graph
 		*/
 		public var isStartingNode:Boolean;		
 		
-		// The following four vars are used to plug in the PipeSimulator and detecting ball type changes:
+		// The following five vars are used to plug in the PipeSimulator and detecting ball type changes:
 		private var m_enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		private var m_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		private var m_prev_enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		private var m_prev_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		private var m_has_error:Boolean = false;
 		
 		/**
 		 * Directed Edge created when a graph structure is read in from XML.
@@ -618,6 +619,21 @@ package graph
 				// Was unknown, still unknown - simply make the change
 				m_exit_ball_type = typ;
 			}
+		}
+		
+		public function get has_error():Boolean
+		{
+			return m_has_error;
+		}
+		
+		public function set has_error(b:Boolean):void
+		{
+			if (m_has_error && !b) {
+				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, this));
+			} else if (!m_has_error && b) {
+				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, this));
+			}
+			m_has_error = b;
 		}
 		
 		private function ballUnknown(typ:uint):Boolean

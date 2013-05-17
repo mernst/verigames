@@ -24,7 +24,7 @@ package events
 		
 		override public function toString():String
 		{
-			return "[BallTypeChangeEvent:" + type + " edgeId:" + edge.edge_id + " oldType:" + oldType + " newType:" + newType;
+			return "[BallTypeChangeEvent:" + type + " edgeId:" + edge.edge_id + " oldType:" + oldType + " newType:" + newType + "]";
 		}
 		
 	}

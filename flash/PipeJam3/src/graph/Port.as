@@ -24,11 +24,18 @@ package graph
 		public static const INCOMING_PORT_TYPE:uint = 0;
 		public static const OUTGOING_PORT_TYPE:uint = 1;
 		
+		public var has_error:Boolean = false;
+		
 		public function Port(_node:Node, _edge:Edge, _id:String, _type:uint = INCOMING_PORT_TYPE) {
 			node = _node;
 			edge = _edge;
 			port_id = _id;
 			type = _type;
+		}
+		
+		public function toString():String
+		{
+			return node.node_id + ((type == INCOMING_PORT_TYPE) ? "_I" : "_O") + port_id;
 		}
 		
 	}

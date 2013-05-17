@@ -18,6 +18,7 @@ package scenes.game.display
 	import system.PipeSimulator;
 	import system.Simulator;
 	import scenes.game.components.InGameMenuBox;
+	import system.SimulatorResults;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes

@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import events.BallTypeChangeEvent;
+	import events.EdgeTroublePointEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import graph.Edge;
@@ -101,13 +102,16 @@ package scenes.game.display
 			} else {
 				if (toBox) {
 					setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
-					setOutgoingWidth(m_toComponent.m_isWide);
+					if (graphEdge.has_pinch) {
+						setOutgoingWidth(false);
+						graphEdge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onTroublePointAdded);
+						graphEdge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onTroublePointRemoved);
+					} else {
+						setOutgoingWidth(m_toComponent.m_isWide);
+					}
 				} else {// Lines going into joints should have constant width throughout
 					setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
 					setOutgoingWidth(isBallWide(graphEdge.exit_ball_type));
-				}
-				if (graphEdge.edge_id == "e9") {
-					trace("listening to: " + graphEdge.edge_id);
 				}
 				graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			}
@@ -141,6 +145,10 @@ package scenes.game.display
 				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			}
 			if (graphEdge) {
+				if (toBox && graphEdge.has_pinch) {
+					graphEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onTroublePointAdded);
+					graphEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onTroublePointRemoved);
+				}
 				graphEdge.removeEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			}
 			super.dispose();
@@ -151,11 +159,27 @@ package scenes.game.display
 			trace(evt.newType);
 			if (toBox) {
 				setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
-				setOutgoingWidth(m_toComponent.m_isWide);
+				if (graphEdge.has_pinch) {
+					setOutgoingWidth(false);
+				} else {
+					setOutgoingWidth(m_toComponent.m_isWide);
+				}
 			} else {// Lines going into joints should have constant width throughout
 				setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
 				setOutgoingWidth(isBallWide(graphEdge.exit_ball_type));
 			}
+		}
+		
+		private function onTroublePointAdded(evt:EdgeTroublePointEvent):void
+		{
+			m_endJoint.m_hasError = true;
+			m_endJoint.m_isDirty = true;
+		}
+		
+		private function onTroublePointRemoved(evt:EdgeTroublePointEvent):void
+		{
+			m_endJoint.m_hasError = false;
+			m_endJoint.m_isDirty = true;
 		}
 		
 		private function getBallTypeChangeEvent():String
