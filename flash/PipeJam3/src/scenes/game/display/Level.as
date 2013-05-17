@@ -448,7 +448,7 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			var edgeSetID:String = e.data as String;
+			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
 			for each (var edgeID:String in edgeSet.edge_ids)
 			{
@@ -457,8 +457,8 @@ package scenes.game.display
 				{
 					edge.is_wide = !edge.is_wide;
 				}
-				var outID:String = edgeID+"__OUT__";
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
+				var outID:String = edgeID + "__OUT__";
+				var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
 				if(outgoingGameEdgeContainer)
 					outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				var inID:String = edgeID+"__IN__";
@@ -466,6 +466,7 @@ package scenes.game.display
 				if(incomingGameEdgeContainer)
 					incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 			}
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
 		}
 		
 		//data object should be in final selected/unselected state
