@@ -120,7 +120,7 @@ package utils
 		}
 		
 		public function boardNameExists(_original_board_name:String):Boolean {
-			return (obfuscatedBoardNameDictionary[_original_board_name] != null);
+			return obfuscatedBoardNameDictionary.hasOwnProperty(_original_board_name);
 		}
 		
 		public function getBoardName(_original_board_name:String, _original_level_name:String):String {
@@ -137,7 +137,10 @@ package utils
 		
 		public function getReverseBoardName(obfuscatedName:String):String
 		{
-			return reverseObfuscatedBoardNameDictionary[obfuscatedName];
+			if (reverseObfuscatedBoardNameDictionary.hasOwnProperty(obfuscatedName)) {
+				return reverseObfuscatedBoardNameDictionary[obfuscatedName];
+			}
+			return "";
 		}
 		
 		public function getLevelName(_original_level_name:String):String {

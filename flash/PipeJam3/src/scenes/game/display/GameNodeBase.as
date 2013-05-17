@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import events.EdgeSetChangeEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
@@ -96,7 +97,7 @@ package scenes.game.display
 						// Need to dispatch AFTER setting width, this will trigger the score update
 						// (we don't want to update the score with old values, we only know they're old
 						// if we properly mark them dirty first)
-						dispatchEvent(new starling.events.Event(Level.EDGE_SET_CHANGED, true, null));
+						dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
 					}
 					
 				}

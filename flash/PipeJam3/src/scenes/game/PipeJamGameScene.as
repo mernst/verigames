@@ -233,7 +233,7 @@ package scenes.game
 				trace("everything loaded");
 				if(nextParseState)
 					nextParseState.removeFromParent();
-								
+				
 				active_world = createWorldFromNodes(m_network, m_worldXML, m_worldLayout, m_worldConstraints);		
 				
 				addChild(active_world);

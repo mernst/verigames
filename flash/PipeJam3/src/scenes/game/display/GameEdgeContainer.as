@@ -134,11 +134,11 @@ package scenes.game.display
 		{
 			m_edgeSegments = new Vector.<GameEdgeSegment>;			
 			m_edgeJoints = new Vector.<GameEdgeJoint>;
-								
+			
 			//create start joint, and then create rest when we create connecting segment
 			m_startJoint = new GameEdgeJoint(false, true);
 			m_edgeJoints.push(m_startJoint);
-						
+			
 			var numJoints:int = 6;
 			//now create segments and joints for second position to n
 			for(var index:int = 1; index<numJoints; index++)

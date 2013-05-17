@@ -62,6 +62,7 @@ package state
 		}
 		
 		public override function onTasksComplete():void {
+			world_nodes.attachExternalSubboardNodesToBoardNodes();
 			var event:starling.events.Event = new starling.events.Event(WORLD_PARSED, true, world_nodes);
 			dispatchEvent(event);
 			stateUnload();

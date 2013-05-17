@@ -16,11 +16,12 @@ package graph
 		
 		/** Dictionary mapping edge ids to edges */
 		//static because edges are created before the network object
-		public static var edgeDictionary:Dictionary = new Dictionary;
+		public static var edgeDictionary:Dictionary = new Dictionary();
 		
 		/** This is a dictionary of LevelNodes, which is a dictionary of BoardNodes, which is a dictionary of Nodes; INDEXED BY LEVEL NAME, BOARD NAME, AND NODE ID, RESPECTIVELY */
 		public var LevelNodesDictionary:Dictionary = new Dictionary();
-		public var levelNodeNameArray:Array = new Array;
+		public var levelNodeNameArray:Array = new Array();
+		public var globalBoardNameToBoardNodesDictionary:Dictionary = new Dictionary();
 		
 		public function Network(_original_world_name:String, _world_index:uint = 1, _obfuscate_names:Boolean = true) 
 		{
@@ -43,7 +44,7 @@ package graph
 				LevelNodesDictionary[new_level_name] = new LevelNodes(_original_level_name, obfuscator);
 				levelNodeNameArray.push(new_level_name);
 			}
-				
+			
 			(LevelNodesDictionary[new_level_name] as LevelNodes).addNode(_node, _original_board_name);
 		}
 		
@@ -52,8 +53,35 @@ package graph
 			if (LevelNodesDictionary[level.level_name] == null) {
 				LevelNodesDictionary[level.level_name] = level;
 				levelNodeNameArray.push(level.level_name);
+				for (var obfusBoardName:String in level.boardNodesDictionary) {
+					var boardNodes:BoardNodes = level.boardNodesDictionary[obfusBoardName];
+					if (globalBoardNameToBoardNodesDictionary.hasOwnProperty(boardNodes.original_board_name)) {
+						throw new Error("Duplicate board name found for level: " + level.original_level_name + " board:" + boardNodes.original_board_name);
+					}
+					globalBoardNameToBoardNodesDictionary[boardNodes.original_board_name] = boardNodes;
+				}
 			} else {
-				throw new Error("Duplicate Level entries found for level: " + level.level_name);
+				throw new Error("Duplicate Level entries found for level: " + level.original_level_name);
+			}
+		}
+		
+		public function attachExternalSubboardNodesToBoardNodes():void
+		{
+			for (var levelName:String in LevelNodesDictionary) {
+				var levelNodes:LevelNodes = LevelNodesDictionary[levelName] as LevelNodes;
+				for (var boardName:String in levelNodes.boardNodesDictionary) {
+					var boardNodes:BoardNodes = levelNodes.boardNodesDictionary[boardName] as BoardNodes;
+					for each (var externalSubnetNode:SubnetworkNode in boardNodes.subnetNodesToAssociate) {
+						externalSubnetNode.associated_board_is_external = true;
+						if (globalBoardNameToBoardNodesDictionary.hasOwnProperty(externalSubnetNode.subboard_name)) {
+							externalSubnetNode.associated_board = globalBoardNameToBoardNodesDictionary[externalSubnetNode.subboard_name] as BoardNodes;
+						} else {
+							// If the board doesn't exist in this world, mark as null
+							externalSubnetNode.associated_board = null;
+						}
+					}
+					boardNodes.subnetNodesToAssociate = new Vector.<SubnetworkNode>();
+				}
 			}
 		}
 		
@@ -148,6 +176,9 @@ package graph
 				edge.updateEdgeWidth(isWide);
 			}
 		}
+		
+		
+		
 	}
 
 }

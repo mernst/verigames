@@ -11,5 +11,9 @@ package
 		public static const WIDE_INPUT_POINTS:Number = 25;
 		public static const NARROW_OUTPUT_POINTS:Number = 25;
 		public static const ERROR_POINTS:Number = -75;
+		
+		public static const XML_ANNOT_IN:String = "__IN__";
+		public static const XML_ANNOT_OUT:String = "__OUT__";
+		public static const XML_ANNOT_EXT:String = "EXT___";
     }
 }

@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import events.EdgeSetChangeEvent;
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	import flash.events.Event;
@@ -14,6 +15,7 @@ package scenes.game.display
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
+	import system.PipeSimulator;
 	import system.Simulator;
 	import scenes.game.components.InGameMenuBox;
 	
@@ -49,11 +51,11 @@ package scenes.game.display
 		public var m_network:Network;
 		
 		/** simulator for the network */
-		public var m_simulator:Simulator;
-
+		public var m_simulator:PipeSimulator;
+		
 		/** Original XML used for this world */
 		public var world_xml:XML;
-
+		
 		/** True if at least one level on this board has not succeeded */
 		public var failed:Boolean = false;
 		
@@ -96,8 +98,9 @@ package scenes.game.display
 			m_layoutXML = _layout;
 			
 			createWorld(m_network.LevelNodesDictionary);
-			m_simulator = new Simulator(m_network);
-
+			//m_simulator = new Simulator(m_network);
+			m_simulator = new PipeSimulator(m_network);
+			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
@@ -114,6 +117,7 @@ package scenes.game.display
 			selectLevel(firstLevel);
 			
 			addEventListener(Level.SCORE_CHANGED, onScoreChange);
+			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
 			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
@@ -153,6 +157,11 @@ package scenes.game.display
 		{
 			var level:Level = e.data as Level;
 			gameControlPanel.updateScore(level);
+		}
+		
+		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		{
+			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
 		}
 		
 		private function onCenterOnNodeEvent(e:starling.events.Event):void

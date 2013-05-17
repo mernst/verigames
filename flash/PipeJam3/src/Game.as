@@ -138,7 +138,6 @@ package
 			if (!SUPPRESS_TRACE_STATEMENTS) {
 				trace(_msg);
 				if (ExternalInterface.available) {
-					//var reply:String = ExternalInterface.call("navTo", URLBASE + "browsing/card.php?id=" + quiz_card_asked + "&topic=" + TOPIC_NUM);
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
 			}
@@ -152,7 +151,6 @@ package
 			if (!SUPPRESS_TRACE_STATEMENTS) {
 				trace(_msg);
 				if (ExternalInterface.available) {
-					//var reply:String = ExternalInterface.call("navTo", URLBASE + "browsing/card.php?id=" + quiz_card_asked + "&topic=" + TOPIC_NUM);
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
 			}

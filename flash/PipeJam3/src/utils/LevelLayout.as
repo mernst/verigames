@@ -91,11 +91,12 @@ package utils
 				}
 				
 				if (my_board_xml["display"].length() > 0) {
-					var boardNode:BoardNodes = my_levelNodes.getDictionary(my_board_xml.attribute("name"));
-					if(boardNode)
-					{
+					var boardNode:BoardNodes = my_levelNodes.getBoardNodes(my_board_xml.attribute("name"));
+					if(boardNode) {
 						var boardDisplayXML:XMLList = my_board_xml["display"];
 						boardNode.metadata["display"] = boardDisplayXML[0];
+					} else {
+						Game.printDebug("WARNING: BoardNodes not generated yet for this <display name='"+my_board_xml.attribute("name")+"'/>");
 					}
 				}
 				
@@ -142,6 +143,8 @@ package utils
 			if (my_level_xml.attribute("index").length() != 0) {
 				my_levelNodes.metadata["index"] = new Number(my_level_xml.attribute("index"));		
 			}
+			
+			my_levelNodes.associateSubnetNodesToBoardNodes();
 			
 			Game.printDebug("Level layout LOADED!");
 			return my_levelNodes;

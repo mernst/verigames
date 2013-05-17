@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
 	
 	import flash.display.Shape;
@@ -36,10 +37,10 @@ package scenes.game.display
 		
 		/** True if the balls should be dropped when the level has been solved, rather than displaying fireworks right away */
 		public static const DROP_WHEN_SUCCEEDED:Boolean = false;
-				
+		
 		/** Name of this level */
 		public var level_name:String;
-				
+		
 		/** True if not all boards on this level have succeeded */
 		public var failed:Boolean = true;
 		
@@ -73,7 +74,7 @@ package scenes.game.display
 		
 		/** The icon associated with this level on the world map */
 		public var level_icon:WorldMapLevelImage;
-						
+		
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelNodes:LevelNodes;
 		
@@ -91,7 +92,6 @@ package scenes.game.display
 		public static var COMPONENT_UNSELECTED:String = "component_unselected";
 		public static var GROUP_SELECTED:String = "group_selected";
 		public static var GROUP_UNSELECTED:String = "group_unselected";
-		public static var EDGE_SET_CHANGED:String = "edge_set_changed";
 		public static var MOVE_EVENT:String = "move_event";
 		public static var SCORE_CHANGED:String = "score_changed";
 		public static var CENTER_ON_COMPONENT:String = "center_on_component";
@@ -271,12 +271,14 @@ package scenes.game.display
 					edgeArray[i].y -= minYedge;
 				}
 				
+				var lineID:String = edgeXML.@id;
+				
 				var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
 				var newGameEdge:GameEdgeContainer;
 				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir);
+					newGameEdge = new GameEdgeContainer(lineID, edgeArray, bb, myNode, myJoint, dir);
 				else
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir);
+					newGameEdge = new GameEdgeContainer(lineID, edgeArray, bb, myJoint, myNode, dir);
 				m_edgeList.push(newGameEdge);
 				
 				minX = Math.min(minX, minXedge);
@@ -288,7 +290,7 @@ package scenes.game.display
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
-			addEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
+			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
@@ -387,7 +389,7 @@ package scenes.game.display
 			
 			disposeChildren();
 			
-			removeEventListener(Level.EDGE_SET_CHANGED, onEdgeSetChange);
+			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
 			removeEventListener(Level.GROUP_SELECTED, onGroupSelection);
@@ -423,7 +425,7 @@ package scenes.game.display
 		}
 	
 		//assume this only generates on toggle width events
-		private function onEdgeSetChange(e:starling.events.Event):void
+		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 //			var edgeSet:EdgeSetRef = e.data as EdgeSetRef;
 //			
@@ -435,7 +437,7 @@ package scenes.game.display
 //					edge.is_wide = !edge.is_wide;
 //				}
 //			}
-			dispatchEvent(new Event(Level.SCORE_CHANGED, true, this));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
 		}
 		
 		//data object should be in final selected/unselected state
@@ -585,8 +587,8 @@ package scenes.game.display
 			for each(var gameNode:GameNode in m_nodeList)
 			{
 				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
-				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height / 2;
-				gameNode.draw();
+				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
+				gameNode.m_isDirty = true;
 				addChild(gameNode);
 				nodeCount++;
 			}
@@ -596,7 +598,7 @@ package scenes.game.display
 			{
 				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameJoint.m_boundingBox.width/2;
 				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameJoint.m_boundingBox.height/2;
-				gameJoint.draw();
+				gameJoint.m_isDirty = true;
 				addChild(gameJoint);
 				jointCount++;
 			}

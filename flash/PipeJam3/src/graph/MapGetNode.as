@@ -15,34 +15,36 @@ package graph
 		public static const VALUE_PORT_IDENTIFIER:String = 		"2";
 		public static const ARGUMENT_PORT_IDENTIFIER:String = 	"3";
 		
-		
 		public function MapGetNode(_x:Number, _y:Number, _t:Number, _metadata:Object = null) {
 			super(_x, _y, _t, NodeTypes.GET, _metadata);
 		}
 		
 		public function getOutputBallType():uint {
-			/*if (associated_mapget.argumentHasMapStamp) {
+			if (argumentHasMapStamp()) {
 				// Argument pinstriping matches key, ball travels from value to output
-				if (valueEdge.associated_pipe.is_wide) {
-					return valueEdge.associated_pipe.exit_ball_type;
+				if (valueEdge.is_wide) {
+					return valueEdge.exit_ball_type;
 				} else {
-					switch (valueEdge.associated_pipe.exit_ball_type) {
+					switch (valueEdge.exit_ball_type) {
 						case VerigameServerConstants.BALL_TYPE_WIDE:
+							// WIDE ball through narrow pipe? This shouldn't be possible, but process it anyway
 							return VerigameServerConstants.BALL_TYPE_NONE;
 						break;
 						case VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW:
 							return VerigameServerConstants.BALL_TYPE_NARROW;
 						break;
-						default:
-							return valueEdge.associated_pipe.exit_ball_type;
-						break;
 					}
+					return valueEdge.exit_ball_type;
 				}
-			} else {
-				// Argument pinstriping doesn't match key, null literal (WIDE ball) thrown)
-				return VerigameServerConstants.BALL_TYPE_WIDE;
-			}*/
-			return VerigameServerConstants.BALL_TYPE_NONE;
+			}
+			// Argument pinstriping doesn't match key, null literal (WIDE ball) thrown)
+			return VerigameServerConstants.BALL_TYPE_WIDE;
+		}
+		
+		public function argumentHasMapStamp():Boolean
+		{
+			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;
+			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
 		}
 		
 		public function get mapEdge():Edge {

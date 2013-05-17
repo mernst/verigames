@@ -93,6 +93,10 @@ package graph
 		*/
 		public var isStartingNode:Boolean;		
 		
+		// The following two vars are used to plug in the old Simulator:
+		public var enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		public var exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		
 		/**
 		 * Directed Edge created when a graph structure is read in from XML.
 		 * @param	_from_node Source node
@@ -313,7 +317,7 @@ package graph
 						break;
 				}
 			}
-				
+			
 			return true;
 		}
 		
