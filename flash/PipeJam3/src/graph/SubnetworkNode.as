@@ -37,7 +37,7 @@ package graph
 		public function set associated_board(bNodes:BoardNodes):void
 		{
 			m_associated_board = bNodes;
-			if (m_associated_board.incoming_node) {
+			if (m_associated_board && m_associated_board.incoming_node) {
 				for each (var ip:Port in incoming_ports) {
 					var sip:SubnetworkPort = ip as SubnetworkPort;
 					for each (var subnet_inner_incoming_port:Port in m_associated_board.incoming_node.outgoing_ports) {
@@ -47,7 +47,7 @@ package graph
 					}
 				}
 			}
-			if (m_associated_board.outgoing_node) {
+			if (m_associated_board && m_associated_board.outgoing_node) {
 				for each (var op:Port in outgoing_ports) {
 					var sop:SubnetworkPort = op as SubnetworkPort;
 					for each (var subnet_inner_outgoing_port:Port in m_associated_board.outgoing_node.outgoing_ports) {

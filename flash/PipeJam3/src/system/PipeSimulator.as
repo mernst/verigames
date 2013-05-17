@@ -139,12 +139,11 @@ package system
 			var initial_ghost_outputs:uint = 0;
 			var total_outputs:uint = 0;
 			var outgoing_vec:Vector.<Edge>;
-			var outgoing_edge:Edge;
 			for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-				for each (outgoing_edge in outgoing_vec) {
+				for each (var oEdge:Edge in outgoing_vec) {
 					total_outputs++;
-					if ( (outgoing_edge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
-						(outgoing_edge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
+					if ( (oEdge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
+						(oEdge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 						initial_ghost_outputs++;
 					}
 				}
@@ -173,7 +172,7 @@ package system
 					// check for SUBNETWORK width mismatch - this is the case when a SUBNETWORK edge flows into this edge (e)
 					switch (e.from_node.kind) {
 						case NodeTypes.INCOMING:
-							// TODO: not totally clear in this case, just stick to wide for wide, small for small
+							// For now we've agreed to make this a pipe-dependent ball: wide for wide, small for small
 							if (e.is_wide) {
 								e.enter_ball_type = Edge.BALL_TYPE_WIDE;
 							} else {
@@ -254,7 +253,7 @@ package system
 									case Edge.BALL_TYPE_UNDETERMINED:
 									case Edge.BALL_TYPE_GHOST:
 										if (!subnet_board.changed_since_last_sim) {
-											throw new Error("Flow sensitive PipeSimulator: BALL_TYPE_UNDETERMINED/GHOST found for supposedly simulated board. This should not be the case/");
+											throw new Error("Flow sensitive PipeSimulator: BALL_TYPE_UNDETERMINED/GHOST found for supposedly simulated board. This should not be the case");
 										}
 										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
 									break;
@@ -395,7 +394,7 @@ package system
 								edges_awaiting_others.push(edge);
 							}
 						} else {
-							var outgoing_edge:Edge = node.outgoing_ports[0].edge;
+							var outgoingMergeEdge:Edge = node.outgoing_ports[0].edge;
 							// The other edge has already been reached, proceed with collision detection
 							// There is only a problem if the outgoing pipe is narrow and we have a wide ball in either incoming pipe
 							var narrow_ball_into_next_edge:Boolean = ( 
@@ -408,12 +407,12 @@ package system
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (!outgoing_edge.is_wide && !outgoing_edge.has_buzzsaw) {
+									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
 										if (listPortTroublePoints.indexOf(edge.to_port) == -1) {
 											listPortTroublePoints.push(edge.to_port);
 										}
-										if (listPortTroublePoints.indexOf(outgoing_edge.from_port) == -1) {
-											listPortTroublePoints.push(outgoing_edge.from_port);
+										if (listPortTroublePoints.indexOf(outgoingMergeEdge.from_port) == -1) {
+											listPortTroublePoints.push(outgoingMergeEdge.from_port);
 										}
 									} else {
 										wide_ball_into_next_edge = true;
@@ -423,12 +422,12 @@ package system
 							switch (other_edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									if (!outgoing_edge.is_wide && !outgoing_edge.has_buzzsaw) {
+									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
 										if (listPortTroublePoints.indexOf(other_edge.to_port) == -1) {
 											listPortTroublePoints.push(other_edge.to_port);
 										}
-										if (listPortTroublePoints.indexOf(outgoing_edge.from_port) == -1) {
-											listPortTroublePoints.push(outgoing_edge.from_port);
+										if (listPortTroublePoints.indexOf(outgoingMergeEdge.from_port) == -1) {
+											listPortTroublePoints.push(outgoingMergeEdge.from_port);
 										}
 									} else {
 										wide_ball_into_next_edge = true;
@@ -436,17 +435,17 @@ package system
 								break;
 							}
 							if (wide_ball_into_next_edge && narrow_ball_into_next_edge) {
-								outgoing_edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
+								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
 							} else if (wide_ball_into_next_edge) {
-								outgoing_edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_WIDE;
 							} else if (narrow_ball_into_next_edge) {
-								outgoing_edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							} else if ( (edge.exit_ball_type == Edge.BALL_TYPE_GHOST) 
 								|| (other_edge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 								// TODO: we don't cover the none + ghost case, what should that output? For now, output ghost
-								outgoing_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_GHOST;
 							} else {
-								outgoing_edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_NONE;
 							}
 							// Remove edges from waiting list if they're in there
 							if (edges_awaiting_others.indexOf(edge) > -1) {
@@ -455,7 +454,7 @@ package system
 							if (edges_awaiting_others.indexOf(other_edge) > -1) {
 								edges_awaiting_others.splice(edges_awaiting_others.indexOf(other_edge), 1);
 							}
-							queue.push(outgoing_edge); //enqueue
+							queue.push(outgoingMergeEdge); //enqueue
 						}
 					}
 					break;
@@ -630,9 +629,9 @@ package system
 			var latest_ghost_outputs:uint = 0;
 			// Check for any ghost outputs on *this* board
 			for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-				for each (outgoing_edge in outgoing_vec) {
-					if ( (outgoing_edge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
-						(outgoing_edge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
+				for each (var oEdge1:Edge in outgoing_vec) {
+					if ( (oEdge1.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
+						(oEdge1.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 						latest_ghost_outputs++;
 					}
 				}
@@ -654,9 +653,9 @@ package system
 					new_ghost_outputs = 0;
 					// Check for any ghost outputs on *this* board
 					for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-						for each (outgoing_edge in outgoing_vec) {
-							if ( (outgoing_edge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
-								(outgoing_edge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
+						for each (var oEdge2:Edge in outgoing_vec) {
+							if ( (oEdge2.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
+								(oEdge2.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 								new_ghost_outputs++;
 							}
 						}
@@ -671,13 +670,13 @@ package system
 				if (new_ghost_outputs >= latest_ghost_outputs) {
 					// We aren't making progress, infinite loop suspected. Just assign outputs and continue
 					for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-						for each (outgoing_edge in outgoing_vec) {
-							if ( (outgoing_edge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
-								(outgoing_edge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
-								if (outgoing_edge.is_wide) {
-									outgoing_edge.exit_ball_type == Edge.BALL_TYPE_WIDE;
+						for each (var oEdge3:Edge in outgoing_vec) {
+							if ( (oEdge3.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
+								(oEdge3.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
+								if (oEdge3.is_wide) {
+									oEdge3.exit_ball_type == Edge.BALL_TYPE_WIDE;
 								} else {
-									outgoing_edge.exit_ball_type == Edge.BALL_TYPE_NARROW;
+									oEdge3.exit_ball_type == Edge.BALL_TYPE_NARROW;
 								}
 							}
 						}
@@ -693,10 +692,10 @@ package system
 			boards_in_progress.splice(boards_in_progress.indexOf(sim_board), 1);
 			sim_board.changed_since_last_sim = false;
 			
-			var result:Array = new Array(2);
-			result[0] = listPortTroublePoints;
-			result[1] = listEdgeTroublePoints;
-			return result;
+			var result1:Array = new Array(2);
+			result1[0] = listPortTroublePoints;
+			result1[1] = listEdgeTroublePoints;
+			return result1;
 		}
 		
 		/* Checks if a given dictionary is empty or not. 

@@ -7,7 +7,7 @@ package graph
 	import utils.Geometry;
 	import utils.Metadata;
 	
-	import flash.events.EventDispatcher;
+	import starling.events.EventDispatcher;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
@@ -51,10 +51,10 @@ package graph
 		
 		/** Id of the variable identified in XML */
 		public var variableID:int;
-				
+		
 		/** The spline control points associated with this edge for drawing purposes */
 		public var spline_control_points:Vector.<Point>;	
-				
+		
 		/** pointers back up to all starting edges that can reach this edge. */
 		public var topmostEdgeDictionary:Dictionary = new Dictionary;
 		public var topmostEdgeIDArray:Array = new Array;
@@ -93,9 +93,11 @@ package graph
 		*/
 		public var isStartingNode:Boolean;		
 		
-		// The following two vars are used to plug in the old Simulator:
-		public var enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
-		public var exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		// The following four vars are used to plug in the PipeSimulator and detecting ball type changes:
+		private var m_enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		private var m_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		private var m_prev_enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
+		private var m_prev_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		
 		/**
 		 * Directed Edge created when a graph structure is read in from XML.
@@ -568,6 +570,62 @@ package graph
 		
 		public function get to_port_id():String {
 			return to_port.port_id;
+		}
+		
+		public function get enter_ball_type():uint
+		{
+			return m_enter_ball_type;
+		}
+		
+		public function get exit_ball_type():uint
+		{
+			return m_exit_ball_type;
+		}
+		
+		public function set enter_ball_type(typ:uint):void
+		{
+			if (ballUnknown(typ) && !ballUnknown(m_enter_ball_type)) {
+				// If setting a ball to be UNDETERMINED/GHOST to begin sim, keep previous type to compare after sim
+				m_prev_enter_ball_type = m_enter_ball_type;
+				m_enter_ball_type = typ;
+			} else if (!ballUnknown(typ)) {
+				// If setting a type to a KNOWN ball type (done simulating, for example) record change
+				m_enter_ball_type = typ;
+				if (m_prev_enter_ball_type != m_enter_ball_type) {
+					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, m_prev_enter_ball_type, m_enter_ball_type, this));
+				}
+			} else {
+				// Was unknown, still unknown - simply make the change
+				m_enter_ball_type = typ;
+			}
+		}
+		
+		public function set exit_ball_type(typ:uint):void
+		{
+			if (ballUnknown(typ) && !ballUnknown(m_exit_ball_type)) {
+				// If setting a ball to be UNDETERMINED/GHOST to begin sim, keep previous type to compare after sim
+				m_prev_exit_ball_type = m_exit_ball_type;
+				m_exit_ball_type = typ;
+			} else if (!ballUnknown(typ)) {
+				// If setting a type to a KNOWN ball type (done simulating, for example) record change
+				m_exit_ball_type = typ;
+				if (m_prev_exit_ball_type != m_exit_ball_type) {
+					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, m_prev_exit_ball_type, m_exit_ball_type, this));
+				}
+			} else {
+				// Was unknown, still unknown - simply make the change
+				m_exit_ball_type = typ;
+			}
+		}
+		
+		private function ballUnknown(typ:uint):Boolean
+		{
+			switch (typ) {
+				case BALL_TYPE_UNDETERMINED:
+				case BALL_TYPE_GHOST:
+					return true;
+			}
+			return false;
 		}
 		
 	}

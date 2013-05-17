@@ -70,7 +70,6 @@ package utils
 				my_board_xml = boards_xml_list[b];
 				Game.printDebug("Processing board: " + my_board_xml.attribute("name"));
 				
-				
 				// FORM NODE/EDGE OBJECTS FROM XML
 				for each (var n1:XML in my_board_xml["node"]) {
 					var md:Metadata = attributesToMetadata(n1);

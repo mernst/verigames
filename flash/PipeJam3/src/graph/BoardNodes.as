@@ -22,10 +22,10 @@ package graph
 		public var beginningNodes:Vector.<Node> = new Vector.<Node>();
 		
 		/** Map from edge set id to all starting edges for that edge set ON THIS BOARD (no other boards) */
-		public var startingEdgeDictionary:Dictionary = new Dictionary();
+		private var m_startingEdgeDictionary:Dictionary;
 		
 		/** Map from edge set id to all OUTGOING edges for that edge set ON THIS BOARD (no other boards) */
-		public var outgoingEdgeDictionary:Dictionary = new Dictionary();
+		private var m_outgoingEdgeDictionary:Dictionary;
 		
 		/** True if a change in pipe width or buzzsaw was made since the last simulation */
 		public var changed_since_last_sim:Boolean = true;
@@ -48,7 +48,7 @@ package graph
 		}
 		
 		public function addNode(_node:Node):void {
-			if (nodeDictionary[_node.node_id] == null) {
+			if (!nodeDictionary.hasOwnProperty(_node.node_id)) {
 				nodeDictionary[_node.node_id] = _node;
 				nodeIDArray.push(_node.node_id);
 				var ip:Port, op:Port;
@@ -60,31 +60,16 @@ package graph
 							}
 						}
 						subnetNodesToAssociate.push(_node as SubnetworkNode);
-						// If there are no incoming pipes to the subboard, this is a beginning node - fall through to add to beginningNodes list
-						if (_node.incoming_ports.length == 0) {
-							if (beginningNodes.indexOf(_node) == -1) {
-								beginningNodes.push(_node);
-							}
+						if (beginningNodes.indexOf(_node) == -1) {
+							beginningNodes.push(_node);
 						}
-						for each (op in _node.outgoing_ports) {
-							addStartingEdgeToDictionary(op.edge);
-						}
-					break;
+						break;
 					case NodeTypes.OUTGOING:
 						if (outgoing_node) {
 							throw new Error("Board found with multiple outgoing nodes: " + original_board_name + " nodes:" + outgoing_node.node_id + " & " + _node.node_id);
 						}
 						outgoing_node = _node;
-						// It is also (apparently) possible for an outgoing node to have no inputs or outputs, this won't actually get processed but include it anyway
-						if (_node.incoming_ports.length == 0) {
-							if (beginningNodes.indexOf(_node) == -1) {
-								beginningNodes.push(_node);
-							}
-						}
-						for each (ip in _node.incoming_ports) {
-							addOutgoingEdgeToDictionary(ip.edge);
-						}
-					break;
+						break;
 					case NodeTypes.INCOMING:
 						if (incoming_node) {
 							throw new Error("Board found with multiple incoming nodes: " + original_board_name + " nodes:" + incoming_node.node_id + " & " + _node.node_id);
@@ -98,11 +83,7 @@ package graph
 						if (beginningNodes.indexOf(_node) == -1) {
 							beginningNodes.push(_node);
 						}
-						for each (op in _node.outgoing_ports) {
-							// Should only be one port
-							addStartingEdgeToDictionary(op.edge);
-						}
-					break;
+						break;
 				}
 			} else {
 				throw new Error("Duplicate world nodes found for node_id: " + _node.node_id);
@@ -110,17 +91,17 @@ package graph
 		}
 		
 		/**
-		 * Adds the input edge and edge set index id pair to the startingEdgeDictionary
+		 * Adds the input edge and edge set index id pair to the m_startingEdgeDictionary
 		 * @param	e A starting edge to be added to the dictionary
 		 * @param	checkIfExists True if only edges that do not already exist in the dictionary are added
 		 */
-		public function addStartingEdgeToDictionary(e:Edge, checkIfExists:Boolean = true):void {
+		private function addStartingEdgeToDictionary(e:Edge, checkIfExists:Boolean = true):void {
 			var id:String = e.linked_edge_set.id;
-			if (startingEdgeDictionary[id] == null) {
-				startingEdgeDictionary[id] = new Vector.<Edge>();
+			if (m_startingEdgeDictionary[id] == null) {
+				m_startingEdgeDictionary[id] = new Vector.<Edge>();
 			}
-			if ((!checkIfExists) || (startingEdgeDictionary[id].indexOf(e) == -1)) {
-				startingEdgeDictionary[id].push(e);
+			if ((!checkIfExists) || (m_startingEdgeDictionary[id].indexOf(e) == -1)) {
+				m_startingEdgeDictionary[id].push(e);
 			}
 		}
 		
@@ -129,14 +110,40 @@ package graph
 		 * @param	e A starting edge to be added to the dictionary
 		 * @param	checkIfExists True if only edges that do not already exist in the dictionary are added
 		 */
-		public function addOutgoingEdgeToDictionary(e:Edge, checkIfExists:Boolean = true):void {
+		private function addOutgoingEdgeToDictionary(e:Edge, checkIfExists:Boolean = true):void {
 			var id:String = e.linked_edge_set.id;
-			if (outgoingEdgeDictionary[id] == null) {
-				outgoingEdgeDictionary[id] = new Vector.<Edge>();
+			if (m_outgoingEdgeDictionary[id] == null) {
+				m_outgoingEdgeDictionary[id] = new Vector.<Edge>();
 			}
-			if ((!checkIfExists) || (outgoingEdgeDictionary[id].indexOf(e) == -1)) {
-				outgoingEdgeDictionary[id].push(e);
+			if ((!checkIfExists) || (m_outgoingEdgeDictionary[id].indexOf(e) == -1)) {
+				m_outgoingEdgeDictionary[id].push(e);
 			}
+		}
+		
+		public function get startingEdgeDictionary():Dictionary
+		{
+			if (m_startingEdgeDictionary == null) {
+				m_startingEdgeDictionary = new Dictionary();
+				for each (var begNode:Node in beginningNodes) {
+					for each (var begport:Port in begNode.outgoing_ports) {
+						addStartingEdgeToDictionary(begport.edge);
+					}
+				}
+			}
+			return m_startingEdgeDictionary;
+		}
+		
+		public function get outgoingEdgeDictionary():Dictionary
+		{
+			if (m_outgoingEdgeDictionary == null) {
+				m_outgoingEdgeDictionary = new Dictionary();
+				if (outgoing_node) {
+					for each (var outport:Port in outgoing_node.incoming_ports) {
+						addOutgoingEdgeToDictionary(outport.edge);
+					}
+				}
+			}
+			return m_outgoingEdgeDictionary;
 		}
 		
 	}

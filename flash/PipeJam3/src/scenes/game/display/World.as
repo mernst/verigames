@@ -185,12 +185,11 @@ package scenes.game.display
 			if (newLevel == active_level) {
 				return;
 			}
-
+			
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.updateScore(newLevel);
-			
 			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
 			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));

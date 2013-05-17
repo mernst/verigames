@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
 	
@@ -312,6 +313,8 @@ package scenes.game.display
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
+			addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onEnterBallTypeChange);
+			addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onExitBallTypeChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
@@ -333,7 +336,7 @@ package scenes.game.display
 			draw();
 			
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
-			
+			trace(m_levelLayoutXML.@id);
 			takeSnapshot();
 		}	
 		
@@ -457,16 +460,26 @@ package scenes.game.display
 				{
 					edge.is_wide = !edge.is_wide;
 				}
-				var outID:String = edgeID + "__OUT__";
-				var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
-				if(outgoingGameEdgeContainer)
-					outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-				var inID:String = edgeID+"__IN__";
-				var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
-				if(incomingGameEdgeContainer)
-					incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+				//var outID:String = edgeID + "__OUT__";
+				//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
+				//if(outgoingGameEdgeContainer)
+					//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+				//var inID:String = edgeID+"__IN__";
+				//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
+				//if(incomingGameEdgeContainer)
+					//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
+		}
+		
+		private function onEnterBallTypeChange(evt:BallTypeChangeEvent):void
+		{
+			trace(evt.edge + " old:" + evt.oldType + " new:" + evt.newType);
+		}
+		
+		private function onExitBallTypeChange(evt:BallTypeChangeEvent):void
+		{
+			trace(evt.edge + " old:" + evt.oldType + " new:" + evt.newType);
 		}
 		
 		//data object should be in final selected/unselected state
