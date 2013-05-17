@@ -15,9 +15,8 @@ package scenes.game.display
 
 	public class GameEdgeJoint extends GameComponent
 	{		
-		public var m_showError:Boolean = false;
-		private var m_isLastJoint:Boolean;
-		private var m_isConnectionJoint:Boolean;
+		public var m_hasError:Boolean = false;
+		public var m_jointType:int;
 		
 		//used when moving connection points to allow for snapping back to start, or swapping positions with other connections
 		public var m_originalPoint:Point;
@@ -28,19 +27,23 @@ package scenes.game.display
 		
 		public var count:int = 0;
 		private var m_quad:Quad;
-		private var m_highlightQuad:Quad;
 		
-		public function GameEdgeJoint(isLastJoint:Boolean = false, isConnectionJoint:Boolean = false)
+		static public var STANDARD_JOINT:int = 0;
+		static public var MARKER_JOINT:int = 1;
+		static public var END_JOINT:int = 2;
+		
+		public function GameEdgeJoint(jointType:int = 0)
 		{
 			super("");
 			
-			m_isLastJoint = isLastJoint;
-			m_isConnectionJoint = isConnectionJoint;
+			m_jointType = jointType;
 			m_originalPoint = new Point;
 			m_isDirty = true;
 			
+			//default to true
+			m_isEditable = true;
+			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
 		override public function dispose():void
@@ -51,86 +54,12 @@ package scenes.game.display
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
-			if (hasEventListener(TouchEvent.TOUCH)) {
-				removeEventListener(TouchEvent.TOUCH, onTouch);
-			}
+
 			disposeChildren();
-			if(m_highlightQuad)
-				m_highlightQuad.dispose();
 			if(m_quad)
 				m_quad.dispose();
 
 			super.dispose();
-		}
-		
-		private var isMoving:Boolean = false;
-		private var isHover:Boolean = false;
-		private function onTouch(event:TouchEvent):void
-		{
-			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length)
-			{
-				if (touches.length == 1)
-				{
-					if(isMoving)
-					{
-						x = m_originalPoint.x;
-						y = m_originalPoint.y;
-						(parent as GameEdgeContainer).rubberBandEdge(new Point(), !m_isLastJoint);
-					}
-					m_isDirty = true;
-					isMoving = false;
-					isHover = false;
-				}
-			}
-			
-			if(event.getTouches(this, TouchPhase.HOVER).length)
-			{
-				if (touches.length == 1 && m_isConnectionJoint && event.shiftKey)
-				{
-					m_isDirty = true;
-					isHover = true;
-				}
-			}
-			else
-			{
-				m_isDirty = true;
-				isHover = false;
-			}
-			
-			if(event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					if(!isMoving)
-					{
-						isMoving = true;
-						m_originalPoint.x = x; 
-						m_originalPoint.y = y;
-//						if(m_fromComponent is GameNode)
-//						{
-//							m_closestWall = GameEdgeContainer.BOTTOM_WALL;
-//							var node:GameNode = m_fromComponent as GameNode;
-//							m_position = node.m_outgoingEdges.indexOf(parent);
-//						}
-//						else if(m_toComponent is GameNode)
-//						{
-//							m_closestWall = GameEdgeContainer.TOP_WALL;
-//							var inode:GameNode = m_toComponent as GameNode;
-//							m_position = inode.m_incomingEdges.indexOf(parent);
-//							trace(m_position + " " + x);
-//						}
-					}
-					
-					var currentMoveLocation:Point = touches[0].getLocation(this);
-					var previousLocation:Point = touches[0].getPreviousLocation(this);
-
-					if(m_isConnectionJoint)
-					{
-						//pin to edge of GameNode
-						trackConnector(currentMoveLocation, previousLocation)
-					}
-				}
-			}
 		}
 		
 		protected function trackConnector(currentMoveLocation:Point, previousLocation:Point):void
@@ -286,24 +215,16 @@ package scenes.game.display
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 		
+			var color:int = getColor();
+			
 			removeChildren();
 
 			if(m_quad)
-				m_quad.dispose();
-			if(m_highlightQuad)
-				m_highlightQuad.dispose();
-			
-			if(isHover)
-			{
+				m_quad.dispose();		
 
-				m_highlightQuad = new Quad(lineSize+1, lineSize+1, 0xeeeeee);
-				m_highlightQuad.x = -lineSize;
-				m_highlightQuad.y = -lineSize;
-				addChild(m_highlightQuad);
-			}
-			m_quad = new Quad(lineSize, lineSize, m_color);
+			m_quad = new Quad(lineSize, lineSize, color);
 			m_quad.x = -lineSize/2;
-			m_quad.y = 0;
+			m_quad.y = -lineSize/2;
 			addChild(m_quad);
 			
 
@@ -315,6 +236,10 @@ package scenes.game.display
 //			addChild(m_shape);
 		}
 		
+		override public function hasError():Boolean
+		{
+			return m_hasError;
+		}
 		public function onEnterFrame(event:Event):void
 		{
 			if(m_isDirty)

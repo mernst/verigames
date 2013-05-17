@@ -18,6 +18,7 @@ package scenes.game.display
 		
 		protected var m_edgeSegments:Vector.<GameEdgeSegment>;
 		private var m_edgeJoints:Vector.<GameEdgeJoint>;
+		public var m_outputSegmentIsEditable:Boolean = true;
 		
 		//save start and end points, so we can remake line
 		private var m_startPoint:Point;
@@ -35,7 +36,6 @@ package scenes.game.display
 		public static var RIGHT_WALL:int = 2;
 		public static var TOP_WALL:int = 3;
 		public static var BOTTOM_WALL:int = 4;
-		private var m_recreateEdge:Boolean = true;
 		
 		public static var WIDE_WIDTH:Number = .3;
 		public static var NARROW_WIDTH:Number = .1;
@@ -45,14 +45,19 @@ package scenes.game.display
 		public static var DIR_BOX_TO_JOINT:String = "2joint";
 		public static var DIR_JOINT_TO_BOX:String = "2box";
 		
-		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String)
+		public var NUM_JOINTS:int = 6;
+		
+		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
+										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
+										  isEditable:Boolean = true, isLastSegmentEditable:Boolean = true)
 		{
 			super(_id);
 			m_edgeArray = edgeArray;
 			m_fromComponent = fromComponent;
 			m_toComponent = toComponent;
 			m_dir = dir;
-			
+			m_isEditable = isEditable;
+			m_outputSegmentIsEditable = isLastSegmentEditable;
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
@@ -61,7 +66,7 @@ package scenes.game.display
 			
 			m_boundingBox = _boundingBox;
 
-			createChildren();
+			createJointPointsArray(m_startPoint, m_endPoint);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(CREATE_JOINT, onCreateJoint);
@@ -78,12 +83,10 @@ package scenes.game.display
 			m_startPoint.y = 0;
 			m_endPoint.y =  m_boundingBox.height;
 			
+			createJointPointsArray(m_startPoint, m_endPoint);
 			positionChildren();
 			
-			//touch up color and width
-			setIncomingColor(m_fromComponent.getColor());
-			setOutgoingColor(m_toComponent.getColor());
-			
+			//touch up width
 			setIncomingWidth(m_fromComponent.m_isWide);
 			setOutgoingWidth(m_toComponent.m_isWide);
 		}
@@ -108,6 +111,7 @@ package scenes.game.display
 			super.dispose();
 		}
 		
+		//called when a segment is double-clicked on
 		private function onCreateJoint(event:Event):void
 		{
 			//get the segment index as a guide to where to add the joint
@@ -123,57 +127,70 @@ package scenes.game.display
 			
 			var secondJointPt:Point = newJointPt.clone();
 			m_jointPoints.splice(startingJointIndex+1, 0, newJointPt, secondJointPt);
-			m_recreateEdge = true;
 			createChildren();
 			positionChildren();
 			
 		}
 		
 		//create edge segments and joints from simple point list (m_jointPoints)
-		public function createChildren(currentDragSegment:GameEdgeSegment = null, segmentIndex:int = -1):void
+		public function createChildren():void
 		{
+			//make sure we remove the old ones
+			removeChildren();
+			
 			m_edgeSegments = new Vector.<GameEdgeSegment>;			
 			m_edgeJoints = new Vector.<GameEdgeJoint>;
 			
 			//create start joint, and then create rest when we create connecting segment
-			m_startJoint = new GameEdgeJoint(false, true);
+			m_startJoint = new GameEdgeJoint();
+			m_startJoint.m_isEditable = m_isEditable;
 			m_edgeJoints.push(m_startJoint);
 			
-			var numJoints:int = 6;
+			 
+						
+			
 			//now create segments and joints for second position to n
+			var numJoints:int = m_jointPoints.length;
 			for(var index:int = 1; index<numJoints; index++)
 			{
 				var isLastSegment:Boolean = false;
-				if(index+2 == numJoints)
+				
+				if(index+1 == numJoints)
 					isLastSegment = true;
 				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isLastSegment);
+				if(!isLastSegment)
+					segment.m_isEditable = m_isEditable;
+				else
+					segment.m_isEditable = m_outputSegmentIsEditable;
+				
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
-				var isMarkerJoint:Boolean = false;
+				var jointType:int = GameEdgeJoint.STANDARD_JOINT;
 				if(index+2 == numJoints)
-					isMarkerJoint = true;
-				var isEndJoint:Boolean = false;
+					jointType = GameEdgeJoint.MARKER_JOINT;
 				var joint:GameEdgeJoint;
 				if(index+1 != numJoints)
 				{
-					joint = new GameEdgeJoint(isMarkerJoint, isEndJoint);
+					joint = new GameEdgeJoint(jointType);
+					joint.m_isEditable = m_isEditable;
 					m_edgeJoints.push(joint);
 				}
 			}
-			m_endJoint = new GameEdgeJoint(false, true);
+			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT);
 			m_edgeJoints.push(m_endJoint);
+			
+			m_endJoint.m_isEditable = m_outputSegmentIsEditable;
+
 		}
 		
 		public function positionChildren():void
 		{			
-			createJointPointsArray(m_startPoint, m_endPoint);
-
 			var previousSegment:GameEdgeSegment = null;
 			//move each segment to where they should be, and add them, then add front joint
 			var a:int = 0;
 			var b:int = 1;
-			
+						
 			var segment:GameEdgeSegment;
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
@@ -217,6 +234,7 @@ package scenes.game.display
 					m_endPoint.y = m_endPoint.y+deltaPoint.y;
 				}
 
+				createJointPointsArray(m_startPoint, m_endPoint);
 				positionChildren();
 				
 				m_isDirty = true;
@@ -227,19 +245,36 @@ package scenes.game.display
 		{
 			//update both end joints, and then redraw
 			var segmentIndex:int = m_edgeSegments.indexOf(segment);
+			
+			//if either of the end segments, exit for now. Will want to handle like we did for dragging connection joints around previously
+			//and same for the tunnel/end section within the nodes, I think
+			if(segmentIndex == 0 || segmentIndex == m_edgeSegments.length-1)
+				return;
+			
 			//if connected to end segment, add a expansion joint in between. Test both ends.
-			if(segmentIndex == 1)
+			if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
 			{
-				m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
-				segmentIndex++;
-				m_recreateEdge = true;
+				if(segmentIndex == 1)
+				{
+					m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
+					segmentIndex++;
+					var newJoint:GameEdgeJoint = new GameEdgeJoint();
+					m_edgeJoints.splice(1, 0, newJoint);
+
+					var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir);
+					this.m_edgeSegments.splice(1,0,newSegment);						
+				}
+				if(segmentIndex+3 == m_jointPoints.length)
+				{
+					m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
+					var newEndJoint:GameEdgeJoint = new GameEdgeJoint();
+					m_edgeJoints.splice(-2, 0, newEndJoint);
+					
+					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir);
+					this.m_edgeSegments.splice(-1,0,newEndSegment);	
+				}
 			}
-			if(segmentIndex+3 == m_jointPoints.length)
-			{
-				m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-				m_recreateEdge = true;
-			}
-		
+			
 			//check for horizontal or vertical
 			if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
 			{
@@ -251,6 +286,8 @@ package scenes.game.display
 				m_jointPoints[segmentIndex].x += deltaPoint.x;
 				m_jointPoints[segmentIndex+1].x += deltaPoint.x;
 			}
+
+			
 			
 			//check for any really short segments, and if found, remove them. Start at the end and work backwards
 			//don't do if we just added a segment
@@ -268,7 +305,7 @@ package scenes.game.display
 //				}
 			
 			//need to keep current segment so I have a drag handle still
-			createChildren(segment, segmentIndex);
+			//createChildren(segment, segmentIndex);
 			positionChildren();
 			m_isDirty = true;
 		}
@@ -276,19 +313,25 @@ package scenes.game.display
 		//create 6 joints
 		//  	beginning connection
 		//		end of outgoing port extension
-		//		bend point 1
-		//		bend point 2
+		//		middle point 1
+		//		middle point 2
 		//		start of incoming port extension
 		//		end connection
 		private function createJointPointsArray(startPoint:Point, endPoint:Point):void
-		{			
-			m_jointPoints = new Array(6);
+		{		
+			//recreate if we have a non-initialized or non-standard line
+			//it might be nice to deal with non-standard lines better than wiping out the changes....
+			if(!m_jointPoints || m_jointPoints.length != 6)
+			{
+				m_jointPoints = new Array(NUM_JOINTS);
+				createChildren();
+			}
+
 			//create easy parts
 			makeInitialNodesAndExtension(startPoint, 0, 1, true);
-			makeInitialNodesAndExtension(endPoint, 5, 4, false);
+			makeInitialNodesAndExtension(endPoint, NUM_JOINTS-1, NUM_JOINTS-2, false);
 			
-			makeMainEdgeParts();
-			
+			makeMainEdgeParts();			
 		}
 		
 		private function makeInitialNodesAndExtension(connectionPoint:Point, startIndex:int, nodeIndex:int, isStartPoint:Boolean):void
@@ -303,8 +346,8 @@ package scenes.game.display
 		
 		private function makeMainEdgeParts():void
 		{
-			var xDistance:Number = m_jointPoints[4].x - m_jointPoints[1].x;
-			var yDistance:Number = m_jointPoints[4].y - m_jointPoints[1].y;
+			var xDistance:Number = m_jointPoints[NUM_JOINTS-2].x - m_jointPoints[1].x;
+			var yDistance:Number = m_jointPoints[NUM_JOINTS-2].y - m_jointPoints[1].y;
 			setBottomWallOutputConnection(xDistance, yDistance);
 
 		}
@@ -322,16 +365,16 @@ package scenes.game.display
 //			var gFromNodeTopSide:Number = m_node.y;
 //			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
 
-			if(m_jointPoints[1].y > m_jointPoints[4].y)
+//			if(m_jointPoints[1].y > m_jointPoints[4].y)
 			{
-				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
-				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
+				m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
+				m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[NUM_JOINTS-2].y);
 			}
-			else
-			{
-				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
-				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
-			}
+//			else
+//			{
+//				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
+//				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
+//			}
 		}
 		
 		override public function componentSelected(isSelected:Boolean):void
@@ -366,17 +409,6 @@ package scenes.game.display
 			return getScore();
 		}
 		
-		public function hasError():Boolean
-		{
-			if (toJoint) {
-				// Edges going into joints can't fail
-				return false;
-			} else {
-				return (!m_fromComponent.m_isWide && m_toComponent.m_isWide);
-			}
-		}
-		
-		
 		public function onEnterFrame():void
 		{					
 			if(m_isDirty)
@@ -389,13 +421,13 @@ package scenes.game.display
 				
 				for each(var joint:GameEdgeJoint in m_edgeJoints)
 				{
-					if (hasError())
+					if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
 					{
-						joint.m_showError = true;
+						joint.m_hasError = true;
 					}
 					else
 					{
-						joint.m_showError = false;
+						joint.m_hasError = false;
 					}
 					joint.m_isDirty = true;
 				}
@@ -505,58 +537,5 @@ package scenes.game.display
 				}
 			}
 		}
-		
-		//set children's color, based on incoming and outgoing component and error condition
-		public function setIncomingColor(color:int):void
-		{
-			if(m_edgeSegments != null)
-				for(var segIndex:int; segIndex<m_edgeSegments.length-1; segIndex++)
-				{
-					var segment:GameEdgeSegment = m_edgeSegments[segIndex];
-					if(segment.m_color != color)
-					{
-						segment.m_color = color;
-						segment.m_isDirty = true;
-					}
-				}
-			
-			if(m_edgeJoints != null)
-				for(var jointIndex:int; jointIndex<this.m_edgeJoints.length-1; jointIndex++)
-				{
-					var joint:GameEdgeJoint = m_edgeJoints[jointIndex];
-					if(joint.m_color != color)
-					{
-						joint.m_color = color;
-						joint.m_isDirty = true;
-					}
-				}
-		}
-		
-		//set children's color, based on incoming and outgoing component and error condition
-		public function setOutgoingColor(color:int):void
-		{
-			if(m_edgeSegments != null)
-			{
-				var segment:GameEdgeSegment = m_edgeSegments[m_edgeSegments.length-1];
-				if(segment.m_color != color)
-				{
-					segment.m_color = color;
-					segment.m_isDirty = true;
-				}
-			}
-			
-			if(m_edgeJoints != null)
-			{
-				var joint:GameEdgeJoint = m_edgeJoints[m_edgeJoints.length-1];
-					if(joint.m_color != color)
-				{
-					joint.m_color = color;
-					joint.m_isDirty = true;
-				}
-			}
-
-		}
-		
-
 	}
 }
