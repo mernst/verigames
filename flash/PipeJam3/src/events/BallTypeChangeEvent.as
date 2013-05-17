@@ -1,9 +1,7 @@
 package events 
 {
 	import graph.Edge;
-	import scenes.game.display.GameNodeBase;
-	import scenes.game.display.Level;
-	import starling.events.Event;
+	import flash.events.Event;
 	
 	public class BallTypeChangeEvent extends Event 
 	{
@@ -17,10 +15,16 @@ package events
 		
 		public function BallTypeChangeEvent(eventType:String, _oldType:uint, _newType:uint, _edge:Edge) 
 		{
-			super(type, true);
+			super(eventType);
 			oldType = _oldType;
 			newType = _newType;
 			edge = _edge;
+			//trace("dispatching: " + this);
+		}
+		
+		override public function toString():String
+		{
+			return "[BallTypeChangeEvent:" + type + " edgeId:" + edge.edge_id + " oldType:" + oldType + " newType:" + newType;
 		}
 		
 	}

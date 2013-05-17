@@ -1,7 +1,9 @@
 package scenes.game.display
 {
+	import events.BallTypeChangeEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import graph.Edge;
 	
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
@@ -31,6 +33,8 @@ package scenes.game.display
 		public var incomingEdgePosition:int;
 		public var outgoingEdgePosition:int;
 		
+		public var graphEdge:Edge;
+		
 		//use for figuring out closest wall
 		public static var LEFT_WALL:int = 1;
 		public static var RIGHT_WALL:int = 2;
@@ -49,15 +53,16 @@ package scenes.game.display
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
-										  isEditable:Boolean = true, isLastSegmentEditable:Boolean = true)
+										  _graphEdge:Edge = null)
 		{
 			super(_id);
 			m_edgeArray = edgeArray;
 			m_fromComponent = fromComponent;
 			m_toComponent = toComponent;
 			m_dir = dir;
-			m_isEditable = isEditable;
-			m_outputSegmentIsEditable = isLastSegmentEditable;
+			graphEdge = _graphEdge;
+			m_isEditable = (graphEdge == null) ? false : graphEdge.editable;
+			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
@@ -86,9 +91,36 @@ package scenes.game.display
 			createJointPointsArray(m_startPoint, m_endPoint);
 			positionChildren();
 			
-			//touch up width
-			setIncomingWidth(m_fromComponent.m_isWide);
-			setOutgoingWidth(m_toComponent.m_isWide);
+			if (graphEdge == null) {
+				setIncomingWidth(m_fromComponent.m_isWide);
+				if (toBox) {
+					setOutgoingWidth(m_toComponent.m_isWide);
+				} else {// Lines going into joints should have constant width throughout
+					setOutgoingWidth(m_fromComponent.m_isWide);
+				}
+			} else {
+				if (toBox) {
+					setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
+					setOutgoingWidth(m_toComponent.m_isWide);
+				} else {// Lines going into joints should have constant width throughout
+					setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
+					setOutgoingWidth(isBallWide(graphEdge.exit_ball_type));
+				}
+				if (graphEdge.edge_id == "e9") {
+					trace("listening to: " + graphEdge.edge_id);
+				}
+				graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+			}
+		}
+		
+		private function isBallWide(ballType:uint):Boolean
+		{
+			switch (ballType) {
+				case Edge.BALL_TYPE_WIDE:
+				case Edge.BALL_TYPE_WIDE_AND_NARROW:
+					return true;
+			}
+			return false;
 		}
 		
 		override public function dispose():void
@@ -108,7 +140,27 @@ package scenes.game.display
 			if (hasEventListener(Event.ADDED_TO_STAGE)) {
 				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			}
+			if (graphEdge) {
+				graphEdge.removeEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+			}
 			super.dispose();
+		}
+		
+		private function onBallTypeChange(evt:BallTypeChangeEvent):void
+		{
+			trace(evt.newType);
+			if (toBox) {
+				setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
+				setOutgoingWidth(m_toComponent.m_isWide);
+			} else {// Lines going into joints should have constant width throughout
+				setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
+				setOutgoingWidth(isBallWide(graphEdge.exit_ball_type));
+			}
+		}
+		
+		private function getBallTypeChangeEvent():String
+		{
+			return toBox ? BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED : BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED;
 		}
 		
 		//called when a segment is double-clicked on

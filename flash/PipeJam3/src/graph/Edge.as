@@ -7,7 +7,7 @@ package graph
 	import utils.Geometry;
 	import utils.Metadata;
 	
-	import starling.events.EventDispatcher;
+	import flash.events.EventDispatcher;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
@@ -594,6 +594,7 @@ package graph
 				if (m_prev_enter_ball_type != m_enter_ball_type) {
 					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, m_prev_enter_ball_type, m_enter_ball_type, this));
 				}
+				m_prev_enter_ball_type = m_enter_ball_type;
 			} else {
 				// Was unknown, still unknown - simply make the change
 				m_enter_ball_type = typ;
@@ -612,6 +613,7 @@ package graph
 				if (m_prev_exit_ball_type != m_exit_ball_type) {
 					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, m_prev_exit_ball_type, m_exit_ball_type, this));
 				}
+				m_prev_exit_ball_type = m_exit_ball_type;
 			} else {
 				// Was unknown, still unknown - simply make the change
 				m_exit_ball_type = typ;

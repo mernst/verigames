@@ -283,21 +283,11 @@ package scenes.game.display
 				var index:int = edgeContainerID.indexOf('__');
 				var edgeID:String = edgeContainerID.substring(0, index);
 				var newEdge:Edge = this.edgeDictionary[edgeID];
-				var componentEditable:Boolean;
-				if(newEdge)
-					componentEditable = newEdge.editable;
-				else
-				{
-					//TODO:
-					// if we get here it's because this is a line derived from a subboard, and I don't know 
-					//how to decide if a subboard should be editable. Right now I vote not.
-					componentEditable = false;
-				}
-				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, componentEditable, componentEditable);
-				else
-				{
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, componentEditable, myNode.m_isEditable);
+				
+				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge);
+				} else {
+					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge);
 				}
 				m_edgeList.push(newGameEdge);
 				
@@ -313,8 +303,6 @@ package scenes.game.display
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
-			addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onEnterBallTypeChange);
-			addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onExitBallTypeChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
@@ -470,16 +458,6 @@ package scenes.game.display
 					//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
-		}
-		
-		private function onEnterBallTypeChange(evt:BallTypeChangeEvent):void
-		{
-			trace(evt.edge + " old:" + evt.oldType + " new:" + evt.newType);
-		}
-		
-		private function onExitBallTypeChange(evt:BallTypeChangeEvent):void
-		{
-			trace(evt.edge + " old:" + evt.oldType + " new:" + evt.newType);
 		}
 		
 		//data object should be in final selected/unselected state
