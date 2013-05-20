@@ -125,6 +125,7 @@ package scenes.game.display
 			addEventListener(Level.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(Level.SUBMIT_SCORE, onSubmitScore);
 			addEventListener(Level.SAVE_LOCALLY, onSaveLocally);
+			addEventListener(Level.SET_NEW_LAYOUT, setNewLayout);	
 		}
 		
 		private function onShowGameMenuEvent():void
@@ -151,6 +152,12 @@ package scenes.game.display
 		{
 			if(active_level != null)
 				active_level.onSaveLocally(event);
+		}
+		
+		public function setNewLayout(event:starling.events.Event):void
+		{
+			if(active_level != null)
+				active_level.setNewLayout(event, true);
 		}
 		
 		private function onScoreChange(e:starling.events.Event):void

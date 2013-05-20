@@ -97,6 +97,7 @@ package scenes.game.display
 		public static var CENTER_ON_COMPONENT:String = "center_on_component";
 		
 		public static var SAVE_LAYOUT:String = "save_layout";
+		public static var SET_NEW_LAYOUT:String = "set_new_layout";
 		public static var SUBMIT_SCORE:String = "submit_score";
 		public static var SAVE_LOCALLY:String = "save_locally";
 		
@@ -136,7 +137,7 @@ package scenes.game.display
 			initialize();
 
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
 		protected function initialize():void
@@ -222,81 +223,14 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
-			for each(var lineXML:XML in m_levelLayoutXML.line)
+			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var edgeFromBox:XML = lineXML.frombox[0];
-				var edgeToJoint:XML = lineXML.tojoint[0];
-				var edgeFromJoint:XML = lineXML.fromjoint[0];
-				var edgeToBox:XML = lineXML.tobox[0];
-				var myNode:GameNode;
-				var myJoint:GameJointNode;
-				var dir:String;
-				var boxId:String, jointId:String;
-				if (edgeFromBox && edgeToJoint) {
-					dir = GameEdgeContainer.DIR_BOX_TO_JOINT;
-					boxId = edgeFromBox.@id;
-					jointId = edgeToJoint.@id;
-					myNode = boxDictionary[boxId];
-					myJoint = jointDictionary[jointId];
-				} else if (edgeFromJoint && edgeToBox) {
-					dir = GameEdgeContainer.DIR_JOINT_TO_BOX;
-					boxId = edgeToBox.@id;
-					jointId = edgeFromJoint.@id;
-					myNode = boxDictionary[boxId];
-					myJoint = jointDictionary[jointId];
-				} else {
-					throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
-				}
+				var boundingBox:Rectangle = createLine(edgeXML);
 				
-				//normalize edge Array, and then slide game edge to right x,y value
-				var minXedge:Number = Number.POSITIVE_INFINITY;
-				var minYedge:Number = Number.POSITIVE_INFINITY;
-				var maxXedge:Number = Number.NEGATIVE_INFINITY;
-				var maxYedge:Number = Number.NEGATIVE_INFINITY;
-				
-				//create edge array
-				var edgeArray:Array = new Array;
-				
-				var edgePoints:XMLList = lineXML.point;
-				for each(var pointXML:XML in edgePoints)
-				{
-					var pt:Point = new Point(pointXML.@x, pointXML.@y);
-					edgeArray.push(pt);
-					minXedge = Math.min(minXedge, pt.x);
-					minYedge = Math.min(minYedge, pt.y);
-					maxXedge = Math.max(maxXedge, pt.x);
-					maxYedge = Math.max(maxYedge, pt.y);
-				}
-				//adjust by min
-				for(var i:int = 0; i<edgeArray.length; i++)
-				{
-					edgeArray[i].x -= minXedge;
-					edgeArray[i].y -= minYedge;
-				}
-				
-				var lineID:String = lineXML.@id;
-				
-				var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
-				var newGameEdge:GameEdgeContainer;
-				// get editable property from related edge for end segment/joint
-				var edgeContainerID:String = lineXML.@id;
-				var index:int = edgeContainerID.indexOf('__');
-				var edgeID:String = edgeContainerID.substring(0, index);
-				var newEdge:Edge = this.edgeDictionary[edgeID];
-				//trace("lineID:" + edgeID + " edgeFound:" + newEdge);
-				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-					newGameEdge = new GameEdgeContainer(lineXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge);
-				} else {
-					newGameEdge = new GameEdgeContainer(lineXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge);
-				}
-				m_edgeList.push(newGameEdge);
-				
-				edgeContainerDictionary[edgeContainerID] = newGameEdge;
-				
-				minX = Math.min(minX, minXedge);
-				minY = Math.min(minY, minYedge);
-				maxX = Math.max(maxX, maxXedge);
-				maxY = Math.max(maxY, maxYedge);
+				minX = Math.min(minX, boundingBox.x);
+				minY = Math.min(minY, boundingBox.y);
+				maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+				maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
 			}
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
@@ -308,6 +242,91 @@ package scenes.game.display
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
 			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
+		}
+		
+		
+		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false):Rectangle
+		{
+			var edgeFromBox:XML = edgeXML.frombox[0];
+			var edgeToJoint:XML = edgeXML.tojoint[0];
+			var edgeFromJoint:XML = edgeXML.fromjoint[0];
+			var edgeToBox:XML = edgeXML.tobox[0];
+			var myNode:GameNode;
+			var myJoint:GameJointNode;
+			var dir:String;
+			var boxId:String, jointId:String;
+			if (edgeFromBox && edgeToJoint) {
+				dir = GameEdgeContainer.DIR_BOX_TO_JOINT;
+				boxId = edgeFromBox.@id;
+				jointId = edgeToJoint.@id;
+				myNode = boxDictionary[boxId];
+				myJoint = jointDictionary[jointId];
+			} else if (edgeFromJoint && edgeToBox) {
+				dir = GameEdgeContainer.DIR_JOINT_TO_BOX;
+				boxId = edgeToBox.@id;
+				jointId = edgeFromJoint.@id;
+				myNode = boxDictionary[boxId];
+				myJoint = jointDictionary[jointId];
+			} else {
+				throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
+			}
+			
+			//normalize edge Array, and then slide game edge to right x,y value
+			var minXedge:Number = Number.POSITIVE_INFINITY;
+			var minYedge:Number = Number.POSITIVE_INFINITY;
+			var maxXedge:Number = Number.NEGATIVE_INFINITY;
+			var maxYedge:Number = Number.NEGATIVE_INFINITY;
+			
+			//create edge array
+			var edgeArray:Array = new Array;
+			
+			var edgePoints:XMLList = edgeXML.point;
+			for each(var pointXML:XML in edgePoints)
+			{
+				var pt:Point = new Point(pointXML.@x, pointXML.@y);
+				edgeArray.push(pt);
+				minXedge = Math.min(minXedge, pt.x);
+				minYedge = Math.min(minYedge, pt.y);
+				maxXedge = Math.max(maxXedge, pt.x);
+				maxYedge = Math.max(maxYedge, pt.y);
+			}
+			//adjust by min
+			for(var i:int = 0; i<edgeArray.length; i++)
+			{
+				edgeArray[i].x -= minXedge;
+				edgeArray[i].y -= minYedge;
+			}
+			
+			var lineID:String = edgeXML.@id;
+			
+			var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
+			var newGameEdge:GameEdgeContainer;
+			// get editable property from related edge or end segment/joint
+			var edgeContainerID:String = edgeXML.@id;
+			var index:int = edgeContainerID.indexOf('__');
+			var edgeID:String = edgeContainerID.substring(0, index);
+			var newEdge:Edge = this.edgeDictionary[edgeID];
+			var componentEditable:Boolean;
+			if(newEdge)
+				componentEditable = newEdge.editable;
+			else
+			{
+				//TODO:
+				// if we get here it's because this is a line derived from a subboard, and I don't know 
+				//how to decide if a subboard should be editable. Right now I vote not.
+				componentEditable = false;
+			}
+			if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines);
+			else
+			{
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines);
+			}
+			m_edgeList.push(newGameEdge);
+				
+			edgeContainerDictionary[edgeContainerID] = newGameEdge;
+				
+			return bb;
 		}
 		
 		public function takeSnapshot():LevelNodes
@@ -332,9 +351,8 @@ package scenes.game.display
 		{
 			updateLayoutXML();
 			
-			m_levelLayoutXML.@id = "Layout " + (Math.round(Math.random()*1000));
-			LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXML);
-			
+			m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
+			LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXML);	
 		}
 		
 		
@@ -353,22 +371,94 @@ package scenes.game.display
 			//disposeChildren();
 		}
 		
+		public function setNewLayout(event:starling.events.Event, useExistingLines:Boolean = false):void
+		{
+			var layoutXML:XML = event.data as XML;
+			m_edgeList = new Vector.<GameEdgeContainer>;
+			
+			var minX:Number, minY:Number, maxX:Number, maxY:Number;
+			minX = minY = maxX = maxY = 0;
+			
+			var children:XMLList = m_levelLayoutXML.children();
+			//set box and joint positions first
+			for each(var child:XML in children)
+			{
+				var childName:String = child.localName();
+				var gameNode:GameNodeBase = null;
+				if(childName.indexOf("box") != -1)
+				{
+					var boxID:String = child.@id;
+					gameNode = boxDictionary[boxID];
+				}
+				else if(childName.indexOf("joint") != -1)
+				{
+					var jointID:String = child.@id;
+					gameNode = jointDictionary[jointID];
+				}
+				
+				if(gameNode)
+				{
+					gameNode.x = child.@x;
+					gameNode.y = child.@y;
+					
+					minX = Math.min(minX, gameNode.m_boundingBox.left);
+					minY = Math.min(minY, gameNode.m_boundingBox.top);
+					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				}
+			}
+			//update lines
+			edgeContainerDictionary = new Dictionary();
+			for each(var edge:XML in m_levelLayoutXML.line)
+			{
+				var boundingBox:Rectangle = createLine(edge, useExistingLines);
+					
+				minX = Math.min(minX, boundingBox.x);
+				minY = Math.min(minY, boundingBox.y);
+				maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+				maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
+
+			}
+			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			
+			draw();
+		}
+		
 		public function updateLayoutXML():void
 		{
 			var children:XMLList = m_levelLayoutXML.children();
 			for each(var child:XML in children)
 			{
 				var childName:String = child.localName();
-				if(childName.indexOf("edgeset") != -1)
+				if(childName.indexOf("box") != -1)
 				{
-					var childID:String = child.@id;
-					var edgeSet:GameNode = boxDictionary[childID];
-					child.@top = edgeSet.y;
-					child.@left = edgeSet.x;
+					var boxID:String = child.@id;
+					var edgeSet:GameNode = boxDictionary[boxID];
+					child.@y = edgeSet.y;
+					child.@x = edgeSet.x;
 				}
-				else if(childName.indexOf("edge") != -1)
+				else if(childName.indexOf("joint") != -1)
 				{
-					//TODO - fix this when we know what we are doing with the new layout file
+					var jointID:String = child.@id;
+					var joint:GameJointNode = jointDictionary[jointID];
+					child.@y = joint.y;
+					child.@x = joint.x;
+				}
+				else if(childName.indexOf("line") != -1)
+				{
+					//remove all current points, and then add new ones
+					delete child.point;
+					
+					var lineID:String = child.@id;
+					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
+					for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
+					{
+						var pt:Point = edgeContainer.m_jointPoints[i];
+						var ptXML:XML = <point></point>;
+						ptXML.@x = pt.x;
+						ptXML.@y = pt.y;
+						child.appendChild(ptXML);
+					}
 				}
 			}
 		}
@@ -392,6 +482,8 @@ package scenes.game.display
 				}
 			}
 		}
+		
+
 		
 		override public function dispose():void
 		{
@@ -588,6 +680,8 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
+			//don't dispose as we are immediately re-adding them
+			removeChildren();
 			//add two quads at opposite corners to cause the size to be right
 			var p:Quad = new Quad(.1, .1, 0xff0000);
 			var q:Quad = new Quad(.1, .1, 0xff0000);

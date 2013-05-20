@@ -1,13 +1,14 @@
 package scenes.game.display
 {
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import scenes.BaseComponent;
+	import scenes.login.NetworkConnection;
 	
 	import starling.display.DisplayObjectContainer;
 	import starling.display.materials.StandardMaterial;
 	import starling.events.Event;
-	import flash.geom.Rectangle;
 	
 	public class GameComponent extends BaseComponent
 	{
@@ -18,7 +19,7 @@ package scenes.game.display
 		public var m_isDirty:Boolean = false;
 		
 		public var m_boundingBox:Rectangle;
-		
+				
 		//these are here in that they determine color, so all screen objects need them set
 		protected var m_isWide:Boolean;
 		public var m_hasError:Boolean = false;

@@ -25,10 +25,6 @@ package scenes.splashscreen
 		public function SplashScreenScene(game:PipeJamGame)
 		{
 			super(game);
-			
-			//start this loading so we don't have to wait so long
-			LoginHelper.getLoginHelper().getLevelMetadata();
-
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
