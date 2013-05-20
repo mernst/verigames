@@ -222,12 +222,12 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
-			for each(var edgeXML:XML in m_levelLayoutXML.line)
+			for each(var lineXML:XML in m_levelLayoutXML.line)
 			{
-				var edgeFromBox:XML = edgeXML.frombox[0];
-				var edgeToJoint:XML = edgeXML.tojoint[0];
-				var edgeFromJoint:XML = edgeXML.fromjoint[0];
-				var edgeToBox:XML = edgeXML.tobox[0];
+				var edgeFromBox:XML = lineXML.frombox[0];
+				var edgeToJoint:XML = lineXML.tojoint[0];
+				var edgeFromJoint:XML = lineXML.fromjoint[0];
+				var edgeToBox:XML = lineXML.tobox[0];
 				var myNode:GameNode;
 				var myJoint:GameJointNode;
 				var dir:String;
@@ -257,7 +257,7 @@ package scenes.game.display
 				//create edge array
 				var edgeArray:Array = new Array;
 				
-				var edgePoints:XMLList = edgeXML.point;
+				var edgePoints:XMLList = lineXML.point;
 				for each(var pointXML:XML in edgePoints)
 				{
 					var pt:Point = new Point(pointXML.@x, pointXML.@y);
@@ -274,20 +274,20 @@ package scenes.game.display
 					edgeArray[i].y -= minYedge;
 				}
 				
-				var lineID:String = edgeXML.@id;
+				var lineID:String = lineXML.@id;
 				
 				var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
 				var newGameEdge:GameEdgeContainer;
 				// get editable property from related edge for end segment/joint
-				var edgeContainerID:String = edgeXML.@id;
+				var edgeContainerID:String = lineXML.@id;
 				var index:int = edgeContainerID.indexOf('__');
 				var edgeID:String = edgeContainerID.substring(0, index);
 				var newEdge:Edge = this.edgeDictionary[edgeID];
-				
+				//trace("lineID:" + edgeID + " edgeFound:" + newEdge);
 				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge);
+					newGameEdge = new GameEdgeContainer(lineXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge);
 				} else {
-					newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge);
+					newGameEdge = new GameEdgeContainer(lineXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge);
 				}
 				m_edgeList.push(newGameEdge);
 				
