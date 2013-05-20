@@ -37,6 +37,9 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import flash.events.ContextMenuEvent;
+	import flash.display.NativeMenu;
+	import flash.display.NativeMenuItem;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent

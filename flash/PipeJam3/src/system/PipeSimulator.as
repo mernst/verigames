@@ -2,7 +2,6 @@ package system
 {	
 	import graph.LevelNodes;
 	import graph.Network;
-	import mx.events.PropertyChangeEvent;
 	import graph.Edge;
 	import graph.MapGetNode;
 	import graph.Node;

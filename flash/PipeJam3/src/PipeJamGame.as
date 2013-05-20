@@ -30,6 +30,10 @@ package
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
 		
+		/** list of all network connection objects spawned */
+		protected static var networkConnections:Vector.<NetworkConnection>;
+
+		
 		public function PipeJamGame()
 		{
 			super();
@@ -43,6 +47,9 @@ package
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			scenesToCreate["LoginScene"] = LoginScene;
+			
+			
+			networkConnections = new Vector.<NetworkConnection>;
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
@@ -87,6 +94,20 @@ package
 					//var reply:String = ExternalInterface.call("navTo", URLBASE + "browsing/card.php?id=" + quiz_card_asked + "&topic=" + TOPIC_NUM);
 					var reply:String = ExternalInterface.call("printDebug", _msg);
 				}
+			}
+		}
+		
+		public static function addNetworkConnection(connection:NetworkConnection)
+		{
+			networkConnections.push(connection);
+			
+			//clean up list some, if any of the earliest connections done
+			var frontNC:NetworkConnection = networkConnections[0];
+			while(frontNC && frontNC.done == true)
+			{
+				networkConnections.pop();
+				frontNC.dispose();
+				frontNC = networkConnections[0];
 			}
 		}
 

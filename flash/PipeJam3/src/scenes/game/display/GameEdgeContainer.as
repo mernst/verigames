@@ -16,6 +16,7 @@ package scenes.game.display
 		public var m_fromComponent:GameNodeBase;
 		public var m_toComponent:GameNodeBase;
 		private var m_dir:String;
+		private var m_useExistingPoints:Boolean;
 		
 		public var m_edgeArray:Array;
 		
@@ -29,7 +30,7 @@ package scenes.game.display
 		public var m_startJoint:GameEdgeJoint;
 		public var m_endJoint:GameEdgeJoint;
 		
-		private var m_jointPoints:Array;
+		public var m_jointPoints:Array;
 		
 		public var incomingEdgePosition:int;
 		public var outgoingEdgePosition:int;
@@ -54,7 +55,7 @@ package scenes.game.display
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
-										  _graphEdge:Edge = null)
+										  _graphEdge:Edge = null, useExistingPoints:Boolean = false)
 		{
 			super(_id);
 			m_edgeArray = edgeArray;
@@ -63,7 +64,10 @@ package scenes.game.display
 			m_dir = dir;
 			graphEdge = _graphEdge;
 			m_isEditable = (graphEdge == null) ? false : graphEdge.editable;
+			m_useExistingPoints = useExistingPoints;
+
 			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
+			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
@@ -71,8 +75,6 @@ package scenes.game.display
 			m_endPoint = edgeArray[edgeArray.length-1];
 			
 			m_boundingBox = _boundingBox;
-
-			createJointPointsArray(m_startPoint, m_endPoint);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(CREATE_JOINT, onCreateJoint);
@@ -89,7 +91,20 @@ package scenes.game.display
 			m_startPoint.y = 0;
 			m_endPoint.y =  m_boundingBox.height;
 			
-			createJointPointsArray(m_startPoint, m_endPoint);
+		
+			if(!m_useExistingPoints)
+				createJointPointsArray(m_startPoint, m_endPoint);
+			else
+			{
+				m_jointPoints = new Array();
+				for(var i:int = 0; i< m_edgeArray.length; i++)
+				{
+					var pt:Point = m_edgeArray[i];
+					m_jointPoints.push(pt.clone());
+				}
+			}
+			
+			createChildren()
 			positionChildren();
 			
 			if (graphEdge == null) {
