@@ -14,8 +14,9 @@ package
 		
 		public static const XML_ANNOT_IN:String = "__IN__";
 		public static const XML_ANNOT_OUT:String = "__OUT__";
-		public static const XML_ANNOT_EXT:String = "EXT___";
-		public static const XML_ANNOT_EXT_IN:String = "___IN___";
-		public static const XML_ANNOT_EXT_OUT:String = "___OUT___";
+		public static const XML_ANNOT_COPY:String = "CPY";
+		public static const XML_ANNOT_EXT:String = "EXT__";
+		public static const XML_ANNOT_EXT_IN:String = "__XIN__";
+		public static const XML_ANNOT_EXT_OUT:String = "__XOUT__";
     }
 }

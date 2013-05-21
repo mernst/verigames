@@ -437,7 +437,7 @@ package system
 						// Problem only if wide pipe flows into narrow
 						var subnet_incoming_edge:Edge = (edge.to_port as SubnetworkPort).linked_subnetwork_edge;
 						var subnet_stub_is_wide:Boolean;
-						if (subnet_incoming_edge) {
+						if (subnet_incoming_edge && SIMULATE_EXTERNAL_BOARDS) {
 							subnet_stub_is_wide = subnet_incoming_edge.is_wide;
 						} else {
 							subnet_stub_is_wide = (edge.to_port as SubnetworkPort).default_is_wide;

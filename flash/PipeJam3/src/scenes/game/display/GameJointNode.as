@@ -13,7 +13,7 @@ package scenes.game.display
 		public function GameJointNode( _layoutXML:XML) 
 		{
 			super(_layoutXML);
-			
+			updateSize();
 			draw();
 		}
 		
@@ -25,15 +25,35 @@ package scenes.game.display
 			addChild(m_quad);
 		}
 		
+		override public function updateSize():void
+		{
+			if (m_outgoingEdges.length == 0) {
+				m_isWide = true;// Case where no outputs, don't put a constraint on input lines
+			}
+			// Any outputs narrow, create a narrow constraint
+			var anyNarrowOutputs:Boolean = false;
+			for each (var oedge:GameEdgeContainer in m_outgoingEdges) {
+				if (!oedge.isWide()) {
+					anyNarrowOutputs = true;
+					break;
+				}
+			}
+			
+			var wide:Boolean = !anyNarrowOutputs;
+			if (m_isWide != wide) {
+				m_isWide = wide;
+				m_isDirty = true; // if we end up drawing based on width, re-draw at this point
+				for each (var iedge:GameEdgeContainer in m_incomingEdges) {
+					if (!m_isWide || iedge.isWide()) {
+						iedge.setOutgoingWidth(m_isWide);
+					}
+				}
+			}
+		}
+		
 		override public function isWide():Boolean
 		{
-			// Joint's output is wide is any inputs are wide
-			var wide:Boolean = false;
-			for each (var oedge:GameEdgeContainer in m_incomingEdges) {
-				wide = (wide || oedge.isWide());
-			}
-			m_isWide = wide;
-			return wide;
+			return m_isWide;
 		}
 		
 		override public function getColor():int

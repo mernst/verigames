@@ -175,11 +175,11 @@ package scenes.game.display
 				var gameNode:GameNode;
 				if (!edgeSetDictionary.hasOwnProperty(boxEdgeSetId)) {
 					// TODO: If we have another level with this subboard, produce a link here:
-					if (boxEdgeSetId.indexOf("EXT___") == 0) {
+					if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT) == 0) {
 						// Found a reference to an external SUBBOARD, create fixed node
 						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
 						var isStarting:Boolean = false;
-						if (boxEdgeSetId.indexOf("___OUT___") > -1) {
+						if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT_OUT) > -1) {
 							isWide = false;
 							isStarting = true;
 						}
@@ -303,29 +303,21 @@ package scenes.game.display
 			var newGameEdge:GameEdgeContainer;
 			// get editable property from related edge or end segment/joint
 			var edgeContainerID:String = edgeXML.@id;
+			
 			var index:int = edgeContainerID.indexOf('__');
 			var edgeID:String = edgeContainerID.substring(0, index);
 			var newEdge:Edge = this.edgeDictionary[edgeID];
-			var componentEditable:Boolean;
-			if(newEdge)
-				componentEditable = newEdge.editable;
-			else
-			{
-				//TODO:
-				// if we get here it's because this is a line derived from a subboard, and I don't know 
-				//how to decide if a subboard should be editable. Right now I vote not.
-				componentEditable = false;
-			}
-			if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines);
-			else
-			{
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines);
+			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
+			
+			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines, edgeIsCopy);
+			} else {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
 			m_edgeList.push(newGameEdge);
-				
+			
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
-				
+			
 			return bb;
 		}
 		

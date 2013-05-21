@@ -39,8 +39,7 @@ package scenes.game.components
 		/** Button to switch to the next level */
 		public var nextLevel_button:Button;
 		
-		
-		var selectLayoutDialog:SelectLayoutDialogBox;
+		private var selectLayoutDialog:SelectLayoutDialogBox;
 		
 		protected var loginHelper:LoginHelper;
 		

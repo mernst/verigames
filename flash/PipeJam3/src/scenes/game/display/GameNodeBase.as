@@ -88,10 +88,11 @@ package scenes.game.display
 					{
 						m_isWide = !m_isWide;
 						m_isDirty = true;
-//						for each(var oedge:GameEdgeContainer in this.m_outgoingEdges)
-//							oedge.setIncomingWidth(m_isWide);
-//						for each(var iedge:GameEdgeContainer in this.m_incomingEdges)
-//							iedge.setOutgoingWidth(m_isWide);
+						for each (var iedge:GameEdgeContainer in m_incomingEdges) {
+							if (!m_isWide || iedge.isWide()) {
+								iedge.setOutgoingWidth(m_isWide);
+							}
+						}
 						// Need to dispatch AFTER setting width, this will trigger the score update
 						// (we don't want to update the score with old values, we only know they're old
 						// if we properly mark them dirty first)
@@ -201,7 +202,6 @@ package scenes.game.display
 			edge.incomingEdgePosition = (m_incomingEdges.length-1)/5;
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
-			
 			//push size info - nope, this is coming from the simulator
 			//edge.setOutgoingWidth(m_isWide);
 		}

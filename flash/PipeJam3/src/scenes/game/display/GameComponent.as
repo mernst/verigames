@@ -157,5 +157,9 @@ package scenes.game.display
 					return UNADJUSTABLE_NARROW_COLOR;				
 			}
 		}
+		
+		public function updateSize():void
+		{
+		}
 	}
 }

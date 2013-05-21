@@ -97,7 +97,7 @@ package
 			}
 		}
 		
-		public static function addNetworkConnection(connection:NetworkConnection)
+		public static function addNetworkConnection(connection:NetworkConnection):void
 		{
 			networkConnections.push(connection);
 			

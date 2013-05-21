@@ -19,7 +19,7 @@ package scenes.game.display
 		public var m_toComponent:GameNodeBase;
 		private var m_dir:String;
 		private var m_useExistingPoints:Boolean;
-		
+		private var m_outgoingIsWide:Boolean = false;
 		public var m_edgeArray:Array;
 		
 		protected var m_edgeSegments:Vector.<GameEdgeSegment>;
@@ -38,6 +38,7 @@ package scenes.game.display
 		public var outgoingEdgePosition:int;
 		
 		public var graphEdge:Edge;
+		public var edgeIsCopy:Boolean;
 		
 		//use for figuring out closest wall
 		public static var LEFT_WALL:int = 1;
@@ -57,7 +58,8 @@ package scenes.game.display
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
-										  _graphEdge:Edge = null, useExistingPoints:Boolean = false)
+										  _graphEdge:Edge = null, useExistingPoints:Boolean = false,
+										  _graphEdgeIsCopy:Boolean = false)
 		{
 			super(_id);
 			
@@ -66,15 +68,16 @@ package scenes.game.display
 			m_toComponent = toComponent;
 			m_dir = dir;
 			graphEdge = _graphEdge;
+			edgeIsCopy = _graphEdgeIsCopy;
 			m_isEditable = (graphEdge == null) ? (m_fromComponent.isEditable() || m_toComponent.isEditable()) : graphEdge.editable;
 			m_useExistingPoints = useExistingPoints;
-
-			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
 			
+			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
 			// Also even if box is editable, if contains a pinch point then make editable = false
-			if (toBox && graphEdge && graphEdge.has_pinch) {
+			if (toBox && graphEdge && graphEdge.has_pinch && !edgeIsCopy) {
 				m_outputSegmentIsEditable = false;
 			}
+			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
@@ -113,31 +116,62 @@ package scenes.game.display
 			
 			createChildren()
 			positionChildren();
-			var toComponentNarrow:Boolean = !m_toComponent.isWide();
-			if (graphEdge == null) {
-				setIncomingWidth(m_fromComponent.isWide());
-				if (toBox) {
-					setOutgoingWidth(m_toComponent.isWide());
-				} else {// Lines going into joints should have constant width throughout
-					setOutgoingWidth(toComponentNarrow ? false : m_fromComponent.isWide());
-				}
-			} else {
-				if (toBox) {
-					setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
-					if (graphEdge.has_pinch) {
-						setOutgoingWidth(false);
+			
+			if (graphEdge) {
+				if (isTopOfEdge()) {
+					if (graphEdge.has_pinch && !edgeIsCopy) {
 						listenToEdgeForTroublePoints(graphEdge);
-					} else {
-						setOutgoingWidth(m_toComponent.isWide());
 					}
 					listenToPortForTroublePoints(graphEdge.from_port);
-				} else {// Lines going into joints should have constant width throughout
-					setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
-					setOutgoingWidth(toComponentNarrow ? false : isBallWide(graphEdge.exit_ball_type));
+				} else {
 					listenToPortForTroublePoints(graphEdge.to_port);
 				}
 				graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			}
+			updateSize();
+			m_isDirty = true;
+		}
+		
+		private function isTopOfEdge():Boolean
+		{
+			return ((!edgeIsCopy && toBox) || (edgeIsCopy && toJoint));
+		}
+		
+		override public function updateSize():void
+		{
+			//if (graphEdge && graphEdge.edge_id == "e88")
+				//var d = 1;
+			var toComponentNarrow:Boolean = !m_toComponent.isWide();
+			var newIsWide:Boolean = m_isWide;
+			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
+			if (graphEdge == null) {
+				newIsWide = m_fromComponent.isWide();
+				if (toBox) {
+					newOutgoingIsWide = m_toComponent.isWide();
+				} else {
+					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+				}
+			} else {
+				if (isTopOfEdge()) {
+					newIsWide = isBallWide(graphEdge.enter_ball_type);
+					if (graphEdge.has_pinch && !edgeIsCopy) {
+						newOutgoingIsWide = false;
+					} else {
+						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+					}
+				} else {
+					newIsWide = isBallWide(graphEdge.exit_ball_type);
+					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+				}
+			}
+			if (newIsWide != m_isWide) {
+				setIncomingWidth(newIsWide);
+				if (toBox) {
+					// Update the joint, which may restrict the incoming line(s)
+					m_fromComponent.updateSize();
+				}
+			}
+			setOutgoingWidth(newOutgoingIsWide);
 		}
 		
 		private function isBallWide(ballType:uint):Boolean
@@ -185,17 +219,7 @@ package scenes.game.display
 		
 		private function onBallTypeChange(evt:BallTypeChangeEvent):void
 		{
-			trace(evt.newType);
-			if (toBox) {
-				setIncomingWidth(isBallWide(graphEdge.enter_ball_type));
-				if (!graphEdge.has_pinch) {
-					setOutgoingWidth(m_toComponent.isWide());
-				}
-			} else {
-				setIncomingWidth(isBallWide(graphEdge.exit_ball_type));
-				var toComponentNarrow:Boolean = !m_toComponent.isWide();
-				setOutgoingWidth(toComponentNarrow ? false : isBallWide(graphEdge.exit_ball_type));
-			}
+			updateSize();
 		}
 		
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
@@ -625,6 +649,9 @@ package scenes.game.display
 		
 		public static function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
+			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
+				return -1;
+			}
 			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
 				return -1;
 			else
@@ -633,6 +660,9 @@ package scenes.game.display
 		
 		public static function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
+			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
+				return -1;
+			}
 			if(x.m_edgeArray[x.m_edgeArray.length-1].x < y.m_edgeArray[y.m_edgeArray.length-1].x)
 				return -1;
 			else
@@ -642,6 +672,10 @@ package scenes.game.display
 		//set children's width, based on incoming and outgoing component
 		public function setIncomingWidth(_isWide:Boolean):void
 		{
+			if (m_isWide == _isWide) {
+				return;
+			}
+			m_isWide = _isWide;
 			if (m_edgeSegments != null)
 			{
 				for(var segIndex:int = 0; segIndex<m_edgeSegments.length-1; segIndex++)
@@ -671,6 +705,10 @@ package scenes.game.display
 		//set children's width, based on incoming and outgoing component
 		public function setOutgoingWidth(_isWide:Boolean):void
 		{
+			if (m_outgoingIsWide == _isWide) {
+				return;
+			}
+			m_outgoingIsWide = _isWide;
 			if(m_edgeSegments != null)
 			{
 				var segment:GameEdgeSegment = m_edgeSegments[m_edgeSegments.length-1];
