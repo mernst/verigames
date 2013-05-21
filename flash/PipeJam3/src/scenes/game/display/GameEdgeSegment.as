@@ -56,7 +56,7 @@
 			
 			//default to true
 			m_isEditable = true;
-
+			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
@@ -73,7 +73,7 @@
 			if (m_disposed || currentDragSegment) {
 				return;
 			}
-
+			
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
@@ -100,7 +100,7 @@
 					isMoving = false;
 					isHover = false;
 				}
-
+				
 				var touch:Touch = touches[0];
 				if(touch.tapCount == 2)
 				{
@@ -137,8 +137,6 @@
 					currentDragSegment = true;
 					(parent as GameEdgeContainer).rubberBandEdgeSegment(updatePoint, this);
 					currentDragSegment = false;
-
-					
 				}
 			}
 		}
@@ -151,7 +149,7 @@
 
 		public function draw():void
 		{
-			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int = getColor();
 			
 			if (m_arrowImg) {

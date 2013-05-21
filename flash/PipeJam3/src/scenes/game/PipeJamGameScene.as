@@ -29,9 +29,9 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		public var worldFile:String = "../SampleWorlds/DemoWorld/DemoWorld.zip";
-		public var layoutFile:String = "../SampleWorlds/DemoWorld/DemoWorldLayout.zip";
-		public var constraintsFile:String = "../SampleWorlds/DemoWorld/DemoWorldConstraints.zip";
+		public var worldFile:String = "../SampleWorlds/DemoWorld/Application.zip";
+		public var layoutFile:String = "../SampleWorlds/DemoWorld/ApplicationLayout.zip";
+		public var constraintsFile:String = "../SampleWorlds/DemoWorld/ApplicationConstraints.zip";
 		private var world_zip_file_to_be_played:String;// = "../SampleWorlds/DemoWorld.zip";
 		public var m_worldXML:XML;
 		public var m_worldLayout:XML;
@@ -40,14 +40,6 @@ package scenes.game
 		private var fz2:FZip;
 		private var fz3:FZip;
 		
-		protected var loadType:int;
-		
-		public static var USE_LOCAL:int = 1;
-		public static var USE_DATABASE:int = 2;
-		public static var USE_URL:int = 3;
-		
-		public static const HOST_URL:String = "";
-
 		protected var m_layoutLoaded:Boolean = false;
 		protected var m_constraintsLoaded:Boolean = false;
 		protected var m_worldLoaded:Boolean = false;
@@ -70,19 +62,16 @@ package scenes.game
 
 			if (!world_zip_file_to_be_played)
 			{
-				loadType = USE_LOCAL;
+				var loadType:int = LoginHelper.USE_LOCAL;
 				
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				var fileName:String = obj["files"];
-				if(loginHelper.levelObject != null) //load from MongoDB
+				if(LoginHelper.levelObject != null) //load from MongoDB
 				{
-					loadType = USE_DATABASE;
-					worldFile = "/level/" + loginHelper.levelObject.xmlID+"/xml";
-					layoutFile = "/level/" + loginHelper.levelObject.layoutID+"/layout";
-					constraintsFile = "/level/" + loginHelper.levelObject.constraintsID+"/constraints";	
-										
-					//null this out after use
-					loginHelper.levelObject = null;
+					loadType = LoginHelper.USE_DATABASE;
+					worldFile = "/level/get/" + LoginHelper.levelObject.xmlID+"/xml";
+					layoutFile = "/level/get/" + LoginHelper.levelObject.layoutID+"/layout";
+					constraintsFile = "/level/get/" + LoginHelper.levelObject.constraintsID+"/constraints";		
 				}
 				else if(fileName && fileName.length > 0)
 				{
@@ -94,16 +83,16 @@ package scenes.game
 				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
 			
 				fz1 = new FZip();
-				loadFile(null, worldFile, worldZipLoaded, fz1);
+				loginHelper.loadFile(loadType, null, worldFile, worldZipLoaded, fz1);
 				fz2 = new FZip();
-				loadFile(null, layoutFile, layoutZipLoaded, fz2);
+				loginHelper.loadFile(loadType, null, layoutFile, layoutZipLoaded, fz2);
 				fz3 = new FZip();
-				loadFile(null, constraintsFile, constraintsZipLoaded, fz3);
+				loginHelper.loadFile(loadType, null, constraintsFile, constraintsZipLoaded, fz3);
 			}
 			else
 			 {
 				//load the zip file from it's location
-				loadType = USE_URL;
+				loadType = LoginHelper.USE_URL;
 				fz1 = new FZip();
 				fz1.addEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
 				fz1.load(new URLRequest(world_zip_file_to_be_played));
@@ -123,31 +112,6 @@ package scenes.game
 		public function initGame():void 
 		{
 
-		}
-		
-		public function loadFile(loader:URLLoader, fileName:String, callback:Function, fz:FZip = null):void
-		{
-			switch(loadType)
-			{
-				case USE_DATABASE:
-				{
-					fz.addEventListener(flash.events.Event.COMPLETE, callback);
-					fz.load(new URLRequest(LoginHelper.PROXY_URL +fileName+ "&method=DATABASE"));
-					break;
-				}
-				case USE_LOCAL:
-				{
-					fz.addEventListener(flash.events.Event.COMPLETE, callback);
-					fz.load(new URLRequest(fileName));
-					break;
-				}
-				case USE_URL:
-				{
-					loader.addEventListener(flash.events.Event.COMPLETE, callback);
-					loader.load(new URLRequest(HOST_URL +fileName + "?version=" + Math.round(1000000*Math.random())));
-					break;
-				}
-			}
 		}
 		
 		public function onLayoutLoaded(byteArray:ByteArray):void {

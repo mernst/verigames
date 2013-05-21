@@ -30,8 +30,9 @@ package scenes.game.display
 			// Joint's output is wide is any inputs are wide
 			var wide:Boolean = false;
 			for each (var oedge:GameEdgeContainer in m_incomingEdges) {
-				wide = (wide || oedge.m_isWide);
+				wide = (wide || oedge.isWide());
 			}
+			m_isWide = wide;
 			return wide;
 		}
 		

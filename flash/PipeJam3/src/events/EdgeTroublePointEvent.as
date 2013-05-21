@@ -14,7 +14,7 @@ package events
 		{
 			super(type);
 			edge = _edge;
-			trace("dispatching: " + this);
+			//trace("dispatching: " + this);
 		}
 		
 		override public function toString():String
