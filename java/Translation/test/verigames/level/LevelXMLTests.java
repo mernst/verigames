@@ -49,7 +49,7 @@ public class LevelXMLTests
     constructor.addNode(start);
     Intersection outgoing = Intersection.factory(Kind.OUTGOING);
     constructor.addNode(outgoing);
-    Chute c = new Chute();
+    Chute c = new Chute(0, null);
     c.setNarrow(false);
     constructor.addEdge(start, "0", outgoing, "0", c);
     constructor.addChuteName(c, "s");
@@ -67,9 +67,9 @@ public class LevelXMLTests
     method.addNode(end);
     method.addNode(restart);
     method.addNode(out);
-    
-    Chute c2 = new Chute();
-    Chute c3 = new Chute();
+
+    Chute c2 = new Chute(1, null);
+    Chute c3 = new Chute(2, null);
     c2.setNarrow(false);
     c3.setNarrow(false);
     
@@ -79,9 +79,10 @@ public class LevelXMLTests
     method.addChuteName(c3, "s");
     
     l.addBoard("method", method);
-    
-    l.makeLinked(c, c2, c3);
-    
+
+    l.linkByVarID(0, 1);
+    l.linkByVarID(2, 1);
+
     l.finishConstruction();
     
     World w = new World();

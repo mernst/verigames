@@ -31,7 +31,7 @@ public class LevelSpecTests
     chutes = new Chute[10];
     
     for (int i = 0; i < chutes.length; i++)
-      chutes[i] = new Chute();
+      chutes[i] = new Chute(i, null);
     
     // Add all of these to a board, then add the board to a level in order to
     // satisfy precondition for makeLinked
@@ -140,5 +140,13 @@ public class LevelSpecTests
     
     l.makeLinked(set2);
     assertTrue(l.areLinked(set1));
+  }
+
+  @Test
+  public void testLinkedVarIDs()
+  {
+    l.linkByVarID(1, 3);
+    assertTrue(l.areVarIDsLinked(1, 3));
+    assertFalse(l.areVarIDsLinked(1, 2));
   }
 }
