@@ -308,7 +308,6 @@ package scenes.game.display
 			var edgeID:String = edgeContainerID.substring(0, index);
 			var newEdge:Edge = this.edgeDictionary[edgeID];
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
-			
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines, edgeIsCopy);
 			} else {

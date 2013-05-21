@@ -286,7 +286,7 @@ package scenes.game.display
 		
 		private function getBallTypeChangeEvent():String
 		{
-			return toBox ? BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED : BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED;
+			return isTopOfEdge() ? BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED : BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED;
 		}
 		
 		//called when a segment is double-clicked on
