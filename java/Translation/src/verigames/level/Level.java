@@ -49,6 +49,13 @@ public class Level
   @Deprecated
   private final Set<Set<Chute>> linkedEdgeClasses;
 
+  /**
+   * Stores linked varIDs. All {@link Chute}s with varIDs listed in the same
+   * {@code Set} will be linked, meaning that in the game they must change width
+   * together.
+   */
+  private final Set<Set<Integer>> linkedVarIDs;
+
   private final Map<String, Board> boardNames;
 
   /**
@@ -128,6 +135,7 @@ public class Level
   public Level()
   {
     linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
+    linkedVarIDs = new LinkedHashSet<Set<Integer>>();
     boardNames = new LinkedHashMap<String, Board>();
     stampSets = new LinkedHashMap<Integer, Set<Integer>>();
     checkRep();
@@ -156,40 +164,7 @@ public class Level
   @Deprecated
   public void makeLinked(Chute... toLink)
   {
-    makeLinkedCalled = true;
-    if (toLink.length > 1)
-    {
-      /*
-       * Contains the sets that should be removed from linkedEdgeClasses
-       * because they will be deprecated by the newly created equivalence
-       * class
-       */
-      Set<Set<Chute>> toRemove = new LinkedHashSet<Set<Chute>>();
-
-      /*
-       * The new equivalence class to be added to linkedEdgeClasses. It will
-       * at least have all of the elements in toLink.
-       */
-      Set<Chute> newEquivClass = new LinkedHashSet<Chute>(
-          Arrays.asList(toLink));
-
-      for (Set<Chute> linked : linkedEdgeClasses)
-      {
-        for (Chute c : toLink)
-        {
-          if (linked.contains(c))
-          {
-            toRemove.add(linked);
-            newEquivClass.addAll(linked);
-          }
-        }
-      }
-
-      linkedEdgeClasses.removeAll(toRemove);
-
-      linkedEdgeClasses.add(newEquivClass);
-      checkRep();
-    }
+    makeLinked(new LinkedHashSet<>(Arrays.asList(toLink)));
   }
 
   /**
@@ -202,7 +177,9 @@ public class Level
   @Deprecated
   public void makeLinked(Set<Chute> toLink)
   {
-    makeLinked(toLink.toArray(new Chute[0]));
+    makeLinkedCalled = true;
+    link(linkedEdgeClasses, toLink);
+    checkRep();
   }
 
   /**
@@ -222,6 +199,64 @@ public class Level
         return true;
     }
     return false;
+  }
+
+  /**
+   * Links all {@link Chute}s with the given variable IDs.<p>
+   *
+   * Not to be used in conjunction with {@link #makeLinked}. Results are
+   * undefined if both are called on the same Level.
+   */
+  // TODO should this be varargs or take a set? Or is linking two at once good
+  // enough?
+  public void linkByVarID(int var1, int var2)
+  {
+    link(linkedVarIDs, new LinkedHashSet<Integer>(Arrays.asList(var1, var2)));
+  }
+
+  public boolean areVarIDsLinked(int var1, int var2)
+  {
+    for (Set<Integer> s : linkedVarIDs)
+    {
+      if (s.contains(var1) && s.contains(var2))
+        return true;
+    }
+    return false;
+  }
+
+  private static <T> void link(Set<Set<T>> linkedClasses, Set<T> toLink)
+  {
+    if (toLink.size() > 1)
+    {
+      /*
+       * Contains the sets that should be removed from linkedClasses
+       * because they will be deprecated by the newly created equivalence
+       * class
+       */
+      Set<Set<T>> toRemove = new LinkedHashSet<Set<T>>();
+
+      /*
+       * The new equivalence class to be added to linkedClasses. It will
+       * at least have all of the elements in toLink.
+       */
+      Set<T> newEquivClass = new LinkedHashSet<T>(toLink);
+
+      for (Set<T> linked : linkedClasses)
+      {
+        for (T c : toLink)
+        {
+          if (linked.contains(c))
+          {
+            toRemove.add(linked);
+            newEquivClass.addAll(linked);
+          }
+        }
+      }
+
+      linkedClasses.removeAll(toRemove);
+
+      linkedClasses.add(newEquivClass);
+    }
   }
 
   /**
@@ -340,7 +375,7 @@ public class Level
 
     /* TODO THIS IS A HACK -- FIX IT. Really, makeLinked should be deprecated or
      * removed, and a different data structure should be used.*/
-    linkChutesWithSameID();
+    linkChutesWithLinkedID();
 
     underConstruction = false;
     for (Board b : boardNames.values())
@@ -374,16 +409,18 @@ public class Level
   /**
    * Links all chutes with the same ID, as long as makeLinked has not been
    * called (if there are chutes already linked, it is assumed that the user
-   * wants to manually link the chutes, so nothing is done).
+   * wants to manually link the chutes, so nothing is done).<p>
+   *
+   * Also links any chutes whose varIDs are linked (through linkByVarID).
    */
-  private void linkChutesWithSameID()
+  private void linkChutesWithLinkedID()
   {
     if (makeLinkedCalled)
       return;
 
     Set<Chute> chutes = getAllChutes();
 
-    // map from variable id to chute
+    // map from variable id to chutes with that variable ID
     Map<Integer, Set<Chute>> IDMap = new LinkedHashMap<Integer, Set<Chute>>();
     for (Chute c : chutes)
     {
@@ -404,6 +441,22 @@ public class Level
       }
     }
 
+    // link all chutes that have had their variableIDs explicitly linked
+    for (Set<Integer> linkedVarIDSet : linkedVarIDs)
+    {
+      Set<Chute> linkedChutes = new LinkedHashSet<>();
+      for (int varID : linkedVarIDSet)
+      {
+        linkedChutes.addAll(IDMap.get(varID));
+        // we don't want to add this later
+        IDMap.remove(varID);
+      }
+
+      linkedEdgeClasses.add(linkedChutes);
+    }
+
+    // link the remaining chutes (those that have not had their variableIDs
+    // explicitly linked)
     for (Map.Entry<Integer, Set<Chute>> entry : IDMap.entrySet())
     {
       linkedEdgeClasses.add(entry.getValue());
