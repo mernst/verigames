@@ -6,6 +6,7 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameJointNode;
 	import utils.XMath;
 	
 	import scenes.BaseComponent;
@@ -95,7 +96,7 @@ package scenes.game.components
 			backgroundImage.height = HEIGHT;
 			addChild(backgroundImage);
 			
-			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 40, 25, GameComponent.SCORE_COLOR);
+			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 60, 35, GameComponent.SCORE_COLOR);
 			scoreTextfield.x = -5; 
 			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
 			addChild(scoreTextfield);
@@ -132,7 +133,7 @@ package scenes.game.components
 				line2.y = SCORE_PANEL_AREA.height - 2 * PAD;
 				m_scoreCurrentLine.addChild(line2);
 			}
-			const TEXT_SIZE:Number = 8.0;
+			const TEXT_SIZE:Number = 12.0;
 			m_scoreBlockBaselineLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, 0xFFFFFF);
 			m_scoreBlockBaselineLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
 			m_scoreBlockBaselineLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
@@ -222,7 +223,7 @@ package scenes.game.components
 			// Pass over all nodes, find nodes involved in scoring
 			for each(var nodeSet:GameNode in level.getNodes())
 			{
-				if (nodeSet.isEditable()) { // Decision: don't score nodes that you can't change unless they have errors
+				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
 					if (nodeSet.isWide()) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
@@ -244,6 +245,19 @@ package scenes.game.components
 						errors++;
 						if (errorEdges.indexOf(incomingEdge) == -1) {
 							errorEdges.push(incomingEdge);
+						} else {
+							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
+						}
+					}
+				}
+			}
+			
+			for each (var myJoint:GameJointNode in level.getJoints()) {
+				for each (var injEdge:GameEdgeContainer in myJoint.m_incomingEdges) {
+					if (injEdge.hasError()) {
+						errors++;
+						if (errorEdges.indexOf(injEdge) == -1) {
+							errorEdges.push(injEdge);
 						} else {
 							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
 						}

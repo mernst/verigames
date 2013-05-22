@@ -116,9 +116,8 @@ package scenes.game.display
 			
 			selectLevel(firstLevel);
 			
-			addEventListener(Level.SCORE_CHANGED, onScoreChange);
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
-			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
+			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
 			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
@@ -160,18 +159,13 @@ package scenes.game.display
 				active_level.setNewLayout(event, true);
 		}
 		
-		private function onScoreChange(e:starling.events.Event):void
-		{
-			var level:Level = e.data as Level;
-			gameControlPanel.updateScore(level);
-		}
-		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
+			gameControlPanel.updateScore(evt.level);
 		}
 		
-		private function onCenterOnNodeEvent(e:starling.events.Event):void
+		private function onCenterOnComponentEvent(e:starling.events.Event):void
 		{
 			var component:GameComponent = e.data as GameComponent;
 			if(component)
@@ -206,7 +200,7 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
-			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnNodeEvent);
+			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			if(active_level)
 				removeChild(active_level, true);
 			m_network = null;

@@ -415,7 +415,10 @@ package scenes.game.components
 		 */
 		public function centerOnComponent(component:GameComponent):void
 		{
-			panTo(component.x + component.width / 2, component.y + component.height / 2);
+			var centerPt:Point = new Point(component.width / 2, component.height / 2);
+			var globPt:Point = component.localToGlobal(centerPt);
+			var localPt:Point = content.globalToLocal(globPt);
+			panTo(localPt.x, localPt.y);
 		}
 	}
 }

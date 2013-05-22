@@ -32,6 +32,7 @@ package scenes.game.display
 		private var m_endPoint:Point;
 		public var m_startJoint:GameEdgeJoint;
 		public var m_endJoint:GameEdgeJoint;
+		public var m_markerJoint:GameEdgeJoint;
 		
 		public var m_jointPoints:Array;
 		
@@ -275,6 +276,7 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = true;
+			m_markerJoint.m_hasError = true;
 			m_isDirty = true;
 		}
 		
@@ -284,6 +286,7 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = false;
+			m_markerJoint.m_hasError = false;
 			m_isDirty = true;
 		}
 		
@@ -353,6 +356,9 @@ package scenes.game.display
 					joint = new GameEdgeJoint(jointType);
 					joint.m_isEditable = m_isEditable;
 					m_edgeJoints.push(joint);
+					if (jointType == GameEdgeJoint.MARKER_JOINT) {
+						m_markerJoint = joint;
+					}
 				}
 			}
 			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT);

@@ -95,7 +95,6 @@ package scenes.game.display
 		public static var GROUP_SELECTED:String = "group_selected";
 		public static var GROUP_UNSELECTED:String = "group_unselected";
 		public static var MOVE_EVENT:String = "move_event";
-		public static var SCORE_CHANGED:String = "score_changed";
 		public static var CENTER_ON_COMPONENT:String = "center_on_component";
 		
 		public static var SAVE_LAYOUT:String = "save_layout";
@@ -905,6 +904,11 @@ package scenes.game.display
 		public function getNodes():Vector.<GameNode>
 		{
 			return m_nodeList;
+		}
+		
+		public function getJoints():Vector.<GameJointNode>
+		{
+			return m_jointList;
 		}
 	}
 }

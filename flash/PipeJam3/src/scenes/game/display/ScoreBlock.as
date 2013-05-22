@@ -31,7 +31,7 @@ package scenes.game.display
 			blockHeight = Math.max(blockHeight, MIN_HEIGHT);
 			var blockWidth:Number = WIDTH;
 			var outline:Quad = new Quad(blockWidth, blockHeight, 0x000000);
-			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, getColor());
+			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.getColor());
 			//set center point offset
 			addChild(outline);
 			addChild(quad);
@@ -39,7 +39,8 @@ package scenes.game.display
 			quad.y = .5;
 			
 			m_text = TextFactory.getInstance().createTextField(gameComponent.getScore().toString(), AssetsFont.FONT_NUMERIC, blockWidth, blockHeight, MIN_HEIGHT, 0x00000);
-			m_text.x = -5; 
+			m_text.x = -5;
+			m_text.y = 0.5;
 			TextFactory.getInstance().updateAlign(m_text, 2, 1);
 			addChild(m_text);
 			
@@ -65,7 +66,13 @@ package scenes.game.display
 			{
 				if (touches.length == 1)
 				{
-					dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, m_gameComponent));
+					if (m_gameComponent is GameEdgeContainer) {
+						// Center on marker joint - this is where we actually display the error
+						var jointToCenter:GameEdgeJoint = (m_gameComponent as GameEdgeContainer).m_markerJoint;
+						dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, jointToCenter));
+					} else {
+						dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, m_gameComponent));
+					}
 				}
 			}
 		}
