@@ -110,8 +110,8 @@ package utils
 						return null;
 					}
 					
-					source_node = my_levelNodes.getNode(my_board_xml.attribute("name"), e1["from"]["noderef"].attribute("id").toString());
-					dest_node = my_levelNodes.getNode(my_board_xml.attribute("name"), e1["to"]["noderef"].attribute("id").toString());
+					source_node = my_levelNodes.getNode(/*my_board_xml.attribute("name"),*/ e1["from"]["noderef"].attribute("id").toString());
+					dest_node = my_levelNodes.getNode(/*my_board_xml.attribute("name"),*/ e1["to"]["noderef"].attribute("id").toString());
 					
 					if ( (source_node == null) || (dest_node == null) ) {
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " could not find node with getNodeById() method.");

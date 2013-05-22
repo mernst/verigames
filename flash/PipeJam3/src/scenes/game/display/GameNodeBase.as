@@ -64,6 +64,7 @@ package scenes.game.display
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
+			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if(isMoving) //if we were moving, stop it, and exit

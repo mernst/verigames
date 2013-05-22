@@ -1,5 +1,6 @@
 package graph
 {
+	import flash.utils.Dictionary;
 	import graph.Edge;
 	
 	import system.VerigameServerConstants;
@@ -37,6 +38,10 @@ package graph
 		
 		/** All ports for edges that originate from this node */
 		public var outgoing_ports:Vector.<Port>;
+		
+		/** Ports listed by port_id */
+		public var incoming_port_dict:Dictionary = new Dictionary();
+		public var outgoing_port_dict:Dictionary = new Dictionary();
 		
 		/** The unique id given as input from XML (unique within a given world) */
 		public var node_id:String;
@@ -80,6 +85,10 @@ package graph
 			var e:Edge = new Edge(this, _outgoing_port, _destination_node, _destination_port, _edge_spline_control_points, _linked_edge_set, _metadata);
 			outgoing_ports.push(e.from_port);
 			_destination_node.connectIncomingEdge(e);
+			if (outgoing_port_dict.hasOwnProperty(e.from_port.port_id)) {
+				throw new Error("Attempting to add more than one port for outgoing port id:" + e.from_port.port_id);
+			}
+			outgoing_port_dict[e.from_port.port_id] = e.from_port;
 		}
 		
 		/**
@@ -88,6 +97,10 @@ package graph
 		 */
 		public function connectIncomingEdge(_e:Edge):void {
 			incoming_ports.push(_e.to_port);
+			if (incoming_port_dict.hasOwnProperty(_e.to_port.port_id)) {
+				throw new Error("Attempting to add more than one port for incoming port id:" + _e.to_port.port_id);
+			}
+			incoming_port_dict[_e.to_port.port_id] = _e.to_port;
 		}
 
 		

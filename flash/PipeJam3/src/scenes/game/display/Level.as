@@ -3,6 +3,8 @@ package scenes.game.display
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
+	import graph.NodeTypes;
+	import graph.SubnetworkPort;
 	
 	import flash.display.Shape;
 	import flash.geom.Point;
@@ -135,7 +137,7 @@ package scenes.game.display
 			levels_that_this_level_depends_on = new Vector.<Level>();
 			
 			initialize();
-
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -212,7 +214,47 @@ package scenes.game.display
 			// Process <joint> 's
 			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
 			{
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML);
+				var jointID:String = jointLayoutXML.@id;
+				var foundNode:Node = levelNodes.getNode(jointLayoutXML.@id);
+				var inIndx:int = jointID.indexOf(Constants.XML_ANNOT_IN);
+				var outIndx:int = jointID.indexOf(Constants.XML_ANNOT_OUT);
+				var foundPort:Port;
+				if (inIndx > -1) {
+					foundNode = levelNodes.getNode(jointID.substring(0, inIndx));
+					var inPortID:String = jointID.substring(inIndx + Constants.XML_ANNOT_IN.length);
+					if (foundNode) {
+						for each (var inport:Port in foundNode.incoming_ports) {
+							if (inport.port_id == inPortID) {
+								foundPort = inport;
+								break;
+							}
+						}
+					}
+				} else if (outIndx > -1) {
+					foundNode = levelNodes.getNode(jointID.substring(0, outIndx));
+					var outPortID:String = jointID.substring(outIndx + Constants.XML_ANNOT_OUT.length);
+					if (foundNode) {
+						for each (var outport:Port in foundNode.outgoing_ports) {
+							if (outport.port_id == outPortID) {
+								foundPort = outport;
+								break;
+							}
+						}
+					}
+				}
+				
+				if (foundNode) {
+					// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+					switch (foundNode.kind) {
+						case NodeTypes.INCOMING:
+						case NodeTypes.START_PIPE_DEPENDENT_BALL:
+						case NodeTypes.OUTGOING:
+						case NodeTypes.END:
+							continue;
+					}
+				}
+				
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML, foundNode, foundPort);
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
 				
@@ -226,11 +268,12 @@ package scenes.game.display
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
 				var boundingBox:Rectangle = createLine(edgeXML);
-				
-				minX = Math.min(minX, boundingBox.x);
-				minY = Math.min(minY, boundingBox.y);
-				maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
-				maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
+				if (boundingBox) {
+					minX = Math.min(minX, boundingBox.x);
+					minY = Math.min(minY, boundingBox.y);
+					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
+				}
 			}
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
@@ -307,6 +350,25 @@ package scenes.game.display
 			var index:int = edgeContainerID.indexOf('__');
 			var edgeID:String = edgeContainerID.substring(0, index);
 			var newEdge:Edge = this.edgeDictionary[edgeID];
+			if (newEdge) {
+				// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+				if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+					switch (newEdge.from_node.kind) {
+						case NodeTypes.INCOMING:
+						case NodeTypes.START_PIPE_DEPENDENT_BALL:
+							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+							return null;
+					}
+				} else {
+					switch (newEdge.to_node.kind) {
+						case NodeTypes.OUTGOING:
+						case NodeTypes.END:
+							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+							return null;
+					}
+				}
+			}
+			
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines, edgeIsCopy);

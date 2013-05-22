@@ -15,6 +15,8 @@ package graph
 		
 		/** This is a dictionary of BoardNodes, which is a dictionary of Nodes; INDEXED BY BOARD NAME AND NODE ID, RESPECTIVELY */
 		public var boardNodesDictionary:Dictionary = new Dictionary();
+		/** This is a dictionary of Node's indexed by nodeID - so that nodes may be looked up without needing board information */
+		public var nodeIdToNodeDictionary:Dictionary = new Dictionary();
 		public var boardNodeNameArray:Array = new Array;
 		
 		public function LevelNodes(_original_level_name:String, _obfuscater:NameObfuscater = null) 
@@ -36,6 +38,10 @@ package graph
 			if (boardNodesDictionary[new_board_name] == null) {
 				boardNodesDictionary[new_board_name] = new BoardNodes(new_board_name, _original_board_name);
 			}
+			if (nodeIdToNodeDictionary.hasOwnProperty(_node.node_id)) {
+				throw new Error("Duplicate nodes found for node_id: " + _node.node_id);
+			}
+			nodeIdToNodeDictionary[_node.node_id] = _node;
 			(boardNodesDictionary[new_board_name] as BoardNodes).addNode(_node);
 			boardNodeNameArray.push(new_board_name);
 		}
@@ -48,16 +54,21 @@ package graph
 			return boardNodesDictionary[new_board_name];
 		}
 		
-		public function getNode(_original_board_name:String, _node_id:String):Node {
-			var new_board_name:String = _original_board_name;
-			if (m_obfuscator) {
-				new_board_name = m_obfuscator.getBoardName(_original_board_name, original_level_name);
-			}
-			if (boardNodesDictionary[new_board_name] != null) {
-				return (boardNodesDictionary[new_board_name] as BoardNodes).nodeDictionary[_node_id];
-			}
-			return null;
+		public function getNode(_node_id:String):Node
+		{
+			return nodeIdToNodeDictionary[_node_id];
 		}
+		
+		//public function getNode(_original_board_name:String, _node_id:String):Node {
+			//var new_board_name:String = _original_board_name;
+			//if (m_obfuscator) {
+				//new_board_name = m_obfuscator.getBoardName(_original_board_name, original_level_name);
+			//}
+			//if (boardNodesDictionary[new_board_name] != null) {
+				//return (boardNodesDictionary[new_board_name] as BoardNodes).nodeDictionary[_node_id];
+			//}
+			//return null;
+		//}
 		
 		public function associateSubnetNodesToBoardNodes():void
 		{
