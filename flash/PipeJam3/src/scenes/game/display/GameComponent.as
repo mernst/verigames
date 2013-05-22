@@ -17,13 +17,14 @@ package scenes.game.display
 		
 		public var m_isSelected:Boolean;
 		public var m_isDirty:Boolean = false;
-				
+		
 		public var m_boundingBox:Rectangle;
 				
 		//these are here in that they determine color, so all screen objects need them set
-		public var m_isWide:Boolean;
+		protected var m_isWide:Boolean;
+		public var m_hasError:Boolean = false;
 		public var m_isEditable:Boolean;
-		public var m_shouldShowError:Boolean;
+		public var m_shouldShowError:Boolean = true;
 
 		public static var NARROW_COLOR:uint = 0x5B74B8;// 0x1A85FF;
 		public static var WIDE_COLOR:uint = 0xAEBEE0;// 0x3427FF;
@@ -91,7 +92,7 @@ package scenes.game.display
 		
 		public function hasError():Boolean
 		{
-			return false;
+			return m_hasError;
 		}
 		
 		public function componentSelected(isSelected:Boolean):void
@@ -131,6 +132,11 @@ package scenes.game.display
 			return m_isWide;
 		}
 		
+		public function setIsWide(b:Boolean):void
+		{
+			m_isWide = b;
+		}
+		
 		//set children's color, based on incoming and outgoing component and error condition
 		public function getColor():int
 		{
@@ -150,6 +156,10 @@ package scenes.game.display
 				else
 					return UNADJUSTABLE_NARROW_COLOR;				
 			}
+		}
+		
+		public function updateSize():void
+		{
 		}
 	}
 }

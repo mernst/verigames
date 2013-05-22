@@ -65,8 +65,9 @@ package graph
 				var boardNodes:BoardNodes = boardNodesDictionary[boardName];
 				var remainingNodes:Vector.<SubnetworkNode> = new Vector.<SubnetworkNode>();
 				for each (var subnetNodeToFinish:SubnetworkNode in boardNodes.subnetNodesToAssociate) {
-					if (boardNodesDictionary.hasOwnProperty(subnetNodeToFinish.subboard_name)) {
-						var foundBoardNodes:BoardNodes = boardNodesDictionary[subnetNodeToFinish.subboard_name] as BoardNodes;
+					var obsName:String = m_obfuscator.getBoardName(subnetNodeToFinish.subboard_name, original_level_name);
+					if (obsName && boardNodesDictionary.hasOwnProperty(obsName)) {
+						var foundBoardNodes:BoardNodes = boardNodesDictionary[obsName] as BoardNodes;
 						subnetNodeToFinish.associated_board = foundBoardNodes;
 						subnetNodeToFinish.associated_board_is_external = false;
 					} else {

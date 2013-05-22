@@ -203,13 +203,13 @@ for lx in wx.getElementsByTagName('level'):
 						defaultwidth = px.attributes['defaultWidth'].value
 					edgeport = getboardedge(lname, boardname, 0, portnum)
 					if edgeport is None:
-						setid = 'EXT___%s___IN___%s' % (boardname, portnum)
+						setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
 						print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 					elif edgesets.get(edgeport.edgeid) is None:
-						setid = 'EXT___%s___IN___%s' % (boardname, portnum)
+						setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
@@ -217,7 +217,7 @@ for lx in wx.getElementsByTagName('level'):
 					else:
 						setid = edgesets.get(edgeport.edgeid)[0]
 					fromnid = nid + '__IN__' + portnum
-					lineid = '%s___%s' % (fromnid, setid)
+					lineid = '%s__OUT__CPY' % px.attributes['edge'].value
 					if extraedgesetlines.get(setid) is None:
 						extraedgesetlines[setid] = []
 					setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
@@ -237,13 +237,13 @@ for lx in wx.getElementsByTagName('level'):
 						defaultwidth = px.attributes['defaultWidth'].value
 					edgeport = getboardedge(lname, boardname, 1, portnum)
 					if edgeport is None:
-						setid = 'EXT___%s___OUT___%s' % (boardname, portnum)
+						setid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
 						print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 					elif edgesets.get(edgeport.edgeid) is None:
-						setid = 'EXT___%s___OUT___%s' % (boardname, portnum)
+						setid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
@@ -251,7 +251,7 @@ for lx in wx.getElementsByTagName('level'):
 					else:
 						setid = edgesets.get(edgeport.edgeid)[0]
 					tonid = nid + '__OUT__' + portnum
-					lineid = '%s___%s' % (setid, tonid)
+					lineid = '%s__IN__CPY' % px.attributes['edge'].value
 					if extraedgesetlines.get(setid) is None:
 						extraedgesetlines[setid] = []
 					setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))

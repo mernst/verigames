@@ -15,7 +15,6 @@ package scenes.game.display
 
 	public class GameEdgeJoint extends GameComponent
 	{		
-		public var m_hasError:Boolean = false;
 		public var m_jointType:int;
 		
 		//used when moving connection points to allow for snapping back to start, or swapping positions with other connections
@@ -216,7 +215,6 @@ package scenes.game.display
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 		
 			var color:int = getColor();
-			
 			removeChildren();
 
 			if(m_quad)
@@ -240,6 +238,7 @@ package scenes.game.display
 		{
 			return m_hasError;
 		}
+		
 		public function onEnterFrame(event:Event):void
 		{
 			if(m_isDirty)

@@ -621,6 +621,19 @@ package graph
 			}
 		}
 		
+		// Set this edge to UNDETERMINED and outgoing Edge's
+		public function setUndeterminedAndRecurse():void
+		{
+			if ((m_enter_ball_type == BALL_TYPE_UNDETERMINED) && (m_exit_ball_type == BALL_TYPE_UNDETERMINED)) {
+				return;
+			}
+			m_enter_ball_type = BALL_TYPE_UNDETERMINED;
+			m_exit_ball_type = BALL_TYPE_UNDETERMINED;
+			for each (var outport:Port in to_port.node.outgoing_ports) {
+				outport.edge.setUndeterminedAndRecurse();
+			}
+		}
+		
 		public function get has_error():Boolean
 		{
 			return m_has_error;
