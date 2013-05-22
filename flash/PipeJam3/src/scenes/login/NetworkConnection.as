@@ -6,6 +6,8 @@ package scenes.login
 	import flash.system.Security;
 	import flash.events.*;
 	import deng.fzip.FZipFile;
+	import flash.utils.ByteArray;
+	import utils.Base64Encoder;
 
 	//used by LoginHelper, one NetworkConnection object created for each connection and used only once
 	//attached to the parent object, which is responsible for cleanup
@@ -88,7 +90,7 @@ package scenes.login
 				trace("zip failed");
 		}
 		
-		public function sendMessage(type:int, callback:Function, info:String = null, name:String = null):void
+		public function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null):void
 		{
 			var request:String;
 			var method:String;
@@ -145,7 +147,15 @@ package scenes.login
 			{
 				urlRequest.method = URLRequestMethod.POST;
 				if(info != null)
-					urlRequest.data = info;
+				{
+					var encoder:Base64Encoder = new Base64Encoder();
+					encoder.encodeBytes(info);
+					var encodedString:String = encoder.toString();
+					urlRequest.contentType = URLLoaderDataFormat.TEXT;
+					trace(encodedString.length);
+					trace(encodedString);
+					urlRequest.data = encodedString+"\n"; //terminate line so Java can use readLine to get message
+				}
 				else
 					urlRequest.data = null;
 			}

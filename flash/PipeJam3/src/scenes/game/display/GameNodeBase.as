@@ -31,6 +31,10 @@ package scenes.game.display
 			m_layoutXML = _layoutXML;
 			m_boundingBox = findBoundingBox(m_layoutXML);
 			
+			//adjust bounding box by half dimensions since layout is from center of node
+			m_boundingBox.x -= m_boundingBox.width/2;
+			m_boundingBox.y -= m_boundingBox.height/2;
+			
 			m_outgoingEdges = new Vector.<GameEdgeContainer>;
 			m_incomingEdges = new Vector.<GameEdgeContainer>;
 			

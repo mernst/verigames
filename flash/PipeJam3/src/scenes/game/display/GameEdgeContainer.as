@@ -2,8 +2,10 @@ package scenes.game.display
 {
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
 	import graph.Edge;
 	
 	import starling.display.DisplayObjectContainer;
@@ -85,15 +87,17 @@ package scenes.game.display
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			//fix up connection points and adjust bounding box if needed
-			m_boundingBox.y = m_fromComponent.y + m_fromComponent.height;
-			m_boundingBox.height = m_toComponent.y - m_boundingBox.y;
-			m_startPoint.y = 0;
-			m_endPoint.y =  m_boundingBox.height;
-			
-		
 			if(!m_useExistingPoints)
+			{
 				createJointPointsArray(m_startPoint, m_endPoint);
+				//fix up edge array also
+				m_edgeArray = new Array;
+				for(var i:int = 0; i< m_jointPoints.length; i++)
+				{
+					var pt:Point = m_jointPoints[i];
+					m_edgeArray.push(pt.clone());
+				}
+			}
 			else
 			{
 				m_jointPoints = new Array();
