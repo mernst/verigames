@@ -40,8 +40,8 @@ package graph
 		public var outgoing_ports:Vector.<Port>;
 		
 		/** Ports listed by port_id */
-		public var incoming_port_dict:Dictionary = new Dictionary();
-		public var outgoing_port_dict:Dictionary = new Dictionary();
+		private var incoming_port_dict:Dictionary = new Dictionary();
+		private var outgoing_port_dict:Dictionary = new Dictionary();
 		
 		/** The unique id given as input from XML (unique within a given world) */
 		public var node_id:String;
@@ -82,27 +82,36 @@ package graph
 		 * @param	_metadata Extra information about this edge (for example: any attributes in the original XML object)
 		 */
 		public function addOutgoingEdge(_outgoing_port:String, _destination_node:Node, _destination_port:String, _edge_spline_control_points:Vector.<Point>, _linked_edge_set:EdgeSetRef, _metadata:Object = null):void {
-			var e:Edge = new Edge(this, _outgoing_port, _destination_node, _destination_port, _edge_spline_control_points, _linked_edge_set, _metadata);
-			outgoing_ports.push(e.from_port);
-			_destination_node.connectIncomingEdge(e);
-			if (outgoing_port_dict.hasOwnProperty(e.from_port.port_id)) {
-				throw new Error("Attempting to add more than one port for outgoing port id:" + e.from_port.port_id);
+			var new_edge:Edge = new Edge(this, _outgoing_port, _destination_node, _destination_port, _edge_spline_control_points, _linked_edge_set, _metadata);
+			outgoing_ports.push(new_edge.from_port);
+			_destination_node.connectIncomingEdge(new_edge);
+			if (outgoing_port_dict.hasOwnProperty(new_edge.from_port.port_id)) {
+				throw new Error("Attempting to add more than one port for outgoing port id:" + new_edge.from_port.port_id);
 			}
-			outgoing_port_dict[e.from_port.port_id] = e.from_port;
+			outgoing_port_dict[new_edge.from_port.port_id] = new_edge.from_port;
 		}
 		
 		/**
 		 * Connect an incoming edge to this node 
 		 * @param	_e Edge to be connected/linked to this node
 		 */
-		public function connectIncomingEdge(_e:Edge):void {
-			incoming_ports.push(_e.to_port);
-			if (incoming_port_dict.hasOwnProperty(_e.to_port.port_id)) {
-				throw new Error("Attempting to add more than one port for incoming port id:" + _e.to_port.port_id);
+		public function connectIncomingEdge(_edge:Edge):void {
+			incoming_ports.push(_edge.to_port);
+			if (incoming_port_dict.hasOwnProperty(_edge.to_port.port_id)) {
+				throw new Error("Attempting to add more than one port for incoming port id:" + _edge.to_port.port_id);
 			}
-			incoming_port_dict[_e.to_port.port_id] = _e.to_port;
+			incoming_port_dict[_edge.to_port.port_id] = _edge.to_port;
 		}
 
+		public function getIncomingPort(_portId:String):Port
+		{
+			return incoming_port_dict[_portId];
+		}
+		
+		public function getOutgoingPort(_portId:String):Port
+		{
+			return outgoing_port_dict[_portId];
+		}
 		
 		/**
 		 * This orders the incoming and outgoing edges from smallest port to largest port (Ex: 0, 2, 4, 5, 6)

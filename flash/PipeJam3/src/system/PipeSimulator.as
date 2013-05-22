@@ -284,9 +284,13 @@ package system
 						break;
 						case NodeTypes.SUBBOARD:
 							var subnet_node:SubnetworkNode = e.from_node as SubnetworkNode;
+							var changedSinceLastSim:Boolean = false;
+							var useDefaultBoardOutputs:Boolean = true;
 							if (subnet_node.associated_board && (!subnet_node.associated_board_is_external || SIMULATE_EXTERNAL_BOARDS)) {
 								var subnet_board:BoardNodes = subnet_node.associated_board;
+								useDefaultBoardOutputs = false;
 								if (subnet_board.changed_since_last_sim) {
+									changedSinceLastSim = true;
 									// If this board hasn't been simulated yet
 									if (boards_in_progress.indexOf(subnet_board) > -1) {
 										// If we're already simulating this, a recursive case is found. For this, use the "default" result, meaning output ghost balls
@@ -297,6 +301,8 @@ package system
 										// If we haven't begun simulating this yet, do so now and store results in dictionary
 										boardToTroublePoints[subnet_board.board_name] = simulateBoard(subnet_board, boards_in_progress, boards_touched, simulate_recursion_boards);
 									}
+								} else {
+									changedSinceLastSim = false;
 								}
 							}
 							// Now we can initialize the ball types for pipes on this board flowing out of the subnet_board
@@ -304,7 +310,7 @@ package system
 								var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
 								// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
 								var out_type:uint;
-								if (subnet_port.linked_subnetwork_edge) {
+								if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
 									out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
 								} else {
 									out_type = subnet_port.default_ball_type;
@@ -334,7 +340,7 @@ package system
 									break;
 									case Edge.BALL_TYPE_UNDETERMINED:
 									case Edge.BALL_TYPE_GHOST:
-										if (!subnet_board.changed_since_last_sim) {
+										if (!changedSinceLastSim) {
 											throw new Error("Flow sensitive PipeSimulator: BALL_TYPE_UNDETERMINED/GHOST found for supposedly simulated board. This should not be the case");
 										}
 										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;

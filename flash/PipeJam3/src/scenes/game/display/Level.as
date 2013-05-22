@@ -223,23 +223,13 @@ package scenes.game.display
 					foundNode = levelNodes.getNode(jointID.substring(0, inIndx));
 					var inPortID:String = jointID.substring(inIndx + Constants.XML_ANNOT_IN.length);
 					if (foundNode) {
-						for each (var inport:Port in foundNode.incoming_ports) {
-							if (inport.port_id == inPortID) {
-								foundPort = inport;
-								break;
-							}
-						}
+						foundPort = foundNode.getIncomingPort(inPortID);
 					}
 				} else if (outIndx > -1) {
 					foundNode = levelNodes.getNode(jointID.substring(0, outIndx));
 					var outPortID:String = jointID.substring(outIndx + Constants.XML_ANNOT_OUT.length);
 					if (foundNode) {
-						for each (var outport:Port in foundNode.outgoing_ports) {
-							if (outport.port_id == outPortID) {
-								foundPort = outport;
-								break;
-							}
-						}
+						foundNode.getOutgoingPort(outPortID);
 					}
 				}
 				

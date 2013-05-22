@@ -40,20 +40,18 @@ package graph
 			if (m_associated_board && m_associated_board.incoming_node) {
 				for each (var ip:Port in incoming_ports) {
 					var sip:SubnetworkPort = ip as SubnetworkPort;
-					for each (var subnet_inner_incoming_port:Port in m_associated_board.incoming_node.outgoing_ports) {
-						if (subnet_inner_incoming_port.port_id == sip.port_id) {
-							sip.linked_subnetwork_edge = subnet_inner_incoming_port.edge;
-						}
+					var innerInPort:Port = m_associated_board.incoming_node.getOutgoingPort(sip.port_id);
+					if (innerInPort) {
+						sip.linked_subnetwork_edge = innerInPort.edge;
 					}
 				}
 			}
 			if (m_associated_board && m_associated_board.outgoing_node) {
 				for each (var op:Port in outgoing_ports) {
 					var sop:SubnetworkPort = op as SubnetworkPort;
-					for each (var subnet_inner_outgoing_port:Port in m_associated_board.outgoing_node.outgoing_ports) {
-						if (subnet_inner_outgoing_port.port_id == sop.port_id) {
-							sop.linked_subnetwork_edge = subnet_inner_outgoing_port.edge;
-						}
+					var innerOutPort:Port = m_associated_board.outgoing_node.getIncomingPort(sop.port_id);
+					if (innerOutPort) {
+						sop.linked_subnetwork_edge = innerOutPort.edge;
 					}
 				}
 			}

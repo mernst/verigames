@@ -48,37 +48,33 @@ package graph
 		}
 		
 		public function get mapEdge():Edge {
-			for each (var my_port:Port in incoming_ports) {
-				if (my_port.port_id == MAP_PORT_IDENTIFIER) {
-					return my_port.edge;
-				}
+			var my_port:Port = getIncomingPort(MAP_PORT_IDENTIFIER);
+			if (my_port) {
+				return my_port.edge;
 			}
 			return null;
 		}
 		
 		public function get keyEdge():Edge {
-			for each (var my_port:Port in incoming_ports) {
-				if (my_port.port_id == KEY_PORT_IDENTIFIER) {
-					return my_port.edge;
-				}
+			var my_port:Port = getIncomingPort(KEY_PORT_IDENTIFIER);
+			if (my_port) {
+				return my_port.edge;
 			}
 			return null;
 		}
 		
 		public function get valueEdge():Edge {
-			for each (var my_port:Port in incoming_ports) {
-				if (my_port.port_id == VALUE_PORT_IDENTIFIER) {
-					return my_port.edge;
-				}
+			var my_port:Port = getIncomingPort(VALUE_PORT_IDENTIFIER);
+			if (my_port) {
+				return my_port.edge;
 			}
 			return null;
 		}
 		
 		public function get argumentEdge():Edge {
-			for each (var my_port:Port in incoming_ports) {
-				if (my_port.port_id == ARGUMENT_PORT_IDENTIFIER) {
-					return my_port.edge;
-				}
+			var my_port:Port = getIncomingPort(ARGUMENT_PORT_IDENTIFIER);
+			if (my_port) {
+				return my_port.edge;
 			}
 			return null;
 		}
