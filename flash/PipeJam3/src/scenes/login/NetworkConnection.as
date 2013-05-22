@@ -90,7 +90,7 @@ package scenes.login
 				trace("zip failed");
 		}
 		
-		public function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null):void
+		public function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null, other:String = null):void
 		{
 			var request:String;
 			var method:String;
@@ -115,6 +115,10 @@ package scenes.login
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/refused&method=PUT";
 					method = URLRequestMethod.POST; 
 					break;
+				case LoginHelper.CREATE_RA_LEVEL:
+					request = "/ra/games/"+GAME_ID+"/levels/new";
+					method = URLRequestMethod.POST; 
+					break;
 
 				//database messages
 				case LoginHelper.GET_ALL_LEVEL_METADATA:
@@ -134,7 +138,8 @@ package scenes.login
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.SAVE_CONSTRAINTS:
-					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"&method=DATABASE";
+					var scoreASString:String = other;
+					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+scoreASString+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 			}

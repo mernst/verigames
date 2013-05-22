@@ -18,24 +18,15 @@ package scenes.login
 	{				
 		public static var CREATE_PLAYER:int = 0;
 		public static var ACTIVATE_PLAYER:int = 1;
-		public static var DEACTIVATE_PLAYER:int = 71;
-		public static var DELETE_PLAYER:int = 2;
-		public static var CREATE_RANDOM_LEVEL:int = 3;
-		public static var REQUEST_LEVELS:int = 4;
-		public static var START_LEVEL:int = 5;
-		public static var STOP_LEVEL:int = 6;
-		public static var ACTIVATE_LEVEL:int = 7;
-		public static var DEACTIVATE_LEVEL:int = 8;
-		public static var ACTIVATE_ALL_LEVELS:int = 9;
-		public static var DEACTIVATE_ALL_LEVELS:int = 10;
-		public static var RANDOM_REQUEST:int = 11;
-		public static var GET_LEVEL_METADATA:int = 12;
-		public static var GET_ALL_LEVEL_METADATA:int = 13;
-		public static var SAVE_LAYOUT:int = 14;
-		public static var SAVE_CONSTRAINTS:int = 15;
-		public static var REFUSE_LEVELS:int = 16;
-		public static var REQUEST_LAYOUT_LIST:int = 17;
-				
+		public static var REQUEST_LEVELS:int = 2;
+		public static var GET_LEVEL_METADATA:int = 3;
+		public static var GET_ALL_LEVEL_METADATA:int = 4;
+		public static var SAVE_LAYOUT:int = 5;
+		public static var SAVE_CONSTRAINTS:int = 6;
+		public static var REFUSE_LEVELS:int = 7;
+		public static var REQUEST_LAYOUT_LIST:int = 8;
+		public static var CREATE_RA_LEVEL:int = 9;	
+		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
 				
@@ -53,6 +44,9 @@ package scenes.login
 		
 		public var levelInfoVector:Vector.<Object> = null;
 		public var matchArrayObjects:Object = null;
+		
+		public var m_constraintsSaved:Boolean = false;
+		public var m_levelCreated:Boolean = false;
 		
 		public static function getLoginHelper():LoginHelper
 		{
@@ -149,10 +143,63 @@ package scenes.login
 			sendMessage(REQUEST_LAYOUT_LIST, callback);
 		}
 		
-		protected function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null):void
+		public function saveConstraintFile(levelConstraintsXML:XML, currentScore:int):void
+		{
+			//this involves:
+			//saving the level
+			//saving the score, level and player info
+			//reporting the player performance/preference to the RA
+			
+			//currently we just do 1 and 2
+			
+			//create the graph wrapper
+			
+			var xmlFile:XML = <graph id="world"/>;
+			xmlFile.appendChild(levelConstraintsXML);
+			
+			//zip the file up, and then save
+			var newZip:FZip = new FZip();
+			var zipByteArray:ByteArray = new ByteArray();
+			zipByteArray.writeUTFBytes(xmlFile.toString());
+			newZip.addFile("constraints",  zipByteArray);
+			var byteArray:ByteArray = new ByteArray;
+			newZip.serialize(byteArray);
+			
+			m_constraintsSaved = m_levelCreated = false;
+			sendMessage(SAVE_CONSTRAINTS, onConstraintsFileSaved, byteArray, levelConstraintsXML.@name);
+			
+			sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelConstraintsXML.@name, new String(currentScore));
+		}	
+		
+		public function onConstraintsFileSaved(result:int, e:flash.events.Event):void
+		{
+			var constraintsID:String = e.target.data;
+			m_constraintsSaved  = true;
+			onDBLevelCreated();
+		}
+		
+		public function onRALevelCreated(result:int, e:flash.events.Event):void
+		{
+			var raLevelObj:Object = JSON.parse(e.target.data);
+			var levelID:String = raLevelObj.id;
+			m_levelCreated = true;
+			onDBLevelCreated();
+		}
+		
+		public function onDBLevelCreated():void
+		{
+			//need the constraints file id and the level id to create a db level (reuse the current xmlID and layoutID)
+			//also should add user id, so we can track who did what
+			if(m_constraintsSaved == true && m_levelCreated == true)
+			{
+			//	sendMessage(CREATE_DB_LEVEL, null, ??????);
+			}
+		}
+	
+		protected function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null, other:String = null):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
-			networkConnection.sendMessage(type, callback, info, name);
+			networkConnection.sendMessage(type, callback, info, name, other );
 			
 		}
 	}

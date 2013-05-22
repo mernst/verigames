@@ -216,7 +216,7 @@ package scenes.game
 				
 				m_network = _worldNodes;
 				PipeJamGame.printDebug("Creating World...");
-				var world:World = new World(_worldNodes, _world_xml, _layout);				
+				var world:World = new World(_worldNodes, _world_xml, _layout, _constraints);				
 			} catch (error:Error) {
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
 				var debug:int = 0;
