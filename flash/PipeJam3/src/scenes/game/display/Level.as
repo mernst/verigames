@@ -104,6 +104,7 @@ package scenes.game.display
 		public static var SAVE_LOCALLY:String = "save_locally";
 		
 		private var m_levelLayoutXML:XML;
+		private var m_levelConstraintsXML:XML;
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
@@ -125,18 +126,20 @@ package scenes.game.display
 		 * @param	_world The parent world that contains this level
 		 * @param  _levelNodes The node objects used to create this level (including name obfuscater)
 		 */
-		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML)
+		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			levelNodes = _levelNodes;
 			m_levelLayoutXML = _levelLayoutXML;
+			m_levelConstraintsXML = _levelConstraintsXML;
 			color_index = 0;
 			level_has_been_solved_before = false;
 			levels_that_depend_on_this_level = new Vector.<Level>();
 			levels_that_this_level_depends_on = new Vector.<Level>();
 			
 			initialize();
+			setConstraints();
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -287,6 +290,17 @@ package scenes.game.display
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
 		}
 		
+		public function setConstraints():void
+		{
+			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
+			{
+				var gameNode:GameNode = boxDictionary[boxConstraint.@id];
+				if(boxConstraint.@width == "narrow")
+					gameNode.m_isWide = false;
+				else
+					gameNode.m_isWide = true;
+			}
+		}
 		
 		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false):Rectangle
 		{
@@ -460,7 +474,10 @@ package scenes.game.display
 		
 		public function onSubmitScore(event:starling.events.Event):void
 		{
-
+			updateConstraintXML();
+			m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
+			var currentScore:int = 300;
+			LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
 		}
 		
 		public function onSaveLocally(event:starling.events.Event):void
@@ -573,23 +590,22 @@ package scenes.game.display
 			}
 		}
 		
+		
 		public function updateConstraintXML():void
 		{
-			var children:XMLList = m_levelLayoutXML.children();
-			for each(var child:XML in children)
+			delete m_levelConstraintsXML.box;
+			
+			for each(var node:GameNode in m_nodeList)
 			{
-				var childName:String = child.localName();
-				if(childName.indexOf("box") != -1)
-				{
-					var childID:String = child.@id;
-					var edgeSet:GameNode = boxDictionary[childID];
-					child.@top = edgeSet.y;
-					child.@left = edgeSet.x;
-				}
-				else if(childName.indexOf("edge") != -1)
-				{
-					//TODO - fix this when we know what we are doing with the new layout file
-				}
+				var id:String = node.m_id;
+				var width:Boolean = node.m_isWide;
+				var widthString:String = (width == true) ? "wide" : "narrow";
+				
+				var child:XML = <box/>;
+				child.@id = id;
+				child.@width = widthString;
+					
+				m_levelConstraintsXML.appendChild(child);
 			}
 		}
 		

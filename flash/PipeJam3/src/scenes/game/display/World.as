@@ -73,7 +73,9 @@ package scenes.game.display
 		
 		/** Map from board name to board */
 		public var worldBoardNameDictionary:Dictionary = new Dictionary();
+		
 		private var m_layoutXML:XML;
+		private var m_constraintsXML:XML;
 		
 		protected var right_arrow_button:Button;
 		protected var left_arrow_button:Button;
@@ -90,12 +92,13 @@ package scenes.game.display
 		 * @param	_name Name of the level
 		 * @param	_system The parent VerigameSystem instance
 		 */
-		public function World(_network:Network, _world_xml:XML, _layout:XML = null)
+		public function World(_network:Network, _world_xml:XML, _layout:XML,  _constraints:XML)
 		{
 //			super(_x, _y, _width, _height);
 			m_network = _network;
 			world_xml = _world_xml;
 			m_layoutXML = _layout;
+			m_constraintsXML = _constraints;
 			
 			createWorld(m_network.LevelNodesDictionary);
 			//m_simulator = new Simulator(m_network);
@@ -227,8 +230,9 @@ package scenes.game.display
 				var my_levelNodes:LevelNodes = (worldNodesDictionary[my_level_name] as LevelNodes);
 				PipeJamGame.printDebug("Creating level: " + my_level_name);
 				
-				var levelLayoutXML:XML = findLevelLayout(my_levelNodes.original_level_name);
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML);
+				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
+				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML);
 				levels.push(my_level);
 									
 		//		if(my_levelNodes.original_level_name == "Application2") //KhakiDunes
@@ -247,16 +251,19 @@ package scenes.game.display
 			return null;
 		}
 		
-		public function findLevelLayout(name:String):XML
+		public function findLevelFile(name:String, xml:XML):XML
 		{
-			var layoutList:XMLList = m_layoutXML.level;
-			for each(var layout:XML in layoutList)
+			var xmlList:XMLList = xml.level;
+			for each(var level:XML in xmlList)
 			{
 				//contains the name, and it's at the end to avoid matches like level_name1
-				var levelName:String = layout.@id;
+				var levelName:String = level.@id;
+				if(levelName.length == 0)
+					levelName = level.@name;
+				
 				var matchIndex:int = levelName.indexOf(name);
 				if(matchIndex != -1 && matchIndex+(name).length == levelName.length)
-					return layout;
+					return level;
 			}
 			
 			return null;
