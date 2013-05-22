@@ -314,6 +314,29 @@ package scenes.game.display
 				throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
 			}
 			
+			var edgeContainerID:String = edgeXML.@id;
+			var index:int = edgeContainerID.indexOf('__');
+			var edgeID:String = edgeContainerID.substring(0, index);
+			var newEdge:Edge = this.edgeDictionary[edgeID];
+			if (newEdge) {
+				// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+				if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+					switch (newEdge.from_node.kind) {
+						case NodeTypes.INCOMING:
+						case NodeTypes.START_PIPE_DEPENDENT_BALL:
+							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+							return null;
+					}
+				} else {
+					switch (newEdge.to_node.kind) {
+						case NodeTypes.OUTGOING:
+						case NodeTypes.END:
+							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+							return null;
+					}
+				}
+			}
+			
 			//normalize edge Array, and then slide game edge to right x,y value
 			var minXedge:Number = Number.POSITIVE_INFINITY;
 			var minYedge:Number = Number.POSITIVE_INFINITY;
@@ -394,29 +417,6 @@ package scenes.game.display
 			var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
 			var newGameEdge:GameEdgeContainer;
 			// get editable property from related edge or end segment/joint
-			var edgeContainerID:String = edgeXML.@id;
-			
-			var index:int = edgeContainerID.indexOf('__');
-			var edgeID:String = edgeContainerID.substring(0, index);
-			var newEdge:Edge = this.edgeDictionary[edgeID];
-			if (newEdge) {
-				// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
-				if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
-					switch (newEdge.from_node.kind) {
-						case NodeTypes.INCOMING:
-						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
-				} else {
-					switch (newEdge.to_node.kind) {
-						case NodeTypes.OUTGOING:
-						case NodeTypes.END:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
-				}
-			}
 			
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {

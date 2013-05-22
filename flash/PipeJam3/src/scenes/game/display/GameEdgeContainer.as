@@ -110,10 +110,10 @@ package scenes.game.display
 			else
 			{
 				m_jointPoints = new Array();
-				for(var i:int = 0; i< m_edgeArray.length; i++)
+				for(var i1:int = 0; i1< m_edgeArray.length; i1++)
 				{
-					var pt:Point = m_edgeArray[i];
-					m_jointPoints.push(pt.clone());
+					var pt1:Point = m_edgeArray[i1];
+					m_jointPoints.push(pt1.clone());
 				}
 			}
 			
