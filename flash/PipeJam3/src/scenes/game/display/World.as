@@ -1,23 +1,30 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import events.EdgeSetChangeEvent;
+	
+	import flash.events.Event;
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
-	import flash.events.Event;
+	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	
 	import scenes.BaseComponent;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
+	import scenes.game.components.InGameMenuBox;
+	
 	import starling.display.Button;
+	import starling.display.Quad;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
+	
 	import system.PipeSimulator;
 	import system.Simulator;
-	import scenes.game.components.InGameMenuBox;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -110,12 +117,13 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			edgeSetGraphViewPanel = new GridViewPanel;
-			addChild(edgeSetGraphViewPanel);
-			
 			gameControlPanel = new GameControlPanel;
-			gameControlPanel.x = edgeSetGraphViewPanel.width;
 			addChild(gameControlPanel);
+			
+			edgeSetGraphViewPanel = new GridViewPanel;
+			//position before adding to get clip rect in right place
+			edgeSetGraphViewPanel.x = gameControlPanel.width;
+			addChild(edgeSetGraphViewPanel);
 			
 			selectLevel(firstLevel);
 			

@@ -72,9 +72,6 @@ package scenes.game.components
 			content = new BaseComponent;
 			addChild(content);
 			
-			//create a clip rect for the window
-			clipRect = new Rectangle(0, 0, width, height);
-			
 			quad = new Quad(10, 10, 0xff0000);
 			minScaleX = minScaleY = 0.25;
 			
@@ -84,6 +81,9 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
+			//create a clip rect for the window
+			clipRect = new Rectangle(x, y, width, height);
+			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			content.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
