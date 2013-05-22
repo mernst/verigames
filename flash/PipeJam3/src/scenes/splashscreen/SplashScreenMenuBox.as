@@ -163,16 +163,18 @@ package scenes.splashscreen
 		{
 			if(result == LoginHelper.EVENT_COMPLETE)
 			{
-				if(loginHelper.levelInfoVector != null && loginHelper.requestLevelVector != null)
+				if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
 					onGetLevelMetadataComplete();
 			}
 		}
 		
 		protected function onGetLevelMetadataComplete():void
 		{
-			for(var i:int = 0; i<matchArrayObjects.length; i++)
+			matchArrayMetadata = new Array;
+			levelMetadataArray = new Array;
+			for(var i:int = 0; i<loginHelper.matchArrayObjects.length; i++)
 			{
-				var match:Object = matchArrayObjects[i];
+				var match:Object = loginHelper.matchArrayObjects[i];
 				var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector);
 				if(levelName != null)
 					levelMetadataArray.push(levelName);

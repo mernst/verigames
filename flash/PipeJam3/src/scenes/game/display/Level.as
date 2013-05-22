@@ -324,15 +324,64 @@ package scenes.game.display
 			var edgeArray:Array = new Array;
 			
 			var edgePoints:XMLList = edgeXML.point;
+			
+
 			for each(var pointXML:XML in edgePoints)
 			{
 				var pt:Point = new Point(pointXML.@x, pointXML.@y);
 				edgeArray.push(pt);
-				minXedge = Math.min(minXedge, pt.x);
-				minYedge = Math.min(minYedge, pt.y);
-				maxXedge = Math.max(maxXedge, pt.x);
-				maxYedge = Math.max(maxYedge, pt.y);
 			}
+			
+			//we need to adjust array if we are just using start and end points
+			if(!useExistingLines)
+			{
+				var newStartPt:Point = edgeArray[0];
+				var newEndPt:Point = edgeArray[edgeArray.length-1];
+				edgeArray = new Array;
+				
+				//adjust ends to make up for dot not quite aligning lines and boxes. As such we only
+				//need to do this when using the starter layout, not ones chosen from the layout menu
+				//TODO: make sure starter layout doesn't show in layout menu...
+				if(dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
+				{
+					newStartPt.y = myNode.m_boundingBox.y + myNode.m_boundingBox.height;
+					newEndPt.y = myJoint.m_boundingBox.y;
+				}
+				else
+				{
+					newStartPt.y = myJoint.m_boundingBox.y + myJoint.m_boundingBox.height;
+					newEndPt.y = myNode.m_boundingBox.y;
+				}
+				edgeArray.push(newStartPt);
+				edgeArray.push(newEndPt);
+			}
+			
+			var startPt:Point = edgeArray[0];
+			var endPt:Point = edgeArray[edgeArray.length-1];
+			//get bounding box points, using start and end points as reference
+			if(startPt.x < endPt.x)
+			{
+				minXedge = startPt.x;
+				maxXedge = endPt.x;
+			}
+			else
+			{
+				minXedge = endPt.x;
+				maxXedge = startPt.x;
+				
+			}
+			
+			if(startPt.y < endPt.y)
+			{
+				minYedge = startPt.y;
+				maxYedge = endPt.y;
+			}
+			else
+			{
+				minYedge = endPt.y;
+				maxYedge = startPt.y;
+			}
+			
 			//adjust by min
 			for(var i:int = 0; i<edgeArray.length; i++)
 			{
@@ -426,7 +475,7 @@ package scenes.game.display
 		
 		public function setNewLayout(event:starling.events.Event, useExistingLines:Boolean = false):void
 		{
-			var layoutXML:XML = event.data as XML;
+			m_levelLayoutXML = event.data as XML;
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
@@ -451,8 +500,8 @@ package scenes.game.display
 				
 				if(gameNode)
 				{
-					gameNode.x = child.@x;
-					gameNode.y = child.@y;
+					gameNode.m_boundingBox.x = child.@x - gameNode.m_boundingBox.width/2;
+					gameNode.m_boundingBox.y = child.@y - gameNode.m_boundingBox.height/2;
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -487,29 +536,37 @@ package scenes.game.display
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					child.@y = edgeSet.y;
-					child.@x = edgeSet.x;
+					child.@x = edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2;
+					child.@y = edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2;
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
 					var jointID:String = child.@id;
 					var joint:GameJointNode = jointDictionary[jointID];
-					child.@y = joint.y;
-					child.@x = joint.x;
+					child.@x = joint.x + m_boundingBox.x + joint.m_boundingBox.width/2;
+					child.@y = joint.y + m_boundingBox.y + joint.m_boundingBox.height/2;
 				}
 				else if(childName.indexOf("line") != -1)
 				{
+					//remember first point to compare later
+					var oldPoint:Point = new Point(child.point[2].@x, child.point[2].@y);
 					//remove all current points, and then add new ones
 					delete child.point;
 					
 					var lineID:String = child.@id;
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
+					if(edgeContainer.m_jointPoints.length != 6)
+						trace("Wrong number of joint points");
 					for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
 					{
 						var pt:Point = edgeContainer.m_jointPoints[i];
 						var ptXML:XML = <point></point>;
-						ptXML.@x = pt.x;
-						ptXML.@y = pt.y;
+						ptXML.@x = pt.x + edgeContainer.m_boundingBox.x;
+						ptXML.@y = pt.y + edgeContainer.m_boundingBox.y;
+						
+						var ptt:Point = edgeContainer.localToGlobal(pt);
+						var pttt:Point = globalToLocal(ptt);
+					
 						child.appendChild(ptXML);
 					}
 				}
@@ -753,8 +810,8 @@ package scenes.game.display
 			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x - gameNode.m_boundingBox.width/2;
-				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y - gameNode.m_boundingBox.height/2;
+				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x;
+				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y;
 				gameNode.m_isDirty = true;
 				addChild(gameNode);
 				nodeCount++;
@@ -763,8 +820,8 @@ package scenes.game.display
 			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x - gameJoint.m_boundingBox.width/2;
-				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y - gameJoint.m_boundingBox.height/2;
+				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x;
+				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
 				addChild(gameJoint);
 				jointCount++;

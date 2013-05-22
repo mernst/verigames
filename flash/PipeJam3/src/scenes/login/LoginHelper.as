@@ -52,7 +52,7 @@ package scenes.login
 		public static var levelObject:Object = null;
 		
 		public var levelInfoVector:Vector.<Object> = null;
-		public var requestLevelVector:Vector.<Object> = null;
+		public var matchArrayObjects:Object = null;
 		
 		public static function getLoginHelper():LoginHelper
 		{
@@ -82,8 +82,15 @@ package scenes.login
 		
 		public function saveLayoutFile(m_levelLayoutXML:XML):void
 		{
-			//need to set up proxy server to save this, and add in save constraints file when saving score
-			sendMessage(SAVE_LAYOUT, m_levelLayoutXML.toString(), m_levelLayoutXML.@id);
+			//zip the file up, and then save
+			var newZip:FZip = new FZip();
+			var zipByteArray:ByteArray = new ByteArray();
+			zipByteArray.writeUTFBytes(m_levelLayoutXML.toString());
+			newZip.addFile("layout",  zipByteArray);
+			var byteArray:ByteArray = new ByteArray;
+			newZip.serialize(byteArray);
+
+			sendMessage(SAVE_LAYOUT, null, byteArray, m_levelLayoutXML.@id);
 		}
 		
 		public function saveConstraintsFile(m_levelConstraintsXML:XML):void
@@ -115,10 +122,9 @@ package scenes.login
 		
 		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
 		{
+			matchArrayObjects = JSON.parse(e.target.data).matches;
 			//handle callback ourselves since we want to use request info, not refuse;
 			onRequestLevelFinishedCallback(result);
-		//	JSON.parse(JSONObjString)
-		//	requestLevelVector = levelObjects;
 			sendMessage(LoginHelper.REFUSE_LEVELS, null);
 		}
 		
@@ -133,7 +139,6 @@ package scenes.login
 		//called when level metadata is loaded 
 		public function setLevelMetadataFromCurrent(result:int, layoutObjects:Vector.<Object>):void
 		{
-			trace("levelVector set");
 			levelInfoVector = layoutObjects;
 			onRequestLevelMetadataFinishedCallback(result);
 		}
@@ -144,7 +149,7 @@ package scenes.login
 			sendMessage(REQUEST_LAYOUT_LIST, callback);
 		}
 		
-		protected function sendMessage(type:int, callback:Function, info:String = null, name:String = null):void
+		protected function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
 			networkConnection.sendMessage(type, callback, info, name);
