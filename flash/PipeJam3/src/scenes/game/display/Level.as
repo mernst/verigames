@@ -321,22 +321,23 @@ package scenes.game.display
 			var index:int = edgeContainerID.indexOf('__');
 			var edgeID:String = edgeContainerID.substring(0, index);
 			var newEdge:Edge = this.edgeDictionary[edgeID];
-			if (newEdge) {
-				// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
-				if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
-					switch (newEdge.from_node.kind) {
-						case NodeTypes.INCOMING:
-						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
-				} else {
-					switch (newEdge.to_node.kind) {
-						case NodeTypes.OUTGOING:
-						case NodeTypes.END:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
+			if (!newEdge) {
+				throw new Error("Attempting to create line with no graph edge found, line id:" + edgeContainerID);
+			}
+			// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+			if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+				switch (newEdge.from_node.kind) {
+					case NodeTypes.INCOMING:
+					case NodeTypes.START_PIPE_DEPENDENT_BALL:
+						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						return null;
+				}
+			} else {
+				switch (newEdge.to_node.kind) {
+					case NodeTypes.OUTGOING:
+					case NodeTypes.END:
+						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						return null;
 				}
 			}
 			
@@ -351,7 +352,6 @@ package scenes.game.display
 			
 			var edgePoints:XMLList = edgeXML.point;
 			
-
 			for each(var pointXML:XML in edgePoints)
 			{
 				var pt:Point = new Point(pointXML.@x, pointXML.@y);

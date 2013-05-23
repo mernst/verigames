@@ -194,9 +194,6 @@ package scenes.game.display
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			
-			//push size info - nope, this is coming from the simulator
-			// edge.setIncomingWidth(m_isWide);
-			
 		}
 		
 		//adds edge to incoming edge method (unless currently in vector), then sorts
@@ -207,8 +204,7 @@ package scenes.game.display
 			edge.incomingEdgePosition = (m_incomingEdges.length-1)/5;
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
-			//push size info - nope, this is coming from the simulator
-			//edge.setOutgoingWidth(m_isWide);
+			
 		}
 		
 		public function findGroup(dictionary:Dictionary):void

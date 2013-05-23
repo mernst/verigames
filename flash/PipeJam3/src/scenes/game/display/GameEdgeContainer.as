@@ -60,7 +60,7 @@ package scenes.game.display
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
-										  _graphEdge:Edge = null, useExistingPoints:Boolean = false,
+										  _graphEdge:Edge, useExistingPoints:Boolean = false,
 										  _graphEdgeIsCopy:Boolean = false)
 		{
 			super(_id);
@@ -71,12 +71,12 @@ package scenes.game.display
 			m_dir = dir;
 			graphEdge = _graphEdge;
 			edgeIsCopy = _graphEdgeIsCopy;
-			m_isEditable = (graphEdge == null) ? (m_fromComponent.isEditable() || m_toComponent.isEditable()) : graphEdge.editable;
+			m_isEditable = graphEdge.editable;
 			m_useExistingPoints = useExistingPoints;
 			
 			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
 			// Also even if box is editable, if contains a pinch point then make editable = false
-			if (toBox && graphEdge && graphEdge.has_pinch && !edgeIsCopy) {
+			if (toBox && graphEdge.has_pinch && !edgeIsCopy) {
 				m_outputSegmentIsEditable = false;
 			}
 			
@@ -121,17 +121,17 @@ package scenes.game.display
 			createChildren()
 			positionChildren();
 			
-			if (graphEdge) {
-				if (isTopOfEdge()) {
-					if (graphEdge.has_pinch && !edgeIsCopy) {
-						listenToEdgeForTroublePoints(graphEdge);
-					}
-					listenToPortForTroublePoints(graphEdge.from_port);
-				} else {
-					listenToPortForTroublePoints(graphEdge.to_port);
+			
+			if (isTopOfEdge()) {
+				if (graphEdge.has_pinch && !edgeIsCopy) {
+					listenToEdgeForTroublePoints(graphEdge);
 				}
-				graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+				listenToPortForTroublePoints(graphEdge.from_port);
+			} else {
+				listenToPortForTroublePoints(graphEdge.to_port);
 			}
+			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+			
 			updateSize();
 			m_isDirty = true;
 		}
@@ -143,31 +143,22 @@ package scenes.game.display
 		
 		override public function updateSize():void
 		{
-			//if (graphEdge && graphEdge.edge_id == "e88")
-				//var d = 1;
 			var toComponentNarrow:Boolean = !m_toComponent.isWide();
 			var newIsWide:Boolean = m_isWide;
 			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
-			if (graphEdge == null) {
-				newIsWide = m_fromComponent.isWide();
-				if (toBox) {
-					newOutgoingIsWide = m_toComponent.isWide();
+			
+			if (isTopOfEdge()) {
+				newIsWide = isBallWide(graphEdge.enter_ball_type);
+				if (graphEdge.has_pinch && !edgeIsCopy) {
+					newOutgoingIsWide = false;
 				} else {
 					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 				}
 			} else {
-				if (isTopOfEdge()) {
-					newIsWide = isBallWide(graphEdge.enter_ball_type);
-					if (graphEdge.has_pinch && !edgeIsCopy) {
-						newOutgoingIsWide = false;
-					} else {
-						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
-					}
-				} else {
-					newIsWide = isBallWide(graphEdge.exit_ball_type);
-					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
-				}
+				newIsWide = isBallWide(graphEdge.exit_ball_type);
+				newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 			}
+			
 			if (newIsWide != m_isWide) {
 				setIncomingWidth(newIsWide);
 				if (toBox) {
