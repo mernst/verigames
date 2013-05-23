@@ -1,0 +1,47 @@
+
+
+import java.net.*;
+import java.io.*;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import com.mongodb.gridfs.GridFS;
+
+public class ProxyServer {
+	
+	static public String dbURL = "ec2-184-72-152-11.compute-1.amazonaws.com";
+    public static void main(String[] args) throws IOException {
+    	
+        //Connect to database
+        Mongo mongo = new Mongo( dbURL );
+        String dbName = "gameapi";
+        DB db = mongo.getDB( dbName );
+        DBCollection coll = db.getCollection("Level");
+        //Create GridFS object
+        GridFS fs = new GridFS( db );
+        
+        ServerSocket serverSocket = null;
+        boolean listening = true;
+
+        int port = 8001;	//default
+        try {
+            port = Integer.parseInt(args[0]);
+        } catch (Exception e) {
+            //ignore me
+        }
+
+        try {
+            serverSocket = new ServerSocket(port);
+            System.out.println("Started on: " + port);
+        } catch (IOException e) {
+            System.err.println("Could not listen on port: " + args[0]);
+            System.exit(-1);
+        }
+
+        while (listening) {
+            new ProxyThread(serverSocket.accept(), fs, coll).start();
+        }
+        serverSocket.close();
+    }
+}
