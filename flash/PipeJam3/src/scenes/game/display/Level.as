@@ -257,9 +257,10 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
+			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edgeXML);
+				var boundingBox:Rectangle = createLine(edgeXML, false, copyLines);
 				if (boundingBox) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
@@ -267,6 +268,22 @@ package scenes.game.display
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
+			// At this point, there may be multiple lines listening to the same port for trouble points,
+			// fix at this point so that only one line is listening to that port
+			for each (var copyLine:GameEdgeContainer in copyLines) {
+				var lineID:String = copyLine.m_id;
+				var cpyIndx:int = lineID.indexOf(Constants.XML_ANNOT_COPY);
+				if (cpyIndx == -1) {
+					throw new Error("Unexpected line id found for copy line: " + lineID);
+				}
+				var nonCopyID:String = lineID.substring(0, cpyIndx);
+				var foundLine:GameEdgeContainer = edgeContainerDictionary[nonCopyID];
+				if (!foundLine) {
+					throw new Error("No line found for lineID: " + nonCopyID);
+				}
+				foundLine.removeDuplicatePortListeners(copyLine);
+			}
+			
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -291,8 +308,11 @@ package scenes.game.display
 			}
 		}
 		
-		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false):Rectangle
+		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
 		{
+			if (copyLines == null) {
+				copyLines = new Vector.<GameEdgeContainer>();
+			}
 			var edgeFromBox:XML = edgeXML.frombox[0];
 			var edgeToJoint:XML = edgeXML.tojoint[0];
 			var edgeFromJoint:XML = edgeXML.fromjoint[0];
@@ -428,7 +448,9 @@ package scenes.game.display
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
 			m_edgeList.push(newGameEdge);
-			
+			if (edgeIsCopy) {
+				copyLines.push(newGameEdge);
+			}
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			
 			return bb;

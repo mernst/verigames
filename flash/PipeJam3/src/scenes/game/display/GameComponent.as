@@ -25,11 +25,13 @@ package scenes.game.display
 		public var m_hasError:Boolean = false;
 		public var m_isEditable:Boolean;
 		public var m_shouldShowError:Boolean = true;
-
-		public static var NARROW_COLOR:uint = 0x5B74B8;// 0x1A85FF;
-		public static var WIDE_COLOR:uint = 0xAEBEE0;// 0x3427FF;
-		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x6E6F71;// 0x3A3F4C;
-		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xAAAAAA;// 0x3A3F4C;
+		
+		public var m_forceColor:Number = -1;
+		
+		public static var NARROW_COLOR:uint = 0x90FFF0;// 0x1A85FF;
+		public static var WIDE_COLOR:uint = 0x0177FF;// 0x3427FF;
+		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0xF0F0F0;// 0x3A3F4C;
+		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD2D2D2;// 0x3A3F4C;
 		public static var ERROR_COLOR:uint = 0xE92227;
 		public static var SCORE_COLOR:uint = 0xFFDC1A;
 		
@@ -137,9 +139,18 @@ package scenes.game.display
 			m_isWide = b;
 		}
 		
+		public function forceColor(color:Number):void
+		{
+			m_forceColor = color;
+			m_isDirty = true;
+		}
+		
 		//set children's color, based on incoming and outgoing component and error condition
 		public function getColor():int
 		{
+			if (m_forceColor > -1) {
+				return m_forceColor;
+			}
 			if(m_shouldShowError && hasError())
 				return ERROR_COLOR;
 			if(m_isEditable == true)
