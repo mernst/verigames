@@ -74,8 +74,6 @@ package scenes.game.display
 			draw();
 		}
 		
-
-		
 		public function isStartingNode():Boolean
 		{			
 			for each(var edgeID:String in m_edgeSet.edge_ids)

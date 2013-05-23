@@ -52,13 +52,12 @@ package scenes.game.components
 		protected var content:BaseComponent;
 		
 		protected var quad:Quad;
-		protected var minScaleX:Number;
-		protected var minScaleY:Number;
 		
 		protected var currentMode:int;
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
+		private static const MIN_SCALE:Number = 5.0;
 		private static const MAX_SCALE:Number = 50.0;
 		
 		public function GridViewPanel()
@@ -73,7 +72,6 @@ package scenes.game.components
 			addChild(content);
 			
 			quad = new Quad(10, 10, 0xff0000);
-			minScaleX = minScaleY = 0.25;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -254,31 +252,16 @@ package scenes.game.components
 		{
 			var oldScaleX:Number = content.scaleX;
 			var oldScaleY:Number = content.scaleY;
-			var newScaleX:Number = content.scaleX*sizeDiff;
-			var newScaleY:Number = content.scaleY*sizeDiff;
-			if(newScaleX > MAX_SCALE &&  newScaleX > newScaleY)
+			var newScaleX:Number = XMath.clamp(content.scaleX * sizeDiff, MIN_SCALE, MAX_SCALE);
+			var newScaleY:Number = XMath.clamp(content.scaleY * sizeDiff, MIN_SCALE, MAX_SCALE);
+			trace(newScaleX + " " + newScaleY);
+			if(newScaleX > newScaleY)
 			{
-				newScaleX = MAX_SCALE;
 				sizeDiff = newScaleX/content.scaleX;
 				newScaleY = content.scaleY*sizeDiff;
-			}
-			else if(newScaleY > MAX_SCALE)
-			{
-				newScaleY = MAX_SCALE;
-				sizeDiff = newScaleY/content.scaleY;
-				newScaleX = content.scaleX*sizeDiff;
-			}
-			else if(newScaleX < minScaleX &&  newScaleX < newScaleY)
-			{
-				newScaleX = minScaleX;
+			} else {
 				sizeDiff = newScaleX/content.scaleX;
 				newScaleY = content.scaleY*sizeDiff;
-			}
-			else if(newScaleY < minScaleY)
-			{
-				newScaleY = minScaleY;
-				sizeDiff = newScaleY/content.scaleY;
-				newScaleX = content.scaleX*sizeDiff;
 			}
 			
 			var origViewCoords:Rectangle = getViewInContentSpace();
@@ -364,28 +347,12 @@ package scenes.game.components
 			content.x = 0;
 			content.y = 0;
 
-			content.scaleX = content.scaleY = 1;
+			content.scaleX = content.scaleY = 25.0;
 			content.addChild(m_currentLevel);
-
-			//use larger value
-			if(this.clipRect.height/content.height > this.clipRect.width/ content.width)
-			{
-				content.scaleX = content.scaleY = (this.clipRect.width)/content.width;
-				if(content.scaleX > 3)
-					content.scaleX = content.scaleY = MAX_SCALE; //just limit it from being really big
+			var nodes:Vector.<GameNode> = level.getNodes();
+			if (nodes.length > 0) {
+				centerOnComponent(nodes[0]);
 			}
-			else
-			{
-				content.scaleX = content.scaleY = (this.clipRect.height)/content.height;
-				if(content.scaleX > 3)
-					content.scaleX = content.scaleY = MAX_SCALE; //just limit it from being really big
-			}
-			
-			if(content.scaleX < minScaleX)
-				minScaleX = content.scaleX;
-			if(content.scaleY < minScaleY)
-				minScaleY = content.scaleY;
-
 		}
 		
 		public function onEnterFrame(event:Event):void
