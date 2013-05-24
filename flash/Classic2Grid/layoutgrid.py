@@ -1,31 +1,38 @@
 import os, sys, re
 from xml.dom.minidom import parse
 
+# Globally round graphviz coordinates
+decimalplacestoroundto = 2
+
 ### Classes ###
 class Point:
 	def __init__(self, x, y):
-		self.x = x
-		self.y = y
+		self.x = round(float(x), decimalplacestoroundto)
+		self.y = round(float(y), decimalplacestoroundto)
 
 # DotLayout contains this info: portnum, edgeid, nodeid
 class DotLayout:
 	def __init__(self, id, pos=None, width=None, height=None, points=None):
 		self.id = id
 		self.pos = pos
-		self.width = width
-		self.height = height
+		if width is not None:
+			self.width = round(float(width), decimalplacestoroundto)
+		if height is not None:
+			self.height = round(float(height), decimalplacestoroundto)
 		self.points = points
 
 
 ### Dictionaries ###
-coords = {}
-
 # edge2linexml[levelid][dotedgestring] = line xml element
 edge2linexml = {}
 
 # node2xml[levelid][dotnodestring] = box/joint xml element
 node2xml = {}
 
+# portxcoords[boxid___P___portid] = x coordinate that incoming/outgoing ports
+# should use - use this lookup to force them to have the exact same x value
+# i.e. if incoming port "1" has x=23.54 make outgoing port "1" have x=23.54
+portxcoords = {}
 
 ### Helper functions ###
 # convert to string
@@ -132,9 +139,12 @@ def parsedot(line):
 	if attribs.get('pos'):
 		pos = attribs.get('pos')
 		if pos.count(',') > 1:
-			# These are edge points, parse them individually
+			# These are edge points, parse them individually - take only the first and last
 			pts = []
-			for pair in pos.split(' '):
+			allpointpairs = pos.split(' ')
+			firstpair = allpointpairs[0]
+			lastpair = allpointpairs[-1]
+			for pair in [firstpair, lastpair]:
 				if len(pair.split(',')) == 2:
 					posx = float(pair.split(',')[0].strip())
 					posy = float(pair.split(',')[1].strip())
@@ -170,7 +180,10 @@ def parsedot(line):
 
 ### Main function ###
 if (len(sys.argv) < 2) or (len(sys.argv) > 4):
-	print '\n\nUsage: %s input_file [output_file] [-o]\n\n  input_file: name of INPUT grid XML to be laid out, omitting ".xml" extension\n  output_file: (optional) OUTPUT xml/dot file name prefix, if none overwrite input xml file\n  -o (optional) to write dot layout input and output files including pdf of graph for each level\n\n\nEx: To parse Test.xml and output TestGraph.xml run: %s Test TestGraph\n' % (sys.argv[0], sys.argv[0])
+	print ('\n\nUsage: %s input_file [output_file] [-o]\n\n  input_file: name of INPUT grid XML to be laid out, '
+	'omitting ".xml" extension\n  output_file: (optional) OUTPUT xml/dot file name prefix, if none overwrite '
+	'input xml file\n  -o (optional) to write dot layout input and output files including pdf of graph for '
+	'each level\n\n\nEx: To parse Test.xml and output TestGraph.xml run: %s Test TestGraph\n') % (sys.argv[0], sys.argv[0])
 	quit()
 verbose = True # fixedsize=True should mean that labeling nodes and ports shouldn't affect node sizes
 outputdotfiles = False
@@ -190,6 +203,7 @@ for lx in gx.getElementsByTagName('level'):
 	lname = lx.attributes['id'].value
 	edge2linexml[lname] = {}
 	node2xml[lname] = {}
+	portxcoords = {}
 	#print 'Laying out Level: %s' % lname
 	dotin =  'digraph %s {\n' % lname
 	dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
@@ -288,8 +302,29 @@ for lx in gx.getElementsByTagName('level'):
 				# Output edge points
 				edgex = edge2linexml[lname].get(layout.id)
 				if edgex is None:
-					print 'Warning: no edge found for id %s' % layout.id
+					print 'Warning: no line xml found for id %s' % layout.id
 					continue
+				if len(layout.points) != 2:
+					print 'Warning: expecting exactly two points for line id %s' % layout.id
+					continue
+				foundstartx = None
+				foundendx = None
+				if edgex.getElementsByTagName('frombox'):
+					portid = '%s___P___%s' % (edgex.getElementsByTagName('frombox')[0].attributes['id'].value, edgex.getElementsByTagName('frombox')[0].attributes['port'].value)
+					foundstartx = portxcoords.get(portid)
+					if foundstartx is not None:
+						layout.points[0].x = foundstartx
+					else:
+						portxcoords[portid] = layout.points[0].x
+				elif edgex.getElementsByTagName('tobox'):
+					portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
+					foundendx = portxcoords.get(portid)
+					if foundendx is not None:
+						layout.points[-1].x = foundendx
+					else:
+						portxcoords[portid] = layout.points[-1].x
+				else:
+					print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
 				# Remove any current layout points, we only want the new layout points to be saved
 				for oldptx in edgex.getElementsByTagName('point'):
 					edgex.removeChild(oldptx)

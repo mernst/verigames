@@ -25,6 +25,12 @@ numedgesetedges = {}
 # extraedgesetlines[edgesetid] = Array of extra lines generated from SUBBOARD nodes connecting to INCOMING/OUTGOING edges
 extraedgesetlines = {}
 
+# edgesetwidth[edgesetid] = isWide (Boolean)
+edgesetwidth = {}
+
+# edgeseteditable[edgesetid] = editable (Boolean)
+edgeseteditable = {}
+
 # nodekinds[nodeid] = node kind
 nodekinds = {}
 
@@ -97,12 +103,16 @@ def makeline2joint(lineid, tonid, toport, setid, setport):
 
 ### Main function ###
 if (len(sys.argv) < 2) or (len(sys.argv) > 3):
-	print '\n\nUsage: %s input_file [output_file]\n\n  input_file: name of classic XML file to be parsed, omitting ".xml" extension\n  output_file: (optional) name of XML file to be output, omitting ".xml" extension if none given write to input_file + "Graph.xml"\n\nEx: To parse Test.xml to TestGraph.xml run: %s Test TestGraph\n' % (sys.argv[0], sys.argv[0])
+	print ('\n\nUsage: %s input_file [output_file]\n\n  input_file: name of classic XML '
+		'file to be parsed, omitting ".xml" extension\n  output_files_prefix: (optional) name '
+		'of prefix for XML files to be output, omitting ".xml" extension if none given write to input_file'
+		'+ "Layout.xml" and input_file + "Constraints.xml"\n\nEx: To parse Test.xml run: '
+		'%s Test TestOut \n  -- this will create TestOutLayout.xml and TestOutConstraints.xml\n') % (sys.argv[0], sys.argv[0])
 	quit()
 if len(sys.argv) == 3:
 	outfile = sys.argv[2]
 else:
-	outfile = sys.argv[1] + 'Graph'
+	outfile = sys.argv[1]
 allxml = parse(sys.argv[1] + '.xml')
 worlds = allxml.getElementsByTagName('world')
 if len(worlds) != 1:
@@ -162,12 +172,15 @@ for lx in wx.getElementsByTagName('level'):
 # Output string:
 out = '<?xml version="1.0" ?>\n'
 out += '<graph id="world">\n'
+constraintout = out
 for lx in wx.getElementsByTagName('level'):
 	# Reset level-specific dictionaries
 	edgesets = {}
 	nodekinds = {}
 	numedgesetedges = {}
 	extraedgesetlines = {}
+	edgesetwidth = {}
+	edgeseteditable = {}
 	# Node ids for SUBBOARDS, INCOMING, and OUTGOING nodes that correspond to multiple joints (instead of exactly one)
 	lname = lx.attributes['name'].value
 	# Gather the associated edge ids for edgesets dictionary
@@ -181,6 +194,8 @@ for lx in wx.getElementsByTagName('level'):
 			edgesets[edgeid].append(edgesetport)
 			edgesetport += 1
 		numedgesetedges[edgesetid] = edgesetport
+		edgesetwidth[edgesetid] = 'narrow'
+		edgeseteditable[edgesetid] = False
 	# 2a: Replace <node> with <joint>, making one <joint> per in/out for SUBBOARD, INCOMING, OUTGOING nodes
 	# for subboards, also create lines between subboard joint and inner incoming/outgoing edges within the board
 	# for off-level subboards, create an extra "dummy" box per input and output connecting to joint
@@ -198,21 +213,22 @@ for lx in wx.getElementsByTagName('level'):
 				if kind.lower() == 'subboard':
 					boardname = nx.attributes['name'].value
 					portnum = px.attributes['num'].value
-					defaultwidth = 'wide' # not using this at the moment
-					if px.attributes.get('defaultWidth') is not None:
-						defaultwidth = px.attributes['defaultWidth'].value
 					edgeport = getboardedge(lname, boardname, 0, portnum)
 					if edgeport is None:
 						setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
+							edgesetwidth[setid] = 'wide' # make default input to unknown boards wide
+							edgeseteditable[setid] = False
 						print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 					elif edgesets.get(edgeport.edgeid) is None:
 						setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
+							edgesetwidth[setid] = 'wide' # make default input to unknown boards wide
+							edgeseteditable[setid] = False
 						print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, setid)
 					else:
 						setid = edgesets.get(edgeport.edgeid)[0]
@@ -232,21 +248,22 @@ for lx in wx.getElementsByTagName('level'):
 				if kind.lower() == 'subboard':
 					boardname = nx.attributes['name'].value
 					portnum = px.attributes['num'].value
-					defaultwidth = 'narrow' # not using this at the moment
-					if px.attributes.get('defaultWidth') is not None:
-						defaultwidth = px.attributes['defaultWidth'].value
 					edgeport = getboardedge(lname, boardname, 1, portnum)
 					if edgeport is None:
 						setid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
+							edgesetwidth[setid] = 'narrow' # make default output from unknown boards narrow
+							edgeseteditable[setid] = False
 						print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 					elif edgesets.get(edgeport.edgeid) is None:
 						setid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
 						if numedgesetedges.get(setid) is None:
 							numedgesetedges[setid] = 0
 							extrasubboardbids.append(setid)
+							edgesetwidth[setid] = 'narrow' # make default output from unknown boards narrow
+							edgeseteditable[setid] = False
 						print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, setid)
 					else:
 						setid = edgesets.get(edgeport.edgeid)[0]
@@ -292,6 +309,13 @@ for lx in wx.getElementsByTagName('level'):
 			continue
 		setid = edgesets.get(edgeid)[0]
 		setport = edgesets.get(edgeid)[1]
+		# Update edge-set isWide and editable
+		edgewidth = ex.attributes['width'].value
+		if edgewidth.lower() == 'wide':
+			edgesetwidth[setid] = edgewidth.lower()
+		edgeeditable = ex.attributes['editable'].value
+		if (edgeeditable.lower() == 'true') or (edgeeditable.lower() == 't'):
+			edgeseteditable[setid] = True
 		# Create line from top node (joint) to edge-set (box)
 		fromlineid = edgeid + '__IN__'
 		fromnodex = ex.getElementsByTagName('from')[0].getElementsByTagName('noderef')[0]
@@ -326,7 +350,17 @@ for lx in wx.getElementsByTagName('level'):
 	out += linesout
 	out += extrasubboardlines
 	out += '  </level>\n'
+	# Output constaints file
+	constraintout += '  <level id="%s">\n' % lname
+	for setid in edgesetwidth:
+		editablestr = '%s' % edgeseteditable.get(setid, 'narrow')
+		constraintout += '    <box id="%s" width="%s" editable="%s"/>\n' % (setid, edgesetwidth[setid], editablestr.lower())
+	constraintout += '  </level>\n'
 out += '</graph>'
-writegrid = open(outfile + '.xml','w')
+constraintout += '</graph>'
+writegrid = open(outfile + 'Layout.xml','w')
 writegrid.write(out)
 writegrid.close()
+writeconstr = open(outfile + 'Constraints.xml','w')
+writeconstr.write(constraintout)
+writeconstr.close()
