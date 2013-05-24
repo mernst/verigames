@@ -6,6 +6,7 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import graph.NodeTypes;
+	import graph.SubnetworkPort;
 	
 	import graph.Edge;
 	import graph.Port;
@@ -19,6 +20,9 @@ package scenes.game.display
 	{
 		public var m_fromComponent:GameNodeBase;
 		public var m_toComponent:GameNodeBase;
+		public var m_fromPortID:String;
+		public var m_toPortID:String;
+		
 		private var m_dir:String;
 		private var m_useExistingPoints:Boolean;
 		private var m_outgoingIsWide:Boolean = false;
@@ -62,7 +66,8 @@ package scenes.game.display
 		public var NUM_JOINTS:int = 6;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
-										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
+										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
+										  _fromPortID:String, _toPortID:String, dir:String,
 										  _graphEdge:Edge, useExistingPoints:Boolean = false,
 										  _graphEdgeIsCopy:Boolean = false)
 		{
@@ -71,6 +76,8 @@ package scenes.game.display
 			m_edgeArray = edgeArray;
 			m_fromComponent = fromComponent;
 			m_toComponent = toComponent;
+			m_fromPortID = _fromPortID;
+			m_toPortID = _toPortID;
 			m_dir = dir;
 			graphEdge = _graphEdge;
 			edgeIsCopy = _graphEdgeIsCopy;
@@ -169,11 +176,22 @@ package scenes.game.display
 			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
 			
 			if (isTopOfEdge()) {
-				newIsWide = isBallWide(graphEdge.enter_ball_type);
-				if (graphEdge.has_pinch && !edgeIsCopy) {
-					newOutgoingIsWide = false;
+				if (edgeIsCopy) {
+					// If we're coming OUT of a subboard, use subboard pipe's outgoing width (if we have it) or default
+					if (graphEdge.from_port is SubnetworkPort) {
+						newIsWide = isBallWide((graphEdge.from_port as SubnetworkPort).default_ball_type);
+						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+						trace(graphEdge.from_port.edge.linked_edge_set.id + ":o" + graphEdge.from_port.port_id);
+					} else {
+						throw new Error("Warning: expecting case where box->joint edge copy is a Subnetwork outgoing edge.");
+					}
 				} else {
-					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+					newIsWide = isBallWide(graphEdge.enter_ball_type);
+					if (graphEdge.has_pinch && !edgeIsCopy) {
+						newOutgoingIsWide = false;
+					} else {
+						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+					}
 				}
 			} else {
 				newIsWide = isBallWide(graphEdge.exit_ball_type);
@@ -695,10 +713,21 @@ package scenes.game.display
 			m_endJoint.y = newPoint.y;
 		}
 		
+		public function getOriginalStartPosition():Point
+		{
+			return m_startJoint.m_originalPoint.clone();
+		}
+		
 		public function setOriginalStartPosition(newPoint:Point):void
 		{
 			m_startJoint.m_originalPoint.x = newPoint.x;
-			m_startJoint.m_originalPoint..y = newPoint.y;
+			m_startJoint.m_originalPoint.y = newPoint.y;
+		}
+		
+		
+		public function getOriginalEndPosition():Point
+		{
+			return m_endJoint.m_originalPoint.clone();
 		}
 		
 		public function setOriginalEndPosition(newPoint:Point):void

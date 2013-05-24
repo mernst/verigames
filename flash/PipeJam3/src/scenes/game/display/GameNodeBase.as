@@ -10,7 +10,6 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-
 	
 	public class GameNodeBase extends GameComponent
 	{

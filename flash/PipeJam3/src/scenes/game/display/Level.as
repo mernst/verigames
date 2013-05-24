@@ -321,16 +321,21 @@ package scenes.game.display
 			var myJoint:GameJointNode;
 			var dir:String;
 			var boxId:String, jointId:String;
+			var fromPortID:String, toPortID:String;
 			if (edgeFromBox && edgeToJoint) {
 				dir = GameEdgeContainer.DIR_BOX_TO_JOINT;
 				boxId = edgeFromBox.@id;
 				jointId = edgeToJoint.@id;
+				fromPortID = edgeFromBox.@port;
+				toPortID =  edgeToJoint.@port;
 				myNode = boxDictionary[boxId];
 				myJoint = jointDictionary[jointId];
 			} else if (edgeFromJoint && edgeToBox) {
 				dir = GameEdgeContainer.DIR_JOINT_TO_BOX;
 				boxId = edgeToBox.@id;
 				jointId = edgeFromJoint.@id;
+				fromPortID = edgeFromJoint.@port;
+				toPortID =  edgeToBox.@port;
 				myNode = boxDictionary[boxId];
 				myJoint = jointDictionary[jointId];
 			} else {
@@ -443,9 +448,9 @@ package scenes.game.display
 			
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, dir, newEdge, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
 			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {

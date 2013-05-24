@@ -312,6 +312,7 @@ package system
 								var out_type:uint;
 								if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
 									out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
+									subnet_port.default_ball_type = out_type; // update best-known default
 								} else {
 									out_type = subnet_port.default_ball_type;
 								}
