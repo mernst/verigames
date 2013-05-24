@@ -5,6 +5,7 @@ package scenes.game.display
 	import events.PortTroublePointEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import graph.NodeTypes;
 	
 	import graph.Edge;
 	import graph.Port;
@@ -34,10 +35,12 @@ package scenes.game.display
 		public var m_endJoint:GameEdgeJoint;
 		public var m_markerJoint:GameEdgeJoint;
 		
+		private var m_innerBoxSegment:InnerBoxSegment;
+		
 		public var m_jointPoints:Array;
 		
-		public var incomingEdgePosition:int;
-		public var outgoingEdgePosition:int;
+		public var incomingEdgePosition:Number;
+		public var outgoingEdgePosition:Number;
 		
 		public var graphEdge:Edge;
 		public var edgeIsCopy:Boolean;
@@ -60,7 +63,7 @@ package scenes.game.display
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, dir:String,
-										  _graphEdge:Edge = null, useExistingPoints:Boolean = false,
+										  _graphEdge:Edge, useExistingPoints:Boolean = false,
 										  _graphEdgeIsCopy:Boolean = false)
 		{
 			super(_id);
@@ -71,22 +74,51 @@ package scenes.game.display
 			m_dir = dir;
 			graphEdge = _graphEdge;
 			edgeIsCopy = _graphEdgeIsCopy;
-			m_isEditable = (graphEdge == null) ? (m_fromComponent.isEditable() || m_toComponent.isEditable()) : graphEdge.editable;
+			m_isEditable = graphEdge.editable;
 			m_useExistingPoints = useExistingPoints;
 			
 			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
 			// Also even if box is editable, if contains a pinch point then make editable = false
-			if (toBox && graphEdge && graphEdge.has_pinch && !edgeIsCopy) {
+			if (toBox && graphEdge.has_pinch && !edgeIsCopy) {
 				m_outputSegmentIsEditable = false;
 			}
 			
-			fromComponent.setOutgoingEdge(this);
-			toComponent.setIncomingEdge(this);
+			outgoingEdgePosition = fromComponent.setOutgoingEdge(this);
+			incomingEdgePosition = toComponent.setIncomingEdge(this);
 			
 			m_startPoint = edgeArray[0];
 			m_endPoint = edgeArray[edgeArray.length-1];
 			
+			var innerBoxPt:Point;
+			var boxHeight:Number;
+			var startingCircle:Boolean = false;
+			if (toBox) {
+				boxHeight =(m_toComponent as GameNode).m_boundingBox.height;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+			} else {
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+				switch (graphEdge.from_port.node.kind) {
+					case NodeTypes.INCOMING:
+					case NodeTypes.START_PIPE_DEPENDENT_BALL:
+						startingCircle = true;
+						break;
+				}
+			}
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, startingCircle);
+			
 			m_boundingBox = _boundingBox;
+			
+			if (isTopOfEdge()) {
+				if (graphEdge.has_pinch && !edgeIsCopy) {
+					listenToEdgeForTroublePoints(graphEdge);
+				}
+				listenToPortForTroublePoints(graphEdge.from_port);
+			} else {
+				listenToPortForTroublePoints(graphEdge.to_port);
+			}
+			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+			
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(CREATE_JOINT, onCreateJoint);
@@ -121,17 +153,6 @@ package scenes.game.display
 			createChildren()
 			positionChildren();
 			
-			if (graphEdge) {
-				if (isTopOfEdge()) {
-					if (graphEdge.has_pinch && !edgeIsCopy) {
-						listenToEdgeForTroublePoints(graphEdge);
-					}
-					listenToPortForTroublePoints(graphEdge.from_port);
-				} else {
-					listenToPortForTroublePoints(graphEdge.to_port);
-				}
-				graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
-			}
 			updateSize();
 			m_isDirty = true;
 		}
@@ -143,37 +164,36 @@ package scenes.game.display
 		
 		override public function updateSize():void
 		{
-			//if (graphEdge && graphEdge.edge_id == "e88")
-				//var d = 1;
 			var toComponentNarrow:Boolean = !m_toComponent.isWide();
 			var newIsWide:Boolean = m_isWide;
 			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
-			if (graphEdge == null) {
-				newIsWide = m_fromComponent.isWide();
-				if (toBox) {
-					newOutgoingIsWide = m_toComponent.isWide();
+			
+			if (isTopOfEdge()) {
+				newIsWide = isBallWide(graphEdge.enter_ball_type);
+				if (graphEdge.has_pinch && !edgeIsCopy) {
+					newOutgoingIsWide = false;
 				} else {
 					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 				}
 			} else {
-				if (isTopOfEdge()) {
-					newIsWide = isBallWide(graphEdge.enter_ball_type);
-					if (graphEdge.has_pinch && !edgeIsCopy) {
-						newOutgoingIsWide = false;
-					} else {
-						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
-					}
-				} else {
-					newIsWide = isBallWide(graphEdge.exit_ball_type);
-					newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
-				}
+				newIsWide = isBallWide(graphEdge.exit_ball_type);
+				newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 			}
+			
 			if (newIsWide != m_isWide) {
 				setIncomingWidth(newIsWide);
 				if (toBox) {
 					// Update the joint, which may restrict the incoming line(s)
 					m_fromComponent.updateSize();
+				} else {
+					m_innerBoxSegment.setIsWide(m_isWide);
+					m_innerBoxSegment.draw();
 				}
+				m_innerBoxSegment.draw();
+			}
+			if (toBox && m_innerBoxSegment.isWide() != newOutgoingIsWide) {
+				m_innerBoxSegment.setIsWide(newOutgoingIsWide);
+				m_innerBoxSegment.draw();
 			}
 			setOutgoingWidth(newOutgoingIsWide);
 		}
@@ -270,13 +290,39 @@ package scenes.game.display
 			}
 		}
 		
+		public function getListeningToPorts():Vector.<Port>
+		{
+			return m_listeningToPorts;
+		}
+		
+		public function stopListeningToPort(_port:Port):void
+		{
+			var portIndx:int = m_listeningToPorts.indexOf(_port);
+			if (portIndx > -1) {
+				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
+				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
+				onPortTroublePointRemoved(null);
+				m_listeningToPorts.splice(portIndx, 1);
+			}
+		}
+		
+		public function removeDuplicatePortListeners(_otherLine:GameEdgeContainer):void
+		{
+			var otherListeningPorts:Vector.<Port> = _otherLine.getListeningToPorts();
+			for each (var listPort:Port in otherListeningPorts) {
+				stopListeningToPort(listPort);
+			}
+		}
+		
 		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
 		{
 			if (m_hasError) {
 				return;
 			}
 			m_hasError = true;
-			m_markerJoint.m_hasError = true;
+			if (m_markerJoint) {
+				m_markerJoint.m_hasError = true;
+			}
 			m_isDirty = true;
 		}
 		
@@ -286,7 +332,9 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = false;
-			m_markerJoint.m_hasError = false;
+			if (m_markerJoint) {
+				m_markerJoint.m_hasError = false;
+			}
 			m_isDirty = true;
 		}
 		
@@ -369,23 +417,35 @@ package scenes.game.display
 		}
 		
 		public function positionChildren():void
-		{			
+		{
+			var innerBoxPt:Point;
+			var boxHeight:Number;
+			if (toBox) {
+				boxHeight =(m_toComponent as GameNode).m_boundingBox.height;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+			} else {
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+			}
+			m_innerBoxSegment.interiorPt = innerBoxPt;
+			m_innerBoxSegment.draw();
+			addChild(m_innerBoxSegment);
 			var previousSegment:GameEdgeSegment = null;
 			//move each segment to where they should be, and add them, then add front joint
 			var a:int = 0;
 			var b:int = 1;
-						
+			
 			var segment:GameEdgeSegment;
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
 				var startPoint:Point = m_jointPoints[segIndex];
 				var endPoint:Point = m_jointPoints[segIndex+1];
-
+				
 				segment.updateSegment(startPoint, endPoint);
 				segment.x = m_jointPoints[segIndex].x;
 				segment.y = m_jointPoints[segIndex].y;
-
+				
 				addChild(segment);
 				
 				var joint:GameEdgeJoint = m_edgeJoints[segIndex];
@@ -417,7 +477,7 @@ package scenes.game.display
 					m_endPoint.x = m_endPoint.x+deltaPoint.x;
 					m_endPoint.y = m_endPoint.y+deltaPoint.y;
 				}
-
+				
 				createJointPointsArray(m_startPoint, m_endPoint);
 				positionChildren();
 				
@@ -505,12 +565,12 @@ package scenes.game.display
 		{		
 			//recreate if we have a non-initialized or non-standard line
 			//it might be nice to deal with non-standard lines better than wiping out the changes....
-			if(!m_jointPoints || m_jointPoints.length != 6)
+			if(!m_jointPoints || m_jointPoints.length != NUM_JOINTS)
 			{
 				m_jointPoints = new Array(NUM_JOINTS);
 				createChildren();
 			}
-
+			
 			//create easy parts
 			makeInitialNodesAndExtension(startPoint, 0, 1, true);
 			makeInitialNodesAndExtension(endPoint, NUM_JOINTS-1, NUM_JOINTS-2, false);
@@ -576,6 +636,7 @@ package scenes.game.display
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.draw();
 			}
+			m_innerBoxSegment.draw();
 		}
 		
 		override public function getScore():Number
@@ -738,5 +799,77 @@ package scenes.game.display
 				}
 			}
 		}
+	}
+}
+
+
+import flash.geom.Point;
+import scenes.game.display.GameComponent;
+import scenes.game.display.GameEdgeJoint;
+import scenes.game.display.GameEdgeSegment;
+import scenes.game.display.GameEdgeContainer;
+
+class InnerBoxSegment extends GameComponent
+{
+	private static var id:int = 0;
+	public var innerCircleJoint:GameEdgeJoint;
+	public var edgeSegment:GameEdgeSegment;
+	public var interiorPt:Point;
+	private var m_dir:String;
+	private var m_height:Number;
+	private var m_createStartingCircle:Boolean;
+	
+	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, createStartingCircle:Boolean)
+	{
+		super("IS" + id++);
+		interiorPt = _interiorPt;
+		m_height = height;
+		m_dir = dir;
+		m_isWide = isWide;
+		m_createStartingCircle = createStartingCircle;
+		
+		edgeSegment = new GameEdgeSegment(m_dir, true);
+		edgeSegment.forceColor(0x0);
+		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
+		if (createStartingCircle) {
+			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT);
+			innerCircleJoint.forceColor(0x0);
+		}
+		draw();
+		addChild(edgeSegment);
+		if (innerCircleJoint) {
+			addChild(innerCircleJoint);
+		}
+		this.touchable = false;
+	}
+	
+	public function draw():void
+	{
+		if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+			edgeSegment.x = interiorPt.x;
+			edgeSegment.y = interiorPt.y - m_height;
+		} else {
+			edgeSegment.x = interiorPt.x;
+			edgeSegment.y = interiorPt.y;
+		}
+		edgeSegment.setIsWide(m_isWide);
+		edgeSegment.draw();
+		if (innerCircleJoint) {
+			innerCircleJoint.x = interiorPt.x;
+			innerCircleJoint.y = interiorPt.y;
+			innerCircleJoint.setIsWide(m_isWide);
+			innerCircleJoint.draw();
+		}
+	}
+	
+	override public function dispose():void
+	{
+		if (edgeSegment) {
+			edgeSegment.removeFromParent(true);
+		}
+		if (innerCircleJoint) {
+			innerCircleJoint.removeFromParent(true);
+		}
+		super.dispose();
 	}
 }

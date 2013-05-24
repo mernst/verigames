@@ -257,9 +257,10 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
+			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edgeXML);
+				var boundingBox:Rectangle = createLine(edgeXML, false, copyLines);
 				if (boundingBox) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
@@ -267,6 +268,22 @@ package scenes.game.display
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
+			// At this point, there may be multiple lines listening to the same port for trouble points,
+			// fix at this point so that only one line is listening to that port
+			for each (var copyLine:GameEdgeContainer in copyLines) {
+				var lineID:String = copyLine.m_id;
+				var cpyIndx:int = lineID.indexOf(Constants.XML_ANNOT_COPY);
+				if (cpyIndx == -1) {
+					throw new Error("Unexpected line id found for copy line: " + lineID);
+				}
+				var nonCopyID:String = lineID.substring(0, cpyIndx);
+				var foundLine:GameEdgeContainer = edgeContainerDictionary[nonCopyID];
+				if (!foundLine) {
+					throw new Error("No line found for lineID: " + nonCopyID);
+				}
+				foundLine.removeDuplicatePortListeners(copyLine);
+			}
+			
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -291,8 +308,11 @@ package scenes.game.display
 			}
 		}
 		
-		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false):Rectangle
+		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
 		{
+			if (copyLines == null) {
+				copyLines = new Vector.<GameEdgeContainer>();
+			}
 			var edgeFromBox:XML = edgeXML.frombox[0];
 			var edgeToJoint:XML = edgeXML.tojoint[0];
 			var edgeFromJoint:XML = edgeXML.fromjoint[0];
@@ -321,22 +341,23 @@ package scenes.game.display
 			var index:int = edgeContainerID.indexOf('__');
 			var edgeID:String = edgeContainerID.substring(0, index);
 			var newEdge:Edge = this.edgeDictionary[edgeID];
-			if (newEdge) {
-				// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
-				if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
-					switch (newEdge.from_node.kind) {
-						case NodeTypes.INCOMING:
-						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
-				} else {
-					switch (newEdge.to_node.kind) {
-						case NodeTypes.OUTGOING:
-						case NodeTypes.END:
-							//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-							return null;
-					}
+			if (!newEdge) {
+				throw new Error("Attempting to create line with no graph edge found, line id:" + edgeContainerID);
+			}
+			// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+			if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+				switch (newEdge.from_node.kind) {
+					case NodeTypes.INCOMING:
+					case NodeTypes.START_PIPE_DEPENDENT_BALL:
+						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						return null;
+				}
+			} else {
+				switch (newEdge.to_node.kind) {
+					case NodeTypes.OUTGOING:
+					case NodeTypes.END:
+						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						return null;
 				}
 			}
 			
@@ -351,7 +372,6 @@ package scenes.game.display
 			
 			var edgePoints:XMLList = edgeXML.point;
 			
-
 			for each(var pointXML:XML in edgePoints)
 			{
 				var pt:Point = new Point(pointXML.@x, pointXML.@y);
@@ -428,7 +448,9 @@ package scenes.game.display
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
 			m_edgeList.push(newGameEdge);
-			
+			if (edgeIsCopy) {
+				copyLines.push(newGameEdge);
+			}
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			
 			return bb;

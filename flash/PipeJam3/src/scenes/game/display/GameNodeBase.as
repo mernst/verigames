@@ -186,29 +186,23 @@ package scenes.game.display
 		}
 		
 		//adds edge to outgoing edge method (unless currently in vector), then sorts
-		public function setOutgoingEdge(edge:GameEdgeContainer):void
+		public function setOutgoingEdge(edge:GameEdgeContainer):Number
 		{
 			if(m_outgoingEdges.indexOf(edge) == -1)
 				m_outgoingEdges.push(edge);
-			edge.outgoingEdgePosition = (m_outgoingEdges.length-1)/5;
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
-			
-			//push size info - nope, this is coming from the simulator
-			// edge.setIncomingWidth(m_isWide);
-			
+			return (m_outgoingEdges.length - 1) / 5;
 		}
 		
 		//adds edge to incoming edge method (unless currently in vector), then sorts
-		public function setIncomingEdge(edge:GameEdgeContainer):void
+		public function setIncomingEdge(edge:GameEdgeContainer):Number
 		{
 			if(m_incomingEdges.indexOf(edge) == -1)
 				m_incomingEdges.push(edge);
-			edge.incomingEdgePosition = (m_incomingEdges.length-1)/5;
 			//I want the edges to be in ascending order according to x position, so do that here
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
-			//push size info - nope, this is coming from the simulator
-			//edge.setOutgoingWidth(m_isWide);
+			return (m_incomingEdges.length - 1) / 5;
 		}
 		
 		public function findGroup(dictionary:Dictionary):void

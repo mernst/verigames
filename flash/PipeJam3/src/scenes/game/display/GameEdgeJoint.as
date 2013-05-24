@@ -30,6 +30,7 @@ package scenes.game.display
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
 		static public var END_JOINT:int = 2;
+		static public var INNER_CIRCLE_JOINT:int = 3;
 		
 		public function GameEdgeJoint(jointType:int = 0)
 		{
@@ -55,9 +56,9 @@ package scenes.game.display
 			}
 
 			disposeChildren();
-			if(m_quad)
+			if (m_quad) {
 				m_quad.dispose();
-
+			}
 			super.dispose();
 		}
 		
@@ -143,7 +144,8 @@ package scenes.game.display
 					//redraw nextEdge, passing update point = 0,0
 					oNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
 					//reorder outgoing edge array
-					node.setOutgoingEdge(oNextEdge);
+					var oNewPos:Number = node.setOutgoingEdge(oNextEdge);
+					oNextEdge.outgoingEdgePosition = oNewPos; // probably want to update the edge at this point
 				}
 			}
 			else
@@ -178,7 +180,8 @@ package scenes.game.display
 					//redraw nextEdge, passing update point = 0,0
 					iNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
 					//reorder outgoing edge array
-					node.setOutgoingEdge(iNextEdge);
+					var iNewPos:Number = node.setOutgoingEdge(iNextEdge);
+					iNextEdge.outgoingEdgePosition = iNewPos; // probably want to update the edge at this point
 				}
 			}
 			if (m_parentEdge) {
@@ -213,18 +216,20 @@ package scenes.game.display
 		public function draw():void
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-		
+			
 			var color:int = getColor();
 			removeChildren();
-
-			if(m_quad)
-				m_quad.dispose();		
-
+			
+			if (m_jointType == INNER_CIRCLE_JOINT) {
+				lineSize *= 1.5;
+			}
+			if (m_quad) {
+				m_quad.dispose();
+			}
 			m_quad = new Quad(lineSize, lineSize, color);
 			m_quad.x = -lineSize/2;
 			m_quad.y = -lineSize/2;
 			addChild(m_quad);
-			
 
 //			var number:String = ""+count;
 //			var txt:TextField = new TextField(10, 10, number, "Veranda", 6,0x00ff00); 

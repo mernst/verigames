@@ -254,7 +254,7 @@ package scenes.game.components
 			var oldScaleY:Number = content.scaleY;
 			var newScaleX:Number = XMath.clamp(content.scaleX * sizeDiff, MIN_SCALE, MAX_SCALE);
 			var newScaleY:Number = XMath.clamp(content.scaleY * sizeDiff, MIN_SCALE, MAX_SCALE);
-			trace(newScaleX + " " + newScaleY);
+			
 			if(newScaleX > newScaleY)
 			{
 				sizeDiff = newScaleX/content.scaleX;
@@ -347,7 +347,7 @@ package scenes.game.components
 			content.x = 0;
 			content.y = 0;
 
-			content.scaleX = content.scaleY = 25.0;
+			content.scaleX = content.scaleY = 24.0;
 			content.addChild(m_currentLevel);
 			var nodes:Vector.<GameNode> = level.getNodes();
 			if (nodes.length > 0) {
