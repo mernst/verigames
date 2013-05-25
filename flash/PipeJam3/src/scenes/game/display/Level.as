@@ -5,6 +5,7 @@ package scenes.game.display
 	import events.MoveEvent;
 	import graph.NodeTypes;
 	import graph.SubnetworkPort;
+	import utils.XString;
 	
 	import flash.display.Shape;
 	import flash.geom.Point;
@@ -300,11 +301,22 @@ package scenes.game.display
 		{
 			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
 			{
-				var gameNode:GameNode = boxDictionary[boxConstraint.@id];
-				if(boxConstraint.@width == "narrow")
-					gameNode.m_isWide = false;
-				else
-					gameNode.m_isWide = true;
+				var gameNode:GameNode = boxDictionary[String(boxConstraint.@id)];
+				if (!gameNode) {
+					throw new Error("Box node not found for id found in constraints file:" + boxConstraint.@id);
+				}
+				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
+				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
+				if (constraintIsEditable) {
+					gameNode.m_isWide = constraintIsWide;
+				} else {
+					if (gameNode.isWide() != constraintIsWide) {
+						throw new Error("Mismatch between constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
+					}
+				}
+				if (constraintIsEditable != gameNode.isEditable()) {
+					throw new Error("Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
+				}
 			}
 		}
 		

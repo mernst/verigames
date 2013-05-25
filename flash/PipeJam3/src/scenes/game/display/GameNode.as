@@ -51,8 +51,10 @@ package scenes.game.display
 			}
 			if (m_edgeSetEdges.length == 0) {
 				m_isEditable = false;
+				m_isWide = false;
 			} else {
 				m_isEditable = m_edgeSetEdges[0].editable;
+				m_isWide = m_edgeSetEdges[0].is_wide;
 			}
 			m_numIncomingNodeEdges = m_numOutgoingNodeEdges = 0;
 			for each (var myEdge:Edge in m_edgeSetEdges) {
