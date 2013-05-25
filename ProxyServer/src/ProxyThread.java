@@ -231,6 +231,7 @@ public class ProxyThread extends Thread {
     		"<cross-domain-policy>" +
     		"<site-control permitted-cross-domain-policies=\"all\"/>" +
     		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
+    		"<allow-access-from domain=\"*.verigames.com\" to-ports=\"8001\"/>" +
     		"<allow-http-request-headers-from domain=\"*\" headers=\"*\"/>" +
     		"</cross-domain-policy>";
 			
