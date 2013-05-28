@@ -179,178 +179,184 @@ def parsedot(line):
 
 
 ### Main function ###
-if (len(sys.argv) < 2) or (len(sys.argv) > 4):
-	print ('\n\nUsage: %s input_file [output_file] [-o]\n\n  input_file: name of INPUT grid XML to be laid out, '
-	'omitting ".xml" extension\n  output_file: (optional) OUTPUT xml/dot file name prefix, if none overwrite '
-	'input xml file\n  -o (optional) to write dot layout input and output files including pdf of graph for '
-	'each level\n\n\nEx: To parse Test.xml and output TestGraph.xml run: %s Test TestGraph\n') % (sys.argv[0], sys.argv[0])
-	quit()
-verbose = True # fixedsize=True should mean that labeling nodes and ports shouldn't affect node sizes
-outputdotfiles = False
-for myarg in sys.argv:
-	if myarg == '-o':
-		outputdotfiles = True
-allxml = parse(sys.argv[1] + '.xml')
-graphs = allxml.getElementsByTagName('graph')
-if len(graphs) != 1:
-	print 'Warning: expecting 1 graph, found %d, processing only the first graph' % len(graphs)
-gx = graphs[0]
-if len(sys.argv) == 2:
-	outfile = sys.argv[1]
-else:
-	outfile = sys.argv[2]
-for lx in gx.getElementsByTagName('level'):
-	lname = lx.attributes['id'].value
-	edge2linexml[lname] = {}
-	node2xml[lname] = {}
-	portxcoords = {}
-	#print 'Laying out Level: %s' % lname
-	dotin =  'digraph %s {\n' % lname
-	dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
-	dotin += '  graph [\n'
-	dotin += '    rankdir=TB,\n'
-	dotin += '    nodesep=1.0,\n'
-	dotin += '    ranksep=1.0,\n'
-	dotin += '    splines=spline\n'
-	dotin += '  ];\n'
-	dotin += '  node [\n'
-	dotin += '    fontsize=14.0,\n'
-#	dotin += '    width=0.5,\n'
-#	dotin += '    height=1.0,\n'
-	dotin += '    fixedsize=true,\n'
-	dotin += '    shape=record\n'
-	dotin += '  ];\n'
-	dotin += '  edge [\n'
-	dotin += '    arrowhead=none,\n'
-	dotin += '    arrowtail=none\n'
-	dotin += '  ];\n'
-	for jx in lx.getElementsByTagName('joint'):
-		jid = jx.attributes['id'].value
-		jin = int(jx.attributes['inputs'].value)
-		jout = int(jx.attributes['outputs'].value)
-		jwidth = max(jin, jout)
-		jlabel = createportlabels(jin, jout, None, verbose)
-		nodeid = 'J_%s' % sanitize(jid)
-		dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth, jlabel)
-		node2xml[lname][nodeid] = jx
-	for bx in lx.getElementsByTagName('box'):
-		bid = bx.attributes['id'].value
-		blines = int(bx.attributes['lines'].value)
-		blabel = createportlabels(blines, blines, bid, verbose)
-		nodeid = 'B_%s' % sanitize(bid)
-		dotin += '  %s [width=%s,height=1.0,label="%s"];\n' % (nodeid, blines, blabel)
-		node2xml[lname][nodeid] = bx
-	for linex in lx.getElementsByTagName('line'):
-		lid = linex.attributes['id'].value
-		if (len(linex.getElementsByTagName('fromjoint')) == 1) and (len(linex.getElementsByTagName('tobox')) == 1):
-			fromid = 'J_%s' % sanitize(linex.getElementsByTagName('fromjoint')[0].attributes['id'].value)
-			fromport = linex.getElementsByTagName('fromjoint')[0].attributes['port'].value
-			toid = 'B_%s' % sanitize(linex.getElementsByTagName('tobox')[0].attributes['id'].value)
-			toport = linex.getElementsByTagName('tobox')[0].attributes['port'].value
-		elif (len(linex.getElementsByTagName('frombox')) == 1) and (len(linex.getElementsByTagName('tojoint')) == 1):
-			fromid = 'B_%s' % sanitize(linex.getElementsByTagName('frombox')[0].attributes['id'].value)
-			fromport = linex.getElementsByTagName('frombox')[0].attributes['port'].value
-			toid = 'J_%s' % sanitize(linex.getElementsByTagName('tojoint')[0].attributes['id'].value)
-			toport = linex.getElementsByTagName('tojoint')[0].attributes['port'].value
-		else:
-			print 'Warning: unsupported input/outputs for line id: %s' % lid
-			continue
-		edgeid = '%s:o%s -> %s:i%s' % (fromid, fromport, toid, toport)
-		edge2linexml[lname][edgeid] = linex
-		dotin += '  %s;\n' % (edgeid)
-	dotin += '}'
-	dotinfilename = '%s-%s-in.dot' % (outfile, lname)
-	writedot = open(dotinfilename,'w')
-	writedot.write(dotin)
-	writedot.close()
-	dotcmd = os.popen('dot ' + dotinfilename)
-	dotoutput = dotcmd.read()
-	dotcmd.close()
-	if outputdotfiles:
-		dotcmd = os.popen('dot -Tpdf -o%s-%s.pdf %s' % (outfile, lname, dotinfilename))
-		dotcmd.read()
-		dotcmd.close()
-		dotoutfilename = '%s-%s-out.dot' % (outfile, lname)
-		writedot = open(dotoutfilename,'w')
-		writedot.write(dotoutput)
-		writedot.close()
-	else:
-		os.remove(dotinfilename)
-	dotoutput = ' '.join(dotoutput.split()) #get rid of any runs of spaces, newlines, etc
-	# Get rid of dot's "continue on next line" character '\' while preserving pos="N,N N,N" formatting
-	dotoutput = dotoutput.replace(', \\', ',').replace('\\ ,', ',').replace(' \\ ', ' ').replace('\\', '')
-	# Put pairs together that may have been separated
-	dotoutput = dotoutput.replace(' , ', ',').replace(', ', ',').replace(' ,', ',')
-	dotelms = dotoutput.split(";") #split each element on its own line
-	
-	linenum = 0
-	for line in dotelms[:3]:
-		bb = parsebb(line)
-		if bb is not None:
-			#print 'Bounding Box: %s,%s %s,%s' % (bb[0].x, bb[0].y, bb[1].x, bb[1].y)
-			break
-	if bb is None:
-		print 'Warning: No bounding box found in graph. Creating dummy bb = 0,0 to 500,500'
-		bb = [Point(0,0), Point(500,500)]
-	maxy = bb[1].y
-	for line in dotelms:
-		layout = parsedot(line)
-		if layout is not None:
-			if layout.id is None:
-				print 'Warning: invalid layout created for line %s' % line
-			if layout.points is not None:
-				# Output edge points
-				edgex = edge2linexml[lname].get(layout.id)
-				if edgex is None:
-					print 'Warning: no line xml found for id %s' % layout.id
-					continue
-				if len(layout.points) != 2:
-					print 'Warning: expecting exactly two points for line id %s' % layout.id
-					continue
-				foundstartx = None
-				foundendx = None
-				if edgex.getElementsByTagName('frombox'):
-					portid = '%s___P___%s' % (edgex.getElementsByTagName('frombox')[0].attributes['id'].value, edgex.getElementsByTagName('frombox')[0].attributes['port'].value)
-					foundstartx = portxcoords.get(portid)
-					if foundstartx is not None:
-						layout.points[0].x = foundstartx
-					else:
-						portxcoords[portid] = layout.points[0].x
-				elif edgex.getElementsByTagName('tobox'):
-					portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
-					foundendx = portxcoords.get(portid)
-					if foundendx is not None:
-						layout.points[-1].x = foundendx
-					else:
-						portxcoords[portid] = layout.points[-1].x
-				else:
-					print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
-				# Remove any current layout points, we only want the new layout points to be saved
-				for oldptx in edgex.getElementsByTagName('point'):
-					edgex.removeChild(oldptx)
-				for pt in layout.points:
-					ptx = allxml.createElement('point')
-					ptx.setAttribute('x', tostr(pt.x))
-					ptx.setAttribute('y', tostr(maxy - pt.y))
-					edgex.appendChild(ptx)
-			elif layout.pos is not None:
-				# Output node position
-				nodex = node2xml[lname].get(layout.id)
-				if nodex is None:
-					print 'Warning: no node found for id %s' % layout.id
-					continue
-				nodex.setAttribute('x', tostr(layout.pos.x))
-				nodex.setAttribute('y', tostr(maxy - layout.pos.y))
-				if 'width' in nodex.attributes.keys():
-					nodex.removeAttribute('width')
-				if 'height' in nodex.attributes.keys():
-					nodex.removeAttribute('height')
-				if layout.width is not None:
-					nodex.setAttribute('width', tostr(layout.width))
-				if layout.height is not None:
-					nodex.setAttribute('height', tostr(layout.height))
+def layout(infile, outfile, outputdotfiles):
+	allxml = parse(infile + '.xml')
+	graphs = allxml.getElementsByTagName('graph')
+	if len(graphs) != 1:
+		print 'Warning: expecting 1 graph, found %d, processing only the first graph' % len(graphs)
+	gx = graphs[0]
+	for lx in gx.getElementsByTagName('level'):
+		lname = lx.attributes['id'].value
+		edge2linexml[lname] = {}
+		node2xml[lname] = {}
+		portxcoords = {}
+		#print 'Laying out Level: %s' % lname
+		dotin =  'digraph %s {\n' % lname
+		dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
+		dotin += '  graph [\n'
+		dotin += '    rankdir=TB,\n'
+		dotin += '    nodesep=1.0,\n'
+		dotin += '    ranksep=1.0,\n'
+		dotin += '    splines=spline\n'
+		dotin += '  ];\n'
+		dotin += '  node [\n'
+		dotin += '    fontsize=14.0,\n'
+	#	dotin += '    width=0.5,\n'
+	#	dotin += '    height=1.0,\n'
+		dotin += '    fixedsize=true,\n'
+		dotin += '    shape=record\n'
+		dotin += '  ];\n'
+		dotin += '  edge [\n'
+		dotin += '    arrowhead=none,\n'
+		dotin += '    arrowtail=none\n'
+		dotin += '  ];\n'
+		for jx in lx.getElementsByTagName('joint'):
+			jid = jx.attributes['id'].value
+			jin = int(jx.attributes['inputs'].value)
+			jout = int(jx.attributes['outputs'].value)
+			jwidth = max(jin, jout)
+			jlabel = createportlabels(jin, jout, None, verbose)
+			nodeid = 'J_%s' % sanitize(jid)
+			dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth, jlabel)
+			node2xml[lname][nodeid] = jx
+		for bx in lx.getElementsByTagName('box'):
+			bid = bx.attributes['id'].value
+			blines = int(bx.attributes['lines'].value)
+			blabel = createportlabels(blines, blines, bid, verbose)
+			nodeid = 'B_%s' % sanitize(bid)
+			dotin += '  %s [width=%s,height=1.0,label="%s"];\n' % (nodeid, blines, blabel)
+			node2xml[lname][nodeid] = bx
+		for linex in lx.getElementsByTagName('line'):
+			lid = linex.attributes['id'].value
+			if (len(linex.getElementsByTagName('fromjoint')) == 1) and (len(linex.getElementsByTagName('tobox')) == 1):
+				fromid = 'J_%s' % sanitize(linex.getElementsByTagName('fromjoint')[0].attributes['id'].value)
+				fromport = linex.getElementsByTagName('fromjoint')[0].attributes['port'].value
+				toid = 'B_%s' % sanitize(linex.getElementsByTagName('tobox')[0].attributes['id'].value)
+				toport = linex.getElementsByTagName('tobox')[0].attributes['port'].value
+			elif (len(linex.getElementsByTagName('frombox')) == 1) and (len(linex.getElementsByTagName('tojoint')) == 1):
+				fromid = 'B_%s' % sanitize(linex.getElementsByTagName('frombox')[0].attributes['id'].value)
+				fromport = linex.getElementsByTagName('frombox')[0].attributes['port'].value
+				toid = 'J_%s' % sanitize(linex.getElementsByTagName('tojoint')[0].attributes['id'].value)
+				toport = linex.getElementsByTagName('tojoint')[0].attributes['port'].value
 			else:
-				print 'Warning: bad layout created for line: %s' % line
-writelayout = open(outfile + '.xml','w')
-writelayout.write(gx.toxml())
-writelayout.close()
+				print 'Warning: unsupported input/outputs for line id: %s' % lid
+				continue
+			edgeid = '%s:o%s -> %s:i%s' % (fromid, fromport, toid, toport)
+			edge2linexml[lname][edgeid] = linex
+			dotin += '  %s;\n' % (edgeid)
+		dotin += '}'
+		dotinfilename = '%s-%s-in.dot' % (outfile, lname)
+		writedot = open(dotinfilename,'w')
+		writedot.write(dotin)
+		writedot.close()
+		dotcmd = os.popen('dot ' + dotinfilename)
+		dotoutput = dotcmd.read()
+		dotcmd.close()
+		if outputdotfiles:
+			dotcmd = os.popen('dot -Tpdf -o%s-%s.pdf %s' % (outfile, lname, dotinfilename))
+			dotcmd.read()
+			dotcmd.close()
+			dotoutfilename = '%s-%s-out.dot' % (outfile, lname)
+			writedot = open(dotoutfilename,'w')
+			writedot.write(dotoutput)
+			writedot.close()
+		else:
+			os.remove(dotinfilename)
+		dotoutput = ' '.join(dotoutput.split()) #get rid of any runs of spaces, newlines, etc
+		# Get rid of dot's "continue on next line" character '\' while preserving pos="N,N N,N" formatting
+		dotoutput = dotoutput.replace(', \\', ',').replace('\\ ,', ',').replace(' \\ ', ' ').replace('\\', '')
+		# Put pairs together that may have been separated
+		dotoutput = dotoutput.replace(' , ', ',').replace(', ', ',').replace(' ,', ',')
+		dotelms = dotoutput.split(";") #split each element on its own line
+		
+		linenum = 0
+		for line in dotelms[:3]:
+			bb = parsebb(line)
+			if bb is not None:
+				#print 'Bounding Box: %s,%s %s,%s' % (bb[0].x, bb[0].y, bb[1].x, bb[1].y)
+				break
+		if bb is None:
+			print 'Warning: No bounding box found in graph. Creating dummy bb = 0,0 to 500,500'
+			bb = [Point(0,0), Point(500,500)]
+		maxy = bb[1].y
+		for line in dotelms:
+			layout = parsedot(line)
+			if layout is not None:
+				if layout.id is None:
+					print 'Warning: invalid layout created for line %s' % line
+				if layout.points is not None:
+					# Output edge points
+					edgex = edge2linexml[lname].get(layout.id)
+					if edgex is None:
+						print 'Warning: no line xml found for id %s' % layout.id
+						continue
+					if len(layout.points) != 2:
+						print 'Warning: expecting exactly two points for line id %s' % layout.id
+						continue
+					foundstartx = None
+					foundendx = None
+					if edgex.getElementsByTagName('frombox'):
+						portid = '%s___P___%s' % (edgex.getElementsByTagName('frombox')[0].attributes['id'].value, edgex.getElementsByTagName('frombox')[0].attributes['port'].value)
+						foundstartx = portxcoords.get(portid)
+						if foundstartx is not None:
+							layout.points[0].x = foundstartx
+						else:
+							portxcoords[portid] = layout.points[0].x
+					elif edgex.getElementsByTagName('tobox'):
+						portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
+						foundendx = portxcoords.get(portid)
+						if foundendx is not None:
+							layout.points[-1].x = foundendx
+						else:
+							portxcoords[portid] = layout.points[-1].x
+					else:
+						print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
+					# Remove any current layout points, we only want the new layout points to be saved
+					for oldptx in edgex.getElementsByTagName('point'):
+						edgex.removeChild(oldptx)
+					for pt in layout.points:
+						ptx = allxml.createElement('point')
+						ptx.setAttribute('x', tostr(pt.x))
+						ptx.setAttribute('y', tostr(maxy - pt.y))
+						edgex.appendChild(ptx)
+				elif layout.pos is not None:
+					# Output node position
+					nodex = node2xml[lname].get(layout.id)
+					if nodex is None:
+						print 'Warning: no node found for id %s' % layout.id
+						continue
+					nodex.setAttribute('x', tostr(layout.pos.x))
+					nodex.setAttribute('y', tostr(maxy - layout.pos.y))
+					if 'width' in nodex.attributes.keys():
+						nodex.removeAttribute('width')
+					if 'height' in nodex.attributes.keys():
+						nodex.removeAttribute('height')
+					if layout.width is not None:
+						nodex.setAttribute('width', tostr(layout.width))
+					if layout.height is not None:
+						nodex.setAttribute('height', tostr(layout.height))
+				else:
+					print 'Warning: bad layout created for line: %s' % line
+	writelayout = open(outfile + '.xml','w')
+	writelayout.write(gx.toxml())
+	writelayout.close()
+	
+### Command line interface ###
+if __name__ == "__main__":
+	if (len(sys.argv) < 2) or (len(sys.argv) > 4):
+		print ('\n\nUsage: %s input_file [output_file] [-o]\n\n  input_file: name of INPUT grid XML to be laid out, '
+		'omitting ".xml" extension\n  output_file: (optional) OUTPUT xml/dot file name prefix, if none overwrite '
+		'input xml file\n  -o (optional) to write dot layout input and output files including pdf of graph for '
+		'each level\n\n\nEx: To parse Test.xml and output TestGraph.xml run: %s Test TestGraph\n') % (sys.argv[0], sys.argv[0])
+		quit()
+	verbose = True # fixedsize=True should mean that labeling nodes and ports shouldn't affect node sizes
+	outputdotfiles = False
+	for myarg in sys.argv:
+		if myarg == '-o':
+			outputdotfiles = True
+	infile = sys.argv[1]
+	if len(sys.argv) == 2:
+		outfile = sys.argv[1]
+	else:
+		outfile = sys.argv[2]
+	layout(infile, outfile, outputdotfiles)
