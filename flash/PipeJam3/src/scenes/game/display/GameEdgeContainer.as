@@ -178,6 +178,8 @@ package scenes.game.display
 			if (isTopOfEdge()) {
 				if (edgeIsCopy) {
 					// If we're coming OUT of a subboard, use subboard pipe's outgoing width (if we have it) or default
+					// NOTE: If the subboard appears on this level, no copy edge should exist, the outgoing edge of the
+					// subboard should connect directly to the subboard output for this case (no extra edge)
 					if (graphEdge.from_port is SubnetworkPort) {
 						newIsWide = isBallWide((graphEdge.from_port as SubnetworkPort).default_ball_type);
 						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;

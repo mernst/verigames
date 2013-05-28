@@ -241,9 +241,16 @@ package scenes.game.display
 					switch (foundNode.kind) {
 						case NodeTypes.INCOMING:
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-						case NodeTypes.OUTGOING:
 						case NodeTypes.END:
 							continue;
+						case NodeTypes.OUTGOING:
+							// Only create the joint for an outgoing node if other lines connect
+							// to it (these lines are the SUBBOARD outgoing ports that correspond
+							// to this OUTGOING edge)
+							var numOutputs:Number = Number(jointLayoutXML.@outputs);
+							if (isNaN(numOutputs) || (numOutputs == 0)) {
+								continue;
+							}
 					}
 				}
 				
@@ -353,7 +360,6 @@ package scenes.game.display
 			} else {
 				throw new Error("Level.as: Line found with unsupported to/from, must be from a joint to a box or vice-versa");
 			}
-			
 			var edgeContainerID:String = edgeXML.@id;
 			var index:int = edgeContainerID.indexOf('__');
 			var edgeID:String = edgeContainerID.substring(0, index);
@@ -372,12 +378,23 @@ package scenes.game.display
 			} else {
 				switch (newEdge.to_node.kind) {
 					case NodeTypes.OUTGOING:
+						// Only need to create outgoing joint if others come out of it,
+						// if joint was not created, don't create the line
+						if (!myJoint) {
+							return null;
+						}
+						break;
 					case NodeTypes.END:
 						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
 						return null;
 				}
 			}
-			
+			if (!myJoint) {
+				trace("Warning! Joint not found for jointId: " + jointId);
+			}
+			if (!myNode) {
+				trace("Warning! Box not found for boxId: " + boxId);
+			}
 			//normalize edge Array, and then slide game edge to right x,y value
 			var minXedge:Number = Number.POSITIVE_INFINITY;
 			var minYedge:Number = Number.POSITIVE_INFINITY;

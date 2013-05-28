@@ -1,4 +1,4 @@
-import sys, os, classic2grid
+import sys, os, classic2grid, layoutgrid
 
 inputpath = './input/'
 outputpath = './output/'
@@ -9,5 +9,5 @@ for filename in cmd.xreadlines():
 	print 'Converting %s  -->  %s ...' % (filein, fileout)
 	classic2grid.classic2grid(filein, fileout)
 	print 'Laying out %s ...' % fileout
-	
+	layoutgrid.layout(fileout, fileout, True)
 cmd.close()
