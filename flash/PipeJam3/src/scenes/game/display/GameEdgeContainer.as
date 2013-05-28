@@ -536,10 +536,10 @@ package scenes.game.display
 				if(segmentIndex+3 == m_jointPoints.length)
 				{
 					m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_outgoingIsWide);
+					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
 					m_edgeJoints.splice(-2, 0, newEndJoint);
 					
-					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_outgoingIsWide);
+					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
 					this.m_edgeSegments.splice(-1,0,newEndSegment);	
 				}
 			}
