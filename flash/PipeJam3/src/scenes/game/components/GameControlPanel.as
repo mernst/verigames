@@ -265,7 +265,7 @@ package scenes.game.components
 				}
 			}
 			
-			trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			//trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
 			current_score = Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
 			TextFactory.getInstance().updateText(scoreTextfield, current_score.toString());
 			TextFactory.getInstance().updateText(m_scoreBlockCurrentLabel, current_score.toString());
