@@ -43,10 +43,10 @@
 			ARROW_TEXT.repeat = true;
 		}
 		
-		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false)
 		{
 			super("");
-			
+			m_isWide = _isWide;
 			m_dir = _dir;
 			m_isNodeExtensionSegment = _isNodeExtensionSegment;
 			m_isLastSegment = _isLastSegment;

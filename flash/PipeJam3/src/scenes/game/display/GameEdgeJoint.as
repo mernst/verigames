@@ -32,10 +32,10 @@ package scenes.game.display
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
 		
-		public function GameEdgeJoint(jointType:int = 0)
+		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false)
 		{
 			super("");
-			
+			m_isWide = _isWide;
 			m_jointType = jointType;
 			m_originalPoint = new Point;
 			m_isDirty = true;

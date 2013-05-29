@@ -21,7 +21,7 @@ package scenes.game.display
 		public var m_boundingBox:Rectangle;
 				
 		//these are here in that they determine color, so all screen objects need them set
-		public var m_isWide:Boolean;
+		public var m_isWide:Boolean = false;
 		public var m_hasError:Boolean = false;
 		public var m_isEditable:Boolean;
 		public var m_shouldShowError:Boolean = true;

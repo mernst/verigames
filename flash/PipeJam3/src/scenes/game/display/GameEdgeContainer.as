@@ -183,12 +183,18 @@ package scenes.game.display
 					if (graphEdge.from_port is SubnetworkPort) {
 						newIsWide = isBallWide((graphEdge.from_port as SubnetworkPort).default_ball_type);
 						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
-						trace(graphEdge.from_port.edge.linked_edge_set.id + ":o" + graphEdge.from_port.port_id);
+						//trace(graphEdge.from_port.edge.linked_edge_set.id + ":o" + graphEdge.from_port.port_id);
 					} else {
 						throw new Error("Warning: expecting case where box->joint edge copy is a Subnetwork outgoing edge.");
 					}
 				} else {
-					newIsWide = isBallWide(graphEdge.enter_ball_type);
+					// Special case: START_LARGE_BALL could possibly lead into narrow edge in which case we want to show
+					// the top as being wide
+					if (graphEdge.from_port.node.kind == NodeTypes.START_LARGE_BALL) {
+						newIsWide = true;
+					} else {
+						newIsWide = isBallWide(graphEdge.enter_ball_type);
+					}
 					if (graphEdge.has_pinch && !edgeIsCopy) {
 						newOutgoingIsWide = false;
 					} else {
@@ -394,7 +400,7 @@ package scenes.game.display
 			m_edgeJoints = new Vector.<GameEdgeJoint>;
 			
 			//create start joint, and then create rest when we create connecting segment
-			m_startJoint = new GameEdgeJoint();
+			m_startJoint = new GameEdgeJoint(0, m_isWide);
 			m_startJoint.m_isEditable = m_isEditable;
 			m_edgeJoints.push(m_startJoint);
 			
@@ -406,12 +412,11 @@ package scenes.game.display
 				
 				if(index+1 == numJoints)
 					isLastSegment = true;
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isLastSegment);
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isLastSegment, false, isLastSegment ? m_outgoingIsWide : m_isWide);
 				if(!isLastSegment)
 					segment.m_isEditable = m_isEditable;
 				else
 					segment.m_isEditable = m_outputSegmentIsEditable;
-				
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -421,7 +426,7 @@ package scenes.game.display
 				var joint:GameEdgeJoint;
 				if(index+1 != numJoints)
 				{
-					joint = new GameEdgeJoint(jointType);
+					joint = new GameEdgeJoint(jointType, m_isWide);
 					joint.m_isEditable = m_isEditable;
 					m_edgeJoints.push(joint);
 					if (jointType == GameEdgeJoint.MARKER_JOINT) {
@@ -429,7 +434,7 @@ package scenes.game.display
 					}
 				}
 			}
-			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT);
+			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_outgoingIsWide);
 			m_edgeJoints.push(m_endJoint);
 			
 			m_endJoint.m_isEditable = m_outputSegmentIsEditable;
@@ -522,19 +527,19 @@ package scenes.game.display
 				{
 					m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
 					segmentIndex++;
-					var newJoint:GameEdgeJoint = new GameEdgeJoint();
+					var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
 					m_edgeJoints.splice(1, 0, newJoint);
 
-					var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir);
+					var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
 					this.m_edgeSegments.splice(1,0,newSegment);						
 				}
 				if(segmentIndex+3 == m_jointPoints.length)
 				{
 					m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-					var newEndJoint:GameEdgeJoint = new GameEdgeJoint();
+					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_outgoingIsWide);
 					m_edgeJoints.splice(-2, 0, newEndJoint);
 					
-					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir);
+					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_outgoingIsWide);
 					this.m_edgeSegments.splice(-1,0,newEndSegment);	
 				}
 			}
@@ -859,11 +864,11 @@ class InnerBoxSegment extends GameComponent
 		m_isWide = isWide;
 		m_createStartingCircle = createStartingCircle;
 		
-		edgeSegment = new GameEdgeSegment(m_dir, true);
+		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide);
 		edgeSegment.forceColor(0x0);
 		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 		if (createStartingCircle) {
-			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT);
+			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide);
 			innerCircleJoint.forceColor(0x0);
 		}
 		draw();

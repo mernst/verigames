@@ -267,7 +267,13 @@ package system
 							queue.push(e);
 						break;
 						case NodeTypes.START_LARGE_BALL:
-							e.enter_ball_type = Edge.BALL_TYPE_WIDE;
+							// Technically, we have the possibility of START_LARGE_BALL into narrow edge - possible trouble point
+							if (!e.is_wide) {
+								addTpPort(listPortTroublePoints, e.from_port);
+								e.enter_ball_type = Edge.BALL_TYPE_NONE;
+							} else {
+								e.enter_ball_type = Edge.BALL_TYPE_WIDE;
+							}
 							queue.push(e);
 						break;
 						case NodeTypes.START_NO_BALL:
