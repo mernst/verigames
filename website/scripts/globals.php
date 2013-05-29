@@ -10,11 +10,11 @@ define('UPLOADS_DIRECTORY', '../uploads/');
 define('JDK_7_PATH', '../../../jdk1.7.0/bin/java');
 define('FILE_KEY', 'Filedata');
 define('DIRECTORY', realpath("../uploads/"));
-define('INFERENCE_LOC', "../scripts/inference.jaif");
-define('WORLD_XML_LOC', "../scripts/World.xml");
+define('INFERENCE_LOC', "inference.jaif");
+define('WORLD_XML_LOC', "World.xml");
 define('VERIGAMES_JAR', "../java/verigames.jar");
 define('MAP_JAR', "../java/map.jar");
-define('TYPECHECKER_LOC', '../scripts/typecheckers/');
+define('TYPECHECKER_LOC', 'typecheckers/');
 
 //file locations
 define('UPDATED_XML', 'updatedXML.xml');
