@@ -55,9 +55,9 @@ package scenes.game.display
 		public static var TOP_WALL:int = 3;
 		public static var BOTTOM_WALL:int = 4;
 		
-		public static var WIDE_WIDTH:Number = .3;
-		public static var NARROW_WIDTH:Number = .1;
-		private static var EXTENSION_LENGTH:Number = .3;
+		public static var WIDE_WIDTH:Number = .3 * Constants.GAME_SCALE;
+		public static var NARROW_WIDTH:Number = .1 * Constants.GAME_SCALE;
+		private static var EXTENSION_LENGTH:Number = .3 * Constants.GAME_SCALE;
 		
 		public static var CREATE_JOINT:String = "create_joint";
 		public static var DIR_BOX_TO_JOINT:String = "2joint";

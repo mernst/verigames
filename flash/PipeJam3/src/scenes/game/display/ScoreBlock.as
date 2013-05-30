@@ -11,41 +11,41 @@ package scenes.game.display
 	
 	public class ScoreBlock extends GameComponent
 	{
-		public static const WIDTH:Number = 15;
-		public static const VERTICAL_GAP:Number = 1;
-		private static const MIN_HEIGHT:Number = 5;
-		
 		/** Component associated with this score, GameNodes have points for wide inputs/narrow outputs
-		 * while GameEdgeContainers have negative points for errrors */
+		 * while GameEdgeContainers have negative points for errors. Assigning no gameComponent will
+		 * just display the score and the ScoreBlock will not be interactive */
 		private var m_gameComponent:GameComponent;
+		private var m_color:Number;
+		private var m_score:String;
+		private var m_width:Number;
+		private var m_height:Number;
+		private var m_fontSize:Number;
 		
 		/** Text showing current score on score_pane */
 		private var m_text:TextFieldWrapper;
 		
-		public function ScoreBlock(gameComponent:GameComponent)
+		public function ScoreBlock(_color:Number, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null)
 		{
 			super("");
 			
-			m_gameComponent = gameComponent;
-			var blockHeight:Number = Math.abs(gameComponent.getScore()) - VERTICAL_GAP;
-			blockHeight = Math.max(blockHeight, MIN_HEIGHT);
-			var blockWidth:Number = WIDTH;
-			var outline:Quad = new Quad(blockWidth, blockHeight, 0x000000);
-			var quad:Quad = new Quad(blockWidth-1, blockHeight-1, gameComponent.getColor());
+			m_color = _color;
+			m_score = _score;
+			m_width = _width;
+			m_height = _height;
+			m_fontSize = _fontSize;
+			m_gameComponent = _gameComponent;
+			
+			var quad:Quad = new Quad(m_width-1, m_height-1, _color);
 			//set center point offset
-			addChild(outline);
 			addChild(quad);
-			quad.x = .5;
-			quad.y = .5;
 			
-			m_text = TextFactory.getInstance().createTextField(gameComponent.getScore().toString(), AssetsFont.FONT_NUMERIC, blockWidth, blockHeight, MIN_HEIGHT, 0x00000);
-			m_text.x = -5;
-			m_text.y = 0.5;
-			TextFactory.getInstance().updateAlign(m_text, 2, 1);
+			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width, m_height, m_fontSize, 0x00000);
+			TextFactory.getInstance().updateAlign(m_text, 1, 1);
 			addChild(m_text);
-			
-			addEventListener(TouchEvent.TOUCH, onTouch);
-			this.useHandCursor = true;
+			if (m_gameComponent) {
+				addEventListener(TouchEvent.TOUCH, onTouch);
+				this.useHandCursor = true;
+			}
 			m_isDirty = true;
 		}
 		

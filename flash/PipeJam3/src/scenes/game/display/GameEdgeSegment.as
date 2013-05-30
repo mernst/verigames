@@ -1,6 +1,7 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
+	import starling.display.BlendMode;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -64,6 +65,7 @@
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			this.blendMode = BlendMode.NONE;
 			m_isDirty = true;
 		}
 		

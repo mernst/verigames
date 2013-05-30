@@ -10,7 +10,6 @@ package scenes.game.display
 	
 	public class GameJointNode extends GameNodeBase
 	{	
-		private var m_quad:Quad;
 		private var m_node:Node;
 		private var m_port:Port;
 		
@@ -29,6 +28,7 @@ package scenes.game.display
 				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
 			}
 			addChild(m_quad);
+			this.flatten();
 		}
 		
 		override public function updateSize():void

@@ -34,8 +34,8 @@ package scenes.game.display
 		public var m_numOutgoingNodeEdges:int;
 
 		private var m_edgeSetEdges:Vector.<Edge>;
-		
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
+		private var m_scoreBlock:ScoreBlock;
 		
 		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
@@ -90,11 +90,12 @@ package scenes.game.display
 			return false;
 		}
 		
-		private var m_star:ScoreStar;
 		override public function draw():void
 		{
 			var color:uint = getColor();
-			
+			if (m_shape) {
+				m_shape.removeFromParent(true);
+			}
 			m_shape = new Shape;
 			if(color == WIDE_COLOR)
 				m_shape.graphics.beginMaterialFill(darkColorMaterial);
@@ -108,13 +109,6 @@ package scenes.game.display
 			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
 			m_shape.graphics.endFill();
 			
-			if (!isWide())
-			{
-				// Draw inner black outline to appear smaller if this is a narrow node
-				m_shape.graphics.lineStyle(1.5, 0x0);
-				m_shape.graphics.drawRoundRect(1.0, 1.0, (shapeWidth - 2.0), (shapeHeight - 2.0), shapeHeight/5.0);
-			}
-			
 			if(m_isSelected && !isTempSelection)
 			{
 				m_shape.graphics.beginMaterialFill(selectedColorMaterial);
@@ -126,17 +120,17 @@ package scenes.game.display
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
+			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
 			if (wideScore > narrowScore) {
-				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-				m_star.width = m_star.height = m_boundingBox.height/2.0;
-				m_star.x = m_star.y = m_boundingBox.height/8.0;
-				addChild(m_star);
+				m_scoreBlock = new ScoreBlock(WIDE_COLOR, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ);
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height/2.0;
+				m_scoreBlock.x = m_scoreBlock.y = m_scoreBlock.height/8.0;
+				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-				m_star.width = m_star.height = 0.5;
-				m_star.width = m_star.height = m_boundingBox.height/2.0;
-				m_star.x = m_star.y = m_boundingBox.height/8.0;
-				addChild(m_star);
+				m_scoreBlock = new ScoreBlock(NARROW_COLOR, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ);
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height/2.0;
+				m_scoreBlock.x = m_scoreBlock.y = m_scoreBlock.height/8.0;
+				addChild(m_scoreBlock);
 			}
 			useHandCursor = m_isEditable;
 			

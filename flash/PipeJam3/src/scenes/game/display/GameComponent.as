@@ -34,6 +34,7 @@ package scenes.game.display
 		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD2D2D2;// 0x3A3F4C;
 		public static var ERROR_COLOR:uint = 0xE92227;
 		public static var SCORE_COLOR:uint = 0xFFDC1A;
+		public static var SELECTED_COLOR:uint = 0xEEEEEE;
 		
 		static protected var fillMaterial:StandardMaterial = null;
 		static protected var lightColorMaterial:StandardMaterial = null;
@@ -67,7 +68,7 @@ package scenes.game.display
 				unadjustableNarrowColorMaterial.color = UNADJUSTABLE_NARROW_COLOR;
 				
 				selectedColorMaterial = new StandardMaterial;
-				selectedColorMaterial.color = 0xeeeeee;
+				selectedColorMaterial.color = SELECTED_COLOR;
 			}
 		}
 		

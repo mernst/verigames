@@ -4,8 +4,10 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	
+	import starling.display.BlendMode;
+	import starling.display.Quad;
 	import starling.display.Shape;
+	
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -13,6 +15,7 @@ package scenes.game.display
 	
 	public class GameNodeBase extends GameComponent
 	{
+		public var m_quad:Quad;
 		public var m_shape:Shape;
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
@@ -49,9 +52,11 @@ package scenes.game.display
 				return;
 			}
 			disposeChildren();
+			if (m_quad) {
+				m_quad.removeFromParent(true);
+			}
 			if (m_shape) {
-				m_shape.removeChildren(0, -1, true);
-				m_shape.dispose();
+				m_shape.removeFromParent(true);
 			}
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);

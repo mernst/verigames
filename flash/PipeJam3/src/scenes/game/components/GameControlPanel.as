@@ -32,6 +32,9 @@ package scenes.game.components
 		private static const SCORE_PANEL_AREA:Rectangle = new Rectangle(3, 65, WIDTH - 3, 266.5 - 65);
 		private static const PAD:Number = 2.0;
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
+		private static const VERTICAL_GAP:Number = 1;
+		private static const SCORE_BLOCK_WIDTH:Number = 15;
+		private static const BLOCK_FONT_SIZE:Number = 5;
 		
 		/** Graphical object showing user's score */
 		protected var scorePanel:BaseComponent;
@@ -116,10 +119,10 @@ package scenes.game.components
 			m_scoreBaseline = new Sprite();
 			m_scoreCurrentLine = new Sprite();
 			const DOTTED_LINE_SEGS:int = 5;
-			const BASELINE_TOTAL_WIDTH:Number = 2.75 * ScoreBlock.WIDTH;
+			const BASELINE_TOTAL_WIDTH:Number = 2.75 * SCORE_BLOCK_WIDTH;
 			const SEG_WIDTH:Number = BASELINE_TOTAL_WIDTH / (2.0 * DOTTED_LINE_SEGS - 1);
 			const SEG_HEIGHT:Number = 1.0;
-			const START_X:Number = 2 * ScoreBlock.WIDTH;
+			const START_X:Number = 2 * SCORE_BLOCK_WIDTH;
 			for (var i:int = 0; i < DOTTED_LINE_SEGS; i++)
 			{
 				// Baseline
@@ -134,13 +137,13 @@ package scenes.game.components
 				m_scoreCurrentLine.addChild(line2);
 			}
 			const TEXT_SIZE:Number = 12.0;
-			m_scoreBlockBaselineLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, 0xFFFFFF);
+			m_scoreBlockBaselineLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_BLOCK_WIDTH, TEXT_SIZE, TEXT_SIZE, 0xFFFFFF);
 			m_scoreBlockBaselineLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
 			m_scoreBlockBaselineLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
 			TextFactory.getInstance().updateAlign(m_scoreBlockBaselineLabel, 0, 1);
 			m_scoreBaseline.addChild(m_scoreBlockBaselineLabel);
 			
-			m_scoreBlockCurrentLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, GameComponent.SCORE_COLOR);
+			m_scoreBlockCurrentLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_BLOCK_WIDTH, TEXT_SIZE, TEXT_SIZE, GameComponent.SCORE_COLOR);
 			m_scoreBlockCurrentLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
 			m_scoreBlockCurrentLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
 			TextFactory.getInstance().updateAlign(m_scoreBlockCurrentLabel, 0, 1);
@@ -276,40 +279,40 @@ package scenes.game.components
 			m_scoreBlocks = new Vector.<ScoreBlock>();
 			
 			var currentY:Number = SCORE_PANEL_AREA.height - 2 * PAD;
-			var currentX:Number = 0.5 * ScoreBlock.WIDTH;
+			var currentX:Number = 0.5 * SCORE_BLOCK_WIDTH;
 			// Pass over nodes involved in scoring and create scoring blocks for them
 			var maxBlockHeight:Number = (SCORE_PANEL_AREA.height - 5) / Math.max(scoringNodes.length, 1);
 			maxBlockHeight = XMath.clamp(maxBlockHeight, 3, 10);
 			var scoreNode:GameNode, scoreBlock:ScoreBlock;
 			for each (scoreNode in potentialScoringNodes) {
-				scoreBlock = new ScoreBlock(scoreNode);
+				scoreBlock = new ScoreBlock(scoreNode.getColor(), scoreNode.getScore().toString(), SCORE_BLOCK_WIDTH, Math.max(BLOCK_FONT_SIZE, Math.abs(scoreNode.getScore()) - VERTICAL_GAP), BLOCK_FONT_SIZE, scoreNode);
 				scoreBlock.x = currentX;
 				scoreBlock.y = currentY - scoreBlock.height;
-				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				currentY -= scoreBlock.height + VERTICAL_GAP;
 				m_scoreBlocks.push(scoreBlock);
 				scoreBlockContainer.addChildAt(scoreBlock, 0);
 			}
 			currentY = SCORE_PANEL_AREA.height - 2 * PAD;
-			currentX += 1.75 * ScoreBlock.WIDTH;
+			currentX += 1.75 * SCORE_BLOCK_WIDTH;
 			for each (scoreNode in scoringNodes) {
-				scoreBlock = new ScoreBlock(scoreNode);
+				scoreBlock = new ScoreBlock(scoreNode.getColor(), scoreNode.getScore().toString(), SCORE_BLOCK_WIDTH, Math.max(BLOCK_FONT_SIZE, Math.abs(scoreNode.getScore()) - VERTICAL_GAP), BLOCK_FONT_SIZE, scoreNode);
 				scoreBlock.x = currentX;
 				scoreBlock.y = currentY - scoreBlock.height;
-				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				currentY -= scoreBlock.height + VERTICAL_GAP;
 				m_scoreBlocks.push(scoreBlock);
 				scoreBlockContainer.addChildAt(scoreBlock, 0);
 			}
-			currentY += ScoreBlock.VERTICAL_GAP;
-			currentX += 1.25 * ScoreBlock.WIDTH;
+			currentY += VERTICAL_GAP;
+			currentX += 1.25 * SCORE_BLOCK_WIDTH;
 			for each (var scoreEdge:GameEdgeContainer in errorEdges) {
-				scoreBlock = new ScoreBlock(scoreEdge);
+				scoreBlock = new ScoreBlock(scoreEdge.getColor(), scoreNode.getScore().toString(), SCORE_BLOCK_WIDTH, Math.max(BLOCK_FONT_SIZE, Math.abs(scoreEdge.getScore()) - VERTICAL_GAP), BLOCK_FONT_SIZE, scoreEdge);
 				scoreBlock.x = currentX;
 				scoreBlock.y = currentY;
-				currentY += scoreBlock.height + ScoreBlock.VERTICAL_GAP;
+				currentY += scoreBlock.height + VERTICAL_GAP;
 				m_scoreBlocks.push(scoreBlock);
 				scoreBlockContainer.addChildAt(scoreBlock, 0);
 			}
-			m_scoreCurrentLine.y = (currentY - ScoreBlock.VERTICAL_GAP) - (SCORE_PANEL_AREA.height - 2 * PAD);
+			m_scoreCurrentLine.y = (currentY - VERTICAL_GAP) - (SCORE_PANEL_AREA.height - 2 * PAD);
 			
 			var blocksBounds:Rectangle = scoreBlockContainer.getBounds(scorePanel);
 			// Adjust bounds to be relative to top left=(0,0) and unscaled (scaleX,Y=1)

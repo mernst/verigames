@@ -408,7 +408,7 @@ package scenes.game.display
 			
 			for each(var pointXML:XML in edgePoints)
 			{
-				var pt:Point = new Point(pointXML.@x, pointXML.@y);
+				var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
 				edgeArray.push(pt);
 			}
 			
@@ -562,8 +562,8 @@ package scenes.game.display
 				
 				if(gameNode)
 				{
-					gameNode.m_boundingBox.x = child.@x - gameNode.m_boundingBox.width/2;
-					gameNode.m_boundingBox.y = child.@y - gameNode.m_boundingBox.height/2;
+					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
+					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -598,20 +598,20 @@ package scenes.game.display
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					child.@x = edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2;
-					child.@y = edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2;
+					child.@x = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					child.@y = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
 					var jointID:String = child.@id;
 					var joint:GameJointNode = jointDictionary[jointID];
-					child.@x = joint.x + m_boundingBox.x + joint.m_boundingBox.width/2;
-					child.@y = joint.y + m_boundingBox.y + joint.m_boundingBox.height/2;
+					child.@x = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					child.@y = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 				}
 				else if(childName.indexOf("line") != -1)
 				{
 					//remember first point to compare later
-					var oldPoint:Point = new Point(child.point[2].@x, child.point[2].@y);
+					var oldPoint:Point = new Point(child.point[2].@x * Constants.GAME_SCALE, child.point[2].@y * Constants.GAME_SCALE);
 					//remove all current points, and then add new ones
 					delete child.point;
 					
@@ -623,8 +623,8 @@ package scenes.game.display
 					{
 						var pt:Point = edgeContainer.m_jointPoints[i];
 						var ptXML:XML = <point></point>;
-						ptXML.@x = pt.x + edgeContainer.m_boundingBox.x;
-						ptXML.@y = pt.y + edgeContainer.m_boundingBox.y;
+						ptXML.@x = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+						ptXML.@y = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
 						
 						var ptt:Point = edgeContainer.localToGlobal(pt);
 						var pttt:Point = globalToLocal(ptt);
