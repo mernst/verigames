@@ -113,16 +113,19 @@ package scenes.game.components
 			exit_button.height *= .5;
 			addChild(exit_button);
 			
-			var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClass");
-			var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClickClass");
-			
-			nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
-			nextLevel_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
-			nextLevel_button.x = 2;
-			nextLevel_button.y = 252;
-			nextLevel_button.width *= .5;
-			nextLevel_button.height *= .5;
-			addChild(nextLevel_button);
+			if(!PipeJamGame.RELEASE_BUILD)
+			{
+				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClass");
+				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClickClass");
+				
+				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
+				nextLevel_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
+				nextLevel_button.x = 2;
+				nextLevel_button.y = 252;
+				nextLevel_button.width *= .5;
+				nextLevel_button.height *= .5;
+				addChild(nextLevel_button);
+			}
 			
 			loginHelper = LoginHelper.getLoginHelper();
 		}

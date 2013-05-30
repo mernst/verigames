@@ -24,9 +24,8 @@ package scenes.login
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 
 		//the first address is verigames, the second my machine
-		//static public var PROXY_URL:String = "http://128.208.6.231:8001";
-		static public var PROXY_URL:String = "http://128.95.2.112:8001";
-		//		protected var apiURL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:80";
+		static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
+		//static public var PROXY_URL:String = "http://128.95.2.112:8001";
 
 		
 		public function NetworkConnection()

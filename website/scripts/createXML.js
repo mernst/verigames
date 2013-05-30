@@ -12,7 +12,7 @@ function createXML() {
     var typeChecker, request;
     showSpinner("verify-spin");
     typeChecker = $('option:selected').val();
-	console.log("typechecker is " + typeChecker);
+	console.log("typechecker is " + typeChecker + " " + document.location.pathname);
     //make ajax request to create XML file
     request = $.ajax({
         url     : PHP_SCRIPT,
@@ -26,6 +26,8 @@ function createXML() {
  		console.log("create XML success");
 	     	createGameFiles();
         } else {
+		console.log("create XML fail " + response);
+
             $('#verify-spin').html("<a style='color:red' target='_blank' " +
                 "href='scripts/utilities.php" +
                 "?function=displayError&file=" + response + "&id=" + uploadGUID + "\'>Error</a>");

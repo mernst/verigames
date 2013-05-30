@@ -30,6 +30,9 @@ package
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
 		
+		/** Set to true if a build for the server */
+		public static var RELEASE_BUILD:Boolean = false;
+		
 		/** list of all network connection objects spawned */
 		protected static var networkConnections:Vector.<NetworkConnection>;
 

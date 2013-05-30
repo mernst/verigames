@@ -73,17 +73,6 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
-			var signinButtonUp:Texture = AssetInterface.getTexture("Menu", "SignInButtonClass");
-			var signinButtonClick:Texture = AssetInterface.getTexture("Menu", "SignInButtonClickClass");
-			
-			signin_button = new Button(signinButtonUp, "", signinButtonClick);
-			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = 0;
-			signin_button.y = 60;
-			signin_button.width *= .6;
-			signin_button.height *= .6;
-			m_mainMenu.addChild(signin_button);
-			
 			var playButtonUp:Texture = AssetInterface.getTexture("Menu", "PlayButtonClass");
 			var playButtonClick:Texture = AssetInterface.getTexture("Menu", "PlayButtonClickClass");
 			
@@ -95,27 +84,44 @@ package scenes.splashscreen
 			play_button.height *= .6;
 			m_mainMenu.addChild(play_button);
 			
-			var tutorialButtonUp:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
-			var tutorialButtonClick:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClickClass");
 			
-			tutorial_button = new Button(tutorialButtonUp, "", tutorialButtonClick);
-			tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
-			tutorial_button.x = 0;
-			tutorial_button.y = 160;
-			tutorial_button.width *= .6;
-			tutorial_button.height *= .6;
-			m_mainMenu.addChild(tutorial_button);
-			
-			var demoButtonUp:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
-			var demoButtonClick:Texture = AssetInterface.getTexture("Menu", "DemoButtonClickClass");
-			
-			demo_button = new Button(demoButtonUp, "", demoButtonClick);
-			demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
-			demo_button.x = 0;
-			demo_button.y = 210;
-			demo_button.width *= .6;
-			demo_button.height *= .6;
-			m_mainMenu.addChild(demo_button);
+			if(!PipeJamGame.RELEASE_BUILD)
+			{
+				var signinButtonUp:Texture = AssetInterface.getTexture("Menu", "SignInButtonClass");
+				var signinButtonClick:Texture = AssetInterface.getTexture("Menu", "SignInButtonClickClass");
+				
+				signin_button = new Button(signinButtonUp, "", signinButtonClick);
+				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
+				signin_button.x = 0;
+				signin_button.y = 60;
+				signin_button.width *= .6;
+				signin_button.height *= .6;
+				m_mainMenu.addChild(signin_button);
+				
+	
+				
+				var tutorialButtonUp:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
+				var tutorialButtonClick:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClickClass");
+				
+				tutorial_button = new Button(tutorialButtonUp, "", tutorialButtonClick);
+				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
+				tutorial_button.x = 0;
+				tutorial_button.y = 160;
+				tutorial_button.width *= .6;
+				tutorial_button.height *= .6;
+				m_mainMenu.addChild(tutorial_button);
+				
+				var demoButtonUp:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
+				var demoButtonClick:Texture = AssetInterface.getTexture("Menu", "DemoButtonClickClass");
+				
+				demo_button = new Button(demoButtonUp, "", demoButtonClick);
+				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
+				demo_button.x = 0;
+				demo_button.y = 210;
+				demo_button.width *= .6;
+				demo_button.height *= .6;
+				m_mainMenu.addChild(demo_button);
+			}
 		}
 		
 		protected function buildLevelMenu():void

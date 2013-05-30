@@ -117,7 +117,7 @@ function checkFileValidity($id){
 function createXML($id, $script) {
     	$path = UPLOADS_DIRECTORY . "/" . $id;
 
-    	$command = 'sh ' . TYPECHECKER_LOC . $script . ' `find ' . $path . ' -name "*.java"` > ' .
+    	$command = 'sh ' . getcwd() . "/typecheckers/" . $script . ' `find ' . $path . ' -name "*.java"` > ' .
                 $path . '/' . XML_LOG .' 2>&1';
     	exec($command);
 
@@ -132,12 +132,23 @@ function createXML($id, $script) {
 * it will return a 0. 
 */
 function createGameFiles($id) {
-	if (file_exists(INFERENCE_LOC) && file_exists(WORLD_XML_LOC)) {
-		chdir(WORLD_XML_LOC);
-
-    		//Create the map file
-     		$command = 'java -jar ../java/map.jar World.xml';
+	if (
+		file_exists(INFERENCE_LOC) && 
+		file_exists(WORLD_XML_LOC)) 
+	{
+    		//Create the layout and constraints files
+     		$command = 'python classic2grid.py World';
    		exec($command);
+
+		//Use dot to create the actual layout
+     		$command = 'python layoutgrid.py WorldLayout WorldLayout';
+   		exec($command);
+
+		//Count nodes and edges, and maybe eventually errors
+     		$command = 'java -jar ../java/NodeCounter.jar World.xml';
+   		exec($command);
+
+
 
 		zipGameFiles($id);
 	//	uploadGameFiles($id);
@@ -152,10 +163,17 @@ function createGameFiles($id) {
 */
 function zipGameFiles($id) {
 
-	exec('zip -q World.zip World.xml world.map');
-	exec('cp ../scripts/World.zip ' . UPLOADS_DIRECTORY . "/" . $id . '/World.zip');
-	exec('rm ' . WORLD_XML_LOC . ' ../scripts/World.zip world.map ' . INFERENCE_LOC);	
-	exec('cp ../scripts/out.txt ' . $path);
+	exec('zip -q World.zip World.xml');
+	exec('zip -q WorldLayout.zip WorldLayout.xml');
+	exec('zip -q WorldConstraints.zip WorldConstraints.xml');
+
+	exec('cp World.zip ' . UPLOADS_DIRECTORY . "/" . $id . '/World.zip');
+	exec('cp World.xml ' . UPLOADS_DIRECTORY . "/" . $id . '/World.xml');
+	exec('cp WorldLayout.zip ' . UPLOADS_DIRECTORY . "/" . $id . '/WorldLayout.zip');
+	exec('cp WorldConstraints.zip ' . UPLOADS_DIRECTORY . "/" . $id . '/WorldConstraints.zip');
+
+	exec('rm ' . WORLD_XML_LOC . ' World.zip WorldLayout.zip WorldLayout.xml WorldConstraints.zip WorldConstraints.xml ' . INFERENCE_LOC);
+
 	return 1;
 }
 
@@ -206,7 +224,6 @@ function cleanup($id, $deleteAll) {
     if ($deleteAll) {
         $deleteString = "-r " . $path;
     } else {
-        $deleteText = '`find ' . $path . ' -name "*.txt"` ';
         $deleteClass = '`find ' . $path . ' -name "*.class"` ';
         $deleteString = $deleteText . $deleteClass;
     }
