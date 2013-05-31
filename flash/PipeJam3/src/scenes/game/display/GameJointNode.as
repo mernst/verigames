@@ -24,9 +24,14 @@ package scenes.game.display
 		
 		override public function draw():void
 		{
-			if (!m_quad) {
+			if (m_quad)
+				removeChildren(0,-1,true);
+			
+			if(m_isSelected && !isTempSelection)
+				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, SELECTED_COLOR);
+			else
 				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
-			}
+			
 			addChild(m_quad);
 			this.flatten();
 		}

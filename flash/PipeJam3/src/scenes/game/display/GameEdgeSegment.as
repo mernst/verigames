@@ -29,6 +29,7 @@
 		
 		public var m_endPt:Point;
 		public var m_currentRect:Rectangle;
+		public var updatePoint:Point;
 		
 		public var index:int;
 		
@@ -87,20 +88,41 @@
 		}
 		
 		private var isMoving:Boolean = false;
-		private var isHover:Boolean = false;
+		public var returnLocation:Point;
 		private function onTouch(event:TouchEvent):void
 		{
-			if(m_isNodeExtensionSegment)
-				return;
-			
 			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length)
+
+			if(event.getTouches(this, TouchPhase.MOVED).length)
+			{
+				if (touches.length == 1)
+				{
+					if(!isMoving)
+					{
+						dispatchEvent(new Event(GameEdgeContainer.SAVE_CURRENT_LOCATION, true));
+						isMoving = true;
+					}
+					
+					var currentMoveLocation:Point = touches[0].getLocation(this);
+					var previousLocation:Point = touches[0].getPreviousLocation(this);
+					updatePoint = currentMoveLocation.subtract(previousLocation);	
+					currentDragSegment = true;
+					dispatchEvent(new Event(GameEdgeContainer.RUBBER_BAND_SEGMENT, true, this));
+					currentDragSegment = false;
+				}
+			}
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					isMoving = false;
-					isHover = false;
+					
+					if(isMoving)
+					{
+						isMoving = false;
+						if(this.m_isNodeExtensionSegment)
+							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
+					}
 				}
 				
 				var touch:Touch = touches[0];
@@ -111,35 +133,23 @@
 						dispatchEvent(new Event(GameEdgeContainer.CREATE_JOINT, true, this));
 				}
 			}
-			
-			if(event.getTouches(this, TouchPhase.HOVER).length)
+			else if(event.getTouches(this, TouchPhase.HOVER).length)
 			{
-				if (touches.length == 1 && event.shiftKey)
+				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					isHover = true;
+					dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OVER, true));
 				}
+			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				
 			}
 			else
 			{
 				m_isDirty = true;
 				isMoving = false;
-				isHover = false;
-			}
-			
-			if(event.shiftKey && event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					if(!isMoving)
-						isMoving = true;
-					
-					var currentMoveLocation:Point = touches[0].getLocation(this);
-					var previousLocation:Point = touches[0].getPreviousLocation(this);
-					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);	
-					currentDragSegment = true;
-					(parent as GameEdgeContainer).rubberBandEdgeSegment(updatePoint, this);
-					currentDragSegment = false;
-				}
+				dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
 			}
 		}
 		
@@ -175,7 +185,7 @@
 			}
 			else if(m_endPt.x != 0)
 			{
-				if(isHover)
+				if(isHoverOn)
 				{
 					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + .1, 0xeeeeee);
 					m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
@@ -208,11 +218,11 @@
 			}
 			else
 			{
-				if(isHover)
+				if(isHoverOn)
 				{
 					m_quad = new Quad(lineSize + .1, Math.abs(m_endPt.y), 0xeeeeee);
 					m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-					m_quad.y = -0.05;
+					m_quad.y = 0;// -0.05;
 					m_quad.x = (m_endPt.y > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
 					addChild(m_quad);
 				}

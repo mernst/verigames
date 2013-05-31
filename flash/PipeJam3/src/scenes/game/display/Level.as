@@ -3,9 +3,6 @@ package scenes.game.display
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
-	import graph.NodeTypes;
-	import graph.SubnetworkPort;
-	import utils.XString;
 	
 	import flash.display.Shape;
 	import flash.geom.Point;
@@ -17,7 +14,9 @@ package scenes.game.display
 	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Node;
+	import graph.NodeTypes;
 	import graph.Port;
+	import graph.SubnetworkPort;
 	
 	import scenes.BaseComponent;
 	import scenes.game.components.WorldMapLevelImage;
@@ -28,6 +27,8 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	
+	import utils.XString;
 	
 	/**
 	 * Level contains multiple boards that each contain multiple pipes
@@ -930,7 +931,9 @@ package scenes.game.display
 			if(startingPoint != null)
 			{
 				marqueeRect.removeChildren();
-				marqueeRect.graphics.lineStyle(.1, 0xffffff);
+				//scale line size
+				var lineSize:Number = 1/(Math.max(parent.scaleX, parent.scaleY));
+				marqueeRect.graphics.lineStyle(lineSize, 0xffffff);
 				marqueeRect.graphics.moveTo(0,0);
 				var pt1:Point = globalToLocal(startingPoint);
 				var pt2:Point = globalToLocal(currentPoint);
@@ -948,29 +951,35 @@ package scenes.game.display
 				
 				for each(var node:GameNode in m_nodeList)
 				{
-					var bottomRight:Point = globalToLocal(node.bounds.bottomRight);
-					var topLeft:Point = globalToLocal(node.bounds.topLeft);
-					var topRight:Point = globalToLocal(new Point(node.bounds.right, node.bounds.top));
-					var bottomLeft:Point = globalToLocal(new Point(node.bounds.left, node.bounds.bottom));
-					var mbottomLeft:Point = globalToLocal(new Point(marqueeRect.x, marqueeRect.y));
-
-					if((marqueeRect.bounds.left < node.bounds.left && marqueeRect.bounds.right > node.bounds.left) || 
-						(marqueeRect.bounds.left < node.bounds.right && marqueeRect.bounds.right > node.bounds.right))
-					{
-						if((marqueeRect.bounds.top < node.bounds.bottom && marqueeRect.bounds.bottom > node.bounds.bottom) || 
-							(marqueeRect.bounds.top < node.bounds.top && marqueeRect.bounds.bottom > node.bounds.top))
-						{
-							node.componentSelected(!node.m_isSelected);
-							var event:Event = new Event("temp", false, node);
-							this.onComponentSelection(event);
-						}
-					}
-					
+					handleSelection(node);
+				}
+				for each(var joint:GameJointNode in m_jointList)
+				{
+					handleSelection(joint);
 				}
 				removeChild(marqueeRect);
 			}
+		}
+		
+		protected function handleSelection(node:GameNodeBase):void
+		{
+			var bottomRight:Point = globalToLocal(node.bounds.bottomRight);
+			var topLeft:Point = globalToLocal(node.bounds.topLeft);
+			var topRight:Point = globalToLocal(new Point(node.bounds.right, node.bounds.top));
+			var bottomLeft:Point = globalToLocal(new Point(node.bounds.left, node.bounds.bottom));
+			var mbottomLeft:Point = globalToLocal(new Point(marqueeRect.x, marqueeRect.y));
 			
-			
+			if((marqueeRect.bounds.left < node.bounds.left && marqueeRect.bounds.right > node.bounds.left) || 
+				(marqueeRect.bounds.left < node.bounds.right && marqueeRect.bounds.right > node.bounds.right))
+			{
+				if((marqueeRect.bounds.top < node.bounds.bottom && marqueeRect.bounds.bottom > node.bounds.bottom) || 
+					(marqueeRect.bounds.top < node.bounds.top && marqueeRect.bounds.bottom > node.bounds.top))
+				{
+					node.componentSelected(!node.m_isSelected);
+					var event:Event = new Event("temp", false, node);
+					this.onComponentSelection(event);
+				}
+			}
 		}
 		
 		public function getNodes():Vector.<GameNode>

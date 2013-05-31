@@ -1,7 +1,6 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import starling.display.DisplayObject;
 	
 	import events.MoveEvent;
 	
@@ -17,6 +16,7 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Shape;
@@ -90,6 +90,28 @@ package scenes.game.display
 			return false;
 		}
 		
+		public function getExtensionEdge(portID:String, isOutgoingPort:Boolean):GameEdgeContainer
+		{
+			if(isOutgoingPort)
+			{
+				for each(var inEdge:GameEdgeContainer in m_incomingEdges)
+				{
+					if(inEdge.m_toPortID == portID)
+						return inEdge;
+				}
+			}
+			else
+			{
+				for each(var outEdge:GameEdgeContainer in m_outgoingEdges)
+				{
+					if(outEdge.m_fromPortID == portID)
+						return outEdge;
+				}
+			}
+			
+			return null;
+		}
+		
 		override public function draw():void
 		{
 			var color:uint = getColor();
@@ -107,14 +129,13 @@ package scenes.game.display
 				m_shape.graphics.beginMaterialFill(unadjustableNarrowColorMaterial);
 			
 			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
-			m_shape.graphics.endFill();
 			
 			if(m_isSelected && !isTempSelection)
 			{
 				m_shape.graphics.beginMaterialFill(selectedColorMaterial);
 				m_shape.graphics.drawRect(0, 0, shapeWidth, shapeHeight);
-				m_shape.graphics.endFill();
 			}
+			m_shape.graphics.endFill();
 			
 			addChild(m_shape);
 			

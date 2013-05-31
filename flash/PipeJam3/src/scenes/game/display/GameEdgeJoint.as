@@ -26,6 +26,7 @@ package scenes.game.display
 		
 		public var count:int = 0;
 		private var m_quad:Quad;
+		private var m_hoverQuad:Quad;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
@@ -44,6 +45,7 @@ package scenes.game.display
 			m_isEditable = true;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
 		override public function dispose():void
@@ -62,134 +64,36 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		protected function trackConnector(currentMoveLocation:Point, previousLocation:Point):void
+		private function onTouch(event:TouchEvent):void
 		{
-			var containerComponent:GameComponent;
-//			if(m_fromComponent is GameNode)
-//				containerComponent = m_fromComponent;
-//			else 
-//				containerComponent = m_toComponent;
+			var touches:Vector.<Touch> = event.touches;
 			
-			var startPt:Point = new Point(x,y);
-			
-			//find difference in mouse movement, and apply to x,y
-			var differencePt:Point = currentMoveLocation.subtract(previousLocation);						
-			//zero out y movement
-			differencePt.y = 0;
-			var updatedXY:Point = startPt.add(differencePt);
-			var jointStartGlobalPt:Point = parent.localToGlobal(startPt);
-			var jointUpdatedGlobalPt:Point = parent.localToGlobal(updatedXY);
-			
-			//find global coordinates of container, subtracting off joints height and width
-			var containerPt:Point = new Point(containerComponent.x+0.5*width,containerComponent.y+0.5*height);
-			var containerGlobalPt:Point = containerComponent.parent.localToGlobal(containerPt);						
-			var boundsGlobalPt:Point = containerComponent.parent.localToGlobal(new Point(containerComponent.x + containerComponent.width-0.5*width, containerComponent.y + containerComponent.height-0.5*height));
-			
-			//make sure we are in bounds and on glued to same edge
-			if(jointUpdatedGlobalPt.x < containerGlobalPt.x)
+			if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
-				jointUpdatedGlobalPt.x = containerGlobalPt.x;
+
 			}
-			else if(jointUpdatedGlobalPt.x > boundsGlobalPt.x)
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
-				jointUpdatedGlobalPt.x = boundsGlobalPt.x;
+
 			}
-			if(jointUpdatedGlobalPt.y < containerGlobalPt.y)
+			else if(event.getTouches(this, TouchPhase.HOVER).length)
 			{
-				jointUpdatedGlobalPt.y = containerGlobalPt.y;
-			}
-			else if(jointUpdatedGlobalPt.y > boundsGlobalPt.y)
-			{
-				jointUpdatedGlobalPt.y = boundsGlobalPt.y;
-			}
-			
-			
-			var finalPt:Point = parent.globalToLocal(jointUpdatedGlobalPt);
-			var updatePoint:Point = finalPt.subtract(startPt);	
-			
-			var isOutgoingEdge:Boolean;// = m_fromComponent is GameNode ? true : false;
-			
-			//now compare current point with other connection points, and if we've overlapped one of them, switch places
-			//moving towards the right
-			var gameEdgeContainer:GameEdgeContainer = parent as GameEdgeContainer;
-			
-			var node:GameNode = containerComponent as GameNode;
-			if(isOutgoingEdge)
-			{
-				node.m_outgoingEdges.sort(sortOutgoingXPositions);
-				var oEdgePosition:int = node.m_outgoingEdges.indexOf(parent);
-				if(oEdgePosition != m_position)
+				if (touches.length == 1)
 				{
-					m_position = oEdgePosition;
-					//get the node we just passed, and switch end points
-					var oNextEdge:GameEdgeContainer;
-					if(updatePoint.x>0) 
-						if(oEdgePosition>0)
-							oNextEdge = node.m_outgoingEdges[oEdgePosition-1];
-						else
-							return;
-					else
-						if(node.m_outgoingEdges.length > oEdgePosition+1)
-							oNextEdge = node.m_outgoingEdges[oEdgePosition+1];
-						else
-							return;
-					//save next edge current start point
-					var globalNextStartPt:Point = oNextEdge.localToGlobal(new Point(oNextEdge.m_startJoint.x, oNextEdge.m_startJoint.y));
-					//set next edge start position using our current original point
-					var globalOriginalStartPt:Point = parent.localToGlobal(m_originalPoint);
-					oNextEdge.setStartPosition(oNextEdge.globalToLocal(globalOriginalStartPt));
-					//set our original point from saved next edge point
-					m_originalPoint = parent.globalToLocal(globalNextStartPt);
-					
-					//redraw nextEdge, passing update point = 0,0
-					oNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
-					//reorder outgoing edge array
-					var oNewPos:Number = node.setOutgoingEdge(oNextEdge);
-					oNextEdge.outgoingEdgePosition = oNewPos; // probably want to update the edge at this point
+					m_isDirty = true;
+					dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OVER, true));
 				}
+			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
 			}
 			else
 			{
-				
-				node.m_incomingEdges.sort(sortIncomingXPositions);
-				var iEdgePosition:int = node.m_incomingEdges.indexOf(parent);
-				if(iEdgePosition != m_position)
-				{
-					m_position = iEdgePosition;
-					//get the node we just passed, and switch end points
-					var iNextEdge:GameEdgeContainer;
-					if(updatePoint.x>0) 
-						if(iEdgePosition>0)
-							iNextEdge = node.m_incomingEdges[iEdgePosition-1];
-						else
-							return;
-					else
-						if(node.m_incomingEdges.length > iEdgePosition+1)
-							iNextEdge = node.m_incomingEdges[iEdgePosition+1];
-						else
-							return;
-					
-					//save next edge current start point
-					var globalNextEndPt:Point = iNextEdge.localToGlobal(new Point(iNextEdge.m_endJoint.x, iNextEdge.m_endJoint.y));
-					//set next edge start position using our current original point
-					var globalOriginalEndPt:Point = parent.localToGlobal(m_originalPoint);
-					iNextEdge.setEndPosition(iNextEdge.globalToLocal(globalOriginalEndPt));
-					//set our original point from saved next edge point
-					m_originalPoint = parent.globalToLocal(globalNextEndPt);
-					
-					//redraw nextEdge, passing update point = 0,0
-					iNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
-					//reorder outgoing edge array
-					var iNewPos:Number = node.setOutgoingEdge(iNextEdge);
-					iNextEdge.outgoingEdgePosition = iNewPos; // probably want to update the edge at this point
-				}
-			}
-			if (m_parentEdge) {
-				m_parentEdge.rubberBandEdge(updatePoint, isOutgoingEdge);
+				m_isDirty = true;
+				dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
 			}
 		}
 		
-
 		protected function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
 			var pt1:Point = x.localToGlobal(new Point(x.m_startJoint.x, x.m_startJoint.y));
@@ -225,6 +129,18 @@ package scenes.game.display
 			}
 			if (m_quad) {
 				m_quad.dispose();
+			}
+			
+			if (m_hoverQuad) {
+				m_hoverQuad.dispose();
+			}
+			
+			if(isHoverOn)
+			{
+				m_hoverQuad = new Quad(lineSize+.1, lineSize+.1, 0xeeeeee);
+				m_hoverQuad.x = -lineSize/2-.05;
+				m_hoverQuad.y = -lineSize/2-.05;
+				addChild(m_hoverQuad);
 			}
 			m_quad = new Quad(lineSize, lineSize, color);
 			m_quad.x = -lineSize/2;

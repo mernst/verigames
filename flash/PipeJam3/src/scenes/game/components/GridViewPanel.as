@@ -14,21 +14,23 @@ package scenes.game.components
 	
 	
 	import assets.AssetInterface;
-	import flash.events.MouseEvent;
-	import scenes.game.display.GameComponent;
-	import starling.core.Starling;
 	import starling.display.BlendMode;
-	import starling.display.DisplayObjectContainer;
-	import utils.XMath;
 	
+	import flash.display.NativeMenu;
+	import flash.display.NativeMenuItem;
+	import flash.events.ContextMenuEvent;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	
 	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	
+	import starling.core.Starling;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -38,9 +40,8 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import flash.events.ContextMenuEvent;
-	import flash.display.NativeMenu;
-	import flash.display.NativeMenuItem;
+	
+	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -124,7 +125,9 @@ package scenes.game.components
 					if(m_currentLevel)
 					{
 						var currentPoint:Point = touches[0].getLocation(this);
-						m_currentLevel.handleMarquee(startingPoint, currentPoint);
+						var globalStartingPt:Point = localToGlobal(startingPoint);
+						var globalCurrentPt:Point = localToGlobal(currentPoint);
+						m_currentLevel.handleMarquee(globalStartingPt, globalCurrentPt);
 					}
 				}
 				else
