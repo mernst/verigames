@@ -226,25 +226,17 @@ package scenes.game.display
 			dictionary[m_id] = this;
 			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
 			{
-				var toGameNode:GameNodeBase = oedge1.m_toComponent;
-				for each(var oedge2:GameEdgeContainer in toGameNode.m_outgoingEdges)
-				{
-					if(dictionary[oedge2.m_toComponent.m_id] == null)
-						oedge2.m_toComponent.findGroup(dictionary);
-				}
+				if(dictionary[oedge1.m_toComponent.m_id] == null)
+					oedge1.m_toComponent.findGroup(dictionary);
 			}
 			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
 			{
-				var fromGameNode:GameNodeBase = oedge1.m_fromComponent;
-				for each(var iedge2:GameEdgeContainer in fromGameNode.m_incomingEdges)
-				{
-					if(dictionary[iedge2.m_fromComponent.m_id] == null)
-						iedge2.m_fromComponent.findGroup(dictionary);
-				}
+				if(dictionary[iedge1.m_fromComponent.m_id] == null)
+					iedge1.m_fromComponent.findGroup(dictionary);
 			}
 		}
 		
-		public function organizePorts(edge:GameEdgeContainer, movingRight:Boolean):void
+		public function organizePorts(edge:GameEdgeContainer, incrementing:Boolean):void
 		{
 			var edgeIndex:int;
 			var nextEdgeIndex:int;
@@ -268,242 +260,173 @@ package scenes.game.display
 				edgeGlobalPt = edge.localToGlobal(edge.m_endPoint);
 				edgeBeginGlobalPt = edge.localToGlobal(edge.m_savedEndPoint);
 			}
-			
-			if(movingRight)
+
+			nextEdgeIndex = getNextEdgePosition(edgeIndex, incrementing);
+			if(nextEdgeIndex != -1)
 			{
-				if(m_PortToEdgeArray.length > edgeIndex+1)
-				{
-					nextEdge = m_PortToEdgeArray[edgeIndex+1];
-					nextEdgeIndex = edgeIndex+1;
-					isNextEdgeOutgoing = nextEdge.m_fromComponent == this ? true : false;
-				}
+				nextEdge = m_PortToEdgeArray[nextEdgeIndex];
+				isNextEdgeOutgoing = nextEdge.m_fromComponent == this ? true : false;
+				if(isNextEdgeOutgoing)
+					nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_startPoint);
+				else
+					nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_endPoint);
 				
-				if(nextEdge)
+				if(incrementing)
 				{
-					if(isNextEdgeOutgoing)
-						nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_startPoint);
-					else
-						nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_endPoint);
-					
 					if(nextEdgeGlobalPt.x < edgeGlobalPt.x)
-					{
-						if(isNextEdgeOutgoing)
-						{
-							if(isEdgeOutgoing)
-							{
-								edge.m_savedStartPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							else
-							{
-								edge.m_savedEndPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							
-							nextEdge.m_startPoint.x = nextEdge.globalToLocal(edgeBeginGlobalPt).x;
-							nextEdge.rubberBandEdge(new Point(), false);
-							if(nextEdge.m_extensionEdge)
-							{
-								nextEdge.m_extensionEdge.m_endPoint.x = nextEdge.m_extensionEdge.globalToLocal(edgeBeginGlobalPt).x;
-								nextEdge.m_extensionEdge.rubberBandEdge(new Point(), true);
-							}
-							
-							edge.hasChanged = true;
-							edge.restoreEdge = false;							
-						}
-						else
-						{
-	
-							if(isEdgeOutgoing)
-							{
-								edge.m_savedStartPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							else
-							{
-								edge.m_savedEndPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							
-							nextEdge.m_endPoint.x = nextEdge.globalToLocal(edgeBeginGlobalPt).x;
-							nextEdge.rubberBandEdge(new Point(), true);
-							if(nextEdge.m_extensionEdge)
-							{
-								nextEdge.m_extensionEdge.m_startPoint.x = nextEdge.m_extensionEdge.globalToLocal(edgeBeginGlobalPt).x;
-								nextEdge.m_extensionEdge.rubberBandEdge(new Point(), true);
-							}
-							
-							edge.hasChanged = true;
-							edge.restoreEdge = false;
-						}
-						
-						
-					}
-				}
-			}
-			else 
-			{
-				if(edgeIndex>0)
-				{
-					nextEdge = m_PortToEdgeArray[edgeIndex-1];
-					nextEdgeIndex = edgeIndex-1;
-					isNextEdgeOutgoing = nextEdge.m_fromComponent == this ? true : false;
-				}
+						updateEdges(edge, nextEdgeGlobalPt, nextEdge, edgeBeginGlobalPt);
 				
-				if(nextEdge)
+				}
+				else 
 				{
-					if(isNextEdgeOutgoing)
-						nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_startPoint);
-					else
-						nextEdgeGlobalPt = nextEdge.localToGlobal(nextEdge.m_endPoint);
-					
 					if(nextEdgeGlobalPt.x > edgeGlobalPt.x)
-					{
-						if(isNextEdgeOutgoing)
-						{
-							if(isEdgeOutgoing)
-							{
-								edge.m_savedStartPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							else
-							{
-								edge.m_savedEndPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							
-							nextEdge.m_startPoint.x = nextEdge.globalToLocal(edgeBeginGlobalPt).x;
-							nextEdge.rubberBandEdge(new Point(), false);
-							if(nextEdge.m_extensionEdge)
-							{
-								nextEdge.m_extensionEdge.m_endPoint.x = nextEdge.m_extensionEdge.globalToLocal(edgeBeginGlobalPt).x;
-								nextEdge.m_extensionEdge.rubberBandEdge(new Point(), true);
-							}
-							
-							edge.hasChanged = true;
-							edge.restoreEdge = false;
-						}
-						else
-						{
-							if(isEdgeOutgoing)
-							{
-								edge.m_savedStartPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							else
-							{
-								edge.m_savedEndPoint.x = edge.globalToLocal(nextEdgeGlobalPt).x;
-								if(edge.m_extensionEdge)
-									edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(nextEdgeGlobalPt).x;
-							}
-							
-							nextEdge.m_endPoint.x = nextEdge.globalToLocal(edgeBeginGlobalPt).x;
-							nextEdge.rubberBandEdge(new Point(), true);
-							if(nextEdge.m_extensionEdge)
-							{
-								nextEdge.m_extensionEdge.m_startPoint.x = nextEdge.m_extensionEdge.globalToLocal(edgeBeginGlobalPt).x;
-								nextEdge.m_extensionEdge.rubberBandEdge(new Point(), true);
-							}
-							
-							edge.hasChanged = true;
-							edge.restoreEdge = false;
-						}
-					}
+						updateEdges(edge, nextEdgeGlobalPt, nextEdge, edgeBeginGlobalPt);
+				}
+			
+				if(edge.hasChanged && nextEdge)
+					switchEdgePositions(edge, edgeIndex, nextEdge, nextEdgeIndex);
+			}
+		}
+		
+		//find and return the position in the port array for the next edge, or -1
+		protected function getNextEdgePosition(currentPos:int, increasing:Boolean):int
+		{
+			var nextEdge:GameEdgeContainer;
+			var nextEdgeIndex:int = -1;
+			if(increasing)
+			{
+				currentPos++;
+				while(nextEdgeIndex == -1 && currentPos < m_PortToEdgeArray.length)
+				{
+					nextEdge = m_PortToEdgeArray[currentPos];
+					if(nextEdge)
+						nextEdgeIndex = currentPos;
+					else
+						currentPos++;
 				}
 			}
-			if(edge.hasChanged && nextEdge)
+			else
 			{
-				edge.hasChanged = false;
-				if(edge.m_extensionEdge)
-					edge.m_extensionEdge.restoreEdge = false;
-				
-				m_PortToEdgeArray[edgeIndex] = nextEdge;
-				m_PortToEdgeArray[nextEdgeIndex] = edge;
-				
-				if(isEdgeOutgoing)
+				currentPos--;
+				while(nextEdgeIndex == -1 && currentPos>=0)
 				{
-					if(movingRight)
-					{
-						edge.outgoingEdgePosition++;
-						if(edge.m_extensionEdge)
-							edge.m_extensionEdge.incomingEdgePosition++;
-						if(isNextEdgeOutgoing)
-						{
-							nextEdge.outgoingEdgePosition--;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.incomingEdgePosition--;
-						}
-						else
-						{
-							nextEdge.incomingEdgePosition--;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.outgoingEdgePosition--;
-						}
-					}
+					nextEdge = m_PortToEdgeArray[currentPos];
+					if(nextEdge)
+						nextEdgeIndex = currentPos;
 					else
-					{
-						edge.outgoingEdgePosition--;
-						if(edge.m_extensionEdge)
-							edge.m_extensionEdge.incomingEdgePosition--;
-						if(isNextEdgeOutgoing)
-						{
-							nextEdge.outgoingEdgePosition++;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.incomingEdgePosition++;
-						}
-						else
-						{
-							nextEdge.incomingEdgePosition++;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.outgoingEdgePosition++;
-						}
-					}
+						currentPos--;
+				}
+			}
+			return nextEdgeIndex;
+		}
+		
+		protected function updateEdges(edge:GameEdgeContainer, newPosition:Point, nextEdge:GameEdgeContainer, newNextPosition:Point):void
+		{
+			updateEdgePosition(edge, newPosition);
+			updateNextEdgePosition(nextEdge, newNextPosition);
+			
+			var isNextEdgeOutgoing:Boolean = nextEdge.m_fromComponent == this ? true : false;
+			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing);
+			if(nextEdge.m_extensionEdge)
+			{
+				var isNextExtensionEdgeOutgoing:Boolean = nextEdge.m_extensionEdge.m_fromComponent == this ? true : false;
+				updateNextEdgePosition(nextEdge.m_extensionEdge, newNextPosition);
+				nextEdge.m_extensionEdge.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing);
+			}
+			
+			edge.hasChanged = true;
+			edge.restoreEdge = false;
+		}
+		
+		//update edge and extension edge to be at newPosition.x
+		//the difference between this function and the next one, is that the mechanism is going to try to restore this
+		//edge to the beginning state (as when you drag it a little bit, and it snaps back)
+		//but, but setting the saved point, we will be snapping back to the new position, not the old one
+		// in the next function, none of that holds, so we can just directly update the start and end points
+		protected function updateEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
+		{
+			var isEdgeOutgoing:Boolean = edge.m_fromComponent == this ? true : false;
+			if(isEdgeOutgoing)
+			{
+				if(edge.m_savedStartPoint)
+					edge.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedEndPoint)
+					edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+			}
+			else
+			{
+				if(edge.m_savedEndPoint)
+					edge.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedStartPoint)
+					edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+			}
+		}
+		
+		//update edge and extension edge to be at newPosition.x
+		protected function updateNextEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
+		{
+			var isEdgeOutgoing:Boolean = edge.m_fromComponent == this ? true : false;
+			if(isEdgeOutgoing)
+			{
+				edge.m_startPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge)
+					edge.m_extensionEdge.m_endPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+			}
+			else
+			{
+				edge.m_endPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge)
+					edge.m_extensionEdge.m_startPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+			}
+		}
+		
+		//switch edge port positions - both in the port index array and internally in the incoming and outgoing position variables
+		protected function switchEdgePositions(currentEdgeContainer:GameEdgeContainer, currentPosition:int, nextEdgeContainer:GameEdgeContainer, nextPosition:int):void
+		{
+			var isEdgeOutgoing:Boolean = currentEdgeContainer.m_fromComponent == this ? true : false;
+			var isNextEdgeOutgoing:Boolean = nextEdgeContainer.m_fromComponent == this ? true : false;
+			
+			currentEdgeContainer.hasChanged = false;
+			if(currentEdgeContainer.m_extensionEdge)
+				currentEdgeContainer.m_extensionEdge.restoreEdge = false;
+			
+			m_PortToEdgeArray[currentPosition] = nextEdgeContainer;
+			m_PortToEdgeArray[nextPosition] = currentEdgeContainer;
+			
+			if(isEdgeOutgoing)
+			{
+				currentEdgeContainer.outgoingEdgePosition = nextPosition;
+				if(currentEdgeContainer.m_extensionEdge)
+					currentEdgeContainer.m_extensionEdge.incomingEdgePosition = nextPosition;
+				if(isNextEdgeOutgoing)
+				{
+					nextEdgeContainer.outgoingEdgePosition = currentPosition;
+					if(nextEdgeContainer.m_extensionEdge)
+						nextEdgeContainer.m_extensionEdge.incomingEdgePosition = currentPosition;
 				}
 				else
 				{
-					if(movingRight)
-					{
-						edge.incomingEdgePosition++;
-						if(edge.m_extensionEdge)
-							edge.m_extensionEdge.outgoingEdgePosition++;
-						if(isNextEdgeOutgoing)
-						{
-							nextEdge.outgoingEdgePosition--;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.incomingEdgePosition--;
-						}
-						else
-						{
-							nextEdge.incomingEdgePosition--;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.outgoingEdgePosition--;
-						}
-					}
-					else
-					{
-						edge.incomingEdgePosition--;
-						if(edge.m_extensionEdge)
-							edge.m_extensionEdge.outgoingEdgePosition--;
-						if(isNextEdgeOutgoing)
-						{
-							nextEdge.outgoingEdgePosition++;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.incomingEdgePosition++;
-						}
-						else
-						{
-							nextEdge.incomingEdgePosition++;
-							if(nextEdge.m_extensionEdge)
-								nextEdge.m_extensionEdge.outgoingEdgePosition++;
-						}
-					}
+					nextEdgeContainer.incomingEdgePosition = currentPosition;
+					if(nextEdgeContainer.m_extensionEdge)
+						nextEdgeContainer.m_extensionEdge.outgoingEdgePosition = currentPosition;
+				}
+			}
+			else
+			{
+				currentEdgeContainer.incomingEdgePosition = nextPosition;
+				if(currentEdgeContainer.m_extensionEdge)
+					currentEdgeContainer.m_extensionEdge.outgoingEdgePosition = nextPosition;
+				if(isNextEdgeOutgoing)
+				{
+					nextEdgeContainer.outgoingEdgePosition = currentPosition;
+					if(nextEdgeContainer.m_extensionEdge)
+						nextEdgeContainer.m_extensionEdge.incomingEdgePosition = currentPosition;
+				}
+				else
+				{
+					nextEdgeContainer.incomingEdgePosition = currentPosition;
+					if(nextEdgeContainer.m_extensionEdge)
+						nextEdgeContainer.m_extensionEdge.outgoingEdgePosition = currentPosition;
 				}
 			}
 		}

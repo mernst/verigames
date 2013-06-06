@@ -6,6 +6,7 @@ package
 	import scenes.game.*;
 	import scenes.splashscreen.*;
 	import scenes.login.*;
+	import flash.display.LoaderInfo;
 	
 	import server.LoggingServerInterface;
 	
@@ -50,9 +51,6 @@ package
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			scenesToCreate["LoginScene"] = LoginScene;
-			
-			
-			networkConnections = new Vector.<NetworkConnection>;
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
@@ -102,6 +100,9 @@ package
 		
 		public static function addNetworkConnection(connection:NetworkConnection):void
 		{
+			if(networkConnections == null)
+				networkConnections = new Vector.<NetworkConnection>;
+			
 			networkConnections.push(connection);
 			
 			//clean up list some, if any of the earliest connections done

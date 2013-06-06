@@ -430,7 +430,7 @@ package scenes.game.display
 			m_savedEndPoint = m_endPoint.clone();
 			
 			for each(var pt:Point in m_jointPoints)
-			m_savedJointPoints.push(pt.clone());
+				m_savedJointPoints.push(pt.clone());
 			
 			m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
 		}
@@ -747,7 +747,14 @@ package scenes.game.display
 				containerComponent = m_toComponent;
 			
 			var jointPoint:Point = new Point;
-			if(segmentIndex == 0)
+			if(segmentIndex == -1)
+			{
+				if(segment.m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX)
+					jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;
+				else
+					jointPoint.x = m_edgeJoints[0].x;
+			}
+			else if(segmentIndex == 0)
 				jointPoint.x = m_edgeJoints[0].x;
 			else
 				jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;

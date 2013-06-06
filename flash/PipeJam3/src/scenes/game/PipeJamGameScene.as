@@ -29,9 +29,17 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		public var worldFile:String = "../SampleWorlds/World.zip";
-		public var layoutFile:String = "../SampleWorlds/WorldLayout.zip";
-		public var constraintsFile:String = "../SampleWorlds/WorldConstraints.zip";
+		static public var demoButtonWorldFile:String = "../SampleWorlds/DemoWorld/DemoWorld.zip";
+		static public var demoButtonLayoutFile:String = "../SampleWorlds/DemoWorld/DemoWorldLayout.zip";
+		static public var demoButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/DemoWorldConstraints.zip";
+		
+		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
+		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
+		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
+		
+		static public var worldFile:String = demoButtonWorldFile;
+		static public var layoutFile:String = demoButtonLayoutFile;
+		static public var constraintsFile:String = demoButtonConstraintsFile;
 		private var world_zip_file_to_be_played:String;// = "../SampleWorlds/DemoWorld.zip";
 		public var m_worldXML:XML;
 		public var m_worldLayout:XML;

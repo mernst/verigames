@@ -18,14 +18,14 @@ package scenes.login
 		
 		protected var GAME_ID:int = 1;
 		public var numLevels:int = 5;
-		public var playerID:String = "51365e65e4b0ad10f4079c88";
 		
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 
-		//the first address is verigames, the second my machine
+		//the first address is verigames, the second the development environ, the third my machine
 		static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-		//static public var PROXY_URL:String = "http://128.95.2.112:8001";
+	//	static public var PROXY_URL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:8001";
+	//	static public var PROXY_URL:String = "http://128.95.2.112:8001";
 
 		
 		public function NetworkConnection()
@@ -92,7 +92,9 @@ package scenes.login
 		public function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null, other:String = null):void
 		{
 			var request:String;
+			var specificURL:String = null;
 			var method:String;
+			var playerID:String = PipeJam3.playerID;
 			
 			m_callback = callback;
 			
@@ -141,9 +143,19 @@ package scenes.login
 					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+scoreASString+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
+				case LoginHelper.VERIFY_SESSION:
+				//	request = "/"+name+"&method=VERIFY";
+					specificURL = "http://trafficjam.verigames.com/verifySession";
+					request = "?cookies="+name;
+					method = URLRequestMethod.POST; 
+					break;
 			}
 			
-			var urlRequest:URLRequest = new URLRequest(PROXY_URL+request);
+			var urlRequest:URLRequest;
+			if(specificURL != null)
+				urlRequest = new URLRequest(specificURL+request);
+			else
+				urlRequest = new URLRequest(PROXY_URL+request);
 			
 			if(method == URLRequestMethod.GET)
 				urlRequest.method = method;

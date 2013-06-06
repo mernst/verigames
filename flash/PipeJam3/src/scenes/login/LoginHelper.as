@@ -26,6 +26,7 @@ package scenes.login
 		public static var REFUSE_LEVELS:int = 7;
 		public static var REQUEST_LAYOUT_LIST:int = 8;
 		public static var CREATE_RA_LEVEL:int = 9;	
+		public static var VERIFY_SESSION:int = 10;	
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -37,6 +38,7 @@ package scenes.login
 		private var m_levelCallback:Function;
 		private var onRequestLevelFinishedCallback:Function;
 		private var onRequestLevelMetadataFinishedCallback:Function;
+		private var onSessionValidatedCallback:Function;
 		
 		protected static var loginHelper:LoginHelper = null;		
 
@@ -59,6 +61,28 @@ package scenes.login
 		
 		public function LoginHelper()
 		{
+		}
+		
+		public function checkSessionID(cookies:String, callback:Function):void
+		{	
+			onSessionValidatedCallback = callback;
+			//encode cookies
+			var encodedCookies:String = escape(cookies);
+			encodedCookies = cookies;
+			sendMessage(VERIFY_SESSION, onSessionIDValidatingFinished, null, encodedCookies);
+		}
+		
+		public function onSessionIDValidatingFinished(result:int, e:flash.events.Event):void
+		{
+			if(result == EVENT_COMPLETE)
+			{
+				onSessionValidatedCallback(e);
+			}
+			else //redirect to login page
+			{
+				
+			}
+				
 		}
 		
 		//load files from disk or database
@@ -203,4 +227,5 @@ package scenes.login
 			
 		}
 	}
-}
+}	
+
