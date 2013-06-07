@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetsFont;
+	import display.RoundedRect;
 	import scenes.game.display.GameComponent;
 	
 	import starling.display.Quad;
@@ -24,7 +25,7 @@ package scenes.game.display
 		/** Text showing current score on score_pane */
 		private var m_text:TextFieldWrapper;
 		
-		public function ScoreBlock(_color:Number, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null)
+		public function ScoreBlock(_color:Number, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null, _radius:Number = -1)
 		{
 			super("");
 			
@@ -34,13 +35,16 @@ package scenes.game.display
 			m_height = _height;
 			m_fontSize = _fontSize;
 			m_gameComponent = _gameComponent;
-			
-			var quad:Quad = new Quad(m_width-1, m_height-1, _color);
-			//set center point offset
-			addChild(quad);
+			if (_radius <= 0) {
+				_radius = Math.min(m_width, m_height) / 5.0;
+			}
+			var rect:RoundedRect = new RoundedRect(m_width-1, m_height-1, _radius, _color, true, false, false, false);
+			addChild(rect);
 			
 			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width, m_height, m_fontSize, 0x00000);
 			TextFactory.getInstance().updateAlign(m_text, 1, 1);
+			m_text.width = m_width;
+			m_text.height = m_height;
 			addChild(m_text);
 			if (m_gameComponent) {
 				addEventListener(TouchEvent.TOUCH, onTouch);

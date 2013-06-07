@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import display.RoundedRect;
 	import events.EdgeSetChangeEvent;
 	
 	import flash.geom.Point;
@@ -17,7 +18,7 @@ package scenes.game.display
 	public class GameNodeBase extends GameComponent
 	{
 		public var m_quad:Quad;
-		public var m_shape:Shape;
+		public var m_rect:RoundedRect;
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
 
@@ -59,8 +60,8 @@ package scenes.game.display
 			if (m_quad) {
 				m_quad.removeFromParent(true);
 			}
-			if (m_shape) {
-				m_shape.removeFromParent(true);
+			if (m_rect) {
+				m_rect.removeFromParent(true);
 			}
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);

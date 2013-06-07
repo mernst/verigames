@@ -1,6 +1,11 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import display.RoundedQuad;
+	import display.RoundedRect;
+	import starling.display.Quad;
+	import starling.display.Sprite;
+	import starling.filters.BlurFilter;
 	
 	import events.MoveEvent;
 	
@@ -115,42 +120,23 @@ package scenes.game.display
 		override public function draw():void
 		{
 			var color:uint = getColor();
-			if (m_shape) {
-				m_shape.removeFromParent(true);
+			
+			if (m_rect) {
+				m_rect.removeFromParent(true);
 			}
-			m_shape = new Shape;
-			if(color == WIDE_COLOR)
-				m_shape.graphics.beginMaterialFill(darkColorMaterial);
-			else if(color == NARROW_COLOR)
-				m_shape.graphics.beginMaterialFill(lightColorMaterial);
-			else if(color == UNADJUSTABLE_WIDE_COLOR)
-				m_shape.graphics.beginMaterialFill(unadjustableWideColorMaterial);
-			else if(color == UNADJUSTABLE_NARROW_COLOR)
-				m_shape.graphics.beginMaterialFill(unadjustableNarrowColorMaterial);
-			
-			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
-			
-			if(m_isSelected && !isTempSelection)
-			{
-				m_shape.graphics.beginMaterialFill(selectedColorMaterial);
-				m_shape.graphics.drawRect(0, 0, shapeWidth, shapeHeight);
-			}
-			m_shape.graphics.endFill();
-			
-			addChild(m_shape);
+			m_rect = new RoundedRect(shapeWidth, shapeHeight, shapeHeight / 5.0, color);
+			addChild(m_rect);
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
 			if (wideScore > narrowScore) {
-				m_scoreBlock = new ScoreBlock(WIDE_COLOR, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ);
-				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height/2.0;
-				m_scoreBlock.x = m_scoreBlock.y = m_scoreBlock.height/8.0;
+				m_scoreBlock = new ScoreBlock(WIDE_COLOR, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_scoreBlock = new ScoreBlock(NARROW_COLOR, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ);
-				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height/2.0;
-				m_scoreBlock.x = m_scoreBlock.y = m_scoreBlock.height/8.0;
+				m_scoreBlock = new ScoreBlock(NARROW_COLOR, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			}
 			useHandCursor = m_isEditable;

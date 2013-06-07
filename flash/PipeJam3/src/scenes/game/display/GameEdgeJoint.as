@@ -1,12 +1,12 @@
 package scenes.game.display
 {
+	import display.RoundedRect;
 	import flash.geom.Point;
+	import starling.display.DisplayObject;
 	
 	import scenes.BaseComponent;
 	
 	import starling.display.Quad;
-	import starling.display.Shape;
-	import starling.display.materials.StandardMaterial;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -25,8 +25,8 @@ package scenes.game.display
 		public var m_closestWall:int = 0;
 		
 		public var count:int = 0;
-		private var m_quad:Quad;
-		private var m_hoverQuad:Quad;
+		private var m_quad:DisplayObject;
+		private var m_hoverQuad:DisplayObject;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
@@ -59,7 +59,10 @@ package scenes.game.display
 
 			disposeChildren();
 			if (m_quad) {
-				m_quad.dispose();
+				m_quad.removeFromParent(true);
+			}
+			if (m_hoverQuad) {
+				m_hoverQuad.removeFromParent(true);
 			}
 			super.dispose();
 		}
@@ -115,34 +118,45 @@ package scenes.game.display
 			else
 				return 1;
 		}
-	
-	
+		
+		private static var draws:uint = 0;
 		public function draw():void
 		{
+			trace(draws++);
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			
 			var color:int = getColor();
-			removeChildren();
 			
 			if (m_jointType == INNER_CIRCLE_JOINT) {
 				lineSize *= 1.5;
 			}
+			
 			if (m_quad) {
-				m_quad.dispose();
+				m_quad.removeFromParent(true);
 			}
 			
 			if (m_hoverQuad) {
-				m_hoverQuad.dispose();
+				m_hoverQuad.removeFromParent(true);
 			}
 			
 			if(isHoverOn)
 			{
-				m_hoverQuad = new Quad(lineSize+.1, lineSize+.1, 0xeeeeee);
+				if (m_jointType == INNER_CIRCLE_JOINT) {
+					m_hoverQuad = new RoundedRect(lineSize + .1, lineSize + .1, lineSize / 3.0, 0xeeeeee);
+				} else {
+					m_hoverQuad = new Quad(lineSize + .1, lineSize + .1, 0xeeeeee);
+				}
 				m_hoverQuad.x = -lineSize/2-.05;
 				m_hoverQuad.y = -lineSize/2-.05;
 				addChild(m_hoverQuad);
 			}
-			m_quad = new Quad(lineSize, lineSize, color);
+			
+			if (m_jointType == INNER_CIRCLE_JOINT) {
+				m_quad = new RoundedRect(lineSize, lineSize, lineSize / 3.0, color);
+			} else {
+				m_quad = new Quad(lineSize, lineSize, color);
+			}
+			
 			m_quad.x = -lineSize/2;
 			m_quad.y = -lineSize/2;
 			addChild(m_quad);
