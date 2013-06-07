@@ -119,10 +119,8 @@ package scenes.game.display
 				return 1;
 		}
 		
-		private static var draws:uint = 0;
 		public function draw():void
 		{
-			trace(draws++);
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			
 			var color:int = getColor();

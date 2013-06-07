@@ -211,6 +211,9 @@ package system
 				boards_touched.push(sim_board);
 			}
 			
+			const DEBUG:Boolean = true;
+			if (DEBUG) { trace("----Simulating " + sim_board.board_name + "----"); }
+			
 			// When we transition to an algorithm that only traverses the edges that have changes widths (after a click), we will mark 
 			// ONLY those pipes as BALL_TYPE_UNDETERMINED and then only perform collision detection below on BALL_TYPE_UNDETERMINED edges (and below)
 			// For now, mark all pipes as BALL_TYPE_UNDETERMINED and recompute all
@@ -234,6 +237,7 @@ package system
 					}
 				}
 			}
+			if (DEBUG) { trace("  ["+sim_board.board_name+"] Ghost outputs/total: " + initial_ghost_outputs + "/" + total_outputs); }
 			
 			var listPortTroublePoints:Dictionary = new Dictionary();
 			var listEdgeTroublePoints:Dictionary = new Dictionary();
@@ -290,6 +294,7 @@ package system
 						break;
 						case NodeTypes.SUBBOARD:
 							var subnet_node:SubnetworkNode = e.from_node as SubnetworkNode;
+							if (DEBUG) { trace("  ["+sim_board.board_name+"] Found subboard starting edge: " + e.edge_id + " board:" + subnet_node.associated_board.board_name); }
 							var changedSinceLastSim:Boolean = false;
 							var useDefaultBoardOutputs:Boolean = true;
 							if (subnet_node.associated_board && (!subnet_node.associated_board_is_external || SIMULATE_EXTERNAL_BOARDS)) {
@@ -302,9 +307,11 @@ package system
 										// If we're already simulating this, a recursive case is found. For this, use the "default" result, meaning output ghost balls
 										if (recursive_boards.indexOf(subnet_board) == -1) {
 											recursive_boards.push(subnet_board);
+											if (DEBUG) { trace("  ["+sim_board.board_name+"] Adding " + subnet_board.board_name + " to recursive_boards list"); }
 										}
 									} else {
 										// If we haven't begun simulating this yet, do so now and store results in dictionary
+										if (DEBUG) { trace("  ["+sim_board.board_name+"] Simulate this subboard: " + subnet_board.board_name); }
 										boardToTroublePoints[subnet_board.board_name] = simulateBoard(subnet_board, boards_in_progress, boards_touched, simulate_recursion_boards);
 									}
 								} else {
@@ -347,10 +354,15 @@ package system
 									break;
 									case Edge.BALL_TYPE_UNDETERMINED:
 									case Edge.BALL_TYPE_GHOST:
+										if (DEBUG) { trace("  ["+sim_board.board_name+"] Ball coming out of subboard is UNDETERMINED or GHOST. changedSinceLastSim=" + changedSinceLastSim); }
 										if (!changedSinceLastSim) {
-											throw new Error("Flow sensitive PipeSimulator: BALL_TYPE_UNDETERMINED/GHOST found for supposedly simulated board. This should not be the case");
+											// Unable to make any progress (mutually recursive boards where no new outputs
+											// were simulated. In this case, give up and output no ball
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+											if (DEBUG) { trace("  [" + sim_board.board_name + "] Assigning subnet outgoing edge: " + subnet_port.edge.edge_id + " BALL_TYPE_NONE"); }
+										} else {
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
 										}
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
 									break;
 									default:
 										throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
@@ -707,6 +719,7 @@ package system
 					}
 				}
 			}
+			if (DEBUG) { trace("  ["+sim_board.board_name+"] Latest ghost outputs for " + sim_board.board_name + " = " + latest_ghost_outputs); }
 			
 			/* Here we're looping over any subnetwork board that has pipes that output into this board and was already being simulated (recursive case).
 			 * We want to:
@@ -718,7 +731,7 @@ package system
 				for each (var recursive_board:BoardNodes in recursive_boards) {
 					// Re-simulate this board, but don't use the current stack of recursive calls, this should allow the top-level
 					// board to see the updated output ball types
-					//trace("Recursively simulating " + recursive_board.board_name + " within " + sim_board.board_name);
+					if (DEBUG) { trace("  ["+sim_board.board_name+"] Recursively simulating " + recursive_board.board_name + " within " + sim_board.board_name); }
 					var arr:Array = simulateBoard(recursive_board, null, null, false);
 					boardToTroublePoints[recursive_board.board_name] = arr;
 					new_ghost_outputs = 0;
@@ -731,7 +744,7 @@ package system
 							}
 						}
 					}
-					
+					if (DEBUG) { trace("  ["+sim_board.board_name+"] New ghost outputs = " + new_ghost_outputs); }
 					// If we reach zero ghost outputs, that's good enough for this level - exit the routine
 					if (new_ghost_outputs == 0) {
 						break; // TODO: Could this be an imcomplete solution? For example, could there be narrow balls flowing down wide pipes that we missed?
@@ -756,12 +769,13 @@ package system
 				}
 				
 				latest_ghost_outputs = new_ghost_outputs;
-				
 			}
 			
 			// Remove sim_board from boards_in_progress, this board's outgoing exit ball types have been updated at this point
 			boards_in_progress.splice(boards_in_progress.indexOf(sim_board), 1);
 			sim_board.changed_since_last_sim = false;
+			
+			if (DEBUG) { trace("----Finished simulating board: " + sim_board.board_name + "----"); }
 			
 			var result1:Array = new Array(2);
 			result1[0] = listPortTroublePoints;
