@@ -1,7 +1,6 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import display.RoundedQuad;
 	import display.RoundedRect;
 	import starling.display.Quad;
 	import starling.display.Sprite;
