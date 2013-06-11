@@ -305,7 +305,7 @@ package scenes.game.components
 			currentY += VERTICAL_GAP;
 			currentX += 1.25 * SCORE_BLOCK_WIDTH;
 			for each (var scoreEdge:GameEdgeContainer in errorEdges) {
-				scoreBlock = new ScoreBlock(scoreEdge.getColor(), scoreNode.getScore().toString(), SCORE_BLOCK_WIDTH, Math.max(BLOCK_FONT_SIZE, Math.abs(scoreEdge.getScore()) - VERTICAL_GAP), BLOCK_FONT_SIZE, scoreEdge);
+				scoreBlock = new ScoreBlock(scoreEdge.getColor(), scoreEdge.getScore().toString(), SCORE_BLOCK_WIDTH, Math.max(BLOCK_FONT_SIZE, Math.abs(scoreEdge.getScore()) - VERTICAL_GAP), BLOCK_FONT_SIZE, scoreEdge);
 				scoreBlock.x = currentX;
 				scoreBlock.y = currentY;
 				currentY += scoreBlock.height + VERTICAL_GAP;

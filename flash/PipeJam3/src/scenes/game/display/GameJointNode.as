@@ -27,10 +27,7 @@ package scenes.game.display
 			if (m_quad)
 				removeChildren(0,-1,true);
 			
-			if(m_isSelected && !isTempSelection)
-				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, SELECTED_COLOR);
-			else
-				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
+			m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
 			
 			addChild(m_quad);
 			this.flatten();
@@ -69,7 +66,10 @@ package scenes.game.display
 		
 		override public function getColor():int
 		{
-			return 0xAAAAAA;
+			if(m_isSelected)
+				return SELECTED_COLOR;
+			else
+				return 0xAAAAAA;
 		}
 	}
 

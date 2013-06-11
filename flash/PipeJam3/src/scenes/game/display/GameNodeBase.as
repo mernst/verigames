@@ -1,15 +1,16 @@
 package scenes.game.display
 {
 	import display.RoundedRect;
+	
 	import events.EdgeSetChangeEvent;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	
 	import starling.display.BlendMode;
 	import starling.display.Quad;
 	import starling.display.Shape;
-	
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -29,6 +30,8 @@ package scenes.game.display
 		public var m_PortToEdgeArray:Array;
 		
 		protected var m_gameEdges:Vector.<GameEdgeContainer>;
+		
+		protected static var WIDTH_CHANGE:String = "width_change";
 		
 		public function GameNodeBase(_layoutXML:XML)
 		{
@@ -72,8 +75,8 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		protected var isTempSelection:Boolean = false;
 		private var isMoving:Boolean = false;
+		private var startingPoint:Point;
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
@@ -83,12 +86,15 @@ package scenes.game.display
 				if(isMoving) //if we were moving, stop it, and exit
 				{
 					isMoving = false;
-					if(isTempSelection)
-					{
-						isTempSelection = false;
-						this.componentSelected(false);
-						dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
-					}
+					
+					var undoData:Object = new Object();
+					undoData.target = "level";
+					undoData.component = this;
+					undoData.startPoint = startingPoint.clone();
+					undoData.endPoint = new Point(x,y);
+					var undoEvent:Event = new Event(Level.MOVE_EVENT,false,undoData);
+					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+					
 					return;
 				}
 				
@@ -97,27 +103,29 @@ package scenes.game.display
 				if(!event.shiftKey)
 				{
 					//clear selections on all actions with no shift key
-					dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
+					 
 					if(m_isEditable)
 					{
-						m_isWide = !m_isWide;
-						m_isDirty = true;
-						for each (var iedge:GameEdgeContainer in m_incomingEdges) {
-							if (!m_isWide || iedge.isWide()) {
-								iedge.setOutgoingWidth(m_isWide);
-							}
-						}
-						// Need to dispatch AFTER setting width, this will trigger the score update
-						// (we don't want to update the score with old values, we only know they're old
-						// if we properly mark them dirty first)
-						dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
+						handleWidthChange();
+				//		dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
+						
+						var undoData:Object = new Object();
+						undoData.target = this;
+						var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
+						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
 					}
 					
 				}
 				else //shift key down
 				{
 					if(touch.tapCount == 1)
+					{
 						componentSelected(!m_isSelected);	
+						if(m_isSelected)
+							dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
+						else
+							dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
+					}
 					else //select whole group
 					{
 						if(m_isSelected) //we were selected on the first click
@@ -130,22 +138,36 @@ package scenes.game.display
 			else if(event.getTouches(this, TouchPhase.MOVED).length){
 				if (touches.length == 1)
 				{
-					if(!m_isSelected) //set up immediate drag here
-					{
-						//deselect everything else if shift key up
-						if(!event.shiftKey)
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, null));
-						
-						isTempSelection = true;
-						this.componentSelected(true);
-						dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
-					}
-					
+					if(isMoving == false)
+						startingPoint = new Point(x,y);
 					isMoving = true;
-					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, touches[0]));
+
+					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, event));
 					
 				}
 			}
+		}
+		
+		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			if(undoEvent.type == EdgeSetChangeEvent.EDGE_SET_CHANGED)
+				handleWidthChange();
+		}
+		
+		
+		protected function handleWidthChange():void
+		{
+			m_isWide = !m_isWide;
+			m_isDirty = true;
+			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
+				if (!m_isWide || iedge.isWide()) {
+					iedge.setOutgoingWidth(m_isWide);
+				}
+			}
+			// Need to dispatch AFTER setting width, this will trigger the score update
+			// (we don't want to update the score with old values, we only know they're old
+			// if we properly mark them dirty first)
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
 		}
 		
 		public function onEnterFrame(event:Event):void
@@ -430,6 +452,16 @@ package scenes.game.display
 						nextEdgeContainer.m_extensionEdge.outgoingEdgePosition = currentPosition;
 				}
 			}
+		}
+		
+		public override function hideComponent(hide:Boolean):void
+		{
+			super.hideComponent(hide);
+			
+			for each(var outgoingEdge:GameEdgeContainer in m_outgoingEdges)
+				outgoingEdge.hideComponent(hide);
+				for each(var incomingEdge:GameEdgeContainer in m_incomingEdges)
+				incomingEdge.hideComponent(hide);
 		}
 	}
 }

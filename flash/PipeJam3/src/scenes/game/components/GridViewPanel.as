@@ -14,7 +14,6 @@ package scenes.game.components
 	
 	
 	import assets.AssetInterface;
-	import starling.display.BlendMode;
 	
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -28,8 +27,10 @@ package scenes.game.components
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	
 	import starling.core.Starling;
+	import starling.display.BlendMode;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -61,6 +62,10 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
+		
+		public static const MOUSE_WHEEL:String = "mouse_wheel";
+		public static const MOUSE_DRAG:String = "mouse_drag";
+		public static const CENTER:String = "center";
 		
 		public function GridViewPanel()
 		{
@@ -104,6 +109,16 @@ package scenes.game.components
 						m_currentLevel.handleMarquee(null, null);
 					}
 				}
+				else if(currentMode == MOVING_MODE)
+				{
+					var undoData:Object = new Object();
+					undoData.target = this;
+					undoData.component = this;
+					undoData.startPoint = startingPoint.clone();
+					undoData.endPoint = new Point(content.x, content.y);
+					var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
+					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+				}
 				if(currentMode != NORMAL_MODE)
 					currentMode = NORMAL_MODE;
 				else
@@ -132,7 +147,11 @@ package scenes.game.components
 				}
 				else
 				{
-					currentMode = MOVING_MODE;
+					if(currentMode != MOVING_MODE)
+					{
+						currentMode = MOVING_MODE;
+						startingPoint = new Point(content.x, content.y);
+					}
 					if (touches.length == 1)
 					{
 						// one finger touching -> move
@@ -200,12 +219,19 @@ package scenes.game.components
 
 		private function onMouseWheel(evt:MouseEvent):void
 		{
-			
-			
 			//scaleContent(1.0/content.scaleX);
 			var delta:Number = evt.delta;
 			
 			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
+			
+			handleMouseWheel(delta, localMouse);
+			
+		}
+		
+		private function handleMouseWheel(delta:Number, localMouse:Point, createUndoEvent:Boolean = true)
+		{
+			var mousePoint:Point = localMouse.clone();
+			
 			const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
 					Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
 			
@@ -235,6 +261,20 @@ package scenes.game.components
 			var newX:Number = viewRect.x + viewRect.width / 2 + (prevMouse.x - newMouse.x);// / content.scaleX;
 			var newY:Number = viewRect.y + viewRect.height / 2 + (prevMouse.y - newMouse.y);// / content.scaleY;
 			moveContent(newX, newY);
+			
+			
+			//turn this off if in an undo event
+			if(createUndoEvent)
+			{
+				var endPoint:Point = new Point(content.x, content.y);
+				var moveData:Object = new Object();
+				moveData.target = this;
+				moveData.mousePoint = mousePoint;
+				moveData.delta = delta;
+				moveData.time = new Date().time;
+				var undoEvent:Event = new Event(MOUSE_WHEEL,false,moveData);
+				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+			}
 		}
 		
 		private function moveContent(newX:Number, newY:Number):void
@@ -375,8 +415,9 @@ package scenes.game.components
 		 * @param	panX
 		 * @param	panY
 		 */
-		public function panTo(panX:Number, panY:Number):void
+		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
 		{
+			var startPoint:Point = new Point(content.x, content.y);
 			content.x = (-panX* content.scaleX + clipRect.width/2) ;
 			content.y = (-panY* content.scaleY + clipRect.height/2) ;
 		}
@@ -387,10 +428,52 @@ package scenes.game.components
 		 */
 		public function centerOnComponent(component:GameComponent):void
 		{
+			startingPoint = new Point(content.x, content.y);
+			
 			var centerPt:Point = new Point(component.width / 2, component.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
 			panTo(localPt.x, localPt.y);
+			
+			var undoData:Object = new Object();
+			undoData.target = this;
+			undoData.component = this;
+			undoData.startPoint = startingPoint.clone();
+			undoData.endPoint = new Point(content.x, content.y);
+			var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
+			dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+
+		}
+		
+		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			var undoData:Object = undoEvent.data;
+			if(undoEvent.type == GridViewPanel.MOUSE_WHEEL)
+			{
+				var delta:Number = undoData.delta;
+				var localMouse:Point = undoData.mousePoint;
+				if(!isUndo)
+					handleMouseWheel(delta, localMouse, false);
+				else
+					handleMouseWheel(-delta, localMouse, false);
+
+			}
+			else if(undoEvent.type == GridViewPanel.MOUSE_DRAG)
+			{
+				var startPoint:Point = undoData.startPoint;
+				var endPoint:Point = undoData.endPoint;
+				if(isUndo)
+				{
+					content.x = startPoint.x;
+					content.y = startPoint.y;
+				}
+				else
+				{
+					content.x = endPoint.x;
+					content.y = endPoint.y;
+				}
+				
+			}
 		}
 	}
 }

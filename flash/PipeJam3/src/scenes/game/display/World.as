@@ -18,9 +18,10 @@ package scenes.game.display
 	import scenes.game.components.InGameMenuBox;
 	
 	import starling.display.Button;
-	import starling.display.Quad;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 	import starling.textures.Texture;
 	
 	import system.PipeSimulator;
@@ -81,6 +82,9 @@ package scenes.game.display
 		/** Map from board name to board */
 		public var worldBoardNameDictionary:Dictionary = new Dictionary();
 		
+		protected var undoStack:Array;
+		protected var redoStack:Array;
+		
 		private var m_layoutXML:XML;
 		private var m_constraintsXML:XML;
 		
@@ -89,6 +93,8 @@ package scenes.game.display
 		
 		public static var SHOW_GAME_MENU:String = "show_game_menu";
 		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
+		
+		public static var UNDO_EVENT:String = "undo_event";
 		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
@@ -106,6 +112,9 @@ package scenes.game.display
 			world_xml = _world_xml;
 			m_layoutXML = _layout;
 			m_constraintsXML = _constraints;
+			
+			undoStack = new Array();
+			redoStack = new Array();
 			
 			createWorld(m_network.LevelNodesDictionary);
 			//m_simulator = new Simulator(m_network);
@@ -136,6 +145,9 @@ package scenes.game.display
 			addEventListener(Level.SUBMIT_SCORE, onSubmitScore);
 			addEventListener(Level.SAVE_LOCALLY, onSaveLocally);
 			addEventListener(Level.SET_NEW_LAYOUT, setNewLayout);	
+			
+			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+			addEventListener(UNDO_EVENT, saveEvent);
 		}
 		
 		private function onShowGameMenuEvent():void
@@ -191,6 +203,143 @@ package scenes.game.display
 			selectLevel(levels[currentLevelNumber]);
 		}
 		
+		private function saveEvent(e:starling.events.Event):void
+		{
+			//sometimes we need to remove the last event to add a complex event that includes that one
+			if(e.data && e.data.data && e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
+			{
+				var lastEvent:starling.events.Event = undoStack.pop();
+				if(lastEvent.data is Array)
+				{
+					(lastEvent.data as Array).push(e.data.data);
+					undoStack.push(lastEvent);
+				}
+				else
+				{
+					var event1:starling.events.Event = new starling.events.Event(lastEvent.type, true, lastEvent.data);
+					var event2:starling.events.Event = new starling.events.Event(e.data.type, true, e.data.data);
+					var newArray:Array = new Array(event1, event2);
+					var newEvent:starling.events.Event = new starling.events.Event(World.UNDO_EVENT, true, newArray);
+					undoStack.push(newEvent);
+					
+				}
+			}
+			else
+				undoStack.push(e.data);
+			//when we build on the undoStack, clear out the redoStack
+			redoStack = new Array();
+		}
+		
+		public function handleKeyUp(event:starling.events.KeyboardEvent):void
+		{
+			if(event.ctrlKey)
+			{
+				switch(event.keyCode)
+				{
+					case 90: //'z'
+					{
+						if(undoStack.length > 0)
+						{
+							var undoDataEvent:starling.events.Event = undoStack.pop();
+							if(undoDataEvent.data != null)
+							{
+								if(undoDataEvent.data is Array)
+								{
+									for each(var obj:starling.events.Event in undoDataEvent.data)
+									{
+										var undoData:Object = obj.data;
+										if(undoData == null) //handle locally
+											handleUndoEvent(undoDataEvent, true);
+										if(undoData.target is String)
+										{
+											if(undoData.target == "level")
+											{
+												if(this.active_level != null)
+													active_level.handleUndoEvent(obj, true);
+											}
+										}
+										else if(undoData.target is BaseComponent)
+											(undoData.target as BaseComponent).handleUndoEvent(obj, true);
+									}
+									redoStack.push(undoDataEvent);
+								}
+								else
+								{
+									var undoData:Object = undoDataEvent.data;
+									if(undoData == null) //handle locally
+										handleUndoEvent(undoDataEvent, true);
+									if(undoData.target is String)
+									{
+										if(undoData.target == "level")
+										{
+											if(this.active_level != null)
+												active_level.handleUndoEvent(undoDataEvent, true);
+										}
+									}
+									else if(undoData.target is BaseComponent)
+										(undoData.target as BaseComponent).handleUndoEvent(undoDataEvent, true);
+									redoStack.push(undoDataEvent);
+								}
+							}
+						}
+						break;
+					}
+					case 82: //'r'
+					case 89: //'y'
+					{
+						if(redoStack.length > 0)
+						{
+							var redoDataEvent:starling.events.Event = redoStack.pop();
+							if(redoDataEvent.data != null)
+							{
+								if(redoDataEvent.data is Array)
+								{
+									for each(var obj:starling.events.Event in redoDataEvent.data)
+									{
+										var redoData:Object = obj.data;
+										if(redoData == null) //handle locally
+											handleUndoEvent(redoDataEvent, false);
+										if(redoData.target is String)
+										{
+											if(redoData.target == "level")
+											{
+												if(this.active_level != null)
+													active_level.handleUndoEvent(obj, false);
+											}
+										}
+										else if(redoData.target is BaseComponent)
+											(redoData.target as BaseComponent).handleUndoEvent(obj, false);
+									}
+									undoStack.push(redoDataEvent);
+								}
+								else
+								{
+									var redoData:Object = redoDataEvent.data;
+									if(redoData == null) //handle locally
+										handleUndoEvent(redoDataEvent, false);
+									if(redoData.target is String)
+									{
+										if(redoData.target == "level")
+										{
+											if(this.active_level != null)
+												active_level.handleUndoEvent(redoDataEvent, false);
+										}
+									}
+									else if(redoData.target is BaseComponent)
+										(redoData.target as BaseComponent).handleUndoEvent(redoDataEvent, false);
+									undoStack.push(redoDataEvent);
+								}
+							}
+						}
+						break;
+					}
+					case 72: //'h' for hide
+					if(this.active_level != null)
+						active_level.toggleUneditableStrings();
+					break;
+				}
+			}
+		}
 		
 		private function selectLevel(newLevel:Level):void
 		{
@@ -212,6 +361,19 @@ package scenes.game.display
 		private function onRemovedFromStage():void
 		{
 			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
+			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			removeEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
+			removeEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
+			
+			removeEventListener(Level.SAVE_LAYOUT, onSaveLayoutFile);
+			removeEventListener(Level.SUBMIT_SCORE, onSubmitScore);
+			removeEventListener(Level.SAVE_LOCALLY, onSaveLocally);
+			removeEventListener(Level.SET_NEW_LAYOUT, setNewLayout);	
+			removeEventListener(UNDO_EVENT, saveEvent);
+			
+			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+			
 			if(active_level)
 				removeChild(active_level, true);
 			m_network = null;

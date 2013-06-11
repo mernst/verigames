@@ -100,15 +100,17 @@ package scenes.game.display
 			return m_hasError;
 		}
 		
+		
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;
 			m_isSelected = isSelected;
-			
-			if(m_isSelected)
-				dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
-			else
-				dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
+		}
+		
+		public function hideComponent(hide:Boolean):void
+		{
+			visible = !hide;
+			m_isDirty = true;
 		}
 		
 		public function getGlobalScaleFactor():Point
@@ -154,6 +156,10 @@ package scenes.game.display
 			if (m_forceColor > -1) {
 				return m_forceColor;
 			}
+			
+			if(m_isSelected)
+				return SELECTED_COLOR;
+			
 			if(m_shouldShowError && hasError())
 				return ERROR_COLOR;
 			if(m_isEditable == true)
