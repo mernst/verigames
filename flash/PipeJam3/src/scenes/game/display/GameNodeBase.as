@@ -51,6 +51,17 @@ package scenes.game.display
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
+		public function getNumLines():int
+		{
+			if (m_layoutXML) {
+				var linesStr:String = m_layoutXML.@lines;
+				if (!isNaN(int(linesStr))) {
+					return int(linesStr);
+				}
+			}
+			return 0;
+		}
+		
 		override public function dispose():void
 		{
 			if (m_disposed) {

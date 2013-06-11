@@ -99,8 +99,10 @@ package scenes.game.components
 			backgroundImage.height = HEIGHT;
 			addChild(backgroundImage);
 			
-			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 60, 35, GameComponent.SCORE_COLOR);
-			scoreTextfield.x = -5; 
+			const TEXT_BUFFER:Number = WIDTH / 10.0;
+			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, WIDTH - 2 * TEXT_BUFFER, 60 - 2 * TEXT_BUFFER, 35, GameComponent.SCORE_COLOR);
+			scoreTextfield.x = TEXT_BUFFER;
+			scoreTextfield.y = TEXT_BUFFER;
 			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
 			addChild(scoreTextfield);
 			
@@ -210,7 +212,7 @@ package scenes.game.components
 			
 			/*
 			 * New Scoring:
-			 *
+			 * +75 for each line going thru/starting/ending @ a box
 			 * +25 for wide inputs
 			 * +25 for narrow outputs
 			 * -75 for errors
@@ -220,6 +222,7 @@ package scenes.game.components
 			var wideInputs:int = 0;
 			var narrowOutputs:int = 0;
 			var errors:int = 0;
+			var totalLines:int = 0;
 			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
@@ -227,6 +230,7 @@ package scenes.game.components
 			for each(var nodeSet:GameNode in level.getNodes())
 			{
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
+					totalLines += nodeSet.getNumLines();
 					if (nodeSet.isWide()) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
@@ -268,9 +272,10 @@ package scenes.game.components
 				}
 			}
 			
-			//trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
-			current_score = Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			current_score = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
 			TextFactory.getInstance().updateText(scoreTextfield, current_score.toString());
+			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
 			TextFactory.getInstance().updateText(m_scoreBlockCurrentLabel, current_score.toString());
 			
 			for each (var block:ScoreBlock in m_scoreBlocks) {

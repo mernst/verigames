@@ -1,8 +1,10 @@
 package scenes.game.display
 {
+	import display.RoundedRect;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import starling.display.DisplayObjectContainer;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	
 	import events.BallTypeChangeEvent;
@@ -54,6 +56,13 @@ package scenes.game.display
 		public var graphEdge:Edge;
 		public var edgeIsCopy:Boolean;
 		
+		public var errorContainer:Sprite = new Sprite();
+		public var errorMarker:RoundedRect;
+		
+		private var m_edgeHasError:Boolean = false;
+		private var m_portHasError:Boolean = false;
+		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
+		
 		//use for figuring out closest wall
 		public static var LEFT_WALL:int = 1;
 		public static var RIGHT_WALL:int = 2;
@@ -62,6 +71,7 @@ package scenes.game.display
 		
 		public static var WIDE_WIDTH:Number = .3 * Constants.GAME_SCALE;
 		public static var NARROW_WIDTH:Number = .1 * Constants.GAME_SCALE;
+		public static var ERROR_WIDTH:Number = .6 * Constants.GAME_SCALE;
 		private static var EXTENSION_LENGTH:Number = .3 * Constants.GAME_SCALE;
 		
 		public static var CREATE_JOINT:String = "create_joint";
@@ -314,23 +324,32 @@ package scenes.game.display
 		
 		private function onEdgeTroublePointAdded(evt:EdgeTroublePointEvent):void
 		{
+			m_edgeHasError = true;
 			if (m_hasError) {
 				return;
 			}
 			m_hasError = true;
-			m_isDirty = true;
+			if (errorMarker == null) {
+				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker.x = -ERROR_WIDTH / 2;
+				errorMarker.y = -ERROR_WIDTH / 2;
+			}
+			errorContainer.addChild(errorMarker);
 		}
 		
 		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
 		{
+			m_edgeHasError = false;
 			if (!m_hasError) {
 				return;
 			}
-			m_hasError = false;
-			m_isDirty = true;
+			m_hasError = m_portHasError;
+			if (!m_hasError && errorMarker) {
+				errorMarker.removeFromParent(true);
+			}
+			errorMarker = null;
 		}
 		
-		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		public function listenToPortForTroublePoints(_port:Port):void
 		{
 			if (m_listeningToPorts.indexOf(_port) == -1) {
@@ -367,28 +386,33 @@ package scenes.game.display
 			}
 		}
 		
+		
 		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
 		{
+			m_portHasError = true;
 			if (m_hasError) {
 				return;
 			}
 			m_hasError = true;
-			if (m_markerJoint) {
-				m_markerJoint.m_hasError = true;
+			if (errorMarker == null) {
+				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker.x = -ERROR_WIDTH / 2;
+				errorMarker.y = -ERROR_WIDTH / 2;
 			}
-			m_isDirty = true;
+			errorContainer.addChild(errorMarker);
 		}
 		
 		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
 		{
+			m_portHasError = false;
 			if (!m_hasError) {
 				return;
 			}
-			m_hasError = false;
-			if (m_markerJoint) {
-				m_markerJoint.m_hasError = false;
+			m_hasError = m_edgeHasError;
+			if (!m_hasError && errorMarker) {
+				errorMarker.removeFromParent(true);
 			}
-			m_isDirty = true;
+			errorMarker = null;
 		}
 		
 		private function onHoverOver(event:Event):void
@@ -600,7 +624,12 @@ package scenes.game.display
 				joint.x = m_jointPoints[segIndex].x;
 				joint.y = m_jointPoints[segIndex].y;
 				
-				addChild(joint);
+				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+					errorContainer.x = this.x + joint.x;
+					errorContainer.y = this.y + joint.y;
+				}
+				
+				addChildAt(joint, 0);
 			}
 			
 			//deal with last joint special, since it's at the end of a segment
@@ -608,7 +637,7 @@ package scenes.game.display
 			//add joint at end
 			lastJoint.x = m_jointPoints[m_edgeSegments.length].x;
 			lastJoint.y = m_jointPoints[m_edgeSegments.length].y;
-			addChild(lastJoint);
+			addChildAt(lastJoint, 0);
 		}
 		
 		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
@@ -973,6 +1002,10 @@ package scenes.game.display
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.draw();
+				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+					errorContainer.x = this.x + joint.x;
+					errorContainer.y = this.y + joint.y;
+				}
 			}
 			m_innerBoxSegment.draw();
 		}
@@ -1004,14 +1037,14 @@ package scenes.game.display
 				
 				for each(var joint:GameEdgeJoint in m_edgeJoints)
 				{
-					if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
-					{
-						joint.m_hasError = true;
-					}
-					else
-					{
-						joint.m_hasError = false;
-					}
+					//if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
+					//{
+						//joint.m_hasError = true;
+					//}
+					//else
+					//{
+						//joint.m_hasError = false;
+					//}
 					joint.m_isDirty = true;
 				}
 				
@@ -1189,7 +1222,7 @@ class InnerBoxSegment extends GameComponent
 		draw();
 		addChild(edgeSegment);
 		if (innerCircleJoint) {
-			addChild(innerCircleJoint);
+			addChildAt(innerCircleJoint, 0);
 		}
 	}
 	

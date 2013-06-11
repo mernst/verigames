@@ -3,6 +3,8 @@ package scenes.game.display
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
+	import starling.display.Sprite;
+	import starling.filters.BlurFilter;
 	
 	import flash.display.Shape;
 	import flash.geom.Point;
@@ -115,6 +117,11 @@ package scenes.game.display
 		private var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
 		
+		private var m_edgesContainer:Sprite = new Sprite();
+		private var m_nodesContainer:Sprite = new Sprite();
+		private var m_jointsContainer:Sprite = new Sprite();
+		private var m_errorContainer:Sprite = new Sprite();
+		
 		private var m_boundingBox:Rectangle;
 		
 		/**
@@ -141,6 +148,12 @@ package scenes.game.display
 			
 			initialize();
 			setConstraints();
+			
+			addChild(m_errorContainer);
+			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0xFF00FF);
+			addChild(m_nodesContainer);
+			addChild(m_jointsContainer);
+			addChild(m_edgesContainer);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -852,8 +865,6 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			//don't dispose as we are immediately re-adding them
-			removeChildren();
 			//add two quads at opposite corners to cause the size to be right
 			var p:Quad = new Quad(.1, .1, 0xff0000);
 			var q:Quad = new Quad(.1, .1, 0xff0000);
@@ -875,7 +886,7 @@ package scenes.game.display
 				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x;
 				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y;
 				gameNode.m_isDirty = true;
-				addChild(gameNode);
+				m_nodesContainer.addChild(gameNode);
 				nodeCount++;
 			}
 			
@@ -885,17 +896,18 @@ package scenes.game.display
 				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x;
 				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
-				addChild(gameJoint);
+				m_jointsContainer.addChild(gameJoint);
 				jointCount++;
 			}
 			
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				gameEdge.draw();
-				addChild(gameEdge);
 				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
 				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
+				gameEdge.draw();
+				m_edgesContainer.addChild(gameEdge);
+				m_errorContainer.addChild(gameEdge.errorContainer);
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);

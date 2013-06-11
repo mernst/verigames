@@ -199,22 +199,22 @@
 				m_quad.x = 0;
 				
 				// Create/add arrows if segment is long enough to display them
-//				if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
-//					m_arrowImg = new Image(ARROW_TEXT);
-//					pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
-//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-//					m_arrowImg.width = Math.abs(m_endPt.x);
-//					m_arrowImg.height = lineSize;
-//					
-//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-//					
-//					m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-//					m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-//					m_arrowImg.x = 0;
-//				}
+				//if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
+					//m_arrowImg = new Image(ARROW_TEXT);
+					//pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
+					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					//m_arrowImg.width = Math.abs(m_endPt.x);
+					//m_arrowImg.height = lineSize;
+					//
+					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					//
+					//m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+					//m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
+					//m_arrowImg.x = 0;
+				//}
 			}
 			else
 			{
@@ -238,39 +238,31 @@
 //					quad1.y = i;
 //				}
 				// Create/add arrows if segment is long enough to display them
-//				if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
-//					m_arrowImg = new Image(ARROW_TEXT);
-//					pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
-//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-//					m_arrowImg.width = Math.abs(m_endPt.y);
-//					m_arrowImg.height = lineSize;
-//					
-//					var q:Number = 0.5 - pctTextHeight/2.0;
-//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-//					
-//					m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
-//					m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
-//					m_arrowImg.y = 0;
-//				}
+				//if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
+					//m_arrowImg = new Image(ARROW_TEXT);
+					//m_arrowImg.touchable = false;
+					//pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
+					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					//m_arrowImg.width = Math.abs(m_endPt.y);
+					//m_arrowImg.height = lineSize;
+					//
+					//var q:Number = 0.5 - pctTextHeight/2.0;
+					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					//
+					//m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
+					//m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
+					//m_arrowImg.y = 0;
+				//}
 			}
 			
 			addChild(m_quad);
 			if (m_arrowImg) {
 				addChild(m_arrowImg);
 			}
-			
-		}
-		
-		private static function fillUV(tx:Number, ty:Number, rot:Number, tex:Texture):Matrix
-		{
-			var ret:Matrix = new Matrix();
-			ret.rotate(XMath.degreesToRadians(rot));
-			ret.translate(tx, ty);
-			ret.scale(1.0 / tex.width, 1.0 / tex.height);
-			return ret;
+			flatten();
 		}
 		
 		public function drawDiagonalLine(p1:Point, p2:Point, width:Number=1, color:uint=0x000000):Quad
@@ -320,6 +312,16 @@
 				draw();
 				m_isDirty = false;
 			}
+		}
+		
+		// Make lines slightly darker to be more visible
+		override public function getColor():int
+		{
+			var color:int = super.getColor();
+			var red:int = XSprite.extractRed(color);
+			var green:int = XSprite.extractGreen(color);
+			var blue:int = XSprite.extractBlue(color);
+			return  ( ( Math.round(red * 0.8) << 16 ) | ( Math.round(green * 0.8) << 8 ) | Math.round(blue * 0.8) );
 		}
 	}
 }

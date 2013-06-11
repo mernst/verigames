@@ -7,6 +7,7 @@ package scenes.game.display
 	import scenes.BaseComponent;
 	import starling.display.Quad;
 	import starling.events.TouchEvent;
+	import utils.XSprite;
 	
 	public class GameJointNode extends GameNodeBase
 	{	

@@ -3,6 +3,7 @@ package scenes.game.display
 	import display.RoundedRect;
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
+	import utils.XSprite;
 	
 	import scenes.BaseComponent;
 	
@@ -122,11 +123,16 @@ package scenes.game.display
 		public function draw():void
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			
 			var color:int = getColor();
+			var err:Boolean = hasError();
 			
+			var roundRadius:Number;
 			if (m_jointType == INNER_CIRCLE_JOINT) {
 				lineSize *= 1.5;
+				roundRadius = lineSize / 3.0;
+			} else if (err) {
+				lineSize = GameEdgeContainer.ERROR_WIDTH;
+				roundRadius = lineSize / 2.0;
 			}
 			
 			if (m_quad) {
@@ -137,10 +143,12 @@ package scenes.game.display
 				m_hoverQuad.removeFromParent(true);
 			}
 			
+			var isRound:Boolean = ((m_jointType == INNER_CIRCLE_JOINT) || err);
+			
 			if(isHoverOn)
 			{
-				if (m_jointType == INNER_CIRCLE_JOINT) {
-					m_hoverQuad = new RoundedRect(lineSize + .1, lineSize + .1, lineSize / 3.0, 0xeeeeee);
+				if (isRound) {
+					m_hoverQuad = new RoundedRect(lineSize + .1, lineSize + .1, roundRadius, 0xeeeeee);
 				} else {
 					m_hoverQuad = new Quad(lineSize + .1, lineSize + .1, 0xeeeeee);
 				}
@@ -149,8 +157,8 @@ package scenes.game.display
 				addChild(m_hoverQuad);
 			}
 			
-			if (m_jointType == INNER_CIRCLE_JOINT) {
-				m_quad = new RoundedRect(lineSize, lineSize, lineSize / 3.0, color);
+			if (isRound) {
+				m_quad = new RoundedRect(lineSize, lineSize, roundRadius, color);
 			} else {
 				m_quad = new Quad(lineSize, lineSize, color);
 			}
@@ -179,6 +187,16 @@ package scenes.game.display
 				draw();
 				m_isDirty = false;
 			}
+		}
+		
+		// Make edge joints slightly darker to be more visible
+		override public function getColor():int
+		{
+			var color:int = super.getColor();
+			var red:int = XSprite.extractRed(color);
+			var green:int = XSprite.extractGreen(color);
+			var blue:int = XSprite.extractBlue(color);
+			return  ( ( Math.round(red * 0.8) << 16 ) | ( Math.round(green * 0.8) << 8 ) | Math.round(blue * 0.8) );
 		}
 	}
 }

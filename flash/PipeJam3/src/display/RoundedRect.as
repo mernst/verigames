@@ -55,89 +55,79 @@ package display
 			addChild(mCornerBatch);
 			addChild(mBatch);
 			
-			const BUFFER:Number = mRadius * 0.2; // Overlap to prevent gaps between rounded corners and quads
-			if (mRadius < mWidth / 2) {
-				var topBotWidth:Number = mWidth - 2 * mRadius + 2 * BUFFER;
-				var topBotX:Number = mRadius - BUFFER;
-				
-				var topWidth:Number = topBotWidth;
-				var topX:Number = topBotX;
-				if (!mRoundTopLeft) {
-					topWidth += mRadius - BUFFER;
-					topX = 0;
-				}
-				if (!mRoundTopRight) {
-					topWidth += mRadius - BUFFER;
-				}
-				mTopQuad = new Quad(topWidth, mRadius, mColor);
-				mTopQuad.x = topX;
-				mTopQuad.y = 0;
-				mTopQuad.blendMode = BlendMode.NONE;
-				mBatch.addQuad(mTopQuad);
-				//addChild(mTopQuad);
-				
-				var botWidth:Number = topBotWidth;
-				var botX:Number = topBotX;
-				if (!mRoundBottomLeft) {
-					botWidth += mRadius - BUFFER;
-					botX = 0;
-				}
-				if (!mRoundBottomRight) {
-					botWidth += mRadius - BUFFER;
-				}
-				mBottomQuad = new Quad(botWidth, mRadius, mColor);
-				mBottomQuad.x = botX;
-				mBottomQuad.y = mHeight - mRadius;
-				mBottomQuad.blendMode = BlendMode.NONE;
-				mBatch.addQuad(mBottomQuad);
-				//addChild(mBottomQuad);
-			}
+			const BUFFER:Number = mRadius * 0.18; // Overlap to prevent gaps between rounded corners and quads
 			
-			if (mRadius < mHeight / 2) {
-				var leftRightHeight:Number = mHeight - 2 * mRadius + 2 * BUFFER;
-				var leftRightY:Number = mRadius - BUFFER;
-				
-				var leftHeight:Number = leftRightHeight;
-				var leftY:Number = leftRightY;
-				if (!mRoundTopLeft) {
-					leftHeight += mRadius - BUFFER;
-					leftY = 0;
-				}
-				if (!mRoundBottomLeft) {
-					leftHeight += mRadius - BUFFER;
-				}
-				mLeftQuad = new Quad(mRadius, leftHeight, mColor);
-				mLeftQuad.x = 0;
-				mLeftQuad.y = leftY;
-				mLeftQuad.blendMode = BlendMode.NONE;
-				mBatch.addQuad(mLeftQuad);
-				//addChild(mLeftQuad);
-				
-				var rightHeight:Number = leftRightHeight;
-				var rightY:Number = leftRightY;
-				if (!mRoundTopRight) {
-					rightHeight += mRadius - BUFFER;
-					rightY = 0;
-				}
-				if (!mRoundBottomRight) {
-					rightHeight += mRadius - BUFFER;
-				}
-				mRightQuad = new Quad(mRadius, rightHeight, mColor);
-				mRightQuad.x = mWidth - mRadius;
-				mRightQuad.y = rightY;
-				mRightQuad.blendMode = BlendMode.NONE;
-				mBatch.addQuad(mRightQuad);
-				//addChild(mRightQuad);
-			}
+			var topBotWidth:Number = mWidth - 2 * mRadius + 2 * BUFFER;
+			var topBotX:Number = mRadius - BUFFER;
 			
-			if ((mRadius < mWidth / 2) || (mRadius < mHeight / 2)) {
-				mCenterQuad = new Quad(mWidth - 2 * mRadius, mHeight - 2 * mRadius, mColor);
-				mCenterQuad.x = mRadius;
-				mCenterQuad.y = mRadius;
-				mCenterQuad.blendMode = BlendMode.NONE;
-				mBatch.addQuad(mCenterQuad);
-				//addChild(mCenterQuad);
+			var topWidth:Number = topBotWidth;
+			var topX:Number = topBotX;
+			if (!mRoundTopLeft) {
+				topWidth += mRadius - BUFFER;
+				topX = 0;
 			}
+			if (!mRoundTopRight) {
+				topWidth += mRadius - BUFFER;
+			}
+			mTopQuad = new Quad(topWidth, mRadius, mColor);
+			mTopQuad.x = topX;
+			mTopQuad.y = 0;
+			mTopQuad.blendMode = BlendMode.NONE;
+			mBatch.addQuad(mTopQuad);
+			
+			var botWidth:Number = topBotWidth;
+			var botX:Number = topBotX;
+			if (!mRoundBottomLeft) {
+				botWidth += mRadius - BUFFER;
+				botX = 0;
+			}
+			if (!mRoundBottomRight) {
+				botWidth += mRadius - BUFFER;
+			}
+			mBottomQuad = new Quad(botWidth, mRadius, mColor);
+			mBottomQuad.x = botX;
+			mBottomQuad.y = mHeight - mRadius;
+			mBottomQuad.blendMode = BlendMode.NONE;
+			mBatch.addQuad(mBottomQuad);
+			
+			var leftRightHeight:Number = mHeight - 2 * mRadius + 2 * BUFFER;
+			var leftRightY:Number = mRadius - BUFFER;
+			
+			var leftHeight:Number = leftRightHeight;
+			var leftY:Number = leftRightY;
+			if (!mRoundTopLeft) {
+				leftHeight += mRadius - BUFFER;
+				leftY = 0;
+			}
+			if (!mRoundBottomLeft) {
+				leftHeight += mRadius - BUFFER;
+			}
+			mLeftQuad = new Quad(mRadius, leftHeight, mColor);
+			mLeftQuad.x = 0;
+			mLeftQuad.y = leftY;
+			mLeftQuad.blendMode = BlendMode.NONE;
+			mBatch.addQuad(mLeftQuad);
+			
+			var rightHeight:Number = leftRightHeight;
+			var rightY:Number = leftRightY;
+			if (!mRoundTopRight) {
+				rightHeight += mRadius - BUFFER;
+				rightY = 0;
+			}
+			if (!mRoundBottomRight) {
+				rightHeight += mRadius - BUFFER;
+			}
+			mRightQuad = new Quad(mRadius, rightHeight, mColor);
+			mRightQuad.x = mWidth - mRadius;
+			mRightQuad.y = rightY;
+			mRightQuad.blendMode = BlendMode.NONE;
+			mBatch.addQuad(mRightQuad);
+			
+			mCenterQuad = new Quad(mWidth - 2 * mRadius, mHeight - 2 * mRadius, mColor);
+			mCenterQuad.x = mRadius;
+			mCenterQuad.y = mRadius;
+			mCenterQuad.blendMode = BlendMode.NONE;
+			mBatch.addQuad(mCenterQuad);
 			
 			const colorToBeReplaced:uint = 0xFF000000;
 			const newColor:uint = 0xFF000000 + mColor;
@@ -151,7 +141,6 @@ package display
 				mTopLeftCorner.x = 0;
 				mTopLeftCorner.y = mRadius;
 				mCornerBatch.addImage(mTopLeftCorner);
-				//addChild(mTopLeftCorner);
 			}
 			
 			if (mRoundTopRight) {
@@ -161,7 +150,6 @@ package display
 				mTopRightCorner.x = mWidth - mRadius;
 				mTopRightCorner.y = 0;
 				mCornerBatch.addImage(mTopRightCorner);
-				//addChild(mTopRightCorner);
 			}
 			
 			if (mRoundBottomLeft) {
@@ -171,7 +159,6 @@ package display
 				mBottomLeftCorner.x = mRadius;
 				mBottomLeftCorner.y = mHeight;
 				mCornerBatch.addImage(mBottomLeftCorner);
-				//addChild(mBottomLeftCorner);
 			}
 			
 			if (mRoundBottomRight) {
@@ -181,7 +168,6 @@ package display
 				mBottomRightCorner.x = mWidth;
 				mBottomRightCorner.y = mHeight - mRadius;
 				mCornerBatch.addImage(mBottomRightCorner);
-				//addChild(mBottomRightCorner);
 			}
 			
 			flatten();
