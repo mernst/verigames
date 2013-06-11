@@ -111,6 +111,8 @@ package scenes.game
 		
 		protected  override function removedFromStage(event:starling.events.Event):void
 		{
+			removeChildren(0, -1, true);
+			active_world = null;
 		}
 		
 		

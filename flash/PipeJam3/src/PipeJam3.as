@@ -38,8 +38,8 @@ package
 			var originalCookies:String = JSON.stringify(this.loaderInfo.parameters);
 			var pattern:RegExp = /sid/;
 			cookies = escape(originalCookies.replace(pattern, "express.sid"));
-			LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValid);
-			
+	//		LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValid);
+			sessionIDValid(null);
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -87,7 +87,7 @@ package
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;
 				
-				Starling.multitouchEnabled = true; // useful on mobile devices
+				Starling.multitouchEnabled = false; // useful on mobile devices
 				Starling.handleLostContext = true; // deactivate on mobile devices (to save memory)
 				
 				var stats:Stats = new Stats;
@@ -95,7 +95,8 @@ package
 				
 				//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
 				mStarling = new Starling(PipeJamGame, stage);
-				mStarling.simulateMultitouch = true;
+				//mostly just an annoyance in desktop mode, so turn off...
+				mStarling.simulateMultitouch = false;
 				mStarling.enableErrorChecking = false;
 				mStarling.start();
 				

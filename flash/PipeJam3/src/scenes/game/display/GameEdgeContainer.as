@@ -165,7 +165,7 @@ package scenes.game.display
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			if(!m_useExistingPoints)
+			if(m_edgeArray.length == 2)
 			{
 				createJointPointsArray(m_startPoint, m_endPoint);
 				//fix up edge array also

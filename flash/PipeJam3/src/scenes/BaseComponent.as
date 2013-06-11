@@ -13,6 +13,7 @@ package scenes
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
 	import starling.textures.Texture;
+	import starling.events.Event;
 
 	public class BaseComponent extends starling.display.Sprite
 	{	
@@ -133,6 +134,11 @@ package scenes
 			var pos:Point = new Point(componentXML.@x * Constants.GAME_SCALE, componentXML.@y * Constants.GAME_SCALE);
 			
 			return pos;
+		}
+		
+		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			
 		}
 	}
 }

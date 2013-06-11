@@ -90,6 +90,8 @@ package scenes.game.display
 		private var edgeSetDictionary:Dictionary = new Dictionary;
 		
 		private var selectedComponents:Vector.<GameComponent>;
+		//stored for undo
+		private var selectionChangedComponents:Vector.<GameComponent>;
 		
 		private var marqueeRect:starling.display.Shape = new starling.display.Shape;
 		
@@ -106,7 +108,10 @@ package scenes.game.display
 		public static var SUBMIT_SCORE:String = "submit_score";
 		public static var SAVE_LOCALLY:String = "save_locally";
 		
+		//the level node and decendents
 		private var m_levelLayoutXML:XML;
+		//used when saving, as we need a parent graph element for the above level node
+		private var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
 		
 		private var boxDictionary:Dictionary;
@@ -215,6 +220,7 @@ package scenes.game.display
 					}
 					gameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
 				}
+				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
 				
@@ -312,7 +318,7 @@ package scenes.game.display
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
-			addEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
+			addEventListener(Level.COMPONENT_UNSELECTED, onComponentUnselection);
 			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
 			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(Level.MOVE_EVENT, onMoveEvent);
@@ -419,7 +425,6 @@ package scenes.game.display
 			var edgeArray:Array = new Array;
 			
 			var edgePoints:XMLList = edgeXML.point;
-			
 			for each(var pointXML:XML in edgePoints)
 			{
 				var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
@@ -427,7 +432,7 @@ package scenes.game.display
 			}
 			
 			//we need to adjust array if we are just using start and end points
-			if(!useExistingLines)
+			if(edgeArray.length == 2)
 			{
 				var newStartPt:Point = edgeArray[0];
 				var newEndPt:Point = edgeArray[edgeArray.length-1];
@@ -495,6 +500,8 @@ package scenes.game.display
 			} else {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
+			newGameEdge.visible = edgeXML.@visible;
+			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
 				copyLines.push(newGameEdge);
@@ -526,8 +533,15 @@ package scenes.game.display
 		{
 			updateLayoutXML();
 			
-			m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
-			LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXML);	
+			if(LoginHelper.levelObject != null)
+			{
+				m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
+				LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXMLWrapper);	
+			}
+			else
+			{
+				//save locally?
+			}
 		}
 		
 		
@@ -552,6 +566,10 @@ package scenes.game.display
 		public function setNewLayout(event:starling.events.Event, useExistingLines:Boolean = false):void
 		{
 			m_levelLayoutXML = event.data as XML;
+			//we might have ended up with a 'world', just grab the first level
+			if(m_levelLayoutXML.level != undefined)
+				m_levelLayoutXML = m_levelLayoutXML.level[0];
+			
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
@@ -560,7 +578,7 @@ package scenes.game.display
 			var children:XMLList = m_levelLayoutXML.children();
 			//set box and joint positions first
 			for each(var child:XML in children)
-			{
+			{ 
 				var childName:String = child.localName();
 				var gameNode:GameNodeBase = null;
 				if(childName.indexOf("box") != -1)
@@ -578,6 +596,7 @@ package scenes.game.display
 				{
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
+					gameNode.visible = child.@visible;
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -612,41 +631,65 @@ package scenes.game.display
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					child.@x = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
-					child.@y = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					var x:Number = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					child.@x = x.toFixed(2);
+					var y:Number = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					child.@y = y.toFixed(2);
+					child.@visible = edgeSet.visible;
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
 					var jointID:String = child.@id;
 					var joint:GameJointNode = jointDictionary[jointID];
-					child.@x = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
-					child.@y = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					if(joint != null)
+					{
+						var x:Number = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						child.@x = x.toFixed(2);
+						var y:Number = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						child.@y = y.toFixed(2);
+						child.@visible = joint.visible;
+					}
 				}
 				else if(childName.indexOf("line") != -1)
 				{
-					//remember first point to compare later
-					var oldPoint:Point = new Point(child.point[2].@x * Constants.GAME_SCALE, child.point[2].@y * Constants.GAME_SCALE);
-					//remove all current points, and then add new ones
-					delete child.point;
 					
 					var lineID:String = child.@id;
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
-					if(edgeContainer.m_jointPoints.length != 6)
-						trace("Wrong number of joint points");
-					for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
+					if(edgeContainer != null)
 					{
-						var pt:Point = edgeContainer.m_jointPoints[i];
-						var ptXML:XML = <point></point>;
-						ptXML.@x = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
-						ptXML.@y = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+						child.@visible = edgeContainer.visible;
 						
-						var ptt:Point = edgeContainer.localToGlobal(pt);
-						var pttt:Point = globalToLocal(ptt);
-					
-						child.appendChild(ptXML);
+						//remove all current points, and then add new ones
+						delete child.point;
+						
+						if(edgeContainer.m_jointPoints.length != 6)
+							trace("Wrong number of joint points " + lineID);
+						for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
+						{
+							var pt:Point = edgeContainer.m_jointPoints[i];
+							var ptXML:XML = <point></point>;
+							var x:Number = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							ptXML.@x = x.toFixed(2);
+							var y:Number = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							ptXML.@y = y.toFixed(2);
+												
+							child.appendChild(ptXML);
+						}
+						
+						if(child.frombox != undefined)
+							child.frombox.@port = edgeContainer.incomingEdgePosition;
+						else if(child.fromjoint != undefined)
+							child.fromjoint.@port = edgeContainer.incomingEdgePosition;
+						if(child.tobox != undefined)
+							child.tobox.@port = edgeContainer.outgoingEdgePosition;
+						else if(child.tojoint != undefined)
+							child.tojoint.@port = edgeContainer.outgoingEdgePosition;
 					}
 				}
 			}
+			
+			m_levelLayoutXMLWrapper = <graph id="world"/>;
+			m_levelLayoutXMLWrapper.appendChild(m_levelLayoutXML);
 		}
 		
 		
@@ -680,7 +723,7 @@ package scenes.game.display
 			
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
-			removeEventListener(Level.COMPONENT_UNSELECTED, onUnselectComponent);
+			removeEventListener(Level.COMPONENT_UNSELECTED, onComponentSelection);
 			removeEventListener(Level.GROUP_SELECTED, onGroupSelection);
 			removeEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(Level.MOVE_EVENT, onMoveEvent);
@@ -738,7 +781,7 @@ package scenes.game.display
 		}
 		
 		//data object should be in final selected/unselected state
-		private function onComponentSelectionChanged(component:GameNodeBase):void
+		private function componentSelectionChanged(component:GameNodeBase):void
 		{		
 			if(component.m_isSelected)
 			{
@@ -751,7 +794,9 @@ package scenes.game.display
 					if(selectedComponents.indexOf(fromComponent) != -1)
 					{
 						if(selectedComponents.indexOf(edge) == -1)
+						{
 							selectedComponents.push(edge);
+						}
 						edge.componentSelected(true);
 					}
 				}
@@ -761,7 +806,9 @@ package scenes.game.display
 					if(selectedComponents.indexOf(toComponent) != -1)
 					{
 						if(selectedComponents.indexOf(edge1) == -1)
+						{
 							selectedComponents.push(edge1);
+						}
 						edge1.componentSelected(true);
 					}
 				}
@@ -797,14 +844,22 @@ package scenes.game.display
 		{
 			var component:GameNodeBase = e.data as GameNodeBase;
 			if(component)
-				onComponentSelectionChanged(component);
+				componentSelectionChanged(component);
+			
+			selectionChangedComponents = new Vector.<GameComponent>();
+			selectionChangedComponents.push(component);
+			addSelectionUndoEvent(selectionChangedComponents);
 		}
 		
-		private function onUnselectComponent(e:starling.events.Event):void
+		private function onComponentUnselection(e:starling.events.Event):void
 		{
 			var component:GameNodeBase = e.data as GameNodeBase;
 			if(component)
-				onComponentSelectionChanged(component);
+				componentSelectionChanged(component);
+			
+			selectionChangedComponents = new Vector.<GameComponent>();
+			selectionChangedComponents.push(component);
+			addSelectionUndoEvent(selectionChangedComponents);
 		}
 		
 		private function onGroupSelection(e:starling.events.Event):void
@@ -812,16 +867,20 @@ package scenes.game.display
 			var component:GameNodeBase = e.data as GameNodeBase;
 			var groupDictionary:Dictionary = new Dictionary;
 			component.findGroup(groupDictionary);
-			
+			selectionChangedComponents = new Vector.<GameComponent>();
 			for each(var comp:GameComponent in groupDictionary)
 			{
 				if(selectedComponents.indexOf(comp) == -1)
 				{
 					comp.componentSelected(true);
 					if(comp is GameNodeBase)
-						onComponentSelectionChanged(comp as GameNodeBase);
+					{
+						componentSelectionChanged(comp as GameNodeBase);
+						selectionChangedComponents.push(comp);
+					}
 				}
 			}
+			addSelectionUndoEvent(selectionChangedComponents, true);
 		}
 		
 		private function onGroupUnselection(e:starling.events.Event):void
@@ -829,36 +888,103 @@ package scenes.game.display
 			var component:GameNodeBase = e.data as GameNodeBase;
 			var groupDictionary:Dictionary = new Dictionary;
 			component.findGroup(groupDictionary);
-			
+			selectionChangedComponents = new Vector.<GameComponent>();
 			for each(var comp:GameComponent in groupDictionary)
 			{
 				comp.componentSelected(false);
 				if(comp is GameNodeBase)
-					onComponentSelectionChanged(comp as GameNodeBase);
+				{
+					componentSelectionChanged(comp as GameNodeBase);
+					selectionChangedComponents.push(comp);
+				}
 			}
+
+			addSelectionUndoEvent(selectionChangedComponents);
 		}
 		
-		public function unselectAll():void
+		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, addToLast:Boolean = false):void
 		{
-			while(selectedComponents.length > 0)
+			var undoData:Object = new Object();
+			undoData.target = this;
+			undoData.selection = selection;
+			undoData.addToLast = addToLast;
+			var undoEvent:Event = new Event(Level.GROUP_SELECTED,false,undoData);
+			dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+		}
+		
+		public function unselectAll(addEventToLast:Boolean = false):void
+		{
+			//make a copy of the selected list for the undo event
+			var currentSelection:Vector.<GameComponent> = new Vector.<GameComponent>();
+			
+			for each(var comp:GameComponent in selectedComponents)
 			{
-				var comp:GameComponent = selectedComponents[0];
 				comp.componentSelected(false);
-				if(comp is GameNodeBase)
-					onComponentSelectionChanged(comp as GameNodeBase);
+				currentSelection.push(comp);
+			}
+
+			if(currentSelection.length)
+			{
+				addSelectionUndoEvent(currentSelection, addEventToLast);
+				selectedComponents = new Vector.<GameComponent>;
 			}
 		}
 		
 		private function onMoveEvent(e:starling.events.Event):void
 		{
-			var touch:Touch = e.data as Touch;
+			var touch:Touch = e.data.touches[0] as Touch;
 			
 			var currentMoveLocation:Point = touch.getLocation(this);
 			var previousLocation:Point = touch.getPreviousLocation(this);
 			var delta:Point = currentMoveLocation.subtract(previousLocation);
 			
-			for each(var component:GameComponent in selectedComponents)
-				component.componentMoved(delta);
+			//if component isn't in the currently selected group, unselect everything, and then move component
+			if(selectedComponents.indexOf(e.target) == -1)
+			{
+				unselectAll();
+				(e.target as GameComponent).componentMoved(delta);
+			}
+			else
+				for each(var component:GameComponent in selectedComponents)
+					component.componentMoved(delta);
+		}
+		
+		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			var undoData:Object = undoEvent.data;
+			var component:GameNodeBase = undoData.component as GameNodeBase;
+			if(undoEvent.type == GROUP_SELECTED) //individual selections come through here also
+			{
+				if(undoData.selection)
+				{
+					for each(var selectedComp:GameComponent in undoData.selection)
+					{
+						if(selectedComp is GameNodeBase)
+						{
+							selectedComp.componentSelected(!selectedComp.m_isSelected);
+						
+							componentSelectionChanged(selectedComp as GameNodeBase);
+						}
+					}
+				}
+			}
+			else if(undoEvent.type == MOVE_EVENT)
+			{
+				var delta:Point;
+				if(!isUndo)
+					delta = new Point(undoData.endPoint.x-undoData.startPoint.x, undoData.endPoint.y-undoData.startPoint.y);
+				else
+					delta = new Point(undoData.startPoint.x-undoData.endPoint.x, undoData.startPoint.y-undoData.endPoint.y);
+				
+				//not added as a temp selection, so move separately
+				if(component)
+					component.componentMoved(delta);
+				for each(var selectedComponent:GameComponent in selectedComponents)
+				{
+					if(component != selectedComponent)
+						selectedComponent.componentMoved(delta);
+				}
+			}
 		}
 		
 		//to be called once to set everything up 
@@ -961,6 +1087,7 @@ package scenes.game.display
 			else
 			{
 				
+				selectionChangedComponents = new Vector.<GameComponent>();
 				for each(var node:GameNode in m_nodeList)
 				{
 					handleSelection(node);
@@ -970,6 +1097,8 @@ package scenes.game.display
 					handleSelection(joint);
 				}
 				removeChild(marqueeRect);
+				
+				addSelectionUndoEvent(selectionChangedComponents);
 			}
 		}
 		
@@ -987,12 +1116,44 @@ package scenes.game.display
 				if((marqueeRect.bounds.top < node.bounds.bottom && marqueeRect.bounds.bottom > node.bounds.bottom) || 
 					(marqueeRect.bounds.top < node.bounds.top && marqueeRect.bounds.bottom > node.bounds.top))
 				{
+					selectionChangedComponents.push(node);
 					node.componentSelected(!node.m_isSelected);
-					var event:Event = new Event("temp", false, node);
-					this.onComponentSelection(event);
+					componentSelectionChanged(node);
 				}
 			}
 		}
+		
+		public function toggleUneditableStrings():void
+		{
+			var visitedNodes:Dictionary = new Dictionary;
+			for each(var node:GameNode in m_nodeList)
+			{
+				if(visitedNodes[node.m_id] == null)
+				{
+					visitedNodes[node.m_id] = node;
+					var groupDictionary:Dictionary = new Dictionary;
+					node.findGroup(groupDictionary);
+					//check for an editable node
+					var uneditable:Boolean = true;
+					for each(var comp:GameComponent in groupDictionary)
+					{
+						if(comp.m_isEditable)
+						{
+							uneditable = false;
+							break;
+						}
+					}
+					if(uneditable)
+					{
+						for each(var comp:GameComponent in groupDictionary)
+						{
+							comp.hideComponent(comp.visible);
+							visitedNodes[comp.m_id] = comp;
+						}
+					}
+				}
+			}
+		}	
 		
 		public function getNodes():Vector.<GameNode>
 		{
@@ -1003,5 +1164,6 @@ package scenes.game.display
 		{
 			return m_jointList;
 		}
+
 	}
 }
