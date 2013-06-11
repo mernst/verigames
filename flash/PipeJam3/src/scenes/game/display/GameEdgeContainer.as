@@ -1,24 +1,17 @@
 package scenes.game.display
 {
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import starling.display.DisplayObjectContainer;
+	import starling.events.Event;
+	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
-	
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.SubnetworkPort;
-	
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Quad;
-	import starling.display.Shape;
-	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -154,9 +147,8 @@ package scenes.game.display
 			}
 			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			
-			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
-
+			
 			m_isDirty = true;
 		}
 		
@@ -1164,9 +1156,9 @@ package scenes.game.display
 
 import flash.geom.Point;
 import scenes.game.display.GameComponent;
+import scenes.game.display.GameEdgeContainer;
 import scenes.game.display.GameEdgeJoint;
 import scenes.game.display.GameEdgeSegment;
-import scenes.game.display.GameEdgeContainer;
 
 class InnerBoxSegment extends GameComponent
 {
