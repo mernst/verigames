@@ -107,10 +107,6 @@ package scenes.game.display
 			m_useExistingPoints = useExistingPoints;
 			
 			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
-			// If coming out of a BALL_SIZE_TEST make it uneditable
-			if (toBox && (graphEdge.from_node.kind == NodeTypes.BALL_SIZE_TEST)) {
-				m_outputSegmentIsEditable = false;
-			}
 			// Also even if box is editable, if contains a pinch point then make editable = false
 			if (toBox && graphEdge.has_pinch && !edgeIsCopy) {
 				m_outputSegmentIsEditable = false;

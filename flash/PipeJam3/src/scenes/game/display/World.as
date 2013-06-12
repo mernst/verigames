@@ -126,13 +126,12 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			gameControlPanel = new GameControlPanel;
-			addChild(gameControlPanel);
-			
-			edgeSetGraphViewPanel = new GridViewPanel;
-			//position before adding to get clip rect in right place
-			edgeSetGraphViewPanel.x = gameControlPanel.width;
+			edgeSetGraphViewPanel = new GridViewPanel();
 			addChild(edgeSetGraphViewPanel);
+			
+			gameControlPanel = new GameControlPanel();
+			gameControlPanel.y = edgeSetGraphViewPanel.height;
+			addChild(gameControlPanel);
 			
 			selectLevel(firstLevel);
 			

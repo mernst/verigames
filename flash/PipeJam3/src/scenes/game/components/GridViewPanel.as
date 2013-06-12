@@ -47,8 +47,8 @@ package scenes.game.components
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
 	{
-		private static const WIDTH:Number = 384;
-		private static const HEIGHT:Number = Constants.GameHeight;
+		private static const WIDTH:Number = Constants.GameWidth;
+		private static const HEIGHT:Number = 270;
 		
 		protected var m_currentLevel:Level;
 		
