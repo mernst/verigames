@@ -613,29 +613,13 @@ package system
 					break;
 					
 					case NodeTypes.BALL_SIZE_TEST : {
+						// new implementation: always output a small ball down the small pipe
+						// and a large ball down the wide pipe, rather that "sorting" the balls
 						for each (var outgoing_port:Port in node.outgoing_ports) {
 							if (outgoing_port.edge.is_wide) {
-								// If there was a wide ball, send it down this pipe
-								switch (edge.exit_ball_type) {
-									case Edge.BALL_TYPE_WIDE:
-									case Edge.BALL_TYPE_WIDE_AND_NARROW:
-										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
-									break;
-									default:
-										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-									break;
-								}
+								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
 							} else {
-								// If there was a narrow ball, send it down this pipe
-								switch (edge.exit_ball_type) {
-									case Edge.BALL_TYPE_NARROW:
-									case Edge.BALL_TYPE_WIDE_AND_NARROW:
-										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
-									break;
-									default:
-										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-									break;
-								}
+								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							}
 							queue.push(outgoing_port.edge); //enqueue
 						}
