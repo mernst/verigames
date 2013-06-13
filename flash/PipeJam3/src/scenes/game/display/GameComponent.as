@@ -4,7 +4,6 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	
 	import scenes.BaseComponent;
-	import scenes.login.NetworkConnection;
 	
 	import starling.display.DisplayObjectContainer;
 	import starling.display.materials.StandardMaterial;

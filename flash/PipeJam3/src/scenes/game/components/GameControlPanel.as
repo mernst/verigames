@@ -1,8 +1,9 @@
 package scenes.game.components
 {
-	import com.greensock.TweenLite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -32,9 +33,10 @@ package scenes.game.components
 		/** Graphical object showing user's score */
 		private var m_scorePanel:BaseComponent;
 		
-		/** Graphical object, child of scorePanel to hold all scoreBlocks */
+		/** Graphical object, child of scorePanel to hold scorebar */
 		private var m_scoreBarContainer:Sprite;
 		
+		/** Indicate the current score */
 		private var m_scoreBar:Quad;
 		
 		/** Text showing current score on score_pane */
@@ -218,14 +220,30 @@ package scenes.game.components
 			var BAR_SLIDING_ANIM_SEC:Number = 1.0;
 			if (newBarWidth < m_scoreBar.width) {
 				// If we're shrinking, shrink right away - then show flash showing the difference
-				TweenLite.killTweensOf(m_scoreBar);
-				TweenLite.to(m_scoreBar, BAR_SLIDING_ANIM_SEC, { width: newBarWidth } );
-				TweenLite.to(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, { x: newScoreX} );
+				Starling.juggler.removeTweens(m_scoreBar);
+				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   width: newBarWidth
+				});
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   x: newScoreX
+				});
 			} else if (newBarWidth > m_scoreBar.width) {
 				// If we're growing, flash the difference first then grow
-				TweenLite.killTweensOf(m_scoreBar);
-				TweenLite.to(m_scoreBar, BAR_SLIDING_ANIM_SEC, { width: newBarWidth, delay:FLASHING_ANIM_SEC } );
-				TweenLite.to(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, { x: newScoreX, delay:FLASHING_ANIM_SEC} );
+				Starling.juggler.removeTweens(m_scoreBar);
+				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   delay: FLASHING_ANIM_SEC,
+				   width: newBarWidth
+				});
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   delay: FLASHING_ANIM_SEC,
+				   x: newScoreX
+				});
 			} else {
 				return;
 			}
@@ -243,7 +261,6 @@ package scenes.game.components
 			adjustedBounds.height /= m_scoreBarContainer.scaleY;
 			
 			// Tween to make this fit the area we want it to, ONLY IF OFF SCREEN
-			TweenLite.killTweensOf(m_scoreBarContainer);
 			var newScaleX:Number = (SCORE_PANEL_AREA.width - 2 * PAD) / blocksBounds.width;
 			//var newScaleY:Number = Math.min(SCORE_PANEL_MAX_SCALEY, (SCORE_PANEL_AREA.height - 2 * PAD) / adjustedBounds.height);
 			var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
@@ -252,7 +269,12 @@ package scenes.game.components
 			// OR if was shrunk below 100% and doesn't need to be
 			if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD
 				|| ((m_scoreBarContainer.scaleX < 1.0) && (newScaleX > m_scoreBarContainer.scaleX))) {
-				TweenLite.to(m_scoreBarContainer, 1.5, { /*x:newX, y:newY, */ scaleX:newScaleX,/* scaleY: newScaleY,*/ delay:(FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY) } );
+				Starling.juggler.removeTweens(m_scoreBarContainer);
+				Starling.juggler.tween(m_scoreTextfield, 1.5, {
+				   transition: Transitions.EASE_OUT,
+				   delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
+				   scaleX: newScaleX
+				});
 			}
 		}
 		
