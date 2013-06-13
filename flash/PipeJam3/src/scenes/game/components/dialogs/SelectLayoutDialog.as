@@ -1,4 +1,4 @@
-package scenes.game.components
+package scenes.game.components.dialogs
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -26,7 +26,7 @@ package scenes.game.components
 	import starling.text.TextField;
 	import starling.textures.Texture;
 
-	public class SelectLayoutDialogBox extends BaseComponent
+	public class SelectLayoutDialog extends BaseComponent
 	{
 		protected var m_layoutMenu:starling.display.Sprite;
 				
@@ -39,7 +39,7 @@ package scenes.game.components
 		protected var layoutArray:Array = null;
 		protected var m_layoutVector:Vector.<Object>;
 		
-		public function SelectLayoutDialogBox()
+		public function SelectLayoutDialog()
 		{
 			super();
 			

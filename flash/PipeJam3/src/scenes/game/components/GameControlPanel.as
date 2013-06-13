@@ -45,6 +45,8 @@ package scenes.game.components
 		/** Button to bring the up the menu */
 		private var m_menuButton:Button;
 		
+		private var menuShowing:Boolean = false;
+		
 		/** Current Score of the player */
 		private var m_currentScore:int = 0;
 		
@@ -88,16 +90,17 @@ package scenes.game.components
 			
 			m_menuButton = new Button(menuButtonUp, "", menuButtonClick);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_menuButton.width *= .5;
-			m_menuButton.height *= .5;
-			m_menuButton.x = 2;
+//			m_menuButton.width *= .4;
+//			m_menuButton.height *= .5;
+			m_menuButton.x = 4;
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
 		}
 		
 		private function onMenuButtonTriggered():void
 		{
-			dispatchEvent(new Event(World.SHOW_GAME_MENU, true));
+			menuShowing = !menuShowing;
+			dispatchEvent(new Event(World.SHOW_GAME_MENU, true, menuShowing));
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void

@@ -113,8 +113,35 @@ package scenes.game.display
 			}
 			
 			//start these at their given port numbers
-			outgoingEdgePosition = parseInt(m_fromPortID);
-			incomingEdgePosition = parseInt(m_toPortID);
+			if(!isNaN(parseInt(m_fromPortID)))
+				outgoingEdgePosition = parseInt(m_fromPortID);
+			else
+			{
+				trace(m_fromPortID);
+				if(m_fromPortID.indexOf("left") != -1)
+					outgoingEdgePosition = 0;
+				else if(m_fromPortID.indexOf("right") != -1)
+					outgoingEdgePosition = 1;
+				else if(m_fromPortID.indexOf("input") != -1)
+					outgoingEdgePosition = 0;
+				else if(m_fromPortID.indexOf("output") != -1)
+					outgoingEdgePosition = 0;
+			}
+			if(!isNaN(parseInt(m_toPortID)))
+				incomingEdgePosition = parseInt(m_toPortID);
+			else
+			{
+				trace(m_toPortID);
+				if(m_toPortID.indexOf("left") != -1)
+					incomingEdgePosition = 0;
+				else if(m_toPortID.indexOf("right") != -1)
+					incomingEdgePosition = 1;
+				else if(m_toPortID.indexOf("input") != -1)
+					incomingEdgePosition = 0;
+				else if(m_toPortID.indexOf("output") != -1)
+					incomingEdgePosition = 0;
+			}
+			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			

@@ -15,7 +15,7 @@ package scenes.game.display
 	import scenes.BaseComponent;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import scenes.game.components.InGameMenuBox;
+	import scenes.game.components.dialogs.InGameMenuDialog;
 	
 	import starling.display.Button;
 	import starling.display.Image;
@@ -34,7 +34,7 @@ package scenes.game.display
 	{
 		protected var edgeSetGraphViewPanel:GridViewPanel;
 		public var gameControlPanel:GameControlPanel;
-	
+		protected var inGameMenuBox:InGameMenuDialog;
 		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
@@ -132,7 +132,7 @@ package scenes.game.display
 			gameControlPanel = new GameControlPanel();
 			gameControlPanel.y = edgeSetGraphViewPanel.height;
 			addChild(gameControlPanel);
-			
+						
 			selectLevel(firstLevel);
 			
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
@@ -149,12 +149,22 @@ package scenes.game.display
 			addEventListener(UNDO_EVENT, saveEvent);
 		}
 		
-		private function onShowGameMenuEvent():void
+		private function onShowGameMenuEvent(e:starling.events.Event):void
 		{
-			var inGameMenuBox:InGameMenuBox = new InGameMenuBox();
-			addChild(inGameMenuBox);
-			inGameMenuBox.x = 150;
-			inGameMenuBox.y = 20;
+			if(e.data == true)
+			{
+				if(inGameMenuBox == null)
+				{
+					inGameMenuBox = new InGameMenuDialog();
+					addChild(inGameMenuBox);
+					inGameMenuBox.x = 0;
+					inGameMenuBox.y = gameControlPanel.y - inGameMenuBox.height;
+				}
+				inGameMenuBox.visible = true;
+			}
+			else
+				inGameMenuBox.visible = false;
+				
 		}
 		
 		public function onSaveLayoutFile(event:starling.events.Event):void
