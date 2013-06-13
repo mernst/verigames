@@ -76,5 +76,11 @@ package assets
 		
 		[Embed(source="../../lib/assets/menus/NextLevelClick.png")]
 		public var NextLevelButtonClickClass:Class;
+		
+		[Embed(source="../../lib/assets/menus/InGameMenuBackground.png")]
+		public var InGameMenuBackgroundClass:Class;
+		
+		[Embed(source="../../lib/assets/menus/SubmitLayoutDialogBackground.png")]
+		public var SubmitLayoutDialogBackgroundClass:Class;
 	}
 }
