@@ -29,6 +29,10 @@ edge2linexml = {}
 # node2xml[levelid][dotnodestring] = box/joint xml element
 node2xml = {}
 
+# numnodeinputports[dotnodeid] = number of input ports, used for port labeling since port ids are strings
+numnodeinputports = {}
+numnodeoutputports = {}
+
 # portxcoords[boxid___P___portid] = x coordinate that incoming/outgoing ports
 # should use - use this lookup to force them to have the exact same x value
 # i.e. if incoming port "1" has x=23.54 make outgoing port "1" have x=23.54
@@ -190,6 +194,8 @@ def layout(infile, outfile, outputdotfiles):
 		edge2linexml[lname] = {}
 		node2xml[lname] = {}
 		portxcoords = {}
+		numnodeinputports = {}
+		numnodeoutputports = {}
 		#print 'Laying out Level: %s' % lname
 		dotin =  'digraph %s {\n' % lname
 		dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
@@ -231,17 +237,37 @@ def layout(infile, outfile, outputdotfiles):
 			if (len(linex.getElementsByTagName('fromjoint')) == 1) and (len(linex.getElementsByTagName('tobox')) == 1):
 				fromid = 'J_%s' % sanitize(linex.getElementsByTagName('fromjoint')[0].attributes['id'].value)
 				fromport = linex.getElementsByTagName('fromjoint')[0].attributes['port'].value
+				fromportnum = numnodeoutputports.get(fromid)
+				if fromportnum is None:
+					fromportnum = 0
+					numnodeoutputports[fromid] = 0
+				numnodeoutputports[fromid] += 1
 				toid = 'B_%s' % sanitize(linex.getElementsByTagName('tobox')[0].attributes['id'].value)
 				toport = linex.getElementsByTagName('tobox')[0].attributes['port'].value
+				toportnum = numnodeinputports.get(toid)
+				if toportnum is None:
+					toportnum = 0
+					numnodeinputports[toid] = 0
+				numnodeinputports[toid] += 1
 			elif (len(linex.getElementsByTagName('frombox')) == 1) and (len(linex.getElementsByTagName('tojoint')) == 1):
 				fromid = 'B_%s' % sanitize(linex.getElementsByTagName('frombox')[0].attributes['id'].value)
 				fromport = linex.getElementsByTagName('frombox')[0].attributes['port'].value
+				fromportnum = numnodeoutputports.get(fromid)
+				if fromportnum is None:
+					fromportnum = 0
+					numnodeoutputports[fromid] = 0
+				numnodeoutputports[fromid] += 1
 				toid = 'J_%s' % sanitize(linex.getElementsByTagName('tojoint')[0].attributes['id'].value)
 				toport = linex.getElementsByTagName('tojoint')[0].attributes['port'].value
+				toportnum = numnodeinputports.get(toid)
+				if toportnum is None:
+					toportnum = 0
+					numnodeinputports[toid] = 0
+				numnodeinputports[toid] += 1
 			else:
 				print 'Warning: unsupported input/outputs for line id: %s' % lid
 				continue
-			edgeid = '%s:o%s -> %s:i%s' % (fromid, fromport, toid, toport)
+			edgeid = '%s:o%s -> %s:i%s' % (fromid, fromportnum, toid, toportnum)
 			edge2linexml[lname][edgeid] = linex
 			dotin += '  %s;\n' % (edgeid)
 		dotin += '}'
