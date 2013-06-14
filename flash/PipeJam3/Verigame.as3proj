@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="bin\Verigame.swf" />
     <movie fps="30" />
-    <movie width="1024" />
-    <movie height="768" />
+    <movie width="960" />
+    <movie height="640" />
     <movie version="11" />
     <movie minorVersion="1" />
     <movie platform="Flash Player" />
@@ -21,6 +21,7 @@
     <class path="external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src" />
     <class path="external\Hi-ReS-Stats-master\src" />
     <class path="external\Feathers 1.0.1\source" />
+    <class path="external\Starling-Framework\starling\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -58,7 +59,6 @@
     <element path="lib\assets\" />
     <element path="external\cgs-common\CGSCommon.swc" />
     <element path="external\Starling-Extension-Graphics\extension\bin\Starling-Extension-Graphics.swc" />
-    <element path="external\Starling-Framework\starling\bin\starling.swc" />
     <element path="external\Feathers 1.0.1\swc\feathers.swc" />
   </libraryPaths>
   <!-- External Libraries -->
