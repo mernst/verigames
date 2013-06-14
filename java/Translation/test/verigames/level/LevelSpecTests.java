@@ -1,20 +1,15 @@
 package verigames.level;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import verigames.level.Board;
-import verigames.level.Chute;
-import verigames.level.Intersection;
-import verigames.level.Level;
-import verigames.level.Intersection.Kind;
+import verigames.level.*;
+import verigames.level.StubBoard.*;
+import verigames.level.Intersection.*;
 
 // TODO add tests for other features of level
 
@@ -148,5 +143,25 @@ public class LevelSpecTests
     l.linkByVarID(1, 3);
     assertTrue(l.areVarIDsLinked(1, 3));
     assertFalse(l.areVarIDsLinked(1, 2));
+  }
+
+  @Test
+  public void stubBoardSanityCheck()
+  {
+    Level l = new Level();
+
+    List<StubConnection> inputs = new ArrayList<>();
+    inputs.add(new StubConnection("input1", true));
+    List<StubConnection> outputs = new ArrayList<>();
+    outputs.add(new StubConnection("output1", false));
+
+    StubBoard b = new StubBoard(inputs, outputs);
+
+    l.addStubBoard("stub", b);
+
+    assertEquals(b, l.getStubBoard("stub"));
+    assertTrue(l.contains("stub"));
+    assertEquals(inputs, b.getInputs());
+    assertEquals(outputs, b.getOutputs());
   }
 }

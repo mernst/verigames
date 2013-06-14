@@ -2,13 +2,12 @@ package verigames.level;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 import verigames.layout.GameCoordinate;
 import verigames.level.Intersection.Kind;
+import verigames.level.StubBoard.*;
 import verigames.utilities.Printer;
 
 import nu.xom.*;
@@ -16,7 +15,7 @@ import nu.xom.*;
 // TODO add lots of documentation
 public class WorldXMLPrinter extends Printer<World, Void>
 {
-  public static final int version = 1;
+  public static final int version = 2;
 
   /**
    * Prints the XML representation for {@code toPrint}<br/>
@@ -166,11 +165,42 @@ public class WorldXMLPrinter extends Printer<World, Void>
     return edgesElt;
   }
 
+  private void addStubConnections(Collection<StubConnection> connections, Element elt)
+  {
+    for (StubConnection c : connections)
+    {
+      Element connectionElt = new Element("stub-connection");
+      connectionElt.addAttribute(new Attribute("num", c.getPortName()));
+      connectionElt.addAttribute(new Attribute("width", c.isNarrow() ? "narrow" : "wide"));
+      elt.appendChild(connectionElt);
+    }
+  }
+
   private Element constructBoardsMap(Level l)
   {
     Map<String, Board> boardNames = l.getBoards();
+    Map<String, StubBoard> stubBoardNames = l.getStubBoards();
 
     Element boardsElt = new Element("boards");
+
+    for (Map.Entry<String, StubBoard> entry : stubBoardNames.entrySet())
+    {
+      String name = entry.getKey();
+      StubBoard stub = entry.getValue();
+
+      Element stubElt = new Element("board-stub");
+      stubElt.addAttribute(new Attribute("name", name));
+
+      Element inputElt = new Element("stub-input");
+      addStubConnections(stub.getInputs(), inputElt);
+      stubElt.appendChild(inputElt);
+
+      Element outputElt = new Element("stub-output");
+      addStubConnections(stub.getOutputs(), outputElt);
+      stubElt.appendChild(outputElt);
+
+      boardsElt.appendChild(stubElt);
+    }
 
     for (Map.Entry<String, Board> entry : boardNames.entrySet())
     {
