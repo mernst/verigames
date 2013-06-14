@@ -1,20 +1,19 @@
 package scenes.game.display
 {
+	import display.RoundedRect;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Sprite;
+	import starling.events.Event;
+	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import graph.NodeTypes;
-	import graph.SubnetworkPort;
-	
 	import graph.Edge;
+	import graph.NodeTypes;
 	import graph.Port;
-	
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Quad;
-	import starling.display.Shape;
-	import starling.events.Event;
+	import graph.SubnetworkPort;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -22,6 +21,7 @@ package scenes.game.display
 		public var m_toComponent:GameNodeBase;
 		public var m_fromPortID:String;
 		public var m_toPortID:String;
+		public var m_extensionEdge:GameEdgeContainer;
 		
 		private var m_dir:String;
 		private var m_useExistingPoints:Boolean;
@@ -33,15 +33,22 @@ package scenes.game.display
 		public var m_outputSegmentIsEditable:Boolean = true;
 		
 		//save start and end points, so we can remake line
-		private var m_startPoint:Point;
-		private var m_endPoint:Point;
+		public var m_startPoint:Point;
+		public var m_endPoint:Point;
+		public var m_savedStartPoint:Point;
+		public var m_savedEndPoint:Point;
 		public var m_startJoint:GameEdgeJoint;
 		public var m_endJoint:GameEdgeJoint;
 		public var m_markerJoint:GameEdgeJoint;
 		
+		public var hasChanged:Boolean;
+		public var restoreEdge:Boolean;
+		
 		private var m_innerBoxSegment:InnerBoxSegment;
+		private var m_savedInnerBoxSegmentLocation:Point;
 		
 		public var m_jointPoints:Array;
+		public var m_savedJointPoints:Array;
 		
 		public var incomingEdgePosition:Number;
 		public var outgoingEdgePosition:Number;
@@ -49,19 +56,34 @@ package scenes.game.display
 		public var graphEdge:Edge;
 		public var edgeIsCopy:Boolean;
 		
+		public var errorContainer:Sprite = new Sprite();
+		public var errorMarker:RoundedRect;
+		
+		private var m_edgeHasError:Boolean = false;
+		private var m_portHasError:Boolean = false;
+		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
+		
 		//use for figuring out closest wall
 		public static var LEFT_WALL:int = 1;
 		public static var RIGHT_WALL:int = 2;
 		public static var TOP_WALL:int = 3;
 		public static var BOTTOM_WALL:int = 4;
 		
-		public static var WIDE_WIDTH:Number = .3;
-		public static var NARROW_WIDTH:Number = .1;
-		private static var EXTENSION_LENGTH:Number = .3;
+		public static var WIDE_WIDTH:Number = .3 * Constants.GAME_SCALE;
+		public static var NARROW_WIDTH:Number = .1 * Constants.GAME_SCALE;
+		public static var ERROR_WIDTH:Number = .6 * Constants.GAME_SCALE;
+		private static var EXTENSION_LENGTH:Number = .3 * Constants.GAME_SCALE;
 		
 		public static var CREATE_JOINT:String = "create_joint";
 		public static var DIR_BOX_TO_JOINT:String = "2joint";
 		public static var DIR_JOINT_TO_BOX:String = "2box";
+		
+		public static var HOVER_EVENT_OVER:String = "hover_event_in";
+		public static var HOVER_EVENT_OUT:String = "hover_event_out";
+		
+		public static var RUBBER_BAND_SEGMENT:String = "rubber_band_segment";
+		public static var SAVE_CURRENT_LOCATION:String = "save_current_location";
+		public static var RESTORE_CURRENT_LOCATION:String = "restore_current_location";
 		
 		public var NUM_JOINTS:int = 6;
 		
@@ -90,8 +112,38 @@ package scenes.game.display
 				m_outputSegmentIsEditable = false;
 			}
 			
-			outgoingEdgePosition = fromComponent.setOutgoingEdge(this);
-			incomingEdgePosition = toComponent.setIncomingEdge(this);
+			//start these at their given port numbers
+			if(!isNaN(parseInt(m_fromPortID)))
+				outgoingEdgePosition = parseInt(m_fromPortID);
+			else
+			{
+				trace(m_fromPortID);
+				if(m_fromPortID.indexOf("left") != -1)
+					outgoingEdgePosition = 0;
+				else if(m_fromPortID.indexOf("right") != -1)
+					outgoingEdgePosition = 1;
+				else if(m_fromPortID.indexOf("input") != -1)
+					outgoingEdgePosition = 0;
+				else if(m_fromPortID.indexOf("output") != -1)
+					outgoingEdgePosition = 0;
+			}
+			if(!isNaN(parseInt(m_toPortID)))
+				incomingEdgePosition = parseInt(m_toPortID);
+			else
+			{
+				trace(m_toPortID);
+				if(m_toPortID.indexOf("left") != -1)
+					incomingEdgePosition = 0;
+				else if(m_toPortID.indexOf("right") != -1)
+					incomingEdgePosition = 1;
+				else if(m_toPortID.indexOf("input") != -1)
+					incomingEdgePosition = 0;
+				else if(m_toPortID.indexOf("output") != -1)
+					incomingEdgePosition = 0;
+			}
+			
+			fromComponent.setOutgoingEdge(this);
+			toComponent.setIncomingEdge(this);
 			
 			m_startPoint = edgeArray[0];
 			m_endPoint = edgeArray[edgeArray.length-1];
@@ -112,6 +164,13 @@ package scenes.game.display
 						break;
 				}
 			}
+			if(fromComponent is GameNode)
+				m_extensionEdge = (fromComponent as GameNode).getExtensionEdge(_fromPortID, true);
+			else
+				m_extensionEdge = (toComponent as GameNode).getExtensionEdge(_toPortID, false);
+			if(m_extensionEdge)
+				m_extensionEdge.m_extensionEdge = this;
+			
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, startingCircle);
 			
 			m_boundingBox = _boundingBox;
@@ -126,17 +185,15 @@ package scenes.game.display
 			}
 			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			
-			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
-			addEventListener(CREATE_JOINT, onCreateJoint);
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			
 			m_isDirty = true;
 		}
 		
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			if(!m_useExistingPoints)
+			if(m_edgeArray.length == 2)
 			{
 				createJointPointsArray(m_startPoint, m_endPoint);
 				//fix up edge array also
@@ -162,6 +219,14 @@ package scenes.game.display
 			
 			updateSize();
 			m_isDirty = true;
+			
+			addEventListener(CREATE_JOINT, onCreateJoint);
+			addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			addEventListener(HOVER_EVENT_OVER, onHoverOver);
+			addEventListener(HOVER_EVENT_OUT, onHoverOut);
+			addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
+			addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
 		}
 		
 		private function isTopOfEdge():Boolean
@@ -287,23 +352,32 @@ package scenes.game.display
 		
 		private function onEdgeTroublePointAdded(evt:EdgeTroublePointEvent):void
 		{
+			m_edgeHasError = true;
 			if (m_hasError) {
 				return;
 			}
 			m_hasError = true;
-			m_isDirty = true;
+			if (errorMarker == null) {
+				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker.x = -ERROR_WIDTH / 2;
+				errorMarker.y = -ERROR_WIDTH / 2;
+			}
+			errorContainer.addChild(errorMarker);
 		}
 		
 		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
 		{
+			m_edgeHasError = false;
 			if (!m_hasError) {
 				return;
 			}
-			m_hasError = false;
-			m_isDirty = true;
+			m_hasError = m_portHasError;
+			if (!m_hasError && errorMarker) {
+				errorMarker.removeFromParent(true);
+			}
+			errorMarker = null;
 		}
 		
-		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		public function listenToPortForTroublePoints(_port:Port):void
 		{
 			if (m_listeningToPorts.indexOf(_port) == -1) {
@@ -340,28 +414,123 @@ package scenes.game.display
 			}
 		}
 		
+		
 		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
 		{
+			m_portHasError = true;
 			if (m_hasError) {
 				return;
 			}
 			m_hasError = true;
-			if (m_markerJoint) {
-				m_markerJoint.m_hasError = true;
+			if (errorMarker == null) {
+				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker.x = -ERROR_WIDTH / 2;
+				errorMarker.y = -ERROR_WIDTH / 2;
 			}
-			m_isDirty = true;
+			errorContainer.addChild(errorMarker);
 		}
 		
 		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
 		{
+			m_portHasError = false;
 			if (!m_hasError) {
 				return;
 			}
-			m_hasError = false;
-			if (m_markerJoint) {
-				m_markerJoint.m_hasError = false;
+			m_hasError = m_edgeHasError;
+			if (!m_hasError && errorMarker) {
+				errorMarker.removeFromParent(true);
+			}
+			errorMarker = null;
+		}
+		
+		private function onHoverOver(event:Event):void
+		{
+			handleHover(true);
+			if(m_extensionEdge)
+				m_extensionEdge.handleHover(true);
+		}
+		
+		private function onHoverOut(event:Event):void
+		{
+			handleHover(false);
+			if(m_extensionEdge)
+				m_extensionEdge.handleHover(false);
+		}
+		
+		private function onSaveLocation(event:Event):void
+		{
+			saveLocation();
+			if(m_extensionEdge)
+				m_extensionEdge.saveLocation();
+		}
+		
+		private function saveLocation():void
+		{
+			hasChanged = false;
+			restoreEdge = true;
+			m_savedJointPoints = new Array;
+			
+			m_savedStartPoint = m_startPoint.clone();
+			m_savedEndPoint = m_endPoint.clone();
+			
+			for each(var pt:Point in m_jointPoints)
+				m_savedJointPoints.push(pt.clone());
+			
+			m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
+		}
+		
+		private function onRestoreLocation(event:Event):void
+		{
+			restoreLocation();
+						
+			if(m_extensionEdge)
+				m_extensionEdge.restoreLocation();
+		}
+		
+		private function restoreLocation():void
+		{
+			if(restoreEdge)
+			{
+				m_jointPoints = m_savedJointPoints;
+				m_startPoint = m_savedStartPoint;
+				m_endPoint = m_savedEndPoint;
+				positionChildren();
+				m_innerBoxSegment.interiorPt.x = m_savedInnerBoxSegmentLocation.x;
+				m_innerBoxSegment.interiorPt.y = m_savedInnerBoxSegmentLocation.y;
+			}
+			else
+			{
+				m_startPoint = m_savedStartPoint;
+				m_endPoint = m_savedEndPoint;
+				rubberBandEdge(new Point(), true);
 			}
 			m_isDirty = true;
+		}
+		
+		private function handleHover(turnHoverOn:Boolean):void
+		{
+			for each (var joint:GameEdgeJoint in m_edgeJoints) 
+			{
+				joint.isHoverOn = turnHoverOn;
+				joint.m_isDirty = true;
+			}
+			
+			var segment:GameEdgeSegment;
+			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
+			{
+				segment = m_edgeSegments[segIndex];
+				segment.isHoverOn = turnHoverOn;
+				segment.m_isDirty = true;
+			}
+			
+			m_innerBoxSegment.edgeSegment.isHoverOn = turnHoverOn;
+			m_innerBoxSegment.edgeSegment.m_isDirty = true;
+			
+			if(turnHoverOn)
+			{
+				//reorder to place on top
+				parent.setChildIndex(this, parent.numChildren);
+			}
 		}
 		
 		private function getBallTypeChangeEvent():String
@@ -409,10 +578,16 @@ package scenes.game.display
 			for(var index:int = 1; index<numJoints; index++)
 			{
 				var isLastSegment:Boolean = false;
-				
+				var isNodeExtensionSegment:Boolean = false;
 				if(index+1 == numJoints)
+				{
 					isLastSegment = true;
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isLastSegment, false, isLastSegment ? m_outgoingIsWide : m_isWide);
+					isNodeExtensionSegment = true;
+				}
+				if(index == 1)
+					isNodeExtensionSegment = true;
+					
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, isLastSegment ? m_outgoingIsWide : m_isWide);
 				if(!isLastSegment)
 					segment.m_isEditable = m_isEditable;
 				else
@@ -477,7 +652,12 @@ package scenes.game.display
 				joint.x = m_jointPoints[segIndex].x;
 				joint.y = m_jointPoints[segIndex].y;
 				
-				addChild(joint);
+				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+					errorContainer.x = this.x + joint.x;
+					errorContainer.y = this.y + joint.y;
+				}
+				
+				addChildAt(joint, 0);
 			}
 			
 			//deal with last joint special, since it's at the end of a segment
@@ -485,7 +665,7 @@ package scenes.game.display
 			//add joint at end
 			lastJoint.x = m_jointPoints[m_edgeSegments.length].x;
 			lastJoint.y = m_jointPoints[m_edgeSegments.length].y;
-			addChild(lastJoint);
+			addChildAt(lastJoint, 0);
 		}
 		
 		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
@@ -510,74 +690,263 @@ package scenes.game.display
 			}
 		}
 		
+		private function onRubberBandSegment(event:Event):void
+		{
+			if(event.target as GameEdgeSegment)
+			{
+				var segment:GameEdgeSegment = event.target as GameEdgeSegment;
+				
+				if(segment.parent is InnerBoxSegment)
+				{
+					rubberBandEdgeSegment(segment.updatePoint, segment);
+			//		rubberBandEdgeSegment(segment.updatePoint, (segment.parent as InnerBoxSegment).m_extensionEdge);
+				}
+				else
+					rubberBandEdgeSegment(segment.updatePoint, segment);
+			}
+		}
+		
 		public function rubberBandEdgeSegment(deltaPoint:Point, segment:GameEdgeSegment):void 
 		{
 			//update both end joints, and then redraw
 			var segmentIndex:int = m_edgeSegments.indexOf(segment);
-			
-			//if either of the end segments, exit for now. Will want to handle like we did for dragging connection joints around previously
-			//and same for the tunnel/end section within the nodes, I think
-			if(segmentIndex == 0 || segmentIndex == m_edgeSegments.length-1)
-				return;
-			
-			//if connected to end segment, add a expansion joint in between. Test both ends.
-			if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
+			//not a innerbox segment or end segment
+			if(segmentIndex != -1 && segmentIndex != 0 && segmentIndex != m_edgeSegments.length-1) 
+			{				
+				//if connected to end segment, add a expansion joint in between. Test both ends.
+				if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
+				{
+					if(segmentIndex == 1)
+					{
+						m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
+						segmentIndex++;
+						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
+						m_edgeJoints.splice(1, 0, newJoint);
+						newJoint.isHoverOn = true;
+	
+						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
+						this.m_edgeSegments.splice(1,0,newSegment);	
+						newSegment.isHoverOn = true;
+					}
+					if(segmentIndex+3 == m_jointPoints.length)
+					{
+						m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
+					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
+						m_edgeJoints.splice(-2, 0, newEndJoint);
+						newEndJoint.isHoverOn = true;
+						
+					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
+						this.m_edgeSegments.splice(-1,0,newEndSegment);	
+						newEndSegment.isHoverOn = true;
+					}
+				}
+				
+				//check for horizontal or vertical
+				if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
+				{
+					m_jointPoints[segmentIndex].y += deltaPoint.y;
+					m_jointPoints[segmentIndex+1].y += deltaPoint.y;
+				}
+				else
+				{
+					m_jointPoints[segmentIndex].x += deltaPoint.x;
+					m_jointPoints[segmentIndex+1].x += deltaPoint.x;
+				}
+	
+				
+				
+				//check for any really short segments, and if found, remove them. Start at the end and work backwards
+				//don't do if we just added a segment
+				//!!Interesting idea, but there are flaws, in that you can now create diagonal lines
+	//			if(!m_recreateEdge)
+	//				for(var i:int = m_jointPoints.length - 2; i >= 0; i--)
+	//				{
+	//					trace(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y));
+	//					if(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y) < .1)
+	//					{
+	//						m_jointPoints.splice(i, 1);
+	//						m_recreateEdge = true;
+	//						trace("remove " + i); 
+	//					}
+	//				}
+				
+				positionChildren();
+				m_isDirty = true;
+			}
+			else //handle innerBoxSegment/connectionSegment updating
 			{
-				if(segmentIndex == 1)
-				{
-					m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
-					segmentIndex++;
-					var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
-					m_edgeJoints.splice(1, 0, newJoint);
-
-					var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
-					this.m_edgeSegments.splice(1,0,newSegment);						
-				}
-				if(segmentIndex+3 == m_jointPoints.length)
-				{
-					m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_outgoingIsWide);
-					m_edgeJoints.splice(-2, 0, newEndJoint);
-					
-					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_outgoingIsWide);
-					this.m_edgeSegments.splice(-1,0,newEndSegment);	
-				}
+				trackConnector(deltaPoint, segmentIndex, segment);
+			}
+		}
+		
+		protected function trackConnector(deltaPoint:Point, segmentIndex:int, segment:GameEdgeSegment):void
+		{
+			var totalScaleXFactorNumber:Number = 1;
+			var currentObj:DisplayObjectContainer = this;
+			while(currentObj != null)
+			{
+				totalScaleXFactorNumber *= currentObj.scaleX;
+				currentObj = currentObj.parent;
 			}
 			
-			//check for horizontal or vertical
-			if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
+			var containerComponent:GameNodeBase;
+			if(m_fromComponent is GameNode)
+				containerComponent = m_fromComponent;
+			else 
+				containerComponent = m_toComponent;
+			
+			var jointPoint:Point = new Point;
+			if(segmentIndex == -1)
 			{
-				m_jointPoints[segmentIndex].y += deltaPoint.y;
-				m_jointPoints[segmentIndex+1].y += deltaPoint.y;
+				if(segment.m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX)
+					jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;
+				else
+					jointPoint.x = m_edgeJoints[0].x;
+			}
+			else if(segmentIndex == 0)
+				jointPoint.x = m_edgeJoints[0].x;
+			else
+				jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;
+			
+			//find global coordinates of container, subtracting off joints height and width
+			var containerPt:Point = new Point(containerComponent.x,containerComponent.y);
+			var containerGlobalPt:Point = containerComponent.parent.localToGlobal(containerPt);						
+			var boundsGlobalPt:Point = containerComponent.parent.localToGlobal(new Point(containerComponent.x + containerComponent.width,
+																					containerComponent.y + containerComponent.height));
+			var jointGlobalPt:Point = localToGlobal(jointPoint);	
+			
+			//make sure we are in bounds
+			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			var newDeltaX:Number = deltaPoint.x;
+			if(containerGlobalPt.x > jointGlobalPt.x+deltaPoint.x-totalScaleXFactorNumber*lineSize)
+			{
+				if(deltaPoint.x < 0)
+					newDeltaX = 0;
+			}
+			else if(boundsGlobalPt.x < jointGlobalPt.x+deltaPoint.x+totalScaleXFactorNumber*lineSize)
+			{
+				if(deltaPoint.x > 0)
+					newDeltaX = 0;
+			}
+			//always take the smallest delta
+			if(Math.abs(newDeltaX) < Math.abs(deltaPoint.x))
+				deltaPoint.x = newDeltaX;
+			deltaPoint.y = 0;
+			//need to rubber band edges and extension edges, if they exist
+			var segmentOutgoing:Boolean = false;
+			if(segmentIndex == -1)
+			{
+				if(m_dir == GameEdgeContainer.DIR_BOX_TO_JOINT)
+					segmentOutgoing = true;
+			}
+			if(segmentIndex == 0 || segmentOutgoing)
+			{
+				rubberBandEdge(deltaPoint, true);
+				segmentOutgoing = true;
+				if(this.m_extensionEdge)
+				{
+					m_extensionEdge.rubberBandEdge(deltaPoint, false);
+				}
 			}
 			else
 			{
-				m_jointPoints[segmentIndex].x += deltaPoint.x;
-				m_jointPoints[segmentIndex+1].x += deltaPoint.x;
+				rubberBandEdge(deltaPoint, false);
+				if(this.m_extensionEdge)
+				{
+					m_extensionEdge.rubberBandEdge(deltaPoint, true);
+				}
 			}
-
+			var movingRight:Boolean = deltaPoint.x > 0 ? true : false;
+			if(deltaPoint.x != 0)
+				containerComponent.organizePorts(this, movingRight);
 			
 			
-			//check for any really short segments, and if found, remove them. Start at the end and work backwards
-			//don't do if we just added a segment
-			//!!Interesting idea, but there are flaws, in that you can now create diagonal lines
-//			if(!m_recreateEdge)
-//				for(var i:int = m_jointPoints.length - 2; i >= 0; i--)
-//				{
-//					trace(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y));
-//					if(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y) < .1)
-//					{
-//						m_jointPoints.splice(i, 1);
-//						m_recreateEdge = true;
-//						trace("remove " + i); 
-//					}
-//				}
+			/*
+			var finalPt:Point = parent.globalToLocal(jointUpdatedGlobalPt);
+			var updatePoint:Point = finalPt.subtract(startPt);	
 			
-			//need to keep current segment so I have a drag handle still
-			//createChildren(segment, segmentIndex);
-			positionChildren();
-			m_isDirty = true;
+			var isOutgoingEdge:Boolean;// = m_fromComponent is GameNode ? true : false;
+			
+			//now compare current point with other connection points, and if we've overlapped one of them, switch places
+			//moving towards the right
+			var gameEdgeContainer:GameEdgeContainer = parent as GameEdgeContainer;
+			
+			var node:GameNode = containerComponent as GameNode;
+			if(isOutgoingEdge)
+			{
+				node.m_outgoingEdges.sort(sortOutgoingXPositions);
+				var oEdgePosition:int = node.m_outgoingEdges.indexOf(parent);
+				if(oEdgePosition != m_position)
+				{
+					m_position = oEdgePosition;
+					//get the node we just passed, and switch end points
+					var oNextEdge:GameEdgeContainer;
+					if(updatePoint.x>0) 
+						if(oEdgePosition>0)
+							oNextEdge = node.m_outgoingEdges[oEdgePosition-1];
+						else
+							return;
+						else
+							if(node.m_outgoingEdges.length > oEdgePosition+1)
+								oNextEdge = node.m_outgoingEdges[oEdgePosition+1];
+							else
+								return;
+					//save next edge current start point
+					var globalNextStartPt:Point = oNextEdge.localToGlobal(new Point(oNextEdge.m_startJoint.x, oNextEdge.m_startJoint.y));
+					//set next edge start position using our current original point
+					var globalOriginalStartPt:Point = parent.localToGlobal(m_originalPoint);
+					oNextEdge.setStartPosition(oNextEdge.globalToLocal(globalOriginalStartPt));
+					//set our original point from saved next edge point
+					m_originalPoint = parent.globalToLocal(globalNextStartPt);
+					
+					//redraw nextEdge, passing update point = 0,0
+					oNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
+					//reorder outgoing edge array
+					//var oNewPos:Number = node.setOutgoingEdge(oNextEdge);
+					//oNextEdge.outgoingEdgePosition = oNewPos; // probably want to update the edge at this point
+				}
+			}
+			else
+			{
+				
+				node.m_incomingEdges.sort(sortIncomingXPositions);
+				var iEdgePosition:int = node.m_incomingEdges.indexOf(parent);
+				if(iEdgePosition != m_position)
+				{
+					m_position = iEdgePosition;
+					//get the node we just passed, and switch end points
+					var iNextEdge:GameEdgeContainer;
+					if(updatePoint.x>0) 
+						if(iEdgePosition>0)
+							iNextEdge = node.m_incomingEdges[iEdgePosition-1];
+						else
+							return;
+						else
+							if(node.m_incomingEdges.length > iEdgePosition+1)
+								iNextEdge = node.m_incomingEdges[iEdgePosition+1];
+							else
+								return;
+					
+					//save next edge current start point
+					var globalNextEndPt:Point = iNextEdge.localToGlobal(new Point(iNextEdge.m_endJoint.x, iNextEdge.m_endJoint.y));
+					//set next edge start position using our current original point
+					var globalOriginalEndPt:Point = parent.localToGlobal(m_originalPoint);
+					iNextEdge.setEndPosition(iNextEdge.globalToLocal(globalOriginalEndPt));
+					//set our original point from saved next edge point
+					m_originalPoint = parent.globalToLocal(globalNextEndPt);
+					
+					//redraw nextEdge, passing update point = 0,0
+					iNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
+					//reorder outgoing edge array
+					//	var iNewPos:Number = node.setOutgoingEdge(iNextEdge);
+					//	iNextEdge.outgoingEdgePosition = iNewPos; // probably want to update the edge at this point
+				}
+			}
+			if (m_parentEdge) {
+				m_parentEdge.rubberBandEdge(updatePoint, isOutgoingEdge);
+			}*/
 		}
+		
 		
 		//create 6 joints
 		//  	beginning connection
@@ -603,19 +972,20 @@ package scenes.game.display
 			makeMainEdgeParts();			
 		}
 		
+		//uses edge position to determine hight of connection segments. currently stepped upwards, might want to step up and then down
 		private function makeInitialNodesAndExtension(connectionPoint:Point, startIndex:int, nodeIndex:int, isStartPoint:Boolean):void
 		{
 			m_jointPoints[startIndex] = connectionPoint.clone();
 			if(isStartPoint)
-				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y + EXTENSION_LENGTH + incomingEdgePosition*.2);
+				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y + EXTENSION_LENGTH + outgoingEdgePosition*.2);
 			else
-				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y - EXTENSION_LENGTH - outgoingEdgePosition*.2);
+				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y - EXTENSION_LENGTH - incomingEdgePosition*.2);
 		}
 		
 		
 		private function makeMainEdgeParts():void
 		{
-			var xDistance:Number = m_jointPoints[NUM_JOINTS-2].x - m_jointPoints[1].x;
+			var xDistance:Number = m_jointPoints[NUM_JOINTS-2].x - m_jointPoints[1].x; 
 			var yDistance:Number = m_jointPoints[NUM_JOINTS-2].y - m_jointPoints[1].y;
 			setBottomWallOutputConnection(xDistance, yDistance);
 
@@ -660,6 +1030,10 @@ package scenes.game.display
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.draw();
+				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+					errorContainer.x = this.x + joint.x;
+					errorContainer.y = this.y + joint.y;
+				}
 			}
 			m_innerBoxSegment.draw();
 		}
@@ -691,16 +1065,18 @@ package scenes.game.display
 				
 				for each(var joint:GameEdgeJoint in m_edgeJoints)
 				{
-					if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
-					{
-						joint.m_hasError = true;
-					}
-					else
-					{
-						joint.m_hasError = false;
-					}
+					//if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
+					//{
+						//joint.m_hasError = true;
+					//}
+					//else
+					//{
+						//joint.m_hasError = false;
+					//}
 					joint.m_isDirty = true;
 				}
+				
+				m_innerBoxSegment.draw();
 				
 				m_isDirty = false;
 			}
@@ -841,9 +1217,9 @@ package scenes.game.display
 
 import flash.geom.Point;
 import scenes.game.display.GameComponent;
+import scenes.game.display.GameEdgeContainer;
 import scenes.game.display.GameEdgeJoint;
 import scenes.game.display.GameEdgeSegment;
-import scenes.game.display.GameEdgeContainer;
 
 class InnerBoxSegment extends GameComponent
 {
@@ -874,9 +1250,8 @@ class InnerBoxSegment extends GameComponent
 		draw();
 		addChild(edgeSegment);
 		if (innerCircleJoint) {
-			addChild(innerCircleJoint);
+			addChildAt(innerCircleJoint, 0);
 		}
-		this.touchable = false;
 	}
 	
 	public function draw():void

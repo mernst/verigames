@@ -93,7 +93,7 @@ package
 		private static var sBitmapFonts:Dictionary = new Dictionary();
 		
 		/** Create a new text field with the given properties. */
-		public function TextFieldHack(width:int, height:int, text:String, fontName:String="Verdana",
+		public function TextFieldHack(width:Number, height:Number, text:String, fontName:String="Verdana",
 								  fontSize:Number=12, color:uint=0x0, bold:Boolean=false)
 		{
 			mText = text ? text : "";

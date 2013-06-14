@@ -13,6 +13,7 @@ package scenes
 	import starling.display.Sprite;
 	import starling.errors.MissingContextError;
 	import starling.textures.Texture;
+	import starling.events.Event;
 
 	public class BaseComponent extends starling.display.Sprite
 	{	
@@ -120,19 +121,24 @@ package scenes
 		public static function findBoundingBox(componentXML:XML):Rectangle
 		{			
 			var bb:Rectangle = new Rectangle;
-			bb.x = componentXML.@x;
-			bb.y = componentXML.@y;
-			bb.width = componentXML.@width;
-			bb.height = componentXML.@height;
+			bb.x = componentXML.@x * Constants.GAME_SCALE;
+			bb.y = componentXML.@y * Constants.GAME_SCALE;
+			bb.width = componentXML.@width * Constants.GAME_SCALE;
+			bb.height = componentXML.@height * Constants.GAME_SCALE;
 			
 			return bb;
 		}
 		
 		public function findNodePosition(componentXML:XML):Point
 		{
-			var pos:Point = new Point(componentXML.@x, componentXML.@y);
+			var pos:Point = new Point(componentXML.@x * Constants.GAME_SCALE, componentXML.@y * Constants.GAME_SCALE);
 			
 			return pos;
+		}
+		
+		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			
 		}
 	}
 }

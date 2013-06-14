@@ -1,6 +1,7 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
+	import starling.display.BlendMode;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -28,6 +29,7 @@
 		
 		public var m_endPt:Point;
 		public var m_currentRect:Rectangle;
+		public var updatePoint:Point;
 		
 		public var index:int;
 		
@@ -64,6 +66,7 @@
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			this.blendMode = BlendMode.NONE;
 			m_isDirty = true;
 		}
 		
@@ -85,20 +88,41 @@
 		}
 		
 		private var isMoving:Boolean = false;
-		private var isHover:Boolean = false;
+		public var returnLocation:Point;
 		private function onTouch(event:TouchEvent):void
 		{
-			if(m_isNodeExtensionSegment)
-				return;
-			
 			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length)
+
+			if(event.getTouches(this, TouchPhase.MOVED).length)
+			{
+				if (touches.length == 1)
+				{
+					if(!isMoving)
+					{
+						dispatchEvent(new Event(GameEdgeContainer.SAVE_CURRENT_LOCATION, true));
+						isMoving = true;
+					}
+					
+					var currentMoveLocation:Point = touches[0].getLocation(this);
+					var previousLocation:Point = touches[0].getPreviousLocation(this);
+					updatePoint = currentMoveLocation.subtract(previousLocation);	
+					currentDragSegment = true;
+					dispatchEvent(new Event(GameEdgeContainer.RUBBER_BAND_SEGMENT, true, this));
+					currentDragSegment = false;
+				}
+			}
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					isMoving = false;
-					isHover = false;
+					
+					if(isMoving)
+					{
+						isMoving = false;
+						if(this.m_isNodeExtensionSegment)
+							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
+					}
 				}
 				
 				var touch:Touch = touches[0];
@@ -109,35 +133,23 @@
 						dispatchEvent(new Event(GameEdgeContainer.CREATE_JOINT, true, this));
 				}
 			}
-			
-			if(event.getTouches(this, TouchPhase.HOVER).length)
+			else if(event.getTouches(this, TouchPhase.HOVER).length)
 			{
-				if (touches.length == 1 && event.shiftKey)
+				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					isHover = true;
+					dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OVER, true));
 				}
+			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				
 			}
 			else
 			{
 				m_isDirty = true;
 				isMoving = false;
-				isHover = false;
-			}
-			
-			if(event.shiftKey && event.getTouches(this, TouchPhase.MOVED).length){
-				if (touches.length == 1)
-				{
-					if(!isMoving)
-						isMoving = true;
-					
-					var currentMoveLocation:Point = touches[0].getLocation(this);
-					var previousLocation:Point = touches[0].getPreviousLocation(this);
-					var updatePoint:Point = currentMoveLocation.subtract(previousLocation);	
-					currentDragSegment = true;
-					(parent as GameEdgeContainer).rubberBandEdgeSegment(updatePoint, this);
-					currentDragSegment = false;
-				}
+				dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
 			}
 		}
 		
@@ -173,7 +185,7 @@
 			}
 			else if(m_endPt.x != 0)
 			{
-				if(isHover)
+				if(isHoverOn)
 				{
 					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + .1, 0xeeeeee);
 					m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
@@ -187,30 +199,30 @@
 				m_quad.x = 0;
 				
 				// Create/add arrows if segment is long enough to display them
-//				if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
-//					m_arrowImg = new Image(ARROW_TEXT);
-//					pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
-//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-//					m_arrowImg.width = Math.abs(m_endPt.x);
-//					m_arrowImg.height = lineSize;
-//					
-//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-//					
-//					m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-//					m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-//					m_arrowImg.x = 0;
-//				}
+				//if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
+					//m_arrowImg = new Image(ARROW_TEXT);
+					//pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
+					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					//m_arrowImg.width = Math.abs(m_endPt.x);
+					//m_arrowImg.height = lineSize;
+					//
+					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					//
+					//m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
+					//m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
+					//m_arrowImg.x = 0;
+				//}
 			}
 			else
 			{
-				if(isHover)
+				if(isHoverOn)
 				{
 					m_quad = new Quad(lineSize + .1, Math.abs(m_endPt.y), 0xeeeeee);
 					m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-					m_quad.y = -0.05;
+					m_quad.y = 0;// -0.05;
 					m_quad.x = (m_endPt.y > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
 					addChild(m_quad);
 				}
@@ -226,39 +238,31 @@
 //					quad1.y = i;
 //				}
 				// Create/add arrows if segment is long enough to display them
-//				if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
-//					m_arrowImg = new Image(ARROW_TEXT);
-//					pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
-//					pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-//					m_arrowImg.width = Math.abs(m_endPt.y);
-//					m_arrowImg.height = lineSize;
-//					
-//					var q:Number = 0.5 - pctTextHeight/2.0;
-//					m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-//					m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-//					m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-//					m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-//					
-//					m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
-//					m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
-//					m_arrowImg.y = 0;
-//				}
+				//if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
+					//m_arrowImg = new Image(ARROW_TEXT);
+					//m_arrowImg.touchable = false;
+					//pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
+					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
+					//m_arrowImg.width = Math.abs(m_endPt.y);
+					//m_arrowImg.height = lineSize;
+					//
+					//var q:Number = 0.5 - pctTextHeight/2.0;
+					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
+					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
+					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
+					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
+					//
+					//m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
+					//m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
+					//m_arrowImg.y = 0;
+				//}
 			}
 			
 			addChild(m_quad);
 			if (m_arrowImg) {
 				addChild(m_arrowImg);
 			}
-			
-		}
-		
-		private static function fillUV(tx:Number, ty:Number, rot:Number, tex:Texture):Matrix
-		{
-			var ret:Matrix = new Matrix();
-			ret.rotate(XMath.degreesToRadians(rot));
-			ret.translate(tx, ty);
-			ret.scale(1.0 / tex.width, 1.0 / tex.height);
-			return ret;
+			flatten();
 		}
 		
 		public function drawDiagonalLine(p1:Point, p2:Point, width:Number=1, color:uint=0x000000):Quad
@@ -308,6 +312,16 @@
 				draw();
 				m_isDirty = false;
 			}
+		}
+		
+		// Make lines slightly darker to be more visible
+		override public function getColor():int
+		{
+			var color:int = super.getColor();
+			var red:int = XSprite.extractRed(color);
+			var green:int = XSprite.extractGreen(color);
+			var blue:int = XSprite.extractBlue(color);
+			return  ( ( Math.round(red * 0.8) << 16 ) | ( Math.round(green * 0.8) << 8 ) | Math.round(blue * 0.8) );
 		}
 	}
 }

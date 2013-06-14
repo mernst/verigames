@@ -1,86 +1,57 @@
 package scenes.game.components
 {
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import com.greensock.TweenLite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameJointNode;
-	import utils.XMath;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.ScoreBlock;
-	import scenes.game.display.World;
-	
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.TouchEvent;
-	import starling.text.TextField;
 	import starling.textures.Texture;
+	
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	
 	public class GameControlPanel extends BaseComponent
 	{
-		private static const WIDTH:Number = 96;
-		private static const HEIGHT:Number = Constants.GameHeight;
-		private static const SCORE_PANEL_AREA:Rectangle = new Rectangle(3, 65, WIDTH - 3, 266.5 - 65);
+		private static const WIDTH:Number = Constants.GameWidth;
+		private static const HEIGHT:Number = 50;
+		
+		private static const SCORE_PANEL_AREA:Rectangle = new Rectangle(79, 2, 304, 48);
 		private static const PAD:Number = 2.0;
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
-		protected var scorePanel:BaseComponent;
+		private var m_scorePanel:BaseComponent;
 		
-		/** Graphical object, child of scorePanel to hold all scoreBlocks */
-		protected var scoreBlockContainer:Sprite;
+		/** Graphical object, child of scorePanel to hold scorebar */
+		private var m_scoreBarContainer:Sprite;
 		
-		/** Dashed line indicated the score starting point (score = 0), 
-		 *  the current level of score (score blocks minus error blocks) 
-		 *  and associated textLabel showing the zero/current score, respectively */
-		private var m_scoreBaseline:Sprite;
-		private var m_scoreCurrentLine:Sprite;
-		private var m_scoreBlockBaselineLabel:TextFieldWrapper;
-		private var m_scoreBlockCurrentLabel:TextFieldWrapper;
+		/** Indicate the current score */
+		private var m_scoreBar:Quad;
 		
 		/** Text showing current score on score_pane */
-		protected var scoreTextfield:TextFieldWrapper;
-		
-		/** Button allowing user to place a buzzsaw on the current board */
-		public var buzzsaw_button:Image;
-		
-		/** Button to bring the user back to the previous board */
-		public var back_button:Image;
+		private var m_scoreTextfield:TextFieldWrapper;
 		
 		/** Button to bring the up the menu */
-		public var menu_button:Button;
+		private var m_menuButton:Button;
 		
-		/** Button to save to XML */
-		protected var exit_button:Image;
+		private var menuShowing:Boolean = false;
 		
-		/** Button to replay last level */
-		protected var replay_button:Image;
+		/** Current Score of the player */
+		private var m_currentScore:int = 0;
 		
-		/** Button to save to XML */
-		protected var save_button:Image;
-		
-		/** Button to save XML and return to end to end system */
-		protected var submit_button:Image;
-		
-		/** Score of the player */
-		protected var current_score:int = 0;
-		
-		/** Most recent score of the player (could be used to animate between the two, but currently is not) */
-		protected var prev_score:int = 0;
-		
-		/** All the score blocks visible in the scoring pane used to show current/potential scoring for certain nodes/edges */
-		private var m_scoreBlocks:Vector.<ScoreBlock> = new Vector.<ScoreBlock>();
-		
-		protected var m_initialized:Boolean = false;
+		/** Most recent score of the player */
+		private var m_prevScore:int = 0;
 		
 		public function GameControlPanel()
 		{			
@@ -96,84 +67,45 @@ package scenes.game.components
 			backgroundImage.height = HEIGHT;
 			addChild(backgroundImage);
 			
-			scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, width, 60, 35, GameComponent.SCORE_COLOR);
-			scoreTextfield.x = -5; 
-			TextFactory.getInstance().updateAlign(scoreTextfield, 1, 1);
-			addChild(scoreTextfield);
-			
-			scorePanel = new BaseComponent();
-			scorePanel.x = SCORE_PANEL_AREA.x + PAD;
-			scorePanel.y = SCORE_PANEL_AREA.y + PAD; 
+			m_scorePanel = new BaseComponent();
+			m_scorePanel.x = SCORE_PANEL_AREA.x + PAD;
+			m_scorePanel.y = SCORE_PANEL_AREA.y + PAD; 
 			var quad:Quad = new Quad(SCORE_PANEL_AREA.width - 2*PAD, SCORE_PANEL_AREA.height - 2*PAD, 0x000000);
-			scorePanel.addChild(quad);
-			addChild(scorePanel);
+			m_scorePanel.addChild(quad);
+			addChild(m_scorePanel);
 			
-			scoreBlockContainer = new Sprite();
-			scorePanel.addChild(scoreBlockContainer);
-			var topLeftScorePanel:Point = scorePanel.localToGlobal(new Point(0, 0));
-			scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, scorePanel.width, scorePanel.height);
+			m_scoreBarContainer = new Sprite();
+			m_scorePanel.addChild(m_scoreBarContainer);
+			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
+			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreBaseline = new Sprite();
-			m_scoreCurrentLine = new Sprite();
-			const DOTTED_LINE_SEGS:int = 5;
-			const BASELINE_TOTAL_WIDTH:Number = 2.75 * ScoreBlock.WIDTH;
-			const SEG_WIDTH:Number = BASELINE_TOTAL_WIDTH / (2.0 * DOTTED_LINE_SEGS - 1);
-			const SEG_HEIGHT:Number = 1.0;
-			const START_X:Number = 2 * ScoreBlock.WIDTH;
-			for (var i:int = 0; i < DOTTED_LINE_SEGS; i++)
-			{
-				// Baseline
-				var line:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, 0xFFFFFF);
-				line.x = START_X + 2 * i * SEG_WIDTH;
-				line.y = SCORE_PANEL_AREA.height - 2 * PAD;
-				m_scoreBaseline.addChild(line);
-				// Current line
-				var line2:Quad = new Quad(SEG_WIDTH, SEG_HEIGHT, GameComponent.SCORE_COLOR);
-				line2.x = START_X + 2 * i * SEG_WIDTH;
-				line2.y = SCORE_PANEL_AREA.height - 2 * PAD;
-				m_scoreCurrentLine.addChild(line2);
-			}
-			const TEXT_SIZE:Number = 12.0;
-			m_scoreBlockBaselineLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, 0xFFFFFF);
-			m_scoreBlockBaselineLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
-			m_scoreBlockBaselineLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
-			TextFactory.getInstance().updateAlign(m_scoreBlockBaselineLabel, 0, 1);
-			m_scoreBaseline.addChild(m_scoreBlockBaselineLabel);
-			
-			m_scoreBlockCurrentLabel = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, ScoreBlock.WIDTH, TEXT_SIZE, TEXT_SIZE, GameComponent.SCORE_COLOR);
-			m_scoreBlockCurrentLabel.x = START_X + BASELINE_TOTAL_WIDTH + 1.0;
-			m_scoreBlockCurrentLabel.y = SCORE_PANEL_AREA.height - 2 * PAD - TEXT_SIZE / 2.0;
-			TextFactory.getInstance().updateAlign(m_scoreBlockCurrentLabel, 0, 1);
-			m_scoreCurrentLine.addChild(m_scoreBlockCurrentLabel);
-			
-			scoreBlockContainer.addChild(m_scoreBaseline);
-			scoreBlockContainer.addChild(m_scoreCurrentLine);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, HEIGHT / 2 - 2*PAD, HEIGHT / 2 - 2*PAD, GameComponent.SCORE_COLOR);
+			m_scoreTextfield.x = SCORE_PANEL_AREA.width / 2 - m_scoreTextfield.width;
+			m_scoreTextfield.y = HEIGHT/4 + PAD;
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			m_scorePanel.addChild(m_scoreTextfield);
 			
 			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
 			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
 			
-			menu_button = new Button(menuButtonUp, "", menuButtonClick);
-			menu_button.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			menu_button.width *= .5;
-			menu_button.height *= .5;
-			menu_button.x = (width - menu_button.width)/2;
-			menu_button.y = 278;
-			addChild(menu_button);
+			m_menuButton = new Button(menuButtonUp, "", menuButtonClick);
+			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
+//			m_menuButton.width *= .4;
+//			m_menuButton.height *= .5;
+			m_menuButton.x = 4;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
+			addChild(m_menuButton);
 		}
 		
 		private function onMenuButtonTriggered():void
 		{
-			dispatchEvent(new Event(World.SHOW_GAME_MENU, true));
+			menuShowing = !menuShowing;
+			dispatchEvent(new Event(World.SHOW_GAME_MENU, true, menuShowing));
 		}
 		
 		public function removedFromStage(event:starling.events.Event):void
 		{
 			//TODO what? dispose of things?
-		}
-		
-		public function isInitialized():Boolean
-		{
-			return m_initialized;
 		}
 		
 		/**
@@ -207,16 +139,17 @@ package scenes.game.components
 			
 			/*
 			 * New Scoring:
-			 *
+			 * +75 for each line going thru/starting/ending @ a box
 			 * +25 for wide inputs
 			 * +25 for narrow outputs
 			 * -75 for errors
 			*/
 			
-			prev_score = current_score;
+			m_prevScore = m_currentScore;
 			var wideInputs:int = 0;
 			var narrowOutputs:int = 0;
 			var errors:int = 0;
+			var totalLines:int = 0;
 			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
@@ -224,6 +157,7 @@ package scenes.game.components
 			for each(var nodeSet:GameNode in level.getNodes())
 			{
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
+					totalLines += nodeSet.getNumLines();
 					if (nodeSet.isWide()) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
@@ -265,73 +199,85 @@ package scenes.game.components
 				}
 			}
 			
-			//trace("wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
-			current_score = Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
-			TextFactory.getInstance().updateText(scoreTextfield, current_score.toString());
-			TextFactory.getInstance().updateText(m_scoreBlockCurrentLabel, current_score.toString());
+			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			var baseScore:Number = Constants.POINTS_PER_LINE * totalLines;
 			
-			for each (var block:ScoreBlock in m_scoreBlocks) {
-				block.removeFromParent(true);
-			}
-			m_scoreBlocks = new Vector.<ScoreBlock>();
+			TextFactory.getInstance().updateText(m_scoreTextfield, m_currentScore.toString());
+			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			
-			var currentY:Number = SCORE_PANEL_AREA.height - 2 * PAD;
-			var currentX:Number = 0.5 * ScoreBlock.WIDTH;
-			// Pass over nodes involved in scoring and create scoring blocks for them
-			var maxBlockHeight:Number = (SCORE_PANEL_AREA.height - 5) / Math.max(scoringNodes.length, 1);
-			maxBlockHeight = XMath.clamp(maxBlockHeight, 3, 10);
-			var scoreNode:GameNode, scoreBlock:ScoreBlock;
-			for each (scoreNode in potentialScoringNodes) {
-				scoreBlock = new ScoreBlock(scoreNode);
-				scoreBlock.x = currentX;
-				scoreBlock.y = currentY - scoreBlock.height;
-				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-				m_scoreBlocks.push(scoreBlock);
-				scoreBlockContainer.addChildAt(scoreBlock, 0);
+			// Aim for starting score to be 2/3 of the width of the scorebar area
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * m_currentScore / baseScore;
+			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
+			if (!m_scoreBar) {
+				m_scoreBar = new Quad(newBarWidth, HEIGHT / 2, GameComponent.NARROW_COLOR);
+				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
+				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
+				m_scoreBar.y = (HEIGHT - m_scoreBar.height) / 2;
+				m_scoreBarContainer.addChild(m_scoreBar);
+				m_scoreTextfield.x = newScoreX;
 			}
-			currentY = SCORE_PANEL_AREA.height - 2 * PAD;
-			currentX += 1.75 * ScoreBlock.WIDTH;
-			for each (scoreNode in scoringNodes) {
-				scoreBlock = new ScoreBlock(scoreNode);
-				scoreBlock.x = currentX;
-				scoreBlock.y = currentY - scoreBlock.height;
-				currentY -= scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-				m_scoreBlocks.push(scoreBlock);
-				scoreBlockContainer.addChildAt(scoreBlock, 0);
-			}
-			currentY += ScoreBlock.VERTICAL_GAP;
-			currentX += 1.25 * ScoreBlock.WIDTH;
-			for each (var scoreEdge:GameEdgeContainer in errorEdges) {
-				scoreBlock = new ScoreBlock(scoreEdge);
-				scoreBlock.x = currentX;
-				scoreBlock.y = currentY;
-				currentY += scoreBlock.height + ScoreBlock.VERTICAL_GAP;
-				m_scoreBlocks.push(scoreBlock);
-				scoreBlockContainer.addChildAt(scoreBlock, 0);
-			}
-			m_scoreCurrentLine.y = (currentY - ScoreBlock.VERTICAL_GAP) - (SCORE_PANEL_AREA.height - 2 * PAD);
 			
-			var blocksBounds:Rectangle = scoreBlockContainer.getBounds(scorePanel);
+			var FLASHING_ANIM_SEC:Number = 0; // TODO: make this nonzero when animation is in place
+			var DELAY:Number = 0.5;
+			var BAR_SLIDING_ANIM_SEC:Number = 1.0;
+			if (newBarWidth < m_scoreBar.width) {
+				// If we're shrinking, shrink right away - then show flash showing the difference
+				Starling.juggler.removeTweens(m_scoreBar);
+				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   width: newBarWidth
+				});
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   x: newScoreX
+				});
+			} else if (newBarWidth > m_scoreBar.width) {
+				// If we're growing, flash the difference first then grow
+				Starling.juggler.removeTweens(m_scoreBar);
+				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   delay: FLASHING_ANIM_SEC,
+				   width: newBarWidth
+				});
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   delay: FLASHING_ANIM_SEC,
+				   x: newScoreX
+				});
+			} else {
+				return;
+			}
+			
+			// If we've spilled off to the right, shrink it down after we've animated showing the difference
+			
+			var blocksBounds:Rectangle = m_scoreBarContainer.getBounds(m_scorePanel);
 			// Adjust bounds to be relative to top left=(0,0) and unscaled (scaleX,Y=1)
 			var adjustedBounds:Rectangle = blocksBounds.clone();
-			adjustedBounds.x -= scoreBlockContainer.x;
-			adjustedBounds.x /= scoreBlockContainer.scaleX;
-			adjustedBounds.y -= scoreBlockContainer.y;
-			adjustedBounds.y /= scoreBlockContainer.scaleY;
-			adjustedBounds.width /= scoreBlockContainer.scaleX;
-			adjustedBounds.height /= scoreBlockContainer.scaleY;
+			adjustedBounds.x -= m_scoreBarContainer.x;
+			adjustedBounds.x /= m_scoreBarContainer.scaleX;
+			adjustedBounds.y -= m_scoreBarContainer.y;
+			adjustedBounds.y /= m_scoreBarContainer.scaleY;
+			adjustedBounds.width /= m_scoreBarContainer.scaleX;
+			adjustedBounds.height /= m_scoreBarContainer.scaleY;
 			
 			// Tween to make this fit the area we want it to, ONLY IF OFF SCREEN
-			TweenLite.killTweensOf(scoreBlockContainer);
-			//var newScaleX:Number = (SCORE_PANEL_AREA.width - 2 * PAD) / blocksBounds.width;
-			var newScaleY:Number = Math.min(SCORE_PANEL_MAX_SCALEY, (SCORE_PANEL_AREA.height - 2 * PAD) / adjustedBounds.height);
-			//var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
-			var newY:Number = SCORE_PANEL_AREA.height - 2 * PAD - adjustedBounds.bottom * newScaleY; // sits on the bottom
+			var newScaleX:Number = (SCORE_PANEL_AREA.width - 2 * PAD) / blocksBounds.width;
+			//var newScaleY:Number = Math.min(SCORE_PANEL_MAX_SCALEY, (SCORE_PANEL_AREA.height - 2 * PAD) / adjustedBounds.height);
+			var newX:Number = -blocksBounds.x * newScaleX; // left-adjusted
+			//var newY:Number = SCORE_PANEL_AREA.height - 2 * PAD - adjustedBounds.bottom * newScaleY; // sits on the bottom
 			// Only move the score blocks around/scale if some of the blocks are offscreen (out of score panel area)
 			// OR if was shrunk below 100% and doesn't need to be
 			if (blocksBounds.top < 0 || blocksBounds.bottom > SCORE_PANEL_AREA.height - 2 * PAD
-				|| ((scoreBlockContainer.scaleY < 1.0) && (newScaleY > scoreBlockContainer.scaleY))) {
-				TweenLite.to(scoreBlockContainer, 1.5, {/*x:newX,*/ y:newY, /*scaleX:newScaleX,*/ scaleY: newScaleY, delay: 0.5 } );
+				|| ((m_scoreBarContainer.scaleX < 1.0) && (newScaleX > m_scoreBarContainer.scaleX))) {
+				Starling.juggler.removeTweens(m_scoreBarContainer);
+				Starling.juggler.tween(m_scoreTextfield, 1.5, {
+				   transition: Transitions.EASE_OUT,
+				   delay: (FLASHING_ANIM_SEC + BAR_SLIDING_ANIM_SEC + 2 * DELAY),
+				   scaleX: newScaleX
+				});
 			}
 		}
 		

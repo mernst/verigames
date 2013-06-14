@@ -15,14 +15,16 @@ package scenes.splashscreen
 	
 	import scenes.BaseComponent;
 	import scenes.Scene;
+	import scenes.game.PipeJamGameScene;
 	import scenes.login.*;
 	
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
-	import starling.text.TextField;
+	import starling.text.*;
 	import starling.textures.Texture;
+	import flash.text.*;
 
 	public class SplashScreenMenuBox extends BaseComponent
 	{
@@ -44,6 +46,9 @@ package scenes.splashscreen
 		protected var levelMetadataArray:Array = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
+		
+		public var inputInfo:flash.text.TextField;
+
 		
 		public function SplashScreenMenuBox(parent:SplashScreenScene)
 		{
@@ -84,6 +89,26 @@ package scenes.splashscreen
 			play_button.height *= .6;
 			m_mainMenu.addChild(play_button);
 			
+//			inputInfo = new flash.text.TextField();
+//			// Create default text format
+//			var inputInfoTextFormat:TextFormat = new TextFormat("Arial", 12, 0x000000);
+//			inputInfoTextFormat.align = TextFormatAlign.LEFT;
+//			inputInfo.defaultTextFormat = inputInfoTextFormat;
+//			// Set text input type
+//			inputInfo.type = TextFieldType.INPUT;
+//			inputInfo.autoSize = TextFieldAutoSize.LEFT;
+//			inputInfo.multiline = true;
+//			inputInfo.wordWrap = true;
+//			inputInfo.x = width + 30;
+//			inputInfo.y = 110;
+//			inputInfo.height = 200;
+//			inputInfo.width = 100;
+//			// Set background just for testing needs
+//			inputInfo.background = true;
+//			inputInfo.backgroundColor = 0xffffff;
+//			inputInfo.text = PipeJam3.cookies;
+//			
+//			Starling.current.nativeOverlay.addChild(inputInfo);
 			
 			if(!PipeJamGame.RELEASE_BUILD)
 			{
@@ -263,10 +288,9 @@ package scenes.splashscreen
 		protected function onSignInButtonTriggered(e:starling.events.Event):void
 		{
 			//get client id
-			//Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			//var myURL:URLRequest = new URLRequest("http://ec2-184-72-152-11.compute-1.amazonaws.com:3000/auth/csfv");
-			//navigateToURL(myURL, "_blank");
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LoginScene"));
+			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
+			var myURL:URLRequest = new URLRequest("http://trafficjam.verigames.com/login?redirect=http://trafficjam.verigames.com/game/PipeJam3.html");
+			navigateToURL(myURL, "_self");
 		}
 		
 		protected function onLevelSelected(e:starling.events.Event):void
@@ -310,6 +334,12 @@ package scenes.splashscreen
 		{
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 
+			//do this, although player probably is already be activated
+			loginHelper.onActivatePlayer(onPlayerActivated);
+		}
+		
+		protected function onPlayerActivated(result:int, e:flash.events.Event):void
+		{
 			loginHelper.requestLevels(onRequestLevels);
 			loginHelper.getLevelMetadata(onRequestLevels);
 			
@@ -321,11 +351,17 @@ package scenes.splashscreen
 		
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
+			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
+			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
+			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		protected function onDemoButtonTriggered(e:starling.events.Event):void
 		{
+			PipeJamGameScene.worldFile = PipeJamGameScene.demoButtonWorldFile;
+			PipeJamGameScene.layoutFile = PipeJamGameScene.demoButtonLayoutFile;
+			PipeJamGameScene.constraintsFile = PipeJamGameScene.demoButtonConstraintsFile;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}

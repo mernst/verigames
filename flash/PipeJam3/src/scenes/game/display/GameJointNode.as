@@ -7,10 +7,10 @@ package scenes.game.display
 	import scenes.BaseComponent;
 	import starling.display.Quad;
 	import starling.events.TouchEvent;
+	import utils.XSprite;
 	
 	public class GameJointNode extends GameNodeBase
 	{	
-		private var m_quad:Quad;
 		private var m_node:Node;
 		private var m_port:Port;
 		
@@ -25,10 +25,13 @@ package scenes.game.display
 		
 		override public function draw():void
 		{
-			if (!m_quad) {
-				m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
-			}
+			if (m_quad)
+				removeChildren(0,-1,true);
+			
+			m_quad = new Quad(m_boundingBox.width, m_boundingBox.height, getColor());
+			
 			addChild(m_quad);
+			this.flatten();
 		}
 		
 		override public function updateSize():void
@@ -64,7 +67,10 @@ package scenes.game.display
 		
 		override public function getColor():int
 		{
-			return 0xAAAAAA;
+			if(m_isSelected)
+				return SELECTED_COLOR;
+			else
+				return 0xAAAAAA;
 		}
 	}
 

@@ -4,7 +4,6 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	
 	import scenes.BaseComponent;
-	import scenes.login.NetworkConnection;
 	
 	import starling.display.DisplayObjectContainer;
 	import starling.display.materials.StandardMaterial;
@@ -25,6 +24,8 @@ package scenes.game.display
 		public var m_hasError:Boolean = false;
 		public var m_isEditable:Boolean;
 		public var m_shouldShowError:Boolean = true;
+		public var isHoverOn:Boolean = false;
+
 		
 		public var m_forceColor:Number = -1;
 		
@@ -32,8 +33,9 @@ package scenes.game.display
 		public static var WIDE_COLOR:uint = 0x0177FF;// 0x3427FF;
 		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0xF0F0F0;// 0x3A3F4C;
 		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD2D2D2;// 0x3A3F4C;
-		public static var ERROR_COLOR:uint = 0xE92227;
-		public static var SCORE_COLOR:uint = 0xFFDC1A;
+		public static var ERROR_COLOR:uint = 0xEF5631;// 0xE92227;
+		public static var SCORE_COLOR:uint = 0x0;// 0xFFDC1A;
+		public static var SELECTED_COLOR:uint = 0xff0000;
 		
 		static protected var fillMaterial:StandardMaterial = null;
 		static protected var lightColorMaterial:StandardMaterial = null;
@@ -67,7 +69,7 @@ package scenes.game.display
 				unadjustableNarrowColorMaterial.color = UNADJUSTABLE_NARROW_COLOR;
 				
 				selectedColorMaterial = new StandardMaterial;
-				selectedColorMaterial.color = 0xeeeeee;
+				selectedColorMaterial.color = SELECTED_COLOR;
 			}
 		}
 		
@@ -97,15 +99,17 @@ package scenes.game.display
 			return m_hasError;
 		}
 		
+		
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;
 			m_isSelected = isSelected;
-			
-			if(m_isSelected)
-				dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
-			else
-				dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
+		}
+		
+		public function hideComponent(hide:Boolean):void
+		{
+			visible = !hide;
+			m_isDirty = true;
 		}
 		
 		public function getGlobalScaleFactor():Point
@@ -151,6 +155,10 @@ package scenes.game.display
 			if (m_forceColor > -1) {
 				return m_forceColor;
 			}
+			
+			if(m_isSelected)
+				return SELECTED_COLOR;
+			
 			if(m_shouldShowError && hasError())
 				return ERROR_COLOR;
 			if(m_isEditable == true)

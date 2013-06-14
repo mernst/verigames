@@ -1,7 +1,10 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import starling.display.DisplayObject;
+	import display.RoundedRect;
+	import starling.display.Quad;
+	import starling.display.Sprite;
+	import starling.filters.BlurFilter;
 	
 	import events.MoveEvent;
 	
@@ -17,6 +20,7 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Shape;
@@ -34,8 +38,8 @@ package scenes.game.display
 		public var m_numOutgoingNodeEdges:int;
 
 		private var m_edgeSetEdges:Vector.<Edge>;
-		
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
+		private var m_scoreBlock:ScoreBlock;
 		
 		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
@@ -90,53 +94,49 @@ package scenes.game.display
 			return false;
 		}
 		
-		private var m_star:ScoreStar;
+		public function getExtensionEdge(portID:String, isOutgoingPort:Boolean):GameEdgeContainer
+		{
+			if(isOutgoingPort)
+			{
+				for each(var inEdge:GameEdgeContainer in m_incomingEdges)
+				{
+					if(inEdge.m_toPortID == portID)
+						return inEdge;
+				}
+			}
+			else
+			{
+				for each(var outEdge:GameEdgeContainer in m_outgoingEdges)
+				{
+					if(outEdge.m_fromPortID == portID)
+						return outEdge;
+				}
+			}
+			
+			return null;
+		}
+		
 		override public function draw():void
 		{
 			var color:uint = getColor();
 			
-			m_shape = new Shape;
-			if(color == WIDE_COLOR)
-				m_shape.graphics.beginMaterialFill(darkColorMaterial);
-			else if(color == NARROW_COLOR)
-				m_shape.graphics.beginMaterialFill(lightColorMaterial);
-			else if(color == UNADJUSTABLE_WIDE_COLOR)
-				m_shape.graphics.beginMaterialFill(unadjustableWideColorMaterial);
-			else if(color == UNADJUSTABLE_NARROW_COLOR)
-				m_shape.graphics.beginMaterialFill(unadjustableNarrowColorMaterial);
-			
-			m_shape.graphics.drawRoundRect(0, 0, shapeWidth, shapeHeight, shapeHeight/5.0);
-			m_shape.graphics.endFill();
-			
-			if (!isWide())
-			{
-				// Draw inner black outline to appear smaller if this is a narrow node
-				m_shape.graphics.lineStyle(1.5, 0x0);
-				m_shape.graphics.drawRoundRect(1.0, 1.0, (shapeWidth - 2.0), (shapeHeight - 2.0), shapeHeight/5.0);
+			if (m_rect) {
+				m_rect.removeFromParent(true);
 			}
-			
-			if(m_isSelected && !isTempSelection)
-			{
-				m_shape.graphics.beginMaterialFill(selectedColorMaterial);
-				m_shape.graphics.drawRect(0, 0, shapeWidth, shapeHeight);
-				m_shape.graphics.endFill();
-			}
-			
-			addChild(m_shape);
+			m_rect = new RoundedRect(shapeWidth, shapeHeight, shapeHeight / 5.0, color);
+			addChild(m_rect);
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
+			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
 			if (wideScore > narrowScore) {
-				m_star = new ScoreStar((wideScore - narrowScore).toString(), WIDE_COLOR);
-				m_star.width = m_star.height = m_boundingBox.height/2.0;
-				m_star.x = m_star.y = m_boundingBox.height/8.0;
-				addChild(m_star);
+				m_scoreBlock = new ScoreBlock(WIDE_COLOR, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
+				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_star = new ScoreStar((narrowScore - wideScore).toString(), NARROW_COLOR);
-				m_star.width = m_star.height = 0.5;
-				m_star.width = m_star.height = m_boundingBox.height/2.0;
-				m_star.x = m_star.y = m_boundingBox.height/8.0;
-				addChild(m_star);
+				m_scoreBlock = new ScoreBlock(NARROW_COLOR, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
+				addChild(m_scoreBlock);
 			}
 			useHandCursor = m_isEditable;
 			

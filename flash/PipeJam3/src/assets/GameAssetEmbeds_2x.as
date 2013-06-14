@@ -114,6 +114,10 @@ package assets
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
 		public var Loading8Class:Class;		
 		
+		// Rounded rect corner
+		[Embed(source="../../lib/assets/corner.png")]
+		public var CornerClass:Class;
+		
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]

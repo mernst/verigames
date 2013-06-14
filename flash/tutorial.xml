@@ -972,7 +972,7 @@
 				<edge description="leftmergein" variableID="1" pinch="false" width="narrow"
 					editable="true" id="e213" buzzsaw="false">
 					<from>
-						<noderef id="n212" port="0" />
+						<noderef id="n212" port="1" />
 					</from>
 					<to>
 						<noderef id="n214" port="0" />
@@ -994,7 +994,7 @@
 						<noderef id="n213" port="0" />
 					</from>
 					<to>
-						<noderef id="n214" port="0" />
+						<noderef id="n214" port="1" />
 					</to>
 					<edge-layout>
 						<point>
@@ -1010,7 +1010,7 @@
 				<edge description="rightend" variableID="1" pinch="false" width="wide"
 					editable="true" id="e215" buzzsaw="false">
 					<from>
-						<noderef id="n213" port="0" />
+						<noderef id="n213" port="1" />
 					</from>
 					<to>
 						<noderef id="n217" port="0" />

@@ -20,12 +20,16 @@ package scenes.splashscreen
 	public class SplashScreenScene extends Scene
 	{
 
-		protected var startMenuBox:SplashScreenMenuBox;
+		public var startMenuBox:SplashScreenMenuBox;
 		protected var background:Image;
+		
+		//would like to dispatch an event and end up here, but
+		public static var splashScreenScene:SplashScreenScene;
 		
 		public function SplashScreenScene(game:PipeJamGame)
 		{
 			super(game);
+			splashScreenScene = this;
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
@@ -36,18 +40,15 @@ package scenes.splashscreen
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
+			
 			addChild(background);
 			
 			addMenuBox();
 		}
-		
-		protected function addMenuBox():void
+			
+		public function addMenuBox():void
 		{	
 			startMenuBox = new SplashScreenMenuBox(this);
-			addChild(startMenuBox);
-			startMenuBox.x = (background.width-startMenuBox.width)/2;
-			startMenuBox.y = 40;
-			
 			addChild(startMenuBox);
 		}
 		
