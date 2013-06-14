@@ -57,6 +57,7 @@ public class Level
   private final Set<Set<Integer>> linkedVarIDs;
 
   private final Map<String, Board> boardNames;
+  private final Map<String, StubBoard> stubBoardNames;
 
   /**
    * Contains information about which pipes can be stamped with the colors of
@@ -137,6 +138,7 @@ public class Level
     linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
     linkedVarIDs = new LinkedHashSet<Set<Integer>>();
     boardNames = new LinkedHashMap<String, Board>();
+    stubBoardNames = new LinkedHashMap<String, StubBoard>();
     stampSets = new LinkedHashMap<Integer, Set<Integer>>();
     checkRep();
   }
@@ -323,11 +325,22 @@ public class Level
    */
   public void addBoard(String name, Board b)
   {
-    if (boardNames.containsKey(name))
+    if (this.contains(name))
       throw new IllegalArgumentException("name \"" + name + "\" already in use");
+    // the following check is pretty expensive, but probably worth it.
     if (boardNames.containsValue(b))
       throw new IllegalArgumentException("Board " + b + " already contained");
     boardNames.put(name, b);
+    checkRep();
+  }
+
+  public void addStubBoard(String name, StubBoard b)
+  {
+    if (this.contains(name))
+      throw new IllegalArgumentException("name \"" + name + "\" already in use");
+    if (stubBoardNames.containsValue(b))
+      throw new IllegalArgumentException("StubBoard " + b + " already contained");
+    stubBoardNames.put(name, b);
     checkRep();
   }
 
@@ -348,6 +361,25 @@ public class Level
   public/* @Nullable */Board getBoard(String name)
   {
     return boardNames.get(name);
+  }
+
+  public Map<String, StubBoard> getStubBoards()
+  {
+    return Collections.unmodifiableMap(stubBoardNames);
+  }
+
+  public /* @Nullable */ StubBoard getStubBoard(String name)
+  {
+    return stubBoardNames.get(name);
+  }
+
+  /**
+   * Returns {@code true} if and only if this {@code Level} contains a {@link
+   * Board} or a {@link StubBoard} by the given name.
+   */
+  public boolean contains(String name)
+  {
+    return boardNames.containsKey(name) || stubBoardNames.containsKey(name);
   }
 
   /**

@@ -1,5 +1,5 @@
 <!ELEMENT world (level*)>
- <!ATTLIST world version (1) #REQUIRED>
+ <!ATTLIST world version (2) #REQUIRED>
  <!ELEMENT level (linked-edges,boards)>
   <!ATTLIST level name CDATA #REQUIRED>
   <!ELEMENT linked-edges (edge-set*)>
@@ -12,7 +12,14 @@
      <!ATTLIST stamp active (true|false) #REQUIRED>
     <!ELEMENT edgeref EMPTY>
      <!ATTLIST edgeref id IDREF #REQUIRED>
-  <!ELEMENT boards (board*)>
+  <!ELEMENT boards (board-stub*,board*)>
+   <!ELEMENT board-stub (stub-input,stub-output)>
+    <!ATTLIST board-stub name ID #REQUIRED>
+    <!ELEMENT stub-input (stub-connection*)>
+    <!ELEMENT stub-output (stub-connection*)>
+     <!ELEMENT stub-connection EMPTY>
+      <!ATTLIST stub-connection num CDATA #REQUIRED>
+      <!ATTLIST stub-connection width (wide|narrow) #REQUIRED>
    <!ELEMENT board (node*,edge*)>
     <!ATTLIST board name ID #REQUIRED>
     <!ELEMENT node (input,output,layout?)>
@@ -80,7 +87,7 @@ Edge layout information:
    number of control points, x, will always be such that (x = 1 (mod 3)).
    Equivalently, (x mod 3) = 1, or x = 1 + 3n, where n is any nonnegative
    integer.
-   
+
 ================================================================================
 
 Requirements not enforced by the DTD:
