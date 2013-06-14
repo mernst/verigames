@@ -37,7 +37,7 @@ package system
 		private static const SIMULATE_EXTERNAL_BOARDS:Boolean = false;
 		
 		/** True to mark both the incoming wide ball port AND outgoing narrow port, False to only mark incoming port */
-		private static const MARK_OUTGOING_PORT_TROUBLE_POINTS:Boolean = false;
+		private static const MARK_INGOING_PORT_TROUBLE_POINTS:Boolean = false;
 		
 		/* The world in which the PipeSimulator detects trouble points */
 		private var network:Network;
@@ -510,10 +510,10 @@ package system
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
 									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
-										addTpPort(listPortTroublePoints, edge.to_port);
-										if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-											addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
+										if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+											addTpPort(listPortTroublePoints, edge.to_port);
 										}
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
 									} else {
 										wide_ball_into_next_edge = true;
 									}
@@ -523,10 +523,10 @@ package system
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
 									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
-										addTpPort(listPortTroublePoints, other_edge.to_port);
-										if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-											addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
+										if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+											addTpPort(listPortTroublePoints, other_edge.to_port);
 										}
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
 									} else {
 										wide_ball_into_next_edge = true;
 									}
@@ -563,17 +563,17 @@ package system
 						if ( !node.outgoing_ports[0].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:
@@ -588,17 +588,17 @@ package system
 						if ( !node.outgoing_ports[1].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
 									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
 									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:
@@ -655,17 +655,17 @@ package system
 						if ( !node.outgoing_ports[0].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 								break;
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									if (MARK_OUTGOING_PORT_TROUBLE_POINTS) {
-										addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
 									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
 									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 								break;
 								default:

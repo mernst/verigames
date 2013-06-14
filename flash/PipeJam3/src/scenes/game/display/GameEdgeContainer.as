@@ -257,10 +257,12 @@ package scenes.game.display
 					// the top as being wide
 					if (graphEdge.from_port.node.kind == NodeTypes.START_LARGE_BALL) {
 						newIsWide = true;
+					} else if (graphEdge.from_port.node.kind == NodeTypes.MERGE) {
+						newIsWide = isBallWide(graphEdge.from_port.node.incoming_ports[0].edge.exit_ball_type) || isBallWide(graphEdge.from_port.node.incoming_ports[1].edge.exit_ball_type);
 					} else {
 						newIsWide = isBallWide(graphEdge.enter_ball_type);
 					}
-					if (graphEdge.has_pinch && !edgeIsCopy) {
+					if (graphEdge.has_pinch) {
 						newOutgoingIsWide = false;
 					} else {
 						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
