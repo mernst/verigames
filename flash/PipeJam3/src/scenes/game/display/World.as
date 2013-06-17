@@ -429,7 +429,6 @@ package scenes.game.display
 			var xmlList:XMLList = xml.level;
 			for each(var level:XML in xmlList)
 			{
-				//contains the name, and it's at the end to avoid matches like level_name1
 				var levelName:String = level.@id;
 				if(levelName.length == 0)
 					levelName = level.@name;

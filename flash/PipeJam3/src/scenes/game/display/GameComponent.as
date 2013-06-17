@@ -152,29 +152,30 @@ package scenes.game.display
 		//set children's color, based on incoming and outgoing component and error condition
 		public function getColor():int
 		{
+			var color:int;
 			if (m_forceColor > -1) {
-				return m_forceColor;
+				color = m_forceColor;
 			}
-			
-			if(m_isSelected)
-				return SELECTED_COLOR;
-			
-			if(m_shouldShowError && hasError())
-				return ERROR_COLOR;
-			if(m_isEditable == true)
+			else if(m_shouldShowError && hasError())
+				color = ERROR_COLOR;
+			else if(m_isEditable == true)
 			{
 				if(m_isWide == true)
-					return WIDE_COLOR;
+					color = WIDE_COLOR;
 				else
-					return NARROW_COLOR;
+					color = NARROW_COLOR;
 			}
 			else //not adjustable
 			{
 				if(m_isWide == true)
-					return UNADJUSTABLE_WIDE_COLOR;
+					color = UNADJUSTABLE_WIDE_COLOR;
 				else
-					return UNADJUSTABLE_NARROW_COLOR;				
+					color = UNADJUSTABLE_NARROW_COLOR;				
 			}
+			if(m_isSelected)
+				color -= 0x222222;
+			
+			return color;
 		}
 		
 		public function updateSize():void

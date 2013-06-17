@@ -1,18 +1,20 @@
 package scenes.game.display
 {
 	import display.RoundedRect;
+	
 	import flash.geom.Point;
-	import starling.display.DisplayObject;
-	import utils.XSprite;
 	
 	import scenes.BaseComponent;
 	
+	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
+	
+	import utils.XSprite;
 
 	public class GameEdgeJoint extends GameComponent
 	{		
@@ -145,22 +147,18 @@ package scenes.game.display
 			
 			var isRound:Boolean = ((m_jointType == INNER_CIRCLE_JOINT) || err);
 			
-			if(isHoverOn)
-			{
-				if (isRound) {
-					m_hoverQuad = new RoundedRect(lineSize + .1, lineSize + .1, roundRadius, 0xeeeeee);
-				} else {
-					m_hoverQuad = new Quad(lineSize + .1, lineSize + .1, 0xeeeeee);
-				}
-				m_hoverQuad.x = -lineSize/2-.05;
-				m_hoverQuad.y = -lineSize/2-.05;
-				addChild(m_hoverQuad);
-			}
 			
 			if (isRound) {
 				m_quad = new RoundedRect(lineSize, lineSize, roundRadius, color);
 			} else {
 				m_quad = new Quad(lineSize, lineSize, color);
+				if(isHoverOn)
+				{
+					(m_quad as Quad).setVertexColor(0, color + 0x333333);
+					(m_quad as Quad).setVertexColor(1, color + 0x333333);
+					(m_quad as Quad).setVertexColor(2, color + 0x333333);
+					(m_quad as Quad).setVertexColor(3, color + 0x333333);
+				}
 			}
 			
 			m_quad.x = -lineSize/2;

@@ -54,6 +54,65 @@ package scenes.game.display
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
+		public function updatePortIndexes():void
+		{
+			//sort things
+			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
+			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
+			var currentPos:int = 0;
+			for(var i:int = 0; i<m_outgoingEdges.length; i++)
+			{
+				var oedge:GameEdgeContainer = m_outgoingEdges[i];
+
+				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
+				
+				for(var j:int = 0; j<m_incomingEdges.length; j++)
+				{
+					var iedge:GameEdgeContainer = m_incomingEdges[j];
+					if(iedge.incomingEdgePosition != -1)
+						continue;
+					
+					var iedgeXPos:Number = iedge.localToGlobal(iedge.m_edgeArray[iedge.m_edgeArray.length-1]).x;
+					
+					//compare positions of all nodes and set positions accordingly
+					//if the name's the same, they are the same
+					if(oedge.m_fromPortID == iedge.m_toPortID)
+					{
+						oedge.outgoingEdgePosition = currentPos;
+						iedge.incomingEdgePosition = currentPos;
+						m_PortToEdgeArray[currentPos] = oedge;
+						currentPos++;
+						break;
+					}
+					else if(oedgeXPos < iedgeXPos)
+					{
+						oedge.outgoingEdgePosition = currentPos;
+						m_PortToEdgeArray[currentPos] = oedge;
+						currentPos++;
+						break;
+					}
+					else
+					{
+						iedge.incomingEdgePosition = currentPos;
+						m_PortToEdgeArray[currentPos] = iedge;
+						currentPos++;
+					}
+				}
+			}
+			
+			//pick up any missed ones
+			for(var j1:int = 0; j1<m_incomingEdges.length; j1++)
+			{
+				var edge:GameEdgeContainer = m_incomingEdges[j1];
+				if(edge.incomingEdgePosition == -1)
+				{
+					edge.incomingEdgePosition = currentPos;
+					m_PortToEdgeArray[currentPos] = edge;
+					currentPos++;
+				}
+			}
+		}
+		
 		public function getNumLines():int
 		{
 			if (m_layoutXML) {
@@ -234,6 +293,7 @@ package scenes.game.display
 				m_outgoingEdges.push(edge);
 			
 			//I want the edges to be in ascending order according to x position, so do that here
+			//only works when added to stage, so don't rely on initial placements
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			
 			//stick the edge in the array at the port num, doesn't matter if it's replacing something, we just need one
@@ -247,6 +307,7 @@ package scenes.game.display
 				m_incomingEdges.push(edge);
 			
 			//I want the edges to be in ascending order according to x position, so do that here
+			//only works when added to stage, so don't rely on initial placements
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
 			
 			//stick the edge in the array at the port num, doesn't matter if it's replacing something, we just need one
