@@ -1,12 +1,11 @@
 package scenes.game.display
 {
-	import display.RoundedRect;
-	import flash.geom.Point;
-	import starling.display.DisplayObject;
+	import display.NineSliceBatch;
 	import utils.XSprite;
-	
 	import scenes.BaseComponent;
 	
+	import flash.geom.Point;
+	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -148,7 +147,7 @@ package scenes.game.display
 			if(isHoverOn)
 			{
 				if (isRound) {
-					m_hoverQuad = new RoundedRect(lineSize + .1, lineSize + .1, roundRadius, 0xeeeeee);
+					m_hoverQuad = new NineSliceBatch(lineSize + .1, lineSize + .1, roundRadius, roundRadius, "Game", "RoundRectWhitePNG", "Box9SliceXML", "Box");
 				} else {
 					m_hoverQuad = new Quad(lineSize + .1, lineSize + .1, 0xeeeeee);
 				}
@@ -158,7 +157,7 @@ package scenes.game.display
 			}
 			
 			if (isRound) {
-				m_quad = new RoundedRect(lineSize, lineSize, roundRadius, color);
+				m_quad = new NineSliceBatch(lineSize, lineSize, roundRadius, roundRadius, "Game", "RoundRectBlackPNG", "Box9SliceXML", "Box");
 			} else {
 				m_quad = new Quad(lineSize, lineSize, color);
 			}
