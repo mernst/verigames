@@ -1,5 +1,6 @@
 package assets
 {
+	import starling.textures.TextureAtlas;
 	public class GameAssetEmbeds_1x
 	{
 		// Bitmaps
@@ -111,6 +112,17 @@ package assets
 		// Rounded rect corner
 		[Embed(source="../../lib/assets/corner.png")]
 		public var CornerClass:Class;
+		
+		// 9 Slice coords to use for all box textures
+		[Embed(source = '../../lib/assets/atlases/Box9Slice.xml', mimeType = "application/octet-stream")] public var Box9SliceXML:Class;
+		
+		[Embed(source = '../../lib/assets/atlases/RoundRectWide.png')] public var RoundRectWidePNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectNarrow.png')] public var RoundRectNarrowPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectLightGray.png')] public var RoundRectLightGrayPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectDarkGray.png')] public var RoundRectDarkGrayPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectBlack.png')] public var RoundRectBlackPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectWhite.png')] public var RoundRectWhitePNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectOrange.png')] public var RoundRectOrangePNG:Class;
 		
 		// Bitmap Fonts
 		

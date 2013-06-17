@@ -1,11 +1,10 @@
 package scenes.game.display
 {
-	import display.RoundedRect;
-	
-	import flash.geom.Point;
+	import display.NineSliceBatch;
 	
 	import scenes.BaseComponent;
 	
+	import flash.geom.Point;
 	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.events.Event;
@@ -149,7 +148,7 @@ package scenes.game.display
 			
 			
 			if (isRound) {
-				m_quad = new RoundedRect(lineSize, lineSize, roundRadius, color);
+				m_quad = new NineSliceBatch(lineSize, lineSize, roundRadius, roundRadius, "Game", "RoundRectBlackPNG", "Box9SliceXML", "Box");
 			} else {
 				m_quad = new Quad(lineSize, lineSize, color);
 				if(isHoverOn)

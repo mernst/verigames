@@ -1,34 +1,13 @@
 package scenes.game.display
 {
-	import assets.AssetInterface;
-	import display.RoundedRect;
-	import starling.display.Quad;
-	import starling.display.Sprite;
-	import starling.filters.BlurFilter;
-	
-	import events.MoveEvent;
-	
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	
+	import display.NineSliceBatch;
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.Network;
 	import graph.NodeTypes;
 	import graph.Port;
 	
-	import scenes.BaseComponent;
-	
-	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Image;
-	import starling.display.Shape;
-	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
-	import starling.textures.Texture;
+	import flash.utils.Dictionary;
 	
 	public class GameNode extends GameNodeBase
 	{
@@ -118,23 +97,38 @@ package scenes.game.display
 		
 		override public function draw():void
 		{
-			var color:uint = getColor();
-			
-			if (m_rect) {
-				m_rect.removeFromParent(true);
+			if (m_box9slice) {
+				m_box9slice.removeFromParent(true);
 			}
-			m_rect = new RoundedRect(shapeWidth, shapeHeight, shapeHeight / 5.0, color);
-			addChild(m_rect);
+			
+			var assetName:String;
+			if(m_isEditable == true)
+			{
+				if(m_isWide == true)
+					assetName = "RoundRectWidePNG";
+				else
+					assetName = "RoundRectNarrowPNG";
+			}
+			else //not adjustable
+			{
+				if(m_isWide == true)
+					assetName = "RoundRectDarkGrayPNG";
+				else
+					assetName = "RoundRectLightGrayPNG";
+			}
+			
+			m_box9slice = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 5.0, shapeHeight / 5.0, "Game", assetName, "Box9SliceXML", "Box");
+			addChild(m_box9slice);
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
 			if (wideScore > narrowScore) {
-				m_scoreBlock = new ScoreBlock(WIDE_COLOR, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock("RoundRectWidePNG", (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_scoreBlock = new ScoreBlock(NARROW_COLOR, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock("RoundRectNarrowPNG", (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			}

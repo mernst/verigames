@@ -1,10 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetsFont;
-	import display.RoundedRect;
+	import display.NineSliceBatch;
 	import scenes.game.display.GameComponent;
 	
-	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -12,6 +11,12 @@ package scenes.game.display
 	
 	public class ScoreBlock extends GameComponent
 	{
+		/* Name of 9 slice asset to use */
+		private var m_assetName:String;
+		
+		/* 9 slice asset created */
+		private var m_sliceBatch:NineSliceBatch;
+		
 		/** Component associated with this score, GameNodes have points for wide inputs/narrow outputs
 		 * while GameEdgeContainers have negative points for errors. Assigning no gameComponent will
 		 * just display the score and the ScoreBlock will not be interactive */
@@ -25,11 +30,10 @@ package scenes.game.display
 		/** Text showing current score on score_pane */
 		private var m_text:TextFieldWrapper;
 		
-		public function ScoreBlock(_color:Number, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null, _radius:Number = -1)
+		public function ScoreBlock(_assetName:String, _score:String, _width:Number, _height:Number, _fontSize:Number, _gameComponent:GameComponent = null, _radius:Number = -1)
 		{
 			super("");
-			
-			m_color = _color;
+			m_assetName = _assetName;
 			m_score = _score;
 			m_width = _width;
 			m_height = _height;
@@ -38,13 +42,13 @@ package scenes.game.display
 			if (_radius <= 0) {
 				_radius = Math.min(m_width, m_height) / 5.0;
 			}
-			var rect:RoundedRect = new RoundedRect(m_width-1, m_height-1, _radius, _color, true, false, false, false);
-			addChild(rect);
 			
-			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width, m_height, m_fontSize, 0x00000);
+			m_sliceBatch = new NineSliceBatch(m_width + 2 * _radius, m_height + 2 * _radius, _radius, _radius, "Game", m_assetName, "Box9SliceXML", "Box");
+			m_sliceBatch.adjustUsedSlices(true, true, false, true, true, false, false, false, false);
+			addChild(m_sliceBatch);
+			
+			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
 			TextFactory.getInstance().updateAlign(m_text, 1, 1);
-			m_text.width = m_width;
-			m_text.height = m_height;
 			addChild(m_text);
 			if (m_gameComponent) {
 				addEventListener(TouchEvent.TOUCH, onTouch);

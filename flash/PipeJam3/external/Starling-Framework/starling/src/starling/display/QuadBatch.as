@@ -370,7 +370,6 @@ package starling.display
                 support.finishQuadBatch();
                 support.raiseDrawCount();
                 renderCustom(support.mvpMatrix, alpha * parentAlpha, support.blendMode);
-				if (mVertexBuffer)    mVertexBuffer.dispose();
             }
         }
         

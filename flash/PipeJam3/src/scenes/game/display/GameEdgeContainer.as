@@ -1,6 +1,6 @@
 package scenes.game.display
 {
-	import display.RoundedRect;
+	import display.NineSliceBatch;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import starling.display.DisplayObjectContainer;
@@ -57,7 +57,7 @@ package scenes.game.display
 		public var edgeIsCopy:Boolean;
 		
 		public var errorContainer:Sprite = new Sprite();
-		public var errorMarker:RoundedRect;
+		public var errorMarker:NineSliceBatch;
 		
 		private var m_edgeHasError:Boolean = false;
 		private var m_portHasError:Boolean = false;
@@ -335,7 +335,7 @@ package scenes.game.display
 			}
 			m_hasError = true;
 			if (errorMarker == null) {
-				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
 				errorMarker.x = -ERROR_WIDTH / 2;
 				errorMarker.y = -ERROR_WIDTH / 2;
 			}
@@ -400,7 +400,7 @@ package scenes.game.display
 			}
 			m_hasError = true;
 			if (errorMarker == null) {
-				errorMarker = new RoundedRect(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_COLOR);
+				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
 				errorMarker.x = -ERROR_WIDTH / 2;
 				errorMarker.y = -ERROR_WIDTH / 2;
 			}

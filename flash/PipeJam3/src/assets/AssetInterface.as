@@ -31,6 +31,7 @@ package assets
         // Texture cache
         
         public static var sContentScaleFactor:int = 1;
+		private static var sTextureAtlases:Dictionary = new Dictionary();
         private static var sTextures:Dictionary = new Dictionary();
         private static var sSounds:Dictionary = new Dictionary();
         private static var sTextureAtlas:TextureAtlas;
@@ -49,7 +50,7 @@ package assets
 		private var loginAssetEmbeds_2x:LoginAssetEmbeds_2x;
 		private var menuAssetEmbeds_1x:MenuAssetEmbeds_1x;
 		private var menuAssetEmbeds_2x:MenuAssetEmbeds_2x;
-        
+		
         public static function getTexture(file:String, name:String):Texture
         {
             if (sTextures[name] == undefined)
@@ -161,17 +162,21 @@ package assets
             else throw new ArgumentError("Sound not found: " + newName);
         }
         
-        public static function getTextureAtlas(file:String, textureFile:String, xmlFile:String):TextureAtlas
-        {
-            if (sTextureAtlas == null)
-            {
-                var texture:Texture = getTexture(file, textureFile);
-                var xml:XML = XML(create(file, xmlFile));
-                sTextureAtlas = new TextureAtlas(texture, xml);
-            }
-            
-            return sTextureAtlas;
-        }
+		public static function getTextureAtlas(file:String, texClassName:String, xmlClassName:String):TextureAtlas
+		{
+			return getTextureAtlasUsingDict(sTextureAtlases, file, texClassName, xmlClassName);
+		}
+		
+		private static function getTextureAtlasUsingDict(dict:Dictionary, file:String, texClassName:String, xmlClassName:String):TextureAtlas
+		{
+			if (dict[file + texClassName] == undefined) {
+				var data:Object = create(file, texClassName);
+				var texture:Texture = Texture.fromBitmap(data as Bitmap, false);
+				var xml:XML = XML(create(file, xmlClassName));
+				dict[file + texClassName] = new TextureAtlas(texture, xml);
+			}
+			return dict[file + texClassName];
+		}
         
         public static function loadBitmapFont(filename:String, fontName:String, xmlFile:String):void
         {
