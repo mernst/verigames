@@ -154,7 +154,7 @@ package scenes.game.components.dialogs
 				if(currentPoint.x < backgroundImage.width)
 				{
 					if(currentPoint.y < backgroundImage.height/5)
-						onSaveButtonTriggered();
+						onNextLevelButtonTriggered();
 					else if(currentPoint.y < (backgroundImage.height/5)*2)
 						onSelectLayoutButtonTriggered();
 					else if(currentPoint.y < (backgroundImage.height/5)*3)
@@ -185,19 +185,13 @@ package scenes.game.components.dialogs
 			if(submitLayoutDialog == null)
 			{
 				submitLayoutDialog = new SubmitLayoutDialog();
-				addChild(submitLayoutDialog);
+				parent.addChild(submitLayoutDialog);
 				submitLayoutDialog.x = backgroundImage.width;
-				submitLayoutDialog.y = backgroundImage.height - submitLayoutDialog.height;
+				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
 				submitLayoutDialog.visible = true;
 			}
 			else
 				submitLayoutDialog.visible = !submitLayoutDialog.visible;
-		}
-		
-		private function submitLayout():void
-		{
-			dispatchEvent(new starling.events.Event(Level.SAVE_LAYOUT, true, this));
-			
 		}
 		
 		private function onSelectLayoutButtonTriggered():void
@@ -217,15 +211,24 @@ package scenes.game.components.dialogs
 		
 		private function onBackToGameButtonTriggered():void
 		{
-			this.removeFromParent();
-			
+			//hide other dialogs
+			hideAllDialogs();			
 		}
 		
 		private function onExitButtonTriggered():void
 		{
+			hideAllDialogs();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen", true));
 			this.removeFromParent();
 			
+		}
+		
+		private function hideAllDialogs():void
+		{
+			if(submitLayoutDialog)
+				submitLayoutDialog.visible = false;
+			
+			visible = false;
 		}
 		
 		private function onNextLevelButtonTriggered():void

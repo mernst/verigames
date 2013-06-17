@@ -17,7 +17,7 @@ package
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
 	
-	[SWF(width = "1024", height = "768", frameRate = "30", backgroundColor = "#ffffff")]
+	[SWF(width = "960", height = "640", frameRate = "30", backgroundColor = "#ffffff")]
 	
 	public class PipeJam3 extends flash.display.Sprite 
 	{
@@ -119,9 +119,9 @@ package
 		
 		public function updateSize(e:flash.events.Event):void {
 			// Compute max view port size
-			var fullViewPort:Rectangle = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight)
-			const DES_WIDTH:Number = 1024;
-			const DES_HEIGHT:Number = 768;
+			var fullViewPort:Rectangle = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+			const DES_WIDTH:Number = Constants.GameWidth;
+			const DES_HEIGHT:Number = Constants.GameHeight;
 			var scaleFactor:Number = Math.min(stage.stageWidth / DES_WIDTH, stage.stageHeight / DES_HEIGHT);
 			
 			// Compute ideal view port

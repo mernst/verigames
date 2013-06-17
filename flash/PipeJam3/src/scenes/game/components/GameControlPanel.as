@@ -80,7 +80,7 @@ package scenes.game.components
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
 			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, HEIGHT / 2 - 2*PAD, HEIGHT / 2 - 2*PAD, GameComponent.SCORE_COLOR);
-			m_scoreTextfield.x = SCORE_PANEL_AREA.width / 2 - m_scoreTextfield.width;
+			m_scoreTextfield.x = (SCORE_PANEL_AREA.width- m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = HEIGHT/4 + PAD;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);

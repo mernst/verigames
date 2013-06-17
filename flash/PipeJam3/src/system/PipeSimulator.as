@@ -652,7 +652,7 @@ package system
 					
 					case NodeTypes.CONNECT : {
 						// Check for wide into small condition, although I imagine the two pipes would be linked (same color, same width)
-						if ( !node.outgoing_ports[0].edge.is_wide ) {
+						if ( node.outgoing_ports.length > 0 && !node.outgoing_ports[0].edge.is_wide ) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
@@ -673,9 +673,11 @@ package system
 								break;
 							}
 						} else {
-							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+							if ( node.outgoing_ports.length > 0)
+								node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
 						}
-						queue.push(node.outgoing_ports[0].edge); //enqueue
+						if (node.outgoing_ports.length > 0)
+							queue.push(node.outgoing_ports[0].edge); //enqueue
 					}
 					break;
 					
