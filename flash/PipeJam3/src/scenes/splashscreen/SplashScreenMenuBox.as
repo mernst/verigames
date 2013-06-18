@@ -357,11 +357,13 @@ package scenes.splashscreen
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
+		static var fileNumber = 0;
 		protected function onDemoButtonTriggered(e:starling.events.Event):void
 		{
-			PipeJamGameScene.worldFile = PipeJamGameScene.demoButtonWorldFile;
-			PipeJamGameScene.layoutFile = PipeJamGameScene.demoButtonLayoutFile;
-			PipeJamGameScene.constraintsFile = PipeJamGameScene.demoButtonConstraintsFile;
+			PipeJamGameScene.worldFile = PipeJamGameScene.dArray[fileNumber];
+			PipeJamGameScene.layoutFile = PipeJamGameScene.dArray[fileNumber+2];
+			PipeJamGameScene.constraintsFile = PipeJamGameScene.dArray[fileNumber+1];
+			fileNumber+=3
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}
