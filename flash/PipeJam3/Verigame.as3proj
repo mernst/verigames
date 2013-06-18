@@ -22,6 +22,7 @@
     <class path="external\Hi-ReS-Stats-master\src" />
     <class path="external\Feathers 1.0.1\source" />
     <class path="external\Starling-Framework\starling\src" />
+    <class path="external\Starling-Extension-Particle-System-master\src" />
   </classpaths>
   <!-- Build options -->
   <build>

@@ -47,8 +47,8 @@ package scenes.game.components
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
 	{
-		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 270;
+		public static const WIDTH:Number = Constants.GameWidth;
+		public static const HEIGHT:Number = 270;
 		
 		protected var m_currentLevel:Level;
 		
@@ -70,13 +70,12 @@ package scenes.game.components
 		public function GridViewPanel()
 		{
 			currentMode = NORMAL_MODE;
-			var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-			var backgroundImage:Image = new Image(background);
-			backgroundImage.width = WIDTH;
-			backgroundImage.height = HEIGHT;
-			backgroundImage.blendMode = BlendMode.NONE;
-			addChild(backgroundImage);
-			content = new BaseComponent;
+			
+			var mouseQuad:Quad = new Quad(WIDTH, HEIGHT, 0x0);
+			mouseQuad.blendMode = BlendMode.NONE;
+			addChild(mouseQuad);
+			
+			content = new BaseComponent();
 			addChild(content);
 			
 			quad = new Quad(10, 10, 0xff0000);
@@ -228,7 +227,7 @@ package scenes.game.components
 			
 		}
 		
-		private function handleMouseWheel(delta:Number, localMouse:Point, createUndoEvent:Boolean = true)
+		private function handleMouseWheel(delta:Number, localMouse:Point, createUndoEvent:Boolean = true):void
 		{
 			var mousePoint:Point = localMouse.clone();
 			
@@ -279,7 +278,10 @@ package scenes.game.components
 		
 		private function moveContent(newX:Number, newY:Number):void
 		{
-			var moveBounds:Rectangle = content.getBounds(this);
+			var moveBounds:Rectangle = new Rectangle(content.x + content.scaleX * m_currentLevel.m_boundingBox.x,
+			                                        content.y + content.scaleY * m_currentLevel.m_boundingBox.y,
+													content.scaleX * m_currentLevel.m_boundingBox.width,
+													content.scaleY * m_currentLevel.m_boundingBox.height);
 			moveBounds.x -= content.x;
 			moveBounds.y -= content.y;
 			
@@ -313,6 +315,8 @@ package scenes.game.components
 			// Perform scaling
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
+			
+			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
 			// Adjust so that original centered point is still in the middle
@@ -321,6 +325,8 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
+			
+			
 		}
 		
 		private function getViewInContentSpace():Rectangle
@@ -418,8 +424,8 @@ package scenes.game.components
 		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
 		{
 			var startPoint:Point = new Point(content.x, content.y);
-			content.x = (-panX* content.scaleX + clipRect.width/2) ;
-			content.y = (-panY* content.scaleY + clipRect.height/2) ;
+			content.x = ( -panX * content.scaleX + clipRect.width / 2) ;
+			content.y = ( -panY * content.scaleY + clipRect.height / 2) ;
 		}
 		
 		/**
