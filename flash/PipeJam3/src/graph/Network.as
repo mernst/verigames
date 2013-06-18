@@ -50,7 +50,7 @@ package graph
 		
 		public function addLevel(level:LevelNodes):void
 		{
-			if (LevelNodesDictionary[level.level_name] == null) {
+			//if (LevelNodesDictionary[level.level_name] == null) {
 				LevelNodesDictionary[level.level_name] = level;
 				levelNodeNameArray.push(level.level_name);
 				for (var obfusBoardName:String in level.boardNodesDictionary) {
@@ -60,9 +60,9 @@ package graph
 					}
 					globalBoardNameToBoardNodesDictionary[boardNodes.original_board_name] = boardNodes;
 				}
-			} else {
-				throw new Error("Duplicate Level entries found for level: " + level.original_level_name);
-			}
+//			} else {
+//				throw new Error("Duplicate Level entries found for level: " + level.original_level_name);
+//			}
 		}
 		
 		public function attachExternalSubboardNodesToBoardNodes():void

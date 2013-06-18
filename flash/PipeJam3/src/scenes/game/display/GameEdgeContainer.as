@@ -112,35 +112,9 @@ package scenes.game.display
 				m_outputSegmentIsEditable = false;
 			}
 			
-			//start these at their given port numbers
-			if(!isNaN(parseInt(m_fromPortID)))
-				outgoingEdgePosition = parseInt(m_fromPortID);
-			else
-			{
-				trace(m_fromPortID);
-				if(m_fromPortID.indexOf("left") != -1)
-					outgoingEdgePosition = 0;
-				else if(m_fromPortID.indexOf("right") != -1)
-					outgoingEdgePosition = 1;
-				else if(m_fromPortID.indexOf("input") != -1)
-					outgoingEdgePosition = 0;
-				else if(m_fromPortID.indexOf("output") != -1)
-					outgoingEdgePosition = 0;
-			}
-			if(!isNaN(parseInt(m_toPortID)))
-				incomingEdgePosition = parseInt(m_toPortID);
-			else
-			{
-				trace(m_toPortID);
-				if(m_toPortID.indexOf("left") != -1)
-					incomingEdgePosition = 0;
-				else if(m_toPortID.indexOf("right") != -1)
-					incomingEdgePosition = 1;
-				else if(m_toPortID.indexOf("input") != -1)
-					incomingEdgePosition = 0;
-				else if(m_toPortID.indexOf("output") != -1)
-					incomingEdgePosition = 0;
-			}
+			//mark these as undefined
+			outgoingEdgePosition = -1;
+			incomingEdgePosition = -1;
 			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
@@ -189,6 +163,7 @@ package scenes.game.display
 			
 			m_isDirty = true;
 		}
+		
 		
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
@@ -861,92 +836,6 @@ package scenes.game.display
 			var movingRight:Boolean = deltaPoint.x > 0 ? true : false;
 			if(deltaPoint.x != 0)
 				containerComponent.organizePorts(this, movingRight);
-			
-			
-			/*
-			var finalPt:Point = parent.globalToLocal(jointUpdatedGlobalPt);
-			var updatePoint:Point = finalPt.subtract(startPt);	
-			
-			var isOutgoingEdge:Boolean;// = m_fromComponent is GameNode ? true : false;
-			
-			//now compare current point with other connection points, and if we've overlapped one of them, switch places
-			//moving towards the right
-			var gameEdgeContainer:GameEdgeContainer = parent as GameEdgeContainer;
-			
-			var node:GameNode = containerComponent as GameNode;
-			if(isOutgoingEdge)
-			{
-				node.m_outgoingEdges.sort(sortOutgoingXPositions);
-				var oEdgePosition:int = node.m_outgoingEdges.indexOf(parent);
-				if(oEdgePosition != m_position)
-				{
-					m_position = oEdgePosition;
-					//get the node we just passed, and switch end points
-					var oNextEdge:GameEdgeContainer;
-					if(updatePoint.x>0) 
-						if(oEdgePosition>0)
-							oNextEdge = node.m_outgoingEdges[oEdgePosition-1];
-						else
-							return;
-						else
-							if(node.m_outgoingEdges.length > oEdgePosition+1)
-								oNextEdge = node.m_outgoingEdges[oEdgePosition+1];
-							else
-								return;
-					//save next edge current start point
-					var globalNextStartPt:Point = oNextEdge.localToGlobal(new Point(oNextEdge.m_startJoint.x, oNextEdge.m_startJoint.y));
-					//set next edge start position using our current original point
-					var globalOriginalStartPt:Point = parent.localToGlobal(m_originalPoint);
-					oNextEdge.setStartPosition(oNextEdge.globalToLocal(globalOriginalStartPt));
-					//set our original point from saved next edge point
-					m_originalPoint = parent.globalToLocal(globalNextStartPt);
-					
-					//redraw nextEdge, passing update point = 0,0
-					oNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
-					//reorder outgoing edge array
-					//var oNewPos:Number = node.setOutgoingEdge(oNextEdge);
-					//oNextEdge.outgoingEdgePosition = oNewPos; // probably want to update the edge at this point
-				}
-			}
-			else
-			{
-				
-				node.m_incomingEdges.sort(sortIncomingXPositions);
-				var iEdgePosition:int = node.m_incomingEdges.indexOf(parent);
-				if(iEdgePosition != m_position)
-				{
-					m_position = iEdgePosition;
-					//get the node we just passed, and switch end points
-					var iNextEdge:GameEdgeContainer;
-					if(updatePoint.x>0) 
-						if(iEdgePosition>0)
-							iNextEdge = node.m_incomingEdges[iEdgePosition-1];
-						else
-							return;
-						else
-							if(node.m_incomingEdges.length > iEdgePosition+1)
-								iNextEdge = node.m_incomingEdges[iEdgePosition+1];
-							else
-								return;
-					
-					//save next edge current start point
-					var globalNextEndPt:Point = iNextEdge.localToGlobal(new Point(iNextEdge.m_endJoint.x, iNextEdge.m_endJoint.y));
-					//set next edge start position using our current original point
-					var globalOriginalEndPt:Point = parent.localToGlobal(m_originalPoint);
-					iNextEdge.setEndPosition(iNextEdge.globalToLocal(globalOriginalEndPt));
-					//set our original point from saved next edge point
-					m_originalPoint = parent.globalToLocal(globalNextEndPt);
-					
-					//redraw nextEdge, passing update point = 0,0
-					iNextEdge.rubberBandEdge(new Point(), isOutgoingEdge);
-					//reorder outgoing edge array
-					//	var iNewPos:Number = node.setOutgoingEdge(iNextEdge);
-					//	iNextEdge.outgoingEdgePosition = iNewPos; // probably want to update the edge at this point
-				}
-			}
-			if (m_parentEdge) {
-				m_parentEdge.rubberBandEdge(updatePoint, isOutgoingEdge);
-			}*/
 		}
 		
 		
@@ -1136,7 +1025,7 @@ package scenes.game.display
 			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
 				return -1;
 			}
-			if(x.m_edgeArray[0].x < y.m_edgeArray[0].x)
+			if(x.localToGlobal(x.m_edgeArray[0]).x < y.localToGlobal(y.m_edgeArray[0]).x)
 				return -1;
 			else
 				return 1;
@@ -1147,7 +1036,7 @@ package scenes.game.display
 			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
 				return -1;
 			}
-			if(x.m_edgeArray[x.m_edgeArray.length-1].x < y.m_edgeArray[y.m_edgeArray.length-1].x)
+			if(x.localToGlobal(x.m_edgeArray[x.m_edgeArray.length-1]).x < y.localToGlobal(y.m_edgeArray[y.m_edgeArray.length-1]).x)
 				return -1;
 			else
 				return 1;

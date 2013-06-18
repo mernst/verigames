@@ -185,15 +185,14 @@
 			}
 			else if(m_endPt.x != 0)
 			{
+				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
 				if(isHoverOn)
 				{
-					m_quad = new Quad(Math.abs(m_endPt.x), lineSize + .1, 0xeeeeee);
-					m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-					m_quad.y = (m_endPt.x > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
-					m_quad.x = 0;
-					addChild(m_quad);
+					m_quad.setVertexColor(0, color + 0x333333);
+					m_quad.setVertexColor(1, color + 0x333333);
+					m_quad.setVertexColor(2, color + 0x333333);
+					m_quad.setVertexColor(3, color + 0x333333);
 				}
-				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
 				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
 				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.x = 0;
@@ -218,15 +217,14 @@
 			}
 			else
 			{
+				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
 				if(isHoverOn)
 				{
-					m_quad = new Quad(lineSize + .1, Math.abs(m_endPt.y), 0xeeeeee);
-					m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-					m_quad.y = 0;// -0.05;
-					m_quad.x = (m_endPt.y > 0) ? -(lineSize+.1)/2.0 : (lineSize+.1)/2.0;
-					addChild(m_quad);
+					m_quad.setVertexColor(0, color + 0x333333);
+					m_quad.setVertexColor(1, color + 0x333333);
+					m_quad.setVertexColor(2, color + 0x333333);
+					m_quad.setVertexColor(3, color + 0x333333);
 				}
-				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
 				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
 				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
 				m_quad.y = 0;

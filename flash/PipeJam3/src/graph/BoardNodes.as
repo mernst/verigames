@@ -65,15 +65,15 @@ package graph
 						}
 						break;
 					case NodeTypes.OUTGOING:
-						if (outgoing_node) {
-							throw new Error("Board found with multiple outgoing nodes: " + original_board_name + " nodes:" + outgoing_node.node_id + " & " + _node.node_id);
-						}
+//						if (outgoing_node) {
+//							throw new Error("Board found with multiple outgoing nodes: " + original_board_name + " nodes:" + outgoing_node.node_id + " & " + _node.node_id);
+//						}
 						outgoing_node = _node;
 						break;
 					case NodeTypes.INCOMING:
-						if (incoming_node) {
-							throw new Error("Board found with multiple incoming nodes: " + original_board_name + " nodes:" + incoming_node.node_id + " & " + _node.node_id);
-						}
+//						if (incoming_node) {
+//							throw new Error("Board found with multiple incoming nodes: " + original_board_name + " nodes:" + incoming_node.node_id + " & " + _node.node_id);
+//						}
 						incoming_node = _node;
 						// intentional fall-thru (no break)
 					case NodeTypes.START_LARGE_BALL:

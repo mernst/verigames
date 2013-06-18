@@ -82,5 +82,11 @@ package assets
 		
 		[Embed(source="../../lib/assets/menus/SubmitLayoutDialogBackground.png")]
 		public var SubmitLayoutDialogBackgroundClass:Class;
+		
+		[Embed(source="../../lib/assets/menus/cancel.jpg")]
+		public var CancelButtonClass:Class;
+		
+		[Embed(source="../../lib/assets/menus/submit.jpg")]
+		public var SubmitButtonClass:Class;
 	}
 }

@@ -168,6 +168,7 @@ package scenes.game.display
 			m_backgroundImage.blendMode = BlendMode.NONE;
 			addChild(m_backgroundImage);
 			
+			addChild(m_errorContainer);
 			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
 			addChild(m_nodesContainer);
 			addChild(m_jointsContainer);
@@ -234,6 +235,9 @@ package scenes.game.display
 					gameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
 				}
 				
+				if(boxLayoutXML.hasOwnProperty('@visible'))
+					gameNode.visible = boxLayoutXML.@visible == "true" ? true : false;
+				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
 				
@@ -288,6 +292,8 @@ package scenes.game.display
 				}
 				
 				var joint:GameJointNode = new GameJointNode(jointLayoutXML, foundNode, foundPort);
+				if(jointLayoutXML.hasOwnProperty('@visible'))
+					joint.visible = jointLayoutXML.@visible == "true" ? true : false;
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
 				
@@ -470,6 +476,9 @@ package scenes.game.display
 			
 			var startPt:Point = edgeArray[0];
 			var endPt:Point = edgeArray[edgeArray.length-1];
+			
+			if(startPt == null || endPt == null)
+				return null;
 			//get bounding box points, using start and end points as reference
 			if(startPt.x < endPt.x)
 			{
@@ -513,7 +522,8 @@ package scenes.game.display
 			} else {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
 			}
-			newGameEdge.visible = edgeXML.@visible;
+			if(edgeXML.hasOwnProperty('@visible'))
+				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
 			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
@@ -535,7 +545,19 @@ package scenes.game.display
 			
 			setDisplayData();
 			
+
+			
 			draw();
+			
+			//now that everything is attached and added to parents, update port position indexes, for both nodes and joints
+			for each(var nodeElem:GameNodeBase in m_nodeList)
+			{
+				nodeElem.updatePortIndexes();
+			}
+			for each(var jointElem:GameNodeBase in m_jointList)
+			{
+				jointElem.updatePortIndexes();
+			}
 			
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
 			trace(m_levelLayoutXML.@id);
@@ -548,7 +570,7 @@ package scenes.game.display
 			
 			if(LoginHelper.levelObject != null)
 			{
-				m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
+				m_levelLayoutXML.@id = event.data;
 				LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXMLWrapper);	
 			}
 			else
@@ -609,7 +631,8 @@ package scenes.game.display
 				{
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
-					gameNode.visible = child.@visible;
+					if(child.hasOwnProperty('@visible'))
+						gameNode.visible = child.@visible == "true" ? true : false;
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -623,17 +646,20 @@ package scenes.game.display
 			{
 				var boundingBox:Rectangle = createLine(edge, useExistingLines);
 					
-				minX = Math.min(minX, boundingBox.x);
-				minY = Math.min(minY, boundingBox.y);
-				maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
-				maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
-
+				if(boundingBox)
+				{
+					minX = Math.min(minX, boundingBox.x);
+					minY = Math.min(minY, boundingBox.y);
+					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+					maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
+				}
 			}
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			draw();
 		}
 		
+		//update current layout info based on node/edge position
 		public function updateLayoutXML():void
 		{
 			var children:XMLList = m_levelLayoutXML.children();
@@ -705,7 +731,7 @@ package scenes.game.display
 			m_levelLayoutXMLWrapper.appendChild(m_levelLayoutXML);
 		}
 		
-		
+		//update current constraint info based on node constraints
 		public function updateConstraintXML():void
 		{
 			delete m_levelConstraintsXML.box;

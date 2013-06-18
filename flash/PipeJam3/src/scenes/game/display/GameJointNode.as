@@ -68,7 +68,7 @@ package scenes.game.display
 		override public function getColor():int
 		{
 			if(m_isSelected)
-				return SELECTED_COLOR;
+				return 0x888888;
 			else
 				return 0xAAAAAA;
 		}

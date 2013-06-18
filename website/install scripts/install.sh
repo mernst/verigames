@@ -1,12 +1,13 @@
 #!/bin/sh
 
 #Two systems to log in to
-#ec2-50-16-16-173.compute-1.amazonaws.com is the beta VM
-#ec2-107-21-183-34.compute-1.amazonaws.com is the live site
+#ec2-50-16-16-173.compute-1.amazonaws.com is the test VM
+#ec2-107-21-183-34.compute-1.amazonaws.com is the interm vm site - going away real soon
+#ec2-54-226-188-147.compute-1.amazonaws.com is the beta site
 
 #aaron can get you a name and password on them
-#if you log in to the beta VM and change to the root, there is a script at ~/ssh.topcoder to auto login in to the live site,
-#else you have to deal with the ppk stuff. Get a private key from aaron or craig.
+#if you log in to the beta VM and change to the root (sudo -i, then password), there is a script at ~/ssh.topcoder to auto login in to the beta site,
+#else you sudo have to deal with the ppk stuff. Get a private key from aaron or craig.
 
 
 #The game is not in the repositiory, as it's a large collection (too large and half of a release build could be tossed) of stuff, 
