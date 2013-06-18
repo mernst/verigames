@@ -119,7 +119,7 @@ package display
 		
 		public function adjustUsedSlices(useTopLeft:Boolean = true, useTop:Boolean = true, useTopRight:Boolean = true,
                                          useLeft:Boolean = true, useCenter:Boolean = true, useRight:Boolean = true,
-                                         useBottomLeft:Boolean = true, useBottom:Boolean = true, useBottomRight:Boolean = true)
+                                         useBottomLeft:Boolean = true, useBottom:Boolean = true, useBottomRight:Boolean = true):void
 		{
 			this.reset();
 			if (useTopLeft) addImage(mTopLeft);

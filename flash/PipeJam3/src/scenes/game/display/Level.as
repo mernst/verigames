@@ -1,10 +1,14 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
+	import starling.display.BlendMode;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
+	import starling.textures.Texture;
 	
 	import flash.display.Shape;
 	import flash.geom.Point;
@@ -127,8 +131,10 @@ package scenes.game.display
 		private var m_jointsContainer:Sprite = new Sprite();
 		private var m_errorContainer:Sprite = new Sprite();
 		
-		private var m_boundingBox:Rectangle;
-		
+		public var m_boundingBox:Rectangle;
+		private var m_backgroundImage:Image;
+		private static const BG_WIDTH:Number = 256;
+		private static const MIN_BORDER:Number = 1000;
 		/**
 		 * Level contains multiple boards that each contain multiple pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -154,8 +160,15 @@ package scenes.game.display
 			initialize();
 			setConstraints();
 			
-			addChild(m_errorContainer);
-			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0xFF00FF);
+			var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
+			background.repeat = true;
+			m_backgroundImage = new Image(background);
+			m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
+			m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			addChild(m_backgroundImage);
+			
+			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
 			addChild(m_nodesContainer);
 			addChild(m_jointsContainer);
 			addChild(m_edgesContainer);
@@ -991,16 +1004,6 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			//add two quads at opposite corners to cause the size to be right
-			var p:Quad = new Quad(.1, .1, 0xff0000);
-			var q:Quad = new Quad(.1, .1, 0xff0000);
-			p.x = 0;
-			p.y = 0;
-			q.x = (m_boundingBox.width-.1);
-			q.y = (m_boundingBox.height-.1);
-			
-			addChild(p);
-			addChild(q);
 			trace("Bounding Box " + m_boundingBox.width + "  " + m_boundingBox.height);
 			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
@@ -1037,6 +1040,12 @@ package scenes.game.display
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
+			m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
+			m_backgroundImage.x = m_backgroundImage.y = - MIN_BORDER - 0.5 * Math.max(m_boundingBox.x, m_boundingBox.y);
+			var texturesToRepeat:Number = (50.0 / Constants.GAME_SCALE) * (m_backgroundImage.width / BG_WIDTH);
+			m_backgroundImage.setTexCoords(1, new Point(texturesToRepeat, 0.0));
+			m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
+			m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 		}
 		
 		

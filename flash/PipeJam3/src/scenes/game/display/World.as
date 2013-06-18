@@ -130,9 +130,9 @@ package scenes.game.display
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = edgeSetGraphViewPanel.height;
+			gameControlPanel.y = GridViewPanel.HEIGHT;
 			addChild(gameControlPanel);
-						
+			
 			selectLevel(firstLevel);
 			
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
