@@ -3,6 +3,7 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import particle.ErrorParticleSystem;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -334,12 +335,7 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = true;
-			if (errorMarker == null) {
-				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
-				errorMarker.x = -ERROR_WIDTH / 2;
-				errorMarker.y = -ERROR_WIDTH / 2;
-			}
-			errorContainer.addChild(errorMarker);
+			addError();
 		}
 		
 		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
@@ -349,10 +345,9 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = m_portHasError;
-			if (!m_hasError && errorMarker) {
-				errorMarker.removeFromParent(true);
+			if (!m_hasError) {
+				removeError();
 			}
-			errorMarker = null;
 		}
 		
 		public function listenToPortForTroublePoints(_port:Port):void
@@ -391,6 +386,35 @@ package scenes.game.display
 			}
 		}
 		
+		private var m_errorParticleSystem:ErrorParticleSystem;
+		private function addError():void
+		{
+			/*
+			if (errorMarker == null) {
+				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
+				errorMarker.x = -ERROR_WIDTH / 2;
+				errorMarker.y = -ERROR_WIDTH / 2;
+			}
+			errorContainer.addChild(errorMarker);
+			*/
+			if (m_errorParticleSystem == null) {
+				m_errorParticleSystem = new ErrorParticleSystem();
+			}
+			errorContainer.addChild(m_errorParticleSystem);
+		}
+		
+		private function removeError():void
+		{
+			if (errorMarker != null) {
+				errorMarker.removeFromParent(true);
+			}
+			errorMarker = null;
+			
+			if (m_errorParticleSystem != null) {
+				m_errorParticleSystem.removeFromParent(true);
+			}
+			m_errorParticleSystem = null;
+		}
 		
 		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
 		{
@@ -399,12 +423,7 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = true;
-			if (errorMarker == null) {
-				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
-				errorMarker.x = -ERROR_WIDTH / 2;
-				errorMarker.y = -ERROR_WIDTH / 2;
-			}
-			errorContainer.addChild(errorMarker);
+			addError();
 		}
 		
 		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
@@ -414,10 +433,7 @@ package scenes.game.display
 				return;
 			}
 			m_hasError = m_edgeHasError;
-			if (!m_hasError && errorMarker) {
-				errorMarker.removeFromParent(true);
-			}
-			errorMarker = null;
+			removeError();
 		}
 		
 		private function onHoverOver(event:Event):void
