@@ -210,12 +210,18 @@ package scenes.game.components
 			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * m_currentScore / baseScore;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
-				m_scoreBar = new Quad(newBarWidth, HEIGHT / 2, GameComponent.NARROW_COLOR);
+				m_scoreBar = new Quad(Math.max(1, newBarWidth), HEIGHT / 2, GameComponent.NARROW_COLOR);
 				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
 				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
 				m_scoreBar.y = (HEIGHT - m_scoreBar.height) / 2;
 				m_scoreBarContainer.addChild(m_scoreBar);
 				m_scoreTextfield.x = newScoreX;
+			}
+			if (newBarWidth < SCORE_PANEL_AREA.width / 20) {
+				TextFactory.getInstance().updateColor(m_scoreTextfield, 0xFFFFFF);
+				newScoreX = -m_scoreTextfield.width + SCORE_PANEL_AREA.width / 20;
+			} else {
+				TextFactory.getInstance().updateColor(m_scoreTextfield, 0x0);
 			}
 			
 			var FLASHING_ANIM_SEC:Number = 0; // TODO: make this nonzero when animation is in place
