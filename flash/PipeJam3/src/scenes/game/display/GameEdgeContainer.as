@@ -174,7 +174,7 @@ package scenes.game.display
 				case NodeTypes.GET:
 					if ((graphEdge.to_node as MapGetNode).argumentEdge == graphEdge) {
 						// The only other case where we are generating trouble points at a port is if the argument edge
-						// of a MAPGET has a wide ball and the value edge is narrow, so listen to trouble points for this
+						// of a MAPGET has a wide ball and the key edge is narrow, so listen to trouble points for this
 						// case
 						listenToPortForTroublePoints(graphEdge.to_port);
 					}
@@ -251,10 +251,12 @@ package scenes.game.display
 					newOutgoingIsWide = m_toComponent.isWide();
 				}
 			} else {
-				// Restrict width ONLY for MAPGET node case where argument edge is restricted by value edge width
+				// Restrict width ONLY for MAPGET node case where argument edge is restricted by key edge width
 				if (graphEdge.to_node.kind == NodeTypes.GET) {
-					if ((graphEdge == (graphEdge.to_node as MapGetNode).argumentEdge) && !(graphEdge.to_node as MapGetNode).valueEdge.is_wide) {
-						newOutgoingIsWide = false;
+					if (graphEdge == (graphEdge.to_node as MapGetNode).argumentEdge) {
+						newOutgoingIsWide = (graphEdge.to_node as MapGetNode).keyEdge.is_wide;
+					} else {
+						newOutgoingIsWide = newIsWide;
 					}
 				} else {
 					// Otherwise the line should end with the same width as the rest of the line
