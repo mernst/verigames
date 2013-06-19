@@ -556,8 +556,13 @@ package system
 					break;
 					
 					case NodeTypes.CONNECT : {
-						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
-						queue.push(node.outgoing_ports[0].edge); //enqueue
+						// Apparently there is a possibility that the CONNECT node doesn't have an output
+						if (node.outgoing_ports.length == 1) {
+							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+							queue.push(node.outgoing_ports[0].edge); //enqueue
+						} else {
+							//trace("WARNING! Found CONNECT node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
+						}
 					}
 					break;
 					
