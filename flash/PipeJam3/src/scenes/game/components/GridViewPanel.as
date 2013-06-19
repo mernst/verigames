@@ -61,7 +61,7 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
-		private static const MAX_SCALE:Number = 500.0 / Constants.GAME_SCALE;
+		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		
 		public static const MOUSE_WHEEL:String = "mouse_wheel";
 		public static const MOUSE_DRAG:String = "mouse_drag";
