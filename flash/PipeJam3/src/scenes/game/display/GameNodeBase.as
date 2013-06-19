@@ -228,13 +228,15 @@ package scenes.game.display
 		{
 			m_isWide = !m_isWide;
 			m_isDirty = true;
+			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
+				if (!m_isWide || iedge.isWide()) {
+					iedge.setOutgoingWidth(m_isWide);
+				}
+			}
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
-			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
-				iedge.updateSize(); // this will check if necessary, no check needed here
-			}
 		}
 		
 		public function onEnterFrame(event:Event):void

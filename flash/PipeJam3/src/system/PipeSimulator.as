@@ -16,18 +16,16 @@ package system
 	
 	/**
 	 * The PipeSimulator class calculates and stores where trouble points
-	 * can occur in the game, based on the current edge/graph configuration.
+	 * can occur in the game, based on the current pipe configuration.
 	 * 
-	 * Trouble points can occur at either Ports or Edges. 
+	 * Trouble points can be either Nodes or Edges. 
 	 * 
-	 * A trouble point Port occurs only when an edge with a WIDE ball flows
-	 * into a NARROW SUBNETWORK edge stub or when a WIDE ball in the argument
-	 * edge of a MAPGET node flows into a MAPGET where the VALUE edge is
-	 * NARROW.
+	 * A trouble point Node can be, for example, a MERGE node where a wide
+	 * pipe flows into a narrow pipe.
 	 * 
-	 * Trouble point edges occur any time a WIDE ball flows into a NARROW edge
-	 * or an edge that has a pinch point. For these edges, the edge.enter_ball_type
-	 * would be WIDE while the edge.exit_ball_type would be NARROW or NONE.
+	 * A trouble edge can be, for example, an edge on a wide chute with a 
+	 * pinch point. Other trouble edges can happen flowing into and flowing
+	 * out of subnetworks. 
 	 * 
 	 * @author Steph
 	 */
@@ -37,6 +35,9 @@ package system
 		
 		/** True to use simulation results from external board calls (outside of the current level) on current board */
 		private static const SIMULATE_EXTERNAL_BOARDS:Boolean = false;
+		
+		/** True to mark both the incoming wide ball port AND outgoing narrow port, False to only mark incoming port */
+		private static const MARK_INGOING_PORT_TROUBLE_POINTS:Boolean = false;
 		
 		/* The world in which the PipeSimulator detects trouble points */
 		private var network:Network;
@@ -271,7 +272,13 @@ package system
 							queue.push(e);
 						break;
 						case NodeTypes.START_LARGE_BALL:
-							e.enter_ball_type = Edge.BALL_TYPE_WIDE;
+							// Technically, we have the possibility of START_LARGE_BALL into narrow edge - possible trouble point
+							if (!e.is_wide) {
+								addTpPort(listPortTroublePoints, e.from_port);
+								e.enter_ball_type = Edge.BALL_TYPE_NONE;
+							} else {
+								e.enter_ball_type = Edge.BALL_TYPE_WIDE;
+							}
 							queue.push(e);
 						break;
 						case NodeTypes.START_NO_BALL:
@@ -325,13 +332,23 @@ package system
 								}
 								switch (out_type) {
 									case Edge.BALL_TYPE_WIDE:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										if (!subnet_port.edge.is_wide) {
+											addTpPort(listPortTroublePoints, subnet_port);
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										} else {
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										}
 									break;
 									case Edge.BALL_TYPE_NONE:
 										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 									break;
 									case Edge.BALL_TYPE_WIDE_AND_NARROW:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
+										if (!subnet_port.edge.is_wide) {
+											addTpPort(listPortTroublePoints, subnet_port);
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+										} else {
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
+										}
 									break;
 									case Edge.BALL_TYPE_NARROW:
 										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
@@ -394,15 +411,16 @@ package system
 						break;
 					}
 				} else {
-					// Top of pipe has no buzzsaw, fail any wide balls and pass through any narrow/pinched pipes
+					// Top of pipe has no buzzsaw, fail any wide ball pipes and pass through any narrow balls
 					switch (edge.enter_ball_type) {
 						case Edge.BALL_TYPE_NONE:
+							outgoing_ball_type = Edge.BALL_TYPE_NONE;
+						break;
 						case Edge.BALL_TYPE_NARROW:
-						case Edge.BALL_TYPE_GHOST:
-							outgoing_ball_type = edge.enter_ball_type;
+							outgoing_ball_type = Edge.BALL_TYPE_NARROW;
 						break;
 						case Edge.BALL_TYPE_WIDE:
-							if (edge.has_pinch || !edge.is_wide) {
+							if (edge.has_pinch) {
 								addTpEdge(listEdgeTroublePoints, edge);
 								outgoing_ball_type = Edge.BALL_TYPE_NONE;
 							} else {
@@ -410,12 +428,15 @@ package system
 							}
 						break;
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
-							if (edge.has_pinch || !edge.is_wide) {
+							if (edge.has_pinch) {
 								addTpEdge(listEdgeTroublePoints, edge);
 								outgoing_ball_type = Edge.BALL_TYPE_NARROW;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
 							}
+						break;
+						case Edge.BALL_TYPE_GHOST:
+							outgoing_ball_type = Edge.BALL_TYPE_GHOST;
 						break;
 						default:
 							throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + edge.enter_ball_type);
@@ -439,7 +460,7 @@ package system
 					
 					case NodeTypes.SUBBOARD : {
 						// This is the case when this edge ("edge") flows into a SUBNETWORK edge
-						// Problem only if wide ball flows into narrow pipe
+						// Problem only if wide pipe flows into narrow
 						var subnet_incoming_edge:Edge = (edge.to_port as SubnetworkPort).linked_subnetwork_edge;
 						var subnet_is_external:Boolean = (node as SubnetworkNode).associated_board_is_external;
 						var subnet_stub_is_wide:Boolean;
@@ -476,19 +497,41 @@ package system
 							}
 						} else {
 							var outgoingMergeEdge:Edge = node.outgoing_ports[0].edge;
-							// Merge the ball types - narrow if either incoming ball is narrow, same with wide
-							var narrow_ball_into_next_edge:Boolean = (
+							// The other edge has already been reached, proceed with collision detection
+							// There is only a problem if the outgoing pipe is narrow and we have a wide ball in either incoming pipe
+							var narrow_ball_into_next_edge:Boolean = ( 
 								(edge.exit_ball_type == Edge.BALL_TYPE_NARROW) ||
 								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_NARROW) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW)
 								);
-							var wide_ball_into_next_edge:Boolean = (
-								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE) ||
-								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW) ||
-								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE) ||
-								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW)
-								);
+							var wide_ball_into_next_edge:Boolean = false;
+							switch (edge.exit_ball_type) {
+								case Edge.BALL_TYPE_WIDE:
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
+										if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+											addTpPort(listPortTroublePoints, edge.to_port);
+										}
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
+									} else {
+										wide_ball_into_next_edge = true;
+									}
+								break;
+							}
+							switch (other_edge.exit_ball_type) {
+								case Edge.BALL_TYPE_WIDE:
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									if (!outgoingMergeEdge.is_wide && !outgoingMergeEdge.has_buzzsaw) {
+										if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+											addTpPort(listPortTroublePoints, other_edge.to_port);
+										}
+										addTpPort(listPortTroublePoints, outgoingMergeEdge.from_port);
+									} else {
+										wide_ball_into_next_edge = true;
+									}
+								break;
+							}
 							if (wide_ball_into_next_edge && narrow_ball_into_next_edge) {
 								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
 							} else if (wide_ball_into_next_edge) {
@@ -516,9 +559,55 @@ package system
 					
 					//other nodes
 					case NodeTypes.SPLIT : {
-						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+						// Check for wide into small condition, although I imagine the two pipes would be linked (same color, same width)
+						if ( !node.outgoing_ports[0].edge.is_wide ) {
+							switch (edge.exit_ball_type) {
+								case Edge.BALL_TYPE_WIDE:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+								break;
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								break;
+								default:
+									node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+								break;
+							}
+						} else {
+							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+						}
 						queue.push(node.outgoing_ports[0].edge); //enqueue
-						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+						// Check for wide into small condition, although I imagine the two pipes would be linked (same color, same width)
+						if ( !node.outgoing_ports[1].edge.is_wide ) {
+							switch (edge.exit_ball_type) {
+								case Edge.BALL_TYPE_WIDE:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
+									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+								break;
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[1]);
+									node.outgoing_ports[1].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								break;
+								default:
+									node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+								break;
+							}
+						} else {
+							node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+						}
 						queue.push(node.outgoing_ports[1].edge); //enqueue
 					}
 					break;
@@ -540,24 +629,55 @@ package system
 					case NodeTypes.GET : {
 						// Process the GET node when the "VALUE" edge is reached
 						if ((node as MapGetNode).valueEdge == edge) {
-							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
-							queue.push(node.outgoing_ports[0].edge); //enqueue
-						} else if ((edge == (node as MapGetNode).argumentEdge) && !(node as MapGetNode).keyEdge.is_wide) {
-							// Argument is restricted by width of key, if key is narrow and argument has wide ball, add troublePoint
-							switch (edge.exit_ball_type) {
-								case Edge.BALL_TYPE_WIDE:
-								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									break;
+							// Check for wide into small condition
+							if ( !node.outgoing_ports[0].edge.is_wide ) {
+								switch (edge.exit_ball_type) {
+									case Edge.BALL_TYPE_WIDE:
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										addTpPort(listPortTroublePoints, edge.to_port);
+										break;
+								}
 							}
-							// DON'T enqueue outgoing edge, this will be done at the valueEdge (see above)
+							var my_exit_ball:uint = node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
+							if (!node.outgoing_ports[0].edge.is_wide && ((my_exit_ball == Edge.BALL_TYPE_WIDE) || (my_exit_ball == Edge.BALL_TYPE_WIDE_AND_NARROW))) {
+								node.outgoing_ports[0].edge.enter_ball_type == Edge.BALL_TYPE_NONE;
+								addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+							} else {
+								node.outgoing_ports[0].edge.enter_ball_type = my_exit_ball;
+							}
+							queue.push(node.outgoing_ports[0].edge); //enqueue
 						}
 					}
 					break;
 					
 					case NodeTypes.CONNECT : {
-						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
-						queue.push(node.outgoing_ports[0].edge); //enqueue
+						// Check for wide into small condition, although I imagine the two pipes would be linked (same color, same width)
+						if ( node.outgoing_ports.length > 0 && !node.outgoing_ports[0].edge.is_wide ) {
+							switch (edge.exit_ball_type) {
+								case Edge.BALL_TYPE_WIDE:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+								break;
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
+										addTpPort(listPortTroublePoints, edge.to_port);
+									}
+									addTpPort(listPortTroublePoints, node.outgoing_ports[0]);
+									node.outgoing_ports[0].edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								break;
+								default:
+									node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+								break;
+							}
+						} else {
+							if ( node.outgoing_ports.length > 0)
+								node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+						}
+						if (node.outgoing_ports.length > 0)
+							queue.push(node.outgoing_ports[0].edge); //enqueue
 					}
 					break;
 					

@@ -3,7 +3,6 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import graph.MapGetNode;
 	import particle.ErrorParticleSystem;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Sprite;
@@ -152,33 +151,12 @@ package scenes.game.display
 			m_boundingBox = _boundingBox;
 			
 			if (isTopOfEdge()) {
-				if (!edgeIsCopy) {
-					// If normal edge leading into box, mark trouble points
+				if (graphEdge.has_pinch && !edgeIsCopy) {
 					listenToEdgeForTroublePoints(graphEdge);
 				}
-				// If edge is copy and top of edge (an edge leading from an external SUBBOARD box to a joint)
-				// then listen for trouble points at the actual edge which will leading from the joint above
-				// to the actual edge-set box
-			}
-			// For edges leading into SUBNETWORK (the lower CPY lines) or argument edges of MAPGET, the edge.to_port could
-			// have trouble points
-			switch (graphEdge.to_node.kind) {
-				case NodeTypes.SUBBOARD:
-					if (edgeIsCopy) {
-						// There are two lines for every connection INTO a subboard, the box to joint is the line corresponding
-						// to the edge, and the joint to the box which is the CPY line. We want to show trouble points on the lower
-						// CPY line only
-						listenToPortForTroublePoints(graphEdge.to_port);
-					}
-					break;
-				case NodeTypes.GET:
-					if ((graphEdge.to_node as MapGetNode).argumentEdge == graphEdge) {
-						// The only other case where we are generating trouble points at a port is if the argument edge
-						// of a MAPGET has a wide ball and the value edge is narrow, so listen to trouble points for this
-						// case
-						listenToPortForTroublePoints(graphEdge.to_port);
-					}
-					break;
+				listenToPortForTroublePoints(graphEdge.from_port);
+			} else {
+				listenToPortForTroublePoints(graphEdge.to_port);
 			}
 			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			
@@ -234,57 +212,59 @@ package scenes.game.display
 		
 		override public function updateSize():void
 		{
+			var toComponentNarrow:Boolean = !m_toComponent.isWide();
 			var newIsWide:Boolean = m_isWide;
 			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
 			
 			if (isTopOfEdge()) {
-				newIsWide = isBallWide(graphEdge.enter_ball_type);
-			} else {
-				newIsWide = isBallWide(graphEdge.exit_ball_type);
-			}
-			
-			if (toBox) {
-				// Restrict width on lines leading to narrow boxes or pinched edges
-				if (graphEdge.has_pinch) {
-					newOutgoingIsWide = false;
-				} else {
-					newOutgoingIsWide = m_toComponent.isWide();
-				}
-			} else {
-				// Restrict width ONLY for MAPGET node case where argument edge is restricted by value edge width
-				if (graphEdge.to_node.kind == NodeTypes.GET) {
-					if ((graphEdge == (graphEdge.to_node as MapGetNode).argumentEdge) && !(graphEdge.to_node as MapGetNode).valueEdge.is_wide) {
-						newOutgoingIsWide = false;
+				if (edgeIsCopy) {
+					// If we're coming OUT of a subboard, use subboard pipe's outgoing width (if we have it) or default
+					// NOTE: If the subboard appears on this level, no copy edge should exist, the outgoing edge of the
+					// subboard should connect directly to the subboard output for this case (no extra edge)
+					if (graphEdge.from_port is SubnetworkPort) {
+						newIsWide = isBallWide((graphEdge.from_port as SubnetworkPort).default_ball_type);
+						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+						//trace(graphEdge.from_port.edge.linked_edge_set.id + ":o" + graphEdge.from_port.port_id);
+					} else {
+						throw new Error("Warning: expecting case where box->joint edge copy is a Subnetwork outgoing edge.");
 					}
 				} else {
-					// Otherwise the line should end with the same width as the rest of the line
-					newOutgoingIsWide = newIsWide;
+					// Special case: START_LARGE_BALL could possibly lead into narrow edge in which case we want to show
+					// the top as being wide
+					if (graphEdge.from_port.node.kind == NodeTypes.START_LARGE_BALL) {
+						newIsWide = true;
+					} else if (graphEdge.from_port.node.kind == NodeTypes.MERGE) {
+						newIsWide = isBallWide(graphEdge.from_port.node.incoming_ports[0].edge.exit_ball_type) || isBallWide(graphEdge.from_port.node.incoming_ports[1].edge.exit_ball_type);
+					} else {
+						newIsWide = isBallWide(graphEdge.enter_ball_type);
+					}
+					if (graphEdge.has_pinch) {
+						newOutgoingIsWide = false;
+					} else {
+						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
+					}
 				}
+			} else {
+				newIsWide = isBallWide(graphEdge.exit_ball_type);
+				newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 			}
 			
-			// Update line width
-			if (m_isWide != newIsWide) {
+			if (newIsWide != m_isWide) {
 				setIncomingWidth(newIsWide);
-				if (toJoint) {
+				if (toBox) {
+					// Update the joint, which may restrict the incoming line(s)
+					m_fromComponent.updateSize();
+				} else {
 					m_innerBoxSegment.setIsWide(m_isWide);
 					m_innerBoxSegment.draw();
 				}
+				m_innerBoxSegment.draw();
 			}
-			// Update end of line indicating width restrictions
-			if (m_outgoingIsWide != newOutgoingIsWide) {
-				setOutgoingWidth(newOutgoingIsWide);
+			if (toBox && m_innerBoxSegment.isWide() != newOutgoingIsWide) {
+				m_innerBoxSegment.setIsWide(newOutgoingIsWide);
+				m_innerBoxSegment.draw();
 			}
-			// Update inner (black) line width to match exit_ball_type
-			if (toBox) {
-				var newExitIsWide:Boolean = isBallWide(graphEdge.exit_ball_type);
-				if (edgeIsCopy) {
-					newExitIsWide = newOutgoingIsWide;
-				}
-				if (m_innerBoxSegment.isWide() != newExitIsWide) {
-					m_innerBoxSegment.setIsWide(newExitIsWide);
-					m_innerBoxSegment.draw();
-				}
-			}
+			setOutgoingWidth(newOutgoingIsWide);
 		}
 		
 		private function isBallWide(ballType:uint):Boolean
@@ -361,11 +341,13 @@ package scenes.game.display
 		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
 		{
 			m_edgeHasError = false;
-			m_hasError = m_portHasError;
-			if (m_hasError) {
+			if (!m_hasError) {
 				return;
 			}
-			removeError();
+			m_hasError = m_portHasError;
+			if (!m_hasError) {
+				removeError();
+			}
 		}
 		
 		public function listenToPortForTroublePoints(_port:Port):void
@@ -447,10 +429,10 @@ package scenes.game.display
 		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
 		{
 			m_portHasError = false;
-			m_hasError = m_edgeHasError;
-			if (m_hasError) {
+			if (!m_hasError) {
 				return;
 			}
+			m_hasError = m_edgeHasError;
 			removeError();
 		}
 		
@@ -1076,8 +1058,8 @@ package scenes.game.display
 				return 1;
 		}
 		
-		// set widths of all edge segments other than the last based on ball size from Simulator
-		private function setIncomingWidth(_isWide:Boolean):void
+		//set children's width, based on incoming and outgoing component
+		public function setIncomingWidth(_isWide:Boolean):void
 		{
 			if (m_isWide == _isWide) {
 				return;
@@ -1109,8 +1091,8 @@ package scenes.game.display
 			}
 		}
 		
-		//set width of final edge segment indicating width of box port (or restriction at argument edge of MAPGET)
-		private function setOutgoingWidth(_isWide:Boolean):void
+		//set children's width, based on incoming and outgoing component
+		public function setOutgoingWidth(_isWide:Boolean):void
 		{
 			if (m_outgoingIsWide == _isWide) {
 				return;
