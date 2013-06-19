@@ -651,8 +651,8 @@ package system
 					break;
 					
 					case NodeTypes.CONNECT : {
-						// Check for wide into small condition, although I imagine the two pipes would be linked (same color, same width)
-						if ( node.outgoing_ports.length > 0 && !node.outgoing_ports[0].edge.is_wide ) {
+						// Apparently there is a possibility that the CONNECT node doesn't have an output
+						if (node.outgoing_ports.length == 1) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 									if (MARK_INGOING_PORT_TROUBLE_POINTS) {
@@ -674,10 +674,13 @@ package system
 							}
 						} else {
 							if ( node.outgoing_ports.length > 0)
-								node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
 						}
 						if (node.outgoing_ports.length > 0)
 							queue.push(node.outgoing_ports[0].edge); //enqueue
+						} else {
+							//trace("WARNING! Found CONNECT node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
+						}
 					}
 					break;
 					

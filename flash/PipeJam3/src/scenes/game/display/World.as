@@ -116,7 +116,29 @@ package scenes.game.display
 			undoStack = new Array();
 			redoStack = new Array();
 			
-			createWorld(m_network.LevelNodesDictionary);
+			// create World
+			var original_subboard_nodes:Vector.<Node> = new Vector.<Node>();
+			for (var level_index:uint = 0; level_index < world_xml["level"].length(); level_index++) {
+				var my_level_xml:XML = world_xml["level"][level_index];
+				var my_level_name:String = m_network.obfuscator.getLevelName(my_level_xml.attribute("name").toString());
+				if ((m_network.LevelNodesDictionary[my_level_name] == null) || (m_network.LevelNodesDictionary[my_level_name] == undefined)) {
+					// This is true if there are no edges in the level, skip this level
+					PipeJamGame.printDebug("No edges found on level " + my_level_name + " skipping this level and not creating...");
+					continue;
+				}
+				var my_levelNodes:LevelNodes = (m_network.LevelNodesDictionary[my_level_name] as LevelNodes);
+				PipeJamGame.printDebug("Creating level: " + my_level_name);
+				
+				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
+				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML);
+				levels.push(my_level);
+				
+				if (!firstLevel) {
+					firstLevel = my_level; //grab first one..
+				}
+			}
+			
 			//m_simulator = new Simulator(m_network);
 			m_simulator = new PipeSimulator(m_network);
 			
@@ -388,29 +410,6 @@ package scenes.game.display
 			m_network = null;
 			world_xml = null;
 			m_layoutXML = null;
-		}
-		
-		public function createWorld(worldNodesDictionary:Dictionary):void
-		{
-			var original_subboard_nodes:Vector.<Node> = new Vector.<Node>();
-
-			for (var my_level_name:String in worldNodesDictionary) {
-				if (worldNodesDictionary[my_level_name] == null) {
-					// This is true if there are no edges in the level, skip this level
-					PipeJamGame.printDebug("No edges found on level " + my_level_name + " skipping this level and not creating...");
-					continue;
-				}
-				var my_levelNodes:LevelNodes = (worldNodesDictionary[my_level_name] as LevelNodes);
-				PipeJamGame.printDebug("Creating level: " + my_level_name);
-				
-				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
-				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML);
-				levels.push(my_level);
-									
-		//		if(my_levelNodes.original_level_name == "Application2") //KhakiDunes
-					firstLevel = my_level; //grab last one..
-			}
 		}
 		
 		public function findLevel(index:uint):Level

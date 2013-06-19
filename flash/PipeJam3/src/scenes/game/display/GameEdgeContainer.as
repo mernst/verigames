@@ -156,6 +156,7 @@ package scenes.game.display
 				}
 				listenToPortForTroublePoints(graphEdge.from_port);
 			} else {
+						// of a MAPGET has a wide ball and the key edge is narrow, so listen to trouble points for this
 				listenToPortForTroublePoints(graphEdge.to_port);
 			}
 			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
@@ -243,6 +244,11 @@ package scenes.game.display
 					} else {
 						newOutgoingIsWide = toComponentNarrow ? false : newIsWide;
 					}
+				// Restrict width ONLY for MAPGET node case where argument edge is restricted by key edge width
+					if (graphEdge == (graphEdge.to_node as MapGetNode).argumentEdge) {
+						newOutgoingIsWide = (graphEdge.to_node as MapGetNode).keyEdge.is_wide;
+					} else {
+						newOutgoingIsWide = newIsWide;
 				}
 			} else {
 				newIsWide = isBallWide(graphEdge.exit_ball_type);
