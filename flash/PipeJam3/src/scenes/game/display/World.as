@@ -1,31 +1,20 @@
 package scenes.game.display
 {
-	import assets.AssetInterface;
-	
 	import events.EdgeSetChangeEvent;
-	
-	import flash.events.Event;
-	import flash.external.ExternalInterface;
-	import flash.utils.Dictionary;
-	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
-	
 	import scenes.BaseComponent;
+	import scenes.game.components.dialogs.InGameMenuDialog;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import scenes.game.components.dialogs.InGameMenuDialog;
+	import system.PipeSimulator;
 	
+	import flash.utils.Dictionary;
 	import starling.display.Button;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	import starling.textures.Texture;
-	
-	import system.PipeSimulator;
-	import system.Simulator;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -142,11 +131,11 @@ package scenes.game.display
 			//m_simulator = new Simulator(m_network);
 			m_simulator = new PipeSimulator(m_network);
 			
-			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(starling.events.Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
 		
-		protected function onAddedToStage(event:starling.events.Event):void
+		protected function onAddedToStage(event:Event):void
 		{
 			edgeSetGraphViewPanel = new GridViewPanel();
 			addChild(edgeSetGraphViewPanel);
@@ -171,7 +160,7 @@ package scenes.game.display
 			addEventListener(UNDO_EVENT, saveEvent);
 		}
 		
-		private function onShowGameMenuEvent(e:starling.events.Event):void
+		private function onShowGameMenuEvent(e:Event):void
 		{
 			if(e.data == true)
 			{
@@ -189,25 +178,25 @@ package scenes.game.display
 				
 		}
 		
-		public function onSaveLayoutFile(event:starling.events.Event):void
+		public function onSaveLayoutFile(event:Event):void
 		{
 			if(active_level != null)
 				active_level.onSaveLayoutFile(event);
 		}
 		
-		public function onSubmitScore(event:starling.events.Event):void
+		public function onSubmitScore(event:Event):void
 		{
 			if(active_level != null)
 				active_level.onSubmitScore(event);
 		}
 		
-		public function onSaveLocally(event:starling.events.Event):void
+		public function onSaveLocally(event:Event):void
 		{
 			if(active_level != null)
 				active_level.onSaveLocally(event);
 		}
 		
-		public function setNewLayout(event:starling.events.Event):void
+		public function setNewLayout(event:Event):void
 		{
 			if(active_level != null)
 				active_level.setNewLayout(event, true);
@@ -216,10 +205,15 @@ package scenes.game.display
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
-			gameControlPanel.updateScore(evt.level);
+			var newScore:int = gameControlPanel.updateScore(evt.level);
+			if (newScore >= evt.level.getTargetScore()) {
+				edgeSetGraphViewPanel.displayNextButton();
+			} else {
+				edgeSetGraphViewPanel.hideNextButton();
+			}
 		}
 		
-		private function onCenterOnComponentEvent(e:starling.events.Event):void
+		private function onCenterOnComponentEvent(e:Event):void
 		{
 			var component:GameComponent = e.data as GameComponent;
 			if(component)
@@ -228,18 +222,18 @@ package scenes.game.display
 			}
 		}
 		
-		private function onNextLevel(e:starling.events.Event):void
+		private function onNextLevel(e:Event):void
 		{
 			currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 			selectLevel(levels[currentLevelNumber]);
 		}
 		
-		private function saveEvent(e:starling.events.Event):void
+		private function saveEvent(e:Event):void
 		{
 			//sometimes we need to remove the last event to add a complex event that includes that one
 			if(e.data && e.data.data && e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
 			{
-				var lastEvent:starling.events.Event = undoStack.pop();
+				var lastEvent:Event = undoStack.pop();
 				if(lastEvent.data is Array)
 				{
 					(lastEvent.data as Array).push(e.data.data);
@@ -247,10 +241,10 @@ package scenes.game.display
 				}
 				else
 				{
-					var event1:starling.events.Event = new starling.events.Event(lastEvent.type, true, lastEvent.data);
-					var event2:starling.events.Event = new starling.events.Event(e.data.type, true, e.data.data);
+					var event1:Event = new Event(lastEvent.type, true, lastEvent.data);
+					var event2:Event = new Event(e.data.type, true, e.data.data);
 					var newArray:Array = new Array(event1, event2);
-					var newEvent:starling.events.Event = new starling.events.Event(World.UNDO_EVENT, true, newArray);
+					var newEvent:Event = new Event(World.UNDO_EVENT, true, newArray);
 					undoStack.push(newEvent);
 					
 				}
@@ -271,12 +265,12 @@ package scenes.game.display
 					{
 						if(undoStack.length > 0)
 						{
-							var undoDataEvent:starling.events.Event = undoStack.pop();
+							var undoDataEvent:Event = undoStack.pop();
 							if(undoDataEvent.data != null)
 							{
 								if(undoDataEvent.data is Array)
 								{
-									for each(var obj:starling.events.Event in undoDataEvent.data)
+									for each(var obj:Event in undoDataEvent.data)
 									{
 										var undoData:Object = obj.data;
 										if(undoData == null) //handle locally
@@ -320,12 +314,12 @@ package scenes.game.display
 					{
 						if(redoStack.length > 0)
 						{
-							var redoDataEvent:starling.events.Event = redoStack.pop();
+							var redoDataEvent:Event = redoStack.pop();
 							if(redoDataEvent.data != null)
 							{
 								if(redoDataEvent.data is Array)
 								{
-									for each(var obj:starling.events.Event in redoDataEvent.data)
+									for each(var obj:Event in redoDataEvent.data)
 									{
 										var redoData:Object = obj.data;
 										if(redoData == null) //handle locally
@@ -374,20 +368,15 @@ package scenes.game.display
 		
 		private function selectLevel(newLevel:Level):void
 		{
-			if (newLevel == active_level) {
-				return;
-			}
-			
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.updateScore(newLevel);
 			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
 			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
-			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+			
+			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
 		}
-		
-
 		
 		private function onRemovedFromStage():void
 		{

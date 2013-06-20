@@ -1,17 +1,6 @@
 package scenes.game.components.dialogs
 {
-	import assets.AssetInterface;
-	
-	import events.NavigationEvent;
-	
-	import flash.events.Event;
 	import flash.geom.Point;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
-	import scenes.login.LoginHelper;
-	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -19,7 +8,14 @@ package scenes.game.components.dialogs
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-
+	
+	import assets.AssetInterface;
+	import events.NavigationEvent;
+	import scenes.BaseComponent;
+	import scenes.game.display.Level;
+	import scenes.game.display.World;
+	import scenes.login.LoginHelper;
+	
 	public class InGameMenuDialog extends BaseComponent
 	{
 		
@@ -65,7 +61,7 @@ package scenes.game.components.dialogs
 //			var saveButtonClick:Texture = AssetInterface.getTexture("Menu", "SaveButtonClickClass");
 //			
 //			save_button = new Button(saveButtonUp, "", saveButtonClick);
-//			save_button.addEventListener(starling.events.Event.TRIGGERED, onSaveButtonTriggered);
+//			save_button.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
 //			save_button.x = 2;
 //			save_button.y = 2;
 //			save_button.width *= .5;
@@ -76,7 +72,7 @@ package scenes.game.components.dialogs
 //			var submitScoreBButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitScoreButtonClickClass");
 //			
 //			submitScore_button = new Button(submitScoreButtonUp, "", submitScoreBButtonClick);
-//			submitScore_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
+//			submitScore_button.addEventListener(Event.TRIGGERED, onSubmitScoreButtonTriggered);
 //			submitScore_button.x = 2;
 //			submitScore_button.y = 52;
 //			submitScore_button.width *= .5;
@@ -87,7 +83,7 @@ package scenes.game.components.dialogs
 //			var submitLayoutButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClickClass");
 //			
 //			submitLayout_button = new Button(submitLayoutButtonUp, "", submitLayoutButtonClick);
-//			submitLayout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
+//			submitLayout_button.addEventListener(Event.TRIGGERED, onSubmitLayoutButtonTriggered);
 //			submitLayout_button.x = 2;
 //			submitLayout_button.y = 102;
 //			submitLayout_button.width *= .5;
@@ -98,7 +94,7 @@ package scenes.game.components.dialogs
 //			var selectLayoutButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClickClass");
 //			
 //			submitLayout_button = new Button(selectLayoutButtonUp, "", selectLayoutButtonClick);
-//			submitLayout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
+//			submitLayout_button.addEventListener(Event.TRIGGERED, onSelectLayoutButtonTriggered);
 //			submitLayout_button.x = 2;
 //			submitLayout_button.y = 125;
 //			submitLayout_button.width *= .5;
@@ -109,7 +105,7 @@ package scenes.game.components.dialogs
 //			var backToGameButtonClick:Texture = AssetInterface.getTexture("Menu", "BackToGameButtonClickClass");
 //			
 //			backToGame_button = new Button(backToGameButtonUp, "", backToGameButtonClick);
-//			backToGame_button.addEventListener(starling.events.Event.TRIGGERED, onBackToGameButtonTriggered);
+//			backToGame_button.addEventListener(Event.TRIGGERED, onBackToGameButtonTriggered);
 //			backToGame_button.x = 2;
 //			backToGame_button.y = 152;
 //			backToGame_button.width *= .5;
@@ -120,7 +116,7 @@ package scenes.game.components.dialogs
 //			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClickClass");
 //			
 //			exit_button = new Button(exitButtonUp, "", exitButtonClick);
-//			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
+//			exit_button.addEventListener(Event.TRIGGERED, onExitButtonTriggered);
 //			exit_button.x = 2;
 //			exit_button.y = 202;
 //			exit_button.width *= .5;
@@ -133,7 +129,7 @@ package scenes.game.components.dialogs
 //				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClickClass");
 //				
 //				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
-//				nextLevel_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
+//				nextLevel_button.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 //				nextLevel_button.x = 2;
 //				nextLevel_button.y = 252;
 //				nextLevel_button.width *= .5;
@@ -170,13 +166,13 @@ package scenes.game.components.dialogs
 		
 		private function onSaveButtonTriggered():void
 		{
-			dispatchEvent(new starling.events.Event(Level.SAVE_LOCALLY, true, this));
+			dispatchEvent(new Event(Level.SAVE_LOCALLY, true, this));
 			
 		}
 		
 		private function onSubmitScoreButtonTriggered():void
 		{
-			dispatchEvent(new starling.events.Event(Level.SUBMIT_SCORE, true, this));
+			dispatchEvent(new Event(Level.SUBMIT_SCORE, true, this));
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void
@@ -196,7 +192,7 @@ package scenes.game.components.dialogs
 		
 		private function onSelectLayoutButtonTriggered():void
 		{
-			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
+			dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
 			loginHelper.onRequestLayoutList(onRequestLayoutList);
 		}
 		
@@ -233,8 +229,7 @@ package scenes.game.components.dialogs
 		
 		private function onNextLevelButtonTriggered():void
 		{
-			dispatchEvent(new starling.events.Event(World.SWITCH_TO_NEXT_LEVEL, true));
-			
+			dispatchEvent(new Event(World.SWITCH_TO_NEXT_LEVEL, true));
 		}
 	}
 }

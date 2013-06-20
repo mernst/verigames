@@ -55,11 +55,11 @@ package scenes.game.components
 		
 		public function GameControlPanel()
 		{			
-			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
-			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
+			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
 		}
 		
-		public function addedToStage(event:starling.events.Event):void
+		public function addedToStage(event:Event):void
 		{
 			var background:Texture = AssetInterface.getTexture("Game", "GameControlPanelBackgroundImageClass");
 			var backgroundImage:Image = new Image(background);
@@ -103,7 +103,7 @@ package scenes.game.components
 			dispatchEvent(new Event(World.SHOW_GAME_MENU, true, menuShowing));
 		}
 		
-		public function removedFromStage(event:starling.events.Event):void
+		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
 		}
@@ -111,8 +111,7 @@ package scenes.game.components
 		/**
 		 * Re-calculates score and updates the score on the screen
 		 */
-		
-		public function updateScore(level:Level):void 
+		public function updateScore(level:Level):int 
 		{
 			
 			/* Old scoring:
@@ -254,7 +253,7 @@ package scenes.game.components
 				   x: newScoreX
 				});
 			} else {
-				return;
+				return m_currentScore;
 			}
 			
 			// If we've spilled off to the right, shrink it down after we've animated showing the difference
@@ -285,6 +284,8 @@ package scenes.game.components
 				   scaleX: newScaleX
 				});
 			}
+			
+			return m_currentScore;
 		}
 		
 //		public function onSaveButtonClick(e:TouchEvent):void {

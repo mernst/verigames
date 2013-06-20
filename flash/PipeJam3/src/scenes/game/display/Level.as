@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import assets.AssetsFont;
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
@@ -117,6 +118,8 @@ package scenes.game.display
 		//used when saving, as we need a parent graph element for the above level node
 		private var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
+		private var m_levelText:String;
+		private var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
@@ -156,6 +159,13 @@ package scenes.game.display
 			level_has_been_solved_before = false;
 			levels_that_depend_on_this_level = new Vector.<Level>();
 			levels_that_this_level_depends_on = new Vector.<Level>();
+			
+			m_levelText = m_levelLayoutXML.attribute("text").toString();
+			
+			m_targetScore = int.MAX_VALUE;
+			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
+				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
+			}
 			
 			initialize();
 			setConstraints();
@@ -544,8 +554,6 @@ package scenes.game.display
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			setDisplayData();
-			
-
 			
 			draw();
 			
@@ -1199,6 +1207,15 @@ package scenes.game.display
 		{
 			return m_jointList;
 		}
-
+		
+		public function getLevelText():String
+		{
+			return m_levelText;
+		}
+		
+		public function getTargetScore():int
+		{
+			return m_targetScore;
+		}
 	}
 }

@@ -1,40 +1,14 @@
 package scenes.game.components
 {
-//	import Events.CGSServerLocal;
-//	
-//	import System.VerigameServerConstants;
-//	
-//	import Utilities.Fonts;
-//	
-//	import VisualWorld.Board;
-//	import VisualWorld.VerigameSystem;
-//	import VisualWorld.World;
-//	
-//	import cgs.server.logging.actions.ClientAction;
-	
-	
-	import assets.AssetInterface;
-	
-	import flash.display.NativeMenu;
-	import flash.display.NativeMenuItem;
-	import flash.events.ContextMenuEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
-	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
-	import starling.display.DisplayObjectContainer;
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
@@ -42,6 +16,14 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	import display.ShimmeringText;
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	import scenes.game.display.World;
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -51,12 +33,12 @@ package scenes.game.components
 		public static const HEIGHT:Number = 270;
 		
 		protected var m_currentLevel:Level;
-		
 		protected var content:BaseComponent;
-		
 		protected var quad:Quad;
-		
 		protected var currentMode:int;
+		protected var nextLevel_button:Button;
+		protected var m_levelTextFields:Vector.<ShimmeringText> = new Vector.<ShimmeringText>();
+		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
@@ -90,7 +72,6 @@ package scenes.game.components
 			clipRect = new Rectangle(x, y, width, height);
 			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			content.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -355,7 +336,6 @@ package scenes.game.components
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			if (content) {
 				content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			}
@@ -386,6 +366,7 @@ package scenes.game.components
 		
 		public function loadLevel(level:Level):void
 		{
+			hideNextButton();
 			if(m_currentLevel == level)
 				return;
 			if(m_currentLevel)
@@ -397,18 +378,75 @@ package scenes.game.components
 			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 			content.x = 0;
 			content.y = 0;
-
+			
 			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
 			content.addChild(m_currentLevel);
-			var nodes:Vector.<GameNode> = level.getNodes();
-			if (nodes.length > 0) {
-				centerOnComponent(nodes[0]);
+			if ((m_currentLevel.m_boundingBox.width < WIDTH) && (m_currentLevel.m_boundingBox.height < HEIGHT)) {
+				// If smaller than window, just center
+				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
+				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
+				var localPt:Point = content.globalToLocal(globPt);
+				panTo(localPt.x, localPt.y);
+			} else {
+				// Otherwise center on the first box
+				var nodes:Vector.<GameNode> = level.getNodes();
+				if (nodes.length > 0) {
+					centerOnComponent(nodes[0]);
+				}
+			}
+			
+			for (var i:int = 0; i < m_levelTextFields.length; i++) {
+				Starling.juggler.removeTweens(m_levelTextFields[i]);
+				m_levelTextFields[i].removeFromParent(true);
+			}
+			m_levelTextFields = new Vector.<ShimmeringText>();
+			var levelText:String = m_currentLevel.getLevelText();
+			if (levelText) {
+				var textLines:Array = levelText.split("\r\r");
+				var totalTime:Number = 0.0;
+				var lineHeight:Number = HEIGHT / Math.max(10, textLines.length * 1.5);
+				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
+				for (var j:int = 0; j < textLines.length; j++) {
+					var levelTextLine:String = textLines[j] as String;
+					var lineDispTime:Number = levelTextLine.length * SEC_PER_CHAR;
+					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_SPECIAL_ELITE, WIDTH, lineHeight, lineHeight, 0xEEEE00);
+					shimmerLine.y = j * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
+					shimmerLine.touchable = false;
+					shimmerLine.visible = false;
+					m_levelTextFields.push(shimmerLine);
+					addChild(shimmerLine);
+					Starling.juggler.delayCall(shimmerLine.showLineShimmer, totalTime, lineDispTime / 3, lineDispTime / 3, (levelText.length - 2 * textLines.length) * SEC_PER_CHAR - totalTime, 1.0);
+					totalTime += lineDispTime;
+				}
 			}
 		}
 		
-		public function onEnterFrame(event:Event):void
+		public function displayNextButton():void
 		{
-			
+			if (!nextLevel_button) {
+				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClass");
+				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClickClass");
+				
+				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
+				nextLevel_button.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
+				nextLevel_button.width *= .5;
+				nextLevel_button.height *= .5;
+				nextLevel_button.x = WIDTH - nextLevel_button.width - 5;
+				nextLevel_button.y = HEIGHT - nextLevel_button.height - 5;
+			}
+			addChild(nextLevel_button);
+		}
+		
+		public function hideNextButton():void
+		{
+			if (nextLevel_button) {
+				nextLevel_button.removeFromParent();
+			}
+		}
+		
+		private function onNextLevelButtonTriggered(evt:Event):void
+		{
+			dispatchEvent(new Event(World.SWITCH_TO_NEXT_LEVEL, true));
 		}
 		
 		public function displayTextMetadata(textParent:XML):void

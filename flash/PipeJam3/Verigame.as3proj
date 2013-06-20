@@ -23,6 +23,7 @@
     <class path="external\Feathers 1.0.1\source" />
     <class path="external\Starling-Framework\starling\src" />
     <class path="external\Starling-Extension-Particle-System-master\src" />
+    <class path="external\pixelmask-master\src" />
   </classpaths>
   <!-- Build options -->
   <build>
