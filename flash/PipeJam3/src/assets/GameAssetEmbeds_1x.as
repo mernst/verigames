@@ -7,129 +7,132 @@ package assets
 		
 		//Splash Screen
 		[Embed(source="../../lib/assets/TrafficSplashScreen.png")]
-		public var TrafficJamTitleScreenImageClass:Class;
+		public static const TrafficJamTitleScreenImageClass:Class;
 		
 		[Embed(source="../../lib/assets/BoxesStartScreen.jpg")]
-		public var BoxesStartScreenImageClass:Class;
+		public static const BoxesStartScreenImageClass:Class;
 		
 		[Embed(source="../../lib/assets/BoxesGamePanelBackground.jpg")]
-		public var BoxesGamePanelBackgroundImageClass:Class;
+		public static const BoxesGamePanelBackgroundImageClass:Class;
 		
 		[Embed(source="../../lib/assets/GameControlPanelBackground.jpg")]
-		public var GameControlPanelBackgroundImageClass:Class;
+		public static const GameControlPanelBackgroundImageClass:Class;
  
 		[Embed(source="../../lib/assets/TrafficStartButtonUp.png")]
-		public var StartButtonTrafficImageClass:Class;
+		public static const StartButtonTrafficImageClass:Class;
 		
 		[Embed(source="../../lib/assets/TrafficStartButtonOver.png")]
-		public var StartButtonTrafficClickImageClass:Class;
+		public static const StartButtonTrafficClickImageClass:Class;
 		
 		[Embed(source="../../lib/assets/TutorialButtonUp.png")]
-		public var TutorialButtonTrafficImageClass:Class;
+		public static const TutorialButtonTrafficImageClass:Class;
 		
 		[Embed(source="../../lib/assets/TutorialButtonOver.png")]
-		public var TutorialButtonTrafficClickImageClass:Class;
+		public static const TutorialButtonTrafficClickImageClass:Class;
 		
 		//Game Scene
 		//[Embed(source = '../../lib/assets/FireworksSlowMo.swf', symbol = 'FireworksSlowMo')]
 		/** Animated fireworks display */
 		
 		[Embed(source = '../../lib/assets/Fireworks.swf', symbol = 'Fireworks')]
-		public var Fireworks:Class;
+		public static const Fireworks:Class;
 		
 		[Embed(source="../../lib/assets/background.png")]
-		public var Art_Background:Class;
+		public static const Art_Background:Class;
 		
 		[Embed(source="../../lib/assets/test.png")]
-		public var Art_Workers:Class;
+		public static const Art_Workers:Class;
 		
 		//Game Panel
 		/** The animated buzzsaw asset */
 		[Embed(source = '../../lib/assets/NextButtonUp.png')]
-		public var NextLevelButtonClass:Class;
+		public static const NextLevelButtonClass:Class;
 		
 		[Embed(source = '../../lib/assets/NextButtonOver.png')]
-		public var NextLevelClickButtonClass:Class;
+		public static const NextLevelClickButtonClass:Class;
 		
 		/** The animated buzzsaw asset */
 		[Embed(source = '../../lib/assets/BackButtonUp.png')]
-		public var BackLevelButtonClass:Class;
+		public static const BackLevelButtonClass:Class;
 		
 		[Embed(source = '../../lib/assets/BackButtonOver.png')]
-		public var BackLevelClickButtonClass:Class;
+		public static const BackLevelClickButtonClass:Class;
 		
 		[Embed(source = '../../lib/assets/ExitButton.png')]
-		public var ExitButtonClass:Class;
+		public static const ExitButtonClass:Class;
 		
 		[Embed(source = '../../lib/assets/ExitButtonClick.png')]
-		public var ExitClickButtonClass:Class;
+		public static const ExitClickButtonClass:Class;
 		
 		[Embed(source = '../../lib/assets/PipeJamAlternateLarge.jpeg')]
-		public var PipeJamGameArt:Class;
+		public static const PipeJamGameArt:Class;
 		
 		[Embed(source = '../../lib/assets/MergeSign.png')]
-		public var MergeSignClass:Class;
+		public static const MergeSignClass:Class;
 		
 		[Embed(source = '../../lib/assets/SplitSign.png')]
-		public var SplitSignClass:Class;
+		public static const SplitSignClass:Class;
 		
 		[Embed(source = '../../lib/assets/StreetConnect.png')]
-		public var StreetConnectClass:Class;
+		public static const StreetConnectClass:Class;
 		
 		[Embed(source = '../../lib/assets/StreetEnd.png')]
-		public var StreetEndClass:Class;
+		public static const StreetEndClass:Class;
 		
 		[Embed(source = "../../lib/assets/Chevron.png")]
-		public var ChevronClass:Class;
+		public static const ChevronClass:Class;
 		
 		[Embed(source="../../lib/assets/Star.png")]
-		public var StarClass:Class;
+		public static const StarClass:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading1.png")]
-		public var Loading1Class:Class;
+		public static const Loading1Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading2.png")]
-		public var Loading2Class:Class;
+		public static const Loading2Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading3.png")]
-		public var Loading3Class:Class;
+		public static const Loading3Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading4.png")]
-		public var Loading4Class:Class;
+		public static const Loading4Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading5.png")]
-		public var Loading5Class:Class;
+		public static const Loading5Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading6.png")]
-		public var Loading6Class:Class;
+		public static const Loading6Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading7.png")]
-		public var Loading7Class:Class;
+		public static const Loading7Class:Class;
 		
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
-		public var Loading8Class:Class;
+		public static const Loading8Class:Class;
 		
 		// Rounded rect corner
 		[Embed(source="../../lib/assets/corner.png")]
-		public var CornerClass:Class;
+		public static const CornerClass:Class;
 		
 		// 9 Slice coords to use for all box textures
-		[Embed(source = '../../lib/assets/atlases/Box9Slice.xml', mimeType = "application/octet-stream")] public var Box9SliceXML:Class;
+		[Embed(source = '../../lib/assets/atlases/Box9Slice.xml', mimeType = "application/octet-stream")] public static const Box9SliceXML:Class;
 		
-		[Embed(source = '../../lib/assets/atlases/RoundRectWide.png')] public var RoundRectWidePNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectNarrow.png')] public var RoundRectNarrowPNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectLightGray.png')] public var RoundRectLightGrayPNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectDarkGray.png')] public var RoundRectDarkGrayPNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectBlack.png')] public var RoundRectBlackPNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectWhite.png')] public var RoundRectWhitePNG:Class;
-		[Embed(source = '../../lib/assets/atlases/RoundRectOrange.png')] public var RoundRectOrangePNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectWide.png')] public static const RoundRectWidePNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectNarrow.png')] public static const RoundRectNarrowPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectLightGray.png')] public static const RoundRectLightGrayPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectDarkGray.png')] public static const RoundRectDarkGrayPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectBlack.png')] public static const RoundRectBlackPNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectWhite.png')] public static const RoundRectWhitePNG:Class;
+		[Embed(source = '../../lib/assets/atlases/RoundRectOrange.png')] public static const RoundRectOrangePNG:Class;
+		
+		[Embed(source = "../../lib/assets/shimmer.png")]
+		public static const ShimmerClass:Class;
 		
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]
-		public var DesyrelXml:Class;
+		public static const DesyrelXml:Class;
 		
 		[Embed(source = "../../media/fonts/1x/desyrel.png")]
-		public var DesyrelTexture:Class;
+		public static const DesyrelTexture:Class;
 	}
 }

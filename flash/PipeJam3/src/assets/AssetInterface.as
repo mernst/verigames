@@ -202,8 +202,8 @@ package assets
             var textureClassNameString:String = sContentScaleFactor == 1 ? file+"AssetEmbeds_1x" : file+"AssetEmbeds_2x";
 			var qualifiedName:String = "assets." + textureClassNameString;
 			var textureClass:Class = getDefinitionByName(qualifiedName) as Class;
-			var textureClassObject:Object = (new textureClass) as Object;
-            return new textureClassObject[name];
+			var textureClassObject:Object = textureClass[name] as Object;
+            return new textureClassObject;
         }
         
         public static function get contentScaleFactor():Number { return sContentScaleFactor; }

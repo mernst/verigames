@@ -3,21 +3,21 @@ package assets
 	public class WorldMapAssetEmbeds_1x
 	{
 		[Embed(source="../../lib/assets/world.png")]
-		public var WorldImageClass:Class;
+		public static const WorldImageClass:Class;
 		
 		[Embed(source="../../lib/assets/castle.png")]
-		public var CastleImageClass:Class;
+		public static const CastleImageClass:Class;
 		
 		[Embed(source="../../lib/assets/pawn.png")]
-		public var PawnImageClass:Class;
+		public static const PawnImageClass:Class;
 		
 		[Embed(source="../../lib/assets/plus.png")]
-		public var PlusImageClass:Class;
+		public static const PlusImageClass:Class;
 		
 		[Embed(source="../../lib/assets/minus.png")]
-		public var MinusImageClass:Class;
+		public static const MinusImageClass:Class;
 		
 		[Embed(source="../../lib/assets/world.png")]
-		public var WorldMapBackgroundClass:Class;
+		public static const WorldMapBackgroundClass:Class;
 	}
 }

@@ -3,90 +3,90 @@ package assets
 	public class MenuAssetEmbeds_2x
 	{
 		[Embed(source="../../lib/assets/menus/Menu.png")]
-		public var MenuButtonClass:Class;
+		public static const MenuButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/MenuClick.png")]
-		public var MenuButtonClickClass:Class;
+		public static const MenuButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/Exit.png")]
-		public var ExitButtonClass:Class;
+		public static const ExitButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/ExitClick.png")]
-		public var ExitButtonClickClass:Class;
+		public static const ExitButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SubmitLayout.png")]
-		public var SubmitLayoutButtonClass:Class;
+		public static const SubmitLayoutButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SubmitLayoutClick.png")]
-		public var SubmitLayoutButtonClickClass:Class;
+		public static const SubmitLayoutButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SubmitScore.png")]
-		public var SubmitScoreButtonClass:Class;
+		public static const SubmitScoreButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SubmitScoreClick.png")]
-		public var SubmitScoreButtonClickClass:Class;
+		public static const SubmitScoreButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/Save.png")]
-		public var SaveButtonClass:Class;
+		public static const SaveButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SaveClick.png")]
-		public var SaveButtonClickClass:Class;
+		public static const SaveButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/Demo.png")]
-		public var DemoButtonClass:Class;
+		public static const DemoButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/DemoClick.png")]
-		public var DemoButtonClickClass:Class;
+		public static const DemoButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/NextLevel.png")]
-		public var NewLevelButtonClass:Class;
+		public static const NewLevelButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/NextLevelClick.png")]
-		public var NewLevelButtonClickClass:Class;	
+		public static const NewLevelButtonClickClass:Class;	
 		
 		[Embed(source="../../lib/assets/menus/BackToGame.png")]
-		public var BackToGameButtonClass:Class;
+		public static const BackToGameButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/BackToGameClick.png")]
-		public var BackToGameButtonClickClass:Class;
+		public static const BackToGameButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/Tutorial.png")]
-		public var TutorialButtonClass:Class;
+		public static const TutorialButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/TutorialClick.png")]
-		public var TutorialButtonClickClass:Class;
+		public static const TutorialButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/Start.png")]
-		public var PlayButtonClass:Class;
+		public static const PlayButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/StartClick.png")]
-		public var PlayButtonClickClass:Class;
+		public static const PlayButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SignOut.png")]
-		public var SignOutButtonClass:Class;
+		public static const SignOutButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SignIn.png")]
-		public var SignInButtonClass:Class;
+		public static const SignInButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SignInClick.png")]
-		public var SignInButtonClickClass:Class;	
+		public static const SignInButtonClickClass:Class;	
 		
 		[Embed(source="../../lib/assets/menus/NextLevel.png")]
-		public var NextLevelButtonClass:Class;
+		public static const NextLevelButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/NextLevelClick.png")]
-		public var NextLevelButtonClickClass:Class;
+		public static const NextLevelButtonClickClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/InGameMenuBackground.png")]
-		public var InGameMenuBackgroundClass:Class;
+		public static const InGameMenuBackgroundClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/SubmitLayoutDialogBackground.png")]
-		public var SubmitLayoutDialogBackgroundClass:Class;
+		public static const SubmitLayoutDialogBackgroundClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/cancel.jpg")]
-		public var CancelButtonClass:Class;
+		public static const CancelButtonClass:Class;
 		
 		[Embed(source="../../lib/assets/menus/submit.jpg")]
-		public var SubmitButtonClass:Class;
+		public static const SubmitButtonClass:Class;
 	}
 }
