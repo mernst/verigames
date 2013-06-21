@@ -47,7 +47,11 @@ package scenes.game.display
 			m_isEditable = true;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(TouchEvent.TOUCH, onTouch);
+			if (jointType == INNER_CIRCLE_JOINT) {
+				touchable = false;
+			} else {
+				addEventListener(TouchEvent.TOUCH, onTouch);
+			}
 		}
 		
 		override public function dispose():void
