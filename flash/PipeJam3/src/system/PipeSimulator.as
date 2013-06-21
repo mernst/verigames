@@ -474,7 +474,7 @@ package system
 							if (edges_awaiting_others.indexOf(edge) == -1) {
 								edges_awaiting_others.push(edge);
 							}
-						} else {
+						} else if (node.outgoing_ports.length == 1) {
 							var outgoingMergeEdge:Edge = node.outgoing_ports[0].edge;
 							// Merge the ball types - narrow if either incoming ball is narrow, same with wide
 							var narrow_ball_into_next_edge:Boolean = (
@@ -510,6 +510,15 @@ package system
 								edges_awaiting_others.splice(edges_awaiting_others.indexOf(other_edge), 1);
 							}
 							queue.push(outgoingMergeEdge); //enqueue
+						} else {
+							//trace("WARNING! Found MERGE node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
+							// Remove edges from waiting list if they're in there
+							if (edges_awaiting_others.indexOf(edge) > -1) {
+								edges_awaiting_others.splice(edges_awaiting_others.indexOf(edge), 1);
+							}
+							if (edges_awaiting_others.indexOf(other_edge) > -1) {
+								edges_awaiting_others.splice(edges_awaiting_others.indexOf(other_edge), 1);
+							}
 						}
 					}
 					break;
