@@ -1,5 +1,6 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
 	import display.NineSliceBatch;
 	import graph.Edge;
 	import graph.EdgeSetRef;
@@ -104,31 +105,31 @@ package scenes.game.display
 			var assetName:String;
 			if(m_isEditable == true)
 			{
-				if(m_isWide == true)
-					assetName = "RoundRectWidePNG";
+				if (m_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix;
 				else
-					assetName = "RoundRectNarrowPNG";
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix;
 			}
 			else //not adjustable
 			{
 				if(m_isWide == true)
-					assetName = "RoundRectDarkGrayPNG";
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkBoxPrefix;
 				else
-					assetName = "RoundRectLightGrayPNG";
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
 			}
 			
-			m_box9slice = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 5.0, shapeHeight / 5.0, "Game", assetName, "Box9SliceXML", "Box");
+			m_box9slice = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
 			addChild(m_box9slice);
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
 			if (wideScore > narrowScore) {
-				m_scoreBlock = new ScoreBlock("RoundRectWidePNG", (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_scoreBlock = new ScoreBlock("RoundRectNarrowPNG", (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			}

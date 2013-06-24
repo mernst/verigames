@@ -51,6 +51,41 @@ package assets
 		private var menuAssetEmbeds_1x:MenuAssetEmbeds_1x;
 		private var menuAssetEmbeds_2x:MenuAssetEmbeds_2x;
 		
+		// List of Subtexture names from PipeJamSpriteSheet atlas
+		public static const PipeJamSubTexture_GrayDarkBoxPrefix:String = "GrayDarkBox";
+		public static const PipeJamSubTexture_GrayLightBoxPrefix:String = "GrayLightBox";
+		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
+		public static const PipeJamSubTexture_BlueLightBoxPrefix:String = "BlueLightBox";
+		public static const PipeJamSubTexture_OrangeAdaptor:String = "OrangeAdaptor";
+		public static const PipeJamSubTexture_OrangeAdaptorPlug:String = "OrangeAdaptorPlug";
+		public static const PipeJamSubTexture_ScoreBarForeground:String = "ScoreBarForeground";
+		public static const PipeJamSubTexture_ScoreBarBlue:String = "ScoreBarBlue";
+		public static const PipeJamSubTexture_ScoreBarOrange:String = "ScoreBarOrange";
+		public static const PipeJamSubTexture_MenuBoxFreePrefix:String = "MenuBoxFree";
+		public static const PipeJamSubTexture_MenuBoxAttachedPrefix:String = "MenuBoxAttached";
+		public static const PipeJamSubTexture_MenuBoxScrollbar:String = "MenuBoxScrollbar";
+		public static const PipeJamSubTexture_MenuBoxScrollbarButton:String = "MenuBoxScrollbarButton";
+		public static const PipeJamSubTexture_MenuBoxScrollbarButtonOver:String = "MenuBoxScrollbarButtonOver";
+		public static const PipeJamSubTexture_MenuBoxScrollbarButtonSelected:String = "MenuBoxScrollbarButtonSelected";
+		public static const PipeJamSubTexture_MenuButtonPrefix:String = "MenuButton";
+		public static const PipeJamSubTexture_MenuButtonOverPrefix:String = "MenuButtonOver";
+		public static const PipeJamSubTexture_MenuButtonSelectedPrefix:String = "MenuButtonSelected";
+		public static const PipeJamSubTexture_MenuArrowHorizonal:String = "MenuArrowHorizonal";
+		public static const PipeJamSubTexture_MenuArrowVertical:String = "MenuArrowVertical";
+		public static const PipeJamSubTexture_BackButton:String = "BackButton";
+		public static const PipeJamSubTexture_BackButtonOver:String = "BackButtonOver";
+		public static const PipeJamSubTexture_BackButtonSelected:String = "BackButtonSelected";
+		public static const PipeJamSubTexture_SettingsButton:String = "SettingsButton";
+		public static const PipeJamSubTexture_SettingsButtonOver:String = "SettingsButtonOver";
+		public static const PipeJamSubTexture_SettingsButtonSelected:String = "SettingsButtonSelected";
+		public static const PipeJamSubTexture_SoundButton:String = "SoundButton";
+		public static const PipeJamSubTexture_SoundButtonOver:String = "SoundButtonOver";
+		public static const PipeJamSubTexture_SoundButtonSelected:String = "SoundButtonSelected";
+		public static const PipeJamSubTexture_TextInput:String = "TextInput";
+		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
+		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";
+		
+		
         public static function getTexture(file:String, name:String):Texture
         {
             if (sTextures[name] == undefined)

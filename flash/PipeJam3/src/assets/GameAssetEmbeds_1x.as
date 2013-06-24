@@ -124,6 +124,18 @@ package assets
 		[Embed(source = '../../lib/assets/atlases/RoundRectWhite.png')] public static const RoundRectWhitePNG:Class;
 		[Embed(source = '../../lib/assets/atlases/RoundRectOrange.png')] public static const RoundRectOrangePNG:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
+		public static const PipeJamSpriteSheetPNG:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.xml", mimeType = "application/octet-stream")]
+		public static const PipeJamSpriteSheetXML:Class;
+		
+		[Embed(source = "../../lib/assets/Background.jpg")]
+		public static const StationaryBackgroundClass:Class;
+		
+		[Embed(source = "../../lib/assets/BorderVignette.png")]
+		public static const BorderVignetteClass:Class;
+		
 		[Embed(source = "../../lib/assets/shimmer.png")]
 		public static const ShimmerClass:Class;
 		

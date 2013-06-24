@@ -29,20 +29,15 @@ package scenes.game.display
 		
 		public var m_forceColor:Number = -1;
 		
-		public static var NARROW_COLOR:uint = 0x90FFF0;// 0x1A85FF;
-		public static var WIDE_COLOR:uint = 0x0177FF;// 0x3427FF;
-		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0xF0F0F0;// 0x3A3F4C;
-		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD2D2D2;// 0x3A3F4C;
-		public static var ERROR_COLOR:uint = 0xEF5631;// 0xE92227;
+		public static var NARROW_COLOR:uint = 0x6ED4FF;// 0x1A85FF;
+		public static var NARROW_COLOR_BORDER:uint = 0x1773B8
+		public static var WIDE_COLOR:uint = 0x0077FF;// 0x3427FF;
+		public static var WIDE_COLOR_BORDER:uint = 0x1B3C86;
+		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x808184;// 0x3A3F4C;
+		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD0D2D3;// 0x3A3F4C;
+		public static var ERROR_COLOR:uint = 0xF05A28;// 0xE92227;
 		public static var SCORE_COLOR:uint = 0x0;// 0xFFDC1A;
 		public static var SELECTED_COLOR:uint = 0xff0000;
-		
-		static protected var fillMaterial:StandardMaterial = null;
-		static protected var lightColorMaterial:StandardMaterial = null;
-		static protected var darkColorMaterial:StandardMaterial = null;
-		static protected var unadjustableWideColorMaterial:StandardMaterial = null;
-		static protected var unadjustableNarrowColorMaterial:StandardMaterial = null;
-		static protected var selectedColorMaterial:StandardMaterial = null;
 		
 		public function GameComponent(_id:String)
 		{
@@ -50,27 +45,6 @@ package scenes.game.display
 			
 			m_id = _id;
 			m_isSelected = false;
-			
-			if(fillMaterial == null)
-			{
-				fillMaterial = new StandardMaterial;
-				fillMaterial.color = 0xeeeeee;
-				
-				lightColorMaterial = new StandardMaterial;
-				lightColorMaterial.color = NARROW_COLOR;
-				
-				darkColorMaterial = new StandardMaterial;
-				darkColorMaterial.color = WIDE_COLOR;
-				
-				unadjustableWideColorMaterial = new StandardMaterial;
-				unadjustableWideColorMaterial.color = UNADJUSTABLE_WIDE_COLOR;
-				
-				unadjustableNarrowColorMaterial = new StandardMaterial;
-				unadjustableNarrowColorMaterial.color = UNADJUSTABLE_NARROW_COLOR;
-				
-				selectedColorMaterial = new StandardMaterial;
-				selectedColorMaterial.color = SELECTED_COLOR;
-			}
 		}
 		
 		public function componentMoved(delta:Point):void

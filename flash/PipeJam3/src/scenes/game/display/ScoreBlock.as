@@ -43,7 +43,7 @@ package scenes.game.display
 				_radius = Math.min(m_width, m_height) / 5.0;
 			}
 			
-			m_sliceBatch = new NineSliceBatch(m_width + 2 * _radius, m_height + 2 * _radius, _radius, _radius, "Game", m_assetName, "Box9SliceXML", "Box");
+			m_sliceBatch = new NineSliceBatch(m_width + 2 * _radius, m_height + 2 * _radius, _radius, _radius, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", m_assetName);
 			m_sliceBatch.adjustUsedSlices(true, true, false, true, true, false, false, false, false);
 			addChild(m_sliceBatch);
 			
