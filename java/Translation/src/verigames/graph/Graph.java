@@ -238,10 +238,10 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
 
     if (start.getOutput(startPort) != null)
       throw new IllegalArgumentException(
-          "Start Node already connected to Edge on port " + startPort + ": " + start.getOutput(startPort));
+          "Start Node already connected to Edge on port " + startPort + ": " + start.getOutput(startPort) + " Graph=" + toString());
     if (end.getInput(endPort) != null)
       throw new IllegalArgumentException(
-          "End Node already connected to Edge on port " + endPort + ": " + end.getInput(endPort));
+          "End Node already connected to Edge on port " + endPort + ": " + end.getInput(endPort) + " Graph=" + toString());
     // end precondition checks
 
     edges.add(edge);
