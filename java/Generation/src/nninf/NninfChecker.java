@@ -19,7 +19,7 @@ import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 import checkers.util.MultiGraphQualifierHierarchy;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -63,7 +63,7 @@ public class NninfChecker extends GameChecker {
     @Override
     public boolean needsAnnotation(AnnotatedTypeMirror ty) {
         return !(ty instanceof AnnotatedPrimitiveType
-                || ty instanceof AnnotatedTypeVariable);
+                 /*|| ty instanceof AnnotatedTypeVariable*/);
     }
 
     @Override

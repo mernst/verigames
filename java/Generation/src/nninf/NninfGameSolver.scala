@@ -1,7 +1,7 @@
 package nninf
 
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
@@ -29,7 +29,7 @@ class NninfGameSolver extends GameSolver {
           case SubtypeConstraint(sub, sup) => {
             // TODO: CombVariables should be handled by flow sensitivity. Should revisit this when flow
             // sensitivity is integrated.
-            if (sup.isInstanceOf[CombVariable])
+            if (sup.isInstanceOf[CombVariable] || unsupportedVariables.contains(sub) || unsupportedVariables.contains(sup) ) //TODO JB: REMOVE UNHANDLEDS
               return true;
             // No need to generate something for trivial super/sub-types.
             if (sup != NninfConstants.NULLABLE &&
@@ -40,15 +40,21 @@ class NninfGameSolver extends GameSolver {
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
                 // Assume sup is a variable. Alternatives?
-                val supvar = sup.asInstanceOf[Variable]
+
+                //Possible Explanation: We have a binary method that gets defaulted to NonNull
+                //which is then passed a null literal, need to change defaulting
+                if( sup.isInstanceOf[Constant]) {  //TODO JB: Ask Werner
+                  return true
+                }
+
+                val supvar = sup.asInstanceOf[AbstractVariable]
                 board = variablePosToBoard(supvar.varpos)
 
                 val lastIntersection = boardNVariableToIntersection((board, supvar))
                 val merge = board.add(lastIntersection, "output", MERGE, "left", toChute(supvar))._2
 
-                val blackballchute = new Chute(-1, "null literal")
-                blackballchute.setEditable(false)
-
+                //TODO JB: Is there a reason we weren't using createChute here?
+                val blackballchute = createChute(sub)
                 val blackball  = board.add(Intersection.Kind.START_LARGE_BALL, "output", merge, "right", blackballchute)._1
 
                 boardNVariableToIntersection.update((board, supvar), merge)
@@ -61,19 +67,17 @@ class NninfGameSolver extends GameSolver {
                 if (board!=null) {
                   // println(sub + " <: " + sup)
 
-                  var sublast : Intersection = null
-                  var suplast : Intersection = null
-                  try {
-                	sublast = findIntersection(board, sub)
-                	suplast = findIntersection(board, sup)
-                  } catch {
-                    case e : NoSuchElementException => {
-                      return false
-                    }
+
+                  val (sublast, suplast) = try {
+                    (findIntersection(board, sub), findIntersection(board, sup))
+                  } catch { //TODO JB: This is temporary to get partially mangled boards through
+                  //TODO JB: When we are finished with Generics this should never happen
+                    case e : NoSuchElementException => return true
                   }
-                  
+
                   merge = Intersection.factory(Intersection.Kind.MERGE)
                   board.addNode(merge)
+
 
                   if (isUniqueSlot(sub)) {
                     board.addEdge(sublast, "output", merge, "left",  createChute(sub))
@@ -135,16 +139,27 @@ class NninfGameSolver extends GameSolver {
                 // Nothing to do if the LHS is "this", always non-null.
               } else if (ell.isInstanceOf[Constant]){
                 // TODO
+              } else if (ell.isInstanceOf[Literal] ) {
+                // TODO
+                val lit = ell.asInstanceOf[Literal]
+                println("TODO: Uncovered case" + lit)
               } else {
-                val ellvar = ell.asInstanceOf[Variable]
+                val ellvar = ell.asInstanceOf[AbstractVariable]
                 val board = variablePosToBoard(ctx);
-                val elllast = findIntersection(board, ellvar)
+
+
+                val elllast = try {
+                  findIntersection(board, ellvar)
+                } catch { //TODO JB: Remove this when generics are covered
+                  case _ => return true
+                }
 
                 val chute = toChute(ellvar)
                 chute.setPinched(true)
 
                 val con = board.add(elllast, "output", CONNECT, "input", chute)._2
                 updateIntersection(board, ellvar, con)
+
               }
             } else {
               println("TODO: uncovered inequality case!")
@@ -157,11 +172,24 @@ class NninfGameSolver extends GameSolver {
         return true
     }
 
+    /**
+     * Find the latest intersection for a given slot.  Constants/Literals always have
+     * a new Intersection for the latest use since their values never depend on past state
+     * @param board Board we are searching on
+     * @param slot  A slot that appears on board
+     * @return The last intersection placed on board for slot
+     */
     def findIntersection(board: Board, slot: Slot): Intersection = {
       slot match {
-        case v: Variable =>  boardNVariableToIntersection((board, v))
+        //If we have a variable or LiteralThis, we have already created the previous Intersection
+        case v: Variable           =>
+          val iEmpty = boardNVariableToIntersection.get((board, v)).isEmpty //TODO: Temporary
+          boardNVariableToIntersection((board, v))
+        case v: RefinementVariable =>  boardNVariableToIntersection((board, v))
         case LiteralThis =>  boardToSelfIntersection(board)
 
+        //For assignments (and uses?) of literals/constants they result in a ball intersection
+        //being generated as everywhere they are used is a NEW type use
         case LiteralNull             => board.addNode(START_LARGE_BALL)
         case NninfConstants.NULLABLE => board.addNode(START_LARGE_BALL)
 
@@ -178,7 +206,8 @@ class NninfGameSolver extends GameSolver {
 
     def updateIntersection(board: Board, slot: Slot, inters: Intersection) {
       slot match {
-        case v: Variable =>  boardNVariableToIntersection.update((board, v), inters)
+        case v: Variable           =>  boardNVariableToIntersection.update((board, v), inters)
+        case v: RefinementVariable =>  boardNVariableToIntersection.update((board, v), inters)
         case LiteralThis =>  boardToSelfIntersection.update(board, inters)
 
         case LiteralNull             => // Nothing to do, we're always creating a new black ball
@@ -195,6 +224,9 @@ class NninfGameSolver extends GameSolver {
     def createChute(slot: Slot): Chute = {
       slot match {
         case v: Variable => {
+          new Chute(v.id, v.toString())
+        }
+        case v: RefinementVariable => {
           new Chute(v.id, v.toString())
         }
         case LiteralThis => {

@@ -1,7 +1,7 @@
 package test;
 
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
@@ -18,10 +18,11 @@ class TestGameSolver extends GameSolver {
     val outputName = System.getenv("ACTUAL_PATH")
 	
     override def solve(variables: List[Variable],
-    combvariables: List[CombVariable],
-    constraints: List[Constraint],
-    weights: List[WeightInfo],
-    params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
+      combvariables: List[CombVariable],
+      refinementVariables : List[RefinementVariable],
+      constraints: List[Constraint],
+      weights: List[WeightInfo],
+      params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
       
       // Do nothing.
       println ("checking for env")
@@ -29,7 +30,7 @@ class TestGameSolver extends GameSolver {
       println (System.getenv("ACTUAL_PATH"))
       writeToFile(outputName, "Constraints:\n")
       
-      super.solve(variables, combvariables, constraints, weights, params)
+      super.solve(variables, combvariables, refinementVariables, constraints, weights, params)
     }
     
     override def createBoards(world: World) {
@@ -44,7 +45,7 @@ class TestGameSolver extends GameSolver {
      */
     override def handleConstraint(world: World, constraint: Constraint): Boolean = {
     	appendToFile(outputName, constraint.toString() + "\n")
-    	return true
+    	true
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection = {

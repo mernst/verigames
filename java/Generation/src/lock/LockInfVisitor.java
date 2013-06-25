@@ -22,8 +22,8 @@ import checkers.source.SourceChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.AnnotationUtils;
-import checkers.util.TreeUtils;
+import javacutils.AnnotationUtils;
+import javacutils.TreeUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -133,7 +133,7 @@ public class LockInfVisitor extends GameVisitor {
         } else if (methodSel.getKind() == Tree.Kind.MEMBER_SELECT) {
             return ((MemberSelectTree)methodSel).getExpression().toString();
         } else {
-            SourceChecker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
+            lockChecker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
             return null;
         }
     }

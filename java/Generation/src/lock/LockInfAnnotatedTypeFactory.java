@@ -18,9 +18,9 @@ import checkers.quals.Unqualified;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.util.AnnotationBuilder;
-import checkers.util.AnnotationUtils;
-import checkers.util.TreeUtils;
-import checkers.util.TypesUtils;
+import javacutils.AnnotationUtils;
+import javacutils.TreeUtils;
+import javacutils.TypesUtils;
 
 public class LockInfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<LockInfChecker>{
 

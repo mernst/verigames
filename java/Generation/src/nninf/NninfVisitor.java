@@ -20,7 +20,8 @@ import checkers.source.Result;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.TreeUtils;
+import javacutils.InternalUtils;
+import javacutils.TreeUtils;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.Trees;
@@ -187,7 +188,6 @@ public class NninfVisitor extends GameVisitor {
     }
 
 
-
     /** Check for implicit {@code .iterator} call */
     @Override
     public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
@@ -276,7 +276,7 @@ public class NninfVisitor extends GameVisitor {
         final ExpressionTree leftOp = node.getLeftOperand();
         final ExpressionTree rightOp = node.getRightOperand();
 
-        if (NullnessVisitor.isUnboxingOperation(types, stringType, node)) {
+        if (isUnboxingOperation(node)) {
             checkForNullability(leftOp, "unboxing.of.nullable");
             checkForNullability(rightOp, "unboxing.of.nullable");
         }
@@ -297,19 +297,51 @@ public class NninfVisitor extends GameVisitor {
     public Void visitCompoundAssignment(CompoundAssignmentTree node, Void p) {
         super.visitCompoundAssignment(node, p);
         // ignore String concatenation
-        if (!NullnessVisitor.isString(types, stringType, node)) {
+        if (!isString(node)) {
             checkForNullability(node.getVariable(), "unboxing.of.nullable");
             checkForNullability(node.getExpression(), "unboxing.of.nullable");
         }
         return null;
     }
 
+    //TODO: Nullness visitor has a copy of this method, do we want to just
+    //TODO: make it static/public or put it in a util?
+    private boolean isPrimitive(Tree tree) {
+        return InternalUtils.typeOf(tree).getKind().isPrimitive();
+    }
+
     /** Unboxing case: casting to a primitive */
     @Override
     public Void visitTypeCast(TypeCastTree node, Void p) {
         super.visitTypeCast(node, p);
-        if (NullnessVisitor.isPrimitive(node) && !NullnessVisitor.isPrimitive(node.getExpression()))
+        if (isPrimitive(node) && !isPrimitive(node.getExpression()))
             checkForNullability(node.getExpression(), "unboxing.of.nullable");
         return null;
+    }
+
+    //TODO: These TWO are from NonNullInfVisitor but are no longer static
+    /** @return true if binary operation could cause an unboxing operation */
+    private final boolean isUnboxingOperation(BinaryTree tree) {
+        if (tree.getKind() == Tree.Kind.EQUAL_TO
+                || tree.getKind() == Tree.Kind.NOT_EQUAL_TO) {
+            // it is valid to check equality between two reference types, even
+            // if one (or both) of them is null
+            return isPrimitive(tree.getLeftOperand()) != isPrimitive(tree
+                    .getRightOperand());
+        } else {
+            // All BinaryTree's are of type String, a primitive type or the
+            // reference type equivalent of a primitive type. Furthermore,
+            // Strings don't have a primitive type, and therefore only
+            // BinaryTrees that aren't String can cause unboxing.
+            return !isString(tree);
+        }
+    }
+
+    /**
+     * @return true if the type of the tree is a super of String
+     * */
+    private final boolean isString(ExpressionTree tree) {
+        TypeMirror type = InternalUtils.typeOf(tree);
+        return types.isAssignable(stringType, type);
     }
 }

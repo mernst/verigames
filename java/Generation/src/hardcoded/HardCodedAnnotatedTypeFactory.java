@@ -7,7 +7,7 @@ import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
-import checkers.util.TreeUtils;
+import javacutils.TreeUtils;
 
 public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<HardCodedChecker> {
 

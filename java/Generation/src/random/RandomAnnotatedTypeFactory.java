@@ -11,8 +11,8 @@ import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
-import checkers.util.ElementUtils;
-import checkers.util.TreeUtils;
+import javacutils.ElementUtils;
+import javacutils.TreeUtils;
 
 public class RandomAnnotatedTypeFactory extends
 		BasicAnnotatedTypeFactory<RandomChecker> {

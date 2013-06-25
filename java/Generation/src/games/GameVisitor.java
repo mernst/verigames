@@ -15,7 +15,7 @@ import com.sun.source.tree.VariableTree;
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceVisitor;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.TreeUtils;
+import javacutils.TreeUtils;
 
 /**
  * This Visitor is a superclass of all Visitors in the game. Its purpose is to abstract common 
@@ -36,7 +36,7 @@ public class GameVisitor extends InferenceVisitor {
     @Override
     public Void visitVariable(VariableTree node, Void p) {
         /* TODO: Re-orderings were causing duplicate constraints. Revisit whether we can do
-         * this smarter. 
+         * this smarter.
         scan(node.getModifiers(), p);
         scan(node.getType(), p);
         scan(node.getInitializer(), p);
@@ -49,8 +49,8 @@ public class GameVisitor extends InferenceVisitor {
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
         Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() && !node.toString().equals("this")) {
-            logFieldAccess(node);
+        if (elem.getKind().isField() && !node.toString().equals("this")) { //TODO JB: Ask Werner if I should protect against
+            logFieldAccess(node);                                          //TODO JB: Calling assignments field accesses here
         }
         return super.visitIdentifier(node, p);
     }
@@ -98,7 +98,7 @@ public class GameVisitor extends InferenceVisitor {
 
         AnnotatedExecutableType methodType = atypeFactory.getAnnotatedType(enclosingMethod);
         commonAssignmentCheck(methodType.getReturnType(), node.getExpression(),
-                "return.type.incompatible");
+                "return.type.incompatible", false);
 
         return null;
     }

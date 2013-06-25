@@ -18,7 +18,7 @@ import checkers.types.TypeHierarchy;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 

@@ -1,7 +1,7 @@
 package trusted
 
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror

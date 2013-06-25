@@ -6,7 +6,7 @@ import javax.lang.model.util.Elements;
 import trusted.TrustedChecker;
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 
 /**
  * 

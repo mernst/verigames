@@ -1,13 +1,13 @@
 package random;
 
+import checkers.types.AnnotatedTypeFactory;
 import trusted.TrustedChecker;
 import random.quals.Random;
 import random.quals.MaybeRandom;
 
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
-import checkers.types.AnnotatedTypeFactory;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 
 import javax.lang.model.util.Elements;
 
