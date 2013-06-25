@@ -99,11 +99,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
       // find an unused string for the edge-set ID. There is very small
       // probability that there will be collisions, as there would have to be
       // some really bizarre level names, but it's still possible.
-      String edgeSetID = name + edgeSetNumber;
+      String edgeSetID = cleanNameForXML(name + edgeSetNumber);
       while (usedLinkedEdgeIDs.contains(edgeSetID))
       {
         edgeSetNumber++;
-        edgeSetID = name + edgeSetNumber;
+        edgeSetID = cleanNameForXML(name + edgeSetNumber);
       }
       // TODO associate linked edge sets with their ID somehow, so that they can
       // be referred to when needed.
@@ -140,11 +140,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
         {
           Element setElt = new Element("edge-set");
 
-          String edgeSetID = name + edgeSetNumber;
+          String edgeSetID = cleanNameForXML(name + edgeSetNumber);
           while (usedLinkedEdgeIDs.contains(edgeSetID))
           {
             edgeSetNumber++;
-            edgeSetID = name + edgeSetNumber;
+            edgeSetID = cleanNameForXML(name + edgeSetNumber);
           }
 
           setElt.addAttribute(new Attribute("id", edgeSetID));
@@ -204,7 +204,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
 
     for (Map.Entry<String, Board> entry : boardNames.entrySet())
     {
-      String name = entry.getKey();
+      String name = cleanNameForXML(entry.getKey());
       Board board = entry.getValue();
 
       Element boardElt = new Element("board");
@@ -221,7 +221,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
         if (node.getIntersectionKind() == Kind.SUBBOARD)
         {
           if (node.isSubboard())
-            nodeElt.addAttribute(new Attribute("name", node.asSubboard().getSubnetworkName()));
+            nodeElt.addAttribute(new Attribute("name", cleanNameForXML(node.asSubboard().getSubnetworkName())));
           else
             throw new RuntimeException("node " + node + " has kind subnetwork but isSubnetwork returns false");
         }
@@ -264,11 +264,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
           Element layoutElt = new Element("layout");
 
           Element xElt = new Element("x");
-          xElt.appendChild(String.format("%.5f", x));
+          xElt.appendChild(formatDouble(x));
           layoutElt.appendChild(xElt);
 
           Element yElt = new Element("y");
-          yElt.appendChild(String.format("%.5f", y));
+          yElt.appendChild(formatDouble(y));
           layoutElt.appendChild(yElt);
 
           nodeElt.appendChild(layoutElt);
@@ -328,12 +328,13 @@ public class WorldXMLPrinter extends Printer<World, Void>
           {
             Element pointElt = new Element("point");
 
+              //TODO JB: Is there a reason for this level of precision?  Bumped it to ten
             Element xElt = new Element("x");
-            xElt.appendChild(String.format("%.5f", point.getX()));
+            xElt.appendChild(formatDouble(point.getX()));
             pointElt.appendChild(xElt);
 
             Element yElt = new Element("y");
-            yElt.appendChild(String.format("%.5f", point.getY()));
+            yElt.appendChild(formatDouble(point.getY()));
             pointElt.appendChild(yElt);
 
             edgeLayoutElt.appendChild(pointElt);
@@ -350,4 +351,26 @@ public class WorldXMLPrinter extends Printer<World, Void>
 
     return boardsElt;
   }
+
+  //TODO JB: Make more extensive and systematic
+  //Note: In DTD's $ is forbidden and id's follow the "NAME" production so
+  //this method equally applies to ids
+  public String cleanNameForXML(final String id) {
+    return id.replace("$", "-d-");
+  }
+
+  //TODO JB: Generalize
+  //Takes only non-negative doubles
+  public int determinePrecision(double d) {
+    if(d > Math.pow(10, -4)) {
+        return 5;
+    } else {
+        return 10;
+    }
+  }
+
+  public String formatDouble(double d) {
+      return String.format("%." + String.valueOf(determinePrecision(d)) + "f", d );
+  }
+
 }
