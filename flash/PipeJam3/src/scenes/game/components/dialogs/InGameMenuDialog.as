@@ -40,7 +40,7 @@ package scenes.game.components.dialogs
 		/** Button to switch to the next level */
 		public var nextLevel_button:Button;
 		
-		var backgroundImage:Image;
+		private var backgroundImage:Image;
 		
 		private var selectLayoutDialog:SelectLayoutDialog;
 		private var submitLayoutDialog:SubmitLayoutDialog;

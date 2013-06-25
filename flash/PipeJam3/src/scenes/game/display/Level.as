@@ -213,7 +213,8 @@ package scenes.game.display
 			trace(m_levelLayoutXML.@id);
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = maxX = maxY = 0;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			//create node for sets
 			m_nodeList = new Vector.<GameNode>(); 
@@ -259,6 +260,8 @@ package scenes.game.display
 				minY = Math.min(minY, gameNode.m_boundingBox.top);
 				maxX = Math.max(maxX, gameNode.m_boundingBox.right);
 				maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				
+				trace("Level " + m_levelLayoutXML.@id + " node m_boundingBox = " + gameNode.m_boundingBox);
 				
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
@@ -315,6 +318,7 @@ package scenes.game.display
 				minY = Math.min(minY, joint.m_boundingBox.top);
 				maxX = Math.max(maxX, joint.m_boundingBox.right);
 				maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				trace("Level " + m_levelLayoutXML.@id + " joint m_boundingBox = " + joint.m_boundingBox);
 			}
 			
 			// Process <line> 's
@@ -327,6 +331,7 @@ package scenes.game.display
 					minY = Math.min(minY, boundingBox.y);
 					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
+					trace("Level " + m_levelLayoutXML.@id + " edge m_boundingBox = " + boundingBox);
 				}
 			}
 			// At this point, there may be multiple lines listening to the same port for trouble points,
@@ -347,8 +352,8 @@ package scenes.game.display
 			
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
-			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
@@ -621,7 +626,8 @@ package scenes.game.display
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = maxX = maxY = 0;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			var children:XMLList = m_levelLayoutXML.children();
 			//set box and joint positions first
@@ -661,10 +667,10 @@ package scenes.game.display
 					
 				if(boundingBox)
 				{
-					minX = Math.min(minX, boundingBox.x);
-					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
-					maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
+					minX = Math.min(minX, boundingBox.left);
+					minY = Math.min(minY, boundingBox.top);
+					maxX = Math.max(maxX, boundingBox.right);
+					maxY = Math.max(maxY, boundingBox.bottom);
 				}
 			}
 			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
@@ -680,13 +686,14 @@ package scenes.game.display
 			for each(var child:XML in children)
 			{
 				var childName:String = child.localName();
+				var x:Number, y:Number;
 				if(childName.indexOf("box") != -1)
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					var x:Number = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					x = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
 					child.@x = x.toFixed(2);
-					var y:Number = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					y = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = y.toFixed(2);
 					child.@visible = edgeSet.visible;
 				}
@@ -696,9 +703,9 @@ package scenes.game.display
 					var joint:GameJointNode = jointDictionary[jointID];
 					if(joint != null)
 					{
-						var x:Number = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						x = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
 						child.@x = x.toFixed(2);
-						var y:Number = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						y = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = y.toFixed(2);
 						child.@visible = joint.visible;
 					}
@@ -721,9 +728,9 @@ package scenes.game.display
 						{
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
-							var x:Number = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							x = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
 							ptXML.@x = x.toFixed(2);
-							var y:Number = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							y = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
 							ptXML.@y = y.toFixed(2);
 												
 							child.appendChild(ptXML);

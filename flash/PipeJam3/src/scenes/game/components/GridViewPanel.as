@@ -379,9 +379,10 @@ package scenes.game.components
 			
 			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
 			content.addChild(m_currentLevel);
+			var i:int;
 			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
-				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
+				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.right / 2, m_currentLevel.m_boundingBox.bottom / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
 				var localPt:Point = content.globalToLocal(globPt);
 				panTo(localPt.x, localPt.y);
@@ -390,7 +391,7 @@ package scenes.game.components
 				var nodes:Vector.<GameNode> = level.getNodes();
 				if (nodes.length > 0) {
 					var foundNode:GameNode = nodes[0];
-					for (var i:int = 0; i < nodes.length; i++) {
+					for (i = 0; i < nodes.length; i++) {
 						if (nodes[i].visible && (nodes[i].alpha > 0) && nodes[i].parent) {
 							foundNode = nodes[i];
 							break;
@@ -400,7 +401,7 @@ package scenes.game.components
 				}
 			}
 			
-			for (var i:int = 0; i < m_levelTextFields.length; i++) {
+			for (i = 0; i < m_levelTextFields.length; i++) {
 				Starling.juggler.removeTweens(m_levelTextFields[i]);
 				m_levelTextFields[i].removeFromParent(true);
 			}
@@ -411,11 +412,11 @@ package scenes.game.components
 				var totalTime:Number = 0.0;
 				var lineHeight:Number = HEIGHT / Math.max(10, textLines.length * 1.5);
 				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
-				for (var j:int = 0; j < textLines.length; j++) {
-					var levelTextLine:String = textLines[j] as String;
+				for (i = 0; i < textLines.length; i++) {
+					var levelTextLine:String = textLines[i] as String;
 					var lineDispTime:Number = levelTextLine.length * SEC_PER_CHAR;
 					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_SPECIAL_ELITE, WIDTH, lineHeight, lineHeight, 0xEEEE00);
-					shimmerLine.y = j * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
+					shimmerLine.y = i * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
 					shimmerLine.touchable = false;
 					shimmerLine.visible = false;
 					m_levelTextFields.push(shimmerLine);

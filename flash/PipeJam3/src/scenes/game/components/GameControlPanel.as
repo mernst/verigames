@@ -234,7 +234,6 @@ package scenes.game.components
 						dottedQ.x = -dottedQ.width / 2;
 						dottedQ.y = ((dq + 1.0) / 11.0) * SCORE_PANEL_AREA.height;
 						m_targetScoreContainer.addChild(dottedQ);
-						trace("add " + dottedQ.y);
 					}
 					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
 					m_targetScoreTextfield.x = 2.0;

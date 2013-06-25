@@ -268,11 +268,12 @@ package scenes.game.display
 							var undoDataEvent:Event = undoStack.pop();
 							if(undoDataEvent.data != null)
 							{
+								var undoData:Object;
 								if(undoDataEvent.data is Array)
 								{
 									for each(var obj:Event in undoDataEvent.data)
 									{
-										var undoData:Object = obj.data;
+										undoData = obj.data;
 										if(undoData == null) //handle locally
 											handleUndoEvent(undoDataEvent, true);
 										if(undoData.target is String)
@@ -290,7 +291,7 @@ package scenes.game.display
 								}
 								else
 								{
-									var undoData:Object = undoDataEvent.data;
+									undoData = undoDataEvent.data;
 									if(undoData == null) //handle locally
 										handleUndoEvent(undoDataEvent, true);
 									if(undoData.target is String)

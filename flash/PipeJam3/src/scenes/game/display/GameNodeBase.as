@@ -156,16 +156,17 @@ package scenes.game.display
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
+				var undoData:Object, undoEvent:Event;
 				if(isMoving) //if we were moving, stop it, and exit
 				{
 					isMoving = false;
 					
-					var undoData:Object = new Object();
+					undoData = new Object();
 					undoData.target = "level";
 					undoData.component = this;
 					undoData.startPoint = startingPoint.clone();
 					undoData.endPoint = new Point(x,y);
-					var undoEvent:Event = new Event(Level.MOVE_EVENT,false,undoData);
+					undoEvent = new Event(Level.MOVE_EVENT,false,undoData);
 					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
 					
 					return;
@@ -182,9 +183,9 @@ package scenes.game.display
 						handleWidthChange();
 				//		dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 						
-						var undoData:Object = new Object();
+						undoData = new Object();
 						undoData.target = this;
-						var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
+						undoEvent = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
 						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
 					}
 					
