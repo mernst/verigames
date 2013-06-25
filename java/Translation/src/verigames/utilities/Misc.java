@@ -21,5 +21,5 @@ public class Misc
    * However, some classes may ignore this value in favor of their own, for
    * greater granularity.
    */
-  public static final boolean CHECK_REP_ENABLED = true;
+  public static final boolean CHECK_REP_ENABLED = false;
 }
