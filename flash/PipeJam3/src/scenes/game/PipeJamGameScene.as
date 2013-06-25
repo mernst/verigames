@@ -29,9 +29,9 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_annotation_RefFlatReader.zip";//Simple.zip";
-		static public var demoButtonLayoutFile:String = "../SampleWorlds/net_sf_picard_annotation_RefFlatReaderLayout.zip";//SimpleLayout.zip";
-		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_annotation_RefFlatReaderConstraints.zip";//SimpleConstraints.zip";
+		static public var demoButtonWorldFile:String = "../SampleWorlds/Simple.zip";
+		static public var demoButtonLayoutFile:String = "../SampleWorlds/SimpleLayout.zip";
+		static public var demoButtonConstraintsFile:String = "../SampleWorlds/SimpleConstraints.zip";
 		
 		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
 		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
@@ -223,6 +223,7 @@ package scenes.game
 		 */
 		public function createWorldFromNodes(_worldNodes:Network, _world_xml:XML, _layout:XML, _constraints:XML):World {
 			try {
+				
 				m_network = _worldNodes;
 				PipeJamGame.printDebug("Creating World...");
 				var world:World = new World(_worldNodes, _world_xml, _layout, _constraints);				
