@@ -30,14 +30,15 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static const WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 270;
+		public static const HEIGHT:Number = 262;
 		
 		protected var m_currentLevel:Level;
 		protected var content:BaseComponent;
-		protected var quad:Quad;
 		protected var currentMode:int;
 		protected var nextLevel_button:Button;
 		protected var m_levelTextFields:Vector.<ShimmeringText> = new Vector.<ShimmeringText>();
+		protected var m_backgroundImage:Image;
+		protected var m_border:Image;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -53,14 +54,22 @@ package scenes.game.components
 		{
 			currentMode = NORMAL_MODE;
 			
-			var mouseQuad:Quad = new Quad(WIDTH, HEIGHT, 0x0);
-			mouseQuad.blendMode = BlendMode.NONE;
-			addChild(mouseQuad);
+			var background:Texture = AssetInterface.getTexture("Game", "StationaryBackgroundClass");
+			m_backgroundImage = new Image(background);
+			m_backgroundImage.width = Constants.GameWidth;
+			m_backgroundImage.height = Constants.GameHeight;
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			addChild(m_backgroundImage);
 			
 			content = new BaseComponent();
 			addChild(content);
 			
-			quad = new Quad(10, 10, 0xff0000);
+			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
+			m_border = new Image(borderTexture);
+			m_border.width = WIDTH;
+			m_border.height = HEIGHT;
+			m_border.touchable = false;
+			addChild(m_border);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -297,7 +306,6 @@ package scenes.game.components
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
 			
-			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
 			// Adjust so that original centered point is still in the middle
@@ -306,21 +314,11 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
-			
-			
 		}
 		
 		private function getViewInContentSpace():Rectangle
 		{
 			return new Rectangle(-content.x / content.scaleX, -content.y / content.scaleY, clipRect.width / content.scaleX, clipRect.height / content.scaleY);
-		}
-		
-		private function makeQuad(qx:Number, qy:Number, color:Number = 0xFFFF00, size:Number = 5):void
-		{
-			var myQuad:Quad = new Quad(size, size, color);
-			myQuad.x = qx;
-			myQuad.y = qy;
-			content.addChild(myQuad);
 		}
 		
 		private function onRemovedFromStage():void
@@ -381,17 +379,24 @@ package scenes.game.components
 			
 			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
 			content.addChild(m_currentLevel);
-			if ((m_currentLevel.m_boundingBox.width < WIDTH) && (m_currentLevel.m_boundingBox.height < HEIGHT)) {
-				// If smaller than window, just center
+			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
+				// If about the size of the window, just center the level
 				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
 				var localPt:Point = content.globalToLocal(globPt);
 				panTo(localPt.x, localPt.y);
 			} else {
-				// Otherwise center on the first box
+				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = level.getNodes();
 				if (nodes.length > 0) {
-					centerOnComponent(nodes[0]);
+					var foundNode:GameNode = nodes[0];
+					for (var i:int = 0; i < nodes.length; i++) {
+						if (nodes[i].visible && (nodes[i].alpha > 0) && nodes[i].parent) {
+							foundNode = nodes[i];
+							break;
+						}
+					}
+					centerOnComponent(foundNode);
 				}
 			}
 			

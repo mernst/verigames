@@ -29,8 +29,8 @@ package display
 			m_textFieldShadow.y = m_textFieldShadow.x = 0.05 * _height;
 			m_shimmerImage = new Image(m_shimmerTexture);
 			m_shimmerImage.alpha = 1;
-			m_shimmerImage.width = m_shimmerImage.height = _height * 2;
-			m_shimmerImage.y = - _height / 2;
+			m_shimmerImage.width = m_shimmerImage.height = _height;// * 2.0;
+			//m_shimmerImage.y = - _height / 2.0;
 			m_maskedContainer = new PixelMaskDisplayObject();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

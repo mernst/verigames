@@ -8,6 +8,8 @@ package assets
 		[Embed(source="../../lib/assets/font/Metal_Mania/MetalMania-Regular.ttf", fontFamily="MetalMania", embedAsCFF="false", mimeType="application/x-font")] private static const FontMetalMania:Class;
 		[Embed(source="../../lib/assets/font/Bangers/Bangers.ttf", fontFamily="Bangers", embedAsCFF="false", mimeType="application/x-font")] private static const FontBangers:Class;
 		[Embed(source="../../lib/assets/font/Special_Elite/SpecialElite.ttf", fontFamily="SpecialElite", embedAsCFF="false", mimeType="application/x-font")] private static const FontSpecialElite:Class;
+		[Embed(source = "../../lib/assets/font/UbuntuTitling-Bold.ttf", fontFamily="UbuntuTitlingBold", embedAsCFF="false", mimeType="application/x-font")] private static const FontUbuntuTitlingBold:Class;
+		
 		
 		public static const FONT_DEFAULT:String   = "Vegur";
 		public static const FONT_FRACTION:String  = "Bebas";
@@ -15,5 +17,6 @@ package assets
 		public static const FONT_METAL:String = "MetalMania";
 		public static const FONT_BANGERS:String = "Bangers";
 		public static const FONT_SPECIAL_ELITE:String = "SpecialElite";
+		public static const FONT_UBUNTU:String = "UbuntuTitlingBold";
 	}
 }

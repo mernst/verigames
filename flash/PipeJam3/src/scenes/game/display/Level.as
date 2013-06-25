@@ -138,6 +138,8 @@ package scenes.game.display
 		private var m_backgroundImage:Image;
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
+		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
+		
 		/**
 		 * Level contains multiple boards that each contain multiple pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -170,13 +172,15 @@ package scenes.game.display
 			initialize();
 			setConstraints();
 			
-			var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-			background.repeat = true;
-			m_backgroundImage = new Image(background);
-			m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
-			m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
-			m_backgroundImage.blendMode = BlendMode.NONE;
-			addChild(m_backgroundImage);
+			if (USE_TILED_BACKGROUND) {
+				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
+				background.repeat = true;
+				m_backgroundImage = new Image(background);
+				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
+				m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
+				m_backgroundImage.blendMode = BlendMode.NONE;
+				addChild(m_backgroundImage);
+			}
 			
 			addChild(m_errorContainer);
 			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
@@ -343,6 +347,7 @@ package scenes.game.display
 			
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
+			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
@@ -662,6 +667,7 @@ package scenes.game.display
 					maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
 				}
 			}
+			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			draw();
@@ -1074,12 +1080,14 @@ package scenes.game.display
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
-			m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
-			m_backgroundImage.x = m_backgroundImage.y = - MIN_BORDER - 0.5 * Math.max(m_boundingBox.x, m_boundingBox.y);
-			var texturesToRepeat:Number = (50.0 / Constants.GAME_SCALE) * (m_backgroundImage.width / BG_WIDTH);
-			m_backgroundImage.setTexCoords(1, new Point(texturesToRepeat, 0.0));
-			m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
-			m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
+			if (m_backgroundImage) {
+				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER + Math.max(m_boundingBox.width, m_boundingBox.height);
+				m_backgroundImage.x = m_backgroundImage.y = - MIN_BORDER - 0.5 * Math.max(m_boundingBox.x, m_boundingBox.y);
+				var texturesToRepeat:Number = (50.0 / Constants.GAME_SCALE) * (m_backgroundImage.width / BG_WIDTH);
+				m_backgroundImage.setTexCoords(1, new Point(texturesToRepeat, 0.0));
+				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
+				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
+			}
 		}
 		
 		
