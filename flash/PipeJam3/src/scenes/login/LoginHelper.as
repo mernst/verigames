@@ -78,9 +78,9 @@ package scenes.login
 			{
 				onSessionValidatedCallback(e);
 			}
-			else //redirect to login page
+			else // in the future redirect to login page
 			{
-				
+				onSessionValidatedCallback(e);
 			}
 				
 		}
@@ -123,7 +123,7 @@ package scenes.login
 		}
 		
 		
-		public function onActivatePlayer(callback:Function):void
+		public function activatePlayer(callback:Function):void
 		{
 			sendMessage(ACTIVATE_PLAYER, callback);
 		}
@@ -140,10 +140,13 @@ package scenes.login
 		
 		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
 		{
-			matchArrayObjects = JSON.parse(e.target.data).matches;
-			//handle callback ourselves since we want to use request info, not refuse;
-			onRequestLevelFinishedCallback(result);
-			sendMessage(LoginHelper.REFUSE_LEVELS, null);
+			if(e != null)
+			{
+				matchArrayObjects = JSON.parse(e.target.data).matches;
+				//handle callback ourselves since we want to use request info, not refuse;
+				onRequestLevelFinishedCallback(result);
+				sendMessage(LoginHelper.REFUSE_LEVELS, null);
+			}
 		}
 		
 		//connect to the db and get a list of levels

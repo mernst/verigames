@@ -13,6 +13,11 @@ package scenes.login
 		{
 			ExternalInterface.call("setCookie", key, val);
 		}
+		
+		public static function displayAlert(str:String):void
+		{
+			ExternalInterface.call("alert", str);
+		}
 	}
 }
 

@@ -1,21 +1,25 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import graph.MapGetNode;
-	import particle.ErrorParticleSystem;
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Sprite;
-	import starling.events.Event;
 	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
+	
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
 	import graph.Edge;
+	import graph.MapGetNode;
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.SubnetworkPort;
+	
+	import particle.ErrorParticleSystem;
+	
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Sprite;
+	import starling.events.Event;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -699,6 +703,8 @@ package scenes.game.display
 				createJointPointsArray(m_startPoint, m_endPoint);
 				positionChildren();
 				
+				if(this.errorContainer)
+					dispatchEvent(new Event(Level.ERROR_MOVED, true, errorContainer));
 				m_isDirty = true;
 			}
 		}

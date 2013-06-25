@@ -3,8 +3,11 @@ package scenes.splashscreen
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
+	import display.NineSliceBatch;
+	
 	import events.NavigationEvent;
 	
+	import feathers.controls.Button;
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
 	import feathers.themes.*;
@@ -12,6 +15,7 @@ package scenes.splashscreen
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
+	import flash.text.*;
 	
 	import scenes.BaseComponent;
 	import scenes.Scene;
@@ -24,31 +28,32 @@ package scenes.splashscreen
 	import starling.events.TouchEvent;
 	import starling.text.*;
 	import starling.textures.Texture;
-	import flash.text.*;
-
+	import deng.fzip.FZip;
+	import deng.fzip.FZipFile;
+	import scenes.game.components.dialogs.SelectLevelDialog;
+	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
 		protected var m_mainMenu:starling.display.Sprite;
-		protected var m_levelMenu:starling.display.Sprite;
 		
-		protected var play_button:starling.display.Button;
-		protected var signin_button:starling.display.Button;
+		protected var play_button:feathers.controls.Button;
+		protected var signin_button:feathers.controls.Button;
 		protected var tutorial_button:starling.display.Button;
 		protected var demo_button:starling.display.Button;
 		
 		protected var loader:URLLoader;
 		protected var loginHelper:LoginHelper;
 		protected var m_parent:SplashScreenScene;
-		
-		protected var theme:AeonDesktopTheme;
-		
+				
 		protected var levelList:List = null;
 		protected var levelMetadataArray:Array = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
 		
 		public var inputInfo:flash.text.TextField;
-
+		protected var tutorialZipFile:FZip;
+		
+		protected var selectLevelDialog:SelectLevelDialog;
 		
 		public function SplashScreenMenuBox(parent:SplashScreenScene)
 		{
@@ -66,7 +71,13 @@ package scenes.splashscreen
 		{
 			addChild(m_mainMenu);
 			
-			theme = new AeonDesktopTheme( this.stage );
+		//	play_button.x = (this.stage.stageWidth - play_button.width) / 2;
+		//	play_button.y = (this.stage.stageHeight - play_button.height) / 2;
+			var obj:Object =play_button.defaultLabelProperties;
+			obj.textFormat = new TextFormat("Arial",36, 0xffffff);
+			play_button.defaultLabelProperties = obj;
+			signin_button.defaultLabelProperties = obj;
+
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
@@ -81,54 +92,63 @@ package scenes.splashscreen
 			var playButtonUp:Texture = AssetInterface.getTexture("Menu", "PlayButtonClass");
 			var playButtonClick:Texture = AssetInterface.getTexture("Menu", "PlayButtonClickClass");
 			
-			play_button = new Button(playButtonUp, "", playButtonClick);
+			//change scale to get buttons to (mostly) look right. Should figure out why they look wrong and fix that...
+			scaleX = .5;
+			scaleY = .175;
+			
+			play_button = new feathers.controls.Button();
+			play_button.label = " Play ";
 			play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-			play_button.x = 0;
-			play_button.y = 110;
-			play_button.width *= .6;
-			play_button.height *= .6;
-			m_mainMenu.addChild(play_button);
+			play_button.x = 700;
+			play_button.y = 1100;
 			
-//			inputInfo = new flash.text.TextField();
-//			// Create default text format
-//			var inputInfoTextFormat:TextFormat = new TextFormat("Arial", 12, 0x000000);
-//			inputInfoTextFormat.align = TextFormatAlign.LEFT;
-//			inputInfo.defaultTextFormat = inputInfoTextFormat;
-//			// Set text input type
-//			inputInfo.type = TextFieldType.INPUT;
-//			inputInfo.autoSize = TextFieldAutoSize.LEFT;
-//			inputInfo.multiline = true;
-//			inputInfo.wordWrap = true;
-//			inputInfo.x = width + 30;
-//			inputInfo.y = 110;
-//			inputInfo.height = 200;
-//			inputInfo.width = 100;
-//			// Set background just for testing needs
-//			inputInfo.background = true;
-//			inputInfo.backgroundColor = 0xffffff;
-//			inputInfo.text = PipeJam3.cookies;
-//			
-//			Starling.current.nativeOverlay.addChild(inputInfo);
+			signin_button = new feathers.controls.Button();
+			signin_button.label = " Log In ";
+			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
+			signin_button.x = 700;
+			signin_button.y = 1100;
+
 			
-			if(!PipeJamGame.RELEASE_BUILD)
+			if(PipeJamGame.PLAYER_LOGGED_IN || !PipeJam3.RELEASE_BUILD)
+			{			
+				m_mainMenu.addChild(play_button);
+				m_mainMenu.removeChild(signin_button);
+			}
+			else
 			{
-				var signinButtonUp:Texture = AssetInterface.getTexture("Menu", "SignInButtonClass");
-				var signinButtonClick:Texture = AssetInterface.getTexture("Menu", "SignInButtonClickClass");
-				
-				signin_button = new Button(signinButtonUp, "", signinButtonClick);
-				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-				signin_button.x = 0;
-				signin_button.y = 60;
-				signin_button.width *= .6;
-				signin_button.height *= .6;
+				m_mainMenu.removeChild(play_button);
 				m_mainMenu.addChild(signin_button);
-				
-	
-				
+			}
+			
+						
+			//			inputInfo = new flash.text.TextField();
+			//			// Create default text format
+			//			var inputInfoTextFormat:TextFormat = new TextFormat("Arial", 12, 0x000000);
+			//			inputInfoTextFormat.align = TextFormatAlign.LEFT;
+			//			inputInfo.defaultTextFormat = inputInfoTextFormat;
+			//			// Set text input type
+			//			inputInfo.type = TextFieldType.INPUT;
+			//			inputInfo.autoSize = TextFieldAutoSize.LEFT;
+			//			inputInfo.multiline = true;
+			//			inputInfo.wordWrap = true;
+			//			inputInfo.x = width + 30;
+			//			inputInfo.y = 110;
+			//			inputInfo.height = 200;
+			//			inputInfo.width = 100;
+			//			// Set background just for testing needs
+			//			inputInfo.background = true;
+			//			inputInfo.backgroundColor = 0xffffff;
+			//			inputInfo.text = PipeJam3.cookies;
+			//			
+			//			Starling.current.nativeOverlay.addChild(inputInfo);
+			
+
+			if(!PipeJam3.RELEASE_BUILD)
+			{
 				var tutorialButtonUp:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
 				var tutorialButtonClick:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClickClass");
 				
-				tutorial_button = new Button(tutorialButtonUp, "", tutorialButtonClick);
+				tutorial_button = new starling.display.Button(tutorialButtonUp, "", tutorialButtonClick);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 				tutorial_button.x = 0;
 				tutorial_button.y = 160;
@@ -139,7 +159,7 @@ package scenes.splashscreen
 				var demoButtonUp:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
 				var demoButtonClick:Texture = AssetInterface.getTexture("Menu", "DemoButtonClickClass");
 				
-				demo_button = new Button(demoButtonUp, "", demoButtonClick);
+				demo_button = new starling.display.Button(demoButtonUp, "", demoButtonClick);
 				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
 				demo_button.x = 0;
 				demo_button.y = 210;
@@ -151,43 +171,43 @@ package scenes.splashscreen
 		
 		protected function buildLevelMenu():void
 		{
-			m_levelMenu = new Sprite();
-			var background:Texture = AssetInterface.getTexture("Game", "GameControlPanelBackgroundImageClass");
-			var backgroundImage:Image = new Image(background);
-			backgroundImage.width = 150;
-			backgroundImage.height = 200;
-			m_levelMenu.addChild(backgroundImage);
-			
-			//create a title
-			var titleTextfield:TextFieldWrapper = TextFactory.getInstance().createTextField("Levels", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xeeeeee);
-			titleTextfield.x = -5; 
-			TextFactory.getInstance().updateAlign(titleTextfield, 1, 1);
-			m_levelMenu.addChild(titleTextfield);
-
-			levelList = new List;
-			levelList.y = 75;
-			levelList.x = 10;
-			levelList.width = 125;
-			levelList.itemRendererProperties.height = 10;
-			
-			m_levelMenu.addChild(levelList);
-			levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
-			levelList.validate();
-			
-			var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-			
-			var exit_button:Button = new Button(exitButtonUp, "", exitButtonClick);
-			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
-			exit_button.x = 10;
-			exit_button.y = 150;
-			exit_button.width *= .38;
-			exit_button.height *= .38;
-			m_levelMenu.addChild(exit_button);
-			
-			m_levelMenu.visible = false;
+//			m_levelMenu = new Sprite();
+//			var background:Texture = AssetInterface.getTexture("Game", "GameControlPanelBackgroundImageClass");
+//			var backgroundImage:Image = new Image(background);
+//			backgroundImage.width = 150;
+//			backgroundImage.height = 200;
+//			m_levelMenu.addChild(backgroundImage);
+//			
+//			//create a title
+//			var titleTextfield:TextFieldWrapper = TextFactory.getInstance().createTextField("Levels", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xeeeeee);
+//			titleTextfield.x = -5; 
+//			TextFactory.getInstance().updateAlign(titleTextfield, 1, 1);
+//			m_levelMenu.addChild(titleTextfield);
+//			
+//			levelList = new List;
+//			levelList.y = 75;
+//			levelList.x = 10;
+//			levelList.width = 125;
+//			levelList.itemRendererProperties.height = 10;
+//			
+//			m_levelMenu.addChild(levelList);
+//			levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
+//			levelList.validate();
+//			
+//		/*	var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
+//			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
+//			
+//			var exit_button:Button = new Button(exitButtonUp, "", exitButtonClick);
+//			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
+//			exit_button.x = 10;
+//			exit_button.y = 150;
+//			exit_button.width *= .38;
+//			exit_button.height *= .38;
+//			m_levelMenu.addChild(exit_button);*/
+//			
+//			m_levelMenu.visible = false;
 			//use this for testing without any connection
-//			onRequestLevels(LoginHelper.EVENT_COMPLETE, null)
+			//			onRequestLevels(LoginHelper.EVENT_COMPLETE, null)
 		}
 		
 		protected function onRequestLevels(result:int):void
@@ -214,13 +234,14 @@ package scenes.splashscreen
 			//we are done, show everything
 			// Creating the dataprovider
 			var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
-			levelList.dataProvider = matchCollection;
+			selectLevelDialog.levelListCollection = matchCollection;
+			selectLevelDialog.matchArrayMetadata = matchArrayMetadata;
 			
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 			
 			m_mainMenu.visible = false;
-			m_levelMenu.visible = true;
-
+			selectLevelDialog.visible = true;
+			
 		}
 		protected static var levelCount:int = 1;
 		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>):String
@@ -236,7 +257,7 @@ package scenes.splashscreen
 				matchID = match.levelId;
 			else
 				matchID = match.levelId.$oid;
-				
+			
 			while(levelNotFound)
 			{
 				foundObj = levelMetadataVector[index];
@@ -281,7 +302,7 @@ package scenes.splashscreen
 					return levelObj.name;
 				}
 			}
-
+			
 			return null;
 		}
 		
@@ -289,7 +310,7 @@ package scenes.splashscreen
 		{
 			//get client id
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest = new URLRequest("http://trafficjam.verigames.com/login?redirect=http://trafficjam.verigames.com/game/PipeJam3.html");
+			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game/PipeJam3.html");
 			navigateToURL(myURL, "_self");
 		}
 		
@@ -303,7 +324,7 @@ package scenes.splashscreen
 		private function onExitButtonTriggered():void
 		{
 			m_mainMenu.visible = true;
-			m_levelMenu.visible = false;
+			removeChild(selectLevelDialog);
 		}
 		
 		protected function callback(evt:flash.events.Event):void
@@ -333,35 +354,91 @@ package scenes.splashscreen
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
-
+			
 			//do this, although player probably is already be activated
-			loginHelper.onActivatePlayer(onPlayerActivated);
+			if(!PipeJam3.playerActivated)
+				loginHelper.activatePlayer(onPlayerActivated);
+			else
+				onPlayerActivated(0, null);
 		}
 		
 		protected function onPlayerActivated(result:int, e:flash.events.Event):void
 		{
-			loginHelper.requestLevels(onRequestLevels);
-			loginHelper.getLevelMetadata(onRequestLevels);
+			//check for tutorial cookies, and if not found, or incomplete, do that, else load real levels
+			//get Tutorial file
+			tutorialZipFile = new FZip();
+			LoginHelper.getLoginHelper().loadFile(LoginHelper.USE_LOCAL, null, PipeJamGameScene.tutorialButtonWorldFile, getLevels, tutorialZipFile);
+		}
+		
+		protected function getLevels(e:flash.events.Event):void
+		{
+			if(isTutorialDone())
+			{
+				loginHelper.requestLevels(onRequestLevels);
+				loginHelper.getLevelMetadata(onRequestLevels);
+				
+				selectLevelDialog = new SelectLevelDialog();
+				//buildLevelMenu();
+				//the containing menubox is scaled wierdly
+				selectLevelDialog.width = 175;
+				selectLevelDialog.height = 250;
+				
+				parent.addChild(selectLevelDialog);
+				
+				//do after adding to parent
+				selectLevelDialog.centerDialog();
+			//	m_levelMenu.x = m_mainMenu.x;
+			//	m_levelMenu.y = m_mainMenu.y;
+				PipeJamGameScene.inTutorial = false;
+			}
+			else
+				loadTutorial();
+		}
+		
+		protected function isTutorialDone():Boolean
+		{
+			//unpack tutorial zip file, and count levels
+			if(tutorialZipFile.getFileCount() > 0)
+			{
+				var zipFile:FZipFile = tutorialZipFile.getFileAt(0);
+				trace(zipFile.filename);
+				var tutorialXML:XML = new XML(zipFile.content);
+				PipeJamGameScene.numTutorialLevels = tutorialXML["level"].length();
+			}
 			
-			buildLevelMenu();
-			addChild(m_levelMenu);
-			m_levelMenu.x = m_mainMenu.x;
-			m_levelMenu.y = m_mainMenu.y;
+			var tutorialStatus:String = HTTPCookies.getCookie("tutorialLevelCompleted");
+			if(!isNaN(parseInt(tutorialStatus)))
+				PipeJamGameScene.numTutorialLevelsCompleted = parseInt(tutorialStatus);
+			
+			if(PipeJamGameScene.numTutorialLevelsCompleted >= PipeJamGameScene.numTutorialLevels)
+				return true;
+			else
+				return false;
 		}
 		
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
+			loadTutorial();
+		}
+		
+		protected function loadTutorial():void
+		{
+			PipeJamGameScene.inTutorial = true;
 			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
 			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
 			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
+		protected static var fileNumber:int = 0;
 		protected function onDemoButtonTriggered(e:starling.events.Event):void
 		{
-			PipeJamGameScene.worldFile = PipeJamGameScene.demoButtonWorldFile;
-			PipeJamGameScene.layoutFile = PipeJamGameScene.demoButtonLayoutFile;
-			PipeJamGameScene.constraintsFile = PipeJamGameScene.demoButtonConstraintsFile;
+			if(PipeJamGameScene.dArray.length == fileNumber)
+				fileNumber = 0;
+			PipeJamGameScene.worldFile = PipeJamGameScene.dArray[fileNumber];
+			PipeJamGameScene.layoutFile = PipeJamGameScene.dArray[fileNumber+2];
+			PipeJamGameScene.constraintsFile = PipeJamGameScene.dArray[fileNumber+1];
+			fileNumber+=3;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}

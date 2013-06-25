@@ -32,9 +32,7 @@ package scenes.game.components.dialogs
 				
 		protected var loader:URLLoader;
 		protected var loginHelper:LoginHelper;
-		
-		protected var theme:AeonDesktopTheme;
-		
+				
 		protected var layoutList:List = null;
 		protected var layoutArray:Array = null;
 		protected var m_layoutVector:Vector.<Object>;
@@ -55,7 +53,6 @@ package scenes.game.components.dialogs
 			addChild(m_layoutMenu);
 			m_layoutMenu.visible = true;
 			visible = true;
-			theme = new AeonDesktopTheme( this.stage );
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void

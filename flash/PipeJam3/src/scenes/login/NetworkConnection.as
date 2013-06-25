@@ -24,8 +24,8 @@ package scenes.login
 
 		//the first address is verigames, the second the development environ, the third my machine
 	//	static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-	//	static public var PROXY_URL:String = "http://ec2-184-72-152-11.compute-1.amazonaws.com:8001";
-		static public var PROXY_URL:String = "http://128.95.2.112:8001";
+		static public var PROXY_URL:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
+	//	static public var PROXY_URL:String = "http://128.95.2.112:8001";
 
 		
 		public function NetworkConnection()
@@ -145,7 +145,7 @@ package scenes.login
 					break;
 				case LoginHelper.VERIFY_SESSION:
 				//	request = "/"+name+"&method=VERIFY";
-					specificURL = "http://trafficjam.verigames.com/verifySession";
+					specificURL = "http://pipejam.verigames.com/verifySession";
 					request = "?cookies="+name;
 					method = URLRequestMethod.POST; 
 					break;
@@ -180,7 +180,7 @@ package scenes.login
 			
 			try
 			{
-				trace(urlRequest);
+				trace(urlRequest.url);
 				loader.load(urlRequest);
 			}
 			catch(error:Error)
@@ -211,7 +211,7 @@ package scenes.login
 		{
 			trace(e.text);
 			if(m_callback != null)
-				m_callback(LoginHelper.EVENT_ERROR, e);
+				m_callback(LoginHelper.EVENT_ERROR, null);
 		}
 		
 		private function completeHandler(e:flash.events.Event):void

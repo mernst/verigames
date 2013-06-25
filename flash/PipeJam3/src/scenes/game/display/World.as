@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import events.EdgeSetChangeEvent;
+	import flash.geom.Point;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
@@ -9,6 +10,7 @@ package scenes.game.display
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import system.PipeSimulator;
+	import scenes.game.PipeJamGameScene;
 	
 	import flash.utils.Dictionary;
 	import starling.display.Button;
@@ -84,7 +86,7 @@ package scenes.game.display
 		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
 		
 		public static var UNDO_EVENT:String = "undo_event";
-		
+				
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -130,7 +132,7 @@ package scenes.game.display
 			
 			//m_simulator = new Simulator(m_network);
 			m_simulator = new PipeSimulator(m_network);
-			
+						
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
@@ -143,6 +145,12 @@ package scenes.game.display
 			gameControlPanel = new GameControlPanel();
 			gameControlPanel.y = GridViewPanel.HEIGHT;
 			addChild(gameControlPanel);
+			
+			if(PipeJamGameScene.inTutorial)
+			{
+				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				firstLevel = levels[currentLevelNumber];
+			}
 			
 			selectLevel(firstLevel);
 			
@@ -158,6 +166,12 @@ package scenes.game.display
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UNDO_EVENT, saveEvent);
+			
+			addEventListener(Level.ERROR_ADDED, onErrorAdded);
+			addEventListener(Level.ERROR_REMOVED, onErrorRemoved);
+			addEventListener(Level.ERROR_MOVED, onErrorMoved);
+			addEventListener(Level.MOVE_TO_POINT, onMoveToPointEvent);
+
 		}
 		
 		private function onShowGameMenuEvent(e:Event):void
@@ -224,11 +238,34 @@ package scenes.game.display
 		
 		private function onNextLevel(e:Event):void
 		{
-			currentLevelNumber = (currentLevelNumber + 1) % levels.length;
+			if(PipeJamGameScene.inTutorial)
+				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted  % levels.length; //modulo just so we don't crash, currently...
+			else
+				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 			selectLevel(levels[currentLevelNumber]);
 		}
 		
-		private function saveEvent(e:Event):void
+		public function onErrorAdded(event:starling.events.Event):void
+		{
+			gameControlPanel.errorAdded(event.data, active_level);
+		}
+		
+		public function onErrorRemoved(event:starling.events.Event):void
+		{
+			gameControlPanel.errorRemoved(event.data);
+		}
+		
+		public function onErrorMoved(event:starling.events.Event):void
+		{
+			gameControlPanel.errorMoved(event.data);
+		}
+		
+		private function onMoveToPointEvent(e:starling.events.Event):void
+		{
+			edgeSetGraphViewPanel.moveToPoint(e.data as Point);
+		}
+		
+		private function saveEvent(e:starling.events.Event):void
 		{
 			//sometimes we need to remove the last event to add a complex event that includes that one
 			if(e.data && e.data.data && e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
@@ -320,9 +357,9 @@ package scenes.game.display
 							{
 								if(redoDataEvent.data is Array)
 								{
-									for each(var obj:Event in redoDataEvent.data)
+									for each(var obj1:Event in redoDataEvent.data)
 									{
-										var redoData:Object = obj.data;
+										var redoData:Object = obj1.data;
 										if(redoData == null) //handle locally
 											handleUndoEvent(redoDataEvent, false);
 										if(redoData.target is String)
@@ -330,20 +367,20 @@ package scenes.game.display
 											if(redoData.target == "level")
 											{
 												if(this.active_level != null)
-													active_level.handleUndoEvent(obj, false);
+													active_level.handleUndoEvent(obj1, false);
 											}
 										}
 										else if(redoData.target is BaseComponent)
-											(redoData.target as BaseComponent).handleUndoEvent(obj, false);
+											(redoData.target as BaseComponent).handleUndoEvent(obj1, false);
 									}
 									undoStack.push(redoDataEvent);
 								}
 								else
 								{
-									var redoData:Object = redoDataEvent.data;
-									if(redoData == null) //handle locally
+									var redoData1:Object = redoDataEvent.data;
+									if(redoData1 == null) //handle locally
 										handleUndoEvent(redoDataEvent, false);
-									if(redoData.target is String)
+									if(redoData1.target is String)
 									{
 										if(redoData.target == "level")
 										{
@@ -351,8 +388,8 @@ package scenes.game.display
 												active_level.handleUndoEvent(redoDataEvent, false);
 										}
 									}
-									else if(redoData.target is BaseComponent)
-										(redoData.target as BaseComponent).handleUndoEvent(redoDataEvent, false);
+									else if(redoData1.target is BaseComponent)
+										(redoData1.target as BaseComponent).handleUndoEvent(redoDataEvent, false);
 									undoStack.push(redoDataEvent);
 								}
 							}
@@ -372,7 +409,7 @@ package scenes.game.display
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);
-			gameControlPanel.updateScore(newLevel);
+			gameControlPanel.newLevelSelected(newLevel);
 			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
 			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
 			

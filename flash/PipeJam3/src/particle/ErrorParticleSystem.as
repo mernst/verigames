@@ -1,5 +1,9 @@
 package particle 
 {
+	import flash.utils.Dictionary;
+	
+	import scenes.game.display.Level;
+	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -18,10 +22,17 @@ package particle
 		private static const errorTexture:Texture = Texture.fromBitmap(new ErrorParticle());
 		private var mParticleSystem:PDParticleSystem;
 		
+		protected static var nextID:int = 0;
+		public var id:int;
+		//need to store these somewhere, as they get created before the world is finished
+		public static var errorList:Dictionary = new Dictionary;
+		
 		public function ErrorParticleSystem() 
 		{
 			super();
-            
+			
+			id=nextID++;
+            errorList[id] = this;
             mParticleSystem = new PDParticleSystem(errorConfig, errorTexture);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -36,6 +47,8 @@ package particle
             
             addChild(mParticleSystem);
             Starling.juggler.add(mParticleSystem);
+			
+			dispatchEvent(new Event(Level.ERROR_ADDED, true, this));
         }
 		
 		private function onRemovedFromStage(evt:Event):void
@@ -43,8 +56,10 @@ package particle
 			mParticleSystem.stop();
 			mParticleSystem.removeFromParent();
 			Starling.juggler.remove(mParticleSystem);
+			
+			errorList[id] = null;
+			dispatchEvent(new Event(Level.ERROR_REMOVED, true, this));
 		}
-		
 	}
 
 }

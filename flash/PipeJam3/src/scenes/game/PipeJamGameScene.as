@@ -33,9 +33,18 @@ package scenes.game
 		static public var demoButtonLayoutFile:String = "../SampleWorlds/SimpleLayout.zip";
 		static public var demoButtonConstraintsFile:String = "../SampleWorlds/SimpleConstraints.zip";
 		
+		static public var dArray:Array = new Array(
+			"../SampleWorlds/Simple.zip",
+			"../SampleWorlds/SimpleConstraints.zip",
+			"../SampleWorlds/SimpleLayout.zip"
+		);
+		
 		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
 		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
 		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
+		static public var numTutorialLevels:int = 0;
+		static public var numTutorialLevelsCompleted:int = 0;
+		static public var inTutorial:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
 		static public var layoutFile:String = demoButtonLayoutFile;
@@ -51,7 +60,7 @@ package scenes.game
 		protected var m_layoutLoaded:Boolean = false;
 		protected var m_constraintsLoaded:Boolean = false;
 		protected var m_worldLoaded:Boolean = false;
-
+		
 		/** Start button image */
 		protected var start_button:Button;
 		private var active_world:World;
@@ -67,7 +76,7 @@ package scenes.game
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			super.addedToStage(event);
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
-
+			
 			if (!world_zip_file_to_be_played)
 			{
 				var loadType:int = LoginHelper.USE_LOCAL;
@@ -89,7 +98,7 @@ package scenes.game
 				}
 				
 				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
-			
+				
 				fz1 = new FZip();
 				loginHelper.loadFile(loadType, null, worldFile, worldZipLoaded, fz1);
 				fz2 = new FZip();
@@ -98,7 +107,7 @@ package scenes.game
 				loginHelper.loadFile(loadType, null, constraintsFile, constraintsZipLoaded, fz3);
 			}
 			else
-			 {
+			{
 				//load the zip file from it's location
 				loadType = LoginHelper.USE_URL;
 				fz1 = new FZip();
@@ -106,7 +115,7 @@ package scenes.game
 				fz1.load(new URLRequest(world_zip_file_to_be_played));
 			}
 			initGame();
-
+			
 		}
 		
 		protected  override function removedFromStage(event:starling.events.Event):void
@@ -121,7 +130,7 @@ package scenes.game
 		 */
 		public function initGame():void 
 		{
-
+			
 		}
 		
 		public function onLayoutLoaded(byteArray:ByteArray):void {
@@ -144,7 +153,7 @@ package scenes.game
 			parseXML(worldXML);
 		}
 		
-			
+		
 		private function worldZipLoaded(e:flash.events.Event):void {
 			fz1.removeEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
 			if(fz1.getFileCount() > 0)
