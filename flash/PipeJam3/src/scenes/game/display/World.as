@@ -14,6 +14,8 @@ package scenes.game.display
 	import events.NavigationEvent;
 	
 	import flash.utils.Dictionary;
+	import flash.system.System;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -408,6 +410,20 @@ package scenes.game.display
 					if(this.active_level != null)
 						active_level.toggleUneditableStrings();
 					break;
+					case 76: //'l' for copy layout
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.updateLayoutXML();
+							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
+						}
+						break;
+					case 67: //'c' for copy constraints
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.updateConstraintXML();
+							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
+						}
+						break;
 				}
 			}
 		}

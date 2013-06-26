@@ -121,8 +121,9 @@ package scenes.game.display
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
 		//used when saving, as we need a parent graph element for the above level node
-		private var m_levelLayoutXMLWrapper:XML;
+		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
+		public var m_levelConstraintsXMLWrapper:XML;
 		private var m_levelText:String;
 		private var m_targetScore:int;
 		
@@ -784,6 +785,8 @@ package scenes.game.display
 					
 				m_levelConstraintsXML.appendChild(child);
 			}
+			m_levelConstraintsXMLWrapper = <graph id="world"/>;
+			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
 		
 
