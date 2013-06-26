@@ -61,6 +61,7 @@ package scenes.game.display
 			var currentPos:int = 0;
 			for(var i:int = 0; i<m_outgoingEdges.length; i++)
 			{
+				var startingCurrentPos = currentPos;
 				var oedge:GameEdgeContainer = m_outgoingEdges[i];
 
 				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
@@ -96,6 +97,13 @@ package scenes.game.display
 						m_PortToEdgeArray[currentPos] = iedge;
 						currentPos++;
 					}
+				}
+				//no incoming edges, or all incoming edges less than this outgoing edge?
+				if(startingCurrentPos == currentPos || oedge.outgoingEdgePosition == -1)
+				{
+					oedge.outgoingEdgePosition = currentPos;
+					m_PortToEdgeArray[currentPos] = oedge;
+					currentPos++;
 				}
 			}
 			
@@ -170,7 +178,7 @@ package scenes.game.display
 				}
 				
 				var touch:Touch = touches[0];
-				if(event.shiftKey && event.ctrlKey)
+				if(event.shiftKey && event.ctrlKey && !PipeJam3.RELEASE_BUILD)
 				{
 					this.m_isEditable = !this.m_isEditable;
 					this.m_isDirty = true;
