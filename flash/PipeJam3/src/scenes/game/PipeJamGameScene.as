@@ -29,14 +29,14 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		static public var demoButtonWorldFile:String = "../SampleWorlds/DemoWorld/Simple.zip";
-		static public var demoButtonLayoutFile:String = "../SampleWorlds/SimpleLayout.zip";
-		static public var demoButtonConstraintsFile:String = "../SampleWorlds/SimpleConstraints.zip";
+		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader.zip";
+		static public var demoButtonLayoutFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderLayout.zip";
+		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
 		static public var dArray:Array = new Array(
-			"../SampleWorlds/DemoWorld/Simple.zip",
-			"../SampleWorlds/DemoWorld/SimpleConstraints.zip",
-			"../SampleWorlds/DemoWorld/SimpleLayout.zip"
+			"../SampleWorlds/net_sf_picard_metrics_VersionHeader.zip",
+			"../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip",
+			"../SampleWorlds/net_sf_picard_metrics_VersionHeaderLayout.zip"
 		);
 		
 		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";

@@ -737,18 +737,18 @@ package scenes.game.display
 							ptXML.@x = x.toFixed(2);
 							y = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
 							ptXML.@y = y.toFixed(2);
-												
+							
 							child.appendChild(ptXML);
 						}
 						
 						if(child.frombox != undefined)
-							child.frombox.@port = edgeContainer.incomingEdgePosition;
+							child.frombox.@port = edgeContainer.m_fromPortID;
 						else if(child.fromjoint != undefined)
-							child.fromjoint.@port = edgeContainer.incomingEdgePosition;
+							child.fromjoint.@port = edgeContainer.m_fromPortID;
 						if(child.tobox != undefined)
-							child.tobox.@port = edgeContainer.outgoingEdgePosition;
+							child.tobox.@port = edgeContainer.m_toPortID;
 						else if(child.tojoint != undefined)
-							child.tojoint.@port = edgeContainer.outgoingEdgePosition;
+							child.tojoint.@port = edgeContainer.m_toPortID;
 					}
 				}
 			}
