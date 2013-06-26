@@ -47,7 +47,7 @@ package scenes.game.display
 			m_sliceBatch.adjustUsedSlices(true, true, false, true, true, false, false, false, false);
 			addChild(m_sliceBatch);
 			
-			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
+			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_UBUNTU, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
 			TextFactory.getInstance().updateAlign(m_text, 1, 1);
 			addChild(m_text);
 			if (m_gameComponent) {

@@ -421,7 +421,7 @@ package scenes.game.components
 				for (i = 0; i < textLines.length; i++) {
 					var levelTextLine:String = textLines[i] as String;
 					var lineDispTime:Number = levelTextLine.length * SEC_PER_CHAR;
-					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_SPECIAL_ELITE, WIDTH, lineHeight, lineHeight, 0xEEEE00);
+					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_DEFAULT, WIDTH, lineHeight, lineHeight, 0xEEEE00);
 					shimmerLine.y = i * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
 					shimmerLine.touchable = false;
 					shimmerLine.visible = false;

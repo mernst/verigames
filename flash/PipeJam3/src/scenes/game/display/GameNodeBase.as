@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import display.NineSliceBatch;
 	import events.EdgeSetChangeEvent;
+	import utils.XMath;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -141,7 +142,9 @@ package scenes.game.display
 		}
 		
 		private var isMoving:Boolean = false;
+		private var hasMovedOutsideClickDist:Boolean = false;
 		private var startingPoint:Point;
+		private static const CLICK_DIST:Number = 0.2; // if the node is moved just a tiny bit, chances are the user meant to click rather than move
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
@@ -157,11 +160,13 @@ package scenes.game.display
 					undoData.target = "level";
 					undoData.component = this;
 					undoData.startPoint = startingPoint.clone();
-					undoData.endPoint = new Point(x,y);
-					undoEvent = new Event(Level.MOVE_EVENT,false,undoData);
-					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-					
-					return;
+					undoData.endPoint = new Point(x, y);
+					if (hasMovedOutsideClickDist) {
+						undoEvent = new Event(Level.MOVE_EVENT,false,undoData);
+						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+						hasMovedOutsideClickDist = false;
+						return;
+					}
 				}
 				
 				var touch:Touch = touches[0];
@@ -207,13 +212,18 @@ package scenes.game.display
 					}
 				}
 			}
-			else if(event.getTouches(this, TouchPhase.MOVED).length){
+			else if (event.getTouches(this, TouchPhase.MOVED).length) {
 				if (touches.length == 1)
 				{
-					if(isMoving == false)
-						startingPoint = new Point(x,y);
+					if(isMoving == false) {
+						startingPoint = new Point(x, y);
+						hasMovedOutsideClickDist = false;
+					} else if (!hasMovedOutsideClickDist && XMath.getDist(startingPoint.clone(), new Point(x, y)) > CLICK_DIST * Constants.GAME_SCALE) {
+						// This is probably meant as a click
+						hasMovedOutsideClickDist = true;
+					}
 					isMoving = true;
-
+					
 					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, event));
 					
 				}

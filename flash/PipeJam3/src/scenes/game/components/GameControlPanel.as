@@ -84,7 +84,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
@@ -252,7 +252,7 @@ package scenes.game.components
 						dottedQ.y = ((dq + 1.0) / 11.0) * SCORE_PANEL_AREA.height;
 						m_targetScoreContainer.addChild(dottedQ);
 					}
-					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
+					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
 					m_targetScoreTextfield.x = 2.0;
 				} else {
 					TextFactory.getInstance().updateText(m_targetScoreTextfield, level.getTargetScore().toString());
