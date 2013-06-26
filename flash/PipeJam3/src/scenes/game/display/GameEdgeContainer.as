@@ -3,7 +3,6 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import graph.MapGetNode;
 	import particle.ErrorParticleSystem;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Sprite;
@@ -27,12 +26,12 @@ package scenes.game.display
 		
 		private var m_dir:String;
 		private var m_useExistingPoints:Boolean;
-		private var m_outgoingIsWide:Boolean = false;
+		private var m_innerSegmentBorderIsWide:Boolean = false;
 		public var m_edgeArray:Array;
 		
 		protected var m_edgeSegments:Vector.<GameEdgeSegment>;
 		private var m_edgeJoints:Vector.<GameEdgeJoint>;
-		public var m_outputSegmentIsEditable:Boolean = true;
+		public var m_innerSegmentIsEditable:Boolean = true;
 		
 		//save start and end points, so we can remake line
 		public var m_startPoint:Point;
@@ -46,7 +45,7 @@ package scenes.game.display
 		public var hasChanged:Boolean;
 		public var restoreEdge:Boolean;
 		
-		private var m_innerBoxSegment:InnerBoxSegment;
+		public var m_innerBoxSegment:InnerBoxSegment;
 		private var m_savedInnerBoxSegmentLocation:Point;
 		
 		public var m_jointPoints:Array;
@@ -108,10 +107,12 @@ package scenes.game.display
 			m_isEditable = graphEdge.editable;
 			m_useExistingPoints = useExistingPoints;
 			
-			m_outputSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : m_isEditable;
+			m_innerSegmentBorderIsWide = toBox ? (m_toComponent as GameNodeBase).isWide() : (m_fromComponent as GameNodeBase).isWide();
+			m_innerSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : (m_fromComponent as GameNodeBase).isEditable();
 			// Also even if box is editable, if contains a pinch point then make editable = false
 			if (toBox && graphEdge.has_pinch && !edgeIsCopy) {
-				m_outputSegmentIsEditable = false;
+				m_innerSegmentIsEditable = false;
+				m_innerSegmentBorderIsWide = false;
 			}
 			
 			//mark these as undefined
@@ -128,7 +129,7 @@ package scenes.game.display
 			var boxHeight:Number;
 			var startingCircle:Boolean = false;
 			if (toBox) {
-				boxHeight =(m_toComponent as GameNode).m_boundingBox.height;
+				boxHeight = (m_toComponent as GameNode).m_boundingBox.height;
 				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
 			} else {
 				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
@@ -140,18 +141,33 @@ package scenes.game.display
 						break;
 				}
 			}
-			if(fromComponent is GameNode)
+			if (fromComponent is GameNode) {
 				m_extensionEdge = (fromComponent as GameNode).getExtensionEdge(_fromPortID, true);
-			else
+			} else {
 				m_extensionEdge = (toComponent as GameNode).getExtensionEdge(_toPortID, false);
-			if(m_extensionEdge)
+			}
+			if (m_extensionEdge) {
 				m_extensionEdge.m_extensionEdge = this;
+				if (toBox) {
+					m_extensionEdge.m_innerSegmentIsEditable = m_innerSegmentIsEditable;
+					m_extensionEdge.m_innerSegmentBorderIsWide = m_innerSegmentBorderIsWide;
+					if (m_extensionEdge.m_innerBoxSegment) {
+						m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
+					}
+				} else {
+					m_innerSegmentIsEditable = m_extensionEdge.m_innerSegmentIsEditable;
+					m_innerSegmentBorderIsWide = m_extensionEdge.m_innerSegmentBorderIsWide;
+				}
+			}
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, startingCircle);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, startingCircle);
 			
 			m_boundingBox = _boundingBox;
 			
 			if (isTopOfEdge()) {
+				graphEdge.addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				// Also need to update the inner box segment when the exit ball type changes
+				graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 				if (!edgeIsCopy) {
 					// If normal edge leading into box, mark trouble points
 					listenToEdgeForTroublePoints(graphEdge);
@@ -159,8 +175,10 @@ package scenes.game.display
 				// If edge is copy and top of edge (an edge leading from an external SUBBOARD box to a joint)
 				// then listen for trouble points at the actual edge which will leading from the joint above
 				// to the actual edge-set box
+			} else {
+				graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 			}
-			// For edges leading into SUBNETWORK (the lower CPY lines) or argument edges of MAPGET, the edge.to_port could
+			// For edges leading into SUBNETWORK (the lower CPY lines) the edge.to_port could
 			// have trouble points
 			switch (graphEdge.to_node.kind) {
 				case NodeTypes.SUBBOARD:
@@ -171,16 +189,7 @@ package scenes.game.display
 						listenToPortForTroublePoints(graphEdge.to_port);
 					}
 					break;
-				case NodeTypes.GET:
-					if ((graphEdge.to_node as MapGetNode).argumentEdge == graphEdge) {
-						// The only other case where we are generating trouble points at a port is if the argument edge
-						// of a MAPGET has a wide ball and the key edge is narrow, so listen to trouble points for this
-						// case
-						listenToPortForTroublePoints(graphEdge.to_port);
-					}
-					break;
 			}
-			graphEdge.addEventListener(getBallTypeChangeEvent(), onBallTypeChange);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			
@@ -235,7 +244,6 @@ package scenes.game.display
 		override public function updateSize():void
 		{
 			var newIsWide:Boolean = m_isWide;
-			var newOutgoingIsWide:Boolean = m_outgoingIsWide;
 			
 			if (isTopOfEdge()) {
 				newIsWide = isBallWide(graphEdge.enter_ball_type);
@@ -243,48 +251,24 @@ package scenes.game.display
 				newIsWide = isBallWide(graphEdge.exit_ball_type);
 			}
 			
-			if (toBox) {
-				// Restrict width on lines leading to narrow boxes or pinched edges
-				if (graphEdge.has_pinch) {
-					newOutgoingIsWide = false;
-				} else {
-					newOutgoingIsWide = m_toComponent.isWide();
-				}
-			} else {
-				// Restrict width ONLY for MAPGET node case where argument edge is restricted by key edge width
-				if (graphEdge.to_node.kind == NodeTypes.GET) {
-					if (graphEdge == (graphEdge.to_node as MapGetNode).argumentEdge) {
-						newOutgoingIsWide = (graphEdge.to_node as MapGetNode).keyEdge.is_wide;
-					} else {
-						newOutgoingIsWide = newIsWide;
-					}
-				} else {
-					// Otherwise the line should end with the same width as the rest of the line
-					newOutgoingIsWide = newIsWide;
-				}
-			}
-			
 			// Update line width
 			if (m_isWide != newIsWide) {
-				setIncomingWidth(newIsWide);
+				setWidths(newIsWide);
 				if (toJoint) {
 					m_innerBoxSegment.setIsWide(m_isWide);
 					m_innerBoxSegment.draw();
 				}
 			}
-			// Update end of line indicating width restrictions
-			if (m_outgoingIsWide != newOutgoingIsWide) {
-				setOutgoingWidth(newOutgoingIsWide);
-			}
-			// Update inner (black) line width to match exit_ball_type
+			
+			// Update inner line width to match exit_ball_type
 			if (toBox) {
 				var newExitIsWide:Boolean = isBallWide(graphEdge.exit_ball_type);
 				if (edgeIsCopy) {
-					newExitIsWide = newOutgoingIsWide;
+					newExitIsWide = newIsWide;
 				}
 				if (m_innerBoxSegment.isWide() != newExitIsWide) {
 					m_innerBoxSegment.setIsWide(newExitIsWide);
-					m_innerBoxSegment.draw();
+					m_innerBoxSegment.m_isDirty = true;
 				}
 			}
 		}
@@ -327,7 +311,8 @@ package scenes.game.display
 			}
 			m_listeningToPorts = new Vector.<Port>();
 			if (graphEdge) {
-				graphEdge.removeEventListener(getBallTypeChangeEvent(), onBallTypeChange);
+				graphEdge.removeEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.removeEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 			}
 			super.dispose();
 		}
@@ -536,19 +521,14 @@ package scenes.game.display
 				segment.m_isDirty = true;
 			}
 			
-			m_innerBoxSegment.edgeSegment.isHoverOn = turnHoverOn;
-			m_innerBoxSegment.edgeSegment.m_isDirty = true;
+			m_innerBoxSegment.isHoverOn = turnHoverOn;
+			m_innerBoxSegment.m_isDirty = true;
 			
 			if(turnHoverOn)
 			{
 				//reorder to place on top
 				parent.setChildIndex(this, parent.numChildren);
 			}
-		}
-		
-		private function getBallTypeChangeEvent():String
-		{
-			return isTopOfEdge() ? BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED : BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED;
 		}
 		
 		//called when a segment is double-clicked on
@@ -582,8 +562,7 @@ package scenes.game.display
 			m_edgeJoints = new Vector.<GameEdgeJoint>;
 			
 			//create start joint, and then create rest when we create connecting segment
-			m_startJoint = new GameEdgeJoint(0, m_isWide);
-			m_startJoint.m_isEditable = m_isEditable;
+			m_startJoint = new GameEdgeJoint(0, m_isWide, m_isEditable);
 			m_edgeJoints.push(m_startJoint);
 			
 			//now create segments and joints for second position to n
@@ -600,11 +579,7 @@ package scenes.game.display
 				if(index == 1)
 					isNodeExtensionSegment = true;
 					
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, isLastSegment ? m_outgoingIsWide : m_isWide);
-				if(!isLastSegment)
-					segment.m_isEditable = m_isEditable;
-				else
-					segment.m_isEditable = m_outputSegmentIsEditable;
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, m_isEditable);
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -614,19 +589,15 @@ package scenes.game.display
 				var joint:GameEdgeJoint;
 				if(index+1 != numJoints)
 				{
-					joint = new GameEdgeJoint(jointType, m_isWide);
-					joint.m_isEditable = m_isEditable;
+					joint = new GameEdgeJoint(jointType, m_isWide, m_isEditable);
 					m_edgeJoints.push(joint);
 					if (jointType == GameEdgeJoint.MARKER_JOINT) {
 						m_markerJoint = joint;
 					}
 				}
 			}
-			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_outgoingIsWide);
+			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_isWide, m_isEditable);
 			m_edgeJoints.push(m_endJoint);
-			
-			m_endJoint.m_isEditable = m_outputSegmentIsEditable;
-
 		}
 		
 		public function positionChildren():void
@@ -641,7 +612,14 @@ package scenes.game.display
 				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
 			}
 			m_innerBoxSegment.interiorPt = innerBoxPt;
-			m_innerBoxSegment.draw();
+			if (toBox) {
+				m_innerBoxSegment.m_isEditable = m_innerSegmentIsEditable;
+				if (m_extensionEdge) {
+					m_extensionEdge.m_innerBoxSegment.m_isEditable = m_innerSegmentIsEditable;
+					m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
+				}
+			}
+			m_innerBoxSegment.m_isDirty = true;
 			addChild(m_innerBoxSegment);
 			var previousSegment:GameEdgeSegment = null;
 			//move each segment to where they should be, and add them, then add front joint
@@ -669,8 +647,9 @@ package scenes.game.display
 					errorContainer.x = this.x + joint.x;
 					errorContainer.y = this.y + joint.y;
 				}
-				
-				addChildAt(joint, 0);
+				if (segIndex > 0) {
+					addChildAt(joint, 0);
+				}
 			}
 			
 			//deal with last joint special, since it's at the end of a segment
@@ -678,7 +657,7 @@ package scenes.game.display
 			//add joint at end
 			lastJoint.x = m_jointPoints[m_edgeSegments.length].x;
 			lastJoint.y = m_jointPoints[m_edgeSegments.length].y;
-			addChildAt(lastJoint, 0);
+			//addChildAt(lastJoint, 0);
 		}
 		
 		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
@@ -733,22 +712,22 @@ package scenes.game.display
 					{
 						m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
 						segmentIndex++;
-						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
+						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, m_isEditable);
 						m_edgeJoints.splice(1, 0, newJoint);
 						newJoint.isHoverOn = true;
-	
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
+						
+						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, m_isEditable);
 						this.m_edgeSegments.splice(1,0,newSegment);	
 						newSegment.isHoverOn = true;
 					}
 					if(segmentIndex+3 == m_jointPoints.length)
 					{
 						m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-					var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide);
+						var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, m_isEditable);
 						m_edgeJoints.splice(-2, 0, newEndJoint);
 						newEndJoint.isHoverOn = true;
 						
-					var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide);
+						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, m_isEditable);
 						this.m_edgeSegments.splice(-1,0,newEndSegment);	
 						newEndSegment.isHoverOn = true;
 					}
@@ -1078,8 +1057,8 @@ package scenes.game.display
 				return 1;
 		}
 		
-		// set widths of all edge segments other than the last based on ball size from Simulator
-		private function setIncomingWidth(_isWide:Boolean):void
+		// set widths of all edge segments based on ball size from Simulator
+		private function setWidths(_isWide:Boolean):void
 		{
 			if (m_isWide == _isWide) {
 				return;
@@ -1087,7 +1066,7 @@ package scenes.game.display
 			m_isWide = _isWide;
 			if (m_edgeSegments != null)
 			{
-				for(var segIndex:int = 0; segIndex<m_edgeSegments.length-1; segIndex++)
+				for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 				{
 					var segment:GameEdgeSegment = m_edgeSegments[segIndex];
 					if(segment.isWide() != _isWide)
@@ -1099,7 +1078,7 @@ package scenes.game.display
 			}
 			if (m_edgeJoints != null)
 			{
-				for(var jointIndex:int = 0; jointIndex<this.m_edgeJoints.length-1; jointIndex++)
+				for(var jointIndex:int = 0; jointIndex<this.m_edgeJoints.length; jointIndex++)
 				{
 					var joint:GameEdgeJoint = m_edgeJoints[jointIndex];
 					if(joint.isWide() != _isWide)
@@ -1111,31 +1090,17 @@ package scenes.game.display
 			}
 		}
 		
-		//set width of final edge segment indicating width of box port (or restriction at argument edge of MAPGET)
-		private function setOutgoingWidth(_isWide:Boolean):void
+		//set width of innersegment 
+		public function setInnerSegmentBorderWidth(_isWide:Boolean):void
 		{
-			if (m_outgoingIsWide == _isWide) {
+			if (m_innerSegmentBorderIsWide == _isWide) {
 				return;
 			}
-			m_outgoingIsWide = _isWide;
-			if(m_edgeSegments != null)
-			{
-				var segment:GameEdgeSegment = m_edgeSegments[m_edgeSegments.length-1];
-				if(segment.isWide() != _isWide)
-				{
-					segment.setIsWide(_isWide);
-					segment.m_isDirty = true;
-				}
-			}
+			m_innerSegmentBorderIsWide = _isWide;
 			
-			if(m_edgeJoints != null)
+			if(m_innerBoxSegment != null)
 			{
-				var joint:GameEdgeJoint = m_edgeJoints[m_edgeJoints.length-1];
-				if(joint.isWide() != _isWide)
-				{
-					joint.setIsWide(_isWide);
-					joint.m_isDirty = true;
-				}
+				m_innerBoxSegment.updateBorderWidth(_isWide);
 			}
 		}
 	}
@@ -1147,42 +1112,87 @@ import scenes.game.display.GameComponent;
 import scenes.game.display.GameEdgeContainer;
 import scenes.game.display.GameEdgeJoint;
 import scenes.game.display.GameEdgeSegment;
+import starling.display.Quad;
+import starling.events.EnterFrameEvent;
+import starling.events.Event;
 
 class InnerBoxSegment extends GameComponent
 {
 	private static var id:int = 0;
 	public var innerCircleJoint:GameEdgeJoint;
 	public var edgeSegment:GameEdgeSegment;
+	public var edgeSegmentOutline:Quad;
 	public var interiorPt:Point;
 	private var m_dir:String;
 	private var m_height:Number;
 	private var m_createStartingCircle:Boolean;
+	private var m_borderWide:Boolean;
+	private static const BORDER_SIZE:Number = 0.02 * Constants.GAME_SCALE;
 	
-	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, createStartingCircle:Boolean)
+	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createStartingCircle:Boolean)
 	{
 		super("IS" + id++);
 		interiorPt = _interiorPt;
 		m_height = height;
 		m_dir = dir;
 		m_isWide = isWide;
+		m_borderWide = borderIsWide;
+		m_isEditable = isEditable;
 		m_createStartingCircle = createStartingCircle;
-		
-		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide);
-		edgeSegment.forceColor(0x0);
+		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
+		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide, m_isEditable);
 		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 		if (createStartingCircle) {
-			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide);
-			innerCircleJoint.forceColor(0x0);
+			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable);
 		}
 		draw();
+		addChild(edgeSegmentOutline);
 		addChild(edgeSegment);
 		if (innerCircleJoint) {
-			addChildAt(innerCircleJoint, 0);
+			addChild(innerCircleJoint);
 		}
+		m_isDirty = false;
+		addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+	}
+	
+	private function getBorderWidth():Number
+	{
+		return 2 * BORDER_SIZE + (m_borderWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH);
+	}
+	
+	private function getBorderColor():uint
+	{
+		if (m_isEditable) {
+			return m_isWide ? GameComponent.WIDE_COLOR_BORDER : GameComponent.NARROW_COLOR_BORDER;
+		} else {
+			return m_isWide ? GameComponent.UNADJUSTABLE_WIDE_COLOR_BORDER : GameComponent.UNADJUSTABLE_NARROW_COLOR_BORDER;
+		}
+	}
+	
+	private function onEnterFrame(event:Event):void
+	{
+		if(m_isDirty)
+		{
+			draw();
+			m_isDirty = false;
+		}
+	}
+	
+	public function updateBorderWidth(_isWide:Boolean):void
+	{
+		if (m_borderWide == _isWide) {
+			return;
+		}
+		if (!m_isEditable) {
+			return;
+		}
+		m_borderWide = _isWide;
+		m_isDirty = true;
 	}
 	
 	public function draw():void
 	{
+		unflatten();
 		if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
 			edgeSegment.x = interiorPt.x;
 			edgeSegment.y = interiorPt.y - m_height;
@@ -1190,6 +1200,15 @@ class InnerBoxSegment extends GameComponent
 			edgeSegment.x = interiorPt.x;
 			edgeSegment.y = interiorPt.y;
 		}
+		edgeSegment.isHoverOn = isHoverOn;
+		if (edgeSegmentOutline.width != getBorderWidth()) {
+			edgeSegmentOutline.width = getBorderWidth();
+		}
+		if (edgeSegmentOutline.color != getBorderColor()) {
+			edgeSegmentOutline.color = getBorderColor();
+		}
+		edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0;
+		edgeSegmentOutline.y = edgeSegment.y;
 		edgeSegment.setIsWide(m_isWide);
 		edgeSegment.draw();
 		if (innerCircleJoint) {
@@ -1198,6 +1217,7 @@ class InnerBoxSegment extends GameComponent
 			innerCircleJoint.setIsWide(m_isWide);
 			innerCircleJoint.draw();
 		}
+		flatten();
 	}
 	
 	override public function dispose():void
@@ -1207,6 +1227,9 @@ class InnerBoxSegment extends GameComponent
 		}
 		if (innerCircleJoint) {
 			innerCircleJoint.removeFromParent(true);
+		}
+		if (hasEventListener(Event.ENTER_FRAME)) {
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		super.dispose();
 	}

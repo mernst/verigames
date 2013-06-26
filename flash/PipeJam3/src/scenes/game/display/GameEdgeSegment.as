@@ -45,7 +45,7 @@
 			ARROW_TEXT.repeat = true;
 		}
 		
-		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
 		{
 			super("");
 			m_isWide = _isWide;
@@ -56,8 +56,7 @@
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
 			
-			//default to true
-			m_isEditable = true;
+			m_isEditable = _isEditable;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);

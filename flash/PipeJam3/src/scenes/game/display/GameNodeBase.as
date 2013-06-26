@@ -2,8 +2,6 @@ package scenes.game.display
 {
 	import display.NineSliceBatch;
 	import events.EdgeSetChangeEvent;
-	import graph.MapGetNode;
-	import graph.NodeTypes;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -33,10 +31,6 @@ package scenes.game.display
 		
 		protected static var WIDTH_CHANGE:String = "width_change";
 		
-		// Used to handle width change events for Value edge of MapGet which will affect the constraint
-		// put on the argument exit_ball. Null if 
-		private var m_outgoingMapGetKeyEdgeContainers:Vector.<GameEdgeContainer>;
-		
 		public function GameNodeBase(_layoutXML:XML)
 		{
 			super(_layoutXML.@id);
@@ -51,8 +45,6 @@ package scenes.game.display
 			m_outgoingEdges = new Vector.<GameEdgeContainer>;
 			m_incomingEdges = new Vector.<GameEdgeContainer>;
 			m_PortToEdgeArray = new Array;
-			
-			m_outgoingMapGetKeyEdgeContainers = new Vector.<GameEdgeContainer>;
 			
 			m_gameEdges = new Vector.<GameEdgeContainer>;
 			
@@ -238,19 +230,13 @@ package scenes.game.display
 			// if we properly mark them dirty first)
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
 			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
-				iedge.updateSize(); // this will check if necessary, no check needed here
+				iedge.updateSize();
+				iedge.setInnerSegmentBorderWidth(m_isWide);
 			}
-			for each (var vedge:GameEdgeContainer in m_outgoingMapGetKeyEdgeContainers) {
-				// If we changed the width of this value edge, propagate the change to the associated
-				// argument edge containers
-				var mapJoint:GameJointNode = vedge.m_toComponent as GameJointNode;
-				for each (var imapedge:GameEdgeContainer in mapJoint.m_incomingEdges) {
-					var mapget:MapGetNode = imapedge.graphEdge.to_node as MapGetNode;
-					if (imapedge.graphEdge == mapget.argumentEdge) {
-						imapedge.updateSize();
-						break;
-					}
-				}
+			// May need to redraw inner edges
+			for each (var oedge:GameEdgeContainer in m_outgoingEdges) {
+				oedge.updateSize();
+				oedge.setInnerSegmentBorderWidth(m_isWide);
 			}
 		}
 		
@@ -305,11 +291,6 @@ package scenes.game.display
 		{
 			if(m_outgoingEdges.indexOf(edge) == -1) {
 				m_outgoingEdges.push(edge);
-				if (edge.graphEdge.to_node.kind == NodeTypes.GET) {
-					if (edge.graphEdge == (edge.graphEdge.to_node as MapGetNode).keyEdge) {
-						m_outgoingMapGetKeyEdgeContainers.push(edge);
-					}
-				}
 			}
 			
 			//I want the edges to be in ascending order according to x position, so do that here

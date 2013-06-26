@@ -1,8 +1,10 @@
 package scenes.game.display
 {
-	import display.NineSliceBatch;
-	
+	import assets.AssetInterface;
 	import scenes.BaseComponent;
+	import starling.display.Image;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
@@ -35,7 +37,7 @@ package scenes.game.display
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
 		
-		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false)
+		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false)
 		{
 			super("");
 			m_isWide = _isWide;
@@ -43,8 +45,7 @@ package scenes.game.display
 			m_originalPoint = new Point;
 			m_isDirty = true;
 			
-			//default to true
-			m_isEditable = true;
+			m_isEditable = _isEditable;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			if (jointType == INNER_CIRCLE_JOINT) {
@@ -129,15 +130,9 @@ package scenes.game.display
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int = getColor();
-			var err:Boolean = hasError();
 			
-			var roundRadius:Number;
 			if (m_jointType == INNER_CIRCLE_JOINT) {
 				lineSize *= 1.5;
-				roundRadius = lineSize / 3.0;
-			} else if (err) {
-				lineSize = GameEdgeContainer.ERROR_WIDTH;
-				roundRadius = lineSize / 2.0;
 			}
 			
 			if (m_quad) {
@@ -148,11 +143,28 @@ package scenes.game.display
 				m_hoverQuad.removeFromParent(true);
 			}
 			
-			var isRound:Boolean = ((m_jointType == INNER_CIRCLE_JOINT) || err);
-			
+			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
 			
 			if (isRound) {
-				m_quad = new NineSliceBatch(lineSize, lineSize, roundRadius, roundRadius, "Game", "RoundRectBlackPNG", "Box9SliceXML", "Box");
+				var assetName:String;
+				if(m_isEditable == true)
+				{
+					if (m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
+				}
+				else //not adjustable
+				{
+					if(m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
+				}
+				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+				var startTexture:Texture = atlas.getTexture(assetName);
+				m_quad = new Image(startTexture);
+				m_quad.width = m_quad.height = lineSize;
 			} else {
 				m_quad = new Quad(lineSize, lineSize, color);
 				if(isHoverOn)
@@ -174,11 +186,6 @@ package scenes.game.display
 //			txt.x = 1;
 //			m_shape.addChild(txt);
 //			addChild(m_shape);
-		}
-		
-		override public function hasError():Boolean
-		{
-			return m_hasError;
 		}
 		
 		public function onEnterFrame(event:Event):void

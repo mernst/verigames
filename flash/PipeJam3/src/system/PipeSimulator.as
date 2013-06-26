@@ -551,15 +551,6 @@ package system
 						if ((node as MapGetNode).valueEdge == edge) {
 							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
 							queue.push(node.outgoing_ports[0].edge); //enqueue
-						} else if ((edge == (node as MapGetNode).argumentEdge) && !(node as MapGetNode).keyEdge.is_wide) {
-							// Argument is restricted by width of key, if key is narrow and argument has wide ball, add troublePoint
-							switch (edge.exit_ball_type) {
-								case Edge.BALL_TYPE_WIDE:
-								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									break;
-							}
-							// DON'T enqueue outgoing edge, this will be done at the valueEdge (see above)
 						}
 					}
 					break;

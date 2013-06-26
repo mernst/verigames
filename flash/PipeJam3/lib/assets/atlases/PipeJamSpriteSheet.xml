@@ -10,7 +10,7 @@
 	<SubTexture name="GrayDarkBoxBottomLeft"  x="2"   y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayDarkBoxBottom"      x="66"  y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayDarkBoxBottomRight" x="130" y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="GrayDarkStart"          x="780" y="124" width="36" height="36" frameX="0" frameY="0" frameWidth="36" frameHeight="36"/>
+	<SubTexture name="GrayDarkStart"          x="779" y="123" width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="GrayDarkEnd"            x="826" y="140" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="GrayDarkPlug"           x="861" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
 	
@@ -24,7 +24,7 @@
 	<SubTexture name="GrayLightBoxBottomLeft"  x="2"   y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayLightBoxBottom"      x="66"  y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayLightBoxBottomRight" x="130" y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="GrayLightStart"          x="787" y="60"  width="22" height="22" frameX="0" frameY="0" frameWidth="22" frameHeight="22"/>
+	<SubTexture name="GrayLightStart"          x="786" y="59"  width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="GrayLightEnd"            x="826" y="102" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="GrayLightPlug"           x="912" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>
 	
@@ -38,7 +38,7 @@
 	<SubTexture name="BlueDarkBoxBottomLeft"  x="196" y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueDarkBoxBottom"      x="260" y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueDarkBoxBottomRight" x="324" y="158" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="BlueDarkStart"          x="780" y="85"  width="36" height="36" frameX="0" frameY="0" frameWidth="36" frameHeight="36"/>
+	<SubTexture name="BlueDarkStart"          x="779" y="84"  width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="BlueDarkEnd"            x="826" y="159" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="BlueDarkPlug"           x="827" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
 	
@@ -52,7 +52,7 @@
 	<SubTexture name="BlueLightBoxBottomLeft"  x="196" y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueLightBoxBottom"      x="260" y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueLightBoxBottomRight" x="324" y="352" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="BlueLightStart"          x="787" y="35"  width="22" height="22" frameX="0" frameY="0" frameWidth="22" frameHeight="22"/>
+	<SubTexture name="BlueLightStart"          x="786" y="34"  width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="BlueLightEnd"            x="826" y="121" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="BlueLightPlug"           x="894" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>
 	
