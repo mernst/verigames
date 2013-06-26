@@ -382,11 +382,13 @@ package scenes.game.display
 					gameNode.m_isWide = constraintIsWide;
 				} else {
 					if (gameNode.isWide() != constraintIsWide) {
-						throw new Error("Mismatch between constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
+						gameNode.m_isWide = constraintIsWide;
+						trace(gameNode.m_id, "Mismatch between constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
-					throw new Error("Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
+					gameNode.m_isEditable = constraintIsEditable;
+					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
 		}
@@ -606,9 +608,12 @@ package scenes.game.display
 		public function onSubmitScore(event:starling.events.Event):void
 		{
 			updateConstraintXML();
-			m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
-			var currentScore:int = 300;
-			LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
+			if(PipeJam3.RELEASE_BUILD)
+			{
+				m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
+				var currentScore:int = 300;
+				LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
+			}
 		}
 		
 		public function onSaveLocally(event:starling.events.Event):void
@@ -768,9 +773,14 @@ package scenes.game.display
 				var width:Boolean = node.m_isWide;
 				var widthString:String = (width == true) ? "wide" : "narrow";
 				
+				//changed only in editor mode
+				var editable:Boolean = node.m_isEditable;
+				var editableString:String = (editable == true) ? "true" : "false";
+				
 				var child:XML = <box/>;
 				child.@id = id;
 				child.@width = widthString;
+				child.@editable = editableString;
 					
 				m_levelConstraintsXML.appendChild(child);
 			}

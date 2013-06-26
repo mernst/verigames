@@ -93,20 +93,26 @@ package scenes.splashscreen
 			var playButtonClick:Texture = AssetInterface.getTexture("Menu", "PlayButtonClickClass");
 			
 			//change scale to get buttons to (mostly) look right. Should figure out why they look wrong and fix that...
-			scaleX = .5;
-			scaleY = .175;
+			scaleX = .25;
+			scaleY = .25;
 			
 			play_button = new feathers.controls.Button();
 			play_button.label = " Play ";
 			play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-			play_button.x = 700;
-			play_button.y = 1100;
+			play_button.x = 1300;
+			play_button.y = 950;
+			
+			play_button.width = 400;
+			play_button.height = 150;
 			
 			signin_button = new feathers.controls.Button();
 			signin_button.label = " Log In ";
 			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = 700;
-			signin_button.y = 1100;
+			signin_button.x = 1300;
+			signin_button.y = 950;
+			
+			signin_button.width = 400;
+			signin_button.height = 150;
 
 			
 			if(PipeJamGame.PLAYER_LOGGED_IN || !PipeJam3.RELEASE_BUILD)
@@ -234,8 +240,7 @@ package scenes.splashscreen
 			//we are done, show everything
 			// Creating the dataprovider
 			var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
-			selectLevelDialog.levelListCollection = matchCollection;
-			selectLevelDialog.matchArrayMetadata = matchArrayMetadata;
+			selectLevelDialog.setDialogInfo(matchCollection, matchArrayMetadata);
 			
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 			
