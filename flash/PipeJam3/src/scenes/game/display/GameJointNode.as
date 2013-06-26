@@ -21,6 +21,7 @@ package scenes.game.display
 			super(_layoutXML);
 			m_node = _node;
 			m_port = _port;
+			updateSize();
 			draw();
 		}
 		
@@ -38,7 +39,7 @@ package scenes.game.display
 		
 		override public function updateSize():void
 		{
-			// no concept of size for joints
+			// joints have no concept of width at this point
 		}
 		
 		override public function isWide():Boolean

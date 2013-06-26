@@ -1,9 +1,23 @@
 package scenes.game.components
 {
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
+	import display.ShimmeringText;
+	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	import scenes.game.display.World;
+	import scenes.game.PipeJamGameScene;
+	import scenes.login.HTTPCookies;
+	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Button;
@@ -16,14 +30,6 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import display.ShimmeringText;
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -44,7 +50,7 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
-		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
+		private static const MAX_SCALE:Number = 500.0 / Constants.GAME_SCALE;
 		
 		public static const MOUSE_WHEEL:String = "mouse_wheel";
 		public static const MOUSE_DRAG:String = "mouse_drag";
@@ -147,6 +153,7 @@ package scenes.game.components
 						if(touches[0].target is starling.display.Image || touches[0].target is starling.display.Image)
 						{
 							var delta:Point = touches[0].getMovement(parent);
+							var cp:Point = touches[0].getLocation(this.content);
 							var viewRect:Rectangle = getViewInContentSpace();
 							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
@@ -268,15 +275,8 @@ package scenes.game.components
 		
 		private function moveContent(newX:Number, newY:Number):void
 		{
-			var moveBounds:Rectangle = new Rectangle(content.x + content.scaleX * m_currentLevel.m_boundingBox.x,
-			                                        content.y + content.scaleY * m_currentLevel.m_boundingBox.y,
-													content.scaleX * m_currentLevel.m_boundingBox.width,
-													content.scaleY * m_currentLevel.m_boundingBox.height);
-			moveBounds.x -= content.x;
-			moveBounds.y -= content.y;
-			
-			newX = XMath.clamp(newX, moveBounds.x / content.scaleX, (moveBounds.x + moveBounds.width) / content.scaleX);
-			newY = XMath.clamp(newY, moveBounds.y / content.scaleY, (moveBounds.y + moveBounds.height) / content.scaleY);
+			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
+			newY = XMath.clamp(newY,m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
 			
 			panTo(newX, newY);
 		}
@@ -314,6 +314,12 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
+		}
+		
+		//returns a point containing the content scale factors
+		public function getContentScale():Point
+		{
+			return new Point(content.scaleX, content.scaleY);
 		}
 		
 		private function getViewInContentSpace():Rectangle
@@ -430,6 +436,7 @@ package scenes.game.components
 		public function displayNextButton():void
 		{
 			if (!nextLevel_button) {
+				
 				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClass");
 				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClickClass");
 				
@@ -441,6 +448,10 @@ package scenes.game.components
 				nextLevel_button.y = HEIGHT - nextLevel_button.height - 5;
 			}
 			addChild(nextLevel_button);
+			
+			//assume we are in the tutorial, and we just finished a level
+			PipeJamGameScene.numTutorialLevelsCompleted++;
+			HTTPCookies.setCookie("tutorialLevelCompleted", PipeJamGameScene.numTutorialLevelsCompleted);
 		}
 		
 		public function hideNextButton():void
@@ -458,6 +469,11 @@ package scenes.game.components
 		public function displayTextMetadata(textParent:XML):void
 		{
 		
+		}
+		
+		public function moveToPoint(percentPoint:Point):void
+		{
+			moveContent(percentPoint.x* m_currentLevel.m_boundingBox.width/scaleX, percentPoint.y * m_currentLevel.m_boundingBox.height/scaleY);
 		}
 		
 		/**

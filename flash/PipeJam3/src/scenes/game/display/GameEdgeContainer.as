@@ -396,9 +396,9 @@ package scenes.game.display
 		{
 			/*
 			if (errorMarker == null) {
-				errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
-				errorMarker.x = -ERROR_WIDTH / 2;
-				errorMarker.y = -ERROR_WIDTH / 2;
+			errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
+			errorMarker.x = -ERROR_WIDTH / 2;
+			errorMarker.y = -ERROR_WIDTH / 2;
 			}
 			errorContainer.addChild(errorMarker);
 			*/
@@ -472,7 +472,7 @@ package scenes.game.display
 			m_savedEndPoint = m_endPoint.clone();
 			
 			for each(var pt:Point in m_jointPoints)
-				m_savedJointPoints.push(pt.clone());
+			m_savedJointPoints.push(pt.clone());
 			
 			m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
 		}
@@ -480,7 +480,7 @@ package scenes.game.display
 		private function onRestoreLocation(event:Event):void
 		{
 			restoreLocation();
-						
+			
 			if(m_extensionEdge)
 				m_extensionEdge.restoreLocation();
 		}
@@ -578,7 +578,7 @@ package scenes.game.display
 				}
 				if(index == 1)
 					isNodeExtensionSegment = true;
-					
+				
 				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, m_isEditable);
 				m_edgeSegments.push(segment);
 				
@@ -691,7 +691,7 @@ package scenes.game.display
 				if(segment.parent is InnerBoxSegment)
 				{
 					rubberBandEdgeSegment(segment.updatePoint, segment);
-			//		rubberBandEdgeSegment(segment.updatePoint, (segment.parent as InnerBoxSegment).m_extensionEdge);
+					//		rubberBandEdgeSegment(segment.updatePoint, (segment.parent as InnerBoxSegment).m_extensionEdge);
 				}
 				else
 					rubberBandEdgeSegment(segment.updatePoint, segment);
@@ -744,23 +744,23 @@ package scenes.game.display
 					m_jointPoints[segmentIndex].x += deltaPoint.x;
 					m_jointPoints[segmentIndex+1].x += deltaPoint.x;
 				}
-	
+				
 				
 				
 				//check for any really short segments, and if found, remove them. Start at the end and work backwards
 				//don't do if we just added a segment
 				//!!Interesting idea, but there are flaws, in that you can now create diagonal lines
-	//			if(!m_recreateEdge)
-	//				for(var i:int = m_jointPoints.length - 2; i >= 0; i--)
-	//				{
-	//					trace(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y));
-	//					if(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y) < .1)
-	//					{
-	//						m_jointPoints.splice(i, 1);
-	//						m_recreateEdge = true;
-	//						trace("remove " + i); 
-	//					}
-	//				}
+				//			if(!m_recreateEdge)
+				//				for(var i:int = m_jointPoints.length - 2; i >= 0; i--)
+				//				{
+				//					trace(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y));
+				//					if(Math.abs(m_jointPoints[i].x-m_jointPoints[i+1].x) + Math.abs(m_jointPoints[i].y-m_jointPoints[i+1].y) < .1)
+				//					{
+				//						m_jointPoints.splice(i, 1);
+				//						m_recreateEdge = true;
+				//						trace("remove " + i); 
+				//					}
+				//				}
 				
 				positionChildren();
 				m_isDirty = true;
@@ -804,7 +804,7 @@ package scenes.game.display
 			var containerPt:Point = new Point(containerComponent.x,containerComponent.y);
 			var containerGlobalPt:Point = containerComponent.parent.localToGlobal(containerPt);						
 			var boundsGlobalPt:Point = containerComponent.parent.localToGlobal(new Point(containerComponent.x + containerComponent.width,
-																					containerComponent.y + containerComponent.height));
+				containerComponent.y + containerComponent.height));
 			var jointGlobalPt:Point = localToGlobal(jointPoint);	
 			
 			//make sure we are in bounds
@@ -894,32 +894,32 @@ package scenes.game.display
 			var xDistance:Number = m_jointPoints[NUM_JOINTS-2].x - m_jointPoints[1].x; 
 			var yDistance:Number = m_jointPoints[NUM_JOINTS-2].y - m_jointPoints[1].y;
 			setBottomWallOutputConnection(xDistance, yDistance);
-
+			
 		}
 		
 		private function setBottomWallOutputConnection(xDistance:Number, yDistance:Number):void
 		{
-//			var gStartPt:Point = localToGlobal(m_jointPoints[1]);
-//			var gEndPt:Point = localToGlobal(m_jointPoints[4]);
-//			var gToNodeLeftSide:Number = m_joint.x;
-//			var gToNodeRightSide:Number = m_joint.x+m_joint.width;
-//			var gToNodeTopSide:Number = m_joint.y;
-//			var gToNodeBottomSide:Number = m_joint.y+m_joint.height;
-//			var gFromNodeLeftSide:Number = m_node.x;
-//			var gFromNodeRightSide:Number = m_node.x+m_node.width;
-//			var gFromNodeTopSide:Number = m_node.y;
-//			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
-
-//			if(m_jointPoints[1].y > m_jointPoints[4].y)
+			//			var gStartPt:Point = localToGlobal(m_jointPoints[1]);
+			//			var gEndPt:Point = localToGlobal(m_jointPoints[4]);
+			//			var gToNodeLeftSide:Number = m_joint.x;
+			//			var gToNodeRightSide:Number = m_joint.x+m_joint.width;
+			//			var gToNodeTopSide:Number = m_joint.y;
+			//			var gToNodeBottomSide:Number = m_joint.y+m_joint.height;
+			//			var gFromNodeLeftSide:Number = m_node.x;
+			//			var gFromNodeRightSide:Number = m_node.x+m_node.width;
+			//			var gFromNodeTopSide:Number = m_node.y;
+			//			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
+			
+			//			if(m_jointPoints[1].y > m_jointPoints[4].y)
 			{
 				m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
 				m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[NUM_JOINTS-2].y);
 			}
-//			else
-//			{
-//				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
-//				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
-//			}
+			//			else
+			//			{
+			//				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
+			//				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
+			//			}
 		}
 		
 		override public function componentSelected(isSelected:Boolean):void
@@ -973,11 +973,11 @@ package scenes.game.display
 				{
 					//if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
 					//{
-						//joint.m_hasError = true;
+					//joint.m_hasError = true;
 					//}
 					//else
 					//{
-						//joint.m_hasError = false;
+					//joint.m_hasError = false;
 					//}
 					joint.m_isDirty = true;
 				}

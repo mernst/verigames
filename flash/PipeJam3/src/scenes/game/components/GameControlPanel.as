@@ -1,7 +1,20 @@
 package scenes.game.components
 {
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import starling.textures.TextureAtlas;
+	
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	import scenes.game.display.World;
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Button;
@@ -10,17 +23,6 @@ package scenes.game.components
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
-	
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -59,6 +61,8 @@ package scenes.game.components
 		/** Display the target score the player is looking to beat for the level */
 		private var m_targetScoreContainer:Sprite;
 		private var m_targetScoreTextfield:TextFieldWrapper;
+		
+		protected var conflictMap:ConflictMap;
 		
 		public function GameControlPanel()
 		{			
@@ -103,6 +107,13 @@ package scenes.game.components
 			m_menuButton.x = 4;
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
+			
+			conflictMap = new ConflictMap();
+			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
+			conflictMap.y = 2;
+			conflictMap.width = width-conflictMap.x - 2;
+			conflictMap.height = height-conflictMap.y - 2;
+			addChild(conflictMap);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -114,6 +125,12 @@ package scenes.game.components
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
+		}
+		
+		public function newLevelSelected(level:Level):void 
+		{
+			updateScore(level);
+			conflictMap.updateLevel(level);
 		}
 		
 		/**
@@ -336,5 +353,21 @@ package scenes.game.components
 //			//showNextWorldScreen();
 //		}
 
+		public function errorAdded(errorData:Object, level:Level):void
+		{
+			conflictMap.errorAdded(errorData, level);
+		}
+		
+		public function errorRemoved(errorData:Object):void
+		{
+			conflictMap.errorRemoved(errorData);
+		}
+		
+		public function errorMoved(errorData:Object):void
+		{
+			conflictMap.errorMoved(errorData as Sprite);
+		}
 	}
+	
+
 }

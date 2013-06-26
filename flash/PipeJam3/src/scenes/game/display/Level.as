@@ -113,6 +113,11 @@ package scenes.game.display
 		public static var SUBMIT_SCORE:String = "submit_score";
 		public static var SAVE_LOCALLY:String = "save_locally";
 		
+		public static var ERROR_ADDED:String = "error_added";
+		public static var ERROR_REMOVED:String = "error_removed";
+		public static var ERROR_MOVED:String = "error_moved";
+		public static var MOVE_TO_POINT:String = "move_to_point";
+		
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
 		//used when saving, as we need a parent graph element for the above level node
@@ -1203,10 +1208,10 @@ package scenes.game.display
 					}
 					if(uneditable)
 					{
-						for each(var comp:GameComponent in groupDictionary)
+						for each(var comp1:GameComponent in groupDictionary)
 						{
-							comp.hideComponent(comp.visible);
-							visitedNodes[comp.m_id] = comp;
+							comp1.hideComponent(comp.visible);
+							visitedNodes[comp1.m_id] = comp1;
 						}
 					}
 				}

@@ -6,12 +6,26 @@ package scenes.login
 	{
 		public static function getCookie(key:String):*
 		{
+			if (!ExternalInterface.available) {
+				return null;
+			}
 			return ExternalInterface.call("getCookie", key);
 		}
 		
 		public static function setCookie(key:String, val:*):void
 		{
+			if (!ExternalInterface.available) {
+				return;
+			}
 			ExternalInterface.call("setCookie", key, val);
+		}
+		
+		public static function displayAlert(str:String):void
+		{
+			if (!ExternalInterface.available) {
+				return;
+			}
+			ExternalInterface.call("alert", str);
 		}
 	}
 }

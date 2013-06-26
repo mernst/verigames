@@ -109,6 +109,9 @@ package assets
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
 		public static const Loading8Class:Class;
 		
+		[Embed(source="../../lib/assets/ConflictMapBackground.png")]
+		public static const ConflictMapBackgroundImageClass:Class;
+		
 		// Rounded rect corner
 		[Embed(source="../../lib/assets/corner.png")]
 		public static const CornerClass:Class;

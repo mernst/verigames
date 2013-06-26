@@ -7,7 +7,6 @@ package utils
 	import system.VerigameServerConstants;
 	import Game;
 	
-	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 
