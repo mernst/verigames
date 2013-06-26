@@ -2,6 +2,7 @@ package scenes.splashscreen
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.NineSliceButton;
 	
 	import display.NineSliceBatch;
 	
@@ -38,8 +39,8 @@ package scenes.splashscreen
 		
 		protected var play_button:feathers.controls.Button;
 		protected var signin_button:feathers.controls.Button;
-		protected var tutorial_button:starling.display.Button;
-		protected var demo_button:starling.display.Button;
+		protected var tutorial_button:NineSliceButton;
+		protected var demo_button:NineSliceButton;
 		
 		protected var loader:URLLoader;
 		protected var loginHelper:LoginHelper;
@@ -74,7 +75,7 @@ package scenes.splashscreen
 		//	play_button.x = (this.stage.stageWidth - play_button.width) / 2;
 		//	play_button.y = (this.stage.stageHeight - play_button.height) / 2;
 			var obj:Object =play_button.defaultLabelProperties;
-			obj.textFormat = new TextFormat("Arial",36, 0xffffff);
+			obj.textFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 36, 0xffffff);
 			play_button.defaultLabelProperties = obj;
 			signin_button.defaultLabelProperties = obj;
 
@@ -151,26 +152,16 @@ package scenes.splashscreen
 
 			if(!PipeJam3.RELEASE_BUILD)
 			{
-				var tutorialButtonUp:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClass");
-				var tutorialButtonClick:Texture = AssetInterface.getTexture("Menu", "TutorialButtonClickClass");
-				
-				tutorial_button = new starling.display.Button(tutorialButtonUp, "", tutorialButtonClick);
+				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 256, 96);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
-				tutorial_button.x = 0;
-				tutorial_button.y = 160;
-				tutorial_button.width *= .6;
-				tutorial_button.height *= .6;
+				tutorial_button.x = 16;
+				tutorial_button.y = 32;
 				m_mainMenu.addChild(tutorial_button);
 				
-				var demoButtonUp:Texture = AssetInterface.getTexture("Menu", "DemoButtonClass");
-				var demoButtonClick:Texture = AssetInterface.getTexture("Menu", "DemoButtonClickClass");
-				
-				demo_button = new starling.display.Button(demoButtonUp, "", demoButtonClick);
+				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 256, 96);
 				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
-				demo_button.x = 0;
-				demo_button.y = 210;
-				demo_button.width *= .6;
-				demo_button.height *= .6;
+				demo_button.x = 16;
+				demo_button.y = 312;
 				m_mainMenu.addChild(demo_button);
 			}
 		}

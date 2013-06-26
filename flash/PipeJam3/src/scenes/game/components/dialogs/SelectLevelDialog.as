@@ -1,5 +1,6 @@
 package scenes.game.components.dialogs
 {
+	import assets.AssetsFont;
 	import events.NavigationEvent;
 	
 	import feathers.controls.Button;
@@ -60,7 +61,7 @@ package scenes.game.components.dialogs
 			footer.y = height - footer.height;
 			footer.addChild( exitButton );
 			var obj:Object = exitButton.defaultLabelProperties;
-			obj.textFormat = new TextFormat("Arial",36, 0xffffff);
+			obj.textFormat = new TextFormat(AssetsFont.FONT_UBUNTU,36, 0xffffff);
 			exitButton.defaultLabelProperties = obj;
 			
 

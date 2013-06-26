@@ -2,6 +2,9 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.NineSliceButton;
+	import flash.text.TextFormat;
+	import starling.textures.TextureAtlas;
 	
 	import display.ShimmeringText;
 	
@@ -20,7 +23,6 @@ package scenes.game.components
 	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
-	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
@@ -41,7 +43,7 @@ package scenes.game.components
 		protected var m_currentLevel:Level;
 		protected var content:BaseComponent;
 		protected var currentMode:int;
-		protected var nextLevel_button:Button;
+		protected var nextLevelButton:NineSliceButton;
 		protected var m_levelTextFields:Vector.<ShimmeringText> = new Vector.<ShimmeringText>();
 		protected var m_backgroundImage:Image;
 		protected var m_border:Image;
@@ -435,19 +437,13 @@ package scenes.game.components
 		
 		public function displayNextButton():void
 		{
-			if (!nextLevel_button) {
-				
-				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClass");
-				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClickClass");
-				
-				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
-				nextLevel_button.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
-				nextLevel_button.width *= .5;
-				nextLevel_button.height *= .5;
-				nextLevel_button.x = WIDTH - nextLevel_button.width - 5;
-				nextLevel_button.y = HEIGHT - nextLevel_button.height - 5;
+			if (!nextLevelButton) {
+				nextLevelButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 42);
+				nextLevelButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
+				nextLevelButton.x = WIDTH - nextLevelButton.width - 5;
+				nextLevelButton.y = HEIGHT - nextLevelButton.height - 5;
 			}
-			addChild(nextLevel_button);
+			addChild(nextLevelButton);
 			
 			//assume we are in the tutorial, and we just finished a level
 			PipeJamGameScene.numTutorialLevelsCompleted++;
@@ -456,8 +452,8 @@ package scenes.game.components
 		
 		public function hideNextButton():void
 		{
-			if (nextLevel_button) {
-				nextLevel_button.removeFromParent();
+			if (nextLevelButton) {
+				nextLevelButton.removeFromParent();
 			}
 		}
 		
