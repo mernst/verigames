@@ -11,6 +11,7 @@ package scenes.game.display
 	import scenes.game.components.GridViewPanel;
 	import system.PipeSimulator;
 	import scenes.game.PipeJamGameScene;
+	import events.NavigationEvent;
 	
 	import flash.utils.Dictionary;
 	import starling.display.Button;
@@ -239,7 +240,14 @@ package scenes.game.display
 		private function onNextLevel(e:Event):void
 		{
 			if(PipeJamGameScene.inTutorial)
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted  % levels.length; //modulo just so we don't crash, currently...
+			{
+				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(currentLevelNumber >= levels.length)
+				{
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen", true));
+					return;
+				}
+			}
 			else
 				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 			selectLevel(levels[currentLevelNumber]);

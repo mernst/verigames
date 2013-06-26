@@ -22,6 +22,7 @@ package scenes.game.components.dialogs
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import scenes.splashscreen.SplashScreenMenuBox;
 	
 	public class SelectLevelDialog extends CustomScreen
 	{
@@ -30,10 +31,12 @@ package scenes.game.components.dialogs
 		protected var levelList:List = null;
 		
 		protected var exitButton:Button;
+		protected var dialogParent:SplashScreenMenuBox;
 		
-		public function SelectLevelDialog()
+		public function SelectLevelDialog(_dialogParent:SplashScreenMenuBox)
 		{
 			super();
+			dialogParent = _dialogParent;
 		}
 		
 		//runs once when screen is first added to the stage.
@@ -98,9 +101,9 @@ package scenes.game.components.dialogs
 		
 		public function setDialogInfo(_levelListCollection:ListCollection, _matchArrayMetadata:Array):void
 		{
-		//	levelListCollection = _levelListCollection;
+			levelListCollection = _levelListCollection;
 			matchArrayMetadata = _matchArrayMetadata;
-	//		levelList.dataProvider = levelListCollection;
+			levelList.dataProvider = levelListCollection;
 		}
 		
 		protected function onLevelSelected(e:starling.events.Event):void
@@ -114,6 +117,7 @@ package scenes.game.components.dialogs
 		{
 		//	m_mainMenu.visible = true;
 			parent.removeChild(this);
+			dialogParent.showMainMenu(true);
 		}
 		
 		private function list_changeHandler(e:Event):void
