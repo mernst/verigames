@@ -1,22 +1,26 @@
 package scenes.game.components.dialogs
 {
-	import feathers.controls.Screen;
-	import feathers.controls.ImageLoader;
-	import feathers.display.Scale9Image;
-	import feathers.data.ListCollection;
+	import events.NavigationEvent;
+	
+	import feathers.controls.Button;
+	import feathers.controls.GroupedList;
 	import feathers.controls.Header;
+	import feathers.controls.ImageLoader;
+	import feathers.controls.List;
+	import feathers.controls.Screen;
 	import feathers.controls.text.TextFieldTextRenderer;
 	import feathers.core.ITextRenderer;
-	import flash.text.TextFormat;
-	import feathers.controls.GroupedList;
 	import feathers.data.HierarchicalCollection;
-	import starling.events.Event;
-	import feathers.controls.Button;
-	import starling.display.Sprite;
-	import starling.display.Quad;
-	import feathers.controls.List;
-	import events.NavigationEvent;
+	import feathers.data.ListCollection;
+	import feathers.display.Scale9Image;
+	
+	import flash.text.TextFormat;
+	
 	import scenes.login.LoginHelper;
+	
+	import starling.display.Quad;
+	import starling.display.Sprite;
+	import starling.events.Event;
 	
 	public class SelectLevelDialog extends CustomScreen
 	{
@@ -41,28 +45,31 @@ package scenes.game.components.dialogs
 			this.addChild( header );
 			
 			var footer:Sprite = new Sprite();
-			footer.height = 30;
-			footer.width = width;
 			this.addChild( footer );
-			footer.scaleX = .5;
-			footer.scaleY = .10;
-			
+			trace(footer.x, footer.y, footer.height, footer.width);
 			exitButton = new Button();
 			exitButton.label = "Exit";
 			exitButton.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
-//			exitButton.height = 40;
-//			exitButton.width = 70;
+//			exitButton.x = 250;
+//			exitButton.y = 250;
+			footer.scaleX = .25;
+			footer.scaleY = .25;
+			var q:Quad = new Quad(width*4, 30*4, 0xff0000);
+			q.alpha = 0;
+			footer.addChild(q);
+			footer.y = height - footer.height;
 			footer.addChild( exitButton );
-			
 			var obj:Object = exitButton.defaultLabelProperties;
-			obj.textFormat = new TextFormat("Arial",24, 0xffffff);
+			obj.textFormat = new TextFormat("Arial",36, 0xffffff);
 			exitButton.defaultLabelProperties = obj;
 			
-			footer.y = height - footer.height;
-			footer.x = (width - footer.width)/2;
-///			
-			exitButton.y = -height;
-			exitButton.x = -105;
+
+					
+			exitButton.height = 100;
+			exitButton.width = 350;
+			exitButton.x = ((footer.width - exitButton.width*footer.scaleX)/2)/footer.scaleX;
+		//	exitButton.y = -10;
+			trace(footer.x, footer.y, footer.height, footer.width);
 			
 //			var list:GroupedList = new GroupedList();
 //			
@@ -74,13 +81,25 @@ package scenes.game.components.dialogs
 			
 			levelList = new List;
 			levelList.y = 75;
-			levelList.x = 10;
 			levelList.width = 125;
+			levelList.x = (width - levelList.width)/2;
 			levelList.itemRendererProperties.height = 10;
 			
 			addChild(levelList);
 			levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
 			levelList.validate();
+//			levelListCollection = new ListCollection();
+//			levelListCollection.push("test1");
+//			levelListCollection.push("test2");
+//			levelListCollection.push("test3");
+//			levelList.dataProvider = levelListCollection;
+		}
+		
+		public function setDialogInfo(_levelListCollection:ListCollection, _matchArrayMetadata:Array):void
+		{
+		//	levelListCollection = _levelListCollection;
+			matchArrayMetadata = _matchArrayMetadata;
+	//		levelList.dataProvider = levelListCollection;
 		}
 		
 		protected function onLevelSelected(e:starling.events.Event):void

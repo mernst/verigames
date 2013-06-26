@@ -164,15 +164,21 @@ package scenes.game.display
 					return;
 				}
 				
-				//if shift key, select, else change size
 				var touch:Touch = touches[0];
+				if(event.shiftKey && event.ctrlKey)
+				{
+					this.m_isEditable = !this.m_isEditable;
+					this.m_isDirty = true;
+				}
+				
+				//if shift key, select, else change size
 				if(!event.shiftKey)
 				{
 					//clear selections on all actions with no shift key
 					 
 					if(m_isEditable)
 					{
-						handleWidthChange();
+						handleWidthChange(!m_isWide);
 				//		dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 						
 						undoData = new Object();
@@ -217,13 +223,13 @@ package scenes.game.display
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
 			if(undoEvent.type == EdgeSetChangeEvent.EDGE_SET_CHANGED)
-				handleWidthChange();
+				handleWidthChange(!m_isWide);
 		}
 		
 		
-		protected function handleWidthChange():void
+		public function handleWidthChange(newWidth:Boolean):void
 		{
-			m_isWide = !m_isWide;
+			m_isWide = newWidth;
 			m_isDirty = true;
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
