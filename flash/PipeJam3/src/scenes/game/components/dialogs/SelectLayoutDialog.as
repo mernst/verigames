@@ -41,7 +41,7 @@ package scenes.game.components.dialogs
 		protected var textInputHeight:int = 18;
 		protected var labelHeight:int = 12;
 		protected var shapeWidth:int = 120;
-		protected var buttonHeight:int = 20;
+		protected var buttonHeight:int = 24;
 		protected var buttonWidth:int = (shapeWidth - 3*buttonPaddingWidth)/2;
 		protected var shapeHeight:int = 3*buttonPaddingHeight + buttonHeight + textInputHeight + labelHeight;
 		
@@ -52,13 +52,13 @@ package scenes.game.components.dialogs
 			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
-			submit_button = ButtonFactory.getInstance().createDefaultButton("Submit", buttonWidth, buttonHeight);
+			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, 16, 16);
 			submit_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			submit_button.x = background.width - buttonPaddingWidth - buttonWidth;
 			submit_button.y = background.height - buttonPaddingHeight - buttonHeight;
 			addChild(submit_button);	
 			
-			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", buttonWidth, buttonHeight);
+			cancel_button = ButtonFactory.getInstance().createButton("Cancel", buttonWidth, buttonHeight, 16, 16);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			cancel_button.x = background.width - 2*buttonPaddingWidth - 2*buttonWidth;
 			cancel_button.y = background.height - buttonPaddingHeight - buttonHeight;

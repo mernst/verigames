@@ -22,7 +22,12 @@ package
 		
 		public function createDefaultButton(text:String, width:Number, height:Number):NineSliceButton
 		{
-			return new NineSliceButton(text, width, height, height / 3.0, height / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
+			return createButton(text, width, height, height / 3.0, height / 3.0);
+		}
+		
+		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceButton
+		{
+			return new NineSliceButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
 									  AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
 									  AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
 		}

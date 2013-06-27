@@ -54,7 +54,7 @@ package scenes.game.components.dialogs
 		protected var shapeWidth:int = 86;
 		protected var buttonPaddingWidth:int = 8;
 		protected var buttonPaddingHeight:int = 8;
-		protected var buttonHeight:int = 20;
+		protected var buttonHeight:int = 24;
 		protected var buttonWidth:int = shapeWidth - 2*buttonPaddingWidth;
 		
 		protected var numButtons:int = 4;
@@ -70,25 +70,25 @@ package scenes.game.components.dialogs
 			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
-			exit_button = ButtonFactory.getInstance().createDefaultButton("Exit", buttonWidth, buttonHeight);
+			exit_button = ButtonFactory.getInstance().createButton("Exit", buttonWidth, buttonHeight, 16, 16);
 			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
 			exit_button.x = buttonPaddingWidth;
 			exit_button.y = background.height - buttonPaddingHeight - exit_button.height;
 			addChild(exit_button);
 			
-			submit_layout_button = ButtonFactory.getInstance().createDefaultButton("Submit Layout", buttonWidth, buttonHeight);
+			submit_layout_button = ButtonFactory.getInstance().createButton("Submit Layout", buttonWidth, buttonHeight, 16, 16);
 			submit_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
 			submit_layout_button.x = buttonPaddingWidth;
 			submit_layout_button.y = exit_button.y - buttonPaddingHeight - submit_layout_button.height;
 			addChild(submit_layout_button);
 			
-			select_layout_button = ButtonFactory.getInstance().createDefaultButton("Select Layout", buttonWidth, buttonHeight);
+			select_layout_button = ButtonFactory.getInstance().createButton("Select Layout", buttonWidth, buttonHeight, 16, 16);
 			select_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
 			select_layout_button.x = buttonPaddingWidth;
 			select_layout_button.y = submit_layout_button.y - buttonPaddingHeight - select_layout_button.height;
 			addChild(select_layout_button);
 			
-			submit_score_button = ButtonFactory.getInstance().createDefaultButton("Submit Score", buttonWidth, buttonHeight);
+			submit_score_button = ButtonFactory.getInstance().createButton("Submit Score", buttonWidth, buttonHeight, 16, 16);
 			submit_score_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
 			submit_score_button.x = buttonPaddingWidth;
 			submit_score_button.y = select_layout_button.y - buttonPaddingHeight - submit_score_button.height;
@@ -96,7 +96,7 @@ package scenes.game.components.dialogs
 					
 			if(!PipeJam3.RELEASE_BUILD)
 			{
-				next_level_button = ButtonFactory.getInstance().createDefaultButton("Next Level", buttonWidth, buttonHeight);
+				next_level_button = ButtonFactory.getInstance().createButton("Next Level", buttonWidth, buttonHeight, 16, 16);
 				next_level_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				next_level_button.x = buttonPaddingWidth;
 				next_level_button.y = submit_score_button.y - buttonPaddingHeight - next_level_button.height;
