@@ -1,8 +1,8 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
+	
 	import events.EdgeSetChangeEvent;
-	import utils.XMath;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -15,6 +15,8 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	
+	import utils.XMath;
 	
 	public class GameNodeBase extends GameComponent
 	{
