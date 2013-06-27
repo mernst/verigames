@@ -23,6 +23,8 @@ package scenes.game.display
 		public var m_fromPortID:String;
 		public var m_toPortID:String;
 		public var m_extensionEdge:GameEdgeContainer;
+		//if there's an extension edge, this tells us if it's outgoing or incoming
+		protected var m_extensionEdgeIsOutgoing:Boolean;
 		
 		private var m_dir:String;
 		private var m_useExistingPoints:Boolean;
@@ -143,8 +145,10 @@ package scenes.game.display
 			}
 			if (fromComponent is GameNode) {
 				m_extensionEdge = (fromComponent as GameNode).getExtensionEdge(_fromPortID, true);
+				m_extensionEdgeIsOutgoing = true;
 			} else {
 				m_extensionEdge = (toComponent as GameNode).getExtensionEdge(_toPortID, false);
+				m_extensionEdgeIsOutgoing = false;
 			}
 			if (m_extensionEdge) {
 				m_extensionEdge.m_extensionEdge = this;
@@ -782,23 +786,35 @@ package scenes.game.display
 			}
 			
 			var containerComponent:GameNodeBase;
-			if(m_fromComponent is GameNode)
-				containerComponent = m_fromComponent;
-			else 
-				containerComponent = m_toComponent;
 			
 			var jointPoint:Point = new Point;
 			if(segmentIndex == -1)
 			{
 				if(segment.m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX)
+				{
 					jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;
+					containerComponent = m_toComponent;
+				}
 				else
+				{
 					jointPoint.x = m_edgeJoints[0].x;
+					containerComponent = m_fromComponent;
+				}
 			}
 			else if(segmentIndex == 0)
+			{
 				jointPoint.x = m_edgeJoints[0].x;
+				containerComponent = m_fromComponent;
+			}
 			else
+			{
 				jointPoint.x = m_edgeJoints[m_jointPoints.length-1].x;
+				containerComponent = m_toComponent;
+			}
+			
+			//don't allow switching at joints
+			if(containerComponent is GameJointNode)
+				return;
 			
 			//find global coordinates of container, subtracting off joints height and width
 			var containerPt:Point = new Point(containerComponent.x,containerComponent.y);
@@ -835,7 +851,7 @@ package scenes.game.display
 			{
 				rubberBandEdge(deltaPoint, true);
 				segmentOutgoing = true;
-				if(this.m_extensionEdge)
+				if(this.m_extensionEdge && m_extensionEdgeIsOutgoing)
 				{
 					m_extensionEdge.rubberBandEdge(deltaPoint, false);
 				}
@@ -843,7 +859,7 @@ package scenes.game.display
 			else
 			{
 				rubberBandEdge(deltaPoint, false);
-				if(this.m_extensionEdge)
+				if(this.m_extensionEdge && !m_extensionEdgeIsOutgoing)
 				{
 					m_extensionEdge.rubberBandEdge(deltaPoint, true);
 				}

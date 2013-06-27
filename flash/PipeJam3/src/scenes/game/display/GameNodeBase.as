@@ -1,8 +1,8 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
+	
 	import events.EdgeSetChangeEvent;
-	import utils.XMath;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -15,6 +15,8 @@ package scenes.game.display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	
+	import utils.XMath;
 	
 	public class GameNodeBase extends GameComponent
 	{
@@ -61,7 +63,7 @@ package scenes.game.display
 			var currentPos:int = 0;
 			for(var i:int = 0; i<m_outgoingEdges.length; i++)
 			{
-				var startingCurrentPos = currentPos;
+				var startingCurrentPos:int = currentPos;
 				var oedge:GameEdgeContainer = m_outgoingEdges[i];
 
 				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
