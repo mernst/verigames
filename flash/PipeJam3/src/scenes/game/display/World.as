@@ -1,5 +1,7 @@
 package scenes.game.display
 {
+	import assets.AssetsAudio;
+	import audio.AudioManager;
 	import events.EdgeSetChangeEvent;
 	import flash.geom.Point;
 	import graph.LevelNodes;
@@ -171,7 +173,9 @@ package scenes.game.display
 			addEventListener(Level.ERROR_REMOVED, onErrorRemoved);
 			addEventListener(Level.ERROR_MOVED, onErrorMoved);
 			addEventListener(Level.MOVE_TO_POINT, onMoveToPointEvent);
-
+			
+			AudioManager.getInstance().audioDriver().reset();
+			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 		}
 		
 		private function onShowGameMenuEvent(e:Event):void
@@ -418,6 +422,8 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
+			AudioManager.getInstance().audioDriver().reset();
+			
 			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);

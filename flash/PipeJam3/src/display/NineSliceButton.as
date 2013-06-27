@@ -1,5 +1,7 @@
 package display 
 {
+	import assets.AssetsAudio;
+	import audio.AudioManager;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -68,6 +70,7 @@ package display
 		
 		private var mEnabled:Boolean = true;
 		private var mIsDown:Boolean = false;
+		private var mIsHovering:Boolean = false;
 		// Adaptive from starling.display.Button
 		private function onTouch(event:TouchEvent):void
         {
@@ -79,11 +82,11 @@ package display
             
 			if (touch == null)
 			{
-				showButton(m_buttonSkin);
-				mIsDown = false;
+				reset();
 			}
             else if (touch.phase == TouchPhase.BEGAN)
             {
+				mIsHovering = false;
 				if (!mIsDown) {
 					showButton(m_buttonClickSkin);
 					mIsDown = true;
@@ -91,7 +94,11 @@ package display
             }
             else if (touch.phase == TouchPhase.HOVER)
             {
-                showButton(m_buttonOverSkin);
+				if (!mIsHovering) {
+					showButton(m_buttonOverSkin);
+					//AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_MENU_BUTTON);
+				}
+				mIsHovering = true;
 				mIsDown = false;
             }
 			else if (touch.phase == TouchPhase.MOVED && mIsDown)
@@ -103,22 +110,27 @@ package display
                     touch.globalX > buttonRect.x + buttonRect.width + MAX_DRAG_DIST ||
                     touch.globalY > buttonRect.y + buttonRect.height + MAX_DRAG_DIST)
                 {
-                    showButton(m_buttonSkin);
-					mIsDown = false;
+                    reset();
                 }
             }
             else if (touch.phase == TouchPhase.ENDED)
             {
 				if (mIsDown) {
+					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_MENU_BUTTON);
 					dispatchEventWith(Event.TRIGGERED, true);
 				}
-				showButton(m_buttonSkin);
-				mIsDown = false;
+				reset();
             } else {
-				showButton(m_buttonSkin);
-				mIsDown = false;
+				reset();
 			}
         }
+		
+		private function reset():void
+		{
+			showButton(m_buttonSkin);
+			mIsHovering = false;
+			mIsDown = false;
+		}
 		
 		private function showButton(_skin:Sprite):void
 		{

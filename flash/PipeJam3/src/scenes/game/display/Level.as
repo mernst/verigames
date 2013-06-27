@@ -1,7 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import assets.AssetsAudio;
 	import assets.AssetsFont;
+	import audio.AudioManager;
 	import events.BallTypeChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.MoveEvent;
@@ -834,6 +836,11 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
+			if (evt.edgeSetChanged.isWide()) {
+				AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+			} else {
+				AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+			}
 			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
 			for each (var edgeID:String in edgeSet.edge_ids)
