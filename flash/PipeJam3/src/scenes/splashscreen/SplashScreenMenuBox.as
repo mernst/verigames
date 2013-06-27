@@ -166,47 +166,6 @@ package scenes.splashscreen
 			}
 		}
 		
-		protected function buildLevelMenu():void
-		{
-//			m_levelMenu = new Sprite();
-//			var background:Texture = AssetInterface.getTexture("Game", "GameControlPanelBackgroundImageClass");
-//			var backgroundImage:Image = new Image(background);
-//			backgroundImage.width = 150;
-//			backgroundImage.height = 200;
-//			m_levelMenu.addChild(backgroundImage);
-//			
-//			//create a title
-//			var titleTextfield:TextFieldWrapper = TextFactory.getInstance().createTextField("Levels", AssetsFont.FONT_NUMERIC, width, 40, 25, 0xeeeeee);
-//			titleTextfield.x = -5; 
-//			TextFactory.getInstance().updateAlign(titleTextfield, 1, 1);
-//			m_levelMenu.addChild(titleTextfield);
-//			
-//			levelList = new List;
-//			levelList.y = 75;
-//			levelList.x = 10;
-//			levelList.width = 125;
-//			levelList.itemRendererProperties.height = 10;
-//			
-//			m_levelMenu.addChild(levelList);
-//			levelList.addEventListener( starling.events.Event.CHANGE, onLevelSelected);
-//			levelList.validate();
-//			
-//		/*	var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-//			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-//			
-//			var exit_button:Button = new Button(exitButtonUp, "", exitButtonClick);
-//			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
-//			exit_button.x = 10;
-//			exit_button.y = 150;
-//			exit_button.width *= .38;
-//			exit_button.height *= .38;
-//			m_levelMenu.addChild(exit_button);*/
-//			
-//			m_levelMenu.visible = false;
-			//use this for testing without any connection
-			//			onRequestLevels(LoginHelper.EVENT_COMPLETE, null)
-		}
-		
 		protected function onRequestLevels(result:int):void
 		{
 			if(result == LoginHelper.EVENT_COMPLETE)
@@ -374,7 +333,6 @@ package scenes.splashscreen
 				loginHelper.getLevelMetadata(onRequestLevels);
 				
 				selectLevelDialog = new SelectLevelDialog(this);
-				//buildLevelMenu();
 				//the containing menubox is scaled wierdly
 				selectLevelDialog.width = 175;
 				selectLevelDialog.height = 250;
