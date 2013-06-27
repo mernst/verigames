@@ -39,15 +39,8 @@ package
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var sessionVerificationHasBeenAttempted:Boolean = false;
 		
-		private static const AUDIO_ON:Boolean = true;
-		
 		public function PipeJam3() 
 		{
-			if (!AUDIO_ON) {
-				AudioManager.getInstance().audioDriver().musicOn = false;
-				AudioManager.getInstance().audioDriver().sfxOn = false;
-			}
-			
 			var expressID:String = JSON.stringify(this.loaderInfo.parameters);
 			var pattern:RegExp = /sid/;
 			cookies = escape(expressID.replace(pattern, "express.sid"));

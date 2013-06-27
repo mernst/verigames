@@ -8,7 +8,7 @@ package audio
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	
-	import starling.display.Button;
+	import display.BasicButton;
 	import starling.events.Event;
 
 	public class AudioManager
@@ -20,13 +20,17 @@ package audio
 		private var m_audioLoaded:Boolean = false;
 		
 		/** Button for user to turn music on/off */
-		private var m_musicButton:Button;
+		private var m_musicButton:BasicButton;
 		private var m_musicCallback:Function;
 		
 		/** Button for user to turn sound fx on/off */
-		private var m_sfxButton:Button;
+		private var m_sfxButton:BasicButton;
 		private var m_sfxCallback:Function;
-
+		
+		/** Button for user to turn all sounds off (sfx + musix) */
+		private var m_audioButton:BasicButton;
+		private var m_audioCallback:Function;
+		
 		private static var m_instance:AudioManager; // singleton instance
 
 		public static function getInstance():AudioManager
@@ -75,7 +79,7 @@ package audio
 			m_audioLoaded = true;
 		}
 		
-		public function setMusicButton(musicButton:Button, musicCallback:Function):void
+		public function setMusicButton(musicButton:BasicButton, musicCallback:Function):void
 		{
 			m_musicButton = musicButton;
 			m_musicButton.addEventListener(starling.events.Event.TRIGGERED, onMusicClick);
@@ -84,7 +88,7 @@ package audio
 			updateMusicState();
 		}
 		
-		public function get musicButton():Button
+		public function get musicButton():BasicButton
 		{
 			return m_musicButton;
 		}
@@ -103,7 +107,7 @@ package audio
 			}
 		}
 		
-		public function setSfxButton(sfxButton:Button, sfxCallback:Function):void
+		public function setSfxButton(sfxButton:BasicButton, sfxCallback:Function):void
 		{
 			m_sfxButton = sfxButton;
 			m_sfxButton.addEventListener(starling.events.Event.TRIGGERED, onSfxClick);
@@ -112,7 +116,7 @@ package audio
 			updateSfxState();
 		}
 		
-		public function get sfxButton():Button
+		public function get sfxButton():BasicButton
 		{
 			return m_sfxButton;
 		}
@@ -130,6 +134,34 @@ package audio
 				m_sfxCallback(audioDriver().sfxOn);
 			}
 		}
+		
+		public function setAllAudioButton(audioButton:BasicButton, audioCallback:Function):void
+		{
+			m_audioButton = audioButton;
+			m_audioButton.addEventListener(starling.events.Event.TRIGGERED, onAllAudioClick);
+			audioDriver().musicOn = audioDriver().sfxOn; // force these to be the same value
+			m_audioCallback = audioCallback;
+			updateAllAudioState();
+		}
+		
+		public function get allAudioButton():BasicButton
+		{
+			return m_audioButton;
+		}
+		
+		private function onAllAudioClick(ev:starling.events.Event):void
+		{
+			audioDriver().musicOn = audioDriver().sfxOn = !audioDriver().sfxOn;  // this way they are sure to be both on or both off
+			updateAllAudioState();
+		}
+		
+		private function updateAllAudioState():void
+		{
+			if (m_audioCallback != null) {
+				m_audioCallback(audioDriver().sfxOn);
+			}
+		}
+		
 	}
 }
 

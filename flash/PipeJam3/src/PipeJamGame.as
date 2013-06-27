@@ -1,6 +1,11 @@
 package
 {
+	import audio.AudioManager;
+	import cgs.Cache.Cache;
+	import display.SoundButton;
+	import display.MusicButton;
 	import flash.external.ExternalInterface;
+	import utils.XSprite;
 	
 	import scenes.*;
 	import scenes.game.*;
@@ -42,10 +47,13 @@ package
 		public static var theme:PipeJamTheme;
 		public static var theme1:AeonDesktopTheme;
 		
+		private var m_musicButton:MusicButton;
+		private var m_sfxButton:SoundButton;
+		
 		public function PipeJamGame()
 		{
 			super();
-						
+			
 			if(!LoggingServerInterface.m_serverInitialized)
 				LoggingServerInterface.initializeServer();
 			
@@ -56,6 +64,18 @@ package
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			scenesToCreate["LoginScene"] = LoginScene;
 			
+			AudioManager.getInstance().audioDriver().reset();
+			//AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_MUSIC));
+			AudioManager.getInstance().audioDriver().sfxOn = AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_SFX));
+			
+			/*
+			m_musicButton = new MusicButton();
+			XSprite.setupDisplayObject(m_musicButton, 16.5, Constants.GameHeight - 14.5, 12.5);
+			AudioManager.getInstance().setMusicButton(m_musicButton, updateMusicState);
+			*/
+			m_sfxButton = new SoundButton();
+			XSprite.setupDisplayObject(m_sfxButton, 2, Constants.GameHeight - 14.5, 12.5);
+			AudioManager.getInstance().setAllAudioButton(m_sfxButton, updateSfxState);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
@@ -70,7 +90,7 @@ package
 			// create and show menu screen
 			showScene("SplashScreen");
 			
-			
+			addChild(m_sfxButton);
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
@@ -78,6 +98,19 @@ package
 			
 		}
 		
+		private function updateMusicState(musicOn:Boolean):void
+		{
+			m_musicButton.musicOn = musicOn;
+			var result:Boolean = Cache.setSave(Constants.CACHE_MUTE_MUSIC, !musicOn)
+			trace("Cache updateMusicState: " + result);
+		}
+		
+		private function updateSfxState(sfxOn:Boolean):void
+		{
+			m_sfxButton.sfxOn = sfxOn;
+			var result:Boolean = Cache.setSave(Constants.CACHE_MUTE_SFX, !sfxOn)
+			trace("Cache updateSfxState: " + result);
+		}
 		
 		/**
 		 * This prints any debug messages to Javascript if embedded in a webpage with a script "printDebug(msg)"

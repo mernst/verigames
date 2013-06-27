@@ -14,6 +14,7 @@ package scenes.game.display
 	import system.PipeSimulator;
 	import scenes.game.PipeJamGameScene;
 	import events.NavigationEvent;
+	import utils.XMath;
 	
 	import flash.utils.Dictionary;
 	import flash.system.System;
@@ -151,10 +152,11 @@ package scenes.game.display
 			gameControlPanel.y = GridViewPanel.HEIGHT;
 			addChild(gameControlPanel);
 			
-			if(PipeJamGameScene.inTutorial)
+			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
-				firstLevel = levels[currentLevelNumber];
+				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
+				firstLevel = levels[levelNumberToUse];
 			}
 			
 			selectLevel(firstLevel);
@@ -434,6 +436,10 @@ package scenes.game.display
 		
 		private function selectLevel(newLevel:Level):void
 		{
+			if (!newLevel) {
+				return;
+			}
+			
 			active_level = newLevel;
 			
 			edgeSetGraphViewPanel.loadLevel(newLevel);

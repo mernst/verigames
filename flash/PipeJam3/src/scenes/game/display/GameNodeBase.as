@@ -61,9 +61,9 @@ package scenes.game.display
 			var currentPos:int = 0;
 			for(var i:int = 0; i<m_outgoingEdges.length; i++)
 			{
-				var startingCurrentPos = currentPos;
+				var startingCurrentPos:int = currentPos;
 				var oedge:GameEdgeContainer = m_outgoingEdges[i];
-
+				
 				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
 				
 				for(var j:int = 0; j<m_incomingEdges.length; j++)

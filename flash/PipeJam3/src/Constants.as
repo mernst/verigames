@@ -22,5 +22,8 @@ package
 		public static const XML_ANNOT_EXT:String = "EXT__";
 		public static const XML_ANNOT_EXT_IN:String = "__XIN__";
 		public static const XML_ANNOT_EXT_OUT:String = "__XOUT__";
+		
+		public static const CACHE_MUTE_MUSIC:String = "muteMusic";
+		public static const CACHE_MUTE_SFX:String = "muteSfx";
     }
 }
