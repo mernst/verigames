@@ -13,8 +13,11 @@ package scenes.game.display
 	import scenes.game.components.GridViewPanel;
 	import system.PipeSimulator;
 	import scenes.game.PipeJamGameScene;
+	import events.NavigationEvent;
 	
 	import flash.utils.Dictionary;
+	import flash.system.System;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -243,7 +246,14 @@ package scenes.game.display
 		private function onNextLevel(e:Event):void
 		{
 			if(PipeJamGameScene.inTutorial)
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted  % levels.length; //modulo just so we don't crash, currently...
+			{
+				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(currentLevelNumber >= levels.length)
+				{
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen", true));
+					return;
+				}
+			}
 			else
 				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 			selectLevel(levels[currentLevelNumber]);
@@ -404,6 +414,20 @@ package scenes.game.display
 					if(this.active_level != null)
 						active_level.toggleUneditableStrings();
 					break;
+					case 76: //'l' for copy layout
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.updateLayoutXML();
+							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
+						}
+						break;
+					case 67: //'c' for copy constraints
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.updateConstraintXML();
+							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
+						}
+						break;
 				}
 			}
 		}

@@ -257,10 +257,10 @@ package scenes.splashscreen
 			while(levelNotFound)
 			{
 				foundObj = levelMetadataVector[index];
-				if(foundObj._id is String)
-					objID = foundObj._id;
+				if(foundObj.levelId is String)
+					objID = foundObj.levelId;
 				else
-					objID = foundObj._id.$oid;
+					objID = foundObj.levelId.$oid;
 				
 				if(matchID == objID)
 				{
@@ -275,7 +275,7 @@ package scenes.splashscreen
 				return null;
 			}
 			
-			if(foundObj._id is String)
+			if(foundObj.levelId is String)
 				objID = foundObj.levelId;
 			else
 				objID = foundObj.levelId.$oid;
@@ -284,8 +284,8 @@ package scenes.splashscreen
 			{
 				var levelObj:Object = levelMetadataVector[i];
 				//we don't want ourselves
-				if(levelObj == foundObj)
-					continue;
+			//	if(levelObj == foundObj) there was a time when the RA info was stored here too, and as such we needed to skip this
+			//		continue;
 				var levelObjID:String;
 				if(levelObj.levelId is String)
 					levelObjID = levelObj.levelId;
@@ -373,7 +373,7 @@ package scenes.splashscreen
 				loginHelper.requestLevels(onRequestLevels);
 				loginHelper.getLevelMetadata(onRequestLevels);
 				
-				selectLevelDialog = new SelectLevelDialog();
+				selectLevelDialog = new SelectLevelDialog(this);
 				//buildLevelMenu();
 				//the containing menubox is scaled wierdly
 				selectLevelDialog.width = 175;
@@ -436,6 +436,11 @@ package scenes.splashscreen
 			PipeJamGameScene.constraintsFile = PipeJamGameScene.dArray[fileNumber+1];
 			fileNumber+=3;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+		}
+		
+		public function showMainMenu(show:Boolean):void
+		{
+			m_mainMenu.visible = show;
 		}
 	}
 }
