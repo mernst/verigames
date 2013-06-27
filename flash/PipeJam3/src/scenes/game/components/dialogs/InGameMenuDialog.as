@@ -1,167 +1,109 @@
 package scenes.game.components.dialogs
 {
-	import flash.geom.Point;
-	import starling.display.Button;
-	import starling.display.Image;
-	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
-	import starling.textures.Texture;
-	
 	import assets.AssetInterface;
+	
+	
 	import events.NavigationEvent;
+	
+	import flash.geom.Point;
+	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
 	import scenes.login.LoginHelper;
 	
-	public class InGameMenuDialog extends BaseComponent
+	import starling.display.Button;
+	import starling.display.Image;
+	import starling.display.Sprite;
+	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
+	import starling.textures.Texture;
+
+	import display.NineSliceButton;
+	import display.NineSliceBatch;
+	
+	public class InGameMenuDialog extends Sprite
 	{
-		
-		/** Button to save the current game */
-		public var save_button:Button;
-		
+				
 		/** Button to submit the current game */
-		public var submitScore_button:Button;
+		protected var submit_score_button:NineSliceButton;
 		
 		/** Button to submit the current layout */
-		public var submitLayout_button:Button;
+		protected var submit_layout_button:NineSliceButton;
 		
-		/** Button to submit the current layout */
-		public var selectLayout_button:Button;
-		
-		/** Button to go back to the current game */
-		public var backToGame_button:Button;
-		
+		/** Button to select a new layout */
+		protected var select_layout_button:NineSliceButton;
+				
 		/** Button to exit to the splash screen */
-		public var exit_button:Button;
+		protected var exit_button:NineSliceButton;
+
 		
-		/** Button to switch to the next level */
-		public var nextLevel_button:Button;
+		/** Button to switch to the next level only available in debug build */
+		protected var next_level_button:NineSliceButton;
 		
-		private var backgroundImage:Image;
+		private var background:NineSliceBatch;
 		
 		private var selectLayoutDialog:SelectLayoutDialog;
+		
 		private var submitLayoutDialog:SubmitLayoutDialog;
 		
-		protected var loginHelper:LoginHelper;
+		protected var loginHelper:LoginHelper;	
+		
+		protected var shapeWidth:int = 86;
+		protected var buttonPaddingWidth:int = 8;
+		protected var buttonPaddingHeight:int = 8;
+		protected var buttonHeight:int = 20;
+		protected var buttonWidth:int = shapeWidth - 2*buttonPaddingWidth;
+		
+		protected var numButtons:int = 4;
 		
 		public function InGameMenuDialog()
 		{
 			super();
 			
+			if(!PipeJam3.RELEASE_BUILD)
+				numButtons = 5;
 			
-			var background:Texture = AssetInterface.getTexture("Menu", "InGameMenuBackgroundClass");
-			backgroundImage = new Image(background);
-
-			addChild(backgroundImage);
+			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight;
+			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
+			addChild(background);
 			
-//			var saveButtonUp:Texture = AssetInterface.getTexture("Menu", "SaveButtonClass");
-//			var saveButtonClick:Texture = AssetInterface.getTexture("Menu", "SaveButtonClickClass");
-//			
-//			save_button = new Button(saveButtonUp, "", saveButtonClick);
-//			save_button.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
-//			save_button.x = 2;
-//			save_button.y = 2;
-//			save_button.width *= .5;
-//			save_button.height *= .5;
-//			addChild(save_button);
-//			
-//			var submitScoreButtonUp:Texture = AssetInterface.getTexture("Menu", "SubmitScoreButtonClass");
-//			var submitScoreBButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitScoreButtonClickClass");
-//			
-//			submitScore_button = new Button(submitScoreButtonUp, "", submitScoreBButtonClick);
-//			submitScore_button.addEventListener(Event.TRIGGERED, onSubmitScoreButtonTriggered);
-//			submitScore_button.x = 2;
-//			submitScore_button.y = 52;
-//			submitScore_button.width *= .5;
-//			submitScore_button.height *= .5;
-//			addChild(submitScore_button);
-//			
-//			var submitLayoutButtonUp:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClass");
-//			var submitLayoutButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClickClass");
-//			
-//			submitLayout_button = new Button(submitLayoutButtonUp, "", submitLayoutButtonClick);
-//			submitLayout_button.addEventListener(Event.TRIGGERED, onSubmitLayoutButtonTriggered);
-//			submitLayout_button.x = 2;
-//			submitLayout_button.y = 102;
-//			submitLayout_button.width *= .5;
-//			submitLayout_button.height *= .25;
-//			addChild(submitLayout_button);
-//			
-//			var selectLayoutButtonUp:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClass");
-//			var selectLayoutButtonClick:Texture = AssetInterface.getTexture("Menu", "SubmitLayoutButtonClickClass");
-//			
-//			submitLayout_button = new Button(selectLayoutButtonUp, "", selectLayoutButtonClick);
-//			submitLayout_button.addEventListener(Event.TRIGGERED, onSelectLayoutButtonTriggered);
-//			submitLayout_button.x = 2;
-//			submitLayout_button.y = 125;
-//			submitLayout_button.width *= .5;
-//			submitLayout_button.height *= .25;
-//			addChild(submitLayout_button);
-//			
-//			var backToGameButtonUp:Texture = AssetInterface.getTexture("Menu", "BackToGameButtonClass");
-//			var backToGameButtonClick:Texture = AssetInterface.getTexture("Menu", "BackToGameButtonClickClass");
-//			
-//			backToGame_button = new Button(backToGameButtonUp, "", backToGameButtonClick);
-//			backToGame_button.addEventListener(Event.TRIGGERED, onBackToGameButtonTriggered);
-//			backToGame_button.x = 2;
-//			backToGame_button.y = 152;
-//			backToGame_button.width *= .5;
-//			backToGame_button.height *= .5;
-//			addChild(backToGame_button);
-//			
-//			var exitButtonUp:Texture = AssetInterface.getTexture("Menu", "ExitButtonClass");
-//			var exitButtonClick:Texture = AssetInterface.getTexture("Menu", "ExitButtonClickClass");
-//			
-//			exit_button = new Button(exitButtonUp, "", exitButtonClick);
-//			exit_button.addEventListener(Event.TRIGGERED, onExitButtonTriggered);
-//			exit_button.x = 2;
-//			exit_button.y = 202;
-//			exit_button.width *= .5;
-//			exit_button.height *= .5;
-//			addChild(exit_button);
-//			
-//			if(!PipeJamGame.RELEASE_BUILD)
-//			{
-//				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClass");
-//				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NextLevelButtonClickClass");
-//				
-//				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
-//				nextLevel_button.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
-//				nextLevel_button.x = 2;
-//				nextLevel_button.y = 252;
-//				nextLevel_button.width *= .5;
-//				nextLevel_button.height *= .5;
-//				addChild(nextLevel_button);
-//			}
+			exit_button = ButtonFactory.getInstance().createDefaultButton("Exit", buttonWidth, buttonHeight);
+			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
+			exit_button.x = buttonPaddingWidth;
+			exit_button.y = background.height - buttonPaddingHeight - exit_button.height;
+			addChild(exit_button);
 			
-			addEventListener(TouchEvent.TOUCH, onTouch);
+			submit_layout_button = ButtonFactory.getInstance().createDefaultButton("Submit Layout", buttonWidth, buttonHeight);
+			submit_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
+			submit_layout_button.x = buttonPaddingWidth;
+			submit_layout_button.y = exit_button.y - buttonPaddingHeight - submit_layout_button.height;
+			addChild(submit_layout_button);
+			
+			select_layout_button = ButtonFactory.getInstance().createDefaultButton("Select Layout", buttonWidth, buttonHeight);
+			select_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
+			select_layout_button.x = buttonPaddingWidth;
+			select_layout_button.y = submit_layout_button.y - buttonPaddingHeight - select_layout_button.height;
+			addChild(select_layout_button);
+			
+			submit_score_button = ButtonFactory.getInstance().createDefaultButton("Submit Score", buttonWidth, buttonHeight);
+			submit_score_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
+			submit_score_button.x = buttonPaddingWidth;
+			submit_score_button.y = select_layout_button.y - buttonPaddingHeight - submit_score_button.height;
+			addChild(submit_score_button);
+					
+			if(!PipeJam3.RELEASE_BUILD)
+			{
+				next_level_button = ButtonFactory.getInstance().createDefaultButton("Next Level", buttonWidth, buttonHeight);
+				next_level_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
+				next_level_button.x = buttonPaddingWidth;
+				next_level_button.y = submit_score_button.y - buttonPaddingHeight - next_level_button.height;
+				addChild(next_level_button);
+			}
 			
 			loginHelper = LoginHelper.getLoginHelper();
-		}
-		
-		private function onTouch(event:TouchEvent):void
-		{
-			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length){
-				var currentPoint:Point = touches[0].getLocation(this);
-				if(currentPoint.x < backgroundImage.width)
-				{
-					if(currentPoint.y < backgroundImage.height/5)
-						onNextLevelButtonTriggered();
-					else if(currentPoint.y < (backgroundImage.height/5)*2)
-						onSelectLayoutButtonTriggered();
-					else if(currentPoint.y < (backgroundImage.height/5)*3)
-						onSubmitLayoutButtonTriggered();
-					else if(currentPoint.y < (backgroundImage.height/5)*4)
-						onSubmitScoreButtonTriggered();
-					else
-						onExitButtonTriggered();
-				}
-				
-			}
 		}
 		
 		private function onSaveButtonTriggered():void
@@ -182,7 +124,7 @@ package scenes.game.components.dialogs
 			{
 				submitLayoutDialog = new SubmitLayoutDialog();
 				parent.addChild(submitLayoutDialog);
-				submitLayoutDialog.x = backgroundImage.width;
+				submitLayoutDialog.x = background.width;
 				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
 				submitLayoutDialog.visible = true;
 			}
@@ -192,17 +134,27 @@ package scenes.game.components.dialogs
 		
 		private function onSelectLayoutButtonTriggered():void
 		{
-			dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
-			loginHelper.onRequestLayoutList(onRequestLayoutList);
+			if(LoginHelper.levelObject != null)
+			{
+				dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
+				loginHelper.onRequestLayoutList(onRequestLayoutList);
+			}
+			else
+				onRequestLayoutList(0, null);
 		}
 		
 		protected function onRequestLayoutList(result:int, layoutList:Vector.<Object>):void
 		{
 			if(selectLayoutDialog == null)
+			{
 				selectLayoutDialog = new SelectLayoutDialog();
-			
-			selectLayoutDialog.setLayouts(layoutList);
-			addChild(selectLayoutDialog);
+				parent.addChild(selectLayoutDialog);
+				selectLayoutDialog.x = background.width;
+				selectLayoutDialog.y = y + (height - selectLayoutDialog.height);
+				selectLayoutDialog.visible = true;
+			}
+			else
+				selectLayoutDialog.visible = !selectLayoutDialog.visible;
 		}
 		
 		private function onBackToGameButtonTriggered():void
