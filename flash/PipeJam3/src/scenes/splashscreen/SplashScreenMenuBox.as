@@ -2,43 +2,34 @@ package scenes.splashscreen
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import deng.fzip.FZip;
+	import deng.fzip.FZipFile;
 	import display.NineSliceButton;
-	
-	import display.NineSliceBatch;
-	
 	import events.NavigationEvent;
-	
 	import feathers.controls.Button;
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
 	import feathers.themes.*;
-	
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
 	import flash.text.*;
-	
 	import scenes.BaseComponent;
-	import scenes.Scene;
+	import scenes.game.components.dialogs.SelectLevelDialog;
 	import scenes.game.PipeJamGameScene;
 	import scenes.login.*;
-	
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
-	import starling.events.TouchEvent;
 	import starling.text.*;
 	import starling.textures.Texture;
-	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
-	import scenes.game.components.dialogs.SelectLevelDialog;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
 		protected var m_mainMenu:starling.display.Sprite;
 		
-		protected var play_button:feathers.controls.Button;
-		protected var signin_button:feathers.controls.Button;
+		protected var play_button:NineSliceButton;
+		protected var signin_button:NineSliceButton;
 		protected var tutorial_button:NineSliceButton;
 		protected var demo_button:NineSliceButton;
 		
@@ -71,14 +62,6 @@ package scenes.splashscreen
 		protected function addedToStage(event:starling.events.Event):void
 		{
 			addChild(m_mainMenu);
-			
-		//	play_button.x = (this.stage.stageWidth - play_button.width) / 2;
-		//	play_button.y = (this.stage.stageHeight - play_button.height) / 2;
-			var obj:Object =play_button.defaultLabelProperties;
-			obj.textFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 36, 0xffffff);
-			play_button.defaultLabelProperties = obj;
-			signin_button.defaultLabelProperties = obj;
-
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
@@ -90,31 +73,15 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
-			var playButtonUp:Texture = AssetInterface.getTexture("Menu", "PlayButtonClass");
-			var playButtonClick:Texture = AssetInterface.getTexture("Menu", "PlayButtonClickClass");
-			
-			//change scale to get buttons to (mostly) look right. Should figure out why they look wrong and fix that...
-			scaleX = .25;
-			scaleY = .25;
-			
-			play_button = new feathers.controls.Button();
-			play_button.label = " Play ";
+			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 128, 48);
 			play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-			play_button.x = 1300;
-			play_button.y = 950;
+			play_button.x = Constants.GameWidth - 144;
+			play_button.y = Constants.GameHeight - 140;
 			
-			play_button.width = 400;
-			play_button.height = 150;
-			
-			signin_button = new feathers.controls.Button();
-			signin_button.label = " Log In ";
+			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 128, 48);
 			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = 1300;
-			signin_button.y = 950;
-			
-			signin_button.width = 400;
-			signin_button.height = 150;
-
+			signin_button.x = Constants.GameWidth - 144;
+			signin_button.y = Constants.GameHeight - 80;
 			
 			if(PipeJamGame.PLAYER_LOGGED_IN || !PipeJam3.RELEASE_BUILD)
 			{			
@@ -152,16 +119,16 @@ package scenes.splashscreen
 
 			if(!PipeJam3.RELEASE_BUILD)
 			{
-				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 256, 96);
+				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 64, 24);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
-				tutorial_button.x = 16;
-				tutorial_button.y = 32;
+				tutorial_button.x = 10;
+				tutorial_button.y = Constants.GameHeight - 82;
 				m_mainMenu.addChild(tutorial_button);
 				
-				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 256, 96);
+				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 64, 24);
 				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
-				demo_button.x = 16;
-				demo_button.y = 312;
+				demo_button.x = 10;
+				demo_button.y = tutorial_button.y + 30;
 				m_mainMenu.addChild(demo_button);
 			}
 		}
@@ -341,8 +308,7 @@ package scenes.splashscreen
 				
 				//do after adding to parent
 				selectLevelDialog.centerDialog();
-			//	m_levelMenu.x = m_mainMenu.x;
-			//	m_levelMenu.y = m_mainMenu.y;
+				
 				PipeJamGameScene.inTutorial = false;
 			}
 			else
