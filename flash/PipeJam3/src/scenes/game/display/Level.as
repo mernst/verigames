@@ -190,11 +190,11 @@ package scenes.game.display
 				addChild(m_backgroundImage);
 			}
 			
-			addChild(m_errorContainer);
 			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
 			addChild(m_nodesContainer);
 			addChild(m_jointsContainer);
 			addChild(m_edgesContainer);
+			addChild(m_errorContainer);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
