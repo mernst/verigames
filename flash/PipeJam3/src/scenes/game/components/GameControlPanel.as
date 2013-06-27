@@ -102,10 +102,8 @@ package scenes.game.components
 			
 			m_menuButton = new Button(menuButtonUp, "", menuButtonClick);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-//			m_menuButton.width *= .4;
-//			m_menuButton.height *= .5;
-			m_menuButton.x = 4;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
+			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 8;
 			addChild(m_menuButton);
 			
 			conflictMap = new ConflictMap();
