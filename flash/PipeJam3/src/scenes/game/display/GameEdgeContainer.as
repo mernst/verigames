@@ -404,6 +404,7 @@ package scenes.game.display
 			*/
 			if (m_errorParticleSystem == null) {
 				m_errorParticleSystem = new ErrorParticleSystem();
+				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
 			}
 			errorContainer.addChild(m_errorParticleSystem);
 		}
@@ -643,7 +644,7 @@ package scenes.game.display
 				joint.x = m_jointPoints[segIndex].x;
 				joint.y = m_jointPoints[segIndex].y;
 				
-				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+				if (joint.m_jointType == GameEdgeJoint.END_JOINT) {
 					errorContainer.x = this.x + joint.x;
 					errorContainer.y = this.y + joint.y;
 				}
@@ -936,7 +937,7 @@ package scenes.game.display
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.draw();
-				if (joint.m_jointType == GameEdgeJoint.MARKER_JOINT) {
+				if (joint.m_jointType == GameEdgeJoint.END_JOINT) {
 					errorContainer.x = this.x + joint.x;
 					errorContainer.y = this.y + joint.y;
 				}
