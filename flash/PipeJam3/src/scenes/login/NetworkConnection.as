@@ -101,12 +101,16 @@ package scenes.login
 			switch(type)
 			{
 				case LoginHelper.CREATE_PLAYER:
-					request = "/ra/games/"+GAME_ID+"/players/random";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/new";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.ACTIVATE_PLAYER:
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/activate&method=PUT"; 
 					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.PLAYER_EXISTS:
+					request = "/ra/games/"+GAME_ID+"/players/" + playerID + "/exists&method=GET";
+					method = URLRequestMethod.GET; 
 					break;
 				case LoginHelper.REQUEST_LEVELS:
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match";

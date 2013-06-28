@@ -2,6 +2,7 @@ package scenes.login
 {	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
+	import utils.XString;
 	
 	import events.NavigationEvent;
 	
@@ -25,7 +26,8 @@ package scenes.login
 		public static var REFUSE_LEVELS:int = 7;
 		public static var REQUEST_LAYOUT_LIST:int = 8;
 		public static var CREATE_RA_LEVEL:int = 9;	
-		public static var VERIFY_SESSION:int = 10;	
+		public static var VERIFY_SESSION:int = 10;
+		public static var PLAYER_EXISTS:int = 11;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -116,15 +118,45 @@ package scenes.login
 			sendMessage(SAVE_CONSTRAINTS, m_levelConstraintsXML.toString(), m_levelConstraintsXML.@id);
 		}
 		
-		protected function onCreateNewPlayer(callback:Function):void
+		
+		protected var activatePlayerCallback:Function;
+		public function checkPlayerID(callback:Function):void
 		{
-			sendMessage(CREATE_PLAYER, callback);
+			activatePlayerCallback = callback;
+			//check on existence first
+			sendMessage(PLAYER_EXISTS, playerExistsCallback);
 		}
 		
-		
-		public function activatePlayer(callback:Function):void
+		public function playerExistsCallback(result:int, e:flash.events.Event):void
 		{
-			sendMessage(ACTIVATE_PLAYER, callback);
+			if(e != null)
+			{
+				var exists:String = JSON.parse(e.target.data).existsInRepo;
+				if(XString.stringToBool(exists) == false)
+				{
+					//create player
+					createPlayer(JSON.parse(e.target.data).id);
+				}
+				else
+					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
+			}
+		}
+			
+		public function createPlayer(playerID:String):void
+		{
+			sendMessage(CREATE_PLAYER, createPlayerCallback);
+		}
+		
+		public function createPlayerCallback(result:int, e:flash.events.Event):void
+		{
+			if(e != null)
+			{
+				var success:String = JSON.parse(e.target.data).success;
+				if(XString.stringToBool(success) == true)
+				{
+					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
+				}
+			}
 		}
 		
 		

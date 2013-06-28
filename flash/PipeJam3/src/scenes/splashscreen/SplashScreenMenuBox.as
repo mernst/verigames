@@ -279,7 +279,7 @@ package scenes.splashscreen
 			
 			//do this, although player probably is already be activated
 			if(!PipeJam3.playerActivated)
-				loginHelper.activatePlayer(onPlayerActivated);
+				loginHelper.checkPlayerID(onPlayerActivated);
 			else
 				onPlayerActivated(0, null);
 		}

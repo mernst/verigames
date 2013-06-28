@@ -26,14 +26,14 @@ package
 		private var mStarling:Starling;
 		
 		public static var playerLoggedIn:Boolean = false;
-		public static var playerID:String = "51c49aa0e4b0fa95a28f6ce2";
+		public static var playerID:String = "51cb6fc7ddfe66b65d000021";
 		public static var playerActivated:Boolean = false;
 		static public var cookies:String;
 
 		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = false;
+		public static var RELEASE_BUILD:Boolean = true;
 
 		
 		protected var hasBeenAddedToStage:Boolean = false;
@@ -72,18 +72,18 @@ package
 				{
 					var jsonResponseObj:Object = JSON.parse(response);
 					
-					if(jsonResponseObj.userId != null)
+			//		if(jsonResponseObj.userId != null)
 					{
 						playerLoggedIn = true;
-						playerID = jsonResponseObj.userId;
+			//			playerID = jsonResponseObj.userId;
 						PipeJamGame.PLAYER_LOGGED_IN = true;
 						//activate player to make sure
-						LoginHelper.getLoginHelper().activatePlayer(initialize);
+						LoginHelper.getLoginHelper().checkPlayerID(initialize);
 						playerActivated = true; //or at least attempted
 						
 					}
-					else
-						initialize();
+//					else
+//						initialize();
 				}
 				else
 					initialize();
