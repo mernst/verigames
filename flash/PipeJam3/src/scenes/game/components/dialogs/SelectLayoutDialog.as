@@ -100,13 +100,15 @@ package scenes.game.components.dialogs
 		public function setDialogInfo(_layoutList:Vector.<Object>):void
 		{
 			layoutNameArray = new Array;
-			for(var i:int = 0; i<_layoutList.length; i++)
+			if(_layoutList)
 			{
-				var layout:Object = _layoutList[i];
-				var layoutName:String = decodeURIComponent(layout.name);
-				layoutNameArray.push(layoutName);
+				for(var i:int = 0; i<_layoutList.length; i++)
+				{
+					var layout:Object = _layoutList[i];
+					var layoutName:String = decodeURIComponent(layout.name);
+					layoutNameArray.push(layoutName);
+				}
 			}
-			
 			//we are done, show everything
 			// Creating the dataprovider
 			layoutNameCollection = new ListCollection(layoutNameArray);
@@ -126,16 +128,24 @@ package scenes.game.components.dialogs
 		private function onSelectButtonTriggered(e:starling.events.Event):void
 		{
 			visible = false;
-			var selectedIndex:int = layoutList.selectedIndex;
-			var layoutID:String;
-			if(layoutObjectVector[selectedIndex]._id is String)
-				layoutID = layoutObjectVector[selectedIndex]._id;
-			else
+			if(layoutObjectVector != null)
 			{
-				var idObj:Object = layoutID = layoutObjectVector[selectedIndex]._id;
-				layoutID = idObj.$oid;
+				var selectedIndex:int = layoutList.selectedIndex;
+				var layoutID:String;
+				if(layoutObjectVector[selectedIndex]._id is String)
+					layoutID = layoutObjectVector[selectedIndex]._id;
+				else
+				{
+					var idObj:Object = layoutID = layoutObjectVector[selectedIndex]._id;
+					layoutID = idObj.$oid;
+				}
+				LoginHelper.getLoginHelper().getNewLayout(layoutID, setNewLayout);
 			}
-			LoginHelper.getLoginHelper().getNewLayout(layoutID, setNewLayout);
+			else if(PipeJam3.RELEASE_BUILD == false)
+			{
+				//reload layout file??. Useful if testing setNewLayout, and changing layouts during runs
+				
+			}
 		}
 		
 		private function setNewLayout(byteArray:ByteArray):void

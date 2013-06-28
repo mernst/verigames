@@ -339,7 +339,7 @@ package scenes.game.display
 					minY = Math.min(minY, boundingBox.y);
 					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
-					trace("Level " + m_levelLayoutXML.@id + " edge m_boundingBox = " + boundingBox);
+					trace("Level " + edgeXML.@id + " edge m_boundingBox = " + boundingBox);
 				}
 			}
 			// At this point, there may be multiple lines listening to the same port for trouble points,
@@ -464,11 +464,7 @@ package scenes.game.display
 			if (!myNode) {
 				trace("Warning! Box not found for boxId: " + boxId);
 			}
-			//normalize edge Array, and then slide game edge to right x,y value
-			var minXedge:Number = Number.POSITIVE_INFINITY;
-			var minYedge:Number = Number.POSITIVE_INFINITY;
-			var maxXedge:Number = Number.NEGATIVE_INFINITY;
-			var maxYedge:Number = Number.NEGATIVE_INFINITY;
+			
 			
 			//create edge array
 			var edgeArray:Array = new Array;
@@ -503,12 +499,46 @@ package scenes.game.display
 				edgeArray.push(newStartPt);
 				edgeArray.push(newEndPt);
 			}
+			if(edgeArray.length < 2)
+				return null;
+			
+			var bb:Rectangle = createEdgePointBoundingBox(edgeArray);
+			
+			var lineID:String = edgeXML.@id;
+			var newGameEdge:GameEdgeContainer;
+			// get editable property from related edge or end segment/joint
+			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
+			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
+			} else {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
+			}
+			if(edgeXML.hasOwnProperty('@visible'))
+				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
+			
+			m_edgeList.push(newGameEdge);
+			if (edgeIsCopy) {
+				copyLines.push(newGameEdge);
+			}
+			edgeContainerDictionary[edgeContainerID] = newGameEdge;
+			return bb;
+		}
+		
+		//figures out edge point min and max values, creates bounding box, and then normalizes points
+		public function createEdgePointBoundingBox(edgeArray:Array):Rectangle
+		{
+			//normalize edge Array, and then slide game edge to right x,y value
+			var minXedge:Number = Number.POSITIVE_INFINITY;
+			var minYedge:Number = Number.POSITIVE_INFINITY;
+			var maxXedge:Number = Number.NEGATIVE_INFINITY;
+			var maxYedge:Number = Number.NEGATIVE_INFINITY;
 			
 			var startPt:Point = edgeArray[0];
 			var endPt:Point = edgeArray[edgeArray.length-1];
 			
 			if(startPt == null || endPt == null)
 				return null;
+			
 			//get bounding box points, using start and end points as reference
 			if(startPt.x < endPt.x)
 			{
@@ -540,26 +570,7 @@ package scenes.game.display
 				edgeArray[i].y -= minYedge;
 			}
 			
-			var lineID:String = edgeXML.@id;
-			
 			var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
-			var newGameEdge:GameEdgeContainer;
-			// get editable property from related edge or end segment/joint
-			
-			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
-			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
-			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
-			}
-			if(edgeXML.hasOwnProperty('@visible'))
-				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
-			
-			m_edgeList.push(newGameEdge);
-			if (edgeIsCopy) {
-				copyLines.push(newGameEdge);
-			}
-			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			
 			return bb;
 		}
@@ -669,22 +680,50 @@ package scenes.game.display
 			}
 			//update lines
 			
-			//delete all existing edges, and recreate
-			for each(var existingEdge:GameEdgeContainer  in m_edgeList)
-				existingEdge.parent.removeChild(existingEdge);
-			edgeContainerDictionary = new Dictionary();
-			m_edgeList = new Vector.<GameEdgeContainer>;
+			if(useExistingLines == false)
+			{
+				//delete all existing edges, and recreate
+				for each(var existingEdge:GameEdgeContainer  in m_edgeList)
+					existingEdge.parent.removeChild(existingEdge);
+				edgeContainerDictionary = new Dictionary();
+				m_edgeList = new Vector.<GameEdgeContainer>;
+			}
 				
 			for each(var edge:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edge, useExistingLines);
-					
-				if(boundingBox)
+				var edgeID:String = edge.@id;
+				var edgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeID];
+				if(useExistingLines == false && edgeContainer == null)
 				{
-					minX = Math.min(minX, boundingBox.left);
-					minY = Math.min(minY, boundingBox.top);
-					maxX = Math.max(maxX, boundingBox.right);
-					maxY = Math.max(maxY, boundingBox.bottom);
+					var boundingBox:Rectangle = createLine(edge, useExistingLines);
+					
+					if(boundingBox)
+					{
+						minX = Math.min(minX, boundingBox.left);
+						minY = Math.min(minY, boundingBox.top);
+						maxX = Math.max(maxX, boundingBox.right);
+						maxY = Math.max(maxY, boundingBox.bottom);
+					}
+				}
+				else
+				{
+					if(edgeContainer)
+					{
+						//create edge array
+						var edgeArray:Array = new Array;
+						
+						var edgePoints:XMLList = edge.point;
+						for each(var pointXML:XML in edgePoints)
+						{
+							var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
+							edgeArray.push(pt);
+						}
+						var boundingBox:Rectangle = createEdgePointBoundingBox(edgeArray);
+						edgeContainer.createLine(edgeArray);
+						edgeContainer.m_boundingBox = boundingBox;
+						edgeContainer.x = edgeContainer.m_boundingBox.x - m_boundingBox.x;
+						edgeContainer.y = edgeContainer.m_boundingBox.y - m_boundingBox.y;
+					}
 				}
 			}
 			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);

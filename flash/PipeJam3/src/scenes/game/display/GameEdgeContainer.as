@@ -204,6 +204,26 @@ package scenes.game.display
 		//assume to and from nodes are set in place, so we can fix our size and bounding box
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			createLine();
+			
+			addEventListener(CREATE_JOINT, onCreateJoint);
+			addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			addEventListener(HOVER_EVENT_OVER, onHoverOver);
+			addEventListener(HOVER_EVENT_OUT, onHoverOut);
+			addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
+			addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
+		}
+		
+		//create or recreate line. m_edgeArray needs to be set first, or values passed in
+		public function createLine(newEdgeArray:Array = null):void
+		{
+			if(newEdgeArray)
+				m_edgeArray = newEdgeArray;
+			
+			m_startPoint = m_edgeArray[0];
+			m_endPoint = m_edgeArray[m_edgeArray.length-1];
+			
 			if(m_edgeArray.length == 2)
 			{
 				createJointPointsArray(m_startPoint, m_endPoint);
@@ -230,14 +250,6 @@ package scenes.game.display
 			
 			updateSize();
 			m_isDirty = true;
-			
-			addEventListener(CREATE_JOINT, onCreateJoint);
-			addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(HOVER_EVENT_OVER, onHoverOver);
-			addEventListener(HOVER_EVENT_OUT, onHoverOut);
-			addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
-			addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
 		}
 		
 		private function isTopOfEdge():Boolean
