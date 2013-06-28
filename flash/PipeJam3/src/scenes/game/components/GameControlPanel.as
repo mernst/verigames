@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.NineSliceButton;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -17,7 +18,6 @@ package scenes.game.components
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
-	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -45,7 +45,7 @@ package scenes.game.components
 		private var m_scoreTextfield:TextFieldWrapper;
 		
 		/** Button to bring the up the menu */
-		private var m_menuButton:Button;
+		private var m_menuButton:NineSliceButton;
 		
 		private var menuShowing:Boolean = false;
 		
@@ -97,10 +97,7 @@ package scenes.game.components
 			m_scorebarForeground.height = HEIGHT;
 			addChild(m_scorebarForeground);
 			
-			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
-			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
-			
-			m_menuButton = new Button(menuButtonUp, "", menuButtonClick);
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2;
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 8;

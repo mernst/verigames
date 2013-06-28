@@ -49,13 +49,13 @@ package scenes.game.components.dialogs
 			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
-			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, 16, 16);
+			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			submit_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitButtonTriggered);
 			submit_button.x = background.width - buttonPaddingWidth - buttonWidth;
 			submit_button.y = background.height - buttonPaddingHeight - buttonHeight;
 			addChild(submit_button);	
 			
-			cancel_button = ButtonFactory.getInstance().createButton("Cancel", buttonWidth, buttonHeight, 16, 16);
+			cancel_button = ButtonFactory.getInstance().createButton("Cancel", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			cancel_button.x = background.width - 2*buttonPaddingWidth - 2*buttonWidth;
 			cancel_button.y = background.height - buttonPaddingHeight - buttonHeight;

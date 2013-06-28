@@ -197,7 +197,7 @@ package scenes.game.display
 				inGameMenuBox.visible = true;
 			}
 			else
-				inGameMenuBox.visible = false;
+				inGameMenuBox.onBackToGameButtonTriggered();
 				
 		}
 		
