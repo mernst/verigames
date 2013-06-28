@@ -27,6 +27,7 @@ package scenes.game.components.dialogs
 	public class SelectLevelDialog extends CustomScreen
 	{
 		protected var levelList:List = null;
+		
 				
 		public function SelectLevelDialog(_dialogParent:SplashScreenMenuBox)
 		{
@@ -60,7 +61,7 @@ package scenes.game.components.dialogs
 		}
 		
 		public override function setDialogInfo(_levelListCollection:ListCollection, _matchArrayMetadata:Array):void
-		{
+		{			
 			super.setDialogInfo(_levelListCollection, _matchArrayMetadata);
 			levelList.dataProvider = levelListCollection;
 		}

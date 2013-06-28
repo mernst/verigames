@@ -1,28 +1,34 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
+	
 	import events.EdgeSetChangeEvent;
+	import events.NavigationEvent;
+	
 	import flash.geom.Point;
+	import flash.system.System;
+	import flash.utils.Dictionary;
+	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	
 	import scenes.BaseComponent;
-	import scenes.game.components.dialogs.InGameMenuDialog;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import system.PipeSimulator;
-	import scenes.game.PipeJamGameScene;
-	import events.NavigationEvent;
-	import utils.XMath;
-	
-	import flash.utils.Dictionary;
-	import flash.system.System;
+	import scenes.game.components.dialogs.InGameMenuDialog;
 	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	
+	import system.PipeSimulator;
+	
+	import utils.XMath;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -210,7 +216,10 @@ package scenes.game.display
 		public function onSubmitScore(event:Event):void
 		{
 			if(active_level != null)
-				active_level.onSubmitScore(event);
+			{
+				var currentScore:int = gameControlPanel.getCurrentScore();
+				active_level.onSubmitScore(event, currentScore);
+			}
 		}
 		
 		public function onSaveLocally(event:Event):void

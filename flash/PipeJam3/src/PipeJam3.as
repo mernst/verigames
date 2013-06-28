@@ -33,7 +33,7 @@ package
 		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = false;
 
 		
 		protected var hasBeenAddedToStage:Boolean = false;
@@ -72,18 +72,18 @@ package
 				{
 					var jsonResponseObj:Object = JSON.parse(response);
 					
-			//		if(jsonResponseObj.userId != null)
+					if(jsonResponseObj.userId != null)
 					{
 						playerLoggedIn = true;
-			//			playerID = jsonResponseObj.userId;
+						playerID = jsonResponseObj.userId;
 						PipeJamGame.PLAYER_LOGGED_IN = true;
 						//activate player to make sure
 						LoginHelper.getLoginHelper().checkPlayerID(initialize);
 						playerActivated = true; //or at least attempted
 						
 					}
-//					else
-//						initialize();
+					else
+						initialize();
 				}
 				else
 					initialize();

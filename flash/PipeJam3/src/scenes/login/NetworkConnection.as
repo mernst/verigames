@@ -144,7 +144,7 @@ package scenes.login
 					break;
 				case LoginHelper.SAVE_CONSTRAINTS:
 					var scoreASString:String = other;
-					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+scoreASString+"&method=DATABASE";
+					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+playerID+"/"+scoreASString+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.VERIFY_SESSION:
@@ -173,7 +173,6 @@ package scenes.login
 					var encodedString:String = encoder.toString();
 					urlRequest.contentType = URLLoaderDataFormat.TEXT;
 					trace(encodedString.length);
-					trace(encodedString);
 					urlRequest.data = encodedString+"\n"; //terminate line so Java can use readLine to get message
 				}
 				else

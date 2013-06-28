@@ -53,6 +53,8 @@ package scenes.game.display
 		{
 			x += delta.x;
 			y += delta.y;
+			m_boundingBox.x += delta.x;
+			m_boundingBox.y += delta.y;
 		}
 		
 		public function getScore():Number

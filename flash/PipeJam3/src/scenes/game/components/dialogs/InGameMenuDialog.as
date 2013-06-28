@@ -149,12 +149,15 @@ package scenes.game.components.dialogs
 			{
 				selectLayoutDialog = new SelectLayoutDialog();
 				parent.addChild(selectLayoutDialog);
+				
 				selectLayoutDialog.x = background.width;
 				selectLayoutDialog.y = y + (height - selectLayoutDialog.height);
 				selectLayoutDialog.visible = true;
 			}
 			else
 				selectLayoutDialog.visible = !selectLayoutDialog.visible;
+			
+				selectLayoutDialog.setDialogInfo(layoutList);
 		}
 		
 		public function onBackToGameButtonTriggered():void

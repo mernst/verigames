@@ -224,9 +224,10 @@ package scenes.login
 			newZip.serialize(byteArray);
 			
 			m_constraintsSaved = m_levelCreated = false;
-			sendMessage(SAVE_CONSTRAINTS, onConstraintsFileSaved, byteArray, levelConstraintsXML.@name);
+			sendMessage(SAVE_CONSTRAINTS, onConstraintsFileSaved, byteArray, levelConstraintsXML.@id, currentScore.toString());
 			
-			sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelConstraintsXML.@name, new String(currentScore));
+		//	Maybe we want people to directly generate new playable levels, and build off others??
+		//	sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelConstraintsXML.@id);
 		}	
 		
 		public function onConstraintsFileSaved(result:int, e:flash.events.Event):void

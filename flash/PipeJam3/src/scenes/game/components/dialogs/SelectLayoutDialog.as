@@ -1,26 +1,32 @@
 package scenes.game.components.dialogs
 {
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
+	import display.NineSliceBatch;
+	import display.NineSliceButton;
+	
+	import feathers.controls.Label;
+	import feathers.controls.List;
 	import feathers.controls.TextInput;
+	import feathers.controls.text.StageTextTextEditor;
+	import feathers.core.ITextEditor;
+	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
 	
+	import flash.text.TextFormat;
+	import flash.events.Event;
+	import scenes.BaseComponent;
+	import scenes.game.display.Level;
+	
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
-	import feathers.controls.text.StageTextTextEditor;
-	import feathers.core.ITextEditor;
-	import starling.display.Button;
 	
-	import display.NineSliceButton;
-	import display.NineSliceBatch;
-	import feathers.controls.Label;
-	import flash.text.TextFormat;
-	import feathers.controls.List;
+	import utils.Base64Decoder;
+	import flash.utils.ByteArray;
+	import scenes.login.LoginHelper;
 	
 	public class SelectLayoutDialog extends BaseComponent
 	{
@@ -34,7 +40,11 @@ package scenes.game.components.dialogs
 		
 		private var background:NineSliceBatch;
 		
-		protected var levelList:List = null;
+		protected var layoutList:List = null;
+		
+		protected var layoutObjectVector:Vector.<Object> = null;
+		protected var layoutNameArray:Array = null;
+		protected var layoutNameCollection:ListCollection;
 		
 		protected var buttonPaddingWidth:int = 8;
 		protected var buttonPaddingHeight:int = 8;
@@ -52,7 +62,7 @@ package scenes.game.components.dialogs
 			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
-			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_button = ButtonFactory.getInstance().createButton("Select", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			submit_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			submit_button.x = background.width - buttonPaddingWidth - buttonWidth;
 			submit_button.y = background.height - buttonPaddingHeight - buttonHeight;
@@ -64,20 +74,48 @@ package scenes.game.components.dialogs
 			cancel_button.y = background.height - buttonPaddingHeight - buttonHeight;
 			addChild(cancel_button);
 			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
+			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);	
 		}
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			levelList = new List;
-			levelList.y = 75;
-			levelList.width = 125;
-			levelList.x = (width - levelList.width)/2;
-			levelList.itemRendererProperties.height = 10;
+			layoutList = new List;
+			layoutList.y = buttonPaddingHeight;
+			layoutList.width = width - 2*buttonPaddingWidth;
+			layoutList.height = height - buttonHeight - 3*buttonPaddingHeight;
+			layoutList.x = (width - layoutList.width)/2;
+			layoutList.itemRendererProperties.height = 10;
 			
-			addChild(levelList);
-			levelList.addEventListener( starling.events.Event.CHANGE, onSelectButtonTriggered);
-			levelList.validate();
+			addChild(layoutList);
+	//		layoutList.addEventListener( starling.events.Event.CHANGE, onSelectButtonTriggered);
+			layoutList.validate();
+			
+			if(layoutNameCollection)
+			{
+				layoutList.dataProvider = layoutNameCollection;
+				layoutList.selectedIndex = 0;
+			}
+		}
+		
+		public function setDialogInfo(_layoutList:Vector.<Object>):void
+		{
+			layoutNameArray = new Array;
+			for(var i:int = 0; i<_layoutList.length; i++)
+			{
+				var layout:Object = _layoutList[i];
+				var layoutName:String = decodeURIComponent(layout.name);
+				layoutNameArray.push(layoutName);
+			}
+			
+			//we are done, show everything
+			// Creating the dataprovider
+			layoutNameCollection = new ListCollection(layoutNameArray);
+			layoutObjectVector = _layoutList;
+			if(layoutList)
+			{
+				layoutList.dataProvider = layoutNameCollection;
+				layoutList.selectedIndex = 0;
+			}
 		}
 		
 		private function onCancelButtonTriggered(e:starling.events.Event):void
@@ -88,7 +126,23 @@ package scenes.game.components.dialogs
 		private function onSelectButtonTriggered(e:starling.events.Event):void
 		{
 			visible = false;
-			//dispatchEvent(new starling.events.Event(Level.SAVE_LAYOUT, true, input.text));		
+			var selectedIndex:int = layoutList.selectedIndex;
+			var layoutID:String;
+			if(layoutObjectVector[selectedIndex]._id is String)
+				layoutID = layoutObjectVector[selectedIndex]._id;
+			else
+			{
+				var idObj:Object = layoutID = layoutObjectVector[selectedIndex]._id;
+				layoutID = idObj.$oid;
+			}
+			LoginHelper.getLoginHelper().getNewLayout(layoutID, setNewLayout);
+		}
+		
+		private function setNewLayout(byteArray:ByteArray):void
+		{
+			var layoutFile:XML = new XML(byteArray);
+			dispatchEvent(new starling.events.Event(Level.SET_NEW_LAYOUT, true, layoutFile));		
+			
 		}
 	}
 }

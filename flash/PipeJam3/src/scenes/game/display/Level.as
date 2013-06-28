@@ -598,7 +598,7 @@ package scenes.game.display
 			
 			if(LoginHelper.levelObject != null)
 			{
-				m_levelLayoutXML.@id = event.data;
+				m_levelLayoutXMLWrapper.@id = event.data;
 				LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXMLWrapper);	
 			}
 			else
@@ -608,15 +608,10 @@ package scenes.game.display
 		}
 		
 		
-		public function onSubmitScore(event:starling.events.Event):void
+		public function onSubmitScore(event:starling.events.Event, currentScore:int):void
 		{
 			updateConstraintXML();
-			if(PipeJam3.RELEASE_BUILD)
-			{
-				m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
-				var currentScore:int = 300;
-				LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
-			}
+			LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
 		}
 		
 		public function onSaveLocally(event:starling.events.Event):void
@@ -673,7 +668,13 @@ package scenes.game.display
 				}
 			}
 			//update lines
+			
+			//delete all existing edges, and recreate
+			for each(var existingEdge:GameEdgeContainer  in m_edgeList)
+				existingEdge.parent.removeChild(existingEdge);
 			edgeContainerDictionary = new Dictionary();
+			m_edgeList = new Vector.<GameEdgeContainer>;
+				
 			for each(var edge:XML in m_levelLayoutXML.line)
 			{
 				var boundingBox:Rectangle = createLine(edge, useExistingLines);
@@ -748,15 +749,6 @@ package scenes.game.display
 							
 							child.appendChild(ptXML);
 						}
-						
-						if(child.frombox != undefined)
-							child.frombox.@port = edgeContainer.m_fromPortID;
-						else if(child.fromjoint != undefined)
-							child.fromjoint.@port = edgeContainer.m_fromPortID;
-						if(child.tobox != undefined)
-							child.tobox.@port = edgeContainer.m_toPortID;
-						else if(child.tojoint != undefined)
-							child.tojoint.@port = edgeContainer.m_toPortID;
 					}
 				}
 			}

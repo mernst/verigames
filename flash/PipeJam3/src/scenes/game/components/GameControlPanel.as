@@ -334,19 +334,11 @@ package scenes.game.components
 			
 			return m_currentScore;
 		}
-		
-//		public function onSaveButtonClick(e:TouchEvent):void {
-//			if (m_world) {
-//				m_world.outputXmlToJavascript();
-//			}
-//		}
-//		
-//		public function onSubmitButtonClick(e:TouchEvent):void {
-//			if (m_world) {
-//				m_world.outputXmlToJavascript();
-//			}
-//			//showNextWorldScreen();
-//		}
+
+		public function getCurrentScore():int
+		{
+			return m_currentScore;
+		}
 
 		public function errorAdded(errorData:Object, level:Level):void
 		{
