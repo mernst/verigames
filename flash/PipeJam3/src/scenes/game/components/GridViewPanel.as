@@ -108,13 +108,19 @@ package scenes.game.components
 				}
 				else if(currentMode == MOVING_MODE)
 				{
-					var undoData:Object = new Object();
-					undoData.target = this;
-					undoData.component = this;
-					undoData.startPoint = startingPoint.clone();
-					undoData.endPoint = new Point(content.x, content.y);
-					var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
-					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+					//did we really move?
+					if(content.x != startingPoint.x || content.y != startingPoint.y)
+					{
+						var undoData:Object = new Object();
+						undoData.target = this;
+						undoData.type = "move content";
+						undoData.component = this;
+						undoData.addToLastSimilar = true;
+						undoData.startPoint = startingPoint.clone();
+						undoData.endPoint = new Point(content.x, content.y);
+						var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
+						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+					}
 				}
 				if(currentMode != NORMAL_MODE)
 					currentMode = NORMAL_MODE;
@@ -267,6 +273,8 @@ package scenes.game.components
 				var endPoint:Point = new Point(content.x, content.y);
 				var moveData:Object = new Object();
 				moveData.target = this;
+				moveData.type = "mouse wheel";
+				moveData.addToLastSimilar = true;
 				moveData.mousePoint = mousePoint;
 				moveData.delta = delta;
 				moveData.time = new Date().time;
@@ -499,6 +507,7 @@ package scenes.game.components
 			
 			var undoData:Object = new Object();
 			undoData.target = this;
+			undoData.type = "center on component";
 			undoData.component = this;
 			undoData.startPoint = startingPoint.clone();
 			undoData.endPoint = new Point(content.x, content.y);

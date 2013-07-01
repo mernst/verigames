@@ -121,6 +121,8 @@
 						isMoving = false;
 						if(this.m_isNodeExtensionSegment)
 							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
+						
+						
 					}
 				}
 				

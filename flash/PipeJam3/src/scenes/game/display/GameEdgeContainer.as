@@ -1,20 +1,25 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import particle.ErrorParticleSystem;
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Sprite;
-	import starling.events.Event;
 	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
+	
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import utils.XMath;
+	
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.SubnetworkPort;
+	
+	import particle.ErrorParticleSystem;
+	
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Sprite;
+	import starling.events.Event;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -38,8 +43,6 @@ package scenes.game.display
 		//save start and end points, so we can remake line
 		public var m_startPoint:Point;
 		public var m_endPoint:Point;
-		public var m_savedStartPoint:Point;
-		public var m_savedEndPoint:Point;
 		public var m_startJoint:GameEdgeJoint;
 		public var m_endJoint:GameEdgeJoint;
 		public var m_markerJoint:GameEdgeJoint;
@@ -47,11 +50,12 @@ package scenes.game.display
 		public var hasChanged:Boolean;
 		public var restoreEdge:Boolean;
 		
+		//used to record current position for both undoing and port tracking (snap back to original)
+		public var undoObject:Object;
+		
 		public var m_innerBoxSegment:InnerBoxSegment;
-		private var m_savedInnerBoxSegmentLocation:Point;
 		
 		public var m_jointPoints:Array;
-		public var m_savedJointPoints:Array;
 		
 		public var incomingEdgePosition:Number;
 		public var outgoingEdgePosition:Number;
@@ -472,7 +476,8 @@ package scenes.game.display
 				m_extensionEdge.handleHover(false);
 		}
 		
-		private function onSaveLocation(event:Event):void
+		//these next 4 functions deal with moving internal to node segments, or the extension pieces
+		public function onSaveLocation(event:Event):void
 		{
 			saveLocation();
 			if(m_extensionEdge)
@@ -483,18 +488,23 @@ package scenes.game.display
 		{
 			hasChanged = false;
 			restoreEdge = true;
-			m_savedJointPoints = new Array;
 			
-			m_savedStartPoint = m_startPoint.clone();
-			m_savedEndPoint = m_endPoint.clone();
+			undoObject = new Object;
+			undoObject.m_savedJointPoints = new Array;
+			
+			undoObject.m_savedStartPoint = m_startPoint.clone();
+			undoObject.m_savedEndPoint = m_endPoint.clone();
 			
 			for each(var pt:Point in m_jointPoints)
-			m_savedJointPoints.push(pt.clone());
+				undoObject.m_savedJointPoints.push(pt.clone());
 			
-			m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
+			undoObject.initialOutgoingEdgePosition = outgoingEdgePosition;
+			undoObject.initialIncomingEdgePosition = incomingEdgePosition;
+			
+			undoObject.m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
 		}
 		
-		private function onRestoreLocation(event:Event):void
+		public function onRestoreLocation(event:Event):void
 		{
 			restoreLocation();
 			
@@ -506,18 +516,21 @@ package scenes.game.display
 		{
 			if(restoreEdge)
 			{
-				m_jointPoints = m_savedJointPoints;
-				m_startPoint = m_savedStartPoint;
-				m_endPoint = m_savedEndPoint;
+				m_jointPoints = undoObject.m_savedJointPoints;
+				m_startPoint = undoObject.m_savedStartPoint;
+				m_endPoint = undoObject.m_savedEndPoint;
 				positionChildren();
-				m_innerBoxSegment.interiorPt.x = m_savedInnerBoxSegmentLocation.x;
-				m_innerBoxSegment.interiorPt.y = m_savedInnerBoxSegmentLocation.y;
+				m_innerBoxSegment.interiorPt.x = undoObject.m_savedInnerBoxSegmentLocation.x;
+				m_innerBoxSegment.interiorPt.y = undoObject.m_savedInnerBoxSegmentLocation.y;
 			}
 			else
 			{
-				m_startPoint = m_savedStartPoint;
-				m_endPoint = m_savedEndPoint;
-				rubberBandEdge(new Point(), true);
+				var startDistance:Number = XMath.getDistSquared(m_startPoint, undoObject.m_savedStartPoint);
+				var endDistance:Number = XMath.getDistSquared(m_endPoint, undoObject.m_savedEndPoint);
+				
+				m_startPoint = undoObject.m_savedStartPoint;
+				m_endPoint = undoObject.m_savedEndPoint;
+				rubberBandEdge(new Point(), true); //just force a redrawing
 			}
 			m_isDirty = true;
 		}
@@ -705,13 +718,7 @@ package scenes.game.display
 			{
 				var segment:GameEdgeSegment = event.target as GameEdgeSegment;
 				
-				if(segment.parent is InnerBoxSegment)
-				{
-					rubberBandEdgeSegment(segment.updatePoint, segment);
-					//		rubberBandEdgeSegment(segment.updatePoint, (segment.parent as InnerBoxSegment).m_extensionEdge);
-				}
-				else
-					rubberBandEdgeSegment(segment.updatePoint, segment);
+				rubberBandEdgeSegment(segment.updatePoint, segment);
 			}
 		}
 		

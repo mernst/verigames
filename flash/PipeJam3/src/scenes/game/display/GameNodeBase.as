@@ -168,6 +168,7 @@ package scenes.game.display
 					
 					undoData = new Object();
 					undoData.target = "level";
+					undoData.type = "move GameNodeBase";
 					undoData.component = this;
 					undoData.startPoint = startingPoint.clone();
 					undoData.endPoint = new Point(x, y);
@@ -198,6 +199,7 @@ package scenes.game.display
 						
 						undoData = new Object();
 						undoData.target = this;
+						undoData.type = "width change";
 						undoEvent = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
 						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
 					}
@@ -374,13 +376,13 @@ package scenes.game.display
 			{
 				edgeIndex = edge.outgoingEdgePosition;
 				edgeGlobalPt = edge.localToGlobal(edge.m_startPoint);
-				edgeBeginGlobalPt = edge.localToGlobal(edge.m_savedStartPoint);
+				edgeBeginGlobalPt = edge.localToGlobal(edge.undoObject.m_savedStartPoint);
 			}
 			else
 			{
 				edgeIndex = edge.incomingEdgePosition;
 				edgeGlobalPt = edge.localToGlobal(edge.m_endPoint);
-				edgeBeginGlobalPt = edge.localToGlobal(edge.m_savedEndPoint);
+				edgeBeginGlobalPt = edge.localToGlobal(edge.undoObject.m_savedEndPoint);
 			}
 
 			nextEdgeIndex = getNextEdgePosition(edgeIndex, incrementing);
@@ -463,24 +465,24 @@ package scenes.game.display
 		//update edge and extension edge to be at newPosition.x
 		//the difference between this function and the next one, is that the mechanism is going to try to restore this
 		//edge to the beginning state (as when you drag it a little bit, and it snaps back)
-		//but, but setting the saved point, we will be snapping back to the new position, not the old one
+		//but, by setting the saved point, we will be snapping back to the new position, not the old one
 		// in the next function, none of that holds, so we can just directly update the start and end points
 		protected function updateEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
 		{
 			var isEdgeOutgoing:Boolean = edge.m_fromComponent == this ? true : false;
 			if(isEdgeOutgoing)
 			{
-				if(edge.m_savedStartPoint)
-					edge.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
-				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedEndPoint)
-					edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+				if(edge.undoObject.m_savedStartPoint)
+					edge.undoObject.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.undoObject.m_savedEndPoint)
+					edge.m_extensionEdge.undoObject.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
 			}
 			else
 			{
-				if(edge.m_savedEndPoint)
-					edge.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
-				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedStartPoint)
-					edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+				if(edge.undoObject.m_savedEndPoint)
+					edge.undoObject.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.undoObject.m_savedStartPoint)
+					edge.m_extensionEdge.undoObject.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
 			}
 		}
 		
