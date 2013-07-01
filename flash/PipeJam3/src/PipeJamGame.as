@@ -13,8 +13,6 @@ package
 	import scenes.login.*;
 	import flash.display.LoaderInfo;
 	
-	import server.LoggingServerInterface;
-	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -29,9 +27,6 @@ package
 	
 	public class PipeJamGame extends Game
 	{
-		/** True to log to the CGS server */
-		public static var LOGGING_ON:Boolean = true;
-		
 		/** Set by flashVars */
 		public static var DEBUG_MODE:Boolean = false;
 		
@@ -40,7 +35,7 @@ package
 		
 		/** Set to true if player logged into website (there's an express.sid cookie, and it's validated by server) */
 		public static var PLAYER_LOGGED_IN:Boolean = false;
-				
+		
 		/** list of all network connection objects spawned */
 		protected static var networkConnections:Vector.<NetworkConnection>;
 
@@ -53,9 +48,6 @@ package
 		public function PipeJamGame()
 		{
 			super();
-			
-			if(!LoggingServerInterface.m_serverInitialized)
-				LoggingServerInterface.initializeServer();
 			
 			// load general assets
 			prepareAssets();

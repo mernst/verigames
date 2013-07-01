@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	import system.VerigameServerConstants;
 	
 	import audio.AudioManager;
 	
@@ -243,6 +244,12 @@ package scenes.game.display
 			} else {
 				edgeSetGraphViewPanel.hideNextButton();
 			}
+			if (PipeJam3.logging) {
+				var details:Object = new Object();
+				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_id;
+				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_WIDTH] = evt.edgeSetChanged.isWide() ? VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_WIDE : VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_NARROW;
+				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+			}
 		}
 		
 		private function onCenterOnComponentEvent(e:Event):void
@@ -448,9 +455,19 @@ package scenes.game.display
 			if (!newLevel) {
 				return;
 			}
-			
+			if (PipeJam3.logging) {
+				var details:Object;
+				if (active_level) {
+					details = new Object();
+					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
+					PipeJam3.logging.logQuestEnd(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
+				}
+				details = new Object();
+				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
+				PipeJam3.logging.logQuestStart(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
+			}
 			active_level = newLevel;
-			
+			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.newLevelSelected(newLevel);
 			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);

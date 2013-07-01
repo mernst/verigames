@@ -24,6 +24,7 @@
     <class path="external\Starling-Framework\starling\src" />
     <class path="external\Starling-Extension-Particle-System-master\src" />
     <class path="external\pixelmask-master\src" />
+    <class path="external\MochiAPI_v4_1_2" />
   </classpaths>
   <!-- Build options -->
   <build>

@@ -1,7 +1,5 @@
 package graph 
 {
-	import system.VerigameServerConstants;
-
 	/**
 	 * Special type of node - subnetwork. This does not contain any graphics/drawing information, but it does 
 	 * contain a reference to the associated_board object that has all of that.
@@ -26,19 +24,19 @@ package graph
 					return valueEdge.exit_ball_type;
 				} else {
 					switch (valueEdge.exit_ball_type) {
-						case VerigameServerConstants.BALL_TYPE_WIDE:
+						case Edge.BALL_TYPE_WIDE:
 							// WIDE ball through narrow pipe? This shouldn't be possible, but process it anyway
-							return VerigameServerConstants.BALL_TYPE_NONE;
+							return Edge.BALL_TYPE_NONE;
 						break;
-						case VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW:
-							return VerigameServerConstants.BALL_TYPE_NARROW;
+						case Edge.BALL_TYPE_WIDE_AND_NARROW:
+							return Edge.BALL_TYPE_NARROW;
 						break;
 					}
 					return valueEdge.exit_ball_type;
 				}
 			}
 			// Argument pinstriping doesn't match key, null literal (WIDE ball) thrown)
-			return VerigameServerConstants.BALL_TYPE_WIDE;
+			return Edge.BALL_TYPE_WIDE;
 		}
 		
 		public function argumentHasMapStamp():Boolean

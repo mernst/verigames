@@ -144,6 +144,8 @@ package scenes.game.display
 		
 		public var m_boundingBox:Rectangle;
 		private var m_backgroundImage:Image;
+		private var m_levelStartTime:Number;
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -176,6 +178,8 @@ package scenes.game.display
 			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
 				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
 			}
+			
+			m_levelStartTime = new Date().time;
 			
 			initialize();
 			setConstraints();
@@ -268,9 +272,6 @@ package scenes.game.display
 				minY = Math.min(minY, gameNode.m_boundingBox.top);
 				maxX = Math.max(maxX, gameNode.m_boundingBox.right);
 				maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
-				
-				trace("Level " + m_levelLayoutXML.@id + " node m_boundingBox = " + gameNode.m_boundingBox);
-				
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -326,7 +327,6 @@ package scenes.game.display
 				minY = Math.min(minY, joint.m_boundingBox.top);
 				maxX = Math.max(maxX, joint.m_boundingBox.right);
 				maxY = Math.max(maxY, joint.m_boundingBox.bottom);
-				trace("Level " + m_levelLayoutXML.@id + " joint m_boundingBox = " + joint.m_boundingBox);
 			}
 			
 			// Process <line> 's
@@ -339,7 +339,6 @@ package scenes.game.display
 					minY = Math.min(minY, boundingBox.y);
 					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
-					trace("Level " + edgeXML.@id + " edge m_boundingBox = " + boundingBox);
 				}
 			}
 			// At this point, there may be multiple lines listening to the same port for trouble points,
@@ -601,7 +600,12 @@ package scenes.game.display
 			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
 			trace(m_levelLayoutXML.@id);
 			takeSnapshot();
-		}	
+		}
+		
+		public function start():void
+		{
+			m_levelStartTime = new Date().time;
+		}
 		
 		public function onSaveLayoutFile(event:starling.events.Event):void
 		{
@@ -693,9 +697,10 @@ package scenes.game.display
 			{
 				var edgeID:String = edge.@id;
 				var edgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeID];
+				var boundingBox:Rectangle;
 				if(useExistingLines == false && edgeContainer == null)
 				{
-					var boundingBox:Rectangle = createLine(edge, useExistingLines);
+					boundingBox = createLine(edge, useExistingLines);
 					
 					if(boundingBox)
 					{
@@ -718,7 +723,7 @@ package scenes.game.display
 							var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
 							edgeArray.push(pt);
 						}
-						var boundingBox:Rectangle = createEdgePointBoundingBox(edgeArray);
+						boundingBox = createEdgePointBoundingBox(edgeArray);
 						edgeContainer.createLine(edgeArray);
 						edgeContainer.m_boundingBox = boundingBox;
 						edgeContainer.x = edgeContainer.m_boundingBox.x - m_boundingBox.x;
@@ -726,7 +731,7 @@ package scenes.game.display
 					}
 				}
 			}
-			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
+			trace("Level " + m_levelLayoutXML.attribute("id") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			draw();
@@ -1287,6 +1292,16 @@ package scenes.game.display
 		public function getTargetScore():int
 		{
 			return m_targetScore;
+		}
+		
+		public function get original_level_name():String
+		{
+			return m_levelLayoutXML.attribute("id");
+		}
+		
+		public function getTimeMs():Number
+		{
+			return new Date().time - m_levelStartTime;
 		}
 	}
 }

@@ -6,6 +6,7 @@ package
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import server.LoggingServerInterface;
 	
 	import net.hires.debug.Stats;
 	
@@ -34,7 +35,8 @@ package
 		
 		/** Set to true if a build for the server */
 		public static var RELEASE_BUILD:Boolean = false;
-
+		
+		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var sessionVerificationHasBeenAttempted:Boolean = false;
@@ -48,6 +50,9 @@ package
 			cookies = cookies.replace(pattern1, "\%2B");
 			var pattern2:RegExp = /\//;
 			cookies = cookies.replace(pattern2, "\%2F");
+			if (LoggingServerInterface.LOGGING_ON) {
+				logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
+			}
 			LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValid);
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -76,6 +81,11 @@ package
 					{
 						playerLoggedIn = true;
 						playerID = jsonResponseObj.userId;
+						
+						if (LoggingServerInterface.LOGGING_ON) {
+							logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage, LoggingServerInterface.CGS_VERIGAMES_PREFIX + playerID);
+						}
+						
 						PipeJamGame.PLAYER_LOGGED_IN = true;
 						//activate player to make sure
 						LoginHelper.getLoginHelper().checkPlayerID(initialize);

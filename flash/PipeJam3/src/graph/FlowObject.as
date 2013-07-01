@@ -2,8 +2,6 @@ package graph
 {
 	import events.*;
 	
-	import system.VerigameServerConstants;
-	
 	import flash.utils.Dictionary;
 	
 	/* a class to hold flow state - i.e. information for Drop Objects that needs to flow down the edges, such as current size. */
@@ -31,11 +29,11 @@ package graph
 			associatedEdge = _associatedEdge;
 			flowStartingEdge = startingEdge;
 			
-			if(startingBallType == VerigameServerConstants.BALL_TYPE_NONE)
+			if(startingBallType == Edge.BALL_TYPE_NONE)
 				starting_ball_type = startingBallType;
 			else
-				starting_ball_type = associatedEdge.is_wide ? VerigameServerConstants.BALL_TYPE_WIDE : VerigameServerConstants.BALL_TYPE_NARROW;
-			exit_ball_type = VerigameServerConstants.BALL_TYPE_UNDETERMINED;
+				starting_ball_type = associatedEdge.is_wide ? Edge.BALL_TYPE_WIDE : Edge.BALL_TYPE_NARROW;
+			exit_ball_type = Edge.BALL_TYPE_UNDETERMINED;
 			objectID = objCount;
 			objCount++;
 			parentFlowObject = null;
@@ -60,29 +58,29 @@ package graph
 			switch(flowStartingEdge.from_node.kind)
 			{
 				case NodeTypes.START_LARGE_BALL:
-					starting_ball_type = VerigameServerConstants.BALL_TYPE_WIDE;
+					starting_ball_type = Edge.BALL_TYPE_WIDE;
 					break;
 				case NodeTypes.INCOMING:
 				case NodeTypes.START_PIPE_DEPENDENT_BALL:
 					if(edge.is_wide)
-						starting_ball_type = VerigameServerConstants.BALL_TYPE_WIDE;
+						starting_ball_type = Edge.BALL_TYPE_WIDE;
 					else
-						starting_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+						starting_ball_type = Edge.BALL_TYPE_NARROW;
 					break;
 				case NodeTypes.START_SMALL_BALL:
-					starting_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+					starting_ball_type = Edge.BALL_TYPE_NARROW;
 					break;
 				case NodeTypes.START_NO_BALL:
-					starting_ball_type = VerigameServerConstants.BALL_TYPE_NONE;
+					starting_ball_type = Edge.BALL_TYPE_NONE;
 					break;
 				default:
 					starting_ball_type = this.parentFlowObject.exit_ball_type;
 			}
 			
-			if(starting_ball_type == VerigameServerConstants.BALL_TYPE_WIDE && edge.has_pinch)
-				exit_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+			if(starting_ball_type == Edge.BALL_TYPE_WIDE && edge.has_pinch)
+				exit_ball_type = Edge.BALL_TYPE_NARROW;
 			else if(edge.has_buzzsaw)
-				exit_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+				exit_ball_type = Edge.BALL_TYPE_NARROW;
 			else
 				exit_ball_type = starting_ball_type;
 			
@@ -109,14 +107,14 @@ package graph
 		{
 			starting_ball_type = flowObject.exit_ball_type;
 			//allow normal travel if you get on a pipe that has a blocked top
-			if(starting_ball_type != VerigameServerConstants.BALL_TYPE_NONE)
+			if(starting_ball_type != Edge.BALL_TYPE_NONE)
 				exit_ball_type = starting_ball_type;
 			else
 			{
 				if(this.associatedEdge.is_wide)
-					starting_ball_type = VerigameServerConstants.BALL_TYPE_WIDE;
+					starting_ball_type = Edge.BALL_TYPE_WIDE;
 				else
-					starting_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+					starting_ball_type = Edge.BALL_TYPE_NARROW;
 				
 				exit_ball_type = starting_ball_type;
 			}

@@ -275,16 +275,16 @@ package graph
 			switch (from_port.node.kind) {
 				case NodeTypes.INCOMING: // TODO: not totally clear in this case, just stick to wide for wide, small for small - CC: I think this is right
 				case NodeTypes.START_PIPE_DEPENDENT_BALL:
-					flowObject.starting_ball_type = is_wide ? VerigameServerConstants.BALL_TYPE_WIDE : VerigameServerConstants.BALL_TYPE_NARROW;
+					flowObject.starting_ball_type = is_wide ? BALL_TYPE_WIDE : BALL_TYPE_NARROW;
 					break;					
 				case NodeTypes.START_LARGE_BALL:
-					flowObject.starting_ball_type = VerigameServerConstants.BALL_TYPE_WIDE;
+					flowObject.starting_ball_type = BALL_TYPE_WIDE;
 					break;
 				case NodeTypes.START_NO_BALL:
-					flowObject.starting_ball_type = VerigameServerConstants.BALL_TYPE_NONE;
+					flowObject.starting_ball_type = BALL_TYPE_NONE;
 					break;
 				case NodeTypes.START_SMALL_BALL:
-					flowObject.starting_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+					flowObject.starting_ball_type = BALL_TYPE_NARROW;
 					break;
 				default:
 					trace("FOUND a " + from_node.kind);
@@ -303,15 +303,15 @@ package graph
 				
 				// Set outgoing ball type
 				switch (flowObject.starting_ball_type) {
-					case VerigameServerConstants.BALL_TYPE_NONE:
-					case VerigameServerConstants.BALL_TYPE_GHOST:
+					case BALL_TYPE_NONE:
+					case BALL_TYPE_GHOST:
 						flowObject.exit_ball_type = flowObject.starting_ball_type;
 						break;
-					case VerigameServerConstants.BALL_TYPE_WIDE:
-					case VerigameServerConstants.BALL_TYPE_NARROW:
-					case VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW:
+					case BALL_TYPE_WIDE:
+					case BALL_TYPE_NARROW:
+					case BALL_TYPE_WIDE_AND_NARROW:
 						if (has_buzzsaw)
-							flowObject.exit_ball_type = VerigameServerConstants.BALL_TYPE_NARROW;
+							flowObject.exit_ball_type = BALL_TYPE_NARROW;
 						else
 							flowObject.exit_ball_type = flowObject.starting_ball_type;
 						break;
@@ -380,7 +380,7 @@ package graph
 				var parentFlowStateObj:FlowObject = dropObjectFlowStateCache[parentFOEdgeID];
 				
 				//that we get here is probably an error, but for the time being...
-				if(parentFlowStateObj.exit_ball_type == VerigameServerConstants.BALL_TYPE_UNDETERMINED)
+				if(parentFlowStateObj.exit_ball_type == BALL_TYPE_UNDETERMINED)
 				{
 					parentFlowStateObj.exit_ball_type = parentFlowStateObj.starting_ball_type;
 				}
@@ -440,12 +440,12 @@ package graph
 				var in_type:uint = flowObject.starting_ball_type;
 				var out_type:uint = flowObject.exit_ball_type;
 				switch (in_type) {
-					case VerigameServerConstants.BALL_TYPE_WIDE:
-					case VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW:
-						if (out_type != VerigameServerConstants.BALL_TYPE_NARROW)
+					case BALL_TYPE_WIDE:
+					case BALL_TYPE_WIDE_AND_NARROW:
+						if (out_type != BALL_TYPE_NARROW)
 							if (this.has_pinch)
 							{
-								flowObject.exit_ball_type =  VerigameServerConstants.BALL_TYPE_NARROW;
+								flowObject.exit_ball_type =  BALL_TYPE_NARROW;
 								
 								flowObject.updateChildren(true);
 								return true;
@@ -492,7 +492,7 @@ package graph
 			{
 				var outgoingPort:Port = outgoingNode.outgoing_ports[outgoingPortIndex];
 				
-				if(!outgoingPort.edge.is_wide && (exitBallType == VerigameServerConstants.BALL_TYPE_WIDE))
+				if(!outgoingPort.edge.is_wide && (exitBallType == BALL_TYPE_WIDE))
 				{
 					var foundProblem:Boolean = false;
 					for(var nextEdgeFOIndex:uint = 0; nextEdgeFOIndex<outgoingPort.edge.dropObjectFlowStateEdgeIDArray.length; nextEdgeFOIndex++)
@@ -502,16 +502,16 @@ package graph
 						//make sure we are dealing with our children only
 						if(flowObject.objectID == nextEdgeFOFlowObject.parentFlowObject.objectID)
 						{
-							if(exitBallType == VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW)
+							if(exitBallType == BALL_TYPE_WIDE_AND_NARROW)
 							{
 								//this state shouldn't exist, but until I'm sure I'll leave it here
-								nextEdgeFOFlowObject.starting_ball_type =  VerigameServerConstants.BALL_TYPE_NARROW;
+								nextEdgeFOFlowObject.starting_ball_type =  BALL_TYPE_NARROW;
 								foundProblem = true;
 							}
-							else if(exitBallType == VerigameServerConstants.BALL_TYPE_WIDE)
+							else if(exitBallType == BALL_TYPE_WIDE)
 							{
-								flowObject.exit_ball_type = VerigameServerConstants.BALL_TYPE_NONE;
-								nextEdgeFOFlowObject.starting_ball_type =  VerigameServerConstants.BALL_TYPE_NARROW;
+								flowObject.exit_ball_type = BALL_TYPE_NONE;
+								nextEdgeFOFlowObject.starting_ball_type =  BALL_TYPE_NARROW;
 								foundProblem = true;
 							}
 						}
@@ -549,7 +549,7 @@ package graph
 					}
 					if(!found)
 					{
-						flowObject.exit_ball_type = VerigameServerConstants.BALL_TYPE_NONE;
+						flowObject.exit_ball_type = BALL_TYPE_NONE;
 						return outgoingPort;
 					}
 				}
