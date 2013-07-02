@@ -19,7 +19,7 @@ package server
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";
 		
 		private var m_cgsServer:CGSServer;
-		private var m_useMochi:Boolean = false;
+		private var m_useMochi:Boolean = PipeJam3.RELEASE_BUILD;
 		public var uid:String;
 		public var serverInitialized:Boolean = false;
 		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
@@ -34,7 +34,6 @@ package server
 				case SETUP_KEY_FRIENDS_AND_FAMILY_BETA:
 					cid = VerigameServerConstants.VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013;
 					saveCacheToServer = true;
-					m_useMochi = true;
 					break;
 			}
 			
@@ -48,6 +47,7 @@ package server
 				serverToUse,
 				CGSServerProps.VERSION2
 			);
+			
 			props.cacheUid = false;
 			props.uidValidCallback = onUidSet;
 			//props.loadServerCacheDataByCid = true;

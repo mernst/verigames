@@ -26,6 +26,11 @@ package system
 		public static const VERIGAME_ACTION_ADD_PIPE_BUZZSAW:int       = 5;// deprecated
 		public static const VERIGAME_ACTION_REMOVE_PIPE_BUZZSAW:int    = 6;// deprecated
 		public static const VERIGAME_ACTION_CHANGE_PIPE_STAMPS:int     = 7;
+		// UI actions
+		public static const VERIGAME_ACTION_SAVE_LAYOUT:int            = 20;
+		public static const VERIGAME_ACTION_SUBMIT_SCORE:int           = 21;
+		public static const VERIGAME_ACTION_LOAD_LAYOUT:int            = 22;
+		
 		
 		public static const ACTION_PARAMETER_START_INFO:String         = "startInfo";
 		public static const ACTION_PARAMETER_BOARD_NAME:String         = "boardName";// deprecated
@@ -34,6 +39,9 @@ package system
 		public static const ACTION_PARAMETER_EDGE_ID:String            = "edgeId";
 		public static const ACTION_PARAMETER_EDGESET_ID:String         = "edgeSetId";
 		public static const ACTION_PARAMETER_STAMP_DICTIONARY:String   = "stampDict";
+		// UI action fields
+		public static const ACTION_PARAMETER_LAYOUT_NAME:String        = "layoutName";
+		public static const ACTION_PARAMETER_SCORE:String              = "score";
 		
 		public static const ACTION_VALUE_EDGE_WIDTH_WIDE:String        = "w";
 		public static const ACTION_VALUE_EDGE_WIDTH_NARROW:String      = "n";

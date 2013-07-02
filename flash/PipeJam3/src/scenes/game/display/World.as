@@ -99,7 +99,7 @@ package scenes.game.display
 		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
 		
 		public static var UNDO_EVENT:String = "undo_event";
-				
+		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -210,8 +210,15 @@ package scenes.game.display
 		
 		public function onSaveLayoutFile(event:Event):void
 		{
-			if(active_level != null)
+			if(active_level != null) {
 				active_level.onSaveLayoutFile(event);
+				if (PipeJam3.logging) {
+					var details:Object = new Object();
+					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data as String;
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
+				}
+			}
 		}
 		
 		public function onSubmitScore(event:Event):void
@@ -220,6 +227,12 @@ package scenes.game.display
 			{
 				var currentScore:int = gameControlPanel.getCurrentScore();
 				active_level.onSubmitScore(event, currentScore);
+				if (PipeJam3.logging) {
+					var details:Object = new Object();
+					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
+				}
 			}
 		}
 		
@@ -231,8 +244,15 @@ package scenes.game.display
 		
 		public function setNewLayout(event:Event):void
 		{
-			if(active_level != null)
+			if(active_level != null) {
 				active_level.setNewLayout(event, true);
+				if (PipeJam3.logging) {
+					var details:Object = new Object();
+					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = (event.data as XML).@id;
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
+				}
+			}
 		}
 		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
