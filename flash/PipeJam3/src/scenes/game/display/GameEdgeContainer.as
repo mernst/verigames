@@ -8,7 +8,6 @@ package scenes.game.display
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import utils.XMath;
 	
 	import graph.Edge;
 	import graph.NodeTypes;
@@ -525,9 +524,6 @@ package scenes.game.display
 			}
 			else
 			{
-				var startDistance:Number = XMath.getDistSquared(m_startPoint, undoObject.m_savedStartPoint);
-				var endDistance:Number = XMath.getDistSquared(m_endPoint, undoObject.m_savedEndPoint);
-				
 				m_startPoint = undoObject.m_savedStartPoint;
 				m_endPoint = undoObject.m_savedEndPoint;
 				rubberBandEdge(new Point(), true); //just force a redrawing
