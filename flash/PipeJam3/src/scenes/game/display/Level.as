@@ -1027,6 +1027,7 @@ package scenes.game.display
 		{
 			var undoData:Object = new Object();
 			undoData.target = this;
+			undoData.type = "add to selection";
 			undoData.selection = selection;
 			undoData.addToLast = addToLast;
 			var undoEvent:Event = new Event(Level.GROUP_SELECTED,false,undoData);

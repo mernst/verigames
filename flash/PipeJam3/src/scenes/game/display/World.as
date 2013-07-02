@@ -320,26 +320,73 @@ package scenes.game.display
 		private function saveEvent(e:starling.events.Event):void
 		{
 			//sometimes we need to remove the last event to add a complex event that includes that one
-			if(e.data && e.data.data && e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
+			//addToLastSimilar adds to the last event if they are of the same type (i.e. successive mouse wheel events should all undo at the same time)
+			//addToLast adds to last event in any case (undo move node event also should put edges back where they were)
+			if(e.data) //should always exist, but...
 			{
-				var lastEvent:Event = undoStack.pop();
-				if(lastEvent.data is Array)
+				if(e.data.data)
 				{
-					(lastEvent.data as Array).push(e.data.data);
-					undoStack.push(lastEvent);
+					var lastEvent:Event;
+					var newArray:Array;
+					var newEvent:Event;
+					
+					if(e.data.data.hasOwnProperty("addToLastSimilar") == true && e.data.data.addToLastSimilar == true)
+					{
+						lastEvent = undoStack.pop();
+						if(lastEvent)
+						{
+							if(lastEvent.type == e.data.type)
+							{
+								if(lastEvent.data is Array)
+								{
+									(lastEvent.data as Array).push(e.data);
+									undoStack.push(lastEvent);
+								}
+								else
+								{
+									newArray = new Array(lastEvent, e.data);
+									newEvent = new Event(e.data.type, true, newArray);
+									undoStack.push(newEvent);
+									
+								}
+							}
+							else //no match, just push, adding back lastEvent also
+							{
+								undoStack.push(lastEvent);
+								undoStack.push(e.data);
+							}
+							
+						}
+						else
+							undoStack.push(e.data);
+					}
+					else if(e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
+					{
+						lastEvent = undoStack.pop();
+						if(lastEvent)
+						{
+							if(lastEvent.data is Array)
+							{
+								(lastEvent.data as Array).push(e.data);
+								undoStack.push(lastEvent);
+							}
+							else
+							{
+								newArray = new Array(lastEvent, e.data);
+								newEvent = new Event(e.data.type, true, newArray);
+								undoStack.push(newEvent);
+								
+							}
+						}
+						else
+							undoStack.push(e.data);
+					}
+					else
+						undoStack.push(e.data);
 				}
 				else
-				{
-					var event1:Event = new Event(lastEvent.type, true, lastEvent.data);
-					var event2:Event = new Event(e.data.type, true, e.data.data);
-					var newArray:Array = new Array(event1, event2);
-					var newEvent:Event = new Event(World.UNDO_EVENT, true, newArray);
-					undoStack.push(newEvent);
-					
-				}
+					undoStack.push(e.data);
 			}
-			else
-				undoStack.push(e.data);
 			//when we build on the undoStack, clear out the redoStack
 			redoStack = new Array();
 		}
@@ -357,44 +404,7 @@ package scenes.game.display
 							var undoDataEvent:Event = undoStack.pop();
 							if(undoDataEvent.data != null)
 							{
-								var undoData:Object;
-								if(undoDataEvent.data is Array)
-								{
-									for each(var obj:Event in undoDataEvent.data)
-									{
-										undoData = obj.data;
-										if(undoData == null) //handle locally
-											handleUndoEvent(undoDataEvent, true);
-										if(undoData.target is String)
-										{
-											if(undoData.target == "level")
-											{
-												if(this.active_level != null)
-													active_level.handleUndoEvent(obj, true);
-											}
-										}
-										else if(undoData.target is BaseComponent)
-											(undoData.target as BaseComponent).handleUndoEvent(obj, true);
-									}
-									redoStack.push(undoDataEvent);
-								}
-								else
-								{
-									undoData = undoDataEvent.data;
-									if(undoData == null) //handle locally
-										handleUndoEvent(undoDataEvent, true);
-									if(undoData.target is String)
-									{
-										if(undoData.target == "level")
-										{
-											if(this.active_level != null)
-												active_level.handleUndoEvent(undoDataEvent, true);
-										}
-									}
-									else if(undoData.target is BaseComponent)
-										(undoData.target as BaseComponent).handleUndoEvent(undoDataEvent, true);
-									redoStack.push(undoDataEvent);
-								}
+								handleUndoRedoEvent(undoDataEvent, true);
 							}
 						}
 						break;
@@ -407,43 +417,7 @@ package scenes.game.display
 							var redoDataEvent:Event = redoStack.pop();
 							if(redoDataEvent.data != null)
 							{
-								if(redoDataEvent.data is Array)
-								{
-									for each(var obj1:Event in redoDataEvent.data)
-									{
-										var redoData:Object = obj1.data;
-										if(redoData == null) //handle locally
-											handleUndoEvent(redoDataEvent, false);
-										if(redoData.target is String)
-										{
-											if(redoData.target == "level")
-											{
-												if(this.active_level != null)
-													active_level.handleUndoEvent(obj1, false);
-											}
-										}
-										else if(redoData.target is BaseComponent)
-											(redoData.target as BaseComponent).handleUndoEvent(obj1, false);
-									}
-									undoStack.push(redoDataEvent);
-								}
-								else
-								{
-									var redoData1:Object = redoDataEvent.data;
-									if(redoData1 == null) //handle locally
-										handleUndoEvent(redoDataEvent, false);
-									if(redoData1.target is String)
-									{
-										if(redoData.target == "level")
-										{
-											if(this.active_level != null)
-												active_level.handleUndoEvent(redoDataEvent, false);
-										}
-									}
-									else if(redoData1.target is BaseComponent)
-										(redoData1.target as BaseComponent).handleUndoEvent(redoDataEvent, false);
-									undoStack.push(redoDataEvent);
-								}
+								handleUndoRedoEvent(redoDataEvent, false);
 							}
 						}
 						break;
@@ -468,6 +442,46 @@ package scenes.game.display
 						break;
 				}
 			}
+		}
+		
+		protected function handleUndoRedoEvent(event:Event, isUndo:Boolean):void
+		{
+			if(event.data != null)
+			{
+				if(event.data is Array)
+				{
+					//added newest at the end, so start at the end
+					for(var i:int = (event.data as Array).length-1; i>=0; i--)
+					{
+						var eventObj:Event = (event.data as Array)[i];
+						handleUndoRedoEventObject(eventObj, isUndo);
+					}
+				}
+				else
+					handleUndoRedoEventObject(event, isUndo);
+			}
+			
+			if(isUndo)
+				redoStack.push(event);
+			else
+				undoStack.push(event);
+		}
+		
+		protected function handleUndoRedoEventObject(event:Event, isUndo:Boolean):void
+		{
+			var data:Object = event.data;
+			if(data == null) //handle locally
+				handleUndoEvent(event, isUndo);
+			if(event.data.target is String)
+			{
+				if((event.data.target as String) == "level")
+				{
+					if(this.active_level != null)
+						active_level.handleUndoEvent(event, isUndo);
+				}
+			}
+			else if(event.data.target is BaseComponent)
+				(event.data.target as BaseComponent).handleUndoEvent(event, isUndo);
 		}
 		
 		private function selectLevel(newLevel:Level):void
