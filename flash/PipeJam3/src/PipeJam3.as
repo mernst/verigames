@@ -1,6 +1,7 @@
 package  
 {
 	import audio.AudioManager;
+	import com.spikything.utils.MouseWheelTrap;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -107,7 +108,7 @@ package
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
 			removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
-			
+			MouseWheelTrap.setup(stage);
 			hasBeenAddedToStage = true;
 			//at least try to initialize, although probably waiting on session verification
 			initialize();
