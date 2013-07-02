@@ -32,7 +32,7 @@ public class RandomChecker extends TrustedChecker implements
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public RandomAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new RandomAnnotatedTypeFactory(this, root);
     }
 }

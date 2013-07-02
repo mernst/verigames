@@ -23,7 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
  *
  */
 @TypeQualifiers({ MaybeHardCoded.class, NotHardCoded.class })
-public class HardCodedChecker extends GameChecker {
+public class HardCodedChecker extends GameChecker<HardCodedAnnotatedTypeFactory> {
     public AnnotationMirror MAYBEHARDCODED, NOTHARDCODED;
 
     @Override
@@ -39,7 +39,7 @@ public class HardCodedChecker extends GameChecker {
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public HardCodedAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new HardCodedAnnotatedTypeFactory(this, root);
     }
 
