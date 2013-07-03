@@ -241,7 +241,7 @@ abstract class GameSolver extends ConstraintSolver {
               // val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
               val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar))
               val inthis = findIntersection(getterBoard, LiteralThis)
-              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", getterBoard.getOutgoingNode, ReturnOutPort + genericsoffset(cvar), toChute(cvar))
+              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", getterBoard.getOutgoingNode, ReturnOutPort + genericsOffset(cvar), toChute(cvar))
             }
 
             // 3. a field setter
@@ -249,7 +249,7 @@ abstract class GameSolver extends ConstraintSolver {
               // val setterBoard = newBoard(level, getFieldSetterName(clvar.asInstanceOf[FieldVP]))
               val setterBoard = findOrCreateMethodBoard(clvar, getFieldSetterName(clvar))
               val inthis = findIntersection(setterBoard, LiteralThis)
-              setterBoard.add(setterBoard.getIncomingNode, OutputPort + genericsoffset(cvar),
+              setterBoard.add(setterBoard.getIncomingNode, OutputPort + genericsOffset(cvar),
                               END, "input", toChute(cvar))
               // Let's not have an output for setters.
               // setterBoard.addEdge(field, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
@@ -356,12 +356,12 @@ abstract class GameSolver extends ConstraintSolver {
                     // Field was previously accessed.
                     val fieldInt = boardNVariableToIntersection((accessBoard, fieldvar))
 
-                    val merge = accessBoard.add(getterSubboardIsect, ReturnOutPort + genericsoffset(fieldvar), MERGE, "left", toChute(fieldvar))._2
+                    val merge = accessBoard.add(getterSubboardIsect, ReturnOutPort + genericsOffset(fieldvar), MERGE, "left", toChute(fieldvar))._2
                     accessBoard.addEdge(fieldInt, "output", merge, "right", toChute(fieldvar))
                     boardNVariableToIntersection.update((accessBoard, fieldvar), merge)
                   } else {
 
-                    val con = accessBoard.add(getterSubboardIsect,  ReturnOutPort + genericsoffset(fieldvar), CONNECT, "input", toChute(fieldvar))._2
+                    val con = accessBoard.add(getterSubboardIsect,  ReturnOutPort + genericsOffset(fieldvar), CONNECT, "input", toChute(fieldvar))._2
                     boardNVariableToIntersection.update((accessBoard, fieldvar), con)
                   }
                 }
@@ -375,7 +375,7 @@ abstract class GameSolver extends ConstraintSolver {
                 //TODO JB: Handle Constants/ Literals - create the type pipes if they don't already exist?
                 if( sVar.isInstanceOf[AbstractVariable] ) { //TODO JB: This will be fixed with using ATMs for Constraints
                   val absSVar = sVar.asInstanceOf[AbstractVariable]
-                  val con = accessBoard.add(getterSubboardIsect, ReturnOutPort + genericsoffset(absSVar), CONNECT, "input", toChute(absSVar))._2
+                  val con = accessBoard.add(getterSubboardIsect, ReturnOutPort + genericsOffset(absSVar), CONNECT, "input", toChute(absSVar))._2
                   boardNVariableToIntersection.update((accessBoard, absSVar), con)
                 }
               }
@@ -399,7 +399,7 @@ abstract class GameSolver extends ConstraintSolver {
 
                     if (isUniqueSlot(rightslot)) {
                       val rightInt = findIntersection(ctxBoard, rightslot)
-                      ctxBoard.addEdge(rightInt, "output", setterBoardISect, OutputPort + genericsoffset(fieldvar), createChute(rightslot))
+                      ctxBoard.addEdge(rightInt, "output", setterBoardISect, OutputPort + genericsOffset(fieldvar), createChute(rightslot))
 
                     } else {
                       val rightInt =
@@ -412,7 +412,7 @@ abstract class GameSolver extends ConstraintSolver {
                         case _ => null //TODO JB: Completely erroneous
                       }
                       val split = ctxBoard.add(rightInt, "output", SPLIT, "input", createChute(rightslot))._2
-                      ctxBoard.addEdge(split, "split", setterBoardISect, OutputPort + genericsoffset(fieldvar), createChute(rightslot))
+                      ctxBoard.addEdge(split, "split", setterBoardISect, OutputPort + genericsOffset(fieldvar), createChute(rightslot))
 
                       updateIntersection(ctxBoard, rightslot, split)
                     }
@@ -587,12 +587,12 @@ abstract class GameSolver extends ConstraintSolver {
                   if (boardNVariableToIntersection.contains((callerBoard, resvar))) {
                     // Method was previously called.
                     val resInt = boardNVariableToIntersection((callerBoard, resvar))
-                    val merge = callerBoard.add(subboard, ReturnOutPort + genericsoffset(resvar), MERGE, "left", toChute(resvar))._2
+                    val merge = callerBoard.add(subboard, ReturnOutPort + genericsOffset(resvar), MERGE, "left", toChute(resvar))._2
                     callerBoard.addEdge(resInt, "output", merge, "right", toChute(resvar))
                     boardNVariableToIntersection.update((callerBoard, resvar), merge)
 
                   } else {
-                    val con = callerBoard.add(subboard, ReturnOutPort + genericsoffset(resvar), CONNECT, "input", toChute(resvar))._2
+                    val con = callerBoard.add(subboard, ReturnOutPort + genericsOffset(resvar), CONNECT, "input", toChute(resvar))._2
                     boardNVariableToIntersection.update((callerBoard, resvar), con)
                   }
 
@@ -644,7 +644,7 @@ abstract class GameSolver extends ConstraintSolver {
         if (cvar.varpos.isInstanceOf[ReturnVP] && variablePosToBoard(cvar.varpos) == board) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
-          board.addEdge(lastsect, "output", outgoing, ReturnOutPort + genericsoffset(cvar), toChute(cvar))
+          board.addEdge(lastsect, "output", outgoing, ReturnOutPort + genericsOffset(cvar), toChute(cvar))
         } else {
           // Everything else simply gets terminated.
           val end = board.add(lastsect, "output", Intersection.Kind.END, "input", toChute(cvar))._2
