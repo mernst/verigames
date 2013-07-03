@@ -4,6 +4,9 @@ from xml.dom.minidom import parse
 # Globally round graphviz coordinates
 decimalplacestoroundto = 2
 
+# Width space given to each incoming/outgoing edge plus 1 unit on each end of a box of padding [][i0][i1]...[in][]
+WIDTHPERPORT = 0.6
+
 ### Classes ###
 class Point:
 	def __init__(self, x, y):
@@ -37,6 +40,14 @@ numnodeoutputports = {}
 # should use - use this lookup to force them to have the exact same x value
 # i.e. if incoming port "1" has x=23.54 make outgoing port "1" have x=23.54
 portxcoords = {}
+
+# boxdotheight[boxid] = Height input to dot to allow for extra vertical space
+# Why not use 1.0? We have adjusted the box heights to allow for
+# extra vertical space for boxes with lots of lines through them to provide space
+# for incoming/outgoing edges, but we don't want the boxes themselves to have a
+# large height, but the constant height of 1.0 so we have to adjust the y values
+# accordingly
+boxdotheight = {}
 
 ### Helper functions ###
 # convert to string
@@ -194,6 +205,7 @@ def layout(infile, outfile, outputdotfiles):
 		edge2linexml[lname] = {}
 		node2xml[lname] = {}
 		portxcoords = {}
+		boxdotheight = {}
 		numnodeinputports = {}
 		numnodeoutputports = {}
 		#print 'Laying out Level: %s' % lname
@@ -223,14 +235,16 @@ def layout(infile, outfile, outputdotfiles):
 			jwidth = max(jin, jout)
 			jlabel = createportlabels(jin, jout, None, verbose)
 			nodeid = 'J_%s' % sanitize(jid)
-			dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth, jlabel)
+			dotin += '  %s [width=%s,height=0.5,label="%s"];\n' % (nodeid, jwidth * WIDTHPERPORT, jlabel)
 			node2xml[lname][nodeid] = jx
 		for bx in lx.getElementsByTagName('box'):
 			bid = bx.attributes['id'].value
 			blines = int(bx.attributes['lines'].value)
 			blabel = createportlabels(blines, blines, bid, verbose)
 			nodeid = 'B_%s' % sanitize(bid)
-			dotin += '  %s [width=%s,height=1.0,label="%s"];\n' % (nodeid, blines, blabel)
+			boxheight = blines / 4.0 + 0.75
+			dotin += '  %s [width=%s,height=%s,label="%s"];\n' % (nodeid, (blines + 2) * WIDTHPERPORT, boxheight, blabel)
+			boxdotheight[nodeid] = boxheight
 			node2xml[lname][nodeid] = bx
 		for linex in lx.getElementsByTagName('line'):
 			lid = linex.attributes['id'].value
@@ -269,7 +283,7 @@ def layout(infile, outfile, outputdotfiles):
 				continue
 			edgeid = '%s:o%s -> %s:i%s' % (fromid, fromportnum, toid, toportnum)
 			edge2linexml[lname][edgeid] = linex
-			dotin += '  %s;\n' % (edgeid)
+			dotin += '  %s ;\n' % (edgeid)
 		dotin += '}'
 		dotinfilename = '%s-%s-in.dot' % (outfile, lname)
 		writedot = open(dotinfilename,'w')
@@ -328,6 +342,10 @@ def layout(infile, outfile, outputdotfiles):
 							layout.points[0].x = foundstartx
 						else:
 							portxcoords[portid] = layout.points[0].x
+						foundboxheight = boxdotheight.get(edgex.getElementsByTagName('frombox')[0].attributes['id'].value)
+						if foundboxheight is not None:
+							# Adjust outgoing line height by boxheight to force box to have a height of 1.0
+							layout.points[0].y += foundboxheight / 2.0 - 0.5
 					elif edgex.getElementsByTagName('tobox'):
 						portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
 						foundendx = portxcoords.get(portid)
@@ -335,6 +353,10 @@ def layout(infile, outfile, outputdotfiles):
 							layout.points[-1].x = foundendx
 						else:
 							portxcoords[portid] = layout.points[-1].x
+						foundboxheight = boxdotheight.get(edgex.getElementsByTagName('tobox')[0].attributes['id'].value)
+						if foundboxheight is not None:
+							# Adjust incoming line height by boxheight to force box to have a height of 1.0
+							layout.points[-1].y -= foundboxheight / 2.0 - 0.5
 					else:
 						print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
 					# Remove any current layout points, we only want the new layout points to be saved
@@ -352,6 +374,15 @@ def layout(infile, outfile, outputdotfiles):
 						print 'Warning: no node found for id %s' % layout.id
 						continue
 					nodex.setAttribute('x', tostr(layout.pos.x))
+					foundboxheight = boxdotheight.get(layout.id)
+					if foundboxheight is not None:
+						# Adjust y to account for difference in forcing height to = 1.0
+						layout.pos.y -= foundboxheight / 2.0 - 0.5
+						# Now force height to = 1.0
+						foundboxheight = 1.0
+					else:
+						# Must be a joint, leave y and height alone
+						foundboxheight = layout.height
 					nodex.setAttribute('y', tostr(maxy - layout.pos.y))
 					if 'width' in nodex.attributes.keys():
 						nodex.removeAttribute('width')
@@ -360,7 +391,7 @@ def layout(infile, outfile, outputdotfiles):
 					if layout.width is not None:
 						nodex.setAttribute('width', tostr(layout.width))
 					if layout.height is not None:
-						nodex.setAttribute('height', tostr(layout.height))
+						nodex.setAttribute('height', tostr(foundboxheight))
 				else:
 					print 'Warning: bad layout created for line: %s' % line
 	writelayout = open(outfile + '.xml','w')
