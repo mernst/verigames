@@ -158,6 +158,7 @@ package scenes.game.display
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
+			var touch:Touch = touches[0];
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
@@ -180,7 +181,6 @@ package scenes.game.display
 					}
 				}
 				
-				var touch:Touch = touches[0];
 				if(event.shiftKey && event.ctrlKey && !PipeJam3.RELEASE_BUILD)
 				{
 					this.m_isEditable = !this.m_isEditable;
@@ -190,20 +190,7 @@ package scenes.game.display
 				//if shift key, select, else change size
 				if(!event.shiftKey)
 				{
-					//clear selections on all actions with no shift key
-					 
-					if(m_isEditable)
-					{
-						handleWidthChange(!m_isWide);
-				//		dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
-						
-						undoData = new Object();
-						undoData.target = this;
-						undoData.type = "width change";
-						undoEvent = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
-						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-					}
-					
+					onClicked();
 				}
 				else //shift key down
 				{
@@ -227,18 +214,38 @@ package scenes.game.display
 			else if (event.getTouches(this, TouchPhase.MOVED).length) {
 				if (touches.length == 1)
 				{
-					if(isMoving == false) {
-						startingPoint = new Point(x, y);
+					var touchXY:Point = new Point(touch.globalX, touch.globalY);
+					touchXY = this.globalToLocal(touchXY);
+					if(!isMoving) {
+						startingPoint = touchXY;
+						isMoving = true;
 						hasMovedOutsideClickDist = false;
-					} else if (!hasMovedOutsideClickDist && XMath.getDist(startingPoint.clone(), new Point(x, y)) > CLICK_DIST * Constants.GAME_SCALE) {
-						// This is probably meant as a click
-						hasMovedOutsideClickDist = true;
+						return;
+					} else if (!hasMovedOutsideClickDist) {
+						if (XMath.getDist(startingPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
+							hasMovedOutsideClickDist = true;
+						} else {
+							// Don't move if haven't moved outside CLICK_DIST
+							return;
+						}
 					}
-					isMoving = true;
-					
 					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, event));
-					
 				}
+			}
+		}
+		
+		public function onClicked():void
+		{
+			if(m_isEditable)
+			{
+				handleWidthChange(!m_isWide);
+				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
+				
+				var undoData:Object = new Object();
+				undoData.target = this;
+				undoData.type = "width change";
+				var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
+				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
 			}
 		}
 		

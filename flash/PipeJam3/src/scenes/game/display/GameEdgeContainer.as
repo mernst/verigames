@@ -90,6 +90,7 @@ package scenes.game.display
 		public static var RUBBER_BAND_SEGMENT:String = "rubber_band_segment";
 		public static var SAVE_CURRENT_LOCATION:String = "save_current_location";
 		public static var RESTORE_CURRENT_LOCATION:String = "restore_current_location";
+		public static var INNER_SEGMENT_CLICKED:String = "extension_clicked";
 		
 		public var NUM_JOINTS:int = 6;
 		
@@ -216,6 +217,7 @@ package scenes.game.display
 			addEventListener(HOVER_EVENT_OUT, onHoverOut);
 			addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
 			addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
+			addEventListener(INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
 		}
 		
 		//create or recreate line. m_edgeArray needs to be set first, or values passed in
@@ -952,6 +954,15 @@ package scenes.game.display
 			//				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
 			//				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
 			//			}
+		}
+		
+		private function onInnerBoxSegmentClicked(event:Event):void
+		{
+			if (m_fromComponent is GameNode) {
+				(m_fromComponent as GameNode).onClicked();
+			} else if (m_toComponent is GameNode) {
+				(m_toComponent as GameNode).onClicked();
+			}
 		}
 		
 		override public function componentSelected(isSelected:Boolean):void

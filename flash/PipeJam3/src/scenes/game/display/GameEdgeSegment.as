@@ -33,7 +33,7 @@
 		
 		public var index:int;
 		
-		public var m_isNodeExtensionSegment:Boolean;
+		public var m_isInnerBoxSegment:Boolean;
 		public var m_isLastSegment:Boolean;
 		public var m_dir:String;
 		
@@ -45,12 +45,12 @@
 			ARROW_TEXT.repeat = true;
 		}
 		
-		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
 		{
 			super("");
 			m_isWide = _isWide;
 			m_dir = _dir;
-			m_isNodeExtensionSegment = _isNodeExtensionSegment;
+			m_isInnerBoxSegment = _isInnerBoxSegment;
 			m_isLastSegment = _isLastSegment;
 			
 			m_isDirty = false;
@@ -86,24 +86,41 @@
 			super.dispose();
 		}
 		
-		private var isMoving:Boolean = false;
 		public var returnLocation:Point;
+		private var isMoving:Boolean = false;
+		private var hasMovedOutsideClickDist:Boolean = false;
+		private var startingPoint:Point;
+		private static const CLICK_DIST:Number = 0.2; //for extensions, register distance dragged
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
-
+			if (touches.length == 0) {
+				return;
+			}
+			var touch:Touch = touches[0];
 			if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
 				if (touches.length == 1)
 				{
-					if(!isMoving)
-					{
+					var touchXY:Point = new Point(touch.globalX, touch.globalY);
+					touchXY = this.globalToLocal(touchXY);
+					if(!isMoving) {
+						startingPoint = touchXY;
 						dispatchEvent(new Event(GameEdgeContainer.SAVE_CURRENT_LOCATION, true));
 						isMoving = true;
+						hasMovedOutsideClickDist = false;
+						return;
+					} else if (!hasMovedOutsideClickDist) {
+						if (XMath.getDist(startingPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
+							hasMovedOutsideClickDist = true;
+						} else {
+							// Don't move if haven't moved outside CLICK_DIST
+							return;
+						}
 					}
 					
-					var currentMoveLocation:Point = touches[0].getLocation(this);
-					var previousLocation:Point = touches[0].getPreviousLocation(this);
+					var currentMoveLocation:Point = touch.getLocation(this);
+					var previousLocation:Point = touch.getPreviousLocation(this);
 					updatePoint = currentMoveLocation.subtract(previousLocation);	
 					currentDragSegment = true;
 					dispatchEvent(new Event(GameEdgeContainer.RUBBER_BAND_SEGMENT, true, this));
@@ -119,18 +136,26 @@
 					if(isMoving)
 					{
 						isMoving = false;
-						if(this.m_isNodeExtensionSegment)
+						if (m_isInnerBoxSegment) {
+							if (!hasMovedOutsideClickDist) {
+								// If haven't moved, register this as a click on the node itself
+								dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
+							}
 							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
-						
-						
+							dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
+						}
+					}
+					else if (m_isInnerBoxSegment)
+					{
+						// If haven't moved, register this as a click on the node itself
+						dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
 					}
 				}
 				
-				var touch:Touch = touches[0];
 				if(touch.tapCount == 2)
 				{
 					this.currentTouch = touch;
-					if(!this.m_isNodeExtensionSegment)
+					if(!m_isInnerBoxSegment)
 						dispatchEvent(new Event(GameEdgeContainer.CREATE_JOINT, true, this));
 				}
 			}
