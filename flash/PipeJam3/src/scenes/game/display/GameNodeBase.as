@@ -236,43 +236,7 @@ package scenes.game.display
 		
 		public function onClicked():void
 		{
-			if(m_isEditable)
-			{
-				handleWidthChange(!m_isWide);
-				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
-				
-				var undoData:Object = new Object();
-				undoData.target = this;
-				undoData.type = "width change";
-				var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
-				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-			}
-		}
-		
-		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
-		{
-			if(undoEvent.type == EdgeSetChangeEvent.EDGE_SET_CHANGED)
-				handleWidthChange(!m_isWide);
-		}
-		
-		
-		public function handleWidthChange(newWidth:Boolean):void
-		{
-			m_isWide = newWidth;
-			m_isDirty = true;
-			// Need to dispatch AFTER setting width, this will trigger the score update
-			// (we don't want to update the score with old values, we only know they're old
-			// if we properly mark them dirty first)
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
-			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
-				iedge.updateSize();
-				iedge.setInnerSegmentBorderWidth(m_isWide);
-			}
-			// May need to redraw inner edges
-			for each (var oedge:GameEdgeContainer in m_outgoingEdges) {
-				oedge.updateSize();
-				oedge.setInnerSegmentBorderWidth(m_isWide);
-			}
+			// overriden by children
 		}
 		
 		public function onEnterFrame(event:Event):void

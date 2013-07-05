@@ -58,25 +58,11 @@ package scenes.game.display
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			addEventListener(MouseEvent.CLICK, onClick);
 			
-//			if (node.valueEdge.associated_pipe) {
-//				node.valueEdge.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onValuePipeWidthChange);
-//			} else {
-//				VerigameSystem.printWarning("WARNING! MapGet object created before 'value' edge's Pipe was created, node id: " + node.node_id);
-//			}
-//			
-//			if (node.argumentEdge.associated_pipe) {
-//				node.argumentEdge.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onArgumentPipeWidthChange);
-//			} else {
-//				VerigameSystem.printWarning("WARNING! MapGet object created before 'argument' edge's Pipe was created, node id: " + node.node_id);
-//			}
-//			
-//			node.argumentEdge.linked_edge_set.addEventListener(StampChangeEvent.STAMP_ACTIVATION, onArgumentStampChange);
-//			
-//			if (node.outgoing_ports[0].edge.associated_pipe) {
-//				node.outgoing_ports[0].edge.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onOutgoingPipeWidthChange);
-//			} else {
-//				VerigameSystem.printWarning("WARNING! MapGet object created before outgoing edge's Pipe was created, node id: " + node.node_id);
-//			}
+			node.valueEdge.linked_edge_set.addEventListener(
+			.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onValuePipeWidthChange);
+			node.argumentEdge.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onArgumentPipeWidthChange);
+			node.argumentEdge.linked_edge_set.addEventListener(StampChangeEvent.STAMP_ACTIVATION, onArgumentStampChange);
+			node.outgoing_ports[0].edge.associated_pipe.addEventListener(PipeChangeEvent.PIPE_CHANGE, onOutgoingPipeWidthChange);
 			
 		}
 		

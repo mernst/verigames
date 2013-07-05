@@ -116,7 +116,7 @@ package utils
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " could not find node with getNodeById() method.");
 						return null;
 					}
-					
+					/*
 					var spline_control_points:Vector.<Point> = new Vector.<Point>();
 					for each (var pts:XML in e1["edge-layout"]) {
 						for each (var pt:XML in pts["point"]) {
@@ -127,9 +127,9 @@ package utils
 							}
 						}
 					}
-					
+					*/
 					// Add this edge!
-					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), spline_control_points, edge_set_dictionary[e1.attribute("id").toString()], md1);
+					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_set_dictionary[e1.attribute("id").toString()], md1);
 				}
 			} // loop over every node a.k.a. board
 			

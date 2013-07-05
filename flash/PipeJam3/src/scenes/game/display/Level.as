@@ -28,7 +28,6 @@ package scenes.game.display
 	import graph.SubnetworkPort;
 	
 	import scenes.BaseComponent;
-	import scenes.game.components.WorldMapLevelImage;
 	import scenes.login.LoginHelper;
 	
 	import starling.display.Quad;
@@ -40,7 +39,7 @@ package scenes.game.display
 	import utils.XString;
 	
 	/**
-	 * Level contains multiple boards that each contain multiple pipes
+	 * Level all game components - boxes, lines and joints
 	 */
 	public class Level extends BaseComponent
 	{
@@ -48,45 +47,8 @@ package scenes.game.display
 		/** True to allow user to navigate to any level regardless of whether levels below it are solved for debugging */
 		public static var UNLOCK_ALL_LEVELS_FOR_DEBUG:Boolean = false;
 		
-		/** True if the balls should be dropped when the level has been solved, rather than displaying fireworks right away */
-		public static const DROP_WHEN_SUCCEEDED:Boolean = false;
-		
 		/** Name of this level */
 		public var level_name:String;
-		
-		/** True if not all boards on this level have succeeded */
-		public var failed:Boolean = true;
-		
-		/** The array that describes which color corresponds to a given edge set index */
-		private static var set_index_colors:Dictionary = new Dictionary();// set_index_colors[id] = 0xXXXXX (i.e. 0xFFFF00)
-		
-		/** Index indicating the next color to be used when assigning to an edge set index */
-		public static var color_index:uint = 0;
-		
-		/** True if this level has been solves and fireworks displayed, setting this will prevent euphoria from being displayed more than once */
-		public var level_has_been_solved_before:Boolean = false;
-		
-		/** All levels that contain a copy of a board from this level as a subboard on a board on that level */
-		public var levels_that_depend_on_this_level:Vector.<Level>;
-		
-		/** All levels containing boards that appear as subboards on any boards in this level */
-		public var levels_that_this_level_depends_on:Vector.<Level>;
-		
-		/** True if the levels that this level depends on have been solved, and the user can visit this level */
-		public var unlocked:Boolean = true;
-		
-		/** Rank refers to have many levels of dependency this level has. If no dependencies: rank = 0, if this level 
-		 * depends one level (contains a subboard from another level) that also depends on a level (contains a 
-		 * subboard from another level) then rank = 2, etc. 
-		 * This will correspond to how high up the level should be on the world map (0 = low, towards Start) */
-		public var rank:uint = 0;
-		
-		/** Index of this level within the overall rank, i.e. the 2nd level of rank = 5 has rank_index = 1, this may equate to 
-		 * an X coordinate on the world map */
-		public var rank_index:uint = 0;
-		
-		/** The icon associated with this level on the world map */
-		public var level_icon:WorldMapLevelImage;
 		
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelNodes:LevelNodes;
@@ -167,10 +129,6 @@ package scenes.game.display
 			levelNodes = _levelNodes;
 			m_levelLayoutXML = _levelLayoutXML;
 			m_levelConstraintsXML = _levelConstraintsXML;
-			color_index = 0;
-			level_has_been_solved_before = false;
-			levels_that_depend_on_this_level = new Vector.<Level>();
-			levels_that_this_level_depends_on = new Vector.<Level>();
 			
 			m_levelText = m_levelLayoutXML.attribute("text").toString();
 			
@@ -619,6 +577,8 @@ package scenes.game.display
 			else
 			{
 				//save locally?
+				trace("Layout XML:");
+				trace(m_levelLayoutXMLWrapper);
 			}
 		}
 		

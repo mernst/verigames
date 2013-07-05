@@ -40,16 +40,6 @@ package assets
 		//need to declare a variable of each type, else they get stripped by the compiler and dynamic generation doesn't work
 		private var gameAssetEmbeds_1x:GameAssetEmbeds_1x;
 		private var gameAssetEmbeds_2x:GameAssetEmbeds_2x;
-		private var gameControlPanelssetEmbeds_1x:GameControlPanelAssetEmbeds_1x;
-		private var gameControlPanelAssetEmbeds_2x:GameControlPanelAssetEmbeds_2x;
-		private var pipeViewPanelAssetEmbeds_1x:PipeViewPanelAssetEmbeds_1x;
-		private var pipeViewPanelAssetEmbeds_2x:PipeViewPanelAssetEmbeds_2x;
-		private var worldMapAssetEmbeds_1x:WorldMapAssetEmbeds_1x;
-		private var worldMapAssetEmbeds_2x:WorldMapAssetEmbeds_2x;
-		private var loginAssetEmbeds_1x:LoginAssetEmbeds_1x;
-		private var loginAssetEmbeds_2x:LoginAssetEmbeds_2x;
-		private var menuAssetEmbeds_1x:MenuAssetEmbeds_1x;
-		private var menuAssetEmbeds_2x:MenuAssetEmbeds_2x;
 		
 		// List of Subtexture names from PipeJamSpriteSheet atlas
 		public static const PipeJamSubTexture_GrayDarkBoxPrefix:String = "GrayDarkBox";

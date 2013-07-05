@@ -44,15 +44,6 @@ package scenes.game.display
 		public var levels:Vector.<Level> = new Vector.<Level>();
 		protected var currentLevelNumber:Number = 0;
 		
-		/** Images used for boards of a given level (different colors, same texture) */
-		public var level_background_images:Vector.<Image>;
-		
-		/** Map from edge set index to Vector of Pipe instances */
-		public var pipeEdgeSetDictionary:Dictionary = new Dictionary();
-		
-		/** Map from edge_id to Pipe instance */
-		public var pipeIdDictionary:Dictionary = new Dictionary();
-		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
 		
@@ -71,29 +62,11 @@ package scenes.game.display
 		/** True if at least one level on this board has not succeeded */
 		public var failed:Boolean = false;
 		
-		/** True if all levels on this board have succeeded */
-		public var succeeded:Boolean = false;
-		
-		/** If we are in process of selecting a level. */
-		protected static var selecting_level:Boolean;
-		
-		/** True if this World has been solves and fireworks displayed, setting this will prevent euphoria from being displayed more than once */
-		public var world_has_been_solved_before:Boolean = false;
-		
-		/** Set to true to only include pipes on normal boards in pipeIdDictionary, not pipes that appear on subboard clones */
-		public static const ONLY_INCLUDE_ORIGINAL_PIPES_IN_PIPE_ID_DICTIONARY:Boolean = true;
-		
-		/** Map from board name to board */
-		public var worldBoardNameDictionary:Dictionary = new Dictionary();
-		
 		protected var undoStack:Array;
 		protected var redoStack:Array;
 		
 		private var m_layoutXML:XML;
 		private var m_constraintsXML:XML;
-		
-		protected var right_arrow_button:Button;
-		protected var left_arrow_button:Button;
 		
 		public static var SHOW_GAME_MENU:String = "show_game_menu";
 		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";

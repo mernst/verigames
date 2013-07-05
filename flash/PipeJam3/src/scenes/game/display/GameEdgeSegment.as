@@ -40,10 +40,10 @@
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
 		
-		private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
-		{
-			ARROW_TEXT.repeat = true;
-		}
+		//private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
+		//{
+			//ARROW_TEXT.repeat = true;
+		//}
 		
 		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
 		{

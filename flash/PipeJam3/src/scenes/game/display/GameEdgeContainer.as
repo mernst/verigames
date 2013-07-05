@@ -415,14 +415,6 @@ package scenes.game.display
 		private var m_errorParticleSystem:ErrorParticleSystem;
 		private function addError():void
 		{
-			/*
-			if (errorMarker == null) {
-			errorMarker = new NineSliceBatch(ERROR_WIDTH, ERROR_WIDTH, ERROR_WIDTH / 2, ERROR_WIDTH / 2, "Game", "RoundRectOrangePNG", "Box9SliceXML", "Box");
-			errorMarker.x = -ERROR_WIDTH / 2;
-			errorMarker.y = -ERROR_WIDTH / 2;
-			}
-			errorContainer.addChild(errorMarker);
-			*/
 			if (m_errorParticleSystem == null) {
 				m_errorParticleSystem = new ErrorParticleSystem();
 				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
