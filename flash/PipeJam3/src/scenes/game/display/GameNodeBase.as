@@ -1,6 +1,10 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
+	import events.GameComponentEvent;
+	import events.GroupSelectionEvent;
+	import events.MoveEvent;
+	import events.UndoEvent;
 	
 	import events.EdgeSetChangeEvent;
 	
@@ -153,6 +157,7 @@ package scenes.game.display
 		
 		private var isMoving:Boolean = false;
 		private var hasMovedOutsideClickDist:Boolean = false;
+		private var startingTouchPoint:Point;
 		private var startingPoint:Point;
 		private static const CLICK_DIST:Number = 0.2; // if the node is moved just a tiny bit, chances are the user meant to click rather than move
 		private function onTouch(event:TouchEvent):void
@@ -167,15 +172,14 @@ package scenes.game.display
 				{
 					isMoving = false;
 					
-					undoData = new Object();
-					undoData.target = "level";
-					undoData.type = "move GameNodeBase";
-					undoData.component = this;
-					undoData.startPoint = startingPoint.clone();
-					undoData.endPoint = new Point(x, y);
 					if (hasMovedOutsideClickDist) {
-						undoEvent = new Event(Level.MOVE_EVENT,false,undoData);
-						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+						var startPoint:Point = startingPoint.clone();
+						var endPoint:Point = new Point(x, y);
+						trace("Move from " + startPoint + " to " + endPoint + " delta:" + endPoint.subtract(startPoint));
+						undoEvent = new MoveEvent(MoveEvent.MOVE_EVENT, this, startPoint, endPoint);
+						var eventToDispatch:UndoEvent = new UndoEvent(undoEvent, this);
+						eventToDispatch.levelEvent = true;
+						dispatchEvent(eventToDispatch);
 						hasMovedOutsideClickDist = false;
 						return;
 					}
@@ -198,16 +202,29 @@ package scenes.game.display
 					{
 						componentSelected(!m_isSelected);	
 						if(m_isSelected)
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
+							dispatchEvent(new GameComponentEvent(GameComponentEvent.COMPONENT_SELECTED, this));
 						else
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
+							dispatchEvent(new GameComponentEvent(GameComponentEvent.COMPONENT_UNSELECTED, this));
 					}
-					else //select whole group
+					else //select/unselect whole group
 					{
+						var groupDictionary:Dictionary = new Dictionary();
+						this.findGroup(groupDictionary);
+						var selection:Vector.<GameComponent> = new Vector.<GameComponent>();
+						for each(var comp:GameComponent in groupDictionary)
+						{
+							if(selection.indexOf(comp) == -1)
+							{
+								if(comp is GameNodeBase)
+								{
+									selection.push(comp);
+								}
+							}
+						}
 						if(m_isSelected) //we were selected on the first click
-							dispatchEvent(new starling.events.Event(Level.GROUP_SELECTED, true, this));
+							dispatchEvent(new GroupSelectionEvent(GroupSelectionEvent.GROUP_SELECTED, this, selection));
 						else
-							dispatchEvent(new starling.events.Event(Level.GROUP_UNSELECTED, true, this));
+							dispatchEvent(new GroupSelectionEvent(GroupSelectionEvent.GROUP_UNSELECTED, this, selection));
 					}
 				}
 			}
@@ -217,19 +234,22 @@ package scenes.game.display
 					var touchXY:Point = new Point(touch.globalX, touch.globalY);
 					touchXY = this.globalToLocal(touchXY);
 					if(!isMoving) {
-						startingPoint = touchXY;
+						startingTouchPoint = touchXY;
+						startingPoint = new Point(x, y);
 						isMoving = true;
 						hasMovedOutsideClickDist = false;
 						return;
 					} else if (!hasMovedOutsideClickDist) {
-						if (XMath.getDist(startingPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
+						if (XMath.getDist(startingTouchPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
 							hasMovedOutsideClickDist = true;
 						} else {
 							// Don't move if haven't moved outside CLICK_DIST
 							return;
 						}
 					}
-					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, event));
+					var currentMoveLocation:Point = touch.getLocation(this);
+					var previousLocation:Point = touch.getPreviousLocation(this);
+					dispatchEvent(new MoveEvent(MoveEvent.MOVE_EVENT, this, previousLocation, currentMoveLocation));
 				}
 			}
 		}

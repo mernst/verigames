@@ -92,7 +92,7 @@ package
 			if(mCurrentScene)
 				closeCurrentScene();
 			
-			showScene(event.params as String);
+			showScene(event.scene);
 		}
         protected function closeCurrentScene():void
         {

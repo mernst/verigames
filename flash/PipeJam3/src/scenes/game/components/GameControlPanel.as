@@ -1,21 +1,7 @@
 package scenes.game.components
 {
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import display.NineSliceButton;
-	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import starling.textures.TextureAtlas;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
-	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -23,6 +9,19 @@ package scenes.game.components
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
+	
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	import display.NineSliceButton;
+	import events.NavigationEvent;
+	import particle.ErrorParticleSystem;
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -114,7 +113,7 @@ package scenes.game.components
 		private function onMenuButtonTriggered():void
 		{
 			menuShowing = !menuShowing;
-			dispatchEvent(new Event(World.SHOW_GAME_MENU, true, menuShowing));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU, "", menuShowing));
 		}
 		
 		public function removedFromStage(event:Event):void
@@ -340,19 +339,19 @@ package scenes.game.components
 			return m_currentScore;
 		}
 
-		public function errorAdded(errorData:Object, level:Level):void
+		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
 		{
-			conflictMap.errorAdded(errorData, level);
+			conflictMap.errorAdded(errorParticleSystem, level);
 		}
 		
-		public function errorRemoved(errorData:Object):void
+		public function errorRemoved(errorParticleSystem:ErrorParticleSystem):void
 		{
-			conflictMap.errorRemoved(errorData);
+			conflictMap.errorRemoved(errorParticleSystem);
 		}
 		
-		public function errorMoved(errorData:Object):void
+		public function errorMoved(errorParticleSystem:ErrorParticleSystem):void
 		{
-			conflictMap.errorMoved(errorData as Sprite);
+			conflictMap.errorMoved(errorParticleSystem);
 		}
 	}
 	

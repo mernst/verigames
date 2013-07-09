@@ -1,32 +1,16 @@
 package scenes.game.components.dialogs
 {
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
-	
-	import feathers.controls.Label;
+	import events.MenuEvent;
 	import feathers.controls.List;
 	import feathers.controls.TextInput;
-	import feathers.controls.text.StageTextTextEditor;
-	import feathers.core.ITextEditor;
 	import feathers.data.ListCollection;
-	import feathers.events.FeathersEventType;
-	
-	import flash.text.TextFormat;
 	import flash.events.Event;
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	
-	import starling.display.Button;
-	import starling.display.Image;
-	import starling.events.Event;
-	import starling.textures.Texture;
-	
-	import utils.Base64Decoder;
 	import flash.utils.ByteArray;
+	import scenes.BaseComponent;
 	import scenes.login.LoginHelper;
+	import starling.events.Event;
 	
 	public class SelectLayoutDialog extends BaseComponent
 	{
@@ -151,8 +135,7 @@ package scenes.game.components.dialogs
 		private function setNewLayout(byteArray:ByteArray):void
 		{
 			var layoutFile:XML = new XML(byteArray);
-			dispatchEvent(new starling.events.Event(Level.SET_NEW_LAYOUT, true, layoutFile));		
-			
+			dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, layoutFile));
 		}
 	}
 }

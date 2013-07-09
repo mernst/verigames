@@ -1,32 +1,15 @@
 package scenes.game.components.dialogs
 {
-	import assets.AssetInterface;
-	
-	
+	import display.NineSliceBatch;
+	import display.NineSliceButton;
+	import events.MenuEvent;
 	import events.NavigationEvent;
-	
-	import flash.geom.Point;
-	
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	import scenes.login.LoginHelper;
-	
-	import starling.display.Button;
-	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
-	import starling.textures.Texture;
-
-	import display.NineSliceButton;
-	import display.NineSliceBatch;
 	
 	public class InGameMenuDialog extends Sprite
 	{
-				
 		/** Button to submit the current game */
 		protected var submit_score_button:NineSliceButton;
 		
@@ -35,10 +18,9 @@ package scenes.game.components.dialogs
 		
 		/** Button to select a new layout */
 		protected var select_layout_button:NineSliceButton;
-				
+		
 		/** Button to exit to the splash screen */
 		protected var exit_button:NineSliceButton;
-
 		
 		/** Button to switch to the next level only available in debug build */
 		protected var next_level_button:NineSliceButton;
@@ -108,13 +90,12 @@ package scenes.game.components.dialogs
 		
 		private function onSaveButtonTriggered():void
 		{
-			dispatchEvent(new Event(Level.SAVE_LOCALLY, true, this));
-			
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LOCALLY));
 		}
 		
 		private function onSubmitScoreButtonTriggered():void
 		{
-			dispatchEvent(new Event(Level.SUBMIT_SCORE, true, this));
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_SCORE));
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void
@@ -169,9 +150,8 @@ package scenes.game.components.dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen", true));
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 			this.removeFromParent();
-			
 		}
 		
 		private function hideAllDialogs():void
@@ -185,7 +165,7 @@ package scenes.game.components.dialogs
 		
 		private function onNextLevelButtonTriggered():void
 		{
-			dispatchEvent(new Event(World.SWITCH_TO_NEXT_LEVEL, true));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 	}
 }

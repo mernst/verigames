@@ -1,34 +1,27 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
-	import system.VerigameServerConstants;
-	
 	import audio.AudioManager;
-	
 	import events.EdgeSetChangeEvent;
+	import events.ErrorEvent;
+	import events.GameComponentEvent;
+	import events.MenuEvent;
+	import events.MoveEvent;
 	import events.NavigationEvent;
-	
-	import flash.geom.Point;
+	import events.UndoEvent;
 	import flash.system.System;
-	import flash.utils.Dictionary;
-	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
-	
 	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
+	import scenes.game.components.dialogs.InGameMenuDialog;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import scenes.game.components.dialogs.InGameMenuDialog;
-	
-	import starling.display.Button;
-	import starling.display.Image;
+	import scenes.game.PipeJamGameScene;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	
 	import system.PipeSimulator;
-	
+	import system.VerigameServerConstants;
 	import utils.XMath;
 	
 	/**
@@ -62,16 +55,11 @@ package scenes.game.display
 		/** True if at least one level on this board has not succeeded */
 		public var failed:Boolean = false;
 		
-		protected var undoStack:Array;
-		protected var redoStack:Array;
+		protected var undoStack:Vector.<UndoEvent>;
+		protected var redoStack:Vector.<UndoEvent>;
 		
 		private var m_layoutXML:XML;
 		private var m_constraintsXML:XML;
-		
-		public static var SHOW_GAME_MENU:String = "show_game_menu";
-		public static var SWITCH_TO_NEXT_LEVEL:String = "switch_to_next_level";
-		
-		public static var UNDO_EVENT:String = "undo_event";
 		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
@@ -90,8 +78,8 @@ package scenes.game.display
 			m_layoutXML = _layout;
 			m_constraintsXML = _constraints;
 			
-			undoStack = new Array();
-			redoStack = new Array();
+			undoStack = new Vector.<UndoEvent>();
+			redoStack = new Vector.<UndoEvent>();
 			
 			// create World
 			var original_subboard_nodes:Vector.<Node> = new Vector.<Node>();
@@ -116,9 +104,8 @@ package scenes.game.display
 				}
 			}
 			
-			//m_simulator = new Simulator(m_network);
 			m_simulator = new PipeSimulator(m_network);
-						
+			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
 		}
@@ -142,30 +129,30 @@ package scenes.game.display
 			selectLevel(firstLevel);
 			
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
-			addEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
-			addEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
-			addEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
+			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
+			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			addEventListener(Level.SAVE_LAYOUT, onSaveLayoutFile);
-			addEventListener(Level.SUBMIT_SCORE, onSubmitScore);
-			addEventListener(Level.SAVE_LOCALLY, onSaveLocally);
-			addEventListener(Level.SET_NEW_LAYOUT, setNewLayout);	
+			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
+			addEventListener(MenuEvent.SUBMIT_SCORE, onSubmitScore);
+			addEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
+			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
-			addEventListener(UNDO_EVENT, saveEvent);
+			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			
-			addEventListener(Level.ERROR_ADDED, onErrorAdded);
-			addEventListener(Level.ERROR_REMOVED, onErrorRemoved);
-			addEventListener(Level.ERROR_MOVED, onErrorMoved);
-			addEventListener(Level.MOVE_TO_POINT, onMoveToPointEvent);
+			addEventListener(ErrorEvent.ERROR_ADDED, onErrorAdded);
+			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
+			addEventListener(ErrorEvent.ERROR_MOVED, onErrorMoved);
+			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
 			
 			AudioManager.getInstance().audioDriver().reset();
 			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 		}
 		
-		private function onShowGameMenuEvent(e:Event):void
+		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			if(e.data == true)
+			if(evt.menuShowing)
 			{
 				if(inGameMenuBox == null)
 				{
@@ -181,20 +168,20 @@ package scenes.game.display
 				
 		}
 		
-		public function onSaveLayoutFile(event:Event):void
+		public function onSaveLayoutFile(event:MenuEvent):void
 		{
 			if(active_level != null) {
 				active_level.onSaveLayoutFile(event);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data as String;
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.layoutName;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
 		}
 		
-		public function onSubmitScore(event:Event):void
+		public function onSubmitScore(event:MenuEvent):void
 		{
 			if(active_level != null)
 			{
@@ -209,20 +196,20 @@ package scenes.game.display
 			}
 		}
 		
-		public function onSaveLocally(event:Event):void
+		public function onSaveLocally(event:MenuEvent):void
 		{
 			if(active_level != null)
 				active_level.onSaveLocally(event);
 		}
 		
-		public function setNewLayout(event:Event):void
+		public function setNewLayout(event:MenuEvent):void
 		{
 			if(active_level != null) {
 				active_level.setNewLayout(event, true);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = (event.data as XML).@id;
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.layoutXML.@id;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
@@ -245,24 +232,26 @@ package scenes.game.display
 			}
 		}
 		
-		private function onCenterOnComponentEvent(e:Event):void
+		private function onCenterOnComponentEvent(evt:GameComponentEvent):void
 		{
-			var component:GameComponent = e.data as GameComponent;
+			var component:GameComponent = evt.component;
 			if(component)
 			{
 				edgeSetGraphViewPanel.centerOnComponent(component);
 			}
 		}
 		
-		private function onNextLevel(e:Event):void
+		private function onNextLevel(evt:NavigationEvent):void
 		{
 			if(PipeJamGameScene.inTutorial)
 			{
 				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
 				if(currentLevelNumber >= levels.length)
 				{
-					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen", true));
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 					return;
+				} else {
+					currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 				}
 			}
 			else
@@ -270,98 +259,69 @@ package scenes.game.display
 			selectLevel(levels[currentLevelNumber]);
 		}
 		
-		public function onErrorAdded(event:starling.events.Event):void
+		public function onErrorAdded(event:ErrorEvent):void
 		{
-			gameControlPanel.errorAdded(event.data, active_level);
+			gameControlPanel.errorAdded(event.errorParticleSystem, active_level);
 		}
 		
-		public function onErrorRemoved(event:starling.events.Event):void
+		public function onErrorRemoved(event:ErrorEvent):void
 		{
-			gameControlPanel.errorRemoved(event.data);
+			gameControlPanel.errorRemoved(event.errorParticleSystem);
 		}
 		
-		public function onErrorMoved(event:starling.events.Event):void
+		public function onErrorMoved(event:ErrorEvent):void
 		{
-			gameControlPanel.errorMoved(event.data);
+			gameControlPanel.errorMoved(event.errorParticleSystem);
 		}
 		
-		private function onMoveToPointEvent(e:starling.events.Event):void
+		private function onMoveToPointEvent(evt:MoveEvent):void
 		{
-			edgeSetGraphViewPanel.moveToPoint(e.data as Point);
+			edgeSetGraphViewPanel.moveToPoint(evt.startLoc);
 		}
 		
-		private function saveEvent(e:starling.events.Event):void
+		private function saveEvent(evt:UndoEvent):void
 		{
+			if (evt.eventsToUndo.length == 0) {
+				return;
+			}
 			//sometimes we need to remove the last event to add a complex event that includes that one
 			//addToLastSimilar adds to the last event if they are of the same type (i.e. successive mouse wheel events should all undo at the same time)
 			//addToLast adds to last event in any case (undo move node event also should put edges back where they were)
-			if(e.data) //should always exist, but...
+			var lastEvent:UndoEvent;
+			if(evt.addToSimilar)
 			{
-				if(e.data.data)
+				lastEvent = undoStack.pop();
+				if(lastEvent && (lastEvent.eventsToUndo.length > 0))
 				{
-					var lastEvent:Event;
-					var newArray:Array;
-					var newEvent:Event;
-					
-					if(e.data.data.hasOwnProperty("addToLastSimilar") == true && e.data.data.addToLastSimilar == true)
+					if(lastEvent.eventsToUndo[0].type == evt.eventsToUndo[0].type)
 					{
-						lastEvent = undoStack.pop();
-						if(lastEvent)
-						{
-							if(lastEvent.type == e.data.type)
-							{
-								if(lastEvent.data is Array)
-								{
-									(lastEvent.data as Array).push(e.data);
-									undoStack.push(lastEvent);
-								}
-								else
-								{
-									newArray = new Array(lastEvent, e.data);
-									newEvent = new Event(e.data.type, true, newArray);
-									undoStack.push(newEvent);
-									
-								}
-							}
-							else //no match, just push, adding back lastEvent also
-							{
-								undoStack.push(lastEvent);
-								undoStack.push(e.data);
-							}
-							
-						}
-						else
-							undoStack.push(e.data);
+						// Add these to end of lastEvent's list of events to undo
+						lastEvent.eventsToUndo = lastEvent.eventsToUndo.concat(evt.eventsToUndo);
 					}
-					else if(e.data.data.hasOwnProperty("addToLast") == true && e.data.data.addToLast == true)
+					else //no match, just push, adding back lastEvent also
 					{
-						lastEvent = undoStack.pop();
-						if(lastEvent)
-						{
-							if(lastEvent.data is Array)
-							{
-								(lastEvent.data as Array).push(e.data);
-								undoStack.push(lastEvent);
-							}
-							else
-							{
-								newArray = new Array(lastEvent, e.data);
-								newEvent = new Event(e.data.type, true, newArray);
-								undoStack.push(newEvent);
-								
-							}
-						}
-						else
-							undoStack.push(e.data);
+						undoStack.push(lastEvent);
+						undoStack.push(evt);
 					}
-					else
-						undoStack.push(e.data);
 				}
 				else
-					undoStack.push(e.data);
+					undoStack.push(evt);
 			}
+			else if(evt.addToLast)
+			{
+				lastEvent = undoStack.pop();
+				if(lastEvent)
+				{
+					// Add these to end of lastEvent's list of events to undo
+					lastEvent.eventsToUndo = lastEvent.eventsToUndo.concat(evt.eventsToUndo);
+				}
+				else
+					undoStack.push(evt);
+			}
+			else
+				undoStack.push(evt);
 			//when we build on the undoStack, clear out the redoStack
-			redoStack = new Array();
+			redoStack = new Vector.<UndoEvent>();
 		}
 		
 		public function handleKeyUp(event:starling.events.KeyboardEvent):void
@@ -374,11 +334,8 @@ package scenes.game.display
 					{
 						if(undoStack.length > 0)
 						{
-							var undoDataEvent:Event = undoStack.pop();
-							if(undoDataEvent.data != null)
-							{
-								handleUndoRedoEvent(undoDataEvent, true);
-							}
+							var undoDataEvent:UndoEvent = undoStack.pop();
+							handleUndoRedoEvent(undoDataEvent, true);
 						}
 						break;
 					}
@@ -387,11 +344,8 @@ package scenes.game.display
 					{
 						if(redoStack.length > 0)
 						{
-							var redoDataEvent:Event = redoStack.pop();
-							if(redoDataEvent.data != null)
-							{
-								handleUndoRedoEvent(redoDataEvent, false);
-							}
+							var redoDataEvent:UndoEvent = redoStack.pop();
+							handleUndoRedoEvent(redoDataEvent, false);
 						}
 						break;
 					}
@@ -417,44 +371,30 @@ package scenes.game.display
 			}
 		}
 		
-		protected function handleUndoRedoEvent(event:Event, isUndo:Boolean):void
+		protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
-			if(event.data != null)
+			//added newest at the end, so start at the end
+			for(var i:int = event.eventsToUndo.length-1; i>=0; i--)
 			{
-				if(event.data is Array)
-				{
-					//added newest at the end, so start at the end
-					for(var i:int = (event.data as Array).length-1; i>=0; i--)
-					{
-						var eventObj:Event = (event.data as Array)[i];
-						handleUndoRedoEventObject(eventObj, isUndo);
-					}
-				}
-				else
-					handleUndoRedoEventObject(event, isUndo);
+				var eventObj:Event = event.eventsToUndo[i];
+				handleUndoRedoEventObject(eventObj, isUndo, event.levelEvent, event.component);
 			}
-			
 			if(isUndo)
 				redoStack.push(event);
 			else
 				undoStack.push(event);
 		}
 		
-		protected function handleUndoRedoEventObject(event:Event, isUndo:Boolean):void
+		protected function handleUndoRedoEventObject(evt:Event, isUndo:Boolean, levelEvent:Boolean, component:BaseComponent):void
 		{
-			var data:Object = event.data;
-			if(data == null) //handle locally
-				handleUndoEvent(event, isUndo);
-			if(event.data.target is String)
+			if (active_level && levelEvent)
 			{
-				if((event.data.target as String) == "level")
-				{
-					if(this.active_level != null)
-						active_level.handleUndoEvent(event, isUndo);
-				}
+				active_level.handleUndoEvent(evt, isUndo);
 			}
-			else if(event.data.target is BaseComponent)
-				(event.data.target as BaseComponent).handleUndoEvent(event, isUndo);
+			else if (component)
+			{
+				component.handleUndoEvent(evt, isUndo);
+			}
 		}
 		
 		private function selectLevel(newLevel:Level):void
@@ -487,17 +427,16 @@ package scenes.game.display
 		{
 			AudioManager.getInstance().audioDriver().reset();
 			
-			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
+			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
-			removeEventListener(Level.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
-			removeEventListener(World.SHOW_GAME_MENU, onShowGameMenuEvent);
-			removeEventListener(World.SWITCH_TO_NEXT_LEVEL, onNextLevel);
+			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
+			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			removeEventListener(Level.SAVE_LAYOUT, onSaveLayoutFile);
-			removeEventListener(Level.SUBMIT_SCORE, onSubmitScore);
-			removeEventListener(Level.SAVE_LOCALLY, onSaveLocally);
-			removeEventListener(Level.SET_NEW_LAYOUT, setNewLayout);	
-			removeEventListener(UNDO_EVENT, saveEvent);
+			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
+			removeEventListener(MenuEvent.SUBMIT_SCORE, onSubmitScore);
+			removeEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
+			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
+			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			

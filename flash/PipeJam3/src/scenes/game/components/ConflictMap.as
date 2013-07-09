@@ -1,28 +1,21 @@
 package scenes.game.components
 {
 	import assets.AssetInterface;
-	import assets.AssetsFont;
-	
+	import events.MoveEvent;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	
 	import particle.ErrorParticleSystem;
-	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
-	
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	
 	import utils.XMath;
-
+	
 	public class ConflictMap extends BaseComponent
 	{
 		
@@ -66,7 +59,7 @@ package scenes.game.components
 				//switch point to percentages
 				currentPoint.x /= width;
 				currentPoint.y /= height;
-				dispatchEvent(new Event(Level.MOVE_TO_POINT, true, currentPoint));
+				dispatchEvent(new MoveEvent(MoveEvent.MOVE_TO_POINT, null, currentPoint, null));
 			}
 		}
 		
@@ -93,14 +86,13 @@ package scenes.game.components
 			}
 		}
 		
-		public function errorAdded(errorData:Object, level:Level):void
+		public function errorAdded(errorParticle:ErrorParticleSystem, level:Level):void
 		{
+			// TODO: make an internal class and new instance here containing particle, quad
 			var errorObj:Object = new Object;
-			errorObj.particle = errorData;
+			errorObj.particle = errorParticle;
 			errorObj.quad = new Quad(3, 3, 0xff0000);
 			conflictList.push(errorObj);
-
-			var errorParticle:ErrorParticleSystem = errorData as ErrorParticleSystem;
 			
 			//find percent location in level panel, then set error quad to that percent in conflict map
 			var errorPt:Point = errorParticle.parent.localToGlobal(new Point(errorParticle.x, errorParticle.y));
@@ -115,7 +107,6 @@ package scenes.game.components
 			var percentX:Number = (levelPoint.x-level.x)*contentScale.x/(boundingBoxMax.x - boundingBoxMin.x);
 			var percentY:Number = (levelPoint.y-level.y)*contentScale.y/(boundingBoxMax.y - boundingBoxMin.y);
 			
-			
 			var xVal:Number = XMath.clamp(percentX*(width/scaleX),0, width/scaleX);
 			var yVal:Number = XMath.clamp(percentY*(height/scaleY),0, height/scaleY);
 			errorObj.quad.x	= xVal;
@@ -124,12 +115,12 @@ package scenes.game.components
 			addChild(errorObj.quad);
 		}
 		
-		public function errorRemoved(errorData:Object):void
+		public function errorRemoved(errorParticle:ErrorParticleSystem):void
 		{
 			for(var i:int = 0; i<conflictList.length; i++)
 			{
 				var errorObj:Object = conflictList[i];
-				if(errorObj.particle.id == errorData.id)
+				if(errorObj.particle.id == errorParticle.id)
 				{
 					removeChild(errorObj.quad);
 					conflictList.splice(i,1);
@@ -137,19 +128,15 @@ package scenes.game.components
 			}
 		}
 		
-		public function errorMoved(errorData:Sprite):void
+		public function errorMoved(errorParticle:ErrorParticleSystem):void
 		{
-			if(errorData.numChildren > 0)
+			for(var i:int = 0; i<conflictList.length; i++)
 			{
-				var error:ErrorParticleSystem = errorData.getChildAt(0) as ErrorParticleSystem;
-				for(var i:int = 0; i<conflictList.length; i++)
+				var errorObj:Object = conflictList[i];
+				if(errorObj.particle.id == errorParticle.id)
 				{
-					var errorObj:Object = conflictList[i];
-					if(errorObj.particle.id == error.id)
-					{
-						errorRemoved(error);
-						errorAdded(error, currentLevel);
-					}
+					errorRemoved(errorParticle);
+					errorAdded(errorParticle, currentLevel);
 				}
 			}
 		}

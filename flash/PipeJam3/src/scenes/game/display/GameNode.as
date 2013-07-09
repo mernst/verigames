@@ -3,6 +3,7 @@ package scenes.game.display
 	import assets.AssetInterface;
 	import display.NineSliceBatch;
 	import events.EdgeSetChangeEvent;
+	import events.UndoEvent;
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.Network;
@@ -105,18 +106,18 @@ package scenes.game.display
 				handleWidthChange(!m_isWide);
 				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 				
-				var undoData:Object = new Object();
-				undoData.target = this;
-				undoData.type = "width change";
-				var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
-				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+				var eventToUndo:Event = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this);
+				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+				dispatchEvent(eventToDispatch);
 			}
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
-			if(undoEvent.type == EdgeSetChangeEvent.EDGE_SET_CHANGED)
+			// TODO: Use the event data, don't just toggle the current state - this isn't robust
+			if(undoEvent is EdgeSetChangeEvent) {
 				handleWidthChange(!m_isWide);
+			}
 		}
 		
 		public function handleWidthChange(newWidth:Boolean):void

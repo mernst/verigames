@@ -3,7 +3,12 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import display.NineSliceButton;
+	import events.MouseWheelEvent;
+	import events.MoveEvent;
+	import events.NavigationEvent;
+	import events.UndoEvent;
 	import flash.text.TextFormat;
+	import starling.animation.Transitions;
 	import starling.textures.TextureAtlas;
 	
 	import display.ShimmeringText;
@@ -53,10 +58,6 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 500.0 / Constants.GAME_SCALE;
-		
-		public static const MOUSE_WHEEL:String = "mouse_wheel";
-		public static const MOUSE_DRAG:String = "mouse_drag";
-		public static const CENTER:String = "center";
 		
 		public function GridViewPanel()
 		{
@@ -111,22 +112,19 @@ package scenes.game.components
 					//did we really move?
 					if(content.x != startingPoint.x || content.y != startingPoint.y)
 					{
-						var undoData:Object = new Object();
-						undoData.target = this;
-						undoData.type = "move content";
-						undoData.component = this;
-						undoData.addToLastSimilar = true;
-						undoData.startPoint = startingPoint.clone();
-						undoData.endPoint = new Point(content.x, content.y);
-						var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
-						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+						var startPoint:Point = startingPoint.clone();
+						var endPoint:Point = new Point(content.x, content.y);
+						var eventToUndo:Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+						var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+						eventToDispatch.addToSimilar = true;
+						dispatchEvent(eventToDispatch);
 					}
 				}
 				if(currentMode != NORMAL_MODE)
 					currentMode = NORMAL_MODE;
 				else
 				{
-					if(this.m_currentLevel && event.target is starling.display.Image)
+					if(this.m_currentLevel && event.target == m_backgroundImage)
 						this.m_currentLevel.unselectAll();
 				}
 			}
@@ -266,20 +264,13 @@ package scenes.game.components
 			var newY:Number = viewRect.y + viewRect.height / 2 + (prevMouse.y - newMouse.y);// / content.scaleY;
 			moveContent(newX, newY);
 			
-			
 			//turn this off if in an undo event
 			if(createUndoEvent)
 			{
-				var endPoint:Point = new Point(content.x, content.y);
-				var moveData:Object = new Object();
-				moveData.target = this;
-				moveData.type = "mouse wheel";
-				moveData.addToLastSimilar = true;
-				moveData.mousePoint = mousePoint;
-				moveData.delta = delta;
-				moveData.time = new Date().time;
-				var undoEvent:Event = new Event(MOUSE_WHEEL,false,moveData);
-				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+				var eventToUndo:MouseWheelEvent = new MouseWheelEvent(mousePoint, delta, new Date().time);
+				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+				eventToDispatch.addToSimilar = true;
+				dispatchEvent(eventToDispatch);
 			}
 		}
 		
@@ -396,7 +387,7 @@ package scenes.game.components
 			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
 			content.addChild(m_currentLevel);
 			var i:int;
-			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
+			if (false){//(m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
 				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.right / 2, m_currentLevel.m_boundingBox.bottom / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
@@ -467,7 +458,7 @@ package scenes.game.components
 		
 		private function onNextLevelButtonTriggered(evt:Event):void
 		{
-			dispatchEvent(new Event(World.SWITCH_TO_NEXT_LEVEL, true));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
 		public function displayTextMetadata(textParent:XML):void
@@ -496,7 +487,8 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		public function centerOnComponent(component:GameComponent):void
+		private var m_spotlight:Image;
+		public function centerOnComponent(component:GameComponent, highlightWithSpotlight:Boolean = false):void
 		{
 			startingPoint = new Point(content.x, content.y);
 			
@@ -505,34 +497,58 @@ package scenes.game.components
 			var localPt:Point = content.globalToLocal(globPt);
 			panTo(localPt.x, localPt.y);
 			
-			var undoData:Object = new Object();
-			undoData.target = this;
-			undoData.type = "center on component";
-			undoData.component = this;
-			undoData.startPoint = startingPoint.clone();
-			undoData.endPoint = new Point(content.x, content.y);
-			var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
-			dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-
+			if (highlightWithSpotlight) {
+				if (!m_spotlight) {
+					var spotlightTexture:Texture = AssetInterface.getTexture("Game", "SpotlightClass");
+					m_spotlight = new Image(spotlightTexture);
+					m_spotlight.touchable = false;
+					m_spotlight.alpha = 0.5;
+				}
+				const MIN_SPOTLIGHT_ASPECT:Number = 1.5;
+				const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
+				if (component.width > MIN_SPOTLIGHT_ASPECT * component.height) {
+					// Reached out min aspect, use scaled up dimensions
+					m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
+					m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
+				} else {
+					// need to expand width to match min aspect
+					m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
+					m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
+				}
+				m_spotlight.x = content.x;
+				m_spotlight.y = content.y;
+				content.addChild(m_spotlight);
+				var destX:Number = localPt.x - m_spotlight.width / 2;
+				var destY:Number = localPt.y - m_spotlight.height / 2;
+				Starling.juggler.removeTweens(m_spotlight);
+				Starling.juggler.tween(m_spotlight, 2.0, { delay: 0.20, x:destX, transition: Transitions.EASE_OUT_ELASTIC } );
+				Starling.juggler.tween(m_spotlight, 1.8, { delay: 0.40, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
+			}
+			
+			var startPoint:Point = startingPoint.clone();
+			var endPoint:Point = new Point(content.x, content.y);
+			var eventToUndo:MoveEvent = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+			dispatchEvent(eventToDispatch);
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
-			var undoData:Object = undoEvent.data;
-			if(undoEvent.type == GridViewPanel.MOUSE_WHEEL)
+			if(undoEvent is MouseWheelEvent)
 			{
-				var delta:Number = undoData.delta;
-				var localMouse:Point = undoData.mousePoint;
-				if(!isUndo)
-					handleMouseWheel(delta, localMouse, false);
-				else
+				var wheelEvt:MouseWheelEvent = undoEvent as MouseWheelEvent;
+				var delta:Number = wheelEvt.delta;
+				var localMouse:Point = wheelEvt.mousePoint;
+				if(isUndo)
 					handleMouseWheel(-delta, localMouse, false);
-
+				else
+					handleMouseWheel(delta, localMouse, false);
 			}
-			else if(undoEvent.type == GridViewPanel.MOUSE_DRAG)
+			else if ((undoEvent is MoveEvent) && (undoEvent.type == MoveEvent.MOUSE_DRAG))
 			{
-				var startPoint:Point = undoData.startPoint;
-				var endPoint:Point = undoData.endPoint;
+				var moveEvt:MoveEvent = undoEvent as MoveEvent;
+				var startPoint:Point = moveEvt.startLoc;
+				var endPoint:Point = moveEvt.endLoc;
 				if(isUndo)
 				{
 					content.x = startPoint.x;
@@ -543,7 +559,6 @@ package scenes.game.components
 					content.x = endPoint.x;
 					content.y = endPoint.y;
 				}
-				
 			}
 		}
 	}

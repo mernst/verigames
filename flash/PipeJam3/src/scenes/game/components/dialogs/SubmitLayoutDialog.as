@@ -1,25 +1,17 @@
 package scenes.game.components.dialogs
 {
-	import scenes.BaseComponent;
-	import scenes.game.display.Level;
-	
-	import assets.AssetInterface;
 	import assets.AssetsFont;
-	
-	import feathers.controls.TextInput;
-	import feathers.events.FeathersEventType;
-	
-	import starling.display.Image;
-	import starling.events.Event;
-	import starling.textures.Texture;
-	import feathers.controls.text.StageTextTextEditor;
-	import feathers.core.ITextEditor;
-	import starling.display.Button;
-	
-	import display.NineSliceButton;
 	import display.NineSliceBatch;
+	import display.NineSliceButton;
+	import events.MenuEvent;
 	import feathers.controls.Label;
+	import feathers.controls.text.StageTextTextEditor;
+	import feathers.controls.TextInput;
+	import feathers.core.ITextEditor;
+	import feathers.events.FeathersEventType;
 	import flash.text.TextFormat;
+	import scenes.BaseComponent;
+	import starling.events.Event;
 	
 	public class SubmitLayoutDialog extends BaseComponent
 	{
@@ -107,7 +99,7 @@ package scenes.game.components.dialogs
 		private function onSubmitButtonTriggered(e:starling.events.Event):void
 		{
 			visible = false;
-			dispatchEvent(new starling.events.Event(Level.SAVE_LAYOUT, true, input.text));		
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT, input.text));		
 		}
 	}
 }
