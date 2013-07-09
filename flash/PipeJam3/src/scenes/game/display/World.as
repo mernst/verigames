@@ -250,8 +250,6 @@ package scenes.game.display
 				{
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 					return;
-				} else {
-					currentLevelNumber = (currentLevelNumber + 1) % levels.length;
 				}
 			}
 			else
