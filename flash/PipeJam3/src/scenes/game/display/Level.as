@@ -76,8 +76,8 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		
 		private var m_nodesContainer:Sprite = new Sprite();
-		private var m_errorContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
+		private var m_errorContainer:Sprite = new Sprite();
 		private var m_edgesContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle;
@@ -131,8 +131,8 @@ package scenes.game.display
 			
 			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
 			addChild(m_nodesContainer);
-			addChild(m_errorContainer);
 			addChild(m_jointsContainer);
+			addChild(m_errorContainer);
 			addChild(m_edgesContainer);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	

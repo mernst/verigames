@@ -1388,6 +1388,12 @@ class InnerBoxSegment extends GameComponent
 	public function draw():void
 	{
 		unflatten();
+		
+		var singleProngToDoubleOffset:Number = 0.0;
+		if (!m_isWide && m_borderIsWide) {
+			singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
+		}
+		
 		if (edgeSegment && edgeSegmentOutline) {
 			if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
 				edgeSegment.x = interiorPt.x;
@@ -1403,7 +1409,7 @@ class InnerBoxSegment extends GameComponent
 			if (edgeSegmentOutline.color != getBorderColor()) {
 				edgeSegmentOutline.color = getBorderColor();
 			}
-			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0;
+			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
 			edgeSegmentOutline.y = edgeSegment.y;
 			edgeSegment.setIsWide(m_isWide);
 			edgeSegment.draw();
@@ -1421,7 +1427,7 @@ class InnerBoxSegment extends GameComponent
 		}
 		updateSocket();
 		if (m_socket) {
-			m_socket.x = interiorPt.x - m_socket.width / 2;
+			m_socket.x = interiorPt.x - m_socket.width / 2 + singleProngToDoubleOffset;
 			m_socket.y = interiorPt.y - m_height;
 		}
 		flatten();
