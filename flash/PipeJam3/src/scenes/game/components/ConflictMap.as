@@ -69,14 +69,15 @@ package scenes.game.components
 			removeChildren(1);
 			var list:Dictionary = ErrorParticleSystem.errorList;
 			//if we are just switching between levels (not changing worlds, we need to clear out old errors
-			for each(var currentError:ErrorParticleSystem in ErrorParticleSystem.errorList)
-			{
-				if(currentError != null)
-				{
-					ErrorParticleSystem.errorList = new Dictionary;
-					break;
-				}
-			}
+			//TO FIX this isn't right. We should do this at the level of actually switching levels
+//			for each(var currentError:ErrorParticleSystem in ErrorParticleSystem.errorList)
+//			{
+//				if(currentError != null)
+//				{
+//					ErrorParticleSystem.errorList = new Dictionary;
+//					break;
+//				}
+//			}
 			
 			for each(var error:ErrorParticleSystem in ErrorParticleSystem.errorList)
 			{

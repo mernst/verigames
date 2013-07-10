@@ -3,11 +3,11 @@ package scenes.game.components.dialogs
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	import events.MenuEvent;
+	import display.NineSliceButton;
 	import events.NavigationEvent;
 	import scenes.login.LoginHelper;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	
 	public class InGameMenuDialog extends Sprite
 	{
 		/** Button to submit the current game */
@@ -30,6 +30,8 @@ package scenes.game.components.dialogs
 		private var selectLayoutDialog:SelectLayoutDialog;
 		
 		private var submitLayoutDialog:SubmitLayoutDialog;
+		
+		private var submitLevelDialog:SubmitLevelDialog;
 		
 		protected var loginHelper:LoginHelper;	
 		
@@ -95,7 +97,17 @@ package scenes.game.components.dialogs
 		
 		private function onSubmitScoreButtonTriggered():void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_SCORE));
+			if(submitLevelDialog == null)
+			{
+				submitLevelDialog = new SubmitLevelDialog(200, 200);
+				parent.addChild(submitLevelDialog);
+				
+				submitLevelDialog.x = (480 - submitLevelDialog.width)/2;
+				submitLevelDialog.y = (320 - submitLevelDialog.height)/2;
+				submitLevelDialog.visible = true;
+			}
+			else
+				submitLevelDialog.visible = !submitLevelDialog.visible;
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void

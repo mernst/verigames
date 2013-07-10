@@ -27,6 +27,14 @@ package scenes.login
 			}
 			ExternalInterface.call("alert", str);
 		}
+		
+		public static function deleteCookie(str:String):void
+		{
+			if (!ExternalInterface.available) {
+				return;
+			}
+			ExternalInterface.call("deleteCookie", str);
+		}
 	}
 }
 

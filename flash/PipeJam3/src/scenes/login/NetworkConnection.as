@@ -144,11 +144,13 @@ package scenes.login
 					break;
 				case LoginHelper.SAVE_CONSTRAINTS:
 					var scoreASString:String = other;
-					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+playerID+"/"+scoreASString+"&method=DATABASE";
+					var eRating:Number = LoginHelper.enjoymentRating;
+					var dRating:Number = LoginHelper.difficultyRating;
+					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+playerID+"/"+scoreASString 
+										+ eRating+"/"+ dRating+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.VERIFY_SESSION:
-				//	request = "/"+name+"&method=VERIFY";
 					specificURL = "http://pipejam.verigames.com/verifySession";
 					request = "?cookies="+name;
 					method = URLRequestMethod.POST; 

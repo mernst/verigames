@@ -93,6 +93,11 @@
 				return document.cookie;
 			}
 			
+			function deleteCookie(name)
+			{
+			    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+			}
+			
 
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
             var swfVersionStr = "11.1.0";

@@ -51,6 +51,9 @@ package scenes.login
 		public var m_constraintsSaved:Boolean = false;
 		public var m_levelCreated:Boolean = false;
 		
+		public static var enjoymentRating:Number;
+		public static var difficultyRating:Number;
+		
 		public static function getLoginHelper():LoginHelper
 		{
 			if(!loginHelper)

@@ -14,7 +14,7 @@ package events
 		
 		public function MenuEvent(_type:String, _layoutName:String = "", _layoutXML:XML = null) 
 		{
-			super(type, true);
+			super(_type, true);
 			layoutName = _layoutName;
 			layoutXML = _layoutXML;
 		}

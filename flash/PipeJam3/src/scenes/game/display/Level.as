@@ -818,22 +818,23 @@ package scenes.game.display
 			}
 			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
-			for each (var edgeID:String in edgeSet.edge_ids)
-			{
-				var edge:Edge = this.edgeDictionary[edgeID];
-				if(edge != null)
+			if(edgeSet != null)
+				for each (var edgeID:String in edgeSet.edge_ids)
 				{
-					edge.is_wide = !edge.is_wide;
+					var edge:Edge = this.edgeDictionary[edgeID];
+					if(edge != null)
+					{
+						edge.is_wide = !edge.is_wide;
+					}
+					//var outID:String = edgeID + "__OUT__";
+					//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
+					//if(outgoingGameEdgeContainer)
+						//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+					//var inID:String = edgeID+"__IN__";
+					//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
+					//if(incomingGameEdgeContainer)
+						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				}
-				//var outID:String = edgeID + "__OUT__";
-				//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
-				//if(outgoingGameEdgeContainer)
-					//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-				//var inID:String = edgeID+"__IN__";
-				//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
-				//if(incomingGameEdgeContainer)
-					//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
 		}
 		

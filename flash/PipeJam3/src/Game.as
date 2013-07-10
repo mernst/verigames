@@ -167,8 +167,8 @@ package
 		
 		public function onStartBusyAnimation(e:Event):void
 		{
-			busyAnimationMovieClip.x = (width-busyAnimationMovieClip.width)/2;
-			busyAnimationMovieClip.y = (height-busyAnimationMovieClip.height)/2;
+			busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
+			busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
 			addChild(busyAnimationMovieClip);
 			Starling.juggler.add(this.busyAnimationMovieClip);
 		}
