@@ -254,7 +254,12 @@ package scenes.game.display
 			}
 			else
 				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
-			selectLevel(levels[currentLevelNumber]);
+			var callback:Function =
+				function():void
+				{
+					selectLevel(levels[currentLevelNumber]);
+				};
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		public function onErrorAdded(event:ErrorEvent):void
