@@ -2,6 +2,7 @@
 {
 	import assets.AssetInterface;
 	import starling.display.BlendMode;
+	import starling.display.Sprite;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -35,6 +36,9 @@
 		
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
+		
+		public var plug:Sprite;
+		public var socket:Sprite;
 		
 		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
 		{
@@ -185,7 +189,6 @@
 				m_quad.removeFromParent(true);
 				m_quad = null;
 			}
-			disposeChildren();
 			
 			var pctTextWidth:Number;
 			var pctTextHeight:Number;
@@ -223,8 +226,19 @@
 			}
 			
 			addChild(m_quad);
-			
-			flatten();
+			if (socket) {
+				addChild(socket);
+			}
+			if (plug) {
+				addChild(plug);
+			}
+			if (plug || socket) {
+				this.blendMode = BlendMode.NORMAL;
+			} else {
+				// Don't flatten with plug since it has transparent areas
+				this.blendMode = BlendMode.NONE;
+				flatten();
+			}
 		}
 		
 		public function onEnterFrame(event:Event):void

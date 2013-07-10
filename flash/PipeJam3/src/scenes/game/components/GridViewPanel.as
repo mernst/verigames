@@ -156,7 +156,7 @@ package scenes.game.components
 					if (touches.length == 1)
 					{
 						// one finger touching -> move
-						if(touches[0].target is starling.display.Image || touches[0].target is starling.display.Image)
+						if(touches[0].target == m_backgroundImage)
 						{
 							var delta:Point = touches[0].getMovement(parent);
 							var cp:Point = touches[0].getLocation(this.content);
@@ -387,7 +387,7 @@ package scenes.game.components
 			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
 			content.addChild(m_currentLevel);
 			var i:int;
-			if (false){//(m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
+			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
 				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.right / 2, m_currentLevel.m_boundingBox.bottom / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);

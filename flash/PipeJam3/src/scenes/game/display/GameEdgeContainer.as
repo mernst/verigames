@@ -1241,8 +1241,9 @@ class InnerBoxSegment extends GameComponent
 		if (innerCircleJoint) {
 			addChild(innerCircleJoint);
 		}
-		addChild(m_socketContainer);
-		addChild(m_plugContainer);
+		edgeSegment.socket = m_socketContainer;
+		edgeSegment.plug = m_plugContainer;
+		edgeSegment.m_isDirty = true;
 		
 		m_isDirty = false;
 		addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
@@ -1295,7 +1296,7 @@ class InnerBoxSegment extends GameComponent
 		var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 		var plugTexture:Texture = atlas.getTexture(m_plugAssetName);
 		m_plug = new Image(plugTexture);
-		m_plug.touchable = false;
+		//m_plug.touchable = false;
 		var scale:Number = PLUG_HEIGHT / m_plug.height;
 		m_plug.width *= scale;
 		m_plug.height *= scale;
@@ -1422,13 +1423,13 @@ class InnerBoxSegment extends GameComponent
 		}
 		updatePlug();
 		if (m_plug) {
-			m_plug.x = interiorPt.x - m_plug.width / 2;
-			m_plug.y = interiorPt.y - m_height - getPlugYOffset();
+			m_plug.x = /*interiorPt.x*/ - m_plug.width / 2;
+			m_plug.y = /*interiorPt.y - m_height*/ - getPlugYOffset();
 		}
 		updateSocket();
 		if (m_socket) {
-			m_socket.x = interiorPt.x - m_socket.width / 2 + singleProngToDoubleOffset;
-			m_socket.y = interiorPt.y - m_height;
+			m_socket.x = /*interiorPt.x*/ - m_socket.width / 2 + singleProngToDoubleOffset;
+			m_socket.y = /*interiorPt.y - m_height*/ 0;
 		}
 		flatten();
 	}
