@@ -164,6 +164,7 @@ package scenes.game.components
 							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
 							moveContent(newX, newY);
+							m_currentLevel.updateVisibleList();
 						}
 					}
 					else if (touches.length == 2)
@@ -201,7 +202,7 @@ package scenes.game.components
 						var sizeDiff:Number = currentVector.length / previousVector.length;
 						
 						scaleContent(sizeDiff);
-						
+						m_currentLevel.updateVisibleList();
 	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
 	//					content.x = currentCenterPt.x - previousCenterPt.x;
 	//					content.y = currentCenterPt.y - previousCenterPt.y;
@@ -227,6 +228,8 @@ package scenes.game.components
 			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
 			
 			handleMouseWheel(delta, localMouse);
+			
+			m_currentLevel.updateVisibleList();
 			
 		}
 		

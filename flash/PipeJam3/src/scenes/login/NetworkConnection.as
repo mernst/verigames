@@ -1,12 +1,15 @@
 package scenes.login
 {
-	import scenes.game.display.GameComponent;
-	import flash.net.*;
 	import deng.fzip.FZip;
-	import flash.system.Security;
-	import flash.events.*;
 	import deng.fzip.FZipFile;
+	
+	import flash.events.*;
+	import flash.net.*;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
+	
+	import scenes.game.display.GameComponent;
+	
 	import utils.Base64Encoder;
 
 	//used by LoginHelper, one NetworkConnection object created for each connection and used only once
@@ -22,6 +25,7 @@ package scenes.login
 		static public var METADATA_GET_ALL_REQUEST:String = "/level/metadata/get/all";
 		static public var LAYOUTS_GET_ALL_REQUEST:String = "/layout/get/all/";
 
+		static public var postAlerts:Boolean = false;
 		//the first address is verigames, the second the development environ, the third my machine
 	//	static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
 		static public var PROXY_URL:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
@@ -205,22 +209,30 @@ package scenes.login
 		private function securityErrorHandler(e:flash.events.SecurityErrorEvent):void
 		{
 			trace(e.text);
+			if(postAlerts)
+				HTTPCookies.displayAlert(e.text);
 		}
 		
 		private function httpStatusHandler(e:flash.events.HTTPStatusEvent):void
 		{
 			trace(e.status);
+			if(postAlerts)
+				HTTPCookies.displayAlert(String(e.status));
 		}
 		
 		private function ioErrorHandler(e:flash.events.IOErrorEvent):void
 		{
 			trace(e.text);
+			if(postAlerts)
+				HTTPCookies.displayAlert(e.text);
 			if(m_callback != null)
 				m_callback(LoginHelper.EVENT_ERROR, null);
 		}
 		
 		private function completeHandler(e:flash.events.Event):void
 		{
+			if(postAlerts)
+				HTTPCookies.displayAlert("complete");
 			try
 			{
 				trace("in complete " + e.target.data);

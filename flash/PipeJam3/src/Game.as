@@ -117,7 +117,7 @@ package
 		private var m_fadeCallback:Function;
 		public function fadeOut(callback:Function):void
 		{
-			if (m_fadeCallback) {
+			if (m_fadeCallback != null) {
 				m_fadeCallback();
 			}
 			m_fadeCallback = callback;
@@ -127,7 +127,7 @@ package
 			Starling.juggler.tween(m_blackFadeScreen, FADE_TIME, { alpha:1, 
 				onComplete:function():void
 				{
-					if (m_fadeCallback) {
+					if (m_fadeCallback != null) {
 						m_fadeCallback();
 					}
 					m_fadeCallback = null;

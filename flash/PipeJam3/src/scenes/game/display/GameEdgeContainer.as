@@ -213,17 +213,20 @@ package scenes.game.display
 		
 		private function onAddedToStage(evt:Event):void
 		{
-			initialized = true;
-			createLine();
-			
-			addEventListener(CREATE_JOINT, onCreateJoint);
-			addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(HOVER_EVENT_OVER, onHoverOver);
-			addEventListener(HOVER_EVENT_OUT, onHoverOut);
-			addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
-			addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
-			addEventListener(INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
+			if(!initialized)
+			{
+				initialized = true;
+				createLine();
+				
+				addEventListener(CREATE_JOINT, onCreateJoint);
+				addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
+				addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				addEventListener(HOVER_EVENT_OVER, onHoverOver);
+				addEventListener(HOVER_EVENT_OUT, onHoverOut);
+				addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
+				addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
+				addEventListener(INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
+			}
 		}
 		
 		//create or recreate line. m_edgeArray needs to be set first, or values passed in
@@ -256,7 +259,7 @@ package scenes.game.display
 				}
 			}
 			
-			createChildren()
+			createChildren();
 			positionChildren();
 			
 			updateSize();
@@ -473,6 +476,7 @@ package scenes.game.display
 		
 		private function onHoverOver(event:Event):void
 		{
+			unflatten();
 			handleHover(true);
 			if(m_extensionEdge)
 				m_extensionEdge.handleHover(true);
@@ -941,6 +945,9 @@ package scenes.game.display
 				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y + InnerBoxSegment.PLUG_HEIGHT + outgoingEdgePosition*.2);
 			else
 				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y - InnerBoxSegment.PLUG_HEIGHT - incomingEdgePosition*.2);
+			
+			if(m_jointPoints[nodeIndex].x - m_jointPoints[startIndex].x != 0 && m_jointPoints[nodeIndex].y - m_jointPoints[startIndex].y != 0)
+				trace("joint point error");
 		}
 		
 		

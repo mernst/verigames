@@ -134,15 +134,22 @@ package scenes.login
 		{
 			if(e != null)
 			{
-				var exists:String = JSON.parse(e.target.data).existsInRepo;
-				if(XString.stringToBool(exists) == false)
+				if(e.target.data.indexOf("<html>") == -1) //if the RA is down, we get a html page telling us something or other
 				{
-					//create player
-					createPlayer(JSON.parse(e.target.data).id);
+					var exists:String = JSON.parse(e.target.data).existsInRepo;
+					if(XString.stringToBool(exists) == false)
+					{
+						//create player
+						createPlayer(JSON.parse(e.target.data).id);
+					}
+					else
+						sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
 				}
 				else
-					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
+					activatePlayerCallback();
 			}
+			else
+				activatePlayerCallback();
 		}
 			
 		public function createPlayer(playerID:String):void

@@ -42,8 +42,8 @@ package scenes.game.components.dialogs
 		private var enjoymentQuad:Quad;
 		private var difficultyQuad:Quad;
 		
-		var enjoymentStarsBackground:Image;
-		var difficultyStarsBackground:Image;
+		private var enjoymentStarsBackground:Image;
+		private var difficultyStarsBackground:Image;
 		
 		public var enjoymentRating:Number = 2.5;
 		public var difficultyRating:Number = 2.5;

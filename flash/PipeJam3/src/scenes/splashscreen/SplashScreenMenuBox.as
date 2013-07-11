@@ -74,23 +74,23 @@ package scenes.splashscreen
 			m_mainMenu = new Sprite();
 			
 			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 128, 48);
-			play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 			play_button.x = Constants.GameWidth - 144;
 			play_button.y = Constants.GameHeight - 140;
 			
-			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 128, 48);
+			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
 			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = Constants.GameWidth - 144;
-			signin_button.y = Constants.GameHeight - 80;
+			signin_button.x = Constants.GameWidth - 144+64;
+			signin_button.y = Constants.GameHeight - 140+48+10;
 			
 			if(PipeJamGame.PLAYER_LOGGED_IN || !PipeJam3.RELEASE_BUILD)
 			{			
 				m_mainMenu.addChild(play_button);
-				m_mainMenu.removeChild(signin_button);
+				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
 			}
 			else
 			{
-				m_mainMenu.removeChild(play_button);
+				m_mainMenu.addChild(play_button);
+				play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 				m_mainMenu.addChild(signin_button);
 			}
 			
@@ -232,7 +232,7 @@ package scenes.splashscreen
 		{
 			//get client id
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game/PipeJam3.html");
+			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game1/PipeJam3.html");
 			navigateToURL(myURL, "_self");
 		}
 		
@@ -343,11 +343,16 @@ package scenes.splashscreen
 		
 		protected function loadTutorial():void
 		{
-			PipeJamGameScene.inTutorial = true;
-			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
-			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
-			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			if(PipeJam3.RELEASE_BUILD)
+			{
+				PipeJamGameScene.inTutorial = true;
+				PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
+				PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
+				PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+			}
+			else
+				onDemoButtonTriggered(null);
 		}
 		
 		protected static var fileNumber:int = 0;

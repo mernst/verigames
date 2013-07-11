@@ -1,19 +1,24 @@
 package  
 {
 	import audio.AudioManager;
+	
 	import com.spikything.utils.MouseWheelTrap;
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
-	import server.LoggingServerInterface;
+	import flash.utils.Timer;
 	
 	import net.hires.debug.Stats;
 	
 	import scenes.login.HTTPCookies;
 	import scenes.login.LoginHelper;
 	import scenes.splashscreen.SplashScreenScene;
+	
+	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
@@ -36,6 +41,7 @@ package
 		
 		/** Set to true if a build for the server */
 		public static var RELEASE_BUILD:Boolean = false;
+		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		
 		public static var logging:LoggingServerInterface;
 		
@@ -44,23 +50,63 @@ package
 		
 		public function PipeJam3() 
 		{
-			var expressID:String = JSON.stringify(this.loaderInfo.parameters);
-			var pattern:RegExp = /sid/;
-			cookies = escape(expressID.replace(pattern, "express.sid"));
-			var pattern1:RegExp = /\+/;
-			cookies = cookies.replace(pattern1, "\%2B");
-			var pattern2:RegExp = /\//;
-			cookies = cookies.replace(pattern2, "\%2F");
+			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+
+			if(RELEASE_BUILD == true && !LOCAL_DEPLOYMENT)
+			{
+				HTTPCookies.callGetEncodedCookie();
+				checkForCookie();
+			}
+			else
+			{
+				sessionIDValid(null);
+			}
+		}
+		
+		var count = 0;
+		protected function checkForCookie(e:TimerEvent = null):void
+		{
+			//this makes an asyncronous call in this case, so I need the timer to poll
+			var cookie:Object = null;
+			if(count > 0)
+				cookie = HTTPCookies.getCookie("express.sid");
+			var timer:Timer;
+			count++;
+			if(count < 10 && (cookie == null || cookie.length < 12))
+			{
+				timer = new Timer(500, 1);
+				timer.addEventListener(TimerEvent.TIMER, checkForCookie);
+				timer.start();
+			}
+			else 
+			{
+				if(cookie)
+					startup(cookie.toString());
+				else
+					sessionIDValid(null);
+			}
+		}
+		
+		protected function startup(cookie:String):void
+		{
+//			HTTPCookies.deleteCookie("Cookie" + cookie);
+			//var expressID:String = JSON.stringify(this.loaderInfo.parameters);
+//			var pattern:RegExp = /sid/;
+//			cookies = escape(expressID.replace(pattern, "express.sid"));
+//			var pattern1:RegExp = /\+/;
+//			cookies = cookies.replace(pattern1, "\%2B");
+//			var pattern2:RegExp = /\//;
+//			cookies = cookies.replace(pattern2, "\%2F");
 			if (LoggingServerInterface.LOGGING_ON) {
 				logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
 			}
-			LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValid);
-			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			LoginHelper.getLoginHelper().checkSessionID(cookie, sessionIDValid);
 		}
 		
 		//called if sessionID valid
 		public function sessionIDValid(event:flash.events.Event):void
 		{
+		//	HTTPCookies.displayAlert("session");
 			if(event && event is flash.events.IOErrorEvent)
 			{
 				
@@ -70,8 +116,7 @@ package
 				//three cases, an Auth Required dialog
 				//a blank userID,
 				//a valid userID
-				
-				sessionVerificationHasBeenAttempted = true;
+		//		HTTPCookies.displayAlert("valid");
 				
 				var response:String = event.target.data;
 				if(response.indexOf("<html>") == -1) //else assume auth required dialog
@@ -89,35 +134,48 @@ package
 						
 						PipeJamGame.PLAYER_LOGGED_IN = true;
 						//activate player to make sure
-						LoginHelper.getLoginHelper().checkPlayerID(initialize);
+			//			HTTPCookies.displayAlert("checking");
+						sessionVerificationHasBeenAttempted = true;
+
+						LoginHelper.getLoginHelper().checkPlayerID(setSessionBooleanAndInitialize);
 						playerActivated = true; //or at least attempted
 						
 					}
 					else
-						initialize();
+						setSessionBooleanAndInitialize();
 				}
 				else
-					initialize();
+					setSessionBooleanAndInitialize();
 			}
 			else
-			{
-				initialize();
-			}
+				setSessionBooleanAndInitialize();
 		}
 			
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
-			removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
-			MouseWheelTrap.setup(stage);
-			hasBeenAddedToStage = true;
-			//at least try to initialize, although probably waiting on session verification
+			if(hasBeenAddedToStage == false)
+			{
+				removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+				hasBeenAddedToStage = true;
+				//at least try to initialize, although probably waiting on session verification
+				initialize();
+			}
+		}
+		
+		public function setSessionBooleanAndInitialize(result:int = 0, e:flash.events.Event = null):void
+		{
+			sessionVerificationHasBeenAttempted = true;
 			initialize();
 		}
 		
 		public function initialize(result:int = 0, e:flash.events.Event = null):void
 		{
+		//	HTTPCookies.displayAlert("init");
+
 			if(hasBeenAddedToStage && sessionVerificationHasBeenAttempted)
 			{
+				MouseWheelTrap.setup(stage);
+
 				//set up the main controller
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;

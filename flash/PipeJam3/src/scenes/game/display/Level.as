@@ -1,13 +1,33 @@
 package scenes.game.display
 {
+	import assets.AssetInterface;
+	import assets.AssetsAudio;
+	
+	import audio.AudioManager;
+	
+	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	
+	import graph.BoardNodes;
+	import graph.Edge;
+	import graph.EdgeSetRef;
+	import graph.LevelNodes;
+	import graph.Node;
+	import graph.NodeTypes;
+	import graph.Port;
+	
+	import scenes.BaseComponent;
+	import scenes.game.components.GridViewPanel;
+	import scenes.login.LoginHelper;
+	
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Shape;
@@ -19,20 +39,8 @@ package scenes.game.display
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	
-	import assets.AssetInterface;
-	import assets.AssetsAudio;
-	import audio.AudioManager;
-	import events.EdgeSetChangeEvent;
-	import graph.BoardNodes;
-	import graph.Edge;
-	import graph.EdgeSetRef;
-	import graph.LevelNodes;
-	import graph.Node;
-	import graph.NodeTypes;
-	import graph.Port;
-	import scenes.BaseComponent;
-	import scenes.login.LoginHelper;
 	import utils.XString;
+	import flash.utils.Timer;
 	
 	/**
 	 * Level all game components - boxes, lines and joints
@@ -74,6 +82,7 @@ package scenes.game.display
 		private var m_nodeList:Vector.<GameNode>;
 		private var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
+		private var m_visibleNodeManager:VisibleNodeManager;
 		
 		private var m_nodesContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
@@ -295,6 +304,7 @@ package scenes.game.display
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
 			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
@@ -981,16 +991,24 @@ package scenes.game.display
 		private function onMoveEvent(evt:MoveEvent):void
 		{
 			var delta:Point = evt.delta;
-			
+			var oldX:Number;
+			var oldY:Number;
 			//if component isn't in the currently selected group, unselect everything, and then move component
 			if(selectedComponents.indexOf(evt.component) == -1)
 			{
 				unselectAll();
+
 				evt.component.componentMoved(delta);
+				m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
 			}
-			else
+			else 
 				for each(var component:GameComponent in selectedComponents)
+				{
+
 					component.componentMoved(delta);
+					if(component is GameNodeBase)
+						m_visibleNodeManager.updateNode(component as GameNodeBase);
+				}
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
@@ -1052,7 +1070,8 @@ package scenes.game.display
 				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x;
 				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y;
 				gameNode.m_isDirty = true;
-				m_nodesContainer.addChild(gameNode);
+//				m_nodesContainer.addChild(gameNode);
+				m_visibleNodeManager.addNode(gameNode);
 				nodeCount++;
 			}
 			
@@ -1062,7 +1081,8 @@ package scenes.game.display
 				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x;
 				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
-				m_jointsContainer.addChild(gameJoint);
+	//			m_jointsContainer.addChild(gameJoint);
+				m_visibleNodeManager.addNode(gameJoint);
 				jointCount++;
 			}
 			
@@ -1072,8 +1092,10 @@ package scenes.game.display
 				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
 				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
 				gameEdge.draw();
-				m_edgesContainer.addChild(gameEdge);
-				m_errorContainer.addChild(gameEdge.errorContainer);
+//				m_edgesContainer.addChild(gameEdge);
+//				m_errorContainer.addChild(gameEdge.errorContainer);
+//				gameEdge.visible = false;
+				m_visibleNodeManager.addEdge(gameEdge);
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
@@ -1085,8 +1107,21 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
+			//give stuff time to draw, so the update actually updates?
+			var timer:Timer = new Timer(100, 1);
+			timer.addEventListener(TimerEvent.TIMER, updateVisibleList);
+			timer.start();
+			updateVisibleList();
 		}
 		
+		public function updateVisibleList(e:TimerEvent = null):void
+		{			
+			var topLeft:Point = globalToLocal(new Point(0,0));
+			var bottomRight:Point = globalToLocal(new Point(Constants.GameWidth, GridViewPanel.HEIGHT));
+			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
+				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
+			this.m_visibleNodeManager.updateVisibleList(rect);
+		}
 		
 		protected function setDisplayData():void
 		{
@@ -1241,6 +1276,40 @@ package scenes.game.display
 		public function getTimeMs():Number
 		{
 			return new Date().time - m_levelStartTime;
+		}	
+		
+		public function addGameComponentToStage(component:GameComponent):void
+		{
+			if(component is GameNodeBase)
+				this.m_nodesContainer.addChild(component);
+			else if(component is GameJointNode)
+				this.m_jointsContainer.addChild(component);
+			else if(component is GameEdgeContainer)
+			{
+				this.m_edgesContainer.addChild(component);
+				this.m_errorContainer.addChild((component as GameEdgeContainer).errorContainer);
+			}
+		}
+		
+		public function removeGameComponentFromStage(component:GameComponent):void
+		{
+			if(component is GameNodeBase)
+				this.m_nodesContainer.removeChild(component);
+			else if(component is GameJointNode)
+				this.m_jointsContainer.removeChild(component);
+			else if(component is GameEdgeContainer)
+			{
+				this.m_edgesContainer.removeChild(component);
+				this.m_errorContainer.removeChild((component as GameEdgeContainer).errorContainer);
+			}
+		}
+		
+		//can't flatten errorContainer as particle system is unsupported display object
+		public override function flatten():void
+		{
+			this.m_nodesContainer.flatten();
+			this.m_jointsContainer.flatten();
+			this.m_edgesContainer.removeChildren();
 		}
 	}
 }

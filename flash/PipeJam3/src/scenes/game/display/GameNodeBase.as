@@ -28,6 +28,9 @@ package scenes.game.display
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
 		
+		public var storedXPosition:int;
+		public var storedYPosition:int;
+		
 		protected var m_layoutXML:XML;
 		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
 		public var m_incomingEdges:Vector.<GameEdgeContainer>;
@@ -194,6 +197,7 @@ package scenes.game.display
 				//if shift key, select, else change size
 				if(!event.shiftKey)
 				{
+					unflattenConnectedEdges();
 					onClicked();
 				}
 				else //shift key down
@@ -249,9 +253,23 @@ package scenes.game.display
 					}
 					var currentMoveLocation:Point = touch.getLocation(this);
 					var previousLocation:Point = touch.getPreviousLocation(this);
+					unflattenConnectedEdges();
 					dispatchEvent(new MoveEvent(MoveEvent.MOVE_EVENT, this, previousLocation, currentMoveLocation));
 				}
 			}
+		}
+		
+		private function unflattenConnectedEdges():void
+		{
+			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
+			{
+				oedge1.unflatten();
+			}
+			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
+			{
+				iedge1.unflatten();
+			}
+			
 		}
 		
 		public function onClicked():void
