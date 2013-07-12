@@ -82,15 +82,17 @@ package scenes.splashscreen
 			signin_button.x = Constants.GameWidth - 144+64;
 			signin_button.y = Constants.GameHeight - 140+48+10;
 			
-			if(PipeJamGame.PLAYER_LOGGED_IN || !PipeJam3.RELEASE_BUILD)
+			if(PipeJam3.RELEASE_BUILD)
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
+				if(!PipeJamGame.PLAYER_LOGGED_IN)
+					m_mainMenu.addChild(signin_button);
 			}
 			else
 			{
 				m_mainMenu.addChild(play_button);
-				play_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
+				play_button.addEventListener(starling.events.Event.TRIGGERED, getNextPlayerLevelDebug);
 				m_mainMenu.addChild(signin_button);
 			}
 			
@@ -289,10 +291,18 @@ package scenes.splashscreen
 			//check for tutorial cookies, and if not found, or incomplete, do that, else load real levels
 			//get Tutorial file
 			tutorialZipFile = new FZip();
-			LoginHelper.getLoginHelper().loadFile(LoginHelper.USE_LOCAL, null, PipeJamGameScene.tutorialButtonWorldFile, getLevels, tutorialZipFile);
+			LoginHelper.getLoginHelper().loadFile(LoginHelper.USE_LOCAL, null, PipeJamGameScene.tutorialButtonWorldFile, getNextPlayerLevel, tutorialZipFile);
 		}
 		
-		protected function getLevels(e:flash.events.Event):void
+		//serve either the next tutorial level, or give the full level select screen if done
+		protected function getNextPlayerLevelDebug(e:starling.events.Event):void
+		{
+			//load tutorial file just in case
+			onPlayerActivated(1, null);
+		}
+		
+		//serve either the next tutorial level, or give the full level select screen if done
+		protected function getNextPlayerLevel(e:flash.events.Event):void
 		{
 			if(isTutorialDone())
 			{
@@ -338,21 +348,18 @@ package scenes.splashscreen
 		
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
+			//go to the beginning
+			PipeJamGameScene.numTutorialLevelsCompleted = 0;
 			loadTutorial();
 		}
 		
 		protected function loadTutorial():void
 		{
-			if(PipeJam3.RELEASE_BUILD)
-			{
-				PipeJamGameScene.inTutorial = true;
-				PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
-				PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
-				PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-			}
-			else
-				onDemoButtonTriggered(null);
+			PipeJamGameScene.inTutorial = true;
+			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
+			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
+			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		protected static var fileNumber:int = 0;
