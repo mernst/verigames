@@ -41,7 +41,7 @@ package
 		
 		/** Set to true if a build for the server */
 		public static var RELEASE_BUILD:Boolean = false;
-		public static var LOCAL_DEPLOYMENT:Boolean = false;
+		public static var LOCAL_DEPLOYMENT:Boolean = true;
 		
 		public static var logging:LoggingServerInterface;
 		
@@ -63,13 +63,13 @@ package
 			}
 		}
 		
-		var count = 0;
+		protected var count:int = 0;
 		protected function checkForCookie(e:TimerEvent = null):void
 		{
 			//this makes an asyncronous call in this case, so I need the timer to poll
 			var cookie:Object = null;
 			if(count > 0)
-				cookie = HTTPCookies.getCookie("express.sid");
+				cookie = HTTPCookies.getEncodedCookieResult();
 			var timer:Timer;
 			count++;
 			if(count < 10 && (cookie == null || cookie.length < 12))

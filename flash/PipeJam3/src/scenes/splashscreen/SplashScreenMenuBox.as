@@ -234,7 +234,7 @@ package scenes.splashscreen
 		{
 			//get client id
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game1/PipeJam3.html");
+			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game/PipeJam3.html");
 			navigateToURL(myURL, "_self");
 		}
 		

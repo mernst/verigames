@@ -35,6 +35,14 @@ package scenes.login
 			}
 			ExternalInterface.call("getEncodedCookie");
 		}
+		
+		public static function getEncodedCookieResult():*
+		{
+			if (!ExternalInterface.available) {
+				return;
+			}
+			return ExternalInterface.call("getEncodedCookieResult");
+		}
 	}
 }
 
