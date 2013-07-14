@@ -37,9 +37,10 @@ package scenes.game.display
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
 		
-		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false)
+		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
 		{
 			super("");
+			draggable = _draggable;
 			m_isWide = _isWide;
 			m_jointType = jointType;
 			m_originalPoint = new Point;
@@ -76,6 +77,8 @@ package scenes.game.display
 		
 		private function onTouch(event:TouchEvent):void
 		{
+			if (!draggable) return;
+			
 			var touches:Vector.<Touch> = event.touches;
 			
 			if(event.getTouches(this, TouchPhase.MOVED).length)

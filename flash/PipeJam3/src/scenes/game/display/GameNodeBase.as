@@ -174,11 +174,9 @@ package scenes.game.display
 				if(isMoving) //if we were moving, stop it, and exit
 				{
 					isMoving = false;
-					
-					if (hasMovedOutsideClickDist) {
+					if (draggable && hasMovedOutsideClickDist) {
 						var startPoint:Point = startingPoint.clone();
 						var endPoint:Point = new Point(x, y);
-						trace("Move from " + startPoint + " to " + endPoint + " delta:" + endPoint.subtract(startPoint));
 						undoEvent = new MoveEvent(MoveEvent.MOVE_EVENT, this, startPoint, endPoint);
 						var eventToDispatch:UndoEvent = new UndoEvent(undoEvent, this);
 						eventToDispatch.levelEvent = true;
@@ -202,6 +200,7 @@ package scenes.game.display
 				}
 				else //shift key down
 				{
+					if (!draggable) return;
 					if(touch.tapCount == 1)
 					{
 						componentSelected(!m_isSelected);	
@@ -251,6 +250,7 @@ package scenes.game.display
 							return;
 						}
 					}
+					if (!draggable) return;
 					var currentMoveLocation:Point = touch.getLocation(this);
 					var previousLocation:Point = touch.getPreviousLocation(this);
 					unflattenConnectedEdges();

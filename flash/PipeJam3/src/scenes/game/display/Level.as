@@ -11,10 +11,12 @@ package scenes.game.display
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
+	
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import graph.BoardNodes;
 	import graph.Edge;
@@ -40,7 +42,6 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import utils.XString;
-	import flash.utils.Timer;
 	
 	/**
 	 * Level all game components - boxes, lines and joints
@@ -73,6 +74,7 @@ package scenes.game.display
 		private var m_levelConstraintsXML:XML;
 		public var m_levelConstraintsXMLWrapper:XML;
 		private var m_levelText:String;
+		private var m_layoutFixed:Boolean;
 		private var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
@@ -116,7 +118,8 @@ package scenes.game.display
 			m_levelConstraintsXML = _levelConstraintsXML;
 			
 			m_levelText = m_levelLayoutXML.attribute("text").toString();
-			
+			m_layoutFixed = XString.stringToBool(m_levelLayoutXML.attribute("layoutFixed").toString());
+			trace("fixed:" + m_layoutFixed);
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
 				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
@@ -192,7 +195,7 @@ package scenes.game.display
 							isWide = false;
 							isStarting = true;
 						}
-						gameNode = new GameNodeFixed(boxLayoutXML, isWide, isStarting);
+						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide, isStarting);
 					} else {
 						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
 					}
@@ -203,7 +206,7 @@ package scenes.game.display
 					for each (var myEdgeId:String in edgeSet.edge_ids) {
 						edgeSetEdges.push(edgeDictionary[myEdgeId]);
 					}
-					gameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, edgeSetEdges);
 				}
 				
 				if(boxLayoutXML.hasOwnProperty('@visible'))
@@ -261,7 +264,7 @@ package scenes.game.display
 					}
 				}
 				
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML, foundNode, foundPort);
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
 				if(jointLayoutXML.hasOwnProperty('@visible'))
 					joint.visible = jointLayoutXML.@visible == "true" ? true : false;
 				m_jointList.push(joint);
@@ -453,9 +456,9 @@ package scenes.game.display
 			// get editable property from related edge or end segment/joint
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
 			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
 			}
 			if(edgeXML.hasOwnProperty('@visible'))
 				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
@@ -1149,6 +1152,8 @@ package scenes.game.display
 		
 		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
 		{
+			if (m_layoutFixed) return;
+			
 			if(startingPoint != null)
 			{
 				marqueeRect.removeChildren();

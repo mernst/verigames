@@ -40,9 +40,10 @@
 		public var plug:Sprite;
 		public var socket:Sprite;
 		
-		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
 		{
 			super("");
+			draggable = _draggable;
 			m_isWide = _isWide;
 			m_dir = _dir;
 			m_isInnerBoxSegment = _isInnerBoxSegment;
@@ -92,6 +93,13 @@
 			if (touches.length == 0) {
 				return;
 			}
+			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
+				(!isMoving || !hasMovedOutsideClickDist)) {
+				// If haven't moved enough, register this as a click on the node itself
+				dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
+			}
+			if (!draggable) return;
+			
 			var touch:Touch = touches[0];
 			if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
@@ -132,18 +140,9 @@
 					{
 						isMoving = false;
 						if (m_isInnerBoxSegment) {
-							if (!hasMovedOutsideClickDist) {
-								// If haven't moved, register this as a click on the node itself
-								dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
-							}
 							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
 							dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
 						}
-					}
-					else if (m_isInnerBoxSegment)
-					{
-						// If haven't moved, register this as a click on the node itself
-						dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
 					}
 				}
 				

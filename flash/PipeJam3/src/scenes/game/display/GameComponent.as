@@ -25,7 +25,7 @@ package scenes.game.display
 		public var m_isEditable:Boolean;
 		public var m_shouldShowError:Boolean = true;
 		public var isHoverOn:Boolean = false;
-
+		public var draggable:Boolean = true;
 		
 		public var m_forceColor:Number = -1;
 		

@@ -24,9 +24,10 @@ package scenes.game.display
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
 		
-		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
+		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
 			super(nodeXML);
+			draggable = _draggable;
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
 			

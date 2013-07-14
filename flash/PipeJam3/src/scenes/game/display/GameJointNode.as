@@ -16,9 +16,10 @@ package scenes.game.display
 		private var m_node:Node;
 		private var m_port:Port;
 		
-		public function GameJointNode( _layoutXML:XML, _node:Node = null, _port:Port = null) 
+		public function GameJointNode( _layoutXML:XML, _draggable:Boolean, _node:Node = null, _port:Port = null) 
 		{
 			super(_layoutXML);
+			draggable = _draggable;
 			m_node = _node;
 			m_port = _port;
 			updateSize();
