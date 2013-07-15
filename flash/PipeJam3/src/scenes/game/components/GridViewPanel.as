@@ -24,7 +24,6 @@ package scenes.game.components
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
 	import scenes.game.PipeJamGameScene;
-	import scenes.login.HTTPCookies;
 	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -450,8 +449,7 @@ package scenes.game.components
 			addChild(nextLevelButton);
 			
 			//assume we are in the tutorial, and we just finished a level
-			PipeJamGameScene.numTutorialLevelsCompleted++;
-			HTTPCookies.setCookie("tutorialLevelCompleted", PipeJamGameScene.numTutorialLevelsCompleted);
+			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
 		}
 		
 		public function hideNextButton():void

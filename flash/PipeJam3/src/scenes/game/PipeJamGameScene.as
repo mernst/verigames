@@ -2,6 +2,7 @@ package scenes.game
 {
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
+	import scenes.login.HTTPCookies;
 	
 	import events.NavigationEvent;
 	
@@ -242,6 +243,21 @@ package scenes.game
 			}
 			
 			return world;
+		}
+		
+		public static var solvedTutorialLevelTags:Vector.<String> = new Vector.<String>();
+		public static function solvedTutorialLevel(_tutorialTag:String):void {
+			if (!_tutorialTag) return;
+			if (solvedTutorialLevelTags.indexOf(_tutorialTag) > -1) return;//already solved
+			solvedTutorialLevelTags.push(_tutorialTag);
+			numTutorialLevelsCompleted++;
+			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, numTutorialLevelsCompleted);
+		}
+		
+		public static function resetTutorialStatus():void
+		{
+			solvedTutorialLevelTags = new Vector.<String>();
+			numTutorialLevelsCompleted = 0;
 		}
 	}
 }

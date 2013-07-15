@@ -22,6 +22,7 @@ package display
 		private var m_buttonSkin:Sprite;
 		private var m_buttonOverSkin:Sprite;
 		private var m_buttonClickSkin:Sprite;
+		private var m_enabled:Boolean = true;
 		
 		private static const TXT_PCT:Number = 0.9;
 		private static const MAX_DRAG_DIST:Number = 50;
@@ -136,6 +137,26 @@ package display
 		{
 			this.removeChildren();
 			addChild(_skin);
+		}
+		
+		public function get enabled():Boolean
+		{
+			return m_enabled;
+		}
+		
+		public function set enabled(value:Boolean):void
+		{
+			if (m_enabled == value) return;
+			m_enabled = value;
+			if (m_enabled) {
+				useHandCursor = true;
+				addEventListener(TouchEvent.TOUCH, onTouch);
+				alpha = 1;
+			} else {
+				useHandCursor = false;
+				removeEventListener(TouchEvent.TOUCH, onTouch);
+				alpha = 0.3;
+			}
 		}
 	}
 }

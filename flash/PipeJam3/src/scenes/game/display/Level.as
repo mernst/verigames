@@ -73,7 +73,7 @@ package scenes.game.display
 		private var m_levelConstraintsXML:XML;
 		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
 		public var m_levelConstraintsXMLWrapper:XML;
-		private var m_tutorialTag:String;
+		public var m_tutorialTag:String;
 		private var m_tutorialManager:TutorialManager;
 		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;

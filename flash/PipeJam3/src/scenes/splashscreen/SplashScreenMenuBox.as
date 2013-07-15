@@ -73,23 +73,26 @@ package scenes.splashscreen
 			play_button.x = (Constants.GameWidth - play_button.width) / 2;
 			play_button.y = 248;
 			
-			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
-			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = (Constants.GameWidth - signin_button.width) / 2;
-			signin_button.y = 204;
+			if (!PipeJam3.TUTORIAL_DEMO) {
+				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
+				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
+				signin_button.x = (Constants.GameWidth - signin_button.width) / 2;
+				signin_button.y = 204;
+			}
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PipeJamGame.PLAYER_LOGGED_IN)
+				if(!PipeJamGame.PLAYER_LOGGED_IN && !PipeJam3.TUTORIAL_DEMO)
 					m_mainMenu.addChild(signin_button);
 			}
 			else
 			{
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, getNextPlayerLevelDebug);
-				m_mainMenu.addChild(signin_button);
+				if (!PipeJam3.TUTORIAL_DEMO)
+					m_mainMenu.addChild(signin_button);
 			}
 			
 						
@@ -115,7 +118,7 @@ package scenes.splashscreen
 			//			Starling.current.nativeOverlay.addChild(inputInfo);
 			
 
-			if(!PipeJam3.RELEASE_BUILD)
+			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
 			{
 				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 64, 24);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
@@ -294,7 +297,7 @@ package scenes.splashscreen
 		protected function getNextPlayerLevelDebug(e:starling.events.Event):void
 		{
 			//load tutorial file just in case
-			onPlayerActivated(1, null);
+			onTutorialButtonTriggered(null);
 		}
 		
 		//serve either the next tutorial level, or give the full level select screen if done
@@ -332,7 +335,7 @@ package scenes.splashscreen
 				PipeJamGameScene.numTutorialLevels = tutorialXML["level"].length();
 			}
 			
-			var tutorialStatus:String = HTTPCookies.getCookie("tutorialLevelCompleted");
+			var tutorialStatus:String = HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
 			if(!isNaN(parseInt(tutorialStatus)))
 				PipeJamGameScene.numTutorialLevelsCompleted = parseInt(tutorialStatus);
 			
@@ -345,7 +348,7 @@ package scenes.splashscreen
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
 			//go to the beginning
-			PipeJamGameScene.numTutorialLevelsCompleted = 0;
+			PipeJamGameScene.resetTutorialStatus();
 			loadTutorial();
 		}
 		

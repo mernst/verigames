@@ -1350,7 +1350,6 @@ class InnerBoxSegment extends GameComponent
 		var scale:Number = SOCKET_HEIGHT / m_socket.height;
 		m_socket.width *= scale;
 		m_socket.height *= scale;
-		m_socket.touchable = false;
 		m_socketContainer.addChild(m_socket);
 	}
 	

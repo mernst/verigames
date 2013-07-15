@@ -24,6 +24,7 @@ package server
 		public var serverInitialized:Boolean = false;
 		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
 		public var saveCacheToServer:Boolean = false;
+		public var provideIp:Boolean = true;
 		
 		public function LoggingServerInterface(_setupKey:String, _stage:Stage = null, _forceUid:String = "")
 		{
@@ -34,6 +35,7 @@ package server
 				case SETUP_KEY_FRIENDS_AND_FAMILY_BETA:
 					cid = VerigameServerConstants.VERIGAME_CATEGORY_DARPA_FRIENDS_FAMILY_BETA_JULY_1_2013;
 					saveCacheToServer = true;
+					provideIp = false;
 					break;
 			}
 			
@@ -53,7 +55,7 @@ package server
 			//props.loadServerCacheDataByCid = true;
 			if (_forceUid.length > 0) props.forceUid = _forceUid;
 			m_cgsServer.setup(props);
-			m_cgsServer.initialize(props, saveCacheToServer, onServerInit, null, _stage);
+			m_cgsServer.initialize(props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
 			
 			if (m_useMochi) {
 				MochiServices.connect(VerigameServerConstants.MOCHI_GAME_ID, _stage, onMochiError);

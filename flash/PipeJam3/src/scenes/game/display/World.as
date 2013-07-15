@@ -256,6 +256,10 @@ package scenes.game.display
 		{
 			if(PipeJamGameScene.inTutorial)
 			{
+				if (evt.menuShowing && active_level) {
+					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
+					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
+				}
 				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
 				if(currentLevelNumber >= levels.length)
 				{
