@@ -73,8 +73,9 @@ package scenes.game.display
 		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
 		public var m_levelConstraintsXMLWrapper:XML;
-		private var m_levelText:String;
-		private var m_layoutFixed:Boolean;
+		private var m_tutorialTag:String;
+		private var m_tutorialManager:TutorialManager;
+		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
@@ -117,9 +118,12 @@ package scenes.game.display
 			m_levelLayoutXML = _levelLayoutXML;
 			m_levelConstraintsXML = _levelConstraintsXML;
 			
-			m_levelText = m_levelLayoutXML.attribute("text").toString();
-			m_layoutFixed = XString.stringToBool(m_levelLayoutXML.attribute("layoutFixed").toString());
-			trace("fixed:" + m_layoutFixed);
+			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
+			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
+				m_tutorialManager = new TutorialManager(m_tutorialTag);
+				m_layoutFixed = m_tutorialManager.getLayoutFixed();
+			}
+			
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
 				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
@@ -1265,7 +1269,7 @@ package scenes.game.display
 		
 		public function getLevelText():String
 		{
-			return m_levelText;
+			return m_tutorialManager ? m_tutorialManager.getText() : null;
 		}
 		
 		public function getTargetScore():int

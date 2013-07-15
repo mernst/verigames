@@ -418,7 +418,7 @@ package scenes.game.components
 			m_levelTextFields = new Vector.<ShimmeringText>();
 			var levelText:String = m_currentLevel.getLevelText();
 			if (levelText) {
-				var textLines:Array = levelText.split("\r\r");
+				var textLines:Array = levelText.split("\n\n");
 				var totalTime:Number = 0.0;
 				var lineHeight:Number = HEIGHT / Math.max(10, textLines.length * 1.5);
 				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
