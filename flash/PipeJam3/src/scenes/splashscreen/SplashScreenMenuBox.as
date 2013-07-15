@@ -70,13 +70,13 @@ package scenes.splashscreen
 			m_mainMenu = new Sprite();
 			
 			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 128, 48);
-			play_button.x = Constants.GameWidth - 144;
-			play_button.y = Constants.GameHeight - 140;
+			play_button.x = (Constants.GameWidth - play_button.width) / 2;
+			play_button.y = 248;
 			
 			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
 			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-			signin_button.x = Constants.GameWidth - 144+64;
-			signin_button.y = Constants.GameHeight - 140+48+10;
+			signin_button.x = (Constants.GameWidth - signin_button.width) / 2;
+			signin_button.y = 197;
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
