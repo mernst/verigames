@@ -1,12 +1,9 @@
 package scenes.splashscreen
 {
-	import assets.AssetInterface;
-	import assets.AssetsFont;
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	import display.NineSliceButton;
 	import events.NavigationEvent;
-	import feathers.controls.Button;
 	import feathers.controls.List;
 	import feathers.data.ListCollection;
 	import feathers.themes.*;
@@ -22,11 +19,10 @@ package scenes.splashscreen
 	import starling.display.*;
 	import starling.events.Event;
 	import starling.text.*;
-	import starling.textures.Texture;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
-		protected var m_mainMenu:starling.display.Sprite;
+		protected var m_mainMenu:Sprite;
 		
 		protected var play_button:NineSliceButton;
 		protected var signin_button:NineSliceButton;

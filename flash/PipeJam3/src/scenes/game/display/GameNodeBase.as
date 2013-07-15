@@ -37,8 +37,6 @@ package scenes.game.display
 		
 		public var m_PortToEdgeArray:Array;
 		
-		protected var m_gameEdges:Vector.<GameEdgeContainer>;
-		
 		protected static var WIDTH_CHANGE:String = "width_change";
 		
 		public function GameNodeBase(_layoutXML:XML)
@@ -55,8 +53,6 @@ package scenes.game.display
 			m_outgoingEdges = new Vector.<GameEdgeContainer>;
 			m_incomingEdges = new Vector.<GameEdgeContainer>;
 			m_PortToEdgeArray = new Array;
-			
-			m_gameEdges = new Vector.<GameEdgeContainer>;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -350,7 +346,14 @@ package scenes.game.display
 			
 			//stick the edge in the array at the port num, doesn't matter if it's replacing something, we just need one
 			m_PortToEdgeArray[edge.incomingEdgePosition] = edge;
-
+		}
+		
+		public function removeEdges():void
+		{
+			// Delete references to edges, i.e. if recreating them
+			m_outgoingEdges = new Vector.<GameEdgeContainer>;
+			m_incomingEdges = new Vector.<GameEdgeContainer>;
+			m_PortToEdgeArray = new Array;
 		}
 		
 		//used when double clicking a node, handles selecting entire group. 

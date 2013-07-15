@@ -46,6 +46,9 @@ package scenes.game.components
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
+		/** Button to start the level over */
+		private var m_ResetButton:NineSliceButton;
+		
 		private var menuShowing:Boolean = false;
 		
 		/** Current Score of the player */
@@ -99,8 +102,14 @@ package scenes.game.components
 			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 8;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 11;
 			addChild(m_menuButton);
+			
+			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
+			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
+			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5;
+			m_ResetButton.y = HEIGHT - m_ResetButton.height - 8;
+			addChild(m_ResetButton);
 			
 			conflictMap = new ConflictMap();
 			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
@@ -114,6 +123,11 @@ package scenes.game.components
 		{
 			menuShowing = !menuShowing;
 			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU, "", menuShowing));
+		}
+		
+		private function onStartOverButtonTriggered():void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.START_OVER));
 		}
 		
 		public function removedFromStage(event:Event):void
@@ -194,8 +208,8 @@ package scenes.game.components
 				}
 				for each (var incomingEdge:GameEdgeContainer in nodeSet.m_incomingEdges) {
 					if (incomingEdge.hasError()) {
-						errors++;
 						if (errorEdges.indexOf(incomingEdge) == -1) {
+							errors++;
 							errorEdges.push(incomingEdge);
 						} else {
 							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
@@ -207,9 +221,9 @@ package scenes.game.components
 			for each (var myJoint:GameJointNode in level.getJoints()) {
 				for each (var injEdge:GameEdgeContainer in myJoint.m_incomingEdges) {
 					if (injEdge.hasError()) {
-						errors++;
 						if (errorEdges.indexOf(injEdge) == -1) {
 							errorEdges.push(injEdge);
+							errors++;
 						} else {
 							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
 						}

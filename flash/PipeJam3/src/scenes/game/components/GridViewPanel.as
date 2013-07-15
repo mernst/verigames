@@ -375,15 +375,16 @@ package scenes.game.components
 		public function loadLevel(level:Level):void
 		{
 			hideNextButton();
-			if(m_currentLevel == level)
-				return;
-			if(m_currentLevel)
+			if(m_currentLevel != level)
 			{
-				m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
-				content.removeChild(m_currentLevel);
+				if(m_currentLevel)
+				{
+					m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
+					content.removeChild(m_currentLevel);
+				}
+				m_currentLevel = level;
+				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 			}
-			m_currentLevel = level;
-			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 			content.x = 0;
 			content.y = 0;
 			

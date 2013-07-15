@@ -89,10 +89,10 @@ package scenes.game.display
 		{
 			if(!m_nodeArray || !m_nodeArray[int(xVal/COLLECTION_SIZE)] || !m_nodeArray[int(xVal/COLLECTION_SIZE)][int(yVal/COLLECTION_SIZE)])
 			{
-				trace("Wrong!", vertexNum);
+				//trace("Wrong!", vertexNum);
 				return;
 			}
-			trace("Right", vertexNum);
+			//trace("Right", vertexNum);
 			var arr:Array = m_nodeArray[int(xVal/COLLECTION_SIZE)][int(yVal/COLLECTION_SIZE)];
 			if(arr)
 			{
@@ -156,7 +156,7 @@ package scenes.game.display
 					}
 				}
 			}
-			trace("visible ",m_visibleNodeList.length, m_visibleEdgeList.length);
+			//trace("visible ",m_visibleNodeList.length, m_visibleEdgeList.length);
 		}
 	}
 }

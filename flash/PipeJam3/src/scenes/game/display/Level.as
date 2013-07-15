@@ -58,8 +58,6 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelNodes:LevelNodes;
 		
-		private var m_edgeSetLayoutXML:XML;
-		
 		private var edgeDictionary:Dictionary = new Dictionary;
 		private var edgeSetDictionary:Dictionary = new Dictionary;
 		
@@ -69,9 +67,11 @@ package scenes.game.display
 		
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
+		private var m_levelOriginalLayoutXML:XML; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
+		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
 		public var m_levelConstraintsXMLWrapper:XML;
 		private var m_tutorialTag:String;
 		private var m_tutorialManager:TutorialManager;
@@ -115,8 +115,8 @@ package scenes.game.display
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			levelNodes = _levelNodes;
-			m_levelLayoutXML = _levelLayoutXML;
-			m_levelConstraintsXML = _levelConstraintsXML;
+			m_levelOriginalLayoutXML = m_levelLayoutXML = _levelLayoutXML;
+			m_levelOriginalConstraintsXML = m_levelConstraintsXML = _levelConstraintsXML;
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
@@ -333,15 +333,16 @@ package scenes.game.display
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
 				if (constraintIsEditable) {
-					gameNode.m_isWide = constraintIsWide;
+					gameNode.handleWidthChange(constraintIsWide, true);
 				} else {
 					if (gameNode.isWide() != constraintIsWide) {
-						gameNode.m_isWide = constraintIsWide;
-						trace(gameNode.m_id, "Mismatch between constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
+						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
+					gameNode.handleWidthChange(constraintIsWide);
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
 					gameNode.m_isEditable = constraintIsEditable;
+					gameNode.m_isDirty = true;
 					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
@@ -558,6 +559,13 @@ package scenes.game.display
 			m_levelStartTime = new Date().time;
 		}
 		
+		public function restart():void
+		{
+			setNewLayout(m_levelOriginalLayoutXML);
+			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
+			setConstraints();
+		}
+		
 		public function onSaveLayoutFile(event:MenuEvent):void
 		{
 			updateLayoutXML();
@@ -592,9 +600,9 @@ package scenes.game.display
 			//disposeChildren();
 		}
 		
-		public function setNewLayout(event:MenuEvent, useExistingLines:Boolean = false):void
+		public function setNewLayout(newLayoutXML:XML, useExistingLines:Boolean = false):void
 		{
-			m_levelLayoutXML = event.layoutXML;
+			m_levelLayoutXML = newLayoutXML;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutXML.level != undefined)
 				m_levelLayoutXML = m_levelLayoutXML.level[0];
@@ -624,6 +632,9 @@ package scenes.game.display
 				
 				if(gameNode)
 				{
+					if (!useExistingLines) {
+						gameNode.removeEdges();
+					}
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					if(child.hasOwnProperty('@visible'))
@@ -640,12 +651,13 @@ package scenes.game.display
 			if(useExistingLines == false)
 			{
 				//delete all existing edges, and recreate
-				for each(var existingEdge:GameEdgeContainer  in m_edgeList)
+				for each(var existingEdge:GameEdgeContainer  in m_edgeList) {
 					existingEdge.parent.removeChild(existingEdge);
+				}
 				edgeContainerDictionary = new Dictionary();
 				m_edgeList = new Vector.<GameEdgeContainer>;
 			}
-				
+			
 			for each(var edge:XML in m_levelLayoutXML.line)
 			{
 				var edgeID:String = edge.@id;
@@ -776,11 +788,10 @@ package scenes.game.display
 					
 				m_levelConstraintsXML.appendChild(child);
 			}
+			// TODO: Hardcoding "world" id correct?
 			m_levelConstraintsXMLWrapper = <graph id="world"/>;
 			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
-		
-
 		
 		override public function dispose():void
 		{
@@ -828,10 +839,12 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			if (evt.edgeSetChanged.isWide()) {
-				AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
-			} else {
-				AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+			if (!evt.silent) {
+				if (evt.edgeSetChanged.isWide()) {
+					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+				} else {
+					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+				}
 			}
 			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
@@ -841,7 +854,7 @@ package scenes.game.display
 					var edge:Edge = this.edgeDictionary[edgeID];
 					if(edge != null)
 					{
-						edge.is_wide = !edge.is_wide;
+						edge.is_wide = evt.newIsWide;
 					}
 					//var outID:String = edgeID + "__OUT__";
 					//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
@@ -852,7 +865,7 @@ package scenes.game.display
 					//if(incomingGameEdgeContainer)
 						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent));
 		}
 		
 		//data object should be in final selected/unselected state

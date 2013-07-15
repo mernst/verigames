@@ -104,10 +104,11 @@ package scenes.game.display
 		{
 			if(m_isEditable)
 			{
-				handleWidthChange(!m_isWide);
+				var newIsWide:Boolean = !m_isWide;
+				handleWidthChange(newIsWide);
 				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 				
-				var eventToUndo:Event = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this);
+				var eventToUndo:Event = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide);
 				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
 				dispatchEvent(eventToDispatch);
 			}
@@ -115,20 +116,25 @@ package scenes.game.display
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
-			// TODO: Use the event data, don't just toggle the current state - this isn't robust
-			if(undoEvent is EdgeSetChangeEvent) {
-				handleWidthChange(!m_isWide);
+			if (undoEvent is EdgeSetChangeEvent) {
+				var evt:EdgeSetChangeEvent = undoEvent as EdgeSetChangeEvent;
+				if (isUndo) {
+					handleWidthChange(!evt.newIsWide);
+				} else {
+					handleWidthChange(evt.newIsWide);
+				}
 			}
 		}
 		
-		public function handleWidthChange(newWidth:Boolean):void
+		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false):void
 		{
-			m_isWide = newWidth;
+			if (m_isWide == newIsWide) return;
+			m_isWide = newIsWide;
 			m_isDirty = true;
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide, null, silent));
 			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
 				iedge.updateSize();
 				iedge.setInnerSegmentBorderWidth(m_isWide);

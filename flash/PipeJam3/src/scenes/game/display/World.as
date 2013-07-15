@@ -131,6 +131,7 @@ package scenes.game.display
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
+			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
@@ -205,7 +206,7 @@ package scenes.game.display
 		public function setNewLayout(event:MenuEvent):void
 		{
 			if(active_level != null) {
-				active_level.setNewLayout(event, true);
+				active_level.setNewLayout(event.layoutXML, true);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
@@ -224,7 +225,7 @@ package scenes.game.display
 			} else {
 				edgeSetGraphViewPanel.hideNextButton();
 			}
-			if (PipeJam3.logging) {
+			if (!evt.silent && PipeJam3.logging) {
 				var details:Object = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_id;
 				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_WIDTH] = evt.edgeSetChanged.isWide() ? VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_WIDE : VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_NARROW;
@@ -239,6 +240,16 @@ package scenes.game.display
 			{
 				edgeSetGraphViewPanel.centerOnComponent(component);
 			}
+		}
+		
+		private function onLevelStartOver(evt:NavigationEvent):void
+		{
+			var callback:Function =
+				function():void
+				{
+					selectLevel(levels[currentLevelNumber], true);
+				};
+			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
@@ -400,7 +411,7 @@ package scenes.game.display
 			}
 		}
 		
-		private function selectLevel(newLevel:Level):void
+		private function selectLevel(newLevel:Level, restart:Boolean = false):void
 		{
 			if (!newLevel) {
 				return;
@@ -416,13 +427,11 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
 				PipeJam3.logging.logQuestStart(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
 			}
+			if (restart) newLevel.restart();
 			active_level = newLevel;
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.newLevelSelected(newLevel);
-			trace("gcp: " + gameControlPanel.width + " x " + gameControlPanel.height);
-			trace("vp: " + edgeSetGraphViewPanel.width + " x " + edgeSetGraphViewPanel.height);
-			
 			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		

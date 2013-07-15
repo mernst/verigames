@@ -66,7 +66,7 @@ package
 			AudioManager.getInstance().setMusicButton(m_musicButton, updateMusicState);
 			*/
 			m_sfxButton = new SoundButton();
-			XSprite.setupDisplayObject(m_sfxButton, 33, Constants.GameHeight - 21, 12.5);
+			XSprite.setupDisplayObject(m_sfxButton, 22, Constants.GameHeight - 22, 12.5);
 			AudioManager.getInstance().setAllAudioButton(m_sfxButton, updateSfxState);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
