@@ -28,7 +28,6 @@ package scenes.game.display
 			m_nodeArray = new Array(int(_size/COLLECTION_SIZE));
 			m_edgeArray = new Array(int(_size/COLLECTION_SIZE));
 			m_container = _container;
-
 		}
 		
 		public function addNode(node:GameNodeBase):void
@@ -41,7 +40,7 @@ package scenes.game.display
 			addNodeAtPoint(node, node.storedXPosition, node.storedYPosition+node.height);
 			addNodeAtPoint(node, node.storedXPosition+node.width, node.storedYPosition);
 			addNodeAtPoint(node, node.storedXPosition+node.width, node.storedYPosition+node.height);
-			m_container.addChild(node);
+			m_container.getNodesContainer().addChild(node);
 			node.visible = true;
 		}
 		

@@ -1283,6 +1283,11 @@ package scenes.game.display
 			return new Date().time - m_levelStartTime;
 		}	
 		
+		public function getNodesContainer():Sprite
+		{
+			return m_nodesContainer;
+		}
+		
 		public function addGameComponentToStage(component:GameComponent):void
 		{
 			if(component is GameNodeBase)
