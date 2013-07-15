@@ -76,7 +76,7 @@ package scenes.splashscreen
 			signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
 			signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
 			signin_button.x = (Constants.GameWidth - signin_button.width) / 2;
-			signin_button.y = 197;
+			signin_button.y = 204;
 			
 			if(PipeJam3.RELEASE_BUILD)
 			{			
