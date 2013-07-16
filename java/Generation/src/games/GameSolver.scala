@@ -10,7 +10,7 @@ import javax.lang.model.element.AnnotationMirror
 import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
-import util.VGJavaConversions._
+import misc.util.VGJavaConversions._
 import verigames.level.Intersection.Kind._
 import checkers.inference.FieldAssignmentConstraint
 import checkers.inference.WeightInfo
@@ -258,7 +258,7 @@ abstract class GameSolver extends ConstraintSolver {
 
           //Add a connection for type variables to a classes type parameters to a class
           //board in case they are
-          /*case ctp : ClassTypeParameterVP  =>
+          /*case ctp : ClassTypeParameterBoundVP  =>
             val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect) */
 

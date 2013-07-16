@@ -9,7 +9,7 @@ import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
 import games.GameSolver
-import util.VGJavaConversions._
+import misc.util.VGJavaConversions._
 import Intersection.Kind._
 
 class NninfGameSolver extends GameSolver {

@@ -131,14 +131,18 @@ public class NninfVisitor extends GameVisitor {
     @Override
     public Void visitMethod(MethodTree node, Void p) {
         final VariableTree receiverParam = node.getReceiverParameter();
-        if(receiverParam != null) { //TODO: CAN THIS BE NULL?
+
+        //TODO: Talk to mike, this is a problem because calling getAnnotatedType in different locations leads
+        //TODO: to Different variablePositions
+        //TODO JB: Put this back in and disable receiver additions for Nninf
+        /*if(receiverParam != null) { //TODO: CAN THIS BE NULL?  Only if this is a constructor?
             final AnnotatedTypeMirror typeMirror = atypeFactory.getAnnotatedType(receiverParam);
 
             if (!typeMirror.getAnnotations().isEmpty()) {
                 checker.report(Result.failure("receiver.annotations.forbidden"),
                         node);
             }
-        }
+        }*/
 
         return super.visitMethod(node, p);
     }
