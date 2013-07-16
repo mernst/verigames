@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>PipeJam3Web</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>com.adobe.flexbuilder.project.flexbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[source path] FZip</name>
+			<type>2</type>
+			<locationURI>ROOT/external/FZip</locationURI>
+		</link>
+		<link>
+			<name>[source path] Hi-ReS-Stats-master-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Hi-ReS-Stats-master/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] MochiAPI_v4_1_2</name>
+			<type>2</type>
+			<locationURI>ROOT/external/MochiAPI_v4_1_2</locationURI>
+		</link>
+		<link>
+			<name>[source path] MouseWheelTrap</name>
+			<type>2</type>
+			<locationURI>ROOT/external/MouseWheelTrap</locationURI>
+		</link>
+		<link>
+			<name>[source path] Starling-Extension-Particle-System-master-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Starling-Extension-Particle-System-master/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] dynamicTextureAtlasGenerator-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Dynamic-Texture-Atlas-Generator-master/dynamicTextureAtlasGenerator/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] extension-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Starling-Extension-Graphics/extension/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] pixelmask-master-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/pixelmask-master/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] source</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Feathers%201.0.1/source</locationURI>
+		</link>
+		<link>
+			<name>[source path] starling-src</name>
+			<type>2</type>
+			<locationURI>ROOT/external/Starling-Framework/starling/src</locationURI>
+		</link>
+		<link>
+			<name>src</name>
+			<type>2</type>
+			<locationURI>ROOT/src</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>ROOT</name>
+			<value>$%7BPARENT-3-PROJECT_LOC%7D</value>
+		</variable>
+	</variableList>
+</projectDescription>
