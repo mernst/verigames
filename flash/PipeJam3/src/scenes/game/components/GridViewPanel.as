@@ -2,29 +2,29 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	
 	import display.NineSliceButton;
+	import display.ShimmeringText;
+	
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.UndoEvent;
-	import flash.text.TextFormat;
-	import starling.animation.Transitions;
-	import starling.textures.TextureAtlas;
-	
-	import display.ShimmeringText;
 	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.World;
-	import scenes.game.PipeJamGameScene;
 	
+	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -35,6 +35,7 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
 	
@@ -233,15 +234,19 @@ package scenes.game.components
 			
 		}
 		
-		private function handleMouseWheel(delta:Number, localMouse:Point, createUndoEvent:Boolean = true):void
+		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
-			var mousePoint:Point = localMouse.clone();
-			
-			const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
-					Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
-			
-			localMouse.x *= native2Starling.x;
-			localMouse.y *= native2Starling.y;
+			if (localMouse == null) {
+				localMouse = new Point(WIDTH / 2, HEIGHT / 2);
+			} else {
+				var mousePoint:Point = localMouse.clone();
+				
+				const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
+						Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
+				
+				localMouse.x *= native2Starling.x;
+				localMouse.y *= native2Starling.y;
+			}
 			
 			// Now localSpace is in local coordinates (relative to this instance of GridViewPanel).
 			// Next, we'll convert to content space
@@ -368,6 +373,14 @@ package scenes.game.components
 					break;
 				case Keyboard.RIGHT:
 					content.x -= 5;
+					break;
+				case Keyboard.EQUAL:
+					handleMouseWheel(5);
+					m_currentLevel.updateVisibleList();
+					break;
+				case Keyboard.MINUS:
+					handleMouseWheel(-5);
+					m_currentLevel.updateVisibleList();
 					break;
 			}
 		}
