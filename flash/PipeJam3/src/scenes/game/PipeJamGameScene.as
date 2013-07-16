@@ -40,9 +40,9 @@ package scenes.game
 			"../SampleWorlds/net_sf_picard_metrics_VersionHeaderLayout.zip"
 		);
 		
-		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
-		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
-		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
+		static public var tutorialButtonWorldFile:String = "tutorial.zip";
+		static public var tutorialButtonLayoutFile:String = "tutorialLayout.zip";
+		static public var tutorialButtonConstraintsFile:String = "tutorialConstraints.zip";
 		static public var numTutorialLevels:int = 0;
 		static public var numTutorialLevelsCompleted:int = 0;
 		static public var inTutorial:Boolean = false;
