@@ -181,6 +181,7 @@
 
 		public function draw():void
 		{
+			unflatten();
 			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int = getColor();
 			
@@ -234,10 +235,15 @@
 			if (plug || socket) {
 				this.blendMode = BlendMode.NORMAL;
 			} else {
-				// Don't flatten with plug since it has transparent areas
 				this.blendMode = BlendMode.NONE;
-				flatten();
 			}
+			flatten();
+		}
+		
+		override public function flatten():void
+		{
+			if (plug || socket) return;
+			super.flatten();
 		}
 		
 		public function onEnterFrame(event:Event):void

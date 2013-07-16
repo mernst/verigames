@@ -1164,6 +1164,10 @@ package scenes.game.display
 			flatten();
 		}
 		
+		override public function flatten():void {
+			return;
+		}
+		
 		//set width of innersegment 
 		public function setInnerSegmentBorderWidth(_isWide:Boolean):void
 		{
@@ -1349,6 +1353,7 @@ class InnerBoxSegment extends GameComponent
 		var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 		var socketTexture:Texture = atlas.getTexture(m_socketAssetName);
 		m_socket = new Image(socketTexture);
+		m_socket.touchable = false;
 		var scale:Number = SOCKET_HEIGHT / m_socket.height;
 		m_socket.width *= scale;
 		m_socket.height *= scale;
@@ -1404,32 +1409,6 @@ class InnerBoxSegment extends GameComponent
 			singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
 		}
 		
-		if (edgeSegment && edgeSegmentOutline) {
-			if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
-				edgeSegment.x = interiorPt.x;
-				edgeSegment.y = interiorPt.y - m_height;
-			} else {
-				edgeSegment.x = interiorPt.x;
-				edgeSegment.y = interiorPt.y;
-			}
-			edgeSegment.isHoverOn = isHoverOn;
-			if (edgeSegmentOutline.width != getBorderWidth()) {
-				edgeSegmentOutline.width = getBorderWidth();
-			}
-			if (edgeSegmentOutline.color != getBorderColor()) {
-				edgeSegmentOutline.color = getBorderColor();
-			}
-			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
-			edgeSegmentOutline.y = edgeSegment.y;
-			edgeSegment.setIsWide(m_isWide);
-			edgeSegment.draw();
-		}
-		if (innerCircleJoint) {
-			innerCircleJoint.x = interiorPt.x;
-			innerCircleJoint.y = interiorPt.y;
-			innerCircleJoint.setIsWide(m_isWide);
-			innerCircleJoint.draw();
-		}
 		updatePlug();
 		if (m_plug) {
 			m_plug.x = - m_plug.width / 2;
@@ -1440,6 +1419,33 @@ class InnerBoxSegment extends GameComponent
 			m_socket.x = - m_socket.width / 2 + singleProngToDoubleOffset;
 			m_socket.y = 0;
 		}
+		
+		if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
+			edgeSegment.x = interiorPt.x;
+			edgeSegment.y = interiorPt.y - m_height;
+		} else {
+			edgeSegment.x = interiorPt.x;
+			edgeSegment.y = interiorPt.y;
+		}
+		edgeSegment.isHoverOn = isHoverOn;
+		if (edgeSegmentOutline.width != getBorderWidth()) {
+			edgeSegmentOutline.width = getBorderWidth();
+		}
+		if (edgeSegmentOutline.color != getBorderColor()) {
+			edgeSegmentOutline.color = getBorderColor();
+		}
+		edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
+		edgeSegmentOutline.y = edgeSegment.y;
+		edgeSegment.setIsWide(m_isWide);
+		edgeSegment.draw();
+		
+		if (innerCircleJoint) {
+			innerCircleJoint.x = interiorPt.x;
+			innerCircleJoint.y = interiorPt.y;
+			innerCircleJoint.setIsWide(m_isWide);
+			innerCircleJoint.draw();
+		}
+		
 		flatten();
 	}
 	
