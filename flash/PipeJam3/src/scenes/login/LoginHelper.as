@@ -267,9 +267,12 @@ package scenes.login
 	
 		protected function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null, other:String = null):void
 		{
+			//if (PipeJam3.LOCAL_DEPLOYMENT) {
+				//callback(null);
+				//return;
+			//}
 			var networkConnection:NetworkConnection = new NetworkConnection();
 			networkConnection.sendMessage(type, callback, info, name, other );
-			
 		}
 	}
 }	

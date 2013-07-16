@@ -335,7 +335,7 @@ package scenes.splashscreen
 				PipeJamGameScene.numTutorialLevels = tutorialXML["level"].length();
 			}
 			
-			var tutorialStatus:String = HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
+			var tutorialStatus:String = PipeJam3.LOCAL_DEPLOYMENT ? "0" : HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
 			if(!isNaN(parseInt(tutorialStatus)))
 				PipeJamGameScene.numTutorialLevelsCompleted = parseInt(tutorialStatus);
 			

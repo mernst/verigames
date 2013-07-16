@@ -57,7 +57,7 @@ package scenes.login
 				case LoginHelper.USE_LOCAL:
 				{
 					fz.addEventListener(flash.events.Event.COMPLETE, callback);
-					fz.load(new URLRequest(fileName));
+					fz.load(new URLRequest(fileName + "?version=" + Math.round(1000000*Math.random())));
 					break;
 				}
 				case LoginHelper.USE_URL:

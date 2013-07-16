@@ -7,7 +7,6 @@ package scenes.splashscreen
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
-	import scenes.login.LoginHelper;
 	
 	import scenes.Scene;
 	

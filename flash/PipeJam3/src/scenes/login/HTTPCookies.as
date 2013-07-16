@@ -8,7 +8,7 @@ package scenes.login
 		
 		public static function getCookie(key:String):*
 		{
-			if (!ExternalInterface.available) {
+			if (ExternalInterface.available || PipeJam3.LOCAL_DEPLOYMENT) {
 				return null;
 			}
 			return ExternalInterface.call("getCookie", key);
@@ -16,7 +16,7 @@ package scenes.login
 		
 		public static function setCookie(key:String, val:*):void
 		{
-			if (!ExternalInterface.available) {
+			if (ExternalInterface.available || PipeJam3.LOCAL_DEPLOYMENT) {
 				return;
 			}
 			ExternalInterface.call("setCookie", key, val);
@@ -24,7 +24,7 @@ package scenes.login
 		
 		public static function displayAlert(str:String):void
 		{
-			if (!ExternalInterface.available) {
+			if (ExternalInterface.available || PipeJam3.LOCAL_DEPLOYMENT) {
 				return;
 			}
 			ExternalInterface.call("alert", str);
@@ -32,7 +32,7 @@ package scenes.login
 		
 		public static function callGetEncodedCookie():void
 		{
-			if (!ExternalInterface.available) {
+			if (ExternalInterface.available || PipeJam3.LOCAL_DEPLOYMENT) {
 				return;
 			}
 			ExternalInterface.call("getEncodedCookie");
@@ -40,7 +40,7 @@ package scenes.login
 		
 		public static function getEncodedCookieResult():*
 		{
-			if (!ExternalInterface.available) {
+			if (ExternalInterface.available || PipeJam3.LOCAL_DEPLOYMENT) {
 				return;
 			}
 			return ExternalInterface.call("getEncodedCookieResult");
