@@ -1135,6 +1135,7 @@ package scenes.game.display
 			if (m_isWide == _isWide) {
 				return;
 			}
+			unflatten();
 			m_isWide = _isWide;
 			if (m_edgeSegments != null)
 			{
@@ -1160,6 +1161,7 @@ package scenes.game.display
 					}
 				}
 			}
+			flatten();
 		}
 		
 		//set width of innersegment 

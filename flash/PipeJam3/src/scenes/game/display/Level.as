@@ -338,7 +338,7 @@ package scenes.game.display
 					if (gameNode.isWide() != constraintIsWide) {
 						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
-					gameNode.handleWidthChange(constraintIsWide);
+					gameNode.handleWidthChange(constraintIsWide, true);
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
 					gameNode.m_isEditable = constraintIsEditable;
@@ -840,7 +840,7 @@ package scenes.game.display
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			if (!evt.silent) {
-				if (evt.edgeSetChanged.isWide()) {
+				if (evt.newIsWide) {
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
 				} else {
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
