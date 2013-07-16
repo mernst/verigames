@@ -1,21 +1,22 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
-	import starling.display.BlendMode;
-	import starling.display.Sprite;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
 	import utils.XSprite;
@@ -190,6 +191,26 @@
 				m_quad = null;
 			}
 			
+			var assetName:String;
+			
+			if(m_isEditable == true)
+			{
+				if (m_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
+			}
+			else //not adjustable
+			{
+				if(m_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
+			
 			var pctTextWidth:Number;
 			var pctTextHeight:Number;
 			if(m_endPt.x != 0 && m_endPt.y !=0)
@@ -198,31 +219,30 @@
 			}
 			else if(m_endPt.x != 0)
 			{
-				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
-				if(isHoverOn)
-				{
-					m_quad.setVertexColor(0, color + 0x333333);
-					m_quad.setVertexColor(1, color + 0x333333);
-					m_quad.setVertexColor(2, color + 0x333333);
-					m_quad.setVertexColor(3, color + 0x333333);
-				}
-				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-				m_quad.x = 0;
+				m_quad = new Image(startTexture);
+				m_quad.width = Math.abs(m_endPt.x);
+				m_quad.height = lineSize;
+				
+				m_quad.x = (m_endPt.x > 0) ? 0 : -m_quad.width;
+				m_quad.y = -lineSize/2.0;
 			}
 			else
 			{
-				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
-				if(isHoverOn)
-				{
-					m_quad.setVertexColor(0, color + 0x333333);
-					m_quad.setVertexColor(1, color + 0x333333);
-					m_quad.setVertexColor(2, color + 0x333333);
-					m_quad.setVertexColor(3, color + 0x333333);
-				}
-				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
-				m_quad.y = 0;
+				m_quad = new Image(startTexture);
+				m_quad.width = lineSize;
+				m_quad.height = Math.abs(m_endPt.y);
+				
+				m_quad.x = -lineSize/2.0;
+				m_quad.y = (m_endPt.y > 0) ? 0 : -m_quad.height;
+			}
+			
+			if(isHoverOn)
+			{
+				m_quad.color = 0xeeeeee;
+			}
+			else
+			{
+				m_quad.color = 0xcccccc;
 			}
 			
 			addChild(m_quad);

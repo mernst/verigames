@@ -13,6 +13,8 @@
 	<SubTexture name="GrayDarkStart"          x="779" y="123" width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="GrayDarkEnd"            x="826" y="140" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="GrayDarkPlug"           x="861" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
+	<SubTexture name="GrayDarkJoint"          x="880" y="5"   width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="GrayDarkSegment"        x="920" y="5"   width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
 	
 	<!-- Light Gray -->
 	<SubTexture name="GrayLightBoxTopLeft"     x="2"   y="224" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
@@ -27,6 +29,8 @@
 	<SubTexture name="GrayLightStart"          x="786" y="59"  width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="GrayLightEnd"            x="826" y="102" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="GrayLightPlug"           x="912" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>
+	<SubTexture name="GrayLightJoint"          x="880" y="25"  width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="GrayLightSegment"        x="920" y="25"  width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
 	
 	<!-- Dark Blue -->
 	<SubTexture name="BlueDarkBoxTopLeft"     x="196" y="30"  width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
@@ -41,6 +45,8 @@
 	<SubTexture name="BlueDarkStart"          x="779" y="84"  width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="BlueDarkEnd"            x="826" y="159" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="BlueDarkPlug"           x="827" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
+	<SubTexture name="BlueDarkJoint"          x="900" y="5"   width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="BlueDarkSegment"        x="940" y="5"   width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
 	
 	<!-- Light Blue -->
 	<SubTexture name="BlueLightBoxTopLeft"     x="196" y="224" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
@@ -55,6 +61,8 @@
 	<SubTexture name="BlueLightStart"          x="786" y="34"  width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="BlueLightEnd"            x="826" y="121" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="BlueLightPlug"           x="894" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>
+	<SubTexture name="BlueLightJoint"          x="900" y="25"  width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="BlueLightSegment"        x="940" y="25"  width="16" height="16" frameX="0" frameY="0" frameWidth="16" frameHeight="16"/>
 	
 	<!-- Orange (Error) -->
 	<SubTexture name="OrangeAdaptor"     x="779" y="162" width="43" height="61" frameX="0" frameY="0" frameWidth="43" frameHeight="61"/>

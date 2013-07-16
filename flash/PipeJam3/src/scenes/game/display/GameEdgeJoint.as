@@ -1,19 +1,23 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import scenes.BaseComponent;
-	import starling.display.Image;
-	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
+	
+	import display.NineSliceBatch;
 	
 	import flash.geom.Point;
+	
+	import scenes.BaseComponent;
+	
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
 
@@ -29,8 +33,7 @@ package scenes.game.display
 		public var m_closestWall:int = 0;
 		
 		public var count:int = 0;
-		private var m_quad:DisplayObject;
-		private var m_hoverQuad:DisplayObject;
+		private var m_quad:Quad;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
@@ -68,9 +71,7 @@ package scenes.game.display
 			disposeChildren();
 			if (m_quad) {
 				m_quad.removeFromParent(true);
-			}
-			if (m_hoverQuad) {
-				m_hoverQuad.removeFromParent(true);
+				m_quad = null;
 			}
 			super.dispose();
 		}
@@ -140,16 +141,14 @@ package scenes.game.display
 			
 			if (m_quad) {
 				m_quad.removeFromParent(true);
-			}
-			
-			if (m_hoverQuad) {
-				m_hoverQuad.removeFromParent(true);
+				m_quad = null;
 			}
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
+
+			var assetName:String;
 			
 			if (isRound) {
-				var assetName:String;
 				if(m_isEditable == true)
 				{
 					if (m_isWide == true)
@@ -164,19 +163,35 @@ package scenes.game.display
 					else
 						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
 				}
-				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var startTexture:Texture = atlas.getTexture(assetName);
-				m_quad = new Image(startTexture);
-				m_quad.width = m_quad.height = lineSize;
 			} else {
-				m_quad = new Quad(lineSize, lineSize, color);
-				if(isHoverOn)
+				if(m_isEditable == true)
 				{
-					(m_quad as Quad).setVertexColor(0, color + 0x333333);
-					(m_quad as Quad).setVertexColor(1, color + 0x333333);
-					(m_quad as Quad).setVertexColor(2, color + 0x333333);
-					(m_quad as Quad).setVertexColor(3, color + 0x333333);
+					if (m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
 				}
+				else //not adjustable
+				{
+					if(m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
+				}
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
+			m_quad = new Image(startTexture);
+			m_quad.width = m_quad.height = lineSize;
+			
+			if(isHoverOn)
+			{
+				m_quad.color = 0xeeeeee;
+			}
+			else
+			{
+				m_quad.color = 0xcccccc;
 			}
 			
 			m_quad.x = -lineSize/2;
