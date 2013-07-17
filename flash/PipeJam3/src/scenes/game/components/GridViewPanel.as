@@ -424,7 +424,7 @@ package scenes.game.components
 			var i:int;
 			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
-				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
+				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
 				var localPt:Point = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);

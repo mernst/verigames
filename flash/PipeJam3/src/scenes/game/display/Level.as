@@ -289,7 +289,7 @@ package scenes.game.display
 				if (boundingBox) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
@@ -713,15 +713,15 @@ package scenes.game.display
 			for each(var child:XML in children)
 			{
 				var childName:String = child.localName();
-				var x:Number, y:Number;
+				var currentLayoutX:Number, currentLayoutY:Number;
 				if(childName.indexOf("box") != -1)
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					x = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
-					child.@x = x.toFixed(2);
-					y = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
-					child.@y = y.toFixed(2);
+					currentLayoutX = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					child.@x = currentLayoutX.toFixed(2);
+					currentLayoutY = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					child.@y = currentLayoutY.toFixed(2);
 					child.@visible = edgeSet.visible;
 				}
 				else if(childName.indexOf("joint") != -1)
@@ -730,10 +730,10 @@ package scenes.game.display
 					var joint:GameJointNode = jointDictionary[jointID];
 					if(joint != null)
 					{
-						x = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
-						child.@x = x.toFixed(2);
-						y = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
-						child.@y = y.toFixed(2);
+						currentLayoutX = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						child.@x = currentLayoutX.toFixed(2);
+						currentLayoutY = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						child.@y = currentLayoutY.toFixed(2);
 						child.@visible = joint.visible;
 					}
 				}
@@ -755,10 +755,10 @@ package scenes.game.display
 						{
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
-							x = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
 							ptXML.@x = x.toFixed(2);
-							y = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
-							ptXML.@y = y.toFixed(2);
+							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							ptXML.@y = currentLayoutY.toFixed(2);
 							
 							child.appendChild(ptXML);
 						}
@@ -1092,8 +1092,8 @@ package scenes.game.display
 			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x;
-				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y;
+				gameNode.x = gameNode.m_boundingBox.x;// - m_boundingBox.x;
+				gameNode.y = gameNode.m_boundingBox.y;// - m_boundingBox.y;
 				gameNode.m_isDirty = true;
 //				m_nodesContainer.addChild(gameNode);
 				m_visibleNodeManager.addNode(gameNode);
@@ -1103,8 +1103,8 @@ package scenes.game.display
 			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x;
-				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y;
+				gameJoint.x = gameJoint.m_boundingBox.x;// - m_boundingBox.x;
+				gameJoint.y = gameJoint.m_boundingBox.y;// - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
 	//			m_jointsContainer.addChild(gameJoint);
 				m_visibleNodeManager.addNode(gameJoint);
@@ -1114,8 +1114,8 @@ package scenes.game.display
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
-				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
+				gameEdge.x = gameEdge.m_boundingBox.x;// - m_boundingBox.x;
+				gameEdge.y = gameEdge.m_boundingBox.y;// - m_boundingBox.y;
 				gameEdge.draw();
 //				m_edgesContainer.addChild(gameEdge);
 //				m_errorContainer.addChild(gameEdge.errorContainer);

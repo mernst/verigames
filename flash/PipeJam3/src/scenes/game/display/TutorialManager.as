@@ -122,7 +122,7 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 					return "Try different configurations. Optimize the level.\n\nGet the high score.";
 				case LAYOUT_TUTORIAL:
-					return "Drag the widgets and links around to help\n\norganize the layout.";
+					return "Drag the widgets and links around to help\n\norganize the layout. Separate the widgets to continue.";
 				case END_TUTORIAL:
 					return "Tutorial Complete. Optimize your first real level.";
 			}
