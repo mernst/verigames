@@ -168,17 +168,24 @@ package scenes.game.components
 						// one finger touching -> move
 						if(touches[0].target == m_backgroundImage)
 						{
-							var delta:Point = touches[0].getMovement(parent);
-							var cp:Point = touches[0].getLocation(this.content);
-							var viewRect:Rectangle = getViewInContentSpace();
-							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
-							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
-							moveContent(newX, newY);
-							m_currentLevel.updateVisibleList();
+							if (m_currentLevel && 
+								m_currentLevel.tutorialManager && 
+								m_currentLevel.tutorialManager.getPanAllowed())
+							{
+								var delta:Point = touches[0].getMovement(parent);
+								var cp:Point = touches[0].getLocation(this.content);
+								var viewRect:Rectangle = getViewInContentSpace();
+								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
+								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
+								moveContent(newX, newY);
+								m_currentLevel.updateVisibleList();
+							}
 						}
 					}
 					else if (touches.length == 2)
 					{
+						/*
+						// TODO: Need to take a look at this if we reactivate multitouch - hasn't been touched in a while 
 						// two fingers touching -> rotate and scale
 						var touchA:Touch = touches[0];
 						var touchB:Touch = touches[1];
@@ -216,6 +223,7 @@ package scenes.game.components
 	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
 	//					content.x = currentCenterPt.x - previousCenterPt.x;
 	//					content.y = currentCenterPt.y - previousCenterPt.y;
+						*/
 					}
 				}
 			}
@@ -245,6 +253,12 @@ package scenes.game.components
 		
 		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
+			if (!(m_currentLevel && 
+				m_currentLevel.tutorialManager && 
+				m_currentLevel.tutorialManager.getZoomAllowed()))
+			{
+				return;
+			}
 			if (localMouse == null) {
 				localMouse = new Point(WIDTH / 2, HEIGHT / 2);
 			} else {
@@ -372,16 +386,36 @@ package scenes.game.components
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					content.y +=  5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.y += 5;
+					}
 					break;
 				case Keyboard.DOWN:
-					content.y -= 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.y -= 5;
+					}
 					break;
 				case Keyboard.LEFT:
-					content.x += 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.x += 5;
+					}
 					break;
 				case Keyboard.RIGHT:
-					content.x -= 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.x -= 5;
+					}
 					break;
 				case Keyboard.EQUAL:
 					handleMouseWheel(5);

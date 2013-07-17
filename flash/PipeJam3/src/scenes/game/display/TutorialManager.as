@@ -101,6 +101,50 @@ package scenes.game.display
 			}
 		}
 		
+		public function getZoomAllowed():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+					return false;
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return true;
+			}
+			return true;
+		}
+		
+		public function getPanAllowed():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+					return false;
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return true;
+			}
+			return true;
+		}
+		
 		public function getLayoutFixed():Boolean
 		{
 			switch (m_tutorialTag) {
@@ -115,9 +159,12 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 					return true;
-				default:
+				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
 					return false;
 			}
+			return false;
 		}
 		
 		public function getText():String
