@@ -66,7 +66,7 @@ package scenes.game.display
 		//edges should be added to parent elsewhere
 		public function addEdge(edge:DisplayObject):void
 		{
-			edge.visible = false;
+		//	edge.visible = false;
 			m_edgeArray.push(edge);
 		}
 		
@@ -115,9 +115,9 @@ package scenes.game.display
 				trace(gameNode.storedXPosition, gameNode.storedYPosition, gameNode.width, gameNode.height);
 			
 			var component:DisplayObject;
-			if(m_visibleEdgeList)
-				for each(component in m_visibleEdgeList)
-					component.visible = false;
+//			if(m_visibleEdgeList)
+//				for each(component in m_visibleEdgeList)
+//					component.visible = false;
 				
 			m_visibleNodeList = new Array;
 			m_visibleEdgeList = new Array;
@@ -152,7 +152,7 @@ package scenes.game.display
 						m_visibleEdgeList.push(iedge);
 						iedge.m_isDirty = true;
 				//		m_container.addGameComponentToStage(iedge as GameComponent);
-						iedge.flatten();
+				//		iedge.flatten();
 					}
 					for each(var oedge:GameEdgeContainer in node.m_outgoingEdges)
 					{
@@ -160,7 +160,7 @@ package scenes.game.display
 						m_visibleEdgeList.push(oedge);
 						oedge.m_isDirty = true;
 		//				m_container.addGameComponentToStage(oedge as GameComponent);
-						oedge.flatten();
+		//				oedge.flatten();
 					}
 				}
 			}
