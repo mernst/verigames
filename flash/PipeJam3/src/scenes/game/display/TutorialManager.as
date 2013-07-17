@@ -102,7 +102,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
-					return "These are widgets. Click the blue widgets to\n\nchange their shades between dark and light.";
+					return "These are widgets. Click the blue widgets to\n\ntoggle their shades between dark and light.";
 				case LOCKED_TUTORIAL:
 					return "Gray widgets are locked, they cannot be changed.";
 				case LINKS_TUTORIAL:
@@ -112,9 +112,9 @@ package scenes.game.display
 				case PINCH_TUTORIAL:
 					return "Some passages are gray. These passages are\n\nlocked and will not change, even if the widget\n\nis changed.";
 				case CLASH_TUTORIAL:
-					return "This is a clash. Clashes happen when wide links\n\ntry to enter narrow passages. Each clash is worth\n\n-75 points.";
+					return "This is a clash. Clashes happen when wide links\n\ntry to enter narrow passages. Each clash incurs\n\na penalty of -75 points.";
 				case WIDEN_TUTORIAL:
-					return "Click the blue widgets to narrow their passages\n\nand fix the clashes.";
+					return "Click the blue widgets to widen their passages\n\nand fix the clashes.";
 				case NARROW_TUTORIAL:
 					return "Click the upper widgets to narrow their links\n\nand fix the clashes.";
 				case COLOR_TUTORIAL:
