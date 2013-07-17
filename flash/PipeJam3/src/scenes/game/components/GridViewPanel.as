@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import scenes.game.display.GameEdgeContainer;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -406,6 +407,10 @@ package scenes.game.components
 					if (m_currentLevel.tutorialManager) {
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 					}
 					
 				}
@@ -414,6 +419,10 @@ package scenes.game.components
 				if (m_currentLevel.tutorialManager) {
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 				}
 			}
 			content.x = 0;
@@ -573,6 +582,15 @@ package scenes.game.components
 					var node:GameNode = m_currentLevel.getNode(evt.componentId);
 					if (node) spotlightComponent(node);
 					break;
+				case TutorialEvent.HIGHLIGHT_EDGE:
+					if (!evt.highlightOn) {
+						removeSpotlight();
+						return;
+					}
+					if (!m_currentLevel) return;
+					var edge:GameEdgeContainer = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge) spotlightComponent(edge);
+					break;
 			}
 		}
 		
@@ -584,6 +602,7 @@ package scenes.game.components
 		private var m_spotlight:Image;
 		public function spotlightComponent(component:GameComponent, timeSec:Number = 3.0):void
 		{
+			if (!m_currentLevel) return;
 			startingPoint = new Point(content.x, content.y);
 			
 			var centerPt:Point = new Point(component.width / 2, component.height / 2);
@@ -607,8 +626,8 @@ package scenes.game.components
 				m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
 				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
 			}
-			m_spotlight.x = content.x;
-			m_spotlight.y = content.y;
+			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
+			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
 			content.addChild(m_spotlight);
 			var destX:Number = localPt.x - m_spotlight.width / 2;
 			var destY:Number = localPt.y - m_spotlight.height / 2;

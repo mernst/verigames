@@ -1283,6 +1283,14 @@ package scenes.game.display
 			return null;
 		}
 		
+		public function getEdgeContainer(_id:String):GameEdgeContainer
+		{
+			if (edgeContainerDictionary.hasOwnProperty(_id) && (edgeContainerDictionary[_id] is GameEdgeContainer)) {
+				return (edgeContainerDictionary[_id] as GameEdgeContainer);
+			}
+			return null;
+		}
+		
 		public function getNodes():Vector.<GameNode>
 		{
 			return m_nodeList;

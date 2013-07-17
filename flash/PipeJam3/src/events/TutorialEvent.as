@@ -6,6 +6,10 @@ package events
 	{
 		public static const SHOW_CONTINUE:String = "SHOW_CONTINUE";
 		public static const HIGHLIGHT_BOX:String = "HIGHLIGHT_BOX";
+		public static const HIGHLIGHT_EDGE:String = "HIGHLIGHT_EDGE";
+		public static const HIGHLIGHT_PASSAGE:String = "HIGHLIGHT_PASSAGE";
+		public static const HIGHLIGHT_CLASH:String = "HIGHLIGHT_CLASH";
+		public static const HIGHLIGHT_SCOREBLOCK:String = "HIGHLIGHT_SCOREBLOCK";
 		
 		public var componentId:String;
 		public var highlightOn:Boolean;

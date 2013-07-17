@@ -52,7 +52,13 @@ package scenes.game.display
 					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", true)); }, 0.2);
 					break;
 				case LOCKED_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "LockedWidget1", true)); }, 0.2);
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
+					break;
 				case LINKS_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_EDGE, "e1__OUT__", true)); }, 0.2);
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
+					break;
 				case PASSAGE_TUTORIAL:
 				case PINCH_TUTORIAL:
 				case CLASH_TUTORIAL:
@@ -72,6 +78,7 @@ package scenes.game.display
 			if (!m_levelStarted) return;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case LINKS_TUTORIAL:
 					dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", false));
 					// Allow user to continue after they click a box
 					dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
