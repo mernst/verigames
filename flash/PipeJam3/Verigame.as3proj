@@ -90,7 +90,7 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>python scripts/prebuild.py</preBuildCommand>
+  <preBuildCommand>python script/prebuild.py</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

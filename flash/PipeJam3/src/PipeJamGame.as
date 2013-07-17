@@ -1,29 +1,38 @@
 package
 {
 	import audio.AudioManager;
+	
+	import buildInfo.BuildInfo;
+	
 	import cgs.Cache.Cache;
-	import display.SoundButton;
+	
 	import display.MusicButton;
+	import display.PipeJamTheme;
+	import display.SoundButton;
+	
+	import feathers.themes.AeonDesktopTheme;
+	
+	import flash.display.LoaderInfo;
+	import flash.events.Event;
 	import flash.external.ExternalInterface;
-	import utils.XSprite;
+	import flash.system.System;
+	import flash.ui.Keyboard;
 	
 	import scenes.*;
 	import scenes.game.*;
-	import scenes.splashscreen.*;
 	import scenes.login.*;
-	import flash.display.LoaderInfo;
+	import scenes.splashscreen.*;
 	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import flash.events.Event;
+	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	import starling.utils.VAlign;
 	
-	import display.PipeJamTheme;
-	import feathers.themes.AeonDesktopTheme;
+	import utils.XSprite;
 	
 	public class PipeJamGame extends Game
 	{
@@ -83,11 +92,22 @@ package
 			showScene("SplashScreen");
 			
 			addChild(m_sfxButton);
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
 		{
-			
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		private function onKeyDown(event:KeyboardEvent):void
+		{
+			if (event.ctrlKey && event.altKey && event.shiftKey && event.keyCode == Keyboard.V) {
+				var buildId:String = BuildInfo.DATE + "-" + BuildInfo.VERSION;
+				trace(buildId);
+				System.setClipboard(buildId);
+			}
 		}
 		
 		private function updateMusicState(musicOn:Boolean):void

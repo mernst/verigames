@@ -29,9 +29,11 @@ syntax: glob
 *~
 .#*
 .gradle
+*.pyc
 
 
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/.settings
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/bin-debug
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/bin-release
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/html-template
+flash/PipeJam3/src/buildInfo/BuildInfo.as
