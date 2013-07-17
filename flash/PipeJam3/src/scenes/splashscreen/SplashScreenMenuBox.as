@@ -40,6 +40,7 @@ package scenes.splashscreen
 		
 		public var inputInfo:flash.text.TextField;
 		protected var tutorialZipFile:FZip;
+		protected var tutorialXML:XML;
 		
 		protected var selectLevelDialog:SelectLevelDialog;
 		
@@ -157,14 +158,10 @@ package scenes.splashscreen
 			
 			//we are done, show everything
 			// Creating the dataprovider
-			var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
-			selectLevelDialog.setDialogInfo(matchCollection, matchArrayMetadata);
+		//	var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
+			selectLevelDialog.setNewLevelInfo(matchArrayMetadata);
 			
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
-			
-			m_mainMenu.visible = false;
-			selectLevelDialog.visible = true;
-			
 		}
 		protected static var levelCount:int = 1;
 		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>):String
@@ -183,6 +180,9 @@ package scenes.splashscreen
 			
 			while(levelNotFound)
 			{
+				if(index >= levelMetadataVector.length)
+					break;
+				
 				foundObj = levelMetadataVector[index];
 				if(foundObj.levelId is String)
 					objID = foundObj.levelId;
@@ -275,18 +275,22 @@ package scenes.splashscreen
 		}
 		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
-		{
-			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
+		{			
 			
 			//do this, although player probably is already be activated
-			if(!PipeJam3.playerActivated)
+			if(!PipeJam3.playerActivated && !PipeJam3.LOCAL_DEPLOYMENT)
+			{
+				dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 				loginHelper.checkPlayerID(onPlayerActivated);
+			}
 			else
 				onPlayerActivated(0, null);
 		}
 		
 		protected function onPlayerActivated(result:int, e:flash.events.Event):void
 		{
+			m_mainMenu.visible = false;
+
 			//check for tutorial cookies, and if not found, or incomplete, do that, else load real levels
 			//get Tutorial file
 			tutorialZipFile = new FZip();
@@ -303,20 +307,22 @@ package scenes.splashscreen
 		//serve either the next tutorial level, or give the full level select screen if done
 		protected function getNextPlayerLevel(e:flash.events.Event):void
 		{
-			if(isTutorialDone())
+			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
 			{
 				loginHelper.requestLevels(onRequestLevels);
 				loginHelper.getLevelMetadata(onRequestLevels);
 				
-				selectLevelDialog = new SelectLevelDialog(this);
-				//the containing menubox is scaled wierdly
-				selectLevelDialog.width = 175;
-				selectLevelDialog.height = 250;
-				
+				selectLevelDialog = new SelectLevelDialog(this, 300, 250);
 				parent.addChild(selectLevelDialog);
-				
+				selectLevelDialog.setTutorialXMLFile(tutorialXML);
+				selectLevelDialog.visible = true;
+
 				//do after adding to parent
-				selectLevelDialog.centerDialog();
+				selectLevelDialog.x = (parent.width - selectLevelDialog.width)/2;
+				selectLevelDialog.y = (parent.height - selectLevelDialog.height)/2;
+				
+				//do this after setting position, since we are setting a clip rect and it uses global coordinates
+				selectLevelDialog.initialize();
 				
 				PipeJamGameScene.inTutorial = false;
 			}
@@ -331,7 +337,7 @@ package scenes.splashscreen
 			{
 				var zipFile:FZipFile = tutorialZipFile.getFileAt(0);
 				trace(zipFile.filename);
-				var tutorialXML:XML = new XML(zipFile.content);
+				tutorialXML = new XML(zipFile.content);
 				PipeJamGameScene.numTutorialLevels = tutorialXML["level"].length();
 			}
 			
@@ -349,7 +355,9 @@ package scenes.splashscreen
 		{
 			//go to the beginning
 			PipeJamGameScene.resetTutorialStatus();
+			
 			loadTutorial();
+			
 		}
 		
 		protected function loadTutorial():void
@@ -358,6 +366,9 @@ package scenes.splashscreen
 			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
 			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
 			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
+			
+			PipeJam3.initialLevelDisplay = false;
+
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
