@@ -232,7 +232,7 @@ package scenes.game.display
 			var oldScore:int = gameControlPanel.getCurrentScore();
 			var newScore:int = gameControlPanel.updateScore(evt.level);
 			if (newScore >= evt.level.getTargetScore()) {
-				edgeSetGraphViewPanel.displayContinueButton(false);
+				edgeSetGraphViewPanel.displayContinueButton(true);
 			} else {
 				edgeSetGraphViewPanel.hideContinueButton();
 			}
