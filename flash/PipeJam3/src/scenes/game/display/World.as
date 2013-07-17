@@ -385,7 +385,7 @@ package scenes.game.display
 						break;
 					}
 					case 72: //'h' for hide
-					if(this.active_level != null)
+					if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
 						active_level.toggleUneditableStrings();
 					break;
 					case 76: //'l' for copy layout
