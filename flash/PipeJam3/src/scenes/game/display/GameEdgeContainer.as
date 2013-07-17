@@ -1,6 +1,8 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
 	import display.NineSliceBatch;
 	
 	import events.BallTypeChangeEvent;
@@ -17,9 +19,13 @@ package scenes.game.display
 	
 	import particle.ErrorParticleSystem;
 	
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Sprite;
+	import starling.display.graphics.NGon;
 	import starling.events.Event;
+	
+	import utils.XSprite;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -427,12 +433,29 @@ package scenes.game.display
 			}
 		}
 		
-		private var m_errorParticleSystem:ErrorParticleSystem;
+		private var m_errorParticleSystem:DisplayObject;
 		private function addError():void
 		{
 			if (m_errorParticleSystem == null) {
-				m_errorParticleSystem = new ErrorParticleSystem();
-				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
+				var errorParticleSystem:Sprite = new Sprite();
+				
+				var textBack:DisplayObject = XSprite.createPolyCircle(6, 0xFF0000, 0);
+				errorParticleSystem.addChild(textBack);
+				
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(Constants.ERROR_POINTS.toString(), AssetsFont.FONT_UBUNTU, 25, 25, 6, 0x000000);
+				TextFactory.getInstance().updateAlign(textField, TextFactory.HCENTER, TextFactory.VCENTER);
+				XSprite.setPivotCenter(textField);
+				errorParticleSystem.addChild(textField);
+				
+				textBack.x = textField.x = 8;
+				textBack.y = textField.y = 8;
+				
+				var particleSystem:ErrorParticleSystem = new ErrorParticleSystem();
+				errorParticleSystem.addChild(particleSystem);
+				
+				errorParticleSystem.touchable = false;
+				errorParticleSystem.scaleX = errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
+				m_errorParticleSystem = errorParticleSystem;
 			}
 			errorContainer.addChild(m_errorParticleSystem);
 			if (toBox && m_innerBoxSegment && !m_innerBoxSegment.m_hasError) {
