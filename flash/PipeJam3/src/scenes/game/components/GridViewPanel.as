@@ -2,21 +2,19 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import display.NineSliceBatch;
-	import events.TutorialEvent;
-	import starling.display.Sprite;
 	
+	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
+	import events.TutorialEvent;
 	import events.UndoEvent;
 	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	
 	import scenes.BaseComponent;
@@ -24,13 +22,13 @@ package scenes.game.components
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
@@ -65,7 +63,7 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 10.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
-		private static const STARTING_SCALE:Number = 24.0 / Constants.GAME_SCALE;
+		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		private static const TUTORIAL_TEXT_AREA:Rectangle = new Rectangle(12, 5, 415, 58);//in m_tutorialTextbox space
 		private static const TUTORIAL_FONT_SIZE:Number = 18;
 		
@@ -426,10 +424,10 @@ package scenes.game.components
 			var i:int;
 			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
-				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.right / 2, m_currentLevel.m_boundingBox.bottom / 2);
+				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
 				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
 				var localPt:Point = content.globalToLocal(globPt);
-				panTo(localPt.x, localPt.y);
+				moveContent(localPt.x, localPt.y);
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = level.getNodes();
@@ -554,7 +552,7 @@ package scenes.game.components
 			var centerPt:Point = new Point(component.width / 2, component.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
-			panTo(localPt.x, localPt.y);
+			moveContent(localPt.x, localPt.y);
 			
 			var startPoint:Point = startingPoint.clone();
 			var endPoint:Point = new Point(content.x, content.y);
