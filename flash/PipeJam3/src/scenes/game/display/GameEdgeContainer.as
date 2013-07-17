@@ -151,6 +151,7 @@ package scenes.game.display
 				switch (graphEdge.to_port.node.kind) {
 					case NodeTypes.OUTGOING:
 					case NodeTypes.END:
+					case NodeTypes.SUBBOARD:
 						innerCircle = true;
 						break;
 				}
