@@ -68,6 +68,7 @@ package assets
 		public static const PipeJamSubTexture_BlueLightSegment:String = "BlueLightSegment";
 		public static const PipeJamSubTexture_OrangeAdaptor:String = "OrangeAdaptor";
 		public static const PipeJamSubTexture_OrangeAdaptorPlug:String = "OrangeAdaptorPlug";
+		public static const PipeJamSubTexture_OrangeScore:String = "OrangeScore";
 		public static const PipeJamSubTexture_ScoreBarForeground:String = "ScoreBarForeground";
 		public static const PipeJamSubTexture_ScoreBarBlue:String = "ScoreBarBlue";
 		public static const PipeJamSubTexture_ScoreBarOrange:String = "ScoreBarOrange";
