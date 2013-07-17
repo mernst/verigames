@@ -505,7 +505,7 @@ package scenes.game.components
 		{
 			if (permenantly) m_continueButtonForced = true;
 			if (!continueButton) {
-				continueButton = ButtonFactory.getInstance().createDefaultButton("Continue", 96, 42);
+				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
 				continueButton.y = HEIGHT - continueButton.height - 5;
