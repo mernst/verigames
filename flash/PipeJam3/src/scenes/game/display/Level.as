@@ -74,7 +74,7 @@ package scenes.game.display
 		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
 		public var m_levelConstraintsXMLWrapper:XML;
 		public var m_tutorialTag:String;
-		private var m_tutorialManager:TutorialManager;
+		public var tutorialManager:TutorialManager;
 		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;
 		
@@ -120,8 +120,8 @@ package scenes.game.display
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
-				m_tutorialManager = new TutorialManager(m_tutorialTag);
-				m_layoutFixed = m_tutorialManager.getLayoutFixed();
+				tutorialManager = new TutorialManager(m_tutorialTag);
+				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
 			
 			m_targetScore = int.MAX_VALUE;
@@ -536,6 +536,8 @@ package scenes.game.display
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			if (tutorialManager) tutorialManager.startLevel();
+			
 			setDisplayData();
 			
 			draw();
@@ -564,6 +566,7 @@ package scenes.game.display
 			setNewLayout(m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
 			setConstraints();
+			if (tutorialManager) tutorialManager.startLevel();
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
@@ -839,6 +842,7 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
+			if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
 			if (!evt.silent) {
 				if (evt.newIsWide) {
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
@@ -1270,6 +1274,14 @@ package scenes.game.display
 			}
 		}	
 		
+		public function getNode(_id:String):GameNode
+		{
+			if (boxDictionary.hasOwnProperty(_id) && (boxDictionary[_id] is GameNode)) {
+				return (boxDictionary[_id] as GameNode);
+			}
+			return null;
+		}
+		
 		public function getNodes():Vector.<GameNode>
 		{
 			return m_nodeList;
@@ -1282,7 +1294,7 @@ package scenes.game.display
 		
 		public function getLevelText():String
 		{
-			return m_tutorialManager ? m_tutorialManager.getText() : null;
+			return tutorialManager ? tutorialManager.getText() : null;
 		}
 		
 		public function getTargetScore():int

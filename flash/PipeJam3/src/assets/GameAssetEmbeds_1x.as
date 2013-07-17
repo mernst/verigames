@@ -65,7 +65,7 @@ package assets
 		[Embed(source = "../../lib/assets/spotlight_beam.png")]
 		public static const SpotlightBeamClass:Class;
 		
-		[Embed(source="../../lib/assets/menus/stars.png")]
+		[Embed(source = "../../lib/assets/menus/stars.png")]
 		public static const RatingStarsClass:Class;
 		
 		// Bitmap Fonts

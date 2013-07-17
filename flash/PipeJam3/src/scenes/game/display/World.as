@@ -221,9 +221,9 @@ package scenes.game.display
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
 			var newScore:int = gameControlPanel.updateScore(evt.level);
 			if (newScore >= evt.level.getTargetScore()) {
-				edgeSetGraphViewPanel.displayNextButton();
+				edgeSetGraphViewPanel.displayContinueButton(false);
 			} else {
-				edgeSetGraphViewPanel.hideNextButton();
+				edgeSetGraphViewPanel.hideContinueButton();
 			}
 			if (!evt.silent && PipeJam3.logging) {
 				var details:Object = new Object();

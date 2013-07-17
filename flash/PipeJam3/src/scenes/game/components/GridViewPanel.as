@@ -2,9 +2,11 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.NineSliceBatch;
+	import events.TutorialEvent;
+	import starling.display.Sprite;
 	
 	import display.NineSliceButton;
-	import display.ShimmeringText;
 	
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
@@ -45,13 +47,18 @@ package scenes.game.components
 		public static const WIDTH:Number = Constants.GameWidth;
 		public static const HEIGHT:Number = 262;
 		
-		protected var m_currentLevel:Level;
-		protected var content:BaseComponent;
-		protected var currentMode:int;
-		protected var nextLevelButton:NineSliceButton;
-		protected var m_levelTextFields:Vector.<ShimmeringText> = new Vector.<ShimmeringText>();
-		protected var m_backgroundImage:Image;
-		protected var m_border:Image;
+		private var m_currentLevel:Level;
+		private var content:BaseComponent;
+		private var currentMode:int;
+		private var continueButton:NineSliceButton;
+		private var m_tutorialTextFields:Vector.<TextFieldWrapper> = new Vector.<TextFieldWrapper>();
+		private var m_backgroundImage:Image;
+		private var m_border:Image;
+		private var m_tutorialTextboxContainer:Sprite = new Sprite();
+		private var m_tutorialBox:NineSliceBatch;
+		private var m_tutorialArrow:Image;
+		private var m_tutorialCursor:Quad;
+		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -59,6 +66,8 @@ package scenes.game.components
 		private static const MIN_SCALE:Number = 10.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 24.0 / Constants.GAME_SCALE;
+		private static const TUTORIAL_TEXT_AREA:Rectangle = new Rectangle(12, 5, 415, 58);//in m_tutorialTextbox space
+		private static const TUTORIAL_FONT_SIZE:Number = 18;
 		
 		public function GridViewPanel()
 		{
@@ -387,16 +396,26 @@ package scenes.game.components
 		
 		public function loadLevel(level:Level):void
 		{
-			hideNextButton();
+			m_continueButtonForced = false;
+			hideContinueButton();
 			if(m_currentLevel != level)
 			{
 				if(m_currentLevel)
 				{
 					m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
 					content.removeChild(m_currentLevel);
+					if (m_currentLevel.tutorialManager) {
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+					}
+					
 				}
 				m_currentLevel = level;
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+				if (m_currentLevel.tutorialManager) {
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+				}
 			}
 			content.x = 0;
 			content.y = 0;
@@ -425,50 +444,74 @@ package scenes.game.components
 				}
 			}
 			
-			for (i = 0; i < m_levelTextFields.length; i++) {
-				Starling.juggler.removeTweens(m_levelTextFields[i]);
-				m_levelTextFields[i].removeFromParent(true);
+			if (m_tutorialBox) m_tutorialBox.removeFromParent(true);
+			if (m_tutorialArrow) m_tutorialArrow.removeFromParent();
+			if (m_tutorialCursor) m_tutorialCursor.removeFromParent();
+			for (i = 0; i < m_tutorialTextFields.length; i++) {
+				Starling.juggler.removeTweens(m_tutorialTextFields[i]);
+				m_tutorialTextFields[i].removeFromParent(true);
 			}
-			m_levelTextFields = new Vector.<ShimmeringText>();
+			m_tutorialTextFields = new Vector.<TextFieldWrapper>();
+			
 			var levelText:String = m_currentLevel.getLevelText();
 			if (levelText) {
 				var textLines:Array = levelText.split("\n\n");
-				var totalTime:Number = 0.0;
-				var lineHeight:Number = HEIGHT / Math.max(10, textLines.length * 1.5);
+				const TEXT_SPACING:Number = 1.1; // i.e. 1.1 = 10% spacing between lines
+				var lineHeight:Number = Math.min(TUTORIAL_FONT_SIZE, TUTORIAL_TEXT_AREA.height / textLines.length * TEXT_SPACING);
 				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
+				var maxTextWidth:Number = 0;
 				for (i = 0; i < textLines.length; i++) {
 					var levelTextLine:String = textLines[i] as String;
-					var lineDispTime:Number = levelTextLine.length * SEC_PER_CHAR;
-					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_DEFAULT, WIDTH, lineHeight, lineHeight, 0xEEEE00);
-					shimmerLine.y = i * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
-					shimmerLine.touchable = false;
-					shimmerLine.visible = false;
-					m_levelTextFields.push(shimmerLine);
-					addChild(shimmerLine);
-					Starling.juggler.delayCall(shimmerLine.showLineShimmer, totalTime, lineDispTime / 3, lineDispTime / 3, (levelText.length - 2 * textLines.length) * SEC_PER_CHAR - totalTime, 1.0);
-					totalTime += lineDispTime;
+					var textFieldLine:TextFieldWrapper = TextFactory.getInstance().createTextField(levelTextLine, AssetsFont.FONT_UBUNTU, WIDTH, lineHeight, lineHeight, 0x0077FF);
+					TextFactory.getInstance().updateAlign(textFieldLine, 0, 0);
+					textFieldLine.x = TUTORIAL_TEXT_AREA.x;
+					textFieldLine.y = i * TEXT_SPACING * lineHeight + TUTORIAL_TEXT_AREA.y;
+					textFieldLine.touchable = false;
+					m_tutorialTextFields.push(textFieldLine);
+					m_tutorialTextboxContainer.addChild(textFieldLine);
+					maxTextWidth = Math.max(maxTextWidth, (textFieldLine as TextFieldHack).textBounds.width);
 				}
+				maxTextWidth += 2 * TUTORIAL_TEXT_AREA.x;
+				var textHeight:Number = textLines.length * TEXT_SPACING * lineHeight + 2 * TUTORIAL_TEXT_AREA.y;
+				var cXY:Number = Math.min(textHeight / 2.0, 16);
+				m_tutorialBox = new NineSliceBatch(maxTextWidth, textHeight, cXY, cXY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
+				m_tutorialTextboxContainer.x = (WIDTH - m_tutorialBox.width) / 2.0;
+				m_tutorialTextboxContainer.addChildAt(m_tutorialBox, 0);
+				addChild(m_tutorialTextboxContainer);
+				if (!m_tutorialArrow) {
+					var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+					var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
+					m_tutorialArrow = new Image(arrowTexture);
+				}
+				const ARROW_HEIGHT:Number = 19.0;
+				m_tutorialArrow.scaleX = m_tutorialArrow.scaleY = lineHeight * 0.5 / ARROW_HEIGHT / TEXT_SPACING;
+				m_tutorialArrow.x = TUTORIAL_TEXT_AREA.x - m_tutorialArrow.width;
+				m_tutorialArrow.y = TUTORIAL_TEXT_AREA.y + (lineHeight - m_tutorialArrow.height) / 2.0;
+				m_tutorialTextboxContainer.addChild(m_tutorialArrow);
+			} else if (m_tutorialTextboxContainer && m_tutorialTextboxContainer.parent) {
+				m_tutorialTextboxContainer.removeFromParent();
 			}
 		}
 		
-		public function displayNextButton():void
+		public function displayContinueButton(permenantly:Boolean = true):void
 		{
-			if (!nextLevelButton) {
-				nextLevelButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 42);
-				nextLevelButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
-				nextLevelButton.x = WIDTH - nextLevelButton.width - 5;
-				nextLevelButton.y = HEIGHT - nextLevelButton.height - 5;
+			if (permenantly) m_continueButtonForced = true;
+			if (!continueButton) {
+				continueButton = ButtonFactory.getInstance().createDefaultButton("Continue", 96, 42);
+				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
+				continueButton.x = WIDTH - continueButton.width - 5;
+				continueButton.y = HEIGHT - continueButton.height - 5;
 			}
-			addChild(nextLevelButton);
+			addChild(continueButton);
 			
 			//assume we are in the tutorial, and we just finished a level
 			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
 		}
 		
-		public function hideNextButton():void
+		public function hideContinueButton():void
 		{
-			if (nextLevelButton) {
-				nextLevelButton.removeFromParent();
+			if (continueButton && !m_continueButtonForced) {
+				continueButton.removeFromParent();
 			}
 		}
 		
@@ -503,8 +546,7 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		private var m_spotlight:Image;
-		public function centerOnComponent(component:GameComponent, highlightWithSpotlight:Boolean = false):void
+		public function centerOnComponent(component:GameComponent):void
 		{
 			startingPoint = new Point(content.x, content.y);
 			
@@ -513,39 +555,67 @@ package scenes.game.components
 			var localPt:Point = content.globalToLocal(globPt);
 			panTo(localPt.x, localPt.y);
 			
-			if (highlightWithSpotlight) {
-				if (!m_spotlight) {
-					var spotlightTexture:Texture = AssetInterface.getTexture("Game", "SpotlightClass");
-					m_spotlight = new Image(spotlightTexture);
-					m_spotlight.touchable = false;
-					m_spotlight.alpha = 0.5;
-				}
-				const MIN_SPOTLIGHT_ASPECT:Number = 1.5;
-				const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
-				if (component.width > MIN_SPOTLIGHT_ASPECT * component.height) {
-					// Reached out min aspect, use scaled up dimensions
-					m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
-					m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-				} else {
-					// need to expand width to match min aspect
-					m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
-					m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-				}
-				m_spotlight.x = content.x;
-				m_spotlight.y = content.y;
-				content.addChild(m_spotlight);
-				var destX:Number = localPt.x - m_spotlight.width / 2;
-				var destY:Number = localPt.y - m_spotlight.height / 2;
-				Starling.juggler.removeTweens(m_spotlight);
-				Starling.juggler.tween(m_spotlight, 2.0, { delay: 0.20, x:destX, transition: Transitions.EASE_OUT_ELASTIC } );
-				Starling.juggler.tween(m_spotlight, 1.8, { delay: 0.40, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
-			}
-			
 			var startPoint:Point = startingPoint.clone();
 			var endPoint:Point = new Point(content.x, content.y);
 			var eventToUndo:MoveEvent = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
 			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
 			dispatchEvent(eventToDispatch);
+		}
+		
+		public function onHighlightTutorialEvent(evt:TutorialEvent):void
+		{
+			switch (evt.type) {
+				case TutorialEvent.HIGHLIGHT_BOX:
+					if (!evt.highlightOn) {
+						removeSpotlight();
+						return;
+					}
+					if (!m_currentLevel) return;
+					var node:GameNode = m_currentLevel.getNode(evt.componentId);
+					if (node) spotlightComponent(node);
+					break;
+			}
+		}
+		
+		private function removeSpotlight():void
+		{
+			if (m_spotlight) m_spotlight.removeFromParent();
+		}
+		
+		private var m_spotlight:Image;
+		public function spotlightComponent(component:GameComponent, timeSec:Number = 3.0):void
+		{
+			startingPoint = new Point(content.x, content.y);
+			
+			var centerPt:Point = new Point(component.width / 2, component.height / 2);
+			var globPt:Point = component.localToGlobal(centerPt);
+			var localPt:Point = content.globalToLocal(globPt);
+			
+			if (!m_spotlight) {
+				var spotlightTexture:Texture = AssetInterface.getTexture("Game", "SpotlightClass");
+				m_spotlight = new Image(spotlightTexture);
+				m_spotlight.touchable = false;
+				m_spotlight.alpha = 0.3;
+			}
+			const MIN_SPOTLIGHT_ASPECT:Number = 1.5;
+			const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
+			if (component.width > MIN_SPOTLIGHT_ASPECT * component.height) {
+				// Reached out min aspect, use scaled up dimensions
+				m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
+				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
+			} else {
+				// need to expand width to match min aspect
+				m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
+				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
+			}
+			m_spotlight.x = content.x;
+			m_spotlight.y = content.y;
+			content.addChild(m_spotlight);
+			var destX:Number = localPt.x - m_spotlight.width / 2;
+			var destY:Number = localPt.y - m_spotlight.height / 2;
+			Starling.juggler.removeTweens(m_spotlight);
+			Starling.juggler.tween(m_spotlight, 0.9*timeSec, { delay:0.1*timeSec, x:destX, transition: Transitions.EASE_OUT_ELASTIC } );
+			Starling.juggler.tween(m_spotlight, timeSec, { delay:0, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
