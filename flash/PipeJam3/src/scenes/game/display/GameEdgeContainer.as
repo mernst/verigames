@@ -135,17 +135,23 @@ package scenes.game.display
 			
 			var innerBoxPt:Point;
 			var boxHeight:Number;
-			var startingCircle:Boolean = false;
+			var innerCircle:Boolean = false;
 			if (toBox) {
 				boxHeight = (m_toComponent as GameNode).m_boundingBox.height;
 				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+				switch (graphEdge.to_port.node.kind) {
+					case NodeTypes.OUTGOING:
+					case NodeTypes.END:
+						innerCircle = true;
+						break;
+				}
 			} else {
 				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
 				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
 				switch (graphEdge.from_port.node.kind) {
 					case NodeTypes.INCOMING:
 					case NodeTypes.START_PIPE_DEPENDENT_BALL:
-						startingCircle = true;
+						innerCircle = true;
 						break;
 				}
 			}
@@ -176,7 +182,7 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, startingCircle, innerIsEnd, m_isWide, m_isEditable, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, m_isEditable, draggable);
 			
 			m_boundingBox = _boundingBox;
 			
@@ -1216,7 +1222,6 @@ class InnerBoxSegment extends GameComponent
 	private var m_dir:String;
 	private var m_height:Number;
 	private var m_borderIsWide:Boolean;
-	private var m_createStartingCircle:Boolean;
 	public var isEnd:Boolean;
 	private var m_plugIsWide:Boolean;
 	private var m_plugIsEditable:Boolean;
@@ -1227,7 +1232,7 @@ class InnerBoxSegment extends GameComponent
 	private var m_socket:Image;
 	private var m_plug:Image;
 	
-	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createStartingCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
+	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
 	{
 		super("IS" + id++);
 		draggable = _draggable;
@@ -1237,14 +1242,13 @@ class InnerBoxSegment extends GameComponent
 		m_isWide = isWide;
 		m_borderIsWide = borderIsWide;
 		m_isEditable = isEditable;
-		m_createStartingCircle = createStartingCircle;
 		isEnd = _isEnd;
 		m_plugIsWide = plugIsWide;
 		m_plugIsEditable = plugIsEditable;
 		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
 		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide, m_isEditable, draggable);
 		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
-		if (createStartingCircle) {
+		if (createInnerCircle) {
 			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
 		}
 		m_socketContainer = new Sprite();
