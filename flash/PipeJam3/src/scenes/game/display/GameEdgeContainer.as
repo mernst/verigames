@@ -192,7 +192,7 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, m_isEditable, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, m_isEditable, draggable);
 			
 			m_boundingBox = _boundingBox;
 			
@@ -1222,11 +1222,14 @@ package scenes.game.display
 
 
 import assets.AssetInterface;
+
 import flash.geom.Point;
+
 import scenes.game.display.GameComponent;
 import scenes.game.display.GameEdgeContainer;
 import scenes.game.display.GameEdgeJoint;
 import scenes.game.display.GameEdgeSegment;
+
 import starling.display.Image;
 import starling.display.Quad;
 import starling.display.Sprite;
@@ -1479,6 +1482,18 @@ class InnerBoxSegment extends GameComponent
 			innerCircleJoint.setIsWide(m_isWide);
 			innerCircleJoint.draw();
 		}
+
+		if (m_socket && !m_plugIsWide && m_isWide) {
+			var offset:Number = 0.075 * Constants.GAME_SCALE;
+			edgeSegmentOutline.x += offset;
+			edgeSegment.x += offset;
+			if (m_plug) {
+				m_plug.x -= offset;
+			}
+			if (innerCircleJoint) {
+				innerCircleJoint.x += offset;
+			}
+		}
 		
 		flatten();
 	}
@@ -1486,6 +1501,9 @@ class InnerBoxSegment extends GameComponent
 	override public function setIsWide(b:Boolean):void
 	{
 		if (m_isWide == b) {
+			return;
+		}
+		if (!m_isEditable) {
 			return;
 		}
 		m_isWide = b;
