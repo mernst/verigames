@@ -48,7 +48,7 @@ package scenes.game.display
 			
 			container.addChild(text);
 			
-			Starling.juggler.tween(text, 1.0, {y:pos.y - 20, alpha:0.2, onComplete:function():void { text.removeFromParent(); }});
+			Starling.juggler.tween(text, 1.5, {y:pos.y - 20, alpha:0.2, onComplete:function():void { text.removeFromParent(); }});
 		}
 	}
 }

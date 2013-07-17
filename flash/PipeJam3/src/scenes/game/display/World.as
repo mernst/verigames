@@ -239,7 +239,7 @@ package scenes.game.display
 			if (evt.point) {
 				if (oldScore != newScore) {
 					var thisPt:Point = globalToLocal(evt.point);
-					TextPopup.popupText(this, thisPt, newScore.toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+					TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
 				}
 			}
 			if (!evt.silent && PipeJam3.logging) {
