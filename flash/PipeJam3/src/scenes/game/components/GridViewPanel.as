@@ -398,6 +398,7 @@ package scenes.game.components
 		{
 			m_continueButtonForced = false;
 			hideContinueButton();
+			removeSpotlight();
 			if(m_currentLevel != level)
 			{
 				if(m_currentLevel)
