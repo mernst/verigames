@@ -17,7 +17,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="external" />
     <class path="external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src" />
     <class path="external\Hi-ReS-Stats-master\src" />
     <class path="external\Feathers 1.0.1\source" />
@@ -25,6 +24,8 @@
     <class path="external\Starling-Extension-Particle-System-master\src" />
     <class path="external\pixelmask-master\src" />
     <class path="external\MochiAPI_v4_1_2" />
+    <class path="external\FZip" />
+    <class path="external\MouseWheelTrap" />
   </classpaths>
   <!-- Build options -->
   <build>
