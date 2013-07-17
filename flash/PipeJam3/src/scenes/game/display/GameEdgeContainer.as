@@ -21,12 +21,15 @@ package scenes.game.display
 	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.display.graphics.NGon;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
 	
@@ -443,7 +446,11 @@ package scenes.game.display
 			if (m_errorParticleSystem == null) {
 				var errorParticleSystem:Sprite = new Sprite();
 				
-				var textBack:DisplayObject = XSprite.createPolyCircle(6, 0xFF0000, 0);
+				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+				var texture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_OrangeScore);
+				var textBack:Image = new Image(texture);
+				XSprite.setPivotCenter(textBack);
+				textBack.width = textBack.height = 12;
 				errorParticleSystem.addChild(textBack);
 				
 				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(Constants.ERROR_POINTS.toString(), AssetsFont.FONT_UBUNTU, 25, 25, 6, 0x000000);
