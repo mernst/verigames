@@ -164,7 +164,7 @@ package scenes.game.display
 						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
 				}
 			} else {
-				if(m_isEditable == true)
+				if(true)//m_isEditable == true)
 				{
 					if (m_isWide == true)
 						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;

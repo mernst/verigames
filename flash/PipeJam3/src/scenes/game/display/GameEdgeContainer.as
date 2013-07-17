@@ -195,7 +195,7 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, m_isEditable, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			
 			m_boundingBox = _boundingBox;
 			
@@ -660,7 +660,7 @@ package scenes.game.display
 				if(index == 1)
 					isNodeExtensionSegment = true;
 				
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, m_isEditable, draggable);
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, true, draggable);
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -800,22 +800,22 @@ package scenes.game.display
 					{
 						m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
 						segmentIndex++;
-						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, m_isEditable, draggable);
+						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
 						m_edgeJoints.splice(1, 0, newJoint);
 						newJoint.isHoverOn = true;
 						
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, m_isEditable, draggable);
+						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(1,0,newSegment);	
 						newSegment.isHoverOn = true;
 					}
 					if(segmentIndex+3 == m_jointPoints.length)
 					{
 						m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-						var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, m_isEditable, draggable);
+						var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
 						m_edgeJoints.splice(-2, 0, newEndJoint);
 						newEndJoint.isHoverOn = true;
 						
-						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, m_isEditable, draggable);
+						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(-1,0,newEndSegment);	
 						newEndSegment.isHoverOn = true;
 					}
