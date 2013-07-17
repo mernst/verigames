@@ -1,17 +1,23 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import display.NineSliceBatch;
+	
 	import events.EdgeSetChangeEvent;
 	import events.UndoEvent;
+	
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
+	
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.Network;
 	import graph.NodeTypes;
 	import graph.Port;
-	import starling.events.Event;
 	
-	import flash.utils.Dictionary;
+	import starling.display.DisplayObjectContainer;
+	import starling.events.Event;
 	
 	public class GameNode extends GameNodeBase
 	{
@@ -100,15 +106,15 @@ package scenes.game.display
 			return null;
 		}
 		
-		public override function onClicked():void
+		public override function onClicked(pt:Point):void
 		{
 			if(m_isEditable)
 			{
 				var newIsWide:Boolean = !m_isWide;
-				handleWidthChange(newIsWide);
+				handleWidthChange(newIsWide, false, pt);
 				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 				
-				var eventToUndo:Event = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide);
+				var eventToUndo:EdgeSetChangeEvent = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide);
 				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
 				dispatchEvent(eventToDispatch);
 			}
@@ -126,7 +132,7 @@ package scenes.game.display
 			}
 		}
 		
-		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false):void
+		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false, pt:Point = null):void
 		{
 			if (m_isWide == newIsWide) return;
 			m_isWide = newIsWide;
@@ -134,7 +140,7 @@ package scenes.game.display
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide, null, silent));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide, null, silent, pt));
 			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
 				iedge.updateSize();
 				iedge.setInnerSegmentBorderWidth(m_isWide);

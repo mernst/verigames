@@ -31,6 +31,7 @@ package scenes.game.display
 	import scenes.login.LoginHelper;
 	
 	import starling.display.BlendMode;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Shape;
 	import starling.display.Sprite;
@@ -869,7 +870,7 @@ package scenes.game.display
 					//if(incomingGameEdgeContainer)
 						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent, evt.point));
 		}
 		
 		//data object should be in final selected/unselected state

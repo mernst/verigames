@@ -97,7 +97,7 @@
 			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
 				(!isMoving || !hasMovedOutsideClickDist)) {
 				// If haven't moved enough, register this as a click on the node itself
-				dispatchEvent(new Event(GameEdgeContainer.INNER_SEGMENT_CLICKED, true));
+				dispatchEvent(new TouchEvent(GameEdgeContainer.INNER_SEGMENT_CLICKED, event.touches));
 			}
 			if (!draggable) return;
 			

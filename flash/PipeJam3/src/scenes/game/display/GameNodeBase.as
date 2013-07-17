@@ -1,12 +1,12 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
+	
+	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
-	
-	import events.EdgeSetChangeEvent;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -192,7 +192,11 @@ package scenes.game.display
 				if(!event.shiftKey)
 				{
 					unflattenConnectedEdges();
-					onClicked();
+					
+					var touchClick:Touch = event.getTouch(this, TouchPhase.ENDED);
+					var touchPoint:Point = touchClick ? new Point(touchClick.globalX, touchClick.globalY) : null;
+					
+					onClicked(touchPoint);
 				}
 				else //shift key down
 				{
@@ -268,7 +272,7 @@ package scenes.game.display
 			
 		}
 		
-		public function onClicked():void
+		public function onClicked(pt:Point):void
 		{
 			// overriden by children
 		}

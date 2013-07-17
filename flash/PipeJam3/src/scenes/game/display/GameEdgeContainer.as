@@ -24,6 +24,9 @@ package scenes.game.display
 	import starling.display.Sprite;
 	import starling.display.graphics.NGon;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	import utils.XSprite;
 	
@@ -1014,12 +1017,15 @@ package scenes.game.display
 			//			}
 		}
 		
-		private function onInnerBoxSegmentClicked(event:Event):void
+		private function onInnerBoxSegmentClicked(event:TouchEvent):void
 		{
+			var touchClick:Touch = event.getTouch(this, TouchPhase.ENDED);
+			var touchPoint:Point = touchClick ? new Point(touchClick.globalX, touchClick.globalY) : null;
+			
 			if (m_fromComponent is GameNode) {
-				(m_fromComponent as GameNode).onClicked();
+				(m_fromComponent as GameNode).onClicked(touchPoint);
 			} else if (m_toComponent is GameNode) {
-				(m_toComponent as GameNode).onClicked();
+				(m_toComponent as GameNode).onClicked(touchPoint);
 			}
 		}
 		

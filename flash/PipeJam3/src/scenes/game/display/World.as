@@ -1,7 +1,9 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
+	
 	import events.EdgeSetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
@@ -9,19 +11,27 @@ package scenes.game.display
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.UndoEvent;
+	
+	import flash.geom.Point;
 	import flash.system.System;
+	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	
 	import scenes.BaseComponent;
-	import scenes.game.components.dialogs.InGameMenuDialog;
+	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import scenes.game.PipeJamGameScene;
+	import scenes.game.components.dialogs.InGameMenuDialog;
+	
+	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	
 	import system.PipeSimulator;
 	import system.VerigameServerConstants;
+	
 	import utils.XMath;
 	
 	/**
@@ -219,11 +229,18 @@ package scenes.game.display
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
+			var oldScore:int = gameControlPanel.getCurrentScore();
 			var newScore:int = gameControlPanel.updateScore(evt.level);
 			if (newScore >= evt.level.getTargetScore()) {
 				edgeSetGraphViewPanel.displayContinueButton(false);
 			} else {
 				edgeSetGraphViewPanel.hideContinueButton();
+			}
+			if (evt.point) {
+				if (oldScore != newScore) {
+					var thisPt:Point = globalToLocal(evt.point);
+					TextPopup.popupText(this, thisPt, newScore.toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+				}
 			}
 			if (!evt.silent && PipeJam3.logging) {
 				var details:Object = new Object();
