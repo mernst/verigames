@@ -18,6 +18,7 @@ package scenes.game.display
 		public static const COLOR_TUTORIAL:String = "color";
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const LAYOUT_TUTORIAL:String = "layout";
+		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const END_TUTORIAL:String = "end";
 		
 		private var m_tutorialTag:String;
@@ -38,6 +39,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					break;
 				default:
@@ -60,13 +62,19 @@ package scenes.game.display
 					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
 					break;
 				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "Links3", true)); }, 0.2);
+					break;
+				case PINCH_TUTORIAL:	
+					break;
 				case CLASH_TUTORIAL:
+					
+					break;
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					break;
 			}
@@ -79,9 +87,16 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case LINKS_TUTORIAL:
-					dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", false));
+					dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
 					// Allow user to continue after they click a box
 					dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+					break;
+				case PASSAGE_TUTORIAL:
+					if (evt.edgeSetChanged.m_id == "Links3") {
+						dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
+						// Allow user to continue after they click a box
+						dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+					}
 					break;
 			}
 		}
@@ -115,7 +130,7 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return "Widgets are connected by links. Dark widgets\n\ncreate wide links, light widgets create narrow links.";
 				case PASSAGE_TUTORIAL:
-					return "This is a passage. Changing the size of the\n\nwidget can change the width of the passage.";
+					return "This is a passage. Links can begin, end or pass\n\nthrough widgets through these passages. Changing the size of\n\nthe widget can change the width of the passage.";
 				case PINCH_TUTORIAL:
 					return "Some passages are gray. These passages are\n\nlocked and will not change, even if the widget\n\nis changed.";
 				case CLASH_TUTORIAL:
@@ -130,6 +145,8 @@ package scenes.game.display
 					return "Try different configurations. Optimize the level.\n\nGet the high score.";
 				case LAYOUT_TUTORIAL:
 					return "Drag the widgets and links around to help\n\norganize the layout. Separate the widgets to continue.";
+				case ZOOM_PAN_TUTORIAL:
+					return "Larger levels require navigation. Drag the\n\nbackground to move around the level. Use the +/- keys\n\nto zoom in and out.";
 				case END_TUTORIAL:
 					return "Tutorial Complete. Optimize your first real level.";
 			}

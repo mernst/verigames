@@ -58,6 +58,7 @@ package scenes.game.components
 		private var m_tutorialArrow:Image;
 		private var m_tutorialCursor:Quad;
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
+		private var m_spotlight:Image;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -599,13 +600,12 @@ package scenes.game.components
 			if (m_spotlight) m_spotlight.removeFromParent();
 		}
 		
-		private var m_spotlight:Image;
 		public function spotlightComponent(component:GameComponent, timeSec:Number = 3.0):void
 		{
 			if (!m_currentLevel) return;
 			startingPoint = new Point(content.x, content.y);
-			
-			var centerPt:Point = new Point(component.width / 2, component.height / 2);
+			var bounds:Rectangle = component.getBounds(component);
+			var centerPt:Point = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
 			
@@ -615,17 +615,9 @@ package scenes.game.components
 				m_spotlight.touchable = false;
 				m_spotlight.alpha = 0.3;
 			}
-			const MIN_SPOTLIGHT_ASPECT:Number = 1.5;
 			const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
-			if (component.width > MIN_SPOTLIGHT_ASPECT * component.height) {
-				// Reached out min aspect, use scaled up dimensions
-				m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
-				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-			} else {
-				// need to expand width to match min aspect
-				m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
-				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-			}
+			m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
+			m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
 			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
 			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
 			content.addChild(m_spotlight);
