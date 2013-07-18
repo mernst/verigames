@@ -95,7 +95,10 @@ package assets
 		public static const PipeJamSubTexture_TextInput:String = "TextInput";
 		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
 		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";
-		
+		public static const PipeJamSubTexture_Thumb:String = "Thumb";
+		public static const PipeJamSubTexture_ThumbOver:String = "ThumbOver";
+		public static const PipeJamSubTexture_ThumbSelected:String = "ThumbSelected";
+		public static const PipeJamSubTexture_ScrollBarTrack:String = "TrackBackground";
 		
         public static function getTexture(file:String, name:String):Texture
         {

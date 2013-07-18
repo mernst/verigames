@@ -13,7 +13,7 @@ package server
 	public class LoggingServerInterface
 	{
 		/** True to log to the CGS server */
-		public static var LOGGING_ON:Boolean = false;
+		public static var LOGGING_ON:Boolean = true;
 		
 		public static const SETUP_KEY_FRIENDS_AND_FAMILY_BETA:String = "SETUP_KEY_FRIENDS_AND_FAMILY_BETA";
 		public static const CGS_VERIGAMES_PREFIX:String = "cgs_vg_";

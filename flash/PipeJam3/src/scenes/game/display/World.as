@@ -33,6 +33,7 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
+	import scenes.login.LoginHelper;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -131,7 +132,10 @@ package scenes.game.display
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(LoginHelper.levelObject is int)
+					currentLevelNumber = LoginHelper.levelObject as int;
+				else
+					currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
 				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
 				firstLevel = levels[levelNumberToUse];
 			}
@@ -277,7 +281,20 @@ package scenes.game.display
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
 					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
 				}
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(LoginHelper.levelObject is int)
+				{
+					if(currentLevelNumber != LoginHelper.levelObject as int) //first time through I'm supposing these are different
+						currentLevelNumber = LoginHelper.levelObject as int;
+					else
+					{
+						currentLevelNumber++;
+						LoginHelper.levelObject = int(currentLevelNumber);
+						if(currentLevelNumber > PipeJamGameScene.numTutorialLevelsCompleted)
+							PipeJamGameScene.numTutorialLevelsCompleted = currentLevelNumber;
+					}
+				}
+				else
+					currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
 				if(currentLevelNumber >= levels.length)
 				{
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
