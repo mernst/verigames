@@ -1,7 +1,7 @@
 package assets
 {
-    public class GameAssetEmbeds_1x
-    {
+	public class GameAssetEmbeds_1x
+	{
 		// Bitmaps
 		
 		//Splash Screen
@@ -50,6 +50,12 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamSpriteSheetXML:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.png")]
+		public static const PipeJamLevelSelectSpriteSheetPNG:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.xml", mimeType = "application/octet-stream")]
+		public static const PipeJamLevelSelectSpriteSheetXML:Class;
+		
 		[Embed(source = "../../lib/assets/Background.jpg")]
 		public static const StationaryBackgroundClass:Class;
 		
@@ -75,5 +81,5 @@ package assets
 		
 		[Embed(source = "../../media/fonts/1x/desyrel.png")]
 		public static const DesyrelTexture:Class;
-    }
+	}
 }

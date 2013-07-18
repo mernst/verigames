@@ -8,6 +8,9 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import scenes.game.display.Level;
+	import scenes.game.display.TutorialManagerTextInfo;
+	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -21,81 +24,71 @@ package scenes.game.components
 	
 	public class TutorialText extends Sprite
 	{
-		private static const TUTORIAL_FONT_SIZE:Number = 12;
-		private static const ARROW_SZ:Number = 8;
+		private static const TUTORIAL_FONT_SIZE:Number = 10;
+		private static const ARROW_SZ:Number = 10;
 		private static const ARROW_BOUNCE:Number = 2;
 		private static const ARROW_BOUNCE_SPEED:Number = 0.5;
 		private static const INSET:Number = 3;
-		private static const PADDING_SZ:Number = ARROW_SZ + ARROW_BOUNCE + 2 * INSET;
+		private static const PADDING_SZ:Number = ARROW_SZ + 2 * ARROW_BOUNCE + 4 * INSET;
 
 		private var m_tutorialTextFields:Vector.<TextFieldWrapper> = new Vector.<TextFieldWrapper>();
-		private var m_tutorialTextboxContainer:Sprite = new Sprite();
+		private var m_textContainer:Sprite;
 		private var m_tutorialBox:NineSliceBatch;
 		private var m_tutorialArrow:Image;
 		private var m_tutorialCursor:Quad;
 		
 		private var m_pointTo:DisplayObject;
+		private var m_pointDir:String;
 		
-		public function TutorialText(text:String, pointTo:DisplayObject)
+		
+		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
-			var size:Point = new Point(200, 40);
+			// get variables out of info
+			var text:String = info.text;
 			
-			var padding:Sprite = new Sprite();
+			var size:Point = info.size;
+			if (size == null) {
+				size = new Point(200, 40);
+			}
+
+			m_pointTo = (info.pointToFn != null) ? info.pointToFn(level) : null;
+			m_pointDir = info.pointDir;
+			
+			// a transparent sprite with padding around the edges so we can put the arrow outside the text box
+			var padding:Quad = new Quad(10, 10, 0xff00ff);
+			padding.alpha = 0.0;
+			padding.touchable = false;
+			padding.x = -size.x / 2 - PADDING_SZ;
+			padding.y = -size.y / 2 - PADDING_SZ;
 			padding.width = size.x + 2 * PADDING_SZ;
 			padding.height = size.y + 2 * PADDING_SZ;
 			addChild(padding);
-			
-			var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
-			box.x = PADDING_SZ;
-			box.y = PADDING_SZ;
-			addChild(box);
-			
-			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, size.x - ARROW_SZ - 3 * INSET, size.y - 2 * INSET, TUTORIAL_FONT_SIZE, 0x0077FF);
-			textField.x = PADDING_SZ + ARROW_SZ + ARROW_BOUNCE + 2 * INSET;
-			textField.y = PADDING_SZ + INSET;
-			addChild(textField);
-			
-			m_pointTo = pointTo;
-			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
-			m_tutorialArrow = new Image(arrowTexture);
 
-			m_tutorialArrow.width = m_tutorialArrow.height = ARROW_SZ;
-			addChild(m_tutorialArrow);
+			// to hold text
+			m_textContainer = new Sprite();
+			m_textContainer.x = -size.x / 2;
+			m_textContainer.y = -size.y / 2;
+			addChild(m_textContainer);
 			
-			/*
-			var textLines:Array = text.split("\n\n");
-			const TEXT_SPACING:Number = 1.1; // i.e. 1.1 = 10% spacing between lines
-			var lineHeight:Number = Math.min(TUTORIAL_FONT_SIZE, TUTORIAL_TEXT_AREA.height / textLines.length * TEXT_SPACING);
-			const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
-			var maxTextWidth:Number = 0;
-			for (var i:uint = 0; i < textLines.length; i++) {
-				var levelTextLine:String = textLines[i] as String;
-				var textFieldLine:TextFieldWrapper = TextFactory.getInstance().createTextField(levelTextLine, AssetsFont.FONT_UBUNTU, WIDTH, lineHeight, lineHeight, 0x0077FF);
-				TextFactory.getInstance().updateAlign(textFieldLine, 0, 0);
-				textFieldLine.x = TUTORIAL_TEXT_AREA.x;
-				textFieldLine.y = i * TEXT_SPACING * lineHeight + TUTORIAL_TEXT_AREA.y;
-				textFieldLine.touchable = false;
-				m_tutorialTextFields.push(textFieldLine);
-				m_tutorialTextboxContainer.addChild(textFieldLine);
-				maxTextWidth = Math.max(maxTextWidth, (textFieldLine as TextFieldHack).textBounds.width);
+			// background box
+			var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
+			m_textContainer.addChild(box);
+			
+			// text field
+			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, size.x - 2 * INSET, size.y - 2 * INSET, TUTORIAL_FONT_SIZE, 0x0077FF);
+			textField.x = INSET;
+			textField.y = INSET;
+			m_textContainer.addChild(textField);
+			
+			// arrow
+			if (m_pointTo) {
+				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
+				m_tutorialArrow = new Image(arrowTexture);
+				m_tutorialArrow.width = m_tutorialArrow.height = ARROW_SZ;
+				XSprite.setPivotCenter(m_tutorialArrow);
+				addChild(m_tutorialArrow);
 			}
-			maxTextWidth += 2 * TUTORIAL_TEXT_AREA.x;
-			var textHeight:Number = textLines.length * TEXT_SPACING * lineHeight + 2 * TUTORIAL_TEXT_AREA.y;
-			var cXY:Number = Math.min(textHeight / 2.0, 16);
-			m_tutorialBox = new NineSliceBatch(maxTextWidth, textHeight, cXY, cXY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
-			m_tutorialTextboxContainer.x = (WIDTH - m_tutorialBox.width) / 2.0;
-			m_tutorialTextboxContainer.addChildAt(m_tutorialBox, 0);
-			addChild(m_tutorialTextboxContainer);
-			if (!m_tutorialArrow) {
-			}
-			const ARROW_HEIGHT:Number = 19.0;
-			m_tutorialArrow.scaleX = m_tutorialArrow.scaleY = lineHeight * 0.5 / ARROW_HEIGHT / TEXT_SPACING;
-			m_tutorialArrow.x = TUTORIAL_TEXT_AREA.x - m_tutorialArrow.width;
-			m_tutorialArrow.y = TUTORIAL_TEXT_AREA.y + (lineHeight - m_tutorialArrow.height) / 2.0;
-			m_tutorialTextboxContainer.addChild(m_tutorialArrow);
-			*/
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
@@ -119,33 +112,86 @@ package scenes.game.components
 			var timeSec:Number = new Date().time / 1000.0;
 			var timeArrowOffset:Number = ARROW_BOUNCE * (int(timeSec / ARROW_BOUNCE_SPEED) % 2);
 			
-			m_tutorialArrow.x = PADDING_SZ + INSET + timeArrowOffset;
-			m_tutorialArrow.y = PADDING_SZ + INSET;
-			
 			if (m_pointTo) {
-				var pt:Point = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.top);
+				var pt:Point = new Point();
+				var offset:Point = new Point();
+				
+				switch (m_pointDir) {
+					case NineSliceBatch.TOP_LEFT:
+						pt = m_pointTo.bounds.topLeft;
+						offset.x = -1;
+						offset.y = -1;
+						break;
+					
+					case NineSliceBatch.BOTTOM_RIGHT:
+						pt = m_pointTo.bounds.bottomRight;
+						offset.x = 1;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.TOP_RIGHT:
+						pt = new Point(m_pointTo.bounds.right, m_pointTo.bounds.top);
+						offset.x = -1;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.BOTTOM_LEFT:
+						pt = new Point(m_pointTo.bounds.left, m_pointTo.bounds.bottom);
+						offset.x = 1;
+						offset.y = -1;
+						break;
+					
+					case NineSliceBatch.LEFT:
+						pt = new Point(m_pointTo.bounds.left, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
+						offset.x = -1;
+						offset.y = 0;
+						break;
+					
+					case NineSliceBatch.RIGHT:
+						pt = new Point(m_pointTo.bounds.right, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
+						offset.x = 1;
+						offset.y = 0;
+						break;
+					
+					case NineSliceBatch.BOTTOM:
+						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.bottom);
+						offset.x = 0;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.TOP:
+					default:
+						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.top);
+						
+						offset.x = 0;
+						offset.y = -1;
+						break;
+				}
+				
 				pt = m_pointTo.parent.localToGlobal(pt);
 				pt = parent.globalToLocal(pt);
 
-				x = pt.x - width / 2;
-				y = pt.y - height - ARROW_SZ + ARROW_BOUNCE + 2 * INSET;
+				var arrowPos:Number = INSET + ARROW_SZ / 2 - timeArrowOffset;
 				
-				/*
-				XSprite.setPivotCenter(m_tutorialArrow);
-				m_tutorialArrow.rotation = Math.PI / 2;
-				m_tutorialArrow.x = x + width / 2 + INSET;
-				m_tutorialArrow.y = y + timeArrowOffset + INSET;
-				*/
-			} else {
-				/*
-				m_tutorialArrow.x = INSET + timeArrowOffset;
-				m_tutorialArrow.y = INSET;
-				*/
-				x = Constants.GameWidth / 2 - width / 2;
-				y = 0;
+				x = pt.x + offset.x * (width / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
+				y = pt.y + offset.y * (height / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
+				
+				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
+				m_tutorialArrow.x = -offset.x * (width / 2 - PADDING_SZ + arrowPos);
+				m_tutorialArrow.y = -offset.y * (height / 2 - PADDING_SZ + arrowPos);
 			}
 		}
 		
+		private function sign(x:Number):Number
+		{
+			if (x < 0.0) {
+				return -1.0;
+			} else if (x > 0.0) {
+				return 1.0;
+			} else {
+				return 0.0;
+			}
+		}
 		public function getConsoleY():Number
 		{
 			if (m_pointTo) {

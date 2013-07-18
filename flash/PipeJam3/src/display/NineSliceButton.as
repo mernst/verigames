@@ -16,16 +16,16 @@ package display
 		private var m_buttonBatch:NineSliceBatch;
 		private var m_buttonOverBatch:NineSliceBatch;
 		private var m_buttonClickBatch:NineSliceBatch;
-		private var m_textField:TextFieldWrapper;
-		private var m_textFieldOver:TextFieldWrapper;
-		private var m_textFieldClick:TextFieldWrapper;
-		private var m_buttonSkin:Sprite;
-		private var m_buttonOverSkin:Sprite;
-		private var m_buttonClickSkin:Sprite;
+		protected var m_textField:TextFieldWrapper;
+		protected var m_textFieldOver:TextFieldWrapper;
+		protected var m_textFieldClick:TextFieldWrapper;
+		protected var m_buttonSkin:Sprite;
+		protected var m_buttonOverSkin:Sprite;
+		protected var m_buttonClickSkin:Sprite;
 		private var m_enabled:Boolean = true;
 		
-		private static const TXT_PCT:Number = 0.9;
-		private static const MAX_DRAG_DIST:Number = 50;
+		protected static const TXT_PCT:Number = 0.9;
+		protected static const MAX_DRAG_DIST:Number = 50;
 		
 		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                                _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
@@ -69,11 +69,11 @@ package display
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
-		private var mEnabled:Boolean = true;
-		private var mIsDown:Boolean = false;
-		private var mIsHovering:Boolean = false;
+		protected var mEnabled:Boolean = true;
+		protected var mIsDown:Boolean = false;
+		protected var mIsHovering:Boolean = false;
 		// Adaptive from starling.display.Button
-		private function onTouch(event:TouchEvent):void
+		protected function onTouch(event:TouchEvent):void
         {
             Mouse.cursor = (useHandCursor && mEnabled && event.interactsWith(this)) ? 
                 MouseCursor.BUTTON : MouseCursor.AUTO;
@@ -126,14 +126,14 @@ package display
 			}
         }
 		
-		private function reset():void
+		protected function reset():void
 		{
 			showButton(m_buttonSkin);
 			mIsHovering = false;
 			mIsDown = false;
 		}
 		
-		private function showButton(_skin:Sprite):void
+		protected function showButton(_skin:Sprite):void
 		{
 			this.removeChildren();
 			addChild(_skin);

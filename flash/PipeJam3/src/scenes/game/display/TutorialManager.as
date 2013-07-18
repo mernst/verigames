@@ -1,5 +1,7 @@
 package scenes.game.display 
 {
+	import display.NineSliceBatch;
+	
 	import events.EdgeSetChangeEvent;
 	import events.TutorialEvent;
 	
@@ -191,44 +193,121 @@ package scenes.game.display
 			return false;
 		}
 		
-		public function getText():String
+		private function pointToNode(name:String):Function
 		{
-			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-					return "These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.";
-				case LOCKED_TUTORIAL:
-					return "Gray widgets are locked, they cannot be changed.";
-				case LINKS_TUTORIAL:
-					return "Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.";
-				case PASSAGE_TUTORIAL:
-					return "This is a passage. Links can begin, end or pass through\nwidgets through these passages. Change the size\nof the widget to change the width its passages and continue.";
-				case PINCH_TUTORIAL:
-					return "Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.";
-				case CLASH_TUTORIAL:
-					return "This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points. Fix this clash.";
-				case WIDEN_TUTORIAL:
-					return "";//Unguided "Click the blue widgets to widen their passages\nand fix the clashes.";
-				case NARROW_TUTORIAL:
-					return "Click the upper widgets to narrow their links\nand fix the clashes.";
-				case COLOR_TUTORIAL:
-					return "Some widgets want to be a certain color. Match\nthe widgets to the color squares to collect bonus\npoints.";// Remember, clashes are worth -75 points.";
-				case OPTIMIZE_TUTORIAL:
-					return "";//Unguided "Try different configurations. Optimize the level.\nGet the high score.";
-				case LAYOUT_TUTORIAL:
-					return "Drag the widgets and links around to help organize\nthe layout. Separate the widgets to continue.";
-				case ZOOM_PAN_TUTORIAL:
-					return "Larger levels require navigation. Drag the background\nto move around the level. Use the +/- keys to\nzoom in and out.";
-				case END_TUTORIAL:
-					return "Optimize your first real level.";
-			}
-			return null;
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
 		}
 		
-		public function getPointTo():Function
+		private function pointToEdge(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+		}
+		
+		private function pointToPassage(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject {
+				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+				if (edge && edge.m_innerBoxSegment) {
+					return edge.m_innerBoxSegment;
+				} else {
+					return null;
+				}
+			};
+		}
+		
+		private function pointToClash(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject {
+				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+				if (edge && edge.m_errorParticleSystem) {
+					return edge.m_errorParticleSystem;
+				} else {
+					return null;
+				}
+			};
+		}
+		
+		public function getTextInfo():TutorialManagerTextInfo
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
-					return function(currentLevel:Level):DisplayObject { return currentLevel.getNode("IntroWidget2"); };
+					return new TutorialManagerTextInfo(
+						"These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.",
+						null,
+						pointToNode("IntroWidget4"),
+						NineSliceBatch.TOP_LEFT);
+				case LOCKED_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Gray widgets are locked, they cannot be changed.",
+						null,
+						pointToNode("LockedWidget1"),
+						null);
+				case LINKS_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.",
+						null,
+						pointToEdge("e1__OUT__"),
+						null);
+				case PASSAGE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a passage. Links can begin, end or pass through\nwidgets through these passages. Change the size\nof the widget to change the width its passages and continue.",
+						null,
+						pointToPassage("e32__IN__"),
+						null);
+				case PINCH_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.",
+						null,
+						null,
+						null);
+				case CLASH_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points. Fix this clash.",
+						null,
+						pointToClash("e2__IN__"),
+						null);
+				case WIDEN_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Click the blue widgets to widen their passages\nand fix the clashes.",
+						null,
+						null,
+						null);
+				case NARROW_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Click the upper widgets to narrow their links\nand fix the clashes.",
+						null,
+						null,
+						null);
+				case COLOR_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Some widgets want to be a certain color. Match\nthe widgets to the color squares to collect bonus\npoints.",
+						null,
+						null,
+						null);
+				case OPTIMIZE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Try different configurations. Optimize the level.\nGet the high score.",
+						null,
+						null,
+						null);
+				case LAYOUT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Drag the widgets and links around to help organize\nthe layout. Separate the widgets to continue.",
+						null,
+						null,
+						null);
+				case ZOOM_PAN_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Larger levels require navigation. Drag the background\nto move around the level. Use the +/- keys to\nzoom in and out.",
+						null,
+						null,
+						null);
+				case END_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Optimize your first real level!",
+						null,
+						null,
+						null);
 			}
 			return null;
 		}

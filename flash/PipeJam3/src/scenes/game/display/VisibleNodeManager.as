@@ -21,13 +21,17 @@ package scenes.game.display
 		protected var m_currentViewRect:Rectangle;
 		protected var m_container:Level;
 		
-		protected var COLLECTION_SIZE:int = 1;
-		
+		//for debugging only
+		protected var tempNodeArray:Array;
+				
 		public function VisibleNodeManager(_size:int, _container:Level)
 		{
-			m_nodeArray = new Array(int(_size/COLLECTION_SIZE));
-			m_edgeArray = new Array(int(_size/COLLECTION_SIZE));
+			m_nodeArray = new Array(_size);
+			m_edgeArray = new Array(_size);
 			m_container = _container;
+			
+			tempNodeArray = new Array;
+
 		}
 		
 		public function addNode(node:GameNodeBase):void
@@ -42,8 +46,12 @@ package scenes.game.display
 			addNodeAtPoint(node, node.storedXPosition+node.width, node.storedYPosition+node.height);
 			m_container.getNodesContainer().addChild(node);
 			node.visible = true;
+			
+			if(tempNodeArray.indexOf(node) == -1)
+				tempNodeArray.push(node);
 		}
 		
+		//nodes should be added to parent elsewhere
 		public function updateNode(node:GameNodeBase):void
 		{
 			//remove old position and place in new
@@ -52,20 +60,14 @@ package scenes.game.display
 			removeNodeAtPoint(node, node.storedXPosition+node.width, node.storedYPosition,2);
 			removeNodeAtPoint(node, node.storedXPosition+node.width, node.storedYPosition+node.height,3);
 			
-			//push 4 corners
-			node.storedXPosition = int(node.x);
-			node.storedYPosition = int(node.y);
-			addNodeAtPoint(node, node.x, node.y);
-			addNodeAtPoint(node, node.x, node.y+node.height);
-			addNodeAtPoint(node, node.x+node.width, node.y);
-			addNodeAtPoint(node, node.x+node.width, node.y+node.height);
+			addNode(node);
 		}
 		
+		//edges should be added to parent elsewhere
 		public function addEdge(edge:DisplayObject):void
 		{
+		//	edge.visible = false;
 			m_edgeArray.push(edge);
-			edge.visible = false;
-			m_container.addGameComponentToStage(edge as GameComponent);
 		}
 		
 		protected function addNodeAtPoint(node:GameNodeBase, xVal:int, yVal:int):void
@@ -85,15 +87,16 @@ package scenes.game.display
 				arr.push(node);
 		}
 		
-		protected function removeNodeAtPoint(node:DisplayObject, xVal:Number, yVal:Number, vertexNum:int):void
+		protected function removeNodeAtPoint(node:GameNodeBase, xVal:Number, yVal:Number, vertexNum:int):void
 		{
-			if(!m_nodeArray || !m_nodeArray[int(xVal/COLLECTION_SIZE)] || !m_nodeArray[int(xVal/COLLECTION_SIZE)][int(yVal/COLLECTION_SIZE)])
+			if(!m_nodeArray || !m_nodeArray[xVal] || !m_nodeArray[xVal][yVal])
 			{
 				//trace("Wrong!", vertexNum);
+				trace(node.storedXPosition, node.storedYPosition, node.width, node.height);
 				return;
 			}
 			//trace("Right", vertexNum);
-			var arr:Array = m_nodeArray[int(xVal/COLLECTION_SIZE)][int(yVal/COLLECTION_SIZE)];
+			var arr:Array = m_nodeArray[xVal][yVal];
 			if(arr)
 			{
 				var index:int = arr.indexOf(node);
@@ -105,11 +108,16 @@ package scenes.game.display
 		//then visit all nodes in list and add their edges
 		public function updateVisibleList(newViewRect:Rectangle):void
 		{			
+			trace("viewRect ",newViewRect.x, newViewRect.y, newViewRect.width, newViewRect.height);
 			//should compare newViewRect with currentViewRect, find delta offsets and just look at those
+			var gameNode:GameNodeBase;
+			for each(gameNode in tempNodeArray)
+				trace(gameNode.storedXPosition, gameNode.storedYPosition, gameNode.width, gameNode.height);
+			
 			var component:DisplayObject;
-			if(m_visibleEdgeList)
-				for each(component in m_visibleEdgeList)
-					component.visible = false;
+//			if(m_visibleEdgeList)
+//				for each(component in m_visibleEdgeList)
+//					component.visible = false;
 				
 			m_visibleNodeList = new Array;
 			m_visibleEdgeList = new Array;
@@ -121,11 +129,11 @@ package scenes.game.display
 				{
 					if(m_nodeArray[xVal] && m_nodeArray[xVal][yVal] && m_nodeArray[xVal][yVal] is Array)
 					{
-						for each(var elem:DisplayObject in m_nodeArray[xVal][yVal])
+						for each(gameNode in m_nodeArray[xVal][yVal])
 						{
-							if(m_visibleNodeList.indexOf(elem) == -1)
+							if(m_visibleNodeList.indexOf(gameNode) == -1)
 							{
-								m_visibleNodeList.push(elem);
+								m_visibleNodeList.push(gameNode);
 							}
 						}
 					}
@@ -144,7 +152,7 @@ package scenes.game.display
 						m_visibleEdgeList.push(iedge);
 						iedge.m_isDirty = true;
 				//		m_container.addGameComponentToStage(iedge as GameComponent);
-						iedge.flatten();
+				//		iedge.flatten();
 					}
 					for each(var oedge:GameEdgeContainer in node.m_outgoingEdges)
 					{
@@ -152,7 +160,7 @@ package scenes.game.display
 						m_visibleEdgeList.push(oedge);
 						oedge.m_isDirty = true;
 		//				m_container.addGameComponentToStage(oedge as GameComponent);
-						oedge.flatten();
+		//				oedge.flatten();
 					}
 				}
 			}

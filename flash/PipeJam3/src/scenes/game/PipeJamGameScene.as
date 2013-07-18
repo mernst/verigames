@@ -2,7 +2,6 @@ package scenes.game
 {
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
-	import scenes.login.HTTPCookies;
 	
 	import events.NavigationEvent;
 	
@@ -15,7 +14,8 @@ package scenes.game
 	
 	import scenes.Scene;
 	import scenes.game.display.World;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
+	import networking.HTTPCookies;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -35,16 +35,18 @@ package scenes.game
 		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
 		static public var dArray:Array = new Array(
-			"../SampleWorlds/net_sf_picard_metrics_VersionHeader.zip",
-			"../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip",
-			"../SampleWorlds/net_sf_picard_metrics_VersionHeaderLayout.zip"
+			"../SampleWorlds/test/Intervals.zip",
+			"../SampleWorlds/test/IntervalsConstraints.zip",
+			"../SampleWorlds/test/IntervalsLayout.zip"
+			
 		);
 		
 		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
 		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
 		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
 		static public var numTutorialLevels:int = 0;
-		static public var numTutorialLevelsCompleted:int = 0;
+		static public var maxTutorialLevelCompleted:int = 0;
+		static public var currentTutorialLevel:int = 0;
 		static public var inTutorial:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
@@ -75,16 +77,32 @@ package scenes.game
 		protected override function addedToStage(event:starling.events.Event):void
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var fileName:String;
+			
 			super.addedToStage(event);
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
+			
+			if( LoginHelper.levelObject is int) // in the tutorial
+			{
+				PipeJamGameScene.inTutorial = true;
+				fileName = "tutorial";
+			}
+			
+			if(PipeJamGameScene.inTutorial && LoginHelper.tutorialFile) //previously loaded?
+			{
+				//mark extra files as loaded, and then parse world file
+				m_layoutLoaded = m_constraintsLoaded = true;
+				parseXML(m_worldXML);
+			}
 			
 			if (!world_zip_file_to_be_played)
 			{
 				var loadType:int = LoginHelper.USE_LOCAL;
 				
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-				var fileName:String = obj["files"];
-				if(LoginHelper.levelObject != null) //load from MongoDB
+				if(!PipeJamGameScene.inTutorial)
+					fileName = obj["files"];
+				if(LoginHelper.levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = LoginHelper.USE_DATABASE;
 					worldFile = "/level/get/" + LoginHelper.levelObject.xmlID+"/xml";
@@ -214,6 +232,12 @@ package scenes.game
 		{
 			if(m_layoutLoaded && m_worldLoaded && m_constraintsLoaded)
 			{
+				if(PipeJamGameScene.inTutorial)
+				{
+					LoginHelper.tutorialFile = m_worldXML;
+					LoginHelper.tutorialLayoutFile = m_worldLayout;
+					LoginHelper.tutorialConstraintsFile = m_worldConstraints;
+				}
 				trace("everything loaded");
 				if(nextParseState)
 					nextParseState.removeFromParent();
@@ -250,14 +274,14 @@ package scenes.game
 			if (!_tutorialTag) return;
 			if (solvedTutorialLevelTags.indexOf(_tutorialTag) > -1) return;//already solved
 			solvedTutorialLevelTags.push(_tutorialTag);
-			numTutorialLevelsCompleted++;
-			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, numTutorialLevelsCompleted);
+			maxTutorialLevelCompleted++;
+			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, maxTutorialLevelCompleted);
 		}
 		
 		public static function resetTutorialStatus():void
 		{
 			solvedTutorialLevelTags = new Vector.<String>();
-			numTutorialLevelsCompleted = 0;
+			maxTutorialLevelCompleted = 0;
 		}
 	}
 }

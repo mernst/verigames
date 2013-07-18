@@ -24,9 +24,9 @@ package display
 		
 		public static const HOVER_OVER:String = "hoverOver";
 		
-		private var m_up:DisplayObject;
-		private var m_over:DisplayObject;
-		private var m_down:DisplayObject;
+		protected var m_up:DisplayObject;
+		protected var m_over:DisplayObject;
+		protected var m_down:DisplayObject;
 		private var m_current:DisplayObject;
 
 		private var m_hitSubRect:Rectangle;
@@ -144,7 +144,7 @@ package display
 			}
 		}
 		
-		private function toState(state:DisplayObject):void
+		public function toState(state:DisplayObject):void
 		{
 			if (m_current != state) {
 				m_current.visible = false;

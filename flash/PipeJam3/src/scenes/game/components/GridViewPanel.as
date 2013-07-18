@@ -2,8 +2,6 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import scenes.game.display.GameEdgeContainer;
-	import starling.display.DisplayObject;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -25,6 +23,7 @@ package scenes.game.components
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.display.TutorialManagerTextInfo;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -493,9 +492,9 @@ package scenes.game.components
 				m_tutorialText = null;
 			}
 			
-			var levelText:String = m_currentLevel.getLevelText();
-			if (levelText) {
-				m_tutorialText = new TutorialText(levelText, m_currentLevel.getLevelPointTo());
+			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
+			if (levelTextInfo) {
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
 			}
 			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
