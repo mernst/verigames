@@ -292,7 +292,7 @@ package scenes.game.display
 						"change the width its passages.",
 						null,
 						pointToPassage("e32__IN__"),
-						NineSliceBatch.TOP_LEFT, NineSliceBatch.BOTTOM_LEFT);
+						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Some passages are gray. These passages\n" +
@@ -300,7 +300,7 @@ package scenes.game.display
 						"is changed.",
 						null,
 						pointToPassage("e20__IN__"),
-						NineSliceBatch.BOTTOM, null);
+						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"This is a CLASH. Clashes happen when\n" +
@@ -309,7 +309,7 @@ package scenes.game.display
 						"score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
-						NineSliceBatch.TOP_RIGHT, NineSliceBatch.CENTER);
+						NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
 				case WIDEN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the widgets to widen their passages\n" +
