@@ -263,7 +263,7 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"These are WIDGETS.\n" +
 						"Click on widgets to change their color.\n" +
-						"Make them solid colors to get points!",
+						"Make them a solid color to get points!",
 						null,
 						pointToNode("IntroWidget2"),
 						NineSliceBatch.TOP, null);
