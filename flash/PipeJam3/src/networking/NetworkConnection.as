@@ -1,4 +1,4 @@
-package scenes.login
+package networking
 {
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
@@ -98,7 +98,7 @@ package scenes.login
 			var request:String;
 			var specificURL:String = null;
 			var method:String;
-			var playerID:String = PipeJam3.playerID;
+			var playerID:String = PlayerValidation.playerID;
 			
 			m_callback = callback;
 			

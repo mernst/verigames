@@ -13,11 +13,14 @@ package scenes.game.display
 	import events.UndoEvent;
 	
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.system.System;
 	
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	
+	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -25,6 +28,9 @@ package scenes.game.display
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.dialogs.InGameMenuDialog;
 	
+	import starling.animation.Juggler;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
@@ -131,7 +137,10 @@ package scenes.game.display
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(LoginHelper.levelObject is int)
+					currentLevelNumber = LoginHelper.levelObject as int;
+				else
+					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
 				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
 				firstLevel = levels[levelNumberToUse];
 			}
@@ -170,9 +179,17 @@ package scenes.game.display
 					inGameMenuBox = new InGameMenuDialog();
 					addChild(inGameMenuBox);
 					inGameMenuBox.x = 0;
-					inGameMenuBox.y = gameControlPanel.y - inGameMenuBox.height;
+					//add clip rect so box seems to slide up out of the gameControlPanel
+					inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
 				}
+				inGameMenuBox.y = gameControlPanel.y;
 				inGameMenuBox.visible = true;
+				var juggler:Juggler = Starling.juggler;
+				juggler.tween(inGameMenuBox, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+				});
+ 
 			}
 			else
 				inGameMenuBox.onBackToGameButtonTriggered();
@@ -277,7 +294,20 @@ package scenes.game.display
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
 					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
 				}
-				currentLevelNumber = PipeJamGameScene.numTutorialLevelsCompleted;
+				if(LoginHelper.levelObject is int)
+				{
+					if(currentLevelNumber != LoginHelper.levelObject as int) //first time through I'm supposing these are different
+						currentLevelNumber = LoginHelper.levelObject as int;
+					else
+					{
+						currentLevelNumber++;
+						LoginHelper.levelObject = int(currentLevelNumber);
+						if(currentLevelNumber > PipeJamGameScene.maxTutorialLevelCompleted)
+							PipeJamGameScene.maxTutorialLevelCompleted = currentLevelNumber;
+					}
+				}
+				else
+					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
 				if(currentLevelNumber >= levels.length)
 				{
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));

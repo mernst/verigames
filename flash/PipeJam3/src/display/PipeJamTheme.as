@@ -64,9 +64,7 @@ package display
 	import feathers.system.DeviceCapabilities;
 	import feathers.textures.Scale3Textures;
 	import feathers.textures.Scale9Textures;
-	
-	import scenes.game.components.dialogs.SelectLevelDialog;
-	
+		
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
@@ -236,7 +234,6 @@ package display
 //			
 //			StandardIcons.listDrillDownAccessoryTexture = this.atlas.getTexture("list-accessory-drill-down-icon");
 			
-			this.setInitializerForClass(SelectLevelDialog, SelectLevelDialogInitializer);
 
 			
 //			this.setInitializerForClassAndSubclasses(Screen, screenInitializer);
@@ -283,14 +280,6 @@ package display
 
 		}
 		
-		protected function SelectLevelDialogInitializer(screen:SelectLevelDialog):void
-		{
-			super.screenInitializer(screen);
-			screen.backgroundSkin = new Scale9Image(menuBoxFreeSkinTextures);
-			screen.backgroundSkin.width = screen.width;
-			screen.backgroundSkin.height = screen.height;
-			screen.addChild(screen.backgroundSkin);
-		}
 		
 		protected override function headerInitializer(header:Header):void
 		{
