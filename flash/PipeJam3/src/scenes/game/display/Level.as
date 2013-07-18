@@ -474,6 +474,7 @@ package scenes.game.display
 			if (edgeIsCopy) {
 				copyLines.push(newGameEdge);
 			}
+			
 			if (edgeContainerDictionary.hasOwnProperty(edgeContainerID) && (edgeContainerDictionary[edgeContainerID] is GameEdgeContainer)) {
 				var oldEdgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeContainerID] as GameEdgeContainer;
 				if (m_edgeList.indexOf(oldEdgeContainer) > -1) {
@@ -481,6 +482,7 @@ package scenes.game.display
 				}
 				oldEdgeContainer.removeFromParent(true);
 			}
+			
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			return bb;
 		}
@@ -619,8 +621,6 @@ package scenes.game.display
 			if(m_levelLayoutXML.level != undefined)
 				m_levelLayoutXML = m_levelLayoutXML.level[0];
 			
-			m_edgeList = new Vector.<GameEdgeContainer>;
-			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
 			minX = minY = Number.POSITIVE_INFINITY;
 			maxX = maxY = Number.NEGATIVE_INFINITY;
@@ -664,7 +664,7 @@ package scenes.game.display
 			{
 				//delete all existing edges, and recreate
 				for each(var existingEdge:GameEdgeContainer  in m_edgeList) {
-					existingEdge.parent.removeChild(existingEdge);
+					existingEdge.removeFromParent(true);
 				}
 				edgeContainerDictionary = new Dictionary();
 				m_edgeList = new Vector.<GameEdgeContainer>;
