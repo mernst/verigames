@@ -37,8 +37,9 @@ package scenes.game.components
 		private var m_textContainer:Sprite;
 		private var m_tutorialArrow:Image;
 		
-		private var m_pointTo:DisplayObject;
-		private var m_pointDir:String;
+		private var m_pointAt:DisplayObject;
+		private var m_pointFrom:String;
+		private var m_pointTo:String;
 		private var m_pointPos:Point = new Point();
 		private var m_pointPosNeedsInit:Boolean = true;
 		private var m_pointPosAlwaysUpdate:Boolean = true;
@@ -65,8 +66,9 @@ package scenes.game.components
 			}
 
 			// get pointing setup
-			m_pointTo = (info.pointToFn != null) ? info.pointToFn(level) : null;
-			m_pointDir = info.pointDir;
+			m_pointAt = (info.pointAtFn != null) ? info.pointAtFn(level) : null;
+			m_pointFrom = info.pointFrom;
+			m_pointTo = info.pointTo;
 			
 			// a transparent sprite with padding around the edges so we can put the arrow outside the text box
 			var padding:Quad = new Quad(10, 10, 0xff00ff);
@@ -95,7 +97,7 @@ package scenes.game.components
 			m_textContainer.addChild(textField);
 			
 			// arrow
-			if (m_pointTo) {
+			if (m_pointAt) {
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
 				m_tutorialArrow = new Image(arrowTexture);
@@ -131,64 +133,90 @@ package scenes.game.components
 			var timeSec:Number = new Date().time / 1000.0;
 			var timeArrowOffset:Number = ARROW_BOUNCE * (int(timeSec / ARROW_BOUNCE_SPEED) % 2);
 			
-			if (m_pointTo) {
+			if (m_pointAt) {
 				var pt:Point = new Point();
 				var offset:Point = new Point();
 				
-				switch (m_pointDir) {
+				switch (m_pointFrom) {
 					case NineSliceBatch.TOP_LEFT:
-						pt = m_pointTo.bounds.topLeft;
 						offset.x = -1;
 						offset.y = -1;
 						break;
 					
 					case NineSliceBatch.BOTTOM_RIGHT:
-						pt = m_pointTo.bounds.bottomRight;
 						offset.x = 1;
 						offset.y = 1;
 						break;
 					
 					case NineSliceBatch.TOP_RIGHT:
-						pt = new Point(m_pointTo.bounds.right, m_pointTo.bounds.top);
 						offset.x = 1;
 						offset.y = -1;
 						break;
 					
 					case NineSliceBatch.BOTTOM_LEFT:
-						pt = new Point(m_pointTo.bounds.left, m_pointTo.bounds.bottom);
 						offset.x = -1;
 						offset.y = 1;
 						break;
 					
 					case NineSliceBatch.LEFT:
-						pt = new Point(m_pointTo.bounds.left, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
 						offset.x = -1;
 						offset.y = 0;
 						break;
 					
 					case NineSliceBatch.RIGHT:
-						pt = new Point(m_pointTo.bounds.right, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
 						offset.x = 1;
 						offset.y = 0;
 						break;
 					
 					case NineSliceBatch.BOTTOM:
-						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.bottom);
 						offset.x = 0;
 						offset.y = 1;
 						break;
 					
 					case NineSliceBatch.TOP:
 					default:
-						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.top);
-						
 						offset.x = 0;
 						offset.y = -1;
 						break;
 				}
-
-				if (m_pointTo.parent) {
-					pt = m_pointTo.parent.localToGlobal(pt);
+				
+				switch (m_pointTo ? m_pointTo : m_pointFrom) {
+					case NineSliceBatch.TOP_LEFT:
+						pt = m_pointAt.bounds.topLeft;
+						break;
+					
+					case NineSliceBatch.BOTTOM_RIGHT:
+						pt = m_pointAt.bounds.bottomRight;
+						break;
+					
+					case NineSliceBatch.TOP_RIGHT:
+						pt = new Point(m_pointAt.bounds.right, m_pointAt.bounds.top);
+						break;
+					
+					case NineSliceBatch.BOTTOM_LEFT:
+						pt = new Point(m_pointAt.bounds.left, m_pointAt.bounds.bottom);
+						break;
+					
+					case NineSliceBatch.LEFT:
+						pt = new Point(m_pointAt.bounds.left, 0.5 * (m_pointAt.bounds.bottom + m_pointAt.bounds.top));
+						break;
+					
+					case NineSliceBatch.RIGHT:
+						pt = new Point(m_pointAt.bounds.right, 0.5 * (m_pointAt.bounds.bottom + m_pointAt.bounds.top));
+						break;
+					
+					case NineSliceBatch.BOTTOM:
+						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), m_pointAt.bounds.bottom);
+						break;
+					
+					case NineSliceBatch.TOP:
+					default:
+						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), m_pointAt.bounds.top);
+						break;
+				}
+				
+				if (m_pointAt.parent) {
+					pt = m_pointAt.parent.localToGlobal(pt);
 					pt = parent.globalToLocal(pt);
 					
 					if (m_pointPosNeedsInit || m_pointPosAlwaysUpdate) {
@@ -223,7 +251,7 @@ package scenes.game.components
 		}
 		public function getConsoleY():Number
 		{
-			if (m_pointTo) {
+			if (m_pointAt) {
 				return 0;
 			} else {
 				return height;

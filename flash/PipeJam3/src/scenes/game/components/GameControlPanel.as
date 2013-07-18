@@ -1,7 +1,24 @@
 package scenes.game.components
 {
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
+	import display.NineSliceButton;
+	
+	import events.NavigationEvent;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import particle.ErrorParticleSystem;
+	
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -10,18 +27,6 @@ package scenes.game.components
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import display.NineSliceButton;
-	import events.NavigationEvent;
-	import particle.ErrorParticleSystem;
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -137,14 +142,14 @@ package scenes.game.components
 		
 		public function newLevelSelected(level:Level):void 
 		{
-			updateScore(level);
+			updateScore(level, true);
 			conflictMap.updateLevel(level);
 		}
-		
+
 		/**
 		 * Re-calculates score and updates the score on the screen
 		 */
-		public function updateScore(level:Level):int 
+		public function updateScore(level:Level, skipAnimatons:Boolean):int 
 		{
 			
 			/* Old scoring:
@@ -286,7 +291,12 @@ package scenes.game.components
 			var FLASHING_ANIM_SEC:Number = 0; // TODO: make this nonzero when animation is in place
 			var DELAY:Number = 0.5;
 			var BAR_SLIDING_ANIM_SEC:Number = 1.0;
-			if (newBarWidth < m_scoreBar.width) {
+			if (skipAnimatons) {
+				Starling.juggler.removeTweens(m_scoreBar);
+				m_scoreBar.width = newBarWidth;
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				m_scoreTextfield.x = newScoreX;
+			} else if (newBarWidth < m_scoreBar.width) {
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {

@@ -234,66 +234,69 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"These are widgets. Click the blue widgets to\n" +
-						"toggle their shades between dark and light.",
+						"These are WIDGETS.\n" +
+						"Click on widgets to change their color.\n" +
+						"Make them solid colors to get points!",
 						null,
 						pointToNode("IntroWidget2"),
-						NineSliceBatch.TOP);
+						NineSliceBatch.TOP, null);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Gray widgets are locked, they cannot be changed.",
+						"Gray widgets are locked.\n" +
+						"Their colors can't be changed.",
 						null,
 						pointToNode("LockedWidget2"),
-						NineSliceBatch.TOP);
+						NineSliceBatch.TOP, null);
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Widgets are connected by\n" +
-						"links. Dark widgets create wide\n" +
-						"links, light widgets\n" +
-						"create narrow links.",
+						"Widgets are connected\n" +
+						"by LINKS. Dark widgets\n" +
+						"create wide links, light\n" +
+						"widgets create narrow\n" +
+						"links.",
 						null,
 						pointToEdge("e1__OUT__"),
-						NineSliceBatch.LEFT);
+						NineSliceBatch.LEFT, null);
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a passage. Links can begin,\n" +
-						"end or pass through these passages.\n" +
-						"Change the size of the widget to\n" +
+						"This is a PASSAGE. Links can begin,\n" +
+						"end or go through passages.\n" +
+						"Change the color of the widget to\n" +
 						"change the width its passages.",
 						null,
 						pointToPassage("e32__IN__"),
-						NineSliceBatch.TOP_RIGHT);
+						NineSliceBatch.TOP_LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some passages are gray. These passages are\n" +
-						"locked and will not change, even if the widget\n" +
+						"Some passages are gray. These passages\n" +
+						"won't change width even if their widget\n" +
 						"is changed.",
 						null,
 						pointToPassage("e20__IN__"),
-						NineSliceBatch.BOTTOM);
+						NineSliceBatch.BOTTOM, null);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a clash. Clashes happen when\n" +
+						"This is a CLASH. Clashes happen when\n" +
 						"wide links try to enter narrow\n" +
-						"passages. Each clash incurs a penalty\n" +
-						"of " + Constants.ERROR_POINTS.toString() + " points.",
+						"passages. Each clash penalizes your\n" +
+						"score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
-						NineSliceBatch.TOP_RIGHT);
+						NineSliceBatch.TOP_RIGHT, null);
 				case WIDEN_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Click the blue widgets to widen their passages\n" +
+						"Click the widgets to widen their passages\n" +
 						"and fix the clashes.",
 						null,
 						null,
-						null);
+						null, null);
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the upper widgets to narrow their links\n" +
 						"and fix the clashes.",
 						null,
 						null,
-						null);
+						null, null);
 				case COLOR_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Some widgets want to be a certain color. Match\n" +
@@ -301,20 +304,20 @@ package scenes.game.display
 						"bonus points.",
 						null,
 						null,
-						null);
+						null, null);
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Try different configurations to improve your score!",
 						null,
 						null,
-						null);
+						null, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Drag the widgets and links around to help organize\n" +
 						"the layout. Separate the widgets to continue.",
 						null,
 						null,
-						null);
+						null, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Larger levels require navigation. Drag the background\n" +
@@ -322,13 +325,13 @@ package scenes.game.display
 						"zoom in and out.",
 						null,
 						null,
-						null);
+						null, null);
 				case END_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Optimize your first real level!",
 						null,
 						null,
-						null);
+						null, null);
 			}
 			return null;
 		}

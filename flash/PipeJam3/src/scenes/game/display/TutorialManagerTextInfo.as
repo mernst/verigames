@@ -6,15 +6,17 @@ package scenes.game.display
 	{
 		public var text:String;
 		public var size:Point;
-		public var pointToFn:Function;
-		public var pointDir:String;
+		public var pointAtFn:Function;
+		public var pointFrom:String;
+		public var pointTo:String;
 		
-		public function TutorialManagerTextInfo(_text:String, _size:Point, _pointToFn:Function, _pointDir:String)
+		public function TutorialManagerTextInfo(_text:String, _size:Point, _pointAtFn:Function, _pointFrom:String, _pointTo:String)
 		{
 			text = _text;
 			size = _size;
-			pointToFn = _pointToFn;
-			pointDir = _pointDir;
+			pointAtFn = _pointAtFn;
+			pointFrom = _pointFrom;
+			pointTo = _pointTo;
 		}
 	}
 }
