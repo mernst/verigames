@@ -32,14 +32,14 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
+				case PINCH_TUTORIAL://TODO
 				case CLASH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL://TODO
+				case ZOOM_PAN_TUTORIAL://TODO
 				case END_TUTORIAL:
 					break;
 				default:
@@ -177,11 +177,11 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return "Widgets are connected by links. Dark widgets\n\ncreate wide links, light widgets create narrow links.";
 				case PASSAGE_TUTORIAL:
-					return "This is a passage. Links can begin, end or pass\n\nthrough widgets through these passages. Changing the size of\n\nthe widget can change the width of the passage.";
+					return "This is a passage. Links can begin, end or pass through\n\nwidgets through these passages. Changing the size\n\nof the widget can change the width of the passage.";
 				case PINCH_TUTORIAL:
 					return "Some passages are gray. These passages are\n\nlocked and will not change, even if the widget\n\nis changed.";
 				case CLASH_TUTORIAL:
-					return "This is a clash. Clashes happen when wide links\n\ntry to enter narrow passages. Each clash incurs\n\na penalty of -75 points.";
+					return "This is a clash. Clashes happen when wide links\n\ntry to enter narrow passages. Each clash incurs\n\na penalty of -75 points. Fix this clash.";
 				case WIDEN_TUTORIAL:
 					return "Click the blue widgets to widen their passages\n\nand fix the clashes.";
 				case NARROW_TUTORIAL:
@@ -195,7 +195,7 @@ package scenes.game.display
 				case ZOOM_PAN_TUTORIAL:
 					return "Larger levels require navigation. Drag the\n\nbackground to move around the level. Use the +/- keys\n\nto zoom in and out.";
 				case END_TUTORIAL:
-					return "Tutorial Complete. Optimize your first real level.";
+					return "Optimize your first real level.";
 			}
 			return "";
 		}

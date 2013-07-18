@@ -534,6 +534,16 @@ package scenes.game.components
 			} else if (m_tutorialTextboxContainer && m_tutorialTextboxContainer.parent) {
 				m_tutorialTextboxContainer.removeFromParent();
 			}
+			var consoleY:Number = 0;
+			if (m_tutorialTextboxContainer && m_tutorialTextboxContainer.parent) {
+				consoleY = m_tutorialTextboxContainer.y + m_tutorialTextboxContainer.height;
+			}
+			const BUFFER:Number = 1.1; // i.e. BUFFER of 1.1 leaves 10% space around level bounds when zoomed out
+			if (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width > WIDTH) {
+				scaleContent(WIDTH / (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width));
+			} else if (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height > HEIGHT - consoleY) {
+				scaleContent((HEIGHT - consoleY) / (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height));
+			}
 		}
 		
 		public function displayContinueButton(permenantly:Boolean = true):void
