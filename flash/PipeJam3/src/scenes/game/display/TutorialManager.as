@@ -259,8 +259,8 @@ package scenes.game.display
 						NineSliceBatch.LEFT, null);
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a PASSAGE. Links can begin,\n" +
-						"end or go through passages.\n" +
+						"This is a PASSAGE. Links can begin\n" +
+						"in, end in or go through passages.\n" +
 						"Change the color of the widget to\n" +
 						"change the width its passages.",
 						null,
