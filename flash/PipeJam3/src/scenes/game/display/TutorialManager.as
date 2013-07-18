@@ -309,7 +309,7 @@ package scenes.game.display
 						"score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
-						NineSliceBatch.TOP_RIGHT, null);
+						NineSliceBatch.TOP_RIGHT, NineSliceBatch.CENTER);
 				case WIDEN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the widgets to widen their passages\n" +
