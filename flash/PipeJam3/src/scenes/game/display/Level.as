@@ -474,6 +474,13 @@ package scenes.game.display
 			if (edgeIsCopy) {
 				copyLines.push(newGameEdge);
 			}
+			if (edgeContainerDictionary.hasOwnProperty(edgeContainerID) && (edgeContainerDictionary[edgeContainerID] is GameEdgeContainer)) {
+				var oldEdgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeContainerID] as GameEdgeContainer;
+				if (m_edgeList.indexOf(oldEdgeContainer) > -1) {
+					m_edgeList.splice(m_edgeList.indexOf(oldEdgeContainer), 1);
+				}
+				oldEdgeContainer.removeFromParent(true);
+			}
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			return bb;
 		}
@@ -621,7 +628,7 @@ package scenes.game.display
 			var children:XMLList = m_levelLayoutXML.children();
 			//set box and joint positions first
 			for each(var child:XML in children)
-			{ 
+			{
 				var childName:String = child.localName();
 				var gameNode:GameNodeBase = null;
 				if(childName.indexOf("box") != -1)
