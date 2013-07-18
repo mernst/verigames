@@ -2,7 +2,9 @@ package scenes.game.display
 {
 	import events.EdgeSetChangeEvent;
 	import events.TutorialEvent;
+	
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.events.EventDispatcher;
 	
 	public class TutorialManager extends EventDispatcher
@@ -109,32 +111,40 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
-					return "These are widgets. Click the blue widgets to\n\ntoggle their shades between dark and light.";
+					return "These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.";
 				case LOCKED_TUTORIAL:
 					return "Gray widgets are locked, they cannot be changed.";
 				case LINKS_TUTORIAL:
-					return "Widgets are connected by links. Dark widgets\n\ncreate wide links, light widgets create narrow links.";
+					return "Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.";
 				case PASSAGE_TUTORIAL:
-					return "This is a passage. Changing the size of the\n\nwidget can change the width of the passage.";
+					return "This is a passage. Changing the size of the\nwidget can change the width of the passage.";
 				case PINCH_TUTORIAL:
-					return "Some passages are gray. These passages are\n\nlocked and will not change, even if the widget\n\nis changed.";
+					return "Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.";
 				case CLASH_TUTORIAL:
-					return "This is a clash. Clashes happen when wide links\n\ntry to enter narrow passages. Each clash incurs\n\na penalty of -75 points.";
+					return "This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points.";
 				case WIDEN_TUTORIAL:
-					return "Click the blue widgets to widen their passages\n\nand fix the clashes.";
+					return "Click the blue widgets to widen their passages\nand fix the clashes.";
 				case NARROW_TUTORIAL:
-					return "Click the upper widgets to narrow their links\n\nand fix the clashes.";
+					return "Click the upper widgets to narrow their links\nand fix the clashes.";
 				case COLOR_TUTORIAL:
-					return "Some widgets want to be a certain color. Match\n\nthe widgets to the color squares to collect bonus\n\npoints.";// Remember, clashes are worth -75 points.";
+					return "Some widgets want to be a certain color. Match\nthe widgets to the color squares to collect bonus\npoints.";// Remember, clashes are worth -75 points.";
 				case OPTIMIZE_TUTORIAL:
-					return "Try different configurations. Optimize the level.\n\nGet the high score.";
+					return "Try different configurations. Optimize the level.\nGet the high score.";
 				case LAYOUT_TUTORIAL:
-					return "Drag the widgets and links around to help\n\norganize the layout. Separate the widgets to continue.";
+					return "Drag the widgets and links around to help\norganize the layout. Separate the widgets to continue.";
 				case END_TUTORIAL:
 					return "Tutorial Complete. Optimize your first real level.";
 			}
-			return "";
+			return null;
+		}
+		
+		public function getPointTo():Function
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+					return function(currentLevel:Level):DisplayObject { return currentLevel.getNode("IntroWidget4"); };
+			}
+			return null;
 		}
 	}
-
 }

@@ -31,6 +31,7 @@ package scenes.game.display
 	import scenes.login.LoginHelper;
 	
 	import starling.display.BlendMode;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Shape;
@@ -1304,6 +1305,11 @@ package scenes.game.display
 		public function getLevelText():String
 		{
 			return tutorialManager ? tutorialManager.getText() : null;
+		}
+		
+		public function getLevelPointTo():DisplayObject
+		{
+			return (tutorialManager && tutorialManager.getPointTo() != null) ? tutorialManager.getPointTo()(this) : null;
 		}
 		
 		public function getTargetScore():int

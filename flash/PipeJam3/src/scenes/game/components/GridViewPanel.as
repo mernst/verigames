@@ -2,7 +2,6 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import scenes.game.display.GameEdgeContainer;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -21,12 +20,14 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -50,13 +51,9 @@ package scenes.game.components
 		private var content:BaseComponent;
 		private var currentMode:int;
 		private var continueButton:NineSliceButton;
-		private var m_tutorialTextFields:Vector.<TextFieldWrapper> = new Vector.<TextFieldWrapper>();
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
-		private var m_tutorialTextboxContainer:Sprite = new Sprite();
-		private var m_tutorialBox:NineSliceBatch;
-		private var m_tutorialArrow:Image;
-		private var m_tutorialCursor:Quad;
+		private var m_tutorialText:TutorialText;
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		
 		protected static const NORMAL_MODE:int = 0;
@@ -65,8 +62,6 @@ package scenes.game.components
 		private static const MIN_SCALE:Number = 10.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
-		private static const TUTORIAL_TEXT_AREA:Rectangle = new Rectangle(12, 5, 415, 58);//in m_tutorialTextbox space
-		private static const TUTORIAL_FONT_SIZE:Number = 18;
 		
 		public function GridViewPanel()
 		{
@@ -452,52 +447,14 @@ package scenes.game.components
 				}
 			}
 			
-			if (m_tutorialBox) m_tutorialBox.removeFromParent(true);
-			if (m_tutorialArrow) m_tutorialArrow.removeFromParent();
-			if (m_tutorialCursor) m_tutorialCursor.removeFromParent();
-			for (i = 0; i < m_tutorialTextFields.length; i++) {
-				Starling.juggler.removeTweens(m_tutorialTextFields[i]);
-				m_tutorialTextFields[i].removeFromParent(true);
+			if (m_tutorialText) {
+				m_tutorialText.removeFromParent(true);
+				m_tutorialText = null;
 			}
-			m_tutorialTextFields = new Vector.<TextFieldWrapper>();
 			
 			var levelText:String = m_currentLevel.getLevelText();
 			if (levelText) {
-				var textLines:Array = levelText.split("\n\n");
-				const TEXT_SPACING:Number = 1.1; // i.e. 1.1 = 10% spacing between lines
-				var lineHeight:Number = Math.min(TUTORIAL_FONT_SIZE, TUTORIAL_TEXT_AREA.height / textLines.length * TEXT_SPACING);
-				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
-				var maxTextWidth:Number = 0;
-				for (i = 0; i < textLines.length; i++) {
-					var levelTextLine:String = textLines[i] as String;
-					var textFieldLine:TextFieldWrapper = TextFactory.getInstance().createTextField(levelTextLine, AssetsFont.FONT_UBUNTU, WIDTH, lineHeight, lineHeight, 0x0077FF);
-					TextFactory.getInstance().updateAlign(textFieldLine, 0, 0);
-					textFieldLine.x = TUTORIAL_TEXT_AREA.x;
-					textFieldLine.y = i * TEXT_SPACING * lineHeight + TUTORIAL_TEXT_AREA.y;
-					textFieldLine.touchable = false;
-					m_tutorialTextFields.push(textFieldLine);
-					m_tutorialTextboxContainer.addChild(textFieldLine);
-					maxTextWidth = Math.max(maxTextWidth, (textFieldLine as TextFieldHack).textBounds.width);
-				}
-				maxTextWidth += 2 * TUTORIAL_TEXT_AREA.x;
-				var textHeight:Number = textLines.length * TEXT_SPACING * lineHeight + 2 * TUTORIAL_TEXT_AREA.y;
-				var cXY:Number = Math.min(textHeight / 2.0, 16);
-				m_tutorialBox = new NineSliceBatch(maxTextWidth, textHeight, cXY, cXY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
-				m_tutorialTextboxContainer.x = (WIDTH - m_tutorialBox.width) / 2.0;
-				m_tutorialTextboxContainer.addChildAt(m_tutorialBox, 0);
-				addChild(m_tutorialTextboxContainer);
-				if (!m_tutorialArrow) {
-					var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-					var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
-					m_tutorialArrow = new Image(arrowTexture);
-				}
-				const ARROW_HEIGHT:Number = 19.0;
-				m_tutorialArrow.scaleX = m_tutorialArrow.scaleY = lineHeight * 0.5 / ARROW_HEIGHT / TEXT_SPACING;
-				m_tutorialArrow.x = TUTORIAL_TEXT_AREA.x - m_tutorialArrow.width;
-				m_tutorialArrow.y = TUTORIAL_TEXT_AREA.y + (lineHeight - m_tutorialArrow.height) / 2.0;
-				m_tutorialTextboxContainer.addChild(m_tutorialArrow);
-			} else if (m_tutorialTextboxContainer && m_tutorialTextboxContainer.parent) {
-				m_tutorialTextboxContainer.removeFromParent();
+				m_tutorialText = new TutorialText(levelText, this, m_currentLevel.getLevelPointTo());
 			}
 		}
 		

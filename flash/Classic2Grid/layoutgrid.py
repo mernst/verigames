@@ -293,7 +293,7 @@ def layout(infile, outfile, outputdotfiles):
 		dotoutput = dotcmd.read()
 		dotcmd.close()
 		if outputdotfiles:
-			dotcmd = os.popen('dot -Tpdf -o%s-%s.pdf %s' % (outfile, lname, dotinfilename))
+			dotcmd = os.popen('dot -Teps -o%s-%s.eps %s' % (outfile, lname, dotinfilename))
 			dotcmd.read()
 			dotcmd.close()
 			dotoutfilename = '%s-%s-out.dot' % (outfile, lname)
