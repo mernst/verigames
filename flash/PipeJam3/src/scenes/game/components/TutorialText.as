@@ -181,6 +181,10 @@ package scenes.game.components
 				}
 				
 				switch (m_pointTo ? m_pointTo : m_pointFrom) {
+					case NineSliceBatch.CENTER:
+						pt = new Point(0.5 * (m_pointAt.bounds.left + m_pointAt.bounds.right), 0.5 * (m_pointAt.bounds.top + m_pointAt.bounds.bottom));
+						break;
+					
 					case NineSliceBatch.TOP_LEFT:
 						pt = m_pointAt.bounds.topLeft;
 						break;
