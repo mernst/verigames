@@ -11,7 +11,7 @@ package scenes.game.display
 	
 	public class GameComponent extends BaseComponent
 	{
-		
+		protected static const DEBUG_TRACE_IDS:Boolean = true;
 		public var m_id:String;
 		
 		public var m_isSelected:Boolean;

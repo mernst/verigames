@@ -234,13 +234,13 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.",
 						null,
-						pointToNode("IntroWidget4"),
+						pointToNode("IntroWidget2"),
 						NineSliceBatch.TOP_LEFT);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Gray widgets are locked, they cannot be changed.",
 						null,
-						pointToNode("LockedWidget1"),
+						pointToNode("LockedWidget2"),
 						null);
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
