@@ -449,17 +449,22 @@ package scenes.game.display
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 				var texture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_OrangeScore);
 				var textBack:Image = new Image(texture);
-				XSprite.setPivotCenter(textBack);
-				textBack.width = textBack.height = 12;
-				errorParticleSystem.addChild(textBack);
+				textBack.width = textBack.height = 120;
+				var textBackCont:Sprite = new Sprite();
+				textBackCont.addChild(textBack);
+				textBackCont.scaleX = textBackCont.scaleY = 0.1;
+				errorParticleSystem.addChild(textBackCont);
+				
+				textBackCont.x = 2;
+				textBackCont.y = 2;
 				
 				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(Constants.ERROR_POINTS.toString(), AssetsFont.FONT_UBUNTU, 25, 25, 6, 0x000000);
 				TextFactory.getInstance().updateAlign(textField, TextFactory.HCENTER, TextFactory.VCENTER);
 				XSprite.setPivotCenter(textField);
 				errorParticleSystem.addChild(textField);
 				
-				textBack.x = textField.x = 8;
-				textBack.y = textField.y = 8;
+				textField.x = 8;
+				textField.y = 8;
 				
 				var particleSystem:ErrorParticleSystem = new ErrorParticleSystem();
 				errorParticleSystem.addChild(particleSystem);
