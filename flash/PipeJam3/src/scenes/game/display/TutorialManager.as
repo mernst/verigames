@@ -173,26 +173,53 @@ package scenes.game.display
 			return false;
 		}
 		
-		public function getAutoZoomAtStart():Boolean
+		public function getStartScaleFactor():Number
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
-				case PASSAGE_TUTORIAL:
 				case PINCH_TUTORIAL:
+					return 0.8;
+				case ZOOM_PAN_TUTORIAL:
+					return 3.0;
+				case LAYOUT_TUTORIAL:
+					return 0.5;
+				case PASSAGE_TUTORIAL:
 				case CLASH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-					return true;
-				case LAYOUT_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
-					return false;
+					return 1.0;
 			}
-			return false;
+			return 1.0;
+		}
+		
+		public function getStartPanOffset():Point
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+					return new Point(0, 5);// move down by 5px
+				case LINKS_TUTORIAL:
+					return new Point(15, 0);//move right 15px
+				case PINCH_TUTORIAL:
+					return new Point(0, -5);// move up by 5px
+				case ZOOM_PAN_TUTORIAL:
+					return new Point(40, -10);// move right 40px, up by 10px
+				case PASSAGE_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case END_TUTORIAL:
+					return new Point();
+			}
+			return new Point();
 		}
 		
 		private function pointToNode(name:String):Function
