@@ -497,7 +497,7 @@ package scenes.game.components
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
 			}
-			if (m_currentLevel && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
+			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
 				var consoleY:Number = 0;
 				if (m_tutorialText && m_tutorialText.parent) {
 					consoleY = m_tutorialText.getConsoleY();

@@ -94,6 +94,11 @@
 			if (touches.length == 0) {
 				return;
 			}
+			
+			if (DEBUG_TRACE_IDS && event.getTouches(this, TouchPhase.ENDED).length && parent && (parent is GameComponent)) {
+				trace("EdgeContainer '"+(parent as GameComponent).m_id+"'");
+			}
+			
 			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
 				(!isMoving || !hasMovedOutsideClickDist)) {
 				// If haven't moved enough, register this as a click on the node itself

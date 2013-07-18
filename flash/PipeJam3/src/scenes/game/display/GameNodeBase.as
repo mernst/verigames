@@ -166,6 +166,7 @@ package scenes.game.display
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
+				if (DEBUG_TRACE_IDS) trace("GameNodeBase '"+m_id+"'");
 				var undoData:Object, undoEvent:Event;
 				if(isMoving) //if we were moving, stop it, and exit
 				{
