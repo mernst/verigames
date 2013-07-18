@@ -1022,18 +1022,23 @@ package scenes.game.display
 			if(selectedComponents.indexOf(evt.component) == -1)
 			{
 				unselectAll();
-
 				evt.component.componentMoved(delta);
 				m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
+				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
-			else 
+			else
+			{
+				var movedGameNode:Boolean = false;
 				for each(var component:GameComponent in selectedComponents)
 				{
-
 					component.componentMoved(delta);
 					if(component is GameNodeBase)
 						m_visibleNodeManager.updateNode(component as GameNodeBase);
+					if(component is GameNode)
+						movedGameNode = true;
 				}
+				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(m_nodeList);
+			}
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void

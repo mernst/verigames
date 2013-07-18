@@ -2,6 +2,9 @@ package scenes.game.display
 {
 	import events.EdgeSetChangeEvent;
 	import events.TutorialEvent;
+	
+	import flash.geom.Point;
+	
 	import starling.core.Starling;
 	import starling.events.EventDispatcher;
 	
@@ -73,9 +76,6 @@ package scenes.game.display
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
-					break;
 				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					break;
@@ -98,6 +98,22 @@ package scenes.game.display
 						dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
 						// Allow user to continue after they click a box
 						dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+					}
+					break;
+			}
+		}
+		
+		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>)
+		{
+			switch (m_tutorialTag) {
+				case LAYOUT_TUTORIAL:
+					if (updatedGameNodes.length == 2) {
+						const SEPARATED_DIST_SQUARED_CHECK:Number = 25*25;
+						var dx:Number = updatedGameNodes[0].x - updatedGameNodes[1].x;
+						var dy:Number = updatedGameNodes[0].y - updatedGameNodes[1].y;
+						if (dx * dx + dy * dy > SEPARATED_DIST_SQUARED_CHECK) {
+							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+						}
 					}
 					break;
 			}
