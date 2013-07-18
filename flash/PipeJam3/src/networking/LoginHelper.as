@@ -1,4 +1,4 @@
-package scenes.login
+package networking
 {	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
@@ -39,7 +39,6 @@ package scenes.login
 		private var m_levelCallback:Function;
 		private var onRequestLevelFinishedCallback:Function;
 		private var onRequestLevelMetadataFinishedCallback:Function;
-		private var onSessionValidatedCallback:Function;
 		
 		protected static var loginHelper:LoginHelper = null;		
 
@@ -73,24 +72,25 @@ package scenes.login
 		
 		public function checkSessionID(cookies:String, callback:Function):void
 		{	
-			onSessionValidatedCallback = callback;
 			//encode cookies
 			var encodedCookies:String = escape(cookies);
 			encodedCookies = cookies;
-			sendMessage(VERIFY_SESSION, onSessionIDValidatingFinished, null, encodedCookies);
+			sendMessage(VERIFY_SESSION, callback, null, encodedCookies);
 		}
 		
-		public function onSessionIDValidatingFinished(result:int, e:flash.events.Event):void
+		public function checkPlayerExistence(callback:Function):void
 		{
-			if(result == EVENT_COMPLETE)
-			{
-				onSessionValidatedCallback(e);
-			}
-			else // in the future redirect to login page
-			{
-				onSessionValidatedCallback(e);
-			}
-				
+			sendMessage(PLAYER_EXISTS, callback);
+		}
+		
+		public function createPlayer(playerID:String, callback:Function):void
+		{
+			sendMessage(CREATE_PLAYER, callback);
+		}
+		
+		public function activatePlayer(playerID:String, callback:Function):void
+		{
+			sendMessage(ACTIVATE_PLAYER, callback);
 		}
 		
 		//load files from disk or database
@@ -124,55 +124,6 @@ package scenes.login
 			//need to set up proxy server to save this, and add in save constraints file when saving score
 			sendMessage(SAVE_CONSTRAINTS, m_levelConstraintsXML.toString(), m_levelConstraintsXML.@id);
 		}
-		
-		
-		protected var activatePlayerCallback:Function;
-		public function checkPlayerID(callback:Function):void
-		{
-			activatePlayerCallback = callback;
-			//check on existence first
-			sendMessage(PLAYER_EXISTS, playerExistsCallback);
-		}
-		
-		public function playerExistsCallback(result:int, e:flash.events.Event):void
-		{
-			if(e != null)
-			{
-				if(e.target.data.indexOf("<html>") == -1) //if the RA is down, we get a html page telling us something or other
-				{
-					var exists:String = JSON.parse(e.target.data).existsInRepo;
-					if(XString.stringToBool(exists) == false)
-					{
-						//create player
-						createPlayer(JSON.parse(e.target.data).id);
-					}
-					else
-						sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
-				}
-				else
-					activatePlayerCallback();
-			}
-			else
-				activatePlayerCallback();
-		}
-			
-		public function createPlayer(playerID:String):void
-		{
-			sendMessage(CREATE_PLAYER, createPlayerCallback);
-		}
-		
-		public function createPlayerCallback(result:int, e:flash.events.Event):void
-		{
-			if(e != null)
-			{
-				var success:String = JSON.parse(e.target.data).success;
-				if(XString.stringToBool(success) == true)
-				{
-					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
-				}
-			}
-		}
-		
 		
 		//store the callback, before calling we want to send a refuse message to the RA
 		//so that levels can be played by more than one player at any one time

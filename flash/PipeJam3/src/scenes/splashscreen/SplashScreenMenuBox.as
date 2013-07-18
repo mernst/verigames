@@ -14,7 +14,7 @@ package scenes.splashscreen
 	import scenes.BaseComponent;
 	import scenes.game.components.dialogs.SelectLevelDialog;
 	import scenes.game.PipeJamGameScene;
-	import scenes.login.*;
+	import networking.*;
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
@@ -85,15 +85,19 @@ package scenes.splashscreen
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PipeJamGame.PLAYER_LOGGED_IN && !PipeJam3.TUTORIAL_DEMO)
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO)
 					m_mainMenu.addChild(signin_button);
 			}
-			else
+			else if (PipeJam3.TUTORIAL_DEMO)
 			{
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, getNextPlayerLevelDebug);
-				if (!PipeJam3.TUTORIAL_DEMO)
-					m_mainMenu.addChild(signin_button);
+			}
+			else if (!PipeJam3.TUTORIAL_DEMO) //not release, not tutorial demo
+			{
+				m_mainMenu.addChild(play_button);
+				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
+				m_mainMenu.addChild(signin_button);
 			}
 			
 						
@@ -277,14 +281,10 @@ package scenes.splashscreen
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
 			
-			//do this, although player probably is already be activated
-			if(!PipeJam3.playerActivated && !PipeJam3.LOCAL_DEPLOYMENT)
 			{
 				dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
-				loginHelper.checkPlayerID(onPlayerActivated);
 			}
-			else
-				onPlayerActivated(0, null);
+			onPlayerActivated(0, null);
 		}
 		
 		protected function onPlayerActivated(result:int, e:flash.events.Event):void
@@ -343,9 +343,9 @@ package scenes.splashscreen
 			
 			var tutorialStatus:String = PipeJam3.LOCAL_DEPLOYMENT ? "0" : HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
 			if(!isNaN(parseInt(tutorialStatus)))
-				PipeJamGameScene.numTutorialLevelsCompleted = parseInt(tutorialStatus);
+				PipeJamGameScene.maxTutorialLevelCompleted = parseInt(tutorialStatus);
 			
-			if(PipeJamGameScene.numTutorialLevelsCompleted >= PipeJamGameScene.numTutorialLevels)
+			if(PipeJamGameScene.maxTutorialLevelCompleted >= PipeJamGameScene.numTutorialLevels)
 				return true;
 			else
 				return false;
@@ -368,7 +368,7 @@ package scenes.splashscreen
 			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
 			
 			PipeJam3.initialLevelDisplay = false;
-
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

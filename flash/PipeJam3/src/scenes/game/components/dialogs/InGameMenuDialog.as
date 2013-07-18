@@ -5,7 +5,7 @@ package scenes.game.components.dialogs
 	import events.MenuEvent;
 	import display.NineSliceButton;
 	import events.NavigationEvent;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	public class InGameMenuDialog extends Sprite

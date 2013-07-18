@@ -17,12 +17,12 @@ package scenes.game.components.dialogs
 	import feathers.data.HierarchicalCollection;
 	import feathers.data.ListCollection;
 	import feathers.display.Scale9Image;
+	import networking.LoginHelper;
 	
 	import flash.text.TextFormat;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
-	import scenes.login.LoginHelper;
 	import scenes.splashscreen.SplashScreenMenuBox;
 	
 	import starling.display.DisplayObjectContainer;
@@ -53,7 +53,7 @@ package scenes.game.components.dialogs
 		{
 			super();
 			
-			background = new NineSliceBatch(width, height, width /6.0, height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxFree");
+			background = new NineSliceBatch(width, height, width /6.0, height / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
 			addChild(background);
 
 			dialogParent = _dialogParent;
@@ -66,7 +66,7 @@ package scenes.game.components.dialogs
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
 			var buttonPadding:int = 7;
-			var buttonWidth:Number = (width - 2*buttonPadding)/3 - 1;
+			var buttonWidth:Number = (width - 2*buttonPadding)/3 - buttonPadding;
 			var buttonY:Number = 30;
 			
 			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Level", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0x0077FF);
@@ -74,52 +74,52 @@ package scenes.game.components.dialogs
 			addChild(label);
 			label.x = (width - label.width)/2;
 			
-			tutorial_levels_button = ButtonFactory.getInstance().createToggleButton("Tutorials", buttonWidth, 20, 0, 0);
+			tutorial_levels_button = ButtonFactory.getInstance().createTabButton("Tutorials", buttonWidth, 27, 6, 6);
 			tutorial_levels_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 			addChild(tutorial_levels_button);
 			tutorial_levels_button.x = buttonPadding;
 			tutorial_levels_button.y = buttonY;
 			
-			new_levels_button = ButtonFactory.getInstance().createToggleButton("New", buttonWidth, 20, 0, 0);
+			new_levels_button = ButtonFactory.getInstance().createTabButton("New", buttonWidth, 27, 6, 6);
 			new_levels_button.addEventListener(starling.events.Event.TRIGGERED, onNewButtonTriggered);
 			addChild(new_levels_button);
-			new_levels_button.x = tutorial_levels_button.x+buttonWidth;
+			new_levels_button.x = tutorial_levels_button.x+buttonWidth+buttonPadding;
 			new_levels_button.y = buttonY;
 			
-			submitted_levels_button = ButtonFactory.getInstance().createToggleButton("Submitted", buttonWidth, 20, 0, 0);
+			submitted_levels_button = ButtonFactory.getInstance().createTabButton("Submitted", buttonWidth, 27, 6, 6);
 			submitted_levels_button.addEventListener(starling.events.Event.TRIGGERED, onSubmittedButtonTriggered);
 			addChild(submitted_levels_button);
-			submitted_levels_button.x = new_levels_button.x+buttonWidth;
+			submitted_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
 			submitted_levels_button.y = buttonY;
 			
-			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 60, 20);
+			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 60, 24);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
 			cancel_button.x = width-2*60-2*buttonPadding;
-			cancel_button.y = height - cancel_button.height - buttonPadding;
+			cancel_button.y = height - cancel_button.height - 6;
 			
-			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 60, 20);
+			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 60, 24);
 			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			addChild(select_button);
 			select_button.x = width-60-buttonPadding;
-			select_button.y = height - select_button.height - buttonPadding;
+			select_button.y = height - select_button.height - 6;
 			//disable to begin with
 			select_button.enabled = false;
 			
-			tutorialListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 3*buttonPadding);
+			tutorialListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
 			tutorialListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
 			tutorialListBox.x = (width - tutorialListBox.width)/2;
 			addChild(tutorialListBox);
 			
-			newLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 3*buttonPadding);
+			newLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
 			newLevelListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
 			newLevelListBox.x = (width - newLevelListBox.width)/2;
 			addChild(newLevelListBox);
 			newLevelListBox.visible = false;
 			
-			submittedLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 3*buttonPadding);
+			submittedLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
 			submittedLevelListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
-			submittedLevelListBox.x = (width - submittedLevelListBox.width)/2;
+			submittedLevelListBox.x = (width - submittedLevelListBox.width)/2+1;
 			addChild(submittedLevelListBox);
 			submittedLevelListBox.visible = false;
 			
@@ -178,7 +178,7 @@ package scenes.game.components.dialogs
 			if(e.target is NineSliceToggleButton)
 			{
 				var target:NineSliceToggleButton = (e.target as NineSliceToggleButton);
-				if(target.icon == null) //TODO fix this somehow...
+				if(target.upIcon == null) //TODO fix this somehow...
 				{
 					if(target != tutorial_levels_button)
 					{
@@ -245,7 +245,7 @@ package scenes.game.components.dialogs
 				var obj:Object = new Object;
 				obj.levelId = count;
 				obj.name = level.@name.toString();
-				if(count <= PipeJamGameScene.numTutorialLevelsCompleted)
+				if(count <= PipeJamGameScene.maxTutorialLevelCompleted)
 					obj.unlocked = true;
 				else
 					obj.unlocked = false;

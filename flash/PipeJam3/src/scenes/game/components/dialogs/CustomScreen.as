@@ -21,7 +21,7 @@ package scenes.game.components.dialogs
 	
 	import flash.text.TextFormat;
 	
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	
 	import starling.display.Quad;
 	import starling.display.Sprite;

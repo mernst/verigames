@@ -17,21 +17,26 @@ package scenes.game.components.dialogs
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import utils.XMath;
 	
 	import scenes.BaseComponent;
 	
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.display.Quad;
+	
+	import utils.XMath;
 	
 	public class SelectLevelList extends Sprite
 	{
-		protected var atlas:TextureAtlas;
+		protected var mainAtlas:TextureAtlas;
+		protected var levelAtlas:TextureAtlas;
 		
 		protected var itemLabel:Label;
 		protected var icon:Texture;
@@ -61,22 +66,25 @@ package scenes.game.components.dialogs
 			
 			var scrollbarWidth:Number = 10.0;
 			
-			atlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			mainAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			
-			topArrow = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			topArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
 			addChild(topArrow);
 			topArrow.scaleX = .5;
 			topArrow.scaleY = .5;
 			topArrow.x = _width - topArrow.width - 1.5;
+			topArrow.addEventListener(TouchEvent.TOUCH, onTouchUpArrow);
 			
-			bottomArrow = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			bottomArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
 			addChild(bottomArrow);
 			bottomArrow.scaleX = .5;
 			bottomArrow.scaleY = -.5;
 			bottomArrow.x = _width - bottomArrow.width - 1.5;
 			bottomArrow.y = _height;
-
-			scrollbarBackground = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
+			bottomArrow.addEventListener(TouchEvent.TOUCH, onTouchDownArrow);
+			
+			scrollbarBackground = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
 			addChild(scrollbarBackground);
 			scrollbarBackground.x = _width - scrollbarWidth;
 			scrollbarBackground.y = topArrow.height + 1;
@@ -100,6 +108,56 @@ package scenes.game.components.dialogs
 	//		addEventListener(Event.TRIGGERED, onButtonToggle);
 		}
 		
+		protected function onTouchUpArrow(event:TouchEvent):void
+		{			
+			if(thumb.enabled == false)
+				return;
+			
+			var touches:Vector.<Touch> = event.touches;
+			if (touches.length == 0) {
+				return;
+			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				this.addEventListener(Event.ENTER_FRAME, updateUpScroll);
+			}
+
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
+			{
+				this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+			}
+		}
+		
+		protected function onTouchDownArrow(event:TouchEvent):void
+		{			
+			if(thumb.enabled == false)
+				return;
+			
+			var touches:Vector.<Touch> = event.touches;
+			if (touches.length == 0) {
+				return;
+			}
+			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				this.addEventListener(Event.ENTER_FRAME, updateDownScroll);
+			}
+				
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
+			{
+				this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+			}
+		}
+		
+		protected function updateUpScroll(e:Event):void
+		{
+			scrollPanel(-3);
+		}
+		
+		protected function updateDownScroll(e:Event):void
+		{
+			scrollPanel(3);
+		}
+		
 		public function setClipRect():void
 		{
 			if(buttonPane.clipRect == null)
@@ -114,8 +172,27 @@ package scenes.game.components.dialogs
 			if(e.data != null)
 			{
 				var percentScrolled:Number = e.data as Number;
-				buttonPane.y = -(buttonPane.height-setHeight)*percentScrolled;
+				
+				if(buttonPane.height>setHeight)
+					buttonPane.y = -(buttonPane.height-setHeight)*percentScrolled;
 			}
+		}
+		
+		private function scrollPanel(percentScrolled:Number):void
+		{
+			var currentPercent:Number = buttonPane.y/-(buttonPane.height-setHeight);
+			trace(percentScrolled, currentPercent, buttonPane.height,setHeight);
+			
+			var totalNewScrollDistance:Number = currentPercent+percentScrolled/100;
+			
+			if(totalNewScrollDistance < -0.1)
+				totalNewScrollDistance = -0.1;
+			
+			if(totalNewScrollDistance > 1.1)
+				totalNewScrollDistance = 1.1;
+			
+			buttonPane.y = -(buttonPane.height-setHeight)*totalNewScrollDistance;
+			thumb.setThumbPercent(totalNewScrollDistance*100);
 		}
 		
 		private function onUpScrollTriggered(e:Event):void
@@ -136,31 +213,37 @@ package scenes.game.components.dialogs
 			buttonPaneArray = new Array;
 			
 			var xpos:Number = width - scrollbarBackground.width;
-			var widthSpacing:Number = xpos/3;
+			var widthSpacing:Number = xpos/2;
+			var heightSpacing:Number = 60;
 			for(var i:int = 0; i< objArray.length; i++)
 			{
-				var icon:Image = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkPlug));
-//				var icondown:Image = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkPlug));
-//				var iconover:Image = new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_GrayDarkPlug));
+				var upicon:Image = new Image(levelAtlas.getTexture("DocumentIcon"));
+				var downicon:Image = new Image(levelAtlas.getTexture("DocumentIconClick"));
+				var overicon:Image = new Image(levelAtlas.getTexture("DocumentIconMouseover"));
 //				var newButton:BasicButton = new BasicButton(iconup, iconover, icondown);
-				var newButton:NineSliceToggleButton = ButtonFactory.getInstance().createToggleButton("",  widthSpacing - 2,  widthSpacing - 2, 0, 0);
+				var newButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("",  widthSpacing - 2,  heightSpacing - 2);
 				newButton.addEventListener(starling.events.TouchEvent.TOUCH, onLevelButtonTouched);
 				addChild(newButton);
 				buttonPaneArray.push(newButton);
-				newButton.x = (widthSpacing)* (i%3);
-				newButton.y = Math.floor(i/3)*(widthSpacing);
+				newButton.x = (widthSpacing)* (i%2);
+				newButton.y = Math.floor(i/2)*(heightSpacing) + 2;
 				
-				newButton.setIcon(icon);
+				newButton.setIcon(upicon, downicon, overicon);
 				newButton.setText(objArray[i].name);
 				if(objArray[i].unlocked == false)
 					newButton.enabled = false;
 				
 				buttonPane.addChild(newButton);
 				
-				//select first, to 
-				if(i == 0)
-					setCurrentSelection(newButton);
-			}
+				}
+				//select first
+				if(objArray.length > 0)
+					setCurrentSelection(buttonPaneArray[0]);
+		
+			if(buttonPane.height<setHeight)
+				thumb.enabled = false;
+			else
+				thumb.enabled = true;
 		}
 		
 		private function onLevelButtonTouched(e:Event):void

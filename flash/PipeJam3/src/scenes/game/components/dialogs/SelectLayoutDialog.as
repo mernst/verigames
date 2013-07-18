@@ -9,7 +9,7 @@ package scenes.game.components.dialogs
 	import flash.events.Event;
 	import flash.utils.ByteArray;
 	import scenes.BaseComponent;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	import starling.events.Event;
 	
 	public class SelectLayoutDialog extends BaseComponent

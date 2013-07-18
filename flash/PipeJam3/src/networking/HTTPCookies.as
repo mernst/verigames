@@ -1,4 +1,4 @@
-package scenes.login
+package networking
 {
 	import flash.external.ExternalInterface;
 	
@@ -32,16 +32,10 @@ package scenes.login
 		
 		public static function callGetEncodedCookie():void
 		{
-			try{
 			if (!ExternalInterface.available) {
 				return;
 			}
 			ExternalInterface.call("getEncodedCookie");
-			}
-			catch(e:Error)
-			{
-				trace("can't call getEncodedCookie");
-			}
 		}
 		
 		public static function getEncodedCookieResult():*
