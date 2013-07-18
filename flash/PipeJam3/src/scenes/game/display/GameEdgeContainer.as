@@ -464,7 +464,7 @@ package scenes.game.display
 				errorParticleSystem.addChild(textField);
 				
 				textField.x = 8;
-				textField.y = 8;
+				textField.y = 7.5;
 				
 				var particleSystem:ErrorParticleSystem = new ErrorParticleSystem();
 				errorParticleSystem.addChild(particleSystem);
