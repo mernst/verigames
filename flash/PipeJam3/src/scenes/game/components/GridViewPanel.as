@@ -164,9 +164,7 @@ package scenes.game.components
 						// one finger touching -> move
 						if(touches[0].target == m_backgroundImage)
 						{
-							if (!(m_currentLevel && 
-								m_currentLevel.tutorialManager && 
-								!m_currentLevel.tutorialManager.getPanAllowed()))
+							if (getPanAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
 								var cp:Point = touches[0].getLocation(this.content);
@@ -249,9 +247,7 @@ package scenes.game.components
 		
 		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
-			if (!(m_currentLevel && 
-				m_currentLevel.tutorialManager && 
-				m_currentLevel.tutorialManager.getZoomAllowed()))
+			if (!getZoomAllowed())
 			{
 				return;
 			}
@@ -386,36 +382,16 @@ package scenes.game.components
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					if (!(m_currentLevel && 
-						m_currentLevel.tutorialManager && 
-						!m_currentLevel.tutorialManager.getPanAllowed()))
-					{
-						content.y += 5;
-					}
+					if (getPanAllowed()) content.y += 5;
 					break;
 				case Keyboard.DOWN:
-					if (!(m_currentLevel && 
-						m_currentLevel.tutorialManager && 
-						!m_currentLevel.tutorialManager.getPanAllowed()))
-					{
-						content.y -= 5;
-					}
+					if (getPanAllowed()) content.y -= 5;
 					break;
 				case Keyboard.LEFT:
-					if (!(m_currentLevel && 
-						m_currentLevel.tutorialManager && 
-						!m_currentLevel.tutorialManager.getPanAllowed()))
-					{
-						content.x += 5;
-					}
+					if (getPanAllowed()) content.x += 5;
 					break;
 				case Keyboard.RIGHT:
-					if (!(m_currentLevel && 
-						m_currentLevel.tutorialManager && 
-						!m_currentLevel.tutorialManager.getPanAllowed()))
-					{
-						content.x -= 5;
-					}
+					if (getPanAllowed()) content.x -= 5;
 					break;
 				case Keyboard.EQUAL:
 					handleMouseWheel(5);
@@ -466,11 +442,12 @@ package scenes.game.components
 			content.scaleX = content.scaleY = STARTING_SCALE;
 			content.addChild(m_currentLevel);
 			var i:int;
+			var centerPt:Point, globPt:Point, localPt:Point;
 			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
 				// If about the size of the window, just center the level
-				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
-				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
-				var localPt:Point = content.globalToLocal(globPt);
+				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
+				globPt = m_currentLevel.localToGlobal(centerPt);
+				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
 			} else {
 				// Otherwise center on the first visible box
@@ -497,6 +474,7 @@ package scenes.game.components
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
 			}
+			
 			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
 				var consoleY:Number = 0;
 				if (m_tutorialText && m_tutorialText.parent) {
@@ -509,6 +487,24 @@ package scenes.game.components
 					scaleContent((HEIGHT - consoleY) / (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height));
 				}
 			}
+			/*
+			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
+				var levelBB:Rectangle = new Rectangle(m_currentLevel.m_boundingBox.x * content.scaleX, m_currentLevel.m_boundingBox.y * content.scaleY, m_currentLevel.m_boundingBox.width * content.scaleX, m_currentLevel.m_boundingBox.height * content.scaleY);
+				var consoleBB:Rectangle = levelBB.clone();
+				if (m_tutorialText && m_tutorialText.parent && m_tutorialText.isPointingToObject()) {
+					consoleBB = m_tutorialText.getBounds(this);
+				}
+				var totalBB:Rectangle = consoleBB.union(levelBB);
+				centerPt = new Point(totalBB.x + totalBB.width / 2, totalBB.y + totalBB.height / 2);
+				globPt = this.localToGlobal(centerPt);
+				localPt = content.globalToLocal(globPt);
+				moveContent(localPt.x, localPt.y);
+				const BUFFER:Number = 1.1; // i.e. BUFFER of 1.1 leaves 10% space around level bounds when zoomed out
+				if ((BUFFER * totalBB.width > WIDTH) || (BUFFER * totalBB.height > HEIGHT)) {
+					scaleContent(Math.min(WIDTH / (BUFFER * totalBB.width), HEIGHT / (BUFFER * totalBB.height)));
+				}
+			}
+			*/
 		}
 		
 		public function displayContinueButton(permenantly:Boolean = true):void
@@ -668,6 +664,18 @@ package scenes.game.components
 					content.y = endPoint.y;
 				}
 			}
+		}
+		
+		public function getZoomAllowed():Boolean
+		{
+			if (m_currentLevel) return m_currentLevel.getZoomAllowed();
+			return true;
+		}
+		
+		public function getPanAllowed():Boolean
+		{
+			if (m_currentLevel) return m_currentLevel.getPanAllowed();
+			return true;
 		}
 	}
 }
