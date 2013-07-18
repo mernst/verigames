@@ -247,7 +247,7 @@ package scenes.game.display
 		{
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
 			var oldScore:int = gameControlPanel.getCurrentScore();
-			var newScore:int = gameControlPanel.updateScore(evt.level);
+			var newScore:int = gameControlPanel.updateScore(evt.level, false);
 			if (newScore >= evt.level.getTargetScore()) {
 				edgeSetGraphViewPanel.displayContinueButton(true);
 			} else {
