@@ -108,7 +108,12 @@ package scenes.game.components
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
-
+		
+		public function isPointingToObject():Boolean
+		{
+			return m_pointTo != null;
+		}
+		
 		public function onAdded(evt:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAdded);

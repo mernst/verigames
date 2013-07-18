@@ -1372,5 +1372,17 @@ package scenes.game.display
 			this.m_jointsContainer.flatten();
 			this.m_edgesContainer.removeChildren();
 		}
+		
+		public function getZoomAllowed():Boolean
+		{
+			if (tutorialManager) return tutorialManager.getZoomAllowed();
+			return true;
+		}
+		
+		public function getPanAllowed():Boolean
+		{
+			if (tutorialManager) return tutorialManager.getPanAllowed();
+			return true;
+		}
 	}
 }
