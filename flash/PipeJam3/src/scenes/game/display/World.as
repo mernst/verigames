@@ -367,7 +367,7 @@ package scenes.game.display
 				{
 					case 90: //'z'
 					{
-						if(undoStack.length > 0)
+						if ((undoStack.length > 0) && !PipeJam3.RELEASE_BUILD)//high risk item, don't allow undo/redo until well tested
 						{
 							var undoDataEvent:UndoEvent = undoStack.pop();
 							handleUndoRedoEvent(undoDataEvent, true);
@@ -377,7 +377,7 @@ package scenes.game.display
 					case 82: //'r'
 					case 89: //'y'
 					{
-						if(redoStack.length > 0)
+						if ((redoStack.length > 0) && !PipeJam3.RELEASE_BUILD)//high risk item, don't allow undo/redo until well tested
 						{
 							var redoDataEvent:UndoEvent = redoStack.pop();
 							handleUndoRedoEvent(redoDataEvent, false);
@@ -385,7 +385,7 @@ package scenes.game.display
 						break;
 					}
 					case 72: //'h' for hide
-					if(this.active_level != null)
+					if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
 						active_level.toggleUneditableStrings();
 					break;
 					case 76: //'l' for copy layout

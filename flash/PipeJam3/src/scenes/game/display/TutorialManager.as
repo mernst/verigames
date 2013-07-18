@@ -20,6 +20,7 @@ package scenes.game.display
 		public static const COLOR_TUTORIAL:String = "color";
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const LAYOUT_TUTORIAL:String = "layout";
+		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const END_TUTORIAL:String = "end";
 		
 		private var m_tutorialTag:String;
@@ -33,13 +34,14 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
+				case PINCH_TUTORIAL://TODO
 				case CLASH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
+				case LAYOUT_TUTORIAL://TODO
+				case ZOOM_PAN_TUTORIAL://TODO
 				case END_TUTORIAL:
 					break;
 				default:
@@ -62,13 +64,18 @@ package scenes.game.display
 					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
 					break;
 				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "e32__IN__", true)); }, 0.2);
+					break;
+				case PINCH_TUTORIAL:	
+					break;
 				case CLASH_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_CLASH, "e2__IN__", true)); }, 0.2);
+					break;
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					break;
 			}
@@ -81,11 +88,78 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case LINKS_TUTORIAL:
-					dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", false));
+					dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
 					// Allow user to continue after they click a box
 					dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
 					break;
+				case PASSAGE_TUTORIAL:
+					if (evt.edgeSetChanged.m_id == "Passages3") {
+						dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
+						// Allow user to continue after they click a box
+						dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+					}
+					break;
 			}
+		}
+		
+		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
+		{
+			switch (m_tutorialTag) {
+				case LAYOUT_TUTORIAL:
+					if (updatedGameNodes.length == 2) {
+						const SEPARATED_DIST_SQUARED_CHECK:Number = 25*25;
+						var dx:Number = updatedGameNodes[0].x - updatedGameNodes[1].x;
+						var dy:Number = updatedGameNodes[0].y - updatedGameNodes[1].y;
+						if (dx * dx + dy * dy > SEPARATED_DIST_SQUARED_CHECK) {
+							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+						}
+					}
+					break;
+			}
+		}
+		
+		public function getZoomAllowed():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+					return false;
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return true;
+			}
+			return true;
+		}
+		
+		public function getPanAllowed():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+					return false;
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return true;
+			}
+			return true;
 		}
 		
 		public function getLayoutFixed():Boolean
@@ -102,9 +176,34 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 					return true;
-				default:
+				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
 					return false;
 			}
+			return false;
+		}
+		
+		public function getAutoZoomAtStart():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+					return true;
+				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return false;
+			}
+			return false;
 		}
 		
 		public function getText():String
@@ -117,11 +216,11 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return "Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.";
 				case PASSAGE_TUTORIAL:
-					return "This is a passage. Changing the size of the\nwidget can change the width of the passage.";
+					return "This is a passage. Links can begin, end or pass through\nwidgets through these passages. Change the size\nof the widget to change the width its passages and continue.";
 				case PINCH_TUTORIAL:
 					return "Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.";
 				case CLASH_TUTORIAL:
-					return "This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points.";
+					return "This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points. Fix this clash.";
 				case WIDEN_TUTORIAL:
 					return "Click the blue widgets to widen their passages\nand fix the clashes.";
 				case NARROW_TUTORIAL:
@@ -131,9 +230,11 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 					return "Try different configurations. Optimize the level.\nGet the high score.";
 				case LAYOUT_TUTORIAL:
-					return "Drag the widgets and links around to help\norganize the layout. Separate the widgets to continue.";
+					return "Drag the widgets and links around to help organize\nthe layout. Separate the widgets to continue.";
+				case ZOOM_PAN_TUTORIAL:
+					return "Larger levels require navigation. Drag the background\nto move around the level. Use the +/- keys to\nzoom in and out.";
 				case END_TUTORIAL:
-					return "Tutorial Complete. Optimize your first real level.";
+					return "Optimize your first real level.";
 			}
 			return null;
 		}

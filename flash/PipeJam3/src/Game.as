@@ -21,7 +21,6 @@ package
     import starling.display.MovieClip;
     import starling.display.Sprite;
     import starling.events.Event;
-    import starling.events.KeyboardEvent;
     import starling.text.TextField;
     import starling.textures.Texture;
     import starling.utils.VAlign;

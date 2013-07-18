@@ -696,8 +696,8 @@ package scenes.game.display
 						boundingBox = createEdgePointBoundingBox(edgeArray);
 						edgeContainer.createLine(edgeArray);
 						edgeContainer.m_boundingBox = boundingBox;
-						edgeContainer.x = edgeContainer.m_boundingBox.x - m_boundingBox.x;
-						edgeContainer.y = edgeContainer.m_boundingBox.y - m_boundingBox.y;
+						edgeContainer.x = edgeContainer.m_boundingBox.x/* - m_boundingBox.x */;
+						edgeContainer.y = edgeContainer.m_boundingBox.y/* - m_boundingBox.y */;
 					}
 				}
 			}
@@ -719,9 +719,9 @@ package scenes.game.display
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					currentLayoutX = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					currentLayoutX = (edgeSet.x + /*m_boundingBox.x*/ + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
 					child.@x = currentLayoutX.toFixed(2);
-					currentLayoutY = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = currentLayoutY.toFixed(2);
 					child.@visible = edgeSet.visible;
 				}
@@ -731,9 +731,9 @@ package scenes.game.display
 					var joint:GameJointNode = jointDictionary[jointID];
 					if(joint != null)
 					{
-						currentLayoutX = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						currentLayoutX = (joint.x + /*m_boundingBox.x*/ + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
 						child.@x = currentLayoutX.toFixed(2);
-						currentLayoutY = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = currentLayoutY.toFixed(2);
 						child.@visible = joint.visible;
 					}
@@ -757,7 +757,7 @@ package scenes.game.display
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
 							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
-							ptXML.@x = x.toFixed(2);
+							ptXML.@x = currentLayoutX.toFixed(2);
 							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
 							ptXML.@y = currentLayoutY.toFixed(2);
 							
@@ -1023,18 +1023,23 @@ package scenes.game.display
 			if(selectedComponents.indexOf(evt.component) == -1)
 			{
 				unselectAll();
-
 				evt.component.componentMoved(delta);
 				m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
+				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
-			else 
+			else
+			{
+				var movedGameNode:Boolean = false;
 				for each(var component:GameComponent in selectedComponents)
 				{
-
 					component.componentMoved(delta);
 					if(component is GameNodeBase)
 						m_visibleNodeManager.updateNode(component as GameNodeBase);
+					if(component is GameNode)
+						movedGameNode = true;
 				}
+				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(m_nodeList);
+			}
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void

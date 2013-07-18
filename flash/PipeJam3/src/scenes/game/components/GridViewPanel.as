@@ -2,6 +2,8 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import scenes.game.display.GameEdgeContainer;
+	import starling.display.DisplayObject;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -55,6 +57,7 @@ package scenes.game.components
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
+		private var m_spotlight:Image;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -162,17 +165,24 @@ package scenes.game.components
 						// one finger touching -> move
 						if(touches[0].target == m_backgroundImage)
 						{
-							var delta:Point = touches[0].getMovement(parent);
-							var cp:Point = touches[0].getLocation(this.content);
-							var viewRect:Rectangle = getViewInContentSpace();
-							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
-							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
-							moveContent(newX, newY);
-							m_currentLevel.updateVisibleList();
+							if (m_currentLevel && 
+								m_currentLevel.tutorialManager && 
+								m_currentLevel.tutorialManager.getPanAllowed())
+							{
+								var delta:Point = touches[0].getMovement(parent);
+								var cp:Point = touches[0].getLocation(this.content);
+								var viewRect:Rectangle = getViewInContentSpace();
+								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
+								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
+								moveContent(newX, newY);
+								m_currentLevel.updateVisibleList();
+							}
 						}
 					}
 					else if (touches.length == 2)
 					{
+						/*
+						// TODO: Need to take a look at this if we reactivate multitouch - hasn't been touched in a while 
 						// two fingers touching -> rotate and scale
 						var touchA:Touch = touches[0];
 						var touchB:Touch = touches[1];
@@ -210,6 +220,7 @@ package scenes.game.components
 	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
 	//					content.x = currentCenterPt.x - previousCenterPt.x;
 	//					content.y = currentCenterPt.y - previousCenterPt.y;
+						*/
 					}
 				}
 			}
@@ -239,6 +250,12 @@ package scenes.game.components
 		
 		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
+			if (!(m_currentLevel && 
+				m_currentLevel.tutorialManager && 
+				m_currentLevel.tutorialManager.getZoomAllowed()))
+			{
+				return;
+			}
 			if (localMouse == null) {
 				localMouse = new Point(WIDTH / 2, HEIGHT / 2);
 			} else {
@@ -349,6 +366,10 @@ package scenes.game.components
 			if (m_disposed) {
 				return;
 			}
+			if (m_tutorialText) {
+				m_tutorialText.dispose();
+				m_tutorialText = null;
+			}
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
@@ -366,16 +387,36 @@ package scenes.game.components
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					content.y +=  5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.y += 5;
+					}
 					break;
 				case Keyboard.DOWN:
-					content.y -= 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.y -= 5;
+					}
 					break;
 				case Keyboard.LEFT:
-					content.x += 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.x += 5;
+					}
 					break;
 				case Keyboard.RIGHT:
-					content.x -= 5;
+					if (m_currentLevel && 
+						m_currentLevel.tutorialManager && 
+						m_currentLevel.tutorialManager.getPanAllowed())
+					{
+						content.x -= 5;
+					}
 					break;
 				case Keyboard.EQUAL:
 					handleMouseWheel(5);
@@ -456,6 +497,18 @@ package scenes.game.components
 			if (levelText) {
 				m_tutorialText = new TutorialText(levelText, this, m_currentLevel.getLevelPointTo());
 			}
+			if (m_currentLevel && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
+				var consoleY:Number = 0;
+				if (m_tutorialText && m_tutorialText.parent) {
+					consoleY = m_tutorialText.getConsoleY();
+				}
+				const BUFFER:Number = 1.1; // i.e. BUFFER of 1.1 leaves 10% space around level bounds when zoomed out
+				if (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width > WIDTH) {
+					scaleContent(WIDTH / (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width));
+				} else if (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height > HEIGHT - consoleY) {
+					scaleContent((HEIGHT - consoleY) / (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height));
+				}
+			}
 		}
 		
 		public function displayContinueButton(permenantly:Boolean = true):void
@@ -529,24 +582,28 @@ package scenes.game.components
 		
 		public function onHighlightTutorialEvent(evt:TutorialEvent):void
 		{
+			if (!evt.highlightOn) {
+				removeSpotlight();
+				return;
+			}
+			if (!m_currentLevel) return;
+			var edge:GameEdgeContainer;
 			switch (evt.type) {
 				case TutorialEvent.HIGHLIGHT_BOX:
-					if (!evt.highlightOn) {
-						removeSpotlight();
-						return;
-					}
-					if (!m_currentLevel) return;
 					var node:GameNode = m_currentLevel.getNode(evt.componentId);
 					if (node) spotlightComponent(node);
 					break;
 				case TutorialEvent.HIGHLIGHT_EDGE:
-					if (!evt.highlightOn) {
-						removeSpotlight();
-						return;
-					}
-					if (!m_currentLevel) return;
-					var edge:GameEdgeContainer = m_currentLevel.getEdgeContainer(evt.componentId);
-					if (edge) spotlightComponent(edge);
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge) spotlightComponent(edge, 3.0, 1.75, 1.2);
+					break;
+				case TutorialEvent.HIGHLIGHT_PASSAGE:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.m_innerBoxSegment) spotlightComponent(edge.m_innerBoxSegment, 3.0, 3, 2);
+					break;
+				case TutorialEvent.HIGHLIGHT_CLASH:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.m_errorParticleSystem) spotlightComponent(edge.m_errorParticleSystem, 3.0, 1.3, 1.3);
 					break;
 			}
 		}
@@ -556,13 +613,12 @@ package scenes.game.components
 			if (m_spotlight) m_spotlight.removeFromParent();
 		}
 		
-		private var m_spotlight:Image;
-		public function spotlightComponent(component:GameComponent, timeSec:Number = 3.0):void
+		public function spotlightComponent(component:DisplayObject, timeSec:Number = 3.0, widthScale:Number = 1.75, heightScale:Number = 1.75):void
 		{
 			if (!m_currentLevel) return;
 			startingPoint = new Point(content.x, content.y);
-			
-			var centerPt:Point = new Point(component.width / 2, component.height / 2);
+			var bounds:Rectangle = component.getBounds(component);
+			var centerPt:Point = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
 			
@@ -572,17 +628,8 @@ package scenes.game.components
 				m_spotlight.touchable = false;
 				m_spotlight.alpha = 0.3;
 			}
-			const MIN_SPOTLIGHT_ASPECT:Number = 1.5;
-			const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
-			if (component.width > MIN_SPOTLIGHT_ASPECT * component.height) {
-				// Reached out min aspect, use scaled up dimensions
-				m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
-				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-			} else {
-				// need to expand width to match min aspect
-				m_spotlight.width = component.height * MIN_SPOTLIGHT_ASPECT * SPOTLIGHT_TO_COMPONENT_RATIO;
-				m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
-			}
+			m_spotlight.width = component.width * widthScale;
+			m_spotlight.height = component.height * heightScale;
 			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
 			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
 			content.addChild(m_spotlight);
