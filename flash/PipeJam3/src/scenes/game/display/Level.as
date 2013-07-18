@@ -747,7 +747,6 @@ package scenes.game.display
 				}
 				else if(childName.indexOf("line") != -1)
 				{
-					
 					var lineID:String = child.@id;
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
 					if(edgeContainer != null)

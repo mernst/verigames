@@ -93,7 +93,7 @@ package scenes.game.components
 		private function onAddedToStage():void
 		{
 			//create a clip rect for the window
-			clipRect = new Rectangle(x, y, width, height);
+			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
 			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -300,7 +300,7 @@ package scenes.game.components
 		private function moveContent(newX:Number, newY:Number):void
 		{
 			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
-			newY = XMath.clamp(newY,m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
+			newY = XMath.clamp(newY, m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
 			
 			panTo(newX, newY);
 		}
@@ -338,6 +338,7 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
+			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
 		//returns a point containing the content scale factors
@@ -404,6 +405,8 @@ package scenes.game.components
 			}
 		}
 		
+		private var m_boundingBoxDebug:Quad;
+		private static const DEBUG_BOUNDING_BOX:Boolean = false;
 		public function loadLevel(level:Level):void
 		{
 			m_continueButtonForced = false;
@@ -441,14 +444,34 @@ package scenes.game.components
 			
 			content.scaleX = content.scaleY = STARTING_SCALE;
 			content.addChild(m_currentLevel);
+			
+			if (DEBUG_BOUNDING_BOX) {
+				if (!m_boundingBoxDebug) {
+					m_boundingBoxDebug = new Quad(m_currentLevel.m_boundingBox.width, m_currentLevel.m_boundingBox.height, 0xFFFF00);
+					m_boundingBoxDebug.alpha = 0.2;
+					m_boundingBoxDebug.touchable = false;
+					content.addChild(m_boundingBoxDebug);
+				} else {
+					m_boundingBoxDebug.width = m_currentLevel.m_boundingBox.width;
+					m_boundingBoxDebug.height = m_currentLevel.m_boundingBox.height;
+				}
+				m_boundingBoxDebug.x = m_currentLevel.m_boundingBox.x;
+				m_boundingBoxDebug.y = m_currentLevel.m_boundingBox.y;
+			} else if (m_boundingBoxDebug) {
+				m_boundingBoxDebug.removeFromParent(true);
+			}
+			
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
-			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
+			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * HEIGHT)) {
 				// If about the size of the window, just center the level
 				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
+				const BUFFER:Number = 1.5;
+				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
+				                      HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = level.getNodes();
@@ -475,36 +498,12 @@ package scenes.game.components
 				addChild(m_tutorialText);
 			}
 			
-			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
-				var consoleY:Number = 0;
-				if (m_tutorialText && m_tutorialText.parent) {
-					consoleY = m_tutorialText.getConsoleY();
-				}
-				const BUFFER:Number = 1.1; // i.e. BUFFER of 1.1 leaves 10% space around level bounds when zoomed out
-				if (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width > WIDTH) {
-					scaleContent(WIDTH / (BUFFER * content.scaleX * m_currentLevel.m_boundingBox.width));
-				} else if (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height > HEIGHT - consoleY) {
-					scaleContent((HEIGHT - consoleY) / (BUFFER * content.scaleY * m_currentLevel.m_boundingBox.height));
-				}
+			if (m_currentLevel && m_currentLevel.tutorialManager) {
+				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
+				content.x += startPtOffset.x * content.scaleX;
+				content.y += startPtOffset.y * content.scaleY;
+				scaleContent(m_currentLevel.tutorialManager.getStartScaleFactor());
 			}
-			/*
-			if (m_currentLevel && m_currentLevel.tutorialManager && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
-				var levelBB:Rectangle = new Rectangle(m_currentLevel.m_boundingBox.x * content.scaleX, m_currentLevel.m_boundingBox.y * content.scaleY, m_currentLevel.m_boundingBox.width * content.scaleX, m_currentLevel.m_boundingBox.height * content.scaleY);
-				var consoleBB:Rectangle = levelBB.clone();
-				if (m_tutorialText && m_tutorialText.parent && m_tutorialText.isPointingToObject()) {
-					consoleBB = m_tutorialText.getBounds(this);
-				}
-				var totalBB:Rectangle = consoleBB.union(levelBB);
-				centerPt = new Point(totalBB.x + totalBB.width / 2, totalBB.y + totalBB.height / 2);
-				globPt = this.localToGlobal(centerPt);
-				localPt = content.globalToLocal(globPt);
-				moveContent(localPt.x, localPt.y);
-				const BUFFER:Number = 1.1; // i.e. BUFFER of 1.1 leaves 10% space around level bounds when zoomed out
-				if ((BUFFER * totalBB.width > WIDTH) || (BUFFER * totalBB.height > HEIGHT)) {
-					scaleContent(Math.min(WIDTH / (BUFFER * totalBB.width), HEIGHT / (BUFFER * totalBB.height)));
-				}
-			}
-			*/
 		}
 		
 		public function displayContinueButton(permenantly:Boolean = true):void
@@ -551,7 +550,6 @@ package scenes.game.components
 		 */
 		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
 		{
-			var startPoint:Point = new Point(content.x, content.y);
 			content.x = ( -panX * content.scaleX + clipRect.width / 2) ;
 			content.y = ( -panY * content.scaleY + clipRect.height / 2) ;
 		}
