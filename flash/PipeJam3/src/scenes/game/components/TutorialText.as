@@ -39,10 +39,16 @@ package scenes.game.components
 		
 		private var m_pointTo:DisplayObject;
 		private var m_pointDir:String;
-		private var m_pointToPrevPos:Point = new Point(0, 0);
+		private var m_pointPos:Point = new Point();
+		private var m_pointPosNeedsInit:Boolean = true;
+		private var m_pointPosAlwaysUpdate:Boolean = true;
 		
 		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
+			if (level.tutorialManager && !level.tutorialManager.getPanAllowed()) {
+				m_pointPosAlwaysUpdate = false;
+			}
+				
 			// get variables out of info
 			var text:String = info.text;
 
@@ -175,19 +181,21 @@ package scenes.game.components
 						offset.y = -1;
 						break;
 				}
-				
+
 				if (m_pointTo.parent) {
 					pt = m_pointTo.parent.localToGlobal(pt);
 					pt = parent.globalToLocal(pt);
-					m_pointToPrevPos = pt;
-				} else {
-					pt = m_pointToPrevPos;
+					
+					if (m_pointPosNeedsInit || m_pointPosAlwaysUpdate) {
+						m_pointPos = pt;
+						m_pointPosNeedsInit = false;
+					}
 				}
 
-				var arrowPos:Number = INSET + ARROW_SZ / 2 - timeArrowOffset;
+				x = m_pointPos.x + offset.x * (width / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
+				y = m_pointPos.y + offset.y * (height / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
 				
-				x = pt.x + offset.x * (width / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
-				y = pt.y + offset.y * (height / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
+				var arrowPos:Number = INSET + ARROW_SZ / 2 - timeArrowOffset;
 				
 				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
 				m_tutorialArrow.x = -offset.x * (width / 2 - PADDING_SZ + arrowPos);
