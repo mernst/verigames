@@ -74,6 +74,8 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
+					break;
 				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					break;
@@ -92,7 +94,7 @@ package scenes.game.display
 					dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
 					break;
 				case PASSAGE_TUTORIAL:
-					if (evt.edgeSetChanged.m_id == "Links3") {
+					if (evt.edgeSetChanged.m_id == "Passages3") {
 						dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "", false));
 						// Allow user to continue after they click a box
 						dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
@@ -167,6 +169,28 @@ package scenes.game.display
 			return false;
 		}
 		
+		public function getAutoZoomAtStart():Boolean
+		{
+			switch (m_tutorialTag) {
+				case WIDGET_TUTORIAL:
+				case LOCKED_TUTORIAL:
+				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
+				case PINCH_TUTORIAL:
+				case CLASH_TUTORIAL:
+				case WIDEN_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+					return true;
+				case LAYOUT_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case END_TUTORIAL:
+					return false;
+			}
+			return false;
+		}
+		
 		public function getText():String
 		{
 			switch (m_tutorialTag) {
@@ -177,7 +201,7 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return "Widgets are connected by links. Dark widgets\n\ncreate wide links, light widgets create narrow links.";
 				case PASSAGE_TUTORIAL:
-					return "This is a passage. Links can begin, end or pass through\n\nwidgets through these passages. Changing the size\n\nof the widget can change the width of the passage.";
+					return "This is a passage. Links can begin, end or pass through\n\nwidgets through these passages. Change the size\n\nof the widget to change the width its passages and continue.";
 				case PINCH_TUTORIAL:
 					return "Some passages are gray. These passages are\n\nlocked and will not change, even if the widget\n\nis changed.";
 				case CLASH_TUTORIAL:
@@ -191,9 +215,9 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 					return "Try different configurations. Optimize the level.\n\nGet the high score.";
 				case LAYOUT_TUTORIAL:
-					return "Drag the widgets and links around to help\n\norganize the layout. Separate the widgets to continue.";
+					return "Drag the widgets and links around to help organize\n\nthe layout. Separate the widgets to continue.";
 				case ZOOM_PAN_TUTORIAL:
-					return "Larger levels require navigation. Drag the\n\nbackground to move around the level. Use the +/- keys\n\nto zoom in and out.";
+					return "Larger levels require navigation. Drag the background\n\nto move around the level. Use the +/- keys to\n\nzoom in and out.";
 				case END_TUTORIAL:
 					return "Optimize your first real level.";
 			}

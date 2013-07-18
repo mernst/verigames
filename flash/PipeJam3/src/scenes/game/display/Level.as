@@ -695,8 +695,8 @@ package scenes.game.display
 						boundingBox = createEdgePointBoundingBox(edgeArray);
 						edgeContainer.createLine(edgeArray);
 						edgeContainer.m_boundingBox = boundingBox;
-						edgeContainer.x = edgeContainer.m_boundingBox.x - m_boundingBox.x;
-						edgeContainer.y = edgeContainer.m_boundingBox.y - m_boundingBox.y;
+						edgeContainer.x = edgeContainer.m_boundingBox.x/* - m_boundingBox.x */;
+						edgeContainer.y = edgeContainer.m_boundingBox.y/* - m_boundingBox.y */;
 					}
 				}
 			}
@@ -718,9 +718,9 @@ package scenes.game.display
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					currentLayoutX = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					currentLayoutX = (edgeSet.x + /*m_boundingBox.x*/ + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
 					child.@x = currentLayoutX.toFixed(2);
-					currentLayoutY = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = currentLayoutY.toFixed(2);
 					child.@visible = edgeSet.visible;
 				}
@@ -730,9 +730,9 @@ package scenes.game.display
 					var joint:GameJointNode = jointDictionary[jointID];
 					if(joint != null)
 					{
-						currentLayoutX = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						currentLayoutX = (joint.x + /*m_boundingBox.x*/ + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
 						child.@x = currentLayoutX.toFixed(2);
-						currentLayoutY = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = currentLayoutY.toFixed(2);
 						child.@visible = joint.visible;
 					}
@@ -756,7 +756,7 @@ package scenes.game.display
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
 							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
-							ptXML.@x = x.toFixed(2);
+							ptXML.@x = currentLayoutX.toFixed(2);
 							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
 							ptXML.@y = currentLayoutY.toFixed(2);
 							
