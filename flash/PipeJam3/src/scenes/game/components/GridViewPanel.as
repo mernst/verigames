@@ -164,9 +164,9 @@ package scenes.game.components
 						// one finger touching -> move
 						if(touches[0].target == m_backgroundImage)
 						{
-							if (m_currentLevel && 
+							if (!(m_currentLevel && 
 								m_currentLevel.tutorialManager && 
-								m_currentLevel.tutorialManager.getPanAllowed())
+								!m_currentLevel.tutorialManager.getPanAllowed()))
 							{
 								var delta:Point = touches[0].getMovement(parent);
 								var cp:Point = touches[0].getLocation(this.content);
@@ -386,33 +386,33 @@ package scenes.game.components
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					if (m_currentLevel && 
+					if (!(m_currentLevel && 
 						m_currentLevel.tutorialManager && 
-						m_currentLevel.tutorialManager.getPanAllowed())
+						!m_currentLevel.tutorialManager.getPanAllowed()))
 					{
 						content.y += 5;
 					}
 					break;
 				case Keyboard.DOWN:
-					if (m_currentLevel && 
+					if (!(m_currentLevel && 
 						m_currentLevel.tutorialManager && 
-						m_currentLevel.tutorialManager.getPanAllowed())
+						!m_currentLevel.tutorialManager.getPanAllowed()))
 					{
 						content.y -= 5;
 					}
 					break;
 				case Keyboard.LEFT:
-					if (m_currentLevel && 
+					if (!(m_currentLevel && 
 						m_currentLevel.tutorialManager && 
-						m_currentLevel.tutorialManager.getPanAllowed())
+						!m_currentLevel.tutorialManager.getPanAllowed()))
 					{
 						content.x += 5;
 					}
 					break;
 				case Keyboard.RIGHT:
-					if (m_currentLevel && 
+					if (!(m_currentLevel && 
 						m_currentLevel.tutorialManager && 
-						m_currentLevel.tutorialManager.getPanAllowed())
+						!m_currentLevel.tutorialManager.getPanAllowed()))
 					{
 						content.x -= 5;
 					}
