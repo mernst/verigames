@@ -28,7 +28,7 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	import scenes.game.components.GridViewPanel;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
@@ -313,7 +313,7 @@ package scenes.game.display
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-			m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
+	//		m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
 			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
@@ -1024,7 +1024,7 @@ package scenes.game.display
 			{
 				unselectAll();
 				evt.component.componentMoved(delta);
-				m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
+			//	m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
 				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
 			else
@@ -1033,8 +1033,8 @@ package scenes.game.display
 				for each(var component:GameComponent in selectedComponents)
 				{
 					component.componentMoved(delta);
-					if(component is GameNodeBase)
-						m_visibleNodeManager.updateNode(component as GameNodeBase);
+//					if(component is GameNodeBase)
+//						m_visibleNodeManager.updateNode(component as GameNodeBase);
 					if(component is GameNode)
 						movedGameNode = true;
 				}
@@ -1101,8 +1101,8 @@ package scenes.game.display
 				gameNode.x = gameNode.m_boundingBox.x;// - m_boundingBox.x;
 				gameNode.y = gameNode.m_boundingBox.y;// - m_boundingBox.y;
 				gameNode.m_isDirty = true;
-//				m_nodesContainer.addChild(gameNode);
-				m_visibleNodeManager.addNode(gameNode);
+				m_nodesContainer.addChild(gameNode);
+//				m_visibleNodeManager.addNode(gameNode);
 				nodeCount++;
 			}
 			
@@ -1112,8 +1112,8 @@ package scenes.game.display
 				gameJoint.x = gameJoint.m_boundingBox.x;// - m_boundingBox.x;
 				gameJoint.y = gameJoint.m_boundingBox.y;// - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
-	//			m_jointsContainer.addChild(gameJoint);
-				m_visibleNodeManager.addNode(gameJoint);
+				m_jointsContainer.addChild(gameJoint);
+	//			m_visibleNodeManager.addNode(gameJoint);
 				jointCount++;
 			}
 			
@@ -1123,10 +1123,10 @@ package scenes.game.display
 				gameEdge.x = gameEdge.m_boundingBox.x;// - m_boundingBox.x;
 				gameEdge.y = gameEdge.m_boundingBox.y;// - m_boundingBox.y;
 				gameEdge.draw();
-//				m_edgesContainer.addChild(gameEdge);
-//				m_errorContainer.addChild(gameEdge.errorContainer);
+				m_edgesContainer.addChild(gameEdge);
+				m_errorContainer.addChild(gameEdge.errorContainer);
 //				gameEdge.visible = false;
-				m_visibleNodeManager.addEdge(gameEdge);
+//				m_visibleNodeManager.addEdge(gameEdge);
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
@@ -1147,11 +1147,11 @@ package scenes.game.display
 		
 		public function updateVisibleList(e:TimerEvent = null):void
 		{			
-			var topLeft:Point = globalToLocal(new Point(0,0));
-			var bottomRight:Point = globalToLocal(new Point(Constants.GameWidth, GridViewPanel.HEIGHT));
-			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
-				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
-			this.m_visibleNodeManager.updateVisibleList(rect);
+//			var topLeft:Point = globalToLocal(new Point(0,0));
+//			var bottomRight:Point = globalToLocal(new Point(Constants.GameWidth, GridViewPanel.HEIGHT));
+//			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
+//				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
+//			this.m_visibleNodeManager.updateVisibleList(rect);
 		}
 		
 		protected function setDisplayData():void

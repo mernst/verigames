@@ -16,7 +16,7 @@ package scenes.game.components.dialogs
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	
 	import starling.display.BlendMode;
 	import starling.display.Image;
