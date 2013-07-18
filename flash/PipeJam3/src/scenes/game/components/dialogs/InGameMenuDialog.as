@@ -8,7 +8,13 @@ package scenes.game.components.dialogs
 	import networking.LoginHelper;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	public class InGameMenuDialog extends Sprite
+	import scenes.BaseComponent;
+	import starling.animation.Juggler;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
+	import flash.geom.Rectangle;
+
+	public class InGameMenuDialog extends BaseComponent
 	{
 		/** Button to submit the current game */
 		protected var submit_score_button:NineSliceButton;
@@ -42,6 +48,8 @@ package scenes.game.components.dialogs
 		protected var buttonWidth:int = shapeWidth - 2*buttonPaddingWidth;
 		
 		protected var numButtons:int = 4;
+		
+		protected var hideMainDialog:Boolean = true;
 		
 		public function InGameMenuDialog()
 		{
@@ -108,6 +116,7 @@ package scenes.game.components.dialogs
 				submitLevelDialog.x = (480 - submitLevelDialog.width)/2;
 				submitLevelDialog.y = (320 - submitLevelDialog.height)/2;
 				submitLevelDialog.visible = true;
+				//add clip rect so box seems to slide up out of the gameControlPanel
 			}
 			else
 				submitLevelDialog.visible = !submitLevelDialog.visible;
@@ -120,12 +129,23 @@ package scenes.game.components.dialogs
 			{
 				submitLayoutDialog = new SubmitLayoutDialog();
 				parent.addChild(submitLayoutDialog);
-				submitLayoutDialog.x = background.width;
+				submitLayoutDialog.x = background.width - submitLayoutDialog.width;
 				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
 				submitLayoutDialog.visible = true;
+				submitLayoutDialog.clipRect = new Rectangle(background.width, y + (height - submitLayoutDialog.height), 
+										submitLayoutDialog.width, submitLayoutDialog.height);
+
+				var juggler:Juggler = Starling.juggler;
+				juggler.tween(submitLayoutDialog, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					x: background.width 
+				});	
 			}
 			else
-				submitLayoutDialog.visible = !submitLayoutDialog.visible;
+			{
+				hideMainDialog = false;
+				hideSecondaryDialog(submitLayoutDialog);
+			}
 		}
 		
 		private function onSelectLayoutButtonTriggered():void
@@ -146,14 +166,24 @@ package scenes.game.components.dialogs
 				selectLayoutDialog = new SelectLayoutDialog();
 				parent.addChild(selectLayoutDialog);
 				
-				selectLayoutDialog.x = background.width;
+				selectLayoutDialog.x = background.width - selectLayoutDialog.width;
 				selectLayoutDialog.y = y + (height - selectLayoutDialog.height);
-				selectLayoutDialog.visible = true;
+				selectLayoutDialog.clipRect = new Rectangle(background.width, y + (height - selectLayoutDialog.height), 
+					selectLayoutDialog.width, selectLayoutDialog.height);
+				
+				selectLayoutDialog.setDialogInfo(layoutList);
+				var juggler:Juggler = Starling.juggler;
+				juggler.tween(selectLayoutDialog, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					x: background.width 
+				});	
 			}
 			else
-				selectLayoutDialog.visible = !selectLayoutDialog.visible;
+			{
+				hideMainDialog = false;
+				hideSecondaryDialog(selectLayoutDialog);
+			}
 			
-				selectLayoutDialog.setDialogInfo(layoutList);
 		}
 		
 		public function onBackToGameButtonTriggered():void
@@ -171,12 +201,56 @@ package scenes.game.components.dialogs
 		
 		private function hideAllDialogs():void
 		{
-			if(submitLayoutDialog)
-				submitLayoutDialog.visible = false;
-			if (selectLayoutDialog)
-				selectLayoutDialog.visible = false;
+			hideMainDialog = true;
+			
+			if(submitLayoutDialog && submitLayoutDialog.visible == true)
+			{
+				hideSecondaryDialog(submitLayoutDialog);
+			}
+			else if (selectLayoutDialog && selectLayoutDialog.visible == true)
+			{
+				hideSecondaryDialog(selectLayoutDialog);
+			}
+			else
+				hideSelf();
+		}
+		
+		protected function hideSelf():void
+		{
+			var juggler:Juggler = Starling.juggler;
+			juggler.tween(this, 1.0, {
+				transition: Transitions.EASE_IN_OUT,
+				onComplete: onHideSelfComplete,
+				y: y + height 
+			});			
+		}
+		
+		protected function onHideSelfComplete():void
+		{
 			visible = false;
 		}
+		
+		protected function hideSecondaryDialog(dialog:BaseComponent):void
+		{
+			var juggler:Juggler = Starling.juggler;
+
+			juggler.tween(dialog, 1.0, {
+				transition: Transitions.EASE_IN_OUT,
+				onComplete: onHideSecondaryDialogComplete,
+				x: dialog.x - dialog.width
+			});			
+		}
+		
+		protected function onHideSecondaryDialogComplete():void
+		{
+			submitLayoutDialog = null;
+			selectLayoutDialog = null;
+			if(hideMainDialog)
+				hideSelf();
+		}
+		
+
+
 		
 		private function onNextLevelButtonTriggered():void
 		{

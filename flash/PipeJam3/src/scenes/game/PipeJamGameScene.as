@@ -14,8 +14,8 @@ package scenes.game
 	
 	import scenes.Scene;
 	import scenes.game.display.World;
-	import scenes.login.HTTPCookies;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
+	import networking.HTTPCookies;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -38,14 +38,15 @@ package scenes.game
 			"../SampleWorlds/test/Intervals.zip",
 			"../SampleWorlds/test/IntervalsConstraints.zip",
 			"../SampleWorlds/test/IntervalsLayout.zip"
-
+			
 		);
 		
 		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
 		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
 		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
 		static public var numTutorialLevels:int = 0;
-		static public var numTutorialLevelsCompleted:int = 0;
+		static public var maxTutorialLevelCompleted:int = 0;
+		static public var currentTutorialLevel:int = 0;
 		static public var inTutorial:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
@@ -273,14 +274,14 @@ package scenes.game
 			if (!_tutorialTag) return;
 			if (solvedTutorialLevelTags.indexOf(_tutorialTag) > -1) return;//already solved
 			solvedTutorialLevelTags.push(_tutorialTag);
-			numTutorialLevelsCompleted++;
-			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, numTutorialLevelsCompleted);
+			maxTutorialLevelCompleted++;
+			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, maxTutorialLevelCompleted);
 		}
 		
 		public static function resetTutorialStatus():void
 		{
 			solvedTutorialLevelTags = new Vector.<String>();
-			numTutorialLevelsCompleted = 0;
+			maxTutorialLevelCompleted = 0;
 		}
 	}
 }

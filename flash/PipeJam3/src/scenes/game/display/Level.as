@@ -28,7 +28,7 @@ package scenes.game.display
 	
 	import scenes.BaseComponent;
 	import scenes.game.components.GridViewPanel;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
 	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObjectContainer;

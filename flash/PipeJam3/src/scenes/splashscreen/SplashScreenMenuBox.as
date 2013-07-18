@@ -319,7 +319,7 @@ package scenes.splashscreen
 
 				//do after adding to parent
 				selectLevelDialog.x = (parent.width - selectLevelDialog.width)/2;
-				selectLevelDialog.y = (parent.height - selectLevelDialog.height)/2;
+				selectLevelDialog.y = (parent.height - selectLevelDialog.height)/2 + 16;
 				
 				//do this after setting position, since we are setting a clip rect and it uses global coordinates
 				selectLevelDialog.initialize();

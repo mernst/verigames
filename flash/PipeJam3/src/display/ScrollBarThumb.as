@@ -55,6 +55,9 @@ package display
 		protected var mIsHovering:Boolean = false;
 		protected function onTouch(event:TouchEvent):void
 		{			
+			if(enabled == false)
+				return;
+			
 			var touch:Touch = event.getTouch(this);
 			
 			if (touch == null)
@@ -98,7 +101,7 @@ package display
 					y = startYPosition;
 					dispatchEvent(new Event(Event.TRIGGERED, true, y/(maxYPosition - minYPosition)));
 				}
-					
+				
 			}
 			else if (touch.phase == TouchPhase.ENDED)
 			{
@@ -108,6 +111,12 @@ package display
 			{
 				toState(m_up);
 			}
+		}
+		
+		public function setThumbPercent(percent:Number):void
+		{
+			percent = XMath.clamp(percent, 0, 100);
+			y = (maxYPosition - minYPosition)*(percent/100) + minYPosition; 
 		}
 	}
 }

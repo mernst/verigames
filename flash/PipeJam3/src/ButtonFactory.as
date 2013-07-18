@@ -29,8 +29,13 @@ package
 		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceButton
 		{
 			return new NineSliceButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
-									  AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
-									  AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
+				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
+				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
+		}
+		
+		public function createDefaultToggleButton(text:String, width:Number, height:Number):NineSliceToggleButton
+		{
+			return createToggleButton(text, width, height, height / 3.0, height / 3.0);
 		}
 		
 		public function createToggleButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
@@ -38,6 +43,13 @@ package
 			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
 				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
 				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
+		}
+		
+		public function createTabButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
+		{
+			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", 
+				"TabInactive", AssetsFont.FONT_UBUNTU, 0x0077FF,
+				"TabInactiveMouseover", "TabActive");
 		}
 	}
 }

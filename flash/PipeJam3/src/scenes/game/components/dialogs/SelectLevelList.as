@@ -44,13 +44,16 @@ package scenes.game.components.dialogs
 		private var background:NineSliceBatch;
 		
 		private var scrollbarBackground:Image;
-		private var topArrow:Image;
-		private var bottomArrow:Image;
+		private var upArrow:Image;
+		private var downArrow:Image;
 		private var thumb:ScrollBarThumb;
 	
 		//remember passed in height, as # of child objects could expand content pane
 		//and we want the clip rect to be this size
 		private var setHeight:Number;
+		
+		//used by page up/down to multipy standard arrow key scroll distance
+		protected var scrollMultiplier:Number = 1.0;
 		
 		protected var buttonPane:BaseComponent;
 		protected var buttonPaneArray:Array;
@@ -69,28 +72,28 @@ package scenes.game.components.dialogs
 			mainAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			
-			topArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
-			addChild(topArrow);
-			topArrow.scaleX = .5;
-			topArrow.scaleY = .5;
-			topArrow.x = _width - topArrow.width - 1.5;
-			topArrow.addEventListener(TouchEvent.TOUCH, onTouchUpArrow);
+			upArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			addChild(upArrow);
+			upArrow.scaleX = .5;
+			upArrow.scaleY = .5;
+			upArrow.x = _width - upArrow.width - 1.5;
+			upArrow.addEventListener(TouchEvent.TOUCH, onTouchUpArrow);
 			
-			bottomArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
-			addChild(bottomArrow);
-			bottomArrow.scaleX = .5;
-			bottomArrow.scaleY = -.5;
-			bottomArrow.x = _width - bottomArrow.width - 1.5;
-			bottomArrow.y = _height;
-			bottomArrow.addEventListener(TouchEvent.TOUCH, onTouchDownArrow);
+			downArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			addChild(downArrow);
+			downArrow.scaleX = .5;
+			downArrow.scaleY = -.5;
+			downArrow.x = _width - downArrow.width - 1.5;
+			downArrow.y = _height;
+			downArrow.addEventListener(TouchEvent.TOUCH, onTouchDownArrow);
 			
 			scrollbarBackground = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
 			addChild(scrollbarBackground);
 			scrollbarBackground.x = _width - scrollbarWidth;
-			scrollbarBackground.y = topArrow.height + 1;
-			scrollbarBackground.height = _height - topArrow.height - bottomArrow.height - 2;
+			scrollbarBackground.y = upArrow.height + 1;
+			scrollbarBackground.height = _height - upArrow.height - downArrow.height - 2;
 			scrollbarBackground.width = scrollbarWidth;
-			
+			scrollbarBackground.addEventListener(TouchEvent.TOUCH, onTouchScrollbar);
 			thumb = new ScrollBarThumb(scrollbarBackground.y, scrollbarBackground.y+scrollbarBackground.height);
 			thumb.addEventListener(starling.events.Event.TRIGGERED, onThumbTriggered);
 			addChild(thumb);
@@ -117,7 +120,13 @@ package scenes.game.components.dialogs
 			if (touches.length == 0) {
 				return;
 			}
-			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			var touch:Touch = event.getTouch(upArrow);
+			if(touch == null)
+				return;
+			
+			var currentPosition:Point = touch.getLocation(scrollbarBackground.parent);
+			storedMouseY = currentPosition.y;
+			if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
 				this.addEventListener(Event.ENTER_FRAME, updateUpScroll);
 			}
@@ -137,7 +146,13 @@ package scenes.game.components.dialogs
 			if (touches.length == 0) {
 				return;
 			}
-			else if(event.getTouches(this, TouchPhase.BEGAN).length)
+			var touch:Touch = event.getTouch(downArrow);
+			if(touch == null)
+				return;
+			
+			var currentPosition:Point = touch.getLocation(scrollbarBackground.parent);
+			storedMouseY = currentPosition.y;
+			if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
 				this.addEventListener(Event.ENTER_FRAME, updateDownScroll);
 			}
@@ -150,12 +165,62 @@ package scenes.game.components.dialogs
 		
 		protected function updateUpScroll(e:Event):void
 		{
-			scrollPanel(-3);
+			if(storedMouseY > thumb.y + thumb.height/2)
+				this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+			else
+				scrollPanel(-3);
 		}
 		
 		protected function updateDownScroll(e:Event):void
 		{
-			scrollPanel(3);
+			if(storedMouseY < thumb.y + thumb.height/2)
+				this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+			else
+				scrollPanel(3);
+		}
+		
+		protected var directionUp:Boolean = true;
+		protected var storedMouseY:Number = -1;
+		protected function onTouchScrollbar(event:TouchEvent):void
+		{			
+			if(thumb.enabled == false)
+				return;
+			
+			var touches:Vector.<Touch> = event.touches;
+			if (touches.length == 0) {
+				return;
+			}
+
+			var touch:Touch = event.getTouch(scrollbarBackground);
+			if(touch == null)
+				return;
+			
+			var currentPosition:Point = touch.getLocation(scrollbarBackground.parent);
+			
+			if(event.getTouches(this, TouchPhase.BEGAN).length)
+			{
+				storedMouseY = currentPosition.y;
+				scrollMultiplier = 5.0;
+				if(currentPosition.y < thumb.y)
+				{
+					directionUp = true;
+					this.addEventListener(Event.ENTER_FRAME, updateUpScroll);
+				}
+				else 
+				{
+					directionUp = false;
+					this.addEventListener(Event.ENTER_FRAME, updateDownScroll);
+				}
+			}
+				
+			else if(event.getTouches(this, TouchPhase.ENDED).length)
+			{
+				scrollMultiplier = 1.0;
+				if(directionUp)
+					this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+				else
+					this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+			}
 		}
 		
 		public function setClipRect():void
@@ -181,8 +246,8 @@ package scenes.game.components.dialogs
 		private function scrollPanel(percentScrolled:Number):void
 		{
 			var currentPercent:Number = buttonPane.y/-(buttonPane.height-setHeight);
-			trace(percentScrolled, currentPercent, buttonPane.height,setHeight);
 			
+			percentScrolled = percentScrolled*scrollMultiplier;
 			var totalNewScrollDistance:Number = currentPercent+percentScrolled/100;
 			
 			if(totalNewScrollDistance < -0.1)
