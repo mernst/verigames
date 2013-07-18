@@ -87,11 +87,11 @@ package scenes.game.components
 			addChild(m_textContainer);
 			
 			// background box
-			var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix);
+			var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
 			m_textContainer.addChild(box);
 			
 			// text field
-			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, size.x - 2 * INSET, size.y - 2 * INSET, TUTORIAL_FONT_SIZE, 0x0077FF);
+			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, size.x - 2 * INSET, size.y - 2 * INSET, TUTORIAL_FONT_SIZE, 0xEEEEEE);
 			textField.x = INSET;
 			textField.y = INSET;
 			m_textContainer.addChild(textField);
@@ -99,7 +99,7 @@ package scenes.game.components
 			// arrow
 			if (m_pointAt) {
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
 				m_tutorialArrow.width = m_tutorialArrow.height = ARROW_SZ;
 				XSprite.setPivotCenter(m_tutorialArrow);

@@ -83,6 +83,8 @@ package assets
 		public static const PipeJamSubTexture_MenuButtonSelectedPrefix:String = "MenuButtonSelected";
 		public static const PipeJamSubTexture_MenuArrowHorizonal:String = "MenuArrowHorizonal";
 		public static const PipeJamSubTexture_MenuArrowVertical:String = "MenuArrowVertical";
+		public static const PipeJamSubTexture_TutorialArrow:String = "TutorialArrow";
+		public static const PipeJamSubTexture_TutorialBoxPrefix:String = "TutorialBox";
 		public static const PipeJamSubTexture_BackButton:String = "BackButton";
 		public static const PipeJamSubTexture_BackButtonOver:String = "BackButtonOver";
 		public static const PipeJamSubTexture_BackButtonSelected:String = "BackButtonSelected";
