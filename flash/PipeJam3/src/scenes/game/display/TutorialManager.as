@@ -206,6 +206,40 @@ package scenes.game.display
 			return false;
 		}
 		
+		private function pointToNode(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
+		}
+		
+		private function pointToEdge(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+		}
+		
+		private function pointToPassage(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject {
+				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+				if (edge && edge.m_innerBoxSegment) {
+					return edge.m_innerBoxSegment;
+				} else {
+					return null;
+				}
+			};
+		}
+		
+		private function pointToClash(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject {
+				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
+				if (edge && edge.m_errorParticleSystem) {
+					return edge.m_errorParticleSystem;
+				} else {
+					return null;
+				}
+			};
+		}
+		
 		public function getTextInfo():TutorialManagerTextInfo
 		{
 			switch (m_tutorialTag) {
@@ -213,22 +247,22 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.",
 						null,
-						function(currentLevel:Level):DisplayObject { return currentLevel.getNode("IntroWidget4"); });
+						pointToNode("IntroWidget4"));
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Gray widgets are locked, they cannot be changed.",
 						null,
-						null);
+						pointToNode("LockedWidget1"));
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.",
 						null,
-						null);
+						pointToEdge("e1__OUT__"));
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"This is a passage. Links can begin, end or pass through\nwidgets through these passages. Change the size\nof the widget to change the width its passages and continue.",
 						null,
-						null);
+						pointToPassage("e32__IN__"));
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.",
@@ -238,7 +272,7 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points. Fix this clash.",
 						null,
-						null);
+						pointToClash("e2__IN__"));
 				case WIDEN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the blue widgets to widen their passages\nand fix the clashes.",
