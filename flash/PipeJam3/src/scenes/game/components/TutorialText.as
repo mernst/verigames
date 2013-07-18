@@ -8,6 +8,9 @@ package scenes.game.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import scenes.game.display.Level;
+	import scenes.game.display.TutorialManagerTextInfo;
+	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -26,7 +29,7 @@ package scenes.game.components
 		private static const ARROW_BOUNCE:Number = 2;
 		private static const ARROW_BOUNCE_SPEED:Number = 0.5;
 		private static const INSET:Number = 3;
-		private static const PADDING_SZ:Number = ARROW_SZ + ARROW_BOUNCE + 3 * INSET;
+		private static const PADDING_SZ:Number = ARROW_SZ + 2 * ARROW_BOUNCE + 4 * INSET;
 
 		private var m_tutorialTextFields:Vector.<TextFieldWrapper> = new Vector.<TextFieldWrapper>();
 		private var m_textContainer:Sprite;
@@ -35,14 +38,21 @@ package scenes.game.components
 		private var m_tutorialCursor:Quad;
 		
 		private var m_pointTo:DisplayObject;
+		private var m_pointDir:String;
 		
-		public function TutorialText(text:String, size:Point, pointTo:DisplayObject)
+		
+		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
+			// get variables out of info
+			var text:String = info.text;
+			
+			var size:Point = info.size;
 			if (size == null) {
 				size = new Point(200, 40);
 			}
-			
-			m_pointTo = pointTo;
+
+			m_pointTo = (info.pointToFn != null) ? info.pointToFn(level) : null;
+			m_pointDir = info.pointDir;
 			
 			// a transparent sprite with padding around the edges so we can put the arrow outside the text box
 			var padding:Quad = new Quad(10, 10, 0xff00ff);
@@ -71,12 +81,14 @@ package scenes.game.components
 			m_textContainer.addChild(textField);
 			
 			// arrow
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
-			m_tutorialArrow = new Image(arrowTexture);
-			m_tutorialArrow.width = m_tutorialArrow.height = ARROW_SZ;
-			XSprite.setPivotCenter(m_tutorialArrow);
-			addChild(m_tutorialArrow);
+			if (m_pointTo) {
+				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowHorizonal);
+				m_tutorialArrow = new Image(arrowTexture);
+				m_tutorialArrow.width = m_tutorialArrow.height = ARROW_SZ;
+				XSprite.setPivotCenter(m_tutorialArrow);
+				addChild(m_tutorialArrow);
+			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
@@ -101,25 +113,85 @@ package scenes.game.components
 			var timeArrowOffset:Number = ARROW_BOUNCE * (int(timeSec / ARROW_BOUNCE_SPEED) % 2);
 			
 			if (m_pointTo) {
-				var pt:Point = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.top);
+				var pt:Point = new Point();
+				var offset:Point = new Point();
+				
+				switch (m_pointDir) {
+					case NineSliceBatch.TOP_LEFT:
+						pt = m_pointTo.bounds.topLeft;
+						offset.x = -1;
+						offset.y = -1;
+						break;
+					
+					case NineSliceBatch.BOTTOM_RIGHT:
+						pt = m_pointTo.bounds.bottomRight;
+						offset.x = 1;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.TOP_RIGHT:
+						pt = new Point(m_pointTo.bounds.right, m_pointTo.bounds.top);
+						offset.x = -1;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.BOTTOM_LEFT:
+						pt = new Point(m_pointTo.bounds.left, m_pointTo.bounds.bottom);
+						offset.x = 1;
+						offset.y = -1;
+						break;
+					
+					case NineSliceBatch.LEFT:
+						pt = new Point(m_pointTo.bounds.left, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
+						offset.x = -1;
+						offset.y = 0;
+						break;
+					
+					case NineSliceBatch.RIGHT:
+						pt = new Point(m_pointTo.bounds.right, 0.5 * (m_pointTo.bounds.bottom + m_pointTo.bounds.top));
+						offset.x = 1;
+						offset.y = 0;
+						break;
+					
+					case NineSliceBatch.BOTTOM:
+						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.bottom);
+						offset.x = 0;
+						offset.y = 1;
+						break;
+					
+					case NineSliceBatch.TOP:
+					default:
+						pt = new Point(0.5 * (m_pointTo.bounds.left + m_pointTo.bounds.right), m_pointTo.bounds.top);
+						
+						offset.x = 0;
+						offset.y = -1;
+						break;
+				}
+				
 				pt = m_pointTo.parent.localToGlobal(pt);
 				pt = parent.globalToLocal(pt);
 
-				x = pt.x;
-				y = pt.y - height / 2;
+				var arrowPos:Number = INSET + ARROW_SZ / 2 - timeArrowOffset;
 				
-				m_tutorialArrow.rotation = Math.PI / 2;
-				m_tutorialArrow.x = 0;
-				m_tutorialArrow.y = height / 2 - INSET - ARROW_SZ / 2 + timeArrowOffset;
-			} else {
-				x = Constants.GameWidth / 2;
-				y = height / 2 - PADDING_SZ;
+				x = pt.x + offset.x * (width / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
+				y = pt.y + offset.y * (height / 2 - PADDING_SZ + 2 * INSET + ARROW_SZ + ARROW_BOUNCE);
 				
-				m_tutorialArrow.x = -width / 2 + INSET + ARROW_SZ / 2 + timeArrowOffset;
-				m_tutorialArrow.y = 0;
+				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
+				m_tutorialArrow.x = -offset.x * (width / 2 - PADDING_SZ + arrowPos);
+				m_tutorialArrow.y = -offset.y * (height / 2 - PADDING_SZ + arrowPos);
 			}
 		}
 		
+		private function sign(x:Number):Number
+		{
+			if (x < 0.0) {
+				return -1.0;
+			} else if (x > 0.0) {
+				return 1.0;
+			} else {
+				return 0.0;
+			}
+		}
 		public function getConsoleY():Number
 		{
 			if (m_pointTo) {

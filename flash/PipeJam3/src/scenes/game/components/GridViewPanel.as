@@ -494,7 +494,7 @@ package scenes.game.components
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
 			if (levelTextInfo) {
-				m_tutorialText = new TutorialText(levelTextInfo.text, levelTextInfo.size, (levelTextInfo.pointToFn != null) ? levelTextInfo.pointToFn(m_currentLevel) : null);
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
 			}
 			if (m_currentLevel && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
