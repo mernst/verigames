@@ -34,8 +34,8 @@
    id="namedview3321"
    showgrid="false"
    inkscape:zoom="1.24"
-   inkscape:cx="255.81839"
-   inkscape:cy="474.61422"
+   inkscape:cx="739.68936"
+   inkscape:cy="829.45293"
    inkscape:window-x="0"
    inkscape:window-y="0"
    inkscape:window-maximized="1"
@@ -1178,12 +1178,12 @@
    d="m 865.85367,-29.04878 a 14.02439,12.804878 0 1 1 -28.04878,0 14.02439,12.804878 0 1 1 28.04878,0 z"
    transform="matrix(1.1408696,0,0,1.2495238,-196.26413,81.297142)"
    id="path4729"
-   style="fill:#f05a28;fill-opacity:1;stroke:none" /><path
-   style="fill:#000000;fill-opacity:1;stroke:#f5ff00;stroke-width:7.83347178;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+   style="fill:#ff2d14;fill-opacity:1;stroke:none" /><path
+   style="fill:#000000;fill-opacity:1;stroke:#ffec00;stroke-width:7.83347178000000000;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
    id="path4115"
    d="m -59.63543,566.91674 c -8.222267,0 -14.885834,6.66545 -14.885834,14.88288 v 154.40076 c 0,8.21647 6.662608,14.88288 14.885834,14.88288 H 94.764219 c 8.218431,0 14.881041,-6.66545 14.881041,-14.88288 V 581.79962 c 0,-8.21647 -6.66261,-14.88288 -14.881041,-14.88288 H -59.63543 z"
    inkscape:connector-curvature="0" /><polygon
-   style="fill:#f5ff00;fill-opacity:1"
+   style="fill:#ffec00;fill-opacity:1"
    id="polygon4117"
    transform="translate(-0.055,-39.485)"
    points="736.304,90.711 745.724,81.293 736.304,71.871 "
