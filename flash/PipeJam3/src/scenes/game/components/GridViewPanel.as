@@ -495,7 +495,8 @@ package scenes.game.components
 			
 			var levelText:String = m_currentLevel.getLevelText();
 			if (levelText) {
-				m_tutorialText = new TutorialText(levelText, this, m_currentLevel.getLevelPointTo());
+				m_tutorialText = new TutorialText(levelText, m_currentLevel.getLevelPointTo());
+				addChild(m_tutorialText);
 			}
 			if (m_currentLevel && m_currentLevel.tutorialManager.getAutoZoomAtStart()) {
 				var consoleY:Number = 0;
