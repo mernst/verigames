@@ -36,9 +36,12 @@ package scenes.game.components
 		
 		private var m_pointTo:DisplayObject;
 		
-		public function TutorialText(text:String, pointTo:DisplayObject)
+		public function TutorialText(text:String, size:Point, pointTo:DisplayObject)
 		{
-			var size:Point = new Point(200, 40);
+			if (size == null) {
+				size = new Point(200, 40);
+			}
+			
 			m_pointTo = pointTo;
 			
 			// a transparent sprite with padding around the edges so we can put the arrow outside the text box

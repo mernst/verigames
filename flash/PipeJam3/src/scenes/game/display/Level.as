@@ -1307,14 +1307,9 @@ package scenes.game.display
 			return m_jointList;
 		}
 		
-		public function getLevelText():String
+		public function getLevelTextInfo():TutorialManagerTextInfo
 		{
-			return tutorialManager ? tutorialManager.getText() : null;
-		}
-		
-		public function getLevelPointTo():DisplayObject
-		{
-			return (tutorialManager && tutorialManager.getPointTo() != null) ? tutorialManager.getPointTo()(this) : null;
+			return tutorialManager ? tutorialManager.getTextInfo() : null;
 		}
 		
 		public function getTargetScore():int
