@@ -161,19 +161,34 @@
 	<SubTexture name="TrackBackground"  x="830" y="94" width="6" height="6" frameX="0" frameY="0" frameWidth="6" frameHeight="6"/>
 	
 	<!-- Back Buttons -->
-	<SubTexture name="BackButton"         x="865" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="BackButtonOver"     x="865" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="BackButtonSelected" x="865" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="BackButton"         x="857" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="BackButtonOver"     x="857" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="BackButtonSelected" x="857" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 	
 	<!-- Settings Buttons -->
-	<SubTexture name="SettingsButton"         x="893" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="SettingsButtonOver"     x="893" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="SettingsButtonSelected" x="893" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SettingsButton"         x="885" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SettingsButtonOver"     x="885" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SettingsButtonSelected" x="885" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 	
 	<!-- Sound Buttons -->
-	<SubTexture name="SoundButton"         x="921" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="SoundButtonOver"     x="921" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
-	<SubTexture name="SoundButtonSelected" x="921" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SoundButton"         x="913" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SoundButtonOver"     x="913" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="SoundButtonSelected" x="913" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	
+	<!-- ZoomOut Buttons -->
+	<SubTexture name="ZoomOutButton"         x="941" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="ZoomOutButtonOver"     x="941" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="ZoomOutButtonSelected" x="941" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	
+	<!-- ZoomIn Buttons -->
+	<SubTexture name="ZoomInButton"         x="969" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="ZoomInButtonOver"     x="969" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="ZoomInButtonSelected" x="969" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	
+	<!-- Recenter Buttons -->
+	<SubTexture name="RecenterButton"         x="997" y="94"  width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="RecenterButtonOver"     x="997" y="122" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="RecenterButtonSelected" x="997" y="150" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 	
 	<!-- Text Inputs -->
 	<SubTexture name="TextInput"         	x="0"   y="0" width="246" height="28" frameX="0" frameY="0" frameWidth="246" frameHeight="28"/>

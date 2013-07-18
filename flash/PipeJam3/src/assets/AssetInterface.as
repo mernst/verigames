@@ -94,6 +94,15 @@ package assets
 		public static const PipeJamSubTexture_SoundButton:String = "SoundButton";
 		public static const PipeJamSubTexture_SoundButtonOver:String = "SoundButtonOver";
 		public static const PipeJamSubTexture_SoundButtonSelected:String = "SoundButtonSelected";
+		public static const PipeJamSubTexture_ZoomOutButton:String = "ZoomOutButton";
+		public static const PipeJamSubTexture_ZoomOutButtonOver:String = "ZoomOutButtonOver";
+		public static const PipeJamSubTexture_ZoomOutButtonSelected:String = "ZoomOutButtonSelected";
+		public static const PipeJamSubTexture_ZoomInButton:String = "ZoomInButton";
+		public static const PipeJamSubTexture_ZoomInButtonOver:String = "ZoomInButtonOver";
+		public static const PipeJamSubTexture_ZoomInButtonSelected:String = "ZoomInButtonSelected";
+		public static const PipeJamSubTexture_RecenterButton:String = "RecenterButton";
+		public static const PipeJamSubTexture_RecenterButtonOver:String = "RecenterButtonOver";
+		public static const PipeJamSubTexture_RecenterButtonSelected:String = "RecenterButtonSelected";
 		public static const PipeJamSubTexture_TextInput:String = "TextInput";
 		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
 		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";
