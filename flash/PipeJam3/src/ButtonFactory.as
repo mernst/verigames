@@ -3,6 +3,7 @@ package
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import display.NineSliceButton;
+	import display.NineSliceToggleButton;
 	
 	public class ButtonFactory
 	{
@@ -30,6 +31,13 @@ package
 			return new NineSliceButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
 									  AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
 									  AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
+		}
+		
+		public function createToggleButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
+		{
+			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
+				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
+				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
 		}
 	}
 }
