@@ -173,6 +173,7 @@ package utils
 			if ((available_suffix_indx != null) && (available_suffix_indx.length > 0)) {
 				var level_suffix_indx:int = rand.nextIntRange(0, available_suffix_indx.length - 1);
 				var level_suffix:String = level_suffix_array[available_suffix_indx[level_suffix_indx]];
+				available_suffix_indx.splice(level_suffix_indx, 1);
 				var num:String = "";
 				if (level_name_iteration > 0) {
 					num = level_name_iteration.toString();
@@ -199,6 +200,7 @@ package utils
 			if ((available_suffix_indx != null) && (available_suffix_indx.length > 0)) {
 				var board_suffix_indx:int = rand.nextIntRange(0, available_suffix_indx.length - 1);
 				var board_suffix:String = board_suffix_array[available_suffix_indx[board_suffix_indx]];
+				available_suffix_indx.splice(board_suffix_indx, 1);
 				var num:String = "";
 				if (board_name_iteration > 0) {
 					num = board_name_iteration.toString();
