@@ -5,6 +5,8 @@ package scenes.game.display
 	import events.EdgeSetChangeEvent;
 	import events.TutorialEvent;
 	
+	import flash.geom.Point;
+	
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.events.EventDispatcher;
@@ -56,21 +58,21 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", true)); }, 0.2);
+					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", true)); }, 0.2);
 					break;
 				case LOCKED_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "LockedWidget2", true)); }, 0.2);
+					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "LockedWidget1", true)); }, 0.2);
 					break;
 				case LINKS_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_EDGE, "e1__OUT__", true)); }, 0.2);
+					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_EDGE, "e1__OUT__", true)); }, 0.2);
 					break;
 				case PASSAGE_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "e32__IN__", true)); }, 0.2);
+					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "e32__IN__", true)); }, 0.2);
 					break;
 				case PINCH_TUTORIAL:	
 					break;
 				case CLASH_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_CLASH, "e2__IN__", true)); }, 0.2);
+					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_CLASH, "e2__IN__", true)); }, 0.2);
 					break;
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
@@ -232,73 +234,92 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"These are widgets. Click the blue widgets to\ntoggle their shades between dark and light.",
+						"These are widgets. Click the blue widgets to\n" +
+						"toggle their shades between dark and light.",
 						null,
 						pointToNode("IntroWidget2"),
-						NineSliceBatch.TOP_LEFT);
+						NineSliceBatch.TOP);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Gray widgets are locked, they cannot be changed.",
 						null,
 						pointToNode("LockedWidget2"),
-						null);
+						NineSliceBatch.TOP);
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Widgets are connected by links. Dark widgets\ncreate wide links, light widgets create narrow links.",
+						"Widgets are connected by\n" +
+						"links. Dark widgets create wide\n" +
+						"links, light widgets\n" +
+						"create narrow links.",
 						null,
 						pointToEdge("e1__OUT__"),
-						null);
+						NineSliceBatch.LEFT);
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a passage. Links can begin, end or pass through\nwidgets through these passages. Change the size\nof the widget to change the width its passages and continue.",
+						"This is a passage. Links can begin,\n" +
+						"end or pass through these passages.\n" +
+						"Change the size of the widget to\n" +
+						"change the width its passages.",
 						null,
 						pointToPassage("e32__IN__"),
-						null);
+						NineSliceBatch.TOP_RIGHT);
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some passages are gray. These passages are\nlocked and will not change, even if the widget\nis changed.",
+						"Some passages are gray. These passages are\n" +
+						"locked and will not change, even if the widget\n" +
+						"is changed.",
 						null,
 						null,
 						null);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a clash. Clashes happen when wide links\ntry to enter narrow passages. Each clash incurs\na penalty of -75 points. Fix this clash.",
+						"This is a clash. Clashes happen when\n" +
+						"wide links try to enter narrow\n" +
+						"passages. Each clash incurs a penalty\n" +
+						"of " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
-						null);
+						NineSliceBatch.TOP_RIGHT);
 				case WIDEN_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Click the blue widgets to widen their passages\nand fix the clashes.",
+						"Click the blue widgets to widen their passages\n" +
+						"and fix the clashes.",
 						null,
 						null,
 						null);
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Click the upper widgets to narrow their links\nand fix the clashes.",
+						"Click the upper widgets to narrow their links\n" +
+						"and fix the clashes.",
 						null,
 						null,
 						null);
 				case COLOR_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some widgets want to be a certain color. Match\nthe widgets to the color squares to collect bonus\npoints.",
+						"Some widgets want to be a certain color. Match\n" +
+						"the widgets to the color squares to collect\n" +
+						"bonus points.",
 						null,
 						null,
 						null);
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Try different configurations. Optimize the level.\nGet the high score.",
+						"Try different configurations to improve your score!",
 						null,
 						null,
 						null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Drag the widgets and links around to help organize\nthe layout. Separate the widgets to continue.",
+						"Drag the widgets and links around to help organize\n" +
+						"the layout. Separate the widgets to continue.",
 						null,
 						null,
 						null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Larger levels require navigation. Drag the background\nto move around the level. Use the +/- keys to\nzoom in and out.",
+						"Larger levels require navigation. Drag the background\n" +
+						"to move around the level. Use the +/- keys to\n" +
+						"zoom in and out.",
 						null,
 						null,
 						null);

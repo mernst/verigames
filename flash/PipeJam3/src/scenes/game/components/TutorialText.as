@@ -7,6 +7,9 @@ package scenes.game.components
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	
 	import scenes.game.display.Level;
 	import scenes.game.display.TutorialManagerTextInfo;
@@ -31,26 +34,31 @@ package scenes.game.components
 		private static const INSET:Number = 3;
 		private static const PADDING_SZ:Number = ARROW_SZ + 2 * ARROW_BOUNCE + 4 * INSET;
 
-		private var m_tutorialTextFields:Vector.<TextFieldWrapper> = new Vector.<TextFieldWrapper>();
 		private var m_textContainer:Sprite;
-		private var m_tutorialBox:NineSliceBatch;
 		private var m_tutorialArrow:Image;
-		private var m_tutorialCursor:Quad;
 		
 		private var m_pointTo:DisplayObject;
 		private var m_pointDir:String;
-		
+		private var m_pointToPrevPos:Point = new Point(0, 0);
 		
 		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
 			// get variables out of info
 			var text:String = info.text;
-			
-			var size:Point = info.size;
-			if (size == null) {
-				size = new Point(200, 40);
+
+			var size:Point;
+			if (info.size == null) {
+				// estimate required size
+				var checkField:TextField = new TextField();
+				checkField.defaultTextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, TUTORIAL_FONT_SIZE);
+				checkField.autoSize = TextFieldAutoSize.CENTER;
+				checkField.text = text;
+				size = new Point(checkField.width + 8, checkField.height + 8);
+			} else {
+				size = info.size.clone();
 			}
 
+			// get pointing setup
 			m_pointTo = (info.pointToFn != null) ? info.pointToFn(level) : null;
 			m_pointDir = info.pointDir;
 			
@@ -131,14 +139,14 @@ package scenes.game.components
 					
 					case NineSliceBatch.TOP_RIGHT:
 						pt = new Point(m_pointTo.bounds.right, m_pointTo.bounds.top);
-						offset.x = -1;
-						offset.y = 1;
+						offset.x = 1;
+						offset.y = -1;
 						break;
 					
 					case NineSliceBatch.BOTTOM_LEFT:
 						pt = new Point(m_pointTo.bounds.left, m_pointTo.bounds.bottom);
-						offset.x = 1;
-						offset.y = -1;
+						offset.x = -1;
+						offset.y = 1;
 						break;
 					
 					case NineSliceBatch.LEFT:
@@ -168,8 +176,13 @@ package scenes.game.components
 						break;
 				}
 				
-				pt = m_pointTo.parent.localToGlobal(pt);
-				pt = parent.globalToLocal(pt);
+				if (m_pointTo.parent) {
+					pt = m_pointTo.parent.localToGlobal(pt);
+					pt = parent.globalToLocal(pt);
+					m_pointToPrevPos = pt;
+				} else {
+					pt = m_pointToPrevPos;
+				}
 
 				var arrowPos:Number = INSET + ARROW_SZ / 2 - timeArrowOffset;
 				
@@ -179,6 +192,9 @@ package scenes.game.components
 				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
 				m_tutorialArrow.x = -offset.x * (width / 2 - PADDING_SZ + arrowPos);
 				m_tutorialArrow.y = -offset.y * (height / 2 - PADDING_SZ + arrowPos);
+			} else {
+				x = Constants.GameWidth / 2;
+				y = height / 2 - PADDING_SZ + INSET;
 			}
 		}
 		
