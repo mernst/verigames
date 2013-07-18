@@ -3,6 +3,7 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import scenes.game.display.GameEdgeContainer;
+	import starling.display.DisplayObject;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -617,24 +618,28 @@ package scenes.game.components
 		
 		public function onHighlightTutorialEvent(evt:TutorialEvent):void
 		{
+			if (!evt.highlightOn) {
+				removeSpotlight();
+				return;
+			}
+			if (!m_currentLevel) return;
+			var edge:GameEdgeContainer;
 			switch (evt.type) {
 				case TutorialEvent.HIGHLIGHT_BOX:
-					if (!evt.highlightOn) {
-						removeSpotlight();
-						return;
-					}
-					if (!m_currentLevel) return;
 					var node:GameNode = m_currentLevel.getNode(evt.componentId);
 					if (node) spotlightComponent(node);
 					break;
 				case TutorialEvent.HIGHLIGHT_EDGE:
-					if (!evt.highlightOn) {
-						removeSpotlight();
-						return;
-					}
-					if (!m_currentLevel) return;
-					var edge:GameEdgeContainer = m_currentLevel.getEdgeContainer(evt.componentId);
-					if (edge) spotlightComponent(edge);
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge) spotlightComponent(edge, 3.0, 1.75, 1.2);
+					break;
+				case TutorialEvent.HIGHLIGHT_PASSAGE:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.m_innerBoxSegment) spotlightComponent(edge.m_innerBoxSegment, 3.0, 3, 2);
+					break;
+				case TutorialEvent.HIGHLIGHT_CLASH:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.m_errorParticleSystem) spotlightComponent(edge.m_errorParticleSystem, 3.0, 1.3, 1.3);
 					break;
 			}
 		}
@@ -644,7 +649,7 @@ package scenes.game.components
 			if (m_spotlight) m_spotlight.removeFromParent();
 		}
 		
-		public function spotlightComponent(component:GameComponent, timeSec:Number = 3.0):void
+		public function spotlightComponent(component:DisplayObject, timeSec:Number = 3.0, widthScale:Number = 1.75, heightScale:Number = 1.75):void
 		{
 			if (!m_currentLevel) return;
 			startingPoint = new Point(content.x, content.y);
@@ -659,9 +664,8 @@ package scenes.game.components
 				m_spotlight.touchable = false;
 				m_spotlight.alpha = 0.3;
 			}
-			const SPOTLIGHT_TO_COMPONENT_RATIO:Number = 1.75;
-			m_spotlight.width = component.width * SPOTLIGHT_TO_COMPONENT_RATIO;
-			m_spotlight.height = component.height * SPOTLIGHT_TO_COMPONENT_RATIO;
+			m_spotlight.width = component.width * widthScale;
+			m_spotlight.height = component.height * heightScale;
 			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
 			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
 			content.addChild(m_spotlight);

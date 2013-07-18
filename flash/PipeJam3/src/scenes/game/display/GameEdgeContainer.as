@@ -440,7 +440,7 @@ package scenes.game.display
 			}
 		}
 		
-		private var m_errorParticleSystem:DisplayObject;
+		public var m_errorParticleSystem:Sprite;
 		private function addError():void
 		{
 			if (m_errorParticleSystem == null) {

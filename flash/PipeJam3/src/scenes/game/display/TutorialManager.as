@@ -62,12 +62,12 @@ package scenes.game.display
 					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE)); }, 3.0);
 					break;
 				case PASSAGE_TUTORIAL:
-					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "Links3", true)); }, 0.2);
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "e32__IN__", true)); }, 0.2);
 					break;
 				case PINCH_TUTORIAL:	
 					break;
 				case CLASH_TUTORIAL:
-					
+					Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_CLASH, "e2__IN__", true)); }, 0.2);
 					break;
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
