@@ -164,9 +164,9 @@ package scenes.game.display
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
 					return true;
 				case LAYOUT_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
 					return false;
 			}
@@ -269,8 +269,8 @@ package scenes.game.display
 						"locked and will not change, even if the widget\n" +
 						"is changed.",
 						null,
-						null,
-						null);
+						pointToPassage("e20__IN__"),
+						NineSliceBatch.BOTTOM);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"This is a clash. Clashes happen when\n" +
