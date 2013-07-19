@@ -303,7 +303,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			
 			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * m_currentScore / baseScore;
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, m_currentScore) / baseScore;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);

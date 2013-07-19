@@ -1295,6 +1295,14 @@ package scenes.game.display
 			return null;
 		}
 		
+		public function getJoint(_id:String):GameJointNode
+		{
+			if (jointDictionary.hasOwnProperty(_id) && (jointDictionary[_id] is GameJointNode)) {
+				return (jointDictionary[_id] as GameJointNode);
+			}
+			return null;
+		}
+		
 		public function getEdgeContainer(_id:String):GameEdgeContainer
 		{
 			if (edgeContainerDictionary.hasOwnProperty(_id) && (edgeContainerDictionary[_id] is GameEdgeContainer)) {

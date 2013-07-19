@@ -13,6 +13,7 @@ package scenes.game.display
 	
 	public class TutorialManager extends EventDispatcher
 	{
+		// This is the order the tutorials appers in:
 		public static const WIDGET_TUTORIAL:String = "widget";
 		public static const LOCKED_TUTORIAL:String = "locked";
 		public static const LINKS_TUTORIAL:String = "links";
@@ -20,11 +21,13 @@ package scenes.game.display
 		public static const WIDEN_TUTORIAL:String = "widen";
 		public static const PASSAGE_TUTORIAL:String = "passage";
 		public static const PINCH_TUTORIAL:String = "pinch";
+		public static const SPLIT_TUTORIAL:String = "split";
+		public static const MERGE_TUTORIAL:String = "merge";
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const END_TUTORIAL:String = "end";
-		
+		// Note currently used:
 		public static const NARROW_TUTORIAL:String = "narrow";
 		public static const COLOR_TUTORIAL:String = "color";
 		
@@ -44,6 +47,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
@@ -77,6 +82,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 				case END_TUTORIAL:
@@ -122,6 +129,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 					return false;
@@ -144,6 +153,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 					return true;
@@ -172,6 +183,8 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
+				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
@@ -186,17 +199,20 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
-					return new Point(0, 5);// move down by 5px
+					return new Point(0, 5);// move down by 5px (pan up)
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
-					return new Point(15, 0);//move right 15px
+					return new Point(15, 0);//move right 15px (pan left)
 				case PINCH_TUTORIAL:
 					return new Point(0, -15);// move up by 15px
+				case MERGE_TUTORIAL:
+					return new Point(-15, 0);//move left 15px
 				case ZOOM_PAN_TUTORIAL:
-					return new Point(40, -10);// move right 40px, up by 10px	
+					return new Point(40, -10);// move right 40px, up by 10px
 				case CLASH_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
+				case SPLIT_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case END_TUTORIAL:
 					return new Point();
@@ -207,6 +223,11 @@ package scenes.game.display
 		private function pointToNode(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getNode(name); };
+		}
+		
+		private function pointToJoint(name:String):Function
+		{
+			return function(currentLevel:Level):DisplayObject { return currentLevel.getJoint(name); };
 		}
 		
 		private function pointToEdge(name:String):Function
@@ -266,23 +287,6 @@ package scenes.game.display
 						null,
 						pointToEdge("e1__OUT__"),
 						NineSliceBatch.LEFT, null);
-				case PASSAGE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"This is a PASSAGE. Links can begin\n" +
-						"in, end in or go through passages.\n" +
-						"Change the color of the widget to\n" +
-						"change the width its passages.",
-						null,
-						pointToPassage("e32__IN__"),
-						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
-				case PINCH_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Some passages are gray. These passages\n" +
-						"won't change width even if their widget\n" +
-						"is changed.",
-						null,
-						pointToPassage("e20__IN__"),
-						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"This is a CLASH. Clashes happen when\n" +
@@ -299,6 +303,67 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
+				case PASSAGE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a PASSAGE. Links can begin\n" +
+						"in, end in or go through passages.\n" +
+						"Change the color of the widget to\n" +
+						"change the width of its passages.",
+						null,
+						pointToPassage("e32__IN__"),
+						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
+				case PINCH_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Some passages are gray. These passages\n" +
+						"won't change width even if their widget\n" +
+						"is changed.",
+						null,
+						pointToPassage("e20__IN__"),
+						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
+				case SPLIT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a SPLIT. When a link is split\n" +
+						"the outgoing links will match the\n" +
+						"incoming link.",
+						null,
+						pointToJoint("n10__IN__0"),
+						NineSliceBatch.TOP_RIGHT, null);
+				case MERGE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a MERGE. When two links merge\n" +
+						"the outgoing link will be wide if\n" +
+						"either incoming link is wide.",
+						null,
+						pointToJoint("n123"),
+						NineSliceBatch.RIGHT, null);
+				case OPTIMIZE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Try different configurations to improve your score!",
+						null,
+						null,
+						null, null);
+				case ZOOM_PAN_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Larger levels require navigation. Drag the background\n" +
+						"to move around the level. Use the +/- keys to\n" +
+						"zoom in and out.",
+						null,
+						null,
+						null, null);
+				case LAYOUT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Widgets and links can be dragged to help organize\n" +
+						"the layout. Separate the widgets.",
+						null,
+						pointToNode("Layout1"),
+						null, null);
+				case END_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Optimize your first real level!",
+						null,
+						null,
+						null, null);
+				// The following are not currently in use:
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the upper widgets to narrow their links\n" +
@@ -311,33 +376,6 @@ package scenes.game.display
 						"Some widgets want to be a certain color. Match\n" +
 						"the widgets to the color squares to collect\n" +
 						"bonus points.",
-						null,
-						null,
-						null, null);
-				case OPTIMIZE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Try different configurations to improve your score!",
-						null,
-						null,
-						null, null);
-				case LAYOUT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Widgets and links can be dragged to help organize\n" +
-						"the layout. Separate the widgets.",
-						null,
-						pointToNode("Layout1"),
-						null, null);
-				case ZOOM_PAN_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Larger levels require navigation. Drag the background\n" +
-						"to move around the level. Use the +/- keys to\n" +
-						"zoom in and out.",
-						null,
-						null,
-						null, null);
-				case END_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Optimize your first real level!",
 						null,
 						null,
 						null, null);
