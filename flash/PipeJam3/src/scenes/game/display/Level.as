@@ -215,16 +215,16 @@ package scenes.game.display
 					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, edgeSetEdges);
 				}
 				
-				if(boxLayoutXML.hasOwnProperty('@visible'))
-					gameNode.visible = boxLayoutXML.@visible == "true" ? true : false;
+				gameNode.visible = getVisible(boxLayoutXML);
 				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
-				
-				minX = Math.min(minX, gameNode.m_boundingBox.left);
-				minY = Math.min(minY, gameNode.m_boundingBox.top);
-				maxX = Math.max(maxX, gameNode.m_boundingBox.right);
-				maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				if (gameNode.visible) {
+					minX = Math.min(minX, gameNode.m_boundingBox.left);
+					minY = Math.min(minY, gameNode.m_boundingBox.top);
+					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				}
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -271,15 +271,15 @@ package scenes.game.display
 				}
 				
 				var joint:GameJointNode = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
-				if(jointLayoutXML.hasOwnProperty('@visible'))
-					joint.visible = jointLayoutXML.@visible == "true" ? true : false;
+				joint.visible = getVisible(jointLayoutXML);
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
-				
-				minX = Math.min(minX, joint.m_boundingBox.left);
-				minY = Math.min(minY, joint.m_boundingBox.top);
-				maxX = Math.max(maxX, joint.m_boundingBox.right);
-				maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				if (joint.visible) {
+					minX = Math.min(minX, joint.m_boundingBox.left);
+					minY = Math.min(minY, joint.m_boundingBox.top);
+					maxX = Math.max(maxX, joint.m_boundingBox.right);
+					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				}
 			}
 			
 			// Process <line> 's
@@ -287,7 +287,8 @@ package scenes.game.display
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
 				var boundingBox:Rectangle = createLine(edgeXML, false, copyLines);
-				if (boundingBox) {
+				var edgeVisible:Boolean = getVisible(edgeXML);
+				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
 					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
@@ -467,8 +468,8 @@ package scenes.game.display
 			} else {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
 			}
-			if(edgeXML.hasOwnProperty('@visible'))
-				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
+			
+			newGameEdge.visible = getVisible(edgeXML);
 			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
@@ -649,8 +650,8 @@ package scenes.game.display
 					}
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
-					if(child.hasOwnProperty('@visible'))
-						gameNode.visible = child.@visible == "true" ? true : false;
+					
+					gameNode.visible = getVisible(child);
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -730,7 +731,7 @@ package scenes.game.display
 					child.@x = currentLayoutX.toFixed(2);
 					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = currentLayoutY.toFixed(2);
-					child.@visible = edgeSet.visible;
+					child.@visible = edgeSet.visible.toString();
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
@@ -742,7 +743,7 @@ package scenes.game.display
 						child.@x = currentLayoutX.toFixed(2);
 						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = currentLayoutY.toFixed(2);
-						child.@visible = joint.visible;
+						child.@visible = joint.visible.toString();
 					}
 				}
 				else if(childName.indexOf("line") != -1)
@@ -751,7 +752,7 @@ package scenes.game.display
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
 					if(edgeContainer != null)
 					{
-						child.@visible = edgeContainer.visible;
+						child.@visible = edgeContainer.visible.toString();
 						
 						//remove all current points, and then add new ones
 						delete child.point;
@@ -1165,7 +1166,12 @@ package scenes.game.display
 		//	var displayNode
 		}
 		
-		
+		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean
+		{
+			var value:String = _xml.attribute("visible").toString();
+			if (value.length == 0) return _defaultValue;
+			return XString.stringToBool(value);
+		}
 		
 		public function findEdgeSetLayoutInfo(name:String):XML
 		{

@@ -61,7 +61,7 @@ package scenes.game.components
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
-		private static const MIN_SCALE:Number = 10.0 / Constants.GAME_SCALE;
+		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		
