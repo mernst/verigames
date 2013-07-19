@@ -164,7 +164,7 @@ package scenes.game.components
 						// one finger touching -> move
 						if(touches[0].target == m_backgroundImage)
 						{
-							if (getPanAllowed())
+							if (getPanZoomAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
 								var cp:Point = touches[0].getLocation(this.content);
@@ -247,7 +247,7 @@ package scenes.game.components
 		
 		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
-			if (!getZoomAllowed())
+			if (!getPanZoomAllowed())
 			{
 				return;
 			}
@@ -378,29 +378,39 @@ package scenes.game.components
 			super.dispose();
 		}
 		
+		public function zoomInDiscrete():void
+		{
+			handleMouseWheel(5);
+			m_currentLevel.updateVisibleList();
+		}
+		
+		public function zoomOutDiscrete():void
+		{
+			handleMouseWheel(-5);
+			m_currentLevel.updateVisibleList();
+		}
+		
 		private function onKeyDown(event:KeyboardEvent):void
 		{
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					if (getPanAllowed()) content.y += 5;
+					if (getPanZoomAllowed()) content.y += 5;
 					break;
 				case Keyboard.DOWN:
-					if (getPanAllowed()) content.y -= 5;
+					if (getPanZoomAllowed()) content.y -= 5;
 					break;
 				case Keyboard.LEFT:
-					if (getPanAllowed()) content.x += 5;
+					if (getPanZoomAllowed()) content.x += 5;
 					break;
 				case Keyboard.RIGHT:
-					if (getPanAllowed()) content.x -= 5;
+					if (getPanZoomAllowed()) content.x -= 5;
 					break;
 				case Keyboard.EQUAL:
-					handleMouseWheel(5);
-					m_currentLevel.updateVisibleList();
+					zoomInDiscrete();
 					break;
 				case Keyboard.MINUS:
-					handleMouseWheel(-5);
-					m_currentLevel.updateVisibleList();
+					zoomOutDiscrete();
 					break;
 			}
 		}
@@ -439,6 +449,23 @@ package scenes.game.components
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 				}
 			}
+			
+			if (m_tutorialText) {
+				m_tutorialText.removeFromParent(true);
+				m_tutorialText = null;
+			}
+			
+			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
+			if (levelTextInfo) {
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
+				addChild(m_tutorialText);
+			}
+			
+			recenter();
+		}
+		
+		public function recenter():void
+		{
 			content.x = 0;
 			content.y = 0;
 			
@@ -471,10 +498,10 @@ package scenes.game.components
 				moveContent(localPt.x, localPt.y);
 				const BUFFER:Number = 1.5;
 				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
-				                      HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
+					HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
-				var nodes:Vector.<GameNode> = level.getNodes();
+				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
 				if (nodes.length > 0) {
 					var foundNode:GameNode = nodes[0];
 					for (i = 0; i < nodes.length; i++) {
@@ -485,17 +512,6 @@ package scenes.game.components
 					}
 					centerOnComponent(foundNode);
 				}
-			}
-			
-			if (m_tutorialText) {
-				m_tutorialText.removeFromParent(true);
-				m_tutorialText = null;
-			}
-			
-			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
-			if (levelTextInfo) {
-				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
-				addChild(m_tutorialText);
 			}
 			
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
@@ -664,15 +680,9 @@ package scenes.game.components
 			}
 		}
 		
-		public function getZoomAllowed():Boolean
+		public function getPanZoomAllowed():Boolean
 		{
-			if (m_currentLevel) return m_currentLevel.getZoomAllowed();
-			return true;
-		}
-		
-		public function getPanAllowed():Boolean
-		{
-			if (m_currentLevel) return m_currentLevel.getPanAllowed();
+			if (m_currentLevel) return m_currentLevel.getPanZoomAllowed();
 			return true;
 		}
 	}

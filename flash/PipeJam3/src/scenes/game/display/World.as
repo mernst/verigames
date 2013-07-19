@@ -156,7 +156,10 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_SCORE, onSubmitScore);
 			addEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
-			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
+			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
+			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
+			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
+			addEventListener(MenuEvent.RECENTER, onRecenter);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -241,6 +244,21 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
+		}
+
+		public function onZoomIn(event:MenuEvent):void
+		{
+			edgeSetGraphViewPanel.zoomInDiscrete();
+		}
+		
+		public function onZoomOut(event:MenuEvent):void
+		{
+			edgeSetGraphViewPanel.zoomOutDiscrete();
+		}
+		
+		public function onRecenter(event:MenuEvent):void
+		{
+			edgeSetGraphViewPanel.recenter();
 		}
 		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
@@ -500,6 +518,9 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
+			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
+			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
+			removeEventListener(MenuEvent.RECENTER, onRecenter);
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			
