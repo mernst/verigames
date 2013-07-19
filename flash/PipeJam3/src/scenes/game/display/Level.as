@@ -98,6 +98,9 @@ package scenes.game.display
 		private var m_backgroundImage:Image;
 		private var m_levelStartTime:Number;
 		
+		private var timer:Timer;
+		private var initialized:Boolean = false;
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -130,28 +133,6 @@ package scenes.game.display
 			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
 				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
 			}
-			
-			m_levelStartTime = new Date().time;
-			
-			initialize();
-			setConstraints();
-			
-			if (USE_TILED_BACKGROUND) {
-				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
-				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-				background.repeat = true;
-				m_backgroundImage = new Image(background);
-				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
-				m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
-				m_backgroundImage.blendMode = BlendMode.NONE;
-				addChild(m_backgroundImage);
-			}
-			
-			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
-			addChild(m_nodesContainer);
-			addChild(m_jointsContainer);
-			addChild(m_errorContainer);
-			addChild(m_edgesContainer);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -539,19 +520,48 @@ package scenes.game.display
 			return bb;
 		}
 		
-		public function takeSnapshot():LevelNodes
-		{
-			return levelNodes.clone();
-		}
-		
 		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			if (m_disposed) {
+				restart(); // undo progress if left the level and coming back
+			} else {
+				start();
+			}
+		}
+		
+		public function start():void
+		{
+			if (!initialized) {
+				initialize();
+				setConstraints();
+				
+				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
+					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
+					var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
+					background.repeat = true;
+					m_backgroundImage = new Image(background);
+					m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
+					m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
+					m_backgroundImage.blendMode = BlendMode.NONE;
+					addChild(m_backgroundImage);
+				}
+				
+				if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
+				if (m_jointsContainer == null) m_jointsContainer = new Sprite();
+				if (m_errorContainer == null)  m_errorContainer  = new Sprite();
+				if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
+				m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
+				addChild(m_nodesContainer);
+				addChild(m_jointsContainer);
+				addChild(m_errorContainer);
+				addChild(m_edgesContainer);
+				initialized = true;
+			}
 			
+			m_disposed = false;
+			m_levelStartTime = new Date().time;
 			if (tutorialManager) tutorialManager.startLevel();
-			
-			setDisplayData();
-			
 			draw();
 			
 			//now that everything is attached and added to parents, update port position indexes, for both nodes and joints
@@ -564,21 +574,21 @@ package scenes.game.display
 				jointElem.updatePortIndexes();
 			}
 			
-			trace(m_levelLayoutXML.@id);
-			takeSnapshot();
-		}
-		
-		public function start():void
-		{
-			m_levelStartTime = new Date().time;
+			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
 		}
 		
 		public function restart():void
 		{
+			if (!initialized) {
+				start();
+			} else {
+				if (tutorialManager) tutorialManager.startLevel();
+				m_levelStartTime = new Date().time;
+			}
 			setNewLayout(m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
 			setConstraints();
-			if (tutorialManager) tutorialManager.startLevel();
+			trace("Restarted: " + m_levelLayoutXML.@id);
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
@@ -807,8 +817,51 @@ package scenes.game.display
 		
 		override public function dispose():void
 		{
+			initialized = false;
+			trace("Disposed of : " + m_levelLayoutXML.@id);
 			if (m_disposed) {
 				return;
+			}
+			
+			if (timer) {
+				timer.stop();
+				timer.removeEventListener(TimerEvent.TIMER, updateVisibleList);
+			}
+			timer == null;
+			
+			if (tutorialManager) tutorialManager.endLevel();
+			
+			for each(var gameNodeSet:GameNode in m_nodeList) {
+				gameNodeSet.removeFromParent(true);
+			}
+			m_nodeList = new Vector.<GameNode>();
+			boxDictionary = new Dictionary();
+			for each(var jointElem:GameNodeBase in m_jointList) {
+				jointElem.removeFromParent(true);
+			}
+			m_jointList = new Vector.<GameJointNode>();
+			jointDictionary = new Dictionary();
+			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
+				gameEdge.removeFromParent(true);
+			}
+			m_edgeList = new Vector.<GameEdgeContainer>();
+			edgeContainerDictionary = null;
+			
+			if (m_nodesContainer) {
+				while (m_nodesContainer.numChildren > 0) m_nodesContainer.getChildAt(0).removeFromParent(true);
+				m_nodesContainer.removeFromParent(true);
+			}
+			if (m_jointsContainer) {
+				while (m_jointsContainer.numChildren > 0) m_jointsContainer.getChildAt(0).removeFromParent(true);
+				m_jointsContainer.removeFromParent(true);
+			}
+			if (m_errorContainer) {
+				while (m_errorContainer.numChildren > 0) m_errorContainer.getChildAt(0).removeFromParent(true);
+				m_errorContainer.removeFromParent(true);
+			}
+			if (m_edgesContainer) {
+				while (m_edgesContainer.numChildren > 0) m_edgesContainer.getChildAt(0).removeFromParent(true);
+				m_edgesContainer.removeFromParent(true);
 			}
 			
 			disposeChildren();
@@ -820,20 +873,9 @@ package scenes.game.display
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			
-			for each(var gameNodeSet:GameNode in m_nodeList) {
-				gameNodeSet.removeFromParent(true);
-			}
-			
-			m_nodeList = null;
-			boxDictionary = null;
-			
-			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
-				gameEdge.removeFromParent(true);
-			}
-			
-			m_edgeList = null;
-			
 			super.dispose();
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
 		}
 		
 		private function onTouch(event:TouchEvent):void
@@ -1146,9 +1188,11 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
 			//give stuff time to draw, so the update actually updates?
-			var timer:Timer = new Timer(100, 1);
-			timer.addEventListener(TimerEvent.TIMER, updateVisibleList);
-			timer.start();
+			if (timer == null) {
+				timer = new Timer(100, 1);
+				timer.addEventListener(TimerEvent.TIMER, updateVisibleList);
+				timer.start();
+			}
 			updateVisibleList();
 		}
 		
@@ -1159,11 +1203,6 @@ package scenes.game.display
 //			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
 //				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
 //			this.m_visibleNodeManager.updateVisibleList(rect);
-		}
-		
-		protected function setDisplayData():void
-		{
-		//	var displayNode
 		}
 		
 		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean

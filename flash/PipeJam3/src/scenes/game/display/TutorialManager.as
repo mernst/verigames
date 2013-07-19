@@ -1,6 +1,7 @@
 package scenes.game.display 
 {
 	import display.NineSliceBatch;
+	import starling.events.Event;
 	
 	import events.EdgeSetChangeEvent;
 	import events.TutorialEvent;
@@ -59,6 +60,12 @@ package scenes.game.display
 			}
 		}
 		
+		override public function dispatchEvent(event:Event):void
+        {
+			// Don't allow events to dispatch if stopped playing level
+			if (m_levelStarted) super.dispatchEvent(event);
+		}
+		
 		public function startLevel():void
 		{
 			switch (m_tutorialTag) {
@@ -90,6 +97,11 @@ package scenes.game.display
 					break;
 			}
 			m_levelStarted = true;
+		}
+		
+		public function endLevel():void
+		{
+			m_levelStarted = false;
 		}
 		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void

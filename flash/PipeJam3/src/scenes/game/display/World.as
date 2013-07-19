@@ -496,7 +496,12 @@ package scenes.game.display
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
 				PipeJam3.logging.logQuestStart(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
 			}
-			if (restart) newLevel.restart();
+			if (restart) {
+				newLevel.restart();
+			} else if (active_level) {
+				active_level.dispose();
+			}
+			
 			active_level = newLevel;
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
