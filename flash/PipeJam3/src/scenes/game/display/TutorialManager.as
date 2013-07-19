@@ -93,6 +93,8 @@ package scenes.game.display
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
 		{
+			// No longer used
+			/*
 			switch (m_tutorialTag) {
 				case LAYOUT_TUTORIAL:
 					if (updatedGameNodes.length == 2) {
@@ -105,6 +107,7 @@ package scenes.game.display
 					}
 					break;
 			}
+			*/
 		}
 		
 		public function getPanZoomAllowed():Boolean
@@ -319,10 +322,10 @@ package scenes.game.display
 						null, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Drag the widgets and links around to help organize\n" +
-						"the layout. Separate the widgets to continue.",
+						"Widgets and links can be dragged to help organize\n" +
+						"the layout. Separate the widgets.",
 						null,
-						null,
+						pointToNode("Layout1"),
 						null, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
