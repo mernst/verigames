@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <graph id="world">
-<!--
   <level id="Bonus1">
     <box id="es26" width="wide" editable="true"/>
     <box id="es27" width="narrow" editable="false"/>
@@ -74,7 +73,6 @@
     <box id="es66" width="narrow" editable="true"/>
     <box id="es67" width="wide" editable="true"/>
   </level>
-  -->
   <level id="Bonus2">
     <box id="es26" width="narrow" editable="true"/>
     <box id="es24" width="narrow" editable="true"/>

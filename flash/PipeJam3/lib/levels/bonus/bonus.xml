@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world>
-<!--
   <level name="Bonus1">
     <linked-edges>
       <edge-set id="es1">
@@ -2298,7 +2297,6 @@
       </board>
     </boards>
   </level>
--->
   <level name="Bonus2">
     <linked-edges>
       <edge-set id="es1">
