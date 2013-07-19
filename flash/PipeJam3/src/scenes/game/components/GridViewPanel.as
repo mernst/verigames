@@ -412,6 +412,9 @@ package scenes.game.components
 				case Keyboard.MINUS:
 					zoomOutDiscrete();
 					break;
+				case Keyboard.SPACE:
+					recenter();
+					break;
 			}
 		}
 		
