@@ -53,10 +53,6 @@ package networking
 		public static var enjoymentRating:Number;
 		public static var difficultyRating:Number;
 		
-		public static var tutorialFile:XML;
-		public static var tutorialLayoutFile:XML;
-		public static var tutorialConstraintsFile:XML;
-		
 		public static function getLoginHelper():LoginHelper
 		{
 			if(!loginHelper)

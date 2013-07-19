@@ -1,20 +1,17 @@
 package scenes.splashscreen
 {
-	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
 	import display.NineSliceButton;
 	import events.NavigationEvent;
 	import feathers.controls.List;
-	import feathers.data.ListCollection;
 	import feathers.themes.*;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
 	import flash.text.*;
+	import networking.*;
 	import scenes.BaseComponent;
 	import scenes.game.components.dialogs.SelectLevelDialog;
 	import scenes.game.PipeJamGameScene;
-	import networking.*;
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
@@ -39,8 +36,6 @@ package scenes.splashscreen
 		protected var matchArrayMetadata:Array = null;
 		
 		public var inputInfo:flash.text.TextField;
-		protected var tutorialZipFile:FZip;
-		protected var tutorialXML:XML;
 		
 		protected var selectLevelDialog:SelectLevelDialog;
 		
@@ -290,11 +285,7 @@ package scenes.splashscreen
 		protected function onPlayerActivated(result:int, e:flash.events.Event):void
 		{
 			m_mainMenu.visible = false;
-
-			//check for tutorial cookies, and if not found, or incomplete, do that, else load real levels
-			//get Tutorial file
-			tutorialZipFile = new FZip();
-			LoginHelper.getLoginHelper().loadFile(LoginHelper.USE_LOCAL, null, PipeJamGameScene.tutorialButtonWorldFile, getNextPlayerLevel, tutorialZipFile);
+			getNextPlayerLevel();
 		}
 		
 		//serve either the next tutorial level, or give the full level select screen if done
@@ -305,7 +296,7 @@ package scenes.splashscreen
 		}
 		
 		//serve either the next tutorial level, or give the full level select screen if done
-		protected function getNextPlayerLevel(e:flash.events.Event):void
+		protected function getNextPlayerLevel():void
 		{
 			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
 			{
@@ -314,7 +305,7 @@ package scenes.splashscreen
 				
 				selectLevelDialog = new SelectLevelDialog(this, 300, 250);
 				parent.addChild(selectLevelDialog);
-				selectLevelDialog.setTutorialXMLFile(tutorialXML);
+				selectLevelDialog.setTutorialXMLFile(PipeJamGameScene.tutorialXML);
 				selectLevelDialog.visible = true;
 
 				//do after adding to parent
@@ -332,14 +323,7 @@ package scenes.splashscreen
 		
 		protected function isTutorialDone():Boolean
 		{
-			//unpack tutorial zip file, and count levels
-			if(tutorialZipFile.getFileCount() > 0)
-			{
-				var zipFile:FZipFile = tutorialZipFile.getFileAt(0);
-				trace(zipFile.filename);
-				tutorialXML = new XML(zipFile.content);
-				PipeJamGameScene.numTutorialLevels = tutorialXML["level"].length();
-			}
+			PipeJamGameScene.numTutorialLevels = PipeJamGameScene.tutorialXML["level"].length();
 			
 			var tutorialStatus:String = PipeJam3.LOCAL_DEPLOYMENT ? "0" : HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
 			if(!isNaN(parseInt(tutorialStatus)))
@@ -363,10 +347,6 @@ package scenes.splashscreen
 		protected function loadTutorial():void
 		{
 			PipeJamGameScene.inTutorial = true;
-			PipeJamGameScene.worldFile = PipeJamGameScene.tutorialButtonWorldFile;
-			PipeJamGameScene.layoutFile = PipeJamGameScene.tutorialButtonLayoutFile;
-			PipeJamGameScene.constraintsFile = PipeJamGameScene.tutorialButtonConstraintsFile;
-			
 			PipeJam3.initialLevelDisplay = false;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
