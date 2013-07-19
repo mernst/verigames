@@ -156,15 +156,16 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case LOCKED_TUTORIAL:
-				case LINKS_TUTORIAL:
-				case PINCH_TUTORIAL:
 					return 0.8;
 				case ZOOM_PAN_TUTORIAL:
 					return 3.0;
 				case LAYOUT_TUTORIAL:
 					return 0.5;
 				case PASSAGE_TUTORIAL:
+					return 1.2;
+				case LINKS_TUTORIAL:
 				case CLASH_TUTORIAL:
+				case PINCH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
@@ -184,12 +185,12 @@ package scenes.game.display
 				case LAYOUT_TUTORIAL:
 					return new Point(0, 5);// move down by 5px
 				case LINKS_TUTORIAL:
+				case PASSAGE_TUTORIAL:
 					return new Point(15, 0);//move right 15px
 				case PINCH_TUTORIAL:
-					return new Point(0, -5);// move up by 5px
+					return new Point(0, -15);// move up by 15px
 				case ZOOM_PAN_TUTORIAL:
-					return new Point(40, -10);// move right 40px, up by 10px
-				case PASSAGE_TUTORIAL:
+					return new Point(40, -10);// move right 40px, up by 10px	
 				case CLASH_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
