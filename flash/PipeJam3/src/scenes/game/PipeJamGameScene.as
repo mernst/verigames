@@ -40,7 +40,7 @@ package scenes.game
 			"../SampleWorlds/test/IntervalsLayout.zip"
 		);
 		
-		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// = "../lib/levels/bonus/bonus.zip";
+		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
 		
 		[Embed(source = "../../../lib/levels/tutorial/tutorial.xml", mimeType = "application/octet-stream")]
 		static public const tutorialFileClass:Class;

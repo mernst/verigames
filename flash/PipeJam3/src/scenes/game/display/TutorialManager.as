@@ -27,8 +27,10 @@ package scenes.game.display
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const LAYOUT_TUTORIAL:String = "layout";
+		public static const SKILLS_A_TUTORIAL:String = "skillsa";
+		public static const SKILLS_B_TUTORIAL:String = "skillsb";
+		// Not currently used:
 		public static const END_TUTORIAL:String = "end";
-		// Note currently used:
 		public static const NARROW_TUTORIAL:String = "narrow";
 		public static const COLOR_TUTORIAL:String = "color";
 		
@@ -53,6 +55,8 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case END_TUTORIAL:
 					break;
 				default:
@@ -369,13 +373,25 @@ package scenes.game.display
 						null,
 						pointToNode("Layout1"),
 						null, null);
+				case SKILLS_A_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Use the skills you've learned to solve a bigger challenge!",
+						null,
+						null,
+						null, null);
+				case SKILLS_B_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Good work! Now try this one!",
+						null,
+						null,
+						null, null);
+				// The following are not currently in use:
 				case END_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Optimize your first real level!",
 						null,
 						null,
 						null, null);
-				// The following are not currently in use:
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the upper widgets to narrow their links\n" +

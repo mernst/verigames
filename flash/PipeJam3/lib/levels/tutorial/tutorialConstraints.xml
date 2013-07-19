@@ -78,6 +78,64 @@
     <box id="Layout5" width="wide" editable="false"/>
     <box id="Layout4" width="wide" editable="true"/>
   </level>
+  <level id="SkillsA" targetScore="1625">
+    <box id="es7" width="narrow" editable="true"/>
+    <box id="es6" width="wide" editable="true"/>
+    <box id="es5" width="wide" editable="false"/>
+    <box id="es4" width="wide" editable="true"/>
+    <box id="es3" width="wide" editable="false"/>
+    <box id="es2" width="wide" editable="true"/>
+    <box id="es9" width="wide" editable="true"/>
+    <box id="es8" width="narrow" editable="true"/>
+    <box id="es18" width="narrow" editable="false"/>
+    <box id="es13" width="wide" editable="true"/>
+    <box id="es12" width="wide" editable="true"/>
+    <box id="es11" width="wide" editable="false"/>
+    <box id="es10" width="wide" editable="true"/>
+    <box id="es17" width="narrow" editable="true"/>
+  </level>
+  <level id="SkillsB" targetScore="4950">
+    <box id="es26" width="narrow" editable="true"/>
+    <box id="es24" width="narrow" editable="true"/>
+    <box id="es25" width="wide" editable="true"/>
+    <box id="es22" width="narrow" editable="true"/>
+    <box id="es23" width="narrow" editable="true"/>
+    <box id="es20" width="narrow" editable="true"/>
+    <box id="es21" width="wide" editable="false"/>
+    <box id="es28" width="narrow" editable="true"/>
+    <box id="es29" width="wide" editable="false"/>
+    <box id="es45" width="narrow" editable="false"/>
+    <box id="es40" width="narrow" editable="true"/>
+    <box id="es41" width="narrow" editable="true"/>
+    <box id="es42" width="narrow" editable="true"/>
+    <box id="es43" width="wide" editable="true"/>
+    <box id="es48" width="narrow" editable="false"/>
+    <box id="es31" width="narrow" editable="true"/>
+    <box id="es33" width="narrow" editable="false"/>
+    <box id="es35" width="narrow" editable="true"/>
+    <box id="es34" width="narrow" editable="false"/>
+    <box id="es37" width="wide" editable="true"/>
+    <box id="es36" width="wide" editable="true"/>
+    <box id="es39" width="narrow" editable="true"/>
+    <box id="es38" width="wide" editable="true"/>
+    <box id="es19" width="narrow" editable="false"/>
+    <box id="es52" width="narrow" editable="true"/>
+    <box id="es13" width="narrow" editable="true"/>
+    <box id="es12" width="narrow" editable="false"/>
+    <box id="es11" width="narrow" editable="false"/>
+    <box id="es10" width="narrow" editable="true"/>
+    <box id="es16" width="wide" editable="true"/>
+    <box id="es15" width="wide" editable="false"/>
+    <box id="es14" width="wide" editable="false"/>
+    <box id="es7" width="narrow" editable="true"/>
+    <box id="es6" width="wide" editable="false"/>
+    <box id="es5" width="wide" editable="false"/>
+    <box id="es4" width="wide" editable="false"/>
+    <box id="es3" width="wide" editable="false"/>
+    <box id="es1" width="wide" editable="true"/>
+    <box id="es8" width="narrow" editable="true"/>
+  </level>
+<!--
   <level id="End" targetScore="10000">
     <box id="net_sf_picard_metrics_VersionHeader88" width="wide" editable="false"/>
     <box id="net_sf_picard_metrics_VersionHeader87" width="narrow" editable="false"/>
@@ -167,4 +225,5 @@
     <box id="net_sf_picard_metrics_VersionHeader173" width="narrow" editable="true"/>
     <box id="net_sf_picard_metrics_VersionHeader172" width="wide" editable="false"/>
   </level>
+-->
 </graph>
