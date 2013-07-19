@@ -46,7 +46,7 @@ package scenes.game.components
 		
 		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
-			if (level.tutorialManager && !level.tutorialManager.getPanAllowed()) {
+			if (level.tutorialManager && !level.tutorialManager.getPanZoomAllowed() && level.tutorialManager.getLayoutFixed()) {
 				m_pointPosAlwaysUpdate = false;
 			}
 				

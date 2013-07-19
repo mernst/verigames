@@ -3,8 +3,13 @@ package scenes.game.components
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
+	import display.BasicButton;
 	import display.NineSliceButton;
+	import display.RecenterButton;
+	import display.ZoomInButton;
+	import display.ZoomOutButton;
 	
+	import events.MenuEvent;
 	import events.NavigationEvent;
 	
 	import flash.geom.Point;
@@ -27,6 +32,8 @@ package scenes.game.components
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	
+	import utils.XSprite;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -53,6 +60,11 @@ package scenes.game.components
 		
 		/** Button to start the level over */
 		private var m_ResetButton:NineSliceButton;
+
+		/** Navigation buttons */
+		private var m_zoomInButton:BasicButton;
+		private var m_zoomOutButton:BasicButton;
+		private var m_recenterButton:BasicButton;
 		
 		private var menuShowing:Boolean = false;
 		
@@ -72,7 +84,7 @@ package scenes.game.components
 		protected var conflictMap:ConflictMap;
 		
 		public function GameControlPanel()
-		{			
+		{
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
 		}
@@ -106,15 +118,39 @@ package scenes.game.components
 			
 			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2;
+			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 6;
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 11;
 			addChild(m_menuButton);
 			
 			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
 			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
-			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5;
+			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
 			m_ResetButton.y = HEIGHT - m_ResetButton.height - 8;
 			addChild(m_ResetButton);
+			
+			m_zoomInButton = new ZoomInButton();
+			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
+			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_zoomInButton);
+			m_zoomInButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_zoomInButton.y = 1 * HEIGHT / 4 - 5;
+			addChild(m_zoomInButton);
+			
+			m_zoomOutButton = new ZoomOutButton();
+			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
+			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_zoomOutButton);
+			m_zoomOutButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_zoomOutButton.y = 2 * HEIGHT / 4 - 5;
+			addChild(m_zoomOutButton);
+			
+			m_recenterButton = new RecenterButton();
+			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
+			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_recenterButton);
+			m_recenterButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_recenterButton.y = 3 * HEIGHT / 4 - 5;
+			addChild(m_recenterButton);
 			
 			conflictMap = new ConflictMap();
 			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
@@ -134,6 +170,21 @@ package scenes.game.components
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.START_OVER));
 		}
+
+		private function onZoomInButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_IN));
+		}
+		
+		private function onZoomOutButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_OUT));
+		}
+		
+		private function onRecenterButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
+		}
 		
 		public function removedFromStage(event:Event):void
 		{
@@ -144,8 +195,16 @@ package scenes.game.components
 		{
 			updateScore(level, true);
 			conflictMap.updateLevel(level);
+			setNavigationButtonVisibility(level.getPanZoomAllowed());
 		}
 
+		private function setNavigationButtonVisibility(viz:Boolean):void
+		{
+			m_zoomInButton.visible = viz;
+			m_zoomOutButton.visible = viz;
+			m_recenterButton.visible = viz;
+		}
+		
 		/**
 		 * Re-calculates score and updates the score on the screen
 		 */

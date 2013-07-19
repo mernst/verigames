@@ -1372,15 +1372,9 @@ package scenes.game.display
 			this.m_edgesContainer.removeChildren();
 		}
 		
-		public function getZoomAllowed():Boolean
+		public function getPanZoomAllowed():Boolean
 		{
-			if (tutorialManager) return tutorialManager.getZoomAllowed();
-			return true;
-		}
-		
-		public function getPanAllowed():Boolean
-		{
-			if (tutorialManager) return tutorialManager.getPanAllowed();
+			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
 			return true;
 		}
 	}
