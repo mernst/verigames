@@ -395,21 +395,31 @@ package scenes.game.components
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
+				case Keyboard.W:
+				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) content.y += 5;
 					break;
 				case Keyboard.DOWN:
+				case Keyboard.S:
+				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) content.y -= 5;
 					break;
 				case Keyboard.LEFT:
+				case Keyboard.A:
+				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) content.x += 5;
 					break;
 				case Keyboard.RIGHT:
+				case Keyboard.D:
+				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) content.x -= 5;
 					break;
 				case Keyboard.EQUAL:
+				case Keyboard.NUMPAD_ADD:
 					zoomInDiscrete();
 					break;
 				case Keyboard.MINUS:
+				case Keyboard.NUMPAD_SUBTRACT:
 					zoomOutDiscrete();
 					break;
 			}
