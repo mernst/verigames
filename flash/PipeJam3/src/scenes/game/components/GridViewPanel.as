@@ -422,6 +422,9 @@ package scenes.game.components
 				case Keyboard.NUMPAD_SUBTRACT:
 					zoomOutDiscrete();
 					break;
+				case Keyboard.SPACE:
+					recenter();
+					break;
 			}
 		}
 		
