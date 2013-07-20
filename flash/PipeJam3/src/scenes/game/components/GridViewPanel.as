@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import particle.FanfareParticleSystem;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -433,6 +434,7 @@ package scenes.game.components
 		public function loadLevel(level:Level):void
 		{
 			m_continueButtonForced = false;
+			removeFanfare();
 			hideContinueButton();
 			removeSpotlight();
 			if(m_currentLevel != level)
@@ -535,6 +537,8 @@ package scenes.game.components
 			}
 		}
 		
+		private var m_fanfareContainer:Sprite = new Sprite();
+		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		public function displayContinueButton(permenantly:Boolean = true):void
 		{
 			if (permenantly) m_continueButtonForced = true;
@@ -544,10 +548,51 @@ package scenes.game.components
 				continueButton.x = WIDTH - continueButton.width - 5;
 				continueButton.y = HEIGHT - continueButton.height - 5;
 			}
-			addChild(continueButton);
+			
+			if (continueButton.parent == null) {
+				addChild(continueButton);
+				
+				// Fanfare
+				if (!m_fanfareContainer) m_fanfareContainer = new Sprite();
+				m_fanfareContainer.x = continueButton.x;
+				m_fanfareContainer.y = continueButton.y;
+				for (var i:int = 0; i <= continueButton.width; i += 15) {
+					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
+					fanfare.x = i;
+					m_fanfare.push(fanfare);
+					m_fanfareContainer.addChild(fanfare);
+				}
+				addChild(m_fanfareContainer);
+				Starling.juggler.delayCall(startFanfare, 0.25);
+				Starling.juggler.delayCall(stopFanfare, 0.5);
+				//Starling.juggler.delayCall(removeFanfare, 15.0);
+			}
 			
 			//assume we are in the tutorial, and we just finished a level
 			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
+		}
+		
+		private function startFanfare():void
+		{
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].start();
+			}
+		}
+		
+		private function stopFanfare():void
+		{
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].stop();
+			}
+		}
+		
+		private function removeFanfare():void
+		{
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].removeFromParent(true);
+			}
+			m_fanfare = new Vector.<FanfareParticleSystem>();
+			if (m_fanfareContainer) m_fanfareContainer.removeFromParent();
 		}
 		
 		public function hideContinueButton():void
