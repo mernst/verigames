@@ -31,8 +31,8 @@
   <rotatePerSecondVariance value="0"/>
   <blendFuncSource value="1"/>
   <blendFuncDestination value="1"/>
-  <rotationStart value="0.00"/>
-  <rotationStartVariance value="0"/>
-  <rotationEnd value="0"/>
-  <rotationEndVariance value="0"/>
+  <rotationStart value="90.00"/>
+  <rotationStartVariance value="90.0"/>
+  <rotationEnd value="90.0"/>
+  <rotationEndVariance value="90.0"/>
 </particleEmitterConfig>

@@ -556,9 +556,10 @@ package scenes.game.components
 				if (!m_fanfareContainer) m_fanfareContainer = new Sprite();
 				m_fanfareContainer.x = continueButton.x;
 				m_fanfareContainer.y = continueButton.y;
-				for (var i:int = 0; i <= continueButton.width; i += 15) {
+				for (var i:int = 0; i <= continueButton.width; i += 10) {
 					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
 					fanfare.x = i;
+					fanfare.scaleX = fanfare.scaleY = 0.4;
 					m_fanfare.push(fanfare);
 					m_fanfareContainer.addChild(fanfare);
 				}
