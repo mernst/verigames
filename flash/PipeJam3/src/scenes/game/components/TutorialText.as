@@ -6,7 +6,6 @@ package scenes.game.components
 	import display.NineSliceBatch;
 	
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -15,7 +14,6 @@ package scenes.game.components
 	import scenes.game.display.TutorialManagerTextInfo;
 	
 	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -50,20 +48,11 @@ package scenes.game.components
 				m_pointPosAlwaysUpdate = false;
 			}
 				
-			// get variables out of info
+			// get text
 			var text:String = info.text;
 
-			var size:Point;
-			if (info.size == null) {
-				// estimate required size
-				var checkField:TextField = new TextField();
-				checkField.defaultTextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, TUTORIAL_FONT_SIZE);
-				checkField.autoSize = TextFieldAutoSize.CENTER;
-				checkField.text = text;
-				size = new Point(checkField.width + 8, checkField.height + 8);
-			} else {
-				size = info.size.clone();
-			}
+			// estimate size
+			var size:Point = info.size ? info.size : TextFactory.getInstance().estimateTextFieldSize(text, AssetsFont.FONT_UBUNTU, TUTORIAL_FONT_SIZE);
 
 			// get pointing setup
 			m_pointAt = (info.pointAtFn != null) ? info.pointAtFn(level) : null;

@@ -72,34 +72,6 @@ package scenes.game.display
 		
 		public function startLevel():void
 		{
-			switch (m_tutorialTag) {
-				case WIDGET_TUTORIAL:
-					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "IntroWidget4", true)); }, 0.2);
-					break;
-				case LOCKED_TUTORIAL:
-					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_BOX, "LockedWidget1", true)); }, 0.2);
-					break;
-				case LINKS_TUTORIAL:
-					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_EDGE, "e1__OUT__", true)); }, 0.2);
-					break;
-				case PASSAGE_TUTORIAL:
-					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_PASSAGE, "e32__IN__", true)); }, 0.2);
-					break;
-				case PINCH_TUTORIAL:	
-					break;
-				case CLASH_TUTORIAL:
-					//Starling.juggler.delayCall(function():void { dispatchEvent(new TutorialEvent(TutorialEvent.HIGHLIGHT_CLASH, "e2__IN__", true)); }, 0.2);
-					break;
-				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
-				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
-				case END_TUTORIAL:
-					break;
-			}
 			m_levelStarted = true;
 		}
 		
@@ -110,27 +82,10 @@ package scenes.game.display
 		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			if (!m_levelStarted) return;
-			// No longer used
 		}
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
 		{
-			// No longer used
-			/*
-			switch (m_tutorialTag) {
-				case LAYOUT_TUTORIAL:
-					if (updatedGameNodes.length == 2) {
-						const SEPARATED_DIST_SQUARED_CHECK:Number = 25*25;
-						var dx:Number = updatedGameNodes[0].x - updatedGameNodes[1].x;
-						var dy:Number = updatedGameNodes[0].y - updatedGameNodes[1].y;
-						if (dx * dx + dy * dy > SEPARATED_DIST_SQUARED_CHECK) {
-							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
-						}
-					}
-					break;
-			}
-			*/
 		}
 		
 		public function getPanZoomAllowed():Boolean
@@ -148,9 +103,9 @@ package scenes.game.display
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
 					return false;
 				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return true;
 			}
@@ -330,9 +285,9 @@ package scenes.game.display
 						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some passages are gray. These passages\n" +
-						"won't change width even if their widget\n" +
-						"is changed.",
+						"Some passages are gray. These\n" +
+						"passages won't change width even\n" +
+						"if their widget is changed.",
 						null,
 						pointToPassage("e20__IN__"),
 						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
