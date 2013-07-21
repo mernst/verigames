@@ -2,7 +2,6 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import particle.FanfareParticleSystem;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -18,12 +17,15 @@ package scenes.game.components
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	
+	import particle.FanfareParticleSystem;
+	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	
 	import starling.animation.Transitions;
@@ -554,18 +556,25 @@ package scenes.game.components
 				
 				// Fanfare
 				if (!m_fanfareContainer) m_fanfareContainer = new Sprite();
+				
 				m_fanfareContainer.x = continueButton.x;
-				m_fanfareContainer.y = continueButton.y;
-				for (var i:int = 0; i <= continueButton.width; i += 10) {
+				m_fanfareContainer.y = continueButton.y - continueButton.height;
+				for (var i:int = 10; i <= continueButton.width - 10; i += 10) {
 					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
 					fanfare.x = i;
+					fanfare.y = continueButton.height / 2;
 					fanfare.scaleX = fanfare.scaleY = 0.4;
 					m_fanfare.push(fanfare);
 					m_fanfareContainer.addChild(fanfare);
 				}
 				addChild(m_fanfareContainer);
-				Starling.juggler.delayCall(startFanfare, 0.25);
-				Starling.juggler.delayCall(stopFanfare, 0.5);
+				
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 14, 0xFFEC00);
+				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+				m_fanfareContainer.addChild(textField);
+				
+				startFanfare();
+				Starling.juggler.delayCall(stopFanfare, 0.1);
 				//Starling.juggler.delayCall(removeFanfare, 15.0);
 			}
 			
