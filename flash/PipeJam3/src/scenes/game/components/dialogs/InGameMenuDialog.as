@@ -13,11 +13,15 @@ package scenes.game.components.dialogs
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import flash.geom.Rectangle;
+	import scenes.game.PipeJamGameScene;
 
 	public class InGameMenuDialog extends BaseComponent
 	{
-		/** Button to submit the current game */
+		/** Button to share the current game */
 		protected var submit_score_button:NineSliceButton;
+		
+		/** Button to save the current game */
+		protected var save_score_button:NineSliceButton;
 		
 		/** Button to submit the current layout */
 		protected var submit_layout_button:NineSliceButton;
@@ -47,7 +51,7 @@ package scenes.game.components.dialogs
 		protected var buttonHeight:int = 24;
 		protected var buttonWidth:int = shapeWidth - 2*buttonPaddingWidth;
 		
-		protected var numButtons:int = 4;
+		protected var numButtons:int = 5;
 		
 		protected var hideMainDialog:Boolean = true;
 		
@@ -56,7 +60,7 @@ package scenes.game.components.dialogs
 			super();
 			
 			if(!PipeJam3.RELEASE_BUILD)
-				numButtons = 5;
+				numButtons ++;
 			
 			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight;
 			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
@@ -68,25 +72,33 @@ package scenes.game.components.dialogs
 			exit_button.y = background.height - buttonPaddingHeight - exit_button.height;
 			addChild(exit_button);
 			
-			submit_layout_button = ButtonFactory.getInstance().createButton("Submit Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_layout_button = ButtonFactory.getInstance().createButton("Share Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			submit_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
 			submit_layout_button.x = buttonPaddingWidth;
 			submit_layout_button.y = exit_button.y - buttonPaddingHeight - submit_layout_button.height;
-			if (PipeJam3.TUTORIAL_DEMO) submit_layout_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) submit_layout_button.enabled = false;
 			addChild(submit_layout_button);
 			
 			select_layout_button = ButtonFactory.getInstance().createButton("Select Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			select_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
 			select_layout_button.x = buttonPaddingWidth;
 			select_layout_button.y = submit_layout_button.y - buttonPaddingHeight - select_layout_button.height;
-			if (PipeJam3.TUTORIAL_DEMO) select_layout_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) select_layout_button.enabled = false;
 			addChild(select_layout_button);
 			
-			submit_score_button = ButtonFactory.getInstance().createButton("Submit Score", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			save_score_button = ButtonFactory.getInstance().createButton("Save Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			save_score_button.addEventListener(starling.events.Event.TRIGGERED, onSaveScoreButtonTriggered);
+			save_score_button.x = buttonPaddingWidth;
+			save_score_button.y = select_layout_button.y - buttonPaddingHeight - save_score_button.height;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) save_score_button.enabled = false;
+			addChild(save_score_button);
+			
+			submit_score_button = ButtonFactory.getInstance().createButton("Share Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			submit_score_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
 			submit_score_button.x = buttonPaddingWidth;
-			submit_score_button.y = select_layout_button.y - buttonPaddingHeight - submit_score_button.height;
-			if (PipeJam3.TUTORIAL_DEMO) submit_score_button.enabled = false;
+			submit_score_button.y = save_score_button.y - buttonPaddingHeight - submit_score_button.height;
+			
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) submit_score_button.enabled = false;
 			addChild(submit_score_button);
 			
 			if(!PipeJam3.RELEASE_BUILD)
@@ -101,9 +113,9 @@ package scenes.game.components.dialogs
 			loginHelper = LoginHelper.getLoginHelper();
 		}
 		
-		private function onSaveButtonTriggered():void
+		private function onSaveScoreButtonTriggered():void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LOCALLY));
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
 		}
 		
 		private function onSubmitScoreButtonTriggered():void
@@ -143,14 +155,14 @@ package scenes.game.components.dialogs
 			}
 			else
 			{
-				hideMainDialog = false;
-				hideSecondaryDialog(submitLayoutDialog);
+				hideSecondaryDialog(submitLayoutDialog, false);
 			}
 		}
 		
 		private function onSelectLayoutButtonTriggered():void
 		{
-			if(LoginHelper.levelObject != null)
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			if(loginHelper != null && loginHelper.levelObject != null)
 			{
 				dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
 				loginHelper.onRequestLayoutList(onRequestLayoutList);
@@ -163,7 +175,7 @@ package scenes.game.components.dialogs
 		{
 			if(selectLayoutDialog == null)
 			{
-				selectLayoutDialog = new SelectLayoutDialog();
+				selectLayoutDialog = new SelectLayoutDialog(this);
 				parent.addChild(selectLayoutDialog);
 				
 				selectLayoutDialog.x = background.width - selectLayoutDialog.width;
@@ -180,9 +192,10 @@ package scenes.game.components.dialogs
 			}
 			else
 			{
-				hideMainDialog = false;
-				hideSecondaryDialog(selectLayoutDialog);
+				hideSecondaryDialog(selectLayoutDialog, false);
 			}
+			
+			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
 			
 		}
 		
@@ -199,17 +212,15 @@ package scenes.game.components.dialogs
 			this.removeFromParent();
 		}
 		
-		private function hideAllDialogs():void
+		public function hideAllDialogs():void
 		{
-			hideMainDialog = true;
-			
 			if(submitLayoutDialog && submitLayoutDialog.visible == true)
 			{
-				hideSecondaryDialog(submitLayoutDialog);
+				hideSecondaryDialog(submitLayoutDialog, true);
 			}
 			else if (selectLayoutDialog && selectLayoutDialog.visible == true)
 			{
-				hideSecondaryDialog(selectLayoutDialog);
+				hideSecondaryDialog(selectLayoutDialog, true);
 			}
 			else
 				hideSelf();
@@ -230,8 +241,10 @@ package scenes.game.components.dialogs
 			visible = false;
 		}
 		
-		protected function hideSecondaryDialog(dialog:BaseComponent):void
+		public function hideSecondaryDialog(dialog:BaseComponent, _hideMainDialog:Boolean):void
 		{
+			hideMainDialog = _hideMainDialog;
+			
 			var juggler:Juggler = Starling.juggler;
 
 			juggler.tween(dialog, 1.0, {

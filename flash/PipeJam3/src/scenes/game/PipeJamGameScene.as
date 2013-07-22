@@ -91,7 +91,7 @@ package scenes.game
 			super.addedToStage(event);
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
-			if(LoginHelper.levelObject is int) // in the tutorial
+			if(LoginHelper.getLoginHelper().levelObject is int) // in the tutorial
 			{
 				PipeJamGameScene.inTutorial = true;
 				fileName = "tutorial";
@@ -110,12 +110,12 @@ package scenes.game
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				if(!PipeJamGameScene.inTutorial)
 					fileName = obj["files"];
-				if(LoginHelper.levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
+				if(LoginHelper.getLoginHelper().levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = LoginHelper.USE_DATABASE;
-					worldFile = "/level/get/" + LoginHelper.levelObject.xmlID+"/xml";
-					layoutFile = "/level/get/" + LoginHelper.levelObject.layoutID+"/layout";
-					constraintsFile = "/level/get/" + LoginHelper.levelObject.constraintsID+"/constraints";		
+					worldFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.xmlID+"/xml";
+					layoutFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.layoutID+"/layout";
+					constraintsFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.constraintsID+"/constraints";		
 				}
 				else if(fileName && fileName.length > 0)
 				{

@@ -2,14 +2,20 @@ package scenes.game.components.dialogs
 {
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
+	
 	import events.MenuEvent;
+	
 	import feathers.controls.List;
 	import feathers.controls.TextInput;
 	import feathers.data.ListCollection;
+	
 	import flash.events.Event;
 	import flash.utils.ByteArray;
-	import scenes.BaseComponent;
+	
 	import networking.LoginHelper;
+	
+	import scenes.BaseComponent;
+	
 	import starling.events.Event;
 	
 	public class SelectLayoutDialog extends BaseComponent
@@ -39,10 +45,12 @@ package scenes.game.components.dialogs
 		protected var buttonWidth:int = (shapeWidth - 3*buttonPaddingWidth)/2;
 		protected var shapeHeight:int = 3*buttonPaddingHeight + buttonHeight + textInputHeight + labelHeight;
 		
-		public function SelectLayoutDialog()
+		protected var parentDialog:InGameMenuDialog;
+		
+		public function SelectLayoutDialog(_parentDialog:InGameMenuDialog)
 		{
 			super();
-			
+			parentDialog = _parentDialog;
 			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
@@ -106,23 +114,17 @@ package scenes.game.components.dialogs
 		
 		private function onCancelButtonTriggered(e:starling.events.Event):void
 		{
-			visible = false;
+			parentDialog.hideSecondaryDialog(this, false);
 		}
 		
 		private function onSelectButtonTriggered(e:starling.events.Event):void
 		{
-			visible = false;
+			parentDialog.hideAllDialogs();
 			if(layoutObjectVector != null)
 			{
 				var selectedIndex:int = layoutList.selectedIndex;
-				var layoutID:String;
-				if(layoutObjectVector[selectedIndex]._id is String)
-					layoutID = layoutObjectVector[selectedIndex]._id;
-				else
-				{
-					var idObj:Object = layoutID = layoutObjectVector[selectedIndex]._id;
-					layoutID = idObj.$oid;
-				}
+				var layoutID:String = layoutObjectVector[selectedIndex].layoutID;
+				
 				LoginHelper.getLoginHelper().getNewLayout(layoutID, setNewLayout);
 			}
 			else if(PipeJam3.RELEASE_BUILD == false)
@@ -134,8 +136,9 @@ package scenes.game.components.dialogs
 		
 		private function setNewLayout(byteArray:ByteArray):void
 		{
+			var name:String = LoginHelper.getLoginHelper().levelObject.layoutName;
 			var layoutFile:XML = new XML(byteArray);
-			dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, layoutFile));
+			dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, name, layoutFile));
 		}
 	}
 }

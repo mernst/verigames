@@ -34,6 +34,8 @@ package scenes.splashscreen
 		protected var levelMetadataArray:Array = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
+		protected var savedLevelsMetadataArray:Array = null;
+		protected var savedLevelsArrayMetadata:Array = null;
 		
 		public var inputInfo:flash.text.TextField;
 		
@@ -138,7 +140,7 @@ package scenes.splashscreen
 		{
 			if(result == LoginHelper.EVENT_COMPLETE)
 			{
-				if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
+				if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && loginHelper.savedMatchArrayObjects != null)
 					onGetLevelMetadataComplete();
 			}
 		}
@@ -150,20 +152,30 @@ package scenes.splashscreen
 			for(var i:int = 0; i<loginHelper.matchArrayObjects.length; i++)
 			{
 				var match:Object = loginHelper.matchArrayObjects[i];
-				var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector);
+				var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, matchArrayMetadata);
 				if(levelName != null)
 					levelMetadataArray.push(levelName);
 			}
 			
-			//we are done, show everything
-			// Creating the dataprovider
-		//	var matchCollection:ListCollection = new ListCollection(levelMetadataArray);
 			selectLevelDialog.setNewLevelInfo(matchArrayMetadata);
+			
+			savedLevelsArrayMetadata = new Array;
+			savedLevelsMetadataArray = new Array;
+			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			{
+				var match:Object = loginHelper.savedMatchArrayObjects[i];
+		//		var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
+		//		if(levelName != null)
+					savedLevelsMetadataArray.push(match.name);
+					savedLevelsArrayMetadata.push(match);
+			}
+			
+			selectLevelDialog.setSavedLevelsInfo(savedLevelsArrayMetadata);
 			
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		protected static var levelCount:int = 1;
-		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>):String
+		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>, savedObjArray:Array):String
 		{
 			//find the level record based on id, and then find the levelID match
 			var levelNotFound:Boolean = true;
@@ -220,7 +232,7 @@ package scenes.splashscreen
 				
 				if(objID == levelObjID)
 				{
-					matchArrayMetadata.push(levelObj);
+					savedObjArray.push(levelObj);
 					return levelObj.name;
 				}
 			}
@@ -238,7 +250,7 @@ package scenes.splashscreen
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			LoginHelper.levelObject = matchArrayMetadata[levelList.selectedIndex];
+			LoginHelper.getLoginHelper().levelObject = matchArrayMetadata[levelList.selectedIndex];
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
@@ -302,6 +314,7 @@ package scenes.splashscreen
 			{
 				loginHelper.requestLevels(onRequestLevels);
 				loginHelper.getLevelMetadata(onRequestLevels);
+				loginHelper.getSavedLevels(onRequestLevels);
 				
 				selectLevelDialog = new SelectLevelDialog(this, 300, 250);
 				parent.addChild(selectLevelDialog);

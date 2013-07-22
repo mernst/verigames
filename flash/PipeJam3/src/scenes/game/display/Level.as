@@ -5,6 +5,9 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	
+	import deng.fzip.FZip;
+	import deng.fzip.FZipFile;
+	
 	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
@@ -15,6 +18,7 @@ package scenes.game.display
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
@@ -26,9 +30,10 @@ package scenes.game.display
 	import graph.NodeTypes;
 	import graph.Port;
 	
+	import networking.LoginHelper;
+	
 	import scenes.BaseComponent;
 	import scenes.game.components.GridViewPanel;
-	import networking.LoginHelper;
 	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
@@ -43,6 +48,7 @@ package scenes.game.display
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	
+	import utils.Base64Encoder;
 	import utils.XString;
 	
 	/**
@@ -69,6 +75,7 @@ package scenes.game.display
 		
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
+		public var m_levelLayoutName:String;
 		private var m_levelOriginalLayoutXML:XML; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutXMLWrapper:XML;
@@ -118,6 +125,7 @@ package scenes.game.display
 			level_name = _name;
 			levelNodes = _levelNodes;
 			m_levelOriginalLayoutXML = m_levelLayoutXML = _levelLayoutXML;
+			m_levelLayoutName = _levelLayoutXML.@id;
 			m_levelOriginalConstraintsXML = m_levelConstraintsXML = _levelConstraintsXML;
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
@@ -575,7 +583,7 @@ package scenes.game.display
 		
 		public function restart():void
 		{
-			setNewLayout(m_levelOriginalLayoutXML);
+			setNewLayout(null, m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
 			setConstraints();
 			if (tutorialManager) tutorialManager.startLevel();
@@ -585,29 +593,51 @@ package scenes.game.display
 		{
 			updateLayoutXML();
 			
-			if(LoginHelper.levelObject != null)
+			if(LoginHelper.getLoginHelper().levelObject != null)
 			{
 				m_levelLayoutXMLWrapper.@id = event.layoutName;
-				LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXMLWrapper);	
-			}
-			else
-			{
-				//save locally?
-				trace("Layout XML:");
-				trace(m_levelLayoutXMLWrapper);
+				LoginHelper.getLoginHelper().levelObject.layoutName = event.layoutName;
+				var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
+				var layoutZipEncodedString:String = encodeBytes(layoutZip);
+				LoginHelper.getLoginHelper().saveLayoutFile(layoutZipEncodedString);	
 			}
 		}
 		
-		
-		public function onSubmitScore(event:MenuEvent, currentScore:int):void
+		public function zipXMLFile(xmlFile:XML, name:String):ByteArray
 		{
+			var newZip:FZip = new FZip();
+			var zipByteArray:ByteArray = new ByteArray();
+			zipByteArray.writeUTFBytes(xmlFile.toString());
+			newZip.addFile(name,  zipByteArray);
+			var byteArray:ByteArray = new ByteArray;
+			newZip.serialize(byteArray);
+			return byteArray;
+		}
+		
+		//as it turns out, I'm going to need to submit two files mashed together in one network POST
+		//so I mark them with the length at the front
+		//and because that length is going to be less than 10 digits, I mark that with it's length
+		//so you end up with a file like this 3456xxxx, where 3 tells you the next three chars are
+		//the length of the following file
+		public function encodeBytes(bytes:ByteArray):String
+		{
+			var encoder:Base64Encoder = new Base64Encoder();
+			encoder.encodeBytes(bytes);
+			var encodedString:String = encoder.toString();
+			var strLen:String = new String(encodedString.length);
+			var strLenLen:String = new String(strLen.length);
+			return strLenLen + strLen + encodedString;
+		}
+		
+		public function onPutLevelInDatabase(type:String, currentScore:int):void
+		{
+			updateLayoutXML();
+			var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
+			var layoutZipEncodedString:String = encodeBytes(layoutZip);
 			updateConstraintXML();
-			LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
-		}
-		
-		public function onSaveLocally(event:MenuEvent):void
-		{
-			
+			var constraintsZip:ByteArray = zipXMLFile(this.m_levelConstraintsXMLWrapper, "costraints");
+			var constraintsZipEncodedString:String = encodeBytes(constraintsZip);
+			LoginHelper.getLoginHelper().submitLevel(layoutZipEncodedString+constraintsZipEncodedString, currentScore, type);	
 		}
 		
 		protected function onRemovedFromStage(event:Event):void
@@ -615,9 +645,10 @@ package scenes.game.display
 			//disposeChildren();
 		}
 		
-		public function setNewLayout(newLayoutXML:XML, useExistingLines:Boolean = false):void
+		public function setNewLayout(name:String, newLayoutXML:XML, useExistingLines:Boolean = false):void
 		{
 			m_levelLayoutXML = newLayoutXML;
+			m_levelLayoutName = name;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutXML.level != undefined)
 				m_levelLayoutXML = m_levelLayoutXML.level[0];

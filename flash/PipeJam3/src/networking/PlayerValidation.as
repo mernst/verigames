@@ -29,19 +29,19 @@ package networking
 		static protected var validationObject:PlayerValidation = null;
 		protected var pipejamCallbackFunction:Function;
 		
-		//callback function should check PlayerValidation.playerLoggedIn for success or not
+		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use in release builds
 		static public function validatePlayerIsLoggedInAndActive(callback:Function):void
 		{
 			if(validationObject == null)
 				validationObject = new PlayerValidation;
 			
-			HTTPCookies.callGetEncodedCookie();
+	//		HTTPCookies.callGetEncodedCookie();
 			
 			validationObject.pipejamCallbackFunction = callback;
 			validationObject.checkForCookie();
 		}
 		
-		//callback function should check PlayerValidation.playerLoggedIn for success or not
+		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use when debugging locally
 		static public function validatePlayerIsActive(callback:Function):void
 		{
 			if(validationObject == null)
@@ -53,29 +53,27 @@ package networking
 		
 		protected var count:int = 0;
 		//check for session ID cookie, and if found, try to validate it
-		protected function checkForCookie(e:TimerEvent = null):void
+		protected function checkForCookie():void
 		{
-			//callGetEncodedCookie makes an asyncronous call, so I need the timer to poll for a valid return
-			var cookie:Object = null;
-			if(count > 0)
-				cookie = HTTPCookies.getEncodedCookieResult();
-			var timer:Timer;
-			count++; //do max
-			if(count < 10 && (cookie == null || cookie.length < 12))
-			{
-				timer = new Timer(500, 1);
-				timer.addEventListener(TimerEvent.TIMER, checkForCookie);
-				timer.start();
-			}
-			else 
-			{
-				if(cookie)
-					LoginHelper.getLoginHelper().checkSessionID(cookie as String, sessionIDValidityCallback);
-				else
-					pipejamCallbackFunction();
-			}
+			LoginHelper.getLoginHelper().getEncodedCookies(cookieCallback);
 		}
 		
+		public function cookieCallback(result:int, event:flash.events.Event):void
+		{
+			if(result == LoginHelper.EVENT_COMPLETE)
+			{
+				var cookies:String = event.target.data;
+				if(cookies.indexOf("<html>") == -1) //else assume auth required dialog
+				{
+					LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValidityCallback);
+					return;
+				}
+			}
+			
+			//if we make it this far, just exit
+			pipejamCallbackFunction();
+		}
+
 		//callback for checking the validity of the session id
 		//if the session id is valid, then get the player id and make sure they are in the RA
 		public function sessionIDValidityCallback(result:int, event:flash.events.Event):void
