@@ -189,7 +189,13 @@ package scenes.game
 				onWorldLoaded(worldXML);
 			}
 			else
-				trace("zip failed unexpected # of files:" + fz1.getFileCount());
+			{
+		//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
+				var zipFile:FZipFile = fz1.getFileAt(0);
+				trace(zipFile.filename);
+				var worldXML:XML = new XML(zipFile.content);
+				onWorldLoaded(worldXML);
+			}
 		}
 		
 		private function layoutZipLoaded(e:flash.events.Event):void {
