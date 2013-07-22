@@ -9,6 +9,7 @@ package networking
 	import flash.utils.ByteArray;
 	
 	import scenes.game.display.GameComponent;
+	import scenes.game.display.World;
 	
 	import utils.Base64Encoder;
 
@@ -28,8 +29,8 @@ package networking
 		static public var postAlerts:Boolean = false;
 		//the first address is verigames, the second the development environ, the third my machine
 	//	static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-		static public var PROXY_URL:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
-	//	static public var PROXY_URL:String = "http://128.95.2.112:8001";
+	//	static public var PROXY_URL:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
+		static public var PROXY_URL:String = "http://128.95.2.112:8001";
 
 		
 		public function NetworkConnection()
@@ -73,9 +74,9 @@ package networking
 		public function getNewLayout(layoutID:String, callback:Function):void
 		{
 			m_callback = callback;
-			LoginHelper.levelObject.layout = layoutID;
+			LoginHelper.getLoginHelper().levelObject.layout = layoutID;
 			
-			var layoutFileURL:String = "/level/get/" + layoutID +"/layout";
+			var layoutFileURL:String = "/layout/get/" + layoutID;
 			
 			fzip = new FZip();
 			loadFile(LoginHelper.USE_DATABASE, null, layoutFileURL, layoutZipLoaded, fzip);
@@ -93,9 +94,10 @@ package networking
 				trace("zip failed");
 		}
 		
-		public function sendMessage(type:int, callback:Function, info:ByteArray = null, name:String = null, other:String = null):void
+		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null):void
 		{
 			var request:String;
+			var levelObj:Object;
 			var specificURL:String = null;
 			var method:String;
 			var playerID:String = PlayerValidation.playerID;
@@ -139,24 +141,62 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.REQUEST_LAYOUT_LIST:
-					request = LAYOUTS_GET_ALL_REQUEST+LoginHelper.levelObject.xmlID+"&method=DATABASE";
+					request = LAYOUTS_GET_ALL_REQUEST+LoginHelper.getLoginHelper().levelObject.xmlID+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.GET_ALL_SAVED_LEVELS:
+					request = "/level/get/saved/"+playerID+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.SAVE_LAYOUT:
-					request = "/layout/save/"+LoginHelper.levelObject.xmlID+"/"+name+"&method=DATABASE";
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"/"+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
-				case LoginHelper.SAVE_CONSTRAINTS:
-					var scoreASString:String = other;
-					var eRating:Number = LoginHelper.enjoymentRating;
-					var dRating:Number = LoginHelper.difficultyRating;
-					request = "/level/save/"+LoginHelper.levelObject.xmlID+"/"+name+"/"+playerID+"/"+scoreASString 
-										+ eRating+"/"+ dRating+"&method=DATABASE";
-					method = URLRequestMethod.POST; 
+				case LoginHelper.SAVE_LEVEL:
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					var props:Object = levelObj.metadata.properties;
+					var scoreASString:String = levelObj.score;
+					var levelID:String = info as String;
+					method = URLRequestMethod.POST;
+					var requestStart:String = "";
+					var requestMiddle:String = "";
+					var requestEnd:String = "";
+					//var paramObject:String = ""; maybe in the future json params and add as a param on end of request?
+					if(info == null) //we are just saving the level, because we don't have a new ID
+					{
+						requestStart = "/level/save/";
+						levelID = levelObj.levelId;
+					}
+					else
+					{
+						requestStart = "/level/submit/";
+						var eRating:Number = levelObj.enjoymentRating;
+						var dRating:Number = levelObj.difficultyRating;
+						requestEnd = "/" + eRating+ "/"+ dRating;
+					}
+					
+					//these need to match the proxy server, or we need to figure out json transfer...
+					requestMiddle = playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"/"+levelObj.layoutID
+							+ "/"+encodeURIComponent(levelObj.name)
+							+ "/" + levelID +"/"+scoreASString
+							+ "/" + props.boxes + "/" + props.lines+ "/"+ props.visibleboxes
+							+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonus_nodes;
+					
+					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
+							
+						//	"/level/submit/"+LoginHelper.getLoginHelper().levelObject.xmlID+"/"+name+"/"+playerID
+						//											+"/" +LoginHelper.getLoginHelper().levelObject.m_levelLayoutName +"/"+scoreASString 
+						//											+"/" +info.levelID+"/" + eRating+"/"+ dRating+"&method=DATABASE";
 					break;
 				case LoginHelper.VERIFY_SESSION:
 					specificURL = "http://pipejam.verigames.com/verifySession";
 					request = "?cookies="+name;
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.GET_ENCODED_COOKIES:
+					specificURL = "http://pipejam.verigames.com/encodeCookies";
+					request = "";
 					method = URLRequestMethod.POST; 
 					break;
 			}
@@ -172,14 +212,10 @@ package networking
 			else
 			{
 				urlRequest.method = URLRequestMethod.POST;
-				if(info != null)
+				if(data != null)
 				{
-					var encoder:Base64Encoder = new Base64Encoder();
-					encoder.encodeBytes(info);
-					var encodedString:String = encoder.toString();
 					urlRequest.contentType = URLLoaderDataFormat.TEXT;
-					trace(encodedString.length);
-					urlRequest.data = encodedString+"\n"; //terminate line so Java can use readLine to get message
+					urlRequest.data = data+"\n"; //terminate line so Java can use readLine to get message
 				}
 				else
 					urlRequest.data = null;

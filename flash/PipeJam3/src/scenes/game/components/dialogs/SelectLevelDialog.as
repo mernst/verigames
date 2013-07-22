@@ -80,13 +80,13 @@ package scenes.game.components.dialogs
 			tutorial_levels_button.x = buttonPadding;
 			tutorial_levels_button.y = buttonY;
 			
-			new_levels_button = ButtonFactory.getInstance().createTabButton("New", buttonWidth, 27, 6, 6);
+			new_levels_button = ButtonFactory.getInstance().createTabButton("Current", buttonWidth, 27, 6, 6);
 			new_levels_button.addEventListener(starling.events.Event.TRIGGERED, onNewButtonTriggered);
 			addChild(new_levels_button);
 			new_levels_button.x = tutorial_levels_button.x+buttonWidth+buttonPadding;
 			new_levels_button.y = buttonY;
 			
-			submitted_levels_button = ButtonFactory.getInstance().createTabButton("Submitted", buttonWidth, 27, 6, 6);
+			submitted_levels_button = ButtonFactory.getInstance().createTabButton("Saved", buttonWidth, 27, 6, 6);
 			submitted_levels_button.addEventListener(starling.events.Event.TRIGGERED, onSubmittedButtonTriggered);
 			addChild(submitted_levels_button);
 			submitted_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
@@ -163,11 +163,9 @@ package scenes.game.components.dialogs
 		private function onSelectButtonTriggered(e:Event):void
 		{
 			if(currentVisibleListBox == this.tutorialListBox)
-				LoginHelper.levelObject = currentVisibleListBox.getSelectedLevelObject().levelId;
+				LoginHelper.getLoginHelper().levelObject = currentVisibleListBox.getSelectedLevelObject().levelId;
 			else
-			{
-				LoginHelper.levelObject = currentVisibleListBox.getSelectedLevelObject();
-			}
+				LoginHelper.getLoginHelper().levelObject = currentVisibleListBox.getSelectedLevelObject();
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			
@@ -233,7 +231,12 @@ package scenes.game.components.dialogs
 		{			
 			this.newLevelListBox.setButtonArray(_newLevelInfo);
 		}
-
+		
+		public function setSavedLevelsInfo(_savedLevelInfo:Array):void
+		{			
+			this.submittedLevelListBox.setButtonArray(_savedLevelInfo);
+		}
+		
 		public function setTutorialXMLFile(tutorialXML:XML):void
 		{
 			var tutorialLevels:XMLList = tutorialXML["level"];

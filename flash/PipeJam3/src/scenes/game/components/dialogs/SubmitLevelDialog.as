@@ -198,14 +198,14 @@ package scenes.game.components.dialogs
 			eRating *= 100;
 			eRating = Math.round(eRating);
 			eRating /= 100;
-			LoginHelper.enjoymentRating = eRating;
+			LoginHelper.getLoginHelper().levelObject.enjoymentRating = eRating;
 			var dRating:Number = this.difficultyRating*5.0;
 			//round to two decimal places
 			dRating *= 100;
 			dRating = Math.round(dRating);
 			dRating /= 100;
-			LoginHelper.difficultyRating = dRating;
-			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_SCORE));
+			LoginHelper.getLoginHelper().levelObject.difficultyRating = dRating;
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 		}
 	}
 }

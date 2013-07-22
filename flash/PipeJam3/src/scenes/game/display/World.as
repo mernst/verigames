@@ -77,6 +77,8 @@ package scenes.game.display
 		private var m_layoutXML:XML;
 		private var m_constraintsXML:XML;
 		
+		static public var m_world:World;
+		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
 		 * @param	_x X coordinate, this is currently unused
@@ -93,6 +95,8 @@ package scenes.game.display
 			world_xml = _world_xml;
 			m_layoutXML = _layout;
 			m_constraintsXML = _constraints;
+			
+			m_world = this;
 			
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
@@ -137,8 +141,8 @@ package scenes.game.display
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				if(LoginHelper.levelObject is int)
-					currentLevelNumber = LoginHelper.levelObject as int;
+				if(LoginHelper.getLoginHelper().levelObject is int)
+					currentLevelNumber = LoginHelper.getLoginHelper().levelObject as int;
 				else
 					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
 				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
@@ -154,8 +158,10 @@ package scenes.game.display
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			addEventListener(MenuEvent.SUBMIT_SCORE, onSubmitScore);
-			addEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
+			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
+			addEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
@@ -212,12 +218,12 @@ package scenes.game.display
 			}
 		}
 		
-		public function onSubmitScore(event:MenuEvent):void
+		public function onPutLevelInDatabase(event:MenuEvent):void
 		{
 			if(active_level != null)
 			{
 				var currentScore:int = gameControlPanel.getCurrentScore();
-				active_level.onSubmitScore(event, currentScore);
+				active_level.onPutLevelInDatabase(event.type, currentScore);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
@@ -227,16 +233,17 @@ package scenes.game.display
 			}
 		}
 		
-		public function onSaveLocally(event:MenuEvent):void
+		public function onLevelPutInDatabase(event:MenuEvent):void
 		{
-			if(active_level != null)
-				active_level.onSaveLocally(event);
-		}
+			//if(event.type == 
+			trace(event.type);
+		}			
+
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
 			if(active_level != null) {
-				active_level.setNewLayout(event.layoutXML, true);
+				active_level.setNewLayout(event.layoutName, event.layoutXML, true);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
@@ -312,14 +319,14 @@ package scenes.game.display
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
 					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
 				}
-				if(LoginHelper.levelObject is int)
+				if(LoginHelper.getLoginHelper().levelObject is int)
 				{
-					if(currentLevelNumber != LoginHelper.levelObject as int) //first time through I'm supposing these are different
-						currentLevelNumber = LoginHelper.levelObject as int;
+					if(currentLevelNumber != LoginHelper.getLoginHelper().levelObject as int) //first time through I'm supposing these are different
+						currentLevelNumber = LoginHelper.getLoginHelper().levelObject as int;
 					else
 					{
 						currentLevelNumber++;
-						LoginHelper.levelObject = int(currentLevelNumber);
+						LoginHelper.getLoginHelper().levelObject = int(currentLevelNumber);
 						if(currentLevelNumber > PipeJamGameScene.maxTutorialLevelCompleted)
 							PipeJamGameScene.maxTutorialLevelCompleted = currentLevelNumber;
 					}
@@ -519,8 +526,10 @@ package scenes.game.display
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			removeEventListener(MenuEvent.SUBMIT_SCORE, onSubmitScore);
-			removeEventListener(MenuEvent.SAVE_LOCALLY, onSaveLocally);
+			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
+			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
+			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
