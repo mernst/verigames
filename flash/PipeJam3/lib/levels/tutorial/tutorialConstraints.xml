@@ -47,6 +47,12 @@
     <box id="NarrowBoxes3" width="wide" editable="false"/>
     <box id="NarrowBoxes4" width="wide" editable="true"/>
   </level>
+  <level id="Optimize" targetScore="1000">
+    <box id="Optimize4" width="narrow" editable="true"/>
+    <box id="Optimize2" width="narrow" editable="true"/>
+    <box id="Optimize3" width="narrow" editable="true"/>
+    <box id="Optimize1" width="narrow" editable="true"/>
+  </level>
   <level id="Splits" targetScore="100">
     <box id="Splits6" width="narrow" editable="false"/>
     <box id="Splits4" width="wide" editable="false"/>
@@ -59,12 +65,6 @@
     <box id="Merges2" width="wide" editable="true"/>
     <box id="Merges3" width="narrow" editable="false"/>
     <box id="Merges1" width="wide" editable="true"/>
-  </level>
-  <level id="Optimize" targetScore="1000">
-    <box id="Optimize4" width="narrow" editable="true"/>
-    <box id="Optimize2" width="narrow" editable="true"/>
-    <box id="Optimize3" width="narrow" editable="true"/>
-    <box id="Optimize1" width="narrow" editable="true"/>
   </level>
   <level id="Layout" targetScore="200">
     <box id="Layout1" width="narrow" editable="true"/>

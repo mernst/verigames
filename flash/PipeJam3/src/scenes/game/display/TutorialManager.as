@@ -22,9 +22,9 @@ package scenes.game.display
 		public static const CLASH_TUTORIAL:String = "clash";
 		public static const WIDEN_TUTORIAL:String = "widen";
 		public static const PINCH_TUTORIAL:String = "pinch";
+		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const SPLIT_TUTORIAL:String = "split";
 		public static const MERGE_TUTORIAL:String = "merge";
-		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
@@ -48,9 +48,9 @@ package scenes.game.display
 				case CLASH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case PINCH_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
@@ -236,8 +236,7 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"These are WIDGETS.\n" +
-						"Click on widgets to change their color.\n" +
+						"Click on WIDGETS to change their color.\n" +
 						"Make them a solid color to get points!",
 						null,
 						pointToNode("IntroWidget2"),
@@ -252,71 +251,68 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets are connected\n" +
-						"by LINKS. Dark widgets\n" +
-						"create wide links, light\n" +
-						"widgets create narrow\n" +
+						"by LINKS. Light widgets\n" +
+						"create narrow links, dark\n" +
+						"widgets create wide\n" +
 						"links.",
 						null,
 						pointToEdge("e1__OUT__"),
 						NineSliceBatch.LEFT, null);
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a PASSAGE. Links can begin\n" +
-						"in, end in or go through passages.\n" +
-						"Change the color of the widget to\n" +
-						"change the width of its passages.",
+						"Links can begin in, end in, or go\n" +
+						"through PASSAGES. Change a widget's\n" +
+						"color to change its passages.",
 						null,
 						pointToPassage("e32__IN__"),
 						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a CLASH. Clashes happen when\n" +
-						"wide links try to enter narrow\n" +
-						"passages. Each clash penalizes your\n" +
-						"score by " + Constants.ERROR_POINTS.toString() + " points.",
+						"CLASHES happen when wide links enter\n" +
+						"narrow passages. Each clash penalizes\n" +
+						"your score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
 						NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
 				case WIDEN_TUTORIAL:
-					return new TutorialManagerTextInfo(
+					return null;/* new TutorialManagerTextInfo(
 						"Click the widgets to widen their passages\n" +
 						"and fix the clashes.",
 						null,
 						null,
-						null, null);
+						null, null);*/
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some passages are gray. These\n" +
-						"passages won't change width even\n" +
-						"if their widget is changed.",
+						"Gray passages won't change width\n" +
+						"even if their widget is changed.",
 						null,
 						pointToPassage("e20__IN__"),
 						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
+				case OPTIMIZE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Sometimes the best score still has clashes.\n" +
+						"Try different configurations to improve your score!",
+						null,
+						null,
+						null, null);
 				case SPLIT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a SPLIT. When a link is split\n" +
-						"the outgoing links will match the\n" +
-						"incoming link.",
+						"When a link is SPLIT the outgoing\n" +
+						"links will match the incoming link.",
 						null,
 						pointToJoint("n10__IN__0"),
 						NineSliceBatch.TOP_RIGHT, null);
 				case MERGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"This is a MERGE. When two links merge\n" +
-						"the outgoing link will be wide if\n" +
-						"either incoming link is wide.",
+						"When links MERGE the outgoing\n" +
+						"link will be wide if any\n" +
+						"incoming link is wide.",
 						null,
 						pointToJoint("n123"),
 						NineSliceBatch.RIGHT, null);
-				case OPTIMIZE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Try different configurations to improve your score!",
-						null,
-						null,
-						null, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Widgets and links can be dragged to help organize\n" +
+						"Widgets can be dragged to help organize\n" +
 						"the layout. Separate the widgets.",
 						null,
 						pointToNode("Layout1"),
