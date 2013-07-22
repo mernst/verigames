@@ -180,12 +180,13 @@ package scenes.game.display
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
+			const BLK_RAD:Number = (shapeHeight / 3.0) * (BLK_SZ * 2 / m_boundingBox.height);
 			if (wideScore > narrowScore) {
-				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix, (wideScore - narrowScore).toString(), BLK_SZ - BLK_RAD, BLK_SZ - BLK_RAD, BLK_SZ, null, BLK_RAD);
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix, (narrowScore - wideScore).toString(), BLK_SZ - BLK_RAD, BLK_SZ - BLK_RAD, BLK_SZ, null, BLK_RAD);
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			}
