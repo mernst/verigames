@@ -779,6 +779,11 @@ package scenes.game.display
 				
 				m_isDirty = true;
 			}
+			else
+			{
+				positionChildren();
+				m_isDirty = true;
+			}
 		}
 		
 		private function onRubberBandSegment(event:Event):void
