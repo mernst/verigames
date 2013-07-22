@@ -93,7 +93,7 @@ package scenes.game.components.dialogs
 			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) save_score_button.enabled = false;
 			addChild(save_score_button);
 			
-			submit_score_button = ButtonFactory.getInstance().createButton("Share Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_score_button = ButtonFactory.getInstance().createButton("Submit Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			submit_score_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
 			submit_score_button.x = buttonPaddingWidth;
 			submit_score_button.y = save_score_button.y - buttonPaddingHeight - submit_score_button.height;

@@ -39,6 +39,7 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
+	import scenes.game.components.dialogs.SimpleAlertDialog;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -233,10 +234,25 @@ package scenes.game.display
 			}
 		}
 		
-		public function onLevelPutInDatabase(event:MenuEvent):void
+		public function onLevelPutInDatabase(event:KeyboardEvent):void
 		{
-			//if(event.type == 
-			trace(event.type);
+			var dialogText:String;
+			var dialogWidth:Number = 160;
+			var dialogHeight:Number = 60;
+			if(event.type == LoginHelper.LEVEL_SAVED)
+			{
+				dialogText = "Level Saved.";
+			}
+			else
+				dialogText = "Level Submitted. Thanks.";
+				
+			
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight);
+			addChild(alert);
+			
+			alert.x = (450 - alert.width)/2;
+			alert.y = (320 - alert.height)/2;
+			
 		}			
 
 		
