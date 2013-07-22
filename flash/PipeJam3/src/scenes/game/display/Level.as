@@ -338,6 +338,7 @@ package scenes.game.display
 					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
+			refreshTroublePoints();
 		}
 		
 		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
@@ -952,6 +953,26 @@ package scenes.game.display
 						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent, evt.point));
+		}
+		
+		private function refreshTroublePoints():void
+		{
+			for (var edgeId:String in edgeDictionary) {
+				var edgeToRefresh:Edge = edgeDictionary[edgeId] as Edge;
+				var hasError:Boolean = edgeToRefresh.has_error;
+				edgeToRefresh.has_error = !hasError;
+				edgeToRefresh.has_error = hasError;
+				if (edgeToRefresh.from_port) {
+					hasError = edgeToRefresh.from_port.has_error;
+					edgeToRefresh.from_port.has_error = !hasError;
+					edgeToRefresh.from_port.has_error = hasError;
+				}
+				if (edgeToRefresh.to_port) {
+					hasError = edgeToRefresh.to_port.has_error;
+					edgeToRefresh.to_port.has_error = !hasError
+					edgeToRefresh.to_port.has_error = hasError;
+				}
+			}
 		}
 		
 		//data object should be in final selected/unselected state

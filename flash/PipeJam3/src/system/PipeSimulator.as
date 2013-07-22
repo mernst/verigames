@@ -127,10 +127,10 @@ package system
 			var removeEdgeTp:Vector.<Edge> = new Vector.<Edge>();
 			var removePortTp:Vector.<Port> = new Vector.<Port>();
 			for each (var boardTouched:BoardNodes in boards_touched) {
-				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0]
-				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1]
-				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0]
-				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1]
+				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0];
+				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1];
+				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0];
+				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1];
 				// check new tp, if they weren't in old Dict then they are new
 				for (var portId:String in newPortTpDict) {
 					if (!prevPortTpDict.hasOwnProperty(portId)) {

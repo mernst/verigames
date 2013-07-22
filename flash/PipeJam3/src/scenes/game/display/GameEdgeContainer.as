@@ -343,6 +343,15 @@ package scenes.game.display
 			if (hasEventListener(Event.ENTER_FRAME)) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
+			if (errorContainer) {
+				errorContainer.removeFromParent(true);
+			}
+			if (m_errorParticleSystem) {
+				m_errorParticleSystem.removeFromParent(true);
+			}
+			if (errorMarker) {
+				errorMarker.removeFromParent(true);
+			}
 			disposeChildren();
 			m_edgeSegments = null;
 			m_edgeJoints = null;
