@@ -234,12 +234,12 @@ package scenes.game.display
 			}
 		}
 		
-		public function onLevelPutInDatabase(event:KeyboardEvent):void
+		public function onLevelPutInDatabase(event:MenuEvent):void
 		{
 			var dialogText:String;
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
-			if(event.type == LoginHelper.LEVEL_SAVED)
+			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
 				dialogText = "Level Saved.";
 			}
