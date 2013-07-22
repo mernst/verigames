@@ -19,6 +19,12 @@
     <box id="SatisfyBoxes2" width="narrow" editable="false"/>
     <box id="SatisfyBoxes1" width="narrow" editable="true"/>
   </level>
+  <level id="Passages" targetScore="225">
+    <box id="Passages2" width="wide" editable="false"/>
+    <box id="Passages3" width="narrow" editable="true"/>
+    <box id="Passages4" width="wide" editable="false"/>
+    <box id="Passages5" width="narrow" editable="true"/>
+  </level>
   <level id="Clashes" targetScore="75">
     <box id="Clashes1" width="wide" editable="true"/>
     <box id="Clashes2" width="narrow" editable="false"/>
@@ -31,12 +37,6 @@
     <box id="WidenBoxes2" width="wide" editable="false"/>
     <box id="WidenBoxes1" width="wide" editable="false"/>
     <box id="WidenBoxes4" width="wide" editable="false"/>
-  </level>
-  <level id="Passages" targetScore="225">
-    <box id="Passages2" width="wide" editable="false"/>
-    <box id="Passages3" width="narrow" editable="true"/>
-    <box id="Passages4" width="wide" editable="false"/>
-    <box id="Passages5" width="narrow" editable="true"/>
   </level>
   <level id="NarrowBoxes" targetScore="450">
     <box id="NarrowBoxes30" width="narrow" editable="true"/>
@@ -66,17 +66,17 @@
     <box id="Optimize3" width="narrow" editable="true"/>
     <box id="Optimize1" width="narrow" editable="true"/>
   </level>
-  <level id="ZoomPan" targetScore="150">
-    <box id="ZoomPan2" width="wide" editable="true"/>
-    <box id="ZoomPan3" width="narrow" editable="false"/>
-    <box id="ZoomPan1" width="wide" editable="true"/>
-  </level>
   <level id="Layout" targetScore="200">
     <box id="Layout1" width="narrow" editable="true"/>
     <box id="Layout3" width="narrow" editable="false"/>
     <box id="Layout2" width="narrow" editable="false"/>
     <box id="Layout5" width="wide" editable="false"/>
     <box id="Layout4" width="wide" editable="true"/>
+  </level>
+  <level id="ZoomPan" targetScore="150">
+    <box id="ZoomPan2" width="wide" editable="true"/>
+    <box id="ZoomPan3" width="narrow" editable="false"/>
+    <box id="ZoomPan1" width="wide" editable="true"/>
   </level>
   <level id="SkillsA" targetScore="1625">
     <box id="es7" width="narrow" editable="true"/>

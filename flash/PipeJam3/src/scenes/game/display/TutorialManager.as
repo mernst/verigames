@@ -18,15 +18,15 @@ package scenes.game.display
 		public static const WIDGET_TUTORIAL:String = "widget";
 		public static const LOCKED_TUTORIAL:String = "locked";
 		public static const LINKS_TUTORIAL:String = "links";
+		public static const PASSAGE_TUTORIAL:String = "passage";
 		public static const CLASH_TUTORIAL:String = "clash";
 		public static const WIDEN_TUTORIAL:String = "widen";
-		public static const PASSAGE_TUTORIAL:String = "passage";
 		public static const PINCH_TUTORIAL:String = "pinch";
 		public static const SPLIT_TUTORIAL:String = "split";
 		public static const MERGE_TUTORIAL:String = "merge";
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
-		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const LAYOUT_TUTORIAL:String = "layout";
+		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
 		public static const SKILLS_B_TUTORIAL:String = "skillsb";
 		// Not currently used:
@@ -45,11 +45,9 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
-				case PINCH_TUTORIAL:
 				case CLASH_TUTORIAL:
 				case WIDEN_TUTORIAL:
-				case NARROW_TUTORIAL:
-				case COLOR_TUTORIAL:
+				case PINCH_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
@@ -57,7 +55,10 @@ package scenes.game.display
 				case ZOOM_PAN_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
+				// Not used:
 				case END_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
 					break;
 				default:
 					throw new Error("Unknown Tutorial encountered: " + m_tutorialTag);
@@ -103,9 +104,9 @@ package scenes.game.display
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
+				case LAYOUT_TUTORIAL:
 					return false;
 				case ZOOM_PAN_TUTORIAL:
-				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return true;
 			}
@@ -127,8 +128,8 @@ package scenes.game.display
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case ZOOM_PAN_TUTORIAL:
 					return true;
+				case ZOOM_PAN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return false;
@@ -258,6 +259,15 @@ package scenes.game.display
 						null,
 						pointToEdge("e1__OUT__"),
 						NineSliceBatch.LEFT, null);
+				case PASSAGE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"This is a PASSAGE. Links can begin\n" +
+						"in, end in or go through passages.\n" +
+						"Change the color of the widget to\n" +
+						"change the width of its passages.",
+						null,
+						pointToPassage("e32__IN__"),
+						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"This is a CLASH. Clashes happen when\n" +
@@ -274,15 +284,6 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
-				case PASSAGE_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"This is a PASSAGE. Links can begin\n" +
-						"in, end in or go through passages.\n" +
-						"Change the color of the widget to\n" +
-						"change the width of its passages.",
-						null,
-						pointToPassage("e32__IN__"),
-						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Some passages are gray. These\n" +
@@ -313,6 +314,13 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
+				case LAYOUT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Widgets and links can be dragged to help organize\n" +
+						"the layout. Separate the widgets.",
+						null,
+						pointToNode("Layout1"),
+						null, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Larger levels require navigation. Drag the background\n" +
@@ -320,13 +328,6 @@ package scenes.game.display
 						"zoom in and out.",
 						null,
 						null,
-						null, null);
-				case LAYOUT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Widgets and links can be dragged to help organize\n" +
-						"the layout. Separate the widgets.",
-						null,
-						pointToNode("Layout1"),
 						null, null);
 				case SKILLS_A_TUTORIAL:
 					return new TutorialManagerTextInfo(
