@@ -1,0 +1,59 @@
+Here are two additional ideas that are related to dynamic analysis that I
+am very excited about, but which we haven't had time to work on yet.
+
+1. Visualize test executions.
+
+Currently, you can run balls through Pipe Jam (or cars through Traffic Jam)
+in a type-theoretic way.  For example, when a ball enters a split point
+that results from an "if" in the code, a ball exits along both exit paths.
+In reality, execution follows only one of the two paths.
+
+The idea is to visualize a specific dynamic execution; for example, the
+ball would flow down just one of the exit paths.
+
+The dynamic execution might illustrate that the static estimates were too
+strong:  some type system warnings might not correspond to any problem that
+ever occurred at run time.  That doesn't mean it *can't* occur, but
+nonetheless might be suggestive to players.
+
+Overall, our hope is that players will use their human insight and
+intuition to see patterns and place the conflicts/buzzsaws in the best
+locations.  Giving more pattern-matching opportunities, and more
+fine-grained information rather than just the type-theoretic approximation,
+might help the players do a better job.
+
+Here are just a few of the interesting challenges.
+
+Our games represent type flow rather than dataflow.  It's (somewhat)
+obvious how to visualize dataflow; how is type flow different?
+
+How do you compress multiple executions into a single flow of balls/cars?
+You don't want to force someone to watch 100 iterations of a loop nor 100
+executions of a method (stemming from different method calls), but they may
+occur in different contexts or have different effects.  What is the right
+type of clustering?  Do you show multiple executions simultaneously
+(overlapping balls/cars?), or one after the other?  If the latter, what is
+the right temporal ordering?
+
+How do we visualize an execution in our new Grid World representation?  It
+has no moving balls/cars.  The benefit is that it is more compact so that
+you can fit more on-screen.  The downside is that it's not immediately
+obvious how to visualize an execution.
+
+
+2. A testing game
+
+Goal:  create a test case that demonstrates that a given set of type
+annotations are incorrect.
+
+Suppose that a player has finished a game but a conflict remains.  (Or,
+suppose that a programmer has annotated a program but there is a
+type-checking error.)  Is this conflict a true positive or a false
+positive?  If we could create a test case that causes a problem there (or
+anywhere else in the program), then we would know it is a true positive --
+a genuine problem.
+
+In the game, a player could try to create input balls that would cause
+problems at particular conflicts.  That could force other players to revise
+their "solutions" to previous levels, without requiring intervention from a
+person with training in formal verification as is currently the case.
