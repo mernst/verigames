@@ -5,40 +5,28 @@ package scenes.game.components.dialogs
 	
 	import display.BasicButton;
 	import display.NineSliceBatch;
-	import display.NineSliceButton;
-	import display.NineSliceToggleButton;
 	import display.ScrollBarThumb;
-	
-	import feathers.controls.Label;
-	import feathers.controls.List;
-	import feathers.controls.ScrollBar;
-	import feathers.controls.renderers.IListItemRenderer;
-	import feathers.core.FeathersControl;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import scenes.BaseComponent;
 	
+	import starling.display.DisplayObject;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.EventDispatcher;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	import utils.XMath;
-	
 	public class SelectLevelList extends Sprite
 	{
 		protected var mainAtlas:TextureAtlas;
 		protected var levelAtlas:TextureAtlas;
 		
-		protected var itemLabel:Label;
 		protected var icon:Texture;
 		
 		private var background:NineSliceBatch;
@@ -57,8 +45,6 @@ package scenes.game.components.dialogs
 		
 		protected var buttonPane:BaseComponent;
 		protected var buttonPaneArray:Array;
-		protected var levelArray:Array;
-		protected var currentSelection:NineSliceToggleButton;
 		
 		public function SelectLevelList(_width:Number, _height:Number)
 		{
@@ -105,8 +91,6 @@ package scenes.game.components.dialogs
 			buttonPane.y = 0;
 			addChild(buttonPane);
 			
-			levelArray = new Array;
-					
 	//		addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 	//		addEventListener(Event.TRIGGERED, onButtonToggle);
 		}
@@ -272,20 +256,62 @@ package scenes.game.components.dialogs
 			
 		}
 		
+		private function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String):DisplayObject
+		{
+			const ICON_SZ:Number = 40;
+			const DOC_WIDTH:Number = 128;
+			const DOC_HEIGHT:Number = 50;
+			const PAD:Number = 6;
+			
+			var icon:Image = new Image(levelAtlas.getTexture(iconTexName));
+			icon.width = icon.height = ICON_SZ;
+			icon.x = PAD;
+			icon.y = DOC_HEIGHT / 2 - ICON_SZ / 2;
+			
+			var bg:NineSliceBatch = NineSliceBatch.createNineSlice(DOC_WIDTH * 4, DOC_HEIGHT * 4, 16, 16, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", bgTexName);
+			bg.scaleX = bg.scaleY = 0.25;
+			
+			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(label, AssetsFont.FONT_UBUNTU, DOC_WIDTH - ICON_SZ - 3 * PAD, DOC_HEIGHT - 2 * PAD, labelSz, 0xFFFFFF);
+			textField.x = ICON_SZ + 2 * PAD;
+			textField.y = PAD;
+			
+			var st:Sprite = new Sprite();
+			st.addChild(bg);
+			st.addChild(icon);
+			st.addChild(textField);
+			
+			return st;
+		}
+		
 		public function setButtonArray(objArray:Array):void
 		{
-			levelArray = objArray;
 			buttonPaneArray = new Array;
 			
 			var xpos:Number = width - scrollbarBackground.width;
 			var widthSpacing:Number = xpos/2;
 			var heightSpacing:Number = 60;
-			for(var i:int = 0; i< objArray.length; i++)
-			{
-				var upicon:Image = new Image(levelAtlas.getTexture("DocumentIcon"));
-				var downicon:Image = new Image(levelAtlas.getTexture("DocumentIconClick"));
-				var overicon:Image = new Image(levelAtlas.getTexture("DocumentIconMouseover"));
-//				var newButton:BasicButton = new BasicButton(iconup, iconover, icondown);
+			
+			for(var ii:int = 0; ii < objArray.length; ++ ii) {
+				var label:String = objArray[ii].name;
+				var labelSz:uint = 12;
+				var newButton:BasicButton;
+				
+				if (objArray[ii].unlocked) {
+					var upstate:DisplayObject = makeDocState(label, labelSz, "DocumentIcon", "DocumentBackground");
+					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick");
+					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover");
+					newButton = new BasicButton(upstate, overstate, downstate);
+					newButton.data = objArray[ii];
+				} else {
+					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
+					newButton = new BasicButton(lockstate, lockstate, lockstate);
+					newButton.enabled = false;
+				}
+				
+				newButton.x = (widthSpacing) * (ii%2);
+				newButton.y = Math.floor(ii/2) * (heightSpacing) + 2;
+				
+				/*///
 				var newButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("",  widthSpacing - 2,  heightSpacing - 2);
 				newButton.addEventListener(starling.events.TouchEvent.TOUCH, onLevelButtonTouched);
 				addChild(newButton);
@@ -295,16 +321,16 @@ package scenes.game.components.dialogs
 				
 				newButton.setIcon(upicon, downicon, overicon);
 				newButton.setText(objArray[i].name);
+				*/
+				
+				/*///
 				if(objArray[i].unlocked == false)
 					newButton.enabled = false;
+				*/
 				
 				buttonPane.addChild(newButton);
-				
-				}
-				//select first
-				if(objArray.length > 0)
-					setCurrentSelection(buttonPaneArray[0]);
-		
+			}
+			
 			if(buttonPane.height<setHeight)
 				thumb.enabled = false;
 			else
@@ -314,87 +340,10 @@ package scenes.game.components.dialogs
 		private function onLevelButtonTouched(e:Event):void
 		{
 			// TODO Auto Generated method stub
-			
 		}
 		
-		protected var _index:int = -1;
-		
-		public function get index():int
-		{
-			return this._index;
-		}
-		
-		public function set index(value:int):void
-		{
-			if(this._index == value)
-			{
-				return;
-			}
-			this._index = value;
-	//		this.invalidate(INVALIDATION_FLAG_DATA);
-		}
-		
-		protected var _data:Object;
-		
-		public function get data():Object
-		{
-			return this._data;
-		}
-		
-		public function set data(value:Object):void
-		{
-			if(this._data == value)
-			{
-				return;
-			}
-			this._data = value;
-//			this.invalidate(INVALIDATION_FLAG_DATA);
-		}
-		
-		protected var _isSelected:Boolean;
-		
-		public function get isSelected():Boolean
-		{
-			return this._isSelected;
-		}
-		
-		public function set isSelected(value:Boolean):void
-		{
-			if(this._isSelected == value)
-			{
-				return;
-			}
-			this._isSelected = value;
-//			this.invalidate(INVALIDATION_FLAG_SELECTED);
-			this.dispatchEventWith(Event.CHANGE);
-		}
-		
-
 		protected function draw():void
 		{
-
-		}
-		
-
-		public function setCurrentSelection(button:NineSliceToggleButton):void
-		{
-			if(currentSelection)
-				currentSelection.setToggleState(false);
-			currentSelection = button;
-			if(currentSelection)
-				currentSelection.setToggleState(true);
-			
-		}
-		
-		public function getSelectedLevelObject():Object
-		{
-			var index:int = buttonPaneArray.indexOf(currentSelection);
-			return levelArray[index];
-		}
-		
-		public function getElementCount():int
-		{
-			return  levelArray.length;
 		}
 	}
 }

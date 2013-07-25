@@ -12,8 +12,8 @@
 	<SubTexture name="LevelSelectWindowBottom"      x="64" y="520" width="696" height="64" frameX="0" frameY="0" frameWidth="696" frameHeight="64"/>
 	<SubTexture name="LevelSelectWindowBottomRight" x="760" y="520" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	
-<SubTexture name="TabActive"     			x="826"   y="0"  width="244" height="54" frameX="0" frameY="0" frameWidth="244" frameHeight="54"/>
-<SubTexture name="TabActiveTopLeft"     	x="826"   y="0"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
+	<SubTexture name="TabActive"     			x="826"   y="0"  width="244" height="54" frameX="0" frameY="0" frameWidth="244" frameHeight="54"/>
+	<SubTexture name="TabActiveTopLeft"     	x="826"   y="0"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabActiveTop"         x="890"   y="0"  width="116" height="24" frameX="0" frameY="0" frameWidth="116" frameHeight="24"/>
 	<SubTexture name="TabActiveTopRight"    x="1006"   y="0"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabActiveLeft"        x="826"   y="24"  width="64" height="20" frameX="0" frameY="0" frameWidth="64" frameHeight="20"/>
@@ -23,8 +23,8 @@
 	<SubTexture name="TabActiveBottom"      x="890"   y="44" width="116" height="10" frameX="0" frameY="0" frameWidth="116" frameHeight="10"/>
 	<SubTexture name="TabActiveBottomRight" x="1004"  y="44" width="64" height="10" frameX="0" frameY="0" frameWidth="64" frameHeight="10"/>
 	
-<SubTexture name="TabInactive"     			x="826"   y="56"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
-<SubTexture name="TabInactiveTopLeft"     	x="826"   y="56"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
+	<SubTexture name="TabInactive"     			x="826"   y="56"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
+	<SubTexture name="TabInactiveTopLeft"     	x="826"   y="56"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabInactiveTop"         x="890"   y="56"  width="116" height="24" frameX="0" frameY="0" frameWidth="116" frameHeight="24"/>
 	<SubTexture name="TabInactiveTopRight"    x="1006"   y="56"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabInactiveLeft"        x="826"   y="80"  width="64" height="15" frameX="0" frameY="0" frameWidth="64" frameHeight="15"/>
@@ -34,8 +34,8 @@
 	<SubTexture name="TabInactiveBottom"      x="890"   y="95" width="116" height="5" frameX="0" frameY="0" frameWidth="116" frameHeight="5"/>
 	<SubTexture name="TabInactiveBottomRight" x="1004"  y="95" width="64" height="5" frameX="0" frameY="0" frameWidth="64" frameHeight="5"/>
 	
-<SubTexture name="TabInactiveMouseover"     x="826"   y="102"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
-<SubTexture name="TabInactiveMouseoverTopLeft"     	x="826"   y="102"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
+	<SubTexture name="TabInactiveMouseover"     x="826"   y="102"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
+	<SubTexture name="TabInactiveMouseoverTopLeft"     	x="826"   y="102"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabInactiveMouseoverTop"         x="890"   y="102"  width="116" height="24" frameX="0" frameY="0" frameWidth="116" frameHeight="24"/>
 	<SubTexture name="TabInactiveMouseoverTopRight"    x="1006"   y="102"  width="64" height="24" frameX="0" frameY="0" frameWidth="64" frameHeight="24"/>
 	<SubTexture name="TabInactiveMouseoverLeft"        x="826"   y="126"  width="64" height="15" frameX="0" frameY="0" frameWidth="64" frameHeight="15"/>
@@ -45,20 +45,23 @@
 	<SubTexture name="TabInactiveMouseoverBottom"      x="890"   y="141" width="116" height="5" frameX="0" frameY="0" frameWidth="116" frameHeight="5"/>
 	<SubTexture name="TabInactiveMouseoverBottomRight" x="1004"  y="141" width="64" height="5" frameX="0" frameY="0" frameWidth="64" frameHeight="5"/>
 	
-<SubTexture name="TabInactivedClick"     	x="826"   y="148"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
+	<SubTexture name="TabInactivedClick"     	x="826"   y="148"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
 
-<SubTexture name="DocumentIcon"     		x="826"   y="194"  width="62" height="62" frameX="0" frameY="0" frameWidth="62" frameHeight="62"/>
-<SubTexture name="DocumentIconMouseover"    x="890"   y="194"  width="62" height="62" frameX="0" frameY="0" frameWidth="62" frameHeight="62"/>
-<SubTexture name="DocumentIconClick"     	x="954"   y="194"  width="62" height="62" frameX="0" frameY="0" frameWidth="62" frameHeight="62"/>
-<SubTexture name="DocumentBackground"     	x="831"   y="260"  width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
-<SubTexture name="DocumentBackgroundMouseover"     x="831"   y="454"  width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
-<SubTexture name="DocumentBackgroundClick"     x="1025"   y="454"  width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
+	<SubTexture name="DocumentIconLocked"           x="825"   y="319"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIcon"                 x="825"   y="445"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIconMouseover"        x="825"   y="571"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIconClick"            x="825"   y="697"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
 
-<SubTexture name="ScrollbarArrowUp"     	x="1018"   y="202"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
-<SubTexture name="ScrollbarArrowDown"     	x="1041"   y="201"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
-<SubTexture name="ScrollbarButton"     		x="1019"   y="214"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
-<SubTexture name="ScrollbarButtonMouseover"     x="1019"   y="226"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
-<SubTexture name="ScrollbarButtonClick"     x="1019"   y="238"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
-<SubTexture name="Scrollbar"     			x="1022"   y="251"  width="4" height="4" frameX="0" frameY="0" frameWidth="4" frameHeight="4"/>
+	<SubTexture name="DocumentBackgroundLocked"     x="954"   y="319"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackground"           x="954"   y="445"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackgroundMouseover"  x="954"   y="571"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackgroundClick"      x="954"   y="697"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+
+	<SubTexture name="ScrollbarArrowUp"     	x="1018"   y="202"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
+	<SubTexture name="ScrollbarArrowDown"     	x="1041"   y="201"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
+	<SubTexture name="ScrollbarButton"     		x="1019"   y="214"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
+	<SubTexture name="ScrollbarButtonMouseover"     x="1019"   y="226"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
+	<SubTexture name="ScrollbarButtonClick"     x="1019"   y="238"  width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
+	<SubTexture name="Scrollbar"     			x="1022"   y="251"  width="4" height="4" frameX="0" frameY="0" frameWidth="4" frameHeight="4"/>
 
 </TextureAtlas>

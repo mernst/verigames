@@ -1,7 +1,5 @@
 package display
 {
-	import utils.XSprite;
-	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
@@ -14,6 +12,8 @@ package display
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	
+	import utils.XSprite;
 
 	[Event(name="triggered", type="starling.events.Event")]
 	[Event(name="hoverOver", type="starling.events.Event")]
@@ -33,6 +33,8 @@ package display
 
 		private var m_enabled:Boolean;
 		private var m_useHandCursor:Boolean;
+
+		private var m_data:Object;
 		
 		public function BasicButton(up:DisplayObject, over:DisplayObject, down:DisplayObject, hitSubRect:Rectangle = null)
 		{
@@ -94,6 +96,11 @@ package display
 			}
 		}
 		
+		public function set data(value:Object):void
+		{
+			m_data = value;
+		}
+		
 		public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
 		{
 			var superHit:DisplayObject = super.hitTest(localPoint, forTouch);
@@ -122,7 +129,7 @@ package display
 			if (touch.phase == TouchPhase.HOVER) {
 				if (m_current != m_over) {
 					toState(m_over);
-					dispatchEventWith(HOVER_OVER, true);
+					dispatchEventWith(HOVER_OVER, true, dispatchEventWith);
 				}
 			} else if (touch.phase == TouchPhase.MOVED) {
 				if (hitTest(touch.getLocation(this))) {
@@ -139,7 +146,7 @@ package display
 					} else {
 						toState(m_up);
 					}
-					dispatchEventWith(Event.TRIGGERED, true);
+					dispatchEventWith(Event.TRIGGERED, true, m_data);
 				}
 			}
 		}

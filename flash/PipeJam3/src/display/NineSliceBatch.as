@@ -1,6 +1,9 @@
 package display 
 {
 	import assets.AssetInterface;
+	
+	import flash.geom.Rectangle;
+	
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -8,6 +11,7 @@ package display
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import starling.utils.RectangleUtil;
 	
 	public class NineSliceBatch extends QuadBatch 
 	{
@@ -76,6 +80,42 @@ package display
 			addImage(mBottomRight);
 		}
 		
+		public static function createNineSlice(_width:Number, _height:Number, _cX:Number, _cY:Number, 
+											   _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
+											   _atlasXMLTexturePrefix:String):NineSliceBatch
+		{
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas(_atlasFile, _atlasImgName, _atlasXMLName);
+			var region:Rectangle = atlas.getRegion(_atlasXMLTexturePrefix);
+			var usePrefix:String = _atlasXMLTexturePrefix + "__" + String(_cX) + "__" + String(_cY);
+			
+			if (!atlas.getRegion(usePrefix)) {
+				var x0:Number = region.x;
+				var x1:Number = region.x + _cX;
+				var x2:Number = region.x + region.width - _cX;
+				var y0:Number = region.y;
+				var y1:Number = region.y + _cY;
+				var y2:Number = region.y + region.height - _cY;
+				var iw:Number = region.width - 2 * _cX;
+				var ih:Number = region.height - 2 * _cY;
+					
+				atlas.addRegion(usePrefix + TOP_LEFT, new Rectangle(x0, y0, _cX, _cY));
+				atlas.addRegion(usePrefix + TOP_RIGHT, new Rectangle(x2, y0, _cX, _cY));
+				atlas.addRegion(usePrefix + BOTTOM_LEFT, new Rectangle(x0, y2, _cX, _cY));
+				atlas.addRegion(usePrefix + BOTTOM_RIGHT, new Rectangle(x2, y2, _cX, _cY));
+
+				atlas.addRegion(usePrefix + TOP, new Rectangle(x1, y0, iw, _cY));
+				atlas.addRegion(usePrefix + BOTTOM, new Rectangle(x1, y2, iw, _cY));
+				atlas.addRegion(usePrefix + LEFT, new Rectangle(x0, y1, _cX, ih));
+				atlas.addRegion(usePrefix + RIGHT, new Rectangle(x2, y1, _cX, ih));
+				
+				atlas.addRegion(usePrefix + CENTER, new Rectangle(x1, y1, iw, ih));
+
+				atlas.addRegion(usePrefix, region);
+			}
+			
+			return new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, usePrefix);
+		}
+			
 		private function updateX():void
 		{
 			mTopLeft.x = mLeft.x = mBottomLeft.x = 0;
