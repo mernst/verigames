@@ -92,16 +92,13 @@ package scenes.game
 			super.addedToStage(event);
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
-			trace("!!!LEVEL!!!");
 			if(LoginHelper.getLoginHelper().levelObject is int) // in the tutorial
 			{
-				trace("!!!TUTORIAL!!!");
 				PipeJamGameScene.inTutorial = true;
 				fileName = "tutorial";
 			}
 			if (DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
 			{
-				trace("!!!DEBUG!!!");
 				//load the zip file from it's location
 				loadType = LoginHelper.USE_URL;
 				fz1 = new FZip();
@@ -110,7 +107,6 @@ package scenes.game
 			}
 			else if(PipeJamGameScene.inTutorial)
 			{
-				trace("!!!TUTORIAL OK!!!");
 				onLayoutLoaded(tutorialLayoutXML);
 				onConstraintsLoaded(tutorialConstraintsXML);
 				onWorldLoaded(tutorialXML);
