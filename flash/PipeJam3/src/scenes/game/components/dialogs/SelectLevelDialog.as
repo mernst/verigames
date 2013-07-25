@@ -17,9 +17,10 @@ package scenes.game.components.dialogs
 	import feathers.data.HierarchicalCollection;
 	import feathers.data.ListCollection;
 	import feathers.display.Scale9Image;
-	import networking.LoginHelper;
 	
 	import flash.text.TextFormat;
+	
+	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -42,7 +43,6 @@ package scenes.game.components.dialogs
 		protected var submitted_levels_button:NineSliceToggleButton;
 		
 		protected var cancel_button:NineSliceButton;
-		protected var select_button:NineSliceButton;
 		
 		protected var tutorialListBox:SelectLevelList;
 		protected var newLevelListBox:SelectLevelList;
@@ -74,7 +74,7 @@ package scenes.game.components.dialogs
 			addChild(label);
 			label.x = (width - label.width)/2;
 			
-			tutorial_levels_button = ButtonFactory.getInstance().createTabButton("Tutorials", buttonWidth, 27, 6, 6);
+			tutorial_levels_button = ButtonFactory.getInstance().createTabButton("Intro", buttonWidth, 27, 6, 6);
 			tutorial_levels_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 			addChild(tutorial_levels_button);
 			tutorial_levels_button.x = buttonPadding;
@@ -98,26 +98,18 @@ package scenes.game.components.dialogs
 			cancel_button.x = width-2*60-2*buttonPadding;
 			cancel_button.y = height - cancel_button.height - 6;
 			
-			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 60, 24);
-			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
-			addChild(select_button);
-			select_button.x = width-60-buttonPadding;
-			select_button.y = height - select_button.height - 6;
-			//disable to begin with
-			select_button.enabled = false;
-			
-			tutorialListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
+			tutorialListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
 			tutorialListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
 			tutorialListBox.x = (width - tutorialListBox.width)/2;
 			addChild(tutorialListBox);
 			
-			newLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
+			newLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
 			newLevelListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
 			newLevelListBox.x = (width - newLevelListBox.width)/2;
 			addChild(newLevelListBox);
 			newLevelListBox.visible = false;
 			
-			submittedLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - select_button.height - 4*buttonPadding);
+			submittedLevelListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
 			submittedLevelListBox.y = label.height + tutorial_levels_button.height + buttonPadding;
 			submittedLevelListBox.x = (width - submittedLevelListBox.width)/2+1;
 			addChild(submittedLevelListBox);
@@ -125,7 +117,7 @@ package scenes.game.components.dialogs
 			
 			tutorial_levels_button.setToggleState(true);
 			currentVisibleListBox = tutorialListBox;
-			addEventListener(Event.TRIGGERED, onButtonToggle);
+			addEventListener(Event.TRIGGERED, onButtonTriggered);
 		}
 		
 		public function initialize():void
@@ -160,73 +152,21 @@ package scenes.game.components.dialogs
 			
 		}
 		
-		private function onSelectButtonTriggered(e:Event):void
+		private function onButtonTriggered(ev:Event):void
 		{
-			if(currentVisibleListBox == this.tutorialListBox)
-				LoginHelper.getLoginHelper().levelObject = currentVisibleListBox.getSelectedLevelObject().levelId;
-			else
-				LoginHelper.getLoginHelper().levelObject = currentVisibleListBox.getSelectedLevelObject();
+			var levelObj:Object = ev.data;
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
-			
-		}
-		
-		private function onButtonToggle(e:Event):void
-		{
-			if(e.target is NineSliceToggleButton)
-			{
-				var target:NineSliceToggleButton = (e.target as NineSliceToggleButton);
-				if(target.upIcon == null) //TODO fix this somehow...
-				{
-					if(target != tutorial_levels_button)
-					{
-						tutorial_levels_button.setToggleState(false);
-						tutorialListBox.visible = false;
-					}
-					else
-					{
-						tutorial_levels_button.setToggleState(true);
-						tutorialListBox.visible = true;
-						currentVisibleListBox = tutorialListBox;
-					}
-					
-					if(target != new_levels_button)
-					{
-						new_levels_button.setToggleState(false);
-						newLevelListBox.visible = false;
-					}
-					else
-					{
-						new_levels_button.setToggleState(true);
-						newLevelListBox.visible = true;
-						currentVisibleListBox = newLevelListBox;
-						
-					}
-					
-					if(target != submitted_levels_button)
-					{
-						submitted_levels_button.setToggleState(false);
-						submittedLevelListBox.visible = false;
-					}
-					else
-					{
-						submitted_levels_button.setToggleState(true);
-						submittedLevelListBox.visible = true;
-						currentVisibleListBox = submittedLevelListBox;
-					}
-				}
-				else
-				{
-					currentVisibleListBox.setCurrentSelection(e.target as NineSliceToggleButton);
+			if (levelObj) {
+				if (levelObj.levelId != undefined) {
+					LoginHelper.getLoginHelper().levelObject = levelObj.levelId;
+				} else {
+					LoginHelper.getLoginHelper().levelObject = levelObj;
 				}
 				
-				if(currentVisibleListBox.getElementCount() > 0)
-					this.select_button.enabled = true;
-				else
-					this.select_button.enabled = false;
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			}
 		}
-		
+
 		public function setNewLevelInfo(_newLevelInfo:Array):void
 		{			
 			this.newLevelListBox.setButtonArray(_newLevelInfo);
@@ -256,11 +196,6 @@ package scenes.game.components.dialogs
 				count++;
 			}
 			tutorialListBox.setButtonArray(tutorialArray);
-			
-			if(currentVisibleListBox.getElementCount() > 0)
-				this.select_button.enabled = true;
-			else
-				this.select_button.enabled = false;
 		}
 	}
 }
