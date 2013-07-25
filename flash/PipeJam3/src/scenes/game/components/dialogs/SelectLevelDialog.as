@@ -95,7 +95,7 @@ package scenes.game.components.dialogs
 			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 60, 24);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
-			cancel_button.x = width-2*60-2*buttonPadding;
+			cancel_button.x = width-60-2*buttonPadding;
 			cancel_button.y = height - cancel_button.height - 6;
 			
 			tutorialListBox = new SelectLevelList(width - 2*buttonPadding, height - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
