@@ -2,9 +2,9 @@
   <texture name="texture.png"/>
   <sourcePosition x="300.00" y="300.00"/>
   <sourcePositionVariance x="5" y="0"/>
-  <speed value="50"/>
+  <speed value="70"/>
   <speedVariance value="15"/>
-  <particleLifeSpan value="1.8"/>
+  <particleLifeSpan value="2.2"/>
   <particleLifespanVariance value="0.2"/>
   <angle value="270"/>
   <angleVariance value="15"/>

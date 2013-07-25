@@ -541,6 +541,7 @@ package scenes.game.components
 		
 		private var m_fanfareContainer:Sprite = new Sprite();
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
+		private var m_fanfareTextContainer:Sprite = new Sprite();
 		public function displayContinueButton(permenantly:Boolean = true):void
 		{
 			if (permenantly) m_continueButtonForced = true;
@@ -555,11 +556,10 @@ package scenes.game.components
 				addChild(continueButton);
 				
 				// Fanfare
-				if (!m_fanfareContainer) m_fanfareContainer = new Sprite();
+				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
+				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
-				m_fanfareContainer.x = continueButton.x;
-				m_fanfareContainer.y = continueButton.y - continueButton.height;
-				for (var i:int = 10; i <= continueButton.width - 10; i += 10) {
+				for (var i:int = 5; i <= continueButton.width - 5; i += 10) {
 					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
 					fanfare.x = i;
 					fanfare.y = continueButton.height / 2;
@@ -569,12 +569,14 @@ package scenes.game.components
 				}
 				addChild(m_fanfareContainer);
 				
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 14, 0xFFEC00);
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
 				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
-				m_fanfareContainer.addChild(textField);
+				m_fanfareTextContainer.addChild(textField);
+				addChild(m_fanfareTextContainer);
 				
 				startFanfare();
 				Starling.juggler.delayCall(stopFanfare, 0.1);
+				Starling.juggler.tween(m_fanfareTextContainer, 2.0, { delay:1.0, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 				//Starling.juggler.delayCall(removeFanfare, 15.0);
 			}
 			
@@ -603,6 +605,7 @@ package scenes.game.components
 			}
 			m_fanfare = new Vector.<FanfareParticleSystem>();
 			if (m_fanfareContainer) m_fanfareContainer.removeFromParent();
+			if (m_fanfareTextContainer) m_fanfareTextContainer.removeFromParent();
 		}
 		
 		public function hideContinueButton():void
