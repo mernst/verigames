@@ -799,7 +799,7 @@ package scenes.game.display
 						//remove all current points, and then add new ones
 						delete child.point;
 						
-						if(edgeContainer.m_jointPoints.length != 6)
+						if(edgeContainer.m_jointPoints.length != GameEdgeContainer.NUM_JOINTS)
 							trace("Wrong number of joint points " + lineID);
 						for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
 						{

@@ -105,7 +105,7 @@ package scenes.game.display
 		public static var RESTORE_CURRENT_LOCATION:String = "restore_current_location";
 		public static var INNER_SEGMENT_CLICKED:String = "extension_clicked";
 		
-		public var NUM_JOINTS:int = 6;
+		public static const NUM_JOINTS:int = 6;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
@@ -642,6 +642,8 @@ package scenes.game.display
 			
 			var secondJointPt:Point = newJointPt.clone();
 			m_jointPoints.splice(startingJointIndex+1, 0, newJointPt, secondJointPt);
+			
+			//trace("inserted to " + m_jointPoints.indexOf(newJointPt) + " , " + m_jointPoints.indexOf(secondJointPt) + " of " + m_jointPoints.length);
 			createChildren();
 			positionChildren();
 			
@@ -727,6 +729,7 @@ package scenes.game.display
 			var b:int = 1;
 			
 			var segment:GameEdgeSegment;
+			//trace("Edges:" + m_edgeSegments.length + " m_jointPoints:" + m_jointPoints.length);
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
@@ -782,17 +785,13 @@ package scenes.game.display
 					m_endPoint.x = m_endPoint.x+deltaPoint.x;
 					m_endPoint.y = m_endPoint.y+deltaPoint.y;
 				}
-				
+				var prevPoints:int = m_jointPoints ? m_jointPoints.length : 0;
 				createJointPointsArray(m_startPoint, m_endPoint);
-				positionChildren();
 				
-				m_isDirty = true;
 			}
-			else
-			{
-				positionChildren();
-				m_isDirty = true;
-			}
+			
+			positionChildren();
+			m_isDirty = true;
 		}
 		
 		private function onRubberBandSegment(event:Event):void
@@ -812,7 +811,10 @@ package scenes.game.display
 			//not a innerbox segment or end segment
 			if(segmentIndex != -1 && segmentIndex != 0 && segmentIndex != m_edgeSegments.length-1) 
 			{				
-				//if connected to end segment, add a expansion joint in between. Test both ends.
+				/*
+				// Don't create new joint here, instead extend the current end joint so its extension
+				// height is maintained and edges will therefor follow a horizontal->vertical->horizontal
+				// alternating fashion
 				if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
 				{
 					if(segmentIndex == 1)
@@ -839,6 +841,7 @@ package scenes.game.display
 						newEndSegment.isHoverOn = true;
 					}
 				}
+				*/
 				
 				//check for horizontal or vertical
 				if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
@@ -981,67 +984,68 @@ package scenes.game.display
 		//		start of incoming port extension
 		//		end connection
 		private function createJointPointsArray(startPoint:Point, endPoint:Point):void
-		{		
-			//recreate if we have a non-initialized or non-standard line
-			//it might be nice to deal with non-standard lines better than wiping out the changes....
-			if(!m_jointPoints || m_jointPoints.length != NUM_JOINTS)
+		{
+			var newEdgesNeeded:Boolean = false;
+			//recreate if we have a non-initialized line
+			if(!m_jointPoints) m_jointPoints = new Array();
+			if(m_jointPoints.length == 0)
 			{
 				m_jointPoints = new Array(NUM_JOINTS);
+				newEdgesNeeded = true;
+			}
+			
+			//makeInitialNodesAndExtension
+			if ((m_jointPoints[0] as Point != null) && (m_jointPoints[1] as Point != null)) {
+				var inputHeight:Number = (m_jointPoints[1] as Point).y - (m_jointPoints[0] as Point).y;
+				m_jointPoints[0] = startPoint.clone();
+				m_jointPoints[1] = new Point(startPoint.x, startPoint.y + inputHeight);
+			} else {
+				m_jointPoints[0] = startPoint.clone();
+				m_jointPoints[1] = new Point(startPoint.x, startPoint.y + InnerBoxSegment.PLUG_HEIGHT + outgoingEdgePosition*0.2);
+			}
+			const LNGTH:Number = m_jointPoints.length;
+			if ((m_jointPoints[LNGTH-1] as Point != null) && (m_jointPoints[LNGTH-2] as Point != null)) {
+				var outputHeight:Number = (m_jointPoints[LNGTH-1] as Point).y - (m_jointPoints[LNGTH-2] as Point).y;
+				m_jointPoints[LNGTH-1] = endPoint.clone();
+				m_jointPoints[LNGTH-2] = new Point(endPoint.x, endPoint.y - outputHeight);
+			} else {
+				m_jointPoints[LNGTH-1] = endPoint.clone();
+				m_jointPoints[LNGTH-2] = new Point(endPoint.x, endPoint.y - InnerBoxSegment.PLUG_HEIGHT - incomingEdgePosition*0.2);
+			}
+			
+			//setBottomWallOutputConnection
+			if (LNGTH == NUM_JOINTS) {
+				var xDistance:Number = m_jointPoints[LNGTH-2].x - m_jointPoints[1].x; 
+				m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
+				m_jointPoints[LNGTH-3] = new Point(m_jointPoints[2].x, m_jointPoints[LNGTH-2].y);
+			} else if (m_jointPoints.length > NUM_JOINTS) {
+				// Leave other interconnecting joints/segments alone, but 
+				// need to update the next joints' y to match the changes above
+				m_jointPoints[2].y = m_jointPoints[1].y;
+				m_jointPoints[LNGTH-3].y = m_jointPoints[LNGTH-2].y;
+			}
+			
+			// Correct any diagonals
+			for (var i:int = 1; i < m_jointPoints.length; i++) {
+				if (((m_jointPoints[i-1] as Point).x != (m_jointPoints[i] as Point).x) 
+					&& ((m_jointPoints[i-1] as Point).y != (m_jointPoints[i] as Point).y)) {
+					// This can happen if legacy joint points that don't alternate in vertical->horiz->vert are loaded
+					// Create new joint points between these to correct it - arbitrarily chose to make a horizontal line here
+					var midy:Number = ((m_jointPoints[i] as Point).y + (m_jointPoints[i-1] as Point).y) / 2.0;
+					var newPt1:Point = new Point((m_jointPoints[i-1] as Point).x, midy);
+					var newPt2:Point = new Point((m_jointPoints[i] as Point).x, midy);
+					m_jointPoints.splice(i, 0, newPt1, newPt2);
+					newEdgesNeeded = true;
+					i += 2; // we've just filled in m_jointPoints[i] and m_jointPoints[i+1] so move to i+3, i+2 check
+					//throw new Error("Diagonal created: m_jointPoints["+i+"]:" + m_jointPoints[i] + " m_jointPoints["+(i-1)+"]:" + m_jointPoints[i-1]);
+				}
+			}
+			
+			// If there are more joint points now than when the method began, create the edge segements
+			// for those new joints
+			if (newEdgesNeeded) {
 				createChildren();
 			}
-			
-			//create easy parts
-			makeInitialNodesAndExtension(startPoint, 0, 1, true);
-			makeInitialNodesAndExtension(endPoint, NUM_JOINTS-1, NUM_JOINTS-2, false);
-			
-			makeMainEdgeParts();			
-		}
-		
-		//uses edge position to determine hight of connection segments. currently stepped upwards, might want to step up and then down
-		private function makeInitialNodesAndExtension(connectionPoint:Point, startIndex:int, nodeIndex:int, isStartPoint:Boolean):void
-		{
-			m_jointPoints[startIndex] = connectionPoint.clone();
-			if(isStartPoint)
-				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y + InnerBoxSegment.PLUG_HEIGHT + outgoingEdgePosition*.2);
-			else
-				m_jointPoints[nodeIndex] = new Point(connectionPoint.x, connectionPoint.y - InnerBoxSegment.PLUG_HEIGHT - incomingEdgePosition*.2);
-			
-			if(m_jointPoints[nodeIndex].x - m_jointPoints[startIndex].x != 0 && m_jointPoints[nodeIndex].y - m_jointPoints[startIndex].y != 0)
-				trace("joint point error");
-		}
-		
-		
-		private function makeMainEdgeParts():void
-		{
-			var xDistance:Number = m_jointPoints[NUM_JOINTS-2].x - m_jointPoints[1].x; 
-			var yDistance:Number = m_jointPoints[NUM_JOINTS-2].y - m_jointPoints[1].y;
-			setBottomWallOutputConnection(xDistance, yDistance);
-			
-		}
-		
-		private function setBottomWallOutputConnection(xDistance:Number, yDistance:Number):void
-		{
-			//			var gStartPt:Point = localToGlobal(m_jointPoints[1]);
-			//			var gEndPt:Point = localToGlobal(m_jointPoints[4]);
-			//			var gToNodeLeftSide:Number = m_joint.x;
-			//			var gToNodeRightSide:Number = m_joint.x+m_joint.width;
-			//			var gToNodeTopSide:Number = m_joint.y;
-			//			var gToNodeBottomSide:Number = m_joint.y+m_joint.height;
-			//			var gFromNodeLeftSide:Number = m_node.x;
-			//			var gFromNodeRightSide:Number = m_node.x+m_node.width;
-			//			var gFromNodeTopSide:Number = m_node.y;
-			//			var gFromNodeBottomSide:Number = m_node.y+m_node.height;
-			
-			//			if(m_jointPoints[1].y > m_jointPoints[4].y)
-			{
-				m_jointPoints[2] = new Point(m_jointPoints[1].x + .5*xDistance, m_jointPoints[1].y);
-				m_jointPoints[3] = new Point(m_jointPoints[2].x, m_jointPoints[NUM_JOINTS-2].y);
-			}
-			//			else
-			//			{
-			//				m_jointPoints[2] = new Point(m_jointPoints[1].x, m_jointPoints[1].y + .5*yDistance);
-			//				m_jointPoints[3] = new Point(m_jointPoints[4].x, m_jointPoints[4].y - .5*yDistance);	
-			//			}
 		}
 		
 		private function onInnerBoxSegmentClicked(event:TouchEvent):void
