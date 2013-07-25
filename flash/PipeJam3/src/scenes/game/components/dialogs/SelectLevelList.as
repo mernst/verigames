@@ -283,7 +283,7 @@ package scenes.game.components.dialogs
 			return st;
 		}
 		
-		public function setButtonArray(objArray:Array):void
+		public function setButtonArray(objArray:Array, isTutorial:Boolean):void
 		{
 			buttonPaneArray = new Array;
 			
@@ -301,7 +301,11 @@ package scenes.game.components.dialogs
 					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick");
 					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover");
 					newButton = new BasicButton(upstate, overstate, downstate);
-					newButton.data = objArray[ii];
+					if (isTutorial) {
+						newButton.data = { level:objArray[ii].levelId };
+					} else {
+						newButton.data = { level:objArray[ii] };
+					}
 				} else {
 					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
 					newButton = new BasicButton(lockstate, lockstate, lockstate);
@@ -310,23 +314,6 @@ package scenes.game.components.dialogs
 				
 				newButton.x = (widthSpacing) * (ii%2);
 				newButton.y = Math.floor(ii/2) * (heightSpacing) + 2;
-				
-				/*///
-				var newButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("",  widthSpacing - 2,  heightSpacing - 2);
-				newButton.addEventListener(starling.events.TouchEvent.TOUCH, onLevelButtonTouched);
-				addChild(newButton);
-				buttonPaneArray.push(newButton);
-				newButton.x = (widthSpacing)* (i%2);
-				newButton.y = Math.floor(i/2)*(heightSpacing) + 2;
-				
-				newButton.setIcon(upicon, downicon, overicon);
-				newButton.setText(objArray[i].name);
-				*/
-				
-				/*///
-				if(objArray[i].unlocked == false)
-					newButton.enabled = false;
-				*/
 				
 				buttonPane.addChild(newButton);
 			}

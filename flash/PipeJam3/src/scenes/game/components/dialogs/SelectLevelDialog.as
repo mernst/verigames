@@ -154,27 +154,24 @@ package scenes.game.components.dialogs
 		
 		private function onButtonTriggered(ev:Event):void
 		{
-			var levelObj:Object = ev.data;
+			var dataObj:Object = ev.data;
 			
-			if (levelObj) {
-				if (levelObj.levelId != undefined) {
-					LoginHelper.getLoginHelper().levelObject = levelObj.levelId;
-				} else {
-					LoginHelper.getLoginHelper().levelObject = levelObj;
+			if (dataObj) {
+				if (dataObj.hasOwnProperty("level")) {
+					LoginHelper.getLoginHelper().levelObject = dataObj.level;
+					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 				}
-				
-				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 			}
 		}
 
 		public function setNewLevelInfo(_newLevelInfo:Array):void
-		{			
-			this.newLevelListBox.setButtonArray(_newLevelInfo);
+		{
+			this.newLevelListBox.setButtonArray(_newLevelInfo, false);
 		}
 		
 		public function setSavedLevelsInfo(_savedLevelInfo:Array):void
-		{			
-			this.submittedLevelListBox.setButtonArray(_savedLevelInfo);
+		{
+			this.submittedLevelListBox.setButtonArray(_savedLevelInfo, false);
 		}
 		
 		public function setTutorialXMLFile(tutorialXML:XML):void
@@ -195,7 +192,7 @@ package scenes.game.components.dialogs
 				tutorialArray.push(obj);
 				count++;
 			}
-			tutorialListBox.setButtonArray(tutorialArray);
+			tutorialListBox.setButtonArray(tutorialArray, true);
 		}
 	}
 }
