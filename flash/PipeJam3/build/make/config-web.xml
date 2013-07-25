@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flex-config>
+  <target-player>11.1</target-player>
+  <compiler>
+    <define append="true">
+      <name>CONFIG::debug</name>
+      <value>true</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::release</name>
+      <value>false</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::mobile</name>
+      <value>false</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::web</name>
+      <value>true</value>
+    </define>
+    <source-path append="true">
+      <path-element>../../src</path-element>
+      <path-element>../../external/Dynamic-Texture-Atlas-Generator-master/dynamicTextureAtlasGenerator/src</path-element>
+      <path-element>../../external/Feathers 1.0.1/source</path-element>
+      <path-element>../../external/FZip</path-element>
+      <path-element>../../external/Hi-ReS-Stats-master/src</path-element>
+      <path-element>../../external/MochiAPI_v4_1_2</path-element>
+      <path-element>../../external/MouseWheelTrap</path-element>
+      <path-element>../../external/pixelmask-master/src</path-element>
+      <path-element>../../external/Starling-Extension-Graphics/extension/src</path-element>
+      <path-element>../../external/Starling-Extension-Particle-System-master/src</path-element>
+      <path-element>../../external/Starling-Framework/starling/src</path-element>
+    </source-path>
+    <library-path append="true">
+      <path-element>../../external/cgs-common/CGSCommon.swc</path-element>
+      <path-element>../../external/Feathers 1.0.1/swc/feathers.swc</path-element>
+    </library-path>
+  </compiler>
+  <default-background-color>#FFFFFF</default-background-color>
+  <default-frame-rate>30</default-frame-rate>
+  <default-size>
+    <width>960</width>
+    <height>640</height>
+  </default-size>
+</flex-config>
