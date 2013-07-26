@@ -78,11 +78,11 @@
    showgrid="false"
    inkscape:zoom="0.48"
    inkscape:cx="775.2923"
-   inkscape:cy="545.46148"
+   inkscape:cy="628.79481"
    inkscape:window-x="0"
    inkscape:window-y="0"
    inkscape:window-maximized="0"
-   inkscape:current-layer="g3456" />
+   inkscape:current-layer="Layer_3" />
 <g
    id="Layer_2"
    transform="translate(0,424)"
@@ -1663,7 +1663,7 @@
    y1="543"
    x2="943.0293"
    y2="595"
-   gradientTransform="matrix(1,0,0,-1,5,172.11336)">
+   gradientTransform="matrix(1,0,0,-1,-295,772.11301)">
 		<stop
    offset="0.3592"
    style="stop-color:#2B388F"
@@ -1696,7 +1696,7 @@
 	<path
    id="path3761"
    stroke-miterlimit="10"
-   d="m 842.549,-422.88664 c -8.572,0 -15.52,6.949 -15.52,15.516 v 36.484 h 242 v -36.484 c 0,-8.566 -6.945,-15.516 -15.516,-15.516 H 842.549 z"
+   d="m 542.549,177.113 c -8.572,0 -15.52,6.949 -15.52,15.516 v 36.48401 h 242 V 192.629 c 0,-8.566 -6.945,-15.516 -15.516,-15.516 H 542.549 z"
    style="fill:url(#path3761_1_);stroke:#2b388f;stroke-width:2;stroke-miterlimit:10"
    inkscape:connector-curvature="0" />
 	
@@ -1707,7 +1707,7 @@
    y1="497"
    x2="943.0293"
    y2="539"
-   gradientTransform="matrix(1,0,0,-1,5,172.11336)">
+   gradientTransform="matrix(1,0,0,-1,-295,772.11301)">
 		<stop
    offset="0.3592"
    style="stop-color:#262261"
@@ -1732,12 +1732,12 @@
 	<path
    id="path3774"
    stroke-miterlimit="10"
-   d="m 842.547,-366.88664 c -8.572,0 -15.518,6.949 -15.518,15.516 v 26.484 h 242 v -26.484 c 0,-8.565 -6.947,-15.516 -15.516,-15.516 H 842.547 z"
+   d="m 542.547,233.11301 c -8.572,0 -15.518,6.949 -15.518,15.516 v 26.484 h 242 v -26.484 c 0,-8.565 -6.947,-15.516 -15.516,-15.516 H 542.547 z"
    style="fill:url(#path3774_1_);stroke:#2b388f;stroke-width:2;stroke-miterlimit:10"
    inkscape:connector-curvature="0" />
 	<g
    id="g3776"
-   transform="translate(1,-422.88664)">
+   transform="translate(-299,177.113)">
 		
 			<linearGradient
    id="path3793_1_"
@@ -1791,7 +1791,7 @@
 	</g>
 	<g
    id="g3797"
-   transform="translate(1,-422.88664)">
+   transform="translate(-299,177.113)">
 		
 			<linearGradient
    id="path3812_1_"
@@ -2091,13 +2091,13 @@
 	</g>
 	<polygon
    id="polygon3907"
-   points="1026.838,200.864 1017.416,210.284 1036.256,210.284 "
-   transform="translate(1,-422.88664)"
+   points="1036.256,210.284 1026.838,200.864 1017.416,210.284 "
+   transform="translate(-299,177.113)"
    style="fill:#0077ff" />
 	<polygon
    id="polygon3909"
-   points="1049.834,210.284 1059.256,200.864 1040.416,200.864 "
-   transform="translate(1,-422.88664)"
+   points="1040.416,200.864 1049.834,210.284 1059.256,200.864 "
+   transform="translate(-299,177.113)"
    style="fill:#0077ff" />
 	<circle
    id="circle3911"
@@ -2109,7 +2109,7 @@
    sodipodi:cy="217.851"
    sodipodi:rx="5"
    sodipodi:ry="5"
-   transform="translate(1,-422.88664)"
+   transform="translate(-299,177.113)"
    style="fill:#0077ff" />
 	<circle
    id="circle3913"
@@ -2121,7 +2121,7 @@
    sodipodi:cy="229.851"
    sodipodi:rx="5"
    sodipodi:ry="5"
-   transform="translate(1,-422.88664)"
+   transform="translate(-299,177.113)"
    style="fill:#6ed4ff" />
 	<circle
    id="circle3915"
@@ -2133,12 +2133,12 @@
    sodipodi:cy="241.851"
    sodipodi:rx="5"
    sodipodi:ry="5"
-   transform="translate(1,-422.88664)"
+   transform="translate(-299,177.113)"
    style="fill:#ffffff" />
 	<rect
    id="rect3917"
-   x="1021.336"
-   y="-173.59964"
+   x="721.336"
+   y="426.39999"
    width="5"
    height="5"
    style="fill:#2b388f" />
