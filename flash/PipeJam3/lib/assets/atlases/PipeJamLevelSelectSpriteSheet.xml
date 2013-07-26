@@ -47,15 +47,15 @@
 	
 	<SubTexture name="TabInactivedClick"     	x="826"   y="148"  width="244" height="44" frameX="0" frameY="0" frameWidth="244" frameHeight="44"/>
 
-	<SubTexture name="DocumentIconLocked"           x="825"   y="319"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentIcon"                 x="825"   y="445"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentIconMouseover"        x="825"   y="571"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentIconClick"            x="825"   y="697"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIconLocked"           x="0"     y="610"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIcon"                 x="130"   y="610"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIconMouseover"        x="260"   y="610"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentIconClick"            x="390"   y="610"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
 
-	<SubTexture name="DocumentBackgroundLocked"     x="954"   y="319"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentBackground"           x="954"   y="445"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentBackgroundMouseover"  x="954"   y="571"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
-	<SubTexture name="DocumentBackgroundClick"      x="954"   y="697"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackgroundLocked"     x="0"     y="740"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackground"           x="130"   y="740"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackgroundMouseover"  x="260"   y="740"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
+	<SubTexture name="DocumentBackgroundClick"      x="390"   y="740"  width="124" height="124" frameX="0" frameY="0" frameWidth="124" frameHeight="124"/>
 
 	<SubTexture name="ScrollbarArrowUp"     	x="1018"   y="202"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
 	<SubTexture name="ScrollbarArrowDown"     	x="1041"   y="201"  width="19" height="10" frameX="0" frameY="0" frameWidth="19" frameHeight="10"/>
