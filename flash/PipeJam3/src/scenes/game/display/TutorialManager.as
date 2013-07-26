@@ -1,15 +1,13 @@
 package scenes.game.display 
 {
 	import display.NineSliceBatch;
-	import starling.events.Event;
 	
 	import events.EdgeSetChangeEvent;
-	import events.TutorialEvent;
 	
 	import flash.geom.Point;
 	
-	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	
 	public class TutorialManager extends EventDispatcher

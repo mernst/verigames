@@ -2,20 +2,14 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	
-	import display.NineSliceBatch;
-	
 	import flash.geom.Point;
 	
-	import scenes.BaseComponent;
-	
-	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	

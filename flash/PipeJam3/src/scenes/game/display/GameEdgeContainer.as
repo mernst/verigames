@@ -3,8 +3,6 @@ package scenes.game.display
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
-	import display.NineSliceBatch;
-	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
@@ -15,15 +13,12 @@ package scenes.game.display
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.SubnetworkPort;
 	
 	import particle.ErrorParticleSystem;
 	
-	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.display.graphics.NGon;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -76,7 +71,6 @@ package scenes.game.display
 		public var edgeIsCopy:Boolean;
 		
 		public var errorContainer:Sprite = new Sprite();
-		public var errorMarker:NineSliceBatch;
 		
 		private var m_edgeHasError:Boolean = false;
 		private var m_portHasError:Boolean = false;
@@ -349,9 +343,6 @@ package scenes.game.display
 			if (m_errorParticleSystem) {
 				m_errorParticleSystem.removeFromParent(true);
 			}
-			if (errorMarker) {
-				errorMarker.removeFromParent(true);
-			}
 			disposeChildren();
 			m_edgeSegments = null;
 			m_edgeJoints = null;
@@ -493,11 +484,6 @@ package scenes.game.display
 		
 		private function removeError():void
 		{
-			if (errorMarker != null) {
-				errorMarker.removeFromParent(true);
-			}
-			errorMarker = null;
-			
 			if (m_errorParticleSystem != null) {
 				m_errorParticleSystem.removeFromParent(true);
 			}

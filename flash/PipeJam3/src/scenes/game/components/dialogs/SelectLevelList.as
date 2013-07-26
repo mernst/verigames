@@ -268,7 +268,7 @@ package scenes.game.components.dialogs
 			icon.x = PAD;
 			icon.y = DOC_HEIGHT / 2 - ICON_SZ / 2;
 			
-			var bg:NineSliceBatch = NineSliceBatch.createNineSlice(DOC_WIDTH * 4, DOC_HEIGHT * 4, 16, 16, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", bgTexName);
+			var bg:NineSliceBatch = new NineSliceBatch(DOC_WIDTH * 4, DOC_HEIGHT * 4, 16, 16, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", bgTexName);
 			bg.scaleX = bg.scaleY = 0.25;
 			
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(label, AssetsFont.FONT_UBUNTU, DOC_WIDTH - ICON_SZ - 3 * PAD, DOC_HEIGHT - 2 * PAD, labelSz, 0xFFFFFF);

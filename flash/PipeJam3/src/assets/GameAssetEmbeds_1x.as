@@ -41,9 +41,6 @@ package assets
 		[Embed(source="../../lib/assets/ConflictMapBackground.png")]
 		public static const ConflictMapBackgroundImageClass:Class;
 		
-		// 9 Slice coords to use for any 192x192 box textures
-		//[Embed(source = '../../lib/assets/atlases/Box9Slice.xml', mimeType = "application/octet-stream")] public static const Box9SliceXML:Class;
-		
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
 		public static const PipeJamSpriteSheetPNG:Class;
 		
