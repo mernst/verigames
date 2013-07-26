@@ -29,10 +29,8 @@ package scenes.game.display
 		public var m_originalPoint:Point;
 		public var m_position:int;
 		
-		protected var m_parentEdge:GameEdgeContainer;
 		public var m_closestWall:int = 0;
 		
-		public var count:int = 0;
 		private var m_quad:Quad;
 		
 		static public var STANDARD_JOINT:int = 0;

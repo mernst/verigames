@@ -29,8 +29,6 @@
 		public var m_currentRect:Rectangle;
 		public var updatePoint:Point;
 		
-		public var index:int;
-		
 		public var m_isInnerBoxSegment:Boolean;
 		public var m_isLastSegment:Boolean;
 		public var m_dir:String;
