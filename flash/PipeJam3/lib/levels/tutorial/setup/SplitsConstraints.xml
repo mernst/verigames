@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<graph id="world">
+  <level id="Splits" targetScore="100">
+    <box id="Splits6" width="narrow" editable="false"/>
+    <box id="Splits4" width="wide" editable="false"/>
+    <box id="Splits5" width="wide" editable="false"/>
+    <box id="Splits2" width="narrow" editable="false"/>
+    <box id="Splits3" width="wide" editable="false"/>
+    <box id="Splits1" width="wide" editable="true"/>
+  </level>
+</graph>

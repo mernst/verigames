@@ -1,0 +1,87 @@
+<graph id="world">
+  <level id="WidenBoxes" tutorial="widen">
+    <box height="1.0" id="WidenBoxes1" lines="1" width="1.81" x="0.9" y="2.04"/>
+    <box height="1.0" id="WidenBoxes2" lines="1" width="1.81" x="3.71" y="2.04"/>
+    <box height="1.0" id="WidenBoxes3" lines="1" width="1.81" x="6.51" y="2.04"/>
+    <box height="1.0" id="WidenBoxes4" lines="1" width="1.81" x="9.32" y="2.04"/>
+    <box height="1.0" id="WidenBoxes10" lines="1" width="1.81" x="0.9" y="5.72"/>
+    <box height="1.0" id="WidenBoxes20" lines="1" width="1.81" x="3.71" y="5.72"/>
+    <box height="1.0" id="WidenBoxes30" lines="2" width="2.4" x="7.9" y="5.845"/>
+    <joint height="0.51" id="n10" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>
+    <joint height="0.51" id="n20" inputs="1" outputs="1" width="0.59" x="3.68" y="3.82"/>
+    <joint height="0.51" id="n300" inputs="1" outputs="0" width="0.59" x="7.08" y="7.63"/>
+    <joint height="0.51" id="n40" inputs="1" outputs="1" width="0.59" x="8.99" y="3.82"/>
+    <joint height="0.51" id="n400" inputs="1" outputs="0" width="0.59" x="8.68" y="7.63"/>
+    <joint height="0.51" id="n200" inputs="1" outputs="0" width="0.59" x="3.68" y="7.63"/>
+    <joint height="0.51" id="n100" inputs="1" outputs="0" width="0.59" x="0.88" y="7.63"/>
+    <joint height="0.51" id="n30" inputs="1" outputs="1" width="0.59" x="6.79" y="3.82"/>
+    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
+    <joint height="0.51" id="n3" inputs="0" outputs="1" width="0.59" x="6.49" y="0.26"/>
+    <joint height="0.51" id="n4" inputs="0" outputs="1" width="0.59" x="9.29" y="0.26"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="WidenBoxes1" port="0"/>
+    <point x="0.89" y="0.53"/><point x="0.89" y="1.53"/></line>
+    <line id="e1__OUT__">
+      <frombox id="WidenBoxes1" port="0"/>
+      <tojoint id="n10" port="0"/>
+    <point x="0.89" y="2.56"/><point x="0.89" y="3.56"/></line>
+    <line id="e2__IN__">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="WidenBoxes2" port="0"/>
+    <point x="3.69" y="0.53"/><point x="3.69" y="1.53"/></line>
+    <line id="e2__OUT__">
+      <frombox id="WidenBoxes2" port="0"/>
+      <tojoint id="n20" port="0"/>
+    <point x="3.69" y="2.56"/><point x="3.69" y="3.56"/></line>
+    <line id="e3__IN__">
+      <fromjoint id="n3" port="0"/>
+      <tobox id="WidenBoxes3" port="0"/>
+    <point x="6.5" y="0.53"/><point x="6.5" y="1.53"/></line>
+    <line id="e3__OUT__">
+      <frombox id="WidenBoxes3" port="0"/>
+      <tojoint id="n30" port="0"/>
+    <point x="6.5" y="2.56"/><point x="6.81" y="3.56"/></line>
+    <line id="e4__IN__">
+      <fromjoint id="n4" port="0"/>
+      <tobox id="WidenBoxes4" port="0"/>
+    <point x="9.31" y="0.53"/><point x="9.31" y="1.53"/></line>
+    <line id="e4__OUT__">
+      <frombox id="WidenBoxes4" port="0"/>
+      <tojoint id="n40" port="0"/>
+    <point x="9.31" y="2.56"/><point x="9.0" y="3.56"/></line>
+    <line id="e10__IN__">
+      <fromjoint id="n10" port="0"/>
+      <tobox id="WidenBoxes10" port="0"/>
+    <point x="0.89" y="4.08"/><point x="0.89" y="5.21"/></line>
+    <line id="e10__OUT__">
+      <frombox id="WidenBoxes10" port="0"/>
+      <tojoint id="n100" port="0"/>
+    <point x="0.89" y="6.24"/><point x="0.89" y="7.36"/></line>
+    <line id="e20__IN__">
+      <fromjoint id="n20" port="0"/>
+      <tobox id="WidenBoxes20" port="0"/>
+    <point x="3.69" y="4.08"/><point x="3.69" y="5.21"/></line>
+    <line id="e20__OUT__">
+      <frombox id="WidenBoxes20" port="0"/>
+      <tojoint id="n200" port="0"/>
+    <point x="3.69" y="6.24"/><point x="3.69" y="7.36"/></line>
+    <line id="e30__IN__">
+      <fromjoint id="n30" port="0"/>
+      <tobox id="WidenBoxes30" port="0"/>
+    <point x="6.81" y="4.08"/><point x="7.57" y="5.08"/></line>
+    <line id="e30__OUT__">
+      <frombox id="WidenBoxes30" port="0"/>
+      <tojoint id="n300" port="0"/>
+    <point x="7.57" y="6.36"/><point x="7.1" y="7.36"/></line>
+    <line id="e40__IN__">
+      <fromjoint id="n40" port="0"/>
+      <tobox id="WidenBoxes30" port="1"/>
+    <point x="9.0" y="4.08"/><point x="8.22" y="5.08"/></line>
+    <line id="e40__OUT__">
+      <frombox id="WidenBoxes30" port="1"/>
+      <tojoint id="n400" port="0"/>
+    <point x="8.22" y="6.36"/><point x="8.69" y="7.36"/></line>
+  </level>
+</graph>

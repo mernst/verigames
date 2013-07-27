@@ -1,0 +1,222 @@
+<graph id="world">
+  <level id="Optimize" tutorial="optimize">
+    <box height="1.0" id="Optimize1" lines="2" visible="true" width="2.4" x="6.69" y="5.07"/>
+    <box height="1.0" id="Optimize2" lines="4" visible="true" width="3.59" x="7.34" y="7.75"/>
+    <box height="1.0" id="Optimize3" lines="5" visible="true" width="4.19" x="6.49" y="11.15"/>
+    <box height="1.0" id="Optimize4" lines="2" visible="true" width="2.4" x="3.37" y="7.99"/>
+    <joint height="0.51" id="n12" inputs="0" outputs="1" width="0.59" x="5.24" y="0.26"/>
+    <joint height="0.51" id="n410" inputs="1" outputs="0" width="0.59" x="13.51" y="8.37"/>
+    <joint height="0.51" id="n33" inputs="1" outputs="1" visible="true" width="0.59" x="7.64" y="9.24"/>
+    <joint height="0.51" id="n34" inputs="0" outputs="1" width="0.59" x="8.28" y="8.37"/>
+    <joint height="0.51" id="n35" inputs="1" outputs="1" visible="true" width="0.59" x="5.79" y="9.80"/>
+    <joint height="0.51" id="n240" inputs="1" outputs="0" width="0.59" x="11.92" y="8.37"/>
+    <joint height="0.51" id="n11__OUT__3" inputs="0" outputs="1" width="0.59" x="5.08" y="8.37"/>
+    <joint height="0.51" id="n11__OUT__2" inputs="0" outputs="1" width="0.59" x="3.49" y="8.37"/>
+    <joint height="0.51" id="n11__OUT__1" inputs="0" outputs="1" width="0.59" x="4.44" y="4.07"/>
+    <joint height="0.51" id="n11__OUT__0" inputs="0" outputs="1" width="0.59" x="3.64" y="0.26"/>
+    <joint height="0.51" id="n11__OUT__4" inputs="0" outputs="1" width="0.59" x="13.51" y="4.07"/>
+    <joint height="0.51" id="n110" inputs="1" outputs="0" width="0.59" x="2.85" y="4.07"/>
+    <joint height="0.51" id="n220" inputs="1" outputs="0" width="0.59" x="1.89" y="8.37"/>
+    <joint height="0.51" id="n320" inputs="1" outputs="0" width="0.59" x="4.97" y="12.93"/>
+    <joint height="0.51" id="n42" inputs="0" outputs="1" width="0.59" x="15.11" y="4.07"/>
+    <joint height="0.51" id="n23" inputs="0" outputs="1" width="0.59" x="7.64" y="4.07"/>
+    <joint height="0.51" id="n22" inputs="1" outputs="1" visible="true" width="0.59" x="7.00" y="6.38"/>
+    <joint height="0.51" id="n24" inputs="1" outputs="1" visible="true" width="0.59" x="7.73" y="12.39"/>
+    <joint height="0.51" id="n350" inputs="1" outputs="0" width="0.59" x="8.17" y="12.93"/>
+    <joint height="0.51" id="n310" inputs="1" outputs="0" width="0.59" x="3.38" y="12.93"/>
+    <joint height="0.51" id="n330" inputs="1" outputs="0" width="0.59" x="6.57" y="12.93"/>
+    <joint height="0.51" id="n210" inputs="1" outputs="0" width="0.59" x="0.29" y="8.37"/>
+    <line id="e11__IN__">
+      <fromjoint id="n11__OUT__0" port="0"/>
+      <tobox id="Optimize1" port="0"/>
+      <point x="3.65" y="0.53"/>
+      <point x="4.13" y="1.53"/>
+    </line>
+    <line id="e11__OUT__">
+      <frombox id="Optimize1" port="0"/>
+      <tojoint id="n110" port="0"/>
+      <point x="4.13" y="2.81"/>
+      <point x="2.86" y="3.81"/>
+    </line>
+    <line id="e12__IN__">
+      <fromjoint id="n12" port="0"/>
+      <tobox id="Optimize1" port="1"/>
+      <point x="5.25" y="0.53"/>
+      <point x="4.78" y="1.53"/>
+    </line>
+    <line id="e12__OUT__" visible="true">
+      <frombox id="Optimize1" port="1"/>
+      <tojoint id="n22" port="0"/>
+      <point x="7.01" y="5.57"/>
+      <point x="7.01" y="5.87"/>
+      <point x="7.02" y="5.87"/>
+      <point x="7.02" y="5.83"/>
+      <point x="7.02" y="5.83"/>
+      <point x="7.02" y="6.13"/>
+    </line>
+    <line id="e21__IN__">
+      <fromjoint id="n11__OUT__1" port="0"/>
+      <tobox id="Optimize2" port="0"/>
+      <point x="4.46" y="4.33"/>
+      <point x="5.43" y="5.33"/>
+    </line>
+    <line id="e21__OUT__">
+      <frombox id="Optimize2" port="0"/>
+      <tojoint id="n210" port="0"/>
+      <point x="5.43" y="7.11"/>
+      <point x="0.31" y="8.11"/>
+    </line>
+    <line id="e22__IN__" visible="true">
+      <fromjoint id="n22" port="0"/>
+      <tobox id="Optimize2" port="1"/>
+      <point x="7.02" y="6.64"/>
+      <point x="7.02" y="6.94"/>
+      <point x="7.02" y="6.94"/>
+      <point x="7.02" y="6.95"/>
+      <point x="7.02" y="6.95"/>
+      <point x="7.02" y="7.25"/>
+    </line>
+    <line id="e22__OUT__">
+      <frombox id="Optimize2" port="1"/>
+      <tojoint id="n220" port="0"/>
+      <point x="6.06" y="7.11"/>
+      <point x="1.9" y="8.11"/>
+    </line>
+    <line id="e23__IN__">
+      <fromjoint id="n23" port="0"/>
+      <tobox id="Optimize2" port="2"/>
+      <point x="7.65" y="4.33"/>
+      <point x="6.68" y="5.33"/>
+    </line>
+    <line id="e23__OUT__" visible="true">
+      <frombox id="Optimize2" port="2"/>
+      <tojoint id="n33" port="0"/>
+      <point x="7.64" y="8.25"/>
+      <point x="7.64" y="8.57"/>
+      <point x="7.64" y="8.57"/>
+      <point x="7.64" y="8.69"/>
+      <point x="7.65" y="8.69"/>
+      <point x="7.65" y="8.99"/>
+    </line>
+    <line id="e24__IN__" visible="true">
+      <fromjoint id="n24" port="0"/>
+      <tobox id="Optimize2" port="3"/>
+      <point x="7.74" y="12.64"/>
+      <point x="7.74" y="12.94"/>
+      <point x="9.54" y="12.94"/>
+      <point x="9.54" y="6.67"/>
+      <point x="8.27" y="6.67"/>
+      <point x="8.27" y="6.91"/>
+      <point x="8.27" y="7.25"/>
+    </line>
+    <line id="e24__OUT__">
+      <frombox id="Optimize2" port="3"/>
+      <tojoint id="n240" port="0"/>
+      <point x="7.31" y="7.11"/>
+      <point x="11.93" y="8.11"/>
+    </line>
+    <line id="e31__IN__">
+      <fromjoint id="n11__OUT__2" port="0"/>
+      <tobox id="Optimize3" port="0"/>
+      <point x="3.5" y="8.64"/>
+      <point x="5.22" y="9.64"/>
+    </line>
+    <line id="e31__OUT__">
+      <frombox id="Optimize3" port="0"/>
+      <tojoint id="n310" port="0"/>
+      <point x="5.22" y="11.67"/>
+      <point x="3.39" y="12.67"/>
+    </line>
+    <line id="e32__IN__">
+      <fromjoint id="n11__OUT__3" port="0"/>
+      <tobox id="Optimize3" port="1"/>
+      <point x="5.1" y="8.64"/>
+      <point x="5.85" y="9.64"/>
+    </line>
+    <line id="e32__OUT__">
+      <frombox id="Optimize3" port="1"/>
+      <tojoint id="n320" port="0"/>
+      <point x="5.85" y="11.67"/>
+      <point x="4.99" y="12.67"/>
+    </line>
+    <line id="e33__IN__" visible="true">
+      <fromjoint id="n33" port="0"/>
+      <tobox id="Optimize3" port="2"/>
+      <point x="7.65" y="9.50"/>
+      <point x="7.65" y="9.80"/>
+      <point x="7.65" y="9.94"/>
+      <point x="7.38" y="9.94"/>
+      <point x="7.38" y="9.93"/>
+      <point x="7.11" y="9.93"/>
+      <point x="7.11" y="10.33"/>
+      <point x="7.11" y="10.65"/>
+    </line>
+    <line id="e33__OUT__">
+      <frombox id="Optimize3" port="2"/>
+      <tojoint id="n330" port="0"/>
+      <point x="6.47" y="11.67"/>
+      <point x="6.58" y="12.67"/>
+    </line>
+    <line id="e34__IN__">
+      <fromjoint id="n34" port="0"/>
+      <tobox id="Optimize3" port="3"/>
+      <point x="8.29" y="8.64"/>
+      <point x="7.11" y="9.64"/>
+    </line>
+    <line id="e34__OUT__" visible="true">
+      <frombox id="Optimize3" port="3"/>
+      <tojoint id="n24" port="0"/>
+      <point x="7.74" y="11.65"/>
+      <point x="7.74" y="11.99"/>
+      <point x="7.74" y="11.99"/>
+      <point x="7.74" y="11.83"/>
+      <point x="7.74" y="11.83"/>
+      <point x="7.74" y="12.13"/>
+    </line>
+    <line id="e35__IN__" visible="true">
+      <fromjoint id="n35" port="0"/>
+      <tobox id="Optimize3" port="4"/>
+      <point x="5.81" y="10.05"/>
+      <point x="5.81" y="10.35"/>
+      <point x="6.14" y="10.35"/>
+      <point x="6.14" y="10.35"/>
+      <point x="6.47" y="10.35"/>
+      <point x="6.47" y="10.65"/>
+    </line>
+    <line id="e35__OUT__">
+      <frombox id="Optimize3" port="4"/>
+      <tojoint id="n350" port="0"/>
+      <point x="7.74" y="11.67"/>
+      <point x="8.18" y="12.67"/>
+    </line>
+    <line id="e41__IN__">
+      <fromjoint id="n11__OUT__4" port="0"/>
+      <tobox id="Optimize4" port="0"/>
+      <point x="13.53" y="4.33"/>
+      <point x="14.0" y="5.58"/>
+    </line>
+    <line id="e41__OUT__">
+      <frombox id="Optimize4" port="0"/>
+      <tojoint id="n410" port="0"/>
+      <point x="14.0" y="6.86"/>
+      <point x="13.53" y="8.11"/>
+    </line>
+    <line id="e42__IN__">
+      <fromjoint id="n42" port="0"/>
+      <tobox id="Optimize4" port="1"/>
+      <point x="15.13" y="4.33"/>
+      <point x="14.65" y="5.58"/>
+    </line>
+    <line id="e42__OUT__" visible="true">
+      <frombox id="Optimize4" port="1"/>
+      <tojoint id="n35" port="0"/>
+      <point x="3.69" y="8.49"/>
+      <point x="3.69" y="8.79"/>
+      <point x="3.69" y="9.24"/>
+      <point x="4.75" y="9.24"/>
+      <point x="4.75" y="9.24"/>
+      <point x="5.81" y="9.24"/>
+      <point x="5.81" y="9.54"/>
+    </line>
+  </level>
+</graph>
