@@ -29,10 +29,29 @@ package particle
             mParticleSystem.emitterX = 0;
             mParticleSystem.emitterY = 0;
             mParticleSystem.start();
-            
             addChild(mParticleSystem);
             Starling.juggler.add(mParticleSystem);
         }
+		
+		public function get particleX():Number
+		{
+			return mParticleSystem.emitterX;
+		}
+		
+		public function get particleY():Number
+		{
+			return mParticleSystem.emitterY;
+		}
+		
+		public function set particleX(value:Number):void
+		{
+			mParticleSystem.emitterX = value;
+		}
+		
+		public function set particleY(value:Number):void
+		{
+			mParticleSystem.emitterY = value;
+		}
 		
 		public function stop():void
 		{
