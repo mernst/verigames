@@ -342,7 +342,7 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
-			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
 		//returns a point containing the content scale factors
@@ -631,11 +631,6 @@ package scenes.game.components
 		private function onNextLevelButtonTriggered(evt:Event):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
-		}
-		
-		public function displayTextMetadata(textParent:XML):void
-		{
-		
 		}
 		
 		public function moveToPoint(percentPoint:Point):void
