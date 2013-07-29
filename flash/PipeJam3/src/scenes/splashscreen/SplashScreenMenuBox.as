@@ -161,13 +161,13 @@ package scenes.splashscreen
 			
 			savedLevelsArrayMetadata = new Array;
 			savedLevelsMetadataArray = new Array;
-			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			for(i = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
 			{
-				var match:Object = loginHelper.savedMatchArrayObjects[i];
-		//		var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
+				var match1:Object = loginHelper.savedMatchArrayObjects[i];
+		//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
 		//		if(levelName != null)
-					savedLevelsMetadataArray.push(match.name);
-					savedLevelsArrayMetadata.push(match);
+					savedLevelsMetadataArray.push(match1.name);
+					savedLevelsArrayMetadata.push(match1);
 			}
 			
 			selectLevelDialog.setSavedLevelsInfo(savedLevelsArrayMetadata);
