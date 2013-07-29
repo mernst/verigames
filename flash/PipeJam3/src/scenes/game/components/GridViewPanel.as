@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import starling.animation.DelayedCall;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -542,6 +543,7 @@ package scenes.game.components
 		private var m_fanfareContainer:Sprite = new Sprite();
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
+		private var m_stopFanfareDelayedCall:DelayedCall;
 		public function displayContinueButton(permenantly:Boolean = true):void
 		{
 			if (permenantly) m_continueButtonForced = true;
@@ -583,7 +585,7 @@ package scenes.game.components
 				for (i = 0; i < m_fanfare.length; i++) {
 					Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
 				}
-				Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
+				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
 				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 			}
 			
@@ -607,6 +609,7 @@ package scenes.game.components
 		
 		private function removeFanfare():void
 		{
+			if (m_stopFanfareDelayedCall) Starling.juggler.remove(m_stopFanfareDelayedCall);
 			for (var i:int = 0; i < m_fanfare.length; i++) {
 				m_fanfare[i].removeFromParent(true);
 			}
