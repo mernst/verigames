@@ -30,6 +30,7 @@
 		public var updatePoint:Point;
 		
 		public var m_isInnerBoxSegment:Boolean;
+		public var m_isFirstSegment:Boolean;
 		public var m_isLastSegment:Boolean;
 		public var m_dir:String;
 		
@@ -39,13 +40,14 @@
 		public var plug:Sprite;
 		public var socket:Sprite;
 		
-		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
 		{
 			super("");
 			draggable = _draggable;
 			m_isWide = _isWide;
 			m_dir = _dir;
 			m_isInnerBoxSegment = _isInnerBoxSegment;
+			m_isFirstSegment = _isFirstSegment;
 			m_isLastSegment = _isLastSegment;
 			
 			m_isDirty = false;
@@ -143,7 +145,7 @@
 					if(isMoving)
 					{
 						isMoving = false;
-						if (m_isInnerBoxSegment) {
+						if (m_isInnerBoxSegment || m_isFirstSegment || m_isLastSegment) {
 							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
 							dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
 						}
@@ -167,7 +169,7 @@
 			}
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
-				
+				trace(touches[0].target);
 			}
 			else
 			{
