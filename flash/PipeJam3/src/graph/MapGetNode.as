@@ -7,8 +7,8 @@ package graph
 	 * value - type of values output from the map
 	 * argument - type of the argument provided to the mapGet(arg) call
 	 * 
-	 * And one outgoing edge that outputs a ball under two conditions
-	 * 1) If the ARGUMENT edge has a stamp indicating it is a keyFor the MAP, then
+	 * And one outgoing edge that outputs a ball under one of two conditions:
+	 * a) If the ARGUMENT edge has a stamp indicating it is a keyFor the MAP, then
 	 *    the ball type that exited the VALUE edge will be output from the
 	 *    MAPGET node.
 	 * Otherwise,
