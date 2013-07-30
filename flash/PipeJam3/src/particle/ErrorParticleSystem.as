@@ -1,13 +1,14 @@
 package particle 
 {
 	import flash.utils.Dictionary;
+	
+	import events.ErrorEvent;
+	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.extensions.PDParticleSystem;
 	import starling.textures.Texture;
-	
-	import events.ErrorEvent;
 	
 	public class ErrorParticleSystem extends Sprite 
 	{
@@ -17,8 +18,9 @@ package particle
 		[Embed(source = "../../lib/assets/particle/error_particle.png")]
 		private static const ErrorParticle:Class;
 		
-		private static const errorConfig:XML = XML(new ErrorConfig());
-		private static const errorTexture:Texture = Texture.fromBitmap(new ErrorParticle());
+		private static var errorInited:Boolean = false;
+		private static var errorConfig:XML;
+		private static var errorTexture:Texture;
 		private var mParticleSystem:PDParticleSystem;
 		
 		protected static var nextID:int = 0;
@@ -29,6 +31,12 @@ package particle
 		public function ErrorParticleSystem() 
 		{
 			super();
+
+			if (!errorInited) {
+				errorInited = true;
+				errorConfig = XML(new ErrorConfig());
+				errorTexture = Texture.fromBitmap(new ErrorParticle());
+			}
 			
 			id=nextID++;
             errorList[id] = this;
