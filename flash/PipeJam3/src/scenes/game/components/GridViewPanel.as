@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import starling.animation.DelayedCall;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -341,7 +342,7 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
-			trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
 		//returns a point containing the content scale factors
@@ -542,6 +543,7 @@ package scenes.game.components
 		private var m_fanfareContainer:Sprite = new Sprite();
 		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
 		private var m_fanfareTextContainer:Sprite = new Sprite();
+		private var m_stopFanfareDelayedCall:DelayedCall;
 		public function displayContinueButton(permenantly:Boolean = true):void
 		{
 			if (permenantly) m_continueButtonForced = true;
@@ -556,6 +558,8 @@ package scenes.game.components
 				addChild(continueButton);
 				
 				// Fanfare
+				removeFanfare();
+				addChild(m_fanfareContainer);
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
@@ -567,17 +571,22 @@ package scenes.game.components
 					m_fanfare.push(fanfare);
 					m_fanfareContainer.addChild(fanfare);
 				}
-				addChild(m_fanfareContainer);
 				
 				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
 				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
 				addChild(m_fanfareTextContainer);
 				
+				var origX:Number = m_fanfareTextContainer.x;
+				var origY:Number = m_fanfareTextContainer.y;
+				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 1.0;
+				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
 				startFanfare();
-				Starling.juggler.delayCall(stopFanfare, 0.1);
-				Starling.juggler.tween(m_fanfareTextContainer, 2.0, { delay:1.0, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
-				//Starling.juggler.delayCall(removeFanfare, 15.0);
+				for (i = 0; i < m_fanfare.length; i++) {
+					Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+				}
+				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
+				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 			}
 			
 			//assume we are in the tutorial, and we just finished a level
@@ -600,12 +609,16 @@ package scenes.game.components
 		
 		private function removeFanfare():void
 		{
+			if (m_stopFanfareDelayedCall) Starling.juggler.remove(m_stopFanfareDelayedCall);
 			for (var i:int = 0; i < m_fanfare.length; i++) {
 				m_fanfare[i].removeFromParent(true);
 			}
 			m_fanfare = new Vector.<FanfareParticleSystem>();
 			if (m_fanfareContainer) m_fanfareContainer.removeFromParent();
-			if (m_fanfareTextContainer) m_fanfareTextContainer.removeFromParent();
+			if (m_fanfareTextContainer) {
+				Starling.juggler.removeTweens(m_fanfareTextContainer);
+				m_fanfareTextContainer.removeFromParent();
+			}
 		}
 		
 		public function hideContinueButton():void
@@ -618,11 +631,6 @@ package scenes.game.components
 		private function onNextLevelButtonTriggered(evt:Event):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
-		}
-		
-		public function displayTextMetadata(textParent:XML):void
-		{
-		
 		}
 		
 		public function moveToPoint(percentPoint:Point):void

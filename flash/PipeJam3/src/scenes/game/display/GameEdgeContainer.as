@@ -653,16 +653,16 @@ package scenes.game.display
 			for(var index:int = 1; index<numJoints; index++)
 			{
 				var isLastSegment:Boolean = false;
-				var isNodeExtensionSegment:Boolean = false;
+				var isFirstSegment:Boolean = false;
 				if(index+1 == numJoints)
 				{
 					isLastSegment = true;
-					isNodeExtensionSegment = true;
 				}
-				if(index == 1)
-					isNodeExtensionSegment = true;
-				
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, true, draggable);
+				else if (index == 1)
+				{
+					isFirstSegment = true;
+				}
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, false, isFirstSegment, isLastSegment, m_isWide, true, draggable);
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -811,7 +811,7 @@ package scenes.game.display
 						m_edgeJoints.splice(1, 0, newJoint);
 						newJoint.isHoverOn = true;
 						
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
+						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(1,0,newSegment);	
 						newSegment.isHoverOn = true;
 					}
@@ -822,7 +822,7 @@ package scenes.game.display
 						m_edgeJoints.splice(-2, 0, newEndJoint);
 						newEndJoint.isHoverOn = true;
 						
-						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
+						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(-1,0,newEndSegment);	
 						newEndSegment.isHoverOn = true;
 					}
@@ -1295,7 +1295,7 @@ class InnerBoxSegment extends GameComponent
 		m_plugIsWide = plugIsWide;
 		m_plugIsEditable = plugIsEditable;
 		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
-		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide, m_isEditable, draggable);
+		edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 		if (createInnerCircle) {
 			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);

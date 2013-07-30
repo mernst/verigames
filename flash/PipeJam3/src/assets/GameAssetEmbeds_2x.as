@@ -8,6 +8,9 @@ package assets
 		[Embed(source="../../lib/assets/BoxesStartScreen.jpg")]
 		public static const BoxesStartScreenImageClass:Class;
 		
+		[Embed(source="../../lib/assets/BoxesStartScreenForeground.png")]
+		public static const BoxesStartScreenForegroundImageClass:Class;
+		
 		//[Embed(source="../../lib/assets/BoxesGamePanelBackground.jpg")]
 		//public static const BoxesGamePanelBackgroundImageClass:Class;
 		

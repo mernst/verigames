@@ -5,7 +5,7 @@
   <speed value="70"/>
   <speedVariance value="15"/>
   <particleLifeSpan value="2.2"/>
-  <particleLifespanVariance value="0.2"/>
+  <particleLifespanVariance value="0.8"/>
   <angle value="270"/>
   <angleVariance value="15"/>
   <gravity x="0" y="100"/>
@@ -17,7 +17,7 @@
   <startColorVariance  red="0" green="0.0" blue="0.0" alpha="0"/>
   <finishColor         red="1" green="0.9" blue="0.5" alpha="1"/>
   <finishColorVariance red="0" green="0.0" blue="0.0" alpha="0"/>
-  <maxParticles value="220.63"/>
+  <maxParticles value="25"/>
   <startParticleSize value="31.75"/>
   <startParticleSizeVariance value="13.84"/>
   <finishParticleSize value="15.15"/>
