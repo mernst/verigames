@@ -14,14 +14,21 @@ package particle
 		[Embed(source = "../../lib/assets/particle/fanfare_particle.png")]
 		private static const FanfareParticle:Class;
 		
-		private static const FanfareXML:XML = XML(new FanfareConfig());
-		private static const fanfareTexture:Texture = Texture.fromBitmap(new FanfareParticle());
+		private static var fanfareInited:Boolean = false;
+		private static var fanfareXML:XML;
+		private static var fanfareTexture:Texture;
 		private var mParticleSystem:PDParticleSystem;
 		
 		public function FanfareParticleSystem()
 		{
 			super();
-			mParticleSystem = new PDParticleSystem(FanfareXML, fanfareTexture);
+
+			if (!fanfareInited) {
+				fanfareXML = XML(new FanfareConfig());
+				fanfareTexture = Texture.fromBitmap(new FanfareParticle());
+			}
+			
+			mParticleSystem = new PDParticleSystem(fanfareXML, fanfareTexture);
         }
         
         public function start():void
