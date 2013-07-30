@@ -61,6 +61,8 @@ package scenes.game.components
 		private var m_tutorialText:TutorialText;
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
+		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
+		private var m_hidingErrorText:Boolean = false;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -68,6 +70,8 @@ package scenes.game.components
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
+		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
+		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
 		public function GridViewPanel()
 		{
@@ -333,6 +337,7 @@ package scenes.game.components
 			// Perform scaling
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
+			onContentScaleChanged();
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
@@ -343,6 +348,26 @@ package scenes.game.components
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
 			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+		}
+		
+		private function onContentScaleChanged():void
+		{
+			var i:int;
+			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
+				if (!m_hidingErrorText) {
+					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+						m_currentLevel.m_edgeList[i].hideErrorText();
+					}
+					m_hidingErrorText = true;
+				}
+			} else {
+				if (m_hidingErrorText) {
+					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+						m_currentLevel.m_edgeList[i].showErrorText();
+					}
+					m_hidingErrorText = false;
+				}
+			}
 		}
 		
 		//returns a point containing the content scale factors
@@ -468,6 +493,14 @@ package scenes.game.components
 				}
 			}
 			
+			// Remove old error text containers and place new ones
+			for (var i:int = 0; i < m_errorTextBubbles.length; i++) m_errorTextBubbles[i].removeFromParent();
+			m_errorTextBubbles = new Vector.<Sprite>();
+			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+				m_errorTextBubbles.push(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+				addChild(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+			}
+			
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
@@ -488,6 +521,7 @@ package scenes.game.components
 			content.y = 0;
 			
 			content.scaleX = content.scaleY = STARTING_SCALE;
+			onContentScaleChanged();
 			content.addChild(m_currentLevel);
 			
 			if (DEBUG_BOUNDING_BOX) {

@@ -41,8 +41,14 @@ package display
 		
 		protected var m_pointPos:Point = new Point();
 		protected var m_pointPosNeedsInit:Boolean = true;
+		protected var m_arrowTextSeparationAdjustment:Number = 0;
 		
-		public function TextBubble(_text:String, _fontSize:Number = 10, _pointAt:DisplayObject = null, _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3)
+		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
+		                           _pointAt:DisplayObject = null, _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, 
+								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
+								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
+								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
+								   _showBox:Boolean = true, _arrowColor:Number = -1)
 		{
 			m_fontSize = _fontSize;
 			m_pointAt = _pointAt;
@@ -52,7 +58,7 @@ package display
 			m_arrowSz = _arrowSz;
 			m_arrowBounce = _arrowBounce;
 			m_arrowBounceSpeed = _arrowBounceSpeed;
-			m_inset = _inset;
+			m_inset = Math.max(_inset, 1); // must specify some inset
 			m_paddingSz = m_arrowSz + 2 * m_arrowBounce + 4 * m_inset;
 			
 			// estimate size if none given
@@ -62,12 +68,12 @@ package display
 			var padding:Quad = new Quad(10, 10, 0xff00ff);
 			padding.alpha = 0.0;
 			padding.touchable = false;
-			padding.x = -size.x / 2 - m_paddingSz;
-			padding.y = -size.y / 2 - m_paddingSz;
 			padding.width = size.x + 2 * m_paddingSz;
 			padding.height = size.y + 2 * m_paddingSz;
+			padding.x = -padding.width / 2;
+			padding.y = -padding.height / 2;
 			addChild(padding);
-
+			
 			// to hold text
 			m_textContainer = new Sprite();
 			m_textContainer.x = -size.x / 2;
@@ -75,11 +81,16 @@ package display
 			addChild(m_textContainer);
 			
 			// background box
-			var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
-			m_textContainer.addChild(box);
+			if (_showBox) {
+				var box:NineSliceBatch = new NineSliceBatch(size.x, size.y, 8, 8, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", AssetInterface.PipeJamSubTexture_TutorialBoxPrefix);
+				m_textContainer.addChild(box);
+			} else {
+				//squeeze text closer to arrow if no box
+				m_arrowTextSeparationAdjustment = -m_arrowSz / 2 - m_arrowBounce - 4 * m_inset;
+			}
 			
 			// text field
-			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, size.x - 2 * m_inset, size.y - 2 * m_inset, m_fontSize, 0xEEEEEE);
+			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, size.x - 2 * m_inset, size.y - 2 * m_inset, m_fontSize, _fontColor);
 			textField.x = m_inset;
 			textField.y = m_inset;
 			m_textContainer.addChild(textField);
@@ -89,6 +100,12 @@ package display
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
+				if (_arrowColor >= 0) {
+					m_tutorialArrow.setVertexColor(0, _arrowColor);
+					m_tutorialArrow.setVertexColor(1, _arrowColor);
+					m_tutorialArrow.setVertexColor(2, _arrowColor);
+					m_tutorialArrow.setVertexColor(3, _arrowColor);
+				}
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;
 				XSprite.setPivotCenter(m_tutorialArrow);
 				addChild(m_tutorialArrow);
@@ -109,6 +126,7 @@ package display
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+			addEventListener(Event.ADDED_TO_STAGE, onAdded); // allow this to be removed and re-added
 		}
 
 		private function onEnterFrame(evt:Event):void
@@ -211,15 +229,15 @@ package display
 						m_pointPosNeedsInit = false;
 					}
 				}
-
-				x = m_pointPos.x + offset.x * (width / 2 - m_paddingSz + 2 * m_inset + m_arrowSz + m_arrowBounce);
-				y = m_pointPos.y + offset.y * (height / 2 - m_paddingSz + 2 * m_inset + m_arrowSz + m_arrowBounce);
+				
+				x = m_pointPos.x + offset.x * (width / 2 - m_paddingSz + 2 * m_inset + m_arrowSz + m_arrowBounce + m_arrowTextSeparationAdjustment);
+				y = m_pointPos.y + offset.y * (height / 2 - m_paddingSz + 2 * m_inset + m_arrowSz + m_arrowBounce + m_arrowTextSeparationAdjustment);
 				
 				var arrowPos:Number = m_inset + m_arrowSz / 2 - timeArrowOffset;
 				
 				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
-				m_tutorialArrow.x = -offset.x * (width / 2 - m_paddingSz + arrowPos);
-				m_tutorialArrow.y = -offset.y * (height / 2 - m_paddingSz + arrowPos);
+				m_tutorialArrow.x = -offset.x * (width / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
+				m_tutorialArrow.y = -offset.y * (height / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
 			} else {
 				x = Constants.GameWidth / 2;
 				y = height / 2 - m_paddingSz + m_inset;
@@ -235,6 +253,16 @@ package display
 			} else {
 				return 0.0;
 			}
+		}
+		
+		public function hideText():void
+		{
+			if (m_textContainer != null) m_textContainer.visible = false;
+		}
+		
+		public function showText():void
+		{
+			if (m_textContainer != null) m_textContainer.visible = true;
 		}
 	}
 }

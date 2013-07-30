@@ -81,7 +81,7 @@ package scenes.game.components
 			
 			for each(var error:ErrorParticleSystem in ErrorParticleSystem.errorList)
 			{
-				if(error != null)
+				if(error != null && error.parent != null)
 					errorAdded(error, level);
 				
 			}

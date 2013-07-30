@@ -26,7 +26,7 @@ package scenes.game.components
 				pointPosAlwaysUpdate = false;
 			}
 			
-			super(info.text, TUTORIAL_FONT_SIZE, pointAt, info.pointFrom, info.pointTo, info.size, pointPosAlwaysUpdate, ARROW_SZ, ARROW_BOUNCE, ARROW_BOUNCE_SPEED, INSET);
+			super(info.text, TUTORIAL_FONT_SIZE, 0xEEEEEE, pointAt, info.pointFrom, info.pointTo, info.size, pointPosAlwaysUpdate, ARROW_SZ, ARROW_BOUNCE, ARROW_BOUNCE_SPEED, INSET);
 		}
 	}
 }
