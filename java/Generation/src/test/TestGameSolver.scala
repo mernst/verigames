@@ -77,6 +77,8 @@ class TestGameSolver extends GameSolver {
     def createThisChute(): Chute = {
       null
     }
+
+    def createReceiverChute( variable : Variable ) = createChute( variable )
     
     def writeToFile(fileName:String, data:String) = 
     	using (new FileWriter(fileName)) {

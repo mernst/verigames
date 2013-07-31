@@ -186,19 +186,22 @@ class NninfGameSolver extends GameSolver {
           val iEmpty = boardNVariableToIntersection.get((board, v)).isEmpty //TODO: Temporary
           boardNVariableToIntersection((board, v))
         case v: RefinementVariable =>  boardNVariableToIntersection((board, v))
-        case LiteralThis =>  boardToSelfIntersection(board)
+        case LiteralThis =>
+          val iEmpty1 = boardToSelfVariable.get(board)
+          val iEmpty2 = boardNVariableToIntersection.get( ( board, boardToSelfVariable(board) ) ).isEmpty //TODO: Temporary
+          boardNVariableToIntersection( ( board, boardToSelfVariable(board) ) )
 
         //For assignments (and uses?) of literals/constants they result in a ball intersection
         //being generated as everywhere they are used is a NEW type use
-        case LiteralNull             => board.addNode(START_LARGE_BALL)
-        case NninfConstants.NULLABLE => board.addNode(START_LARGE_BALL)
+        case LiteralNull             => board.addNode( START_LARGE_BALL )
+        case NninfConstants.NULLABLE => board.addNode( START_LARGE_BALL )
 
-        case lit: AbstractLiteral    => board.addNode(START_SMALL_BALL)  // TODO: Are all other literals non-null?
-        case NninfConstants.NONNULL  => board.addNode(START_SMALL_BALL)
-        case cv: CombVariable        => board.addNode(START_SMALL_BALL)  // TODO: Combvariables appear for BinaryTrees.
+        case lit: AbstractLiteral    => board.addNode( START_SMALL_BALL )  // TODO: Are all other literals non-null?
+        case NninfConstants.NONNULL  => board.addNode( START_SMALL_BALL )
+        case cv: CombVariable        => board.addNode( START_SMALL_BALL )  // TODO: Combvariables appear for BinaryTrees.
 
         case _ => {
-          println("findIntersection: unmatched slot: " + slot)
+          println( "findIntersection: unmatched slot: " + slot )
           null
         }
       }
@@ -208,7 +211,8 @@ class NninfGameSolver extends GameSolver {
       slot match {
         case v: Variable           =>  boardNVariableToIntersection.update((board, v), inters)
         case v: RefinementVariable =>  boardNVariableToIntersection.update((board, v), inters)
-        case LiteralThis =>  boardToSelfIntersection.update(board, inters)
+        case LiteralThis =>
+          boardNVariableToIntersection.update( (board, boardToSelfVariable( board )), inters )
 
         case LiteralNull             => // Nothing to do, we're always creating a new black ball
         case lit: AbstractLiteral    => // Also nothing to do for other literals
@@ -276,6 +280,8 @@ class NninfGameSolver extends GameSolver {
       inthis.setNarrow(true)
       inthis
     }
+
+    def createReceiverChute( variable : Variable ) = createChute( variable )
 
 
     override def optimizeWorld(world: World) {

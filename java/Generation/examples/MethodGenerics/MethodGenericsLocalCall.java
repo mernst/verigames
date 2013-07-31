@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class MethodGenericsLocalCall {
-	public <T> void genericMethodNoReturn(T t1) {
+	public <T extends Object> void genericMethodNoReturn(T t1) {
 	}
 
 	public void localCall() {

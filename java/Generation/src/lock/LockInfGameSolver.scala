@@ -71,6 +71,8 @@ class LockInfGameSolver extends GameSolver {
     def createThisChute(): Chute = {
       null
     }
+
+    def createReceiverChute( variable : Variable ) = createChute(variable : Variable)
     
     def using[A <: {def close(): Unit}, B](param: A)(f: A => B): B =
     	try { f(param) } finally { param.close() }
