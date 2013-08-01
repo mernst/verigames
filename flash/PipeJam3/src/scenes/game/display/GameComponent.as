@@ -36,7 +36,7 @@ package scenes.game.display
 		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x808184;// 0x3A3F4C;
 		public static var UNADJUSTABLE_WIDE_COLOR_BORDER:uint = 0x404144;
 		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD0D2D3;// 0x3A3F4C;
-		public static var UNADJUSTABLE_NARROW_COLOR_BORDER:uint = 0x909293;
+		public static var UNADJUSTABLE_NARROW_COLOR_BORDER:uint = 0x0;//0x909293;
 		public static var ERROR_COLOR:uint = 0xF05A28;// 0xE92227;
 		public static var SCORE_COLOR:uint = 0x0;// 0xFFDC1A;
 		public static var SELECTED_COLOR:uint = 0xff0000;

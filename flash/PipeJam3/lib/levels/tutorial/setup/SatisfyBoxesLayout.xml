@@ -1,0 +1,155 @@
+<graph id="world">
+  <level id="SatisfyBoxes" tutorial="links">
+    <box height="1.0" id="SatisfyBoxes1" lines="1" width="1.81" x="1.51" y="1.90" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes2" lines="1" width="1.81" x="9.39" y="2.31" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes3" lines="2" width="2.4" x="5.16" y="2.64" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes10" lines="1" width="1.81" x="0.90" y="5.85" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes20" lines="1" width="1.81" x="9.39" y="5.99" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes30" lines="1" width="1.81" x="3.76" y="6.19" visible="true"/>
+    <box height="1.0" id="SatisfyBoxes40" lines="1" width="1.81" x="6.56" y="6.19" visible="true"/>
+    <joint height="0.51" id="n10" inputs="1" outputs="1" width="0.59" x="0.88" y="4.07" visible="true"/>
+    <joint height="0.51" id="n1__OUT__1" inputs="0" outputs="1" width="0.59" x="4.29" y="0.26"/>
+    <joint height="0.51" id="n1__OUT__0" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n1__OUT__2" inputs="0" outputs="1" width="0.59" x="5.89" y="0.26"/>
+    <joint height="0.51" id="n40" inputs="1" outputs="1" width="0.59" x="5.94" y="4.41" visible="true"/>
+    <joint height="0.51" id="n400" inputs="1" outputs="0" width="0.59" x="6.49" y="7.63"/>
+    <joint height="0.51" id="n100" inputs="1" outputs="0" width="0.59" x="0.88" y="7.63"/>
+    <joint height="0.51" id="n30" inputs="1" outputs="1" width="0.59" x="4.04" y="4.41" visible="true"/>
+    <joint height="0.51" id="n200__IN__0" inputs="1" outputs="0" width="0.59" x="9.29" y="7.63"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="9.36" y="0.40" visible="true"/>
+    <joint height="0.51" id="n20" inputs="1" outputs="1" width="0.59" x="9.36" y="4.21" visible="true"/>
+    <joint height="0.51" id="n300" inputs="1" outputs="0" width="0.59" x="3.68" y="7.63"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1__OUT__0" port="0"/>
+      <tobox id="SatisfyBoxes1" port="0"/>
+      <point x="0.89" y="0.53"/>
+      <point x="0.89" y="1.65"/>
+    </line>
+    <line id="e1__OUT__" visible="true">
+      <frombox id="SatisfyBoxes1" port="0"/>
+      <tojoint id="n10" port="0"/>
+      <point x="1.50" y="2.40"/>
+      <point x="1.50" y="2.84"/>
+      <point x="1.20" y="2.84"/>
+      <point x="1.20" y="3.38"/>
+      <point x="0.89" y="3.38"/>
+      <point x="0.89" y="3.82"/>
+    </line>
+    <line id="e2__IN__" visible="true">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="SatisfyBoxes2" port="0"/>
+      <point x="9.38" y="0.65"/>
+      <point x="9.38" y="1.07"/>
+      <point x="9.38" y="1.07"/>
+      <point x="9.38" y="1.39"/>
+      <point x="9.38" y="1.39"/>
+      <point x="9.38" y="1.81"/>
+    </line>
+    <line id="e2__OUT__" visible="true">
+      <frombox id="SatisfyBoxes2" port="0"/>
+      <tojoint id="n20" port="0"/>
+      <point x="9.38" y="2.81"/>
+      <point x="9.38" y="3.23"/>
+      <point x="9.38" y="3.23"/>
+      <point x="9.38" y="3.53"/>
+      <point x="9.38" y="3.53"/>
+      <point x="9.38" y="3.95"/>
+    </line>
+    <line id="e3__IN__">
+      <fromjoint id="n1__OUT__1" port="0"/>
+      <tobox id="SatisfyBoxes3" port="0"/>
+      <point x="4.31" y="0.53"/>
+      <point x="4.78" y="1.53"/>
+    </line>
+    <line id="e3__OUT__" visible="true">
+      <frombox id="SatisfyBoxes3" port="0"/>
+      <tojoint id="n30" port="0"/>
+      <point x="4.83" y="3.14"/>
+      <point x="4.83" y="3.56"/>
+      <point x="4.44" y="3.56"/>
+      <point x="4.44" y="3.74"/>
+      <point x="4.05" y="3.74"/>
+      <point x="4.05" y="4.16"/>
+    </line>
+    <line id="e4__IN__">
+      <fromjoint id="n1__OUT__2" port="0"/>
+      <tobox id="SatisfyBoxes3" port="1"/>
+      <point x="5.9" y="0.53"/>
+      <point x="5.43" y="1.53"/>
+    </line>
+    <line id="e4__OUT__" visible="true">
+      <frombox id="SatisfyBoxes3" port="1"/>
+      <tojoint id="n40" port="0"/>
+      <point x="5.48" y="3.14"/>
+      <point x="5.48" y="3.56"/>
+      <point x="5.71" y="3.56"/>
+      <point x="5.71" y="3.74"/>
+      <point x="5.95" y="3.74"/>
+      <point x="5.95" y="4.16"/>
+    </line>
+    <line id="e10__IN__" visible="true">
+      <fromjoint id="n10" port="0"/>
+      <tobox id="SatisfyBoxes10" port="0"/>
+      <point x="0.89" y="4.33"/>
+      <point x="0.89" y="4.75"/>
+      <point x="0.89" y="4.75"/>
+      <point x="0.89" y="4.93"/>
+      <point x="0.89" y="4.93"/>
+      <point x="0.89" y="5.35"/>
+    </line>
+    <line id="e10__OUT__">
+      <frombox id="SatisfyBoxes10" port="0"/>
+      <tojoint id="n100" port="0"/>
+      <point x="0.89" y="6.36"/>
+      <point x="0.89" y="7.36"/>
+    </line>
+    <line id="e20__IN__" visible="true">
+      <fromjoint id="n20" port="0"/>
+      <tobox id="SatisfyBoxes20" port="0"/>
+      <point x="9.38" y="4.46"/>
+      <point x="9.38" y="4.88"/>
+      <point x="9.38" y="4.88"/>
+      <point x="9.38" y="5.07"/>
+      <point x="9.38" y="5.07"/>
+      <point x="9.38" y="5.49"/>
+    </line>
+    <line id="e20__OUT__">
+      <frombox id="SatisfyBoxes20" port="0"/>
+      <tojoint id="n200__IN__0" port="0"/>
+      <point x="9.31" y="6.36"/>
+      <point x="9.31" y="7.36"/>
+    </line>
+    <line id="e30__IN__" visible="true">
+      <fromjoint id="n30" port="0"/>
+      <tobox id="SatisfyBoxes30" port="0"/>
+      <point x="4.05" y="4.67"/>
+      <point x="4.05" y="5.09"/>
+      <point x="3.89" y="5.09"/>
+      <point x="3.89" y="5.27"/>
+      <point x="3.74" y="5.27"/>
+      <point x="3.74" y="5.69"/>
+    </line>
+    <line id="e30__OUT__">
+      <frombox id="SatisfyBoxes30" port="0"/>
+      <tojoint id="n300" port="0"/>
+      <point x="3.69" y="6.36"/>
+      <point x="3.69" y="7.36"/>
+    </line>
+    <line id="e40__IN__" visible="true">
+      <fromjoint id="n40" port="0"/>
+      <tobox id="SatisfyBoxes40" port="0"/>
+      <point x="5.95" y="4.67"/>
+      <point x="5.95" y="5.09"/>
+      <point x="6.25" y="5.09"/>
+      <point x="6.25" y="5.27"/>
+      <point x="6.55" y="5.27"/>
+      <point x="6.55" y="5.69"/>
+    </line>
+    <line id="e40__OUT__">
+      <frombox id="SatisfyBoxes40" port="0"/>
+      <tojoint id="n400" port="0"/>
+      <point x="6.5" y="6.36"/>
+      <point x="6.5" y="7.36"/>
+    </line>
+  </level>
+</graph>

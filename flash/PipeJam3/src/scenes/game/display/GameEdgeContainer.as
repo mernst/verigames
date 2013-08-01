@@ -2,8 +2,8 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	
 	import display.NineSliceBatch;
+	import display.TextBubble;
 	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
@@ -15,15 +15,12 @@ package scenes.game.display
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.SubnetworkPort;
 	
 	import particle.ErrorParticleSystem;
 	
-	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.display.graphics.NGon;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -76,7 +73,9 @@ package scenes.game.display
 		public var edgeIsCopy:Boolean;
 		
 		public var errorContainer:Sprite = new Sprite();
-		public var errorMarker:NineSliceBatch;
+		public var m_errorParticleSystem:Sprite;
+		public var errorTextBubbleContainer:Sprite = new Sprite();
+		public var errorTextBubble:TextBubble;
 		
 		private var m_edgeHasError:Boolean = false;
 		private var m_portHasError:Boolean = false;
@@ -349,9 +348,6 @@ package scenes.game.display
 			if (m_errorParticleSystem) {
 				m_errorParticleSystem.removeFromParent(true);
 			}
-			if (errorMarker) {
-				errorMarker.removeFromParent(true);
-			}
 			disposeChildren();
 			m_edgeSegments = null;
 			m_edgeJoints = null;
@@ -449,40 +445,31 @@ package scenes.game.display
 			}
 		}
 		
-		public var m_errorParticleSystem:Sprite;
+		public function hideErrorText():void
+		{
+			if (errorTextBubble != null) errorTextBubble.hideText();
+		}
+		
+		public function showErrorText():void
+		{
+			if (errorTextBubble != null) errorTextBubble.showText();
+		}
+		
 		private function addError():void
 		{
 			if (m_errorParticleSystem == null) {
-				var errorParticleSystem:Sprite = new Sprite();
-				
-				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var texture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_OrangeScore);
-				var textBack:Image = new Image(texture);
-				textBack.width = textBack.height = 95;
-				var textBackCont:Sprite = new Sprite();
-				textBackCont.addChild(textBack);
-				textBackCont.scaleX = textBackCont.scaleY = 0.1;
-				errorParticleSystem.addChild(textBackCont);
-				
-				textBackCont.x = 1.5;
-				textBackCont.y = 2;
-				
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(Constants.ERROR_POINTS.toString(), AssetsFont.FONT_UBUNTU, 25, 25, 6, 0x000000);
-				TextFactory.getInstance().updateAlign(textField, TextFactory.HCENTER, TextFactory.VCENTER);
-				XSprite.setPivotCenter(textField);
-				errorParticleSystem.addChild(textField);
-				
-				textField.x = 5.5;
-				textField.y = 6;
-				
-				var particleSystem:ErrorParticleSystem = new ErrorParticleSystem();
-				errorParticleSystem.addChild(particleSystem);
-				
-				errorParticleSystem.touchable = false;
-				errorParticleSystem.scaleX = errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
-				m_errorParticleSystem = errorParticleSystem;
+				m_errorParticleSystem = new ErrorParticleSystem();
+				m_errorParticleSystem.touchable = false;
+				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
 			}
 			errorContainer.addChild(m_errorParticleSystem);
+			
+			if (errorTextBubble == null) {
+				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
+			}
+			errorTextBubbleContainer.scaleX = errorTextBubbleContainer.scaleY = 0.5;
+			errorTextBubbleContainer.addChild(errorTextBubble);
+			
 			if (toBox && m_innerBoxSegment && !m_innerBoxSegment.m_hasError) {
 				m_innerBoxSegment.m_hasError = true;
 				m_innerBoxSegment.draw();
@@ -493,15 +480,9 @@ package scenes.game.display
 		
 		private function removeError():void
 		{
-			if (errorMarker != null) {
-				errorMarker.removeFromParent(true);
-			}
-			errorMarker = null;
-			
-			if (m_errorParticleSystem != null) {
-				m_errorParticleSystem.removeFromParent(true);
-			}
+			if (m_errorParticleSystem != null) m_errorParticleSystem.removeFromParent(true);
 			m_errorParticleSystem = null;
+			if (errorTextBubble) errorTextBubble.removeFromParent();
 			if (toBox && m_innerBoxSegment && m_innerBoxSegment.m_hasError) {
 				m_innerBoxSegment.m_hasError = false;
 				m_innerBoxSegment.draw();
@@ -667,16 +648,16 @@ package scenes.game.display
 			for(var index:int = 1; index<numJoints; index++)
 			{
 				var isLastSegment:Boolean = false;
-				var isNodeExtensionSegment:Boolean = false;
+				var isFirstSegment:Boolean = false;
 				if(index+1 == numJoints)
 				{
 					isLastSegment = true;
-					isNodeExtensionSegment = true;
 				}
-				if(index == 1)
-					isNodeExtensionSegment = true;
-				
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, isNodeExtensionSegment, isLastSegment, m_isWide, true, draggable);
+				else if (index == 1)
+				{
+					isFirstSegment = true;
+				}
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, false, isFirstSegment, isLastSegment, m_isWide, true, draggable);
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -825,7 +806,7 @@ package scenes.game.display
 						m_edgeJoints.splice(1, 0, newJoint);
 						newJoint.isHoverOn = true;
 						
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
+						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(1,0,newSegment);	
 						newSegment.isHoverOn = true;
 					}
@@ -836,7 +817,7 @@ package scenes.game.display
 						m_edgeJoints.splice(-2, 0, newEndJoint);
 						newEndJoint.isHoverOn = true;
 						
-						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, m_isWide, true, draggable);
+						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
 						this.m_edgeSegments.splice(-1,0,newEndSegment);	
 						newEndSegment.isHoverOn = true;
 					}
@@ -1309,7 +1290,7 @@ class InnerBoxSegment extends GameComponent
 		m_plugIsWide = plugIsWide;
 		m_plugIsEditable = plugIsEditable;
 		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
-		edgeSegment = new GameEdgeSegment(m_dir, true, false, m_isWide, m_isEditable, draggable);
+		edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 		if (createInnerCircle) {
 			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
@@ -1434,6 +1415,8 @@ class InnerBoxSegment extends GameComponent
 	
 	private function getBorderWidth():Number
 	{
+		// Make pinch points stand out with thicker border
+		if (!m_isEditable && !m_borderIsWide) return 4 * BORDER_SIZE + GameEdgeContainer.NARROW_WIDTH;
 		return 2 * BORDER_SIZE + (m_borderIsWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH);
 	}
 	
@@ -1514,7 +1497,7 @@ class InnerBoxSegment extends GameComponent
 		}
 
 		if (m_socket && !m_plugIsWide && m_isWide) {
-			var offset:Number = 0.075 * Constants.GAME_SCALE;
+			const offset:Number = 0.075 * Constants.GAME_SCALE;
 			edgeSegmentOutline.x += offset;
 			edgeSegment.x += offset;
 			if (m_plug) {

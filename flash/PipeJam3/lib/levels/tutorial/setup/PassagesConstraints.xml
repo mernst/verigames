@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<graph id="world">
+  <level id="Passages" targetScore="225">
+    <box id="Passages2" width="wide" editable="false"/>
+    <box id="Passages3" width="narrow" editable="true"/>
+    <box id="Passages4" width="wide" editable="false"/>
+    <box id="Passages5" width="narrow" editable="true"/>
+  </level>
+</graph>

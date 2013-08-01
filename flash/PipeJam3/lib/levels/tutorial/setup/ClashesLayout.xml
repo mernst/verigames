@@ -1,0 +1,25 @@
+<graph id="world">
+  <level id="Clashes" tutorial="clash">
+    <box height="1.0" id="Clashes1" lines="1" width="1.81" x="0.9" y="2.04"/>
+    <box height="1.0" id="Clashes2" lines="1" width="1.81" x="0.9" y="5.6"/>
+    <joint height="0.51" id="n12" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>
+    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n2" inputs="1" outputs="0" width="0.59" x="0.88" y="7.38"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="Clashes1" port="0"/>
+    <point x="0.89" y="0.53"/><point x="0.89" y="1.53"/></line>
+    <line id="e1__OUT__">
+      <frombox id="Clashes1" port="0"/>
+      <tojoint id="n12" port="0"/>
+    <point x="0.89" y="2.56"/><point x="0.89" y="3.56"/></line>
+    <line id="e2__IN__">
+      <fromjoint id="n12" port="0"/>
+      <tobox id="Clashes2" port="0"/>
+    <point x="0.89" y="4.08"/><point x="0.89" y="5.08"/></line>
+    <line id="e2__OUT__">
+      <frombox id="Clashes2" port="0"/>
+      <tojoint id="n2" port="0"/>
+    <point x="0.89" y="6.11"/><point x="0.89" y="7.11"/></line>
+  </level>
+</graph>

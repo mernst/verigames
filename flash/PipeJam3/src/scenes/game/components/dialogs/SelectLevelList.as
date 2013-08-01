@@ -268,7 +268,7 @@ package scenes.game.components.dialogs
 			icon.x = PAD;
 			icon.y = DOC_HEIGHT / 2 - ICON_SZ / 2;
 			
-			var bg:NineSliceBatch = NineSliceBatch.createNineSlice(DOC_WIDTH * 4, DOC_HEIGHT * 4, 16, 16, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", bgTexName);
+			var bg:NineSliceBatch = new NineSliceBatch(DOC_WIDTH * 4, DOC_HEIGHT * 4, 16, 16, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", bgTexName);
 			bg.scaleX = bg.scaleY = 0.25;
 			
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(label, AssetsFont.FONT_UBUNTU, DOC_WIDTH - ICON_SZ - 3 * PAD, DOC_HEIGHT - 2 * PAD, labelSz, 0xFFFFFF);
@@ -283,7 +283,7 @@ package scenes.game.components.dialogs
 			return st;
 		}
 		
-		public function setButtonArray(objArray:Array):void
+		public function setButtonArray(objArray:Array, isTutorial:Boolean):void
 		{
 			buttonPaneArray = new Array;
 			
@@ -301,7 +301,11 @@ package scenes.game.components.dialogs
 					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick");
 					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover");
 					newButton = new BasicButton(upstate, overstate, downstate);
-					newButton.data = objArray[ii];
+					if (isTutorial) {
+						newButton.data = { level:objArray[ii].levelId };
+					} else {
+						newButton.data = { level:objArray[ii] };
+					}
 				} else {
 					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
 					newButton = new BasicButton(lockstate, lockstate, lockstate);
@@ -310,23 +314,6 @@ package scenes.game.components.dialogs
 				
 				newButton.x = (widthSpacing) * (ii%2);
 				newButton.y = Math.floor(ii/2) * (heightSpacing) + 2;
-				
-				/*///
-				var newButton:NineSliceToggleButton = ButtonFactory.getInstance().createDefaultToggleButton("",  widthSpacing - 2,  heightSpacing - 2);
-				newButton.addEventListener(starling.events.TouchEvent.TOUCH, onLevelButtonTouched);
-				addChild(newButton);
-				buttonPaneArray.push(newButton);
-				newButton.x = (widthSpacing)* (i%2);
-				newButton.y = Math.floor(i/2)*(heightSpacing) + 2;
-				
-				newButton.setIcon(upicon, downicon, overicon);
-				newButton.setText(objArray[i].name);
-				*/
-				
-				/*///
-				if(objArray[i].unlocked == false)
-					newButton.enabled = false;
-				*/
 				
 				buttonPane.addChild(newButton);
 			}

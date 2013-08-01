@@ -8,6 +8,9 @@ package assets
 		[Embed(source="../../lib/assets/BoxesStartScreen.jpg")]
 		public static const BoxesStartScreenImageClass:Class;
 		
+		[Embed(source="../../lib/assets/BoxesStartScreenForeground.png")]
+		public static const BoxesStartScreenForegroundImageClass:Class;
+		
 		//[Embed(source="../../lib/assets/BoxesGamePanelBackground.jpg")]
 		//public static const BoxesGamePanelBackgroundImageClass:Class;
 		
@@ -40,9 +43,6 @@ package assets
 		
 		[Embed(source="../../lib/assets/ConflictMapBackground.png")]
 		public static const ConflictMapBackgroundImageClass:Class;
-		
-		// 9 Slice coords to use for any 192x192 box textures
-		//[Embed(source = '../../lib/assets/atlases/Box9Slice.xml', mimeType = "application/octet-stream")] public static const Box9SliceXML:Class;
 		
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
 		public static const PipeJamSpriteSheetPNG:Class;

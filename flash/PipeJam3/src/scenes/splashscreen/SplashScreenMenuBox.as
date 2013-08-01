@@ -67,14 +67,16 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
+			const BUTTON_CENTER_X:Number = 241; // center point to put Play and Log In buttons
+			
 			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 112, 42);
-			play_button.x = 225 - play_button.width / 2;
-			play_button.y = 240;
+			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
+			play_button.y = 230;
 			
 			if (!PipeJam3.TUTORIAL_DEMO) {
-				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 64, 24);
+				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 96, 32);
 				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
-				signin_button.x = 225 - signin_button.width / 2;
+				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
 				signin_button.y = play_button.y + play_button.height + 10;
 			}
 			
@@ -125,7 +127,7 @@ package scenes.splashscreen
 				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 64, 24);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 				tutorial_button.x = Constants.GameWidth - tutorial_button.width - 10;
-				tutorial_button.y = Constants.GameHeight / 2;
+				tutorial_button.y = 50;
 				m_mainMenu.addChild(tutorial_button);
 				
 				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 64, 24);
@@ -161,13 +163,13 @@ package scenes.splashscreen
 			
 			savedLevelsArrayMetadata = new Array;
 			savedLevelsMetadataArray = new Array;
-			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			for(i = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
 			{
-				var match:Object = loginHelper.savedMatchArrayObjects[i];
-		//		var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
+				var match1:Object = loginHelper.savedMatchArrayObjects[i];
+		//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
 		//		if(levelName != null)
-					savedLevelsMetadataArray.push(match.name);
-					savedLevelsArrayMetadata.push(match);
+					savedLevelsMetadataArray.push(match1.name);
+					savedLevelsArrayMetadata.push(match1);
 			}
 			
 			selectLevelDialog.setSavedLevelsInfo(savedLevelsArrayMetadata);

@@ -171,11 +171,12 @@ package scenes.game
 		
 		private function worldZipLoaded(e:flash.events.Event):void {
 			fz1.removeEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
+			var zipFile:FZipFile, worldXML:XML;
 			if(fz1.getFileCount() == 3)
 			{
-				var worldXML:XML, layoutXML:XML, constraintsXML:XML;
+				var layoutXML:XML, constraintsXML:XML;
 				for (var i:int = 0; i < fz1.getFileCount(); i++) {
-					var zipFile:FZipFile = fz1.getFileAt(i);
+					zipFile = fz1.getFileAt(i);
 					if (zipFile.filename.toLowerCase().indexOf("layout") > -1) {
 						layoutXML = new XML(zipFile.content);
 					} else if (zipFile.filename.toLowerCase().indexOf("constraints") > -1) {
@@ -191,9 +192,9 @@ package scenes.game
 			else
 			{
 		//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
-				var zipFile:FZipFile = fz1.getFileAt(0);
+				zipFile = fz1.getFileAt(0);
 				trace(zipFile.filename);
-				var worldXML:XML = new XML(zipFile.content);
+				worldXML = new XML(zipFile.content);
 				onWorldLoaded(worldXML);
 			}
 		}

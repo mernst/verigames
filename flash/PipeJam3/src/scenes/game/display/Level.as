@@ -92,7 +92,7 @@ package scenes.game.display
 		private var edgeContainerDictionary:Dictionary;
 		
 		private var m_nodeList:Vector.<GameNode>;
-		private var m_edgeList:Vector.<GameEdgeContainer>;
+		public var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_visibleNodeManager:VisibleNodeManager;
 		
