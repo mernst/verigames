@@ -37,6 +37,7 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = true;
 		public static var TUTORIAL_DEMO:Boolean = false;
+		public static var USE_LOCAL_PROXY:Boolean = false;
 		
 		public static var logging:LoggingServerInterface;
 		
@@ -58,6 +59,9 @@ package
 					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
 				}
 				PlayerValidation.validatePlayerIsLoggedInAndActive(playerValidationAttempted);
+			//	sessionVerificationHasBeenAttempted = true;
+			//	PlayerValidation.playerLoggedIn = true;
+			//	initialize();
 			}
 			else if(!LOCAL_DEPLOYMENT) //use baked in player id, so don't get cookie, but do try to validate id
 			{

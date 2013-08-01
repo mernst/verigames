@@ -316,9 +316,11 @@ package scenes.game.display
 		
 		public function setConstraints():void
 		{
+			var gameNode:GameNode;
+			
 			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
 			{
-				var gameNode:GameNode = boxDictionary[String(boxConstraint.@id)];
+				gameNode = boxDictionary[String(boxConstraint.@id)];
 				if (!gameNode) {
 					throw new Error("Box node not found for id found in constraints file:" + boxConstraint.@id);
 				}
@@ -339,6 +341,11 @@ package scenes.game.display
 				}
 			}
 			refreshTroublePoints();
+//			if(gameNode)
+//			{
+//				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, gameNode.m_isWide, null, false, null));
+//			}
+				
 		}
 		
 		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
@@ -537,6 +544,8 @@ package scenes.game.display
 			} else {
 				start();
 			}
+			
+			refreshTroublePoints();
 		}
 		
 		public function start():void

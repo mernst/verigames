@@ -23,7 +23,9 @@ package display
 		public var currentIcon:Image;
 		
 		protected var label:TextFieldWrapper;
+		protected var secondaryLabel:TextFieldWrapper;
 		protected var text:String;
+		protected var secondaryText:String;
 		
 		public function NineSliceToggleButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, _atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String="", _atlasXMLButtonClickTexturePrefix:String="", _fontColorOver:uint=0xFFFFFF, _fontColorClick:uint=0xFFFFFF)
 		{
@@ -51,6 +53,7 @@ package display
 					showButton(m_buttonOverSkin);
 					setCurrentIcon(overIcon);
 					setText(text);
+					setSecondaryText(secondaryText);
 					touchState = TouchPhase.HOVER;
 				}
 			}
@@ -84,12 +87,14 @@ package display
 				showButton(m_buttonClickSkin);
 				setCurrentIcon(upIcon);
 				setText(text);
+				setSecondaryText(secondaryText);
 			}
 			else
 			{
 				showButton(m_buttonSkin);
 				setCurrentIcon(upIcon);
 				setText(text);
+				setSecondaryText(secondaryText);
 			}
 		}
 		
@@ -124,6 +129,20 @@ package display
 				currentIcon.y = label.height + 2;
 				currentIcon.width = 40;
 				currentIcon.height = 40;
+			}
+		}
+		
+		public function setSecondaryText(_text:String):void
+		{
+			secondaryText = _text;
+			if(secondaryText)
+			{
+				secondaryLabel = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, width - 4 - currentIcon.width, 10, 10, 0x0077FF);
+				TextFactory.getInstance().updateAlign(secondaryLabel, 0, 1);
+				addChild(secondaryLabel);
+				secondaryLabel.x = currentIcon.width+ 12;
+				secondaryLabel.y = (height - secondaryLabel.height)/2;
+				
 			}
 		}
 	}

@@ -530,6 +530,8 @@ package scenes.game.display
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.newLevelSelected(newLevel);
 			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
+		//	newLevel.setConstraints();
+		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
 		
 		private function onRemovedFromStage():void
