@@ -21,7 +21,7 @@
     <box id="SatisfyBoxes40" width="wide" editable="false"/>
     <box id="SatisfyBoxes30" width="wide" editable="false"/>
     <box id="SatisfyBoxes20" width="wide" editable="true"/>
-    <box id="SatisfyBoxes3" width="narrow" editable="true"/>
+    <box id="SatisfyBoxes3" width="wide" editable="true"/>
     <box id="SatisfyBoxes2" width="narrow" editable="false"/>
     <box id="SatisfyBoxes1" width="narrow" editable="true"/>
   </level>

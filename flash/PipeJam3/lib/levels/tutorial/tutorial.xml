@@ -575,7 +575,7 @@
      </to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e3" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e3" buzzsaw="false">
      <from>
       <noderef id="n1" port="1"/>
      </from>
@@ -584,7 +584,7 @@
      </to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e4" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e4" buzzsaw="false">
      <from>
       <noderef id="n1" port="2"/>
      </from>
