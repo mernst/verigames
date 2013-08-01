@@ -4,6 +4,12 @@
     <box id="IntroWidget2" width="narrow" editable="true"/>
     <box id="IntroWidget3" width="wide" editable="true"/>
   </level>
+  <level id="WidgetPractice" targetScore="700">
+    <box id="WidgetPractice4" width="narrow" editable="true"/>
+    <box id="WidgetPractice3" width="wide" editable="true"/>
+    <box id="WidgetPractice2" width="wide" editable="true"/>
+    <box id="WidgetPractice1" width="wide" editable="true"/>
+  </level>
   <level id="LockedWidget" targetScore="300">
     <box id="LockedWidget4" width="narrow" editable="true"/>
     <box id="LockedWidget3" width="wide" editable="false"/>

@@ -14,6 +14,7 @@ package scenes.game.display
 	{
 		// This is the order the tutorials appers in:
 		public static const WIDGET_TUTORIAL:String = "widget";
+		public static const WIDGET_PRACTICE_TUTORIAL:String = "widgetpractice";
 		public static const LOCKED_TUTORIAL:String = "locked";
 		public static const LINKS_TUTORIAL:String = "links";
 		public static const PASSAGE_TUTORIAL:String = "passage";
@@ -40,6 +41,7 @@ package scenes.game.display
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
@@ -91,6 +93,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
@@ -112,9 +115,10 @@ package scenes.game.display
 		}
 		
 		public function getLayoutFixed():Boolean
-		{
+		{return false;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
@@ -139,6 +143,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 					return 0.8;
 				case ZOOM_PAN_TUTORIAL:
@@ -166,6 +171,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
@@ -239,6 +245,12 @@ package scenes.game.display
 						null,
 						pointToNode("IntroWidget2"),
 						NineSliceBatch.TOP, null);
+				case WIDGET_PRACTICE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Practice clicking on widgets and matching colors.\n",
+						null,
+						null,
+						null, null);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Gray widgets are locked.\n" +

@@ -2,6 +2,7 @@ import sys
 
 FILES = [
     'IntroWidget',
+    'WidgetPractice',
     'LockedWidget',
     'SatisfyBoxes',
     'Passages',
