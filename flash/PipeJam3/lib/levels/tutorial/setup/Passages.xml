@@ -83,7 +83,7 @@
      <to><noderef id="n353" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e42" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e42" buzzsaw="false">
      <from><noderef id="n342" port="0"/></from>
      <to><noderef id="n420" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
