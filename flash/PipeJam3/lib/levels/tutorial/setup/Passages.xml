@@ -19,7 +19,7 @@
   </linked-edges>
   <boards>
    <board name="Passages--Board">
-	<node kind="START_LARGE_BALL" id="n2">
+	<node kind="START_SMALL_BALL" id="n2">
      <input/>
      <output>
       <port num="0" edge="e2"/>
@@ -29,7 +29,7 @@
       <y>0.0</y>
      </layout>
     </node>
-	<node kind="START_PIPE_DEPENDENT_BALL" id="n3">
+	<node kind="INCOMING" id="n3">
      <input/>
      <output>
       <port num="0" edge="e33"/>
@@ -54,7 +54,7 @@
      <output><port num="0" edge="e53"/></output>
      <layout><x>0.0</x><y>0.0</y></layout>
     </node>
-	<node kind="END" id="n420">
+	<node kind="OUTGOING" id="n420">
      <input>
       <port num="0" edge="e42"/>
      </input>
@@ -68,7 +68,7 @@
      <output/>
      <layout><x>0.0</x><y>0.0</y></layout>
     </node>
-	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e2" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e2" buzzsaw="false">
      <from><noderef id="n2" port="0"/></from>
      <to><noderef id="n23" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
@@ -88,7 +88,7 @@
      <to><noderef id="n420" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e53" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e53" buzzsaw="false">
      <from><noderef id="n353" port="0"/></from>
      <to><noderef id="n530" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>

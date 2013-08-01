@@ -25,11 +25,11 @@
     <box id="SatisfyBoxes2" width="narrow" editable="false"/>
     <box id="SatisfyBoxes1" width="narrow" editable="true"/>
   </level>
-  <level id="Passages" targetScore="300">
-    <box id="Passages2" width="wide" editable="false"/>
+  <level id="Passages" targetScore="350">
+    <box id="Passages2" width="narrow" editable="true"/>
     <box id="Passages3" width="narrow" editable="true"/>
     <box id="Passages4" width="wide" editable="true"/>
-    <box id="Passages5" width="narrow" editable="true"/>
+    <box id="Passages5" width="wide" editable="false"/>
   </level>
   <level id="Clashes" targetScore="75">
     <box id="Clashes1" width="wide" editable="true"/>
@@ -59,9 +59,9 @@
     <box id="Optimize3" width="narrow" editable="true"/>
     <box id="Optimize1" width="narrow" editable="true"/>
   </level>
-  <level id="Splits" targetScore="100">
+  <level id="Splits" targetScore="175">
     <box id="Splits6" width="narrow" editable="false"/>
-    <box id="Splits4" width="wide" editable="false"/>
+    <box id="Splits4" width="narrow" editable="true"/>
     <box id="Splits5" width="wide" editable="false"/>
     <box id="Splits2" width="narrow" editable="false"/>
     <box id="Splits3" width="wide" editable="false"/>
