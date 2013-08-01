@@ -10,9 +10,9 @@
     <box id="WidgetPractice2" width="wide" editable="true"/>
     <box id="WidgetPractice1" width="wide" editable="true"/>
   </level>
-  <level id="LockedWidget" targetScore="300">
-    <box id="LockedWidget4" width="narrow" editable="true"/>
-    <box id="LockedWidget3" width="wide" editable="false"/>
+  <level id="LockedWidget" targetScore="550">
+    <box id="LockedWidget4" width="wide" editable="true"/>
+    <box id="LockedWidget3" width="narrow" editable="true"/>
     <box id="LockedWidget2" width="narrow" editable="false"/>
     <box id="LockedWidget1" width="wide" editable="true"/>
   </level>
