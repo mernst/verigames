@@ -48,8 +48,12 @@
 #now we are getting somewhere!
 #install php (Python's already installed)
 yum -y install php
-#check to  has php-fpm installed, so might need to do
+#check to see if php-fpm installed, so might need to do
 #yum -y install php-fpm
+
+#install mongo driver for python
+yum -y install pymongo
+
 #and start it? Doesn't hurt to do, even if it's already running
 sudo /usr/sbin/php-fpm restart
 #check to make sure port 9000 is being used (hopefully by php-fpm)
@@ -75,12 +79,10 @@ cp "uwverigames/website/install scripts/graphviz-rhel.repo" /etc/yum.repos.d/gra
 yum -y install 'graphviz*'
 
 #compile java parts
-#proxy server
-cd uwverigames/java/ProxyServer
-javac -cp lib/commons-codec-1.6.jar:lib/commons-logging-1.1.1.jar:lib/fluent-hc-4.2.3.jar:lib/httpclient-4.2.3.jar:lib/httpclient-cache-4.2.3.jar:lib/httpcore-4.2.2.jar:lib/httpcore-4.2.3.jar:lib/httpcore-ab-4.2.3.jar:lib/httpcore-nio-4.2.3.jar:lib/httpmime-4.2.3.jar:lib/mongo-2.10.1.jar src/*.java
-cd src
-jar  cfm ../ProxyServer.jar ../manifest.mf *.class
-cd ..
+
+cd uwverigames/website/html/java/
+chmod 777 buildall.sh
+./buildall.sh
 
 #go back to the base dir 
 cd ../../..
@@ -94,8 +96,8 @@ cd ..
 
 #go back to the base dir 
 cd ../../..
-
-#copy upload stuff to apache website locatcd ..ion
+ 
+#copy upload stuff to apache website located on..
 cp -r uwverigames/website/* /var/www/html/
 #if we get nginx working, this is the ticket:
 #mkdir /var/www/html/upload

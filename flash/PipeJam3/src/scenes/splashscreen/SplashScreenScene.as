@@ -1,27 +1,19 @@
 package scenes.splashscreen
 {
 	import assets.AssetInterface;
-	
-	import events.NavigationEvent;
-	
-	import flash.events.Event;
-	import flash.events.HTTPStatusEvent;
-	import flash.net.*;
-	import scenes.login.LoginHelper;
-	
+	import particle.ErrorParticleSystem;
 	import scenes.Scene;
-	
-	import starling.core.Starling;
-	import starling.display.*;
+	import starling.display.BlendMode;
+	import starling.display.Image;
 	import starling.events.Event;
-	import starling.events.TouchEvent;
-	import starling.textures.Texture;
 	
 	public class SplashScreenScene extends Scene
 	{
-
+		
 		public var startMenuBox:SplashScreenMenuBox;
 		protected var background:Image;
+		protected var particleSystem:ErrorParticleSystem;
+		protected var foreground:Image;
 		
 		//would like to dispatch an event and end up here, but
 		public static var splashScreenScene:SplashScreenScene;
@@ -40,8 +32,18 @@ package scenes.splashscreen
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
-			
 			addChild(background);
+			
+			particleSystem = new ErrorParticleSystem();
+			particleSystem.x = 395.5 * background.width / Constants.GameWidth;
+			particleSystem.y = 302.0 * background.height / Constants.GameHeight;
+			particleSystem.scaleX = particleSystem.scaleY = 8.0;
+			addChild(particleSystem);
+			
+			foreground = new Image(AssetInterface.getTexture("Game", "BoxesStartScreenForegroundImageClass"));
+			foreground.scaleX = background.scaleX;
+			foreground.scaleY = background.scaleY;
+			addChild(foreground);
 			
 			addMenuBox();
 		}
@@ -52,7 +54,7 @@ package scenes.splashscreen
 			addChild(startMenuBox);
 		}
 		
-		protected  override function removedFromStage(event:starling.events.Event):void
+		protected  override function removedFromStage(event:Event):void
 		{
 			
 		}

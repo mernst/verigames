@@ -1,17 +1,17 @@
 package scenes.game.display
 {
-	import display.NineSliceBatch;
-	
-	import scenes.BaseComponent;
+	import assets.AssetInterface;
 	
 	import flash.geom.Point;
-	import starling.display.DisplayObject;
+	
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.text.TextField;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XSprite;
 
@@ -23,28 +23,25 @@ package scenes.game.display
 		public var m_originalPoint:Point;
 		public var m_position:int;
 		
-		protected var m_parentEdge:GameEdgeContainer;
 		public var m_closestWall:int = 0;
 		
-		public var count:int = 0;
-		private var m_quad:DisplayObject;
-		private var m_hoverQuad:DisplayObject;
+		private var m_quad:Quad;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
 		
-		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false)
+		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
 		{
 			super("");
+			draggable = _draggable;
 			m_isWide = _isWide;
 			m_jointType = jointType;
 			m_originalPoint = new Point;
 			m_isDirty = true;
 			
-			//default to true
-			m_isEditable = true;
+			m_isEditable = _isEditable;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			if (jointType == INNER_CIRCLE_JOINT) {
@@ -66,15 +63,15 @@ package scenes.game.display
 			disposeChildren();
 			if (m_quad) {
 				m_quad.removeFromParent(true);
-			}
-			if (m_hoverQuad) {
-				m_hoverQuad.removeFromParent(true);
+				m_quad = null;
 			}
 			super.dispose();
 		}
 		
 		private function onTouch(event:TouchEvent):void
 		{
+			if (!draggable) return;
+			
 			var touches:Vector.<Touch> = event.touches;
 			
 			if(event.getTouches(this, TouchPhase.MOVED).length)
@@ -129,39 +126,64 @@ package scenes.game.display
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int = getColor();
-			var err:Boolean = hasError();
 			
-			var roundRadius:Number;
 			if (m_jointType == INNER_CIRCLE_JOINT) {
 				lineSize *= 1.5;
-				roundRadius = lineSize / 3.0;
-			} else if (err) {
-				lineSize = GameEdgeContainer.ERROR_WIDTH;
-				roundRadius = lineSize / 2.0;
 			}
 			
 			if (m_quad) {
 				m_quad.removeFromParent(true);
+				m_quad = null;
 			}
 			
-			if (m_hoverQuad) {
-				m_hoverQuad.removeFromParent(true);
-			}
-			
-			var isRound:Boolean = ((m_jointType == INNER_CIRCLE_JOINT) || err);
-			
+			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
+
+			var assetName:String;
 			
 			if (isRound) {
-				m_quad = new NineSliceBatch(lineSize, lineSize, roundRadius, roundRadius, "Game", "RoundRectBlackPNG", "Box9SliceXML", "Box");
-			} else {
-				m_quad = new Quad(lineSize, lineSize, color);
-				if(isHoverOn)
+				if(m_isEditable == true)
 				{
-					(m_quad as Quad).setVertexColor(0, color + 0x333333);
-					(m_quad as Quad).setVertexColor(1, color + 0x333333);
-					(m_quad as Quad).setVertexColor(2, color + 0x333333);
-					(m_quad as Quad).setVertexColor(3, color + 0x333333);
+					if (m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
 				}
+				else //not adjustable
+				{
+					if(m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
+				}
+			} else {
+				if(true)//m_isEditable == true)
+				{
+					if (m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
+				}
+				else //not adjustable
+				{
+					if(m_isWide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
+				}
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
+			m_quad = new Image(startTexture);
+			m_quad.width = m_quad.height = lineSize;
+			
+			if(isHoverOn)
+			{
+				m_quad.color = 0xeeeeee;
+			}
+			else
+			{
+				m_quad.color = 0xcccccc;
 			}
 			
 			m_quad.x = -lineSize/2;
@@ -174,11 +196,6 @@ package scenes.game.display
 //			txt.x = 1;
 //			m_shape.addChild(txt);
 //			addChild(m_shape);
-		}
-		
-		override public function hasError():Boolean
-		{
-			return m_hasError;
 		}
 		
 		public function onEnterFrame(event:Event):void

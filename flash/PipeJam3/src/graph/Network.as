@@ -35,19 +35,6 @@ package graph
 			}
 		}
 		
-		public function addNode(_node:Node, _original_board_name:String, _original_level_name:String):void {
-			var new_level_name:String = _original_level_name;
-			if (obfuscator) {
-				new_level_name = obfuscator.getLevelName(_original_level_name);
-			}
-			if (LevelNodesDictionary[new_level_name] == null) {
-				LevelNodesDictionary[new_level_name] = new LevelNodes(_original_level_name, obfuscator);
-				levelNodeNameArray.push(new_level_name);
-			}
-			
-			(LevelNodesDictionary[new_level_name] as LevelNodes).addNode(_node, _original_board_name);
-		}
-		
 		public function addLevel(level:LevelNodes):void
 		{
 			//if (LevelNodesDictionary[level.level_name] == null) {

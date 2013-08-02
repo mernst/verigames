@@ -1,0 +1,77 @@
+<graph id="world">
+  <level id="ZoomPan" qid="13" tutorial="zoompan">
+    <box height="1.0" id="ZoomPan1" lines="1" width="1.81" x="-9.92" y="-1.12" visible="true"/>
+    <box height="1.0" id="ZoomPan2" lines="1" width="1.81" x="21.46" y="-1.57" visible="true"/>
+    <box height="1.0" id="ZoomPan3" lines="2" width="2.4" x="2.44" y="5.84" visible="true"/>
+    <joint height="0.51" id="n13" inputs="1" outputs="1" width="0.59" x="1.47" y="3.82" visible="true"/>
+    <joint height="0.51" id="n23" inputs="1" outputs="1" width="0.59" x="3.38" y="3.82" visible="true"/>
+    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
+    <joint height="0.51" id="n310" inputs="1" outputs="0" width="0.59" x="1.63" y="7.63"/>
+    <joint height="0.51" id="n320" inputs="1" outputs="0" width="0.59" x="3.22" y="7.63"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="ZoomPan1" port="0"/>
+      <point x="0.89" y="0.53"/>
+      <point x="0.89" y="1.53"/>
+    </line>
+    <line id="e1__OUT__" visible="true">
+      <frombox id="ZoomPan1" port="0"/>
+      <tojoint id="n13" port="0"/>
+      <point x="-9.93" y="-0.62"/>
+      <point x="-9.93" y="-0.18"/>
+      <point x="-4.22" y="-0.18"/>
+      <point x="-4.22" y="3.13"/>
+      <point x="1.49" y="3.13"/>
+      <point x="1.49" y="3.56"/>
+    </line>
+    <line id="e2__IN__">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="ZoomPan2" port="0"/>
+      <point x="3.69" y="0.53"/>
+      <point x="3.69" y="1.53"/>
+    </line>
+    <line id="e2__OUT__" visible="true">
+      <frombox id="ZoomPan2" port="0"/>
+      <tojoint id="n23" port="0"/>
+      <point x="21.44" y="-1.07"/>
+      <point x="21.44" y="-0.63"/>
+      <point x="12.42" y="-0.63"/>
+      <point x="12.42" y="3.13"/>
+      <point x="3.39" y="3.13"/>
+      <point x="3.39" y="3.56"/>
+    </line>
+    <line id="e31__IN__" visible="true">
+      <fromjoint id="n13" port="0"/>
+      <tobox id="ZoomPan3" port="0"/>
+      <point x="1.49" y="4.08"/>
+      <point x="1.49" y="4.50"/>
+      <point x="1.80" y="4.50"/>
+      <point x="1.80" y="4.92"/>
+      <point x="2.11" y="4.92"/>
+      <point x="2.11" y="5.34"/>
+    </line>
+    <line id="e31__OUT__">
+      <frombox id="ZoomPan3" port="0"/>
+      <tojoint id="n310" port="0"/>
+      <point x="2.11" y="6.36"/>
+      <point x="1.64" y="7.36"/>
+    </line>
+    <line id="e32__IN__" visible="true">
+      <fromjoint id="n23" port="0"/>
+      <tobox id="ZoomPan3" port="1"/>
+      <point x="3.39" y="4.08"/>
+      <point x="3.39" y="4.50"/>
+      <point x="3.08" y="4.50"/>
+      <point x="3.08" y="4.92"/>
+      <point x="2.76" y="4.92"/>
+      <point x="2.76" y="5.34"/>
+    </line>
+    <line id="e32__OUT__">
+      <frombox id="ZoomPan3" port="1"/>
+      <tojoint id="n320" port="0"/>
+      <point x="2.76" y="6.36"/>
+      <point x="3.24" y="7.36"/>
+    </line>
+  </level>
+</graph>

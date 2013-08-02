@@ -1,0 +1,106 @@
+<graph id="world">
+  <level id="LockedWidget" qid="3" tutorial="locked">
+    <box height="1.0" id="LockedWidget1" lines="1" width="1.81" x="5.72" y="3.40" visible="true"/>
+    <box height="1.0" id="LockedWidget2" lines="1" width="1.81" x="7.37" y="0.84" visible="true"/>
+    <box height="1.0" id="LockedWidget3" lines="3" width="3.0" x="9.50" y="1.97" visible="true"/>
+    <box height="1.0" id="LockedWidget4" lines="2" width="2.4" x="4.30" y="1.87" visible="true"/>
+    <joint height="0.51" id="n10__IN__0" inputs="1" outputs="0" width="0.59" x="0.88" y="4.32"/>
+    <joint height="0.51" id="n20" inputs="1" outputs="0" width="0.59" x="3.68" y="4.32"/>
+    <joint height="0.51" id="n310" inputs="1" outputs="0" width="0.59" x="5.49" y="4.32"/>
+    <joint height="0.51" id="n420" inputs="1" outputs="0" width="0.59" x="12.11" y="4.32"/>
+    <joint height="0.51" id="n42__OUT__0" inputs="0" outputs="1" width="0.59" x="12.33" y="0.26"/>
+    <joint height="0.51" id="n41__OUT__0" inputs="0" outputs="1" width="0.59" x="10.74" y="0.26"/>
+    <joint height="0.51" id="n410" inputs="1" outputs="0" width="0.59" x="10.51" y="4.32"/>
+    <joint height="0.51" id="n31" inputs="0" outputs="1" width="0.59" x="5.49" y="0.26"/>
+    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
+    <joint height="0.51" id="n33" inputs="0" outputs="1" width="0.59" x="8.68" y="0.26"/>
+    <joint height="0.51" id="n330" inputs="1" outputs="0" width="0.59" x="8.68" y="4.32"/>
+    <joint height="0.51" id="n32" inputs="0" outputs="1" width="0.59" x="7.08" y="0.26"/>
+    <joint height="0.51" id="n320" inputs="1" outputs="0" width="0.59" x="7.08" y="4.32"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="LockedWidget1" port="0"/>
+      <point x="0.89" y="0.52"/>
+      <point x="0.89" y="1.77"/>
+    </line>
+    <line id="e1__OUT__">
+      <frombox id="LockedWidget1" port="0"/>
+      <tojoint id="n10__IN__0" port="0"/>
+      <point x="0.89" y="2.8"/>
+      <point x="0.89" y="4.05"/>
+    </line>
+    <line id="e2__IN__">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="LockedWidget2" port="0"/>
+      <point x="3.69" y="0.52"/>
+      <point x="3.69" y="1.77"/>
+    </line>
+    <line id="e2__OUT__">
+      <frombox id="LockedWidget2" port="0"/>
+      <tojoint id="n20" port="0"/>
+      <point x="3.69" y="2.8"/>
+      <point x="3.69" y="4.05"/>
+    </line>
+    <line id="e31__IN__">
+      <fromjoint id="n31" port="0"/>
+      <tobox id="LockedWidget3" port="0"/>
+      <point x="5.5" y="0.52"/>
+      <point x="6.47" y="1.52"/>
+    </line>
+    <line id="e31__OUT__">
+      <frombox id="LockedWidget3" port="0"/>
+      <tojoint id="n310" port="0"/>
+      <point x="6.47" y="3.05"/>
+      <point x="5.5" y="4.05"/>
+    </line>
+    <line id="e32__IN__">
+      <fromjoint id="n32" port="0"/>
+      <tobox id="LockedWidget3" port="1"/>
+      <point x="7.1" y="0.52"/>
+      <point x="7.1" y="1.52"/>
+    </line>
+    <line id="e32__OUT__">
+      <frombox id="LockedWidget3" port="1"/>
+      <tojoint id="n320" port="0"/>
+      <point x="7.1" y="3.05"/>
+      <point x="7.1" y="4.05"/>
+    </line>
+    <line id="e33__IN__">
+      <fromjoint id="n33" port="0"/>
+      <tobox id="LockedWidget3" port="2"/>
+      <point x="8.69" y="0.52"/>
+      <point x="7.74" y="1.52"/>
+    </line>
+    <line id="e33__OUT__">
+      <frombox id="LockedWidget3" port="2"/>
+      <tojoint id="n330" port="0"/>
+      <point x="7.74" y="3.05"/>
+      <point x="8.69" y="4.05"/>
+    </line>
+    <line id="e41__IN__">
+      <fromjoint id="n41__OUT__0" port="0"/>
+      <tobox id="LockedWidget4" port="0"/>
+      <point x="10.75" y="0.52"/>
+      <point x="11.11" y="1.65"/>
+    </line>
+    <line id="e41__OUT__">
+      <frombox id="LockedWidget4" port="0"/>
+      <tojoint id="n410" port="0"/>
+      <point x="11.11" y="2.93"/>
+      <point x="10.53" y="4.05"/>
+    </line>
+    <line id="e42__IN__">
+      <fromjoint id="n42__OUT__0" port="0"/>
+      <tobox id="LockedWidget4" port="1"/>
+      <point x="12.35" y="0.52"/>
+      <point x="11.76" y="1.65"/>
+    </line>
+    <line id="e42__OUT__">
+      <frombox id="LockedWidget4" port="1"/>
+      <tojoint id="n420" port="0"/>
+      <point x="11.76" y="2.93"/>
+      <point x="12.13" y="4.05"/>
+    </line>
+  </level>
+</graph>

@@ -1,29 +1,49 @@
 package scenes.game.components
 {
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	import starling.animation.DelayedCall;
+	
+	import display.NineSliceBatch;
+	import display.NineSliceButton;
+	
+	import events.MouseWheelEvent;
+	import events.MoveEvent;
+	import events.NavigationEvent;
+	import events.TutorialEvent;
+	import events.UndoEvent;
+	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	
+	import particle.FanfareParticleSystem;
+	
+	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	import scenes.game.display.OutlineFilter;
+	import scenes.game.display.TutorialManagerTextInfo;
+	
+	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
-	import starling.display.Button;
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import display.ShimmeringText;
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -32,23 +52,26 @@ package scenes.game.components
 		public static const WIDTH:Number = Constants.GameWidth;
 		public static const HEIGHT:Number = 262;
 		
-		protected var m_currentLevel:Level;
-		protected var content:BaseComponent;
-		protected var currentMode:int;
-		protected var nextLevel_button:Button;
-		protected var m_levelTextFields:Vector.<ShimmeringText> = new Vector.<ShimmeringText>();
-		protected var m_backgroundImage:Image;
-		protected var m_border:Image;
+		private var m_currentLevel:Level;
+		private var content:BaseComponent;
+		private var currentMode:int;
+		private var continueButton:NineSliceButton;
+		private var m_backgroundImage:Image;
+		private var m_border:Image;
+		private var m_tutorialText:TutorialText;
+		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
+		private var m_spotlight:Image;
+		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
+		private var m_hidingErrorText:Boolean = false;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
-		
-		public static const MOUSE_WHEEL:String = "mouse_wheel";
-		public static const MOUSE_DRAG:String = "mouse_drag";
-		public static const CENTER:String = "center";
+		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
+		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
+		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
 		public function GridViewPanel()
 		{
@@ -78,7 +101,7 @@ package scenes.game.components
 		private function onAddedToStage():void
 		{
 			//create a clip rect for the window
-			clipRect = new Rectangle(x, y, width, height);
+			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
 			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -100,19 +123,22 @@ package scenes.game.components
 				}
 				else if(currentMode == MOVING_MODE)
 				{
-					var undoData:Object = new Object();
-					undoData.target = this;
-					undoData.component = this;
-					undoData.startPoint = startingPoint.clone();
-					undoData.endPoint = new Point(content.x, content.y);
-					var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
-					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+					//did we really move?
+					if(content.x != startingPoint.x || content.y != startingPoint.y)
+					{
+						var startPoint:Point = startingPoint.clone();
+						var endPoint:Point = new Point(content.x, content.y);
+						var eventToUndo:Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+						var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+						eventToDispatch.addToSimilar = true;
+						dispatchEvent(eventToDispatch);
+					}
 				}
 				if(currentMode != NORMAL_MODE)
 					currentMode = NORMAL_MODE;
 				else
 				{
-					if(this.m_currentLevel && event.target is starling.display.Image)
+					if(this.m_currentLevel && event.target == m_backgroundImage)
 						this.m_currentLevel.unselectAll();
 				}
 			}
@@ -144,17 +170,24 @@ package scenes.game.components
 					if (touches.length == 1)
 					{
 						// one finger touching -> move
-						if(touches[0].target is starling.display.Image || touches[0].target is starling.display.Image)
+						if(touches[0].target == m_backgroundImage)
 						{
-							var delta:Point = touches[0].getMovement(parent);
-							var viewRect:Rectangle = getViewInContentSpace();
-							var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
-							var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
-							moveContent(newX, newY);
+							if (getPanZoomAllowed())
+							{
+								var delta:Point = touches[0].getMovement(parent);
+								var cp:Point = touches[0].getLocation(this.content);
+								var viewRect:Rectangle = getViewInContentSpace();
+								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
+								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
+								moveContent(newX, newY);
+								m_currentLevel.updateVisibleList();
+							}
 						}
 					}
 					else if (touches.length == 2)
 					{
+						/*
+						// TODO: Need to take a look at this if we reactivate multitouch - hasn't been touched in a while 
 						// two fingers touching -> rotate and scale
 						var touchA:Touch = touches[0];
 						var touchB:Touch = touches[1];
@@ -188,10 +221,11 @@ package scenes.game.components
 						var sizeDiff:Number = currentVector.length / previousVector.length;
 						
 						scaleContent(sizeDiff);
-						
+						m_currentLevel.updateVisibleList();
 	//					var currentCenterPt:Point = new Point((currentPosA.x+currentPosB.x)/2 +content.x, (currentPosA.y+currentPosB.y)/2+content.y);
 	//					content.x = currentCenterPt.x - previousCenterPt.x;
 	//					content.y = currentCenterPt.y - previousCenterPt.y;
+						*/
 					}
 				}
 			}
@@ -215,17 +249,27 @@ package scenes.game.components
 			
 			handleMouseWheel(delta, localMouse);
 			
+			m_currentLevel.updateVisibleList();
+			
 		}
 		
-		private function handleMouseWheel(delta:Number, localMouse:Point, createUndoEvent:Boolean = true):void
+		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
 		{
-			var mousePoint:Point = localMouse.clone();
-			
-			const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
-					Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
-			
-			localMouse.x *= native2Starling.x;
-			localMouse.y *= native2Starling.y;
+			if (!getPanZoomAllowed())
+			{
+				return;
+			}
+			if (localMouse == null) {
+				localMouse = new Point(WIDTH / 2, HEIGHT / 2);
+			} else {
+				var mousePoint:Point = localMouse.clone();
+				
+				const native2Starling:Point = new Point(Starling.current.stage.stageWidth / Starling.current.nativeStage.stageWidth, 
+						Starling.current.stage.stageHeight / Starling.current.nativeStage.stageHeight);
+				
+				localMouse.x *= native2Starling.x;
+				localMouse.y *= native2Starling.y;
+			}
 			
 			// Now localSpace is in local coordinates (relative to this instance of GridViewPanel).
 			// Next, we'll convert to content space
@@ -251,32 +295,20 @@ package scenes.game.components
 			var newY:Number = viewRect.y + viewRect.height / 2 + (prevMouse.y - newMouse.y);// / content.scaleY;
 			moveContent(newX, newY);
 			
-			
 			//turn this off if in an undo event
 			if(createUndoEvent)
 			{
-				var endPoint:Point = new Point(content.x, content.y);
-				var moveData:Object = new Object();
-				moveData.target = this;
-				moveData.mousePoint = mousePoint;
-				moveData.delta = delta;
-				moveData.time = new Date().time;
-				var undoEvent:Event = new Event(MOUSE_WHEEL,false,moveData);
-				dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+				var eventToUndo:MouseWheelEvent = new MouseWheelEvent(mousePoint, delta, new Date().time);
+				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+				eventToDispatch.addToSimilar = true;
+				dispatchEvent(eventToDispatch);
 			}
 		}
 		
 		private function moveContent(newX:Number, newY:Number):void
 		{
-			var moveBounds:Rectangle = new Rectangle(content.x + content.scaleX * m_currentLevel.m_boundingBox.x,
-			                                        content.y + content.scaleY * m_currentLevel.m_boundingBox.y,
-													content.scaleX * m_currentLevel.m_boundingBox.width,
-													content.scaleY * m_currentLevel.m_boundingBox.height);
-			moveBounds.x -= content.x;
-			moveBounds.y -= content.y;
-			
-			newX = XMath.clamp(newX, moveBounds.x / content.scaleX, (moveBounds.x + moveBounds.width) / content.scaleX);
-			newY = XMath.clamp(newY, moveBounds.y / content.scaleY, (moveBounds.y + moveBounds.height) / content.scaleY);
+			newX = XMath.clamp(newX, m_currentLevel.m_boundingBox.x, m_currentLevel.m_boundingBox.x + m_currentLevel.m_boundingBox.width);
+			newY = XMath.clamp(newY, m_currentLevel.m_boundingBox.y, m_currentLevel.m_boundingBox.y + m_currentLevel.m_boundingBox.height);
 			
 			panTo(newX, newY);
 		}
@@ -305,6 +337,7 @@ package scenes.game.components
 			// Perform scaling
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
+			onContentScaleChanged();
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
@@ -314,6 +347,33 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
+			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
+		}
+		
+		private function onContentScaleChanged():void
+		{
+			var i:int;
+			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
+				if (!m_hidingErrorText) {
+					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+						m_currentLevel.m_edgeList[i].hideErrorText();
+					}
+					m_hidingErrorText = true;
+				}
+			} else {
+				if (m_hidingErrorText) {
+					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+						m_currentLevel.m_edgeList[i].showErrorText();
+					}
+					m_hidingErrorText = false;
+				}
+			}
+		}
+		
+		//returns a point containing the content scale factors
+		public function getContentScale():Point
+		{
+			return new Point(content.scaleX, content.scaleY);
 		}
 		
 		private function getViewInContentSpace():Rectangle
@@ -331,6 +391,10 @@ package scenes.game.components
 			if (m_disposed) {
 				return;
 			}
+			if (m_tutorialText) {
+				m_tutorialText.dispose();
+				m_tutorialText = null;
+			}
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
@@ -343,54 +407,156 @@ package scenes.game.components
 			super.dispose();
 		}
 		
+		public function zoomInDiscrete():void
+		{
+			handleMouseWheel(5);
+			m_currentLevel.updateVisibleList();
+		}
+		
+		public function zoomOutDiscrete():void
+		{
+			handleMouseWheel(-5);
+			m_currentLevel.updateVisibleList();
+		}
+		
 		private function onKeyDown(event:KeyboardEvent):void
 		{
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
-					content.y +=  5;
+				case Keyboard.W:
+				case Keyboard.NUMPAD_8:
+					if (getPanZoomAllowed()) content.y += 5;
 					break;
 				case Keyboard.DOWN:
-					content.y -= 5;
+				case Keyboard.S:
+				case Keyboard.NUMPAD_2:
+					if (getPanZoomAllowed()) content.y -= 5;
 					break;
 				case Keyboard.LEFT:
-					content.x += 5;
+				case Keyboard.A:
+				case Keyboard.NUMPAD_4:
+					if (getPanZoomAllowed()) content.x += 5;
 					break;
 				case Keyboard.RIGHT:
-					content.x -= 5;
+				case Keyboard.D:
+				case Keyboard.NUMPAD_6:
+					if (getPanZoomAllowed()) content.x -= 5;
+					break;
+				case Keyboard.EQUAL:
+				case Keyboard.NUMPAD_ADD:
+					zoomInDiscrete();
+					break;
+				case Keyboard.MINUS:
+				case Keyboard.NUMPAD_SUBTRACT:
+					zoomOutDiscrete();
+					break;
+				case Keyboard.SPACE:
+					recenter();
 					break;
 			}
 		}
 		
+		private var m_boundingBoxDebug:Quad;
+		private static const DEBUG_BOUNDING_BOX:Boolean = false;
 		public function loadLevel(level:Level):void
 		{
-			hideNextButton();
-			if(m_currentLevel == level)
-				return;
-			if(m_currentLevel)
+			m_continueButtonForced = false;
+			removeFanfare();
+			hideContinueButton();
+			removeSpotlight();
+			if(m_currentLevel != level)
 			{
-				m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
-				content.removeChild(m_currentLevel);
+				if(m_currentLevel)
+				{
+					m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
+					content.removeChild(m_currentLevel);
+					if (m_currentLevel.tutorialManager) {
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
+					}
+					
+				}
+				m_currentLevel = level;
+				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+				if (m_currentLevel.tutorialManager) {
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_EDGE, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
+				}
 			}
-			m_currentLevel = level;
-			m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+			
+			// Remove old error text containers and place new ones
+			for (var i:int = 0; i < m_errorTextBubbles.length; i++) m_errorTextBubbles[i].removeFromParent();
+			m_errorTextBubbles = new Vector.<Sprite>();
+			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+				m_errorTextBubbles.push(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+				addChild(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+			}
+			
+			if (m_tutorialText) {
+				m_tutorialText.removeFromParent(true);
+				m_tutorialText = null;
+			}
+			
+			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
+			if (levelTextInfo) {
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
+				addChild(m_tutorialText);
+			}
+			
+			recenter();
+		}
+		
+		public function recenter():void
+		{
 			content.x = 0;
 			content.y = 0;
 			
-			content.scaleX = content.scaleY = 24.0 / Constants.GAME_SCALE;
+			content.scaleX = content.scaleY = STARTING_SCALE;
+			onContentScaleChanged();
 			content.addChild(m_currentLevel);
-			if ((m_currentLevel.m_boundingBox.width < 2 * WIDTH) && (m_currentLevel.m_boundingBox.height < 2 * HEIGHT)) {
+			
+			if (DEBUG_BOUNDING_BOX) {
+				if (!m_boundingBoxDebug) {
+					m_boundingBoxDebug = new Quad(m_currentLevel.m_boundingBox.width, m_currentLevel.m_boundingBox.height, 0xFFFF00);
+					m_boundingBoxDebug.alpha = 0.2;
+					m_boundingBoxDebug.touchable = false;
+					content.addChild(m_boundingBoxDebug);
+				} else {
+					m_boundingBoxDebug.width = m_currentLevel.m_boundingBox.width;
+					m_boundingBoxDebug.height = m_currentLevel.m_boundingBox.height;
+				}
+				m_boundingBoxDebug.x = m_currentLevel.m_boundingBox.x;
+				m_boundingBoxDebug.y = m_currentLevel.m_boundingBox.y;
+			} else if (m_boundingBoxDebug) {
+				m_boundingBoxDebug.removeFromParent(true);
+			}
+			
+			var i:int;
+			var centerPt:Point, globPt:Point, localPt:Point;
+			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * HEIGHT)) {
 				// If about the size of the window, just center the level
-				var centerPt:Point = new Point(m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.height / 2);
-				var globPt:Point = m_currentLevel.localToGlobal(centerPt);
-				var localPt:Point = content.globalToLocal(globPt);
-				panTo(localPt.x, localPt.y);
+				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
+				globPt = m_currentLevel.localToGlobal(centerPt);
+				localPt = content.globalToLocal(globPt);
+				moveContent(localPt.x, localPt.y);
+				const BUFFER:Number = 1.5;
+				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
+					HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
-				var nodes:Vector.<GameNode> = level.getNodes();
+				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
 				if (nodes.length > 0) {
 					var foundNode:GameNode = nodes[0];
-					for (var i:int = 0; i < nodes.length; i++) {
+					for (i = 0; i < nodes.length; i++) {
 						if (nodes[i].visible && (nodes[i].alpha > 0) && nodes[i].parent) {
 							foundNode = nodes[i];
 							break;
@@ -400,63 +566,110 @@ package scenes.game.components
 				}
 			}
 			
-			for (var i:int = 0; i < m_levelTextFields.length; i++) {
-				Starling.juggler.removeTweens(m_levelTextFields[i]);
-				m_levelTextFields[i].removeFromParent(true);
-			}
-			m_levelTextFields = new Vector.<ShimmeringText>();
-			var levelText:String = m_currentLevel.getLevelText();
-			if (levelText) {
-				var textLines:Array = levelText.split("\r\r");
-				var totalTime:Number = 0.0;
-				var lineHeight:Number = HEIGHT / Math.max(10, textLines.length * 1.5);
-				const SEC_PER_CHAR:Number = 0.1; // seconds per character to calculate reading time
-				for (var j:int = 0; j < textLines.length; j++) {
-					var levelTextLine:String = textLines[j] as String;
-					var lineDispTime:Number = levelTextLine.length * SEC_PER_CHAR;
-					var shimmerLine:ShimmeringText = new ShimmeringText(levelTextLine, AssetsFont.FONT_SPECIAL_ELITE, WIDTH, lineHeight, lineHeight, 0xEEEE00);
-					shimmerLine.y = j * 1.5 * lineHeight + HEIGHT / 2 - textLines.length * 1.5 * lineHeight / 2;
-					shimmerLine.touchable = false;
-					shimmerLine.visible = false;
-					m_levelTextFields.push(shimmerLine);
-					addChild(shimmerLine);
-					Starling.juggler.delayCall(shimmerLine.showLineShimmer, totalTime, lineDispTime / 3, lineDispTime / 3, (levelText.length - 2 * textLines.length) * SEC_PER_CHAR - totalTime, 1.0);
-					totalTime += lineDispTime;
-				}
+			if (m_currentLevel && m_currentLevel.tutorialManager) {
+				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
+				content.x += startPtOffset.x * content.scaleX;
+				content.y += startPtOffset.y * content.scaleY;
+				scaleContent(m_currentLevel.tutorialManager.getStartScaleFactor());
 			}
 		}
 		
-		public function displayNextButton():void
+		private var m_fanfareContainer:Sprite = new Sprite();
+		private var m_fanfare:Vector.<FanfareParticleSystem> = new Vector.<FanfareParticleSystem>();
+		private var m_fanfareTextContainer:Sprite = new Sprite();
+		private var m_stopFanfareDelayedCall:DelayedCall;
+		public function displayContinueButton(permenantly:Boolean = true):void
 		{
-			if (!nextLevel_button) {
-				var nextLevelButtonUp:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClass");
-				var nextLevelButtonClick:Texture = AssetInterface.getTexture("Menu", "NewLevelButtonClickClass");
+			if (permenantly) m_continueButtonForced = true;
+			if (!continueButton) {
+				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
+				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
+				continueButton.x = WIDTH - continueButton.width - 5;
+				continueButton.y = HEIGHT - continueButton.height - 5;
+			}
+			
+			if (continueButton.parent == null) {
+				addChild(continueButton);
 				
-				nextLevel_button = new Button(nextLevelButtonUp, "", nextLevelButtonClick);
-				nextLevel_button.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
-				nextLevel_button.width *= .5;
-				nextLevel_button.height *= .5;
-				nextLevel_button.x = WIDTH - nextLevel_button.width - 5;
-				nextLevel_button.y = HEIGHT - nextLevel_button.height - 5;
+				// Fanfare
+				removeFanfare();
+				addChild(m_fanfareContainer);
+				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
+				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
+				
+				for (var i:int = 5; i <= continueButton.width - 5; i += 10) {
+					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
+					fanfare.x = i;
+					fanfare.y = continueButton.height / 2;
+					fanfare.scaleX = fanfare.scaleY = 0.4;
+					m_fanfare.push(fanfare);
+					m_fanfareContainer.addChild(fanfare);
+				}
+				
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
+				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+				m_fanfareTextContainer.addChild(textField);
+				addChild(m_fanfareTextContainer);
+				
+				var origX:Number = m_fanfareTextContainer.x;
+				var origY:Number = m_fanfareTextContainer.y;
+				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 1.0;
+				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
+				startFanfare();
+				for (i = 0; i < m_fanfare.length; i++) {
+					Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+				}
+				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
+				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 			}
-			addChild(nextLevel_button);
+			
+			//assume we are in the tutorial, and we just finished a level
+			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
 		}
 		
-		public function hideNextButton():void
+		private function startFanfare():void
 		{
-			if (nextLevel_button) {
-				nextLevel_button.removeFromParent();
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].start();
+			}
+		}
+		
+		private function stopFanfare():void
+		{
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].stop();
+			}
+		}
+		
+		private function removeFanfare():void
+		{
+			if (m_stopFanfareDelayedCall) Starling.juggler.remove(m_stopFanfareDelayedCall);
+			for (var i:int = 0; i < m_fanfare.length; i++) {
+				m_fanfare[i].removeFromParent(true);
+			}
+			m_fanfare = new Vector.<FanfareParticleSystem>();
+			if (m_fanfareContainer) m_fanfareContainer.removeFromParent();
+			if (m_fanfareTextContainer) {
+				Starling.juggler.removeTweens(m_fanfareTextContainer);
+				m_fanfareTextContainer.removeFromParent();
+			}
+		}
+		
+		public function hideContinueButton():void
+		{
+			if (continueButton && !m_continueButtonForced) {
+				continueButton.removeFromParent();
 			}
 		}
 		
 		private function onNextLevelButtonTriggered(evt:Event):void
 		{
-			dispatchEvent(new Event(World.SWITCH_TO_NEXT_LEVEL, true));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SWITCH_TO_NEXT_LEVEL));
 		}
 		
-		public function displayTextMetadata(textParent:XML):void
+		public function moveToPoint(percentPoint:Point):void
 		{
-		
+			moveContent(percentPoint.x* m_currentLevel.m_boundingBox.width/scaleX, percentPoint.y * m_currentLevel.m_boundingBox.height/scaleY);
 		}
 		
 		/**
@@ -466,7 +679,6 @@ package scenes.game.components
 		 */
 		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
 		{
-			var startPoint:Point = new Point(content.x, content.y);
 			content.x = ( -panX * content.scaleX + clipRect.width / 2) ;
 			content.y = ( -panY * content.scaleY + clipRect.height / 2) ;
 		}
@@ -482,35 +694,92 @@ package scenes.game.components
 			var centerPt:Point = new Point(component.width / 2, component.height / 2);
 			var globPt:Point = component.localToGlobal(centerPt);
 			var localPt:Point = content.globalToLocal(globPt);
-			panTo(localPt.x, localPt.y);
+			moveContent(localPt.x, localPt.y);
 			
-			var undoData:Object = new Object();
-			undoData.target = this;
-			undoData.component = this;
-			undoData.startPoint = startingPoint.clone();
-			undoData.endPoint = new Point(content.x, content.y);
-			var undoEvent:Event = new Event(MOUSE_DRAG,false,undoData);
-			dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-
+			var startPoint:Point = startingPoint.clone();
+			var endPoint:Point = new Point(content.x, content.y);
+			var eventToUndo:MoveEvent = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+			dispatchEvent(eventToDispatch);
+		}
+		
+		public function onHighlightTutorialEvent(evt:TutorialEvent):void
+		{
+			if (!evt.highlightOn) {
+				removeSpotlight();
+				return;
+			}
+			if (!m_currentLevel) return;
+			var edge:GameEdgeContainer;
+			switch (evt.type) {
+				case TutorialEvent.HIGHLIGHT_BOX:
+					var node:GameNode = m_currentLevel.getNode(evt.componentId);
+					if (node) spotlightComponent(node);
+					break;
+				case TutorialEvent.HIGHLIGHT_EDGE:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge) spotlightComponent(edge, 3.0, 1.75, 1.2);
+					break;
+				case TutorialEvent.HIGHLIGHT_PASSAGE:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.m_innerBoxSegment) spotlightComponent(edge.m_innerBoxSegment, 3.0, 3, 2);
+					break;
+				case TutorialEvent.HIGHLIGHT_CLASH:
+					edge = m_currentLevel.getEdgeContainer(evt.componentId);
+					if (edge && edge.errorContainer) spotlightComponent(edge.errorContainer, 3.0, 1.3, 1.3);
+					break;
+			}
+		}
+		
+		private function removeSpotlight():void
+		{
+			if (m_spotlight) m_spotlight.removeFromParent();
+		}
+		
+		public function spotlightComponent(component:DisplayObject, timeSec:Number = 3.0, widthScale:Number = 1.75, heightScale:Number = 1.75):void
+		{
+			if (!m_currentLevel) return;
+			startingPoint = new Point(content.x, content.y);
+			var bounds:Rectangle = component.getBounds(component);
+			var centerPt:Point = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+			var globPt:Point = component.localToGlobal(centerPt);
+			var localPt:Point = content.globalToLocal(globPt);
+			
+			if (!m_spotlight) {
+				var spotlightTexture:Texture = AssetInterface.getTexture("Game", "SpotlightClass");
+				m_spotlight = new Image(spotlightTexture);
+				m_spotlight.touchable = false;
+				m_spotlight.alpha = 0.3;
+			}
+			m_spotlight.width = component.width * widthScale;
+			m_spotlight.height = component.height * heightScale;
+			m_spotlight.x = m_currentLevel.m_boundingBox.x - Constants.GameWidth / 2;
+			m_spotlight.y = m_currentLevel.m_boundingBox.y - Constants.GameHeight / 2;
+			content.addChild(m_spotlight);
+			var destX:Number = localPt.x - m_spotlight.width / 2;
+			var destY:Number = localPt.y - m_spotlight.height / 2;
+			Starling.juggler.removeTweens(m_spotlight);
+			Starling.juggler.tween(m_spotlight, 0.9*timeSec, { delay:0.1*timeSec, x:destX, transition: Transitions.EASE_OUT_ELASTIC } );
+			Starling.juggler.tween(m_spotlight, timeSec, { delay:0, y:destY, transition: Transitions.EASE_OUT_ELASTIC } );
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
-			var undoData:Object = undoEvent.data;
-			if(undoEvent.type == GridViewPanel.MOUSE_WHEEL)
+			if(undoEvent is MouseWheelEvent)
 			{
-				var delta:Number = undoData.delta;
-				var localMouse:Point = undoData.mousePoint;
-				if(!isUndo)
-					handleMouseWheel(delta, localMouse, false);
-				else
+				var wheelEvt:MouseWheelEvent = undoEvent as MouseWheelEvent;
+				var delta:Number = wheelEvt.delta;
+				var localMouse:Point = wheelEvt.mousePoint;
+				if(isUndo)
 					handleMouseWheel(-delta, localMouse, false);
-
+				else
+					handleMouseWheel(delta, localMouse, false);
 			}
-			else if(undoEvent.type == GridViewPanel.MOUSE_DRAG)
+			else if ((undoEvent is MoveEvent) && (undoEvent.type == MoveEvent.MOUSE_DRAG))
 			{
-				var startPoint:Point = undoData.startPoint;
-				var endPoint:Point = undoData.endPoint;
+				var moveEvt:MoveEvent = undoEvent as MoveEvent;
+				var startPoint:Point = moveEvt.startLoc;
+				var endPoint:Point = moveEvt.endLoc;
 				if(isUndo)
 				{
 					content.x = startPoint.x;
@@ -521,8 +790,13 @@ package scenes.game.components
 					content.x = endPoint.x;
 					content.y = endPoint.y;
 				}
-				
 			}
+		}
+		
+		public function getPanZoomAllowed():Boolean
+		{
+			if (m_currentLevel) return m_currentLevel.getPanZoomAllowed();
+			return true;
 		}
 	}
 }

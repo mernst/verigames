@@ -1,11 +1,9 @@
 package state 
 {
-	import graph.Network;
-	
-	import tasks.ParseLevelXMLTask;
-	
-	import flash.events.Event;
 	import starling.events.Event;
+	
+	import graph.Network;
+	import tasks.ParseLevelXMLTask;
 	
 	public class ParseXMLState extends LoadingState
 	{
@@ -63,7 +61,7 @@ package state
 		
 		public override function onTasksComplete():void {
 			world_nodes.attachExternalSubboardNodesToBoardNodes();
-			var event:starling.events.Event = new starling.events.Event(WORLD_PARSED, true, world_nodes);
+			var event:starling.events.Event = new Event(WORLD_PARSED, true, world_nodes);
 			dispatchEvent(event);
 			stateUnload();
 		}

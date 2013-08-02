@@ -1,12 +1,14 @@
 package
 {
 	import assets.AssetsFont;
-	import flash.filters.BitmapFilter;
 	
-	//import flashx.textLayout.formats.TextAlign;
+	import flash.filters.BitmapFilter;
+	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	
 	import starling.display.DisplayObject;
-	import starling.text.TextField;
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
 
@@ -102,6 +104,16 @@ package
 			//ret.border = true;
 			ret.touchable = false;
 			return ret;
+		}
+		
+		public function estimateTextFieldSize(text:String, fontName:String, fontSize:Number):Point
+		{
+			var estField:TextField = new TextField();
+			estField.defaultTextFormat = new TextFormat(fontName, fontSize);
+			estField.embedFonts = true;
+			estField.autoSize = TextFieldAutoSize.CENTER;
+			estField.text = text;
+			return new Point(estField.width + 8, estField.height + 8);
 		}
 	}
 }

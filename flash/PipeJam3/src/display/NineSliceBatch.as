@@ -1,6 +1,9 @@
 package display 
 {
 	import assets.AssetInterface;
+	
+	import flash.geom.Rectangle;
+	
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -8,6 +11,7 @@ package display
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	import starling.utils.RectangleUtil;
 	
 	public class NineSliceBatch extends QuadBatch 
 	{

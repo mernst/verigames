@@ -11,7 +11,6 @@ package system
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
 	
-	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
 	/**
@@ -42,11 +41,11 @@ package system
 		private var network:Network;
 		
 		/* A map from boardname to an Array that contains the trouble points 
-		 * associated with that level. 
-		 * 
-		 * The Array has exactly two elements. The first element is a Dictionary 
-		 * of Port trouble points. The second is a Dictionary of Edge trouble points.
-		 */
+		* associated with that level. 
+		* 
+		* The Array has exactly two elements. The first element is a Dictionary 
+		* of Port trouble points. The second is a Dictionary of Edge trouble points.
+		*/
 		private var boardToTroublePoints:Dictionary;
 		private var prevBoardToTroublePoints:Dictionary;
 		
@@ -128,10 +127,10 @@ package system
 			var removeEdgeTp:Vector.<Edge> = new Vector.<Edge>();
 			var removePortTp:Vector.<Port> = new Vector.<Port>();
 			for each (var boardTouched:BoardNodes in boards_touched) {
-				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0]
-				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1]
-				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0]
-				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1]
+				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0];
+				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1];
+				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0];
+				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1];
 				// check new tp, if they weren't in old Dict then they are new
 				for (var portId:String in newPortTpDict) {
 					if (!prevPortTpDict.hasOwnProperty(portId)) {
@@ -269,23 +268,23 @@ package system
 								e.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							}
 							queue.push(e);
-						break;
+							break;
 						case NodeTypes.START_LARGE_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_WIDE;
 							queue.push(e);
-						break;
+							break;
 						case NodeTypes.START_NO_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_NONE;
 							queue.push(e);
-						break;
+							break;
 						case NodeTypes.START_SMALL_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							queue.push(e);
-						break;
+							break;
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
 							e.enter_ball_type = e.is_wide ? Edge.BALL_TYPE_WIDE : Edge.BALL_TYPE_NARROW;
 							queue.push(e);
-						break;
+							break;
 						case NodeTypes.SUBBOARD:
 							var subnet_node:SubnetworkNode = e.from_node as SubnetworkNode;
 							//if (DEBUG) { trace("  ["+sim_board.board_name+"] Found subboard starting edge: " + e.edge_id + " board:" + subnet_node.associated_board.board_name); }
@@ -314,50 +313,50 @@ package system
 							}
 							// Now we can initialize the ball types for pipes on this board flowing out of the subnet_board
 							for each (var my_port:Port in e.from_node.outgoing_ports) {
-								var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
-								// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
-								var out_type:uint;
-								if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
-									out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
-									subnet_port.default_ball_type = out_type; // update best-known default
-								} else {
-									out_type = subnet_port.default_ball_type;
-								}
-								switch (out_type) {
-									case Edge.BALL_TYPE_WIDE:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
-									break;
-									case Edge.BALL_TYPE_NONE:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-									break;
-									case Edge.BALL_TYPE_WIDE_AND_NARROW:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
-									break;
-									case Edge.BALL_TYPE_NARROW:
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
-									break;
-									case Edge.BALL_TYPE_UNDETERMINED:
-									case Edge.BALL_TYPE_GHOST:
-										//if (DEBUG) { trace("  ["+sim_board.board_name+"] Ball coming out of subboard is UNDETERMINED or GHOST. changedSinceLastSim=" + changedSinceLastSim); }
-										if (!changedSinceLastSim) {
-											// Unable to make any progress (mutually recursive boards where no new outputs
-											// were simulated. In this case, give up and output no ball
-											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-											//if (DEBUG) { trace("  [" + sim_board.board_name + "] Assigning subnet outgoing edge: " + subnet_port.edge.edge_id + " BALL_TYPE_NONE"); }
-										} else {
-											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
-										}
-									break;
-									default:
-										throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
-									break;
-								}
+							var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
+							// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
+							var out_type:uint;
+							if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
+								out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
+								subnet_port.default_ball_type = out_type; // update best-known default
+							} else {
+								out_type = subnet_port.default_ball_type;
 							}
+							switch (out_type) {
+								case Edge.BALL_TYPE_WIDE:
+									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+									break;
+								case Edge.BALL_TYPE_NONE:
+									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+									break;
+								case Edge.BALL_TYPE_WIDE_AND_NARROW:
+									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
+									break;
+								case Edge.BALL_TYPE_NARROW:
+									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+									break;
+								case Edge.BALL_TYPE_UNDETERMINED:
+								case Edge.BALL_TYPE_GHOST:
+									//if (DEBUG) { trace("  ["+sim_board.board_name+"] Ball coming out of subboard is UNDETERMINED or GHOST. changedSinceLastSim=" + changedSinceLastSim); }
+									if (!changedSinceLastSim) {
+										// Unable to make any progress (mutually recursive boards where no new outputs
+										// were simulated. In this case, give up and output no ball
+										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										//if (DEBUG) { trace("  [" + sim_board.board_name + "] Assigning subnet outgoing edge: " + subnet_port.edge.edge_id + " BALL_TYPE_NONE"); }
+									} else {
+										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+									}
+									break;
+								default:
+									throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
+									break;
+							}
+						}
 							queue.push(e);
-						break;
+							break;
 						default:
 							//trace("FOUND a " + e.from_node.kind);
-						break;
+							break;
 					}
 					
 				}
@@ -380,18 +379,18 @@ package system
 					switch (edge.enter_ball_type) {
 						case Edge.BALL_TYPE_NONE:
 							outgoing_ball_type = Edge.BALL_TYPE_NONE;
-						break;
+							break;
 						case Edge.BALL_TYPE_WIDE:
 						case Edge.BALL_TYPE_NARROW:
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
 							outgoing_ball_type = Edge.BALL_TYPE_NARROW;
-						break;
+							break;
 						case Edge.BALL_TYPE_GHOST:
 							outgoing_ball_type = Edge.BALL_TYPE_GHOST;
-						break;
+							break;
 						default:
 							throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + edge.enter_ball_type);
-						break;
+							break;
 					}
 				} else {
 					// Top of pipe has no buzzsaw, fail any wide balls and pass through any narrow/pinched pipes
@@ -400,7 +399,7 @@ package system
 						case Edge.BALL_TYPE_NARROW:
 						case Edge.BALL_TYPE_GHOST:
 							outgoing_ball_type = edge.enter_ball_type;
-						break;
+							break;
 						case Edge.BALL_TYPE_WIDE:
 							if (edge.has_pinch || !edge.is_wide) {
 								addTpEdge(listEdgeTroublePoints, edge);
@@ -408,7 +407,7 @@ package system
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE;
 							}
-						break;
+							break;
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
 							if (edge.has_pinch || !edge.is_wide) {
 								addTpEdge(listEdgeTroublePoints, edge);
@@ -416,10 +415,10 @@ package system
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
 							}
-						break;
+							break;
 						default:
 							throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + edge.enter_ball_type);
-						break;
+							break;
 					}
 				}
 				
@@ -432,10 +431,10 @@ package system
 				switch (node.kind) {
 					//possible traversal ends
 					case NodeTypes.OUTGOING : { } 	//traversal ends
-					break;
+						break;
 					
 					case NodeTypes.END: { } 		//traversal ends
-					break;
+						break;
 					
 					case NodeTypes.SUBBOARD : {
 						// This is the case when this edge ("edge") flows into a SUBNETWORK edge
@@ -457,7 +456,7 @@ package system
 							}
 						}
 					}
-					break;
+						break;
 					
 					case NodeTypes.MERGE : {
 						var other_edge:Edge;
@@ -482,13 +481,13 @@ package system
 								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_NARROW) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW)
-								);
+							);
 							var wide_ball_into_next_edge:Boolean = (
 								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE) ||
 								(edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE) ||
 								(other_edge.exit_ball_type == Edge.BALL_TYPE_WIDE_AND_NARROW)
-								);
+							);
 							if (wide_ball_into_next_edge && narrow_ball_into_next_edge) {
 								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
 							} else if (wide_ball_into_next_edge) {
@@ -521,7 +520,7 @@ package system
 							}
 						}
 					}
-					break;
+						break;
 					
 					//other nodes
 					case NodeTypes.SPLIT : {
@@ -530,7 +529,7 @@ package system
 						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
 						queue.push(node.outgoing_ports[1].edge); //enqueue
 					}
-					break;
+						break;
 					
 					case NodeTypes.BALL_SIZE_TEST : {
 						// new implementation: always output a small ball down the small pipe
@@ -544,25 +543,16 @@ package system
 							queue.push(outgoing_port.edge); //enqueue
 						}
 					}
-					break;
+						break;
 					
 					case NodeTypes.GET : {
 						// Process the GET node when the "VALUE" edge is reached
 						if ((node as MapGetNode).valueEdge == edge) {
 							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
 							queue.push(node.outgoing_ports[0].edge); //enqueue
-						} else if ((edge == (node as MapGetNode).argumentEdge) && !(node as MapGetNode).keyEdge.is_wide) {
-							// Argument is restricted by width of key, if key is narrow and argument has wide ball, add troublePoint
-							switch (edge.exit_ball_type) {
-								case Edge.BALL_TYPE_WIDE:
-								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
-									break;
-							}
-							// DON'T enqueue outgoing edge, this will be done at the valueEdge (see above)
 						}
 					}
-					break;
+						break;
 					
 					case NodeTypes.CONNECT : {
 						// Apparently there is a possibility that the CONNECT node doesn't have an output
@@ -573,7 +563,7 @@ package system
 							//trace("WARNING! Found CONNECT node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
 						}
 					}
-					break;
+						break;
 					
 					default : {
 						// Totally random observation: When this next statement was output as a trace() it caused a stack underflow error when compiled with FlashDevelop,
@@ -603,10 +593,10 @@ package system
 			//if (DEBUG) { trace("  ["+sim_board.board_name+"] Latest ghost outputs for " + sim_board.board_name + " = " + latest_ghost_outputs); }
 			
 			/* Here we're looping over any subnetwork board that has pipes that output into this board and was already being simulated (recursive case).
-			 * We want to:
-			 * 	1) Check if there are any "ghost" or "undetermined" outputs. If there are none, this board is ready to be used.
-			 * 		a) If there are any ghost outputs, 
-			 */
+			* We want to:
+			* 	1) Check if there are any "ghost" or "undetermined" outputs. If there are none, this board is ready to be used.
+			* 		a) If there are any ghost outputs, 
+			*/
 			var new_ghost_outputs:uint = 0;
 			while (simulate_recursion_boards && (latest_ghost_outputs > 0)) {
 				for each (var recursive_board:BoardNodes in recursive_boards) {
@@ -675,17 +665,17 @@ package system
 		}
 		
 		/* Checks if a given dictionary is empty or not. 
-		 * 
-		 * @param: dict, a dictionary.
-		 * @returns: a boolean, true if the dictionary is empty, false otherwise.
-		 */
+		* 
+		* @param: dict, a dictionary.
+		* @returns: a boolean, true if the dictionary is empty, false otherwise.
+		*/
 		public function isEmpty(dict:Dictionary):Boolean {
 			var empty:Boolean = true;
-
+			
 			for (var key:Object in dict)
 			{
-			   empty = false;
-			   break;
+				empty = false;
+				break;
 			}
 			return empty;
 		}

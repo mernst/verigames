@@ -1,10 +1,18 @@
 package graph 
 {
-	import system.VerigameServerConstants;
-
 	/**
-	 * Special type of node - subnetwork. This does not contain any graphics/drawing information, but it does 
-	 * contain a reference to the associated_board object that has all of that.
+	 * MapGet Node has four incoming edges:
+	 * map - type of map itself
+	 * key - type of keys in the map
+	 * value - type of values output from the map
+	 * argument - type of the argument provided to the mapGet(arg) call
+	 * 
+	 * And one outgoing edge that outputs a ball under one of two conditions:
+	 * a) If the ARGUMENT edge has a stamp indicating it is a keyFor the MAP, then
+	 *    the ball type that exited the VALUE edge will be output from the
+	 *    MAPGET node.
+	 * Otherwise,
+	 * b) A WIDE ball will be output.
 	 * 
 	 * @author Tim Pavlik
 	 */
@@ -26,25 +34,27 @@ package graph
 					return valueEdge.exit_ball_type;
 				} else {
 					switch (valueEdge.exit_ball_type) {
-						case VerigameServerConstants.BALL_TYPE_WIDE:
+						case Edge.BALL_TYPE_WIDE:
 							// WIDE ball through narrow pipe? This shouldn't be possible, but process it anyway
-							return VerigameServerConstants.BALL_TYPE_NONE;
+							return Edge.BALL_TYPE_NONE;
 						break;
-						case VerigameServerConstants.BALL_TYPE_WIDE_AND_NARROW:
-							return VerigameServerConstants.BALL_TYPE_NARROW;
+						case Edge.BALL_TYPE_WIDE_AND_NARROW:
+							return Edge.BALL_TYPE_NARROW;
 						break;
 					}
 					return valueEdge.exit_ball_type;
 				}
 			}
 			// Argument pinstriping doesn't match key, null literal (WIDE ball) thrown)
-			return VerigameServerConstants.BALL_TYPE_WIDE;
+			return Edge.BALL_TYPE_WIDE;
 		}
 		
 		public function argumentHasMapStamp():Boolean
 		{
 			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;
-			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
+			// TODO: HARDCODE TO BE TRUE FOR NOW, change back when UI has been added
+			return true;
+			//return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
 		}
 		
 		public function get mapEdge():Edge {

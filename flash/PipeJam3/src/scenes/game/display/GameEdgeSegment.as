@@ -1,63 +1,59 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
-	import starling.display.BlendMode;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	import utils.XMath;
 	import utils.XSprite;
 	
 	public class GameEdgeSegment extends GameComponent
 	{
-		private static const ARROW_SCALEX:Number = 0.2;
-		private static const MIN_ARROW_SIZE:Number = 10;
-		
 		private var m_quad:Quad;
-		private var m_arrowImg:Image;
 		
 		public var m_endPt:Point;
 		public var m_currentRect:Rectangle;
 		public var updatePoint:Point;
 		
-		public var index:int;
-		
-		public var m_isNodeExtensionSegment:Boolean;
+		public var m_isInnerBoxSegment:Boolean;
+		public var m_isFirstSegment:Boolean;
 		public var m_isLastSegment:Boolean;
 		public var m_dir:String;
 		
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
 		
-		private static const ARROW_TEXT:Texture = AssetInterface.getTexture("Game", "ChevronClass");
-		{
-			ARROW_TEXT.repeat = true;
-		}
+		public var plug:Sprite;
+		public var socket:Sprite;
 		
-		public function GameEdgeSegment(_dir:String, _isNodeExtensionSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
 		{
 			super("");
+			draggable = _draggable;
 			m_isWide = _isWide;
 			m_dir = _dir;
-			m_isNodeExtensionSegment = _isNodeExtensionSegment;
+			m_isInnerBoxSegment = _isInnerBoxSegment;
+			m_isFirstSegment = _isFirstSegment;
 			m_isLastSegment = _isLastSegment;
 			
 			m_isDirty = false;
 			m_endPt = new Point(0,0);
 			
-			//default to true
-			m_isEditable = true;
+			m_isEditable = _isEditable;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -87,24 +83,53 @@
 			super.dispose();
 		}
 		
-		private var isMoving:Boolean = false;
 		public var returnLocation:Point;
-		private function onTouch(event:TouchEvent):void
+		private var isMoving:Boolean = false;
+		private var hasMovedOutsideClickDist:Boolean = false;
+		private var startingPoint:Point;
+		private static const CLICK_DIST:Number = 0.2; //for extensions, register distance dragged
+		public function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
-
+			if (touches.length == 0) {
+				return;
+			}
+			
+			if (DEBUG_TRACE_IDS && event.getTouches(this, TouchPhase.ENDED).length && parent && (parent is GameComponent)) {
+				trace("EdgeContainer '"+(parent as GameComponent).m_id+"'");
+			}
+			
+			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
+				(!isMoving || !hasMovedOutsideClickDist)) {
+				// If haven't moved enough, register this as a click on the node itself
+				dispatchEvent(new TouchEvent(GameEdgeContainer.INNER_SEGMENT_CLICKED, event.touches));
+			}
+			if (!draggable) return;
+			
+			var touch:Touch = touches[0];
 			if(event.getTouches(this, TouchPhase.MOVED).length)
 			{
 				if (touches.length == 1)
 				{
-					if(!isMoving)
-					{
+					var touchXY:Point = new Point(touch.globalX, touch.globalY);
+					touchXY = this.globalToLocal(touchXY);
+					if(!isMoving) {
+						startingPoint = touchXY;
 						dispatchEvent(new Event(GameEdgeContainer.SAVE_CURRENT_LOCATION, true));
 						isMoving = true;
+						hasMovedOutsideClickDist = false;
+						return;
+					} else if (!hasMovedOutsideClickDist) {
+						if (XMath.getDist(startingPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
+							hasMovedOutsideClickDist = true;
+						} else {
+							// Don't move if haven't moved outside CLICK_DIST
+							return;
+						}
 					}
 					
-					var currentMoveLocation:Point = touches[0].getLocation(this);
-					var previousLocation:Point = touches[0].getPreviousLocation(this);
+					var currentMoveLocation:Point = touch.getLocation(this);
+					var previousLocation:Point = touch.getPreviousLocation(this);
 					updatePoint = currentMoveLocation.subtract(previousLocation);	
 					currentDragSegment = true;
 					dispatchEvent(new Event(GameEdgeContainer.RUBBER_BAND_SEGMENT, true, this));
@@ -120,16 +145,17 @@
 					if(isMoving)
 					{
 						isMoving = false;
-						if(this.m_isNodeExtensionSegment)
+						if (m_isInnerBoxSegment || m_isFirstSegment || m_isLastSegment) {
 							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
+							dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
+						}
 					}
 				}
 				
-				var touch:Touch = touches[0];
 				if(touch.tapCount == 2)
 				{
 					this.currentTouch = touch;
-					if(!this.m_isNodeExtensionSegment)
+					if(!m_isInnerBoxSegment)
 						dispatchEvent(new Event(GameEdgeContainer.CREATE_JOINT, true, this));
 				}
 			}
@@ -143,7 +169,7 @@
 			}
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
-				
+				trace(touches[0].target);
 			}
 			else
 			{
@@ -161,146 +187,88 @@
 
 		public function draw():void
 		{
+			unflatten();
 			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var color:int = getColor();
 			
-			if (m_arrowImg) {
-				m_arrowImg.removeFromParent(true);
-				m_arrowImg = null;
-			}
 			if (m_quad) {
 				m_quad.removeFromParent(true);
 				m_quad = null;
 			}
-			disposeChildren();
+			
+			var assetName:String;
+			
+			if(m_isEditable == true)
+			{
+				if (m_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
+			}
+			else //not adjustable
+			{
+				if(m_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
 			
 			var pctTextWidth:Number;
 			var pctTextHeight:Number;
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
-				var startPt:Point = new Point(0,0);
-				m_quad = drawDiagonalLine(startPt, m_endPt, lineSize, color);
-				m_quad.x = -lineSize/2.0;
-				m_quad.y = 0;
+				throw new Error("Diagonal lines deprecated.");
 			}
 			else if(m_endPt.x != 0)
 			{
-				m_quad = new Quad(Math.abs(m_endPt.x), lineSize, color);
-				if(isHoverOn)
-				{
-					m_quad.setVertexColor(0, color + 0x333333);
-					m_quad.setVertexColor(1, color + 0x333333);
-					m_quad.setVertexColor(2, color + 0x333333);
-					m_quad.setVertexColor(3, color + 0x333333);
-				}
-				m_quad.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-				m_quad.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-				m_quad.x = 0;
+				m_quad = new Image(startTexture);
+				m_quad.width = Math.abs(m_endPt.x);
+				m_quad.height = lineSize;
 				
-				// Create/add arrows if segment is long enough to display them
-				//if (Math.abs(m_endPt.x) > MIN_ARROW_SIZE) {
-					//m_arrowImg = new Image(ARROW_TEXT);
-					//pctTextWidth = Math.abs(m_endPt.x) / (ARROW_SCALEX * m_arrowImg.width);
-					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-					//m_arrowImg.width = Math.abs(m_endPt.x);
-					//m_arrowImg.height = lineSize;
-					//
-					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-					//
-					//m_arrowImg.rotation = (m_endPt.x > 0) ? 0 : Math.PI;
-					//m_arrowImg.y = (m_endPt.x > 0) ? -lineSize/2.0 : lineSize/2.0;
-					//m_arrowImg.x = 0;
-				//}
+				m_quad.x = (m_endPt.x > 0) ? 0 : -m_quad.width;
+				m_quad.y = -lineSize/2.0;
 			}
 			else
 			{
-				m_quad = new Quad(lineSize, Math.abs(m_endPt.y), color);
-				if(isHoverOn)
-				{
-					m_quad.setVertexColor(0, color + 0x333333);
-					m_quad.setVertexColor(1, color + 0x333333);
-					m_quad.setVertexColor(2, color + 0x333333);
-					m_quad.setVertexColor(3, color + 0x333333);
-				}
-				m_quad.rotation = (m_endPt.y > 0) ? 0 : Math.PI;
-				m_quad.x = (m_endPt.y > 0) ? -lineSize/2.0 : lineSize/2.0;
-				m_quad.y = 0;
+				m_quad = new Image(startTexture);
+				m_quad.width = lineSize;
+				m_quad.height = Math.abs(m_endPt.y);
 				
-//				for(var i:int = 5; i<Math.abs(m_endPt.y); i+=5)
-//				{
-//					var quad1:Quad = new Quad(lineSize*2, lineSize*2, 0x0000ff);
-//					addChild(quad1);
-//					quad1.y = i;
-//				}
-				// Create/add arrows if segment is long enough to display them
-				//if (Math.abs(m_endPt.y) > MIN_ARROW_SIZE) {
-					//m_arrowImg = new Image(ARROW_TEXT);
-					//m_arrowImg.touchable = false;
-					//pctTextWidth = Math.abs(m_endPt.y) / (ARROW_SCALEX * m_arrowImg.width);
-					//pctTextHeight = lineSize / (1.5 * GameEdgeContainer.WIDE_WIDTH);
-					//m_arrowImg.width = Math.abs(m_endPt.y);
-					//m_arrowImg.height = lineSize;
-					//
-					//var q:Number = 0.5 - pctTextHeight/2.0;
-					//m_arrowImg.setTexCoords(0, new Point(0, 0.5 - pctTextHeight/2.0)); //topleft
-					//m_arrowImg.setTexCoords(1, new Point(pctTextWidth, 0.5 - pctTextHeight/2.0)); //topright
-					//m_arrowImg.setTexCoords(2, new Point(0, 0.5 + pctTextHeight/2.0)); //bottomleft
-					//m_arrowImg.setTexCoords(3, new Point(pctTextWidth, 0.5 + pctTextHeight / 2.0)); //bottomright
-					//
-					//m_arrowImg.rotation = (m_endPt.y > 0) ? Math.PI / 2 : -Math.PI / 2;
-					//m_arrowImg.x = (m_endPt.y > 0) ? lineSize/2.0 : -lineSize/2.0;
-					//m_arrowImg.y = 0;
-				//}
+				m_quad.x = -lineSize/2.0;
+				m_quad.y = (m_endPt.y > 0) ? 0 : -m_quad.height;
+			}
+			
+			if(isHoverOn)
+			{
+				m_quad.color = 0xeeeeee;
+			}
+			else
+			{
+				m_quad.color = 0xcccccc;
 			}
 			
 			addChild(m_quad);
-			if (m_arrowImg) {
-				addChild(m_arrowImg);
+			if (socket) {
+				addChild(socket);
+			}
+			if (plug) {
+				addChild(plug);
+			}
+			if (plug || socket) {
+				this.blendMode = BlendMode.NORMAL;
+			} else {
+				this.blendMode = BlendMode.NONE;
 			}
 			flatten();
 		}
 		
-		public function drawDiagonalLine(p1:Point, p2:Point, width:Number=1, color:uint=0x000000):Quad
+		override public function flatten():void
 		{
-			
-			//a^2 + b^2 = c^2
-			var a:Number = (p2.x - p1.x) * (p2.x - p1.x);
-			var b:Number = (p2.y - p1.y) * (p2.y - p1.y);
-			var hyp:Number = Math.sqrt(a +b);
-			
-			var q:Quad = new Quad(hyp, width);
-			
-			q.setVertexColor(0, color);
-			q.setVertexColor(1, color);
-			q.setVertexColor(2, color);
-			q.setVertexColor(3, color);
-			
-			q.x = p1.x;
-			q.y = p1.y;
-			
-			//get theta
-			//Sin(x) = opp/hyp
-			var theta:Number; // radians
-			
-			theta = Math.asin( (p2.y-p1.y) / hyp );  // radians
-			
-			// degrees:90 radians:1.5707963267948966
-			// degrees:180 radians:3.141592653589793
-			
-			var dX:Number = p1.x - p2.x
-			var dY:Number = p1.y - p2.y
-			
-			if(dX>0 && dY<0) // Q2
-				theta = (Math.PI/2) + ((Math.PI/2) - theta);
-			else if(dX>0 && dY>0) // Q3
-				theta = -Math.PI - theta;
-			
-			q.rotation = theta;
-			
-			return q;
+			if (plug || socket) return;
+			super.flatten();
 		}
 		
 		public function onEnterFrame(event:Event):void

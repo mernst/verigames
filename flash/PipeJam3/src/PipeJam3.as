@@ -1,15 +1,25 @@
 package  
 {
+	import audio.AudioManager;
+	
+	import com.spikything.utils.MouseWheelTrap;
+	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
+	import flash.utils.Timer;
 	
 	import net.hires.debug.Stats;
 	
-	import scenes.login.LoginHelper;
+	import networking.HTTPCookies;
+	import networking.LoginHelper;
+	import networking.PlayerValidation;
 	import scenes.splashscreen.SplashScreenScene;
+	
+	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
@@ -23,66 +33,75 @@ package
 	{
 		private var mStarling:Starling;
 		
-		public static var playerLoggedIn:Boolean = false;
-		public static var playerID:String = "51365e65e4b0ad10f4079c88"; //can't currently log in as other people because of the split RA's
-		static public var cookies:String;
-
-		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
+		/** Set to true if a build for the server */
+		public static var RELEASE_BUILD:Boolean = false;
+		public static var LOCAL_DEPLOYMENT:Boolean = true;
+		public static var TUTORIAL_DEMO:Boolean = false;
+		public static var USE_LOCAL_PROXY:Boolean = false;
+		
+		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
 		protected var sessionVerificationHasBeenAttempted:Boolean = false;
-		
+		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
+		public static var initialLevelDisplay:Boolean = true; 
+		static public var pipeJam3:PipeJam3;
 		
 		public function PipeJam3() 
 		{
-			var originalCookies:String = JSON.stringify(this.loaderInfo.parameters);
-			var pattern:RegExp = /sid/;
-			cookies = escape(originalCookies.replace(pattern, "express.sid"));
-	//		LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValid);
-			sessionIDValid(null);
+			pipeJam3 = this;
+			
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			if(RELEASE_BUILD == true)
+			{
+				if (LoggingServerInterface.LOGGING_ON) {
+					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
+				}
+				PlayerValidation.validatePlayerIsLoggedInAndActive(playerValidationAttempted);
+			//	sessionVerificationHasBeenAttempted = true;
+			//	PlayerValidation.playerLoggedIn = true;
+			//	initialize();
+			}
+			else if(!LOCAL_DEPLOYMENT) //use baked in player id, so don't get cookie, but do try to validate id
+			{
+				if (LoggingServerInterface.LOGGING_ON) {
+					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
+				}
+				PlayerValidation.validatePlayerIsActive(playerValidationAttempted);
+			}
+			else
+			{
+				playerValidationAttempted();
+			}
 		}
 		
-		//called if sessionID valid
-		public function sessionIDValid(event:flash.events.Event):void
+		
+		public function playerValidationAttempted():void
 		{
-			if(event)
-			{
-				//three cases, an Auth Required dialog
-				//a blank userID,
-				//a valid userID
-				
-				var response:String = event.target.data;
-				if(response.indexOf("<html>") == -1) //else assume auth required dialog
-				{
-					var jsonResponseObj:Object = JSON.parse(response);
-					
-					if(jsonResponseObj.userId != null)
-					{
-						playerLoggedIn = true;
-						playerID = jsonResponseObj.userId;
-						PipeJamGame.RELEASE_BUILD = true;
-					}
-				}
-			}
 			sessionVerificationHasBeenAttempted = true;
-			
 			initialize();
 		}
-			
+		
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
-			removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			hasBeenAddedToStage = true;
-			//at least try to initialize, although probably waiting on session verification
-			initialize();
+			if(hasBeenAddedToStage == false)
+			{
+				removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
+				hasBeenAddedToStage = true;
+				//at least try to initialize, although probably waiting on session verification
+				initialize();
+			}
 		}
 		
-		public function initialize():void
+		public function initialize(result:int = 0, e:flash.events.Event = null):void
 		{
+			//	HTTPCookies.displayAlert("init");
+			
 			if(hasBeenAddedToStage && sessionVerificationHasBeenAttempted)
 			{
+				MouseWheelTrap.setup(stage);
+				
 				//set up the main controller
 				stage.scaleMode = StageScaleMode.NO_SCALE;
 				stage.align = StageAlign.TOP_LEFT;
@@ -130,7 +149,7 @@ package
 			viewPort.height = scaleFactor * DES_HEIGHT;
 			viewPort.x = 0.5 * (stage.stageWidth - viewPort.width);
 			viewPort.y = 0.5 * (stage.stageHeight - viewPort.height);
-
+			
 			// Ensure the ideal view port is not larger than the max view port (could cause a crash otherwise)
 			viewPort = viewPort.intersection(fullViewPort);
 			
@@ -138,5 +157,5 @@ package
 			Starling.current.viewPort = viewPort;
 		}
 	}
-
+	
 }

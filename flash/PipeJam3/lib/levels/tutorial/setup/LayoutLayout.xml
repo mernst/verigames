@@ -1,0 +1,79 @@
+<graph id="world">
+  <level id="Layout" qid="12" tutorial="layout">
+    <box height="1.0" id="Layout1" lines="1" width="1.81" x="3.92" y="2.67" visible="true"/>
+    <box height="1.0" id="Layout2" lines="1" width="1.81" x="4.34" y="3.02" visible="true"/>
+    <box height="1.0" id="Layout3" lines="1" width="1.81" x="3.61" y="2.75" visible="true"/>
+    <box height="1.0" id="Layout4" lines="1" width="1.81" x="4.49" y="2.47" visible="true"/>
+    <box height="1.0" id="Layout5" lines="1" width="1.81" x="3.86" y="2.39" visible="true"/>
+    <joint height="0.51" id="n10" inputs="1" outputs="0" width="0.59" x="0.88" y="3.82"/>
+    <joint height="0.51" id="n20" inputs="1" outputs="0" width="0.59" x="3.68" y="3.82"/>
+    <joint height="0.51" id="n1__OUT__0" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="n50" inputs="1" outputs="0" width="0.59" x="6.49" y="3.82"/>
+    <joint height="0.51" id="n40__IN__0" inputs="1" outputs="0" width="0.59" x="9.29" y="3.82"/>
+    <joint height="0.51" id="n30" inputs="1" outputs="0" width="0.59" x="12.1" y="3.82"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
+    <joint height="0.51" id="n3" inputs="0" outputs="1" width="0.59" x="12.1" y="0.26"/>
+    <joint height="0.51" id="n4" inputs="0" outputs="1" width="0.59" x="9.29" y="0.26"/>
+    <joint height="0.51" id="n5" inputs="0" outputs="1" width="0.59" x="6.49" y="0.26"/>
+    <line id="e1__IN__">
+      <fromjoint id="n1__OUT__0" port="0"/>
+      <tobox id="Layout1" port="0"/>
+      <point x="0.89" y="0.52"/>
+      <point x="0.89" y="1.52"/>
+    </line>
+    <line id="e1__OUT__">
+      <frombox id="Layout1" port="0"/>
+      <tojoint id="n10" port="0"/>
+      <point x="0.89" y="2.55"/>
+      <point x="0.89" y="3.55"/>
+    </line>
+    <line id="e2__IN__">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="Layout2" port="0"/>
+      <point x="3.69" y="0.52"/>
+      <point x="3.69" y="1.52"/>
+    </line>
+    <line id="e2__OUT__">
+      <frombox id="Layout2" port="0"/>
+      <tojoint id="n20" port="0"/>
+      <point x="3.69" y="2.55"/>
+      <point x="3.69" y="3.55"/>
+    </line>
+    <line id="e3__IN__">
+      <fromjoint id="n3" port="0"/>
+      <tobox id="Layout3" port="0"/>
+      <point x="12.11" y="0.52"/>
+      <point x="12.11" y="1.52"/>
+    </line>
+    <line id="e3__OUT__">
+      <frombox id="Layout3" port="0"/>
+      <tojoint id="n30" port="0"/>
+      <point x="12.11" y="2.55"/>
+      <point x="12.11" y="3.55"/>
+    </line>
+    <line id="e4__IN__">
+      <fromjoint id="n4" port="0"/>
+      <tobox id="Layout4" port="0"/>
+      <point x="9.31" y="0.52"/>
+      <point x="9.31" y="1.52"/>
+    </line>
+    <line id="e4__OUT__">
+      <frombox id="Layout4" port="0"/>
+      <tojoint id="n40__IN__0" port="0"/>
+      <point x="9.31" y="2.55"/>
+      <point x="9.31" y="3.55"/>
+    </line>
+    <line id="e5__IN__">
+      <fromjoint id="n5" port="0"/>
+      <tobox id="Layout5" port="0"/>
+      <point x="6.5" y="0.52"/>
+      <point x="6.5" y="1.52"/>
+    </line>
+    <line id="e5__OUT__">
+      <frombox id="Layout5" port="0"/>
+      <tojoint id="n50" port="0"/>
+      <point x="6.5" y="2.55"/>
+      <point x="6.5" y="3.55"/>
+    </line>
+  </level>
+</graph>

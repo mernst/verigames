@@ -11,7 +11,7 @@ package scenes.game.display
 	
 	public class GameComponent extends BaseComponent
 	{
-		
+		protected static const DEBUG_TRACE_IDS:Boolean = true;
 		public var m_id:String;
 		
 		public var m_isSelected:Boolean;
@@ -25,7 +25,7 @@ package scenes.game.display
 		public var m_isEditable:Boolean;
 		public var m_shouldShowError:Boolean = true;
 		public var isHoverOn:Boolean = false;
-
+		public var draggable:Boolean = true;
 		
 		public var m_forceColor:Number = -1;
 		
@@ -34,7 +34,9 @@ package scenes.game.display
 		public static var WIDE_COLOR:uint = 0x0077FF;// 0x3427FF;
 		public static var WIDE_COLOR_BORDER:uint = 0x1B3C86;
 		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x808184;// 0x3A3F4C;
+		public static var UNADJUSTABLE_WIDE_COLOR_BORDER:uint = 0x404144;
 		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD0D2D3;// 0x3A3F4C;
+		public static var UNADJUSTABLE_NARROW_COLOR_BORDER:uint = 0x0;//0x909293;
 		public static var ERROR_COLOR:uint = 0xF05A28;// 0xE92227;
 		public static var SCORE_COLOR:uint = 0x0;// 0xFFDC1A;
 		public static var SELECTED_COLOR:uint = 0xff0000;
@@ -51,6 +53,8 @@ package scenes.game.display
 		{
 			x += delta.x;
 			y += delta.y;
+			m_boundingBox.x += delta.x;
+			m_boundingBox.y += delta.y;
 		}
 		
 		public function getScore():Number

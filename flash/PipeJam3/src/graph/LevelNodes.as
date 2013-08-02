@@ -18,6 +18,7 @@ package graph
 		/** This is a dictionary of Node's indexed by nodeID - so that nodes may be looked up without needing board information */
 		public var nodeIdToNodeDictionary:Dictionary = new Dictionary();
 		public var boardNodeNameArray:Array = new Array;
+		public var qid:int = -1;
 		
 		public function LevelNodes(_original_level_name:String, _obfuscater:NameObfuscater = null) 
 		{

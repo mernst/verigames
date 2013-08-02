@@ -1,6 +1,7 @@
 package 
 {
     import assets.AssetInterface;
+	import starling.display.Quad;
     
     import events.NavigationEvent;
     
@@ -20,7 +21,6 @@ package
     import starling.display.MovieClip;
     import starling.display.Sprite;
     import starling.events.Event;
-    import starling.events.KeyboardEvent;
     import starling.text.TextField;
     import starling.textures.Texture;
     import starling.utils.VAlign;
@@ -35,11 +35,13 @@ package
 		protected var busyAnimationImages:Vector.<Texture> = null;
 		protected var busyAnimationMovieClip:MovieClip;
 		
-		public static var START_BUSY_ANIMATION:String = "startBusyAnimation";
-		public static var STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
-
+		private var m_blackFadeScreen:Quad;
 		
-		public static var SUPPRESS_TRACE_STATEMENTS:Boolean = true;
+		private static const FADE_TIME:Number = 0.5;
+		public static const START_BUSY_ANIMATION:String = "startBusyAnimation";
+		public static const STOP_BUSY_ANIMATION:String = "stopBusyAnimation";
+		
+		public static const SUPPRESS_TRACE_STATEMENTS:Boolean = true;
 		
         public function Game()
         {
@@ -50,9 +52,13 @@ package
             // provide textures in the most suitable format.
             Starling.current.stage.stageWidth  = Constants.GameWidth;
             Starling.current.stage.stageHeight = Constants.GameHeight;
+			
+			m_blackFadeScreen = new Quad(Constants.GameWidth, Constants.GameHeight, 0x0);
+			
             assets.AssetInterface.contentScaleFactor = Starling.current.contentScaleFactor;
 			
 			addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
+			addEventListener(NavigationEvent.FADE_SCREEN, onFadeScreen);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 			
@@ -89,11 +95,53 @@ package
         
 		protected function onChangeScreen(event:NavigationEvent):void
 		{
-			if(mCurrentScene)
-				closeCurrentScene();
-			
-			showScene(event.params as String);
+			var callback:Function =
+				function():void
+				{
+					if (mCurrentScene) {
+						closeCurrentScene();
+					}
+					if (event.scene) {
+						showScene(event.scene);
+					}
+				};
+			fadeOut(callback);
 		}
+		
+		public function onFadeScreen(event:NavigationEvent):void
+		{
+			fadeOut(event.fadeCallback);
+		}
+		
+		private var m_fadeCallback:Function;
+		public function fadeOut(callback:Function):void
+		{
+			if (m_fadeCallback != null) {
+				m_fadeCallback();
+			}
+			m_fadeCallback = callback;
+			Starling.juggler.removeTweens(m_blackFadeScreen);
+			m_blackFadeScreen.alpha = 0;
+			addChild(m_blackFadeScreen);
+			Starling.juggler.tween(m_blackFadeScreen, FADE_TIME, { alpha:1, 
+				onComplete:function():void
+				{
+					if (m_fadeCallback != null) {
+						m_fadeCallback();
+					}
+					m_fadeCallback = null;
+					fadeIn();
+				}
+			});
+		}
+		
+		public function fadeIn():void
+		{
+			m_blackFadeScreen.alpha = 1;
+			addChild(m_blackFadeScreen);
+			Starling.juggler.tween(m_blackFadeScreen, FADE_TIME, { alpha:0, onComplete:function():void { m_blackFadeScreen.removeFromParent(); } } );
+		}
+		
         protected function closeCurrentScene():void
         {
             mCurrentScene.removeFromParent();
@@ -118,8 +166,8 @@ package
 		
 		public function onStartBusyAnimation(e:Event):void
 		{
-			busyAnimationMovieClip.x = (width-busyAnimationMovieClip.width)/2;
-			busyAnimationMovieClip.y = (height-busyAnimationMovieClip.height)/2;
+			busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
+			busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
 			addChild(busyAnimationMovieClip);
 			Starling.juggler.add(this.busyAnimationMovieClip);
 		}

@@ -44,6 +44,17 @@ package utils
 		}
 		
 		/**
+		 * Calculates and returns the square of the distance between two points. Use when you don't need exact distance to save from doing expensive sqrt.
+		 * @param p1 The first Point.
+		 * @param p2 The second Point.
+		 * @return An Number representing the distance between two points (in pixels).
+		 */
+		public static function getDistSquared(p1:Point, p2:Point):Number
+		{
+			return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+		}
+		
+		/**
 		 * Calculates and returns the angle between two vectors. 
 		 * @param p1 The first vector.
 		 * @param p2 The second vector.
