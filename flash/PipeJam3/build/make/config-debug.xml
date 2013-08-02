@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flex-config>
+  <compiler>
+    <define append="true">
+      <name>CONFIG::debug</name>
+      <value>true</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::release</name>
+      <value>false</value>
+    </define>
+    <debug>true</debug>
+    <omit-trace-statements>false</omit-trace-statements>
+  </compiler>
+</flex-config>

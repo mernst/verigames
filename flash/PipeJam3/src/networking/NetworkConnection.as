@@ -28,13 +28,17 @@ package networking
 
 		static public var postAlerts:Boolean = false;
 		//the first address is verigames, the second the development environ, the third my machine
-	//	static public var PROXY_URL:String = "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
-	//	static public var PROXY_URL:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
-		static public var PROXY_URL:String = "http://128.95.2.112:8001";
+		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
+		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
+		static public var localProxy:String = "http://128.95.2.112:8001";
+		static public var PROXY_URL:String = stagingProxy;
 
 		
 		public function NetworkConnection()
 		{
+			if(PipeJam3.USE_LOCAL_PROXY == true)
+				PROXY_URL = localProxy;
+				
 			PipeJamGame.addNetworkConnection(this);
 		}
 		

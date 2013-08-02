@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="WidenBoxes" targetScore="300">
+  <level id="WidenBoxes" targetScore="375">
     <box id="WidenBoxes30" width="narrow" editable="true"/>
-    <box id="WidenBoxes20" width="narrow" editable="true"/>
+    <box id="WidenBoxes20" width="wide" editable="true"/>
     <box id="WidenBoxes10" width="narrow" editable="true"/>
     <box id="WidenBoxes3" width="wide" editable="false"/>
-    <box id="WidenBoxes2" width="wide" editable="false"/>
+    <box id="WidenBoxes2" width="narrow" editable="true"/>
     <box id="WidenBoxes1" width="wide" editable="false"/>
     <box id="WidenBoxes4" width="wide" editable="false"/>
   </level>

@@ -48,8 +48,12 @@
 #now we are getting somewhere!
 #install php (Python's already installed)
 yum -y install php
-#check to  has php-fpm installed, so might need to do
+#check to see if php-fpm installed, so might need to do
 #yum -y install php-fpm
+
+#install mongo driver for python
+yum -y install pymongo
+
 #and start it? Doesn't hurt to do, even if it's already running
 sudo /usr/sbin/php-fpm restart
 #check to make sure port 9000 is being used (hopefully by php-fpm)
@@ -94,8 +98,8 @@ cd ..
 
 #go back to the base dir 
 cd ../../..
-
-#copy upload stuff to apache website locatcd ..ion
+ 
+#copy upload stuff to apache website located on..
 cp -r uwverigames/website/* /var/www/html/
 #if we get nginx working, this is the ticket:
 #mkdir /var/www/html/upload

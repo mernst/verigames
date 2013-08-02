@@ -51,7 +51,7 @@
       <y>0.0</y>
      </layout>
     </node>
-	<node kind="START_PIPE_DEPENDENT_BALL" id="n32">
+	<node kind="INCOMING" id="n32">
      <input/>
      <output>
       <port num="0" edge="e32"/>
@@ -144,27 +144,27 @@
      <to><noderef id="n20" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e31" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e31" buzzsaw="false">
      <from><noderef id="n31" port="0"/></from>
      <to><noderef id="n310" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e32" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e32" buzzsaw="false">
      <from><noderef id="n32" port="0"/></from>
      <to><noderef id="n320" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e33" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e33" buzzsaw="false">
      <from><noderef id="n33" port="0"/></from>
      <to><noderef id="n330" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e41" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e41" buzzsaw="false">
      <from><noderef id="n41" port="0"/></from>
      <to><noderef id="n410" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
-	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e42" buzzsaw="false">
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e42" buzzsaw="false">
      <from><noderef id="n42" port="0"/></from>
      <to><noderef id="n420" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
