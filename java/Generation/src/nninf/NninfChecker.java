@@ -25,7 +25,7 @@ import checkers.util.MultiGraphQualifierHierarchy;
 import com.sun.source.tree.CompilationUnitTree;
 
 @TypeQualifiers({ NonNull.class, Nullable.class/*, UnknownKeyFor.class, KeyFor.class*/ })
-public class NninfChecker extends GameChecker {
+public class NninfChecker extends GameChecker<NninfAnnotatedTypeFactory> {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
     public void init(ProcessingEnvironment processingEnv) {
@@ -45,7 +45,7 @@ public class NninfChecker extends GameChecker {
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public NninfAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new NninfAnnotatedTypeFactory(this, root);
     }
 
