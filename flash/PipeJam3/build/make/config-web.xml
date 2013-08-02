@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flex-config>
+  <target-player>11.1</target-player>
+  <compiler>
+    <define append="true">
+      <name>CONFIG::mobile</name>
+      <value>false</value>
+    </define>
+    <define append="true">
+      <name>CONFIG::web</name>
+      <value>true</value>
+    </define>
+  </compiler>
+</flex-config>

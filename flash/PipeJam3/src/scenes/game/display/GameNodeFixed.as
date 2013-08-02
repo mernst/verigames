@@ -6,9 +6,9 @@ package scenes.game.display
 		
 		private var m_isStartingNode:Boolean;
 		
-		public function GameNodeFixed(_layoutXML:XML, _isWide:Boolean, _isStartingNode:Boolean) 
+		public function GameNodeFixed(_layoutXML:XML, _draggable:Boolean, _isWide:Boolean, _isStartingNode:Boolean) 
 		{
-			super(_layoutXML);
+			super(_layoutXML, _draggable);
 			m_isEditable = false;
 			m_isWide = _isWide;
 			m_isStartingNode = _isStartingNode;

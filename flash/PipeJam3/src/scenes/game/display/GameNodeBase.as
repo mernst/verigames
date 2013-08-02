@@ -1,9 +1,12 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
+	
 	import events.EdgeSetChangeEvent;
-	import graph.MapGetNode;
-	import graph.NodeTypes;
+	import events.GameComponentEvent;
+	import events.GroupSelectionEvent;
+	import events.MoveEvent;
+	import events.UndoEvent;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -17,11 +20,16 @@ package scenes.game.display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
+	import utils.XMath;
+	
 	public class GameNodeBase extends GameComponent
 	{
 		public var m_box9slice:NineSliceBatch;
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
+		
+		public var storedXPosition:int;
+		public var storedYPosition:int;
 		
 		protected var m_layoutXML:XML;
 		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
@@ -29,13 +37,7 @@ package scenes.game.display
 		
 		public var m_PortToEdgeArray:Array;
 		
-		protected var m_gameEdges:Vector.<GameEdgeContainer>;
-		
 		protected static var WIDTH_CHANGE:String = "width_change";
-		
-		// Used to handle width change events for Value edge of MapGet which will affect the constraint
-		// put on the argument exit_ball. Null if 
-		private var m_outgoingMapGetKeyEdgeContainers:Vector.<GameEdgeContainer>;
 		
 		public function GameNodeBase(_layoutXML:XML)
 		{
@@ -52,10 +54,6 @@ package scenes.game.display
 			m_incomingEdges = new Vector.<GameEdgeContainer>;
 			m_PortToEdgeArray = new Array;
 			
-			m_outgoingMapGetKeyEdgeContainers = new Vector.<GameEdgeContainer>;
-			
-			m_gameEdges = new Vector.<GameEdgeContainer>;
-			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
@@ -68,8 +66,9 @@ package scenes.game.display
 			var currentPos:int = 0;
 			for(var i:int = 0; i<m_outgoingEdges.length; i++)
 			{
+				var startingCurrentPos:int = currentPos;
 				var oedge:GameEdgeContainer = m_outgoingEdges[i];
-
+				
 				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
 				
 				for(var j:int = 0; j<m_incomingEdges.length; j++)
@@ -103,6 +102,13 @@ package scenes.game.display
 						m_PortToEdgeArray[currentPos] = iedge;
 						currentPos++;
 					}
+				}
+				//no incoming edges, or all incoming edges less than this outgoing edge?
+				if(startingCurrentPos == currentPos || oedge.outgoingEdgePosition == -1)
+				{
+					oedge.outgoingEdgePosition = currentPos;
+					m_PortToEdgeArray[currentPos] = oedge;
+					currentPos++;
 				}
 			}
 			
@@ -149,108 +155,127 @@ package scenes.game.display
 		}
 		
 		private var isMoving:Boolean = false;
+		private var hasMovedOutsideClickDist:Boolean = false;
+		private var startingTouchPoint:Point;
 		private var startingPoint:Point;
+		private static const CLICK_DIST:Number = 0.2; // if the node is moved just a tiny bit, chances are the user meant to click rather than move
 		private function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
+			var touch:Touch = touches[0];
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
+				if (DEBUG_TRACE_IDS) trace("GameNodeBase '"+m_id+"'");
+				var undoData:Object, undoEvent:Event;
 				if(isMoving) //if we were moving, stop it, and exit
 				{
 					isMoving = false;
-					
-					var undoData:Object = new Object();
-					undoData.target = "level";
-					undoData.component = this;
-					undoData.startPoint = startingPoint.clone();
-					undoData.endPoint = new Point(x,y);
-					var undoEvent:Event = new Event(Level.MOVE_EVENT,false,undoData);
-					dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-					
-					return;
+					if (draggable && hasMovedOutsideClickDist) {
+						var startPoint:Point = startingPoint.clone();
+						var endPoint:Point = new Point(x, y);
+						undoEvent = new MoveEvent(MoveEvent.MOVE_EVENT, this, startPoint, endPoint);
+						var eventToDispatch:UndoEvent = new UndoEvent(undoEvent, this);
+						eventToDispatch.levelEvent = true;
+						dispatchEvent(eventToDispatch);
+						hasMovedOutsideClickDist = false;
+						return;
+					}
+				}
+				
+				if(event.shiftKey && event.ctrlKey && !PipeJam3.RELEASE_BUILD)
+				{
+					this.m_isEditable = !this.m_isEditable;
+					this.m_isDirty = true;
 				}
 				
 				//if shift key, select, else change size
-				var touch:Touch = touches[0];
 				if(!event.shiftKey)
 				{
-					//clear selections on all actions with no shift key
-					 
-					if(m_isEditable)
-					{
-						handleWidthChange();
-				//		dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
-						
-						var undoData:Object = new Object();
-						undoData.target = this;
-						var undoEvent:Event = new Event(EdgeSetChangeEvent.EDGE_SET_CHANGED,false,undoData);
-						dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
-					}
+					unflattenConnectedEdges();
 					
+					var touchClick:Touch = event.getTouch(this, TouchPhase.ENDED);
+					var touchPoint:Point = touchClick ? new Point(touchClick.globalX, touchClick.globalY) : null;
+					
+					onClicked(touchPoint);
 				}
 				else //shift key down
 				{
+					if (!draggable) return;
 					if(touch.tapCount == 1)
 					{
 						componentSelected(!m_isSelected);	
 						if(m_isSelected)
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_SELECTED, true, this));
+							dispatchEvent(new GameComponentEvent(GameComponentEvent.COMPONENT_SELECTED, this));
 						else
-							dispatchEvent(new starling.events.Event(Level.COMPONENT_UNSELECTED, true, this));
+							dispatchEvent(new GameComponentEvent(GameComponentEvent.COMPONENT_UNSELECTED, this));
 					}
-					else //select whole group
+					else //select/unselect whole group
 					{
+						var groupDictionary:Dictionary = new Dictionary();
+						this.findGroup(groupDictionary);
+						var selection:Vector.<GameComponent> = new Vector.<GameComponent>();
+						for each(var comp:GameComponent in groupDictionary)
+						{
+							if(selection.indexOf(comp) == -1)
+							{
+								if(comp is GameNodeBase)
+								{
+									selection.push(comp);
+								}
+							}
+						}
 						if(m_isSelected) //we were selected on the first click
-							dispatchEvent(new starling.events.Event(Level.GROUP_SELECTED, true, this));
+							dispatchEvent(new GroupSelectionEvent(GroupSelectionEvent.GROUP_SELECTED, this, selection));
 						else
-							dispatchEvent(new starling.events.Event(Level.GROUP_UNSELECTED, true, this));
+							dispatchEvent(new GroupSelectionEvent(GroupSelectionEvent.GROUP_UNSELECTED, this, selection));
 					}
 				}
 			}
-			else if(event.getTouches(this, TouchPhase.MOVED).length){
+			else if (event.getTouches(this, TouchPhase.MOVED).length) {
 				if (touches.length == 1)
 				{
-					if(isMoving == false)
-						startingPoint = new Point(x,y);
-					isMoving = true;
-
-					dispatchEvent(new starling.events.Event(Level.MOVE_EVENT, true, event));
-					
-				}
-			}
-		}
-		
-		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
-		{
-			if(undoEvent.type == EdgeSetChangeEvent.EDGE_SET_CHANGED)
-				handleWidthChange();
-		}
-		
-		
-		protected function handleWidthChange():void
-		{
-			m_isWide = !m_isWide;
-			m_isDirty = true;
-			// Need to dispatch AFTER setting width, this will trigger the score update
-			// (we don't want to update the score with old values, we only know they're old
-			// if we properly mark them dirty first)
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this));
-			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
-				iedge.updateSize(); // this will check if necessary, no check needed here
-			}
-			for each (var vedge:GameEdgeContainer in m_outgoingMapGetKeyEdgeContainers) {
-				// If we changed the width of this value edge, propagate the change to the associated
-				// argument edge containers
-				var mapJoint:GameJointNode = vedge.m_toComponent as GameJointNode;
-				for each (var imapedge:GameEdgeContainer in mapJoint.m_incomingEdges) {
-					var mapget:MapGetNode = imapedge.graphEdge.to_node as MapGetNode;
-					if (imapedge.graphEdge == mapget.argumentEdge) {
-						imapedge.updateSize();
-						break;
+					var touchXY:Point = new Point(touch.globalX, touch.globalY);
+					touchXY = this.globalToLocal(touchXY);
+					if(!isMoving) {
+						startingTouchPoint = touchXY;
+						startingPoint = new Point(x, y);
+						isMoving = true;
+						hasMovedOutsideClickDist = false;
+						return;
+					} else if (!hasMovedOutsideClickDist) {
+						if (XMath.getDist(startingTouchPoint, touchXY) > CLICK_DIST * Constants.GAME_SCALE) {
+							hasMovedOutsideClickDist = true;
+						} else {
+							// Don't move if haven't moved outside CLICK_DIST
+							return;
+						}
 					}
+					if (!draggable) return;
+					var currentMoveLocation:Point = touch.getLocation(this);
+					var previousLocation:Point = touch.getPreviousLocation(this);
+					unflattenConnectedEdges();
+					dispatchEvent(new MoveEvent(MoveEvent.MOVE_EVENT, this, previousLocation, currentMoveLocation));
 				}
 			}
+		}
+		
+		private function unflattenConnectedEdges():void
+		{
+			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
+			{
+				oedge1.unflatten();
+			}
+			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
+			{
+				iedge1.unflatten();
+			}
+			
+		}
+		
+		public function onClicked(pt:Point):void
+		{
+			// overriden by children
 		}
 		
 		public function onEnterFrame(event:Event):void
@@ -304,11 +329,6 @@ package scenes.game.display
 		{
 			if(m_outgoingEdges.indexOf(edge) == -1) {
 				m_outgoingEdges.push(edge);
-				if (edge.graphEdge.to_node.kind == NodeTypes.GET) {
-					if (edge.graphEdge == (edge.graphEdge.to_node as MapGetNode).keyEdge) {
-						m_outgoingMapGetKeyEdgeContainers.push(edge);
-					}
-				}
 			}
 			
 			//I want the edges to be in ascending order according to x position, so do that here
@@ -331,7 +351,14 @@ package scenes.game.display
 			
 			//stick the edge in the array at the port num, doesn't matter if it's replacing something, we just need one
 			m_PortToEdgeArray[edge.incomingEdgePosition] = edge;
-
+		}
+		
+		public function removeEdges():void
+		{
+			// Delete references to edges, i.e. if recreating them
+			m_outgoingEdges = new Vector.<GameEdgeContainer>;
+			m_incomingEdges = new Vector.<GameEdgeContainer>;
+			m_PortToEdgeArray = new Array;
 		}
 		
 		//used when double clicking a node, handles selecting entire group. 
@@ -366,13 +393,13 @@ package scenes.game.display
 			{
 				edgeIndex = edge.outgoingEdgePosition;
 				edgeGlobalPt = edge.localToGlobal(edge.m_startPoint);
-				edgeBeginGlobalPt = edge.localToGlobal(edge.m_savedStartPoint);
+				edgeBeginGlobalPt = edge.localToGlobal(edge.undoObject.m_savedStartPoint);
 			}
 			else
 			{
 				edgeIndex = edge.incomingEdgePosition;
 				edgeGlobalPt = edge.localToGlobal(edge.m_endPoint);
-				edgeBeginGlobalPt = edge.localToGlobal(edge.m_savedEndPoint);
+				edgeBeginGlobalPt = edge.localToGlobal(edge.undoObject.m_savedEndPoint);
 			}
 
 			nextEdgeIndex = getNextEdgePosition(edgeIndex, incrementing);
@@ -455,24 +482,24 @@ package scenes.game.display
 		//update edge and extension edge to be at newPosition.x
 		//the difference between this function and the next one, is that the mechanism is going to try to restore this
 		//edge to the beginning state (as when you drag it a little bit, and it snaps back)
-		//but, but setting the saved point, we will be snapping back to the new position, not the old one
+		//but, by setting the saved point, we will be snapping back to the new position, not the old one
 		// in the next function, none of that holds, so we can just directly update the start and end points
 		protected function updateEdgePosition(edge:GameEdgeContainer, newPosition:Point):void
 		{
 			var isEdgeOutgoing:Boolean = edge.m_fromComponent == this ? true : false;
 			if(isEdgeOutgoing)
 			{
-				if(edge.m_savedStartPoint)
-					edge.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
-				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedEndPoint)
-					edge.m_extensionEdge.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+				if(edge.undoObject.m_savedStartPoint)
+					edge.undoObject.m_savedStartPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.undoObject.m_savedEndPoint)
+					edge.m_extensionEdge.undoObject.m_savedEndPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
 			}
 			else
 			{
-				if(edge.m_savedEndPoint)
-					edge.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
-				if(edge.m_extensionEdge && edge.m_extensionEdge.m_savedStartPoint)
-					edge.m_extensionEdge.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
+				if(edge.undoObject.m_savedEndPoint)
+					edge.undoObject.m_savedEndPoint.x = edge.globalToLocal(newPosition).x;
+				if(edge.m_extensionEdge && edge.m_extensionEdge.undoObject.m_savedStartPoint)
+					edge.m_extensionEdge.undoObject.m_savedStartPoint.x = edge.m_extensionEdge.globalToLocal(newPosition).x;
 			}
 		}
 		

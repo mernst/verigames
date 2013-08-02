@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><meta http-equiv="X-UA-Compatible" content="IE=9"/><meta http-equiv="Pragma" content="no-cache"/><meta http-equiv="Expires" content="-1"/><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PipeJam!</title><script src="/js/jquery-1.8.0.min.js" type="text/javascript"></script><script src="/js/jquery.dateFormat-1.0.js" type="text/javascript"></script><script src="/js/jquery.jcarousel.min.js" type="text/javascript"></script><script src="/js/jquery.jqtransform.js" type="text/javascript"></script><script src="/js/jquery.fileUploader.js" type="text/javascript"></script><script src="/js/ckeditor/ckeditor.js" type="text/javascript"></script><script src="/js/jquery.form.js" type="text/javascript"></script><script src="/js/async.js" type="text/javascript"></script><script src="/js/scripts.js" type="text/javascript"></script><script src="/js/socket.io/socket.io.js" type="text/javascript"></script><script src="/js/notification.js" type="text/javascript"></script><script src="/js/cv.js" type="text/javascript"></script><script src="/theme-3/js/scripts.js" type="text/javascript"></script><script src="/theme-3/js/minisite3/scripts.js" type="text/javascript"></script><script type="text/javascript" src="swfobject.js"></script>
 <!-- saved from url=(0014)about:internet -->
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
     <!-- 
@@ -11,7 +11,7 @@
     Learn more about Flex at http://flex.org 
     // -->
     <head>
-        <title>${title}</title>
+        <title></title>
         <meta name="google" value="notranslate" />         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
@@ -23,23 +23,44 @@
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
             body { margin:0; padding:0; overflow:auto; text-align:center; 
-                   background-color: ${bgcolor}; }   
+                   background-color: #ffffff; }   
             object:focus { outline:none; }
             #flashContent { display:none; }
         </style>
         
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
-        <!-- BEGIN Browser History required section ${useBrowserHistory}>
+        <!-- BEGIN Browser History required section -->
         <link rel="stylesheet" type="text/css" href="history/history.css" />
         <script type="text/javascript" src="history/history.js"></script>
-        <!${useBrowserHistory} END Browser History required section -->  
+        <!-- END Browser History required section -->  
             
         <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
-        function getCookie(key)
+        
+		var encodedCookieResult = null;
+		var getEncodedCookieCalled = false;
+		
+		function getEncodedCookie()
+		{
+			getEncodedCookieCalled = true;
+			 $.ajax({
+			  url: '/encodeCookies',
+			  success: function(data) {
+			//alert(data);
+			            encodedCookieResult = data;
+			    },
+			  dataType: 'text'
+			});
+		}
+
+        function getEncodedCookieResult()
+		{
+			return encodedCookieResult;
+		}
+		
+		        function getCookie(key)
 			{
 				var cookieValue = null;
-				
 				if (key)
 				{
 					var cookieSearch = key + "=";
@@ -65,7 +86,6 @@
 						}
 					}
 				}
-			
 				return cookieValue;
 			}
 			
@@ -89,28 +109,37 @@
 					}
 				}
 			}
+
+			function getCookies()
+			{
+				return document.cookie;
+			}
+
+function deleteCookie(cookie)
+			{
+				alert('delete cookie' + cookie);
+			}
 			
 
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
-            var swfVersionStr = "${version_major}.${version_minor}.${version_revision}";
+            var swfVersionStr = "11.1.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
-            var xiSwfUrlStr = "${expressInstallSwf}";
+            var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {};
              flashvars.sid = getCookie("express.sid");
-            flashvars.other = getCookie("other");
             var params = {};
             params.quality = "high";
-            params.bgcolor = "${bgcolor}";
+            params.bgcolor = "#ffffff";
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
             params.wmode="direct";
             var attributes = {};
-            attributes.id = "${application}";
-            attributes.name = "${application}";
+            attributes.id = "PipeJam3";
+            attributes.name = "PipeJam3";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "${swf}.swf", "flashContent", 
-                "${width}", "${height}", 
+                "PipeJam3.swf", "flashContent", 
+                "960", "640", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
@@ -125,7 +154,7 @@
         <div id="flashContent">
             <p>
                 To view this page ensure that Adobe Flash Player version 
-                ${version_major}.${version_minor}.${version_revision} or greater is installed. 
+                11.1.0 or greater is installed. 
             </p>
             <script type="text/javascript"> 
                 var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
@@ -135,23 +164,23 @@
         </div>
         
         <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="${width}" height="${height}" id="${application}">
-                <param name="movie" value="${swf}.swf" />
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="960" height="640" id="PipeJam3">
+                <param name="movie" value="PipeJam3.swf" />
                 <param name="quality" value="high" />
-                <param name="bgcolor" value="${bgcolor}" />
+                <param name="bgcolor" value="#ffffff" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="${swf}.swf" width="${width}" height="${height}">
+                <object type="application/x-shockwave-flash" data="PipeJam3.swf" width="960" height="640">
                     <param name="quality" value="high" />
-                    <param name="bgcolor" value="${bgcolor}" />
+                    <param name="bgcolor" value="#ffffff" />
                     <param name="allowScriptAccess" value="sameDomain" />
                     <param name="allowFullScreen" value="true" />
                 <!--<![endif]-->
                 <!--[if gte IE 6]>-->
                     <p> 
                         Either scripts and active content are not permitted to run or Adobe Flash Player version
-                        ${version_major}.${version_minor}.${version_revision} or greater is not installed.
+                        11.1.0 or greater is not installed.
                     </p>
                 <!--<![endif]-->
                     <a href="http://www.adobe.com/go/getflashplayer">

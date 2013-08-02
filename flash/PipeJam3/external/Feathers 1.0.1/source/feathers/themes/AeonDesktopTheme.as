@@ -87,7 +87,7 @@ package feathers.themes
 		[Embed(source="/../assets/images/aeon.xml",mimeType="application/octet-stream")]
 		protected static const ATLAS_XML:Class;
 
-		protected static const BUTTON_SCALE_9_GRID:Rectangle = new Rectangle(6, 6, 70, 10);
+		protected static var BUTTON_SCALE_9_GRID:Rectangle = new Rectangle(6, 6, 70, 10);
 		protected static const SELECTED_BUTTON_SCALE_9_GRID:Rectangle = new Rectangle(6, 6, 52, 10);
 		protected static const HSLIDER_FIRST_REGION:Number = 2;
 		protected static const HSLIDER_SECOND_REGION:Number = 75;
@@ -456,18 +456,18 @@ package feathers.themes
 			button.defaultSkin = new Scale9Image(buttonUpSkinTextures);
 			button.hoverSkin = new Scale9Image(buttonHoverSkinTextures);
 			button.downSkin = new Scale9Image(buttonDownSkinTextures);
-			button.disabledSkin = new Scale9Image(buttonDisabledSkinTextures);
-			button.defaultSelectedSkin = new Scale9Image(buttonSelectedUpSkinTextures);
-			button.selectedHoverSkin = new Scale9Image(buttonSelectedHoverSkinTextures);
-			button.selectedDownSkin = new Scale9Image(buttonSelectedDownSkinTextures);
-			button.selectedDisabledSkin = new Scale9Image(buttonSelectedDisabledSkinTextures);
+//			button.disabledSkin = new Scale9Image(buttonDisabledSkinTextures);
+//			button.defaultSelectedSkin = new Scale9Image(buttonSelectedUpSkinTextures);
+//			button.selectedHoverSkin = new Scale9Image(buttonSelectedHoverSkinTextures);
+//			button.selectedDownSkin = new Scale9Image(buttonSelectedDownSkinTextures);
+//			button.selectedDisabledSkin = new Scale9Image(buttonSelectedDisabledSkinTextures);
 
 			button.defaultLabelProperties.textFormat = this.defaultTextFormat;
 			button.disabledLabelProperties.textFormat = this.disabledTextFormat;
 
-			button.paddingTop = button.paddingBottom = 2;
-			button.paddingLeft = button.paddingRight = 10;
-			button.gap = 2;
+//			button.paddingTop = button.paddingBottom = 2;
+//			button.paddingLeft = button.paddingRight = 10;
+//			button.gap = 2;
 			button.minWidth = button.minHeight = 12;
 		}
 

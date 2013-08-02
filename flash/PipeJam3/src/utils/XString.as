@@ -15,6 +15,7 @@ package utils
 		 */		
 		public static function stringToBool(st:String):Boolean
 		{
+			if (st == null) return false;
 			var lcst:String = st.toLowerCase();
 			switch(lcst) {
 				case "false":

@@ -1,20 +1,26 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import events.BallTypeChangeEvent;
-	import events.EdgeSetChangeEvent;
-	import events.MoveEvent;
-	import starling.display.BlendMode;
-	import starling.display.Image;
-	import starling.display.Sprite;
-	import starling.filters.BlurFilter;
-	import starling.textures.Texture;
+	import assets.AssetsAudio;
 	
-	import flash.display.Shape;
+	import audio.AudioManager;
+	
+	import deng.fzip.FZip;
+	import deng.fzip.FZipFile;
+	
+	import events.EdgeSetChangeEvent;
+	import events.GameComponentEvent;
+	import events.GroupSelectionEvent;
+	import events.MenuEvent;
+	import events.MoveEvent;
+	import events.UndoEvent;
+	
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import graph.BoardNodes;
 	import graph.Edge;
@@ -23,22 +29,30 @@ package scenes.game.display
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.SubnetworkPort;
+	
+	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
-	import scenes.game.components.WorldMapLevelImage;
-	import scenes.login.LoginHelper;
+	import scenes.game.components.GridViewPanel;
 	
-	import starling.display.Quad;
+	import starling.display.BlendMode;
+	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
+	import starling.display.Shape;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.filters.BlurFilter;
+	import starling.textures.Texture;
 	
+	import utils.Base64Encoder;
 	import utils.XString;
 	
 	/**
-	 * Level contains multiple boards that each contain multiple pipes
+	 * Level all game components - boxes, lines and joints
 	 */
 	public class Level extends BaseComponent
 	{
@@ -46,79 +60,31 @@ package scenes.game.display
 		/** True to allow user to navigate to any level regardless of whether levels below it are solved for debugging */
 		public static var UNLOCK_ALL_LEVELS_FOR_DEBUG:Boolean = false;
 		
-		/** True if the balls should be dropped when the level has been solved, rather than displaying fireworks right away */
-		public static const DROP_WHEN_SUCCEEDED:Boolean = false;
-		
 		/** Name of this level */
 		public var level_name:String;
 		
-		/** True if not all boards on this level have succeeded */
-		public var failed:Boolean = true;
-		
-		/** The array that describes which color corresponds to a given edge set index */
-		private static var set_index_colors:Dictionary = new Dictionary();// set_index_colors[id] = 0xXXXXX (i.e. 0xFFFF00)
-		
-		/** Index indicating the next color to be used when assigning to an edge set index */
-		public static var color_index:uint = 0;
-		
-		/** True if this level has been solves and fireworks displayed, setting this will prevent euphoria from being displayed more than once */
-		public var level_has_been_solved_before:Boolean = false;
-		
-		/** All levels that contain a copy of a board from this level as a subboard on a board on that level */
-		public var levels_that_depend_on_this_level:Vector.<Level>;
-		
-		/** All levels containing boards that appear as subboards on any boards in this level */
-		public var levels_that_this_level_depends_on:Vector.<Level>;
-		
-		/** True if the levels that this level depends on have been solved, and the user can visit this level */
-		public var unlocked:Boolean = true;
-		
-		/** Rank refers to have many levels of dependency this level has. If no dependencies: rank = 0, if this level 
-		 * depends one level (contains a subboard from another level) that also depends on a level (contains a 
-		 * subboard from another level) then rank = 2, etc. 
-		 * This will correspond to how high up the level should be on the world map (0 = low, towards Start) */
-		public var rank:uint = 0;
-		
-		/** Index of this level within the overall rank, i.e. the 2nd level of rank = 5 has rank_index = 1, this may equate to 
-		 * an X coordinate on the world map */
-		public var rank_index:uint = 0;
-		
-		/** The icon associated with this level on the world map */
-		public var level_icon:WorldMapLevelImage;
-		
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelNodes:LevelNodes;
-		
-		private var m_edgeSetLayoutXML:XML;
 		
 		private var edgeDictionary:Dictionary = new Dictionary;
 		private var edgeSetDictionary:Dictionary = new Dictionary;
 		
 		private var selectedComponents:Vector.<GameComponent>;
-		//stored for undo
-		private var selectionChangedComponents:Vector.<GameComponent>;
 		
-		private var marqueeRect:starling.display.Shape = new starling.display.Shape;
-		
-		public static var LEVEL_SELECTED:String = "level_selected";
-		public static var COMPONENT_SELECTED:String = "component_selected";
-		public static var COMPONENT_UNSELECTED:String = "component_unselected";
-		public static var GROUP_SELECTED:String = "group_selected";
-		public static var GROUP_UNSELECTED:String = "group_unselected";
-		public static var MOVE_EVENT:String = "move_event";
-		public static var CENTER_ON_COMPONENT:String = "center_on_component";
-		
-		public static var SAVE_LAYOUT:String = "save_layout";
-		public static var SET_NEW_LAYOUT:String = "set_new_layout";
-		public static var SUBMIT_SCORE:String = "submit_score";
-		public static var SAVE_LOCALLY:String = "save_locally";
+		private var marqueeRect:Shape = new Shape();
 		
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
+		public var m_levelLayoutName:String;
+		private var m_levelOriginalLayoutXML:XML; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
-		private var m_levelLayoutXMLWrapper:XML;
+		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
-		private var m_levelText:String;
+		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
+		public var m_levelConstraintsXMLWrapper:XML;
+		public var m_tutorialTag:String;
+		public var tutorialManager:TutorialManager;
+		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
@@ -126,16 +92,22 @@ package scenes.game.display
 		private var edgeContainerDictionary:Dictionary;
 		
 		private var m_nodeList:Vector.<GameNode>;
-		private var m_edgeList:Vector.<GameEdgeContainer>;
+		public var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
+		private var m_visibleNodeManager:VisibleNodeManager;
 		
-		private var m_edgesContainer:Sprite = new Sprite();
 		private var m_nodesContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
 		private var m_errorContainer:Sprite = new Sprite();
+		private var m_edgesContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle;
 		private var m_backgroundImage:Image;
+		private var m_levelStartTime:Number;
+		
+		private var timer:Timer;
+		private var initialized:Boolean = false;
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -155,38 +127,20 @@ package scenes.game.display
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			levelNodes = _levelNodes;
-			m_levelLayoutXML = _levelLayoutXML;
-			m_levelConstraintsXML = _levelConstraintsXML;
-			color_index = 0;
-			level_has_been_solved_before = false;
-			levels_that_depend_on_this_level = new Vector.<Level>();
-			levels_that_this_level_depends_on = new Vector.<Level>();
+			m_levelOriginalLayoutXML = m_levelLayoutXML = _levelLayoutXML;
+			m_levelLayoutName = _levelLayoutXML.@id;
+			m_levelOriginalConstraintsXML = m_levelConstraintsXML = _levelConstraintsXML;
 			
-			m_levelText = m_levelLayoutXML.attribute("text").toString();
+			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
+			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
+				tutorialManager = new TutorialManager(m_tutorialTag);
+				m_layoutFixed = tutorialManager.getLayoutFixed();
+			}
 			
 			m_targetScore = int.MAX_VALUE;
 			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
 				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
 			}
-			
-			initialize();
-			setConstraints();
-			
-			if (USE_TILED_BACKGROUND) {
-				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-				background.repeat = true;
-				m_backgroundImage = new Image(background);
-				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
-				m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
-				m_backgroundImage.blendMode = BlendMode.NONE;
-				addChild(m_backgroundImage);
-			}
-			
-			addChild(m_errorContainer);
-			m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
-			addChild(m_nodesContainer);
-			addChild(m_jointsContainer);
-			addChild(m_edgesContainer);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -213,7 +167,8 @@ package scenes.game.display
 			trace(m_levelLayoutXML.@id);
 			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = maxX = maxY = 0;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			//create node for sets
 			m_nodeList = new Vector.<GameNode>(); 
@@ -235,7 +190,7 @@ package scenes.game.display
 							isWide = false;
 							isStarting = true;
 						}
-						gameNode = new GameNodeFixed(boxLayoutXML, isWide, isStarting);
+						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide, isStarting);
 					} else {
 						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
 					}
@@ -246,20 +201,19 @@ package scenes.game.display
 					for each (var myEdgeId:String in edgeSet.edge_ids) {
 						edgeSetEdges.push(edgeDictionary[myEdgeId]);
 					}
-					gameNode = new GameNode(boxLayoutXML, edgeSet, edgeSetEdges);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, edgeSetEdges);
 				}
 				
-				if(boxLayoutXML.hasOwnProperty('@visible'))
-					gameNode.visible = boxLayoutXML.@visible == "true" ? true : false;
+				gameNode.visible = getVisible(boxLayoutXML);
 				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
-				
-				minX = Math.min(minX, gameNode.m_boundingBox.left);
-				minY = Math.min(minY, gameNode.m_boundingBox.top);
-				maxX = Math.max(maxX, gameNode.m_boundingBox.right);
-				maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
-				
+				if (gameNode.visible) {
+					minX = Math.min(minX, gameNode.m_boundingBox.left);
+					minY = Math.min(minY, gameNode.m_boundingBox.top);
+					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				}
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -305,16 +259,16 @@ package scenes.game.display
 					}
 				}
 				
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML, foundNode, foundPort);
-				if(jointLayoutXML.hasOwnProperty('@visible'))
-					joint.visible = jointLayoutXML.@visible == "true" ? true : false;
+				var joint:GameJointNode = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				joint.visible = getVisible(jointLayoutXML);
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
-				
-				minX = Math.min(minX, joint.m_boundingBox.left);
-				minY = Math.min(minY, joint.m_boundingBox.top);
-				maxX = Math.max(maxX, joint.m_boundingBox.right);
-				maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				if (joint.visible) {
+					minX = Math.min(minX, joint.m_boundingBox.left);
+					minY = Math.min(minY, joint.m_boundingBox.top);
+					maxX = Math.max(maxX, joint.m_boundingBox.right);
+					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				}
 			}
 			
 			// Process <line> 's
@@ -322,10 +276,11 @@ package scenes.game.display
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
 				var boundingBox:Rectangle = createLine(edgeXML, false, copyLines);
-				if (boundingBox) {
+				var edgeVisible:Boolean = getVisible(edgeXML);
+				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
+					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
@@ -347,38 +302,50 @@ package scenes.game.display
 			
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
-			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+	//		m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
+			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
-			addEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
-			addEventListener(Level.COMPONENT_UNSELECTED, onComponentUnselection);
-			addEventListener(Level.GROUP_SELECTED, onGroupSelection);
-			addEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
-			addEventListener(Level.MOVE_EVENT, onMoveEvent);
+			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
+			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
+			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
+			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
+			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 		}
 		
 		public function setConstraints():void
 		{
+			var gameNode:GameNode;
+			
 			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
 			{
-				var gameNode:GameNode = boxDictionary[String(boxConstraint.@id)];
+				gameNode = boxDictionary[String(boxConstraint.@id)];
 				if (!gameNode) {
 					throw new Error("Box node not found for id found in constraints file:" + boxConstraint.@id);
 				}
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
 				if (constraintIsEditable) {
-					gameNode.m_isWide = constraintIsWide;
+					gameNode.handleWidthChange(constraintIsWide, true);
 				} else {
 					if (gameNode.isWide() != constraintIsWide) {
-						throw new Error("Mismatch between constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
+						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
+					gameNode.handleWidthChange(constraintIsWide, true);
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
-					throw new Error("Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
+					gameNode.m_isEditable = constraintIsEditable;
+					gameNode.m_isDirty = true;
+					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
+			refreshTroublePoints();
+//			if(gameNode)
+//			{
+//				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, gameNode.m_isWide, null, false, null));
+//			}
+				
 		}
 		
 		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
@@ -449,11 +416,7 @@ package scenes.game.display
 			if (!myNode) {
 				trace("Warning! Box not found for boxId: " + boxId);
 			}
-			//normalize edge Array, and then slide game edge to right x,y value
-			var minXedge:Number = Number.POSITIVE_INFINITY;
-			var minYedge:Number = Number.POSITIVE_INFINITY;
-			var maxXedge:Number = Number.NEGATIVE_INFINITY;
-			var maxYedge:Number = Number.NEGATIVE_INFINITY;
+			
 			
 			//create edge array
 			var edgeArray:Array = new Array;
@@ -488,12 +451,55 @@ package scenes.game.display
 				edgeArray.push(newStartPt);
 				edgeArray.push(newEndPt);
 			}
+			if(edgeArray.length < 2)
+				return null;
+			
+			var bb:Rectangle = createEdgePointBoundingBox(edgeArray);
+			
+			var lineID:String = edgeXML.@id;
+			var newGameEdge:GameEdgeContainer;
+			// get editable property from related edge or end segment/joint
+			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
+			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
+			} else {
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
+			}
+			
+			newGameEdge.visible = getVisible(edgeXML);
+			
+			m_edgeList.push(newGameEdge);
+			if (edgeIsCopy) {
+				copyLines.push(newGameEdge);
+			}
+			
+			if (edgeContainerDictionary.hasOwnProperty(edgeContainerID) && (edgeContainerDictionary[edgeContainerID] is GameEdgeContainer)) {
+				var oldEdgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeContainerID] as GameEdgeContainer;
+				if (m_edgeList.indexOf(oldEdgeContainer) > -1) {
+					m_edgeList.splice(m_edgeList.indexOf(oldEdgeContainer), 1);
+				}
+				oldEdgeContainer.removeFromParent(true);
+			}
+			
+			edgeContainerDictionary[edgeContainerID] = newGameEdge;
+			return bb;
+		}
+		
+		//figures out edge point min and max values, creates bounding box, and then normalizes points
+		public function createEdgePointBoundingBox(edgeArray:Array):Rectangle
+		{
+			//normalize edge Array, and then slide game edge to right x,y value
+			var minXedge:Number = Number.POSITIVE_INFINITY;
+			var minYedge:Number = Number.POSITIVE_INFINITY;
+			var maxXedge:Number = Number.NEGATIVE_INFINITY;
+			var maxYedge:Number = Number.NEGATIVE_INFINITY;
 			
 			var startPt:Point = edgeArray[0];
 			var endPt:Point = edgeArray[edgeArray.length-1];
 			
 			if(startPt == null || endPt == null)
 				return null;
+			
 			//get bounding box points, using start and end points as reference
 			if(startPt.x < endPt.x)
 			{
@@ -525,41 +531,55 @@ package scenes.game.display
 				edgeArray[i].y -= minYedge;
 			}
 			
-			var lineID:String = edgeXML.@id;
-			
 			var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
-			var newGameEdge:GameEdgeContainer;
-			// get editable property from related edge or end segment/joint
-			
-			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
-			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
-			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, useExistingLines, edgeIsCopy);
-			}
-			if(edgeXML.hasOwnProperty('@visible'))
-				newGameEdge.visible = edgeXML.@visible == "true" ? true : false;
-			
-			m_edgeList.push(newGameEdge);
-			if (edgeIsCopy) {
-				copyLines.push(newGameEdge);
-			}
-			edgeContainerDictionary[edgeContainerID] = newGameEdge;
 			
 			return bb;
 		}
 		
-		public function takeSnapshot():LevelNodes
-		{
-			return levelNodes.clone();
-		}
-		
-		protected function onAddedToStage(event:starling.events.Event):void
+		protected function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			if (m_disposed) {
+				restart(); // undo progress if left the level and coming back
+			} else {
+				start();
+			}
 			
-			setDisplayData();
+			refreshTroublePoints();
+		}
+		
+		public function start():void
+		{
+			if (!initialized) {
+				initialize();
+				setConstraints();
+				
+				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
+					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
+					var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
+					background.repeat = true;
+					m_backgroundImage = new Image(background);
+					m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
+					m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
+					m_backgroundImage.blendMode = BlendMode.NONE;
+					addChild(m_backgroundImage);
+				}
+				
+				if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
+				if (m_jointsContainer == null) m_jointsContainer = new Sprite();
+				if (m_errorContainer == null)  m_errorContainer  = new Sprite();
+				if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
+				m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
+				addChild(m_nodesContainer);
+				addChild(m_jointsContainer);
+				addChild(m_errorContainer);
+				addChild(m_edgesContainer);
+				initialized = true;
+			}
 			
+			m_disposed = false;
+			m_levelStartTime = new Date().time;
+			if (tutorialManager) tutorialManager.startLevel();
 			draw();
 			
 			//now that everything is attached and added to parents, update port position indexes, for both nodes and joints
@@ -572,61 +592,95 @@ package scenes.game.display
 				jointElem.updatePortIndexes();
 			}
 			
-			dispatchEvent(new starling.events.Event(LEVEL_SELECTED, true, this));
-			trace(m_levelLayoutXML.@id);
-			takeSnapshot();
-		}	
+			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
+		}
 		
-		public function onSaveLayoutFile(event:starling.events.Event):void
+		public function restart():void
+		{
+			if (!initialized) {
+				start();
+			} else {
+				if (tutorialManager) tutorialManager.startLevel();
+				m_levelStartTime = new Date().time;
+			}
+			setNewLayout(null, m_levelOriginalLayoutXML);
+			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
+			setConstraints();
+			trace("Restarted: " + m_levelLayoutXML.@id);
+		}
+		
+		public function onSaveLayoutFile(event:MenuEvent):void
 		{
 			updateLayoutXML();
 			
-			if(LoginHelper.levelObject != null)
+			if(LoginHelper.getLoginHelper().levelObject != null)
 			{
-				m_levelLayoutXML.@id = event.data;
-				LoginHelper.getLoginHelper().saveLayoutFile(m_levelLayoutXMLWrapper);	
-			}
-			else
-			{
-				//save locally?
+				m_levelLayoutXMLWrapper.@id = event.layoutName;
+				LoginHelper.getLoginHelper().levelObject.layoutName = event.layoutName;
+				var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
+				var layoutZipEncodedString:String = encodeBytes(layoutZip);
+				LoginHelper.getLoginHelper().saveLayoutFile(layoutZipEncodedString);	
 			}
 		}
 		
-		
-		public function onSubmitScore(event:starling.events.Event):void
+		public function zipXMLFile(xmlFile:XML, name:String):ByteArray
 		{
+			var newZip:FZip = new FZip();
+			var zipByteArray:ByteArray = new ByteArray();
+			zipByteArray.writeUTFBytes(xmlFile.toString());
+			newZip.addFile(name,  zipByteArray);
+			var byteArray:ByteArray = new ByteArray;
+			newZip.serialize(byteArray);
+			return byteArray;
+		}
+		
+		//as it turns out, I'm going to need to submit two files mashed together in one network POST
+		//so I mark them with the length at the front
+		//and because that length is going to be less than 10 digits, I mark that with it's length
+		//so you end up with a file like this 3456xxxx, where 3 tells you the next three chars are
+		//the length of the following file
+		public function encodeBytes(bytes:ByteArray):String
+		{
+			var encoder:Base64Encoder = new Base64Encoder();
+			encoder.encodeBytes(bytes);
+			var encodedString:String = encoder.toString();
+			var strLen:String = new String(encodedString.length);
+			var strLenLen:String = new String(strLen.length);
+			return strLenLen + strLen + encodedString;
+		}
+		
+		public function onPutLevelInDatabase(type:String, currentScore:int):void
+		{
+			updateLayoutXML();
+			var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
+			var layoutZipEncodedString:String = encodeBytes(layoutZip);
 			updateConstraintXML();
-			m_levelLayoutXML.@id = "Layout" + (Math.round(Math.random()*1000));
-			var currentScore:int = 300;
-			LoginHelper.getLoginHelper().saveConstraintFile(m_levelConstraintsXML, currentScore);	
+			var constraintsZip:ByteArray = zipXMLFile(this.m_levelConstraintsXMLWrapper, "costraints");
+			var constraintsZipEncodedString:String = encodeBytes(constraintsZip);
+			LoginHelper.getLoginHelper().submitLevel(layoutZipEncodedString+constraintsZipEncodedString, currentScore, type);	
 		}
 		
-		public function onSaveLocally(event:starling.events.Event):void
-		{
-
-		}
-		
-		protected function onRemovedFromStage(event:starling.events.Event):void
+		protected function onRemovedFromStage(event:Event):void
 		{
 			//disposeChildren();
 		}
 		
-		public function setNewLayout(event:starling.events.Event, useExistingLines:Boolean = false):void
+		public function setNewLayout(name:String, newLayoutXML:XML, useExistingLines:Boolean = false):void
 		{
-			m_levelLayoutXML = event.data as XML;
+			m_levelLayoutXML = newLayoutXML;
+			m_levelLayoutName = name;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutXML.level != undefined)
 				m_levelLayoutXML = m_levelLayoutXML.level[0];
 			
-			m_edgeList = new Vector.<GameEdgeContainer>;
-			
 			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = maxX = maxY = 0;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
 			
 			var children:XMLList = m_levelLayoutXML.children();
 			//set box and joint positions first
 			for each(var child:XML in children)
-			{ 
+			{
 				var childName:String = child.localName();
 				var gameNode:GameNodeBase = null;
 				if(childName.indexOf("box") != -1)
@@ -642,10 +696,13 @@ package scenes.game.display
 				
 				if(gameNode)
 				{
+					if (!useExistingLines) {
+						gameNode.removeEdges();
+					}
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
-					if(child.hasOwnProperty('@visible'))
-						gameNode.visible = child.@visible == "true" ? true : false;
+					
+					gameNode.visible = getVisible(child);
 					
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
@@ -654,20 +711,56 @@ package scenes.game.display
 				}
 			}
 			//update lines
-			edgeContainerDictionary = new Dictionary();
+			
+			if(useExistingLines == false)
+			{
+				//delete all existing edges, and recreate
+				for each(var existingEdge:GameEdgeContainer  in m_edgeList) {
+					existingEdge.removeFromParent(true);
+				}
+				edgeContainerDictionary = new Dictionary();
+				m_edgeList = new Vector.<GameEdgeContainer>;
+			}
+			
 			for each(var edge:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edge, useExistingLines);
-					
-				if(boundingBox)
+				var edgeID:String = edge.@id;
+				var edgeContainer:GameEdgeContainer = edgeContainerDictionary[edgeID];
+				var boundingBox:Rectangle;
+				if(useExistingLines == false && edgeContainer == null)
 				{
-					minX = Math.min(minX, boundingBox.x);
-					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x+boundingBox.width);
-					maxY = Math.max(maxY, boundingBox.y+boundingBox.height);
+					boundingBox = createLine(edge, useExistingLines);
+					
+					if(boundingBox)
+					{
+						minX = Math.min(minX, boundingBox.left);
+						minY = Math.min(minY, boundingBox.top);
+						maxX = Math.max(maxX, boundingBox.right);
+						maxY = Math.max(maxY, boundingBox.bottom);
+					}
+				}
+				else
+				{
+					if(edgeContainer)
+					{
+						//create edge array
+						var edgeArray:Array = new Array;
+						
+						var edgePoints:XMLList = edge.point;
+						for each(var pointXML:XML in edgePoints)
+						{
+							var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
+							edgeArray.push(pt);
+						}
+						boundingBox = createEdgePointBoundingBox(edgeArray);
+						edgeContainer.createLine(edgeArray);
+						edgeContainer.m_boundingBox = boundingBox;
+						edgeContainer.x = edgeContainer.m_boundingBox.x/* - m_boundingBox.x */;
+						edgeContainer.y = edgeContainer.m_boundingBox.y/* - m_boundingBox.y */;
+					}
 				}
 			}
-			trace("Level " + m_levelLayoutXML.attribute("name") + " m_boundingBox = " + m_boundingBox);
+			trace("Level " + m_levelLayoutXML.attribute("id") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 			
 			draw();
@@ -680,15 +773,16 @@ package scenes.game.display
 			for each(var child:XML in children)
 			{
 				var childName:String = child.localName();
+				var currentLayoutX:Number, currentLayoutY:Number;
 				if(childName.indexOf("box") != -1)
 				{
 					var boxID:String = child.@id;
 					var edgeSet:GameNode = boxDictionary[boxID];
-					var x:Number = (edgeSet.x + m_boundingBox.x + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
-					child.@x = x.toFixed(2);
-					var y:Number = (edgeSet.y + m_boundingBox.y + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
-					child.@y = y.toFixed(2);
-					child.@visible = edgeSet.visible;
+					currentLayoutX = (edgeSet.x + /*m_boundingBox.x*/ + edgeSet.m_boundingBox.width/2) / Constants.GAME_SCALE;
+					child.@x = currentLayoutX.toFixed(2);
+					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
+					child.@y = currentLayoutY.toFixed(2);
+					child.@visible = edgeSet.visible.toString();
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
@@ -696,47 +790,37 @@ package scenes.game.display
 					var joint:GameJointNode = jointDictionary[jointID];
 					if(joint != null)
 					{
-						var x:Number = (joint.x + m_boundingBox.x + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
-						child.@x = x.toFixed(2);
-						var y:Number = (joint.y + m_boundingBox.y + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
-						child.@y = y.toFixed(2);
-						child.@visible = joint.visible;
+						currentLayoutX = (joint.x + /*m_boundingBox.x*/ + joint.m_boundingBox.width/2) / Constants.GAME_SCALE;
+						child.@x = currentLayoutX.toFixed(2);
+						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
+						child.@y = currentLayoutY.toFixed(2);
+						child.@visible = joint.visible.toString();
 					}
 				}
 				else if(childName.indexOf("line") != -1)
 				{
-					
 					var lineID:String = child.@id;
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
 					if(edgeContainer != null)
 					{
-						child.@visible = edgeContainer.visible;
+						child.@visible = edgeContainer.visible.toString();
 						
 						//remove all current points, and then add new ones
 						delete child.point;
 						
-						if(edgeContainer.m_jointPoints.length != 6)
+						if(edgeContainer.m_jointPoints.length != GameEdgeContainer.NUM_JOINTS)
 							trace("Wrong number of joint points " + lineID);
 						for(var i:int = 0; i<edgeContainer.m_jointPoints.length; i++)
 						{
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
-							var x:Number = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
-							ptXML.@x = x.toFixed(2);
-							var y:Number = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
-							ptXML.@y = y.toFixed(2);
-												
+							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							ptXML.@x = currentLayoutX.toFixed(2);
+							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							ptXML.@y = currentLayoutY.toFixed(2);
+							
 							child.appendChild(ptXML);
 						}
-						
-						if(child.frombox != undefined)
-							child.frombox.@port = edgeContainer.incomingEdgePosition;
-						else if(child.fromjoint != undefined)
-							child.fromjoint.@port = edgeContainer.incomingEdgePosition;
-						if(child.tobox != undefined)
-							child.tobox.@port = edgeContainer.outgoingEdgePosition;
-						else if(child.tojoint != undefined)
-							child.tojoint.@port = edgeContainer.outgoingEdgePosition;
 					}
 				}
 			}
@@ -756,45 +840,83 @@ package scenes.game.display
 				var width:Boolean = node.m_isWide;
 				var widthString:String = (width == true) ? "wide" : "narrow";
 				
+				//changed only in editor mode
+				var editable:Boolean = node.m_isEditable;
+				var editableString:String = (editable == true) ? "true" : "false";
+				
 				var child:XML = <box/>;
 				child.@id = id;
 				child.@width = widthString;
+				child.@editable = editableString;
 					
 				m_levelConstraintsXML.appendChild(child);
 			}
+			// TODO: Hardcoding "world" id correct?
+			m_levelConstraintsXMLWrapper = <graph id="world"/>;
+			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
-		
-
 		
 		override public function dispose():void
 		{
+			initialized = false;
+			trace("Disposed of : " + m_levelLayoutXML.@id);
 			if (m_disposed) {
 				return;
+			}
+			
+			if (timer) {
+				timer.stop();
+				timer.removeEventListener(TimerEvent.TIMER, updateVisibleList);
+			}
+			timer == null;
+			
+			if (tutorialManager) tutorialManager.endLevel();
+			
+			for each(var gameNodeSet:GameNode in m_nodeList) {
+				gameNodeSet.removeFromParent(true);
+			}
+			m_nodeList = new Vector.<GameNode>();
+			boxDictionary = new Dictionary();
+			for each(var jointElem:GameNodeBase in m_jointList) {
+				jointElem.removeFromParent(true);
+			}
+			m_jointList = new Vector.<GameJointNode>();
+			jointDictionary = new Dictionary();
+			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
+				gameEdge.removeFromParent(true);
+			}
+			m_edgeList = new Vector.<GameEdgeContainer>();
+			edgeContainerDictionary = null;
+			
+			if (m_nodesContainer) {
+				while (m_nodesContainer.numChildren > 0) m_nodesContainer.getChildAt(0).removeFromParent(true);
+				m_nodesContainer.removeFromParent(true);
+			}
+			if (m_jointsContainer) {
+				while (m_jointsContainer.numChildren > 0) m_jointsContainer.getChildAt(0).removeFromParent(true);
+				m_jointsContainer.removeFromParent(true);
+			}
+			if (m_errorContainer) {
+				while (m_errorContainer.numChildren > 0) m_errorContainer.getChildAt(0).removeFromParent(true);
+				m_errorContainer.removeFromParent(true);
+			}
+			if (m_edgesContainer) {
+				while (m_edgesContainer.numChildren > 0) m_edgesContainer.getChildAt(0).removeFromParent(true);
+				m_edgesContainer.removeFromParent(true);
 			}
 			
 			disposeChildren();
 			
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
-			removeEventListener(Level.COMPONENT_SELECTED, onComponentSelection);
-			removeEventListener(Level.COMPONENT_UNSELECTED, onComponentSelection);
-			removeEventListener(Level.GROUP_SELECTED, onGroupSelection);
-			removeEventListener(Level.GROUP_UNSELECTED, onGroupUnselection);
-			removeEventListener(Level.MOVE_EVENT, onMoveEvent);
-			
-			for each(var gameNodeSet:GameNode in m_nodeList) {
-				gameNodeSet.removeFromParent(true);
-			}
-			
-			m_nodeList = null;
-			boxDictionary = null;
-			
-			for each(var gameEdge:GameEdgeContainer in m_edgeList) {
-				gameEdge.removeFromParent(true);
-			}
-			
-			m_edgeList = null;
+			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
+			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
+			removeEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
+			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
+			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			
 			super.dispose();
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
 		}
 		
 		private function onTouch(event:TouchEvent):void
@@ -812,57 +934,75 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
+			if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
+			if (!evt.silent) {
+				if (evt.newIsWide) {
+					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
+				} else {
+					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
+				}
+			}
 			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
-			for each (var edgeID:String in edgeSet.edge_ids)
-			{
-				var edge:Edge = this.edgeDictionary[edgeID];
-				if(edge != null)
+			if(edgeSet != null)
+				for each (var edgeID:String in edgeSet.edge_ids)
 				{
-					edge.is_wide = !edge.is_wide;
+					var edge:Edge = this.edgeDictionary[edgeID];
+					if(edge != null)
+					{
+						edge.is_wide = evt.newIsWide;
+					}
+					//var outID:String = edgeID + "__OUT__";
+					//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
+					//if(outgoingGameEdgeContainer)
+						//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+					//var inID:String = edgeID+"__IN__";
+					//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
+					//if(incomingGameEdgeContainer)
+						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
 				}
-				//var outID:String = edgeID + "__OUT__";
-				//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
-				//if(outgoingGameEdgeContainer)
-					//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-				//var inID:String = edgeID+"__IN__";
-				//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
-				//if(incomingGameEdgeContainer)
-					//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent, evt.point));
+		}
+		
+		private function refreshTroublePoints():void
+		{
+			for (var i:int = 0; i < m_edgeList.length; i++) {
+				m_edgeList[i].refreshTroublePoints();
 			}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, this));
 		}
 		
 		//data object should be in final selected/unselected state
-		private function componentSelectionChanged(component:GameNodeBase):void
-		{		
-			if(component.m_isSelected)
+		private function componentSelectionChanged(component:GameComponent, selected:Boolean):void
+		{
+			if(selected)
 			{
 				if(selectedComponents.indexOf(component) == -1)
 					selectedComponents.push(component);
 				//push any connecting edges that have both connected nodes selected
-				for each(var edge:GameEdgeContainer in component.m_incomingEdges)
-				{
-					var fromComponent:GameNodeBase = edge.m_fromComponent;
-					if(selectedComponents.indexOf(fromComponent) != -1)
+				if (component is GameNodeBase) {
+					for each(var edge:GameEdgeContainer in (component as GameNodeBase).m_incomingEdges)
 					{
-						if(selectedComponents.indexOf(edge) == -1)
+						var fromComponent:GameNodeBase = edge.m_fromComponent;
+						if(selectedComponents.indexOf(fromComponent) != -1)
 						{
-							selectedComponents.push(edge);
+							if(selectedComponents.indexOf(edge) == -1)
+							{
+								selectedComponents.push(edge);
+							}
+							edge.componentSelected(true);
 						}
-						edge.componentSelected(true);
 					}
-				}
-				for each(var edge1:GameEdgeContainer in component.m_outgoingEdges)
-				{
-					var toComponent:GameNodeBase = edge1.m_toComponent;
-					if(selectedComponents.indexOf(toComponent) != -1)
+					for each(var edge1:GameEdgeContainer in (component as GameNodeBase).m_outgoingEdges)
 					{
-						if(selectedComponents.indexOf(edge1) == -1)
+						var toComponent:GameNodeBase = edge1.m_toComponent;
+						if(selectedComponents.indexOf(toComponent) != -1)
 						{
-							selectedComponents.push(edge1);
+							if(selectedComponents.indexOf(edge1) == -1)
+							{
+								selectedComponents.push(edge1);
+							}
+							edge1.componentSelected(true);
 						}
-						edge1.componentSelected(true);
 					}
 				}
 			}
@@ -871,170 +1011,173 @@ package scenes.game.display
 				var index:int = selectedComponents.indexOf(component);
 				if(index != -1)
 					selectedComponents.splice(index, 1);
-				
-				for each(var edge2:GameEdgeContainer in component.m_incomingEdges)
-				{
-					if(selectedComponents.indexOf(edge2) != -1)
+				if (component is GameNodeBase) {
+					for each(var edge2:GameEdgeContainer in (component as GameNodeBase).m_incomingEdges)
 					{
-						var edgeIndex:int = selectedComponents.indexOf(edge2);
-						selectedComponents.splice(edgeIndex, 1);
-						edge2.componentSelected(false);
+						if(selectedComponents.indexOf(edge2) != -1)
+						{
+							var edgeIndex:int = selectedComponents.indexOf(edge2);
+							selectedComponents.splice(edgeIndex, 1);
+							edge2.componentSelected(false);
+						}
 					}
-				}
-				for each(var edge3:GameEdgeContainer in component.m_outgoingEdges)
-				{
-					if(selectedComponents.indexOf(edge3) != -1)
+					for each(var edge3:GameEdgeContainer in (component as GameNodeBase).m_outgoingEdges)
 					{
-						var edgeIndex1:int = selectedComponents.indexOf(edge3);
-						selectedComponents.splice(edgeIndex1, 1);
-						edge3.componentSelected(false);
-					}
-				}
-			}
-		}
-		
-		private function onComponentSelection(e:starling.events.Event):void
-		{
-			var component:GameNodeBase = e.data as GameNodeBase;
-			if(component)
-				componentSelectionChanged(component);
-			
-			selectionChangedComponents = new Vector.<GameComponent>();
-			selectionChangedComponents.push(component);
-			addSelectionUndoEvent(selectionChangedComponents);
-		}
-		
-		private function onComponentUnselection(e:starling.events.Event):void
-		{
-			var component:GameNodeBase = e.data as GameNodeBase;
-			if(component)
-				componentSelectionChanged(component);
-			
-			selectionChangedComponents = new Vector.<GameComponent>();
-			selectionChangedComponents.push(component);
-			addSelectionUndoEvent(selectionChangedComponents);
-		}
-		
-		private function onGroupSelection(e:starling.events.Event):void
-		{
-			var component:GameNodeBase = e.data as GameNodeBase;
-			var groupDictionary:Dictionary = new Dictionary;
-			component.findGroup(groupDictionary);
-			selectionChangedComponents = new Vector.<GameComponent>();
-			for each(var comp:GameComponent in groupDictionary)
-			{
-				if(selectedComponents.indexOf(comp) == -1)
-				{
-					comp.componentSelected(true);
-					if(comp is GameNodeBase)
-					{
-						componentSelectionChanged(comp as GameNodeBase);
-						selectionChangedComponents.push(comp);
+						if(selectedComponents.indexOf(edge3) != -1)
+						{
+							var edgeIndex1:int = selectedComponents.indexOf(edge3);
+							selectedComponents.splice(edgeIndex1, 1);
+							edge3.componentSelected(false);
+						}
 					}
 				}
 			}
+		}
+		
+		private function onComponentSelection(evt:GameComponentEvent):void
+		{
+			var component:GameComponent = evt.component;
+			if(component)
+				componentSelectionChanged(component, true);
+			
+			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
+			selectionChangedComponents.push(component);
 			addSelectionUndoEvent(selectionChangedComponents, true);
 		}
 		
-		private function onGroupUnselection(e:starling.events.Event):void
+		private function onComponentUnselection(evt:GameComponentEvent):void
 		{
-			var component:GameNodeBase = e.data as GameNodeBase;
-			var groupDictionary:Dictionary = new Dictionary;
-			component.findGroup(groupDictionary);
-			selectionChangedComponents = new Vector.<GameComponent>();
-			for each(var comp:GameComponent in groupDictionary)
-			{
-				comp.componentSelected(false);
-				if(comp is GameNodeBase)
-				{
-					componentSelectionChanged(comp as GameNodeBase);
-					selectionChangedComponents.push(comp);
-				}
-			}
-
-			addSelectionUndoEvent(selectionChangedComponents);
+			var component:GameComponent = evt.component;
+			if(component)
+				componentSelectionChanged(component, false);
+			
+			var selectionChangedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
+			selectionChangedComponents.push(component);
+			addSelectionUndoEvent(selectionChangedComponents, false);
 		}
 		
-		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, addToLast:Boolean = false):void
+		private function onGroupSelection(evt:GroupSelectionEvent):void
 		{
-			var undoData:Object = new Object();
-			undoData.target = this;
-			undoData.selection = selection;
-			undoData.addToLast = addToLast;
-			var undoEvent:Event = new Event(Level.GROUP_SELECTED,false,undoData);
-			dispatchEvent(new Event(World.UNDO_EVENT, true, undoEvent));
+			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
+			for each (var comp:GameComponent in selectionChangedComponents) {
+				comp.componentSelected(true);
+				componentSelectionChanged(comp, true);
+			}
+			addSelectionUndoEvent(evt.selection.concat(), true, true);
+		}
+		
+		private function onGroupUnselection(evt:GroupSelectionEvent):void
+		{
+			var selectionChangedComponents:Vector.<GameComponent> = evt.selection.concat();
+			for each (var comp:GameComponent in selectionChangedComponents) {
+				comp.componentSelected(false);
+				componentSelectionChanged(comp, false);
+			}
+			addSelectionUndoEvent(evt.selection.concat(), false);
+		}
+		
+		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void
+		{
+			if (selection.length == 0) {
+				return;
+			}
+			var component:GameComponent = selection[0];
+			var eventToUndo:Event;
+			if (selected) {
+				eventToUndo = new GroupSelectionEvent(GroupSelectionEvent.GROUP_SELECTED, component, selection);
+			} else {
+				eventToUndo = new GroupSelectionEvent(GroupSelectionEvent.GROUP_UNSELECTED, component, selection);
+			}
+			var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+			eventToDispatch.addToLast = addToLast;
+			dispatchEvent(eventToDispatch);
 		}
 		
 		public function unselectAll(addEventToLast:Boolean = false):void
 		{
 			//make a copy of the selected list for the undo event
-			var currentSelection:Vector.<GameComponent> = new Vector.<GameComponent>();
+			var currentSelection:Vector.<GameComponent> = selectedComponents.concat();
+			selectedComponents = new Vector.<GameComponent>();
 			
-			for each(var comp:GameComponent in selectedComponents)
+			for each(var comp:GameComponent in currentSelection)
 			{
 				comp.componentSelected(false);
-				currentSelection.push(comp);
+				componentSelectionChanged(comp, false);
 			}
-
+			
 			if(currentSelection.length)
 			{
-				addSelectionUndoEvent(currentSelection, addEventToLast);
-				selectedComponents = new Vector.<GameComponent>;
+				addSelectionUndoEvent(currentSelection, false, addEventToLast);
 			}
 		}
 		
-		private function onMoveEvent(e:starling.events.Event):void
+		private function onMoveEvent(evt:MoveEvent):void
 		{
-			var touch:Touch = e.data.touches[0] as Touch;
-			
-			var currentMoveLocation:Point = touch.getLocation(this);
-			var previousLocation:Point = touch.getPreviousLocation(this);
-			var delta:Point = currentMoveLocation.subtract(previousLocation);
-			
+			var delta:Point = evt.delta;
+			var oldX:Number;
+			var oldY:Number;
 			//if component isn't in the currently selected group, unselect everything, and then move component
-			if(selectedComponents.indexOf(e.target) == -1)
+			if(selectedComponents.indexOf(evt.component) == -1)
 			{
 				unselectAll();
-				(e.target as GameComponent).componentMoved(delta);
+				evt.component.componentMoved(delta);
+			//	m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
+				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
 			else
+			{
+				var movedGameNode:Boolean = false;
 				for each(var component:GameComponent in selectedComponents)
+				{
 					component.componentMoved(delta);
+//					if(component is GameNodeBase)
+//						m_visibleNodeManager.updateNode(component as GameNodeBase);
+					if(component is GameNode)
+						movedGameNode = true;
+				}
+				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(m_nodeList);
+			}
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
-			var undoData:Object = undoEvent.data;
-			var component:GameNodeBase = undoData.component as GameNodeBase;
-			if(undoEvent.type == GROUP_SELECTED) //individual selections come through here also
+			if (undoEvent is GroupSelectionEvent) //individual selections come through here also
 			{
-				if(undoData.selection)
+				var groupEvt:GroupSelectionEvent = undoEvent as GroupSelectionEvent;
+				if (groupEvt.selection)
 				{
-					for each(var selectedComp:GameComponent in undoData.selection)
+					for each(var selectedComp:GameComponent in groupEvt.selection)
 					{
 						if(selectedComp is GameNodeBase)
 						{
-							selectedComp.componentSelected(!selectedComp.m_isSelected);
-						
-							componentSelectionChanged(selectedComp as GameNodeBase);
+							var performSelection:Boolean;
+							if (undoEvent.type == GroupSelectionEvent.GROUP_SELECTED) {
+								performSelection = !isUndo; // select if redo, unselect if undo
+							} else {
+								performSelection = isUndo; // unselect if redo, select if undo
+							}
+							selectedComp.componentSelected(performSelection);
+							componentSelectionChanged(selectedComp as GameNodeBase, performSelection);
 						}
 					}
 				}
 			}
-			else if(undoEvent.type == MOVE_EVENT)
+			else if (undoEvent is MoveEvent)
 			{
+				var moveEvt:MoveEvent = undoEvent as MoveEvent;
 				var delta:Point;
-				if(!isUndo)
-					delta = new Point(undoData.endPoint.x-undoData.startPoint.x, undoData.endPoint.y-undoData.startPoint.y);
-				else
-					delta = new Point(undoData.startPoint.x-undoData.endPoint.x, undoData.startPoint.y-undoData.endPoint.y);
-				
+				if (!isUndo) {
+					delta = moveEvt.delta.clone();
+				} else {
+					delta = new Point(-moveEvt.delta.x, -moveEvt.delta.y);
+				}
+				trace("isUndo:" + isUndo + " delta:" + delta);
 				//not added as a temp selection, so move separately
-				if(component)
-					component.componentMoved(delta);
+				if (moveEvt.component)
+					moveEvt.component.componentMoved(delta);
 				for each(var selectedComponent:GameComponent in selectedComponents)
 				{
-					if(component != selectedComponent)
+					if (moveEvt.component != selectedComponent)
 						selectedComponent.componentMoved(delta);
 				}
 			}
@@ -1052,31 +1195,35 @@ package scenes.game.display
 			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.m_boundingBox.x - m_boundingBox.x;
-				gameNode.y = gameNode.m_boundingBox.y - m_boundingBox.y;
+				gameNode.x = gameNode.m_boundingBox.x;// - m_boundingBox.x;
+				gameNode.y = gameNode.m_boundingBox.y;// - m_boundingBox.y;
 				gameNode.m_isDirty = true;
 				m_nodesContainer.addChild(gameNode);
+//				m_visibleNodeManager.addNode(gameNode);
 				nodeCount++;
 			}
 			
 			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.m_boundingBox.x - m_boundingBox.x;
-				gameJoint.y = gameJoint.m_boundingBox.y - m_boundingBox.y;
+				gameJoint.x = gameJoint.m_boundingBox.x;// - m_boundingBox.x;
+				gameJoint.y = gameJoint.m_boundingBox.y;// - m_boundingBox.y;
 				gameJoint.m_isDirty = true;
 				m_jointsContainer.addChild(gameJoint);
+	//			m_visibleNodeManager.addNode(gameJoint);
 				jointCount++;
 			}
 			
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				gameEdge.x = (gameEdge.m_boundingBox.x - m_boundingBox.x);
-				gameEdge.y = (gameEdge.m_boundingBox.y - m_boundingBox.y);
+				gameEdge.x = gameEdge.m_boundingBox.x;// - m_boundingBox.x;
+				gameEdge.y = gameEdge.m_boundingBox.y;// - m_boundingBox.y;
 				gameEdge.draw();
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
+//				gameEdge.visible = false;
+//				m_visibleNodeManager.addEdge(gameEdge);
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
@@ -1088,15 +1235,30 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
+			//give stuff time to draw, so the update actually updates?
+			if (timer == null) {
+				timer = new Timer(100, 1);
+				timer.addEventListener(TimerEvent.TIMER, updateVisibleList);
+				timer.start();
+			}
+			updateVisibleList();
 		}
 		
+		public function updateVisibleList(e:TimerEvent = null):void
+		{			
+//			var topLeft:Point = globalToLocal(new Point(0,0));
+//			var bottomRight:Point = globalToLocal(new Point(Constants.GameWidth, GridViewPanel.HEIGHT));
+//			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
+//				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
+//			this.m_visibleNodeManager.updateVisibleList(rect);
+		}
 		
-		protected function setDisplayData():void
+		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean
 		{
-		//	var displayNode
+			var value:String = _xml.attribute("visible").toString();
+			if (value.length == 0) return _defaultValue;
+			return XString.stringToBool(value);
 		}
-		
-		
 		
 		public function findEdgeSetLayoutInfo(name:String):XML
 		{
@@ -1117,6 +1279,8 @@ package scenes.game.display
 		
 		public function handleMarquee(startingPoint:Point, currentPoint:Point):void
 		{
+			if (m_layoutFixed) return;
+			
 			if(startingPoint != null)
 			{
 				marqueeRect.removeChildren();
@@ -1137,23 +1301,25 @@ package scenes.game.display
 			}
 			else
 			{
+				var newSelectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
+				var newUnselectedComponents:Vector.<GameComponent> = new Vector.<GameComponent>();
 				
-				selectionChangedComponents = new Vector.<GameComponent>();
 				for each(var node:GameNode in m_nodeList)
 				{
-					handleSelection(node);
+					handleSelection(node, newSelectedComponents, newUnselectedComponents);
 				}
 				for each(var joint:GameJointNode in m_jointList)
 				{
-					handleSelection(joint);
+					handleSelection(joint, newSelectedComponents, newUnselectedComponents);
 				}
 				removeChild(marqueeRect);
 				
-				addSelectionUndoEvent(selectionChangedComponents);
+				addSelectionUndoEvent(newSelectedComponents, true);
+				addSelectionUndoEvent(newUnselectedComponents, false, true);
 			}
 		}
 		
-		protected function handleSelection(node:GameNodeBase):void
+		protected function handleSelection(node:GameNodeBase, newSelectedComponents:Vector.<GameComponent>, newUnselectedComponents:Vector.<GameComponent>):void
 		{
 			var bottomRight:Point = globalToLocal(node.bounds.bottomRight);
 			var topLeft:Point = globalToLocal(node.bounds.topLeft);
@@ -1167,9 +1333,17 @@ package scenes.game.display
 				if((marqueeRect.bounds.top < node.bounds.bottom && marqueeRect.bounds.bottom > node.bounds.bottom) || 
 					(marqueeRect.bounds.top < node.bounds.top && marqueeRect.bounds.bottom > node.bounds.top))
 				{
-					selectionChangedComponents.push(node);
 					node.componentSelected(!node.m_isSelected);
-					componentSelectionChanged(node);
+					if (node.m_isSelected) {
+						if ((selectedComponents.indexOf(node) == -1) && (newSelectedComponents.indexOf(node) == -1)) {
+							newSelectedComponents.push(node);
+						}
+					} else {
+						if ((selectedComponents.indexOf(node) > -1) && (newUnselectedComponents.indexOf(node) == -1)) {
+							newUnselectedComponents.push(node);
+						}
+					}
+					componentSelectionChanged(node, node.m_isSelected);
 				}
 			}
 		}
@@ -1196,15 +1370,39 @@ package scenes.game.display
 					}
 					if(uneditable)
 					{
-						for each(var comp:GameComponent in groupDictionary)
+						for each(var comp1:GameComponent in groupDictionary)
 						{
-							comp.hideComponent(comp.visible);
-							visitedNodes[comp.m_id] = comp;
+							comp1.hideComponent(comp.visible);
+							visitedNodes[comp1.m_id] = comp1;
 						}
 					}
 				}
 			}
 		}	
+		
+		public function getNode(_id:String):GameNode
+		{
+			if (boxDictionary.hasOwnProperty(_id) && (boxDictionary[_id] is GameNode)) {
+				return (boxDictionary[_id] as GameNode);
+			}
+			return null;
+		}
+		
+		public function getJoint(_id:String):GameJointNode
+		{
+			if (jointDictionary.hasOwnProperty(_id) && (jointDictionary[_id] is GameJointNode)) {
+				return (jointDictionary[_id] as GameJointNode);
+			}
+			return null;
+		}
+		
+		public function getEdgeContainer(_id:String):GameEdgeContainer
+		{
+			if (edgeContainerDictionary.hasOwnProperty(_id) && (edgeContainerDictionary[_id] is GameEdgeContainer)) {
+				return (edgeContainerDictionary[_id] as GameEdgeContainer);
+			}
+			return null;
+		}
 		
 		public function getNodes():Vector.<GameNode>
 		{
@@ -1216,14 +1414,69 @@ package scenes.game.display
 			return m_jointList;
 		}
 		
-		public function getLevelText():String
+		public function getLevelTextInfo():TutorialManagerTextInfo
 		{
-			return m_levelText;
+			return tutorialManager ? tutorialManager.getTextInfo() : null;
 		}
 		
 		public function getTargetScore():int
 		{
 			return m_targetScore;
+		}
+		
+		public function get original_level_name():String
+		{
+			return m_levelLayoutXML.attribute("id");
+		}
+		
+		public function getTimeMs():Number
+		{
+			return new Date().time - m_levelStartTime;
+		}	
+		
+		public function getNodesContainer():Sprite
+		{
+			return m_nodesContainer;
+		}
+		
+		public function addGameComponentToStage(component:GameComponent):void
+		{
+			if(component is GameNodeBase)
+				this.m_nodesContainer.addChild(component);
+			else if(component is GameJointNode)
+				this.m_jointsContainer.addChild(component);
+			else if(component is GameEdgeContainer)
+			{
+				this.m_edgesContainer.addChild(component);
+				this.m_errorContainer.addChild((component as GameEdgeContainer).errorContainer);
+			}
+		}
+		
+		public function removeGameComponentFromStage(component:GameComponent):void
+		{
+			if(component is GameNodeBase)
+				this.m_nodesContainer.removeChild(component);
+			else if(component is GameJointNode)
+				this.m_jointsContainer.removeChild(component);
+			else if(component is GameEdgeContainer)
+			{
+				this.m_edgesContainer.removeChild(component);
+				this.m_errorContainer.removeChild((component as GameEdgeContainer).errorContainer);
+			}
+		}
+		
+		//can't flatten errorContainer as particle system is unsupported display object
+		public override function flatten():void
+		{
+			this.m_nodesContainer.flatten();
+			this.m_jointsContainer.flatten();
+			this.m_edgesContainer.removeChildren();
+		}
+		
+		public function getPanZoomAllowed():Boolean
+		{
+			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
+			return true;
 		}
 	}
 }

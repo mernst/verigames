@@ -15,12 +15,6 @@ java/test/.*/actual_.*txt
 java/test/.*/diff_.*txt
 java/dist
 
-papers/2012-ftfjp/2012-pipejam.bbl
-papers/2012-ftfjp/2012-pipejam.dvi
-papers/2012-ftfjp/2012-pipejam.pdf
-papers/2012-ftfjp/bib
-
-
 syntax: glob
 *.aux
 *.blg
@@ -29,3 +23,16 @@ syntax: glob
 *~
 .#*
 .gradle
+*.pyc
+
+
+flash/PipeJam3/build/FlashBuilder/PipeJam3Web/.settings/
+flash/PipeJam3/build/FlashBuilder/PipeJam3Web/bin-debug
+flash/PipeJam3/build/FlashBuilder/PipeJam3Web/bin-release
+flash/PipeJam3/build/FlashBuilder/PipeJam3Web/html-template
+flash/PipeJam3/build/FlashBuilder4.7/PipeJam3Web/.settings/
+flash/PipeJam3/build/FlashBuilder4.7/PipeJam3Web/bin-debug
+flash/PipeJam3/build/FlashBuilder4.7/PipeJam3Web/bin-release
+flash/PipeJam3/build/FlashBuilder4.7/PipeJam3Web/html-template
+flash/PipeJam3/build/make/bin/
+flash/PipeJam3/src/buildInfo/BuildInfo.as

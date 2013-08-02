@@ -1,0 +1,159 @@
+<graph id="world">
+  <level id="NarrowBoxes" qid="8" tutorial="pinch">
+    <box height="1.0" id="NarrowBoxes1" lines="1" width="1.81" x="0.33" y="1.50" visible="true"/>
+    <box height="1.0" id="NarrowBoxes2" lines="1" width="1.81" x="4.48" y="2.40" visible="true"/>
+    <box height="1.0" id="NarrowBoxes3" lines="1" width="1.81" x="8.12" y="1.31" visible="true"/>
+    <box height="1.0" id="NarrowBoxes4" lines="1" width="1.81" x="10.93" y="1.31" visible="true"/>
+    <box height="1.0" id="NarrowBoxes10" lines="1" width="1.81" x="0.33" y="5.18" visible="true"/>
+    <box height="1.0" id="NarrowBoxes20" lines="1" width="1.81" x="4.48" y="6.08" visible="true"/>
+    <box height="1.0" id="NarrowBoxes30" lines="2" width="2.4" x="9.51" y="5.12" visible="true"/>
+    <joint height="0.51" id="n10" inputs="1" outputs="1" width="0.59" x="0.31" y="3.28" visible="true"/>
+    <joint height="0.51" id="n20" inputs="1" outputs="1" width="0.59" x="4.45" y="4.18" visible="true"/>
+    <joint height="0.51" id="n300" inputs="1" outputs="0" width="0.59" x="7.08" y="7.63"/>
+    <joint height="0.51" id="n40" inputs="1" outputs="1" width="0.59" x="10.60" y="3.09" visible="true"/>
+    <joint height="0.51" id="n400" inputs="1" outputs="0" width="0.59" x="8.68" y="7.63"/>
+    <joint height="0.51" id="n200" inputs="1" outputs="0" width="0.59" x="3.68" y="7.63"/>
+    <joint height="0.51" id="n100" inputs="1" outputs="0" width="0.59" x="0.88" y="7.63"/>
+    <joint height="0.51" id="n30" inputs="1" outputs="1" width="0.59" x="8.40" y="3.09" visible="true"/>
+    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.31" y="-0.28" visible="true"/>
+    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
+    <joint height="0.51" id="n3" inputs="0" outputs="1" width="0.59" x="8.10" y="-0.47" visible="true"/>
+    <joint height="0.51" id="n4" inputs="0" outputs="1" width="0.59" x="9.29" y="0.26"/>
+    <line id="e1__IN__" visible="true">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="NarrowBoxes1" port="0"/>
+      <point x="0.32" y="-0.03"/>
+      <point x="0.32" y="0.39"/>
+      <point x="0.32" y="0.39"/>
+      <point x="0.32" y="0.58"/>
+      <point x="0.32" y="0.58"/>
+      <point x="0.32" y="1.00"/>
+    </line>
+    <line id="e1__OUT__" visible="true">
+      <frombox id="NarrowBoxes1" port="0"/>
+      <tojoint id="n10" port="0"/>
+      <point x="0.32" y="2.00"/>
+      <point x="0.32" y="2.42"/>
+      <point x="0.32" y="2.42"/>
+      <point x="0.32" y="2.60"/>
+      <point x="0.32" y="2.60"/>
+      <point x="0.32" y="3.02"/>
+    </line>
+    <line id="e2__IN__">
+      <fromjoint id="n2" port="0"/>
+      <tobox id="NarrowBoxes2" port="0"/>
+      <point x="3.69" y="0.53"/>
+      <point x="3.69" y="1.53"/>
+    </line>
+    <line id="e2__OUT__" visible="true">
+      <frombox id="NarrowBoxes2" port="0"/>
+      <tojoint id="n20" port="0"/>
+      <point x="4.46" y="2.90"/>
+      <point x="4.46" y="3.32"/>
+      <point x="4.46" y="3.32"/>
+      <point x="4.46" y="3.51"/>
+      <point x="4.46" y="3.51"/>
+      <point x="4.46" y="3.93"/>
+    </line>
+    <line id="e3__IN__" visible="true">
+      <fromjoint id="n3" port="0"/>
+      <tobox id="NarrowBoxes3" port="0"/>
+      <point x="8.11" y="-0.21"/>
+      <point x="8.11" y="0.21"/>
+      <point x="8.11" y="0.21"/>
+      <point x="8.11" y="0.39"/>
+      <point x="8.11" y="0.39"/>
+      <point x="8.11" y="0.81"/>
+    </line>
+    <line id="e3__OUT__" visible="true">
+      <frombox id="NarrowBoxes3" port="0"/>
+      <tojoint id="n30" port="0"/>
+      <point x="8.11" y="1.81"/>
+      <point x="8.11" y="2.23"/>
+      <point x="8.27" y="2.23"/>
+      <point x="8.27" y="2.42"/>
+      <point x="8.42" y="2.42"/>
+      <point x="8.42" y="2.84"/>
+    </line>
+    <line id="e4__IN__">
+      <fromjoint id="n4" port="0"/>
+      <tobox id="NarrowBoxes4" port="0"/>
+      <point x="9.31" y="0.53"/>
+      <point x="9.31" y="1.53"/>
+    </line>
+    <line id="e4__OUT__" visible="true">
+      <frombox id="NarrowBoxes4" port="0"/>
+      <tojoint id="n40" port="0"/>
+      <point x="10.92" y="1.81"/>
+      <point x="10.92" y="2.23"/>
+      <point x="10.77" y="2.23"/>
+      <point x="10.77" y="2.42"/>
+      <point x="10.61" y="2.42"/>
+      <point x="10.61" y="2.84"/>
+    </line>
+    <line id="e10__IN__" visible="true">
+      <fromjoint id="n10" port="0"/>
+      <tobox id="NarrowBoxes10" port="0"/>
+      <point x="0.32" y="3.53"/>
+      <point x="0.32" y="3.95"/>
+      <point x="0.32" y="3.95"/>
+      <point x="0.32" y="4.26"/>
+      <point x="0.32" y="4.26"/>
+      <point x="0.32" y="4.68"/>
+    </line>
+    <line id="e10__OUT__">
+      <frombox id="NarrowBoxes10" port="0"/>
+      <tojoint id="n100" port="0"/>
+      <point x="0.89" y="6.24"/>
+      <point x="0.89" y="7.36"/>
+    </line>
+    <line id="e20__IN__" visible="true">
+      <fromjoint id="n20" port="0"/>
+      <tobox id="NarrowBoxes20" port="0"/>
+      <point x="4.46" y="4.44"/>
+      <point x="4.46" y="4.86"/>
+      <point x="4.46" y="4.86"/>
+      <point x="4.46" y="5.16"/>
+      <point x="4.46" y="5.16"/>
+      <point x="4.46" y="5.58"/>
+    </line>
+    <line id="e20__OUT__">
+      <frombox id="NarrowBoxes20" port="0"/>
+      <tojoint id="n200" port="0"/>
+      <point x="3.69" y="6.24"/>
+      <point x="3.69" y="7.36"/>
+    </line>
+    <line id="e30__IN__" visible="true">
+      <fromjoint id="n30" port="0"/>
+      <tobox id="NarrowBoxes30" port="0"/>
+      <point x="8.42" y="3.35"/>
+      <point x="8.42" y="3.77"/>
+      <point x="8.80" y="3.77"/>
+      <point x="8.80" y="4.20"/>
+      <point x="9.18" y="4.20"/>
+      <point x="9.18" y="4.62"/>
+    </line>
+    <line id="e30__OUT__">
+      <frombox id="NarrowBoxes30" port="0"/>
+      <tojoint id="n300" port="0"/>
+      <point x="7.57" y="6.36"/>
+      <point x="7.1" y="7.36"/>
+    </line>
+    <line id="e40__IN__" visible="true">
+      <fromjoint id="n40" port="0"/>
+      <tobox id="NarrowBoxes30" port="1"/>
+      <point x="10.61" y="3.35"/>
+      <point x="10.61" y="3.77"/>
+      <point x="10.22" y="3.77"/>
+      <point x="10.22" y="4.20"/>
+      <point x="9.83" y="4.20"/>
+      <point x="9.83" y="4.62"/>
+    </line>
+    <line id="e40__OUT__">
+      <frombox id="NarrowBoxes30" port="1"/>
+      <tojoint id="n400" port="0"/>
+      <point x="8.22" y="6.36"/>
+      <point x="8.69" y="7.36"/>
+    </line>
+  </level>
+</graph>

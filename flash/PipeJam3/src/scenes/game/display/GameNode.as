@@ -1,14 +1,23 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import display.NineSliceBatch;
+	
+	import events.EdgeSetChangeEvent;
+	import events.UndoEvent;
+	
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
+	
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.Network;
 	import graph.NodeTypes;
 	import graph.Port;
 	
-	import flash.utils.Dictionary;
+	import starling.display.DisplayObjectContainer;
+	import starling.events.Event;
 	
 	public class GameNode extends GameNodeBase
 	{
@@ -21,9 +30,10 @@ package scenes.game.display
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
 		
-		public function GameNode(nodeXML:XML, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
+		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
 			super(nodeXML);
+			draggable = _draggable;
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
 			
@@ -96,6 +106,52 @@ package scenes.game.display
 			return null;
 		}
 		
+		public override function onClicked(pt:Point):void
+		{
+			if(m_isEditable)
+			{
+				var newIsWide:Boolean = !m_isWide;
+				handleWidthChange(newIsWide, false, pt);
+				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
+				
+				var eventToUndo:EdgeSetChangeEvent = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide);
+				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+				dispatchEvent(eventToDispatch);
+			}
+		}
+		
+		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
+		{
+			if (undoEvent is EdgeSetChangeEvent) {
+				var evt:EdgeSetChangeEvent = undoEvent as EdgeSetChangeEvent;
+				if (isUndo) {
+					handleWidthChange(!evt.newIsWide);
+				} else {
+					handleWidthChange(evt.newIsWide);
+				}
+			}
+		}
+		
+		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false, pt:Point = null):void
+		{
+			if (m_isWide == newIsWide) return;
+			m_isWide = newIsWide;
+			m_isDirty = true;
+			// Need to dispatch AFTER setting width, this will trigger the score update
+			// (we don't want to update the score with old values, we only know they're old
+			// if we properly mark them dirty first)
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide, null, silent, pt));
+			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
+				iedge.updateSize();
+				iedge.setInnerSegmentBorderWidth(m_isWide);
+			}
+			// May need to redraw inner edges
+			for each (var oedge:GameEdgeContainer in m_outgoingEdges) {
+				oedge.updateSize();
+				oedge.setInnerSegmentBorderWidth(m_isWide);
+			}
+		}
+		
 		override public function draw():void
 		{
 			if (m_box9slice) {
@@ -124,12 +180,13 @@ package scenes.game.display
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();
 			const BLK_SZ:Number = 20; // create an upscaled version for better quality, then update width/height to shrink
+			const BLK_RAD:Number = (shapeHeight / 3.0) * (BLK_SZ * 2 / m_boundingBox.height);
 			if (wideScore > narrowScore) {
-				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix, (wideScore - narrowScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueDarkBoxPrefix, (wideScore - narrowScore).toString(), BLK_SZ - BLK_RAD, BLK_SZ - BLK_RAD, BLK_SZ, null, BLK_RAD);
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			} else if (narrowScore > wideScore) {
-				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix, (narrowScore - wideScore).toString(), BLK_SZ, BLK_SZ, BLK_SZ, null, (shapeHeight / 5.0) * (BLK_SZ * 2 / m_boundingBox.height));
+				m_scoreBlock = new ScoreBlock(AssetInterface.PipeJamSubTexture_BlueLightBoxPrefix, (narrowScore - wideScore).toString(), BLK_SZ - BLK_RAD, BLK_SZ - BLK_RAD, BLK_SZ, null, BLK_RAD);
 				m_scoreBlock.width = m_scoreBlock.height = m_boundingBox.height / 2;
 				addChild(m_scoreBlock);
 			}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "world.dtd">
+<world version="1">
+ <level name="Passages" qid="5">
+  <linked-edges>
+   <edge-set id="Passages2">
+    <edgeref id="e2"/>
+   </edge-set>
+   <edge-set id="Passages3">
+	<edgeref id="e32"/>
+	<edgeref id="e33"/>
+   </edge-set>
+   <edge-set id="Passages4">
+    <edgeref id="e42"/>
+   </edge-set>
+   <edge-set id="Passages5">
+    <edgeref id="e53"/>
+   </edge-set>
+  </linked-edges>
+  <boards>
+   <board name="Passages--Board">
+	<node kind="START_SMALL_BALL" id="n2">
+     <input/>
+     <output>
+      <port num="0" edge="e2"/>
+     </output>
+     <layout>
+      <x>0.0</x>
+      <y>0.0</y>
+     </layout>
+    </node>
+	<node kind="INCOMING" id="n3">
+     <input/>
+     <output>
+      <port num="0" edge="e33"/>
+     </output>
+     <layout>
+      <x>0.0</x>
+      <y>0.0</y>
+     </layout>
+    </node>
+	<node kind="CONNECT" id="n23">
+     <input><port num="0" edge="e2"/></input>
+     <output><port num="0" edge="e32"/></output>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
+	<node kind="CONNECT" id="n342">
+     <input><port num="0" edge="e32"/></input>
+     <output><port num="0" edge="e42"/></output>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
+	<node kind="CONNECT" id="n353">
+     <input><port num="0" edge="e33"/></input>
+     <output><port num="0" edge="e53"/></output>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
+	<node kind="OUTGOING" id="n420">
+     <input>
+      <port num="0" edge="e42"/>
+     </input>
+     <output/>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
+	<node kind="END" id="n530">
+     <input>
+      <port num="0" edge="e53"/>
+     </input>
+     <output/>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e2" buzzsaw="false">
+     <from><noderef id="n2" port="0"/></from>
+     <to><noderef id="n23" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e32" buzzsaw="false">
+     <from><noderef id="n23" port="0"/></from>
+     <to><noderef id="n342" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="narrow" editable="true" id="e33" buzzsaw="false">
+     <from><noderef id="n3" port="0"/></from>
+     <to><noderef id="n353" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e42" buzzsaw="false">
+     <from><noderef id="n342" port="0"/></from>
+     <to><noderef id="n420" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e53" buzzsaw="false">
+     <from><noderef id="n353" port="0"/></from>
+     <to><noderef id="n530" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+   </board>
+  </boards>
+ </level>
+</world>

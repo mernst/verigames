@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<graph id="world">
+  <level id="NarrowBoxes" qid="8" targetScore="450">
+    <box id="NarrowBoxes30" width="wide" editable="true"/>
+    <box id="NarrowBoxes20" width="narrow" editable="true"/>
+    <box id="NarrowBoxes10" width="narrow" editable="true"/>
+    <box id="NarrowBoxes1" width="wide" editable="false"/>
+    <box id="NarrowBoxes2" width="wide" editable="true"/>
+    <box id="NarrowBoxes3" width="wide" editable="false"/>
+    <box id="NarrowBoxes4" width="wide" editable="true"/>
+  </level>
+</graph>

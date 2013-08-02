@@ -1,10 +1,31 @@
 package scenes.game.components
 {
+	import assets.AssetInterface;
+	import assets.AssetsFont;
+	
+	import display.BasicButton;
+	import display.NineSliceButton;
+	import display.RecenterButton;
+	import display.ZoomInButton;
+	import display.ZoomOutButton;
+	
+	import events.MenuEvent;
+	import events.NavigationEvent;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import particle.ErrorParticleSystem;
+	
+	import scenes.BaseComponent;
+	import scenes.game.display.GameComponent;
+	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
+	import scenes.game.display.GameNode;
+	import scenes.game.display.Level;
+	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
-	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -12,15 +33,7 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import scenes.BaseComponent;
-	import scenes.game.display.GameComponent;
-	import scenes.game.display.GameEdgeContainer;
-	import scenes.game.display.GameJointNode;
-	import scenes.game.display.GameNode;
-	import scenes.game.display.Level;
-	import scenes.game.display.World;
+	import utils.XSprite;
 	
 	public class GameControlPanel extends BaseComponent
 	{
@@ -43,7 +56,15 @@ package scenes.game.components
 		private var m_scoreTextfield:TextFieldWrapper;
 		
 		/** Button to bring the up the menu */
-		private var m_menuButton:Button;
+		private var m_menuButton:NineSliceButton;
+		
+		/** Button to start the level over */
+		private var m_ResetButton:NineSliceButton;
+
+		/** Navigation buttons */
+		private var m_zoomInButton:BasicButton;
+		private var m_zoomOutButton:BasicButton;
+		private var m_recenterButton:BasicButton;
 		
 		private var menuShowing:Boolean = false;
 		
@@ -60,8 +81,10 @@ package scenes.game.components
 		private var m_targetScoreContainer:Sprite;
 		private var m_targetScoreTextfield:TextFieldWrapper;
 		
+		protected var conflictMap:ConflictMap;
+		
 		public function GameControlPanel()
-		{			
+		{
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
 		}
@@ -80,7 +103,7 @@ package scenes.game.components
 			var topLeftScorePanel:Point = m_scorePanel.localToGlobal(new Point(0, 0));
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
-			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
@@ -93,22 +116,74 @@ package scenes.game.components
 			m_scorebarForeground.height = HEIGHT;
 			addChild(m_scorebarForeground);
 			
-			var menuButtonUp:Texture = AssetInterface.getTexture("Menu", "MenuButtonClass");
-			var menuButtonClick:Texture = AssetInterface.getTexture("Menu", "MenuButtonClickClass");
-			
-			m_menuButton = new Button(menuButtonUp, "", menuButtonClick);
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-//			m_menuButton.width *= .4;
-//			m_menuButton.height *= .5;
-			m_menuButton.x = 4;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
+			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 6;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 11;
 			addChild(m_menuButton);
+			
+			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
+			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
+			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
+			m_ResetButton.y = HEIGHT - m_ResetButton.height - 8;
+			addChild(m_ResetButton);
+			
+			m_zoomInButton = new ZoomInButton();
+			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
+			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_zoomInButton);
+			m_zoomInButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_zoomInButton.y = 1 * HEIGHT / 4 - 5;
+			addChild(m_zoomInButton);
+			
+			m_zoomOutButton = new ZoomOutButton();
+			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
+			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_zoomOutButton);
+			m_zoomOutButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_zoomOutButton.y = 2 * HEIGHT / 4 - 5;
+			addChild(m_zoomOutButton);
+			
+			m_recenterButton = new RecenterButton();
+			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
+			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
+			XSprite.setPivotCenter(m_recenterButton);
+			m_recenterButton.x = m_menuButton.x + m_menuButton.width + 7;
+			m_recenterButton.y = 3 * HEIGHT / 4 - 5;
+			addChild(m_recenterButton);
+			
+			conflictMap = new ConflictMap();
+			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
+			conflictMap.y = 2;
+			conflictMap.width = width-conflictMap.x - 2;
+			conflictMap.height = height-conflictMap.y - 2;
+			addChild(conflictMap);
 		}
 		
 		private function onMenuButtonTriggered():void
 		{
 			menuShowing = !menuShowing;
-			dispatchEvent(new Event(World.SHOW_GAME_MENU, true, menuShowing));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU, "", menuShowing));
+		}
+		
+		private function onStartOverButtonTriggered():void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.START_OVER));
+		}
+
+		private function onZoomInButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_IN));
+		}
+		
+		private function onZoomOutButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.ZOOM_OUT));
+		}
+		
+		private function onRecenterButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
 		}
 		
 		public function removedFromStage(event:Event):void
@@ -116,10 +191,24 @@ package scenes.game.components
 			//TODO what? dispose of things?
 		}
 		
+		public function newLevelSelected(level:Level):void 
+		{
+			updateScore(level, true);
+			conflictMap.updateLevel(level);
+			setNavigationButtonVisibility(level.getPanZoomAllowed());
+		}
+
+		private function setNavigationButtonVisibility(viz:Boolean):void
+		{
+			m_zoomInButton.visible = viz;
+			m_zoomOutButton.visible = viz;
+			m_recenterButton.visible = viz;
+		}
+		
 		/**
 		 * Re-calculates score and updates the score on the screen
 		 */
-		public function updateScore(level:Level):int 
+		public function updateScore(level:Level, skipAnimatons:Boolean):int 
 		{
 			
 			/* Old scoring:
@@ -183,8 +272,8 @@ package scenes.game.components
 				}
 				for each (var incomingEdge:GameEdgeContainer in nodeSet.m_incomingEdges) {
 					if (incomingEdge.hasError()) {
-						errors++;
 						if (errorEdges.indexOf(incomingEdge) == -1) {
+							errors++;
 							errorEdges.push(incomingEdge);
 						} else {
 							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
@@ -196,9 +285,9 @@ package scenes.game.components
 			for each (var myJoint:GameJointNode in level.getJoints()) {
 				for each (var injEdge:GameEdgeContainer in myJoint.m_incomingEdges) {
 					if (injEdge.hasError()) {
-						errors++;
 						if (errorEdges.indexOf(injEdge) == -1) {
 							errorEdges.push(injEdge);
+							errors++;
 						} else {
 							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
 						}
@@ -214,7 +303,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			
 			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * m_currentScore / baseScore;
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, m_currentScore) / baseScore;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
@@ -234,9 +323,8 @@ package scenes.game.components
 						dottedQ.x = -dottedQ.width / 2;
 						dottedQ.y = ((dq + 1.0) / 11.0) * SCORE_PANEL_AREA.height;
 						m_targetScoreContainer.addChild(dottedQ);
-						trace("add " + dottedQ.y);
 					}
-					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_NUMERIC, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
+					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
 					m_targetScoreTextfield.x = 2.0;
 				} else {
 					TextFactory.getInstance().updateText(m_targetScoreTextfield, level.getTargetScore().toString());
@@ -262,7 +350,12 @@ package scenes.game.components
 			var FLASHING_ANIM_SEC:Number = 0; // TODO: make this nonzero when animation is in place
 			var DELAY:Number = 0.5;
 			var BAR_SLIDING_ANIM_SEC:Number = 1.0;
-			if (newBarWidth < m_scoreBar.width) {
+			if (skipAnimatons) {
+				Starling.juggler.removeTweens(m_scoreBar);
+				m_scoreBar.width = newBarWidth;
+				Starling.juggler.removeTweens(m_scoreTextfield);
+				m_scoreTextfield.x = newScoreX;
+			} else if (newBarWidth < m_scoreBar.width) {
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
 				Starling.juggler.tween(m_scoreBar, BAR_SLIDING_ANIM_SEC, {
@@ -323,19 +416,27 @@ package scenes.game.components
 			
 			return m_currentScore;
 		}
-		
-//		public function onSaveButtonClick(e:TouchEvent):void {
-//			if (m_world) {
-//				m_world.outputXmlToJavascript();
-//			}
-//		}
-//		
-//		public function onSubmitButtonClick(e:TouchEvent):void {
-//			if (m_world) {
-//				m_world.outputXmlToJavascript();
-//			}
-//			//showNextWorldScreen();
-//		}
 
+		public function getCurrentScore():int
+		{
+			return m_currentScore;
+		}
+
+		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
+		{
+			conflictMap.errorAdded(errorParticleSystem, level);
+		}
+		
+		public function errorRemoved(errorParticleSystem:ErrorParticleSystem):void
+		{
+			conflictMap.errorRemoved(errorParticleSystem);
+		}
+		
+		public function errorMoved(errorParticleSystem:ErrorParticleSystem):void
+		{
+			conflictMap.errorMoved(errorParticleSystem);
+		}
 	}
+	
+
 }

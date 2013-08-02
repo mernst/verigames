@@ -7,7 +7,6 @@ package utils
 	import system.VerigameServerConstants;
 	import Game;
 	
-	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 
@@ -117,7 +116,7 @@ package utils
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " could not find node with getNodeById() method.");
 						return null;
 					}
-					
+					/*
 					var spline_control_points:Vector.<Point> = new Vector.<Point>();
 					for each (var pts:XML in e1["edge-layout"]) {
 						for each (var pt:XML in pts["point"]) {
@@ -128,9 +127,9 @@ package utils
 							}
 						}
 					}
-					
+					*/
 					// Add this edge!
-					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), spline_control_points, edge_set_dictionary[e1.attribute("id").toString()], md1);
+					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_set_dictionary[e1.attribute("id").toString()], md1);
 				}
 			} // loop over every node a.k.a. board
 			
@@ -141,6 +140,10 @@ package utils
 			
 			if (my_level_xml.attribute("index").length() != 0) {
 				my_levelNodes.metadata["index"] = new Number(my_level_xml.attribute("index"));		
+			}
+			
+			if (my_level_xml.attribute("qid").length() != 0 && !isNaN(int(my_level_xml.attribute("qid")))) {
+				my_levelNodes.qid = int(my_level_xml.attribute("qid"));
 			}
 			
 			my_levelNodes.associateSubnetNodesToBoardNodes();

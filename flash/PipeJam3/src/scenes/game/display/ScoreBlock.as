@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetsFont;
 	import display.NineSliceBatch;
+	import events.GameComponentEvent;
 	import scenes.game.display.GameComponent;
 	
 	import starling.events.Event;
@@ -47,7 +48,7 @@ package scenes.game.display
 			m_sliceBatch.adjustUsedSlices(true, true, false, true, true, false, false, false, false);
 			addChild(m_sliceBatch);
 			
-			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_NUMERIC, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
+			m_text = TextFactory.getInstance().createTextField(m_score, AssetsFont.FONT_UBUNTU, m_width + _radius, m_height + _radius, m_fontSize, 0x00000);
 			TextFactory.getInstance().updateAlign(m_text, 1, 1);
 			addChild(m_text);
 			if (m_gameComponent) {
@@ -77,9 +78,9 @@ package scenes.game.display
 					if (m_gameComponent is GameEdgeContainer) {
 						// Center on marker joint - this is where we actually display the error
 						var jointToCenter:GameEdgeJoint = (m_gameComponent as GameEdgeContainer).m_markerJoint;
-						dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, jointToCenter));
+						dispatchEvent(new GameComponentEvent(GameComponentEvent.CENTER_ON_COMPONENT, jointToCenter));
 					} else {
-						dispatchEvent(new Event(Level.CENTER_ON_COMPONENT, true, m_gameComponent));
+						dispatchEvent(new GameComponentEvent(GameComponentEvent.CENTER_ON_COMPONENT, m_gameComponent));
 					}
 				}
 			}

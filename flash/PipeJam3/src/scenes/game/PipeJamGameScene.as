@@ -14,7 +14,8 @@ package scenes.game
 	
 	import scenes.Scene;
 	import scenes.game.display.World;
-	import scenes.login.LoginHelper;
+	import networking.LoginHelper;
+	import networking.HTTPCookies;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -29,18 +30,39 @@ package scenes.game
 		public var constraintsLoader:URLLoader;
 		protected var nextParseState:ParseXMLState;
 		
-		static public var demoButtonWorldFile:String = "../SampleWorlds/Simple.zip";
-		static public var demoButtonLayoutFile:String = "../SampleWorlds/SimpleLayout.zip";
-		static public var demoButtonConstraintsFile:String = "../SampleWorlds/SimpleConstraints.zip";
+		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader.zip";
+		static public var demoButtonLayoutFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderLayout.zip";
+		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
-		static public var tutorialButtonWorldFile:String = "../SampleWorlds/DemoWorld/tutorial.zip";
-		static public var tutorialButtonLayoutFile:String = "../SampleWorlds/DemoWorld/tutorialLayout.zip";
-		static public var tutorialButtonConstraintsFile:String = "../SampleWorlds/DemoWorld/tutorialConstraints.zip";
+		static public var dArray:Array = new Array(
+			"../SampleWorlds/test/Intervals.zip",
+			"../SampleWorlds/test/IntervalsConstraints.zip",
+			"../SampleWorlds/test/IntervalsLayout.zip"
+		);
+		
+		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
+		
+		[Embed(source = "../../../lib/levels/tutorial/tutorial.xml", mimeType = "application/octet-stream")]
+		static public const tutorialFileClass:Class;
+		static public const tutorialXML:XML = XML(new tutorialFileClass());
+		
+		[Embed(source = "../../../lib/levels/tutorial/tutorialLayout.xml", mimeType = "application/octet-stream")]
+		static public const tutorialLayoutFileClass:Class;
+		static public const tutorialLayoutXML:XML = XML(new tutorialLayoutFileClass());
+		
+		[Embed(source = "../../../lib/levels/tutorial/tutorialConstraints.xml", mimeType = "application/octet-stream")]
+		static public const tutorialConstraintsFileClass:Class;
+		static public const tutorialConstraintsXML:XML = XML(new tutorialConstraintsFileClass());
+		
+		static public var numTutorialLevels:int = 0;
+		static public var maxTutorialLevelCompleted:int = 0;
+		static public var currentTutorialLevel:int = 0;
+		static public var inTutorial:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
 		static public var layoutFile:String = demoButtonLayoutFile;
 		static public var constraintsFile:String = demoButtonConstraintsFile;
-		private var world_zip_file_to_be_played:String;// = "../SampleWorlds/DemoWorld.zip";
+		
 		public var m_worldXML:XML;
 		public var m_worldLayout:XML;
 		public var m_worldConstraints:XML;
@@ -51,7 +73,7 @@ package scenes.game
 		protected var m_layoutLoaded:Boolean = false;
 		protected var m_constraintsLoaded:Boolean = false;
 		protected var m_worldLoaded:Boolean = false;
-
+		
 		/** Start button image */
 		protected var start_button:Button;
 		private var active_world:World;
@@ -65,21 +87,43 @@ package scenes.game
 		protected override function addedToStage(event:starling.events.Event):void
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var fileName:String;
+			
 			super.addedToStage(event);
 			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
-
-			if (!world_zip_file_to_be_played)
+			
+			if(LoginHelper.getLoginHelper().levelObject is int) // in the tutorial
+			{
+				PipeJamGameScene.inTutorial = true;
+				fileName = "tutorial";
+			}
+			if (DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
+			{
+				//load the zip file from it's location
+				loadType = LoginHelper.USE_URL;
+				fz1 = new FZip();
+				fz1.addEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
+				fz1.load(new URLRequest(DEBUG_PLAY_WORLD_ZIP));
+			}
+			else if(PipeJamGameScene.inTutorial)
+			{
+				onLayoutLoaded(tutorialLayoutXML);
+				onConstraintsLoaded(tutorialConstraintsXML);
+				onWorldLoaded(tutorialXML);
+			}
+			else
 			{
 				var loadType:int = LoginHelper.USE_LOCAL;
 				
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-				var fileName:String = obj["files"];
-				if(LoginHelper.levelObject != null) //load from MongoDB
+				if(!PipeJamGameScene.inTutorial)
+					fileName = obj["files"];
+				if(LoginHelper.getLoginHelper().levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = LoginHelper.USE_DATABASE;
-					worldFile = "/level/get/" + LoginHelper.levelObject.xmlID+"/xml";
-					layoutFile = "/level/get/" + LoginHelper.levelObject.layoutID+"/layout";
-					constraintsFile = "/level/get/" + LoginHelper.levelObject.constraintsID+"/constraints";		
+					worldFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.xmlID+"/xml";
+					layoutFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.layoutID+"/layout";
+					constraintsFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.constraintsID+"/constraints";		
 				}
 				else if(fileName && fileName.length > 0)
 				{
@@ -89,7 +133,7 @@ package scenes.game
 				}
 				
 				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
-			
+				
 				fz1 = new FZip();
 				loginHelper.loadFile(loadType, null, worldFile, worldZipLoaded, fz1);
 				fz2 = new FZip();
@@ -97,16 +141,6 @@ package scenes.game
 				fz3 = new FZip();
 				loginHelper.loadFile(loadType, null, constraintsFile, constraintsZipLoaded, fz3);
 			}
-			else
-			 {
-				//load the zip file from it's location
-				loadType = LoginHelper.USE_URL;
-				fz1 = new FZip();
-				fz1.addEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
-				fz1.load(new URLRequest(world_zip_file_to_be_played));
-			}
-			initGame();
-
 		}
 		
 		protected  override function removedFromStage(event:starling.events.Event):void
@@ -115,46 +149,54 @@ package scenes.game
 			active_world = null;
 		}
 		
-		
-		/**
-		 * Run once to initialize the game
-		 */
-		public function initGame():void 
-		{
-
-		}
-		
-		public function onLayoutLoaded(byteArray:ByteArray):void {
-			m_worldLayout = new XML(byteArray); 
+		private function onLayoutLoaded(_layoutXML:XML):void {
+			m_worldLayout = _layoutXML; 
 			m_layoutLoaded = true;
 			//call, but probably wait on xml
 			tasksComplete();
 		}
 		
-		public function onConstraintsLoaded(byteArray:ByteArray):void {
-			m_worldConstraints = new XML(byteArray); 
+		private function onConstraintsLoaded(_constraintsXML:XML):void {
+			m_worldConstraints = _constraintsXML;
 			m_constraintsLoaded = true;
 			//call, but probably wait on xml
 			tasksComplete();
 		}
 		
-		public function onWorldLoaded(byteArray:ByteArray):void { 
-			var worldXML:XML  = new XML(byteArray); 
+		private function onWorldLoaded(_worldXML:XML):void { 
+			var worldXML:XML = _worldXML; 
 			m_worldLoaded = true;
 			parseXML(worldXML);
 		}
 		
-			
 		private function worldZipLoaded(e:flash.events.Event):void {
 			fz1.removeEventListener(flash.events.Event.COMPLETE, worldZipLoaded);
-			if(fz1.getFileCount() > 0)
+			var zipFile:FZipFile, worldXML:XML;
+			if(fz1.getFileCount() == 3)
 			{
-				var zipFile:FZipFile = fz1.getFileAt(0);
-				trace(zipFile.filename);
-				onWorldLoaded(zipFile.content);
+				var layoutXML:XML, constraintsXML:XML;
+				for (var i:int = 0; i < fz1.getFileCount(); i++) {
+					zipFile = fz1.getFileAt(i);
+					if (zipFile.filename.toLowerCase().indexOf("layout") > -1) {
+						layoutXML = new XML(zipFile.content);
+					} else if (zipFile.filename.toLowerCase().indexOf("constraints") > -1) {
+						constraintsXML = new XML(zipFile.content);
+					} else {
+						worldXML = new XML(zipFile.content);
+					}
+				}
+				onLayoutLoaded(layoutXML);
+				onConstraintsLoaded(constraintsXML);
+				onWorldLoaded(worldXML);
 			}
 			else
-				trace("zip failed");
+			{
+		//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
+				zipFile = fz1.getFileAt(0);
+				trace(zipFile.filename);
+				worldXML = new XML(zipFile.content);
+				onWorldLoaded(worldXML);
+			}
 		}
 		
 		private function layoutZipLoaded(e:flash.events.Event):void {
@@ -163,7 +205,8 @@ package scenes.game
 			{
 				var zipFile:FZipFile = fz2.getFileAt(0);
 				trace(zipFile.filename);
-				onLayoutLoaded(zipFile.content);
+				var layoutXML:XML = new XML(zipFile.content);
+				onLayoutLoaded(layoutXML);
 			}
 			else
 				trace("zip failed");
@@ -175,7 +218,8 @@ package scenes.game
 			{
 				var zipFile:FZipFile = fz3.getFileAt(0);
 				trace(zipFile.filename);
-				onConstraintsLoaded(zipFile.content);
+				var constraintsXML:XML = new XML(zipFile.content);
+				onConstraintsLoaded(constraintsXML);
 			}
 			else
 				trace("zip failed");
@@ -233,6 +277,21 @@ package scenes.game
 			}
 			
 			return world;
+		}
+		
+		public static var solvedTutorialLevelTags:Vector.<String> = new Vector.<String>();
+		public static function solvedTutorialLevel(_tutorialTag:String):void {
+			if (!_tutorialTag) return;
+			if (solvedTutorialLevelTags.indexOf(_tutorialTag) > -1) return;//already solved
+			solvedTutorialLevelTags.push(_tutorialTag);
+			maxTutorialLevelCompleted++;
+			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, maxTutorialLevelCompleted);
+		}
+		
+		public static function resetTutorialStatus():void
+		{
+			solvedTutorialLevelTags = new Vector.<String>();
+			maxTutorialLevelCompleted = 0;
 		}
 	}
 }
