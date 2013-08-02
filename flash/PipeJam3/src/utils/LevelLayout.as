@@ -142,6 +142,10 @@ package utils
 				my_levelNodes.metadata["index"] = new Number(my_level_xml.attribute("index"));		
 			}
 			
+			if (my_level_xml.attribute("qid").length() != 0 && !isNaN(int(my_level_xml.attribute("qid")))) {
+				my_levelNodes.qid = int(my_level_xml.attribute("qid"));
+			}
+			
 			my_levelNodes.associateSubnetNodesToBoardNodes();
 			
 			Game.printDebug("Level layout LOADED!");

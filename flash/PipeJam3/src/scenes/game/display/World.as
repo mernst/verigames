@@ -509,15 +509,17 @@ package scenes.game.display
 				return;
 			}
 			if (PipeJam3.logging) {
-				var details:Object;
+				var details:Object, qid:int;
 				if (active_level) {
 					details = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
-					PipeJam3.logging.logQuestEnd(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
+					qid = (active_level.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelNodes.qid;
+					PipeJam3.logging.logQuestEnd(qid, details);
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
-				PipeJam3.logging.logQuestStart(VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, details);
+				qid = (newLevel.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelNodes.qid;
+				PipeJam3.logging.logQuestStart(qid, details);
 			}
 			if (restart) {
 				newLevel.restart();
