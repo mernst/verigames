@@ -166,9 +166,8 @@ import com.sun.source.util.TreePath;
     }
 
     private Element getSite(MethodInvocationTree tree) {
-        AnnotatedDeclaredType type =
-            (AnnotatedDeclaredType)factory.getReceiverType(tree);
-        return type.getElement();
+        //TODO: Check this behavior for implicit receivers/outer receivers
+        return TreeUtils.elementFromUse( TreeUtils.getReceiverTree(tree) );
     }
 
     private boolean isCheckOfGet(Element key, VariableElement map, ExpressionTree tree) {

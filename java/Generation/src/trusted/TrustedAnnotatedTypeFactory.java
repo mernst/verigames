@@ -1,6 +1,7 @@
 package trusted;
 
 import checkers.basetype.BaseTypeChecker;
+import checkers.inference.InferenceUtils;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
@@ -31,11 +32,11 @@ public class TrustedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Trust
 
         /**
          * Handles String concatenation; only @Trusted + @Trusted = @Trusted.
-         * Any other concatenation results in @Untursted.
+         * Any other concatenation results in @Untrusted.
          */
         @Override
         public Void visitBinary(BinaryTree tree, AnnotatedTypeMirror type) {
-            if (!type.isAnnotated()
+            if ( !InferenceUtils.isAnnotated( type )
                     && TreeUtils.isStringConcatenation(tree)) {
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());

@@ -172,15 +172,15 @@ public class LockInfVisitor extends GameVisitor {
             Void p) {
 
         List<String> overriderLocks = methodHolding(TreeUtils.elementFromDeclaration(overriderTree));
-        List<String> overriddenLocks = methodHolding(overridden.getElement());
+        List<String> overriddenLocks = methodHolding( overridden.getElement() );
 
         boolean isValid = overriddenLocks.containsAll(overriderLocks);
 
         if (!isValid) {
             checker.report(Result.failure("override.holding.invalid",
                     TreeUtils.elementFromDeclaration(overriderTree),
-                    enclosingType.getElement(), overridden.getElement(),
-                    overriddenType.getElement(),
+                    //enclosingType.getElement(), overridden.getElement(),
+                    //overriddenType.getElement(),
                     overriderLocks, overriddenLocks), overriderTree);
         }
 
