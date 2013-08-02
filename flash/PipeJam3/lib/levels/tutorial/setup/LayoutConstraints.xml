@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="Layout" targetScore="200">
+  <level id="Layout" qid="12" targetScore="200">
     <box id="Layout1" width="narrow" editable="true"/>
     <box id="Layout3" width="narrow" editable="false"/>
     <box id="Layout2" width="narrow" editable="false"/>

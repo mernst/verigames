@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="IntroWidget" tutorial="widget">
+  <level id="IntroWidget" qid="1" tutorial="widget">
     <box height="1.0" id="IntroWidget2" lines="1" width="1.81" x="1.67" y="1.54" visible="true"/>
     <box height="1.0" id="IntroWidget3" lines="3" width="3.0" x="5.13" y="3.86" visible="true"/>
     <joint height="0.51" id="n2__OUT__0" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>

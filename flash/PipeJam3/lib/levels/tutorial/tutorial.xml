@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="IntroWidget">
+ <level name="IntroWidget" qid="1">
   <linked-edges>
    <edge-set id="IntroWidget2">
     <edgeref id="e2"/>
@@ -105,7 +105,7 @@
    </board>
   </boards>
  </level>
- <level name="WidgetPractice">
+ <level name="WidgetPractice" qid="2">
   <linked-edges>
    <edge-set id="WidgetPractice1">
     <edgeref id="e1"/>
@@ -276,7 +276,7 @@
    </board>
   </boards>
  </level>
- <level name="LockedWidget">
+ <level name="LockedWidget" qid="3">
   <linked-edges>
    <edge-set id="LockedWidget1">
     <edgeref id="e1"/>
@@ -447,7 +447,7 @@
    </board>
   </boards>
  </level>
- <level name="SatisfyBoxes">
+ <level name="SatisfyBoxes" qid="4">
   <linked-edges>
    <edge-set id="SatisfyBoxes1">
     <edgeref id="e1"/>
@@ -632,7 +632,7 @@
    </board>
   </boards>
  </level>
- <level name="Passages">
+ <level name="Passages" qid="5">
   <linked-edges>
    <edge-set id="Passages2">
     <edgeref id="e2"/>
@@ -727,7 +727,7 @@
    </board>
   </boards>
  </level>
- <level name="Clashes">
+ <level name="Clashes" qid="6">
   <linked-edges>
    <edge-set id="Clashes1">
     <edgeref id="e1"/>
@@ -773,7 +773,7 @@
    </board>
   </boards>
  </level>
- <level name="WidenBoxes">
+ <level name="WidenBoxes" qid="7">
   <linked-edges>
    <edge-set id="WidenBoxes1">
     <edgeref id="e1"/>
@@ -976,7 +976,7 @@
    </board>
   </boards>
  </level>
- <level name="NarrowBoxes">
+ <level name="NarrowBoxes" qid="8">
   <linked-edges>
    <edge-set id="NarrowBoxes1">
     <edgeref id="e1"/>
@@ -1179,7 +1179,7 @@
    </board>
   </boards>
  </level>
- <level name="Optimize">
+ <level name="Optimize" qid="9">
   <linked-edges>
    <edge-set id="Optimize1">
     <edgeref id="e11"/>
@@ -1466,7 +1466,7 @@
    </board>
   </boards>
  </level>
- <level name="Splits">
+ <level name="Splits" qid="10">
   <linked-edges>
    <edge-set id="Splits1">
     <edgeref id="e1"/>
@@ -1586,7 +1586,7 @@
    </board>
   </boards>
  </level>
- <level name="Merges">
+ <level name="Merges" qid="11">
   <linked-edges>
    <edge-set id="Merges1">
     <edgeref id="e1"/>
@@ -1641,7 +1641,7 @@
    </board>
   </boards>
  </level>
- <level name="Layout">
+ <level name="Layout" qid="12">
   <linked-edges>
    <edge-set id="Layout1">
     <edgeref id="e1"/>
@@ -1739,7 +1739,7 @@
    </board>
   </boards>
  </level>
- <level name="ZoomPan">
+ <level name="ZoomPan" qid="13">
   <linked-edges>
    <edge-set id="ZoomPan1">
     <edgeref id="e1"/>
@@ -1821,7 +1821,7 @@
    </board>
   </boards>
  </level>
- <level name="SkillsA">
+ <level name="SkillsA" qid="14">
     <linked-edges>
       <edge-set id="es2">
         <edgeref id="e2x0"/>
@@ -2219,7 +2219,7 @@
       </board>
     </boards>
   </level>
- <level name="SkillsB">
+ <level name="SkillsB" qid="15">
     <linked-edges>
       <edge-set id="es1">
         <edgeref id="e1x0"/>

@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="WidgetPractice" tutorial="widgetpractice">
+  <level id="WidgetPractice" qid="2" tutorial="widgetpractice">
     <box height="1.0" id="WidgetPractice1" lines="1" width="1.81" x="6.52" y="4.03" visible="true"/>
     <box height="1.0" id="WidgetPractice2" lines="1" width="1.81" x="6.54" y="2.20" visible="true"/>
     <box height="1.0" id="WidgetPractice3" lines="3" width="3.0" x="9.56" y="1.03" visible="true"/>

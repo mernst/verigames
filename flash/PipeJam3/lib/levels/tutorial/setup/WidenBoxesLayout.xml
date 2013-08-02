@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="WidenBoxes" tutorial="widen">
+  <level id="WidenBoxes" qid="7" tutorial="widen">
     <box height="1.0" id="WidenBoxes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="WidenBoxes2" lines="1" width="1.81" x="3.71" y="2.04"/>
     <box height="1.0" id="WidenBoxes3" lines="1" width="1.81" x="6.51" y="2.04"/>

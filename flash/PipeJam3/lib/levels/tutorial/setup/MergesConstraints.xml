@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="Merges" targetScore="150">
+  <level id="Merges" qid="11" targetScore="150">
     <box id="Merges2" width="wide" editable="true"/>
     <box id="Merges3" width="narrow" editable="false"/>
     <box id="Merges1" width="wide" editable="true"/>

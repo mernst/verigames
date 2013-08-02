@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="SatisfyBoxes">
+ <level name="SatisfyBoxes" qid="4">
   <linked-edges>
    <edge-set id="SatisfyBoxes1">
     <edgeref id="e1"/>

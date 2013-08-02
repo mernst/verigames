@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="NarrowBoxes" tutorial="pinch">
+  <level id="NarrowBoxes" qid="8" tutorial="pinch">
     <box height="1.0" id="NarrowBoxes1" lines="1" width="1.81" x="0.33" y="1.50" visible="true"/>
     <box height="1.0" id="NarrowBoxes2" lines="1" width="1.81" x="4.48" y="2.40" visible="true"/>
     <box height="1.0" id="NarrowBoxes3" lines="1" width="1.81" x="8.12" y="1.31" visible="true"/>

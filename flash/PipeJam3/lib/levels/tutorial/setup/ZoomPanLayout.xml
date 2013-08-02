@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="ZoomPan" tutorial="zoompan">
+  <level id="ZoomPan" qid="13" tutorial="zoompan">
     <box height="1.0" id="ZoomPan1" lines="1" width="1.81" x="-9.92" y="-1.12" visible="true"/>
     <box height="1.0" id="ZoomPan2" lines="1" width="1.81" x="21.46" y="-1.57" visible="true"/>
     <box height="1.0" id="ZoomPan3" lines="2" width="2.4" x="2.44" y="5.84" visible="true"/>

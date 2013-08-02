@@ -80,11 +80,13 @@ package server
 		
 		public function logQuestStart(questId:int = VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, questDetails:Object = null):void
 		{
+			trace("Logging quest start, qid:" + questId);
 			m_cgsServer.logQuestStart(questId, questDetails, onLogQuestStart);
 		}
 		
 		public function logQuestEnd(questId:int = VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD, questDetails:Object = null):void
 		{
+			trace("Logging quest end, qid:" + questId);
 			m_cgsServer.logQuestEnd(questId, questDetails);
 		}
 		

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="LockedWidget">
+ <level name="LockedWidget" qid="3">
   <linked-edges>
    <edge-set id="LockedWidget1">
     <edgeref id="e1"/>

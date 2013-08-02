@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="Optimize" targetScore="1000">
+  <level id="Optimize" qid="9" targetScore="1000">
     <box id="Optimize4" width="narrow" editable="true"/>
     <box id="Optimize2" width="narrow" editable="true"/>
     <box id="Optimize3" width="narrow" editable="true"/>

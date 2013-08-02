@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="LockedWidget" tutorial="locked">
+  <level id="LockedWidget" qid="3" tutorial="locked">
     <box height="1.0" id="LockedWidget1" lines="1" width="1.81" x="5.72" y="3.40" visible="true"/>
     <box height="1.0" id="LockedWidget2" lines="1" width="1.81" x="7.37" y="0.84" visible="true"/>
     <box height="1.0" id="LockedWidget3" lines="3" width="3.0" x="9.50" y="1.97" visible="true"/>

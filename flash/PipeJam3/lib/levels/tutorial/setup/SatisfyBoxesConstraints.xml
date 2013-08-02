@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="SatisfyBoxes" targetScore="400">
+  <level id="SatisfyBoxes" qid="4" targetScore="400">
     <box id="SatisfyBoxes10" width="wide" editable="false"/>
     <box id="SatisfyBoxes40" width="wide" editable="false"/>
     <box id="SatisfyBoxes30" width="wide" editable="false"/>

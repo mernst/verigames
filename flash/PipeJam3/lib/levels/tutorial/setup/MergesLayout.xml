@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="Merges" tutorial="merge">
+  <level id="Merges" qid="11" tutorial="merge">
     <box height="1.0" id="Merges1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Merges2" lines="1" width="1.81" x="3.71" y="2.04"/>
     <box height="1.0" id="Merges3" lines="1" width="1.81" x="2.29" y="5.6"/>

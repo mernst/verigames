@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graph id="world">
-  <level id="IntroWidget" tutorial="widget">
+  <level id="IntroWidget" qid="1" tutorial="widget">
     <box height="1.0" id="IntroWidget2" lines="1" width="1.81" x="1.67" y="1.54" visible="true"/>
     <box height="1.0" id="IntroWidget3" lines="3" width="3.0" x="5.13" y="3.86" visible="true"/>
     <joint height="0.51" id="n2__OUT__0" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
@@ -60,7 +60,7 @@
       <point x="5.89" y="4.05"/>
     </line>
   </level>
-  <level id="WidgetPractice" tutorial="widgetpractice">
+  <level id="WidgetPractice" qid="2" tutorial="widgetpractice">
     <box height="1.0" id="WidgetPractice1" lines="1" width="1.81" x="6.52" y="4.03" visible="true"/>
     <box height="1.0" id="WidgetPractice2" lines="1" width="1.81" x="6.54" y="2.20" visible="true"/>
     <box height="1.0" id="WidgetPractice3" lines="3" width="3.0" x="9.56" y="1.03" visible="true"/>
@@ -164,7 +164,7 @@
       <point x="12.13" y="4.05"/>
     </line>
   </level>
-  <level id="LockedWidget" tutorial="locked">
+  <level id="LockedWidget" qid="3" tutorial="locked">
     <box height="1.0" id="LockedWidget1" lines="1" width="1.81" x="5.72" y="3.40" visible="true"/>
     <box height="1.0" id="LockedWidget2" lines="1" width="1.81" x="7.37" y="0.84" visible="true"/>
     <box height="1.0" id="LockedWidget3" lines="3" width="3.0" x="9.50" y="1.97" visible="true"/>
@@ -268,7 +268,7 @@
       <point x="12.13" y="4.05"/>
     </line>
   </level>
-  <level id="SatisfyBoxes" tutorial="links">
+  <level id="SatisfyBoxes" qid="4" tutorial="links">
     <box height="1.0" id="SatisfyBoxes1" lines="1" width="1.81" x="1.51" y="1.90" visible="true"/>
     <box height="1.0" id="SatisfyBoxes2" lines="1" width="1.81" x="9.39" y="2.31" visible="true"/>
     <box height="1.0" id="SatisfyBoxes3" lines="2" width="2.4" x="5.16" y="2.64" visible="true"/>
@@ -421,7 +421,7 @@
       <point x="6.5" y="7.36"/>
     </line>
   </level>
-  <level id="Passages" tutorial="passage">
+  <level id="Passages" qid="5" tutorial="passage">
     <box height="1.0" id="Passages2" lines="1" width="1.81" x="1.21" y="2.04"/>
     <box height="1.0" id="Passages3" lines="2" width="2.4" x="2.0" y="5.845"/>
     <box height="1.0" id="Passages4" lines="1" width="1.81" x="0.9" y="9.4"/>
@@ -474,7 +474,7 @@
       <tojoint id="n530" port="0"/>
     <point x="3.69" y="9.91"/><point x="3.69" y="10.91"/></line>
   </level>
-  <level id="Clashes" tutorial="clash">
+  <level id="Clashes" qid="6" tutorial="clash">
     <box height="1.0" id="Clashes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Clashes2" lines="1" width="1.81" x="0.9" y="5.6"/>
     <joint height="0.51" id="n12" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>
@@ -497,7 +497,7 @@
       <tojoint id="n2" port="0"/>
     <point x="0.89" y="6.11"/><point x="0.89" y="7.11"/></line>
   </level>
-  <level id="WidenBoxes" tutorial="widen">
+  <level id="WidenBoxes" qid="7" tutorial="widen">
     <box height="1.0" id="WidenBoxes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="WidenBoxes2" lines="1" width="1.81" x="3.71" y="2.04"/>
     <box height="1.0" id="WidenBoxes3" lines="1" width="1.81" x="6.51" y="2.04"/>
@@ -582,7 +582,7 @@
       <tojoint id="n400" port="0"/>
     <point x="8.22" y="6.36"/><point x="8.69" y="7.36"/></line>
   </level>
-  <level id="NarrowBoxes" tutorial="pinch">
+  <level id="NarrowBoxes" qid="8" tutorial="pinch">
     <box height="1.0" id="NarrowBoxes1" lines="1" width="1.81" x="0.33" y="1.50" visible="true"/>
     <box height="1.0" id="NarrowBoxes2" lines="1" width="1.81" x="4.48" y="2.40" visible="true"/>
     <box height="1.0" id="NarrowBoxes3" lines="1" width="1.81" x="8.12" y="1.31" visible="true"/>
@@ -739,7 +739,7 @@
       <point x="8.69" y="7.36"/>
     </line>
   </level>
-  <level id="Optimize" tutorial="optimize">
+  <level id="Optimize" qid="9" tutorial="optimize">
     <box height="1.0" id="Optimize1" lines="2" visible="true" width="2.4" x="6.69" y="5.07"/>
     <box height="1.0" id="Optimize2" lines="4" visible="true" width="3.59" x="7.34" y="7.75"/>
     <box height="1.0" id="Optimize3" lines="5" visible="true" width="4.19" x="6.49" y="11.15"/>
@@ -959,7 +959,7 @@
       <point x="5.81" y="9.54"/>
     </line>
   </level>
-  <level id="Splits" tutorial="split">
+  <level id="Splits" qid="10" tutorial="split">
     <box height="1.0" id="Splits1" lines="1" width="1.81" x="3.68" y="2.04"/>
     <box height="1.0" id="Splits2" lines="1" width="1.81" x="0.9" y="5.59"/>
     <box height="1.0" id="Splits3" lines="1" width="1.81" x="3.71" y="5.59"/>
@@ -1022,7 +1022,7 @@
       <tojoint id="n60" port="0"/>
     <point x="7.92" y="9.66"/><point x="7.92" y="10.66"/></line>
   </level>
-  <level id="Merges" tutorial="merge">
+  <level id="Merges" qid="11" tutorial="merge">
     <box height="1.0" id="Merges1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Merges2" lines="1" width="1.81" x="3.71" y="2.04"/>
     <box height="1.0" id="Merges3" lines="1" width="1.81" x="2.29" y="5.6"/>
@@ -1055,7 +1055,7 @@
       <tojoint id="n3" port="0"/>
     <point x="2.28" y="6.11"/><point x="2.28" y="7.11"/></line>
   </level>
-  <level id="Layout" tutorial="layout">
+  <level id="Layout" qid="12" tutorial="layout">
     <box height="1.0" id="Layout1" lines="1" width="1.81" x="3.92" y="2.67" visible="true"/>
     <box height="1.0" id="Layout2" lines="1" width="1.81" x="4.34" y="3.02" visible="true"/>
     <box height="1.0" id="Layout3" lines="1" width="1.81" x="3.61" y="2.75" visible="true"/>
@@ -1132,7 +1132,7 @@
       <point x="6.5" y="3.55"/>
     </line>
   </level>
-  <level id="ZoomPan" tutorial="zoompan">
+  <level id="ZoomPan" qid="13" tutorial="zoompan">
     <box height="1.0" id="ZoomPan1" lines="1" width="1.81" x="-9.92" y="-1.12" visible="true"/>
     <box height="1.0" id="ZoomPan2" lines="1" width="1.81" x="21.46" y="-1.57" visible="true"/>
     <box height="1.0" id="ZoomPan3" lines="2" width="2.4" x="2.44" y="5.84" visible="true"/>
@@ -1207,7 +1207,7 @@
       <point x="3.24" y="7.36"/>
     </line>
   </level>
-  <level id="SkillsA" tutorial="skillsa">
+  <level id="SkillsA" qid="14" tutorial="skillsa">
     <box height="1.0" id="es2" lines="3" width="3.0" x="17.86" y="480.99" visible="true"/>
     <box height="1.0" id="es3" lines="1" width="1.81" x="5.97" y="480.74" visible="true"/>
     <box height="1.0" id="es4" lines="1" width="1.81" x="2.50" y="484.14" visible="true"/>
@@ -1845,7 +1845,7 @@
       <point x="25.81" y="499.49"/>
     </line>
   </level>
-  <level id="SkillsB" tutorial="skillsb">
+  <level id="SkillsB" qid="15" tutorial="skillsb">
     <box height="1.0" id="es1" lines="3" width="3.0" x="32.58" y="459.71" visible="true"/>
     <box height="1.0" id="es3" lines="1" width="1.81" x="24.24" y="459.46" visible="true"/>
     <box height="1.0" id="es4" lines="1" width="1.81" x="8.74" y="447.54" visible="true"/>

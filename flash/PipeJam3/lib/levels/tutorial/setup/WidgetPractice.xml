@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="WidgetPractice">
+ <level name="WidgetPractice" qid="2">
   <linked-edges>
    <edge-set id="WidgetPractice1">
     <edgeref id="e1"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="SkillsB">
+ <level name="SkillsB" qid="15">
     <linked-edges>
       <edge-set id="es1">
         <edgeref id="e1x0"/>

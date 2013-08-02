@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graph id="world">
-  <level id="IntroWidget" targetScore="400">
+  <level id="IntroWidget" qid="1" targetScore="400">
     <box id="IntroWidget2" width="narrow" editable="true"/>
     <box id="IntroWidget3" width="wide" editable="true"/>
   </level>
-  <level id="WidgetPractice" targetScore="700">
+  <level id="WidgetPractice" qid="2" targetScore="700">
     <box id="WidgetPractice4" width="narrow" editable="true"/>
     <box id="WidgetPractice3" width="wide" editable="true"/>
     <box id="WidgetPractice2" width="wide" editable="true"/>
     <box id="WidgetPractice1" width="wide" editable="true"/>
   </level>
-  <level id="LockedWidget" targetScore="550">
+  <level id="LockedWidget" qid="3" targetScore="550">
     <box id="LockedWidget4" width="wide" editable="true"/>
     <box id="LockedWidget3" width="narrow" editable="true"/>
     <box id="LockedWidget2" width="narrow" editable="false"/>
     <box id="LockedWidget1" width="wide" editable="true"/>
   </level>
-  <level id="SatisfyBoxes" targetScore="400">
+  <level id="SatisfyBoxes" qid="4" targetScore="400">
     <box id="SatisfyBoxes10" width="wide" editable="false"/>
     <box id="SatisfyBoxes40" width="wide" editable="false"/>
     <box id="SatisfyBoxes30" width="wide" editable="false"/>
@@ -25,17 +25,17 @@
     <box id="SatisfyBoxes2" width="narrow" editable="false"/>
     <box id="SatisfyBoxes1" width="narrow" editable="true"/>
   </level>
-  <level id="Passages" targetScore="350">
+  <level id="Passages" qid="5" targetScore="350">
     <box id="Passages2" width="narrow" editable="true"/>
     <box id="Passages3" width="narrow" editable="true"/>
     <box id="Passages4" width="wide" editable="true"/>
     <box id="Passages5" width="wide" editable="false"/>
   </level>
-  <level id="Clashes" targetScore="75">
+  <level id="Clashes" qid="6" targetScore="75">
     <box id="Clashes1" width="wide" editable="true"/>
     <box id="Clashes2" width="narrow" editable="false"/>
   </level>
-  <level id="WidenBoxes" targetScore="375">
+  <level id="WidenBoxes" qid="7" targetScore="375">
     <box id="WidenBoxes30" width="narrow" editable="true"/>
     <box id="WidenBoxes20" width="wide" editable="true"/>
     <box id="WidenBoxes10" width="narrow" editable="true"/>
@@ -44,7 +44,7 @@
     <box id="WidenBoxes1" width="wide" editable="false"/>
     <box id="WidenBoxes4" width="wide" editable="false"/>
   </level>
-  <level id="NarrowBoxes" targetScore="450">
+  <level id="NarrowBoxes" qid="8" targetScore="450">
     <box id="NarrowBoxes30" width="wide" editable="true"/>
     <box id="NarrowBoxes20" width="narrow" editable="true"/>
     <box id="NarrowBoxes10" width="narrow" editable="true"/>
@@ -53,13 +53,13 @@
     <box id="NarrowBoxes3" width="wide" editable="false"/>
     <box id="NarrowBoxes4" width="wide" editable="true"/>
   </level>
-  <level id="Optimize" targetScore="1000">
+  <level id="Optimize" qid="9" targetScore="1000">
     <box id="Optimize4" width="narrow" editable="true"/>
     <box id="Optimize2" width="narrow" editable="true"/>
     <box id="Optimize3" width="narrow" editable="true"/>
     <box id="Optimize1" width="narrow" editable="true"/>
   </level>
-  <level id="Splits" targetScore="175">
+  <level id="Splits" qid="10" targetScore="175">
     <box id="Splits6" width="narrow" editable="false"/>
     <box id="Splits4" width="narrow" editable="true"/>
     <box id="Splits5" width="wide" editable="false"/>
@@ -67,24 +67,24 @@
     <box id="Splits3" width="wide" editable="false"/>
     <box id="Splits1" width="wide" editable="true"/>
   </level>
-  <level id="Merges" targetScore="150">
+  <level id="Merges" qid="11" targetScore="150">
     <box id="Merges2" width="wide" editable="true"/>
     <box id="Merges3" width="narrow" editable="false"/>
     <box id="Merges1" width="wide" editable="true"/>
   </level>
-  <level id="Layout" targetScore="200">
+  <level id="Layout" qid="12" targetScore="200">
     <box id="Layout1" width="narrow" editable="true"/>
     <box id="Layout3" width="narrow" editable="false"/>
     <box id="Layout2" width="narrow" editable="false"/>
     <box id="Layout5" width="wide" editable="false"/>
     <box id="Layout4" width="wide" editable="true"/>
   </level>
-  <level id="ZoomPan" targetScore="150">
+  <level id="ZoomPan" qid="13" targetScore="150">
     <box id="ZoomPan2" width="wide" editable="true"/>
     <box id="ZoomPan3" width="narrow" editable="false"/>
     <box id="ZoomPan1" width="wide" editable="true"/>
   </level>
-  <level id="SkillsA" targetScore="1625">
+  <level id="SkillsA" qid="14" targetScore="1625">
     <box id="es7" width="narrow" editable="true"/>
     <box id="es6" width="wide" editable="true"/>
     <box id="es5" width="wide" editable="false"/>
@@ -100,7 +100,7 @@
     <box id="es10" width="wide" editable="true"/>
     <box id="es17" width="narrow" editable="true"/>
   </level>
-  <level id="SkillsB" targetScore="4950">
+  <level id="SkillsB" qid="15" targetScore="4950">
     <box id="es26" width="narrow" editable="true"/>
     <box id="es24" width="narrow" editable="true"/>
     <box id="es25" width="wide" editable="true"/>

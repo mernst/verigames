@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="Passages" tutorial="passage">
+  <level id="Passages" qid="5" tutorial="passage">
     <box height="1.0" id="Passages2" lines="1" width="1.81" x="1.21" y="2.04"/>
     <box height="1.0" id="Passages3" lines="2" width="2.4" x="2.0" y="5.845"/>
     <box height="1.0" id="Passages4" lines="1" width="1.81" x="0.9" y="9.4"/>

@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="SkillsB" tutorial="skillsb">
+  <level id="SkillsB" qid="15" tutorial="skillsb">
     <box height="1.0" id="es1" lines="3" width="3.0" x="32.58" y="459.71" visible="true"/>
     <box height="1.0" id="es3" lines="1" width="1.81" x="24.24" y="459.46" visible="true"/>
     <box height="1.0" id="es4" lines="1" width="1.81" x="8.74" y="447.54" visible="true"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="WidenBoxes" targetScore="375">
+  <level id="WidenBoxes" qid="7" targetScore="375">
     <box id="WidenBoxes30" width="narrow" editable="true"/>
     <box id="WidenBoxes20" width="wide" editable="true"/>
     <box id="WidenBoxes10" width="narrow" editable="true"/>

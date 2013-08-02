@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="ZoomPan">
+ <level name="ZoomPan" qid="13">
   <linked-edges>
    <edge-set id="ZoomPan1">
     <edgeref id="e1"/>
