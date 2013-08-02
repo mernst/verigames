@@ -13,7 +13,7 @@ exampleDir=$thisDir"/../../examples"
 #For every java file in "java/Generation/examples" run inferNullness.sh
 #and after all finish exit 0 if none failed or 1 if any had a non-zero exit status
 
-files=(`find $exampleDir -name "*.java"`) 
+files=(`find $exampleDir -type f \( -iname "*.java" ! -iname "*_vars.java" \)` )
 
 success=true
 count=0
