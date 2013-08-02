@@ -73,12 +73,13 @@ package scenes.game.display
 		public var edgeIsCopy:Boolean;
 		
 		public var errorContainer:Sprite = new Sprite();
-		public var m_errorParticleSystem:Sprite;
+		private var m_errorParticleSystem:ErrorParticleSystem;
 		public var errorTextBubbleContainer:Sprite = new Sprite();
 		public var errorTextBubble:TextBubble;
 		
 		private var m_edgeHasError:Boolean = false;
 		private var m_portHasError:Boolean = false;
+		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		public var initialized:Boolean = false;
 		
@@ -376,7 +377,6 @@ package scenes.game.display
 			updateSize();
 		}
 		
-		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
 		{
 			if (m_listeningToEdges.indexOf(_edge) == -1) {
@@ -487,6 +487,39 @@ package scenes.game.display
 				m_innerBoxSegment.m_hasError = false;
 				m_innerBoxSegment.draw();
 				positionChildren(); // last segment's endpoint will change as the plug moves up/down
+			}
+		}
+		
+		/**
+		 * Check all appropriate graph edges/ports for errors, in case they have changed while we
+		 * are out of synch (after loading new constraints, etc)
+		 */
+		public function refreshTroublePoints():void
+		{
+			var anyPortErrors:Boolean = false;
+			for (var p:int = 0; p < m_listeningToPorts.length; p++) {
+				if (m_listeningToPorts[p].has_error) {
+					anyPortErrors = true;
+					break;
+				}
+			}
+			if (anyPortErrors) {
+				if (!m_portHasError) onPortTroublePointAdded(null);
+			} else {
+				if (m_portHasError) onPortTroublePointRemoved(null);
+			}
+			
+			var anyEdgeErrors:Boolean = false;
+			for (var e:int = 0; e < m_listeningToEdges.length; e++) {
+				if (m_listeningToEdges[e].has_error) {
+					anyEdgeErrors = true;
+					break;
+				}
+			}
+			if (anyEdgeErrors) {
+				if (!m_edgeHasError) onEdgeTroublePointAdded(null);
+			} else {
+				if (m_edgeHasError) onEdgeTroublePointRemoved(null);
 			}
 		}
 		

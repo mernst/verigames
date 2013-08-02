@@ -966,21 +966,8 @@ package scenes.game.display
 		
 		private function refreshTroublePoints():void
 		{
-			for (var edgeId:String in edgeDictionary) {
-				var edgeToRefresh:Edge = edgeDictionary[edgeId] as Edge;
-				var hasError:Boolean = edgeToRefresh.has_error;
-				edgeToRefresh.has_error = !hasError;
-				edgeToRefresh.has_error = hasError;
-				if (edgeToRefresh.from_port) {
-					hasError = edgeToRefresh.from_port.has_error;
-					edgeToRefresh.from_port.has_error = !hasError;
-					edgeToRefresh.from_port.has_error = hasError;
-				}
-				if (edgeToRefresh.to_port) {
-					hasError = edgeToRefresh.to_port.has_error;
-					edgeToRefresh.to_port.has_error = !hasError
-					edgeToRefresh.to_port.has_error = hasError;
-				}
+			for (var i:int = 0; i < m_edgeList.length; i++) {
+				m_edgeList[i].refreshTroublePoints();
 			}
 		}
 		

@@ -726,7 +726,7 @@ package scenes.game.components
 					break;
 				case TutorialEvent.HIGHLIGHT_CLASH:
 					edge = m_currentLevel.getEdgeContainer(evt.componentId);
-					if (edge && edge.m_errorParticleSystem) spotlightComponent(edge.m_errorParticleSystem, 3.0, 1.3, 1.3);
+					if (edge && edge.errorContainer) spotlightComponent(edge.errorContainer, 3.0, 1.3, 1.3);
 					break;
 			}
 		}
