@@ -20,9 +20,10 @@
     <class path="external\Dynamic-Texture-Atlas-Generator-master\dynamicTextureAtlasGenerator\src" />
     <class path="external\Hi-ReS-Stats-master\src" />
     <class path="external\Feathers 1.0.1\source" />
+    <class path="external\Starling-Extension-Graphics-master-606972f814\extension\src" />
+    <class path="external\Starling-Extension-Particle-System-master-bdfe72d182\src" />
     <class path="external\Starling-Framework\starling\src" />
-    <class path="external\Starling-Extension-Particle-System-master\src" />
-    <class path="external\pixelmask-master\src" />
+    <class path="external\pixelmask-master-2e968c9fd2\src" />
     <class path="external\MochiAPI_v4_1_2" />
     <class path="external\FZip" />
     <class path="external\MouseWheelTrap" />
@@ -62,7 +63,6 @@
   <libraryPaths>
     <element path="lib\assets\" />
     <element path="external\cgs-common\CGSCommon.swc" />
-    <element path="external\Starling-Extension-Graphics\extension\bin\Starling-Extension-Graphics.swc" />
     <element path="external\Feathers 1.0.1\swc\feathers.swc" />
   </libraryPaths>
   <!-- External Libraries -->

@@ -10,9 +10,9 @@
       <path-element>../../external/Hi-ReS-Stats-master/src</path-element>
       <path-element>../../external/MochiAPI_v4_1_2</path-element>
       <path-element>../../external/MouseWheelTrap</path-element>
-      <path-element>../../external/pixelmask-master/src</path-element>
-      <path-element>../../external/Starling-Extension-Graphics/extension/src</path-element>
-      <path-element>../../external/Starling-Extension-Particle-System-master/src</path-element>
+      <path-element>../../external/pixelmask-master-2e968c9fd2/src</path-element>
+      <path-element>../../external/Starling-Extension-Graphics-master-606972f814/extension/src</path-element>
+      <path-element>../../external/Starling-Extension-Particle-System-master-bdfe72d182/src</path-element>
       <path-element>../../external/Starling-Framework/starling/src</path-element>
     </source-path>
     <library-path append="true">
