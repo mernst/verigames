@@ -227,8 +227,8 @@ package scenes.game.display
 		{
 			return function(currentLevel:Level):DisplayObject {
 				var edge:GameEdgeContainer = currentLevel.getEdgeContainer(name);
-				if (edge && edge.m_errorParticleSystem) {
-					return edge.m_errorParticleSystem;
+				if (edge && edge.errorContainer) {
+					return edge.errorContainer;
 				} else {
 					return null;
 				}
