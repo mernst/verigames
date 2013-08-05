@@ -1,10 +1,13 @@
 package display 
 {
 	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
+	
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
+	
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -27,11 +30,16 @@ package display
 		protected static const TXT_PCT:Number = 0.9;
 		protected static const MAX_DRAG_DIST:Number = 50;
 		
+		protected var fontName:String;
+		protected var fontColor:uint;
+		
 		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                                _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
 										_atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String = "", 
 										_atlasXMLButtonClickTexturePrefix:String = "", _fontColorOver:uint = 0xFFFFFF, _fontColorClick:uint = 0xFFFFFF)
 		{
+			fontName = _fontName;
+			fontColor =  _fontColor;
 			
 			m_buttonBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix);
 			m_textField = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColor);
@@ -67,6 +75,11 @@ package display
 			useHandCursor = true;
 			addChild(m_buttonSkin);
 			addEventListener(TouchEvent.TOUCH, onTouch);
+		}
+		
+		public function removeTouchEvent():void
+		{
+			removeEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
 		protected var mEnabled:Boolean = true;
@@ -137,6 +150,31 @@ package display
 		{
 			this.removeChildren();
 			addChild(_skin);
+		}
+		
+		public function setButtonText(_text:String):void
+		{
+			//set all three stages for now - might want to allow for state differentiation
+			m_buttonSkin.removeChild(m_textField);
+			m_textField = TextFactory.getInstance().createTextField(_text, fontName, TXT_PCT * width, TXT_PCT * height, TXT_PCT * height, fontColor);
+			m_textField.x = (1.0 - TXT_PCT) * width / 2;
+			m_textField.y = (1.0 - TXT_PCT) * height / 2;
+			TextFactory.getInstance().updateAlign(m_textField, 1, 1);
+			m_buttonSkin.addChild(m_textField);
+			
+			m_buttonOverSkin.removeChild(m_textFieldOver);
+			m_textFieldOver = TextFactory.getInstance().createTextField(_text, fontName, TXT_PCT * width, TXT_PCT * height, TXT_PCT * height, fontColor);
+			m_textFieldOver.x = (1.0 - TXT_PCT) * width / 2;
+			m_textFieldOver.y = (1.0 - TXT_PCT) * height / 2;
+			TextFactory.getInstance().updateAlign(m_textFieldOver, 1, 1);
+			m_buttonOverSkin.addChild(m_textFieldOver);
+			
+			m_buttonClickSkin.removeChild(m_textFieldClick);
+			m_textFieldClick = TextFactory.getInstance().createTextField(_text, fontName, TXT_PCT * width, TXT_PCT * height, TXT_PCT * height, fontColor);
+			m_textFieldClick.x = (1.0 - TXT_PCT) * width / 2;
+			m_textFieldClick.y = (1.0 - TXT_PCT) * height / 2;
+			TextFactory.getInstance().updateAlign(m_textFieldClick, 1, 1);
+			m_buttonClickSkin.addChild(m_textFieldClick);
 		}
 		
 		public function get enabled():Boolean

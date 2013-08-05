@@ -33,5 +33,9 @@ package scenes
 		{
 			m_gameSystem = game;
 		}
+		
+		public function setStatus(text:String):void
+		{
+		}
 	}
 }

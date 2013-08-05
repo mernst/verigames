@@ -21,6 +21,7 @@ package
 	import scenes.*;
 	import scenes.game.*;
 	import networking.*;
+	import scenes.loadingscreen.*;
 	import scenes.splashscreen.*;
 	
 	import starling.core.Starling;
@@ -58,9 +59,9 @@ package
 			// load general assets
 			prepareAssets();
 			
+			scenesToCreate["LoadingScene"] = LoadingScreenScene;
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
-			scenesToCreate["LoginScene"] = PlayerValidation;
 			
 			AudioManager.getInstance().audioDriver().reset();
 			//AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_MUSIC));
@@ -85,8 +86,15 @@ package
 		{
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
+			
 			// create and show menu screen
-			showScene("SplashScreen");
+			if(PipeJam3.RELEASE_BUILD || !PipeJam3.LOCAL_DEPLOYMENT)
+				showScene("LoadingScene");
+			else
+			{
+				PlayerValidation.playerID = PlayerValidation.playerIDForTesting;
+				showScene("SplashScreen");				
+			}
 			
 			addChild(m_sfxButton);
 			
