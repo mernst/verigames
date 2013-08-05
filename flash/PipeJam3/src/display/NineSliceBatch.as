@@ -1,17 +1,9 @@
 package display 
 {
 	import assets.AssetInterface;
-	
-	import flash.geom.Rectangle;
-	
-	import starling.display.BlendMode;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.QuadBatch;
-	import starling.display.Sprite;
-	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.utils.RectangleUtil;
 	
 	public class NineSliceBatch extends QuadBatch 
 	{
@@ -42,6 +34,10 @@ package display
 		protected var mBottom:Image;
 		protected var mBottomRight:Image;
 		
+		private var mUseTopLeft:Boolean = true,    mUseTop:Boolean = true,    mUseTopRight:Boolean = true;
+        private var mUseLeft:Boolean = true,       mUseCenter:Boolean = true, mUseRight:Boolean = true;
+        private var mUseBottomLeft:Boolean = true, mUseBottom:Boolean = true, mUseBottomRight:Boolean = true;
+		
 		public function NineSliceBatch(_width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                               _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
 									   _atlasXMLTexturePrefix:String)
@@ -69,15 +65,7 @@ package display
 			updateWidth();
 			updateHeight();
 			
-			addImage(mTopLeft);
-			addImage(mTop);
-			addImage(mTopRight);
-			addImage(mLeft);
-			addImage(mCenter);
-			addImage(mRight);
-			addImage(mBottomLeft);
-			addImage(mBottom);
-			addImage(mBottomRight);
+			addImages();
 		}
 		
 		private function updateX():void
@@ -121,20 +109,48 @@ package display
 			updateHeight();
 		}
 		
+		public function set color(col:uint):void
+		{
+			if (mTopLeft != null)     mTopLeft.color = col;
+			if (mTop != null)         mTop.color = col;
+			if (mTopRight != null)    mTopRight.color = col;
+			if (mLeft != null)        mLeft.color = col;
+			if (mCenter != null)      mCenter.color = col;
+			if (mRight != null)       mRight.color = col;
+			if (mBottomLeft != null)  mBottomLeft.color = col;
+			if (mBottom != null)      mBottom.color = col;
+			if (mBottomRight != null) mBottomRight.color = col;
+			addImages();
+		}
+		
 		public function adjustUsedSlices(useTopLeft:Boolean = true, useTop:Boolean = true, useTopRight:Boolean = true,
                                          useLeft:Boolean = true, useCenter:Boolean = true, useRight:Boolean = true,
                                          useBottomLeft:Boolean = true, useBottom:Boolean = true, useBottomRight:Boolean = true):void
 		{
+			mUseTopLeft = useTopLeft;
+			mUseTop = useTop;
+			mUseTopRight = useTopRight;
+            mUseLeft = useLeft;
+			mUseCenter = useCenter;
+			mUseRight = useRight;
+            mUseBottomLeft = useBottomLeft;
+			mUseBottom = useBottom;
+			mUseBottomRight = useBottomRight;
+			addImages();
+		}
+		
+		private function addImages():void
+		{
 			this.reset();
-			if (useTopLeft) addImage(mTopLeft);
-			if (useTop) addImage(mTop);
-			if (useTopRight) addImage(mTopRight);
-			if (useLeft) addImage(mLeft);
-			if (useCenter) addImage(mCenter);
-			if (useRight) addImage(mRight);
-			if (useBottomLeft) addImage(mBottomLeft);
-			if (useBottom) addImage(mBottom);
-			if (useRight) addImage(mBottomRight);
+			if (mUseTopLeft) addImage(mTopLeft);
+			if (mUseTop) addImage(mTop);
+			if (mUseTopRight) addImage(mTopRight);
+			if (mUseLeft) addImage(mLeft);
+			if (mUseCenter) addImage(mCenter);
+			if (mUseRight) addImage(mRight);
+			if (mUseBottomLeft) addImage(mBottomLeft);
+			if (mUseBottom) addImage(mBottom);
+			if (mUseRight) addImage(mBottomRight);
 		}
 	}
 

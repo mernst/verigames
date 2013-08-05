@@ -2,7 +2,7 @@ package encrypted;
 
 import checkers.inference.InferenceTypeChecker;
 import checkers.quals.TypeQualifiers;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 
 import javax.lang.model.util.Elements;
 

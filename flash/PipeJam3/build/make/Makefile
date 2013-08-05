@@ -1,6 +1,6 @@
 MXMLC := "${FLEX_HOME}"/bin/mxmlc +FLEX_HOME="${FLEX_HOME}"
 
-.PHONY: prebuild debug release
+.PHONY: prebuild check install test debug release all
 
 all: debug release
 
@@ -18,6 +18,12 @@ prebuild: check
 
 bin/debug/PipeJam3.swf: prebuild
 	${MXMLC} -load-config+=config-base.xml -load-config+=config-debug.xml -load-config+=config-web.xml ../../src/PipeJam3.as -o $@
+
+install:
+ifndef PREFIX
+	$(error PREFIX needs to be set)
+endif
+	cp -R bin ${PREFIX}
 
 clean:
 	rm -rf bin

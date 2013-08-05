@@ -82,22 +82,24 @@ public class World
     for (Board board : boards.values())
     {
       Set<Intersection> nodeSet = board.getNodes();
-      for (Intersection n : nodeSet)
+      for (Intersection isect : nodeSet)
       {
-        if (n.isSubboard())
+        if (isect.isSubboard())
         {
-          Subboard s = n.asSubboard();
-          String name = s.getSubnetworkName();
+          Subboard subboard = isect.asSubboard();
+          String name = subboard.getSubnetworkName();
           if (!boards.containsKey(name))
             throw new IllegalStateException("no board exists with name " + name);
 
           Board referent = boards.get(name);
 
-          List<String> boardInputs = referent.getIncomingNode().getOutputIDs();
+          List<String> boardInputs  = referent.getIncomingNode().getOutputIDs();
           List<String> boardOutputs = referent.getOutgoingNode().getInputIDs();
-          List<String> subboardInputs = s.getInputIDs();
-          List<String> subboardOutputs = s.getOutputIDs();
+          List<String> subboardInputs  = subboard.getInputIDs();
+          List<String> subboardOutputs = subboard.getOutputIDs();
 
+
+          /** TODO JB:  Put this back in when we figure out missing board info
           if (boardInputs.size() != subboardInputs.size())
             throw new IllegalStateException("subboard " + name + " has " +
                 subboardInputs.size() + " inputs but its referent has " +
@@ -105,7 +107,7 @@ public class World
           if (boardOutputs.size() != subboardOutputs.size())
             throw new IllegalStateException("subboard " + name + " has " +
                 subboardOutputs.size() + " outputs but its referent has " +
-                boardOutputs.size() + " outputs");
+                boardOutputs.size() + " outputs" + " caller: " + board.getName());
 
           if (!boardInputs.equals(subboardInputs))
             throw new IllegalStateException(String.format("subboard %s does " +
@@ -116,8 +118,8 @@ public class World
           if (!boardOutputs.equals(subboardOutputs))
             throw new IllegalStateException(String.format("subboard %s does " +
                 "not have the same output port identifiers as board: subboard " +
-                "has: %s, board has: %s", name, subboardOutputs.toString(),
-                boardOutputs.toString()));
+                "has: %s, board has: %s, caller: %s", name, subboardOutputs.toString(),
+                boardOutputs.toString(), board.getName())); **/
         }
       }
     }

@@ -1,11 +1,14 @@
 package games;
 
 import checkers.basetype.BaseTypeChecker;
+import checkers.inference.InferenceAnnotatedTypeFactory;
 import checkers.inference.InferenceTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
+import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TypeHierarchy;
 
-public abstract class GameChecker extends BaseTypeChecker implements InferenceTypeChecker {
+public abstract class GameChecker<REAL_TYPE_FACTORY extends BasicAnnotatedTypeFactory<?>>
+       extends BaseTypeChecker<REAL_TYPE_FACTORY> implements InferenceTypeChecker {
 
     @Override
     protected TypeHierarchy createTypeHierarchy() {

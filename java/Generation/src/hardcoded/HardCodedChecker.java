@@ -13,7 +13,7 @@ import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 
@@ -23,7 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
  *
  */
 @TypeQualifiers({ MaybeHardCoded.class, NotHardCoded.class })
-public class HardCodedChecker extends GameChecker {
+public class HardCodedChecker extends GameChecker<HardCodedAnnotatedTypeFactory> {
     public AnnotationMirror MAYBEHARDCODED, NOTHARDCODED;
 
     @Override
@@ -39,7 +39,7 @@ public class HardCodedChecker extends GameChecker {
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public HardCodedAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new HardCodedAnnotatedTypeFactory(this, root);
     }
 

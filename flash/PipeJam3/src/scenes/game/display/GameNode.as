@@ -173,7 +173,7 @@ package scenes.game.display
 				else
 					assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
 			}
-			
+			if (m_isSelected) assetName += "Select";
 			m_box9slice = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
 			addChild(m_box9slice);
 			
@@ -197,6 +197,7 @@ package scenes.game.display
 			//			txt.y = 0;
 			//			txt.x = 0;
 			//			m_shape.addChild(txt);
+			super.draw();
 		}
 		
 		override public function getWideScore():Number
