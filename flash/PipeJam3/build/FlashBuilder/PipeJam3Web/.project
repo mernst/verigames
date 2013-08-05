@@ -46,9 +46,9 @@
 			<locationURI>ROOT/external/MouseWheelTrap</locationURI>
 		</link>
 		<link>
-			<name>[source path] Starling-Extension-Particle-System-master-src</name>
+			<name>[source path] Starling-Extension-Particle-System-master-bdfe72d182-src</name>
 			<type>2</type>
-			<locationURI>ROOT/external/Starling-Extension-Particle-System-master/src</locationURI>
+			<locationURI>ROOT/external/Starling-Extension-Particle-System-master-bdfe72d182/src</locationURI>
 		</link>
 		<link>
 			<name>[source path] dynamicTextureAtlasGenerator-src</name>
@@ -58,12 +58,12 @@
 		<link>
 			<name>[source path] extension-src</name>
 			<type>2</type>
-			<locationURI>ROOT/external/Starling-Extension-Graphics/extension/src</locationURI>
+			<locationURI>ROOT/external/Starling-Extension-Graphics-master-606972f814/extension/src</locationURI>
 		</link>
 		<link>
-			<name>[source path] pixelmask-master-src</name>
+			<name>[source path] pixelmask-master-2e968c9fd2-src</name>
 			<type>2</type>
-			<locationURI>ROOT/external/pixelmask-master/src</locationURI>
+			<location>C:/Users/craigc/Documents/PipeJam/flash/PipeJam3/external/pixelmask-master-2e968c9fd2/src</location>
 		</link>
 		<link>
 			<name>[source path] source</name>
