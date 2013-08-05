@@ -22,8 +22,8 @@ import checkers.source.SourceChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.AnnotationUtils;
-import checkers.util.TreeUtils;
+import javacutils.AnnotationUtils;
+import javacutils.TreeUtils;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -133,7 +133,7 @@ public class LockInfVisitor extends GameVisitor {
         } else if (methodSel.getKind() == Tree.Kind.MEMBER_SELECT) {
             return ((MemberSelectTree)methodSel).getExpression().toString();
         } else {
-            SourceChecker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
+            lockChecker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
             return null;
         }
     }
@@ -172,15 +172,15 @@ public class LockInfVisitor extends GameVisitor {
             Void p) {
 
         List<String> overriderLocks = methodHolding(TreeUtils.elementFromDeclaration(overriderTree));
-        List<String> overriddenLocks = methodHolding(overridden.getElement());
+        List<String> overriddenLocks = methodHolding( overridden.getElement() );
 
         boolean isValid = overriddenLocks.containsAll(overriderLocks);
 
         if (!isValid) {
             checker.report(Result.failure("override.holding.invalid",
                     TreeUtils.elementFromDeclaration(overriderTree),
-                    enclosingType.getElement(), overridden.getElement(),
-                    overriddenType.getElement(),
+                    //enclosingType.getElement(), overridden.getElement(),
+                    //overriddenType.getElement(),
                     overriderLocks, overriddenLocks), overriderTree);
         }
 

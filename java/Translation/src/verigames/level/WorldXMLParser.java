@@ -5,6 +5,7 @@ import java.util.*;
 
 import nu.xom.*;
 
+import verigames.level.StubBoard.StubConnection;
 import verigames.layout.GameCoordinate;
 import verigames.utilities.Pair;
 
@@ -111,6 +112,14 @@ public class WorldXMLParser
 
     /* the boards must be processed first because Level requires that edges
      * already be present before makeLinked is called with them as arguments.*/
+    final Map<String, StubBoard> stubBoards = processStubBoards(levelElt.getFirstChildElement("boards"));
+    for (Map.Entry<String, StubBoard> entry : stubBoards.entrySet()) {
+      final String stubBoardName = entry.getKey();
+      final StubBoard stubBoard = entry.getValue();
+
+      level.addStubBoard(stubBoardName, stubBoard);
+    }
+
     final Pair<Map<String, Board>, Map<String, Chute>> p = processBoards(levelElt.getFirstChildElement("boards"));
     final Map<String, Board> boards = p.getFirst();
     final Map<String, Chute> chuteUIDs = p.getSecond();
@@ -188,6 +197,53 @@ public class WorldXMLParser
   }
 
   /**
+   * Takes XML Element boards as a parameter and reads all the stub boards from the XML, returning
+   * a Map from their names to {@code StubBoard}s
+   * @param boards The XML Element countaining the level's boards
+   * @return Map from String names to the corresponding StubBoards
+   */
+  private static Map<String, StubBoard> processStubBoards(final Element boards)
+  {
+    checkName(boards, "boards");
+
+    final Map<String, StubBoard> stubBoards = new LinkedHashMap<String, StubBoard>();
+
+    final Elements stubBoardElts = boards.getChildElements("board-stub");
+
+    for (int i = 0; i < stubBoardElts.size(); i++)
+    {
+      final Element stubBoardElt = stubBoardElts.get(i);
+      final Elements inputConnectionElts = 
+          stubBoardElt.getFirstChildElement("stub-input").getChildElements("stub-connection");
+      final Elements outputConnectionElts = 
+          stubBoardElt.getFirstChildElement("stub-output").getChildElements("stub-connection");
+
+      final List<StubConnection> inputs = getStubConnections(inputConnectionElts);
+      final List<StubConnection> outputs = getStubConnections(outputConnectionElts);
+
+      final String name = stubBoardElt.getAttribute("name").getValue();
+
+      stubBoards.put(name, new StubBoard(inputs, outputs));
+    }
+
+    return stubBoards;
+  }
+
+  /**
+   * Reads the connections from a {@code StubBoard}'s inputs or outputs and returns the StubConnections as a List
+   */
+  private static List<StubConnection> getStubConnections(final Elements connectionElts)
+  {
+    final List<StubConnection> connections = new ArrayList<StubConnection>();
+    for (int i = 0; i < connectionElts.size(); i++) {
+      final Element connectionElt = connectionElts.get(i);
+      connections.add(new StubConnection(connectionElt.getAttribute("num").getValue(),
+          connectionElt.getAttribute("width").getValue().equals("narrow")));
+    }
+    return connections;
+  }
+
+  /**
    * Returns a map from {@link Board} names to {@code Board}s and a map from
    * {@link Chute} UIDs to {@code Chute}s.
    */
@@ -198,7 +254,7 @@ public class WorldXMLParser
     final Map<String, Board> boardsMap = new LinkedHashMap<String, Board>();
     final Map<String, Chute> chuteUIDs = new LinkedHashMap<String, Chute>();
 
-    final Elements children = boards.getChildElements();
+    final Elements children = boards.getChildElements("board");
 
     for (int i = 0; i < children.size(); i++)
     {

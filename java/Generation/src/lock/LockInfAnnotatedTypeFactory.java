@@ -18,9 +18,9 @@ import checkers.quals.Unqualified;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.util.AnnotationBuilder;
-import checkers.util.AnnotationUtils;
-import checkers.util.TreeUtils;
-import checkers.util.TypesUtils;
+import javacutils.AnnotationUtils;
+import javacutils.TreeUtils;
+import javacutils.TypesUtils;
 
 public class LockInfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<LockInfChecker>{
 
@@ -127,22 +127,23 @@ public class LockInfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<LockI
                 t.hasAnnotation(checkers.lock.quals.GuardedBy.class) ||
                 t.hasAnnotation(net.jcip.annotations.GuardedBy.class);
     }
-    
-    @Override
-    public void annotateImplicit(Tree tree, AnnotatedTypeMirror type) {
-        if (!hasGuardedBy(type)) {
-            /* TODO: I added STRING_LITERAL to the list of types that should get defaulted.
-             * This resulted in Flow inference to infer Unqualified for strings, which is a
-             * subtype of guardedby. This broke the Constructors test case.
-             * This check ensures that an existing annotation doesn't get removed by flow.
-             * However, I'm not sure this is the nicest way to do things.
-             */
-            super.annotateImplicit(tree, type);
-        }
-        replaceThis(type, tree);
-        replaceItself(type, tree);
-        removeHeldLocks(type);
-    }
+
+    /* TODO JB: FIGURE OUT WHAT TO DO NOW THAT THIS METHOD IS FINAL */
+//    @Override
+//    public void annotateImplicit(Tree tree, AnnotatedTypeMirror type) {
+//        if (!hasGuardedBy(type)) {
+//            /* TODO: I added STRING_LITERAL to the list of types that should get defaulted.
+//             * This resulted in Flow inference to infer Unqualified for strings, which is a
+//             * subtype of guardedby. This broke the Constructors test case.
+//             * This check ensures that an existing annotation doesn't get removed by flow.
+//             * However, I'm not sure this is the nicest way to do things.
+//             */
+//            super.annotateImplicit(tree, type);
+//        }
+//        replaceThis(type, tree);
+//        replaceItself(type, tree);
+//        removeHeldLocks(type);
+//    }
 
     @Override
     public AnnotationMirror aliasedAnnotation(AnnotationMirror a) {

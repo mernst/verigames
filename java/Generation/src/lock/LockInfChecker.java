@@ -14,12 +14,12 @@ import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 import checkers.util.GraphQualifierHierarchy;
 import checkers.util.MultiGraphQualifierHierarchy;
 
 @TypeQualifiers({GuardedBy.class})
-public class LockInfChecker extends GameChecker {
+public class LockInfChecker extends GameChecker<LockInfAnnotatedTypeFactory> {
 	public AnnotationMirror GUARDEDBY, UNQUALIFIED;
 
     public void init(ProcessingEnvironment processingEnv) {
@@ -36,7 +36,7 @@ public class LockInfChecker extends GameChecker {
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public LockInfAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new LockInfAnnotatedTypeFactory(this, root);
     }
 

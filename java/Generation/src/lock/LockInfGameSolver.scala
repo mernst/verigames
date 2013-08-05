@@ -4,7 +4,7 @@ import checkers.inference.Slot
 import games.GameSolver
 import verigames.level.Board
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
@@ -20,13 +20,14 @@ class LockInfGameSolver extends GameSolver {
       	
     override def solve(variables: List[Variable],
     combvariables: List[CombVariable],
+    refinementVariables : List[RefinementVariable],
     constraints: List[Constraint],
     weights: List[WeightInfo],
     params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
       
       print("Constraints:\n")
       
-      super.solve(variables, combvariables, constraints, weights, params)
+      super.solve(variables, combvariables, refinementVariables, constraints, weights, params)
     }
     
     override def createBoards(world: World) {
@@ -70,6 +71,8 @@ class LockInfGameSolver extends GameSolver {
     def createThisChute(): Chute = {
       null
     }
+
+    def createReceiverChute( variable : Variable ) = createChute(variable : Variable)
     
     def using[A <: {def close(): Unit}, B](param: A)(f: A => B): B =
     	try { f(param) } finally { param.close() }

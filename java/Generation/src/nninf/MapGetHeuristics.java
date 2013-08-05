@@ -8,17 +8,18 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
+import checkers.util.Resolver2;
 import nninf.quals.KeyFor;
 
 import checkers.types.AnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.AnnotationUtils;
-import checkers.util.ElementUtils;
-import checkers.util.InternalUtils;
-import checkers.util.Resolver;
-import checkers.util.TreeUtils;
+import javacutils.AnnotationUtils;
+import javacutils.ElementUtils;
+import javacutils.InternalUtils;
+import javacutils.Resolver;
+import javacutils.TreeUtils;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -68,7 +69,7 @@ import com.sun.source.util.TreePath;
     private final ProcessingEnvironment env;
     private final NninfAnnotatedTypeFactory factory;
     private final AnnotatedTypeFactory keyForFactory;
-    private final Resolver resolver;
+    private final Resolver2 resolver;
 
     private final ExecutableElement mapGet;
 
@@ -78,7 +79,7 @@ import com.sun.source.util.TreePath;
         this.env = env;
         this.factory = factory;
         this.keyForFactory = keyForFactory;
-        this.resolver = new Resolver(env);
+        this.resolver = new Resolver2(env);
 
         mapGet = TreeUtils.getMethod("java.util.Map", "get", 1, env);
     }
@@ -165,9 +166,8 @@ import com.sun.source.util.TreePath;
     }
 
     private Element getSite(MethodInvocationTree tree) {
-        AnnotatedDeclaredType type =
-            (AnnotatedDeclaredType)factory.getReceiverType(tree);
-        return type.getElement();
+        //TODO: Check this behavior for implicit receivers/outer receivers
+        return TreeUtils.elementFromUse( TreeUtils.getReceiverTree(tree) );
     }
 
     private boolean isCheckOfGet(Element key, VariableElement map, ExpressionTree tree) {

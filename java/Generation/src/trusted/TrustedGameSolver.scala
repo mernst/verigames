@@ -1,7 +1,7 @@
 package trusted
 
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
@@ -153,7 +153,7 @@ class TrustedGameSolver extends GameSolver {
           boardNVariableToIntersection((board, v))
         }
         case LiteralThis => {
-          boardToSelfIntersection(board)
+          boardNVariableToIntersection( ( board, boardToSelfVariable(board) ) )
         }
         case lit: AbstractLiteral => {
           val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
@@ -193,8 +193,8 @@ class TrustedGameSolver extends GameSolver {
         case TrustedConstants.TRUSTED => {
           // Nothing to do, we're always creating a new white ball
         }
-        case LiteralThis => {
-          boardToSelfIntersection.update(board, inters)
+        case LiteralThis => { //TODO JB: I don't think this should happen anymore
+          boardNVariableToIntersection.update( (board, boardToSelfVariable( board )), inters )
         }
         case cv: CombVariable => {
           // TODO: Combvariables appear for BinaryTrees.
@@ -252,6 +252,8 @@ class TrustedGameSolver extends GameSolver {
       inthis.setNarrow(true)
       inthis
     }
+
+    def createReceiverChute( variable : Variable ) = createChute( variable )
 
 
     override def optimizeWorld(world: World) {

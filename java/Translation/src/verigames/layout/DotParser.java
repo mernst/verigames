@@ -734,10 +734,14 @@ class DotParser extends AbstractDotParser
   {
     // an optional minus sign, followed by 1 or more digits, optionally
     // followed by a single dot and one or more digits
-    if (!str.matches("-?[0-9]+(\\.[0-9]+)?"))
-      throw new NumberFormatException(str + " is not a well-formed nonnegative decimal number");
+    final BigDecimal original;
+    try {
+        original = new BigDecimal(str);
+    } catch(final NumberFormatException nfe ) {
+        throw new RuntimeException(str + " is not a well-formed nonnegative decimal number", nfe);
+    }
 
-    BigDecimal hundredths = new BigDecimal(str).multiply(new BigDecimal(100));
+    BigDecimal hundredths = original.multiply(new BigDecimal(100));
 
     // round by adding 0.5, then taking the floor.
     return hundredths.add(new BigDecimal("0.5")).intValue();

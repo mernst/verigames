@@ -8,7 +8,7 @@ import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.types.GeneralAnnotatedTypeFactory;
-import checkers.util.Pair;
+import javacutils.Pair;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -36,10 +36,8 @@ public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfCh
 
         defaults.addAbsoluteDefault(checker.NONNULL,  DefaultLocation.OTHERWISE);
         defaults.addAbsoluteDefault(checker.NULLABLE, DefaultLocation.LOCALS);
-        
-        if(root != null && this.checker.currentPath != null) {
-        	postInit();
-        }
+
+        postInit();
     }
 
     /*
