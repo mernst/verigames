@@ -3,6 +3,7 @@ package random;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
+import checkers.inference.InferenceUtils;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -11,8 +12,8 @@ import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
-import checkers.util.ElementUtils;
-import checkers.util.TreeUtils;
+import javacutils.ElementUtils;
+import javacutils.TreeUtils;
 
 public class RandomAnnotatedTypeFactory extends
 		BasicAnnotatedTypeFactory<RandomChecker> {
@@ -57,7 +58,7 @@ public class RandomAnnotatedTypeFactory extends
          */
         @Override
         public Void visitBinary(BinaryTree tree, AnnotatedTypeMirror type) {
-            if (!type.isAnnotated()
+            if ( !InferenceUtils.isAnnotated( type)
                     && TreeUtils.isStringConcatenation(tree)) {
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());

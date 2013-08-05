@@ -1,7 +1,7 @@
 package games
 
 import checkers.inference._
-import checkers.util.AnnotationUtils
+import javacutils.AnnotationUtils
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.Queue
@@ -10,18 +10,49 @@ import javax.lang.model.element.AnnotationMirror
 import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
-import util.VGJavaConversions._
+import misc.util.VGJavaConversions._
+import verigames.level.Intersection.Kind._
+import checkers.inference.FieldAssignmentConstraint
+import checkers.inference.WeightInfo
+import checkers.inference.CombineConstraint
+import checkers.inference.AssignmentConstraint
+import checkers.inference.NewInStaticInitVP
+import scala.Some
+import checkers.inference.Variable
+import checkers.inference.ParameterVP
+import checkers.inference.NewInMethodVP
+import checkers.inference.Constant
+import checkers.inference.CallInstanceMethodConstraint
+import checkers.inference.CombVariable
+import checkers.inference.FieldAccessConstraint
+import checkers.inference.ReturnVP
+import checkers.inference.ComparableConstraint
+import checkers.inference.RefinementVariable
+import checkers.inference.FieldVP
+import checkers.inference.NewInFieldInitVP
+import verigames.layout.LayoutDebugger
+
+import scala.collection.JavaConversions._
+import games.handlers.{CallInstanceMethodConstraintHandler, FieldAssignmentConstraintHandler, FieldAccessConstraintHandler}
 
 /**
  * An abstract base class for all game solvers.
  */
 abstract class GameSolver extends ConstraintSolver {
 
-    /** All variables used in this program. */
+    //TODO JB: TEMP KLUDGE FOR UNSUPPORTED VARIABLES
+    var unsupportedVariables = new scala.collection.mutable.ListBuffer[Variable]
+
+    /** All variables declared in this program. */
     var variables: List[Variable] = null
 
-    /** Empty, b/c there is no viewpoint adaptation (yet?). */
+    /** Empty, b/c there is no viewpoint adaptation (yet?). */  //TODO: Is this true?
     var combvariables: List[CombVariable] = null
+
+    /** flow-sensitively refined variables.  Each one of these variables corresponds to a
+     * declared variable after an assignment operation
+     */
+    var refinementVariables: List[RefinementVariable] = null
 
     /** All constraints that have to be fulfilled. */
     var constraints: List[Constraint] = null
@@ -45,13 +76,24 @@ abstract class GameSolver extends ConstraintSolver {
      * The key is the fully-qualified class name and the
      * value is the corresponding board.
      */
-    val classToBoard = new LinkedHashMap[String, Board]
+    val  classToBoard = new LinkedHashMap[String, Board]
 
     /** We generate a separate board for every method within a class.
      * The key is the fully-qualified class name followed by the method
      * signature and the value is the corresponding board.
      */
     val methToBoard = new LinkedHashMap[String, Board]
+
+
+    /**
+     * We need to be able to route a class's type parameters through all
+     * setters/getters.  Therefore, we must the type parameters to add them
+     * to the relevant board
+     */
+    val classToTypeParams = new LinkedHashMap[String, java.util.List[AbstractVariable]]
+
+
+    val fieldBoardsToClass = new LinkedHashMap[Board, String]
 
     /**
      * For each constraint variable we keep a reference to the
@@ -68,15 +110,19 @@ abstract class GameSolver extends ConstraintSolver {
      */
     val boardToSelfIntersection = new LinkedHashMap[Board, Intersection]
 
+    val boardToSelfVariable = new LinkedHashMap[Board, Variable]
+
 
     def solve(variables: List[Variable],
     combvariables: List[CombVariable],
+    refinementVariables : List[RefinementVariable],
     constraints: List[Constraint],
     weights: List[WeightInfo],
     params: TTIRun): Option[Map[AbstractVariable, AnnotationMirror]] = {
 
       this.variables = variables
       this.combvariables = combvariables
+      this.refinementVariables = refinementVariables
       this.constraints = constraints
       this.weights = weights
       this.params = params
@@ -123,7 +169,10 @@ abstract class GameSolver extends ConstraintSolver {
      * Create the world!
      */
     def createWorld(): World = {
+
       val world = new World()
+
+      try {
 
       // First create all the levels and boards.
       createBoards(world)
@@ -131,8 +180,20 @@ abstract class GameSolver extends ConstraintSolver {
       handleConstraints(world)
       // Optimize the world, removing unnecessary complexity.
       optimizeWorld(world)
+
       // Finally, add any necessary plumbing to the end of each board.
+      // ANd add the boards to the world
       finalizeWorld(world)
+
+        val printWorld = Option(System.getProperty("PRINT_WORLD") )
+        if( printWorld.map( _ == "true" ).getOrElse(false) ) {
+          LayoutDebugger.layout(world, "./debug_world");
+        }
+      }
+      catch {
+        case exc : Exception => LayoutDebugger.layout(world, "./debug_world")
+                                throw exc
+      }
 
       world
     }
@@ -145,33 +206,58 @@ abstract class GameSolver extends ConstraintSolver {
       variables foreach { cvar => {
         import Intersection.Kind._
 
-        val level = variablePosToLevel(cvar.varpos)
-        val board = variablePosToBoard(cvar.varpos)
+        val level = variablePosToLevel( cvar.varpos )
+        val board = variablePosToBoard( cvar.varpos )
 
         cvar.varpos match {
+          case recVp : ReceiverParameterVP =>
+            //If the position == null then it is the top-level parameter class (otherwise it is a type
+            //nested in a type parameter
+            val isThis = Option( cvar.pos ).isEmpty
+            val chute =  if( isThis ) createReceiverChute( cvar ) else createThisChute()
+
+            val incoming = board.getIncomingNode()
+            val connect = board.add(incoming, ReceiverInPort + genericsOffset( cvar ), Intersection.Kind.CONNECT, "input", chute)._2
+
+            boardNVariableToIntersection += ( (board, cvar) -> connect )
+            if( isThis ) {
+              boardToSelfVariable  += (board -> cvar)
+            }
 
           //WithinMethodVP cases
-          case mvar: ParameterVP =>
+          case mvar : ParameterVP =>
             // For each parameter, create a CONNECT Intersection.
-            // Also for FieldVP, but that's not a InMethodVP...
+            // Also for FieldVP, but that's not an InMethodVP...
             val incoming = board.getIncomingNode
-            val connect = board.add(incoming, ParamInPort+incoming.getOutputIDs().size(),
+            val connect = board.add(incoming, ParamInPort + incoming.getOutputIDs().size() + genericsOffset(cvar),
                                     CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
           case mvar: NewInMethodVP =>
-            // For object creations, add a START_WHITE_BALL Intersection.
+            // For object creations, add a START_SMALL_BALL Intersection.
             val connect = board.add(START_SMALL_BALL, "output", CONNECT, "input", toChute(cvar))._2
+            boardNVariableToIntersection += ( (board, cvar) -> connect )
+
+          case mtp : MethodTypeParameterVP  =>
+            //TODO: Is ordering going to be a problem?
+            val incoming = board.getIncomingNode
+            val connect = board.add(incoming, ParamInPort+incoming.getOutputIDs().size() + genericsOffset(cvar),
+              CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
+
           case mvar: WithinMethodVP =>
-            // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.
+            // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.  //TODO: Add refinement vars here?
             // TODO: Should a local variable start as BLACK/WHITE or NO ball?
             val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
           //WithinClassVP cases
           case clvar : FieldVP =>  {
+            //If position is null then it is the "primary" annotation on a field
+            //otherwise it is a type parameter (or an annotation contained within a type parameter)
+            //these fields should be added as outputs/inputs to the subboard
+
             // For a field type, create three things.
             // 1. For field initializers, add the initial connects
             {
@@ -184,43 +270,86 @@ abstract class GameSolver extends ConstraintSolver {
             // 2. a field getter
             {
               // val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
-              val getterBoard = findOrCreateMethodBoard(clvar, getFieldAccessorName(clvar))
-              val inthis = findIntersection(getterBoard, LiteralThis)
-              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", getterBoard.getOutgoingNode, ReturnOutPort, toChute(cvar))
+              val accessorBoardName = getFieldAccessorName(clvar)
+              val getterBoard = findOrCreateMethodBoard(clvar, accessorBoardName )
+              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", getterBoard.getOutgoingNode, ReturnOutPort + genericsOffset(cvar), toChute(cvar))
+
+
+              if( !fieldBoardsToClass.keys.contains( accessorBoardName )) {
+                fieldBoardsToClass += ( getterBoard -> clvar.getFQClassName )
+              }
             }
 
             // 3. a field setter
+            // Pass the receiver and it's type parameters (in this case the class's type parameters)
+            // through the subboard but do NOT pass the field through, pass it in only
             {
-              // val setterBoard = newBoard(level, getFieldSetterName(clvar.asInstanceOf[FieldVP]))
-              val setterBoard = findOrCreateMethodBoard(clvar, getFieldSetterName(clvar))
-              val inthis = findIntersection(setterBoard, LiteralThis)
-              setterBoard.add(setterBoard.getIncomingNode, OutputPort + (1 + genericsOffset(cvar)),
+              val setterName = getFieldSetterName( clvar )
+              val setterBoard = findOrCreateMethodBoard(clvar, setterName)
+              setterBoard.add(setterBoard.getIncomingNode, OutputPort + genericsOffset(cvar),
                               END, "input", toChute(cvar))
-              // Let's not have an output for setters.
-              // setterBoard.addEdge(field, 0, outgoing, 1, new Chute(cvar.id, cvar.toString()))
+
+              if( !fieldBoardsToClass.keys.contains( setterName )) {
+                fieldBoardsToClass += ( setterBoard -> clvar.getFQClassName )
+              }
             }
+
           }
-          case clVar: WithinClassVP if ( clVar.isInstanceOf[NewInFieldInitVP] ||
-                                         clVar.isInstanceOf[NewInStaticInitVP] )  =>
-              val connect = board.add(START_SMALL_BALL, "output", CONNECT, "input", toChute(cvar))._2
-              // For object creations, add a START_WHITE_BALL Intersection.
-              boardNVariableToIntersection += ((board, cvar) -> connect)
+
+          case clVar: WithinClassVP if ( clVar.isInstanceOf[ClassTypeParameterVP]      ||
+                                         clVar.isInstanceOf[ClassTypeParameterBoundVP] )  =>
+            val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
+            boardNVariableToIntersection += ((board, cvar) -> connect)
+
+            val typeVars =
+              classToTypeParams.get( clVar.getFQClassName ).getOrElse({
+                val typeVars = new java.util.ArrayList[AbstractVariable]()
+                classToTypeParams += ( clVar.getFQClassName -> typeVars )
+                typeVars
+              })
+
+            typeVars += cvar
 
           case clvar: WithinClassVP if ( cvar.varpos.isInstanceOf[WithinFieldVP]     ||
                                          cvar.varpos.isInstanceOf[WithinStaticInitVP] ) =>
-
-              // For returns, locals, casts, and instance-ofs, add a START_NO_BALL Intersections.
             val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
           case clvar: WithinClassVP =>
+            unsupportedVariables += cvar
             println("TODO: unsupported field variable position: " + cvar + " pos: " + clvar.getClass())
 
           case _ =>
+            unsupportedVariables += cvar
             println("TODO: unhandled position for: " + cvar + " pos: " + cvar.varpos.getClass())
 
         }
       }}
+
+      //Add all of the "receiver" type variables for fields (i.e. the class type variables for the class
+      // in which the field is declared )
+      fieldBoardsToClass.foreach( (boardToClassName : (Board, String )) => {
+        classToTypeParams.get( boardToClassName._2 ).foreach( typeParams =>
+          connectVariablesToInput( boardToClassName._1, typeParams.toList )
+        )
+      })
+
+      refinementVariables.foreach(
+        refVar => {
+          //create the refinement variable no ball start
+          val board = variablePosToBoard(refVar.varpos)
+          val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(refVar))._2
+          boardNVariableToIntersection += ((board, refVar) -> connect)
+
+          //enforce the subtype rule of refinement <: declaration
+          //TODO: I don't like calling handleConstraint here but I also don't
+          //TODO: Like duplicating the handling of Subtype relationships
+          handleConstraint(world, SubtypeConstraint(refVar, refVar.declVar))
+        }
+      )
+
+      //For ClassTypeParameterVPs and ClassTypeParameterBoundVPs the variable may be required in a sub-board
+      //but because the
     }
 
 
@@ -228,27 +357,28 @@ abstract class GameSolver extends ConstraintSolver {
      * Go through all constraints and add the corresponding piping to the boards.
      */
     def handleConstraints(world: World) {
-      var workQueue = new Queue[Constraint]
-      constraints foreach { constraint => {
-        workQueue += constraint
-      }}
-      while (!workQueue.isEmpty) {
-        val initialSize = workQueue.size
-        var i = 0
-        for (i <- 1 to initialSize) {
-          val constraint = workQueue.dequeue
-          if (!handleConstraint(world, constraint)) {
-            workQueue += constraint
-          }
-        }
-        if (workQueue.size == initialSize) {
-          throw new IllegalStateException("Constraints not solvable: " + workQueue)
+      var workList = List[Constraint](constraints :_*)
+
+      while (!workList.isEmpty) {
+        val initialSize = workList.size
+        workList = workList.filterNot( constraint => handleConstraint(world, constraint) )
+
+        if (workList.size == initialSize) {
+          throw new IllegalStateException("Constraints not solvable: \n" + workList.mkString("\n"))
         }
       }
     }
 
 
     val ParamInPort     = "inParam"
+    val ParamOutPort    = "outParam"
+
+    val ClassTypeParamsInPort = "inClassTypeParam"
+    val ClassTypeParamsOutPort = "outClassTypeParam"
+
+    val MethodTypeParamsInPort = "inMethodTypeParam"
+    val MethodTypeParamsOutPort = "outMethodTypeParam"
+
     val ReceiverInPort  = "inReceiver"
     val ReceiverOutPort = "outReceiver"
     val ReturnOutPort   = "outputReturn"
@@ -269,209 +399,16 @@ abstract class GameSolver extends ConstraintSolver {
           case cc: CombineConstraint =>
             println("TODO: combine constraints should never happen!")
 
-          case FieldAccessConstraint(context, receiver, fieldslot, fieldvp) =>
-            val ctxBoard = variablePosToBoard(context)
-            val subboard = newSubboard(ctxBoard, fieldvp, getFieldAccessorName(fieldvp))
-
-            { // Connect the receiver to input and output 0
-              val receiverInt = findIntersection(ctxBoard, receiver)
-              ctxBoard.addEdge(receiverInt, "output", subboard, ReceiverInPort, createChute(receiver))
-              val con = ctxBoard.add(subboard, ReceiverOutPort, CONNECT, "input", createChute(receiver))._2
-
-              updateIntersection(ctxBoard, receiver, con)
-            }
-            { // Connect the result as output only
-              fieldslot match {
-                case fieldvar: Variable => {
-                  if (boardNVariableToIntersection.contains((ctxBoard, fieldvar))) {
-                    // Field was previously accessed.
-                    val fieldInt = boardNVariableToIntersection((ctxBoard, fieldvar))
-
-                    val merge = ctxBoard.add(subboard, ReturnOutPort, MERGE, "left", toChute(fieldvar))._2
-                    ctxBoard.addEdge(fieldInt, "output", merge, "right", toChute(fieldvar))
-                    boardNVariableToIntersection.update((ctxBoard, fieldvar), merge)
-                  } else {
-
-                    val con = ctxBoard.add(subboard, ReturnOutPort, CONNECT, "input", toChute(fieldvar))._2
-                    boardNVariableToIntersection.update((ctxBoard, fieldvar), con)
-                  }
-                }
-                case _ => {
-                  println("Unhandled field type slot! " + fieldslot)
-                }
-              }
-            }
-
-          case FieldAssignmentConstraint(context, recvslot, fieldslot, rightslot) =>
-            val ctxBoard = variablePosToBoard(context)
-            fieldslot match {
-              case fieldvar : Variable => {
-                fieldvar.varpos match {
-                  case fvp: FieldVP => {
-                    val subboard = newSubboard(ctxBoard, fvp, getFieldSetterName(fvp))
-                    val recvInt = findIntersection(ctxBoard, recvslot)
-                    ctxBoard.addEdge(recvInt, "output", subboard, ReceiverInPort, createChute(recvslot))
-
-                    if (isUniqueSlot(rightslot)) {
-                      val rightInt = findIntersection(ctxBoard, rightslot)
-                      ctxBoard.addEdge(rightInt, "output", subboard, OutputPort + (1 + genericsOffset(fieldvar)), createChute(rightslot))
-
-                    } else {
-                      val rightInt = findIntersection(ctxBoard, rightslot)
-                      val split = ctxBoard.add(rightInt, "output", SPLIT, "input", createChute(rightslot))._2
-                      ctxBoard.addEdge(split, "split", subboard, OutputPort + (1 + genericsOffset(fieldvar)), createChute(rightslot))
-
-                      updateIntersection(ctxBoard, rightslot, split)
-                    }
-
-                    val con = ctxBoard.add(subboard, ReceiverOutPort, CONNECT, "input", createChute(recvslot))._2
-                    updateIntersection(ctxBoard, recvslot, con)
-                  }
-                  case _ => {
-                    println("Unhandled FieldAssignmentConstraint: " + constraint)
-                  }
-                }
-              }
-              case _ => {
-                println("Unhandled FieldAssignmentConstraint: " + constraint)
-              }
-            }
-
           case AssignmentConstraint(context, leftslot, rightslot) =>
             println("TODO: AssignmentConstraint not handled")
 
-          case CallInstanceMethodConstraint(caller, receiver, methname, tyargs, args, result) => {
-            val callerBoard = variablePosToBoard(caller)
-            val subboard = newSubboard(callerBoard, methname, methname.getMethodSignature)
-            // The input port to use next
-            var subboardPort = 0
+          case fac : FieldAccessConstraint     => FieldAccessConstraintHandler( fac, this ).handle()
 
-            // to avoid problems with aliased arguments, we split before
-            // connecting each argument, and the next time the aliased argument
-            // is used, we grab the split at the top, instead of pulling it up
-            // from the output
-            // TODO integrate this into more than just the receiver, once
-            // arguments flow through boards.
-            val localIntersectionMap = new LinkedHashMap[Slot, Intersection]
-            // stores all of the outputs from this subboard. Because aliased
-            // arguments result in multiple outputs, we need to store a list.
-            val outputMap = new LinkedHashMap[Slot, List[Intersection]]
-            // checks localIntersection map for already-used arguments. If
-            // nothing, uses the regular findIntersection method
-            def localFindIntersection(slot: Slot): Intersection = {
-              localIntersectionMap.get(slot) match {
-                case Some(intersection) => intersection
-                case None => findIntersection(callerBoard, slot)
-              }
-            }
-            def addToOutputMap(slot: Slot, intersection: Intersection) = {
-              outputMap.get(slot) match {
-                case Some(list) => outputMap.update(slot, intersection::list)
-                case None => outputMap.update(slot, List(intersection))
-              }
-            }
+          case fac : FieldAssignmentConstraint => FieldAssignmentConstraintHandler( fac, this ).handle()
 
-            { // Connect the receiver to input and output 0
-              val receiverIntersection = localFindIntersection(receiver)
+          case callInstanceMethodConstraint : CallInstanceMethodConstraint =>
+            CallInstanceMethodConstraintHandler(callInstanceMethodConstraint, this).handle()
 
-              // split so that if the argument is aliased, we have something
-              // above the subboard to connect to.
-              val split = callerBoard.add(receiverIntersection, "toSplit", SPLIT, "input", createChute(receiver))._2
-              callerBoard.addEdge(split, "toSubboard", subboard, ReceiverInPort, createChute(receiver))
-              localIntersectionMap.update(receiver, split)
-
-              // pipe the receiver through the subboard
-              val connect = callerBoard.add(subboard, ReceiverOutPort, CONNECT, "input", createChute(receiver))._2
-              addToOutputMap(receiver, connect)
-            }
-            { // TODO: type arguments
-            }
-            { // Connect the arguments as inputs only
-              for (anarg <- args) {
-                subboardPort += 1
-
-                // TODO: merge this with RHS of assignment
-                if (isUniqueSlot(anarg)) {
-                  val anargInt = localFindIntersection(anarg)
-                  callerBoard.addEdge(anargInt, "output", subboard, ParamInPort + subboardPort, createChute(anarg))
-                } else {
-                  val anargInt = localFindIntersection(anarg)
-
-                  val split = callerBoard.add(anargInt, "output", SPLIT, "input", createChute(anarg))._2
-                  callerBoard.addEdge(split, "split", subboard, ParamInPort + subboardPort, createChute(anarg))
-
-                  // it's a bit of a hack to update both the local and the
-                  // global intersection maps, but it won't be necessary once
-                  // all arguments are piped through
-                  localIntersectionMap.update(anarg, split)
-                  updateIntersection(callerBoard, anarg, split)
-                }
-              }
-
-              // clean up:
-              // - add end nodes to all of the splits above the subboard that
-              //   are unused
-              // - merge any outputs that correspond to the same argument
-              // - call updateIntersection for each argument
-
-              // the receiver is currently the only argument that is piped
-              // through and split on the top, so it's the only one that could
-              // have dangling splits above the subboard.
-              val receiverSplit = localIntersectionMap.getOrElse(receiver, null)
-              val end = callerBoard.add(receiverSplit, "toEnd", END, "input", createChute(receiver))._2
-
-              // Arguments:
-              // - list of intersections
-              // - a factory with which new chutes can be created
-              //
-              // Effects:
-              // adds enough merges to merge the intersections into a single
-              // pipe
-              //
-              // Returns: the single node resulting from this process (which may
-              // be a merge node, or may be another node, if no merges were
-              // needed)
-              //
-              // Mutates: callerBoard
-              def merge(intersections: List[Intersection], chuteFactory: () => Chute): Intersection = intersections match {
-                // if there's only one intersection, just return that one
-                case hd::Nil => hd
-                case first::second::tl => {
-                  val mergeIntersection = callerBoard.add(first, "toMerge", MERGE, "first", chuteFactory())._2
-                  callerBoard.addEdge(second, "toMerge", mergeIntersection, "second", chuteFactory())
-                  merge(mergeIntersection::tl, chuteFactory)
-                }
-                case Nil => throw new IllegalArgumentException("empty list passed to merge")
-              }
-
-              for ((slot, subboardOutputs) <- outputMap) {
-                val mergedIntersection = merge(subboardOutputs, () => createChute(slot))
-                updateIntersection(callerBoard, slot, mergedIntersection)
-              }
-            }
-            { // Connect the result as output only
-              result match {
-                case resvar: Variable => {
-                  if (boardNVariableToIntersection.contains((callerBoard, resvar))) {
-                    // Method was previously called.
-                    val resInt = boardNVariableToIntersection((callerBoard, resvar))
-                    val merge = callerBoard.add(subboard, ReturnOutPort, MERGE, "left", toChute(resvar))._2
-                    callerBoard.addEdge(resInt, "output", merge, "right", toChute(resvar))
-                    boardNVariableToIntersection.update((callerBoard, resvar), merge)
-
-                  } else {
-                    val con = callerBoard.add(subboard, ReturnOutPort, CONNECT, "input", toChute(resvar))._2
-                    boardNVariableToIntersection.update((callerBoard, resvar), con)
-                  }
-                }
-                case _ => {
-                  // Nothing to do for void methods.
-                  // TODO: this is also for pre-annotated return types!
-                  // println("Unhandled return type slot! " + result)
-                }
-              }
-            }
-          }
           case _ =>
             // Don't do anything here and hope the subclass does something.
 
@@ -483,7 +420,6 @@ abstract class GameSolver extends ConstraintSolver {
      * Type-system independent optimizations of the world.
      */
     def optimizeWorld(world: World) {/*
-      import scala.collection.JavaConversions._
 
       val emptyLevels = new collection.mutable.ListBuffer[String]
       world.getLevels() foreach ( kv => { val (levelName, level) = kv
@@ -513,18 +449,24 @@ abstract class GameSolver extends ConstraintSolver {
         if (cvar.varpos.isInstanceOf[ReturnVP] && variablePosToBoard(cvar.varpos) == board) {
           // Only the return variable is attached to outgoing.
           val outgoing = board.getOutgoingNode()
-          board.addEdge(lastsect, "output", outgoing, ReturnOutPort, toChute(cvar))
+          board.addEdge(lastsect, "output", outgoing, ReturnOutPort + genericsOffset(cvar), toChute(cvar))
+        } else if( isBoardReceiver( board, cvar )  )  {
+          connectVariablesToOutput( board, List(cvar) )
+
         } else {
+
           // Everything else simply gets terminated.
           val end = board.add(lastsect, "output", Intersection.Kind.END, "input", toChute(cvar))._2
         }
+
       }}
 
+      /*boardToSelfVariable
       boardToSelfIntersection foreach { case (board, lastsect) =>
         val outgoing = board.getOutgoingNode()
         val outthis = createThisChute()
         board.addEdge(lastsect, "output", outgoing, ReceiverOutPort, outthis)
-      }
+      }*/
 
       // Finally, deactivate all levels and add them to the world.
       classToLevel foreach { case (cname, level) =>
@@ -535,7 +477,16 @@ abstract class GameSolver extends ConstraintSolver {
 
     def findIntersection(board: Board, slot: Slot): Intersection
 
-        def createThisChute(): Chute
+    //Used for the actual receiver object
+    //E.g.
+    // public void method( @HERE MyClass< @NOT_HERE String> this )
+    def createThisChute() : Chute
+
+    //Used for the type parameters that may be part of the receiver declaration
+    //E.g.
+    // public void method( @NOT_HERE MyClass< @HERE String> this )
+    def createReceiverChute( variable : Variable ) : Chute
+
     def createChute(slot: Slot): Chute
     def updateIntersection(board: Board, slot: Slot, inters: Intersection)
 
@@ -545,7 +496,7 @@ abstract class GameSolver extends ConstraintSolver {
      * Sanitizes the name to be a valid XML ID.
      */
     def newBoard(level: Level, name: String): Board = {
-      val b = new Board()
+      val b = new Board("Level=" + level + " Board=" + name + "")
       // println("created board " + b + " with name " + name)
       val cleanname = cleanUpForXML(name)
       level.addBoard(cleanname, b)
@@ -556,10 +507,29 @@ abstract class GameSolver extends ConstraintSolver {
       b
     }
 
+
+    def isBoardReceiver( board : Board, variable : AbstractVariable ) = {
+      isGetterOrSetterReceiver( board, variable ) ||
+      isMethodReceiver( board, variable )
+    }
+
+    //TODO: This will erroneously identify a ClassTypeParameterVP from outside the class
+    //TODO: as a receiver param if it somehow ends up on that board
+    def isGetterOrSetterReceiver( board : Board, variable : AbstractVariable ) = {
+      ( isFieldGetterBoard( board ) || isFieldSetterBoard( board ) ) &&
+        ( variable.varpos.isInstanceOf[ClassTypeParameterVP] ||
+          variable.varpos.isInstanceOf[ClassTypeParameterBoundVP] )
+    }
+
+    def isMethodReceiver( board : Board, variable : AbstractVariable ) = {
+      variable.varpos.isInstanceOf[ReceiverParameterVP]                                            &&
+      methToBoard( variable.varpos.asInstanceOf[ReceiverParameterVP].getMethodSignature ) == board
+    }
     /**
-     * Create a new subboard on callerBoard.
+     * Create a new subboard intersection and ensure that the board corresponding to the
+     * subboard has already been created
      */
-    def newSubboard(callerBoard: Board, calledvarpos: VariablePosition, calledname: String): Subboard = {
+    def addSubboardIntersection(callerBoard: Board, calledvarpos: VariablePosition, calledname: String): Subboard = {
       val subboard = Intersection.subboardFactory(cleanUpForXML(calledname))
       callerBoard.addNode(subboard)
       // Ensure that called board exists, returned board not used.
@@ -610,7 +580,7 @@ abstract class GameSolver extends ConstraintSolver {
             val level = variablePosToLevel(varpos)
             val b = newBoard(level, fqcname)
             classToBoard += (fqcname -> b)
-            addThisStart(b)
+            //addThisStart(b)
             b
           }
         }
@@ -628,18 +598,48 @@ abstract class GameSolver extends ConstraintSolver {
         val level = variablePosToLevel(varpos)
         val b = newBoard(level, sig)
         methToBoard += (sig -> b)
-        // TODO: handle static methods
-        addThisStart(b)
+        //addThisStart(b)
         b
       }
     }
 
     /** Add the beginning of "this" pipes to a board. */
-    def addThisStart(board: Board) {
+    /*def addThisStart(board: Board) {
       val incoming = board.getIncomingNode()
       val inthis = createThisChute()
       val connect = board.add(incoming, ReceiverInPort, Intersection.Kind.CONNECT, "input", inthis)._2
       boardToSelfIntersection += (board -> connect)
+    } */
+
+  /**
+   * Add each variable in Variables as an input to the given board
+   * @param board
+   * @param variables
+   */
+    def connectVariablesToInput( board : Board, variables : List[AbstractVariable] ) {
+      for( variable <- variables ) {
+        val incoming = board.getIncomingNode()
+        val chute = createChute(variable)
+        val connect = board.add(incoming, (ReceiverInPort + genericsOffset(variable)),
+                                Intersection.Kind.CONNECT, "input", chute)._2
+        boardNVariableToIntersection += ((board, variable) -> connect )
+      }
+
+    }
+
+  /**
+   * Add each variable in Variables as an output of the given board.  The variables
+   * must have been previously added to the given board
+   * @param board
+   * @param variables
+   */
+    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable] ) {
+      for( variable <- variables ) {
+        val outgoing = board.getOutgoingNode()
+        val chute = createChute( variable )
+        val lastIsect = boardNVariableToIntersection((board, variable))
+        board.addEdge(lastIsect, "output", outgoing,  (ReceiverInPort + genericsOffset(variable)), chute)
+      }
     }
 
     /**
@@ -647,50 +647,56 @@ abstract class GameSolver extends ConstraintSolver {
      * slots.
      */
     def findBoard(slot1: Slot, slot2: Slot): Board = {
+
+      def varPositionsToBoard(varPos1 : VariablePosition, varPos2 : VariablePosition) = {
+        val board1 = variablePosToBoard(varPos1)
+        val board2 = variablePosToBoard(varPos2)
+
+        if (board1==board2) {
+          board1
+        } else if (varPos1.isInstanceOf[ReturnVP]) {
+          board2
+        } else if (varPos2.isInstanceOf[ReturnVP]) {
+          board2
+        } else {
+          /* We only need to handle variables that will end up on the same board.
+           * For all other variables, there will be a MethodCall, FieldRead, or FieldUpdate
+           * constraint, that links things together.
+           */
+          null
+        }
+      }
+
+      def varPositionAndLiteralToBoard(varPos : VariablePosition, literal : AbstractLiteral) = {
+        if (varPos.isInstanceOf[ParameterVP]) {
+          null
+        } else {
+          variablePosToBoard(varPos)
+        }
+      }
+
       (slot1, slot2) match {
-        case (cvar1: Variable, cvar2: Variable) => {
-          val board1 = variablePosToBoard(cvar1.varpos)
-          val board2 = variablePosToBoard(cvar2.varpos)
+        case (cvar1: Variable, cvar2: Variable) => varPositionsToBoard(cvar1.varpos, cvar2.varpos)
 
-          if (board1==board2) {
-            board1
-          } else if (cvar1.varpos.isInstanceOf[ReturnVP]) {
-             board2
-          } else if (cvar2.varpos.isInstanceOf[ReturnVP]) {
-            board2
-          } else {
-            /* We only need to handle variables that will end up on the same board.
-             * For all other variables, there will be a MethodCall, FieldRead, or FieldUpdate
-             * constraint, that links things together.
-             */
-            null
-          }
-        }
+        case (cvar: Variable, refVar: RefinementVariable) => varPositionsToBoard(cvar.varpos, refVar.varpos)
+        case (refVar: RefinementVariable, cvar: Variable) => varPositionsToBoard(cvar.varpos, refVar.varpos)
 
-        case (cvar1: Variable, lit: AbstractLiteral) => {
-          if (cvar1.varpos.isInstanceOf[ParameterVP]) {
-            null
-          } else {
-            variablePosToBoard(cvar1.varpos)
-          }
-        }
-        case (lit: AbstractLiteral, cvar2: Variable) => {
-          if (cvar2.varpos.isInstanceOf[ParameterVP]) {
-            null
-          } else {
-            variablePosToBoard(cvar2.varpos)
-          }
-        }
-        case (cvar1: Variable, c: Constant) => {
-          variablePosToBoard(cvar1.varpos)
-        }
-        case (c: Constant, cvar2: Variable) => {
-          variablePosToBoard(cvar2.varpos)
-        }
-        case (cv: CombVariable, cvar2: Variable) => {
-          // TODO: Combvariables appear for BinaryTrees.
-          variablePosToBoard(cvar2.varpos)
-        }
+        case (cvar: Variable, lit: AbstractLiteral)  => varPositionAndLiteralToBoard(cvar.varpos, lit)
+        case (lit: AbstractLiteral, cvar: Variable)  => varPositionAndLiteralToBoard(cvar.varpos, lit)
+
+        case (refVar: RefinementVariable, lit: AbstractLiteral)  => varPositionAndLiteralToBoard(refVar.declVar.varpos, lit)
+        case (lit: AbstractLiteral, refVar: RefinementVariable)  => varPositionAndLiteralToBoard(refVar.declVar.varpos, lit)
+
+        case (cvar1: Variable, c: Constant) => variablePosToBoard(cvar1.varpos)
+        case (c: Constant, cvar2: Variable) => variablePosToBoard(cvar2.varpos)
+
+        case (refVar: RefinementVariable, c: Constant) => variablePosToBoard(refVar.declVar.varpos)
+        case (c: Constant, refVar: RefinementVariable) => variablePosToBoard(refVar.declVar.varpos)
+
+        // TODO: Combvariables appear for BinaryTrees.
+        case (cv: CombVariable, cvar2: Variable)            => variablePosToBoard(cvar2.varpos)
+        case (cv: CombVariable, refVar: RefinementVariable) => variablePosToBoard(refVar.declVar.varpos)
+
         case (_, _) => {
           println("TODO: findBoard unhandled slots: " + slot1 + " and " + slot2)
           null
@@ -723,22 +729,31 @@ abstract class GameSolver extends ConstraintSolver {
      * intersection is generated each time.
      */
     def isUniqueSlot(slot: Slot): Boolean = {
-      !(slot.isInstanceOf[Variable] || slot == LiteralThis)
+      !(slot.isInstanceOf[Variable] || slot.isInstanceOf[RefinementVariable] || slot == LiteralThis)
     }
+
+    val GetterSuffix = "--GET"
+    val SetterSuffix = "--SET"
 
     /**
      * Helper method to determine the name of the subboard used for a field getter.
      */
     def getFieldAccessorName(fvp: FieldVP): String = {
-      fvp.getFQName + "--GET"
+      fvp.getFQName + GetterSuffix
     }
 
     /**
      * Helper method to determine the name of the subboard used for a field setter.
      */
     def getFieldSetterName(fvp: FieldVP): String = {
-      fvp.getFQName + "--SET"
+      fvp.getFQName + SetterSuffix
     }
+
+    def isFieldSetterName( name : String ) = name.endsWith( SetterSuffix )
+    def isFieldGetterName( name : String ) = name.endsWith( GetterSuffix )
+
+    def isFieldSetterBoard( board : Board ) = isFieldSetterName( board.getName() )
+    def isFieldGetterBoard( board : Board ) = isFieldGetterName( board.getName() )
 
     /** Determine the offset for the generic location of the variable,
      * that is, if we want to serialize all the variables for input/output
@@ -750,7 +765,9 @@ abstract class GameSolver extends ConstraintSolver {
       } else {
         // Add up the size of the array plus all the elements in the array.
         // Is this unique?
-        (avar.pos.size /: avar.pos) (_ + _)
+        avar.pos.zipWithIndex
+          .map{ case (e, i) => math.pow(10, i).asInstanceOf[Int] * (e._1 + e._2 + 1) }
+          .sum
       }
     }
 }

@@ -43,6 +43,11 @@ public class Board extends Graph<Intersection, Chute>
   private /*@LazyNonNull*/ Intersection incomingNode;
   private /*@LazyNonNull*/ Intersection outgoingNode;
 
+  /**
+   * This field has been added only to identify a board while debugging
+   */
+  private /*@Nullable*/ String name;
+
   @Deprecated
   /**
    * This is still supported because the sample levels still use it.
@@ -118,8 +123,25 @@ public class Board extends Graph<Intersection, Chute>
    */
   public Board()
   {
+    this.name = "NotInited";
     nameToChutes = new MultiBiMap<String, Chute>();
     checkRep();
+  }
+
+  /**
+    *
+    */
+  public Board(final String name) {
+    this();
+    this.name = name;
+  }
+
+  /**
+   * Jonathan added this temporarily for debug purposes.  Though, he advises we keep this in.
+   * @return
+   */
+  public String getName() {
+      return name;
   }
 
   /**
@@ -327,5 +349,10 @@ public class Board extends Graph<Intersection, Chute>
     super.finishConstruction();
     if (!this.isAcyclic())
       throw new CycleException();
+  }
+
+  @Override
+  public String toString() {
+      return getName() + ": " + super.toString();
   }
 }

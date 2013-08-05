@@ -19,13 +19,13 @@ import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedPrimitiveType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
-import checkers.util.AnnotationUtils;
+import javacutils.AnnotationUtils;
 import checkers.util.MultiGraphQualifierHierarchy;
 
 import com.sun.source.tree.CompilationUnitTree;
 
 @TypeQualifiers({ NonNull.class, Nullable.class/*, UnknownKeyFor.class, KeyFor.class*/ })
-public class NninfChecker extends GameChecker {
+public class NninfChecker extends GameChecker<NninfAnnotatedTypeFactory> {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
     public void init(ProcessingEnvironment processingEnv) {
@@ -45,7 +45,7 @@ public class NninfChecker extends GameChecker {
     }
 
     @Override
-    public AnnotatedTypeFactory createFactory(CompilationUnitTree root) {
+    public NninfAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
         return new NninfAnnotatedTypeFactory(this, root);
     }
 
@@ -63,7 +63,7 @@ public class NninfChecker extends GameChecker {
     @Override
     public boolean needsAnnotation(AnnotatedTypeMirror ty) {
         return !(ty instanceof AnnotatedPrimitiveType
-                || ty instanceof AnnotatedTypeVariable);
+                 /*|| ty instanceof AnnotatedTypeVariable*/);
     }
 
     @Override

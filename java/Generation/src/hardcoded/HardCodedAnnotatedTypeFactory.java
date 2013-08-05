@@ -1,5 +1,6 @@
 package hardcoded;
 
+import checkers.inference.InferenceUtils;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompilationUnitTree;
 
@@ -7,7 +8,7 @@ import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.BasicAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
-import checkers.util.TreeUtils;
+import javacutils.TreeUtils;
 
 public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<HardCodedChecker> {
 
@@ -35,7 +36,7 @@ public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<Har
          */
         @Override
         public Void visitBinary(BinaryTree tree, AnnotatedTypeMirror type) {
-            if (!type.isAnnotated()
+            if (!InferenceUtils.isAnnotated( type )
                     && TreeUtils.isStringConcatenation(tree)) {
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());

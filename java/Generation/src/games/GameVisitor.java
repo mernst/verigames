@@ -4,18 +4,17 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.VariableTree;
+import checkers.inference.InferenceChecker;
+import checkers.inference.InferenceMain;
+import checkers.types.AnnotatedTypeMirror;
+import com.sun.source.tree.*;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceVisitor;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
-import checkers.util.TreeUtils;
+import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
+import javacutils.InternalUtils;
+import javacutils.TreeUtils;
 
 /**
  * This Visitor is a superclass of all Visitors in the game. Its purpose is to abstract common 
@@ -36,7 +35,7 @@ public class GameVisitor extends InferenceVisitor {
     @Override
     public Void visitVariable(VariableTree node, Void p) {
         /* TODO: Re-orderings were causing duplicate constraints. Revisit whether we can do
-         * this smarter. 
+         * this smarter.
         scan(node.getModifiers(), p);
         scan(node.getType(), p);
         scan(node.getInitializer(), p);
@@ -49,9 +48,10 @@ public class GameVisitor extends InferenceVisitor {
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
         Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() && !node.toString().equals("this")) {
-            logFieldAccess(node);
+        if (elem.getKind().isField() && !node.toString().equals("this")) { //TODO JB: Ask Werner if I should protect against
+            logFieldAccess(node);                                          //TODO JB: Calling assignments field accesses here
         }
+
         return super.visitIdentifier(node, p);
     }
     
@@ -61,6 +61,16 @@ public class GameVisitor extends InferenceVisitor {
         super.visitAssignment(node, p);
         logAssignment(node);
         return null;
+    }
+
+    @Override
+    public Void visitMethod(MethodTree methodTree, Void p) {
+        logReceiverClassConstraints(methodTree);
+
+        if( TreeUtils.isConstructor(methodTree) ) {
+          logConstructorConstraints( methodTree );
+        }
+        return super.visitMethod( methodTree, p );
     }
 
     /** Log method invocations. */
@@ -75,6 +85,8 @@ public class GameVisitor extends InferenceVisitor {
         	System.out.println("inside: " + elem);
         	logFieldAccess(node);
         }*/
+
+
         super.visitMethodInvocation(node, p);
         if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
             // TODO: log the call to Map.get.
@@ -98,8 +110,24 @@ public class GameVisitor extends InferenceVisitor {
 
         AnnotatedExecutableType methodType = atypeFactory.getAnnotatedType(enclosingMethod);
         commonAssignmentCheck(methodType.getReturnType(), node.getExpression(),
-                "return.type.incompatible");
+                "return.type.incompatible", false);
 
         return null;
+    }
+
+    @Override
+    public Void visitNewClass( NewClassTree newClassTree, Void p) {
+        logConstructorInvocationConstraints( newClassTree );
+        return super.visitNewClass( newClassTree, p);
+    }
+
+    @Override
+    public Void visitTypeParameter( TypeParameterTree typeParameterTree, Void p) {
+        //TODO JB: Because the resulting type of typeParameterTree always has the type in front
+        //TODO JB: of the parameter on the upper and lower bounds, create the constraint between
+        //TODO JB: these two here.  Potential fix: change the Checker-Framework behavior
+        logTypeParameterConstraints( typeParameterTree );
+
+        return super.visitTypeParameter(typeParameterTree, p);
     }
 }
