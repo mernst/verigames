@@ -25,7 +25,7 @@ package scenes.game.display
 		
 		public var m_closestWall:int = 0;
 		
-		private var m_quad:Quad;
+		private var m_image:Image;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
@@ -61,9 +61,9 @@ package scenes.game.display
 			}
 
 			disposeChildren();
-			if (m_quad) {
-				m_quad.removeFromParent(true);
-				m_quad = null;
+			if (m_image) {
+				m_image.removeFromParent(true);
+				m_image = null;
 			}
 			super.dispose();
 		}
@@ -131,9 +131,9 @@ package scenes.game.display
 				lineSize *= 1.5;
 			}
 			
-			if (m_quad) {
-				m_quad.removeFromParent(true);
-				m_quad = null;
+			if (m_image) {
+				m_image.removeFromParent(true);
+				m_image = null;
 			}
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
@@ -174,21 +174,21 @@ package scenes.game.display
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var startTexture:Texture = atlas.getTexture(assetName);
-			m_quad = new Image(startTexture);
-			m_quad.width = m_quad.height = lineSize;
+			m_image = new Image(startTexture);
+			m_image.width = m_image.height = lineSize;
 			
 			if(isHoverOn)
 			{
-				m_quad.color = 0xeeeeee;
+				m_image.color = 0xeeeeee;
 			}
 			else
 			{
-				m_quad.color = 0xcccccc;
+				m_image.color = 0xcccccc;
 			}
 			
-			m_quad.x = -lineSize/2;
-			m_quad.y = -lineSize/2;
-			addChild(m_quad);
+			m_image.x = -lineSize/2;
+			m_image.y = -lineSize/2;
+			addChild(m_image);
 
 //			var number:String = ""+count;
 //			var txt:TextField = new TextField(10, 10, number, "Veranda", 6,0x00ff00); 

@@ -31,10 +31,9 @@ package scenes.game.display
 			if (m_box9slice)
 				m_box9slice.removeFromParent(true);
 			
-			var assetName:String = m_isSelected ? AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix : AssetInterface.PipeJamSubTexture_GrayDarkBoxPrefix;
+			var assetName:String = m_isSelected ? AssetInterface.PipeJamSubTexture_GrayDarkBoxSelectPrefix : AssetInterface.PipeJamSubTexture_GrayDarkBoxPrefix;
 			m_box9slice = new NineSliceBatch(m_boundingBox.width, m_boundingBox.height, m_boundingBox.height / 3.0, m_boundingBox.height / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
 			addChild(m_box9slice);
-			
 			this.flatten();
 		}
 		
@@ -46,14 +45,6 @@ package scenes.game.display
 		override public function isWide():Boolean
 		{
 			return m_isWide;
-		}
-		
-		override public function getColor():int
-		{
-			if(m_isSelected)
-				return 0x888888;
-			else
-				return 0xAAAAAA;
 		}
 	}
 

@@ -16,6 +16,17 @@
 	<SubTexture name="GrayDarkBoxRight" x="130" y="94" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayDarkBoxCenter" x="66" y="94" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 
+	<SubTexture name="GrayDarkBoxSelect" x="196" y="536" width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
+	<SubTexture name="GrayDarkBoxSelectTopLeft" x="196" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectTopRight" x="324" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectBottomLeft" x="196" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectBottomRight" x="324" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectTop" x="260" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectBottom" x="260" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectLeft" x="196" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectRight" x="324" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayDarkBoxSelectCenter" x="260" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+
 	<SubTexture name="GrayDarkStart" x="779" y="123" width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="GrayDarkEnd" x="826" y="140" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="GrayDarkPlug" x="861" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
@@ -34,6 +45,17 @@
 	<SubTexture name="GrayLightBoxLeft" x="2" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayLightBoxRight" x="130" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayLightBoxCenter" x="66" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+
+	<SubTexture name="GrayLightBoxSelect" x="390" y="536" width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
+	<SubTexture name="GrayLightBoxSelectTopLeft" x="390" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectTopRight" x="518" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectBottomLeft" x="390" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectBottomRight" x="518" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectTop" x="454" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectBottom" x="454" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectLeft" x="390" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectRight" x="518" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="GrayLightBoxSelectCenter" x="454" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="GrayLightStart" x="786" y="59" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="GrayLightEnd" x="826" y="102" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="GrayLightPlug" x="912" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>
@@ -52,6 +74,17 @@
 	<SubTexture name="BlueDarkBoxLeft" x="196" y="94" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueDarkBoxRight" x="324" y="94" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueDarkBoxCenter" x="260" y="94" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+
+	<SubTexture name="BlueDarkBoxSelect" x="584" y="536" width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
+	<SubTexture name="BlueDarkBoxSelectTopLeft" x="584" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectTopRight" x="712" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectBottomLeft" x="584" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectBottomRight" x="712" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectTop" x="648" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectBottom" x="648" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectLeft" x="584" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectRight" x="712" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueDarkBoxSelectCenter" x="648" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueDarkStart" x="779" y="84" width="38" height="38" frameX="0" frameY="0" frameWidth="38" frameHeight="38"/>
 	<SubTexture name="BlueDarkEnd" x="826" y="159" width="27" height="17" frameX="0" frameY="0" frameWidth="27" frameHeight="17"/>
 	<SubTexture name="BlueDarkPlug" x="827" y="179" width="30" height="44" frameX="0" frameY="0" frameWidth="30" frameHeight="44"/>
@@ -70,6 +103,17 @@
 	<SubTexture name="BlueLightBoxLeft" x="196" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueLightBoxRight" x="324" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueLightBoxCenter" x="260" y="288" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+
+	<SubTexture name="BlueLightBoxSelect" x="778" y="536" width="192" height="192" frameX="0" frameY="0" frameWidth="192" frameHeight="192"/>
+	<SubTexture name="BlueLightBoxSelectTopLeft" x="778" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectTopRight" x="906" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectBottomLeft" x="778" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectBottomRight" x="906" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectTop" x="842" y="536" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectBottom" x="842" y="664" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectLeft" x="778" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectRight" x="906" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
+	<SubTexture name="BlueLightBoxSelectCenter" x="842" y="600" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
 	<SubTexture name="BlueLightStart" x="786" y="34" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
 	<SubTexture name="BlueLightEnd" x="826" y="121" width="11" height="17" frameX="0" frameY="0" frameWidth="11" frameHeight="17"/>
 	<SubTexture name="BlueLightPlug" x="894" y="179" width="16" height="44" frameX="0" frameY="0" frameWidth="16" frameHeight="44"/>

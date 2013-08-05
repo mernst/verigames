@@ -77,7 +77,6 @@ package scenes.game.display
 			return m_hasError;
 		}
 		
-		
 		public function componentSelected(isSelected:Boolean):void
 		{
 			m_isDirty = true;
@@ -150,8 +149,6 @@ package scenes.game.display
 				else
 					color = UNADJUSTABLE_NARROW_COLOR;				
 			}
-			if(m_isSelected)
-				color -= 0x222222;
 			
 			return color;
 		}
