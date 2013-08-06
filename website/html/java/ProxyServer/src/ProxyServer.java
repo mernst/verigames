@@ -27,6 +27,7 @@ public class ProxyServer {
         DBCollection submittedLevelColl = db.getCollection("SubmittedLevels");
         DBCollection savedLevelColl = db.getCollection("SavedLevels");
         DBCollection submittedLayoutColl = db.getCollection("SubmittedLayouts");
+        DBCollection logColl = db.getCollection("log");
         //Create GridFS object
         GridFS fs = new GridFS( db );
         
@@ -45,12 +46,12 @@ public class ProxyServer {
             System.out.println("Version " + version);
             System.out.println("Started on: " + port);
         } catch (IOException e) {
-            System.err.println("Could not listen on port: " + args[0]);
+            System.err.println("Could ps -anot listen on port: " + args[0]);
             System.exit(-1);
         }
 
         while (listening) {
-            new ProxyThread(serverSocket.accept(), fs, levelColl, submittedLevelColl, savedLevelColl, submittedLayoutColl).start();
+            new ProxyThread(serverSocket.accept(), fs, levelColl, submittedLevelColl, savedLevelColl, submittedLayoutColl, logColl).start();
         }
         serverSocket.close();
     }

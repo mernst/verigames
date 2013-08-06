@@ -7,8 +7,8 @@ package scenes.loadingscreen
 	
 	import events.NavigationEvent;
 	
-	import flash.utils.Timer;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import networking.PlayerValidation;
 	
@@ -29,7 +29,10 @@ package scenes.loadingscreen
 		protected var particleSystem:ErrorParticleSystem;
 		protected var foreground:Image;
 		
+		/**Used to hold final message open so it's visible */
 		protected var timer:Timer;
+		/** Set timeout of entire process to not have it feel like it's hanging. */
+		protected var timeoutTimer:Timer;
 		
 		public var loading_button:NineSliceButton;
 		
@@ -74,16 +77,34 @@ package scenes.loadingscreen
 			loading_button.removeTouchEvent(); //we want a non-responsive button look
 			addChild(loading_button);
 
+			//set max loading time of four seconds
+			timeoutTimer = new Timer(4000, 1);
+			timeoutTimer.addEventListener(TimerEvent.TIMER, playerValidationAttempted);
+			timeoutTimer.start();
+			
 			PlayerValidation.validatePlayerIsLoggedInAndActive(playerValidationAttempted, this);
-
+		}
+		
+		public function timeout(e:TimerEvent = null):void
+		{
 			
 		}
 		
-		public function playerValidationAttempted():void
+		public var count:int = 0;
+		public function playerValidationAttempted(e:TimerEvent = null):void
 		{
+			if(e && e.target == timeoutTimer && sessionVerificationHasBeenAttempted == false)
+				setStatus("Player Validation Timed Out");
+
 			sessionVerificationHasBeenAttempted = true;
-			//burn a quarter of a second to let last loading message be visible
-			timer = new Timer(250, 1);
+			if (timeoutTimer) 
+			{
+				timeoutTimer.removeEventListener(TimerEvent.TIMER, playerValidationAttempted);
+				timeoutTimer.stop();
+			}
+			timeoutTimer = null;
+			//burn part of a second to let last loading message be visible
+			timer = new Timer(600, 1);
 			timer.addEventListener(TimerEvent.TIMER, changeScene);
 			timer.start();
 		}
@@ -95,6 +116,7 @@ package scenes.loadingscreen
 				timer.removeEventListener(TimerEvent.TIMER, changeScene);
 			}
 			timer == null;
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		

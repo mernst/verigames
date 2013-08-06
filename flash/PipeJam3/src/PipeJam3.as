@@ -34,8 +34,8 @@ package
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = false;
-		public static var LOCAL_DEPLOYMENT:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = true;
+		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
 		
