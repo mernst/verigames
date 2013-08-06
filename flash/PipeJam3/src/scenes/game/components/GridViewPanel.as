@@ -67,6 +67,7 @@ package scenes.game.components
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
+		protected static const RELEASE_SHIFT_MODE:int = 3;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
@@ -106,33 +107,45 @@ package scenes.game.components
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function endSelectMode():void
+		{
+			if(m_currentLevel)
+			{
+				m_currentLevel.handleMarquee(null, null);
+			}
+		}
+		
+		private function endMoveMode():void
+		{
+			//did we really move?
+			if(content.x != startingPoint.x || content.y != startingPoint.y)
+			{
+				var startPoint:Point = startingPoint.clone();
+				var endPoint:Point = new Point(content.x, content.y);
+				var eventToUndo:Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
+				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
+				eventToDispatch.addToSimilar = true;
+				dispatchEvent(eventToDispatch);
+			}
 		}
 		
 		protected var startingPoint:Point;
 		private function onTouch(event:TouchEvent):void
 		{
+			//trace("Mode:" + currentMode);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				if(currentMode == SELECTING_MODE)
 				{
-					if(m_currentLevel)
-					{
-						m_currentLevel.handleMarquee(null, null);
-					}
+					endSelectMode();
 				}
 				else if(currentMode == MOVING_MODE)
 				{
-					//did we really move?
-					if(content.x != startingPoint.x || content.y != startingPoint.y)
-					{
-						var startPoint:Point = startingPoint.clone();
-						var endPoint:Point = new Point(content.x, content.y);
-						var eventToUndo:Event = new MoveEvent(MoveEvent.MOUSE_DRAG, null, startPoint, endPoint);
-						var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
-						eventToDispatch.addToSimilar = true;
-						dispatchEvent(eventToDispatch);
-					}
+					endMoveMode();
 				}
 				if(currentMode != NORMAL_MODE)
 					currentMode = NORMAL_MODE;
@@ -149,6 +162,7 @@ package scenes.game.components
 				{
 					if(currentMode != SELECTING_MODE)
 					{
+						if (currentMode == MOVING_MODE) endMoveMode();
 						currentMode = SELECTING_MODE;
 						startingPoint = touches[0].getPreviousLocation(this);
 					}
@@ -164,6 +178,7 @@ package scenes.game.components
 				{
 					if(currentMode != MOVING_MODE)
 					{
+						if (currentMode == SELECTING_MODE) endSelectMode();
 						currentMode = MOVING_MODE;
 						startingPoint = new Point(content.x, content.y);
 					}
@@ -403,6 +418,7 @@ package scenes.game.components
 			}
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			super.dispose();
 		}
@@ -454,6 +470,18 @@ package scenes.game.components
 				case Keyboard.SPACE:
 					recenter();
 					break;
+			}
+		}
+		
+		private function onKeyUp(event:KeyboardEvent):void
+		{
+			// Release shift, temporarily enter this mode until next touch
+			// (this prevents the user from un-selecting when they perform
+			// a shift + click + drag + unshift + unclick sequence
+			if(currentMode == SELECTING_MODE && !event.shiftKey)
+			{
+				endSelectMode();
+				currentMode = RELEASE_SHIFT_MODE; // this will reset on next touch event
 			}
 		}
 		
