@@ -53,11 +53,11 @@ while row != -1:
 
 		priority = form.getvalue('priority_'+str(row))
 		activate = form.getvalue('activecheckbox_'+str(row))
-		print '/var/www/html/java/UploadLevel.jar' + " " + str(zipxmlfilename) + " " + str(ratingsfile) + " " + str(fileID) + " " + str(priority) + " " + str(activate)
+		
 		#Upload levels, passing in path to xml zip file, the level id, the priority, and whether to activate or not 
 		command = ['java', '-jar', '/var/www/html/java/UploadLevel.jar', str(zipxmlfilename), str(ratingsfile), str(fileID), str(priority), str(activate)]
 		rateCmd = subprocess.Popen(command)
-		print rateCmd
+		
 		print '<p>uploaded '+newBaseName+'</p>'
 		row = row + 1
 	else:	

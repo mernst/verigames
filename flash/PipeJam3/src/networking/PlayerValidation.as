@@ -1,14 +1,14 @@
 package networking
 {
+	import scenes.Scene;
 	import flash.events.Event;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import utils.XString;
-		
+	
+	import server.LoggingServerInterface;
+	
 	import starling.core.Starling;
 	import starling.events.Event;
 	
-	import server.LoggingServerInterface;
+	import utils.XString;
 
 
 	//the steps are: 
@@ -16,28 +16,41 @@ package networking
 	//  send that to validateSession, to see if it's still a valid session id
 	//	if it is, you will get the player ID number, else null
 	//If you have a valid player ID number, then the fun begins
-	//	first you have to check to see if the player exists in the RA (why log in doesn't add the player to the RA is beyond me)
+	//	first you have to check to see if the player exists in the RA (why log In doesn't add the player to the RA is beyond me)
 	//		If they don't exist, add them
 	//	Then you have to make sure they are active by activating them
 	public class PlayerValidation
 	{
 		public static var playerLoggedIn:Boolean = false;
-		public static var playerID:String = "51e5b3460240288229000026"; //hard code one for local testing
+		
+		public static var playerID:String = "";
+		public static var playerIDForTesting:String = "51e5b3460240288229000026"; //hard code one for local testing
 		
 		public static var LOGIN_STATUS_CHANGE:String = "login_status_change";
 		
 		static protected var validationObject:PlayerValidation = null;
 		protected var pipejamCallbackFunction:Function;
+		protected var controller:Scene;
+		
+		static public var GETTING_COOKIE:String = "Getting Cookie";
+		static public var VALIDATING_SESSION:String = "Validating Session";
+		static public var ACTIVATING_PLAYER:String = "Activating Player";
+		static public var GETTING_PLAYER_INFO:String = "Getting Player ID";
+		
+		static public var VALIDATION_SUCCEEDED:String = "Player Logged In";
+		static public var VALIDATION_FAILED:String = "Validation Failed";
 		
 		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use in release builds
-		static public function validatePlayerIsLoggedInAndActive(callback:Function):void
+		static public function validatePlayerIsLoggedInAndActive(callback:Function, _controller:Scene):void
 		{
 			if(validationObject == null)
+			{
 				validationObject = new PlayerValidation;
-			
-	//		HTTPCookies.callGetEncodedCookie();
-			
+				validationObject.controller = _controller;
+			}
+						
 			validationObject.pipejamCallbackFunction = callback;
+			validationObject.controller.setStatus(GETTING_COOKIE);
 			validationObject.checkForCookie();
 		}
 		
@@ -63,14 +76,16 @@ package networking
 			if(result == LoginHelper.EVENT_COMPLETE)
 			{
 				var cookies:String = event.target.data;
-				if(cookies.indexOf("<html>") == -1) //else assume auth required dialog
+				if(cookies.indexOf("<html>") == -1 && cookies.length > 10) //not an error message or empty cookie string = {} = %7B%7D
 				{
+					controller.setStatus(VALIDATING_SESSION);
 					LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValidityCallback);
 					return;
 				}
 			}
 			
 			//if we make it this far, just exit
+			controller.setStatus(VALIDATION_FAILED);
 			pipejamCallbackFunction();
 		}
 
@@ -92,12 +107,14 @@ package networking
 						if (LoggingServerInterface.LOGGING_ON) {
 							PipeJam3.logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, PipeJam3.pipeJam3.stage, LoggingServerInterface.CGS_VERIGAMES_PREFIX + playerID);
 						}
+						controller.setStatus(ACTIVATING_PLAYER);
 						checkPlayerExistence();
 						return; //wait for callback to continue
 					}
 				}
 			}
 			//if we make it this far, just exit
+			controller.setStatus(VALIDATION_FAILED);
 			pipejamCallbackFunction();
 		}
 		
@@ -124,6 +141,7 @@ package networking
 				}
 			}
 			//if we make it this far, just exit
+			controller.setStatus(VALIDATION_FAILED);
 			pipejamCallbackFunction();
 
 		}
@@ -141,6 +159,7 @@ package networking
 				}
 			}
 			//if we make it this far, just exit
+			controller.setStatus(VALIDATION_FAILED);
 			pipejamCallbackFunction();
 			
 		}
@@ -148,7 +167,12 @@ package networking
 		public function activatePlayerCallback(result:int, e:flash.events.Event):void
 		{
 			if(result == LoginHelper.EVENT_COMPLETE)
+			{
 				playerLoggedIn = true; //whee
+				controller.setStatus(VALIDATION_SUCCEEDED);
+			}
+			else
+				controller.setStatus(VALIDATION_FAILED);
 			
 			
 			pipejamCallbackFunction();

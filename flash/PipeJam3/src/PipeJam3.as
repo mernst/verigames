@@ -42,7 +42,7 @@ package
 		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
-		protected var sessionVerificationHasBeenAttempted:Boolean = false;
+
 		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
 		public static var initialLevelDisplay:Boolean = true; 
 		static public var pipeJam3:PipeJam3;
@@ -53,79 +53,49 @@ package
 			
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
-			if(RELEASE_BUILD == true)
+			if(RELEASE_BUILD == true && !LOCAL_DEPLOYMENT) 
 			{
 				if (LoggingServerInterface.LOGGING_ON) {
 					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
 				}
-				PlayerValidation.validatePlayerIsLoggedInAndActive(playerValidationAttempted);
-			//	sessionVerificationHasBeenAttempted = true;
-			//	PlayerValidation.playerLoggedIn = true;
-			//	initialize();
-			}
-			else if(!LOCAL_DEPLOYMENT) //use baked in player id, so don't get cookie, but do try to validate id
-			{
-				if (LoggingServerInterface.LOGGING_ON) {
-					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
-				}
-				PlayerValidation.validatePlayerIsActive(playerValidationAttempted);
-			}
-			else
-			{
-				playerValidationAttempted();
-			}
+			}		
 		}
-		
-		
-		public function playerValidationAttempted():void
-		{
-			sessionVerificationHasBeenAttempted = true;
-			initialize();
-		}
-		
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
 			if(hasBeenAddedToStage == false)
 			{
 				removeEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
-				hasBeenAddedToStage = true;
-				//at least try to initialize, although probably waiting on session verification
 				initialize();
 			}
 		}
 		
 		public function initialize(result:int = 0, e:flash.events.Event = null):void
-		{
-			//	HTTPCookies.displayAlert("init");
+		{			
+			MouseWheelTrap.setup(stage);
 			
-			if(hasBeenAddedToStage && sessionVerificationHasBeenAttempted)
-			{
-				MouseWheelTrap.setup(stage);
-				
-				//set up the main controller
-				stage.scaleMode = StageScaleMode.NO_SCALE;
-				stage.align = StageAlign.TOP_LEFT;
-				
-				Starling.multitouchEnabled = false; // useful on mobile devices
-				Starling.handleLostContext = true; // deactivate on mobile devices (to save memory)
-				
-				var stats:Stats = new Stats;
-				//		stage.addChild(stats);
-				
-				//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
-				mStarling = new Starling(PipeJamGame, stage);
-				//mostly just an annoyance in desktop mode, so turn off...
-				mStarling.simulateMultitouch = false;
-				mStarling.enableErrorChecking = false;
-				mStarling.start();
-				
-				// this event is dispatched when stage3D is set up
-				mStarling.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated);
-				
-				//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
-				stage.addEventListener(flash.events.Event.RESIZE, updateSize);
-				stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
-			}
+			//set up the main controller
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			
+			Starling.multitouchEnabled = false; // useful on mobile devices
+			Starling.handleLostContext = true; // deactivate on mobile devices (to save memory)
+			
+			var stats:Stats = new Stats;
+			//		stage.addChild(stats);
+			
+			//	mStarling = new Starling(PipeJamGame, stage, null, null,Context3DRenderMode.SOFTWARE);
+			mStarling = new Starling(PipeJamGame, stage);
+			//mostly just an annoyance in desktop mode, so turn off...
+			mStarling.simulateMultitouch = false;
+			mStarling.enableErrorChecking = false;
+			mStarling.start();
+			
+			// this event is dispatched when stage3D is set up
+			mStarling.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated);
+			
+			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
+			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
+			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
 		}
 		
 		private function onContextCreated(event:flash.events.Event):void

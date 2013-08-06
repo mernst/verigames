@@ -158,20 +158,20 @@ public class MongoTestBed {
 //        	if(count > 34)
         	{
 	            System.out.println("Collection " + s);
-	            DBCollection coll = db.getCollection(s);
-	            BasicDBObject field = new BasicDBObject();
-	            field.put("name", "Test1");
-	          //      DBCursor cursor = coll.find(field);
-	         DBCursor cursor = coll.find();
-	    	        try {
-	    	           while(cursor.hasNext()) {
-	    	        	   DBObject obj = cursor.next();
-	    	        	   System.out.println(obj); 
-	    	  //      	   coll.remove(obj);
-	    	           }
-	    	        } finally {
-	    	           cursor.close();
-	    	        }
+//	            DBCollection coll = db.getCollection(s);
+//	            BasicDBObject field = new BasicDBObject();
+//	            field.put("name", "Test1");
+//	          //      DBCursor cursor = coll.find(field);
+//	         DBCursor cursor = coll.find();
+//	    	        try {
+//	    	           while(cursor.hasNext()) {
+//	    	        	   DBObject obj = cursor.next();
+//	    	        	   System.out.println(obj); 
+//	    	  //      	   coll.remove(obj);
+//	    	           }
+//	    	        } finally {
+//	    	           cursor.close();
+//	    	        }
         	}
     	        count++;
  //   	        if(count > 70)
