@@ -29,6 +29,7 @@ public class ProxyThread extends Thread {
     private DBCollection submittedLevelsCollection = null;
     private DBCollection savedLevelsCollection = null;
     private DBCollection submittedLayoutsCollection = null;
+    private DBCollection logCollection = null;
     private static final int BUFFER_SIZE = 32768;
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
@@ -36,12 +37,18 @@ public class ProxyThread extends Thread {
 	private String url = betaurl;
 	private String gameURL = "http://pipejam.verigames.com";
 	private String httpport = ":80";
-	private String authport = ":3000";
+
+	private int LOG_REQUEST = 0;
+	private int LOG_RESPONSE = 1;
+	private int LOG_TO_DB = 2;
+	private int LOG_ERROR = 3;
+	private int LOG_EXCEPTION = 4;
 	
 	
 	String currentLayoutFileID = null;
 	String currentConstraintFileID = null;
-    public ProxyThread(Socket socket, GridFS fs, DBCollection levelCollection, DBCollection submittedLevelsCollection, DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection) {
+    public ProxyThread(Socket socket, GridFS fs, DBCollection levelCollection, DBCollection submittedLevelsCollection, 
+    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection) {
         super("ProxyThread");
         this.socket = socket;
         this.fs = fs;
@@ -49,6 +56,7 @@ public class ProxyThread extends Thread {
         this.submittedLevelsCollection = submittedLevelsCollection;
         this.savedLevelsCollection = savedLevelsCollection;
         this.submittedLayoutsCollection = submittedLayoutsCollection;
+        this.logCollection = logCollection;
     }
 
     public void run() {
@@ -69,23 +77,25 @@ public class ProxyThread extends Thread {
             String[] tokens = null;
             int contentLength = 0;
              ///////////////////////////////////
+            log(LOG_REQUEST, "new request");
             //begin get request from client
             while ((inputLine = in.readLine()) != null) {
+            	
+            	//this breaks from the while when returning nothing, else the thread will just sit and spin
             	try {
                     StringTokenizer tok = new StringTokenizer(inputLine);
                     tok.nextToken();
                 } catch (Exception e) {
                     break;
                 }
-                
+
                 //parse the first line of the request to find the url
                if (cnt == 0) {
+            	    log(LOG_REQUEST, inputLine);
                     tokens = inputLine.split(" ");
                     urlToCall = tokens[1];
                     //can redirect this to output log
-                    System.out.println("Request for : " + urlToCall);
                 }
-               System.out.println(inputLine);
                if(inputLine.toLowerCase().indexOf("content-length") != -1)
                {
             	   String[] contentTokens = inputLine.split(" ");
@@ -97,6 +107,10 @@ public class ProxyThread extends Thread {
             //end get request from client
             ///////////////////////////////////
 
+            //tokens[1] contains the URL, which needs to exist
+            if(tokens == null || tokens[1] == null)
+            	return;
+            
             //do a second read to catch post content - needs to be base64encoded
             byte[] decodedBytes1 = null;
             byte[] decodedBytes2 = null;
@@ -105,14 +119,11 @@ public class ProxyThread extends Thread {
             {
 	            StringBuffer buf = new StringBuffer();
 	            while ((inputLine = in.readLine()) != null) {
-	               System.out.println(inputLine);
 	               buf.append(inputLine);
 	               lengthRead += inputLine.length() + 1; //+1 for line termination char
-	               System.out.println(buf.length()+ " " + lengthRead);
 	              if(lengthRead >= contentLength)
 	            	  break;
 	            }
-	            System.out.println(buf.length() + " " + lengthRead);
 	            BASE64Decoder decoder = new BASE64Decoder();
 	            int file1LengthLength = Integer.parseInt(buf.charAt(0)+"");
 	            int file1Length = Integer.parseInt(buf.substring(1, file1LengthLength+1));
@@ -127,19 +138,13 @@ public class ProxyThread extends Thread {
 	            else
 	            	file1 = buf.substring(file1LengthLength+1, file1End);
 	            decodedBytes1 = decoder.decodeBuffer(file1);
-
-	            if(decodedBytes1 != null)
-	            {
-		            System.out.println(decodedBytes1.length);
-	            }
-	            
+  
 	            if(buf.length() > file1Length + 10)
 	            {
 	            	int file2LengthLength = Integer.parseInt(buf.charAt(file1End)+"");
 		            int file2Length = Integer.parseInt(buf.substring(file1End+1, file1End+1+file2LengthLength));
 		            String file2 = buf.substring(file1End+1+file2LengthLength);
 		            decodedBytes2 = decoder.decodeBuffer(file2);
-		            System.out.println(decodedBytes2.length);
 	            }
             }
             BufferedReader rd = null;
@@ -178,16 +183,15 @@ public class ProxyThread extends Thread {
                 ///////////////////////////////////
             	if(response != null)
             	{
-            		System.out.println(response.toString());
-
             		InputStream isr = response.getEntity().getContent();
 	                //begin send response to client
 	                byte by[] = new byte[ BUFFER_SIZE ];
 	                int index = isr.read( by, 0, BUFFER_SIZE );
 	                while ( index != -1 )
 	                {
-	                	System.out.println(new String(by));
 	                  out.write( by, 0, index );
+	                  String responseStr = new String(by, "UTF-8");
+	                  log(LOG_RESPONSE, responseStr);
 	                  index = isr.read( by, 0, BUFFER_SIZE );
 	                }
             	}
@@ -197,6 +201,7 @@ public class ProxyThread extends Thread {
                 ///////////////////////////////////
             } catch (Exception e) {
                 //can redirect this to error log
+            	log(LOG_EXCEPTION, e.toString());
                 System.err.println("Encountered exception: " + e);
                 e.printStackTrace();
                 //encountered error - just send nothing back, so
@@ -220,6 +225,7 @@ public class ProxyThread extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+            log(LOG_EXCEPTION, e.toString());
         }
     }
     
@@ -289,7 +295,7 @@ public class ProxyThread extends Thread {
     	GridFSDBFile outFile = null;
     	
     	String[] fileInfo = request.split("/");
-	    System.out.println(request);
+    	log(LOG_REQUEST, request);
 
     	if(request.indexOf("/level/save") != -1 || request.indexOf("/level/submit") != -1)
 		{
@@ -382,8 +388,6 @@ public class ProxyThread extends Thread {
 		//returns: success message
 		if(buf != null)
 		{
-			System.out.println("File length " + buf.length);
-
 	        GridFSInputFile xmlIn = fs.createFile(buf);
 	        xmlIn.put("player", fileInfo[3]);
 	        xmlIn.put("xmlID", fileInfo[4]+"L");
@@ -399,8 +403,9 @@ public class ProxyThread extends Thread {
 	        levelObj.put("name", fileInfo[5]);
 			levelObj.put("layoutID", xmlIn.getId().toString());
 			currentLayoutFileID = xmlIn.getId().toString();
+			log(LOG_TO_DB, levelObj.toMap().toString());
 			WriteResult r1 = submittedLayoutsCollection.insert(levelObj);
-			System.out.println(r1.getLastError());
+			log(LOG_ERROR, r1.getLastError().toString());
 		}
     }
     
@@ -449,9 +454,9 @@ public class ProxyThread extends Thread {
         DBObject metadata = new BasicDBObject();
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
-        System.out.println(submittedLevelObj.toMap().toString());
+        log(LOG_TO_DB, submittedLevelObj.toMap().toString());
 		WriteResult r2 = collection.insert(submittedLevelObj);
-		System.out.println(r2.getLastError());
+		log(LOG_ERROR, r2.getLastError().toString());
     }
 
     public HttpResponse doVerify(String request) throws Exception  
@@ -463,4 +468,17 @@ public class ProxyThread extends Thread {
 
         return response;
 	}
+    
+    public void log(int type, String line)
+    {
+     	long threadId = Thread.currentThread().getId();
+     	
+     	DBObject logObj = new BasicDBObject();
+     	logObj.put("time", new Date().toString());
+     	logObj.put("type", type);
+      	logObj.put("threadID", threadId);
+    	logObj.put("line", line);
+		logCollection.insert(logObj);
+   	
+    }
 }

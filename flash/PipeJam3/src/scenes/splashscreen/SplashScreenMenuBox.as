@@ -140,10 +140,33 @@ package scenes.splashscreen
 		
 		protected function onRequestLevels(result:int):void
 		{
-			if(result == LoginHelper.EVENT_COMPLETE)
+			try{
+				if(result == LoginHelper.EVENT_COMPLETE)
+				{
+					if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
+						onGetLevelMetadataComplete();
+				}
+			}
+			catch(err:Error) //probably a parse error in trying to decode the RA response
 			{
-				if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && loginHelper.savedMatchArrayObjects != null)
-					onGetLevelMetadataComplete();
+				trace("ERROR: failure in loading levels " + err);
+				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+			}
+		}
+		
+		protected function onRequestSavedLevels(result:int):void
+		{
+			try{
+				if(result == LoginHelper.EVENT_COMPLETE)
+				{
+					if(loginHelper.savedMatchArrayObjects != null)
+						onGetSavedLevelsComplete();
+				}
+			}
+			catch(err:Error) //probably a parse error in trying to decode the RA response
+			{
+				trace("ERROR: failure in loading levels " + err);
+				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 			}
 		}
 		
@@ -161,21 +184,33 @@ package scenes.splashscreen
 			
 			selectLevelDialog.setNewLevelInfo(matchArrayMetadata);
 			
+			onRequestLevelsComplete();
+		}
+		
+		protected function onGetSavedLevelsComplete():void
+		{		
 			savedLevelsArrayMetadata = new Array;
 			savedLevelsMetadataArray = new Array;
-			for(i = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			for(var i = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
 			{
 				var match1:Object = loginHelper.savedMatchArrayObjects[i];
-		//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
-		//		if(levelName != null)
-					savedLevelsMetadataArray.push(match1.name);
-					savedLevelsArrayMetadata.push(match1);
+				//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
+				//		if(levelName != null)
+				savedLevelsMetadataArray.push(match1.name);
+				savedLevelsArrayMetadata.push(match1);
 			}
 			
 			selectLevelDialog.setSavedLevelsInfo(savedLevelsArrayMetadata);
 			
-			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+			onRequestLevelsComplete();
 		}
+		
+		protected function onRequestLevelsComplete():void
+		{
+			if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && loginHelper.savedMatchArrayObjects != null)
+				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
+		}
+		
 		protected static var levelCount:int = 1;
 		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>, savedObjArray:Array):String
 		{
@@ -289,10 +324,7 @@ package scenes.splashscreen
 		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
-			
-			{
-				dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
-			}
+			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			onPlayerActivated(0, null);
 		}
 		
@@ -314,9 +346,12 @@ package scenes.splashscreen
 		{
 			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
 			{
+				loginHelper.levelInfoVector = null;
+				loginHelper.matchArrayObjects = null;
+				loginHelper.savedMatchArrayObjects = null;
 				loginHelper.requestLevels(onRequestLevels);
 				loginHelper.getLevelMetadata(onRequestLevels);
-				loginHelper.getSavedLevels(onRequestLevels);
+				loginHelper.getSavedLevels(onRequestSavedLevels);
 				
 				selectLevelDialog = new SelectLevelDialog(this, 300, 250);
 				parent.addChild(selectLevelDialog);
