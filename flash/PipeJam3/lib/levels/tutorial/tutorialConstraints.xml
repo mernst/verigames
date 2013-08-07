@@ -72,6 +72,15 @@
     <box id="Merges3" width="narrow" editable="false"/>
     <box id="Merges1" width="wide" editable="true"/>
   </level>
+  <level id="SplitMergePractice" qid="17" targetScore="575">
+    <box id="SplitMergePractice6" width="narrow" editable="false"/>
+    <box id="SplitMergePractice7" width="narrow" editable="false"/>
+    <box id="SplitMergePractice4" width="wide" editable="true"/>
+    <box id="SplitMergePractice5" width="wide" editable="true"/>
+    <box id="SplitMergePractice2" width="narrow" editable="true"/>
+    <box id="SplitMergePractice3" width="narrow" editable="true"/>
+    <box id="SplitMergePractice1" width="narrow" editable="true"/>
+  </level>
   <level id="Layout" qid="12" targetScore="200">
     <box id="Layout1" width="narrow" editable="true"/>
     <box id="Layout3" width="narrow" editable="false"/>

@@ -12,6 +12,7 @@ FILES = [
     'Optimize',
     'Splits',
     'Merges',
+	'SplitMergePractice',
     'Layout',
     'ZoomPan',
     'SkillsA',

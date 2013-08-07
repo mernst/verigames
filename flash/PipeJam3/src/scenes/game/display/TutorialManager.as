@@ -24,6 +24,7 @@ package scenes.game.display
 		public static const OPTIMIZE_TUTORIAL:String = "optimize";
 		public static const SPLIT_TUTORIAL:String = "split";
 		public static const MERGE_TUTORIAL:String = "merge";
+		public static const SPLIT_MERGE_PRACTICE_TUTORIAL:String = "splitmergepractice";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
@@ -51,6 +52,7 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
@@ -90,7 +92,7 @@ package scenes.game.display
 		}
 		
 		public function getPanZoomAllowed():Boolean
-		{
+		{return true;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
@@ -104,6 +106,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 					return false;
@@ -115,7 +118,7 @@ package scenes.game.display
 		}
 		
 		public function getLayoutFixed():Boolean
-		{
+		{return false;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
@@ -129,6 +132,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 					return true;
 				case ZOOM_PAN_TUTORIAL:
@@ -160,6 +164,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
@@ -185,6 +190,7 @@ package scenes.game.display
 					return new Point(-15, 0);//move left 15px
 				case ZOOM_PAN_TUTORIAL:
 					return new Point(40, -10);// move right 40px, up by 10px
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case CLASH_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
@@ -320,6 +326,12 @@ package scenes.game.display
 						null,
 						pointToJoint("n123"),
 						NineSliceBatch.RIGHT, null);
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Practice splits and merges.",
+						null,
+						null,
+						null, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets can be dragged to help organize\n" +
