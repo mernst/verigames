@@ -191,7 +191,7 @@ package scenes.splashscreen
 		{		
 			savedLevelsArrayMetadata = new Array;
 			savedLevelsMetadataArray = new Array;
-			for(var i = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
 			{
 				var match1:Object = loginHelper.savedMatchArrayObjects[i];
 				//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
