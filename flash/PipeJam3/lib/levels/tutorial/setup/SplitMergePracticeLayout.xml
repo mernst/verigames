@@ -1,0 +1,177 @@
+<graph id="world">
+  <level id="SplitMergePractice" qid="17" tutorial="splitmergepractice">
+    <box height="1.0" id="SplitMergePractice1" lines="2" width="2.4" x="4.66" y="2.61" visible="true"/>
+    <box height="1.0" id="SplitMergePractice2" lines="1" width="1.81" x="9.40" y="2.57" visible="true"/>
+    <box height="1.0" id="SplitMergePractice3" lines="2" width="2.4" x="6.93" y="6.08" visible="true"/>
+    <box height="1.0" id="SplitMergePractice4" lines="1" width="1.81" x="3.00" y="9.70" visible="true"/>
+    <box height="1.0" id="SplitMergePractice5" lines="1" width="1.81" x="8.59" y="9.72" visible="true"/>
+    <box height="1.0" id="SplitMergePractice6" lines="1" width="1.81" x="5.74" y="9.66" visible="true"/>
+    <box height="1.0" id="SplitMergePractice7" lines="1" width="1.81" x="11.09" y="9.68" visible="true"/>
+    <joint height="0.51" id="n11" inputs="0" outputs="1" width="0.59" x="8.83" y="0.27"/>
+    <joint height="0.51" id="n367" inputs="1" outputs="2" width="1.19" x="6.61" y="8.03" visible="true"/>
+    <joint height="0.51" id="n461" inputs="2" outputs="1" width="1.19" x="4.46" y="11.33" visible="true"/>
+    <joint height="0.51" id="n572" inputs="2" outputs="1" width="1.19" x="9.74" y="11.35" visible="true"/>
+    <joint height="0.51" id="n330" inputs="1" outputs="0" width="0.59" x="10.11" y="7.88"/>
+    <joint height="0.51" id="n4__OUT__0" inputs="0" outputs="1" width="0.59" x="0.88" y="7.88"/>
+    <joint height="0.51" id="n5__OUT__0" inputs="0" outputs="1" width="0.59" x="8.51" y="7.88"/>
+    <joint height="0.51" id="n33__OUT__0" inputs="0" outputs="1" width="0.59" x="6.44" y="4.07"/>
+    <joint height="0.51" id="n110__IN__0" inputs="1" outputs="0" width="0.59" x="10.25" y="4.07"/>
+    <joint height="0.51" id="n123" inputs="2" outputs="1" width="1.19" x="6.60" y="4.24" visible="true"/>
+    <line id="e1__IN__" visible="true">
+      <fromjoint id="n461" port="output"/>
+      <tobox id="SplitMergePractice1" port="0"/>
+      <point x="4.46" y="11.59"/>
+      <point x="4.46" y="12.05"/>
+      <point x="1.71" y="12.05"/>
+      <point x="1.71" y="1.67"/>
+      <point x="4.32" y="1.67"/>
+      <point x="4.32" y="2.11"/>
+    </line>
+    <line id="e1__OUT__" visible="true">
+      <frombox id="SplitMergePractice1" port="0"/>
+      <tojoint id="n123" port="left"/>
+      <point x="4.32" y="3.11"/>
+      <point x="4.32" y="3.55"/>
+      <point x="5.38" y="3.55"/>
+      <point x="5.38" y="3.55"/>
+      <point x="6.43" y="3.55"/>
+      <point x="6.43" y="3.99"/>
+    </line>
+    <line id="e11__IN__">
+      <fromjoint id="n11" port="0"/>
+      <tobox id="SplitMergePractice1" port="1"/>
+      <point x="8.85" y="0.53"/>
+      <point x="8.85" y="1.53"/>
+    </line>
+    <line id="e11__OUT__">
+      <frombox id="SplitMergePractice1" port="1"/>
+      <tojoint id="n110__IN__0" port="0"/>
+      <point x="8.85" y="2.81"/>
+      <point x="10.26" y="3.81"/>
+    </line>
+    <line id="e2__IN__" visible="true">
+      <fromjoint id="n572" port="output"/>
+      <tobox id="SplitMergePractice2" port="0"/>
+      <point x="9.74" y="11.61"/>
+      <point x="9.74" y="12.07"/>
+      <point x="12.50" y="12.07"/>
+      <point x="12.50" y="1.63"/>
+      <point x="9.39" y="1.63"/>
+      <point x="9.39" y="2.07"/>
+    </line>
+    <line id="e2__OUT__" visible="true">
+      <frombox id="SplitMergePractice2" port="0"/>
+      <tojoint id="n123" port="right"/>
+      <point x="9.39" y="3.07"/>
+      <point x="9.39" y="3.51"/>
+      <point x="8.09" y="3.51"/>
+      <point x="8.09" y="3.51"/>
+      <point x="6.78" y="3.51"/>
+      <point x="6.78" y="3.99"/>
+    </line>
+    <line id="e3__IN__" visible="true">
+      <fromjoint id="n123" port="output"/>
+      <tobox id="SplitMergePractice3" port="0"/>
+      <point x="6.60" y="4.50"/>
+      <point x="6.60" y="4.96"/>
+      <point x="6.60" y="4.96"/>
+      <point x="6.60" y="5.14"/>
+      <point x="6.60" y="5.14"/>
+      <point x="6.60" y="5.58"/>
+    </line>
+    <line id="e3__OUT__" visible="true">
+      <frombox id="SplitMergePractice3" port="0"/>
+      <tojoint id="n367" port="input"/>
+      <point x="6.60" y="6.58"/>
+      <point x="6.60" y="7.02"/>
+      <point x="6.60" y="7.02"/>
+      <point x="6.60" y="7.32"/>
+      <point x="6.60" y="7.32"/>
+      <point x="6.60" y="7.78"/>
+    </line>
+    <line id="e33__IN__">
+      <fromjoint id="n33__OUT__0" port="0"/>
+      <tobox id="SplitMergePractice3" port="1"/>
+      <point x="6.46" y="4.34"/>
+      <point x="8.79" y="5.34"/>
+    </line>
+    <line id="e33__OUT__">
+      <frombox id="SplitMergePractice3" port="1"/>
+      <tojoint id="n330" port="0"/>
+      <point x="8.79" y="6.62"/>
+      <point x="10.13" y="7.62"/>
+    </line>
+    <line id="e4__IN__">
+      <fromjoint id="n4__OUT__0" port="0"/>
+      <tobox id="SplitMergePractice4" port="0"/>
+      <point x="0.89" y="8.14"/>
+      <point x="0.89" y="9.14"/>
+    </line>
+    <line id="e4__OUT__" visible="true">
+      <frombox id="SplitMergePractice4" port="0"/>
+      <tojoint id="n461" port="left"/>
+      <point x="2.99" y="10.20"/>
+      <point x="2.99" y="10.64"/>
+      <point x="3.64" y="10.64"/>
+      <point x="3.64" y="10.64"/>
+      <point x="4.29" y="10.64"/>
+      <point x="4.29" y="11.08"/>
+    </line>
+    <line id="e5__IN__">
+      <fromjoint id="n5__OUT__0" port="0"/>
+      <tobox id="SplitMergePractice5" port="0"/>
+      <point x="8.53" y="8.14"/>
+      <point x="8.53" y="9.14"/>
+    </line>
+    <line id="e5__OUT__" visible="true">
+      <frombox id="SplitMergePractice5" port="0"/>
+      <tojoint id="n572" port="right"/>
+      <point x="8.58" y="10.22"/>
+      <point x="8.58" y="10.66"/>
+      <point x="9.08" y="10.66"/>
+      <point x="9.08" y="10.66"/>
+      <point x="9.58" y="10.66"/>
+      <point x="9.58" y="11.10"/>
+    </line>
+    <line id="e6__IN__" visible="true">
+      <fromjoint id="n367" port="output"/>
+      <tobox id="SplitMergePractice6" port="0"/>
+      <point x="6.42" y="8.28"/>
+      <point x="6.42" y="8.72"/>
+      <point x="6.07" y="8.72"/>
+      <point x="6.07" y="8.72"/>
+      <point x="5.72" y="8.72"/>
+      <point x="5.72" y="9.16"/>
+    </line>
+    <line id="e6__OUT__" visible="true">
+      <frombox id="SplitMergePractice6" port="0"/>
+      <tojoint id="n461" port="right"/>
+      <point x="5.72" y="10.16"/>
+      <point x="5.72" y="10.60"/>
+      <point x="5.18" y="10.60"/>
+      <point x="5.18" y="10.60"/>
+      <point x="4.64" y="10.60"/>
+      <point x="4.64" y="11.08"/>
+    </line>
+    <line id="e7__IN__" visible="true">
+      <fromjoint id="n367" port="split"/>
+      <tobox id="SplitMergePractice7" port="0"/>
+      <point x="6.81" y="8.28"/>
+      <point x="6.81" y="8.74"/>
+      <point x="8.94" y="8.74"/>
+      <point x="8.94" y="8.74"/>
+      <point x="11.07" y="8.74"/>
+      <point x="11.07" y="9.18"/>
+    </line>
+    <line id="e7__OUT__" visible="true">
+      <frombox id="SplitMergePractice7" port="0"/>
+      <tojoint id="n572" port="left"/>
+      <point x="11.07" y="10.18"/>
+      <point x="11.07" y="10.62"/>
+      <point x="10.49" y="10.62"/>
+      <point x="10.49" y="10.62"/>
+      <point x="9.92" y="10.62"/>
+      <point x="9.92" y="11.10"/>
+    </line>
+  </level>
+</graph>
