@@ -421,7 +421,10 @@ package system
 							break;
 					}
 				}
-				
+				// If already simulated, move on
+				if (edge.exit_ball_type == outgoing_ball_type) {
+					continue;
+				}
 				edge.exit_ball_type = outgoing_ball_type;
 				
 				// At this point we have determined what type of ball should be output of this edge, now process next node
@@ -459,20 +462,11 @@ package system
 						break;
 					
 					case NodeTypes.MERGE : {
-						var other_edge:Edge;
-						if (node.incoming_ports[0] == edge.to_port) {
-							other_edge = node.incoming_ports[1].edge;
-						} else if (node.incoming_ports[1] == edge.to_port) {
-							other_edge = node.incoming_ports[0].edge;
-						} else {
-							throw new Error("Flow sensitive PipeSimulator: MERGE node encountered which didn't link to the edge's port. Edge: " + edge.edge_id);
-						}
+						var other_edge:Edge = getOtherMergeEdge(edge);
 						if (other_edge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
 							// If the other edge has not made a determination yet, push this edge to the back of the queue and try later
-							queue.push(edge);
-							if (edges_awaiting_others.indexOf(edge) == -1) {
-								edges_awaiting_others.push(edge);
-							}
+							if (queue.indexOf(edge) == -1) queue.push(edge);
+							if (edges_awaiting_others.indexOf(edge) == -1) edges_awaiting_others.push(edge);
 						} else if (node.outgoing_ports.length == 1) {
 							var outgoingMergeEdge:Edge = node.outgoing_ports[0].edge;
 							// Merge the ball types - narrow if either incoming ball is narrow, same with wide
@@ -508,7 +502,7 @@ package system
 							if (edges_awaiting_others.indexOf(other_edge) > -1) {
 								edges_awaiting_others.splice(edges_awaiting_others.indexOf(other_edge), 1);
 							}
-							queue.push(outgoingMergeEdge); //enqueue
+							if (queue.indexOf(outgoingMergeEdge) == -1) queue.push(outgoingMergeEdge);//enqueue
 						} else {
 							//trace("WARNING! Found MERGE node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
 							// Remove edges from waiting list if they're in there
@@ -525,9 +519,9 @@ package system
 					//other nodes
 					case NodeTypes.SPLIT : {
 						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
-						queue.push(node.outgoing_ports[0].edge); //enqueue
+						if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge);//enqueue
 						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
-						queue.push(node.outgoing_ports[1].edge); //enqueue
+						if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
 					}
 						break;
 					
@@ -540,7 +534,7 @@ package system
 							} else {
 								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							}
-							queue.push(outgoing_port.edge); //enqueue
+							if (queue.indexOf(outgoing_port.edge) == -1) queue.push(outgoing_port.edge); //enqueue
 						}
 					}
 						break;
@@ -549,7 +543,7 @@ package system
 						// Process the GET node when the "VALUE" edge is reached
 						if ((node as MapGetNode).valueEdge == edge) {
 							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
-							queue.push(node.outgoing_ports[0].edge); //enqueue
+							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
 						}
 					}
 						break;
@@ -558,7 +552,7 @@ package system
 						// Apparently there is a possibility that the CONNECT node doesn't have an output
 						if (node.outgoing_ports.length == 1) {
 							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
-							queue.push(node.outgoing_ports[0].edge); //enqueue
+							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
 						} else {
 							//trace("WARNING! Found CONNECT node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
 						}
@@ -573,10 +567,37 @@ package system
 				}
 				
 				if ((queue.length > 0) && (queue.length <= edges_awaiting_others.length)) {
-					// If we only have edges that are awaiting others, this doesn't seem right. Throw error.
-					throw new Error("Flow sensitive PipeSimulator: Stuck with only edges that require further traversal to proceed "
-						+ "(edges that are entering a MERGE node where the other pipe entering hasn't reached this point yet).");
-					queue = new Vector.<Edge>();
+					// If we only have edges that are awaiting others, perform any merges with at least one determined ball type
+					// exiting. Perform on non-ghost exiting ball edges first (if any), then proceed to ghost ball exiting edges
+					var non_ghost_edge:Edge, ghost_edge:Edge;
+					for (var i:int = 0; i < edges_awaiting_others.length; i++) {
+						if (edges_awaiting_others[i].exit_ball_type != Edge.BALL_TYPE_UNDETERMINED) {
+							if (edges_awaiting_others[i].exit_ball_type != Edge.BALL_TYPE_GHOST) {
+								non_ghost_edge = edges_awaiting_others[i];
+								break;
+							} else if (ghost_edge == null) {
+								ghost_edge = edges_awaiting_others[i];
+							}
+						}
+					}
+					// proceed with non-ghost if any
+					var edge_to_proceed:Edge = (non_ghost_edge != null) ? non_ghost_edge : ghost_edge;
+					if (edge_to_proceed == null) {
+						// If only edges with undetermined ball type, throw Error
+						throw new Error("Flow sensitive PipeSimulator: Stuck with only edges that require further traversal to proceed "
+							+ "(edges that are entering a MERGE node where the other pipe entering hasn't reached this point yet).");
+						queue = new Vector.<Edge>();
+					}
+					// Mark other edge's output as ghost (or whatever input ball type is if not undetermined)
+					var other_edge:Edge = getOtherMergeEdge(edge_to_proceed);
+					if (other_edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
+						other_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+					}
+					// enqueue other edge, move to top of queue (remove if in queue, then add to beginning)
+					if (queue.indexOf(other_edge) > -1) {
+						queue.splice(queue.indexOf(other_edge), 1);
+					}
+					queue.unshift(other_edge);
 				}
 			}
 			
@@ -652,6 +673,20 @@ package system
 			result1[0] = listPortTroublePoints;
 			result1[1] = listEdgeTroublePoints;
 			return result1;
+		}
+		
+		private static function getOtherMergeEdge(edge:Edge):Edge
+		{
+			var node:Node = edge.to_node;
+			var other_edge:Edge;
+			if (node.incoming_ports[0] == edge.to_port) {
+				return node.incoming_ports[1].edge;
+			} else if (node.incoming_ports[1] == edge.to_port) {
+				return node.incoming_ports[0].edge;
+			} else {
+				throw new Error("MERGE node encountered which didn't link to the edge's port. Edge: " + edge.edge_id);
+			}
+			return null;
 		}
 		
 		private static function addTpPort(tpDictionary:Dictionary, port:Port):void
