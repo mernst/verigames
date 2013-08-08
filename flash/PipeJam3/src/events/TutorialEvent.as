@@ -1,5 +1,6 @@
 package events 
 {
+	import scenes.game.display.TutorialManagerTextInfo;
 	import starling.events.Event;
 	
 	public class TutorialEvent extends Event 
@@ -10,15 +11,18 @@ package events
 		public static const HIGHLIGHT_PASSAGE:String = "HIGHLIGHT_PASSAGE";
 		public static const HIGHLIGHT_CLASH:String = "HIGHLIGHT_CLASH";
 		public static const HIGHLIGHT_SCOREBLOCK:String = "HIGHLIGHT_SCOREBLOCK";
+		public static const NEW_TUTORIAL_TEXT:String = "NEW_TUTORIAL_TEXT";
 		
 		public var componentId:String;
 		public var highlightOn:Boolean;
+		public var newTextInfo:TutorialManagerTextInfo;
 		
-		public function TutorialEvent(_type:String, _componentId:String = "", _highlightOn:Boolean = true) 
+		public function TutorialEvent(_type:String, _componentId:String = "", _highlightOn:Boolean = true, _newTextInfo:TutorialManagerTextInfo = null) 
 		{
 			super(_type, true);
 			componentId = _componentId;
 			highlightOn = _highlightOn;
+			newTextInfo = _newTextInfo;
 		}
 	}
 

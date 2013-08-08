@@ -1,6 +1,9 @@
 package scenes.game.display 
 {
 	import display.NineSliceBatch;
+	import events.EdgeContainerEvent;
+	import events.TutorialEvent;
+	import starling.core.Starling;
 	
 	import events.EdgeSetChangeEvent;
 	
@@ -27,6 +30,8 @@ package scenes.game.display
 		public static const SPLIT_MERGE_PRACTICE_TUTORIAL:String = "splitmergepractice";
 		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
+		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
+		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
 		public static const SKILLS_B_TUTORIAL:String = "skillsb";
 		// Not currently used:
@@ -36,6 +41,9 @@ package scenes.game.display
 		
 		private var m_tutorialTag:String;
 		private var m_levelStarted:Boolean = false;
+		private var m_levelFinished:Boolean = false;
+		// If default text is ovewridden, store here (otherwise if null, use default text)
+		private var m_currentTutorialText:TutorialManagerTextInfo;
 		
 		public function TutorialManager(_tutorialTag:String)
 		{
@@ -55,6 +63,8 @@ package scenes.game.display
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
 				case SKILLS_B_TUTORIAL:
 				// Not used:
@@ -75,12 +85,45 @@ package scenes.game.display
 		
 		public function startLevel():void
 		{
+			m_currentTutorialText = null;
+			m_levelFinished = false;
 			m_levelStarted = true;
 		}
 		
 		public function endLevel():void
 		{
+			m_currentTutorialText = null;
+			m_levelFinished = true;
 			m_levelStarted = false;
+		}
+		
+		public function onRubberBandEdgeSegment(event:EdgeContainerEvent, textPointingAtSegment:Boolean = false):void
+		{
+			switch (m_tutorialTag) {
+				case CREATE_JOINT_TUTORIAL:
+					if (!m_levelFinished && textPointingAtSegment) {
+						m_levelFinished = true;
+						Starling.juggler.delayCall(function():void {
+							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+						}, 0.5);
+					}
+				break;
+			}
+		}
+		
+		public function onJointCreated(event:EdgeContainerEvent):void
+		{
+			switch (m_tutorialTag) {
+				case CREATE_JOINT_TUTORIAL:
+					var toPos:String = (event.segment.m_endPt.y != 0) ? NineSliceBatch.LEFT : NineSliceBatch.TOP;
+					m_currentTutorialText = new TutorialManagerTextInfo(
+						"Drag the new link segment",
+						null,
+						pointToEdgeSegment(event.container.m_id, event.segmentIndex),
+						toPos, NineSliceBatch.CENTER);
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, m_currentTutorialText));
+					break;
+			}
 		}
 		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
@@ -89,10 +132,20 @@ package scenes.game.display
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
 		{
+			switch (m_tutorialTag) {
+				case GROUP_SELECT_TUTORIAL:
+					if (!m_levelFinished && (updatedGameNodes.length > 0)) {
+						m_levelFinished = true;
+						Starling.juggler.delayCall(function():void {
+							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
+						}, 2.0);
+					}
+					break;
+			}
 		}
 		
 		public function getPanZoomAllowed():Boolean
-		{return true;
+		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
@@ -111,6 +164,8 @@ package scenes.game.display
 				case LAYOUT_TUTORIAL:
 					return false;
 				case ZOOM_PAN_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return true;
 			}
@@ -118,7 +173,7 @@ package scenes.game.display
 		}
 		
 		public function getLayoutFixed():Boolean
-		{return false;
+		{
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
@@ -136,6 +191,8 @@ package scenes.game.display
 				case OPTIMIZE_TUTORIAL:
 					return true;
 				case ZOOM_PAN_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return false;
@@ -166,6 +223,8 @@ package scenes.game.display
 				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
 			}
@@ -196,6 +255,8 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return new Point();
 			}
@@ -215,6 +276,15 @@ package scenes.game.display
 		private function pointToEdge(name:String):Function
 		{
 			return function(currentLevel:Level):DisplayObject { return currentLevel.getEdgeContainer(name); };
+		}
+		
+		private function pointToEdgeSegment(edgeName:String, segmentIndex:int):Function
+		{
+			return function(currentLevel:Level):DisplayObject {
+				var container:GameEdgeContainer = currentLevel.getEdgeContainer(edgeName);
+				if (container != null) return container.getSegment(segmentIndex);
+				return null;
+			};
 		}
 		
 		private function pointToPassage(name:String):Function
@@ -243,6 +313,7 @@ package scenes.game.display
 		
 		public function getTextInfo():TutorialManagerTextInfo
 		{
+			if (m_currentTutorialText != null) return m_currentTutorialText;
 			switch (m_tutorialTag) {
 				case WIDGET_TUTORIAL:
 					return new TutorialManagerTextInfo(
@@ -344,6 +415,21 @@ package scenes.game.display
 						"Larger levels require navigation. Drag the background\n" +
 						"to move around the level. Use the +/- keys to\n" +
 						"zoom in and out.",
+						null,
+						null,
+						null, null);
+				case GROUP_SELECT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"SELECT groups of widgets by holding <SHIFT>\n" +
+						"and click-dragging the mouse. SELECT and\n" +
+						"move a group of widgets to continue...",
+						null,
+						null,
+						null, null);
+				case CREATE_JOINT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Create a joint on any link by\n" +
+						"double-clicking a spot on the link.",
 						null,
 						null,
 						null, null);

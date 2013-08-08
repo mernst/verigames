@@ -1,6 +1,8 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import events.BallTypeChangeEvent;
+	import events.EdgeContainerEvent;
 	
 	import flash.geom.Point;
 	
@@ -87,7 +89,7 @@ package scenes.game.display
 				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OVER, true));
+					dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OVER, null, this));
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
@@ -96,7 +98,7 @@ package scenes.game.display
 			else
 			{
 				m_isDirty = true;
-				dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
+				dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OUT, null, this));
 			}
 		}
 		

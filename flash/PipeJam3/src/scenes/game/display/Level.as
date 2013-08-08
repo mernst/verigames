@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import events.EdgeContainerEvent;
 	
 	import audio.AudioManager;
 	
@@ -306,6 +307,8 @@ package scenes.game.display
 	//		m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
 			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
+			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+			addEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
@@ -907,6 +910,8 @@ package scenes.game.display
 			
 			disposeChildren();
 			
+			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+			removeEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
@@ -930,7 +935,25 @@ package scenes.game.display
 				}
 			}
 		}
-	
+		
+		private function onRubberBandSegment(event:EdgeContainerEvent):void
+		{
+			if (tutorialManager != null) {
+				var pointingAt:Boolean = false;
+				if ((tutorialManager.getTextInfo() != null) && (tutorialManager.getTextInfo().pointAtFn != null)) {
+					var pointAtObject:DisplayObject = tutorialManager.getTextInfo().pointAtFn(this);
+					if (pointAtObject == event.segment) pointingAt = true;
+				}
+				tutorialManager.onRubberBandEdgeSegment(event, pointingAt);
+			}
+		}
+		
+		//called when a segment is double-clicked on
+		private function onCreateJoint(event:EdgeContainerEvent):void
+		{
+			if (tutorialManager && (event.container != null)) tutorialManager.onJointCreated(event);
+		}
+		
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{

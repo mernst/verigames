@@ -4,6 +4,7 @@ package scenes.game.display
 	import assets.AssetsFont;
 	import display.NineSliceBatch;
 	import display.TextBubble;
+	import events.EdgeContainerEvent;
 	
 	import events.BallTypeChangeEvent;
 	import events.EdgeTroublePointEvent;
@@ -93,17 +94,8 @@ package scenes.game.display
 		public static var NARROW_WIDTH:Number = .1 * Constants.GAME_SCALE;
 		public static var ERROR_WIDTH:Number = .6 * Constants.GAME_SCALE;
 		
-		public static var CREATE_JOINT:String = "create_joint";
 		public static var DIR_BOX_TO_JOINT:String = "2joint";
 		public static var DIR_JOINT_TO_BOX:String = "2box";
-		
-		public static var HOVER_EVENT_OVER:String = "hover_event_in";
-		public static var HOVER_EVENT_OUT:String = "hover_event_out";
-		
-		public static var RUBBER_BAND_SEGMENT:String = "rubber_band_segment";
-		public static var SAVE_CURRENT_LOCATION:String = "save_current_location";
-		public static var RESTORE_CURRENT_LOCATION:String = "restore_current_location";
-		public static var INNER_SEGMENT_CLICKED:String = "extension_clicked";
 		
 		public static const NUM_JOINTS:int = 6;
 		
@@ -238,14 +230,14 @@ package scenes.game.display
 				initialized = true;
 				createLine();
 				
-				addEventListener(CREATE_JOINT, onCreateJoint);
-				addEventListener(RUBBER_BAND_SEGMENT, onRubberBandSegment);
+				addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+				addEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
+				addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+				addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
+				addEventListener(EdgeContainerEvent.SAVE_CURRENT_LOCATION, onSaveLocation);
+				addEventListener(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, onRestoreLocation);
+				addEventListener(EdgeContainerEvent.INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
 				addEventListener(Event.ENTER_FRAME, onEnterFrame);
-				addEventListener(HOVER_EVENT_OVER, onHoverOver);
-				addEventListener(HOVER_EVENT_OUT, onHoverOut);
-				addEventListener(SAVE_CURRENT_LOCATION, onSaveLocation);
-				addEventListener(RESTORE_CURRENT_LOCATION, onRestoreLocation);
-				addEventListener(INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
 			}
 		}
 		
@@ -340,9 +332,16 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
-			if (hasEventListener(Event.ENTER_FRAME)) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
+			
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+			removeEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
+			removeEventListener(EdgeContainerEvent.SAVE_CURRENT_LOCATION, onSaveLocation);
+			removeEventListener(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, onRestoreLocation);
+			removeEventListener(EdgeContainerEvent.INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
+			
 			if (errorContainer) {
 				errorContainer.removeFromParent(true);
 			}
@@ -352,8 +351,8 @@ package scenes.game.display
 			disposeChildren();
 			m_edgeSegments = null;
 			m_edgeJoints = null;
-			if (hasEventListener(CREATE_JOINT)) {
-				removeEventListener(CREATE_JOINT, onCreateJoint);
+			if (hasEventListener(EdgeContainerEvent.CREATE_JOINT)) {
+				removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			}
 			for each (var removeListEdge:Edge in m_listeningToEdges) {
 				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onEdgeTroublePointAdded);
@@ -465,7 +464,7 @@ package scenes.game.display
 			errorContainer.addChild(m_errorParticleSystem);
 			
 			if (errorTextBubble == null) {
-				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
+				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, null, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
 			}
 			errorTextBubbleContainer.scaleX = errorTextBubbleContainer.scaleY = 0.5;
 			errorTextBubbleContainer.addChild(errorTextBubble);
@@ -543,7 +542,7 @@ package scenes.game.display
 			removeError();
 		}
 		
-		private function onHoverOver(event:Event):void
+		private function onHoverOver(event:EdgeContainerEvent):void
 		{
 			unflatten();
 			handleHover(true);
@@ -551,7 +550,7 @@ package scenes.game.display
 				m_extensionEdge.handleHover(true);
 		}
 		
-		private function onHoverOut(event:Event):void
+		private function onHoverOut(event:EdgeContainerEvent):void
 		{
 			handleHover(false);
 			if(m_extensionEdge)
@@ -559,7 +558,7 @@ package scenes.game.display
 		}
 		
 		//these next 4 functions deal with moving internal to node segments, or the extension pieces
-		public function onSaveLocation(event:Event):void
+		public function onSaveLocation(event:EdgeContainerEvent):void
 		{
 			saveLocation();
 			if(m_extensionEdge)
@@ -586,7 +585,7 @@ package scenes.game.display
 			undoObject.m_savedInnerBoxSegmentLocation = new Point(m_innerBoxSegment.interiorPt.x, m_innerBoxSegment.interiorPt.y);
 		}
 		
-		public function onRestoreLocation(event:Event):void
+		public function onRestoreLocation(event:EdgeContainerEvent):void
 		{
 			restoreLocation();
 			
@@ -641,11 +640,11 @@ package scenes.game.display
 		}
 		
 		//called when a segment is double-clicked on
-		private function onCreateJoint(event:Event):void
+		private function onCreateJoint(event:EdgeContainerEvent):void
 		{
 			//get the segment index as a guide to where to add the joint
-			var segment:GameEdgeSegment = event.data as GameEdgeSegment;
-			var segmentIndex:int = m_edgeSegments.indexOf(segment);
+			var segment:GameEdgeSegment = event.segment;
+			var segmentIndex:int = event.segmentIndex;
 			var startingJointIndex:int = segmentIndex;
 			var newJointPt:Point = segment.currentTouch.getLocation(this);
 			//if this is a horizontal line, use the y coordinate of the current joints, else visa-versa
@@ -808,14 +807,9 @@ package scenes.game.display
 			m_isDirty = true;
 		}
 		
-		private function onRubberBandSegment(event:Event):void
+		private function onRubberBandSegment(event:EdgeContainerEvent):void
 		{
-			if(event.target as GameEdgeSegment)
-			{
-				var segment:GameEdgeSegment = event.target as GameEdgeSegment;
-				
-				rubberBandEdgeSegment(segment.updatePoint, segment);
-			}
+			if(event.segment != null) rubberBandEdgeSegment(event.segment.updatePoint, event.segment);
 		}
 		
 		public function rubberBandEdgeSegment(deltaPoint:Point, segment:GameEdgeSegment):void 
@@ -1175,6 +1169,22 @@ package scenes.game.display
 		{
 			m_endJoint.m_originalPoint.x = newPoint.x;
 			m_endJoint.m_originalPoint.y = newPoint.y;
+		}
+		
+		public function getSegment(indx:int):GameEdgeSegment
+		{
+			if ((indx >= 0) && (indx < m_edgeSegments.length)) return m_edgeSegments[indx];
+			return null;
+		}
+		
+		public function getSegmentIndex(segment:GameEdgeSegment):int
+		{
+			return m_edgeSegments.indexOf(segment);
+		}
+		
+		public function getJointIndex(joint:GameEdgeJoint):int
+		{
+			return m_edgeJoints.indexOf(joint);
 		}
 		
 		public function get toBox():Boolean
@@ -1573,9 +1583,8 @@ class InnerBoxSegment extends GameComponent
 		if (innerCircleJoint) {
 			innerCircleJoint.removeFromParent(true);
 		}
-		if (hasEventListener(Event.ENTER_FRAME)) {
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
+		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		
 		super.dispose();
 	}
 }

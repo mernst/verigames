@@ -15,6 +15,8 @@ FILES = [
 	'SplitMergePractice',
     'Layout',
     'ZoomPan',
+	'GroupSelect',
+	'CreateJoint',
     'SkillsA',
     'SkillsB',
 #    'End',

@@ -1,0 +1,49 @@
+<graph id="world">
+  <level id="CreateJoint" qid="19" tutorial="createjoint">
+    <box height="1.0" id="es1" lines="1" width="1.81" x="-0.14" y="1.69" visible="true"/>
+    <box height="1.0" id="es2" lines="1" width="1.81" x="-0.21" y="5.93" visible="true"/>
+    <joint height="0.51" id="n1" inputs="1" outputs="1" width="0.59" x="6.52" y="3.89" visible="true"/>
+    <joint height="0.51" id="nSTA1x0" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
+    <joint height="0.51" id="nEND2x0" inputs="1" outputs="0" width="0.59" x="0.88" y="7.38"/>
+    <line id="e1x0__IN__">
+      <fromjoint id="nSTA1x0" port="0"/>
+      <tobox id="es1" port="0"/>
+      <point x="0.89" y="0.53"/>
+      <point x="0.89" y="1.53"/>
+    </line>
+    <line id="e1x0__OUT__" visible="true">
+      <frombox id="es1" port="0"/>
+      <tojoint id="n1" port="0"/>
+      <point x="-0.15" y="2.19"/>
+      <point x="-0.15" y="2.63"/>
+      <point x="3.04" y="2.63"/>
+      <point x="3.04" y="1.15"/>
+      <point x="4.01" y="1.15"/>
+      <point x="4.01" y="3.71"/>
+      <point x="4.83" y="3.71"/>
+      <point x="4.83" y="3.19"/>
+      <point x="6.53" y="3.19"/>
+      <point x="6.53" y="3.63"/>
+    </line>
+    <line id="e2x0__IN__" visible="true">
+      <fromjoint id="n1" port="0"/>
+      <tobox id="es2" port="0"/>
+      <point x="6.53" y="4.14"/>
+      <point x="6.53" y="4.58"/>
+      <point x="4.79" y="4.58"/>
+      <point x="4.79" y="6.24"/>
+      <point x="3.00" y="6.24"/>
+      <point x="3.00" y="4.99"/>
+      <point x="1.83" y="4.99"/>
+      <point x="1.83" y="4.05"/>
+      <point x="-0.22" y="4.05"/>
+      <point x="-0.22" y="5.43"/>
+    </line>
+    <line id="e2x0__OUT__">
+      <frombox id="es2" port="0"/>
+      <tojoint id="nEND2x0" port="0"/>
+      <point x="0.89" y="6.11"/>
+      <point x="0.89" y="7.11"/>
+    </line>
+  </level>
+</graph>

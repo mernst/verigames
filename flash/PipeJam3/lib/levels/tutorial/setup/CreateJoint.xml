@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<world>
+  <level name="CreateJoint" qid="19">
+    <linked-edges>
+      <edge-set id="es1">
+        <edgeref id="e1x0"/>
+      </edge-set>
+      <edge-set id="es2">
+        <edgeref id="e2x0"/>
+      </edge-set>
+    </linked-edges>
+    <boards>
+      <board name="CreateJoint">
+        <node id="nSTA1x0" kind="START_PIPE_DEPENDENT_BALL">
+          <input/>
+          <output><port num="0" edge="e1x0"/></output>
+        </node>
+        <node id="nEND2x0"  kind="END">
+          <input><port num="0" edge="e2x0"/></input>
+          <output/>
+        </node>
+        <node id="n1"  kind="CONNECT">
+          <input><port num="0" edge="e1x0"/></input>
+          <output><port num="0" edge="e2x0"/></output>
+        </node>
+        <edge id="e1x0"  width="wide" editable="true" description="CreateJoint" variableID="-1" pinch="false" buzzsaw="false">
+          <from><noderef id="nSTA1x0" port="0"/></from>
+          <to><noderef id="n1" port="0"/></to>
+        </edge>
+        <edge id="e2x0"  width="wide" editable="true" description="CreateJoint" variableID="-1" pinch="false" buzzsaw="false">
+          <from><noderef id="n1" port="0"/></from>
+          <to><noderef id="nEND2x0" port="0"/></to>
+        </edge>
+      </board>
+    </boards>
+  </level>
+</world>

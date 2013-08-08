@@ -2,31 +2,23 @@ package display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	
 	import display.NineSliceBatch;
-	
 	import flash.geom.Point;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
-	
-	import scenes.game.display.Level;
-	import scenes.game.display.TutorialManagerTextInfo;
-	
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	
 	import utils.XSprite;
 	
 	public class TextBubble extends Sprite
 	{
 		protected var m_fontSize:Number;
 		protected var m_pointAt:DisplayObject;
+		protected var m_pointAtContainer:DisplayObjectContainer;
 		protected var m_pointFrom:String;
 		protected var m_pointTo:String;
 		protected var m_arrowSz:Number;
@@ -44,7 +36,8 @@ package display
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
 		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
-		                           _pointAt:DisplayObject = null, _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, 
+		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 
+								   _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, 
 								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
@@ -52,6 +45,7 @@ package display
 		{
 			m_fontSize = _fontSize;
 			m_pointAt = _pointAt;
+			m_pointAtContainer = _pointAtContainer;
 			m_pointFrom = _pointFrom;
 			m_pointTo = _pointTo;
 			m_pointPosAlwaysUpdate = _pointPosAlwaysUpdate;
@@ -220,8 +214,11 @@ package display
 						break;
 				}
 				
-				if (m_pointAt.parent) {
+				var desiredParent:DisplayObjectContainer = (m_pointAtContainer != null) ? m_pointAtContainer : m_pointAt.parent;
+				if (desiredParent) {
 					pt = m_pointAt.parent.localToGlobal(pt);
+					pt = desiredParent.globalToLocal(pt);
+					pt = desiredParent.localToGlobal(pt);
 					pt = parent.globalToLocal(pt);
 					
 					if (m_pointPosNeedsInit || m_pointPosAlwaysUpdate) {

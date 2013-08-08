@@ -1,6 +1,7 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
+	import events.EdgeContainerEvent;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -102,7 +103,7 @@
 			if (m_isInnerBoxSegment && event.getTouches(this, TouchPhase.ENDED).length && 
 				(!isMoving || !hasMovedOutsideClickDist)) {
 				// If haven't moved enough, register this as a click on the node itself
-				dispatchEvent(new TouchEvent(GameEdgeContainer.INNER_SEGMENT_CLICKED, event.touches));
+				dispatchEvent(new TouchEvent(EdgeContainerEvent.INNER_SEGMENT_CLICKED, event.touches));
 			}
 			if (!draggable) return;
 			
@@ -115,7 +116,7 @@
 					touchXY = this.globalToLocal(touchXY);
 					if(!isMoving) {
 						startingPoint = touchXY;
-						dispatchEvent(new Event(GameEdgeContainer.SAVE_CURRENT_LOCATION, true));
+						dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.SAVE_CURRENT_LOCATION, this));
 						isMoving = true;
 						hasMovedOutsideClickDist = false;
 						return;
@@ -132,7 +133,7 @@
 					var previousLocation:Point = touch.getPreviousLocation(this);
 					updatePoint = currentMoveLocation.subtract(previousLocation);	
 					currentDragSegment = true;
-					dispatchEvent(new Event(GameEdgeContainer.RUBBER_BAND_SEGMENT, true, this));
+					dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.RUBBER_BAND_SEGMENT, this));
 					currentDragSegment = false;
 				}
 			}
@@ -146,8 +147,8 @@
 					{
 						isMoving = false;
 						if (m_isInnerBoxSegment || m_isFirstSegment || m_isLastSegment) {
-							dispatchEvent(new Event(GameEdgeContainer.RESTORE_CURRENT_LOCATION, true));
-							dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
+							dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, this));
+							dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OUT, this));
 						}
 					}
 				}
@@ -156,7 +157,7 @@
 				{
 					this.currentTouch = touch;
 					if(!m_isInnerBoxSegment)
-						dispatchEvent(new Event(GameEdgeContainer.CREATE_JOINT, true, this));
+						dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.CREATE_JOINT, this));
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.HOVER).length)
@@ -164,7 +165,7 @@
 				if (touches.length == 1)
 				{
 					m_isDirty = true;
-					dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OVER, true));
+					dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OVER, this));
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.BEGAN).length)
@@ -175,7 +176,7 @@
 			{
 				m_isDirty = true;
 				isMoving = false;
-				dispatchEvent(new Event(GameEdgeContainer.HOVER_EVENT_OUT, true));
+				dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OUT, this));
 			}
 		}
 		

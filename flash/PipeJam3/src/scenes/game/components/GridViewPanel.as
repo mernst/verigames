@@ -506,6 +506,7 @@ package scenes.game.components
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
 					}
 					
 				}
@@ -518,6 +519,7 @@ package scenes.game.components
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_PASSAGE, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
 				}
 			}
 			
@@ -541,6 +543,20 @@ package scenes.game.components
 			}
 			
 			recenter();
+		}
+		
+		public function onTutorialTextChange(evt:TutorialEvent):void
+		{
+			if (m_tutorialText) {
+				m_tutorialText.removeFromParent(true);
+				m_tutorialText = null;
+			}
+			
+			var levelTextInfo:TutorialManagerTextInfo = evt.newTextInfo;
+			if (levelTextInfo) {
+				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
+				addChild(m_tutorialText);
+			}
 		}
 		
 		public function recenter():void
