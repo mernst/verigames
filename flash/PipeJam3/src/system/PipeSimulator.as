@@ -589,15 +589,15 @@ package system
 						queue = new Vector.<Edge>();
 					}
 					// Mark other edge's output as ghost (or whatever input ball type is if not undetermined)
-					var other_edge:Edge = getOtherMergeEdge(edge_to_proceed);
-					if (other_edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
-						other_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+					var other_merge_edge:Edge = getOtherMergeEdge(edge_to_proceed);
+					if (other_merge_edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
+						other_merge_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
 					}
 					// enqueue other edge, move to top of queue (remove if in queue, then add to beginning)
-					if (queue.indexOf(other_edge) > -1) {
-						queue.splice(queue.indexOf(other_edge), 1);
+					if (queue.indexOf(other_merge_edge) > -1) {
+						queue.splice(queue.indexOf(other_merge_edge), 1);
 					}
-					queue.unshift(other_edge);
+					queue.unshift(other_merge_edge);
 				}
 			}
 			
