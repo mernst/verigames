@@ -209,10 +209,6 @@ def main():
     print "Test suites: " + str(testsuites)
     print
 
-    numTests = 0
-    numFails = 0
-    numErrors = 0
-
     if options.debug:
         scriptName = "./debugScript.sh"
     else:
@@ -221,10 +217,14 @@ def main():
     os.putenv("JAVA", os.getenv("JAVA_HOME") + "/bin/java")
     os.putenv("SCALA", os.getenv("SCALA_HOME") + "/bin/scala")\
 
-    failingTests = []
     os.chdir("..")
     cwd = os.getcwd()
     print ("Current directory: " + cwd)
+
+    failingTests = []
+    numTests = 0
+    numFails = 0
+    numErrors = 0
 
     for testsuite in testsuites:
         print "---Running " + testsuite + " tests---"
