@@ -42,7 +42,8 @@ solverArgs = {"nullness": ["nninf.NninfGameSolver"],
 allTests = ["constraint", "xml"]
 
 def diff_junk_lines(str):
-    return not (str.startswith("Total running time: ") or str.startswith("Generation: ") or str.startswith("Solving: ") or str.startswith("Output: "))
+    return not (str.startswith("Total running time: ") or str.startswith("Generation: ")
+            or str.startswith("Solving: ") or str.startswith("Output: "))
 
 def get_immediate_subdirectories(dir):
         return [name for name in os.listdir(dir)
@@ -76,7 +77,7 @@ def remove_layout(name):
             var.remove(y)
     tree.write(name)
 
-def compare_results(expectedName, actualName, diffName):                    
+def compare_results(expectedName, actualName, diffName):
     e = open(expectedName)
     a = open(actualName)
     same = filecmp.cmp(expectedName, actualName)
@@ -95,11 +96,14 @@ def checker_to_args(checkerName):
     chArgs = checkerArgs[checkerName]
     soArgs = solverArgs[checkerName]
     executable = "dist/scripts/inference.sh" #os.path(parent, "..", "dist", "inference.sh")
-    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], "--visitor", chArgs[1], "--solver", soArgs[0] ]
+    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], 
+            "--visitor", chArgs[1], "--solver", soArgs[0] ]
 
 def run_xml_tests(testSuiteTests):
     javaFiles = [os.path.join(testSuiteTests, name) for name in os.listdir(testSuiteTests)
-                if  not os.path.isdir(os.path.join(testSuiteTests, name)) and name.endswith(".java")] #An array of java files
+            if  not os.path.isdir(os.path.join(testSuiteTests, name))
+            and name.endswith(".java")] #An array of java files
+
     expectedName = "test/xmlTests/" + test + "/expected_" + checker + ".xml"
     # Check that an expected file for this checker/test combination exists
     if os.path.isfile(expectedName):
@@ -122,7 +126,8 @@ def run_xml_tests(testSuiteTests):
                 if os.path.isfile(actualName):
                     remove_layout(actualName)
     else:
-        print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
+        print ("Couldn't find expected file: " + expectedName + " testsuite " +
+                testsuite + " not run for checker " + checker)
 
 
 def run_constraint_tests(testSuitTests):
@@ -136,14 +141,17 @@ def run_constraint_tests(testSuitTests):
             os.putenv("ACTUAL_PATH", actualName)
             # Run the test
             with open(os.devnull, "w") as outfile:
-                ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test", "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
+                ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test",
+                        "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
+
                 if ret != 0: # Error
                     numErrors = numErrors + 1
                     print "Error: " + test + " for " + checker + " returned error code " + str(ret)
                 else:
                     subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
         else:
-            print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
+            print ("Couldn't find expected file: " + expectedName + " testsuite " +
+                    testsuite + " not run for checker " + checker)
 
 
 def main():
@@ -166,7 +174,7 @@ def main():
     print "Type systems: " + str(checkers)
     print "Test suites: " + str(testsuites)
     print
-    
+
     numTests = 0
     numFails = 0
     numErrors = 0
@@ -175,7 +183,7 @@ def main():
         scriptName = "./debugScript.sh"
     else:
         scriptName = "./testScript.sh"
-    
+
     os.putenv("JAVA", os.getenv("JAVA_HOME") + "/bin/java")
     os.putenv("SCALA", os.getenv("SCALA_HOME") + "/bin/scala")\
 
@@ -211,7 +219,8 @@ def main():
                         if os.path.isfile(actualName):
                             subprocess.call(["rm", actualName])
                         else:
-                            print ("STRANGE: exit code zero but no actualFile output for test " + test+ " using checker " + checker)
+                            print ("STRANGE: exit code zero but no actualFile output for test " +
+                                    test + " using checker " + checker)
         if failingTests:
             print
             print "Failing tests:"
@@ -220,7 +229,9 @@ def main():
             print
         failingTests = []
 
-    print "Tests run: " + str(numTests) + ", Passed: " + str(numTests - numErrors - numFails) + ", Errors: " + str(numErrors) + ", Failures: " + str(numFails)
+    print "Tests run: " + str(numTests) + ", Passed: " + str(numTests - numErrors - numFails) + 
+            ", Errors: " + str(numErrors) + ", Failures: " + str(numFails)
+
     os.chdir("test/")
 
 if __name__ == '__main__':
