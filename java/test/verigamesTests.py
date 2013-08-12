@@ -97,6 +97,55 @@ def checker_to_args(checkerName):
     executable = "dist/scripts/inference.sh" #os.path(parent, "..", "dist", "inference.sh")
     return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], "--visitor", chArgs[1], "--solver", soArgs[0] ]
 
+def run_xml_tests(testSuiteTests):
+    javaFiles = [os.path.join(testSuiteTests, name) for name in os.listdir(testSuiteTests)
+                if  not os.path.isdir(os.path.join(testSuiteTests, name)) and name.endswith(".java")] #An array of java files
+    expectedName = "test/xmlTests/" + test + "/expected_" + checker + ".xml"
+    # Check that an expected file for this checker/test combination exists
+    if os.path.isfile(expectedName):
+        numTests = numTests + 1
+        actualName = cwd + "/test/xmlTests/" + test + "/actual_" + checker + ".xml"
+        diffName = cwd + "/test/xmlTests/" + test + "/diff_" + checker + ".txt"
+        # Run the test
+        with open(os.devnull, "w") as outfile:
+            args = checker_to_args(checker) + javaFiles
+            ret = subprocess.call(args, stdout=outfile, stderr=outfile)
+            if ret != 0: # Error
+                numErrors = numErrors + 1
+                print "Error: " + test + " for " + checker + " returned error code " + str(ret)
+            else:
+                subprocess.call(["rm", "inference.jaif"]) # cleanup
+                subprocess.call(["mv", "World.xml", actualName]) # organize
+
+                # Remove layout information
+                remove_layout(expectedName)
+                if os.path.isfile(actualName):
+                    remove_layout(actualName)
+    else:
+        print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
+
+
+def run_constraint_tests(testSuitTests):
+    javaFiles = get_all_java_files(testSuiteTests) #A string of space-separated java files
+        expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
+        # Check that an expected file for this checker/test combination exists
+        if os.path.isfile(expectedName):
+            numTests = numTests + 1
+            actualName = cwd + "/test/constraintTests/" + test + "/actual_" + checker + ".txt"
+            diffName = cwd + "/test/constraintTests/" + test + "/diff_" + checker + ".txt"
+            os.putenv("ACTUAL_PATH", actualName)
+            # Run the test
+            with open(os.devnull, "w") as outfile:
+                ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test", "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
+                if ret != 0: # Error
+                    numErrors = numErrors + 1
+                    print "Error: " + test + " for " + checker + " returned error code " + str(ret)
+                else:
+                    subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
+        else:
+            print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
+
+
 def main():
     p = optparse.OptionParser()
     p.add_option('--checker', '-c', default="all", help="The type system to use: nninf, trusted, or all. Default is all")
@@ -146,51 +195,9 @@ def main():
             #print str(javaFiles)
             for checker in checkers:
                 if testsuite == "xml" :
-                    javaFiles = [os.path.join(testSuiteTests, name) for name in os.listdir(testSuiteTests)
-                                if  not os.path.isdir(os.path.join(testSuiteTests, name)) and name.endswith(".java")] #An array of java files
-                    expectedName = "test/xmlTests/" + test + "/expected_" + checker + ".xml"
-                    # Check that an expected file for this checker/test combination exists
-                    if os.path.isfile(expectedName):
-                        numTests = numTests + 1
-                        actualName = cwd + "/test/xmlTests/" + test + "/actual_" + checker + ".xml"
-                        diffName = cwd + "/test/xmlTests/" + test + "/diff_" + checker + ".txt"
-                        # Run the test
-                        with open(os.devnull, "w") as outfile:
-                            args = checker_to_args(checker) + javaFiles
-                            ret = subprocess.call(args, stdout=outfile, stderr=outfile)
-                            if ret != 0: # Error
-                                numErrors = numErrors + 1
-                                print "Error: " + test + " for " + checker + " returned error code " + str(ret)
-                            else:
-                                subprocess.call(["rm", "inference.jaif"]) # cleanup
-                                subprocess.call(["mv", "World.xml", actualName]) # organize
-
-                                # Remove layout information
-                                remove_layout(expectedName)
-                                if os.path.isfile(actualName):
-                                    remove_layout(actualName)
-                    else:
-                        print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
-
+                    run_xml_tests(testSuiteTests)
                 elif testsuite == "constraint":
-                    javaFiles = get_all_java_files(testSuiteTests) #A string of space-separated java files
-                    expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
-                    # Check that an expected file for this checker/test combination exists
-                    if os.path.isfile(expectedName):
-                        numTests = numTests + 1
-                        actualName = cwd + "/test/constraintTests/" + test + "/actual_" + checker + ".txt"
-                        diffName = cwd + "/test/constraintTests/" + test + "/diff_" + checker + ".txt"
-                        os.putenv("ACTUAL_PATH", actualName)
-                        # Run the test
-                        with open(os.devnull, "w") as outfile:
-                            ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test", "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
-                            if ret != 0: # Error
-                                numErrors = numErrors + 1
-                                print "Error: " + test + " for " + checker + " returned error code " + str(ret)
-                            else:
-                                subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
-                    else:
-                        print ("Couldn't find expected file: " + expectedName + " testsuite " + testsuite + " not run for checker " + checker)
+                    run_constraint_tests(testSuiteTests)
 
                 # Compare the results
                 if os.path.isfile(expectedName) and os.path.isfile(actualName) and not ret:
