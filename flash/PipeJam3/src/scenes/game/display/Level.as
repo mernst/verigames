@@ -2,13 +2,13 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
-	import events.EdgeContainerEvent;
 	
 	import audio.AudioManager;
 	
 	import deng.fzip.FZip;
 	import deng.fzip.FZipFile;
 	
+	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
@@ -276,7 +276,7 @@ package scenes.game.display
 			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edgeXML, false, copyLines);
+				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
 				var edgeVisible:Boolean = getVisible(edgeXML);
 				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
@@ -308,7 +308,7 @@ package scenes.game.display
 			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
-			addEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
+			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
@@ -351,7 +351,7 @@ package scenes.game.display
 				
 		}
 		
-		protected function createLine(edgeXML:XML, useExistingLines:Boolean = false, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
+		protected function createLine(edgeXML:XML, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
 		{
 			if (copyLines == null) {
 				copyLines = new Vector.<GameEdgeContainer>();
@@ -457,16 +457,14 @@ package scenes.game.display
 			if(edgeArray.length < 2)
 				return null;
 			
-			var bb:Rectangle = createEdgePointBoundingBox(edgeArray);
-			
 			var lineID:String = edgeXML.@id;
 			var newGameEdge:GameEdgeContainer;
 			// get editable property from related edge or end segment/joint
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy);
 			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, bb, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, useExistingLines, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy);
 			}
 			
 			newGameEdge.visible = getVisible(edgeXML);
@@ -485,58 +483,7 @@ package scenes.game.display
 			}
 			
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
-			return bb;
-		}
-		
-		//figures out edge point min and max values, creates bounding box, and then normalizes points
-		public function createEdgePointBoundingBox(edgeArray:Array):Rectangle
-		{
-			//normalize edge Array, and then slide game edge to right x,y value
-			var minXedge:Number = Number.POSITIVE_INFINITY;
-			var minYedge:Number = Number.POSITIVE_INFINITY;
-			var maxXedge:Number = Number.NEGATIVE_INFINITY;
-			var maxYedge:Number = Number.NEGATIVE_INFINITY;
-			
-			var startPt:Point = edgeArray[0];
-			var endPt:Point = edgeArray[edgeArray.length-1];
-			
-			if(startPt == null || endPt == null)
-				return null;
-			
-			//get bounding box points, using start and end points as reference
-			if(startPt.x < endPt.x)
-			{
-				minXedge = startPt.x;
-				maxXedge = endPt.x;
-			}
-			else
-			{
-				minXedge = endPt.x;
-				maxXedge = startPt.x;
-				
-			}
-			
-			if(startPt.y < endPt.y)
-			{
-				minYedge = startPt.y;
-				maxYedge = endPt.y;
-			}
-			else
-			{
-				minYedge = endPt.y;
-				maxYedge = startPt.y;
-			}
-			
-			//adjust by min
-			for(var i:int = 0; i<edgeArray.length; i++)
-			{
-				edgeArray[i].x -= minXedge;
-				edgeArray[i].y -= minYedge;
-			}
-			
-			var bb:Rectangle = new Rectangle(minXedge, minYedge, (maxXedge-minXedge), (maxYedge-minYedge));
-			
-			return bb;
+			return newGameEdge.m_boundingBox;
 		}
 		
 		protected function onAddedToStage(event:Event):void
@@ -732,7 +679,7 @@ package scenes.game.display
 				var boundingBox:Rectangle;
 				if(useExistingLines == false && edgeContainer == null)
 				{
-					boundingBox = createLine(edge, useExistingLines);
+					boundingBox = createLine(edge);
 					
 					if(boundingBox)
 					{
@@ -742,25 +689,23 @@ package scenes.game.display
 						maxY = Math.max(maxY, boundingBox.bottom);
 					}
 				}
-				else
+				else if(edgeContainer)
 				{
-					if(edgeContainer)
+					//create edge array
+					var edgeArray:Array = new Array;
+					
+					var edgePoints:XMLList = edge.point;
+					for each(var pointXML:XML in edgePoints)
 					{
-						//create edge array
-						var edgeArray:Array = new Array;
-						
-						var edgePoints:XMLList = edge.point;
-						for each(var pointXML:XML in edgePoints)
-						{
-							var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
-							edgeArray.push(pt);
-						}
-						boundingBox = createEdgePointBoundingBox(edgeArray);
-						edgeContainer.createLine(edgeArray);
-						edgeContainer.m_boundingBox = boundingBox;
-						edgeContainer.x = edgeContainer.m_boundingBox.x/* - m_boundingBox.x */;
-						edgeContainer.y = edgeContainer.m_boundingBox.y/* - m_boundingBox.y */;
+						var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
+						edgeArray.push(pt);
 					}
+					edgeContainer.setupPoints(edgeArray);
+					minX = Math.min(minX, edgeContainer.m_boundingBox.left);
+					minY = Math.min(minY, edgeContainer.m_boundingBox.top);
+					maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
+					maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
+					edgeContainer.createLine();
 				}
 			}
 			trace("Level " + m_levelLayoutXML.attribute("id") + " m_boundingBox = " + m_boundingBox);
@@ -911,7 +856,7 @@ package scenes.game.display
 			disposeChildren();
 			
 			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
-			removeEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
+			removeEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
@@ -936,15 +881,26 @@ package scenes.game.display
 			}
 		}
 		
-		private function onRubberBandSegment(event:EdgeContainerEvent):void
+		private function onSegmentMoved(event:EdgeContainerEvent):void
 		{
+			var newLeft:Number = m_boundingBox.left;
+			var newRight:Number = m_boundingBox.right;
+			var newTop:Number = m_boundingBox.top;
+			var newBottom:Number = m_boundingBox.bottom;
+			if (event.container != null) {
+				newLeft = Math.min(newLeft, event.container.m_boundingBox.left);
+				newRight = Math.max(newRight, event.container.m_boundingBox.right);
+				newTop = Math.min(newTop, event.container.m_boundingBox.top);
+				newBottom = Math.max(newBottom, event.container.m_boundingBox.bottom);
+				m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
+			}
 			if (tutorialManager != null) {
 				var pointingAt:Boolean = false;
 				if ((tutorialManager.getTextInfo() != null) && (tutorialManager.getTextInfo().pointAtFn != null)) {
 					var pointAtObject:DisplayObject = tutorialManager.getTextInfo().pointAtFn(this);
 					if (pointAtObject == event.segment) pointingAt = true;
 				}
-				tutorialManager.onRubberBandEdgeSegment(event, pointingAt);
+				tutorialManager.onSegmentMoved(event, pointingAt);
 			}
 		}
 		
@@ -1137,13 +1093,19 @@ package scenes.game.display
 		private function onMoveEvent(evt:MoveEvent):void
 		{
 			var delta:Point = evt.delta;
-			var oldX:Number;
-			var oldY:Number;
+			var newLeft:Number = m_boundingBox.left;
+			var newRight:Number = m_boundingBox.right;
+			var newTop:Number = m_boundingBox.top;
+			var newBottom:Number = m_boundingBox.bottom;
 			//if component isn't in the currently selected group, unselect everything, and then move component
 			if(selectedComponents.indexOf(evt.component) == -1)
 			{
 				unselectAll();
 				evt.component.componentMoved(delta);
+				newLeft = Math.min(newLeft, evt.component.m_boundingBox.left);
+				newRight = Math.max(newRight, evt.component.m_boundingBox.left);
+				newTop = Math.min(newTop, evt.component.m_boundingBox.top);
+				newBottom = Math.max(newBottom, evt.component.m_boundingBox.bottom);
 			//	m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
 				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
@@ -1153,6 +1115,10 @@ package scenes.game.display
 				for each(var component:GameComponent in selectedComponents)
 				{
 					component.componentMoved(delta);
+					newLeft = Math.min(newLeft, component.m_boundingBox.left);
+					newRight = Math.max(newRight, component.m_boundingBox.left);
+					newTop = Math.min(newTop, component.m_boundingBox.top);
+					newBottom = Math.max(newBottom, component.m_boundingBox.bottom);
 //					if(component is GameNodeBase)
 //						m_visibleNodeManager.updateNode(component as GameNodeBase);
 					if(component is GameNode)
@@ -1160,6 +1126,7 @@ package scenes.game.display
 				}
 				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(m_nodeList);
 			}
+			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
 		
 		public override function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
@@ -1240,8 +1207,8 @@ package scenes.game.display
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				gameEdge.x = gameEdge.m_boundingBox.x;// - m_boundingBox.x;
-				gameEdge.y = gameEdge.m_boundingBox.y;// - m_boundingBox.y;
+				//gameEdge.x = gameEdge.m_boundingBox.x + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.x;
+				//gameEdge.y = gameEdge.m_boundingBox.y + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.y;
 				gameEdge.draw();
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);

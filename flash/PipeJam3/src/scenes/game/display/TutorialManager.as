@@ -97,7 +97,7 @@ package scenes.game.display
 			m_levelStarted = false;
 		}
 		
-		public function onRubberBandEdgeSegment(event:EdgeContainerEvent, textPointingAtSegment:Boolean = false):void
+		public function onSegmentMoved(event:EdgeContainerEvent, textPointingAtSegment:Boolean = false):void
 		{
 			switch (m_tutorialTag) {
 				case CREATE_JOINT_TUTORIAL:

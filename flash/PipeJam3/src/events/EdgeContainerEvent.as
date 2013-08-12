@@ -3,12 +3,14 @@ package events
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameEdgeJoint;
 	import scenes.game.display.GameEdgeSegment;
+	
 	import starling.events.Event;
 	
 	public class EdgeContainerEvent extends Event 
 	{
 		public static const CREATE_JOINT:String = "CREATE_JOINT";
 		public static const RUBBER_BAND_SEGMENT:String = "RUBBER_BAND_SEGMENT";
+		public static const SEGMENT_MOVED:String = "SEGMENT_MOVED";
 		public static const SAVE_CURRENT_LOCATION:String = "SAVE_CURRENT_LOCATION";
 		public static const RESTORE_CURRENT_LOCATION:String = "RESTORE_CURRENT_LOCATION";
 		public static const INNER_SEGMENT_CLICKED:String = "INNER_SEGMENT_CLICKED";
