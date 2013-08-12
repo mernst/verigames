@@ -39,9 +39,7 @@ checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor"],
 solverArgs = {"nullness": ["nninf.NninfGameSolver"],
         "trusted" : ["trusted.TrustedGameSolver"] }
 
-#allTests = ["constraint", "xml"]
-#allTests = ["constraint"]
-allTests = [ "xml"]
+allTests = ["constraint", "xml"]
 
 def diff_junk_lines(str):
     return not (str.startswith("Total running time: ") or str.startswith("Generation: ")
@@ -101,7 +99,7 @@ def checker_to_args(checkerName):
     return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], 
             "--visitor", chArgs[1], "--solver", soArgs[0] ]
 
-def run_xml_tests(checker, test, testSuiteTests):
+def run_xml_tests(checker, test, testSuiteTests, outfile_path):
     ran = False
     error = False
     failure = False
@@ -118,7 +116,7 @@ def run_xml_tests(checker, test, testSuiteTests):
         actualName = cwd + "/test/xmlTests/" + test + "/actual_" + checker + ".xml"
         diffName = cwd + "/test/xmlTests/" + test + "/diff_" + checker + ".txt"
         # Run the test
-        with open(os.devnull, "w") as outfile:
+        with open(outfile_path, "a") as outfile:
             args = checker_to_args(checker) + javaFiles
             ret = subprocess.call(args, stdout=outfile, stderr=outfile)
             if ret != 0: # Error
@@ -141,7 +139,7 @@ def run_xml_tests(checker, test, testSuiteTests):
     return (ran, error, failure)
 
 
-def run_constraint_tests(checker, test, testSuiteTests):
+def run_constraint_tests(checker, test, testSuiteTests, outfile_path):
     ran = False
     error = False
     failure = False
@@ -156,7 +154,7 @@ def run_constraint_tests(checker, test, testSuiteTests):
         diffName = cwd + "/test/constraintTests/" + test + "/diff_" + checker + ".txt"
         os.putenv("ACTUAL_PATH", actualName)
         # Run the test
-        with open(os.devnull, "w") as outfile:
+        with open(outfile_path, "a") as outfile:
             ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test",
                     "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
 
@@ -194,6 +192,7 @@ def main():
     p.add_option('--checker', '-c', default="all", help="The type system to use: nninf, trusted, or all. Default is all")
     p.add_option('--tests', '-t', default="all", help="The test suite to run: constraint, xml, or all. Default is all")
     p.add_option('--debug', '-d',  action="store_true", dest="debug", help="Remote debug using port 5005.")
+    p.add_option('--outfile', '-o', default=os.devnull, help="File to append output from tests.")
     options, arguments = p.parse_args()
 
     checkers = allCheckers if options.checker == "all" else [options.checker]
@@ -235,9 +234,9 @@ def main():
             #print str(javaFiles)
             for checker in checkers:
                 if testsuite == "xml" :
-                    (ran, error, failure) = run_xml_tests(checker, test, testSuiteTests)
+                    (ran, error, failure) = run_xml_tests(checker, test, testSuiteTests, options.outfile)
                 elif testsuite == "constraint":
-                    (ran, error, failure) = run_constraint_tests(checker, test, testSuiteTests)
+                    (ran, error, failure) = run_constraint_tests(checker, test, testSuiteTests, options.outfile)
 
                 if ran:
                     numTests += 1
