@@ -132,26 +132,26 @@ def run_xml_tests(testSuiteTests):
 
 def run_constraint_tests(testSuitTests):
     javaFiles = get_all_java_files(testSuiteTests) #A string of space-separated java files
-        expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
-        # Check that an expected file for this checker/test combination exists
-        if os.path.isfile(expectedName):
-            numTests = numTests + 1
-            actualName = cwd + "/test/constraintTests/" + test + "/actual_" + checker + ".txt"
-            diffName = cwd + "/test/constraintTests/" + test + "/diff_" + checker + ".txt"
-            os.putenv("ACTUAL_PATH", actualName)
-            # Run the test
-            with open(os.devnull, "w") as outfile:
-                ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test",
-                        "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
+    expectedName = "test/constraintTests/" + test + "/expected_" + checker + ".txt"
+    # Check that an expected file for this checker/test combination exists
+    if os.path.isfile(expectedName):
+        numTests = numTests + 1
+        actualName = cwd + "/test/constraintTests/" + test + "/actual_" + checker + ".txt"
+        diffName = cwd + "/test/constraintTests/" + test + "/diff_" + checker + ".txt"
+        os.putenv("ACTUAL_PATH", actualName)
+        # Run the test
+        with open(os.devnull, "w") as outfile:
+            ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test",
+                    "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
 
-                if ret != 0: # Error
-                    numErrors = numErrors + 1
-                    print "Error: " + test + " for " + checker + " returned error code " + str(ret)
-                else:
-                    subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
-        else:
-            print ("Couldn't find expected file: " + expectedName + " testsuite " +
-                    testsuite + " not run for checker " + checker)
+            if ret != 0: # Error
+                numErrors = numErrors + 1
+                print "Error: " + test + " for " + checker + " returned error code " + str(ret)
+            else:
+                subprocess.call(["rm", "Generation/World.xml", "Generation/inference.jaif"]) # cleanup
+    else:
+        print ("Couldn't find expected file: " + expectedName + " testsuite " +
+                testsuite + " not run for checker " + checker)
 
 
 def main():
