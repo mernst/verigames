@@ -229,8 +229,8 @@ def main():
             print
         failingTests = []
 
-    print "Tests run: " + str(numTests) + ", Passed: " + str(numTests - numErrors - numFails) + 
-            ", Errors: " + str(numErrors) + ", Failures: " + str(numFails)
+    print "Tests run: %d, Passed: %d, Errors: %d, Failures: %d" % (numTests,
+            (numTests - numErrors - numFails), numErrors, numFails)
 
     os.chdir("test/")
 
