@@ -28,8 +28,8 @@ package scenes.game.display
 		public static const SPLIT_TUTORIAL:String = "split";
 		public static const MERGE_TUTORIAL:String = "merge";
 		public static const SPLIT_MERGE_PRACTICE_TUTORIAL:String = "splitmergepractice";
-		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const ZOOM_PAN_TUTORIAL:String = "zoompan";
+		public static const LAYOUT_TUTORIAL:String = "layout";
 		public static const GROUP_SELECT_TUTORIAL:String = "groupselect";
 		public static const CREATE_JOINT_TUTORIAL:String = "createjoint";
 		public static const SKILLS_A_TUTORIAL:String = "skillsa";
@@ -61,8 +61,8 @@ package scenes.game.display
 				case SPLIT_TUTORIAL:
 				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
@@ -161,9 +161,9 @@ package scenes.game.display
 				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case LAYOUT_TUTORIAL:
 					return false;
 				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
@@ -189,8 +189,8 @@ package scenes.game.display
 				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-					return true;
 				case ZOOM_PAN_TUTORIAL:
+					return true;
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case LAYOUT_TUTORIAL:
@@ -213,16 +213,17 @@ package scenes.game.display
 					return 0.5;
 				case PASSAGE_TUTORIAL:
 					return 1.2;
-				case LINKS_TUTORIAL:
 				case CLASH_TUTORIAL:
+				case MERGE_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+					return 1.5;
+				case LINKS_TUTORIAL:
 				case PINCH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
-				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
@@ -244,17 +245,18 @@ package scenes.game.display
 				case PASSAGE_TUTORIAL:
 					return new Point(15, 0);//move right 15px (pan left)
 				case PINCH_TUTORIAL:
-					return new Point(0, -15);// move up by 15px
+				case CLASH_TUTORIAL:
+					return new Point(0, -10);// move up by 10px
+				case OPTIMIZE_TUTORIAL:
+					return new Point(0, -20);// move up by 20px
 				case MERGE_TUTORIAL:
-					return new Point(-15, 0);//move left 15px
+					return new Point(-15, -5);//move left 15px, up 5px
 				case ZOOM_PAN_TUTORIAL:
 					return new Point(40, -10);// move right 40px, up by 10px
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				case CLASH_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
@@ -403,13 +405,6 @@ package scenes.game.display
 						null,
 						null,
 						null, null);
-				case LAYOUT_TUTORIAL:
-					return new TutorialManagerTextInfo(
-						"Widgets can be dragged to help organize\n" +
-						"the layout. Separate the widgets.",
-						null,
-						pointToNode("Layout1"),
-						null, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Larger levels require navigation. Drag the background\n" +
@@ -417,6 +412,13 @@ package scenes.game.display
 						"zoom in and out.",
 						null,
 						null,
+						null, null);
+				case LAYOUT_TUTORIAL:
+					return new TutorialManagerTextInfo(
+						"Widgets can be dragged to help organize\n" +
+						"the layout. Separate the widgets.",
+						null,
+						pointToNode("Layout1"),
 						null, null);
 				case GROUP_SELECT_TUTORIAL:
 					return new TutorialManagerTextInfo(
