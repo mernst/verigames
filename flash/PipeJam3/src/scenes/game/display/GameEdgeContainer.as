@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import starling.display.Quad;
 	
 	import display.NineSliceBatch;
 	import display.TextBubble;
@@ -98,6 +99,7 @@ package scenes.game.display
 		public static var DIR_JOINT_TO_BOX:String = "2box";
 		
 		public static const NUM_JOINTS:int = 6;
+		public static const DEBUG_BOUNDING_BOX:Boolean = false;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
@@ -279,6 +281,7 @@ package scenes.game.display
 			}
 		}
 		
+		private var m_debugBoundingBox:Quad = new Quad(1, 1, 0xff00ff);
 		private function updateBoundingBox():void
 		{
 			var minX:Number = Number.POSITIVE_INFINITY;
@@ -293,7 +296,13 @@ package scenes.game.display
 				minY = Math.min(minY, pt1.y - WIDE_WIDTH);
 				maxY = Math.max(maxY, pt1.y + WIDE_WIDTH);
 			}
-			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			m_boundingBox = new Rectangle(minX + this.x, minY + this.y, maxX - minX, maxY - minY);
+			m_debugBoundingBox.width = m_boundingBox.width;
+			m_debugBoundingBox.height = m_boundingBox.height;
+			m_debugBoundingBox.x = m_boundingBox.x - this.x;
+			m_debugBoundingBox.y = m_boundingBox.y - this.y;
+			m_debugBoundingBox.alpha = 0.2;
+			m_debugBoundingBox.touchable = false;
 		}
 		
 		/**
@@ -491,6 +500,7 @@ package scenes.game.display
 				m_errorParticleSystem.touchable = false;
 				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
 			}
+			errorContainer.touchable = false;
 			errorContainer.addChild(m_errorParticleSystem);
 			
 			if (errorTextBubble == null) {
@@ -815,6 +825,7 @@ package scenes.game.display
 			//addChildAt(lastJoint, 0);
 			
 			addChild(m_innerBoxSegment); // inner segment topmost
+			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
 		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 

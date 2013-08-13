@@ -2,12 +2,8 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
-	
 	import audio.AudioManager;
-	
 	import deng.fzip.FZip;
-	import deng.fzip.FZipFile;
-	
 	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
@@ -15,14 +11,12 @@ package scenes.game.display
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
-	
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	
 	import graph.BoardNodes;
 	import graph.Edge;
 	import graph.EdgeSetRef;
@@ -30,15 +24,10 @@ package scenes.game.display
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	
 	import networking.LoginHelper;
-	
 	import scenes.BaseComponent;
-	import scenes.game.components.GridViewPanel;
-	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Shape;
 	import starling.display.Sprite;
@@ -48,7 +37,6 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
-	
 	import utils.Base64Encoder;
 	import utils.XString;
 	
@@ -315,6 +303,7 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
+			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
 		}
 		
 		public function setConstraints():void
@@ -863,7 +852,7 @@ package scenes.game.display
 			removeEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
 			removeEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			removeEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
-			
+			removeEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
 			super.dispose();
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
@@ -1053,6 +1042,37 @@ package scenes.game.display
 				componentSelectionChanged(comp, false);
 			}
 			addSelectionUndoEvent(evt.selection.concat(), false);
+		}
+		
+		private function onFinishedMoving(evt:MoveEvent):void
+		{
+			// Recalc bounds
+			var minX:Number, minY:Number, maxX:Number, maxY:Number;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
+			var i:int;
+			if (evt.component is GameNodeBase) {
+				// If moved node or joint, check those bounds - otherwise assume they're unchanged
+				for (i = 0; i < m_nodeList.length; i++) {
+					minX = Math.min(minX, m_nodeList[i].m_boundingBox.left);
+					minY = Math.min(minY, m_nodeList[i].m_boundingBox.top);
+					maxX = Math.max(maxX, m_nodeList[i].m_boundingBox.right);
+					maxY = Math.max(maxY, m_nodeList[i].m_boundingBox.bottom);
+				}
+				for (i = 0; i < m_jointList.length; i++) {
+					minX = Math.min(minX, m_jointList[i].m_boundingBox.left);
+					minY = Math.min(minY, m_jointList[i].m_boundingBox.top);
+					maxX = Math.max(maxX, m_jointList[i].m_boundingBox.right);
+					maxY = Math.max(maxY, m_jointList[i].m_boundingBox.bottom);
+				}
+			}
+			for (i = 0; i < m_edgeList.length; i++) {
+				minX = Math.min(minX, m_edgeList[i].m_boundingBox.left);
+				minY = Math.min(minY, m_edgeList[i].m_boundingBox.top);
+				maxX = Math.max(maxX, m_edgeList[i].m_boundingBox.right);
+				maxY = Math.max(maxY, m_edgeList[i].m_boundingBox.bottom);
+			}
+			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 		
 		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void
