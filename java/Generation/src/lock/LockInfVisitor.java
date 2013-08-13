@@ -11,8 +11,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 
-import scala.actors.threadpool.Arrays;
-
 import lock.quals.GuardedBy;
 import lock.quals.Holding;
 

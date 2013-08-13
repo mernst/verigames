@@ -9,7 +9,6 @@ import games.GameSolver
  */
 trait ConstraintHandler[CONSTRAINT_TYPE <: Constraint] {
   val constraint : CONSTRAINT_TYPE
-  val gameSolver : GameSolver
 
    def handle( ) {
      throw new RuntimeException("Unhandled constraint: " + constraint )

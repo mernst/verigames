@@ -2,7 +2,7 @@ import java.util.*;
 
 /**
  * This test was created to test methods that have no constraint
- * variables in them but will generate constraint (see localAccess 
+ * variables in them but will generate a constraint (see localAccess
  * below).
  */
  

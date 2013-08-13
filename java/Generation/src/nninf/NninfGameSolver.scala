@@ -67,13 +67,8 @@ class NninfGameSolver extends GameSolver {
                 if (board!=null) {
                   // println(sub + " <: " + sup)
 
-
-                  val (sublast, suplast) = try {
-                    (findIntersection(board, sub), findIntersection(board, sup))
-                  } catch { //TODO JB: This is temporary to get partially mangled boards through
-                  //TODO JB: When we are finished with Generics this should never happen
-                    case e : NoSuchElementException => return true
-                  }
+                  val sublast = findIntersection(board, sub)
+                  val suplast = findIntersection(board, sup)
 
                   merge = Intersection.factory(Intersection.Kind.MERGE)
                   board.addNode(merge)
