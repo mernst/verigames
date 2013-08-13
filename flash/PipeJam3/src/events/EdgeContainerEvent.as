@@ -1,8 +1,10 @@
 package events 
 {
+	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameEdgeJoint;
 	import scenes.game.display.GameEdgeSegment;
+	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	
 	public class EdgeContainerEvent extends Event 
@@ -26,11 +28,8 @@ package events
 			super(type, true);
 			segment = _segment;
 			joint = _joint;
-			if (segment && (segment.parent is GameEdgeContainer)) {
-				container = segment.parent as GameEdgeContainer;
-			} else if (joint && (joint.parent is GameEdgeContainer)) {
-				container = joint.parent as GameEdgeContainer;
-			}
+			container = getEdgeContainerParent(segment);
+			if (container == null) container = getEdgeContainerParent(joint); //try joint if segment/parent null
 			if (container != null) {
 				if (segment != null) segmentIndex = container.getSegmentIndex(segment);
 				if (joint != null) jointIndex = container.getJointIndex(joint);
@@ -39,6 +38,18 @@ package events
 			}
 		}
 		
+		private static function getEdgeContainerParent(comp:GameComponent):GameEdgeContainer
+		{
+			if (comp == null) return null;
+			if (comp.parent == null) return null;
+			var currentParent:DisplayObjectContainer = comp.parent;
+			while (currentParent) {
+				if (currentParent is GameEdgeContainer) {
+					return currentParent as GameEdgeContainer;
+				}
+				currentParent = currentParent.parent;
+			}
+			return null;
+		}
 	}
-
 }

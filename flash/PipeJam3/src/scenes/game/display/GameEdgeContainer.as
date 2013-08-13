@@ -742,7 +742,11 @@ package scenes.game.display
 			var b:int = 1;
 			
 			var segment:GameEdgeSegment;
-			//trace("Edges:" + m_edgeSegments.length + " m_jointPoints:" + m_jointPoints.length);
+			if (m_edgeSegments.length + 1 != m_jointPoints.length) {
+				trace("Warning! m_edgeSegments:" + m_edgeSegments.length + " m_jointPoints:" + m_jointPoints.length + ". Calling createChildren");
+				createChildren();
+				return;
+			}
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
