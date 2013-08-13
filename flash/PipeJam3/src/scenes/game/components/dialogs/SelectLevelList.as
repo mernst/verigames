@@ -5,6 +5,7 @@ package scenes.game.components.dialogs
 	
 	import display.BasicButton;
 	import display.NineSliceBatch;
+	import display.NineSliceToggleButton;
 	import display.ScrollBarThumb;
 	
 	import flash.geom.Point;
@@ -22,7 +23,9 @@ package scenes.game.components.dialogs
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	public class SelectLevelList extends Sprite
+	import utils.XMath;
+	
+	public class SelectLevelList extends BaseComponent
 	{
 		protected var mainAtlas:TextureAtlas;
 		protected var levelAtlas:TextureAtlas;
@@ -38,20 +41,25 @@ package scenes.game.components.dialogs
 	
 		//remember passed in height, as # of child objects could expand content pane
 		//and we want the clip rect to be this size
-		private var setHeight:Number;
+		private var initialHeight:Number;
+		
+		private var thumbTrackDistance:Number;
+		private var thumbTrackTop:Number;
+		private var thumbTrackBottom:Number;
 		
 		//used by page up/down to multipy standard arrow key scroll distance
 		protected var scrollMultiplier:Number = 1.0;
 		
 		protected var buttonPane:BaseComponent;
 		protected var buttonPaneArray:Array;
+		public var currentSelection:BasicButton;
 		
 		public function SelectLevelList(_width:Number, _height:Number)
 		{
-			setHeight = _height;
+			initialHeight = _height;
 			
-			background = new NineSliceBatch(width, _height, _width /6.0, height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "BlueLightBox");
-			addChild(background);
+	//		background = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "BlueLightBox");
+	//		addChild(background);
 			
 			var scrollbarWidth:Number = 10.0;
 			
@@ -80,11 +88,17 @@ package scenes.game.components.dialogs
 			scrollbarBackground.height = _height - upArrow.height - downArrow.height - 2;
 			scrollbarBackground.width = scrollbarWidth;
 			scrollbarBackground.addEventListener(TouchEvent.TOUCH, onTouchScrollbar);
+			
 			thumb = new ScrollBarThumb(scrollbarBackground.y, scrollbarBackground.y+scrollbarBackground.height);
 			thumb.addEventListener(starling.events.Event.TRIGGERED, onThumbTriggered);
 			addChild(thumb);
 			thumb.x = scrollbarBackground.x + scrollbarWidth/2 - thumb.width/2 - 1.5;
 			thumb.y = scrollbarBackground.y;
+			
+			thumbTrackTop = thumb.y;
+			thumbTrackBottom = scrollbarBackground.height + scrollbarBackground.y - thumb.height;
+			thumbTrackDistance = thumbTrackBottom - thumbTrackTop;
+			
 			
 			buttonPane = new BaseComponent();
 			buttonPane.x = 0;
@@ -112,12 +126,12 @@ package scenes.game.components.dialogs
 			storedMouseY = currentPosition.y;
 			if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
-				this.addEventListener(Event.ENTER_FRAME, updateUpScroll);
+				this.addEventListener(Event.ENTER_FRAME, updateUpArrowScroll);
 			}
 
 			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
-				this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+				this.removeEventListener(Event.ENTER_FRAME, updateUpArrowScroll);
 			}
 		}
 		
@@ -138,29 +152,50 @@ package scenes.game.components.dialogs
 			storedMouseY = currentPosition.y;
 			if(event.getTouches(this, TouchPhase.BEGAN).length)
 			{
-				this.addEventListener(Event.ENTER_FRAME, updateDownScroll);
+				this.addEventListener(Event.ENTER_FRAME, updateDownArrowScroll);
 			}
 				
 			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
-				this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+				this.removeEventListener(Event.ENTER_FRAME, updateDownArrowScroll);
 			}
 		}
 		
-		protected function updateUpScroll(e:Event):void
+		protected function updateUpArrowScroll(e:Event):void
 		{
-			if(storedMouseY > thumb.y + thumb.height/2)
-				this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+			if(thumb.y <= thumbTrackTop)
+				this.removeEventListener(Event.ENTER_FRAME, updateUpArrowScroll);
 			else
+			{
 				scrollPanel(-3);
+			}
 		}
 		
-		protected function updateDownScroll(e:Event):void
+		protected function updateDownArrowScroll(e:Event):void
 		{
-			if(storedMouseY < thumb.y + thumb.height/2)
-				this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+			if(thumb.y >= thumbTrackBottom)
+				this.removeEventListener(Event.ENTER_FRAME, updateDownArrowScroll);
 			else
 				scrollPanel(3);
+		}	
+		
+		protected function updatePageDownScroll(e:Event):void
+		{
+			if(storedMouseY < thumb.y + thumb.height/2)
+				this.removeEventListener(Event.ENTER_FRAME, updatePageDownScroll);
+			else
+				scrollPanel(3);
+		}
+		
+		protected function updatePageUpScroll(e:Event):void
+		{
+			if(storedMouseY > thumb.y + thumb.height/2)
+				this.removeEventListener(Event.ENTER_FRAME, updatePageUpScroll);
+			else
+			{
+				//	trace(storedMouseY, thumb.y, thumb.height/2);
+				scrollPanel(-3);
+			}
 		}
 		
 		protected var directionUp:Boolean = true;
@@ -188,12 +223,12 @@ package scenes.game.components.dialogs
 				if(currentPosition.y < thumb.y)
 				{
 					directionUp = true;
-					this.addEventListener(Event.ENTER_FRAME, updateUpScroll);
+					this.addEventListener(Event.ENTER_FRAME, updatePageUpScroll);
 				}
 				else 
 				{
 					directionUp = false;
-					this.addEventListener(Event.ENTER_FRAME, updateDownScroll);
+					this.addEventListener(Event.ENTER_FRAME, updatePageDownScroll);
 				}
 			}
 				
@@ -201,9 +236,9 @@ package scenes.game.components.dialogs
 			{
 				scrollMultiplier = 1.0;
 				if(directionUp)
-					this.removeEventListener(Event.ENTER_FRAME, updateUpScroll);
+					this.removeEventListener(Event.ENTER_FRAME, updatePageUpScroll);
 				else
-					this.removeEventListener(Event.ENTER_FRAME, updateDownScroll);
+					this.removeEventListener(Event.ENTER_FRAME, updatePageDownScroll);
 			}
 		}
 		
@@ -212,7 +247,7 @@ package scenes.game.components.dialogs
 			if(buttonPane.clipRect == null)
 			{
 				var globalPoint:Point = this.localToGlobal(new Point(0,0));
-				buttonPane.clipRect = new Rectangle(globalPoint.x,globalPoint.y,width-scrollbarBackground.width, setHeight);
+				buttonPane.clipRect = new Rectangle(globalPoint.x,globalPoint.y,width-scrollbarBackground.width, initialHeight);
 			}
 		}
 		
@@ -220,40 +255,23 @@ package scenes.game.components.dialogs
 		{
 			if(e.data != null)
 			{
-				var percentScrolled:Number = e.data as Number;
+				var ratioScrolled:Number = e.data as Number;
 				
-				if(buttonPane.height>setHeight)
-					buttonPane.y = -(buttonPane.height-setHeight)*percentScrolled;
+				if(buttonPane.height>initialHeight)
+					buttonPane.y = -(buttonPane.height-initialHeight)*ratioScrolled;
 			}
 		}
 		
 		private function scrollPanel(percentScrolled:Number):void
 		{
-			var currentPercent:Number = buttonPane.y/-(buttonPane.height-setHeight);
-			
+			var currentPercent:Number = buttonPane.y/-(buttonPane.height-initialHeight);
 			percentScrolled = percentScrolled*scrollMultiplier;
 			var totalNewScrollDistance:Number = currentPercent+percentScrolled/100;
+			totalNewScrollDistance = XMath.clamp(totalNewScrollDistance, 0, 1);
 			
-			if(totalNewScrollDistance < -0.1)
-				totalNewScrollDistance = -0.1;
-			
-			if(totalNewScrollDistance > 1.1)
-				totalNewScrollDistance = 1.1;
-			
-			buttonPane.y = -(buttonPane.height-setHeight)*totalNewScrollDistance;
+			buttonPane.y = -(buttonPane.height-initialHeight)*totalNewScrollDistance;
+			trace(totalNewScrollDistance, buttonPane.y);
 			thumb.setThumbPercent(totalNewScrollDistance*100);
-		}
-		
-		private function onUpScrollTriggered(e:Event):void
-		{
-			// TODO Auto Generated method stub
-			
-		}
-		
-		private function onDownScrollTriggered(e:Event):void
-		{
-			// TODO Auto Generated method stub
-			
 		}
 		
 		private function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String):DisplayObject
@@ -301,11 +319,8 @@ package scenes.game.components.dialogs
 					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick");
 					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover");
 					newButton = new BasicButton(upstate, overstate, downstate);
-					if (isTutorial) {
-						newButton.data = { level:objArray[ii].levelId };
-					} else {
-						newButton.data = { level:objArray[ii] };
-					}
+					newButton.data = objArray[ii];
+
 				} else {
 					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
 					newButton = new BasicButton(lockstate, lockstate, lockstate);
@@ -313,20 +328,28 @@ package scenes.game.components.dialogs
 				}
 				
 				newButton.x = (widthSpacing) * (ii%2);
-				newButton.y = Math.floor(ii/2) * (heightSpacing) + 2;
+				newButton.y = Math.floor(ii/2) * (heightSpacing);
 				
+				newButton.addEventListener(Event.TRIGGERED, onLevelButtonTouched);
+				buttonPaneArray.push(newButton);
 				buttonPane.addChild(newButton);
 			}
 			
-			if(buttonPane.height<setHeight)
+			currentSelection = buttonPaneArray[0];
+			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
+			
+			if(buttonPane.height<initialHeight)
 				thumb.enabled = false;
 			else
 				thumb.enabled = true;
 		}
 		
-		private function onLevelButtonTouched(e:Event):void
+		private function onLevelButtonTouched(event:Event):void
 		{
-			// TODO Auto Generated method stub
+			currentSelection.setStatePosition(BasicButton.UP_STATE);
+			currentSelection = event.target as BasicButton;
+			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
+			dispatchEventWith(Event.TRIGGERED);
 		}
 		
 		protected function draw():void

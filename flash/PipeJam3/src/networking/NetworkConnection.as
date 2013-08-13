@@ -29,6 +29,7 @@ package networking
 		static public var postAlerts:Boolean = false;
 		//the first address is verigames, the second the development environ, the third my machine
 		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
+		//this should be the proxy server url, not the MongoDB or RA instance URL. Might be the same, might not be.
 		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
 		static public var localProxy:String = "http://128.95.2.112:8001";
 		static public var PROXY_URL:String = stagingProxy;
@@ -111,7 +112,7 @@ package networking
 			switch(type)
 			{
 				case LoginHelper.CREATE_PLAYER:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/new";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/new&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.ACTIVATE_PLAYER:
@@ -123,7 +124,7 @@ package networking
 					method = URLRequestMethod.GET; 
 					break;
 				case LoginHelper.REQUEST_LEVELS:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.REFUSE_LEVELS:
@@ -131,7 +132,7 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.CREATE_RA_LEVEL:
-					request = "/ra/games/"+GAME_ID+"/levels/new";
+					request = "/ra/games/"+GAME_ID+"/levels/new&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 

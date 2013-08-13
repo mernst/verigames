@@ -31,10 +31,7 @@ package
         protected var mCurrentScene:Scene;
 		protected var scenesToCreate:Dictionary = new Dictionary;
 		protected var sceneDictionary:Dictionary = new Dictionary;
-		
-		protected var busyAnimationImages:Vector.<Texture> = null;
-		protected var busyAnimationMovieClip:MovieClip;
-		
+				
 		private var m_blackFadeScreen:Quad;
 		
 		private static const FADE_TIME:Number = 0.5;
@@ -77,9 +74,6 @@ package
 				busyAnimationImages = new Vector.<Texture>();
 				for(var i:int = 1; i<9; i++)
 			   		busyAnimationImages.push(AssetInterface.getTexture("Game", "Loading"+i+"Class"));
-				busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
-				
-			   
 		   }
 		}
         
@@ -164,18 +158,15 @@ package
 			addChildAt(mCurrentScene, 0);
         }
 		
+		//use for global wait states. BaseComponent has one you can use with local parents.
 		public function onStartBusyAnimation(e:Event):void
 		{
-			busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
-			busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
-			addChild(busyAnimationMovieClip);
-			Starling.juggler.add(this.busyAnimationMovieClip);
+			startBusyAnimation();
 		}
 		
 		public function onStopBusyAnimation(e:Event):void
 		{
-			removeChild(busyAnimationMovieClip);
-			Starling.juggler.remove(this.busyAnimationMovieClip);
+			stopBusyAnimation();
 		}
 		
 		/**

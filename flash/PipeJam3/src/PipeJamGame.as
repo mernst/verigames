@@ -21,8 +21,9 @@ package
 	import scenes.*;
 	import scenes.game.*;
 	import networking.*;
-	import scenes.loadingscreen.*;
+	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.*;
+	import scenes.levelselectscene.LevelSelectScene;
 	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -61,6 +62,7 @@ package
 			
 			scenesToCreate["LoadingScene"] = LoadingScreenScene;
 			scenesToCreate["SplashScreen"] = SplashScreenScene;
+			scenesToCreate["LevelSelectScene"] = LevelSelectScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			
 			AudioManager.getInstance().audioDriver().reset();
@@ -88,7 +90,7 @@ package
 			//	theme1 = new AeonDesktopTheme( this.stage );
 			
 			// create and show menu screen
-			if(PipeJam3.RELEASE_BUILD || !PipeJam3.LOCAL_DEPLOYMENT)
+			if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 				showScene("LoadingScene");
 			else
 			{

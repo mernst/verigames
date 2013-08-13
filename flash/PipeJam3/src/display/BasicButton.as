@@ -24,6 +24,10 @@ package display
 		
 		public static const HOVER_OVER:String = "hoverOver";
 		
+		public static const UP_STATE:String = "upState";
+		public static const OVER_STATE:String = "overState";
+		public static const DOWN_STATE:String = "downState";
+		
 		protected var m_up:DisplayObject;
 		protected var m_over:DisplayObject;
 		protected var m_down:DisplayObject;
@@ -101,6 +105,11 @@ package display
 			m_data = value;
 		}
 		
+		public function get data():Object
+		{
+			return m_data;
+		}
+		
 		public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
 		{
 			var superHit:DisplayObject = super.hitTest(localPoint, forTouch);
@@ -158,6 +167,17 @@ package display
 				m_current = state;
 				m_current.visible = true;
 			}
+		}
+		
+		public function setStatePosition(stateString:String):void
+		{
+			if(stateString == UP_STATE)
+				toState(m_up);
+			else if(stateString == OVER_STATE)
+				toState(m_over);
+			else if(stateString == DOWN_STATE)
+				toState(m_down);
+
 		}
 	}
 }

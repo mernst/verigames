@@ -90,9 +90,8 @@ package scenes.game
 			var fileName:String;
 			
 			super.addedToStage(event);
-			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
-			if(LoginHelper.getLoginHelper().levelObject is int) // in the tutorial
+			if(loginHelper.levelObject && loginHelper.levelObject.levelId is int) // in the tutorial if a short level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				fileName = "tutorial";
@@ -107,6 +106,8 @@ package scenes.game
 			}
 			else if(PipeJamGameScene.inTutorial)
 			{
+				//reset these so we wait till we set them all
+				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
 				onLayoutLoaded(tutorialLayoutXML);
 				onConstraintsLoaded(tutorialConstraintsXML);
 				onWorldLoaded(tutorialXML);
@@ -118,12 +119,12 @@ package scenes.game
 				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				if(!PipeJamGameScene.inTutorial)
 					fileName = obj["files"];
-				if(LoginHelper.getLoginHelper().levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
+				if(loginHelper.levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = LoginHelper.USE_DATABASE;
-					worldFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.xmlID+"/xml";
-					layoutFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.layoutID+"/layout";
-					constraintsFile = "/file/get/" + LoginHelper.getLoginHelper().levelObject.constraintsID+"/constraints";		
+					worldFile = "/file/get/" + loginHelper.levelObject.xmlID+"/xml";
+					layoutFile = "/file/get/" + loginHelper.levelObject.layoutID+"/layout";
+					constraintsFile = "/file/get/" +loginHelper.levelObject.constraintsID+"/constraints";		
 				}
 				else if(fileName && fileName.length > 0)
 				{
