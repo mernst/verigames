@@ -1,4 +1,5 @@
 java/.metadata/
+java/debug_world/
 java/Translation/bin/
 java/Translation/doc/
 java/Translation/check-nullness
@@ -8,6 +9,7 @@ java/DO_NOT_DELETE_Speculation_Translation
 java/Generation/bin/
 java/Generation/.cache
 java/Generation/.scala_dependencies
+java/Generation/examples/.*/*\.class
 java/build
 java/verigames.jar
 java/test/.*/actual_.*xml
