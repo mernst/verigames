@@ -1,45 +1,44 @@
 package games.handlers
 
 import checkers.inference._
-import games.GameSolver
-import scala.collection.mutable.{ListBuffer, LinkedHashMap}
-import verigames.level.{Board, Subboard, Chute, Intersection}
-import verigames.level.Intersection.Kind._
-import checkers.inference.CallInstanceMethodConstraint
-import checkers.inference.FieldVP
-import misc.util.VGJavaConversions._
-import checkers.inference.InferenceMain._
 import checkers.types.AnnotatedTypeMirror
-import checkers.types.AnnotatedTypeMirror.{AnnotatedTypeVariable, AnnotatedDeclaredType}
-import checkers.inference.util.CollectionUtil._
-import games.util.SlotUtil._
+import games.GameSolver
+import scala.collection.mutable.{LinkedHashMap, ListBuffer}
+import verigames.level.{Chute, Subboard, Intersection}
+import checkers.inference.InferenceMain._
+import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable
+import verigames.level.Intersection.Kind._
+import misc.util.VGJavaConversions._
 
 /**
- * This class handles the creation/placement of a CALL to a method subboard and
+ *
+ * This trait handles the creation/placement of a CALL to a method subboard and
  * NOT the creation of the a method subboard itself (this is done incrementally through
  * placement of individuals variables/constraints on a method board).
  *
- * At the moment, only the receiver variables and class type parameters are piped through
- * a method call intersections.  So we first split all variables before connecting them
- * to the method call intersection (i.e. the subboard intersection).  This also allows
- * us to handle the case in which the same variable is the argument to two different
- * method parameters.
+ * For the most part, we just pipe through the relevant arguments and type arguments through the method
+ * subboard.  We first split all variables before connecting them to the method call intersection
+ * (i.e. the subboard intersection).  This also allows us to handle the case in which the same variable
+ * is the argument to two different parameters.
  *
- * @param constraint The CallInstanceMethodConstraint that should be translated into a subboard intersection.
- * @param gameSolver The gameSolver singleton.
+ *  For the most part users of this trait should be able to just declare the required variables to
+ *  implement this trait.  This class should appropriately handle static/instance method calls including constructors.
  */
-case class CallInstanceMethodConstraintHandler( override val constraint : CallInstanceMethodConstraint,
-                                                override val gameSolver : GameSolver)
-  extends ConstraintHandler[CallInstanceMethodConstraint] {
+abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosition,
+                                             SUBBOARD_CONSTRAINT <: SubboardCallConstraint[CALLED_VP]](
 
-  //NOTE: If a variable isn't declared in this file then it likely comes from gameSolver
+  val constraint : SUBBOARD_CONSTRAINT,
+
+  /** The GameSolver that contains the world/level/boards we are editing */
+  val gameSolver : GameSolver ) extends ConstraintHandler[SUBBOARD_CONSTRAINT]  {
+
   import gameSolver._
 
-  val CallInstanceMethodConstraint(callerVp, classTypeArgsToBounds, methodTypeArgToBounds, argsToTypeParams,
-                                   receiver, calledMethodVp, result) = constraint
+
+  protected val methodSignature : String
 
   //The board representing the method IN which the call was made
-  protected val callerBoard = variablePosToBoard(callerVp)
+  protected val callerBoard = variablePosToBoard( constraint.contextVp )
 
   // Variables that will be connected both as input/output of the subboard rather than just input or just output
   protected val throughVars = new ListBuffer[AbstractVariable]()
@@ -48,23 +47,36 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
   // we split before connecting each argument, and the next time the aliased argument
   // is used, we grab the split at the top, instead of pulling it up
   // from the output
-  // TODO integrate this into more than just the receiver, once arguments flow through boards.
   protected val localIntersectionMap = new LinkedHashMap[Slot, Intersection]
 
   // stores all of the outputs from this subboard. Because aliased
-  // arguments result in multiple outputs, we need to store a list.
+  // arguments result in multiple outputs, we need to store a list of
+  // those outputs so that we can later merge them.
   protected val outputMap = new LinkedHashMap[Slot, List[Intersection]]
-
-
-  protected def addToOutputMap(slot: Slot, intersection: Intersection) = {
+/**
+   * Essentially treats outputMap as a ListMap.
+   * If outputMap doesn't already contain slot as a key
+   *  then Add a new entry slot -> List(intersction)
+   *  else Add intersction to the list for existing entry corresponding to the key slot
+   *
+   * See outputMap for more details
+   *
+   * @param slot An existing or new key to outputMap
+   * @param intersection An intersection to add to the list of entries representing the given slot
+   */
+  protected def addToOutputMap(slot: Slot, intersection: Intersection) {
     outputMap.get(slot) match {
       case Some(list) => outputMap.update(slot, intersection::list)
       case None       => outputMap.update(slot, List(intersection))
     }
   }
 
-  // checks localIntersection map for already-used arguments. If
-  // nothing, uses the regular findIntersection method
+  /**
+   * If the given slot already has an intersection in localIntersectionMap then return that intersection otherwise
+   * find the intersection on the callerBoard using the gameSolver.  See localIntersectionMap for more details
+   * @param slot The slot for which we are finding an intersection
+   * @return An intersection for the given slot
+   */
   protected def localFindIntersection(slot: Slot): Intersection = {
     localIntersectionMap.get(slot) match {
       case Some(intersection) => intersection
@@ -82,109 +94,60 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
    */
   override def handle() {
 
-    val subboardISect = addSubboardIntersection(callerBoard, calledMethodVp, calledMethodVp.getMethodSignature)
+    val subboardISect = addSubboardIntersection(callerBoard, constraint.calledVp, methodSignature)
 
     connectReceiverParamsThrough( subboardISect )
     connectMethodTypeArgsThrough( subboardISect )
 
-    //TODO JB: Add lower bound <: type arguments for methodTypeParams only as class type params should be handled
+    //TODO JB: ADD EQUIVALENT/BOUNDS RELATIONSHIPS
 
     connectLowerBoundsThrough( subboardISect )
 
-    //TODO JB: Add lower bound <: argument is a use of class/method type param
     connectArgumentsThrough( subboardISect )
 
     connectResultAsOutput( subboardISect )
 
     capSplits()
     mergeOutputs()
+
   }
 
-  //Connect the receivers main variable through the board
-  //Connect the type arguments of the receiver through the class type parameters of the class
-  //in which this method was defined
-  //TODO: New widgets for handling non-defaultable locations
+  /**
+   * Connect the receivers main slot through the board
+   * Connect the class type arguments of the receiver through the corresponding type parameter ports of
+   * the class in which the called method is defined.
+   * @param subboardISect The subboard representing the method call.
+   */
   def connectReceiverParamsThrough( subboardISect : Subboard ) = {
-    val receiverVar = slotMgr.extractSlot( receiver )
-    connectThrough( subboardISect, List( receiverVar -> false ), ReceiverInPort, ReceiverOutPort, false)
 
-    //Connect the class type arguments of the receiver through corresponding ports
-    val recvTypeArgsToLink = extractAndFlattenVariables( classTypeArgsToBounds.keys.toList )
-    connectThrough( subboardISect, recvTypeArgsToLink, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
+    val receiver = constraint.receiver
+    if( receiver != null ) {
+      connectThrough( subboardISect, List( receiver ), ReceiverInPort, ReceiverOutPort, false)
+    }
+
+    connectThrough( subboardISect, constraint.classTypeArgs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
   }
 
   def connectMethodTypeArgsThrough( subboardISect : Subboard ) = {
-    val methodTypeArgsToLink = extractAndFlattenVariables( methodTypeArgToBounds.keys.toList )
-    connectThrough( subboardISect, methodTypeArgsToLink, MethodTypeParamsInPort, MethodTypeParamsOutPort, false )
+    connectThrough( subboardISect, constraint.methodTypeArgs, MethodTypeParamsInPort, MethodTypeParamsOutPort, false )
   }
 
   def connectArgumentsThrough( subboardISect : Subboard ) = {
-    val argToLinks = extractAndFlattenVariables( argsToTypeParams.keys.toList )
-    connectThrough( subboardISect, argToLinks, ParamInPort, ParamOutPort, true)
+    connectThrough( subboardISect, constraint.args, ParamInPort, ParamOutPort, true)
   }
 
   //All the lower bounds of class type parameters and method type parameters are connected
   //The lower bounds should already have a pipe in the context of this method for the purposes
   //of enforcing the subtype constraint between the type argument
   def connectLowerBoundsThrough( subboardISect : Subboard ) = {
-    val classTypeLBToLinks =
-      classTypeArgsToBounds.values
-        .map( _._2.asInstanceOf[AnnotatedTypeVariable].getEffectiveLowerBound )
-        .map( slotMgr.extractSlot _ )
-        .map( _ -> true )
-        .toList
-
-    connectThrough( subboardISect, classTypeLBToLinks, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
-
-    val methodTypeLBToLinks =
-      methodTypeArgToBounds.values
-        .map( _._2.asInstanceOf[AnnotatedTypeVariable].getEffectiveLowerBound )
-        .map( slotMgr.extractSlot _ )
-        .map( _ -> true )
-        .toList
-
-    connectThrough( subboardISect, methodTypeLBToLinks, MethodTypeParamsInPort, MethodTypeParamsOutPort, false )
+    connectThrough( subboardISect, constraint.classTypeParamLBs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
+    connectThrough( subboardISect, constraint.methodTypeParamLBs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
   }
 
-  /**
-   * This method takes a list of annotated type mirrors and returns a list of slots contained in
-   * those annotated type mirrors in a tuple indicating whether or not we should link chutes representing the
-   * variables to the corresponding chute in the subboard to which they will be attached.
-   *
-   * An AnnotatedTypeMirror is essentially a tree/tree node:
-   *  e.g. @VarAnnot(0) List< @VarAnnot(1) >
-   *  An ATM describing the above type is a tree with VarAnnot(0) at it's root and @VarAnnot(1) as it's descendant.
-   *
-   * Generally, when wiring the top level variables (e.g. VarAnnot(0) ) through a subboard the variable will be
-   * a subtype of the corresponding chute in the method board represented by the subboard.  However, descendants
-   * (e.g. VarAnnot(1) ) usually must be EQUAL to their corresponding chutes.
-   *
-   * Return a flat list where top level variables are identified by an accompanying FALSE value and
-   * nested variables are accompanied by a TRUE value.  Preserve the order in which these variables are encountered.
-   *
-   * e.g.
-   *  If I had a list of annotated type mirrors representing the following types:
-   *    List( @0 List< @1 String >, @2 Map< @3 String, @4 Integer> )
-   *
-   *  Then the resulting output should be:
-   *    List( @0 -> false, @1 -> true, @2 -> false, @3 -> true, @4 -> true )
-   *
-   * Note: This method is important because some port numbers are based on the sequence in which parameters
-   * were added to the method (e.g. method arguments)
-   * @param atms
-   * @return
-   */
-  def extractAndFlattenVariables( atms : List[AnnotatedTypeMirror] ) : List[(Slot, Boolean)] = {
-    topToNestedDeclVariables( atms )
-      .map( topToNested => topToNested._1.map( _ -> false ) ++ topToNested._2.map( _ -> true ) )
-      .flatten
-  }
-
-
-  def connectThrough( subboardISect : Subboard, slotToLinks : List[(Slot, Boolean)],
+  def connectThrough( subboardISect : Subboard, slots : List[Slot],
                       inputPortPrefix : String, outputPortPrefix : String, useIndex : Boolean ) {
-    connectAsInput(  subboardISect, slotToLinks, inputPortPrefix,  useIndex )
-    connectAsOutput( subboardISect, slotToLinks, outputPortPrefix, useIndex )
+    connectAsInput(  subboardISect, slots, inputPortPrefix,  useIndex )
+    connectAsOutput( subboardISect, slots, outputPortPrefix, useIndex )
   }
 
   /**
@@ -193,18 +156,18 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
    * it is a variable of some sort.  Split it, and add it's split into the local intersection map.
    *
    * @param subboardISect The subboard intersection being wired
-   * @param slotToLinks   (slots -> link), the slots to wire and whether or not we wish to link them to
+   * @param slots   (slots -> link), the slots to wire and whether or not we wish to link them to
    *                      the corresponding pipe in the method subboard
    * @param portPrefix    A prefix to add to all input ports
    * @param addIndex      Should the index of a slot be added after portPrefix (but before any genericOffset)
    * @return A mapping of slots to the intersections that are created in this step.  For variables this is
    *         a mapping to the split created in this step.
    */
-  def connectAsInput( subboardISect : Subboard, slotToLinks : List[(Slot, Boolean)],
+  def connectAsInput( subboardISect : Subboard, slots : List[Slot],
                       portPrefix : String, addIndex : Boolean = false ) : List[(Slot,Intersection)] = {
 
-    slotToLinks.zipWithIndex.map( slotToIndex => {
-      val ( (slot, link), index) = slotToIndex
+    slots.zipWithIndex.map( slotToIndex => {
+      val ( slot, index ) = slotToIndex
 
       //If a slot is unique (e.g. "someLiteral") then it doesn't need to be split because it can't be accessed again
 
@@ -219,9 +182,6 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
         val prevIntersection = localFindIntersection( slot )
         val port = makePort( portPrefix, addIndex, index, slot, false )
 
-        if( link ) {
-          //TODO JB: link the variable to the corresponding one in the method board
-        }
         val split = callerBoard.add( prevIntersection, "output", SPLIT, "input", createChute( slot ) )._2
         callerBoard.addEdge(split, "split", subboardISect, port, createChute(slot ) )
 
@@ -241,17 +201,16 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
    * it is a variable of some sort.  Split it, and add it's split into the local intersection map.
    *
    * @param subboardISect The subboard intersection being wired
-   * @param slotToLinks   (slots -> link), the slots to wire and whether or not we wish to link them to
-   *                      the corresponding pipe in the method subboard
+   * @param slots
    * @param portPrefix    A prefix to add to all input ports
    * @param addIndex      Should the index of a slot be added after portPrefix (but before any genericOffset)
    * @return A mapping of slots to the intersections that are created in this step.  For variables this is
    *         a mapping to the split created in this step.
    */
-  def connectAsOutput( subboardISect : Subboard, slotToLinks : List[(Slot, Boolean)],
+  def connectAsOutput( subboardISect : Subboard, slots : List[Slot],
                        portPrefix : String, addIndex : Boolean = false ) : List[(Slot,Intersection)] = {
-    slotToLinks.zipWithIndex.map( slotToIndex => {
-      val ( (slot, link), index) = slotToIndex
+    slots.zipWithIndex.map( slotToIndex => {
+      val ( slot, index) = slotToIndex
 
       //If a slot is unique (e.g. "someLiteral") then it doesn't need to be split because it can't be accessed again
 
@@ -265,11 +224,6 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
 
       } else {
         val port = makePort( portPrefix, addIndex, index, slot, false )
-
-        if( link ) {
-          //TODO JB: link the variable to the corresponding one in the method board
-        }
-
         val connect = callerBoard.add( subboardISect, port, CONNECT, "input", createChute( slot ) )._2
         addToOutputMap(slot, connect)
 
@@ -280,29 +234,28 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
 
   def connectResultAsOutput( subboardISect : Subboard ) {
     // We may have multiple constraint variables for parameterized types and array types in the return type
-    val resultVars = extractAndFlattenVariables( List( result ) )
-    resultVars.foreach(
+    constraint.result.foreach(
       _ match {
 
-      case variable : AbstractVariable =>
-        if (boardNVariableToIntersection.contains((callerBoard, variable))) {
-          // Method was previously called.
-          val resInt = boardNVariableToIntersection((callerBoard, variable))
-          val merge = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), MERGE, "left", toChute(variable))._2
-          callerBoard.addEdge(resInt, "output", merge, "right", toChute(variable))
-          boardNVariableToIntersection.update((callerBoard, variable), merge)
+        case variable : AbstractVariable =>
+          if (boardNVariableToIntersection.contains((callerBoard, variable))) {
+            // Method was previously called.
+            val resInt = boardNVariableToIntersection((callerBoard, variable))
+            val merge = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), MERGE, "left", toChute(variable))._2
+            callerBoard.addEdge(resInt, "output", merge, "right", toChute(variable))
+            boardNVariableToIntersection.update((callerBoard, variable), merge)
 
-        } else {
-          val con = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), CONNECT, "input", toChute(variable))._2
-          boardNVariableToIntersection.update((callerBoard, variable), con)
-        }
+          } else {
+            val con = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), CONNECT, "input", toChute(variable))._2
+            boardNVariableToIntersection.update((callerBoard, variable), con)
+          }
 
-      case _ =>
-      // Nothing to do for void methods.
-      // TODO: this is also for pre-annotated return types!
-      // println("Unhandled return type slot! " + result)
+        case _ =>
+        // TODO JB: FIX THIS
+        // TODO: this is also for pre-annotated return types!
+        // println("Unhandled return type slot! " + result)
 
-    })
+      })
 
   }
 
@@ -363,13 +316,25 @@ case class CallInstanceMethodConstraintHandler( override val constraint : CallIn
 
 
   /**
-   * Create
-   * @param portPrefix
-   * @param addIndex
-   * @param index
-   * @param slot
-   * @param unique
-   * @return
+   * Create a port identifier for the given slot
+   * The port is structured as follows:
+   *
+   * portPrefix + index + genericOffset
+   *
+   * index and generic offset are both option depending on whether addIndex and !unique respectively.
+   * e.g.
+   * if !addIndex and !unique then return
+   *   portPrefix + genericOffset
+   *
+   * if addIndex and unique then return
+   *   portPrefix + index
+   *
+   * @param portPrefix The start of the port identifier
+   * @param addIndex   Whether or not index should be added to the identifier
+   * @param index      The index to add to the identifier
+   * @param slot       The slot for which we are creating a port (used to create the genericOffset string)
+   * @param unique     Whether or not slot is a unique variable or a constant/literal value
+   * @return           A string that identifies a port
    */
   def makePort(portPrefix : String, addIndex : Boolean, index : Int, slot : Slot, unique : Boolean) : String = {
     val port = new scala.collection.mutable.StringBuilder()

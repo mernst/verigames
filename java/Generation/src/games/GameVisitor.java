@@ -4,6 +4,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import checkers.inference.ConstraintManager;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
 import checkers.types.AnnotatedTypeMirror;
@@ -58,8 +59,12 @@ public class GameVisitor extends InferenceVisitor {
     /** Log all assignments. */
     @Override
     public Void visitAssignment(AssignmentTree node, Void p) {
-        super.visitAssignment(node, p);
-        logAssignment(node);
+        final Element leftelem = TreeUtils.elementFromUse( node.getVariable() );
+        if ( infer && !InferenceMain.isPerformingFlow() && leftelem!=null && leftelem.getKind().isField() ) {
+            logAssignment(node);
+        } else {
+            super.visitAssignment(node, p);
+        }
         return null;
     }
 
@@ -86,12 +91,14 @@ public class GameVisitor extends InferenceVisitor {
         	logFieldAccess(node);
         }*/
 
-
-        super.visitMethodInvocation(node, p);
-        if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
-            // TODO: log the call to Map.get.
+        if ( infer & !InferenceMain.isPerformingFlow() ) {
+            if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
+                // TODO: log the call to Map.get.
+            } else {
+                logMethodInvocation(node);
+            }
         } else {
-            logMethodInvocation(node);
+            super.visitMethodInvocation(node, p);
         }
         return null;
     }

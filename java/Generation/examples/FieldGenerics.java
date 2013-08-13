@@ -12,7 +12,7 @@ public class FieldGenerics {
 
 }
 
-class Generic<T> {
+class Generic<T extends Object> {
     private T t;
 
     public Generic( T t) {
