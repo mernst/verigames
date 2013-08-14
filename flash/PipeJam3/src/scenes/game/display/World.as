@@ -178,7 +178,6 @@ package scenes.game.display
 			
 			AudioManager.getInstance().audioDriver().reset();
 			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
-			onLevelPutInDatabase(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
