@@ -18,9 +18,4 @@ class DetachedVarAccess {
 		}
 	}
 	
-	private void method( DetachedVarTest2 d2 ) {
-		for(final String str : d2.test2()) {
-			System.out.println(str);
-		}
-	}
 }

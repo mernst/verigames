@@ -88,6 +88,17 @@ abstract class GameSolver extends ConstraintSolver {
      */
     val boardNVariableToIntersection = new LinkedHashMap[(Board, AbstractVariable), Intersection]
 
+    //HELPER METHODS FOR DEBUGGING THE GAMESOLVER
+    def variablesOnBoard( target : Board ) = {
+      boardNVariableToIntersection
+        .map( { case ( (board, variable), intersection ) => if( board == target ) Some(variable) else None } )
+        .flatten
+    }
+
+    def latestIntersection( board : Board, variable : AbstractVariable ) = {
+      boardNVariableToIntersection.get((board, variable))
+    }
+
     /**
      * Mapping from a board to the Intersection that represents the "this" literal.
      */
