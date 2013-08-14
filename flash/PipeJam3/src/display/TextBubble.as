@@ -104,7 +104,7 @@ package display
 				XSprite.setPivotCenter(m_tutorialArrow);
 				addChild(m_tutorialArrow);
 			}
-			
+			touchable = false;
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		

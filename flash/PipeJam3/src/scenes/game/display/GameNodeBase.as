@@ -171,6 +171,7 @@ package scenes.game.display
 				if(isMoving) //if we were moving, stop it, and exit
 				{
 					isMoving = false;
+					dispatchEvent(new MoveEvent(MoveEvent.FINISHED_MOVING, this));
 					if (draggable && hasMovedOutsideClickDist) {
 						var startPoint:Point = startingPoint.clone();
 						var endPoint:Point = new Point(x, y);

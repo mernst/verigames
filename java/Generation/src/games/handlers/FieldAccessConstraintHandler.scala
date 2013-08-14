@@ -1,17 +1,11 @@
 package games.handlers
 
-import checkers.inference._
 import games.GameSolver
-import verigames.level.Intersection.Kind._
 import checkers.types.AnnotatedTypeMirror
-import verigames.level.Subboard
-import checkers.inference.util.TraversalUtil
-import checkers.inference.Variable
-import checkers.inference.FieldAccessConstraint
-import misc.util.VGJavaConversions._
-import games.util.SlotUtil._
+import checkers.inference.{FieldVP, FieldAccessConstraint}
 
 /**
+ * TODO JB: Revisit this comment
  * For every member field in our game world we actually create a "synthetic" getter/setter board ( i.e. boards
  * doesn't correspond to an actual method ).  When a field is accessed it looks like a method call to the synthetic
  * getter board.  Recall that all method boards when referenced from another board are represented by a Subboard
@@ -38,75 +32,9 @@ import games.util.SlotUtil._
  * @param gameSolver
  */
 
-case class FieldAccessConstraintHandler( override val constraint : FieldAccessConstraint, override val gameSolver : GameSolver)
-  extends ConstraintHandler[FieldAccessConstraint]{
+case class FieldAccessConstraintHandler( override val constraint : FieldAccessConstraint,
+                                         override val gameSolver : GameSolver)
+  extends SubboardCallConstraintHandler[FieldVP, FieldAccessConstraint]( constraint, gameSolver ) {
 
-  //NOTE: If a variable isn't declared in this file then it likely comes from gameSolver
-  import gameSolver._
-
-  val FieldAccessConstraint(accessContext, receiver, fieldAtm, fieldVp) = constraint
-
-  /**
-   * The board (corresponding to a method) in which the field was accessed
-   */
-  val accessBoard = variablePosToBoard(accessContext)
-
-  /**
-   * The create an Subboard intersection that corresponds with the getter board for this field
-   */
-  val getterSubboardIsect = addSubboardIntersection(accessBoard, fieldVp, getFieldAccessorName(fieldVp))
-
-  override def handle(  ) {
-
-    if( !constraint.isFieldStatic ) {
-      connectRecevierVariablesThrough( )
-    }
-
-    connectFieldVariablesToOutput( )
-
-  }
-
-  /**
-   * Connect the receiver to the first n inputs/outputs where n is the number of variables in the receiver
-   * TODO JB: Does this do the correct thing for other.field?  Does not seem like it
-   */
-  private def connectRecevierVariablesThrough( ) {
-    val receiverVars =  listDeclVariables( receiver.get )
-
-    receiverVars.foreach( recVar => {
-      val receiverIsect = findIntersection( accessBoard, recVar )
-
-      accessBoard.addEdge( receiverIsect, "output", getterSubboardIsect, ReceiverInPort, createChute(recVar) )
-      val con = accessBoard.add( getterSubboardIsect, ReceiverOutPort, CONNECT, "input", createChute(recVar) )._2
-      updateIntersection(accessBoard, recVar, con)
-    })
-
-  }
-
-  private def connectFieldVariablesToOutput(  ) {
-    //TODO JB: Currently Wildcards will have the same bug that AnnotatedTypeMirror's do but we won't
-    //TODO JB: Be able to ignore them
-    val outputs = listDeclVariables( fieldAtm )
-
-    outputs.foreach {
-      case fieldVar : Variable => {
-        //If the field was previously accessed,
-        if (boardNVariableToIntersection.contains( (accessBoard, fieldVar) ) ) {
-
-          val fieldInt = boardNVariableToIntersection( (accessBoard, fieldVar) )
-
-          val merge = accessBoard.add(getterSubboardIsect, ReturnOutPort + genericsOffset( fieldVar ), MERGE, "left", toChute( fieldVar ) )._2
-          accessBoard.addEdge(fieldInt, "output", merge, "right", toChute( fieldVar ) )
-          boardNVariableToIntersection.update( (accessBoard, fieldVar ), merge )
-        } else {
-
-          val con = accessBoard.add(getterSubboardIsect,  ReturnOutPort + genericsOffset( fieldVar ), CONNECT, "input", toChute( fieldVar ) )._2
-          boardNVariableToIntersection.update( ( accessBoard, fieldVar ), con )
-        }
-
-      }
-      case slot : Slot =>
-        println( "Unhandled field type slot! " + slot + " for field access with VP= " + fieldVp )
-    }
-  }
+  override val methodSignature = gameSolver.getFieldAccessorName( constraint.calledVp )
 }

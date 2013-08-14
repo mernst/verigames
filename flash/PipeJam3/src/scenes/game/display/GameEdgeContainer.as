@@ -2,11 +2,13 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import starling.display.Quad;
+	
 	import display.NineSliceBatch;
 	import display.TextBubble;
-	import events.EdgeContainerEvent;
 	
 	import events.BallTypeChangeEvent;
+	import events.EdgeContainerEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
 	
@@ -42,7 +44,6 @@ package scenes.game.display
 		protected var m_extensionEdgeIsOutgoing:Boolean;
 		
 		private var m_dir:String;
-		private var m_useExistingPoints:Boolean;
 		private var m_innerSegmentBorderIsWide:Boolean = false;
 		public var m_edgeArray:Array;
 		
@@ -98,12 +99,12 @@ package scenes.game.display
 		public static var DIR_JOINT_TO_BOX:String = "2box";
 		
 		public static const NUM_JOINTS:int = 6;
+		public static const DEBUG_BOUNDING_BOX:Boolean = false;
 		
-		public function GameEdgeContainer(_id:String, edgeArray:Array, _boundingBox:Rectangle, 
+		public function GameEdgeContainer(_id:String, edgeArray:Array, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
 										  _fromPortID:String, _toPortID:String, dir:String,
-										  _graphEdge:Edge, _draggable:Boolean, 
-										  useExistingPoints:Boolean = false,
+										  _graphEdge:Edge, _draggable:Boolean,
 										  _graphEdgeIsCopy:Boolean = false)
 		{
 			super(_id);
@@ -117,7 +118,6 @@ package scenes.game.display
 			graphEdge = _graphEdge;
 			edgeIsCopy = _graphEdgeIsCopy;
 			m_isEditable = graphEdge.editable;
-			m_useExistingPoints = useExistingPoints;
 			
 			m_innerSegmentBorderIsWide = toBox ? (m_toComponent as GameNodeBase).isWide() : (m_fromComponent as GameNodeBase).isWide();
 			m_innerSegmentIsEditable = toBox ? (m_toComponent as GameNodeBase).isEditable() : (m_fromComponent as GameNodeBase).isEditable();
@@ -134,8 +134,7 @@ package scenes.game.display
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
-			m_startPoint = edgeArray[0];
-			m_endPoint = edgeArray[edgeArray.length-1];
+			setupPoints();
 			
 			var innerBoxPt:Point;
 			var boxHeight:Number;
@@ -189,8 +188,6 @@ package scenes.game.display
 			
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			
-			m_boundingBox = _boundingBox;
-			
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
 				// Also need to update the inner box segment when the exit ball type changes
@@ -219,7 +216,6 @@ package scenes.game.display
 			}
 			
 			m_isDirty = true;
-			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -241,11 +237,23 @@ package scenes.game.display
 			}
 		}
 		
-		//create or recreate line. m_edgeArray needs to be set first, or values passed in
-		public function createLine(newEdgeArray:Array = null):void
+		public function setupPoints(newEdgeArray:Array = null):void
 		{
-			if(newEdgeArray)
-				m_edgeArray = newEdgeArray;
+			if(newEdgeArray) m_edgeArray = newEdgeArray;
+			var startPt:Point = m_edgeArray[0];
+			var endPt:Point = m_edgeArray[m_edgeArray.length-1];
+			var minXedge:Number = Math.min(startPt.x, endPt.x);
+			var minYedge:Number = Math.min(startPt.y, endPt.y);
+			this.x = minXedge;
+			this.y = minYedge;
+			if(!newEdgeArray) {
+				//adjust by min
+				for(var i0:int = 0; i0<m_edgeArray.length; i0++)
+				{
+					m_edgeArray[i0].x -= minXedge;
+					m_edgeArray[i0].y -= minYedge;
+				}
+			}
 			
 			m_startPoint = m_edgeArray[0];
 			m_endPoint = m_edgeArray[m_edgeArray.length-1];
@@ -269,8 +277,39 @@ package scenes.game.display
 					var pt1:Point = m_edgeArray[i1];
 					m_jointPoints.push(pt1.clone());
 				}
+				updateBoundingBox();
 			}
-			
+		}
+		
+		private var m_debugBoundingBox:Quad = new Quad(1, 1, 0xff00ff);
+		private function updateBoundingBox():void
+		{
+			var minX:Number = Number.POSITIVE_INFINITY;
+			var maxX:Number = Number.NEGATIVE_INFINITY;
+			var minY:Number = Number.POSITIVE_INFINITY;
+			var maxY:Number = Number.NEGATIVE_INFINITY;
+			for(var i1:int = 0; i1< m_jointPoints.length; i1++)
+			{
+				var pt1:Point = m_jointPoints[i1];
+				minX = Math.min(minX, pt1.x - WIDE_WIDTH);
+				maxX = Math.max(maxX, pt1.x + WIDE_WIDTH);
+				minY = Math.min(minY, pt1.y - WIDE_WIDTH);
+				maxY = Math.max(maxY, pt1.y + WIDE_WIDTH);
+			}
+			m_boundingBox = new Rectangle(minX + this.x, minY + this.y, maxX - minX, maxY - minY);
+			m_debugBoundingBox.width = m_boundingBox.width;
+			m_debugBoundingBox.height = m_boundingBox.height;
+			m_debugBoundingBox.x = m_boundingBox.x - this.x;
+			m_debugBoundingBox.y = m_boundingBox.y - this.y;
+			m_debugBoundingBox.alpha = 0.2;
+			m_debugBoundingBox.touchable = false;
+		}
+		
+		/**
+		 * Create visuals
+		*/
+		public function createLine():void
+		{
 			createChildren();
 			positionChildren();
 			
@@ -461,6 +500,7 @@ package scenes.game.display
 				m_errorParticleSystem.touchable = false;
 				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
 			}
+			errorContainer.touchable = false;
 			errorContainer.addChild(m_errorParticleSystem);
 			
 			if (errorTextBubble == null) {
@@ -659,7 +699,6 @@ package scenes.game.display
 			//trace("inserted to " + m_jointPoints.indexOf(newJointPt) + " , " + m_jointPoints.indexOf(secondJointPt) + " of " + m_jointPoints.length);
 			createChildren();
 			positionChildren();
-			
 		}
 		
 		//create edge segments and joints from simple point list (m_jointPoints)
@@ -742,7 +781,11 @@ package scenes.game.display
 			var b:int = 1;
 			
 			var segment:GameEdgeSegment;
-			//trace("Edges:" + m_edgeSegments.length + " m_jointPoints:" + m_jointPoints.length);
+			if (m_edgeSegments.length + 1 != m_jointPoints.length) {
+				trace("Warning! m_edgeSegments:" + m_edgeSegments.length + " m_jointPoints:" + m_jointPoints.length + ". Calling createChildren");
+				createChildren();
+				return;
+			}
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
@@ -782,6 +825,7 @@ package scenes.game.display
 			//addChildAt(lastJoint, 0);
 			
 			addChild(m_innerBoxSegment); // inner segment topmost
+			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
 		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
@@ -800,16 +844,17 @@ package scenes.game.display
 				}
 				var prevPoints:int = m_jointPoints ? m_jointPoints.length : 0;
 				createJointPointsArray(m_startPoint, m_endPoint);
-				
 			}
-			
 			positionChildren();
 			m_isDirty = true;
 		}
 		
 		private function onRubberBandSegment(event:EdgeContainerEvent):void
 		{
-			if(event.segment != null) rubberBandEdgeSegment(event.segment.updatePoint, event.segment);
+			if(event.segment != null) {
+				rubberBandEdgeSegment(event.segment.updatePoint, event.segment);
+				dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.SEGMENT_MOVED, event.segment, event.joint));
+			}
 		}
 		
 		public function rubberBandEdgeSegment(deltaPoint:Point, segment:GameEdgeSegment):void 
@@ -879,7 +924,7 @@ package scenes.game.display
 				//						trace("remove " + i); 
 				//					}
 				//				}
-				
+				updateBoundingBox();
 				positionChildren();
 				m_isDirty = true;
 			}
@@ -1048,7 +1093,7 @@ package scenes.game.display
 					//throw new Error("Diagonal created: m_jointPoints["+i+"]:" + m_jointPoints[i] + " m_jointPoints["+(i-1)+"]:" + m_jointPoints[i-1]);
 				}
 			}
-			
+			updateBoundingBox();
 			// If there are more joint points now than when the method began, create the edge segements
 			// for those new joints
 			if (newEdgesNeeded) {

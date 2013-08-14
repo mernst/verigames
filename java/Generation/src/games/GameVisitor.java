@@ -4,8 +4,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import checkers.inference.ConstraintManager;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
+import checkers.source.SourceVisitor;
 import checkers.types.AnnotatedTypeMirror;
 import com.sun.source.tree.*;
 
@@ -14,6 +16,7 @@ import checkers.inference.InferenceVisitor;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable;
 import javacutils.InternalUtils;
+import javacutils.Pair;
 import javacutils.TreeUtils;
 
 /**
@@ -38,8 +41,8 @@ public class GameVisitor extends InferenceVisitor {
          * this smarter.
         scan(node.getModifiers(), p);
         scan(node.getType(), p);
-        scan(node.getInitializer(), p);
         */
+        scan(node.getInitializer(), p);
         return super.visitVariable(node, p);
     }
     
@@ -54,12 +57,37 @@ public class GameVisitor extends InferenceVisitor {
 
         return super.visitIdentifier(node, p);
     }
-    
+
+    private boolean holdCheck = false;
+
     /** Log all assignments. */
     @Override
     public Void visitAssignment(AssignmentTree node, Void p) {
-        super.visitAssignment(node, p);
-        logAssignment(node);
+
+        if( infer ) {
+            Pair<Tree, AnnotatedTypeMirror> preAssCtxt = visitorState.getAssignmentContext();
+            visitorState.setAssignmentContext(Pair.of((Tree) node.getVariable(), atypeFactory.getAnnotatedType(node.getVariable())));
+            try {
+                //This is a reimplementation of what happens in BaseTypeVisitor/SourceVisitor
+                //But with commonAssignmentCheck happening after visiting of the left and right side
+                //of an assignment.  This is necessary because we are getting SubtypeConstraints BEFORE
+                //method calls and other constraints are generated for the RHS
+                Void result = scan( node.getVariable(), p);
+                reduce(scan(node.getExpression(), p), result);
+
+                final Element leftElem = TreeUtils.elementFromUse( node.getVariable() );
+                if(!InferenceMain.isPerformingFlow() && leftElem!=null && leftElem.getKind().isField() ) {
+                    logAssignment(node);
+                }
+
+                commonAssignmentCheck(node.getVariable(), node.getExpression(),
+                        "assignment.type.incompatible");
+            } finally {
+                visitorState.setAssignmentContext(preAssCtxt);
+            }
+        } else {
+            super.visitAssignment(node, p);
+        }
         return null;
     }
 
@@ -86,12 +114,15 @@ public class GameVisitor extends InferenceVisitor {
         	logFieldAccess(node);
         }*/
 
-
-        super.visitMethodInvocation(node, p);
-        if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
-            // TODO: log the call to Map.get.
+        if ( infer & !InferenceMain.isPerformingFlow() ) {
+            if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
+                // TODO: log the call to Map.get.
+            } else {
+                scan(node.getMethodSelect(), p);
+                logMethodInvocation(node);
+            }
         } else {
-            logMethodInvocation(node);
+            super.visitMethodInvocation(node, p);
         }
         return null;
     }
