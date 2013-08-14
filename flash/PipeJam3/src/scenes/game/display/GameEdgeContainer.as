@@ -99,7 +99,7 @@ package scenes.game.display
 		public static var DIR_JOINT_TO_BOX:String = "2box";
 		
 		public static const NUM_JOINTS:int = 6;
-		public static const DEBUG_BOUNDING_BOX:Boolean = true;
+		public static const DEBUG_BOUNDING_BOX:Boolean = false;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
