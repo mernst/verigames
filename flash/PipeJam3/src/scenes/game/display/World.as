@@ -16,6 +16,8 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	
+	import graph.Edge;
+	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
@@ -27,6 +29,7 @@ package scenes.game.display
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.dialogs.InGameMenuDialog;
+	import scenes.game.components.dialogs.SimpleAlertDialog;
 	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
@@ -39,7 +42,6 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
-	import scenes.game.components.dialogs.SimpleAlertDialog;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -271,6 +273,69 @@ package scenes.game.display
 				}
 			}
 		}
+		
+		public function updateXML():XML {
+			
+			//update xml from original
+			var output_xml:XML = new XML(world_xml);
+			for each (var my_level:Level in levels) {
+				// Find this level in XML
+				if (my_level.levelNodes == null) {
+					continue;
+				}
+				var my_level_xml_indx:int = -1;
+				for (var level_indx:uint = 0; level_indx < output_xml["level"].length(); level_indx++) {
+					if (output_xml["level"][level_indx].attribute("name").toString() == my_level.levelNodes.original_level_name) {
+						my_level_xml_indx = level_indx;
+						break;
+					}
+				}
+				//found xml representation?
+				if (my_level_xml_indx > -1) {
+				//loop through all boards, find the edges. Update these with new buzzsaw and width info.
+					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
+						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
+							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
+							var my_edge:Edge = my_level.edgeDictionary[my_edge_id];
+							if (my_edge) {
+								var my_width:String = "narrow";
+								if (my_edge.is_wide) {
+									my_width = "wide";
+								}
+								if (my_edge.has_buzzsaw) {
+									var debug:int = 0;
+								}
+								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@width = my_width;
+								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@buzzsaw = my_edge.has_buzzsaw.toString();
+								
+							} else {
+								throw new Error("World.getUpdatedXML(): Edge pipe not found for edge id: " + my_edge_id);
+							}
+						}
+					}
+				} else {
+					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
+				}
+				//Update the xml with the stamp state information. Currently updating all stamp states, changed or not.
+				var numEdgeSets:uint = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"].length();
+				for(var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
+					
+					var edgeID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex].attribute("id").toString();
+					var edgeVector:Vector.<Edge> = my_level.edgeDictionary[edgeID];
+					for each (var currentEdge:Edge in edgeVector) {
+						var linkedEdgeSet:EdgeSetRef =  currentEdge.linked_edge_set;
+						var stampLength:uint = linkedEdgeSet.num_stamps;
+						for(var stampIndex:uint = 0; stampIndex < stampLength; stampIndex++) {
+							var stampID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@id;
+							output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@active
+								= linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+						}
+					}
+				}
+				
+			}	
+			return output_xml;
+		}
 
 		public function onZoomIn(event:MenuEvent):void
 		{
@@ -474,6 +539,13 @@ package scenes.game.display
 						{
 							active_level.updateConstraintXML();
 							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
+						}
+						break;
+					case 88: //'x' for copy xml
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							var outputXML:XML = updateXML();
+							System.setClipboard(outputXML.toString());
 						}
 						break;
 				}
