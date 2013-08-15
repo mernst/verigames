@@ -1,71 +1,493 @@
 Constraints:
-subtype constraint: Variable 1 at method FieldWrite#m():V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+subtype constraint: Variable 2 at method FieldWrite#<init>():V receiver parameter 0; tree <<missing tree>> within 
+<init>() {
+    super();
+}Atm: @VarAnnot(2) FieldWrite  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
+class FieldWrite {
+    
+    FieldWrite() {
+        super();
+    }
+    Object f;
+    
+    void m() {
+        f = new Object();
+    }
+    
+    void n() {
+        f = null;
+    }
+}
 
-field access constraint; context method FieldWrite#m():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+subtype constraint: Variable 1 at method FieldWrite#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
+class FieldWrite {
+    
+    FieldWrite() {
+        super();
+    }
+    Object f;
+    
+    void m() {
+        f = new Object();
+    }
+    
+    void n() {
+        f = null;
+    }
+}
 
-inequality constraint at method FieldWrite#m():V constraint position: Variable 1 at method FieldWrite#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+subtype constraint: Variable 3 at method FieldWrite#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    f = new Object();
+}Atm: @VarAnnot(3) FieldWrite  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
+class FieldWrite {
+    
+    FieldWrite() {
+        super();
+    }
+    Object f;
+    
+    void m() {
+        f = new Object();
+    }
+    
+    void n() {
+        f = null;
+    }
+}
 
-assignment constraint; context method FieldWrite#m():V constraint position; receiver slot: Literal(OTHER, "this") field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 1 at method FieldWrite#m():V creation 0; tree Object
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldWrite#m():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 3 at method FieldWrite#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    f = new Object();
+}Atm: @VarAnnot(3) FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+inequality constraint at method FieldWrite#m():V constraint position: Variable 6 at method FieldWrite#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
 
-field access constraint; context method FieldWrite#n():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FieldWrite#m():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 3 at method FieldWrite#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    f = new Object();
+}Atm: @VarAnnot(3) FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 6 at method FieldWrite#m():V creation 0; tree Object ); 
+result: List(); 
+)
 
-assignment constraint; context method FieldWrite#n():V constraint position; receiver slot: Literal(OTHER, "this") field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+subtype constraint: Variable 6 at method FieldWrite#m():V creation 0; tree Object  <:  Variable 5 at class FieldWrite field f; tree Object
 
-subtype constraint: Variable 3 at method FWOther#write1():V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+subtype constraint: Variable 4 at method FieldWrite#n():V receiver parameter 0; tree <<missing tree>> within 
+void n() {
+    f = null;
+}Atm: @VarAnnot(4) FieldWrite  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
+class FieldWrite {
+    
+    FieldWrite() {
+        super();
+    }
+    Object f;
+    
+    void m() {
+        f = new Object();
+    }
+    
+    void n() {
+        f = null;
+    }
+}
 
-field access constraint; context method FWOther#write1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldWrite#n():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 4 at method FieldWrite#n():V receiver parameter 0; tree <<missing tree>> within 
+void n() {
+    f = null;
+}Atm: @VarAnnot(4) FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-inequality constraint at method FWOther#write1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FieldWrite#n():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 4 at method FieldWrite#n():V receiver parameter 0; tree <<missing tree>> within 
+void n() {
+    f = null;
+}Atm: @VarAnnot(4) FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
 
-field access constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 5 at class FieldWrite field f; tree Object
 
-inequality constraint at method FWOther#write1():V constraint position: Variable 3 at method FWOther#write1():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+subtype constraint: Variable 9 at method FWOther#<init>():V receiver parameter 0; tree <<missing tree>> within 
+<init>() {
+    super();
+}Atm: @VarAnnot(9) FWOther  <:  Variable 7 at class FWOther extends type; tree <<missing tree>> within 
+class FWOther {
+    
+    FWOther() {
+        super();
+    }
+    FieldWrite fw;
+    
+    void write1() {
+        fw.f = new Object();
+        this.fw.f = null;
+    }
+    
+    void read1() {
+        Object x;
+        x = fw.f;
+        x = fw.f;
+    }
+    
+    void write2(FieldWrite p) {
+        p.f = new Object();
+        p.f = null;
+    }
+}
 
-assignment constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 3 at method FWOther#write1():V creation 0; tree Object
+subtype constraint: Variable 8 at method FWOther#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 7 at class FWOther extends type; tree <<missing tree>> within 
+class FWOther {
+    
+    FWOther() {
+        super();
+    }
+    FieldWrite fw;
+    
+    void write1() {
+        fw.f = new Object();
+        this.fw.f = null;
+    }
+    
+    void read1() {
+        Object x;
+        x = fw.f;
+        x = fw.f;
+    }
+    
+    void write2(FieldWrite p) {
+        p.f = new Object();
+        p.f = null;
+    }
+}
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+subtype constraint: Variable 10 at method FWOther#write1():V receiver parameter 0; tree <<missing tree>> within 
+void write1() {
+    fw.f = new Object();
+    this.fw.f = null;
+}Atm: @VarAnnot(10) FWOther  <:  Variable 7 at class FWOther extends type; tree <<missing tree>> within 
+class FWOther {
+    
+    FWOther() {
+        super();
+    }
+    FieldWrite fw;
+    
+    void write1() {
+        fw.f = new Object();
+        this.fw.f = null;
+    }
+    
+    void read1() {
+        Object x;
+        x = fw.f;
+        x = fw.f;
+    }
+    
+    void write2(FieldWrite p) {
+        p.f = new Object();
+        p.f = null;
+    }
+}
 
-field access constraint; context method FWOther#write1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FWOther field fw; 
+receiver: Variable 10 at method FWOther#write1():V receiver parameter 0; tree <<missing tree>> within 
+void write1() {
+    fw.f = new Object();
+    this.fw.f = null;
+}Atm: @VarAnnot(10) FWOther; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 14 at class FWOther field fw; tree FieldWrite); 
+)
 
-inequality constraint at method FWOther#write1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+inequality constraint at method FWOther#write1():V constraint position: Variable 14 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
 
-field access constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-assignment constraint; context method FWOther#write1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+inequality constraint at method FWOther#write1():V constraint position: Variable 15 at method FWOther#write1():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
 
-subtype constraint: Variable 0 at class FieldWrite field f; tree Object  <:  Variable 4 at method FWOther#read1():V local variable x(0); tree Object
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 15 at method FWOther#write1():V creation 0; tree Object ); 
+result: List(); 
+)
 
-field access constraint; context method FWOther#read1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+subtype constraint: Variable 15 at method FWOther#write1():V creation 0; tree Object  <:  Variable 5 at class FieldWrite field f; tree Object
 
-inequality constraint at method FWOther#read1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FWOther field fw; 
+receiver: Variable 10 at method FWOther#write1():V receiver parameter 0; tree <<missing tree>> within 
+void write1() {
+    fw.f = new Object();
+    this.fw.f = null;
+}Atm: @VarAnnot(10) FWOther; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 14 at class FWOther field fw; tree FieldWrite); 
+)
 
-field access constraint; context method FWOther#read1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-subtype constraint: Variable 0 at class FieldWrite field f; tree Object  <:  Variable 4 at method FWOther#read1():V local variable x(0); tree Object
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FWOther#write1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
 
-field access constraint; context method FWOther#read1():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 2 at class FWOther field fw; tree FieldWrite pos: class FWOther field fw
+subtype constraint: Variable 11 at method FWOther#read1():V receiver parameter 0; tree <<missing tree>> within 
+void read1() {
+    Object x;
+    x = fw.f;
+    x = fw.f;
+}Atm: @VarAnnot(11) FWOther  <:  Variable 7 at class FWOther extends type; tree <<missing tree>> within 
+class FWOther {
+    
+    FWOther() {
+        super();
+    }
+    FieldWrite fw;
+    
+    void write1() {
+        fw.f = new Object();
+        this.fw.f = null;
+    }
+    
+    void read1() {
+        Object x;
+        x = fw.f;
+        x = fw.f;
+    }
+    
+    void write2(FieldWrite p) {
+        p.f = new Object();
+        p.f = null;
+    }
+}
 
-inequality constraint at method FWOther#read1():V constraint position: Variable 2 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#read1():V constraint position; 
+calledVp: class FWOther field fw; 
+receiver: Variable 11 at method FWOther#read1():V receiver parameter 0; tree <<missing tree>> within 
+void read1() {
+    Object x;
+    x = fw.f;
+    x = fw.f;
+}Atm: @VarAnnot(11) FWOther; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 14 at class FWOther field fw; tree FieldWrite); 
+)
 
-field access constraint; context method FWOther#read1():V constraint position; receiver slot: Variable 2 at class FWOther field fw; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+inequality constraint at method FWOther#read1():V constraint position: Variable 14 at class FWOther field fw; tree FieldWrite != Constant(@nninf.quals.Nullable)
 
-subtype constraint: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object  <:  Variable 0 at class FieldWrite field f; tree Object
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#read1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite != Constant(@nninf.quals.Nullable)
+subtype constraint: Variable 5 at class FieldWrite field f; tree Object  <:  Variable 16 at method FWOther#read1():V local variable x(0); tree Object
 
-field access constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#read1():V constraint position; 
+calledVp: class FWOther field fw; 
+receiver: Variable 11 at method FWOther#read1():V receiver parameter 0; tree <<missing tree>> within 
+void read1() {
+    Object x;
+    x = fw.f;
+    x = fw.f;
+}Atm: @VarAnnot(11) FWOther; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 14 at class FWOther field fw; tree FieldWrite); 
+)
 
-inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#read1():V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 14 at class FWOther field fw; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-assignment constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Variable 6 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object
+subtype constraint: Variable 12 at method FWOther#write2(LFieldWrite;):V receiver parameter 0; tree <<missing tree>> within 
+void write2(FieldWrite p) {
+    p.f = new Object();
+    p.f = null;
+}Atm: @VarAnnot(12) FWOther  <:  Variable 7 at class FWOther extends type; tree <<missing tree>> within 
+class FWOther {
+    
+    FWOther() {
+        super();
+    }
+    FieldWrite fw;
+    
+    void write1() {
+        fw.f = new Object();
+        this.fw.f = null;
+    }
+    
+    void read1() {
+        Object x;
+        x = fw.f;
+        x = fw.f;
+    }
+    
+    void write2(FieldWrite p) {
+        p.f = new Object();
+        p.f = null;
+    }
+}
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 0 at class FieldWrite field f; tree Object
+inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 1; tree FieldWrite != Constant(@nninf.quals.Nullable)
 
-inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite != Constant(@nninf.quals.Nullable)
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 1; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
 
-field access constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite; field: Variable 0 at class FieldWrite field f; tree Object pos: class FieldWrite field f
+inequality constraint at method FWOther#write2(LFieldWrite;):V constraint position: Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
 
-assignment constraint; context method FWOther#write2(LFieldWrite;):V constraint position; receiver slot: Variable 5 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite field: Variable 0 at class FieldWrite field f; tree Object; right slot: Literal(NULL_LITERAL, "null")
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 1; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object ); 
+result: List(); 
+)
+
+subtype constraint: Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object  <:  Variable 5 at class FieldWrite field f; tree Object
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 1; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at class FieldWrite field f; tree Object); 
+)
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 
+calledVp: class FieldWrite field f; 
+receiver: Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 1; tree FieldWrite; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
 

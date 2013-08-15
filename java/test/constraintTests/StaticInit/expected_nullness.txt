@@ -1,51 +1,23 @@
 Constraints:
-subtype constraint: Literal(STRING_LITERAL, "hello")  <:  Variable 2 at method Test#Main([Ljava/lang/String;):V local variable s1(0); tree String
+subtype constraint: Variable 2 at method StaticInit#<init>():V receiver parameter 0; tree <<missing tree>> within 
+<init>() {
+    super();
+}Atm: @VarAnnot(2) StaticInit  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
+class StaticInit {
+    
+    StaticInit() {
+        super();
+    }
+}
 
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-inequality constraint at method Test#Main([Ljava/lang/String;):V constraint position: Variable 3 at method Test#Main([Ljava/lang/String;):V creation 0; tree HashMap within HashMap<String, String> != Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 3 at method Test#Main([Ljava/lang/String;):V creation 0; tree HashMap within HashMap<String, String>  <:  Variable 6 at method Test#Main([Ljava/lang/String;):V local variable map2(0); tree HashMap within HashMap<String, String>
-
-equality constraint: Variable 7 at method Test#Main([Ljava/lang/String;):V local variable map2(0); tree String at position (0) within HashMap<String, String> = Variable 4 at method Test#Main([Ljava/lang/String;):V creation 0; tree String at position (0) within HashMap<String, String>
-
-equality constraint: Variable 8 at method Test#Main([Ljava/lang/String;):V local variable map2(0); tree String at position (1) within HashMap<String, String> = Variable 5 at method Test#Main([Ljava/lang/String;):V creation 0; tree String at position (1) within HashMap<String, String>
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Constant(@nninf.quals.Nullable)
-
-inequality constraint at method Test#Main([Ljava/lang/String;):V constraint position: Variable 3 at method Test#Main([Ljava/lang/String;):V creation 0; tree HashMap within HashMap<String, String> != Constant(@nninf.quals.Nullable)
-
-inequality constraint at method Test#Main([Ljava/lang/String;):V constraint position: Variable 6 at method Test#Main([Ljava/lang/String;):V local variable map2(0); tree HashMap within HashMap<String, String> != Constant(@nninf.quals.Nullable)
+subtype constraint: Variable 1 at method StaticInit#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
+class StaticInit {
+    
+    StaticInit() {
+        super();
+    }
+}
 
