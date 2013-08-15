@@ -162,5 +162,11 @@
 	<SubTexture name="ScrollbarButtonMouseover" x="719" y="826" width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
 	<SubTexture name="ScrollbarButtonClick" x="719" y="838" width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
 	<SubTexture name="Scrollbar" x="722" y="851" width="4" height="4" frameX="0" frameY="0" frameWidth="4" frameHeight="4"/>
+	
+	<!-- delete button -->
+	
+	<SubTexture name="DeleteButton" x="1038" y="216" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonMouseover" x="1038" y="242" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonClick" x="1038" y="267" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 
 </TextureAtlas>

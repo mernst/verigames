@@ -319,7 +319,7 @@ public class ProxyThread extends Thread {
 				log(LOG_ERROR, "Error: no player ID");
 				return;
 			}
-			//format:  /level/get/saved/player
+			//format:  /level/get/saved/player id
 			//returns: list of all saved levels associated with the player id
     		StringBuffer buff = new StringBuffer(request+"//");
     		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
@@ -333,6 +333,32 @@ public class ProxyThread extends Thread {
 		        } finally {
 		        }
 		}
+		else if(request.indexOf("/level/delete") != -1) //delete saved level
+		{
+			if(fileInfo.length < 4)
+			{
+				out.write("Error: no level id to delete".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /level/delete/record id
+			// deletes the record id from the saved levels collection
+			ObjectId id = new ObjectId(fileInfo[3]);
+	        BasicDBObject query = new BasicDBObject();
+	        query.put("_id", id);
+            try {
+            	savedLevelsCollection.remove(query);
+		        out.write("{success: true}".getBytes());
+	        	log(LOG_RESPONSE, "level deleted "+fileInfo[3]);
+		    } 
+            catch (Exception e){
+		        	out.write("{success: false}".getBytes());
+		        	if(fileInfo[2] != null)
+		        		log(LOG_ERROR, "Error: level not deleted "+fileInfo[2]);
+		        	else
+		        		log(LOG_ERROR, "Error: delete missing level id");
+		        }
+		}
 		else if(request.indexOf("/file/get") != -1)
 		{
 			if(fileInfo.length < 4)
@@ -341,7 +367,7 @@ public class ProxyThread extends Thread {
 				log(LOG_ERROR, "Error: no level ID");
 				return;
 			}
-			//format:  /level/get/doc id/type
+			//format:  /level/get/doc id
 			//returns: xml file with doc id
 	    	ObjectId id = new ObjectId(fileInfo[3]);
 	    	outFile = fs.findOne(id);	     		
@@ -502,14 +528,25 @@ public class ProxyThread extends Thread {
     
     public void log(int type, String line)
     {
-     	long threadId = Thread.currentThread().getId();
-     	
-     	DBObject logObj = new BasicDBObject();
-     	logObj.put("time", new Date().toString());
-     	logObj.put("type", type);
-      	logObj.put("threadID", threadId);
-    	logObj.put("line", line);
-		logCollection.insert(logObj);
+ 	   
+    	long threadId = Thread.currentThread().getId();
+    	
+    	if(ProxyServer.runLocally)
+    	{
+    		System.out.println("type: " + type + " threadID: " + threadId + " " + line);
+    	}
+    	else
+    	{
+	     	
+	     	DBObject logObj = new BasicDBObject();
+	     	//add both a human readable and a sortable time entry
+	     	logObj.put("time", new Date().toString());
+	     	logObj.put("ts", new Date());
+	     	logObj.put("type", type);
+	      	logObj.put("threadID", threadId);
+	    	logObj.put("line", line);
+			logCollection.insert(logObj);
+    	}
    	
     }
 }

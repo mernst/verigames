@@ -5,13 +5,17 @@ package scenes.game.components.dialogs
 	
 	import display.BasicButton;
 	import display.NineSliceBatch;
+	import display.NineSliceButton;
 	import display.NineSliceToggleButton;
 	import display.ScrollBarThumb;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import networking.LoginHelper;
+	
 	import scenes.BaseComponent;
+	import scenes.game.components.dialogs.SimpleTwoButtonDialog;
 	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -274,7 +278,7 @@ package scenes.game.components.dialogs
 			thumb.setThumbPercent(totalNewScrollDistance*100);
 		}
 		
-		private function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String):DisplayObject
+		private function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String, deleteButtonName:String = null, deleteIconCallback:Function = null):DisplayObject
 		{
 			const ICON_SZ:Number = 40;
 			const DOC_WIDTH:Number = 128;
@@ -293,15 +297,27 @@ package scenes.game.components.dialogs
 			textField.x = ICON_SZ + 2 * PAD;
 			textField.y = PAD;
 			
+			
 			var st:Sprite = new Sprite();
 			st.addChild(bg);
 			st.addChild(icon);
 			st.addChild(textField);
 			
+			if(deleteIconCallback != null)
+			{
+				var deleteButtonImage:Image = new Image(levelAtlas.getTexture(deleteButtonName));
+				deleteButtonImage.scaleX = deleteButtonImage.scaleY = 0.6;
+				deleteButtonImage.x = st.width - deleteButtonImage.width - 2;
+				deleteButtonImage.y = 3;
+				st.addChild(deleteButtonImage);
+				if(deleteIconCallback != null)
+					deleteButtonImage.addEventListener(TouchEvent.TOUCH, deleteIconCallback);
+			}
+			
 			return st;
 		}
 		
-		public function setButtonArray(objArray:Array, isTutorial:Boolean):void
+		public function setButtonArray(objArray:Array, addDeleteButton:Boolean):void
 		{
 			buttonPaneArray = new Array;
 			
@@ -309,15 +325,20 @@ package scenes.game.components.dialogs
 			var widthSpacing:Number = xpos/2;
 			var heightSpacing:Number = 60;
 			
+			var deleteCallback:Function = null;
+			if(addDeleteButton)
+				deleteCallback = deleteSavedGame;
+			
 			for(var ii:int = 0; ii < objArray.length; ++ ii) {
 				var label:String = objArray[ii].name;
 				var labelSz:uint = 12;
 				var newButton:BasicButton;
 				
 				if (objArray[ii].unlocked) {
-					var upstate:DisplayObject = makeDocState(label, labelSz, "DocumentIcon", "DocumentBackground");
-					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick");
-					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover");
+					
+					var upstate:DisplayObject = makeDocState(label, labelSz, "DocumentIcon", "DocumentBackground", "DeleteButton", deleteCallback);
+					var downstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconClick", "DocumentBackgroundClick", "DeleteButtonClick", deleteCallback);
+					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover", "DeleteButtonMouseover", deleteCallback);
 					newButton = new BasicButton(upstate, overstate, downstate);
 					newButton.data = objArray[ii];
 
@@ -342,6 +363,76 @@ package scenes.game.components.dialogs
 				thumb.enabled = false;
 			else
 				thumb.enabled = true;
+		}
+		
+		protected var currentDeleteTarget:BasicButton;
+		private function deleteSavedGame(event:TouchEvent):void
+		{
+			var dialogWidth:Number = 160;
+			var dialogHeight:Number = 60;
+			
+			if(event.getTouches(this, TouchPhase.ENDED).length)
+			{
+				//find parent button
+				var displayObject:DisplayObject = event.target as DisplayObject;
+				while(displayObject && !(displayObject is BasicButton))
+					displayObject = displayObject.parent;
+				
+				if(displayObject == null)
+					return;
+				
+				currentDeleteTarget = displayObject as BasicButton;
+				
+				var simpleTwoButtonDialog:SimpleTwoButtonDialog = new SimpleTwoButtonDialog("Delete Saved Game?", "No", "Yes", dialogWidth, dialogHeight, reallyDeleteSavedGame);
+				simpleTwoButtonDialog.x = (width - dialogWidth)/2;
+				simpleTwoButtonDialog.y = 50;
+				addChild(simpleTwoButtonDialog);
+			}
+		}
+		
+		private function reallyDeleteSavedGame(answer:int):void
+		{
+			if(answer == 2)
+			{
+				//remove button from dialog
+				var index:int = buttonPaneArray.indexOf(currentDeleteTarget);
+				if(index != -1)
+				{
+					buttonPaneArray.splice(index, 1);
+					
+					buttonPane.removeChildren();
+					
+					var xpos:Number = width - scrollbarBackground.width;
+					var widthSpacing:Number = xpos/2;
+					var heightSpacing:Number = 60;
+					
+					for(var ii:int = 0; ii<buttonPaneArray.length; ii++)
+					{
+						buttonPaneArray[ii].x = (widthSpacing) * (ii%2);
+						buttonPaneArray[ii].y = Math.floor(ii/2) * (heightSpacing);
+						buttonPane.addChild(buttonPaneArray[ii]);
+					}
+					
+					if(buttonPaneArray.length > 0)
+					{
+						currentSelection = buttonPaneArray[0];
+						currentSelection.setStatePosition(BasicButton.DOWN_STATE);
+					}
+					else
+					{
+						currentSelection = null;
+					}
+					
+					if(buttonPane.height<initialHeight)
+						thumb.enabled = false;
+					else
+						thumb.enabled = true;
+				
+					//and then remove level
+					var levelID:String = currentDeleteTarget.data._id.$oid;
+					LoginHelper.getLoginHelper().deleteSavedLevel(levelID);
+				}
+			}
 		}
 		
 		private function onLevelButtonTouched(event:Event):void

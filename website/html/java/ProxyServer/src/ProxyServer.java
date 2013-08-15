@@ -17,6 +17,9 @@ public class ProxyServer {
 	//ec2-107-21-183-34.compute-1.amazonaws.com
 	static public String dbURL = "api.pipejam.verigames.com";
 	static public String version = "1.0b";
+	
+	static public boolean runLocally = true;
+	
     public static void main(String[] args) throws IOException {
     	
         //Connect to database

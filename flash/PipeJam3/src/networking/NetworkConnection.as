@@ -155,7 +155,11 @@ package networking
 					break;
 				case LoginHelper.SAVE_LAYOUT:
 					levelObj =  LoginHelper.getLoginHelper().levelObject;
-					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"/"+"&method=DATABASE";
+					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.DELETE_SAVED_LEVEL:
+					request = "/level/delete/"+name+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.SAVE_LEVEL:

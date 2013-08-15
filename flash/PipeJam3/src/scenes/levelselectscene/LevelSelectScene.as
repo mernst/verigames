@@ -368,10 +368,10 @@ package scenes.levelselectscene
 		
 		protected function onRequestLevelsComplete():void
 		{
-			if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
+			if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && newLevelListBox != null)
 				newLevelListBox.stopBusyAnimation();
 			
-			if(loginHelper.savedMatchArrayObjects != null)
+			if(loginHelper.savedMatchArrayObjects != null && savedLevelsListBox != null)
 				savedLevelsListBox.stopBusyAnimation();
 		}
 		
@@ -457,7 +457,7 @@ package scenes.levelselectscene
 		
 		public function setSavedLevelsInfo(_savedLevelInfo:Array):void
 		{
-			this.savedLevelsListBox.setButtonArray(_savedLevelInfo, false);
+			this.savedLevelsListBox.setButtonArray(_savedLevelInfo, true);
 		}
 		
 		public function setTutorialXMLFile(tutorialXML:XML):void
@@ -478,7 +478,7 @@ package scenes.levelselectscene
 				tutorialArray.push(obj);
 				count++;
 			}
-			tutorialListBox.setButtonArray(tutorialArray, true);
+			tutorialListBox.setButtonArray(tutorialArray, false);
 		}
 	}
 }

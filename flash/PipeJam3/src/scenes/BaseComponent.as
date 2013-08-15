@@ -159,11 +159,14 @@ package scenes
 		
 		public function stopBusyAnimation():void
 		{
-			removeChild(busyAnimationMovieClip);
-			Starling.juggler.remove(this.busyAnimationMovieClip);
-			
-			busyAnimationMovieClip.dispose();
-			busyAnimationMovieClip = null;
+			if(busyAnimationMovieClip)
+			{
+				removeChild(busyAnimationMovieClip);
+				Starling.juggler.remove(this.busyAnimationMovieClip);
+				
+				busyAnimationMovieClip.dispose();
+				busyAnimationMovieClip = null;
+			}
 			
 			
 		}

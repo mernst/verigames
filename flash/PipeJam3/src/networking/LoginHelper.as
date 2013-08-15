@@ -34,6 +34,7 @@ package networking
 		public static var SAVE_LEVEL:int = 12;
 		public static var GET_ENCODED_COOKIES:int = 13;
 		public static var GET_ALL_SAVED_LEVELS:int = 14;
+		public static var DELETE_SAVED_LEVEL:int = 15;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -126,6 +127,11 @@ package networking
 		{
 			var layoutName:String = encodeURIComponent(levelObject.layoutName);
 			sendMessage(SAVE_LAYOUT, null, _levelLayoutString, layoutName);
+		}
+		
+		public function deleteSavedLevel(_levelIDString:String):void
+		{
+			sendMessage(DELETE_SAVED_LEVEL, null, null, _levelIDString);
 		}
 		
 		//store the callback, before calling we want to send a refuse message to the RA
