@@ -125,18 +125,23 @@ package display
 			return m_hitSubRect.containsPoint(localPoint) ? this : null;
 		}
 		
+		protected var lastTouchState:DisplayObject = m_up;
 		private function onTouch(event:TouchEvent):void
 		{
 			Mouse.cursor = (m_useHandCursor && m_enabled && event.interactsWith(this)) ? MouseCursor.BUTTON : MouseCursor.AUTO;
 			
 			var touch:Touch = event.getTouch(this);
 			if (!m_enabled || touch == null) {
-				toState(m_up);
+				if(!m_current)
+					m_current = m_up;
+				toState(lastTouchState);
+				lastTouchState = m_up;
 				return;
 			}
 			
 			if (touch.phase == TouchPhase.HOVER) {
 				if (m_current != m_over) {
+					lastTouchState = m_current;
 					toState(m_over);
 					dispatchEventWith(HOVER_OVER, true, dispatchEventWith);
 				}
@@ -165,6 +170,8 @@ package display
 			if (m_current != state) {
 				m_current.visible = false;
 				m_current = state;
+				if(!m_current)
+					m_current = m_up;
 				m_current.visible = true;
 			}
 		}
