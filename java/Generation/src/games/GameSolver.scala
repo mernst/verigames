@@ -798,15 +798,13 @@ abstract class GameSolver extends ConstraintSolver {
      * that is, if we want to serialize all the variables for input/output
      * to subboards, what port number should be used.
      */
-    def genericsOffset(avar: AbstractVariable): Int = {
-      if (avar.pos==null || avar.pos.size==0) {
-        0
+    def genericsOffset(avar: AbstractVariable): String = {
+      if (avar.pos==null) {
+        "List"
       } else {
-        // Add up the size of the array plus all the elements in the array.
-        // Is this unique?
-        avar.pos.zipWithIndex
-          .map{ case (e, i) => math.pow(10, i).asInstanceOf[Int] * (e._1 + e._2 + 1) }
-          .sum
+        avar.pos.toString.replaceAllLiterally("(", "__")
+                         .replaceAllLiterally(")", "__")
+                         .replaceAll("(,| )", "_")
       }
     }
 
