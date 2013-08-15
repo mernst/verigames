@@ -35,6 +35,7 @@ public class ProxyThread extends Thread {
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
 	String betaurl = "http://api.pipejam.verigames.com";
 	private String url = betaurl;
+	//used for verifycookie call to verify player
 	private String gameURL = "http://pipejam.verigames.com";
 	private String httpport = ":80";
 
@@ -162,8 +163,6 @@ public class ProxyThread extends Thread {
 	            	out.write("HTTP/1.1 200\r\nContent-Type: text/x-cross-domain-policy\r\nContent-Size: 239\r\n\r\n".getBytes());
 	            	//response =  null;
             	}
-            	else if(urlTokens.length == 1) //no params, simple POST
-            		response = doPost(urlToCall);
             	else
             	{
             		if(urlTokens[1].indexOf("GET") != -1)
@@ -176,6 +175,8 @@ public class ProxyThread extends Thread {
             			doDatabase(urlToCall, out, decodedBytes1, decodedBytes2);
             		else if(urlTokens[1].indexOf("VERIFY") != -1)
             			response = doVerify(urlToCall);
+            		else
+            			response = doPost(urlToCall); //post
             	}
                 //end send request to server, get response from server
                 ///////////////////////////////////
@@ -233,6 +234,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpGet method = new HttpGet(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -243,6 +245,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpPost method = new HttpPost(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -253,6 +256,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpPut method = new HttpPut(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -263,6 +267,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpDelete method = new HttpDelete(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -294,6 +299,7 @@ public class ProxyThread extends Thread {
     {
     	GridFSDBFile outFile = null;
     	
+    	log(LOG_REQUEST, ProxyServer.dbURL);
     	String[] fileInfo = request.split("/");
     	log(LOG_REQUEST, request);
 
@@ -307,7 +313,13 @@ public class ProxyThread extends Thread {
 		}
 		else if(request.indexOf("/level/get/saved") != -1)
 		{
-			//format:  /level/get/saved/player
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no player ID".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /level/get/saved/player id
 			//returns: list of all saved levels associated with the player id
     		StringBuffer buff = new StringBuffer(request+"//");
     		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
@@ -321,13 +333,45 @@ public class ProxyThread extends Thread {
 		        } finally {
 		        }
 		}
-		else if(request.indexOf("/file/get") != -1)
+		else if(request.indexOf("/level/delete") != -1) //delete saved level
+		{
+			if(fileInfo.length < 4)
 			{
-				//format:  /level/get/doc id/type
-				//returns: xml file with doc id
-		    	ObjectId id = new ObjectId(fileInfo[3]);
-		    	outFile = fs.findOne(id);	     		
-		    	outFile.writeTo(out);
+				out.write("Error: no level id to delete".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /level/delete/record id
+			// deletes the record id from the saved levels collection
+			ObjectId id = new ObjectId(fileInfo[3]);
+	        BasicDBObject query = new BasicDBObject();
+	        query.put("_id", id);
+            try {
+            	savedLevelsCollection.remove(query);
+		        out.write("{success: true}".getBytes());
+	        	log(LOG_RESPONSE, "level deleted "+fileInfo[3]);
+		    } 
+            catch (Exception e){
+		        	out.write("{success: false}".getBytes());
+		        	if(fileInfo[2] != null)
+		        		log(LOG_ERROR, "Error: level not deleted "+fileInfo[2]);
+		        	else
+		        		log(LOG_ERROR, "Error: delete missing level id");
+		        }
+		}
+		else if(request.indexOf("/file/get") != -1)
+		{
+			if(fileInfo.length < 4)
+			{
+				out.write("Error: no level ID".getBytes());
+				log(LOG_ERROR, "Error: no level ID");
+				return;
+			}
+			//format:  /level/get/doc id
+			//returns: xml file with doc id
+	    	ObjectId id = new ObjectId(fileInfo[3]);
+	    	outFile = fs.findOne(id);	     		
+	    	outFile.writeTo(out);
 			}
 		else if(request.indexOf("/level/metadata/get/all") != -1)
 		{
@@ -347,6 +391,13 @@ public class ProxyThread extends Thread {
 		}
 		else if(request.indexOf("/layout/get/all") != -1)
 		{
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no xml ID".getBytes());
+				log(LOG_ERROR, "Error: no xml ID");
+				return;
+			}
+			
 			//format:  /layout/get/all/xmlID
 			//returns: list of all layouts associated with the xmlID
     		StringBuffer buff = new StringBuffer(request+"//");
@@ -363,6 +414,12 @@ public class ProxyThread extends Thread {
 		}
     	else if(request.indexOf("/layout/get") != -1)
 		{
+    		if(fileInfo.length < 4)
+			{
+				out.write("Error: no layout ID".getBytes());
+				log(LOG_ERROR, "Error: no layout ID");
+				return;
+			}
 			//format:  /layout/get/name
 			//returns: layout with specified name
     		ObjectId id = new ObjectId(fileInfo[3]);
@@ -471,14 +528,25 @@ public class ProxyThread extends Thread {
     
     public void log(int type, String line)
     {
-     	long threadId = Thread.currentThread().getId();
-     	
-     	DBObject logObj = new BasicDBObject();
-     	logObj.put("time", new Date().toString());
-     	logObj.put("type", type);
-      	logObj.put("threadID", threadId);
-    	logObj.put("line", line);
-		logCollection.insert(logObj);
+ 	   
+    	long threadId = Thread.currentThread().getId();
+    	
+    	if(ProxyServer.runLocally)
+    	{
+    		System.out.println("type: " + type + " threadID: " + threadId + " " + line);
+    	}
+    	else
+    	{
+	     	
+	     	DBObject logObj = new BasicDBObject();
+	     	//add both a human readable and a sortable time entry
+	     	logObj.put("time", new Date().toString());
+	     	logObj.put("ts", new Date());
+	     	logObj.put("type", type);
+	      	logObj.put("threadID", threadId);
+	    	logObj.put("line", line);
+			logCollection.insert(logObj);
+    	}
    	
     }
 }

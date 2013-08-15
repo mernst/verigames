@@ -1117,6 +1117,7 @@ package scenes.game.display
 			var newRight:Number = m_boundingBox.right;
 			var newTop:Number = m_boundingBox.top;
 			var newBottom:Number = m_boundingBox.bottom;
+			var movedNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			//if component isn't in the currently selected group, unselect everything, and then move component
 			if(selectedComponents.indexOf(evt.component) == -1)
 			{
@@ -1127,7 +1128,10 @@ package scenes.game.display
 				newTop = Math.min(newTop, evt.component.m_boundingBox.top);
 				newBottom = Math.max(newBottom, evt.component.m_boundingBox.bottom);
 			//	m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
-				if (tutorialManager && (evt.component is GameNode)) tutorialManager.onGameNodeMoved(m_nodeList);
+				if (tutorialManager && (evt.component is GameNode)) {
+					movedNodes.push(evt.component as GameNode);
+					tutorialManager.onGameNodeMoved(movedNodes);
+				}
 			}
 			else
 			{
@@ -1141,10 +1145,12 @@ package scenes.game.display
 					newBottom = Math.max(newBottom, component.m_boundingBox.bottom);
 //					if(component is GameNodeBase)
 //						m_visibleNodeManager.updateNode(component as GameNodeBase);
-					if(component is GameNode)
+					if (component is GameNode) {
+						movedNodes.push(component as GameNode);
 						movedGameNode = true;
+					}
 				}
-				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(m_nodeList);
+				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(movedNodes);
 			}
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}

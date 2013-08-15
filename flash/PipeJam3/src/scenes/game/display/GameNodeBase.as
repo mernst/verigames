@@ -35,7 +35,7 @@ package scenes.game.display
 		public var m_outgoingEdges:Vector.<GameEdgeContainer>;
 		public var m_incomingEdges:Vector.<GameEdgeContainer>;
 		
-		public var m_PortToEdgeArray:Array;
+		private var m_PortToEdgeArray:Array;
 		
 		protected static var WIDTH_CHANGE:String = "width_change";
 		
@@ -525,6 +525,7 @@ package scenes.game.display
 		//switch edge port positions - both in the port index array and internally in the incoming and outgoing position variables
 		protected function switchEdgePositions(currentEdgeContainer:GameEdgeContainer, currentPosition:int, nextEdgeContainer:GameEdgeContainer, nextPosition:int):void
 		{
+			trace("switch " + currentEdgeContainer.m_id + " @ pos " + currentPosition + " with " + nextEdgeContainer.m_id + " @ pos " + nextPosition);
 			var isEdgeOutgoing:Boolean = currentEdgeContainer.m_fromComponent == this ? true : false;
 			var isNextEdgeOutgoing:Boolean = nextEdgeContainer.m_fromComponent == this ? true : false;
 			

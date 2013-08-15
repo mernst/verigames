@@ -134,7 +134,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case GROUP_SELECT_TUTORIAL:
-					if (!m_levelFinished && (updatedGameNodes.length > 0)) {
+					if (!m_levelFinished && (updatedGameNodes.length > 1)) {
 						m_levelFinished = true;
 						Starling.juggler.delayCall(function():void {
 							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));

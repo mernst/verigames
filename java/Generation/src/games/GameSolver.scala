@@ -88,6 +88,17 @@ abstract class GameSolver extends ConstraintSolver {
      */
     val boardNVariableToIntersection = new LinkedHashMap[(Board, AbstractVariable), Intersection]
 
+    //HELPER METHODS FOR DEBUGGING THE GAMESOLVER
+    def variablesOnBoard( target : Board ) = {
+      boardNVariableToIntersection
+        .map( { case ( (board, variable), intersection ) => if( board == target ) Some(variable) else None } )
+        .flatten
+    }
+
+    def latestIntersection( board : Board, variable : AbstractVariable ) = {
+      boardNVariableToIntersection.get((board, variable))
+    }
+
     /**
      * Mapping from a board to the Intersection that represents the "this" literal.
      */
@@ -311,11 +322,19 @@ abstract class GameSolver extends ConstraintSolver {
 
       //Add all of the "receiver" type variables for fields (i.e. the class type variables for the class
       // in which the field is declared )
-      fieldBoardsToClass.foreach( (boardToClassName : (Board, String )) => {
-        classToTypeParams.get( boardToClassName._2 ).foreach( typeParams =>
-          connectVariablesToInput( boardToClassName._1, typeParams.toList )
-        )
-      })
+
+      for( (fieldBoard, className) <- fieldBoardsToClass ) {
+
+        classToTypeParams.get( className ).map( typeParams => {
+          val missingTypeParams =
+            typeParams
+              .filter( typeParam => boardNVariableToIntersection.contains( (fieldBoard,  typeParam )) )
+              .toList
+
+          connectVariablesToInput( fieldBoard, missingTypeParams, ClassTypeParamsInPort )
+
+        })
+      }
 
       //Add the type parameter lower bounds above subboard intersections that need them as input
       // (see addConstraintLowerBounds )
@@ -636,11 +655,11 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToInput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToInput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val incoming = board.getIncomingNode()
         val chute = createChute(variable)
-        val connect = board.add(incoming, (ReceiverInPort + genericsOffset(variable)),
+        val connect = board.add(incoming, (portPrefix + genericsOffset(variable)),
                                 Intersection.Kind.CONNECT, "input", chute)._2
         boardNVariableToIntersection += ((board, variable) -> connect )
       }
@@ -653,12 +672,12 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val outgoing = board.getOutgoingNode()
         val chute = createChute( variable )
         val lastIsect = boardNVariableToIntersection((board, variable))
-        board.addEdge(lastIsect, "output", outgoing,  (ReceiverInPort + genericsOffset(variable)), chute)
+        board.addEdge(lastIsect, "output", outgoing,  (portPrefix + genericsOffset(variable)), chute)
       }
     }
 
@@ -779,15 +798,13 @@ abstract class GameSolver extends ConstraintSolver {
      * that is, if we want to serialize all the variables for input/output
      * to subboards, what port number should be used.
      */
-    def genericsOffset(avar: AbstractVariable): Int = {
-      if (avar.pos==null || avar.pos.size==0) {
-        0
+    def genericsOffset(avar: AbstractVariable): String = {
+      if (avar.pos==null) {
+        "List"
       } else {
-        // Add up the size of the array plus all the elements in the array.
-        // Is this unique?
-        avar.pos.zipWithIndex
-          .map{ case (e, i) => math.pow(10, i).asInstanceOf[Int] * (e._1 + e._2 + 1) }
-          .sum
+        avar.pos.toString.replaceAllLiterally("(", "__")
+                         .replaceAllLiterally(")", "__")
+                         .replaceAll("(,| )", "_")
       }
     }
 

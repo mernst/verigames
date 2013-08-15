@@ -649,6 +649,7 @@ package scenes.game.display
 				m_startPoint = undoObject.m_savedStartPoint;
 				m_endPoint = undoObject.m_savedEndPoint;
 				rubberBandEdge(new Point(), true); //just force a redrawing
+				updateBoundingBox();
 			}
 			m_isDirty = true;
 		}

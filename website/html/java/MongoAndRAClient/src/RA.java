@@ -42,6 +42,16 @@ public class RA
    static LevelParameters params = new LevelParameters(1, "config/.level_params_starjam");
 
 	
+   public String getVersion()
+	{	
+	   String requestUrl = "/ra/version";
+
+	   System.out.println("request " + requestUrl);
+	   String jsonString = RestAssured.get(requestUrl).body().asString();
+	    System.out.println(jsonString);
+	    return jsonString;
+	}
+   
    public String agentExists(String id, PrincipalType principalType)
 	{	
 	   String requestUrl = null;

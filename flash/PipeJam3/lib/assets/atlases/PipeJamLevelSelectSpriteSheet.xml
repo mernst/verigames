@@ -6,16 +6,16 @@
 	<!-- Window -->
 
 	<SubTexture name="LevelSelectWindow" x="0" y="0" width="824" height="584" frameX="0" frameY="0" frameWidth="824" frameHeight="584"/>
-	<SubTexture name="LevelSelectWindowTopLeft" x="0" y="0" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowTopRight" x="760" y="0" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowBottomLeft" x="0" y="520" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowBottomRight" x="760" y="520" width="64" height="64" frameX="0" frameY="0" frameWidth="64" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="696" height="64" frameX="0" frameY="0" frameWidth="696" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowBottom" x="64" y="520" width="696" height="64" frameX="0" frameY="0" frameWidth="696" frameHeight="64"/>
-	<SubTexture name="LevelSelectWindowLeft" x="0" y="64" width="64" height="456" frameX="0" frameY="0" frameWidth="64" frameHeight="456"/>
-	<SubTexture name="LevelSelectWindowRight" x="760" y="64" width="64" height="456" frameX="0" frameY="0" frameWidth="64" frameHeight="456"/>
-	<SubTexture name="LevelSelectWindowCenter" x="64" y="64" width="696" height="456" frameX="0" frameY="0" frameWidth="696" frameHeight="456"/>
-
+	<SubTexture name="LevelSelectWindowTopLeft" x="0" y="0" width="64" height="95" frameX="0" frameY="0" frameWidth="64" frameHeight="95"/>
+	<SubTexture name="LevelSelectWindowTopRight" x="760" y="0" width="64" height="95" frameX="0" frameY="0" frameWidth="64" frameHeight="95"/>
+	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="696" height="95" frameX="0" frameY="0" frameWidth="696" frameHeight="95"/>
+	<SubTexture name="LevelSelectWindowBottomLeft" x="0" y="520" width="64" height="69" frameX="0" frameY="0" frameWidth="64" frameHeight="69"/>
+	<SubTexture name="LevelSelectWindowBottomRight" x="760" y="520" width="64" height="69" frameX="0" frameY="0" frameWidth="64" frameHeight="69"/>
+	<SubTexture name="LevelSelectWindowBottom" x="64" y="520" width="696" height="69" frameX="0" frameY="0" frameWidth="696" frameHeight="69"/>
+	<SubTexture name="LevelSelectWindowLeft" x="0" y="95" width="64" height="420" frameX="0" frameY="0" frameWidth="64" frameHeight="420"/>
+	<SubTexture name="LevelSelectWindowRight" x="760" y="95" width="64" height="420" frameX="0" frameY="0" frameWidth="64" frameHeight="420"/>
+	<SubTexture name="LevelSelectWindowCenter" x="64" y="95" width="696" height="420" frameX="0" frameY="0" frameWidth="696" frameHeight="420"/>
+	
 	<!-- Tabs -->
 
 	<SubTexture name="TabActive" x="526" y="600" width="244" height="54" frameX="0" frameY="0" frameWidth="244" frameHeight="54"/>
@@ -162,5 +162,11 @@
 	<SubTexture name="ScrollbarButtonMouseover" x="719" y="826" width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
 	<SubTexture name="ScrollbarButtonClick" x="719" y="838" width="10" height="10" frameX="0" frameY="0" frameWidth="10" frameHeight="10"/>
 	<SubTexture name="Scrollbar" x="722" y="851" width="4" height="4" frameX="0" frameY="0" frameWidth="4" frameHeight="4"/>
+	
+	<!-- delete button -->
+	
+	<SubTexture name="DeleteButton" x="1038" y="216" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonMouseover" x="1038" y="242" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonClick" x="1038" y="267" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 
 </TextureAtlas>
