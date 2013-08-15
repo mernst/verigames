@@ -322,11 +322,19 @@ abstract class GameSolver extends ConstraintSolver {
 
       //Add all of the "receiver" type variables for fields (i.e. the class type variables for the class
       // in which the field is declared )
-      fieldBoardsToClass.foreach( (boardToClassName : (Board, String )) => {
-        classToTypeParams.get( boardToClassName._2 ).foreach( typeParams =>
-          connectVariablesToInput( boardToClassName._1, typeParams.toList )
-        )
-      })
+
+      for( (fieldBoard, className) <- fieldBoardsToClass ) {
+
+        classToTypeParams.get( className ).map( typeParams => {
+          val missingTypeParams =
+            typeParams
+              .filter( typeParam => boardNVariableToIntersection.contains( (fieldBoard,  typeParam )) )
+              .toList
+
+          connectVariablesToInput( fieldBoard, missingTypeParams, ClassTypeParamsInPort )
+
+        })
+      }
 
       //Add the type parameter lower bounds above subboard intersections that need them as input
       // (see addConstraintLowerBounds )
@@ -647,11 +655,11 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToInput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToInput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val incoming = board.getIncomingNode()
         val chute = createChute(variable)
-        val connect = board.add(incoming, (ReceiverInPort + genericsOffset(variable)),
+        val connect = board.add(incoming, (portPrefix + genericsOffset(variable)),
                                 Intersection.Kind.CONNECT, "input", chute)._2
         boardNVariableToIntersection += ((board, variable) -> connect )
       }
@@ -664,12 +672,12 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val outgoing = board.getOutgoingNode()
         val chute = createChute( variable )
         val lastIsect = boardNVariableToIntersection((board, variable))
-        board.addEdge(lastIsect, "output", outgoing,  (ReceiverInPort + genericsOffset(variable)), chute)
+        board.addEdge(lastIsect, "output", outgoing,  (portPrefix + genericsOffset(variable)), chute)
       }
     }
 
