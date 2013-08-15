@@ -210,9 +210,13 @@ def main():
     print
 
     if options.debug:
-        scriptName = "./debugScript.sh"
-    else:
-        scriptName = "./testScript.sh"
+        os.putenv("DEBUG", "true")
+
+# TODO: scriptName is never used. Do we need these scripts?
+#    if options.debug:
+#        scriptName = "./debugScript.sh"
+#    else:
+#        scriptName = "./testScript.sh"
 
     os.putenv("JAVA", os.getenv("JAVA_HOME") + "/bin/java")
     os.putenv("SCALA", os.getenv("SCALA_HOME") + "/bin/scala")\

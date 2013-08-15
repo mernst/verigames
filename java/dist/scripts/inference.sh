@@ -27,6 +27,12 @@ do
     BCP=$BCP":"$SCALA_LIB"/"$i  	
 done
 
-CMD=$JAVA_HOME"/bin/java -Dscala.usejavacp=true -Xms512m -Xmx1024m -Xbootclasspath/p"$BCP" -ea "$@
+#Debugging
+if [[ ! -z "$DEBUG" ]]; then
+    echo "debugging"
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -ea -server -Xmx1024m -Xms512m -Xss1m"
+fi
+
+CMD=$JAVA_HOME"/bin/java $JAVA_OPTS -Dscala.usejavacp=true -Xms512m -Xmx1024m -Xbootclasspath/p"$BCP" -ea "$@
 echo "Executing "$CMD
 eval $CMD
