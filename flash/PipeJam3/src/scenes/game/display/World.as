@@ -238,16 +238,19 @@ package scenes.game.display
 		{
 			var dialogText:String;
 			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 60;
+			var dialogHeight:Number = 110;
+			var socialText:String = "";
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
-				dialogText = "Level Saved.";
+				dialogText = "Level Saved";
 			}
 			else
-				dialogText = "Level Submitted. Thanks.";
-				
+			{
+				dialogText = "Level Submitted! Thanks!";
+				socialText = "I just finished a level!";
+			}
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight);
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
 			addChild(alert);
 			
 			alert.x = (450 - alert.width)/2;

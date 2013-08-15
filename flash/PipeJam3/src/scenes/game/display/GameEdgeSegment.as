@@ -2,6 +2,7 @@
 {
 	import assets.AssetInterface;
 	import events.EdgeContainerEvent;
+	import events.MoveEvent;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -146,6 +147,7 @@
 					if(isMoving)
 					{
 						isMoving = false;
+						dispatchEvent(new MoveEvent(MoveEvent.FINISHED_MOVING, this));
 						if (m_isInnerBoxSegment || m_isFirstSegment || m_isLastSegment) {
 							dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, this));
 							dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OUT, this));
@@ -175,7 +177,10 @@
 			else
 			{
 				m_isDirty = true;
-				isMoving = false;
+				if (isMoving) {
+					isMoving = false;
+					dispatchEvent(new MoveEvent(MoveEvent.FINISHED_MOVING, this));
+				}
 				dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.HOVER_EVENT_OUT, this));
 			}
 		}

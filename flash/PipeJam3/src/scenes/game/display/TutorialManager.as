@@ -134,7 +134,7 @@ package scenes.game.display
 		{
 			switch (m_tutorialTag) {
 				case GROUP_SELECT_TUTORIAL:
-					if (!m_levelFinished && (updatedGameNodes.length > 0)) {
+					if (!m_levelFinished && (updatedGameNodes.length > 1)) {
 						m_levelFinished = true;
 						Starling.juggler.delayCall(function():void {
 							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
@@ -210,21 +210,21 @@ package scenes.game.display
 				case ZOOM_PAN_TUTORIAL:
 					return 3.0;
 				case LAYOUT_TUTORIAL:
-					return 0.5;
+				case GROUP_SELECT_TUTORIAL:
+					return 0.6;
 				case PASSAGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return 1.2;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 					return 1.5;
 				case LINKS_TUTORIAL:
 				case PINCH_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case NARROW_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
@@ -240,24 +240,24 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case WIDEN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
+				case GROUP_SELECT_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+					return new Point(0, 11);// move down by 15px
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
 					return new Point(15, 0);//move right 15px (pan left)
 				case PINCH_TUTORIAL:
-				case CLASH_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
-				case OPTIMIZE_TUTORIAL:
-					return new Point(0, -20);// move up by 20px
 				case MERGE_TUTORIAL:
-					return new Point(-15, -5);//move left 15px, up 5px
+					return new Point(-5, 0);//move left 5px
 				case ZOOM_PAN_TUTORIAL:
 					return new Point(40, -10);// move right 40px, up by 10px
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+				case CLASH_TUTORIAL:
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
-				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return new Point();
