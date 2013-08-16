@@ -42,6 +42,7 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
+	import flash.utils.ByteArray;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -163,8 +164,8 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
-			addEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
+			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
+			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
@@ -223,10 +224,25 @@ package scenes.game.display
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
 		{
+			//type:String, currentScore:int = event.type, currentScore
 			if(active_level != null)
 			{
+				//update and collect all xml, and then bundle, zip, and upload
+				var outputXML:XML = updateXML();
+				active_level.updateLevelXML();
+				
+				var collectionXML:XML = <container version="1"/>;
+				collectionXML.@qid = outputXML.qid;
+				collectionXML.appendChild(active_level.m_levelLayoutXMLWrapper);
+				collectionXML.appendChild(active_level.m_levelConstraintsXMLWrapper);
+				collectionXML.appendChild(outputXML);
+				
+				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
+				var zipEncodedString:String = active_level.encodeBytes(zip);
+				
 				var currentScore:int = gameControlPanel.getCurrentScore();
-				active_level.onPutLevelInDatabase(event.type, currentScore);
+				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, currentScore, event.type, PipeJamGame.ALL_IN_ONE);	
+				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
@@ -236,11 +252,11 @@ package scenes.game.display
 			}
 		}
 		
-		public function onLevelPutInDatabase(event:MenuEvent):void
+		public function onLevelUploadSuccess(event:MenuEvent):void
 		{
 			var dialogText:String;
 			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 110;
+			var dialogHeight:Number = 60;
 			var socialText:String = "";
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
@@ -250,6 +266,7 @@ package scenes.game.display
 			{
 				dialogText = "Level Submitted! Thanks!";
 				socialText = "I just finished a level!";
+				dialogHeight = 110;
 			}
 			
 			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
@@ -622,8 +639,8 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
-			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
+			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);

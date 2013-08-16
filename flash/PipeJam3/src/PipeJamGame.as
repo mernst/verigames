@@ -47,6 +47,9 @@ package
 		/** list of all network connection objects spawned */
 		protected static var networkConnections:Vector.<NetworkConnection>;
 		
+		public static var SEPARATE_FILES:int = 1;
+		public static var ALL_IN_ONE:int = 2;
+		
 		public static var theme:PipeJamTheme;
 		public static var theme1:AeonDesktopTheme;
 		

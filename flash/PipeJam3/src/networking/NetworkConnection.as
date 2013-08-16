@@ -99,7 +99,7 @@ package networking
 				trace("zip failed");
 		}
 		
-		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null):void
+		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null, filetype:int = 0):void
 		{
 			var request:String;
 			var levelObj:Object;
@@ -176,13 +176,14 @@ package networking
 					{
 						requestStart = "/level/save/";
 						levelID = levelObj.levelId;
+						requestEnd = "/"+filetype;
 					}
 					else
 					{
 						requestStart = "/level/submit/";
 						var eRating:Number = levelObj.enjoymentRating;
 						var dRating:Number = levelObj.difficultyRating;
-						requestEnd = "/" + eRating+ "/"+ dRating;
+						requestEnd = "/" + eRating+ "/"+ dRating+"/"+filetype;
 					}
 					
 					//these need to match the proxy server, or we need to figure out json transfer...
@@ -190,13 +191,10 @@ package networking
 							+ "/"+encodeURIComponent(levelObj.name)
 							+ "/" + levelID +"/"+scoreASString
 							+ "/" + props.boxes + "/" + props.lines+ "/"+ props.visibleboxes
-							+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonus_nodes;
+							+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonusnodes;
 					
 					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
-							
-						//	"/level/submit/"+LoginHelper.getLoginHelper().levelObject.xmlID+"/"+name+"/"+playerID
-						//											+"/" +LoginHelper.getLoginHelper().levelObject.m_levelLayoutName +"/"+scoreASString 
-						//											+"/" +info.levelID+"/" + eRating+"/"+ dRating+"&method=DATABASE";
+
 					break;
 				case LoginHelper.VERIFY_SESSION:
 					specificURL = "http://pipejam.verigames.com/verifySession";

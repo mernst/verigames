@@ -15,6 +15,7 @@ package scenes
 	import starling.textures.Texture;
 	import starling.events.Event;
 	import starling.display.MovieClip;
+	import starling.display.DisplayObjectContainer;
 
 	public class BaseComponent extends starling.display.Sprite
 	{	
@@ -147,14 +148,25 @@ package scenes
 			
 		}
 		
-		public function startBusyAnimation():void
+		public function startBusyAnimation(animationParent:DisplayObjectContainer = null):MovieClip
 		{
 			busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
 			
-			busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
-			busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
-			addChild(busyAnimationMovieClip);
+			if(!animationParent)
+			{
+				busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
+				busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
+				addChild(busyAnimationMovieClip);
+			}
+			else
+			{
+				busyAnimationMovieClip.x = (animationParent.width-busyAnimationMovieClip.width)/2;
+				busyAnimationMovieClip.y = (animationParent.height-busyAnimationMovieClip.height)/2;
+				animationParent.addChild(busyAnimationMovieClip);
+			}
 			Starling.juggler.add(this.busyAnimationMovieClip);
+			
+			return busyAnimationMovieClip;
 		}
 		
 		public function stopBusyAnimation():void

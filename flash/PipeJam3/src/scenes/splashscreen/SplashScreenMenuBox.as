@@ -66,7 +66,7 @@ package scenes.splashscreen
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = 230;
 			
-			if (!PipeJam3.TUTORIAL_DEMO) {
+			if (!PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT) {
 				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 96, 32);
 				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
 				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
@@ -77,7 +77,7 @@ package scenes.splashscreen
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO)
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT)
 					m_mainMenu.addChild(signin_button);
 			}
 			else if (PipeJam3.TUTORIAL_DEMO)
