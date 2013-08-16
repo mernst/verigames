@@ -113,8 +113,7 @@ public class ProxyThread extends Thread {
             	return;
             
             //do a second read to catch post content - needs to be base64encoded
-            byte[] decodedBytes1 = null;
-            byte[] decodedBytes2 = null;
+            byte[] decodedBytes = null;
             int lengthRead = 0;
             if(contentLength != 0)
             {
@@ -126,27 +125,7 @@ public class ProxyThread extends Thread {
 	            	  break;
 	            }
 	            BASE64Decoder decoder = new BASE64Decoder();
-	            int file1LengthLength = Integer.parseInt(buf.charAt(0)+"");
-	            int file1Length = Integer.parseInt(buf.substring(1, file1LengthLength+1));
-	            int file1End = file1LengthLength+file1Length+1;
-	            //the count includes new lines from the encoding, but the buffer doesn't, so assume lines are 76 chars
-	            //long, and remove the corresponding number of chars
-	            double newLineCount = Math.floor(new Double(file1Length).doubleValue()/76.0) - 1;
-	            file1End -= newLineCount;
-	            String file1 = null;
-	            if(buf.length() < file1Length + 10)
-	            	file1 = buf.substring(file1LengthLength+1);
-	            else
-	            	file1 = buf.substring(file1LengthLength+1, file1End);
-	            decodedBytes1 = decoder.decodeBuffer(file1);
-  
-	            if(buf.length() > file1Length + 10)
-	            {
-	            	int file2LengthLength = Integer.parseInt(buf.charAt(file1End)+"");
-		            int file2Length = Integer.parseInt(buf.substring(file1End+1, file1End+1+file2LengthLength));
-		            String file2 = buf.substring(file1End+1+file2LengthLength);
-		            decodedBytes2 = decoder.decodeBuffer(file2);
-	            }
+	            decodedBytes = decoder.decodeBuffer(buf.toString());
             }
             BufferedReader rd = null;
             HttpResponse response = null;
@@ -172,7 +151,7 @@ public class ProxyThread extends Thread {
             		else if(urlTokens[1].indexOf("DELETE") != -1)
             			response = doDelete(urlToCall);
             		else if(urlTokens[1].indexOf("DATABASE") != -1)
-            			doDatabase(urlToCall, out, decodedBytes1, decodedBytes2);
+            			doDatabase(urlToCall, out, decodedBytes);
             		else if(urlTokens[1].indexOf("VERIFY") != -1)
             			response = doVerify(urlToCall);
             		else
@@ -295,7 +274,7 @@ public class ProxyThread extends Thread {
     	return response;
 	}
     
-    public void doDatabase(String request, DataOutputStream out, byte[] buf1, byte[] buf2) throws Exception 
+    public void doDatabase(String request, DataOutputStream out, byte[] buf) throws Exception 
     {
     	GridFSDBFile outFile = null;
     	
@@ -305,10 +284,7 @@ public class ProxyThread extends Thread {
 
     	if(request.indexOf("/level/save") != -1 || request.indexOf("/level/submit") != -1)
 		{
-			if(buf1 != null)
-				submitLayout(buf1, fileInfo, out);
-			if(buf2 != null)
-				submitConstraints(buf2, fileInfo, out);
+			submitConstraints(buf, fileInfo, out);
 			
 		}
 		else if(request.indexOf("/level/get/saved") != -1)
@@ -431,9 +407,9 @@ public class ProxyThread extends Thread {
     		//input should be a layout file
 			//format:  /layout/save/related parent xml doc id/layoutname/file contents
     		//returns: success message
-			if(buf1 != null)
+			if(buf != null)
 			{
-				submitLayout(buf1, fileInfo, out);
+				submitLayout(buf, fileInfo, out);
 			}
 		}
 	}
@@ -473,6 +449,10 @@ public class ProxyThread extends Thread {
 	     xmlIn.put("player", fileInfo[3]);
 	     xmlIn.put("xmlID", fileInfo[4]+"C");
 	     xmlIn.put("name", fileInfo[7]);
+	     if(fileInfo.length > 17)
+	    	 xmlIn.put("version", fileInfo[18]); //submit
+	     else
+	    	 xmlIn.put("version", fileInfo[16]); //save
 	     xmlIn.save();
 	     currentConstraintFileID = xmlIn.getId().toString();
 	     out.write("file saved".getBytes());
@@ -489,7 +469,8 @@ public class ProxyThread extends Thread {
     	 submittedLevelObj.put("player", fileInfo[3]);
         submittedLevelObj.put("xmlID", fileInfo[4]);
         submittedLevelObj.put("layoutName", fileInfo[5]);
-        submittedLevelObj.put("layoutID", currentLayoutFileID);
+        //assume this is only version 2 files, and we don't have one of these
+        //submittedLevelObj.put("layoutID", currentLayoutFileID);
         submittedLevelObj.put("name", fileInfo[7]);
         submittedLevelObj.put("levelId", fileInfo[8]);
         submittedLevelObj.put("score", fileInfo[9]);
@@ -503,11 +484,15 @@ public class ProxyThread extends Thread {
         properties.put("conflicts", fileInfo[14]);
         properties.put("bonusnodes", fileInfo[15]);
     	
-        if(fileInfo.length > 16)
+        if(fileInfo.length > 17)
         {
         	properties.put("enjoymentRating", fileInfo[16]);
         	properties.put("difficultyRating", fileInfo[17]);
+        	submittedLevelObj.put("version", fileInfo[18]);
         }
+        else
+        	submittedLevelObj.put("version", fileInfo[16]);
+        
         DBObject metadata = new BasicDBObject();
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
