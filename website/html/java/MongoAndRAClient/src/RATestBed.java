@@ -120,12 +120,12 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.deactivateAllAgents(PrincipalType.LEVEL));
 //			ra.printResponseAndEntity(ra.activateLevel("51d322c5e4b0fa95a28f6d09", false));
 //			ra.printResponseAndEntity(ra.activateLevel("51d322c5e4b0fa95a28f6d09", true));
-			ra.printResponseAndEntity(ra.requestMatch("51cae3ce526db6ae6000001d", 10));
-			ra.printResponseAndEntity(ra.refuseMatches("51cae3ce526db6ae6000001d"));
+///			ra.printResponseAndEntity(ra.requestMatch("51cae3ce526db6ae6000001d", 10));
+//			ra.printResponseAndEntity(ra.refuseMatches("51cae3ce526db6ae6000001d"));
 //			ra.printResponseAndEntity(ra.activateAgent("51b173c7544adca41a00001d", true));
 //			ra.agentExists("51cb6fc7ddfe66b65d000021", PrincipalType.PLAYER);
 			
-//			ra.getReport();
+			ra.getReport();
 //			ra.getVersion();
 //			ra.printResponseAndEntity(ra.requestMatch("51e5b3460240288229000026", 10));
 //			ra.printResponseAndEntity(ra.refuseMatches("51e5b3460240288229000026"));
