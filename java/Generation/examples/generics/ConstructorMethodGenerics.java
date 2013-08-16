@@ -7,7 +7,7 @@ class MyClass<T extends Object> extends Object {
     void context() {
         String s = "non null";
         MyClass<String> myc;
-        myc = new MyClass<Integer,String>();
+        myc = new MyClass<String>();
         
         myc.m(s);
     }

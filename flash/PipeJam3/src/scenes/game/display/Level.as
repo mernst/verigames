@@ -55,7 +55,7 @@ package scenes.game.display
 		/** Node collection used to create this level, including name obfuscater */
 		public var levelNodes:LevelNodes;
 		
-		private var edgeDictionary:Dictionary = new Dictionary;
+		public var edgeDictionary:Dictionary = new Dictionary;
 		private var edgeSetDictionary:Dictionary = new Dictionary;
 		
 		private var selectedComponents:Vector.<GameComponent>;
@@ -573,30 +573,19 @@ package scenes.game.display
 			return byteArray;
 		}
 		
-		//as it turns out, I'm going to need to submit two files mashed together in one network POST
-		//so I mark them with the length at the front
-		//and because that length is going to be less than 10 digits, I mark that with it's length
-		//so you end up with a file like this 3456xxxx, where 3 tells you the next three chars are
-		//the length of the following file
 		public function encodeBytes(bytes:ByteArray):String
 		{
 			var encoder:Base64Encoder = new Base64Encoder();
 			encoder.encodeBytes(bytes);
 			var encodedString:String = encoder.toString();
-			var strLen:String = new String(encodedString.length);
-			var strLenLen:String = new String(strLen.length);
-			return strLenLen + strLen + encodedString;
+
+			return encodedString;
 		}
 		
-		public function onPutLevelInDatabase(type:String, currentScore:int):void
+		public function updateLevelXML():void
 		{
 			updateLayoutXML();
-			var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
-			var layoutZipEncodedString:String = encodeBytes(layoutZip);
 			updateConstraintXML();
-			var constraintsZip:ByteArray = zipXMLFile(this.m_levelConstraintsXMLWrapper, "costraints");
-			var constraintsZipEncodedString:String = encodeBytes(constraintsZip);
-			LoginHelper.getLoginHelper().submitLevel(layoutZipEncodedString+constraintsZipEncodedString, currentScore, type);	
 		}
 		
 		protected function onRemovedFromStage(event:Event):void
@@ -762,7 +751,7 @@ package scenes.game.display
 				}
 			}
 			
-			m_levelLayoutXMLWrapper = <graph id="world"/>;
+			m_levelLayoutXMLWrapper = <layout/>;
 			m_levelLayoutXMLWrapper.appendChild(m_levelLayoutXML);
 		}
 		
@@ -789,7 +778,7 @@ package scenes.game.display
 				m_levelConstraintsXML.appendChild(child);
 			}
 			// TODO: Hardcoding "world" id correct?
-			m_levelConstraintsXMLWrapper = <graph id="world"/>;
+			m_levelConstraintsXMLWrapper = <constraints id="world"/>;
 			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
 		

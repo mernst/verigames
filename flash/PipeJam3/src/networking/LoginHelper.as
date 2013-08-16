@@ -190,9 +190,10 @@ package networking
 			sendMessage(REQUEST_LAYOUT_LIST, callback);
 		}
 		
-		protected var m__levelFilesString:String;
+		protected var m_levelFilesString:String;
 		protected var m_currentMessageType:String;
-		public function submitLevel(_levelFilesString:String, _currentScore:int, type:String):void
+		protected var m_fileType:int;
+		public function submitLevel(_levelFilesString:String, _currentScore:int, type:String, fileType:int = 1):void
 		{
 			//this involves:
 			//saving the level (layout and constraints, on either save or submit/share)
@@ -200,21 +201,22 @@ package networking
 			//reporting the player performance/preference to the RA
 			
 			//currently we just do 1 and 2
-			m__levelFilesString = _levelFilesString;
+			m_levelFilesString = _levelFilesString;
 			m_currentMessageType = type;
+			m_fileType = fileType;
 			levelObject.score = _currentScore;
 		
 			//need to create an RA Level so we can use the levelID
 			if(type == MenuEvent.SUBMIT_LEVEL)
 				sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelObject.name);
 			else //save level
-				submitLevelWithID(null);
+				submitLevelWithID(null, fileType);
 		}	
 		
 		//if levelID == null, we are just saving, not submitting (which creates a new level id for future use...)
-		public function submitLevelWithID(levelID:String):void
+		public function submitLevelWithID(levelID:String, fileType:int):void
 		{
-			sendMessage(SAVE_LEVEL, onLevelSubmitted, m__levelFilesString, levelObject.name, levelID);
+			sendMessage(SAVE_LEVEL, onLevelSubmitted, m_levelFilesString, levelObject.name, levelID, fileType);
 		}
 	
 		public function onLevelSubmitted(result:int, e:flash.events.Event):void
@@ -230,7 +232,7 @@ package networking
 			var raLevelObj:Object = JSON.parse(e.target.data);
 			var levelID:String = raLevelObj.id;
 			m_levelCreated = true;
-			submitLevelWithID(levelID);
+			submitLevelWithID(levelID, m_fileType);
 		}
 		
 	
@@ -245,10 +247,10 @@ package networking
 			}
 		}
 	
-		protected function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null):void
+		protected function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null, filetype:int = 0):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
-			networkConnection.sendMessage(type, callback, data, name, infoObj);
+			networkConnection.sendMessage(type, callback, data, name, infoObj, filetype);
 		}
 	}
 }	

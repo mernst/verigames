@@ -141,7 +141,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   //of enforcing the subtype constraint between the type argument
   def connectLowerBoundsThrough( subboardISect : Subboard ) = {
     connectThrough( subboardISect, constraint.classTypeParamLBs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
-    connectThrough( subboardISect, constraint.methodTypeParamLBs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
+    connectThrough( subboardISect, constraint.methodTypeParamLBs, MethodTypeParamsInPort, MethodTypeParamsInPort, false )
   }
 
   def connectThrough( subboardISect : Subboard, slots : List[Slot],
@@ -233,30 +233,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   }
 
   def connectResultAsOutput( subboardISect : Subboard ) {
-    // We may have multiple constraint variables for parameterized types and array types in the return type
-    constraint.result.foreach(
-      _ match {
-
-        case variable : AbstractVariable =>
-          if (boardNVariableToIntersection.contains((callerBoard, variable))) {
-            // Method was previously called.
-            val resInt = boardNVariableToIntersection((callerBoard, variable))
-            val merge = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), MERGE, "left", toChute(variable))._2
-            callerBoard.addEdge(resInt, "output", merge, "right", toChute(variable))
-            boardNVariableToIntersection.update((callerBoard, variable), merge)
-
-          } else {
-            val con = callerBoard.add(subboardISect, ReturnOutPort + genericsOffset(variable), CONNECT, "input", toChute(variable))._2
-            boardNVariableToIntersection.update((callerBoard, variable), con)
-          }
-
-        case _ =>
-        // TODO JB: FIX THIS
-        // TODO: this is also for pre-annotated return types!
-        // println("Unhandled return type slot! " + result)
-
-      })
-
+    connectAsOutput( subboardISect, constraint.result, ReturnOutPort, false )
   }
 
   def cap( slot : Slot, isect : Intersection ) {
@@ -277,8 +254,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   }
 
   /**
-   * Non-receiver arguments have not been piped through the board but may have resulted in multiple
-   * splits of the same variable occurring above the method call intersections (for instance when
+   * The same variable may be split above the board multiple times (for instance when
    * a call f.foo(bar, bar) would cause bar to be split twice).  These values will then be piped through
    * the method board and lead to potentially multiple output intersection for the same value.  Merge
    * these

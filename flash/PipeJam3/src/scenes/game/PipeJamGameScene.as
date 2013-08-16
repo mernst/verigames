@@ -62,10 +62,12 @@ package scenes.game
 		static public var worldFile:String = demoButtonWorldFile;
 		static public var layoutFile:String = demoButtonLayoutFile;
 		static public var constraintsFile:String = demoButtonConstraintsFile;
+		static public var worldAllInOneFile:String;
 		
 		public var m_worldXML:XML;
-		public var m_worldLayout:XML;
-		public var m_worldConstraints:XML;
+		public var m_layoutXML:XML;
+		public var m_constraintsXML:XML;
+		public var m_allInOneXML:XML;
 		private var fz1:FZip;
 		private var fz2:FZip;
 		private var fz3:FZip;
@@ -91,7 +93,7 @@ package scenes.game
 			
 			super.addedToStage(event);
 			
-			if(loginHelper.levelObject && loginHelper.levelObject.levelId is int) // in the tutorial if a short level id
+			if(loginHelper.levelObject && loginHelper.levelObject.levelId is int && loginHelper.levelObject.levelId < 1000) // in the tutorial if a short level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				fileName = "tutorial";
@@ -122,9 +124,21 @@ package scenes.game
 				if(loginHelper.levelObject != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = LoginHelper.USE_DATABASE;
-					worldFile = "/file/get/" + loginHelper.levelObject.xmlID+"/xml";
-					layoutFile = "/file/get/" + loginHelper.levelObject.layoutID+"/layout";
-					constraintsFile = "/file/get/" +loginHelper.levelObject.constraintsID+"/constraints";		
+					worldAllInOneFile = worldFile = layoutFile = constraintsFile = null;
+					//is this an all in one file?
+					var version:int = 0;
+					if(loginHelper.levelObject.version is String)
+						version = parseInt(loginHelper.levelObject.version);
+					if(version == PipeJamGame.ALL_IN_ONE)
+					{
+						worldAllInOneFile = "/file/get/" +loginHelper.levelObject.constraintsID+"/constraints";
+					}
+					else
+					{
+						worldFile = "/file/get/" + loginHelper.levelObject.xmlID+"/xml";
+						layoutFile = "/file/get/" + loginHelper.levelObject.layoutID+"/layout";
+						constraintsFile = "/file/get/" +loginHelper.levelObject.constraintsID+"/constraints";	
+					}
 				}
 				else if(fileName && fileName.length > 0)
 				{
@@ -135,12 +149,27 @@ package scenes.game
 				
 				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
 				
-				fz1 = new FZip();
-				loginHelper.loadFile(loadType, null, worldFile, worldZipLoaded, fz1);
-				fz2 = new FZip();
-				loginHelper.loadFile(loadType, null, layoutFile, layoutZipLoaded, fz2);
-				fz3 = new FZip();
-				loginHelper.loadFile(loadType, null, constraintsFile, constraintsZipLoaded, fz3);
+				if(worldFile) 
+				{
+					fz1 = new FZip();
+					loginHelper.loadFile(loadType, null, worldFile, worldZipLoaded, fz1);
+				}
+				if(layoutFile)
+				{
+					fz2 = new FZip();
+					loginHelper.loadFile(loadType, null, layoutFile, layoutZipLoaded, fz2);
+				}
+				if(constraintsFile)
+				{
+					fz3 = new FZip();
+					loginHelper.loadFile(loadType, null, constraintsFile, constraintsZipLoaded, fz3);
+				}
+				
+				if(worldAllInOneFile)
+				{
+					fz1 = new FZip();
+					loginHelper.loadFile(loadType, null, worldAllInOneFile , allInOneZipLoaded, fz1);
+				}
 			}
 		}
 		
@@ -151,14 +180,14 @@ package scenes.game
 		}
 		
 		private function onLayoutLoaded(_layoutXML:XML):void {
-			m_worldLayout = _layoutXML; 
+			m_layoutXML = _layoutXML; 
 			m_layoutLoaded = true;
 			//call, but probably wait on xml
 			tasksComplete();
 		}
 		
 		private function onConstraintsLoaded(_constraintsXML:XML):void {
-			m_worldConstraints = _constraintsXML;
+			m_constraintsXML = _constraintsXML;
 			m_constraintsLoaded = true;
 			//call, but probably wait on xml
 			tasksComplete();
@@ -198,6 +227,22 @@ package scenes.game
 				worldXML = new XML(zipFile.content);
 				onWorldLoaded(worldXML);
 			}
+		}
+		
+		private function allInOneZipLoaded(e:flash.events.Event):void {
+			fz1.removeEventListener(flash.events.Event.COMPLETE, allInOneZipLoaded);
+			if(fz1.getFileCount() > 0)
+			{
+				var zipFile:FZipFile = fz1.getFileAt(0);
+				var containerXML:XML = new XML(zipFile.content);
+				m_worldXML = containerXML.world[0];
+				m_layoutXML = containerXML.layout[0];
+				m_constraintsXML = containerXML.constraints[0];
+			}
+			onLayoutLoaded(m_layoutXML);
+			onConstraintsLoaded(m_constraintsXML);
+			onWorldLoaded(m_worldXML);
+			
 		}
 		
 		private function layoutZipLoaded(e:flash.events.Event):void {
@@ -253,7 +298,7 @@ package scenes.game
 				if(nextParseState)
 					nextParseState.removeFromParent();
 				
-				active_world = createWorldFromNodes(m_network, m_worldXML, m_worldLayout, m_worldConstraints);		
+				active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);		
 				
 				addChild(active_world);
 			}

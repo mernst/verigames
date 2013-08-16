@@ -167,8 +167,8 @@ package scenes.levelselectscene
 			savedLevelsListBox.setClipRect();
 			newLevelListBox.setClipRect();
 			
-			savedLevelsListBox.startBusyAnimation();
-			newLevelListBox.startBusyAnimation();
+			savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
+			newLevelListBox.startBusyAnimation(newLevelListBox);
 			
 			loginHelper.levelInfoVector = null;
 			loginHelper.matchArrayObjects = null;
