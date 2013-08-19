@@ -155,7 +155,7 @@ def run_constraint_tests(checker, test, testSuiteTests, outfile_path):
         os.putenv("ACTUAL_PATH", actualName)
         # Run the test
         with open(outfile_path, "a") as outfile:
-            ret = subprocess.call(["gradle", "infer", "-P", "infChecker="+checker+"Test",
+            ret = subprocess.call(["gradle", "--daemon", "infer", "-P", "infChecker="+checker+"Test",
                     "-P", "infArgs=" + javaFiles], stdout=outfile, stderr=outfile)
 
             if ret != 0: # Error
