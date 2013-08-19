@@ -97,11 +97,11 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
     val subboardISect = addSubboardIntersection(callerBoard, constraint.calledVp, methodSignature)
 
     connectReceiverParamsThrough( subboardISect )
+
+    connectClassTypeArgsThrough( subboardISect )
     connectMethodTypeArgsThrough( subboardISect )
 
     //TODO JB: ADD EQUIVALENT/BOUNDS RELATIONSHIPS
-
-    connectLowerBoundsThrough( subboardISect )
 
     connectArgumentsThrough( subboardISect )
 
@@ -122,32 +122,40 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
 
     val receiver = constraint.receiver
     if( receiver != null ) {
-      connectThrough( subboardISect, List( receiver ), ReceiverInPort, ReceiverOutPort, false)
+      connectThrough( subboardISect, List( receiver ), ReceiverInPort, ReceiverOutPort )
     }
+  }
 
-    connectThrough( subboardISect, constraint.classTypeArgs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
+  def connectClassTypeArgsThrough( subboardISect : Subboard) = {
+    connectTypeArgsThrough( subboardISect, constraint.classTypeArgs, constraint.classTypeParamLBs,
+                            ClassTypeParamsInPort, ClassTypeParamsOutPort)
   }
 
   def connectMethodTypeArgsThrough( subboardISect : Subboard ) = {
-    connectThrough( subboardISect, constraint.methodTypeArgs, MethodTypeParamsInPort, MethodTypeParamsOutPort, false )
+    connectTypeArgsThrough( subboardISect, constraint.methodTypeArgs, constraint.methodTypeParamLBs,
+      MethodTypeParamsInPort, MethodTypeParamsOutPort)
   }
 
   def connectArgumentsThrough( subboardISect : Subboard ) = {
-    connectThrough( subboardISect, constraint.args, ParamInPort, ParamOutPort, true)
+    connectThrough( subboardISect, constraint.args, ParamInPort, ParamOutPort )
   }
 
-  //All the lower bounds of class type parameters and method type parameters are connected
-  //The lower bounds should already have a pipe in the context of this method for the purposes
-  //of enforcing the subtype constraint between the type argument
-  def connectLowerBoundsThrough( subboardISect : Subboard ) = {
-    connectThrough( subboardISect, constraint.classTypeParamLBs, ClassTypeParamsInPort, ClassTypeParamsOutPort, false )
-    connectThrough( subboardISect, constraint.methodTypeParamLBs, MethodTypeParamsInPort, MethodTypeParamsInPort, false )
+  def connectTypeArgsThrough( subboardISect : Subboard, typeArgs : List[List[Slot]], lowerBounds : List[Slot],
+                              inPortPrefix : String, outPortPrefix : String ) = {
+    assert( typeArgs.length == lowerBounds.length )
+    val slotBuffer = new ListBuffer[Slot]
+    for( (typeArg, lowerBound) <- typeArgs.zip( lowerBounds ) ) {
+      slotBuffer ++= typeArg
+      slotBuffer +=  lowerBound
+    }
+
+    connectThrough( subboardISect, slotBuffer.toList, inPortPrefix, outPortPrefix )
   }
 
   def connectThrough( subboardISect : Subboard, slots : List[Slot],
-                      inputPortPrefix : String, outputPortPrefix : String, useIndex : Boolean ) {
-    connectAsInput(  subboardISect, slots, inputPortPrefix,  useIndex )
-    connectAsOutput( subboardISect, slots, outputPortPrefix, useIndex )
+                      inputPortPrefix : String, outputPortPrefix : String ) {
+    connectAsInput(  subboardISect, slots, inputPortPrefix )
+    connectAsOutput( subboardISect, slots, outputPortPrefix )
   }
 
   /**
@@ -159,30 +167,24 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
    * @param slots   (slots -> link), the slots to wire and whether or not we wish to link them to
    *                      the corresponding pipe in the method subboard
    * @param portPrefix    A prefix to add to all input ports
-   * @param addIndex      Should the index of a slot be added after portPrefix (but before any genericOffset)
    * @return A mapping of slots to the intersections that are created in this step.  For variables this is
    *         a mapping to the split created in this step.
    */
-  def connectAsInput( subboardISect : Subboard, slots : List[Slot],
-                      portPrefix : String, addIndex : Boolean = false ) : List[(Slot,Intersection)] = {
+  def connectAsInput( subboardISect : Subboard, slots : List[Slot], portPrefix : String ) : List[(Slot,Intersection)] = {
 
-    slots.zipWithIndex.map( slotToIndex => {
-      val ( slot, index ) = slotToIndex
+    slots.map( slot => {
 
       //If a slot is unique (e.g. "someLiteral") then it doesn't need to be split because it can't be accessed again
 
-      if ( isUniqueSlot( slot ) ) {
-        val slotIsect = localFindIntersection( slot )
-        val port = makePort( portPrefix, addIndex, index, slot, true )
+      val slotIsect = localFindIntersection( slot )
+      val port = nextInputId( subboardISect, portPrefix )
 
+      if ( isUniqueSlot( slot ) ) {
         callerBoard.addEdge( slotIsect, "output", subboardISect, port, createChute( slot ) )
         slot -> slotIsect
 
       } else {
-        val prevIntersection = localFindIntersection( slot )
-        val port = makePort( portPrefix, addIndex, index, slot, false )
-
-        val split = callerBoard.add( prevIntersection, "output", SPLIT, "input", createChute( slot ) )._2
+        val split = callerBoard.add( slotIsect, "output", SPLIT, "input", createChute( slot ) )._2
         callerBoard.addEdge(split, "split", subboardISect, port, createChute(slot ) )
 
         // it's a bit of a hack to update both the local and the
@@ -190,6 +192,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
         // all arguments are piped through
         localIntersectionMap.update( slot, split )
         slot -> split
+
       }
     })
   }
@@ -203,37 +206,28 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
    * @param subboardISect The subboard intersection being wired
    * @param slots
    * @param portPrefix    A prefix to add to all input ports
-   * @param addIndex      Should the index of a slot be added after portPrefix (but before any genericOffset)
    * @return A mapping of slots to the intersections that are created in this step.  For variables this is
    *         a mapping to the split created in this step.
    */
-  def connectAsOutput( subboardISect : Subboard, slots : List[Slot],
-                       portPrefix : String, addIndex : Boolean = false ) : List[(Slot,Intersection)] = {
-    slots.zipWithIndex.map( slotToIndex => {
-      val ( slot, index) = slotToIndex
+  def connectAsOutput( subboardISect : Subboard, slots : List[Slot], portPrefix : String ) : List[(Slot,Intersection)] = {
+    slots.map( slot => {
 
       //If a slot is unique (e.g. "someLiteral") then it doesn't need to be split because it can't be accessed again
+      val port = nextOutputId( subboardISect, portPrefix )
+      val connect = callerBoard.add( subboardISect, port, CONNECT, "input", createChute( slot ) )._2
 
       if ( isUniqueSlot( slot ) ) {
-        val port = makePort( portPrefix, addIndex, index, slot, true )
-
-        val connect = callerBoard.add( subboardISect, port, CONNECT, "input", createChute( slot ) )._2
         cap( slot, connect )
-
-        slot -> connect
-
       } else {
-        val port = makePort( portPrefix, addIndex, index, slot, false )
-        val connect = callerBoard.add( subboardISect, port, CONNECT, "input", createChute( slot ) )._2
         addToOutputMap(slot, connect)
-
-        slot -> connect
       }
+
+      slot -> connect
     })
   }
 
   def connectResultAsOutput( subboardISect : Subboard ) {
-    connectAsOutput( subboardISect, constraint.result, ReturnOutPort, false )
+    connectAsOutput( subboardISect, constraint.result, ReturnOutPort )
   }
 
   def cap( slot : Slot, isect : Intersection ) {

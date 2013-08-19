@@ -24,7 +24,7 @@ do
 	
 	#create dot string for fileName.......status!
 	length="${#f}"
-	numDots=`expr 60 - ${length}`
+	numDots=`expr 70 - ${length}`
 
 	if [ $numDots -lt 1 ]
 	then
@@ -44,11 +44,11 @@ do
 	
 	if [ $? -ne 0 ]
 		then  
-			files[$count]=$f$dots"failed!"
+			files[$count]=$f$dots" failed!"
 			success=false
 			failed=`expr ${failed} + 1`
 		else 
-			files[$count]=$f$dots"passed!"
+			files[$count]=$f$dots" passed!"
 			passed=`expr ${passed} + 1`
 	fi
 	

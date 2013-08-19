@@ -43,7 +43,7 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	
+		
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -842,5 +842,14 @@ package scenes.game.components
 			if (m_currentLevel) return m_currentLevel.getPanZoomAllowed();
 			return true;
 		}
+		
+/*		public function drawScaled(obj:DisplayObject, thumbWidth:Number, thumbHeight:Number):Bitmap {
+			var m:Matrix = new Matrix();
+			m.scale(WIDTH / obj.width, HEIGHT / obj.height);
+			var bmp:BitmapData = new BitmapData(thumbWidth, thumbHeight, false);
+			bmp.draw(obj, m);
+			var byteArray:ByteArray = new ByteArray(); 
+			bitmapData.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
+		}*/
 	}
 }

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+test "${FLEX_HOME}" = "" && {
+    echo "Please set the FLEX_HOME environment variable." >&2
+    exit 1
+}
+
+scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+java -classpath ${scriptdir}/swfinfo.jar:${FLEX_HOME}/lib/swfutils.jar SwfInfo $@
