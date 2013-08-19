@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 test "${FLEX_HOME}" = "" && {
     echo "Please set the FLEX_HOME environment variable." >&2
