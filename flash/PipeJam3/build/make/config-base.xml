@@ -24,10 +24,4 @@
     </locale>
   </compiler>
   <static-link-runtime-shared-libraries>true</static-link-runtime-shared-libraries>
-  <default-background-color>#FFFFFF</default-background-color>
-  <default-frame-rate>30</default-frame-rate>
-  <default-size>
-    <width>960</width>
-    <height>640</height>
-  </default-size>
 </flex-config>
