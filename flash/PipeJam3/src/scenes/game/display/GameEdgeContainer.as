@@ -271,12 +271,15 @@ package scenes.game.display
 			}
 			else
 			{
+				//trace("creating joint points for " + m_id);
 				m_jointPoints = new Array();
 				for(var i1:int = 0; i1< m_edgeArray.length; i1++)
 				{
+					//trace("joint pt " + m_edgeArray[i1]);
 					var pt1:Point = m_edgeArray[i1];
 					m_jointPoints.push(pt1.clone());
 				}
+				correctJointPointDiagonals();
 				updateBoundingBox();
 			}
 		}
@@ -864,39 +867,7 @@ package scenes.game.display
 			var segmentIndex:int = m_edgeSegments.indexOf(segment);
 			//not a innerbox segment or end segment
 			if(segmentIndex != -1 && segmentIndex != 0 && segmentIndex != m_edgeSegments.length-1) 
-			{				
-				/*
-				// Don't create new joint here, instead extend the current end joint so its extension
-				// height is maintained and edges will therefor follow a horizontal->vertical->horizontal
-				// alternating fashion
-				if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
-				{
-					if(segmentIndex == 1)
-					{
-						m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
-						segmentIndex++;
-						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
-						m_edgeJoints.splice(1, 0, newJoint);
-						newJoint.isHoverOn = true;
-						
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
-						this.m_edgeSegments.splice(1,0,newSegment);	
-						newSegment.isHoverOn = true;
-					}
-					if(segmentIndex+3 == m_jointPoints.length)
-					{
-						m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-						var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
-						m_edgeJoints.splice(-2, 0, newEndJoint);
-						newEndJoint.isHoverOn = true;
-						
-						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
-						this.m_edgeSegments.splice(-1,0,newEndSegment);	
-						newEndSegment.isHoverOn = true;
-					}
-				}
-				*/
-				
+			{
 				//check for horizontal or vertical
 				if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
 				{
@@ -908,8 +879,6 @@ package scenes.game.display
 					m_jointPoints[segmentIndex].x += deltaPoint.x;
 					m_jointPoints[segmentIndex+1].x += deltaPoint.x;
 				}
-				
-				
 				
 				//check for any really short segments, and if found, remove them. Start at the end and work backwards
 				//don't do if we just added a segment
@@ -1079,27 +1048,55 @@ package scenes.game.display
 				m_jointPoints[LNGTH-3].y = m_jointPoints[LNGTH-2].y;
 			}
 			
-			// Correct any diagonals
-			for (var i:int = 1; i < m_jointPoints.length; i++) {
-				if (((m_jointPoints[i-1] as Point).x != (m_jointPoints[i] as Point).x) 
-					&& ((m_jointPoints[i-1] as Point).y != (m_jointPoints[i] as Point).y)) {
-					// This can happen if legacy joint points that don't alternate in vertical->horiz->vert are loaded
-					// Create new joint points between these to correct it - arbitrarily chose to make a horizontal line here
-					var midy:Number = ((m_jointPoints[i] as Point).y + (m_jointPoints[i-1] as Point).y) / 2.0;
-					var newPt1:Point = new Point((m_jointPoints[i-1] as Point).x, midy);
-					var newPt2:Point = new Point((m_jointPoints[i] as Point).x, midy);
-					m_jointPoints.splice(i, 0, newPt1, newPt2);
-					newEdgesNeeded = true;
-					i += 2; // we've just filled in m_jointPoints[i] and m_jointPoints[i+1] so move to i+3, i+2 check
-					//throw new Error("Diagonal created: m_jointPoints["+i+"]:" + m_jointPoints[i] + " m_jointPoints["+(i-1)+"]:" + m_jointPoints[i-1]);
-				}
-			}
-			updateBoundingBox();
+			newEdgesNeeded = newEdgesNeeded || correctJointPointDiagonals();
 			// If there are more joint points now than when the method began, create the edge segements
 			// for those new joints
 			if (newEdgesNeeded) {
 				createChildren();
 			}
+			updateBoundingBox();
+		}
+		
+		/**
+		 * Add extra joints where needed such that there are only alternating vertical and horizontal edges,
+		 * no edges where we're going from p1->pt2 where pt1.x != pt2.x AND pt1.y != pt2.y
+		 * @return
+		 */
+		private function correctJointPointDiagonals():Boolean
+		{
+			var newJointsCreated:Boolean = false;
+			var previousSegmentVertical:Boolean = false;
+			for (var i:int = 1; i < m_jointPoints.length; i++) {
+				var xmismatch:Boolean = ((m_jointPoints[i-1] as Point).x != (m_jointPoints[i] as Point).x);
+				var ymismatch:Boolean = ((m_jointPoints[i-1] as Point).y != (m_jointPoints[i] as Point).y);
+				var newPt1:Point, newPt2:Point;
+				if (xmismatch && ymismatch) {
+					if (previousSegmentVertical) {
+						// Make horizonal->vertical->horizonal segments
+						var midx:Number = ((m_jointPoints[i] as Point).x + (m_jointPoints[i-1] as Point).x) / 2.0;
+						newPt1 = new Point(midx, (m_jointPoints[i-1] as Point).y);
+						newPt2 = new Point(midx, (m_jointPoints[i] as Point).y);
+						previousSegmentVertical = false;
+					} else {
+						// Make vertical->horizonal->vertical segments
+						var midy:Number = ((m_jointPoints[i] as Point).y + (m_jointPoints[i-1] as Point).y) / 2.0;
+						newPt1 = new Point((m_jointPoints[i-1] as Point).x, midy);
+						newPt2 = new Point((m_jointPoints[i] as Point).x, midy);
+						previousSegmentVertical = true;
+					}
+					m_jointPoints.splice(i, 0, newPt1, newPt2);
+					newJointsCreated = true;
+					i += 2; // we've just filled in m_jointPoints[i] and m_jointPoints[i+1] so move to i+3, i+2 check
+					continue;
+				} else if ((ymismatch && previousSegmentVertical) || (xmismatch && !previousSegmentVertical)) {
+					// Don't want two vertical or horizontal segments in a row, duplicate prev joint
+					newPt1 = (m_jointPoints[i-1] as Point).clone();
+					m_jointPoints.splice(i, 0, newPt1);
+					newJointsCreated = true;
+				}
+				previousSegmentVertical = !previousSegmentVertical;
+			}
+			return newJointsCreated;
 		}
 		
 		private function onInnerBoxSegmentClicked(event:TouchEvent):void
