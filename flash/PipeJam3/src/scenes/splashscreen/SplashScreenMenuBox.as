@@ -89,7 +89,7 @@ package scenes.splashscreen
 			{
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				m_mainMenu.addChild(signin_button);
+				if (signin_button) m_mainMenu.addChild(signin_button);
 			}
 			
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
