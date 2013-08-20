@@ -24,6 +24,7 @@ package display
 		protected var maxYPosition:Number;
 		
 		protected var startYPosition:Number;
+		protected var startYClickPoint:Number;
 		
 		public function ScrollBarThumb(minYPos:Number, maxYPos:Number)
 		{
@@ -68,6 +69,7 @@ package display
 				mIsHovering = false;
 				if (!mIsDown) {
 					startYPosition = y;
+					startYClickPoint = touch.getLocation(parent).y;
 					toState(m_down);
 					mIsDown = true;
 				}
@@ -92,8 +94,11 @@ package display
 					currentPosition.y < maxYPosition + MAX_DRAG_DIST)
 				{
 					toState(m_down);
-					y = XMath.clamp(currentPosition.y, minYPosition, maxYPosition);
-					dispatchEvent(new Event(Event.TRIGGERED, true, y/(maxYPosition - minYPosition)));
+					
+					//find the difference between old and new click position here, apply to y position
+					y = startYPosition + (currentPosition.y - startYClickPoint);
+					y = XMath.clamp(y, minYPosition, maxYPosition);
+					dispatchEvent(new Event(Event.TRIGGERED, true, (y - minYPosition)/(maxYPosition - minYPosition)));
 				}
 				else
 				{

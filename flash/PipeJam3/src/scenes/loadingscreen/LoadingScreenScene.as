@@ -78,7 +78,7 @@ package scenes.loadingscreen
 			addChild(loading_button);
 
 			//set max loading time of four seconds
-			timeoutTimer = new Timer(4000, 1);
+			timeoutTimer = new Timer(10000, 1);
 			timeoutTimer.addEventListener(TimerEvent.TIMER, playerValidationAttempted);
 			timeoutTimer.start();
 			

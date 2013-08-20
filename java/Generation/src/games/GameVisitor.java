@@ -9,6 +9,7 @@ import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
 import checkers.source.SourceVisitor;
 import checkers.types.AnnotatedTypeMirror;
+import checkers.util.AnnotatedTypes;
 import com.sun.source.tree.*;
 
 import checkers.basetype.BaseTypeChecker;
@@ -37,14 +38,62 @@ public class GameVisitor extends InferenceVisitor {
 	 */
     @Override
     public Void visitVariable(VariableTree node, Void p) {
+        //TODO: THIS IS ANOTHER COMBO BASETYPECHECKER/TREESCANNER
+        Pair<Tree, AnnotatedTypeMirror> preAssCtxt = visitorState.getAssignmentContext();
+        visitorState.setAssignmentContext(Pair.of((Tree) node, atypeFactory.getAnnotatedType(node)));
+
+        try {
+            boolean valid = validateTypeOf(node);
+
+            Void r = scan(node.getModifiers(), p);
+            r = scanAndReduce(node.getType(), p, r);
+            r = scanAndReduce(node.getInitializer(), p, r);
+
+            // If there's no assignment in this variable declaration, skip it.
+            if (valid && node.getInitializer() != null) {
+                commonAssignmentCheck(node, node.getInitializer(),
+                        "assignment.type.incompatible");
+            }
+            return null;
+        } finally {
+            visitorState.setAssignmentContext(preAssCtxt);
+        }
+    }
+
+
+    @Override
+    public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
+        //TODO: THIS IS ANOTHER COMBO BASETYPECHECKER/TREESCANNER
+        AnnotatedTypeMirror var = atypeFactory.getAnnotatedType(node.getVariable());
+        AnnotatedTypeMirror iterableType =
+                atypeFactory.getAnnotatedType(node.getExpression());
+        AnnotatedTypeMirror iteratedType =
+                AnnotatedTypes.getIteratedType(checker.getProcessingEnvironment(), atypeFactory, iterableType);
+        boolean valid = validateTypeOf(node.getVariable());
+
+
+        Void r = scan(node.getVariable(), p);
+        r = scanAndReduce(node.getExpression(), p, r);
+        r = scanAndReduce(node.getStatement(), p, r);
+
+        if (valid) {
+            commonAssignmentCheck(var, iteratedType, node.getExpression(),
+                    "enhancedfor.type.incompatible", true);
+        }
+        return null;
+    }
+
+
+    //@Override
+    /*public Void visitVariable(VariableTree node, Void p) {
         /* TODO: Re-orderings were causing duplicate constraints. Revisit whether we can do
          * this smarter.
         scan(node.getModifiers(), p);
         scan(node.getType(), p);
         */
-        scan(node.getInitializer(), p);
+        /*scan(node.getInitializer(), p);
         return super.visitVariable(node, p);
-    }
+    }*/
     
 
     /** An identifier is a field access sometimes, i.e. when there is an implicit "this". */
@@ -58,7 +107,11 @@ public class GameVisitor extends InferenceVisitor {
         return super.visitIdentifier(node, p);
     }
 
-    private boolean holdCheck = false;
+    //For some reason scanAndReduce is private though it's constituent methods are public,
+    //we are doing some hacky things to get around duplicate constraints, this makes those easier
+    private Void scanAndReduce(Tree node, Void p, Void r) {
+        return reduce(scan(node, p), r);
+    }
 
     /** Log all assignments. */
     @Override
@@ -72,8 +125,9 @@ public class GameVisitor extends InferenceVisitor {
                 //But with commonAssignmentCheck happening after visiting of the left and right side
                 //of an assignment.  This is necessary because we are getting SubtypeConstraints BEFORE
                 //method calls and other constraints are generated for the RHS
+
                 Void result = scan( node.getVariable(), p);
-                reduce(scan(node.getExpression(), p), result);
+                scanAndReduce(node.getExpression(), p, result);
 
                 final Element leftElem = TreeUtils.elementFromUse( node.getVariable() );
                 if(!InferenceMain.isPerformingFlow() && leftElem!=null && leftElem.getKind().isField() ) {

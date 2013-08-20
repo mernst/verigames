@@ -78,7 +78,9 @@ abstract class GameSolver extends ConstraintSolver {
 
     val fieldBoardsToClass = new LinkedHashMap[Board, String]
 
-    /**
+    val nonStaticMethodBoardsToClass = new LinkedHashMap[Board, String]
+
+  /**
      * For each constraint variable we keep a reference to the
      * Intersection that should be used as next input.
      * For local slots that would be unique enough; however, fields and
@@ -192,6 +194,12 @@ abstract class GameSolver extends ConstraintSolver {
       world
     }
 
+
+    //slow but we can figure that out later
+    def nextPort( prefix : String, incoming : Intersection ) = {
+      prefix + incoming.getOutputIDs().filter( _.startsWith( prefix) ).size
+    }
+
     /**
      * First, go through all variables and create a level for each occurring
      * class and a board for each occurring method.
@@ -211,7 +219,7 @@ abstract class GameSolver extends ConstraintSolver {
             val chute =  if( isThis ) createReceiverChute( cvar ) else createThisChute()
 
             val incoming = board.getIncomingNode()
-            val connect = board.add(incoming, ReceiverInPort + genericsOffset( cvar ), Intersection.Kind.CONNECT, "input", chute)._2
+            val connect = board.add(incoming, nextOutputId( incoming, ReceiverInPort ), Intersection.Kind.CONNECT, "input", chute)._2
 
             boardNVariableToIntersection += ( (board, cvar) -> connect )
             if( isThis ) {
@@ -223,8 +231,7 @@ abstract class GameSolver extends ConstraintSolver {
             // For each parameter, create a CONNECT Intersection.
             // Also for FieldVP, but that's not an InMethodVP...
             val incoming = board.getIncomingNode
-            val connect = board.add(incoming, ParamInPort + incoming.getOutputIDs().filter( _.startsWith( ParamInPort) ).size() + genericsOffset(cvar),
-                                    CONNECT, "input", toChute(cvar))._2
+            val connect = board.add(incoming, nextOutputId( incoming, ParamInPort ), CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
           case mvar: NewInMethodVP =>
@@ -235,8 +242,7 @@ abstract class GameSolver extends ConstraintSolver {
           case mtp : MethodTypeParameterVP  =>
             //TODO: Is ordering going to be a problem?
             val incoming = board.getIncomingNode
-            val connect = board.add(incoming, MethodTypeParamsInPort + genericsOffset(cvar),
-              CONNECT, "input", toChute(cvar))._2
+            val connect = board.add(incoming, nextOutputId( incoming, MethodTypeParamsInPort), CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
 
@@ -256,8 +262,7 @@ abstract class GameSolver extends ConstraintSolver {
             // 1. For field initializers, add the initial connects
             {
               val incoming = board.getIncomingNode
-              val connect  = board.add(incoming, OutputPort+incoming.getOutputIDs().size(),  //TODO JB:  I think the port numbering is going to be off here
-                                             CONNECT, "input", toChute(cvar))._2
+              val connect  = board.add(incoming, nextOutputId( incoming, OutputPort ), CONNECT, "input", toChute(cvar))._2   //TODO: PORT MIGHT BE WRONG
               boardNVariableToIntersection += ((board, cvar) -> connect)
             }
 
@@ -266,10 +271,11 @@ abstract class GameSolver extends ConstraintSolver {
               // val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
               val accessorBoardName = getFieldAccessorName(clvar)
               val getterBoard = findOrCreateMethodBoard(clvar, accessorBoardName )
-              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", getterBoard.getOutgoingNode, ReturnOutPort + genericsOffset(cvar), toChute(cvar))
+              val outgoing = getterBoard.getOutgoingNode
+              getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", outgoing, nextInputId( outgoing, ReturnOutPort ), toChute(cvar))
 
 
-              if( !fieldBoardsToClass.keys.contains( accessorBoardName )) {
+              if( !fieldBoardsToClass.keys.contains( accessorBoardName ) ) {
                 fieldBoardsToClass += ( getterBoard -> clvar.getFQClassName )
               }
             }
@@ -280,8 +286,8 @@ abstract class GameSolver extends ConstraintSolver {
             {
               val setterName = getFieldSetterName( clvar )
               val setterBoard = findOrCreateMethodBoard(clvar, setterName)
-              setterBoard.add(setterBoard.getIncomingNode, OutputPort + genericsOffset(cvar),
-                              END, "input", toChute(cvar))
+              val incoming  = setterBoard.getIncomingNode
+              setterBoard.add( incoming, nextOutputId( incoming, OutputPort ), END, "input", toChute(cvar) )
 
               if( !fieldBoardsToClass.keys.contains( setterName )) {
                 fieldBoardsToClass += ( setterBoard -> clvar.getFQClassName )
@@ -320,20 +326,14 @@ abstract class GameSolver extends ConstraintSolver {
         }
       }}
 
-      //Add all of the "receiver" type variables for fields (i.e. the class type variables for the class
-      // in which the field is declared )
-      fieldBoardsToClass.foreach( (boardToClassName : (Board, String )) => {
-        classToTypeParams.get( boardToClassName._2 ).foreach( typeParams =>
-          connectVariablesToInput( boardToClassName._1, typeParams.toList )
-        )
-      })
+      startClassTypeParams()
 
       //Add the type parameter lower bounds above subboard intersections that need them as input
       // (see addConstraintLowerBounds )
       constraints
         .filter( _.isInstanceOf[SubboardCallConstraint[_]] )
         .map(    _.asInstanceOf[SubboardCallConstraint[_]] )
-        .foreach( addConstraintLowerBounds _ )
+        .foreach( addMissingMethodVars _ )
 
       refinementVariables.foreach(
         refVar => {
@@ -349,8 +349,39 @@ abstract class GameSolver extends ConstraintSolver {
         }
       )
 
-      //For ClassTypeParameterVPs and ClassTypeParameterBoundVPs the variable may be required in a sub-board
-      //but because the
+      //One of these constraints is the one between overridden method return types
+      //TODO: Log these and eliminate them.
+      //There are variables that may be in a subtype relationship that are still not on the boards in which they are
+      //needed for now just add a pipe-dependent start
+      constraints.foreach( constraint => {
+        val(sub, sup) = constraint match {
+          case SubtypeConstraint(sub: Slot, sup: Slot) => (sub, sup)
+
+          case EqualityConstraint(ell: Slot, elr: Slot) => (elr, ell)
+
+          case InequalityConstraint(context: VariablePosition, ell: Slot, elr: Slot) => (elr, ell)
+
+          case _ => (null, null)
+        }
+
+        if( sub != null ) {
+          val board = findBoard(sub, sup)
+
+          if( board != null ) { //TODO: FIGURE OUT WHICH THIS IS HAPPENING ON
+            val missing = List(sub, sup)
+              .filterNot( isUniqueSlot _ )
+              .map( _.asInstanceOf[AbstractVariable] )
+              .filterNot( variable => boardNVariableToIntersection.contains( board, variable ))
+
+            missing.foreach(cvar => {
+              val connect = board.add(START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute(cvar))._2
+              boardNVariableToIntersection += ((board, cvar) -> connect)
+            } )
+          }
+        }
+      })
+
+
     }
 
 
@@ -452,49 +483,58 @@ abstract class GameSolver extends ConstraintSolver {
      */
     def finalizeWorld(world: World) {
 
-      def connectToOutgoing( intersection : Intersection, board : Board, port : String, chute : Chute) = {
-        val outgoing = board.getOutgoingNode()
-        board.addEdge( intersection, "output", outgoing, port, chute)
+      def shouldConnectClassTypeParam( board : Board, cvar : AbstractVariable ) = {
+        val isTypeParamOnMemberBoard = nonStaticMethodBoardsToClass.get( board ).map( className =>
+          className == cvar.varpos.asInstanceOf[WithinClassVP].getFQClassName
+        ).getOrElse( false )
+
+        isTypeParamOnMemberBoard || isGetterOrSetterReceiver( board, cvar )
       }
 
-      val typeParamsToClass = CollectionUtil.reverseAndFlattenJList( classToTypeParams.toMap )
+      //For all boards that
+      endClassTypeParams()
+
+      //returns, parameters, and type parameters should be connected out on the boards in which they are owned
+      // (i.e. in the methods in which they were defined)
+      variables.foreach( cvar => {
+        val board     = variablePosToBoard( cvar.varpos )
+        val outgoing  = board.getOutgoingNode
+
+        val portPrefix : Option[String] = cvar.varpos match {
+          case rvp  : ReturnVP                   => Some( ReturnOutPort )
+          case mtVp : MethodTypeParameterVP      => Some( MethodTypeParamsOutPort )
+          case mtVp : MethodTypeParameterBoundVP => Some( MethodTypeParamsOutPort )
+          case rcVp : ReceiverParameterVP        => Some( ReceiverOutPort )
+          case _                                                  => None
+        }
+
+        //If we have a variable with one of the above VariablePositions, connect it to the outgoing node using prefix
+        portPrefix.map( prefix => {
+          val lastIsect = boardNVariableToIntersection((board, cvar))
+          board.addEdge( lastIsect, "output", outgoing, nextInputId(outgoing, prefix), toChute(cvar))
+        })
+      })
 
       // Connect all intersections to the corresponding outgoing slot
       // boardNVariableToIntersection foreach ( kv => { val ((board, cvar), lastsect) = kv
       boardNVariableToIntersection foreach { case ((board, cvar), lastIsect) => {
 
+        val vpBoard = variablePosToBoard(cvar.varpos)
         cvar.varpos match {
 
-          //Attach return types to outgoing ports
+          //These cases are handled above by iterating over the variable list in order to preserve port ordering
           case retVp : ReturnVP if variablePosToBoard(cvar.varpos) == board =>
-            connectToOutgoing( lastIsect, board, ReturnOutPort + genericsOffset(cvar), toChute(cvar) )
-
-          //If the class type parameter or its bound is in a method for its class then connect it to the outgoing port
-          case ctpVp : ClassTypeParameterVP if typeParamsToClass( cvar ) == ctpVp.getFQClassName ||
-                                               isGetterOrSetterReceiver(board, cvar )           =>
-            connectToOutgoing( lastIsect, board, ClassTypeParamsOutPort + genericsOffset( cvar ), toChute(cvar) )
-
-          case ctpVp : ClassTypeParameterBoundVP if typeParamsToClass( cvar ) == ctpVp.getFQClassName ||
-                                               isGetterOrSetterReceiver(board, cvar )                =>
-            connectToOutgoing( lastIsect, board, ClassTypeParamsOutPort + genericsOffset( cvar ), toChute(cvar)  )
-
-          //If a method's type parameter or its bound is in the method for which it was defined connect it to the
-          //outgoing port, we connect these through because lower bounds need to appear above method subboards
-          //in which they take part because arguments to the method type parameters need to be subtypes of the
-          // lower bound.  For upper bounds, the actual type argument flows through the upper bound's pipe
           case mtpVp : MethodTypeParameterVP if variablePosToBoard( mtpVp ) == board =>
-            connectToOutgoing( lastIsect, board, MethodTypeParamsOutPort + genericsOffset( cvar ), toChute(cvar)  )
-
-          case mtpVp : MethodTypeParameterVP if variablePosToBoard( mtpVp ) == board =>
-            connectToOutgoing( lastIsect, board, MethodTypeParamsOutPort + genericsOffset( cvar ), toChute(cvar)  )
-
-          // Pipe a methods receiver through
+          case mtpVp : MethodTypeParameterBoundVP if variablePosToBoard( mtpVp ) == board =>
           case _ if isMethodReceiver( board, cvar ) =>
-            connectToOutgoing( lastIsect, board, ReceiverOutPort + genericsOffset( cvar ), toChute(cvar)  )
 
-          // Everything else simply gets terminated.
+          //These cases are handled above in endClassTypeParameter in order to preserve port ordering
+          case ctpVp : ClassTypeParameterVP      if shouldConnectClassTypeParam(board, cvar) =>
+          case ctpVp : ClassTypeParameterBoundVP if shouldConnectClassTypeParam(board, cvar) =>
+
+          // All things not piped out of the board should just be ended
           case _ =>
-            val end = board.add( lastIsect, "output", Intersection.Kind.END, "input", toChute(cvar) )._2
+            board.add( lastIsect, "output", Intersection.Kind.END, "input", toChute(cvar) )._2
         }
 
       }}
@@ -600,7 +640,11 @@ abstract class GameSolver extends ConstraintSolver {
       varpos match {
         case mvar: WithinMethodVP => {
           val msig = mvar.getMethodSignature
-          findOrCreateMethodBoard(varpos, msig)
+          val methodBoard = findOrCreateMethodBoard(varpos, msig)
+          if( !mvar.isMethodStatic ) {
+            nonStaticMethodBoardsToClass += ( methodBoard -> mvar.getFQClassName )
+          }
+          methodBoard
         }
         case clvar: WithinClassVP => {
           val fqcname = clvar.getFQClassName
@@ -647,11 +691,11 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToInput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToInput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val incoming = board.getIncomingNode()
         val chute = createChute(variable)
-        val connect = board.add(incoming, (ReceiverInPort + genericsOffset(variable)),
+        val connect = board.add(incoming, nextOutputId(incoming, portPrefix ),
                                 Intersection.Kind.CONNECT, "input", chute)._2
         boardNVariableToIntersection += ((board, variable) -> connect )
       }
@@ -664,12 +708,12 @@ abstract class GameSolver extends ConstraintSolver {
    * @param board
    * @param variables
    */
-    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable] ) {
+    def connectVariablesToOutput( board : Board, variables : List[AbstractVariable], portPrefix : String ) {
       for( variable <- variables ) {
         val outgoing = board.getOutgoingNode()
         val chute = createChute( variable )
         val lastIsect = boardNVariableToIntersection((board, variable))
-        board.addEdge(lastIsect, "output", outgoing,  (ReceiverInPort + genericsOffset(variable)), chute)
+        board.addEdge(lastIsect, "output", outgoing,  nextInputId( outgoing, portPrefix) , chute)
       }
     }
 
@@ -790,15 +834,22 @@ abstract class GameSolver extends ConstraintSolver {
      * that is, if we want to serialize all the variables for input/output
      * to subboards, what port number should be used.
      */
-    def genericsOffset(avar: AbstractVariable): Int = {
-      if (avar.pos==null || avar.pos.size==0) {
-        0
+    def genericsOffset(avar: AbstractVariable): String = {
+
+      //TODO: Temporary kludge until we figure out the port naming fix
+      val idxMod =
+        if( avar.varpos.isInstanceOf[HasParamIdx] )
+          avar.varpos.asInstanceOf[HasParamIdx].paramIdx * 100
+        else
+          0
+
+      if (avar.pos == null) {
+        "List_" + idxMod.toString
       } else {
-        // Add up the size of the array plus all the elements in the array.
-        // Is this unique?
-        avar.pos.zipWithIndex
-          .map{ case (e, i) => math.pow(10, i).asInstanceOf[Int] * (e._1 + e._2 + 1) }
-          .sum
+        avar.pos.toString.replaceAllLiterally("(", "__")
+                         .replaceAllLiterally(")", "__")
+                         .replaceAll("(,| )", "_") +
+                         "_" + idxMod
       }
     }
 
@@ -810,14 +861,25 @@ abstract class GameSolver extends ConstraintSolver {
    * previous method call for that class was already made then we do not have to add the
    * variables again.
    *
+   * Typeargs in some cases may refer to variables contained in the implements or extends
+   * clause of a class, we should handle these in the SubboardCallConstraint but for now just
+   * add them (see Generation/examples/generics/CalledMethod cm.<ListImpl> )
+   *
+   * Method arguments (for the same reason as type args) may have some variables not added to
+   * the board when they are created at the moment (like the variable on an implemented type arg of a parent,
+   * e.g. MyList extends List<@X String>, if an instance of MyList is used it will not at the moment have @X
+   * follow it around on the board.
+   *
+   * TODO JB: Inner generics and variables in the implements fields
+   *
    * @param constraint
    */
-  def addConstraintLowerBounds( constraint : SubboardCallConstraint[_] ) = {
+  def addMissingMethodVars( constraint : SubboardCallConstraint[_] ) = {
     val contextVp = constraint.contextVp
 
     val board = variablePosToBoard( contextVp )
-    val vars = ( constraint.classTypeParamLBs ++ constraint.methodTypeParamLBs )
-                  .filterNot( isUniqueSlot _ )
+    val vars = ( constraint.classTypeParamLBs ++ constraint.methodTypeParamLBs ++ constraint.methodTypeArgs.flatten ++ constraint.args)
+                  .filterNot( isUniqueSlot _ ) //TODO JB: If these are actually lower bounds, is this not superfluous, remove
                   .map( _.asInstanceOf[AbstractVariable] )
 
     vars.foreach( cvar => {
@@ -825,6 +887,42 @@ abstract class GameSolver extends ConstraintSolver {
          val connect = board.add( START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute( cvar ) )._2
          boardNVariableToIntersection += ( (board, cvar) -> connect )
        }
+    })
+  }
+
+  //TODO JB: Inefficient way to do this
+  def nextOutputId( isect : Intersection, portPrefix : String ) : String = {
+    nextId( isect.getOutputIDs.toList, portPrefix )
+  }
+
+  def nextInputId( isect : Intersection, portPrefix : String ) : String = {
+    nextId( isect.getInputIDs.toList, portPrefix )
+  }
+
+  def nextId( ids : List[String], portPrefix : String ) = {
+    portPrefix + ids.filter( _.startsWith( portPrefix ) ).size
+  }
+
+  def getBoardsToClassTypeParams() : List[(Board, List[AbstractVariable])] = {
+    val boardsToClass = ( fieldBoardsToClass ++ nonStaticMethodBoardsToClass )
+    boardsToClass.map({
+      case (board, className) =>
+        board -> classToTypeParams.get( className ).map(_.toList).getOrElse( List.empty[AbstractVariable] )
+    }).toList
+  }
+
+
+  def startClassTypeParams() = {
+    getBoardsToClassTypeParams().foreach({
+      case (board, typeParams) =>
+        connectVariablesToInput( board, typeParams, ClassTypeParamsInPort )
+    })
+  }
+
+  def endClassTypeParams() = {
+    getBoardsToClassTypeParams().foreach({
+      case (board, typeParams) =>
+        connectVariablesToOutput( board, typeParams, ClassTypeParamsOutPort )
     })
   }
 }

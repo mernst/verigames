@@ -35,6 +35,7 @@ public class ProxyThread extends Thread {
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
 	String betaurl = "http://api.pipejam.verigames.com";
 	private String url = betaurl;
+	//used for verifycookie call to verify player
 	private String gameURL = "http://pipejam.verigames.com";
 	private String httpport = ":80";
 
@@ -112,8 +113,7 @@ public class ProxyThread extends Thread {
             	return;
             
             //do a second read to catch post content - needs to be base64encoded
-            byte[] decodedBytes1 = null;
-            byte[] decodedBytes2 = null;
+            byte[] decodedBytes = null;
             int lengthRead = 0;
             if(contentLength != 0)
             {
@@ -125,27 +125,7 @@ public class ProxyThread extends Thread {
 	            	  break;
 	            }
 	            BASE64Decoder decoder = new BASE64Decoder();
-	            int file1LengthLength = Integer.parseInt(buf.charAt(0)+"");
-	            int file1Length = Integer.parseInt(buf.substring(1, file1LengthLength+1));
-	            int file1End = file1LengthLength+file1Length+1;
-	            //the count includes new lines from the encoding, but the buffer doesn't, so assume lines are 76 chars
-	            //long, and remove the corresponding number of chars
-	            double newLineCount = Math.floor(new Double(file1Length).doubleValue()/76.0) - 1;
-	            file1End -= newLineCount;
-	            String file1 = null;
-	            if(buf.length() < file1Length + 10)
-	            	file1 = buf.substring(file1LengthLength+1);
-	            else
-	            	file1 = buf.substring(file1LengthLength+1, file1End);
-	            decodedBytes1 = decoder.decodeBuffer(file1);
-  
-	            if(buf.length() > file1Length + 10)
-	            {
-	            	int file2LengthLength = Integer.parseInt(buf.charAt(file1End)+"");
-		            int file2Length = Integer.parseInt(buf.substring(file1End+1, file1End+1+file2LengthLength));
-		            String file2 = buf.substring(file1End+1+file2LengthLength);
-		            decodedBytes2 = decoder.decodeBuffer(file2);
-	            }
+	            decodedBytes = decoder.decodeBuffer(buf.toString());
             }
             BufferedReader rd = null;
             HttpResponse response = null;
@@ -162,8 +142,6 @@ public class ProxyThread extends Thread {
 	            	out.write("HTTP/1.1 200\r\nContent-Type: text/x-cross-domain-policy\r\nContent-Size: 239\r\n\r\n".getBytes());
 	            	//response =  null;
             	}
-            	else if(urlTokens.length == 1) //no params, simple POST
-            		response = doPost(urlToCall);
             	else
             	{
             		if(urlTokens[1].indexOf("GET") != -1)
@@ -173,9 +151,11 @@ public class ProxyThread extends Thread {
             		else if(urlTokens[1].indexOf("DELETE") != -1)
             			response = doDelete(urlToCall);
             		else if(urlTokens[1].indexOf("DATABASE") != -1)
-            			doDatabase(urlToCall, out, decodedBytes1, decodedBytes2);
+            			doDatabase(urlToCall, out, decodedBytes);
             		else if(urlTokens[1].indexOf("VERIFY") != -1)
             			response = doVerify(urlToCall);
+            		else
+            			response = doPost(urlToCall); //post
             	}
                 //end send request to server, get response from server
                 ///////////////////////////////////
@@ -233,6 +213,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpGet method = new HttpGet(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -243,6 +224,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpPost method = new HttpPost(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -253,6 +235,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpPut method = new HttpPut(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -263,6 +246,7 @@ public class ProxyThread extends Thread {
     {
         HttpClient client = new DefaultHttpClient();
         HttpDelete method = new HttpDelete(url+httpport+request);
+        log(LOG_REQUEST, url+httpport+request);
         // Send POST request
         HttpResponse response = client.execute(method);
 
@@ -290,24 +274,28 @@ public class ProxyThread extends Thread {
     	return response;
 	}
     
-    public void doDatabase(String request, DataOutputStream out, byte[] buf1, byte[] buf2) throws Exception 
+    public void doDatabase(String request, DataOutputStream out, byte[] buf) throws Exception 
     {
     	GridFSDBFile outFile = null;
     	
+    	log(LOG_REQUEST, ProxyServer.dbURL);
     	String[] fileInfo = request.split("/");
     	log(LOG_REQUEST, request);
 
     	if(request.indexOf("/level/save") != -1 || request.indexOf("/level/submit") != -1)
 		{
-			if(buf1 != null)
-				submitLayout(buf1, fileInfo, out);
-			if(buf2 != null)
-				submitConstraints(buf2, fileInfo, out);
+			submitConstraints(buf, fileInfo, out);
 			
 		}
 		else if(request.indexOf("/level/get/saved") != -1)
 		{
-			//format:  /level/get/saved/player
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no player ID".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /level/get/saved/player id
 			//returns: list of all saved levels associated with the player id
     		StringBuffer buff = new StringBuffer(request+"//");
     		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
@@ -321,13 +309,45 @@ public class ProxyThread extends Thread {
 		        } finally {
 		        }
 		}
-		else if(request.indexOf("/file/get") != -1)
+		else if(request.indexOf("/level/delete") != -1) //delete saved level
+		{
+			if(fileInfo.length < 4)
 			{
-				//format:  /level/get/doc id/type
-				//returns: xml file with doc id
-		    	ObjectId id = new ObjectId(fileInfo[3]);
-		    	outFile = fs.findOne(id);	     		
-		    	outFile.writeTo(out);
+				out.write("Error: no level id to delete".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /level/delete/record id
+			// deletes the record id from the saved levels collection
+			ObjectId id = new ObjectId(fileInfo[3]);
+	        BasicDBObject query = new BasicDBObject();
+	        query.put("_id", id);
+            try {
+            	savedLevelsCollection.remove(query);
+		        out.write("{success: true}".getBytes());
+	        	log(LOG_RESPONSE, "level deleted "+fileInfo[3]);
+		    } 
+            catch (Exception e){
+		        	out.write("{success: false}".getBytes());
+		        	if(fileInfo[2] != null)
+		        		log(LOG_ERROR, "Error: level not deleted "+fileInfo[2]);
+		        	else
+		        		log(LOG_ERROR, "Error: delete missing level id");
+		        }
+		}
+		else if(request.indexOf("/file/get") != -1)
+		{
+			if(fileInfo.length < 4)
+			{
+				out.write("Error: no level ID".getBytes());
+				log(LOG_ERROR, "Error: no level ID");
+				return;
+			}
+			//format:  /level/get/doc id
+			//returns: xml file with doc id
+	    	ObjectId id = new ObjectId(fileInfo[3]);
+	    	outFile = fs.findOne(id);	     		
+	    	outFile.writeTo(out);
 			}
 		else if(request.indexOf("/level/metadata/get/all") != -1)
 		{
@@ -347,6 +367,13 @@ public class ProxyThread extends Thread {
 		}
 		else if(request.indexOf("/layout/get/all") != -1)
 		{
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no xml ID".getBytes());
+				log(LOG_ERROR, "Error: no xml ID");
+				return;
+			}
+			
 			//format:  /layout/get/all/xmlID
 			//returns: list of all layouts associated with the xmlID
     		StringBuffer buff = new StringBuffer(request+"//");
@@ -363,6 +390,12 @@ public class ProxyThread extends Thread {
 		}
     	else if(request.indexOf("/layout/get") != -1)
 		{
+    		if(fileInfo.length < 4)
+			{
+				out.write("Error: no layout ID".getBytes());
+				log(LOG_ERROR, "Error: no layout ID");
+				return;
+			}
 			//format:  /layout/get/name
 			//returns: layout with specified name
     		ObjectId id = new ObjectId(fileInfo[3]);
@@ -374,9 +407,9 @@ public class ProxyThread extends Thread {
     		//input should be a layout file
 			//format:  /layout/save/related parent xml doc id/layoutname/file contents
     		//returns: success message
-			if(buf1 != null)
+			if(buf != null)
 			{
-				submitLayout(buf1, fileInfo, out);
+				submitLayout(buf, fileInfo, out);
 			}
 		}
 	}
@@ -416,6 +449,10 @@ public class ProxyThread extends Thread {
 	     xmlIn.put("player", fileInfo[3]);
 	     xmlIn.put("xmlID", fileInfo[4]+"C");
 	     xmlIn.put("name", fileInfo[7]);
+	     if(fileInfo.length > 17)
+	    	 xmlIn.put("version", fileInfo[18]); //submit
+	     else
+	    	 xmlIn.put("version", fileInfo[16]); //save
 	     xmlIn.save();
 	     currentConstraintFileID = xmlIn.getId().toString();
 	     out.write("file saved".getBytes());
@@ -432,7 +469,8 @@ public class ProxyThread extends Thread {
     	 submittedLevelObj.put("player", fileInfo[3]);
         submittedLevelObj.put("xmlID", fileInfo[4]);
         submittedLevelObj.put("layoutName", fileInfo[5]);
-        submittedLevelObj.put("layoutID", currentLayoutFileID);
+        //assume this is only version 2 files, and we don't have one of these
+        //submittedLevelObj.put("layoutID", currentLayoutFileID);
         submittedLevelObj.put("name", fileInfo[7]);
         submittedLevelObj.put("levelId", fileInfo[8]);
         submittedLevelObj.put("score", fileInfo[9]);
@@ -446,11 +484,15 @@ public class ProxyThread extends Thread {
         properties.put("conflicts", fileInfo[14]);
         properties.put("bonusnodes", fileInfo[15]);
     	
-        if(fileInfo.length > 16)
+        if(fileInfo.length > 17)
         {
         	properties.put("enjoymentRating", fileInfo[16]);
         	properties.put("difficultyRating", fileInfo[17]);
+        	submittedLevelObj.put("version", fileInfo[18]);
         }
+        else
+        	submittedLevelObj.put("version", fileInfo[16]);
+        
         DBObject metadata = new BasicDBObject();
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
@@ -471,14 +513,25 @@ public class ProxyThread extends Thread {
     
     public void log(int type, String line)
     {
-     	long threadId = Thread.currentThread().getId();
-     	
-     	DBObject logObj = new BasicDBObject();
-     	logObj.put("time", new Date().toString());
-     	logObj.put("type", type);
-      	logObj.put("threadID", threadId);
-    	logObj.put("line", line);
-		logCollection.insert(logObj);
+ 	   
+    	long threadId = Thread.currentThread().getId();
+    	
+    	if(ProxyServer.runLocally)
+    	{
+    		System.out.println("type: " + type + " threadID: " + threadId + " " + line);
+    	}
+    	else
+    	{
+	     	
+	     	DBObject logObj = new BasicDBObject();
+	     	//add both a human readable and a sortable time entry
+	     	logObj.put("time", new Date().toString());
+	     	logObj.put("ts", new Date());
+	     	logObj.put("type", type);
+	      	logObj.put("threadID", threadId);
+	    	logObj.put("line", line);
+			logCollection.insert(logObj);
+    	}
    	
     }
 }

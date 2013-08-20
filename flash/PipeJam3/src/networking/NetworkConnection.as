@@ -29,6 +29,7 @@ package networking
 		static public var postAlerts:Boolean = false;
 		//the first address is verigames, the second the development environ, the third my machine
 		//= "http://ec2-107-21-183-34.compute-1.amazonaws.com:8001";
+		//this should be the proxy server url, not the MongoDB or RA instance URL. Might be the same, might not be.
 		static public var stagingProxy:String = "http://ec2-54-226-188-147.compute-1.amazonaws.com:8001";
 		static public var localProxy:String = "http://128.95.2.112:8001";
 		static public var PROXY_URL:String = stagingProxy;
@@ -98,7 +99,7 @@ package networking
 				trace("zip failed");
 		}
 		
-		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null):void
+		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null, filetype:int = 0):void
 		{
 			var request:String;
 			var levelObj:Object;
@@ -111,7 +112,7 @@ package networking
 			switch(type)
 			{
 				case LoginHelper.CREATE_PLAYER:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/new";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/new&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.ACTIVATE_PLAYER:
@@ -123,7 +124,7 @@ package networking
 					method = URLRequestMethod.GET; 
 					break;
 				case LoginHelper.REQUEST_LEVELS:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/count/"+numLevels+"/match&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.REFUSE_LEVELS:
@@ -131,7 +132,7 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.CREATE_RA_LEVEL:
-					request = "/ra/games/"+GAME_ID+"/levels/new";
+					request = "/ra/games/"+GAME_ID+"/levels/new&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 
@@ -154,7 +155,11 @@ package networking
 					break;
 				case LoginHelper.SAVE_LAYOUT:
 					levelObj =  LoginHelper.getLoginHelper().levelObject;
-					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"/"+"&method=DATABASE";
+					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.DELETE_SAVED_LEVEL:
+					request = "/level/delete/"+name+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.SAVE_LEVEL:
@@ -171,13 +176,14 @@ package networking
 					{
 						requestStart = "/level/save/";
 						levelID = levelObj.levelId;
+						requestEnd = "/"+filetype;
 					}
 					else
 					{
 						requestStart = "/level/submit/";
 						var eRating:Number = levelObj.enjoymentRating;
 						var dRating:Number = levelObj.difficultyRating;
-						requestEnd = "/" + eRating+ "/"+ dRating;
+						requestEnd = "/" + eRating+ "/"+ dRating+"/"+filetype;
 					}
 					
 					//these need to match the proxy server, or we need to figure out json transfer...
@@ -185,13 +191,10 @@ package networking
 							+ "/"+encodeURIComponent(levelObj.name)
 							+ "/" + levelID +"/"+scoreASString
 							+ "/" + props.boxes + "/" + props.lines+ "/"+ props.visibleboxes
-							+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonus_nodes;
+							+ "/" + props.visiblelines + "/" + props.conflicts+ "/"+ props.bonusnodes;
 					
 					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
-							
-						//	"/level/submit/"+LoginHelper.getLoginHelper().levelObject.xmlID+"/"+name+"/"+playerID
-						//											+"/" +LoginHelper.getLoginHelper().levelObject.m_levelLayoutName +"/"+scoreASString 
-						//											+"/" +info.levelID+"/" + eRating+"/"+ dRating+"&method=DATABASE";
+
 					break;
 				case LoginHelper.VERIFY_SESSION:
 					specificURL = "http://pipejam.verigames.com/verifySession";

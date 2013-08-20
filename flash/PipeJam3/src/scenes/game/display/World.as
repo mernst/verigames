@@ -16,6 +16,8 @@ package scenes.game.display
 	import flash.geom.Rectangle;
 	import flash.system.System;
 	
+	import graph.Edge;
+	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
@@ -27,6 +29,7 @@ package scenes.game.display
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
 	import scenes.game.components.dialogs.InGameMenuDialog;
+	import scenes.game.components.dialogs.SimpleAlertDialog;
 	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
@@ -39,7 +42,7 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
-	import scenes.game.components.dialogs.SimpleAlertDialog;
+	import flash.utils.ByteArray;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -161,8 +164,8 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
-			addEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
+			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
+			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
@@ -221,10 +224,25 @@ package scenes.game.display
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
 		{
+			//type:String, currentScore:int = event.type, currentScore
 			if(active_level != null)
 			{
+				//update and collect all xml, and then bundle, zip, and upload
+				var outputXML:XML = updateXML();
+				active_level.updateLevelXML();
+				
+				var collectionXML:XML = <container version="1"/>;
+				collectionXML.@qid = outputXML.qid;
+				collectionXML.appendChild(active_level.m_levelLayoutXMLWrapper);
+				collectionXML.appendChild(active_level.m_levelConstraintsXMLWrapper);
+				collectionXML.appendChild(outputXML);
+				
+				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
+				var zipEncodedString:String = active_level.encodeBytes(zip);
+				
 				var currentScore:int = gameControlPanel.getCurrentScore();
-				active_level.onPutLevelInDatabase(event.type, currentScore);
+				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, currentScore, event.type, PipeJamGame.ALL_IN_ONE);	
+				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
@@ -234,11 +252,11 @@ package scenes.game.display
 			}
 		}
 		
-		public function onLevelPutInDatabase(event:MenuEvent):void
+		public function onLevelUploadSuccess(event:MenuEvent):void
 		{
 			var dialogText:String;
 			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 110;
+			var dialogHeight:Number = 60;
 			var socialText:String = "";
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
@@ -248,6 +266,7 @@ package scenes.game.display
 			{
 				dialogText = "Level Submitted! Thanks!";
 				socialText = "I just finished a level!";
+				dialogHeight = 110;
 			}
 			
 			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
@@ -270,6 +289,69 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
+		}
+		
+		public function updateXML():XML {
+			
+			//update xml from original
+			var output_xml:XML = new XML(world_xml);
+			for each (var my_level:Level in levels) {
+				// Find this level in XML
+				if (my_level.levelNodes == null) {
+					continue;
+				}
+				var my_level_xml_indx:int = -1;
+				for (var level_indx:uint = 0; level_indx < output_xml["level"].length(); level_indx++) {
+					if (output_xml["level"][level_indx].attribute("name").toString() == my_level.levelNodes.original_level_name) {
+						my_level_xml_indx = level_indx;
+						break;
+					}
+				}
+				//found xml representation?
+				if (my_level_xml_indx > -1) {
+				//loop through all boards, find the edges. Update these with new buzzsaw and width info.
+					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
+						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
+							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
+							var my_edge:Edge = my_level.edgeDictionary[my_edge_id];
+							if (my_edge) {
+								var my_width:String = "narrow";
+								if (my_edge.is_wide) {
+									my_width = "wide";
+								}
+								if (my_edge.has_buzzsaw) {
+									var debug:int = 0;
+								}
+								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@width = my_width;
+								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@buzzsaw = my_edge.has_buzzsaw.toString();
+								
+							} else {
+								throw new Error("World.getUpdatedXML(): Edge pipe not found for edge id: " + my_edge_id);
+							}
+						}
+					}
+				} else {
+					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
+				}
+				//Update the xml with the stamp state information. Currently updating all stamp states, changed or not.
+				var numEdgeSets:uint = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"].length();
+				for(var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
+					
+					var edgeID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex].attribute("id").toString();
+					var edgeVector:Vector.<Edge> = my_level.edgeDictionary[edgeID];
+					for each (var currentEdge:Edge in edgeVector) {
+						var linkedEdgeSet:EdgeSetRef =  currentEdge.linked_edge_set;
+						var stampLength:uint = linkedEdgeSet.num_stamps;
+						for(var stampIndex:uint = 0; stampIndex < stampLength; stampIndex++) {
+							var stampID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@id;
+							output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@active
+								= linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+						}
+					}
+				}
+				
+			}	
+			return output_xml;
 		}
 
 		public function onZoomIn(event:MenuEvent):void
@@ -476,6 +558,13 @@ package scenes.game.display
 							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
 						}
 						break;
+					case 88: //'x' for copy xml
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							var outputXML:XML = updateXML();
+							System.setClipboard(outputXML.toString());
+						}
+						break;
 				}
 			}
 		}
@@ -534,7 +623,6 @@ package scenes.game.display
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			gameControlPanel.newLevelSelected(newLevel);
-			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
 		//	newLevel.setConstraints();
 		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
@@ -551,8 +639,8 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelPutInDatabase);
-			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelPutInDatabase);
+			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);

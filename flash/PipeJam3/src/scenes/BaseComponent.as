@@ -14,6 +14,8 @@ package scenes
 	import starling.errors.MissingContextError;
 	import starling.textures.Texture;
 	import starling.events.Event;
+	import starling.display.MovieClip;
+	import starling.display.DisplayObjectContainer;
 
 	public class BaseComponent extends starling.display.Sprite
 	{	
@@ -23,6 +25,11 @@ package scenes
 		private var m_image:Image;
 		
 		protected var m_disposed:Boolean;
+		
+		//initalized in Game
+		static protected var busyAnimationImages:Vector.<Texture> = null;
+		
+		protected var busyAnimationMovieClip:MovieClip;
 		
 		public function BaseComponent()
 		{
@@ -138,6 +145,41 @@ package scenes
 		
 		public function handleUndoEvent(undoEvent:Event, isUndo:Boolean = true):void
 		{
+			
+		}
+		
+		public function startBusyAnimation(animationParent:DisplayObjectContainer = null):MovieClip
+		{
+			busyAnimationMovieClip = new MovieClip(busyAnimationImages, 4);
+			
+			if(!animationParent)
+			{
+				busyAnimationMovieClip.x = (Constants.GameWidth-busyAnimationMovieClip.width)/2;
+				busyAnimationMovieClip.y = (Constants.GameHeight-busyAnimationMovieClip.height)/2;
+				addChild(busyAnimationMovieClip);
+			}
+			else
+			{
+				busyAnimationMovieClip.x = (animationParent.width-busyAnimationMovieClip.width)/2;
+				busyAnimationMovieClip.y = (animationParent.height-busyAnimationMovieClip.height)/2;
+				animationParent.addChild(busyAnimationMovieClip);
+			}
+			Starling.juggler.add(this.busyAnimationMovieClip);
+			
+			return busyAnimationMovieClip;
+		}
+		
+		public function stopBusyAnimation():void
+		{
+			if(busyAnimationMovieClip)
+			{
+				removeChild(busyAnimationMovieClip);
+				Starling.juggler.remove(this.busyAnimationMovieClip);
+				
+				busyAnimationMovieClip.dispose();
+				busyAnimationMovieClip = null;
+			}
+			
 			
 		}
 	}

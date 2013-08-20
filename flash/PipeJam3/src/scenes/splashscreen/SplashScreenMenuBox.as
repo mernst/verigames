@@ -2,13 +2,11 @@ package scenes.splashscreen
 {
 	import display.NineSliceButton;
 	import events.NavigationEvent;
-	import feathers.controls.List;
 	import feathers.themes.*;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
 	import flash.text.*;
-	import networking.*;
 	import scenes.BaseComponent;
 	import scenes.game.components.dialogs.SelectLevelDialog;
 	import scenes.game.PipeJamGameScene;
@@ -16,6 +14,8 @@ package scenes.splashscreen
 	import starling.display.*;
 	import starling.events.Event;
 	import starling.text.*;
+	import networking.PlayerValidation;
+	import networking.HTTPCookies;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
@@ -27,15 +27,9 @@ package scenes.splashscreen
 		protected var demo_button:NineSliceButton;
 		
 		protected var loader:URLLoader;
-		protected var loginHelper:LoginHelper;
+
 		protected var m_parent:SplashScreenScene;
 				
-		protected var levelList:List = null;
-		protected var levelMetadataArray:Array = null;
-		protected var matchArrayObjects:Array = null;
-		protected var matchArrayMetadata:Array = null;
-		protected var savedLevelsMetadataArray:Array = null;
-		protected var savedLevelsArrayMetadata:Array = null;
 		
 		public var inputInfo:flash.text.TextField;
 		
@@ -46,7 +40,6 @@ package scenes.splashscreen
 			super();
 			
 			parent = m_parent;
-			loginHelper = LoginHelper.getLoginHelper();
 			buildMainMenu();
 			
 			addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
@@ -73,7 +66,7 @@ package scenes.splashscreen
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = 230;
 			
-			if (!PipeJam3.TUTORIAL_DEMO) {
+			if (!PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT) {
 				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 96, 32);
 				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
 				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
@@ -84,7 +77,7 @@ package scenes.splashscreen
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO)
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT)
 					m_mainMenu.addChild(signin_button);
 			}
 			else if (PipeJam3.TUTORIAL_DEMO)
@@ -99,29 +92,6 @@ package scenes.splashscreen
 				m_mainMenu.addChild(signin_button);
 			}
 			
-						
-			//			inputInfo = new flash.text.TextField();
-			//			// Create default text format
-			//			var inputInfoTextFormat:TextFormat = new TextFormat("Arial", 12, 0x000000);
-			//			inputInfoTextFormat.align = TextFormatAlign.LEFT;
-			//			inputInfo.defaultTextFormat = inputInfoTextFormat;
-			//			// Set text input type
-			//			inputInfo.type = TextFieldType.INPUT;
-			//			inputInfo.autoSize = TextFieldAutoSize.LEFT;
-			//			inputInfo.multiline = true;
-			//			inputInfo.wordWrap = true;
-			//			inputInfo.x = width + 30;
-			//			inputInfo.y = 110;
-			//			inputInfo.height = 200;
-			//			inputInfo.width = 100;
-			//			// Set background just for testing needs
-			//			inputInfo.background = true;
-			//			inputInfo.backgroundColor = 0xffffff;
-			//			inputInfo.text = PipeJam3.cookies;
-			//			
-			//			Starling.current.nativeOverlay.addChild(inputInfo);
-			
-
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
 			{
 				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 64, 24);
@@ -138,173 +108,20 @@ package scenes.splashscreen
 			}
 		}
 		
-		protected function onRequestLevels(result:int):void
-		{
-			try{
-				if(result == LoginHelper.EVENT_COMPLETE)
-				{
-					if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
-						onGetLevelMetadataComplete();
-				}
-			}
-			catch(err:Error) //probably a parse error in trying to decode the RA response
-			{
-				trace("ERROR: failure in loading levels " + err);
-				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
-			}
-		}
-		
-		protected function onRequestSavedLevels(result:int):void
-		{
-			try{
-				if(result == LoginHelper.EVENT_COMPLETE)
-				{
-					if(loginHelper.savedMatchArrayObjects != null)
-						onGetSavedLevelsComplete();
-				}
-			}
-			catch(err:Error) //probably a parse error in trying to decode the RA response
-			{
-				trace("ERROR: failure in loading levels " + err);
-				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
-			}
-		}
-		
-		protected function onGetLevelMetadataComplete():void
-		{
-			matchArrayMetadata = new Array;
-			levelMetadataArray = new Array;
-			for(var i:int = 0; i<loginHelper.matchArrayObjects.length; i++)
-			{
-				var match:Object = loginHelper.matchArrayObjects[i];
-				var levelName:String = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, matchArrayMetadata);
-				if(levelName != null)
-					levelMetadataArray.push(levelName);
-			}
-			
-			selectLevelDialog.setNewLevelInfo(matchArrayMetadata);
-			
-			onRequestLevelsComplete();
-		}
-		
-		protected function onGetSavedLevelsComplete():void
-		{		
-			savedLevelsArrayMetadata = new Array;
-			savedLevelsMetadataArray = new Array;
-			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
-			{
-				var match1:Object = loginHelper.savedMatchArrayObjects[i];
-				//		var levelName:String = fileLevelNameFromMatch(match1, loginHelper.levelInfoVector, savedLevelsArrayMetadata);
-				//		if(levelName != null)
-				savedLevelsMetadataArray.push(match1.name);
-				savedLevelsArrayMetadata.push(match1);
-			}
-			
-			selectLevelDialog.setSavedLevelsInfo(savedLevelsArrayMetadata);
-			
-			onRequestLevelsComplete();
-		}
-		
-		protected function onRequestLevelsComplete():void
-		{
-			if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && loginHelper.savedMatchArrayObjects != null)
-				dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
-		}
-		
-		protected static var levelCount:int = 1;
-		protected function fileLevelNameFromMatch(match:Object, levelMetadataVector:Vector.<Object>, savedObjArray:Array):String
-		{
-			//find the level record based on id, and then find the levelID match
-			var levelNotFound:Boolean = true;
-			var index:int = 0;
-			var foundObj:Object;
-			
-			var objID:String;
-			var matchID:String;
-			if(match.levelId is String)
-				matchID = match.levelId;
-			else
-				matchID = match.levelId.$oid;
-			
-			while(levelNotFound)
-			{
-				if(index >= levelMetadataVector.length)
-					break;
-				
-				foundObj = levelMetadataVector[index];
-				if(foundObj.levelId is String)
-					objID = foundObj.levelId;
-				else
-					objID = foundObj.levelId.$oid;
-				
-				if(matchID == objID)
-				{
-					levelNotFound = false;
-					break;
-				}
-				index++;
-			}
-			if(levelNotFound)
-			{
-				//TODO -report error? or just skip?
-				return null;
-			}
-			
-			if(foundObj.levelId is String)
-				objID = foundObj.levelId;
-			else
-				objID = foundObj.levelId.$oid;
-			
-			for(var i:int=0; i<levelMetadataVector.length;i++)
-			{
-				var levelObj:Object = levelMetadataVector[i];
-				//we don't want ourselves
-			//	if(levelObj == foundObj) there was a time when the RA info was stored here too, and as such we needed to skip this
-			//		continue;
-				var levelObjID:String;
-				if(levelObj.levelId is String)
-					levelObjID = levelObj.levelId;
-				else
-					levelObjID = levelObj.levelId.$oid;
-				
-				if(objID == levelObjID)
-				{
-					savedObjArray.push(levelObj);
-					return levelObj.name;
-				}
-			}
-			
-			return null;
-		}
+
 		
 		protected function onSignInButtonTriggered(e:starling.events.Event):void
 		{
 			//get client id
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/game/PipeJam3.html");
+			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/newPlayGame");
 			navigateToURL(myURL, "_self");
-		}
-		
-		protected function onLevelSelected(e:starling.events.Event):void
-		{
-			LoginHelper.getLoginHelper().levelObject = matchArrayMetadata[levelList.selectedIndex];
-			
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		
 		private function onExitButtonTriggered():void
 		{
 			m_mainMenu.visible = true;
 			removeChild(selectLevelDialog);
-		}
-		
-		protected function callback(evt:flash.events.Event):void
-		{
-			loader = new URLLoader();
-			var clientIDURL:URLRequest = new URLRequest(NetworkConnection.PROXY_URL+"/auth/csfv&method=AUTH");
-			loader.addEventListener(flash.events.Event.COMPLETE, callback);
-			loader.addEventListener(flash.events.HTTPStatusEvent.HTTP_STATUS, status);
-			loader.load(clientIDURL);
 		}
 		
 		protected function onActivate(evt:flash.events.Event):void
@@ -315,16 +132,8 @@ package scenes.splashscreen
 			
 		}
 		
-		protected function status(evt:flash.events.Event):void
-		{
-			//			var s:String = evt.status as String;
-			//			var x:int = 4;
-			
-		}
-		
 		protected function onPlayButtonTriggered(e:starling.events.Event):void
 		{			
-			dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			onPlayerActivated(0, null);
 		}
 		
@@ -346,25 +155,7 @@ package scenes.splashscreen
 		{
 			if(isTutorialDone() || !PipeJam3.initialLevelDisplay)
 			{
-				loginHelper.levelInfoVector = null;
-				loginHelper.matchArrayObjects = null;
-				loginHelper.savedMatchArrayObjects = null;
-				loginHelper.requestLevels(onRequestLevels);
-				loginHelper.getLevelMetadata(onRequestLevels);
-				loginHelper.getSavedLevels(onRequestSavedLevels);
-				
-				selectLevelDialog = new SelectLevelDialog(this, 300, 250);
-				parent.addChild(selectLevelDialog);
-				selectLevelDialog.setTutorialXMLFile(PipeJamGameScene.tutorialXML);
-				selectLevelDialog.visible = true;
-
-				//do after adding to parent
-				selectLevelDialog.x = (parent.width - 300)/2;
-				selectLevelDialog.y = 30;// (parent.height - 100)/2 + 16;
-				
-				//do this after setting position, since we are setting a clip rect and it uses global coordinates
-				selectLevelDialog.initialize();
-				
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 				PipeJamGameScene.inTutorial = false;
 			}
 			else

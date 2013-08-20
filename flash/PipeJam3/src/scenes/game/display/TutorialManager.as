@@ -386,14 +386,14 @@ package scenes.game.display
 						null, null);
 				case SPLIT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"When a link is SPLIT the outgoing\n" +
+						"When a link is SPLIT, the outgoing\n" +
 						"links will match the incoming link.",
 						null,
 						pointToJoint("n10__IN__0"),
 						NineSliceBatch.TOP_RIGHT, null);
 				case MERGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"When links MERGE the outgoing\n" +
+						"When links MERGE, the outgoing\n" +
 						"link will be wide if any\n" +
 						"incoming link is wide.",
 						null,
@@ -424,7 +424,7 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"SELECT groups of widgets by holding <SHIFT>\n" +
 						"and click-dragging the mouse. SELECT and\n" +
-						"move a group of widgets to continue...",
+						"move a group of widgets to continue.",
 						null,
 						null,
 						null, null);

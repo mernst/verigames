@@ -158,24 +158,33 @@ public class MongoTestBed {
 //        	if(count > 34)
         	{
 	            System.out.println("Collection " + s);
-//	            DBCollection coll = db.getCollection(s);
-//	            BasicDBObject field = new BasicDBObject();
-//	            field.put("name", "Test1");
-//	          //      DBCursor cursor = coll.find(field);
-//	         DBCursor cursor = coll.find();
-//	    	        try {
-//	    	           while(cursor.hasNext()) {
-//	    	        	   DBObject obj = cursor.next();
-//	    	        	   System.out.println(obj); 
-//	    	  //      	   coll.remove(obj);
-//	    	           }
-//	    	        } finally {
-//	    	           cursor.close();
-//	    	        }
-        	}
-    	        count++;
- //   	        if(count > 70)
- //   	        	break;
+	            if(s.equals("log"))
+	            {
+		            DBCollection coll = db.getCollection(s);
+		            ObjectId field = new ObjectId("520d5020a8e0a1df0d1f62b7");
+		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
+		            BasicDBObject field1 = new BasicDBObject();
+		            field1.put("_id", field);
+		             //  DBCursor cursor = coll.find(field1);
+		                  DBCursor cursor = coll.find();
+		    	        try {
+		    	           while(cursor.hasNext()) {
+		    	        	   count++;
+		    	        	   if(count > 100)
+		    	        	   {
+			    	        	   DBObject obj = cursor.next();
+			    	        	   System.out.println(obj); 
+		    	        	   }
+		    	       // 	   coll.remove(obj);
+		    	           }
+		    	        } finally {
+		    	           cursor.close();
+		    	        }
+	            }
+	        }
+    	    count++;
+ //   	    if(count > 70)
+ //   	        break;
         }
 //        DBCollection coll = db.getCollection("Level");
 //        DBObject obj1 = coll.findOne("51802cf5e4b03743be6d8f42");

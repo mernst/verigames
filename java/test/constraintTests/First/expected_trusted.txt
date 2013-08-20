@@ -1,5 +1,54 @@
 Constraints:
-subtype constraint: Variable 0 at method First#m():V creation 0; tree Object  <:  Variable 1 at method First#m():V local variable o(0); tree Object
+subtype constraint: Variable 2 at method First#<init>():V receiver parameter 0; tree <<missing tree>> within 
+public <init>() {
+    super();
+}Atm: @VarAnnot(2) First  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 1 at method First#m():V local variable o(0); tree Object
+subtype constraint: Variable 1 at method First#<init>():V return type; tree 
+public <init>() {
+    super();
+}  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
+
+subtype constraint: Variable 3 at method First#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    Object o = new Object();
+    o = null;
+}Atm: @VarAnnot(3) First  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
+
+subtype constraint: Variable 5 at method First#m():V creation 0; tree Object  <:  Variable 4 at method First#m():V local variable o(0); tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method First#m():V local variable o(0); tree Object
 

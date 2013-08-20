@@ -1,55 +1,77 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+subtype constraint: Variable 8 at method UseMap#<init>():V receiver parameter 0; tree <<missing tree>> within 
+<init>() {
+    super();
+}Atm: @VarAnnot(8) UseMap  <:  Variable 0 at class UseMap extends type; tree <<missing tree>> within 
+class UseMap {
+    
+    UseMap() {
+        super();
+    }
+    Map<String, String> sm = new HashMap<String, String>();
+    
+    void m() {
+        sm.put("ha!", "val");
+        String s = sm.get("xxx");
+    }
+}
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+subtype constraint: Variable 7 at method UseMap#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class UseMap extends type; tree <<missing tree>> within 
+class UseMap {
+    
+    UseMap() {
+        super();
+    }
+    Map<String, String> sm = new HashMap<String, String>();
+    
+    void m() {
+        sm.put("ha!", "val");
+        String s = sm.get("xxx");
+    }
+}
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 1 at class UseMap field sm; tree Map within Map<String, String>
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+equality constraint: Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String> = Variable 5 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap<String, String>
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+equality constraint: Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String> = Variable 6 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap<String, String>
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+subtype constraint: Variable 9 at method UseMap#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    sm.put("ha!", "val");
+    String s = sm.get("xxx");
+}Atm: @VarAnnot(9) UseMap  <:  Variable 0 at class UseMap extends type; tree <<missing tree>> within 
+class UseMap {
+    
+    UseMap() {
+        super();
+    }
+    Map<String, String> sm = new HashMap<String, String>();
+    
+    void m() {
+        sm.put("ha!", "val");
+        String s = sm.get("xxx");
+    }
+}
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
+checkers.inference.FieldAccessConstraint(
+contextVp: method UseMap#m():V constraint position; 
+calledVp: class UseMap field sm; 
+receiver: Variable 9 at method UseMap#m():V receiver parameter 0; tree <<missing tree>> within 
+void m() {
+    sm.put("ha!", "val");
+    String s = sm.get("xxx");
+}Atm: @VarAnnot(9) UseMap; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>, Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String>, Variable 1 at class UseMap field sm; tree Map within Map<String, String>); 
+)
 
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 3 at class UseMap field sm; tree Map within Map<String, String>
-
-equality constraint: Variable 4 at class UseMap field sm; tree String at position (0) within Map<String, String> = Variable 1 at class UseMap field sm creation 0; tree String at position (0) within HashMap<String, String>
-
-equality constraint: Variable 5 at class UseMap field sm; tree String at position (1) within Map<String, String> = Variable 2 at class UseMap field sm creation 0; tree String at position (1) within HashMap<String, String>
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-field access constraint; context method UseMap#m():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 3 at class UseMap field sm; tree Map within Map<String, String> pos: class UseMap field sm
-
-field access constraint; context method UseMap#m():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 3 at class UseMap field sm; tree Map within Map<String, String> pos: class UseMap field sm
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Trusted)  <:  Constant(@trusted.quals.Untrusted)
-
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 6 at method UseMap#m():V local variable s(0); tree String
-
-field access constraint; context method UseMap#m():V constraint position; receiver slot: Literal(OTHER, "this"); field: Variable 3 at class UseMap field sm; tree Map within Map<String, String> pos: class UseMap field sm
+subtype constraint: Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>  <:  Variable 10 at method UseMap#m():V local variable s(0); tree String
 

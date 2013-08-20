@@ -4,9 +4,7 @@ public class BoxingError<A, B> {
 	public <C, D>  D toAccess(C c1, D d1) {
 		return d1;	
 	}
-	
-	//TODO: Crashes in CFAbstractTransfer.getValueWithSameAnnotations 
-	//TODO: The annotationValue == null
+
 	public void localAccess() {
 		toAccess('c', "BLAG");
 	}
