@@ -390,7 +390,7 @@ def classic2grid(infile, outfile):
 	writeconstr.write(constraintout)
 	writeconstr.close()
 	layoutboxes(outfile + 'Layout', outfile + 'Layout', True)
-	layoutlines(outfile + 'Layout', outfile + 'Layout', True)
+	#layoutlines(outfile + 'Layout', outfile + 'Layout', True) ## still too slow at the moment
 
 ### Command line interface ###
 if __name__ == "__main__":
