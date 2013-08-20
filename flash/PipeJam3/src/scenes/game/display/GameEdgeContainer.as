@@ -140,8 +140,8 @@ package scenes.game.display
 			var boxHeight:Number;
 			var innerCircle:Boolean = false;
 			if (toBox) {
-				boxHeight = (m_toComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+				boxHeight = (m_toComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
 				switch (graphEdge.to_port.node.kind) {
 					case NodeTypes.OUTGOING:
 					case NodeTypes.END:
@@ -150,8 +150,8 @@ package scenes.game.display
 						break;
 				}
 			} else {
-				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
 				switch (graphEdge.from_port.node.kind) {
 					case NodeTypes.INCOMING:
 					case NodeTypes.START_PIPE_DEPENDENT_BALL:
@@ -167,10 +167,15 @@ package scenes.game.display
 				m_extensionEdgeIsOutgoing = false;
 			}
 			if (m_extensionEdge) {
+				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && m_extensionEdge.m_innerBoxSegment.isEnd) {
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
+					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
+						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
+						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
+					}
 					m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
 				}
 				if (toBox) {
@@ -186,7 +191,7 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
@@ -761,11 +766,11 @@ package scenes.game.display
 			var innerBoxPt:Point;
 			var boxHeight:Number;
 			if (toBox) {
-				boxHeight =(m_toComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+				boxHeight =(m_toComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
 			} else {
-				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
 			}
 			if (m_innerBoxSegment) {
 				m_innerBoxSegment.interiorPt = innerBoxPt;
