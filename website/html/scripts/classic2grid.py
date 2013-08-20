@@ -1,5 +1,6 @@
 import sys
 from xml.dom.minidom import parse, parseString
+from layoutgrid import layoutboxes, layoutlines
 
 ### Classes ###
 # Port contains this info: portnum, edgeid, nodeid
@@ -33,6 +34,9 @@ edgeseteditable = {}
 
 # nodekinds[nodeid] = node kind
 nodekinds = {}
+
+# jointkinds[jointid] = node kind
+jointkinds = {}
 
 ### Helper functions ###
 # Safely add an edge port to the boardedges dictionary
@@ -68,7 +72,7 @@ def getboardedge(lname, bname, inout, portnum):
 	return port
 
 # Output joint id, XML for a given SUBBOARD node's input or output port
-def port2joint(nid, input, portnum, edgeid, otherlineid=None):
+def port2joint(nid, kind, input, portnum, edgeid, otherlineid=None):
 	suffix = '__OUT__'
 	inputs = 0
 	outputs = 0
@@ -82,7 +86,7 @@ def port2joint(nid, input, portnum, edgeid, otherlineid=None):
 		if otherlineid:
 			inputs = 1
 	jointid = nid + suffix + portnum
-	out = '<joint id="%s" inputs="%s" outputs="%s"/>' % (jointid, inputs, outputs)
+	out = '<joint id="%s" inputs="%s" outputs="%s" kind="%s"/>' % (jointid, inputs, outputs, kind)
 	return [jointid, out]
 
 # Create the line XML for a line leading from a joint to a box
@@ -167,6 +171,7 @@ def classic2grid(infile, outfile):
 		# Reset level-specific dictionaries
 		edgesets = {}
 		nodekinds = {}
+		jointkinds = {}
 		numedgesetedges = {}
 		extraedgesetlines = {}
 		edgesetwidth = {}
@@ -230,11 +235,13 @@ def classic2grid(infile, outfile):
 						setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
 						extraedgesetlines[setid].append(lineid)
 						extrasubboardlines += makeline2box(lineid, fromnid, '0', setid, setport)
-						jointarr = port2joint(nid, True, px.attributes['num'].value, px.attributes['edge'].value, lineid)
+						jointarr = port2joint(nid, kind, True, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 						jointdict[jointarr[0]] = jointarr[1]
+						jointkinds[jointarr[0]] = kind
 					else:
-						jointarr = port2joint(nid, True, px.attributes['num'].value, px.attributes['edge'].value)
+						jointarr = port2joint(nid, kind, True, px.attributes['num'].value, px.attributes['edge'].value)
 						jointdict[jointarr[0]] = jointarr[1]
+						jointkinds[jointarr[0]] = kind
 				# Process outputs, create new joint for each
 				for px in nx.getElementsByTagName('output')[0].getElementsByTagName('port'):
 					# If SUBBOARD, also create additional LINE (to be output later) from inner edge box to this joint
@@ -260,19 +267,22 @@ def classic2grid(infile, outfile):
 							setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
 							extraedgesetlines[setid].append(lineid)
 							extrasubboardlines += makeline2joint(lineid, tonid, '0', setid, setport)
-							jointarr = port2joint(nid, False, px.attributes['num'].value, px.attributes['edge'].value, lineid)
+							jointarr = port2joint(nid, kind, False, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 							jointdict[jointarr[0]] = jointarr[1]
+							jointkinds[jointarr[0]] = kind
 						else:
 							# For outgoing SUBBOARD ports where we have a subboard node, connect outer edges to inner OUTGOING joint
 							# These will be processed later when edges are converted to lines
 							suboutportsbyedgeid[px.attributes['edge'].value] = edgeport
 					else:
-						jointarr = port2joint(nid, False, px.attributes['num'].value, px.attributes['edge'].value)
+						jointarr = port2joint(nid, kind, False, px.attributes['num'].value, px.attributes['edge'].value)
 						jointdict[jointarr[0]] = jointarr[1]
+						jointkinds[jointarr[0]] = kind
 			else:
 				numinputs = len(nx.getElementsByTagName('input')[0].getElementsByTagName('port'))
 				numoutputs = len(nx.getElementsByTagName('output')[0].getElementsByTagName('port'))
-				jointdict[nid] = '<joint id="%s" inputs="%s" outputs="%s"/>' % (nid, numinputs, numoutputs)
+				jointdict[nid] = '<joint id="%s" inputs="%s" outputs="%s" kind="%s"/>' % (nid, numinputs, numoutputs, kind)
+				jointkinds[nid] = kind
 		# 2b: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
 		boxesout = ''
 		for esx in lx.getElementsByTagName('edge-set'):
@@ -322,14 +332,15 @@ def classic2grid(infile, outfile):
 				subport = suboutportsbyedgeid.get(edgeid)
 				if subport is not None:
 					# Create an outgoing port at the OUTGOING joint
-					outgoingjointarr = port2joint(subport.nodeid, True, subport.portnum, subport.edgeid)
+					outgoingjointarr = port2joint(subport.nodeid, fromkind, True, subport.portnum, subport.edgeid)
 					if jointdict.get(outgoingjointarr[0]):
 						outgoingjointxml = parseString(jointdict.get(outgoingjointarr[0]))
 						outgoingjointxml = outgoingjointxml.getElementsByTagName('joint')[0]
 						newportnum = int(outgoingjointxml.attributes['outputs'].value)
 						outgoingjointxml.setAttribute('outputs', '%s' % (newportnum+1))
 						jointdict[outgoingjointarr[0]] = '%s' % outgoingjointxml.toxml()
-						jointarr = port2joint(subport.nodeid, True, subport.portnum, subport.edgeid)
+						jointkinds[outgoingjointarr[0]] = fromkind
+						jointarr = port2joint(subport.nodeid, fromkind, True, subport.portnum, subport.edgeid)
 						fromnid = jointarr[0]
 						fromport = newportnum
 					else:
@@ -378,7 +389,8 @@ def classic2grid(infile, outfile):
 	writeconstr = open(outfile + 'Constraints.xml','w')
 	writeconstr.write(constraintout)
 	writeconstr.close()
-
+	layoutboxes(outfile + 'Layout', outfile + 'Layout', True)
+	layoutlines(outfile + 'Layout', outfile + 'Layout', True)
 
 ### Command line interface ###
 if __name__ == "__main__":
