@@ -94,15 +94,15 @@ package scenes.splashscreen
 			
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
 			{
-				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 64, 24);
+				tutorial_button = ButtonFactory.getInstance().createDefaultButton("Tutorial", 56, 22);
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
-				tutorial_button.x = Constants.GameWidth - tutorial_button.width - 10;
-				tutorial_button.y = 50;
+				tutorial_button.x = Constants.GameWidth - tutorial_button.width - 4;
+				tutorial_button.y = 110;
 				m_mainMenu.addChild(tutorial_button);
 				
-				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 64, 24);
+				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 56, 22);
 				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
-				demo_button.x = Constants.GameWidth - demo_button.width - 10;
+				demo_button.x = Constants.GameWidth - demo_button.width - 4;
 				demo_button.y = tutorial_button.y + 30;
 				m_mainMenu.addChild(demo_button);
 			}
