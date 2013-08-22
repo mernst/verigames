@@ -131,6 +131,22 @@ package networking
 					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/refused&method=PUT";
 					method = URLRequestMethod.POST; 
 					break;
+				case LoginHelper.START_LEVEL:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/started&method=PUT";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.STOP_LEVEL:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/stopped&method=PUT";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.REPORT_PREFERENCE:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/preference/"+name+"/report&method=POST";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.REPORT_PERFORMANCE:
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/performance/"+name+"/report&method=POST";
+					method = URLRequestMethod.POST; 
+					break;
 				case LoginHelper.CREATE_RA_LEVEL:
 					request = "/ra/games/"+GAME_ID+"/levels/new&method=POST";
 					method = URLRequestMethod.POST; 
@@ -155,7 +171,7 @@ package networking
 					break;
 				case LoginHelper.SAVE_LAYOUT:
 					levelObj =  LoginHelper.getLoginHelper().levelObject;
-					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+encodeURIComponent(levelObj.layoutName)+"&method=DATABASE";
+					request = "/layout/save/"+playerID+"/"+levelObj.xmlID+"/"+name+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.DELETE_SAVED_LEVEL:
@@ -197,15 +213,22 @@ package networking
 
 					break;
 				case LoginHelper.VERIFY_SESSION:
-					specificURL = "http://pipejam.verigames.com/verifySession";
+					specificURL = "http://flowjam.verigames.com/verifySession";
 					request = "?cookies="+name;
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.GET_ENCODED_COOKIES:
-					specificURL = "http://pipejam.verigames.com/encodeCookies";
+					specificURL = "http://flowjam.verigames.com/encodeCookies";
 					request = "";
 					method = URLRequestMethod.POST; 
 					break;
+				case LoginHelper.ADD_ACHIEVEMENT:
+					request = "/achievement/assign/"+GAME_ID+"/"+playerID+"/"+name+"&method=URL";
+					method = URLRequestMethod.POST; 
+					break;
+				default:
+					trace("message not found " + type);
+					return;
 			}
 			
 			var urlRequest:URLRequest;

@@ -18,7 +18,7 @@ public class ProxyServer {
 	static public String dbURL = "api.pipejam.verigames.com";
 	static public String version = "1.0b";
 	
-	static public boolean runLocally = true;
+	static public boolean runLocally = false;
 	
     public static void main(String[] args) throws IOException {
     	

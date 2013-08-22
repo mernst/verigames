@@ -35,6 +35,11 @@ package networking
 		public static var GET_ENCODED_COOKIES:int = 13;
 		public static var GET_ALL_SAVED_LEVELS:int = 14;
 		public static var DELETE_SAVED_LEVEL:int = 15;
+		public static var START_LEVEL:int = 16;
+		public static var STOP_LEVEL:int = 17;
+		public static var REPORT_PERFORMANCE:int = 18;
+		public static var REPORT_PREFERENCE:int = 19;
+		public static var ADD_ACHIEVEMENT:int = 20;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -123,10 +128,12 @@ package networking
 			networkConnection.getNewLayout(layoutID, callback);
 		}
 		
-		public function saveLayoutFile(_levelLayoutString:String):void
+		public function saveLayoutFile(callback:Function, _levelLayoutString:String):void
 		{
-			var layoutName:String = encodeURIComponent(levelObject.layoutName);
-			sendMessage(SAVE_LAYOUT, null, _levelLayoutString, layoutName);
+			var layoutDescription:String = levelObject.layoutName + "::" + levelObject.layoutDescription;
+
+			var encodedLayoutDescription:String = encodeURIComponent(layoutDescription);
+			sendMessage(SAVE_LAYOUT, callback, _levelLayoutString, encodedLayoutDescription);
 		}
 		
 		public function deleteSavedLevel(_levelIDString:String):void
@@ -152,6 +159,32 @@ package networking
 				onRequestLevelFinishedCallback(result);
 				sendMessage(LoginHelper.REFUSE_LEVELS, null);
 			}
+		}
+		
+		public function refuseLevels():void
+		{
+			sendMessage(LoginHelper.REFUSE_LEVELS, null);
+		}
+		
+		public function startLevel(levelObj:Object):void
+		{
+			this.levelObject = levelObj;
+			sendMessage(LoginHelper.START_LEVEL, null);
+		}
+		
+		public function stopLevel():void
+		{
+			sendMessage(LoginHelper.STOP_LEVEL, null);
+		}
+		
+		public function reportPlayerPerformance(score:String):void
+		{
+			sendMessage(LoginHelper.REPORT_PERFORMANCE, null, null, score);
+		}
+		
+		public function reportPlayerPreference(score:String):void
+		{
+			sendMessage(LoginHelper.REPORT_PREFERENCE, null, null, score);
 		}
 		
 		//connect to the db and get a list of all levels
@@ -185,7 +218,7 @@ package networking
 		}
 		
 		//request a list of layouts associated with current levelObject xmlID
-		public function onRequestLayoutList(callback:Function):void
+		public function getLayoutList(callback:Function):void
 		{
 			sendMessage(REQUEST_LAYOUT_LIST, callback);
 		}
@@ -247,7 +280,7 @@ package networking
 			}
 		}
 	
-		protected function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null, filetype:int = 0):void
+		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null, filetype:int = 0):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
 			networkConnection.sendMessage(type, callback, data, name, infoObj, filetype);
