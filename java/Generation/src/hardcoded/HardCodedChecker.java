@@ -62,6 +62,11 @@ public class HardCodedChecker extends GameChecker<HardCodedAnnotatedTypeFactory>
     }
 
     @Override
+    public AnnotationMirror defaultQualifier(AnnotatedTypeMirror ty) {
+        return defaultQualifier();
+    }
+
+    @Override
     public AnnotationMirror defaultQualifier() {
         return this.MAYBEHARDCODED;
     }

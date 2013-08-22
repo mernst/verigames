@@ -90,6 +90,11 @@ public class LockInfChecker extends GameChecker<LockInfAnnotatedTypeFactory> {
                 || ty instanceof AnnotatedTypeVariable);
 	}
 
+    @Override
+    public AnnotationMirror defaultQualifier(AnnotatedTypeMirror ty) {
+        return defaultQualifier();
+    }
+
 	@Override
 	public AnnotationMirror defaultQualifier() {
 		return this.UNQUALIFIED;
