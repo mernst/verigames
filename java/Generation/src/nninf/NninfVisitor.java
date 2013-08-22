@@ -1,5 +1,7 @@
 package nninf;
 
+import checkers.inference.InferenceUtils;
+import com.sun.source.util.TreePath;
 import games.GameVisitor;
 
 import java.util.HashSet;
@@ -167,6 +169,12 @@ public class NninfVisitor extends GameVisitor {
     /** Check for null dereferencing */
     @Override
     public Void visitMemberSelect(MemberSelectTree node, Void p) {
+        //TODO JB: Talk to Werner/Mike about class A extends OtherClass.InnerClass
+        if( InferenceUtils.isInExtendsImplements( node, atypeFactory ) ) {
+            return null;
+        }
+
+
         // Note that the ordering is important! First receiver expression, then create field access, then inequality.
         super.visitMemberSelect(node, p);
         // TODO: How do I decide whether something is a field read or update?
