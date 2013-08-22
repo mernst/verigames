@@ -8,6 +8,8 @@ package system
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.BoardNodes;
+	import graph.PropDictionary;
+	import graph.ConflictDictionary;
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
 	
@@ -40,12 +42,7 @@ package system
 		/* The world in which the PipeSimulator detects trouble points */
 		private var network:Network;
 		
-		/* A map from boardname to an Array that contains the trouble points 
-		* associated with that level. 
-		* 
-		* The Array has exactly two elements. The first element is a Dictionary 
-		* of Port trouble points. The second is a Dictionary of Edge trouble points.
-		*/
+		/* A map from boardname ConflictDict associated with that level.*/
 		private var boardToTroublePoints:Dictionary;
 		private var prevBoardToTroublePoints:Dictionary;
 		
@@ -63,24 +60,25 @@ package system
 				var levelNodes:LevelNodes = network.LevelNodesDictionary[levelName] as LevelNodes;
 				for (var boardName:String in levelNodes.boardNodesDictionary) {
 					var board:BoardNodes = levelNodes.boardNodesDictionary[boardName] as BoardNodes;
-					var tpArr:Array = simulateBoard(board, boards_in_prog);
-					var portTpDict:Dictionary = tpArr[0] as Dictionary;
-					var edgeTpDict:Dictionary = tpArr[1] as Dictionary;
-					for (var portId:String in portTpDict) {
-						var portToMark:Port = portTpDict[portId] as Port;
-						portToMark.has_error = true;
+					var conflictDict:ConflictDictionary = simulateBoard(board, boards_in_prog);
+					var prop:String;
+					for (var portk:String in conflictDict.iterPorts()) {
+						var portToMark:Port = conflictDict.getPort(portk);
+						for (prop in conflictDict.getPortConflicts(portk).iterProps()) {
+							// TODO: merge them all at once instead of adding individually
+							portToMark.addConflict(prop);
+						}
 					}
-					for (var edgeId:String in edgeTpDict) {
-						var edgeToMark:Edge = edgeTpDict[edgeId] as Edge;
-						edgeToMark.has_error = true;
+					for (var edgek:String in conflictDict.iterEdges()) {
+						var edgeToMark:Edge = conflictDict.getEdge(edgek);
+						for (prop in conflictDict.getEdgeConflicts(edgek).iterProps()) {
+							// TODO: merge them all at once instead of adding individually
+							edgeToMark.addConflict(prop);
+						}
 					}
-					boardToTroublePoints[board.board_name] = tpArr;
+					boardToTroublePoints[board.board_name] = conflictDict;
 				}
 			}
-		}
-		
-		public function getAllTroublePointsByBoard(board:BoardNodes):Array {
-			return boardToTroublePoints[board.board_name];
 		}
 		
 		/**
@@ -92,13 +90,7 @@ package system
 			// Copy previous trouble points
 			prevBoardToTroublePoints = new Dictionary();
 			for (var boardName:String in boardToTroublePoints) {
-				var tpArr:Array = boardToTroublePoints[boardName] as Array;
-				var portTpDict:Dictionary = tpArr[0] as Dictionary;
-				var edgeTpDict:Dictionary = tpArr[1] as Dictionary;
-				var portTpDictCopy:Dictionary = cloneDict(portTpDict);
-				var edgeTpDictCopy:Dictionary = cloneDict(edgeTpDict);
-				var tpArrCopy:Array = new Array(portTpDictCopy, edgeTpDictCopy);
-				prevBoardToTroublePoints[boardName] = tpArrCopy;
+				prevBoardToTroublePoints[boardName] = (boardToTroublePoints[boardName] as ConflictDictionary).clone();
 			}
 			
 			var boardsToSim:Vector.<BoardNodes> = new Vector.<BoardNodes>();
@@ -122,70 +114,77 @@ package system
 				}
 			}
 			
-			var newEdgeTp:Vector.<Edge> = new Vector.<Edge>();
-			var newPortTp:Vector.<Port> = new Vector.<Port>();
-			var removeEdgeTp:Vector.<Edge> = new Vector.<Edge>();
-			var removePortTp:Vector.<Port> = new Vector.<Port>();
+			var addConflictDict:ConflictDictionary = new ConflictDictionary();
+			var removeConflictDict:ConflictDictionary = new ConflictDictionary();
+			var portk:String, edgek:String, prop:String;
 			for each (var boardTouched:BoardNodes in boards_touched) {
-				var prevPortTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[0];
-				var prevEdgeTpDict:Dictionary = (prevBoardToTroublePoints[boardTouched.board_name] as Array)[1];
-				var newPortTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[0];
-				var newEdgeTpDict:Dictionary = (boardToTroublePoints[boardTouched.board_name] as Array)[1];
+				var newConflictDict:ConflictDictionary = boardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
+				var prevConflictDict:ConflictDictionary = prevBoardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
 				// check new tp, if they weren't in old Dict then they are new
-				for (var portId:String in newPortTpDict) {
-					if (!prevPortTpDict.hasOwnProperty(portId)) {
-						newPortTp.push(newPortTpDict[portId] as Port);
-					} else {
-						// get rid of this entry, since it appears in both we don't care about it
-						delete prevPortTpDict[portId];
+				for (portk in newConflictDict.iterPorts()) {
+					var port:Port = newConflictDict.getPort(portk);
+					var newPortConfl:PropDictionary = newConflictDict.getPortConflicts(portk);
+					var oldPortConfl:PropDictionary = prevConflictDict.getPortConflicts(portk);
+					for (prop in newPortConfl.iterProps()) {
+						if (oldPortConfl == null) {
+							addConflictDict.addPortConflict(port, prop);
+							continue;
+						}
+						if (oldPortConfl.hasProp(prop)) {
+							// If appears in new and old, remove from old so that only removed conflict props are there
+							oldPortConfl.setProp(prop, false);
+						} else {
+							addConflictDict.addPortConflict(port, prop);
+						}
 					}
 				}
-				for (var edgeId:String in newEdgeTpDict) {
-					if (!prevEdgeTpDict.hasOwnProperty(edgeId)) {
-						newEdgeTp.push(newEdgeTpDict[edgeId] as Edge);
-					} else {
-						// get rid of this entry, since it appears in both we don't care about it
-						delete prevEdgeTpDict[edgeId];
+				for (edgek in newConflictDict.iterEdges()) {
+					var edge:Edge = newConflictDict.getEdge(edgek);
+					var newEdgeConfl:PropDictionary = newConflictDict.getEdgeConflicts(edgek);
+					var oldEdgeConfl:PropDictionary = prevConflictDict.getEdgeConflicts(edgek);
+					for (prop in newEdgeConfl.iterProps()) {
+						if (oldEdgeConfl == null) {
+							addConflictDict.addEdgeConflict(edge, prop);
+							continue;
+						}
+						if (oldEdgeConfl.hasProp(prop)) {
+							// If appears in new and old, remove from old so that only removed conflict props are there
+							oldEdgeConfl.setProp(prop, false);
+						} else {
+							addConflictDict.addEdgeConflict(edge, prop);
+						}
 					}
 				}
-				// Now all that's left in prevPortTpDict and prevEdgeTpDict should be TP that should be removed
-				for (var portId1:String in prevPortTpDict) {
-					if (newPortTpDict.hasOwnProperty(portId1)) {
-						throw new Error("Shouldn't happen!");
-					}
-					removePortTp.push(prevPortTpDict[portId1] as Port);
+				// Now all that's left in prevConflictDict should be conflicts that should be removed
+			}
+			
+			// Mark added conflicts
+			for (portk in addConflictDict.iterPorts()) {
+				for (prop in addConflictDict.getPortConflicts(portk).iterProps()) {
+					// TODO: merge them all at once instead of adding individually
+					addConflictDict.getPort(portk).addConflict(prop);
 				}
-				for (var edgeId1:String in prevEdgeTpDict) {
-					if (newEdgeTpDict.hasOwnProperty(edgeId1)) {
-						throw new Error("Shouldn't happen!");
-					}
-					removeEdgeTp.push(prevEdgeTpDict[edgeId1] as Edge);
+			}
+			for (edgek in addConflictDict.iterEdges()) {
+				for (prop in addConflictDict.getEdgeConflicts(edgek).iterProps()) {
+					// TODO: merge them all at once instead of adding individually
+					addConflictDict.getEdge(edgek).addConflict(prop);
 				}
 			}
 			
-			// Un-mark removed tps
-			for each (var unmarkEdge:Edge in removeEdgeTp) {
-				unmarkEdge.has_error = false;
+			// Un-mark removed conflicts
+			for (portk in prevConflictDict.iterPorts()) {
+				for (prop in prevConflictDict.getPortConflicts(portk).iterProps()) {
+					// TODO: merge them all at once instead of removing individually
+					prevConflictDict.getPort(portk).removeConflict(prop);
+				}
 			}
-			for each (var unmarkPort:Port in removePortTp) {
-				unmarkPort.has_error = false;
+			for (edgek in prevConflictDict.iterEdges()) {
+				for (prop in prevConflictDict.getEdgeConflicts(edgek).iterProps()) {
+					// TODO: merge them all at once instead of removing individually
+					prevConflictDict.getEdge(edgek).removeConflict(prop);
+				}
 			}
-			// Mark added tps
-			for each (var markEdge:Edge in newEdgeTp) {
-				markEdge.has_error = true;
-			}
-			for each (var markPort:Port in newPortTp) {
-				markPort.has_error = true;
-			}
-		}
-		
-		private static function cloneDict(dict:Dictionary):Dictionary
-		{
-			var newDict:Dictionary = new Dictionary();
-			for (var oldKey:Object in dict) {
-				newDict[oldKey] = dict[oldKey];
-			}
-			return newDict;
 		}
 		
 		/**
@@ -196,7 +195,7 @@ package system
 		 * @param	boards_in_progress Any boards that are already being simulated, used to avoid infinite recursion loops
 		 * @return A two element array (list of Port trouble points, list of Edge trouble points)
 		 */
-		private function simulateBoard(sim_board:BoardNodes, boards_in_progress:Vector.<BoardNodes> = null, boards_touched:Vector.<BoardNodes> = null, simulate_recursion_boards:Boolean = true):Array
+		private function simulateBoard(sim_board:BoardNodes, boards_in_progress:Vector.<BoardNodes> = null, boards_touched:Vector.<BoardNodes> = null, simulate_recursion_boards:Boolean = true):ConflictDictionary
 		{
 			if (!boards_in_progress) {
 				boards_in_progress = new Vector.<BoardNodes>();
@@ -238,17 +237,12 @@ package system
 			}
 			//if (DEBUG) { trace("  ["+sim_board.board_name+"] Ghost outputs/total: " + initial_ghost_outputs + "/" + total_outputs); }
 			
-			var listPortTroublePoints:Dictionary = new Dictionary();
-			var listEdgeTroublePoints:Dictionary = new Dictionary();
+			var conflictDict:ConflictDictionary = new ConflictDictionary();
 			
 			var dict:Dictionary = sim_board.startingEdgeDictionary; 
 			if (isEmpty(dict)) { // Nothing to compute on "Start" level. 
 				boards_in_progress.splice(boards_in_progress.indexOf(sim_board), 1);
-				
-				var result:Array = new Array(2);
-				result[0] = listPortTroublePoints;
-				result[1] = listEdgeTroublePoints;
-				return result;				
+				return conflictDict;				
 			}
 			
 			//shift() = dequeue, push() = enqueue
@@ -402,7 +396,7 @@ package system
 							break;
 						case Edge.BALL_TYPE_WIDE:
 							if (edge.has_pinch || !edge.is_wide) {
-								addTpEdge(listEdgeTroublePoints, edge);
+								conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
 								outgoing_ball_type = Edge.BALL_TYPE_NONE;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE;
@@ -410,7 +404,7 @@ package system
 							break;
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
 							if (edge.has_pinch || !edge.is_wide) {
-								addTpEdge(listEdgeTroublePoints, edge);
+								conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
 								outgoing_ball_type = Edge.BALL_TYPE_NARROW;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
@@ -454,7 +448,7 @@ package system
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									addTpPort(listPortTroublePoints, edge.to_port);
+									conflictDict.addPortConflict(edge.to_port, PropDictionary.PROP_NARROW);
 									break;
 							}
 						}
@@ -624,8 +618,7 @@ package system
 					// Re-simulate this board, but don't use the current stack of recursive calls, this should allow the top-level
 					// board to see the updated output ball types
 					//if (DEBUG) { trace("  ["+sim_board.board_name+"] Recursively simulating " + recursive_board.board_name + " within " + sim_board.board_name); }
-					var arr:Array = simulateBoard(recursive_board, null, null, false);
-					boardToTroublePoints[recursive_board.board_name] = arr;
+					boardToTroublePoints[recursive_board.board_name] = simulateBoard(recursive_board, null, null, false);
 					new_ghost_outputs = 0;
 					// Check for any ghost outputs on *this* board
 					for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
@@ -669,10 +662,7 @@ package system
 			
 			//if (DEBUG) { trace("----Finished simulating board: " + sim_board.board_name + "----"); }
 			
-			var result1:Array = new Array(2);
-			result1[0] = listPortTroublePoints;
-			result1[1] = listEdgeTroublePoints;
-			return result1;
+			return conflictDict;
 		}
 		
 		private static function getOtherMergeEdge(edge:Edge):Edge
@@ -689,14 +679,13 @@ package system
 			return null;
 		}
 		
-		private static function addTpPort(tpDictionary:Dictionary, port:Port):void
+		private static function cloneDict(dict:Dictionary):Dictionary
 		{
-			tpDictionary[port.toString()] = port;
-		}
-		
-		private static function addTpEdge(tpDictionary:Dictionary, edge:Edge):void
-		{
-			tpDictionary[edge.edge_id] = edge;
+			var newDict:Dictionary = new Dictionary();
+			for (var oldKey:Object in dict) {
+				newDict[oldKey] = dict[oldKey];
+			}
+			return newDict;
 		}
 		
 		/* Checks if a given dictionary is empty or not. 
@@ -715,5 +704,5 @@ package system
 			return empty;
 		}
 		
-	}	
+	}
 }

@@ -389,13 +389,11 @@ package scenes.game.display
 				removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			}
 			for each (var removeListEdge:Edge in m_listeningToEdges) {
-				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onEdgeTroublePointAdded);
-				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onEdgeTroublePointRemoved);
+				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, onEdgeTroublePointChange);
 			}
 			m_listeningToEdges = new Vector.<Edge>();
 			for each (var removeListPort:Port in m_listeningToPorts) {
-				removeListPort.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				removeListPort.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
+				removeListPort.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, onPortTroublePointChange);
 			}
 			m_listeningToPorts = new Vector.<Port>();
 			if (graphEdge) {
@@ -413,16 +411,24 @@ package scenes.game.display
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
 		{
 			if (m_listeningToEdges.indexOf(_edge) == -1) {
-				if (_edge.has_error) {
-					onEdgeTroublePointAdded(null);
+				if (_edge.hasAnyConflict()) {
+					showEdgeError();
 				}
-				_edge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onEdgeTroublePointAdded);
-				_edge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onEdgeTroublePointRemoved);
+				_edge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, onEdgeTroublePointChange);
 				m_listeningToEdges.push(_edge);
 			}
 		}
 		
-		private function onEdgeTroublePointAdded(evt:EdgeTroublePointEvent):void
+		private function onEdgeTroublePointChange(evt:EdgeTroublePointEvent):void
+		{
+			if (evt.edge.hasAnyConflict()) {
+				showEdgeError();
+			} else {
+				removeEdgeError();
+			}
+		}
+		
+		private function showEdgeError():void
 		{
 			m_edgeHasError = true;
 			if (m_hasError) {
@@ -432,7 +438,7 @@ package scenes.game.display
 			addError();
 		}
 		
-		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
+		private function removeEdgeError():void
 		{
 			m_edgeHasError = false;
 			m_hasError = m_portHasError;
@@ -445,11 +451,10 @@ package scenes.game.display
 		public function listenToPortForTroublePoints(_port:Port):void
 		{
 			if (m_listeningToPorts.indexOf(_port) == -1) {
-				if (_port.has_error) {
-					onPortTroublePointAdded(null);
+				if (_port.hasAnyConflict()) {
+					showPortError();
 				}
-				_port.addEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				_port.addEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
+				_port.addEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, onPortTroublePointChange);
 				m_listeningToPorts.push(_port);
 			}
 		}
@@ -463,10 +468,9 @@ package scenes.game.display
 		{
 			var portIndx:int = m_listeningToPorts.indexOf(_port);
 			if (portIndx > -1) {
-				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
-				onPortTroublePointRemoved(null);
+				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, onPortTroublePointChange);
 				m_listeningToPorts.splice(portIndx, 1);
+				refreshTroublePoints();
 			}
 		}
 		
@@ -532,32 +536,41 @@ package scenes.game.display
 		{
 			var anyPortErrors:Boolean = false;
 			for (var p:int = 0; p < m_listeningToPorts.length; p++) {
-				if (m_listeningToPorts[p].has_error) {
+				if (m_listeningToPorts[p].hasAnyConflict()) {
 					anyPortErrors = true;
 					break;
 				}
 			}
 			if (anyPortErrors) {
-				if (!m_portHasError) onPortTroublePointAdded(null);
+				if (!m_portHasError) showPortError();
 			} else {
-				if (m_portHasError) onPortTroublePointRemoved(null);
+				if (m_portHasError) removePortError();
 			}
 			
 			var anyEdgeErrors:Boolean = false;
 			for (var e:int = 0; e < m_listeningToEdges.length; e++) {
-				if (m_listeningToEdges[e].has_error) {
+				if (m_listeningToEdges[e].hasAnyConflict()) {
 					anyEdgeErrors = true;
 					break;
 				}
 			}
 			if (anyEdgeErrors) {
-				if (!m_edgeHasError) onEdgeTroublePointAdded(null);
+				if (!m_edgeHasError) showEdgeError();
 			} else {
-				if (m_edgeHasError) onEdgeTroublePointRemoved(null);
+				if (m_edgeHasError) removeEdgeError();
 			}
 		}
 		
-		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
+		private function onPortTroublePointChange(evt:PortTroublePointEvent):void
+		{
+			if (evt.port.hasAnyConflict()) {
+				showPortError();
+			} else {
+				removePortError();
+			}
+		}
+		
+		private function showPortError():void
 		{
 			m_portHasError = true;
 			if (m_hasError) {
@@ -567,7 +580,7 @@ package scenes.game.display
 			addError();
 		}
 		
-		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
+		private function removePortError():void
 		{
 			m_portHasError = false;
 			m_hasError = m_edgeHasError;

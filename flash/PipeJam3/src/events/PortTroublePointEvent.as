@@ -5,8 +5,7 @@ package events
 	
 	public class PortTroublePointEvent extends Event 
 	{
-		public static const PORT_TROUBLE_POINT_REMOVED:String = "PORT_TROUBLE_POINT_REMOVED";
-		public static const PORT_TROUBLE_POINT_ADDED:String = "PORT_TROUBLE_POINT_ADDED";
+		public static const PORT_TROUBLE_POINT_CHANGE:String = "PORT_TROUBLE_POINT_CHANGE";
 		
 		public var port:Port;
 		
