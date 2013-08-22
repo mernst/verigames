@@ -27,6 +27,8 @@ if (isset($_REQUEST["function"])) {
         $result = 1;
     } else if (!strcmp($function, "game") && $script) {
         $result = createGameFiles($guid, $script);
+    }else if (!strcmp($function, "gameFromXML") && $script) {
+        $result = createGameFilesFromXML($guid, $script);
     }else if (!strcmp($function, "cleanup_all")) {
        cleanup($guid, false);
        $result = "all_removed";
@@ -158,9 +160,6 @@ function createGameFiles($id, $script) {
      		$command = 'python ' . SCRIPT_PATH . 'controller.py ' . $path . '/World.xml ' . $gamefilepath . ' ' . $script;
 		exec($command);
 
-		/*
-		zipGameFiles($id);
-	//	uploadGameFiles($id);*/
 		return 1;
 	}
 
@@ -168,12 +167,46 @@ function createGameFiles($id, $script) {
 }
 
 /*
+* Function creates the xml file that will be used with the flash game files.  It depends on the
+* verigames.sh script file.  It will copy over the World.xml and the inference.jaif file created
+* by the verigames.sh file.  It will return a 1 if the file was created successfully, otherwise
+* it will return a 0. 
+*/
+function createGameFilesFromXML($id, $script) {
+	
+	//break world into separate levels
+	//get level ID from database
+	//loop over all newly created worlds (containing only one level each) and
+	//measure them, creating a file with that info
+	//all this stuff below
+	//then store in RA and database
+	//then show rename and activate screen, and do that
+
+	$path = UPLOADS_DIRECTORY . $id;
+	$gamefilepath = UPLOADS_DIRECTORY . $id . '/gamefiles';
+
+	//rename xml file as World.xml to make work within system
+	$command = 'cp ' . $path . '/*.xml '. $path . '/World.xml';
+   	exec($command);
+
+
+    	//Create the game files
+	exec('mkdir ' . $gamefilepath);
+
+     	$command = 'python ' . SCRIPT_PATH . 'controller.py ' . $path . '/World.xml ' . $gamefilepath . ' ' . $script;
+	exec($command);
+
+	return 1;
+}
+
+
+/*
 * Function zips all needed game files and removes others. 
 */
 function zipGameFiles($id) {
 
 	//zip all the files listed in the mapfile
-     	//$command = 'python zipFiles.py ' + $id;
+     	//$command = 'python zipFiles.py ' . $id;
    	//exec($command);
 
 	return 1;

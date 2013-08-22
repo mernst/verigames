@@ -62,6 +62,7 @@ package scenes.game.components
 		
 		private var m_currentLevel:Level;
 		private var content:BaseComponent;
+		private var errorBubbleContainer:Sprite;
 		private var currentMode:int;
 		private var continueButton:NineSliceButton;
 		private var m_backgroundImage:Image;
@@ -70,7 +71,6 @@ package scenes.game.components
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
-		private var m_hidingErrorText:Boolean = false;
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
@@ -95,6 +95,9 @@ package scenes.game.components
 			
 			content = new BaseComponent();
 			addChild(content);
+			
+			errorBubbleContainer = new Sprite();
+			addChild(errorBubbleContainer);
 			
 			var borderTexture:Texture = AssetInterface.getTexture("Game", "BorderVignetteClass");
 			m_border = new Image(borderTexture);
@@ -375,22 +378,12 @@ package scenes.game.components
 		
 		private function onContentScaleChanged():void
 		{
-			var i:int;
-			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
-				if (!m_hidingErrorText) {
-					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
-						m_currentLevel.m_edgeList[i].hideErrorText();
-					}
-					m_hidingErrorText = true;
-				}
-			} else {
-				if (m_hidingErrorText) {
-					for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
-						m_currentLevel.m_edgeList[i].showErrorText();
-					}
-					m_hidingErrorText = false;
-				}
-			}
+			if (m_currentLevel == null) return;
+ 			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
+				m_currentLevel.hideErrorText();
+ 			} else {
+				m_currentLevel.showErrorText();
+ 			}
 		}
 		
 		//returns a point containing the content scale factors
@@ -536,7 +529,7 @@ package scenes.game.components
 			m_errorTextBubbles = new Vector.<Sprite>();
 			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
 				m_errorTextBubbles.push(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
-				addChild(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
+				errorBubbleContainer.addChild(m_currentLevel.m_edgeList[i].errorTextBubbleContainer);
 			}
 			
 			if (m_tutorialText) {

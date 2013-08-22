@@ -226,7 +226,7 @@
 			var pctTextHeight:Number;
 			if(m_endPt.x != 0 && m_endPt.y !=0)
 			{
-				throw new Error("Diagonal lines deprecated.");
+				throw new Error("Diagonal lines deprecated. Segment from to " + m_endPt);
 			}
 			else if(m_endPt.x != 0)
 			{

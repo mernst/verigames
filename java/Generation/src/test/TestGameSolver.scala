@@ -74,6 +74,10 @@ class TestGameSolver extends GameSolver {
       }
     }
 
+    override def finalizeWorld(world: World) {
+
+    }
+
     def createThisChute(): Chute = {
       null
     }

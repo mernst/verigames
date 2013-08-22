@@ -13,6 +13,8 @@ function createXML() {
     showSpinner("verify-spin");
     typeChecker = $('option:selected').val();
 	console.log("typechecker is " + typeChecker + " " + document.location.pathname);
+	console.log("isXML " + document.forms.isXML.value);
+
     //make ajax request to create XML file
     request = $.ajax({
         url     : PHP_SCRIPT,
@@ -64,3 +66,33 @@ function createGameFiles() {
         }
     });
 }
+
+function createGameFilesFromXML() {
+ 
+	console.log("creating game files from xml");
+	typeChecker = $('option:selected').val();
+
+    //make ajax request to create game files
+    request = $.ajax({
+        url     : PHP_SCRIPT,
+        type    : "POST",
+        data    : {"function" : "gameFromXML", "guid" : uploadGUID, "script" : typeChecker}
+    });
+
+	//wait for ajax request to complete before continuing
+    request.done(function (response) {
+        if (response === "SUCCESS") {
+		console.log("create game files success");
+
+            $('#verify-spin').html("<img width='25' height='25' src='./resources/success.png'/>");
+            cleanup();
+		$("#resultdir").val(uploadGUID);
+		$("#postFiles").submit();
+        } else {
+            $('#verify-spin').html("<a style='color:red' target='_blank' " +
+                "href='scripts/utilities.php" +
+                "?function=displayError&file=" + response + "&id=" + uploadGUID + "\'>Error</a>");
+        }
+    });
+}
+

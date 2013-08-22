@@ -1,37 +1,24 @@
 package scenes.game.display
 {
-	import assets.AssetInterface;
-	import assets.AssetsFont;
-	import starling.display.Quad;
-	
 	import display.NineSliceBatch;
 	import display.TextBubble;
-	
 	import events.BallTypeChangeEvent;
 	import events.EdgeContainerEvent;
 	import events.EdgeTroublePointEvent;
 	import events.PortTroublePointEvent;
-	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
-	
 	import particle.ErrorParticleSystem;
-	
 	import starling.display.DisplayObjectContainer;
-	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
-	
-	import utils.XSprite;
 	
 	public class GameEdgeContainer extends GameComponent
 	{
@@ -83,6 +70,7 @@ package scenes.game.display
 		private var m_portHasError:Boolean = false;
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
+		private var m_hidingErrorText:Boolean = false;
 		public var initialized:Boolean = false;
 		
 		//use for figuring out closest wall
@@ -140,8 +128,8 @@ package scenes.game.display
 			var boxHeight:Number;
 			var innerCircle:Boolean = false;
 			if (toBox) {
-				boxHeight = (m_toComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+				boxHeight = (m_toComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
 				switch (graphEdge.to_port.node.kind) {
 					case NodeTypes.OUTGOING:
 					case NodeTypes.END:
@@ -150,8 +138,8 @@ package scenes.game.display
 						break;
 				}
 			} else {
-				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
 				switch (graphEdge.from_port.node.kind) {
 					case NodeTypes.INCOMING:
 					case NodeTypes.START_PIPE_DEPENDENT_BALL:
@@ -167,10 +155,15 @@ package scenes.game.display
 				m_extensionEdgeIsOutgoing = false;
 			}
 			if (m_extensionEdge) {
+				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && m_extensionEdge.m_innerBoxSegment.isEnd) {
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
+					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
+						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
+						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
+					}
 					m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
 				}
 				if (toBox) {
@@ -186,7 +179,7 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
@@ -271,12 +264,15 @@ package scenes.game.display
 			}
 			else
 			{
+				//trace("creating joint points for " + m_id);
 				m_jointPoints = new Array();
 				for(var i1:int = 0; i1< m_edgeArray.length; i1++)
 				{
+					//trace("joint pt " + m_edgeArray[i1]);
 					var pt1:Point = m_edgeArray[i1];
 					m_jointPoints.push(pt1.clone());
 				}
+				correctJointPointDiagonals();
 				updateBoundingBox();
 			}
 		}
@@ -485,11 +481,13 @@ package scenes.game.display
 		
 		public function hideErrorText():void
 		{
+			m_hidingErrorText = true;
 			if (errorTextBubble != null) errorTextBubble.hideText();
 		}
 		
 		public function showErrorText():void
 		{
+			m_hidingErrorText = false;
 			if (errorTextBubble != null) errorTextBubble.showText();
 		}
 		
@@ -505,6 +503,11 @@ package scenes.game.display
 			
 			if (errorTextBubble == null) {
 				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, null, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
+			}
+			if (m_hidingErrorText) {
+				errorTextBubble.hideText();
+			} else {
+				errorTextBubble.showText();
 			}
 			errorTextBubbleContainer.scaleX = errorTextBubbleContainer.scaleY = 0.5;
 			errorTextBubbleContainer.addChild(errorTextBubble);
@@ -758,11 +761,11 @@ package scenes.game.display
 			var innerBoxPt:Point;
 			var boxHeight:Number;
 			if (toBox) {
-				boxHeight =(m_toComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2);
+				boxHeight =(m_toComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
 			} else {
-				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height;
-				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2);
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
 			}
 			if (m_innerBoxSegment) {
 				m_innerBoxSegment.interiorPt = innerBoxPt;
@@ -864,39 +867,7 @@ package scenes.game.display
 			var segmentIndex:int = m_edgeSegments.indexOf(segment);
 			//not a innerbox segment or end segment
 			if(segmentIndex != -1 && segmentIndex != 0 && segmentIndex != m_edgeSegments.length-1) 
-			{				
-				/*
-				// Don't create new joint here, instead extend the current end joint so its extension
-				// height is maintained and edges will therefor follow a horizontal->vertical->horizontal
-				// alternating fashion
-				if(segmentIndex == 1 || segmentIndex+3 == m_jointPoints.length)
-				{
-					if(segmentIndex == 1)
-					{
-						m_jointPoints.splice(1, 0, m_jointPoints[1].clone());
-						segmentIndex++;
-						var newJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
-						m_edgeJoints.splice(1, 0, newJoint);
-						newJoint.isHoverOn = true;
-						
-						var newSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
-						this.m_edgeSegments.splice(1,0,newSegment);	
-						newSegment.isHoverOn = true;
-					}
-					if(segmentIndex+3 == m_jointPoints.length)
-					{
-						m_jointPoints.splice(-2, 0, m_jointPoints[m_jointPoints.length-2].clone());
-						var newEndJoint:GameEdgeJoint = new GameEdgeJoint(0, m_isWide, true, draggable);
-						m_edgeJoints.splice(-2, 0, newEndJoint);
-						newEndJoint.isHoverOn = true;
-						
-						var newEndSegment:GameEdgeSegment = new GameEdgeSegment(segment.m_dir, false, false, false, m_isWide, true, draggable);
-						this.m_edgeSegments.splice(-1,0,newEndSegment);	
-						newEndSegment.isHoverOn = true;
-					}
-				}
-				*/
-				
+			{
 				//check for horizontal or vertical
 				if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
 				{
@@ -908,8 +879,6 @@ package scenes.game.display
 					m_jointPoints[segmentIndex].x += deltaPoint.x;
 					m_jointPoints[segmentIndex+1].x += deltaPoint.x;
 				}
-				
-				
 				
 				//check for any really short segments, and if found, remove them. Start at the end and work backwards
 				//don't do if we just added a segment
@@ -1079,27 +1048,55 @@ package scenes.game.display
 				m_jointPoints[LNGTH-3].y = m_jointPoints[LNGTH-2].y;
 			}
 			
-			// Correct any diagonals
-			for (var i:int = 1; i < m_jointPoints.length; i++) {
-				if (((m_jointPoints[i-1] as Point).x != (m_jointPoints[i] as Point).x) 
-					&& ((m_jointPoints[i-1] as Point).y != (m_jointPoints[i] as Point).y)) {
-					// This can happen if legacy joint points that don't alternate in vertical->horiz->vert are loaded
-					// Create new joint points between these to correct it - arbitrarily chose to make a horizontal line here
-					var midy:Number = ((m_jointPoints[i] as Point).y + (m_jointPoints[i-1] as Point).y) / 2.0;
-					var newPt1:Point = new Point((m_jointPoints[i-1] as Point).x, midy);
-					var newPt2:Point = new Point((m_jointPoints[i] as Point).x, midy);
-					m_jointPoints.splice(i, 0, newPt1, newPt2);
-					newEdgesNeeded = true;
-					i += 2; // we've just filled in m_jointPoints[i] and m_jointPoints[i+1] so move to i+3, i+2 check
-					//throw new Error("Diagonal created: m_jointPoints["+i+"]:" + m_jointPoints[i] + " m_jointPoints["+(i-1)+"]:" + m_jointPoints[i-1]);
-				}
-			}
-			updateBoundingBox();
+			newEdgesNeeded = newEdgesNeeded || correctJointPointDiagonals();
 			// If there are more joint points now than when the method began, create the edge segements
 			// for those new joints
 			if (newEdgesNeeded) {
 				createChildren();
 			}
+			updateBoundingBox();
+		}
+		
+		/**
+		 * Add extra joints where needed such that there are only alternating vertical and horizontal edges,
+		 * no edges where we're going from p1->pt2 where pt1.x != pt2.x AND pt1.y != pt2.y
+		 * @return
+		 */
+		private function correctJointPointDiagonals():Boolean
+		{
+			var newJointsCreated:Boolean = false;
+			var previousSegmentVertical:Boolean = false;
+			for (var i:int = 1; i < m_jointPoints.length; i++) {
+				var xmismatch:Boolean = ((m_jointPoints[i-1] as Point).x != (m_jointPoints[i] as Point).x);
+				var ymismatch:Boolean = ((m_jointPoints[i-1] as Point).y != (m_jointPoints[i] as Point).y);
+				var newPt1:Point, newPt2:Point;
+				if (xmismatch && ymismatch) {
+					if (previousSegmentVertical) {
+						// Make horizonal->vertical->horizonal segments
+						var midx:Number = ((m_jointPoints[i] as Point).x + (m_jointPoints[i-1] as Point).x) / 2.0;
+						newPt1 = new Point(midx, (m_jointPoints[i-1] as Point).y);
+						newPt2 = new Point(midx, (m_jointPoints[i] as Point).y);
+						previousSegmentVertical = false;
+					} else {
+						// Make vertical->horizonal->vertical segments
+						var midy:Number = ((m_jointPoints[i] as Point).y + (m_jointPoints[i-1] as Point).y) / 2.0;
+						newPt1 = new Point((m_jointPoints[i-1] as Point).x, midy);
+						newPt2 = new Point((m_jointPoints[i] as Point).x, midy);
+						previousSegmentVertical = true;
+					}
+					m_jointPoints.splice(i, 0, newPt1, newPt2);
+					newJointsCreated = true;
+					i += 2; // we've just filled in m_jointPoints[i] and m_jointPoints[i+1] so move to i+3, i+2 check
+					continue;
+				} else if ((ymismatch && previousSegmentVertical) || (xmismatch && !previousSegmentVertical)) {
+					// Don't want two vertical or horizontal segments in a row, duplicate prev joint
+					newPt1 = (m_jointPoints[i-1] as Point).clone();
+					m_jointPoints.splice(i, 0, newPt1);
+					newJointsCreated = true;
+				}
+				previousSegmentVertical = !previousSegmentVertical;
+			}
+			return newJointsCreated;
 		}
 		
 		private function onInnerBoxSegmentClicked(event:TouchEvent):void
@@ -1317,320 +1314,5 @@ package scenes.game.display
 				m_innerBoxSegment.updateBorderWidth(_isWide);
 			}
 		}
-	}
-}
-
-
-import assets.AssetInterface;
-
-import flash.geom.Point;
-
-import scenes.game.display.GameComponent;
-import scenes.game.display.GameEdgeContainer;
-import scenes.game.display.GameEdgeJoint;
-import scenes.game.display.GameEdgeSegment;
-
-import starling.display.Image;
-import starling.display.Quad;
-import starling.display.Sprite;
-import starling.events.EnterFrameEvent;
-import starling.events.Event;
-import starling.events.Touch;
-import starling.events.TouchEvent;
-import starling.textures.Texture;
-import starling.textures.TextureAtlas;
-
-class InnerBoxSegment extends GameComponent
-{
-	public static const PLUG_HEIGHT:Number = 0.44 * Constants.GAME_SCALE;
-	public static const SOCKET_HEIGHT:Number = 0.17 * Constants.GAME_SCALE;
-	private static const BORDER_SIZE:Number = 0.02 * Constants.GAME_SCALE;
-	
-	private static var id:int = 0;
-	
-	public var innerCircleJoint:GameEdgeJoint;
-	public var edgeSegment:GameEdgeSegment;
-	public var edgeSegmentOutline:Quad;
-	public var interiorPt:Point;
-	private var m_dir:String;
-	private var m_height:Number;
-	private var m_borderIsWide:Boolean;
-	public var isEnd:Boolean;
-	private var m_plugIsWide:Boolean;
-	private var m_plugIsEditable:Boolean;
-	private var m_socketContainer:Sprite;
-	private var m_plugContainer:Sprite;
-	private var m_socketAssetName:String = "";
-	private var m_plugAssetName:String = "";
-	private var m_socket:Image;
-	private var m_plug:Image;
-	
-	public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
-	{
-		super("IS" + id++);
-		draggable = _draggable;
-		interiorPt = _interiorPt;
-		m_height = height;
-		m_dir = dir;
-		m_isWide = isWide;
-		m_borderIsWide = borderIsWide;
-		m_isEditable = isEditable;
-		isEnd = _isEnd;
-		m_plugIsWide = plugIsWide;
-		m_plugIsEditable = plugIsEditable;
-		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
-		edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
-		edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
-		if (createInnerCircle) {
-			innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
-		}
-		m_socketContainer = new Sprite();
-		m_plugContainer = new Sprite();
-		
-		draw();
-		addChild(edgeSegmentOutline);
-		addChild(edgeSegment);
-		if (innerCircleJoint) {
-			addChild(innerCircleJoint);
-		}
-		edgeSegment.socket = m_socketContainer;
-		edgeSegment.plug = m_plugContainer;
-		edgeSegment.m_isDirty = true;
-		
-		m_isDirty = false;
-		addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
-	}
-	
-	public function getPlugYOffset():Number
-	{
-		if (hasError()) {
-			return PLUG_HEIGHT;
-		} else if (isEnd) {
-			return (PLUG_HEIGHT - SOCKET_HEIGHT + 0.01 * Constants.GAME_SCALE);
-		} else {
-			return 0;
-		}
-	}
-	
-	public function updatePlug():void
-	{
-		if (!(isEnd || hasError())) {
-			// Only show plugs/sockets for end with no extension or errors (two prong into one prong)
-			if (m_plug) {
-				m_plug.removeFromParent(true);
-			}
-			m_plug = null;
-			m_plugAssetName = "";
-			return;
-		}
-		var assetName:String;
-		if (m_plugIsEditable) {
-			if (m_plugIsWide) {
-				assetName = AssetInterface.PipeJamSubTexture_BlueDarkPlug;
-			} else {
-				assetName = AssetInterface.PipeJamSubTexture_BlueLightPlug;
-			}
-		} else {
-			if (m_plugIsWide) {
-				assetName = AssetInterface.PipeJamSubTexture_GrayDarkPlug;
-			} else {
-				assetName = AssetInterface.PipeJamSubTexture_GrayLightPlug;
-			}
-		}
-		if (assetName == m_plugAssetName) {
-			// No need to change image
-			return;
-		}
-		if (m_plug) {
-			m_plug.removeFromParent(true);
-		}
-		m_plugAssetName = assetName;
-		var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-		var plugTexture:Texture = atlas.getTexture(m_plugAssetName);
-		m_plug = new Image(plugTexture);
-		var scale:Number = PLUG_HEIGHT / m_plug.height;
-		m_plug.width *= scale;
-		m_plug.height *= scale;
-		m_plugContainer.addChild(m_plug);
-	}
-	
-	public function updateSocket():void
-	{
-		if (!(isEnd || hasError())) {
-			// Only show plugs/sockets for end with no extension or errors (two prong into one prong)
-			if (m_socket) {
-				m_socket.removeFromParent(true);
-			}
-			m_socket = null;
-			m_socketAssetName = "";
-			return;
-		}
-		var assetName:String;
-		if (m_isEditable) {
-			if (m_borderIsWide) {
-				assetName = AssetInterface.PipeJamSubTexture_BlueDarkEnd;
-			} else {
-				assetName = AssetInterface.PipeJamSubTexture_BlueLightEnd;
-			}
-		} else {
-			if (m_borderIsWide) {
-				assetName = AssetInterface.PipeJamSubTexture_GrayDarkEnd;
-			} else {
-				assetName = AssetInterface.PipeJamSubTexture_GrayLightEnd;
-			}
-		}
-		if (assetName == m_socketAssetName) {
-			// No need to change image
-			return;
-		}
-		if (m_socket) {
-			m_socket.removeFromParent(true);
-		}
-		m_socketAssetName = assetName;
-		var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-		var socketTexture:Texture = atlas.getTexture(m_socketAssetName);
-		m_socket = new Image(socketTexture);
-		m_socket.touchable = false;
-		var scale:Number = SOCKET_HEIGHT / m_socket.height;
-		m_socket.width *= scale;
-		m_socket.height *= scale;
-		m_socketContainer.addChild(m_socket);
-	}
-	
-	private static function getWidth(_isWide:Boolean):Number
-	{
-		return _isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-	}
-	
-	private function getBorderWidth():Number
-	{
-		// Make pinch points stand out with thicker border
-		if (!m_isEditable && !m_borderIsWide) return 4 * BORDER_SIZE + GameEdgeContainer.NARROW_WIDTH;
-		return 2 * BORDER_SIZE + (m_borderIsWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH);
-	}
-	
-	private function getBorderColor():uint
-	{
-		if (m_isEditable) {
-			return m_isWide ? GameComponent.WIDE_COLOR_BORDER : GameComponent.NARROW_COLOR_BORDER;
-		} else {
-			return m_isWide ? GameComponent.UNADJUSTABLE_WIDE_COLOR_BORDER : GameComponent.UNADJUSTABLE_NARROW_COLOR_BORDER;
-		}
-	}
-	
-	private function onEnterFrame(event:Event):void
-	{
-		if(m_isDirty)
-		{
-			draw();
-			m_isDirty = false;
-		}
-	}
-	
-	public function updateBorderWidth(_isWide:Boolean):void
-	{
-		if (m_borderIsWide == _isWide) {
-			return;
-		}
-		if (!m_isEditable) {
-			return;
-		}
-		m_borderIsWide = _isWide;
-		m_isDirty = true;
-	}
-	
-	public function draw():void
-	{
-		unflatten();
-		
-		var singleProngToDoubleOffset:Number = 0.0;
-		if (!m_isWide && m_borderIsWide) {
-			singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
-		}
-		
-		updatePlug();
-		if (m_plug) {
-			m_plug.x = - m_plug.width / 2;
-			m_plug.y = - getPlugYOffset();
-		}
-		updateSocket();
-		if (m_socket) {
-			m_socket.x = - m_socket.width / 2 + singleProngToDoubleOffset;
-			m_socket.y = 0;
-		}
-		
-		if (m_dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
-			edgeSegment.x = interiorPt.x;
-			edgeSegment.y = interiorPt.y - m_height;
-		} else {
-			edgeSegment.x = interiorPt.x;
-			edgeSegment.y = interiorPt.y;
-		}
-		edgeSegment.isHoverOn = isHoverOn;
-		if (edgeSegmentOutline.width != getBorderWidth()) {
-			edgeSegmentOutline.width = getBorderWidth();
-		}
-		if (edgeSegmentOutline.color != getBorderColor()) {
-			edgeSegmentOutline.color = getBorderColor();
-		}
-		edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
-		edgeSegmentOutline.y = edgeSegment.y;
-		edgeSegment.setIsWide(m_isWide);
-		edgeSegment.draw();
-		
-		if (innerCircleJoint) {
-			innerCircleJoint.x = interiorPt.x;
-			innerCircleJoint.y = interiorPt.y;
-			innerCircleJoint.setIsWide(m_isWide);
-			innerCircleJoint.draw();
-		}
-
-		if (m_socket && !m_plugIsWide && m_isWide) {
-			const offset:Number = 0.075 * Constants.GAME_SCALE;
-			edgeSegmentOutline.x += offset;
-			edgeSegment.x += offset;
-			if (m_plug) {
-				m_plug.x -= offset;
-			}
-			if (innerCircleJoint) {
-				innerCircleJoint.x += offset;
-			}
-		}
-		
-		flatten();
-	}
-	
-	override public function setIsWide(b:Boolean):void
-	{
-		if (m_isWide == b) {
-			return;
-		}
-		if (!m_isEditable) {
-			return;
-		}
-		m_isWide = b;
-		m_isDirty = true;
-	}
-	
-	public function setPlugIsWide(_plugWide:Boolean):void
-	{
-		if (m_plugIsWide == _plugWide) {
-			return;
-		}
-		m_plugIsWide = _plugWide;
-		m_isDirty = true;
-	}
-	
-	override public function dispose():void
-	{
-		if (edgeSegment) {
-			edgeSegment.removeFromParent(true);
-		}
-		if (innerCircleJoint) {
-			innerCircleJoint.removeFromParent(true);
-		}
-		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		
-		super.dispose();
 	}
 }
