@@ -70,6 +70,7 @@ package scenes.game.display
 		private var m_portHasError:Boolean = false;
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
+		private var m_hidingErrorText:Boolean = false;
 		public var initialized:Boolean = false;
 		
 		//use for figuring out closest wall
@@ -480,11 +481,13 @@ package scenes.game.display
 		
 		public function hideErrorText():void
 		{
+			m_hidingErrorText = true;
 			if (errorTextBubble != null) errorTextBubble.hideText();
 		}
 		
 		public function showErrorText():void
 		{
+			m_hidingErrorText = false;
 			if (errorTextBubble != null) errorTextBubble.showText();
 		}
 		
@@ -500,6 +503,11 @@ package scenes.game.display
 			
 			if (errorTextBubble == null) {
 				errorTextBubble = new TextBubble(Constants.ERROR_POINTS.toString(), 16, ERROR_COLOR, errorContainer, null, NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER, null, true, 10, 2, 0.5, 1, false, ERROR_COLOR);
+			}
+			if (m_hidingErrorText) {
+				errorTextBubble.hideText();
+			} else {
+				errorTextBubble.showText();
 			}
 			errorTextBubbleContainer.scaleX = errorTextBubbleContainer.scaleY = 0.5;
 			errorTextBubbleContainer.addChild(errorTextBubble);

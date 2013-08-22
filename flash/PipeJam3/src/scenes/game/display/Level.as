@@ -84,6 +84,7 @@ package scenes.game.display
 		public var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_visibleNodeManager:VisibleNodeManager;
+		private var m_hidingErrorText:Boolean = false;
 		
 		private var m_nodesContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
@@ -1467,6 +1468,26 @@ package scenes.game.display
 			{
 				this.m_edgesContainer.removeChild(component);
 				this.m_errorContainer.removeChild((component as GameEdgeContainer).errorContainer);
+			}
+		}
+		
+		public function hideErrorText():void
+		{
+			if (!m_hidingErrorText) {
+				for (var i:int = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].hideErrorText();
+				}
+				m_hidingErrorText = true;
+			}
+		}
+		
+		public function showErrorText():void
+		{
+			if (m_hidingErrorText) {
+				for (var i:int = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].showErrorText();
+				}
+				m_hidingErrorText = false;
 			}
 		}
 		
