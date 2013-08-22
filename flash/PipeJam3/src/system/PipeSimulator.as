@@ -120,7 +120,7 @@ package system
 			for each (var boardTouched:BoardNodes in boards_touched) {
 				var newConflictDict:ConflictDictionary = boardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
 				var prevConflictDict:ConflictDictionary = prevBoardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
-				// check new tp, if they weren't in old Dict then they are new
+				// check new conflict, if they weren't in prevConflictDict then they are new and need to be added
 				for (portk in newConflictDict.iterPorts()) {
 					var port:Port = newConflictDict.getPort(portk);
 					var newPortConfl:PropDictionary = newConflictDict.getPortConflicts(portk);
@@ -156,33 +156,36 @@ package system
 					}
 				}
 				// Now all that's left in prevConflictDict should be conflicts that should be removed
-			}
-			
-			// Mark added conflicts
-			for (portk in addConflictDict.iterPorts()) {
-				for (prop in addConflictDict.getPortConflicts(portk).iterProps()) {
-					// TODO: merge them all at once instead of adding individually
-					addConflictDict.getPort(portk).addConflict(prop);
+				// Mark added conflicts
+				for (portk in addConflictDict.iterPorts()) {
+					for (prop in addConflictDict.getPortConflicts(portk).iterProps()) {
+						// TODO: merge them all at once instead of adding individually
+						//trace("->adding " + portk);
+						addConflictDict.getPort(portk).addConflict(prop);
+					}
 				}
-			}
-			for (edgek in addConflictDict.iterEdges()) {
-				for (prop in addConflictDict.getEdgeConflicts(edgek).iterProps()) {
-					// TODO: merge them all at once instead of adding individually
-					addConflictDict.getEdge(edgek).addConflict(prop);
+				for (edgek in addConflictDict.iterEdges()) {
+					for (prop in addConflictDict.getEdgeConflicts(edgek).iterProps()) {
+						// TODO: merge them all at once instead of adding individually
+						//trace("->adding " + edgek);
+						addConflictDict.getEdge(edgek).addConflict(prop);
+					}
 				}
-			}
-			
-			// Un-mark removed conflicts
-			for (portk in prevConflictDict.iterPorts()) {
-				for (prop in prevConflictDict.getPortConflicts(portk).iterProps()) {
-					// TODO: merge them all at once instead of removing individually
-					prevConflictDict.getPort(portk).removeConflict(prop);
+				
+				// Un-mark removed conflicts
+				for (portk in prevConflictDict.iterPorts()) {
+					for (prop in prevConflictDict.getPortConflicts(portk).iterProps()) {
+						// TODO: merge them all at once instead of removing individually
+						//trace("->removing " + portk);
+						prevConflictDict.getPort(portk).removeConflict(prop);
+					}
 				}
-			}
-			for (edgek in prevConflictDict.iterEdges()) {
-				for (prop in prevConflictDict.getEdgeConflicts(edgek).iterProps()) {
-					// TODO: merge them all at once instead of removing individually
-					prevConflictDict.getEdge(edgek).removeConflict(prop);
+				for (edgek in prevConflictDict.iterEdges()) {
+					for (prop in prevConflictDict.getEdgeConflicts(edgek).iterProps()) {
+						// TODO: merge them all at once instead of removing individually
+						//trace("->removing " + edgek);
+						prevConflictDict.getEdge(edgek).removeConflict(prop);
+					}
 				}
 			}
 		}
