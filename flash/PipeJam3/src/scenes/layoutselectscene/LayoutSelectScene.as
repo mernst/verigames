@@ -268,14 +268,17 @@ package scenes.layoutselectscene
 		
 		private function onSelectButtonTriggered(ev:Event):void
 		{
-			this.parent.removeChild(this);
 			var dataObj:Object = currentVisibleListBox.currentSelection.data;
 			if(dataObj != null)
 			{
 				var layoutID:String = dataObj.layoutID;
 				
-				LoginHelper.getLoginHelper().getNewLayout(layoutID, setNewLayout);
+				var data:Object = new Object;
+				data.name = dataObj.name;
+				data.layoutFile = dataObj.layoutFile;
+				dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, data));
 			}
+			this.parent.removeChild(this);
 			
 		}
 		
