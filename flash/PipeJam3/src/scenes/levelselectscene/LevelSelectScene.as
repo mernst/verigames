@@ -18,7 +18,6 @@ package scenes.levelselectscene
 	
 	import scenes.Scene;
 	import scenes.game.PipeJamGameScene;
-	import scenes.game.components.dialogs.SelectLevelList;
 	
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -236,7 +235,7 @@ package scenes.levelselectscene
 				removeChild(nameText);
 				if(currentSelectedLevel.hasOwnProperty("name"))
 				{
-					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLevel.name, AssetsFont.FONT_UBUNTU, 80, 18, 12, 0x0077FF);
+					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLevel.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
 					TextFactory.getInstance().updateAlign(nameText, 0, 1);
 					addChild(nameText);
 					nameText.x = levelSelectInfoPanel.x+ 10;
@@ -287,6 +286,7 @@ package scenes.levelselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
+			loginHelper.refuseLevels();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 			
 		}
@@ -294,6 +294,11 @@ package scenes.levelselectscene
 		private function onSelectButtonTriggered(ev:Event):void
 		{
 			var dataObj:Object = currentVisibleListBox.currentSelection.data;
+			
+			if(currentVisibleListBox == tutorialListBox)
+				PipeJamGameScene.inTutorial = true;
+			else
+				PipeJamGameScene.inTutorial = false;
 			
 			if (dataObj) {
 				if (dataObj.hasOwnProperty("levelId")) {
