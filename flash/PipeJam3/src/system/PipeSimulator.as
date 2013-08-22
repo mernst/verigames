@@ -108,7 +108,9 @@ package system
 			}
 			var boards_in_prog:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			var boards_touched:Vector.<BoardNodes> = new Vector.<BoardNodes>();
-			for each (var simBoard:BoardNodes in boardsToSim) {
+			var i:int;
+			for (i = 0; i < boardsToSim.length; i++) {
+				var simBoard:BoardNodes = boardsToSim[i];
 				if (simBoard.changed_since_last_sim) {
 					boardToTroublePoints[simBoard.board_name] = simulateBoard(simBoard, boards_in_prog, boards_touched);
 				}
@@ -117,7 +119,8 @@ package system
 			var addConflictDict:ConflictDictionary = new ConflictDictionary();
 			var removeConflictDict:ConflictDictionary = new ConflictDictionary();
 			var portk:String, edgek:String, prop:String;
-			for each (var boardTouched:BoardNodes in boards_touched) {
+			for (i = 0; i < boards_touched.length; i++) {
+				var boardTouched:BoardNodes = boards_touched[i];
 				var newConflictDict:ConflictDictionary = boardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
 				var prevConflictDict:ConflictDictionary = prevBoardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
 				// check new conflict, if they weren't in prevConflictDict then they are new and need to be added
@@ -218,9 +221,11 @@ package system
 			// When we transition to an algorithm that only traverses the edges that have changes widths (after a click), we will mark 
 			// ONLY those pipes as BALL_TYPE_UNDETERMINED and then only perform collision detection below on BALL_TYPE_UNDETERMINED edges (and below)
 			// For now, mark all pipes as BALL_TYPE_UNDETERMINED and recompute all
+			var i:int;
 			for (var startingEdgeSetId:String in sim_board.startingEdgeDictionary) {
 				var startingEdgeVec:Vector.<Edge> = sim_board.startingEdgeDictionary[startingEdgeSetId] as Vector.<Edge>;
-				for each (var startingEdge:Edge in startingEdgeVec) {
+				for (i = 0; i < startingEdgeVec.length; i++) {
+					var startingEdge:Edge = startingEdgeVec[i];
 					startingEdge.setUndeterminedAndRecurse();
 				}
 			}
@@ -228,9 +233,10 @@ package system
 			// This will tell us in the end whether we have an infinite recursision problem
 			var initial_ghost_outputs:uint = 0;
 			var total_outputs:uint = 0;
-			var outgoing_vec:Vector.<Edge>;
-			for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-				for each (var oEdge:Edge in outgoing_vec) {
+			for (var edgeSetId:String in sim_board.outgoingEdgeDictionary) {
+				var outgoing_vec:Vector.<Edge> = sim_board.outgoingEdgeDictionary[edgeSetId] as Vector.<Edge>;
+				for (i = 0; i < outgoing_vec.length; i++) {
+					var oEdge:Edge = outgoing_vec[i];
 					total_outputs++;
 					if ( (oEdge.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
 						(oEdge.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
@@ -253,8 +259,10 @@ package system
 			
 			var recursive_boards:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			//check starting edges to see if they come out of a subnetwork and add them to the queue
-			for each (var v:Vector.<Edge> in dict) {
-				for each (var e:Edge in v) {
+			for (var edgeKey:String in dict) {
+				var v:Vector.<Edge> = dict[edgeKey] as Vector.<Edge>;
+				for (i = 0; i < v.length; i++) {
+					var e:Edge = v[i];
 					// check for SUBNETWORK width mismatch - this is the case when a SUBNETWORK edge flows into this edge (e)
 					switch (e.from_node.kind) {
 						case NodeTypes.INCOMING:
@@ -309,46 +317,47 @@ package system
 								}
 							}
 							// Now we can initialize the ball types for pipes on this board flowing out of the subnet_board
-							for each (var my_port:Port in e.from_node.outgoing_ports) {
-							var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
-							// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
-							var out_type:uint;
-							if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
-								out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
-								subnet_port.default_ball_type = out_type; // update best-known default
-							} else {
-								out_type = subnet_port.default_ball_type;
-							}
-							switch (out_type) {
-								case Edge.BALL_TYPE_WIDE:
-									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
-									break;
-								case Edge.BALL_TYPE_NONE:
-									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-									break;
-								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
-									break;
-								case Edge.BALL_TYPE_NARROW:
-									subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
-									break;
-								case Edge.BALL_TYPE_UNDETERMINED:
-								case Edge.BALL_TYPE_GHOST:
-									//if (DEBUG) { trace("  ["+sim_board.board_name+"] Ball coming out of subboard is UNDETERMINED or GHOST. changedSinceLastSim=" + changedSinceLastSim); }
-									if (!changedSinceLastSim) {
-										// Unable to make any progress (mutually recursive boards where no new outputs
-										// were simulated. In this case, give up and output no ball
+							for (var i1:int = 0; i1 < e.from_node.outgoing_ports.length; i1++) {
+								var my_port:Port = e.from_node.outgoing_ports[i1];
+								var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
+								// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
+								var out_type:uint;
+								if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
+									out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
+									subnet_port.default_ball_type = out_type; // update best-known default
+								} else {
+									out_type = subnet_port.default_ball_type;
+								}
+								switch (out_type) {
+									case Edge.BALL_TYPE_WIDE:
+										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										break;
+									case Edge.BALL_TYPE_NONE:
 										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
-										//if (DEBUG) { trace("  [" + sim_board.board_name + "] Assigning subnet outgoing edge: " + subnet_port.edge.edge_id + " BALL_TYPE_NONE"); }
-									} else {
-										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
-									}
-									break;
-								default:
-									throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
-									break;
+										break;
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
+										break;
+									case Edge.BALL_TYPE_NARROW:
+										subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+										break;
+									case Edge.BALL_TYPE_UNDETERMINED:
+									case Edge.BALL_TYPE_GHOST:
+										//if (DEBUG) { trace("  ["+sim_board.board_name+"] Ball coming out of subboard is UNDETERMINED or GHOST. changedSinceLastSim=" + changedSinceLastSim); }
+										if (!changedSinceLastSim) {
+											// Unable to make any progress (mutually recursive boards where no new outputs
+											// were simulated. In this case, give up and output no ball
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+											//if (DEBUG) { trace("  [" + sim_board.board_name + "] Assigning subnet outgoing edge: " + subnet_port.edge.edge_id + " BALL_TYPE_NONE"); }
+										} else {
+											subnet_port.edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+										}
+										break;
+									default:
+										throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
+										break;
+								}
 							}
-						}
 							queue.push(e);
 							break;
 						default:
@@ -525,7 +534,8 @@ package system
 					case NodeTypes.BALL_SIZE_TEST : {
 						// new implementation: always output a small ball down the small pipe
 						// and a large ball down the wide pipe, rather that "sorting" the balls
-						for each (var outgoing_port:Port in node.outgoing_ports) {
+						for (i = 0; i < node.outgoing_ports.length; i++) {
+							var outgoing_port:Port = node.outgoing_ports[i];
 							if (outgoing_port.edge.is_wide) {
 								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
 							} else {
@@ -567,13 +577,13 @@ package system
 					// If we only have edges that are awaiting others, perform any merges with at least one determined ball type
 					// exiting. Perform on non-ghost exiting ball edges first (if any), then proceed to ghost ball exiting edges
 					var non_ghost_edge:Edge, ghost_edge:Edge;
-					for (var i:int = 0; i < edges_awaiting_others.length; i++) {
-						if (edges_awaiting_others[i].exit_ball_type != Edge.BALL_TYPE_UNDETERMINED) {
-							if (edges_awaiting_others[i].exit_ball_type != Edge.BALL_TYPE_GHOST) {
-								non_ghost_edge = edges_awaiting_others[i];
+					for (var j:int = 0; j < edges_awaiting_others.length; j++) {
+						if (edges_awaiting_others[j].exit_ball_type != Edge.BALL_TYPE_UNDETERMINED) {
+							if (edges_awaiting_others[j].exit_ball_type != Edge.BALL_TYPE_GHOST) {
+								non_ghost_edge = edges_awaiting_others[j];
 								break;
 							} else if (ghost_edge == null) {
-								ghost_edge = edges_awaiting_others[i];
+								ghost_edge = edges_awaiting_others[j];
 							}
 						}
 					}
@@ -600,8 +610,10 @@ package system
 			
 			var latest_ghost_outputs:uint = 0;
 			// Check for any ghost outputs on *this* board
-			for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-				for each (var oEdge1:Edge in outgoing_vec) {
+			for (var edgeK:String in sim_board.outgoingEdgeDictionary) {
+				var outgoing_vec1:Vector.<Edge> = sim_board.outgoingEdgeDictionary[edgeK] as Vector.<Edge>;
+				for (i = 0; i < outgoing_vec1.length; i++) {
+					var oEdge1:Edge = outgoing_vec1[i];
 					if ( (oEdge1.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
 						(oEdge1.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 						latest_ghost_outputs++;
@@ -617,15 +629,18 @@ package system
 			*/
 			var new_ghost_outputs:uint = 0;
 			while (simulate_recursion_boards && (latest_ghost_outputs > 0)) {
-				for each (var recursive_board:BoardNodes in recursive_boards) {
+				for (i = 0; i < recursive_boards.length; i++) {
+					var recursive_board:BoardNodes = recursive_boards[i];
 					// Re-simulate this board, but don't use the current stack of recursive calls, this should allow the top-level
 					// board to see the updated output ball types
 					//if (DEBUG) { trace("  ["+sim_board.board_name+"] Recursively simulating " + recursive_board.board_name + " within " + sim_board.board_name); }
 					boardToTroublePoints[recursive_board.board_name] = simulateBoard(recursive_board, null, null, false);
 					new_ghost_outputs = 0;
 					// Check for any ghost outputs on *this* board
-					for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-						for each (var oEdge2:Edge in outgoing_vec) {
+					for (var edgeK2:String in sim_board.outgoingEdgeDictionary) {
+						var outgoing_vec2:Vector.<Edge> = sim_board.outgoingEdgeDictionary[edgeK2] as Vector.<Edge>;
+						for (var i2:int = 0; i2 < outgoing_vec2.length; i2++) {
+							var oEdge2:Edge = outgoing_vec2[i2];
 							if ( (oEdge2.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
 								(oEdge2.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 								new_ghost_outputs++;
@@ -641,8 +656,10 @@ package system
 				
 				if (new_ghost_outputs >= latest_ghost_outputs) {
 					// We aren't making progress, infinite loop suspected. Just assign outputs and continue
-					for each (outgoing_vec in sim_board.outgoingEdgeDictionary) {
-						for each (var oEdge3:Edge in outgoing_vec) {
+					for (var edgeK3:String in sim_board.outgoingEdgeDictionary) {
+						var outgoing_vec3:Vector.<Edge> = sim_board.outgoingEdgeDictionary[edgeK3] as Vector.<Edge>;
+						for (i = 0; i < outgoing_vec3.length; i++) {
+							var oEdge3:Edge = outgoing_vec3[i];
 							if ( (oEdge3.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
 								(oEdge3.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
 								if (oEdge3.is_wide) {

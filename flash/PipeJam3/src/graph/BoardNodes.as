@@ -124,8 +124,10 @@ package graph
 		{
 			if (m_startingEdgeDictionary == null) {
 				m_startingEdgeDictionary = new Dictionary();
-				for each (var begNode:Node in beginningNodes) {
-					for each (var begport:Port in begNode.outgoing_ports) {
+				for (var i:int = 0; i < beginningNodes.length; i++) {
+					var begNode:Node = beginningNodes[i];
+					for (var j:int = 0; j < begNode.outgoing_ports.length; j++) {
+						var begport:Port = begNode.outgoing_ports[j];
 						addStartingEdgeToDictionary(begport.edge);
 					}
 				}
@@ -138,7 +140,8 @@ package graph
 			if (m_outgoingEdgeDictionary == null) {
 				m_outgoingEdgeDictionary = new Dictionary();
 				if (outgoing_node) {
-					for each (var outport:Port in outgoing_node.incoming_ports) {
+					for (var i:int = 0; i < outgoing_node.incoming_ports.length; i++) {
+						var outport:Port = outgoing_node.incoming_ports[i];
 						addOutgoingEdgeToDictionary(outport.edge);
 					}
 				}
