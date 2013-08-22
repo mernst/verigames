@@ -26,9 +26,7 @@ package graph
 		public static const INCOMING_PORT_TYPE:uint = 0;
 		public static const OUTGOING_PORT_TYPE:uint = 1;
 		
-		// Testbed:
-		private var m_props:PropDictionary = new PropDictionary();
-		private var m_conflictProps:PropDictionary = new PropDictionary();
+		private var m_has_error:Boolean = false;
 		
 		public function Port(_node:Node, _edge:Edge, _id:String, _type:uint = INCOMING_PORT_TYPE) {
 			node = _node;
@@ -37,43 +35,24 @@ package graph
 			type = _type;
 		}
 		
-		public function addConflict(prop:String):void
+		public function get has_error():Boolean
 		{
-			var anyConflictPre:Boolean = hasAnyConflict();
-			if (hasConflictProp(prop)) return;
-			m_conflictProps.setProp(prop, true);
-			if (!anyConflictPre) {
-				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, this));
-			}
+			return m_has_error;
 		}
 		
-		public function removeConflict(prop:String):void
+		public function set has_error(b:Boolean):void
 		{
-			var anyConflictPre:Boolean = hasAnyConflict();
-			if (!hasConflictProp(prop)) return;
-			m_conflictProps.setProp(prop, false);
-			if (anyConflictPre && !hasAnyConflict()) {
-				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, this));
+			if (m_has_error && !b) {
+				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, this));
+			} else if (!m_has_error && b) {
+				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, this));
 			}
+			m_has_error = b;
 		}
 		
 		override public function toString():String
 		{
 			return node.node_id + ((type == INCOMING_PORT_TYPE) ? "_I" : "_O") + port_id;
-		}
-		
-		// Testbed:
-		public function hasConflictProp(prop:String):Boolean
-		{
-			return m_conflictProps.hasProp(prop);
-		}
-		
-		public function hasAnyConflict():Boolean
-		{
-			for (var prop:String in m_conflictProps.iterProps()) {
-				return true;
-			}
-			return false;
 		}
 		
 	}

@@ -5,7 +5,8 @@ package events
 	
 	public class EdgeTroublePointEvent extends Event 
 	{
-		public static const EDGE_TROUBLE_POINT_CHANGE:String = "EDGE_TROUBLE_POINT_CHANGE";
+		public static const EDGE_TROUBLE_POINT_REMOVED:String = "EDGE_TROUBLE_POINT_REMOVED";
+		public static const EDGE_TROUBLE_POINT_ADDED:String = "EDGE_TROUBLE_POINT_ADDED";
 		
 		public var edge:Edge;
 		
