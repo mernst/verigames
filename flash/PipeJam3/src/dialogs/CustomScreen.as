@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import feathers.controls.Screen;
 	import feathers.controls.ImageLoader;

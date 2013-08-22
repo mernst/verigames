@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -14,9 +14,10 @@ package scenes.game.components.dialogs
 	import flash.geom.Point;
 	import flash.text.TextFormat;
 	
+	import networking.LoginHelper;
+	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
-	import networking.LoginHelper;
 	
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -192,19 +193,23 @@ package scenes.game.components.dialogs
 		
 		private function onSubmitButtonTriggered(e:starling.events.Event):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			
 			visible = false;
 			var eRating:Number = this.enjoymentRating*5.0;
 			//round to two decimal places
 			eRating *= 100;
 			eRating = Math.round(eRating);
 			eRating /= 100;
-			LoginHelper.getLoginHelper().levelObject.enjoymentRating = eRating;
+			loginHelper.levelObject.enjoymentRating = eRating;
 			var dRating:Number = this.difficultyRating*5.0;
 			//round to two decimal places
 			dRating *= 100;
 			dRating = Math.round(dRating);
 			dRating /= 100;
-			LoginHelper.getLoginHelper().levelObject.difficultyRating = dRating;
+			loginHelper.levelObject.difficultyRating = dRating;
+			loginHelper.reportPlayerPreference((eRating*20).toString()); //0-100 scale
+			loginHelper.reportPlayerPerformance((dRating*20).toString()); //0-100 scale
 			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 		}
 	}

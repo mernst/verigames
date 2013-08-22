@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -138,7 +138,10 @@ package scenes.game.components.dialogs
 		{
 			var name:String = LoginHelper.getLoginHelper().levelObject.layoutName;
 			var layoutFile:XML = new XML(byteArray);
-			dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, name, layoutFile));
+			var data:Object = new Object;
+			data.name = name;
+			data.layoutFile = layoutFile;
+			dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, data));
 		}
 	}
 }
