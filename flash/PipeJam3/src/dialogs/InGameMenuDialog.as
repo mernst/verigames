@@ -1,19 +1,24 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
+	
 	import events.MenuEvent;
-	import display.NineSliceButton;
 	import events.NavigationEvent;
+	
+	import flash.geom.Rectangle;
+	
 	import networking.LoginHelper;
-	import starling.display.Sprite;
-	import starling.events.Event;
+	
 	import scenes.BaseComponent;
+	import scenes.game.PipeJamGameScene;
+	import scenes.layoutselectscene.LayoutSelectScene;
+	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
-	import flash.geom.Rectangle;
-	import scenes.game.PipeJamGameScene;
+	import starling.display.Sprite;
+	import starling.events.Event;
 
 	public class InGameMenuDialog extends BaseComponent
 	{
@@ -162,40 +167,23 @@ package scenes.game.components.dialogs
 		private function onSelectLayoutButtonTriggered():void
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			onBackToGameButtonTriggered();//close menu
 			if(loginHelper != null && loginHelper.levelObject != null)
 			{
 				dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
-				loginHelper.onRequestLayoutList(onRequestLayoutList);
+				loginHelper.getLayoutList(onRequestLayoutList);
 			}
 			else
-				onRequestLayoutList(0, null);
+				onRequestLayoutList(0, null);  //just for testing, as it leads nowhere...
 		}
 		
 		protected function onRequestLayoutList(result:int, layoutList:Vector.<Object>):void
 		{
-			if(selectLayoutDialog == null)
-			{
-				selectLayoutDialog = new SelectLayoutDialog(this);
-				parent.addChild(selectLayoutDialog);
-				
-				selectLayoutDialog.x = background.width - selectLayoutDialog.width;
-				selectLayoutDialog.y = y + (height - selectLayoutDialog.height);
-				selectLayoutDialog.clipRect = new Rectangle(background.width, y + (height - selectLayoutDialog.height), 
-					selectLayoutDialog.width, selectLayoutDialog.height);
-				
-				selectLayoutDialog.setDialogInfo(layoutList);
-				var juggler:Juggler = Starling.juggler;
-				juggler.tween(selectLayoutDialog, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					x: background.width 
-				});	
-			}
-			else
-			{
-				hideSecondaryDialog(selectLayoutDialog, false);
-			}
-			
 			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
+			var layoutSelectScene:LayoutSelectScene = new LayoutSelectScene();
+			layoutSelectScene.setLayouts(layoutList);
+			parent.addChild(layoutSelectScene);
+			
 			
 		}
 		
@@ -208,8 +196,8 @@ package scenes.game.components.dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
-			this.removeFromParent();
+			loginHelper.stopLevel();
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
 		public function hideAllDialogs():void

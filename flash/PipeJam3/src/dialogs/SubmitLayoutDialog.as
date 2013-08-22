@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import assets.AssetsFont;
 	import display.NineSliceBatch;
@@ -16,7 +16,7 @@ package scenes.game.components.dialogs
 	public class SubmitLayoutDialog extends BaseComponent
 	{
 		protected var input:TextInput;
-		
+		protected var description:TextInput;
 		/** Button to save the current layout */
 		public var submit_button:NineSliceButton;
 		
@@ -28,11 +28,12 @@ package scenes.game.components.dialogs
 		protected var buttonPaddingWidth:int = 8;
 		protected var buttonPaddingHeight:int = 8;
 		protected var textInputHeight:int = 18;
+		protected var descriptionInputHeight:int = 60;
 		protected var labelHeight:int = 12;
-		protected var shapeWidth:int = 120;
+		protected var shapeWidth:int = 150;
 		protected var buttonHeight:int = 24;
 		protected var buttonWidth:int = (shapeWidth - 3*buttonPaddingWidth)/2;
-		protected var shapeHeight:int = 3*buttonPaddingHeight + buttonHeight + textInputHeight + labelHeight;
+		protected var shapeHeight:int = 4*buttonPaddingHeight + buttonHeight + textInputHeight + descriptionInputHeight + labelHeight;
 		
 		public function SubmitLayoutDialog()
 		{
@@ -58,6 +59,12 @@ package scenes.game.components.dialogs
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
+			var label:Label = new Label();
+			label.text = "Enter a layout name:";
+			label.x = buttonPaddingWidth;
+			addChild(label);
+			label.textRendererProperties.textFormat = new TextFormat( AssetsFont.FONT_UBUNTU, 12, 0xffffff ); 
+			
 			input = new TextInput();
 			
 			input.textEditorFactory = function():ITextEditor
@@ -71,23 +78,45 @@ package scenes.game.components.dialogs
 			input.width = shapeWidth - 2*buttonPaddingWidth;
 			input.height = 18;
 			input.x = buttonPaddingWidth;
-			input.y = submit_button.y - buttonPaddingHeight - input.height;
+			input.y = buttonPaddingHeight + 12;
 			input.text = "Layout Name";
 			input.selectRange(0, input.text.length);
 			input.addEventListener(FeathersEventType.FOCUS_IN, onFocus);
 			input.addEventListener(FeathersEventType.ENTER, onSubmitButtonTriggered);
 			
-			var label:Label = new Label();
-			label.text = "Enter a layout name:";
-			label.x = buttonPaddingHeight;
-			addChild(label);
-			label.textRendererProperties.textFormat = new TextFormat( AssetsFont.FONT_UBUNTU, 12, 0xffffff ); 
+			description = new TextInput();
+			
+			description.textEditorFactory = function():ITextEditor
+			{
+				var editor:StageTextTextEditor = new StageTextTextEditor();
+				editor.fontSize = 11;
+				return editor;
+			}
+			
+			this.addChild( description );
+			description.width = shapeWidth - 2*buttonPaddingWidth;
+			description.height = descriptionInputHeight;
+			description.x = buttonPaddingWidth;
+			description.y = input.y + input.height + buttonPaddingHeight;
+			description.text = "Add Description Here";
+			description.selectRange(0, input.text.length);
+			description.addEventListener(FeathersEventType.FOCUS_IN, onFocus);
+			description.addEventListener(FeathersEventType.ENTER, onSubmitButtonTriggered);
 		}
 		
 		private function onFocus(e:starling.events.Event):void
 		{
-			if (input.text == "Layout Name") {
-				input.text = "";
+			if(e.target == input)
+			{
+				if (input.text == "Layout Name") {
+					input.text = "";
+				}
+			}
+			else if(e.target == description)
+			{
+				if (description.text == "Add Description Here") {
+					description.text = "";
+				}
 			}
 		}
 		
@@ -99,7 +128,10 @@ package scenes.game.components.dialogs
 		private function onSubmitButtonTriggered(e:starling.events.Event):void
 		{
 			visible = false;
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT, input.text));		
+			var data:Object = new Object;
+			data.name = input.text;
+			data.description = description.text;
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT, data));		
 		}
 	}
 }

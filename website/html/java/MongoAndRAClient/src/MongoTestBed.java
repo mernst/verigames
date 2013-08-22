@@ -161,21 +161,19 @@ public class MongoTestBed {
 	            if(s.equals("log"))
 	            {
 		            DBCollection coll = db.getCollection(s);
-		            ObjectId field = new ObjectId("520d5020a8e0a1df0d1f62b7");
+		            ObjectId field = new ObjectId("521525e6a8e09714605209b5");
 		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
 		            BasicDBObject field1 = new BasicDBObject();
 		            field1.put("_id", field);
-		             //  DBCursor cursor = coll.find(field1);
+		            //    DBCursor cursor = coll.find(field1);
 		                  DBCursor cursor = coll.find();
 		    	        try {
 		    	           while(cursor.hasNext()) {
 		    	        	   count++;
-		    	        	   if(count > 100)
-		    	        	   {
-			    	        	   DBObject obj = cursor.next();
-			    	        	   System.out.println(obj); 
-		    	        	   }
-		    	       // 	   coll.remove(obj);
+		    	        	   DBObject obj = cursor.next();
+		    	        	   System.out.println(obj); 
+		    	        	   
+		    	      //  	   coll.remove(obj);
 		    	           }
 		    	        } finally {
 		    	           cursor.close();

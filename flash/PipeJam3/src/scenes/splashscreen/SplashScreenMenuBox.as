@@ -8,7 +8,6 @@ package scenes.splashscreen
 	import flash.net.*;
 	import flash.text.*;
 	import scenes.BaseComponent;
-	import scenes.game.components.dialogs.SelectLevelDialog;
 	import scenes.game.PipeJamGameScene;
 	import starling.core.Starling;
 	import starling.display.*;
@@ -32,9 +31,7 @@ package scenes.splashscreen
 				
 		
 		public var inputInfo:flash.text.TextField;
-		
-		protected var selectLevelDialog:SelectLevelDialog;
-		
+
 		public function SplashScreenMenuBox(parent:SplashScreenScene)
 		{
 			super();
@@ -89,7 +86,8 @@ package scenes.splashscreen
 			{
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if (signin_button) m_mainMenu.addChild(signin_button);
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT)
+					m_mainMenu.addChild(signin_button);
 			}
 			
 			if(!PipeJam3.RELEASE_BUILD && !PipeJam3.TUTORIAL_DEMO)
@@ -114,14 +112,13 @@ package scenes.splashscreen
 		{
 			//get client id
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
-			var myURL:URLRequest = new URLRequest("http://pipejam.verigames.com/login?redirect=http://pipejam.verigames.com/newPlayGame");
+			var myURL:URLRequest = new URLRequest("http://flowjam.verigames.com/login?redirect=http://flowjam.verigames.com/game1/PipeJam3.html");
 			navigateToURL(myURL, "_self");
 		}
 		
 		private function onExitButtonTriggered():void
 		{
 			m_mainMenu.visible = true;
-			removeChild(selectLevelDialog);
 		}
 		
 		protected function onActivate(evt:flash.events.Event):void

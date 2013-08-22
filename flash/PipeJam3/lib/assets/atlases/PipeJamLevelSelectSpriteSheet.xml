@@ -165,8 +165,8 @@
 	
 	<!-- delete button -->
 	
-	<SubTexture name="DeleteButton" x="525" y="190" width="30" height="30" frameX="0" frameY="0" frameWidth="30" frameHeight="30"/>
-	<SubTexture name="DeleteButtonMouseover" x="560" y="190" width="30" height="30" frameX="0" frameY="0" frameWidth="30" frameHeight="30"/>
-	<SubTexture name="DeleteButtonClick" x="595" y="190" width="30" height="30" frameX="0" frameY="0" frameWidth="30" frameHeight="30"/>
+	<SubTexture name="DeleteButton" x="781" y="602" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonMouseover" x="781" y="632" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
+	<SubTexture name="DeleteButtonClick" x="781" y="660" width="25" height="25" frameX="0" frameY="0" frameWidth="25" frameHeight="25"/>
 
 </TextureAtlas>
