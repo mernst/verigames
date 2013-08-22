@@ -51,9 +51,11 @@ class GraphvizRunner
    */
   public GraphInformation run(Board b)
   {
+
     Process process;
     try
     {
+      System.out.println("Executing " + command + " on board " + b);
       process = Runtime.getRuntime().exec(command);
     }
     catch (IOException e)
@@ -119,8 +121,10 @@ class GraphvizRunner
     StringBuilder processOutput = new StringBuilder();
 
     Scanner in = new Scanner(is);
-    while (in.hasNextLine())
-      processOutput.append(in.nextLine() + "\n");
+    while (in.hasNextLine()) {
+      String nextLine = in.nextLine();
+      processOutput.append(nextLine + "\n");
+    }
     // Scanner closes its underlying InputStream when closed
     in.close();
 
