@@ -93,6 +93,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
    * through the subboard.
    */
   override def handle() {
+    println( "HANDLING " + constraint )
 
     val subboardISect = addSubboardIntersection(callerBoard, constraint.calledVp, methodSignature)
 
@@ -142,14 +143,8 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
 
   def connectTypeArgsThrough( subboardISect : Subboard, typeArgs : List[List[Slot]], lowerBounds : List[Slot],
                               inPortPrefix : String, outPortPrefix : String ) = {
-    assert( typeArgs.length == lowerBounds.length )
-    val slotBuffer = new ListBuffer[Slot]
-    for( (typeArg, lowerBound) <- typeArgs.zip( lowerBounds ) ) {
-      slotBuffer ++= typeArg
-      slotBuffer +=  lowerBound
-    }
-
-    connectThrough( subboardISect, slotBuffer.toList, inPortPrefix, outPortPrefix )
+    val slots = interlaceTypeArgsAndBounds( typeArgs, lowerBounds )
+    connectThrough( subboardISect, slots, inPortPrefix, outPortPrefix )
   }
 
   def connectThrough( subboardISect : Subboard, slots : List[Slot],
