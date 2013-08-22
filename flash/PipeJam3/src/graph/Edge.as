@@ -83,7 +83,10 @@ package graph
 		private var m_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		private var m_prev_enter_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		private var m_prev_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
-		private var m_has_error:Boolean = false;
+		
+		// Testbed:
+		private var m_props:PropDictionary = new PropDictionary();
+		private var m_conflictProps:PropDictionary = new PropDictionary();
 		
 		/**
 		 * Directed Edge created when a graph structure is read in from XML.
@@ -260,19 +263,24 @@ package graph
 			}
 		}
 		
-		public function get has_error():Boolean
+		public function addConflict(prop:String):void
 		{
-			return m_has_error;
+			var anyConflictPre:Boolean = hasAnyConflict();
+			if (hasConflictProp(prop)) return;
+			m_conflictProps.setProp(prop, true);
+			if (!anyConflictPre) {
+				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, this));
+			}
 		}
 		
-		public function set has_error(b:Boolean):void
+		public function removeConflict(prop:String):void
 		{
-			if (m_has_error && !b) {
-				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, this));
-			} else if (!m_has_error && b) {
-				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, this));
+			var anyConflictPre:Boolean = hasAnyConflict();
+			if (!hasConflictProp(prop)) return;
+			m_conflictProps.setProp(prop, false);
+			if (anyConflictPre && !hasAnyConflict()) {
+				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, this));
 			}
-			m_has_error = b;
 		}
 		
 		private function ballUnknown(typ:uint):Boolean
@@ -281,6 +289,20 @@ package graph
 				case BALL_TYPE_UNDETERMINED:
 				case BALL_TYPE_GHOST:
 					return true;
+			}
+			return false;
+		}
+		
+		// Testbed:
+		public function hasConflictProp(prop:String):Boolean
+		{
+			return m_conflictProps.hasProp(prop);
+		}
+		
+		public function hasAnyConflict():Boolean
+		{
+			for (var prop:String in m_conflictProps.iterProps()) {
+				return true;
 			}
 			return false;
 		}

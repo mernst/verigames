@@ -52,9 +52,7 @@ package graph
 		public function argumentHasMapStamp():Boolean
 		{
 			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;
-			// TODO: HARDCODE TO BE TRUE FOR NOW, change back when UI has been added
-			return true;
-			//return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
+			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
 		}
 		
 		public function get mapEdge():Edge {
