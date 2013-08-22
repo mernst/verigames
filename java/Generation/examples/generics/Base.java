@@ -14,12 +14,12 @@ abstract class Base<X, Y> {
 }
 
 
-class PrintBase<X, Y> extends Base<X,Y> {
-	public PrintBase(final X x, final Y y) {
+class PrintBase<X2, Y2> extends Base<X2,Y2> {
+	public PrintBase(final X2 x, final Y2 y) {
 		super( x, y );
 	}
 	
-	public void set(X x) {
+	public void set(X2 x) {
 		this.x = x;
 	}
 }
