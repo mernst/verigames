@@ -2,9 +2,7 @@ package games
 
 import checkers.inference._
 import javacutils.AnnotationUtils
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.LinkedHashMap
-import scala.collection.mutable.Queue
+import scala.collection.mutable.{ListBuffer, HashMap, LinkedHashMap, Queue}
 import com.sun.source.tree.Tree.Kind
 import javax.lang.model.element.AnnotationMirror
 import verigames.level._
@@ -75,7 +73,6 @@ abstract class GameSolver extends ConstraintSolver {
      */
     val classToTypeParams = new LinkedHashMap[String, java.util.List[AbstractVariable]]
 
-
     val fieldBoardsToClass = new LinkedHashMap[Board, String]
 
     val nonStaticMethodBoardsToClass = new LinkedHashMap[Board, String]
@@ -104,7 +101,7 @@ abstract class GameSolver extends ConstraintSolver {
     /**
      * Mapping from a board to the Intersection that represents the "this" literal.
      */
-    val boardToSelfIntersection = new LinkedHashMap[Board, Intersection]
+    val fieldBoardToSelfIntersection = new LinkedHashMap[Board, Intersection]
 
     val boardToSelfVariable = new LinkedHashMap[Board, Variable]
 
@@ -239,7 +236,8 @@ abstract class GameSolver extends ConstraintSolver {
             val connect = board.add(START_SMALL_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ( (board, cvar) -> connect )
 
-          case mtp : MethodTypeParameterVP  =>
+          case mtp : WithinMethodVP if mtp.isInstanceOf[MethodTypeParameterVP]      ||
+                                       mtp.isInstanceOf[MethodTypeParameterBoundVP] =>
             //TODO: Is ordering going to be a problem?
             val incoming = board.getIncomingNode
             val connect = board.add(incoming, nextOutputId( incoming, MethodTypeParamsInPort), CONNECT, "input", toChute(cvar))._2
@@ -287,7 +285,9 @@ abstract class GameSolver extends ConstraintSolver {
               val setterName = getFieldSetterName( clvar )
               val setterBoard = findOrCreateMethodBoard(clvar, setterName)
               val incoming  = setterBoard.getIncomingNode
-              setterBoard.add( incoming, nextOutputId( incoming, OutputPort ), END, "input", toChute(cvar) )
+              val outgoing  = setterBoard.getOutgoingNode
+              setterBoard.add( incoming, nextOutputId( incoming, ParamInPort ),
+                               outgoing, nextInputId( outgoing, ParamOutPort ), toChute(cvar) )
 
               if( !fieldBoardsToClass.keys.contains( setterName )) {
                 fieldBoardsToClass += ( setterBoard -> clvar.getFQClassName )
@@ -354,18 +354,17 @@ abstract class GameSolver extends ConstraintSolver {
       //There are variables that may be in a subtype relationship that are still not on the boards in which they are
       //needed for now just add a pipe-dependent start
       constraints.foreach( constraint => {
-        val(sub, sup) = constraint match {
-          case SubtypeConstraint(sub: Slot, sup: Slot) => (sub, sup)
+        val(sub, sup, board) = constraint match {
+          case SubtypeConstraint(sub: Slot, sup: Slot) => (sub, sup, findBoard(sub, sup))
 
-          case EqualityConstraint(ell: Slot, elr: Slot) => (elr, ell)
+          case EqualityConstraint(ell: Slot, elr: Slot) => (elr, ell, findBoard(elr, ell))
 
-          case InequalityConstraint(context: VariablePosition, ell: Slot, elr: Slot) => (elr, ell)
+          case InequalityConstraint(context: VariablePosition, ell: Slot, elr: Slot) => (elr, ell, variablePosToBoard(context))
 
-          case _ => (null, null)
+          case _ => (null, null, null)
         }
 
         if( sub != null ) {
-          val board = findBoard(sub, sup)
 
           if( board != null ) { //TODO: FIGURE OUT WHICH THIS IS HAPPENING ON
             val missing = List(sub, sup)
@@ -491,6 +490,12 @@ abstract class GameSolver extends ConstraintSolver {
         isTypeParamOnMemberBoard || isGetterOrSetterReceiver( board, cvar )
       }
 
+
+      fieldBoardToSelfIntersection foreach{ case(board, intersection) =>
+        val outgoing  = board.getOutgoingNode
+        board.addEdge( intersection, "output", outgoing, nextInputId( outgoing, ReceiverOutPort ), createThisChute )
+      }
+
       //For all boards that
       endClassTypeParams()
 
@@ -501,6 +506,7 @@ abstract class GameSolver extends ConstraintSolver {
         val outgoing  = board.getOutgoingNode
 
         val portPrefix : Option[String] = cvar.varpos match {
+          case pvp  : ParameterVP                => Some( ParamOutPort )
           case rvp  : ReturnVP                   => Some( ReturnOutPort )
           case mtVp : MethodTypeParameterVP      => Some( MethodTypeParamsOutPort )
           case mtVp : MethodTypeParameterBoundVP => Some( MethodTypeParamsOutPort )
@@ -521,11 +527,12 @@ abstract class GameSolver extends ConstraintSolver {
 
         val vpBoard = variablePosToBoard(cvar.varpos)
         cvar.varpos match {
+          case pvp : ParameterVP if vpBoard == board =>
 
           //These cases are handled above by iterating over the variable list in order to preserve port ordering
-          case retVp : ReturnVP if variablePosToBoard(cvar.varpos) == board =>
-          case mtpVp : MethodTypeParameterVP if variablePosToBoard( mtpVp ) == board =>
-          case mtpVp : MethodTypeParameterBoundVP if variablePosToBoard( mtpVp ) == board =>
+          case retVp : ReturnVP                   if vpBoard == board =>
+          case mtpVp : MethodTypeParameterVP      if vpBoard == board =>
+          case mtpVp : MethodTypeParameterBoundVP if vpBoard == board =>
           case _ if isMethodReceiver( board, cvar ) =>
 
           //These cases are handled above in endClassTypeParameter in order to preserve port ordering
@@ -567,7 +574,7 @@ abstract class GameSolver extends ConstraintSolver {
      * Sanitizes the name to be a valid XML ID.
      */
     def newBoard(level: Level, name: String): Board = {
-      val b = new Board("Level=" + level + " Board=" + name + "")
+      val b = new Board("Board=" + name + "")
       // println("created board " + b + " with name " + name)
       val cleanname = cleanUpForXML(name)
       level.addBoard(cleanname, b)
@@ -673,18 +680,20 @@ abstract class GameSolver extends ConstraintSolver {
         val level = variablePosToLevel(varpos)
         val b = newBoard(level, sig)
         methToBoard += (sig -> b)
-        //addThisStart(b)
+        if( ( isFieldGetterName( sig ) || isFieldSetterName(sig) ) && !varpos.asInstanceOf[WithinFieldVP].isStatic ) {
+          addFieldReceiverStart(b)
+        }
         b
       }
     }
 
     /** Add the beginning of "this" pipes to a board. */
-    /*def addThisStart(board: Board) {
+    def addFieldReceiverStart(board: Board) {
       val incoming = board.getIncomingNode()
       val inthis = createThisChute()
-      val connect = board.add(incoming, ReceiverInPort, Intersection.Kind.CONNECT, "input", inthis)._2
-      boardToSelfIntersection += (board -> connect)
-    } */
+      val connect = board.add(incoming, nextOutputId(incoming, ReceiverInPort), Intersection.Kind.CONNECT, "input", inthis)._2
+      fieldBoardToSelfIntersection += (board -> connect)
+    }
 
   /**
    * Add each variable in Variables as an input to the given board
@@ -878,7 +887,7 @@ abstract class GameSolver extends ConstraintSolver {
     val contextVp = constraint.contextVp
 
     val board = variablePosToBoard( contextVp )
-    val vars = ( constraint.classTypeParamLBs ++ constraint.methodTypeParamLBs ++ constraint.methodTypeArgs.flatten ++ constraint.args)
+    val vars = ( constraint.classTypeParamLBs ++ constraint.methodTypeParamLBs ++ constraint.classTypeArgs.flatten ++ constraint.methodTypeArgs.flatten ++ constraint.args :+ constraint.receiver )
                   .filterNot( isUniqueSlot _ ) //TODO JB: If these are actually lower bounds, is this not superfluous, remove
                   .map( _.asInstanceOf[AbstractVariable] )
 
@@ -924,5 +933,15 @@ abstract class GameSolver extends ConstraintSolver {
       case (board, typeParams) =>
         connectVariablesToOutput( board, typeParams, ClassTypeParamsOutPort )
     })
+  }
+
+  def interlaceTypeArgsAndBounds( typeArgs : List[List[Slot]], lowerBounds : List[Slot] ) : List[Slot] = {
+    assert( typeArgs.length == lowerBounds.length )
+    val slotBuffer = new ListBuffer[Slot]
+    for( (typeArg, lowerBound) <- typeArgs.zip( lowerBounds ) ) {
+      slotBuffer ++= typeArg
+      slotBuffer +=  lowerBound
+    }
+    slotBuffer.toList
   }
 }
