@@ -58,11 +58,11 @@ def tostr(thing):
 
 # substitute characters that dot doesn't like, output is a string dot will like
 def sanitize(thing):
-	return thing.replace('-','_DSH_')
+	return thing.replace('-','_DSH_').replace(' ','_SPC_').replace('.','_DOT_')
 	
 # replace characters that dot doesn't like, output is original unsanitized string
 def desanitize(thing):
-	return thing.replace('_DSH_','-')
+	return thing.replace('_DSH_','-').replace('_SPC_',' ').replace('_DOT_','.')
 
 # get height of box used for dot to allow more vertical space based on number of boxlines passing thru
 def getboxheight(lines):
