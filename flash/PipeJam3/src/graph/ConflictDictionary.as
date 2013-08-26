@@ -27,16 +27,22 @@ package graph
 			return edges;
 		}
 		
-		public function addPortConflict(port:Port, prop:String):void
+		public function addPortConflict(port:Port, prop:String, test:Boolean = false):void
 		{
+			//trace("added port conflict: " + port + " prop:" + prop + " test:" + test);
+			if (test) return;
+			
 			var key:String = port.toString();
 			ports[key] = port;
 			if (!portPropertyConflicts.hasOwnProperty(key)) portPropertyConflicts[key] = new PropDictionary();
 			(portPropertyConflicts[key] as PropDictionary).setProp(prop, true);
 		}
 		
-		public function addEdgeConflict(edge:Edge, prop:String):void
+		public function addEdgeConflict(edge:Edge, prop:String, test:Boolean = false):void
 		{
+			//trace("added edge conflict: " + edge.edge_id + " prop:" + prop + " test:" + test);
+			if (test) return;
+			
 			var key:String = edge.edge_id;
 			edges[key] = edge;
 			if (!edgePropertyConflicts.hasOwnProperty(key)) edgePropertyConflicts[key] = new PropDictionary();

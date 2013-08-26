@@ -16,17 +16,17 @@ package system
 	import flash.utils.Dictionary;
 	
 	/**
-	 * The PipeSimulator class calculates and stores where trouble points
+	 * The PipeSimulator class calculates and stores where conflicts
 	 * can occur in the game, based on the current edge/graph configuration.
 	 * 
-	 * Trouble points can occur at either Ports or Edges. 
+	 * Conflicts can occur at either Ports or Edges. 
 	 * 
-	 * A trouble point Port occurs only when an edge with a WIDE ball flows
+	 * A conflict Port occurs only when an edge with a WIDE ball flows
 	 * into a NARROW SUBNETWORK edge stub or when a WIDE ball in the argument
 	 * edge of a MAPGET node flows into a MAPGET where the VALUE edge is
 	 * NARROW.
 	 * 
-	 * Trouble point edges occur any time a WIDE ball flows into a NARROW edge
+	 * Conflict edges occur any time a WIDE ball flows into a NARROW edge
 	 * or an edge that has a pinch point. For these edges, the edge.enter_ball_type
 	 * would be WIDE while the edge.exit_ball_type would be NARROW or NONE.
 	 * 
@@ -39,12 +39,12 @@ package system
 		/** True to use simulation results from external board calls (outside of the current level) on current board */
 		private static const SIMULATE_EXTERNAL_BOARDS:Boolean = false;
 		
-		/* The world in which the PipeSimulator detects trouble points */
+		/* The world in which the PipeSimulator detects conflicts */
 		private var network:Network;
 		
 		/* A map from boardname ConflictDict associated with that level.*/
-		private var boardToTroublePoints:Dictionary;
-		private var prevBoardToTroublePoints:Dictionary;
+		private var boardToConflicts:Dictionary;
+		private var prevBoardToConflicts:Dictionary;
 		
 		/**
 		 * Simulates the ball types for each edge in the given network
@@ -53,9 +53,10 @@ package system
 		public function PipeSimulator(_network:Network) 
 		{
 			network = _network;
-			boardToTroublePoints = new Dictionary();
+			boardToConflicts = new Dictionary();
 			// TODO: globally mark Edges and Ports has_error = true
 			var boards_in_prog:Vector.<BoardNodes> = new Vector.<BoardNodes>();
+			//trace("Simulating");
 			for (var levelName:String in network.LevelNodesDictionary) {
 				var levelNodes:LevelNodes = network.LevelNodesDictionary[levelName] as LevelNodes;
 				for (var boardName:String in levelNodes.boardNodesDictionary) {
@@ -76,7 +77,7 @@ package system
 							edgeToMark.addConflict(prop);
 						}
 					}
-					boardToTroublePoints[board.board_name] = conflictDict;
+					boardToConflicts[board.board_name] = conflictDict;
 				}
 			}
 		}
@@ -87,12 +88,12 @@ package system
 		 * @param	levelToSimulate To simulate a given level, "" to simulate all in world
 		 */
 		public function updateOnBoxSizeChange(edgeSetId:String, levelToSimulate:String = ""):void {
-			// Copy previous trouble points
-			prevBoardToTroublePoints = new Dictionary();
-			for (var boardName:String in boardToTroublePoints) {
-				prevBoardToTroublePoints[boardName] = (boardToTroublePoints[boardName] as ConflictDictionary).clone();
+			// Copy previous conflicts
+			prevBoardToConflicts = new Dictionary();
+			for (var boardName:String in boardToConflicts) {
+				prevBoardToConflicts[boardName] = (boardToConflicts[boardName] as ConflictDictionary).clone();
 			}
-			
+			//trace("Simulating");
 			var boardsToSim:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			for (var levelName:String in network.LevelNodesDictionary) {
 				if ((levelToSimulate.length == 0) || (levelName == levelToSimulate)) {
@@ -112,17 +113,17 @@ package system
 			for (i = 0; i < boardsToSim.length; i++) {
 				var simBoard:BoardNodes = boardsToSim[i];
 				if (simBoard.changed_since_last_sim) {
-					boardToTroublePoints[simBoard.board_name] = simulateBoard(simBoard, boards_in_prog, boards_touched);
+					boardToConflicts[simBoard.board_name] = simulateBoard(simBoard, boards_in_prog, boards_touched);
 				}
 			}
-			
+			//trace("Determining new/removed conflicts");
 			var addConflictDict:ConflictDictionary = new ConflictDictionary();
 			var removeConflictDict:ConflictDictionary = new ConflictDictionary();
 			var portk:String, edgek:String, prop:String;
 			for (i = 0; i < boards_touched.length; i++) {
 				var boardTouched:BoardNodes = boards_touched[i];
-				var newConflictDict:ConflictDictionary = boardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
-				var prevConflictDict:ConflictDictionary = prevBoardToTroublePoints[boardTouched.board_name] as ConflictDictionary;
+				var newConflictDict:ConflictDictionary = boardToConflicts[boardTouched.board_name] as ConflictDictionary;
+				var prevConflictDict:ConflictDictionary = prevBoardToConflicts[boardTouched.board_name] as ConflictDictionary;
 				// check new conflict, if they weren't in prevConflictDict then they are new and need to be added
 				for (portk in newConflictDict.iterPorts()) {
 					var port:Port = newConflictDict.getPort(portk);
@@ -194,12 +195,12 @@ package system
 		}
 		
 		/**
-		 * Simulates a given level and finds trouble points in the level based on 
+		 * Simulates a given level and finds conflicts in the level based on 
 		 * width of pipes. It is not flow sensitive.
 		 * 
 		 * @param	level the level to simulate
 		 * @param	boards_in_progress Any boards that are already being simulated, used to avoid infinite recursion loops
-		 * @return A two element array (list of Port trouble points, list of Edge trouble points)
+		 * @return Conflict dictionary representing conflicts found by port and edge
 		 */
 		private function simulateBoard(sim_board:BoardNodes, boards_in_progress:Vector.<BoardNodes> = null, boards_touched:Vector.<BoardNodes> = null, simulate_recursion_boards:Boolean = true):ConflictDictionary
 		{
@@ -226,7 +227,7 @@ package system
 				var startingEdgeVec:Vector.<Edge> = sim_board.startingEdgeDictionary[startingEdgeSetId] as Vector.<Edge>;
 				for (i = 0; i < startingEdgeVec.length; i++) {
 					var startingEdge:Edge = startingEdgeVec[i];
-					startingEdge.setUndeterminedAndRecurse();
+					startingEdge.resetPropsAndRecurse();
 				}
 			}
 			
@@ -259,10 +260,13 @@ package system
 			
 			var recursive_boards:Vector.<BoardNodes> = new Vector.<BoardNodes>();
 			//check starting edges to see if they come out of a subnetwork and add them to the queue
+			var props:PropDictionary, edgeSetProps:PropDictionary;
 			for (var edgeKey:String in dict) {
 				var v:Vector.<Edge> = dict[edgeKey] as Vector.<Edge>;
 				for (i = 0; i < v.length; i++) {
 					var e:Edge = v[i];
+					props = new PropDictionary();
+					edgeSetProps = e.linked_edge_set.getProps().clone();
 					// check for SUBNETWORK width mismatch - this is the case when a SUBNETWORK edge flows into this edge (e)
 					switch (e.from_node.kind) {
 						case NodeTypes.INCOMING:
@@ -272,22 +276,32 @@ package system
 							} else {
 								e.enter_ball_type = Edge.BALL_TYPE_NARROW;
 							}
+							edgeSetProps.setProp(PropDictionary.PROP_NARROW, !e.is_wide);
+							e.setEnterProps(edgeSetProps);
 							queue.push(e);
 							break;
 						case NodeTypes.START_LARGE_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_WIDE;
+							edgeSetProps.setProp(PropDictionary.PROP_NARROW, false);
+							e.setEnterProps(edgeSetProps);
 							queue.push(e);
 							break;
 						case NodeTypes.START_NO_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_NONE;
+							edgeSetProps.setProp(PropDictionary.PROP_NARROW, true);
+							e.setEnterProps(edgeSetProps);
 							queue.push(e);
 							break;
 						case NodeTypes.START_SMALL_BALL:
 							e.enter_ball_type = Edge.BALL_TYPE_NARROW;
+							edgeSetProps.setProp(PropDictionary.PROP_NARROW, true);
+							e.setEnterProps(edgeSetProps);
 							queue.push(e);
 							break;
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
 							e.enter_ball_type = e.is_wide ? Edge.BALL_TYPE_WIDE : Edge.BALL_TYPE_NARROW;
+							edgeSetProps.setProp(PropDictionary.PROP_NARROW, !e.is_wide);
+							e.setEnterProps(edgeSetProps);
 							queue.push(e);
 							break;
 						case NodeTypes.SUBBOARD:
@@ -310,7 +324,7 @@ package system
 									} else {
 										// If we haven't begun simulating this yet, do so now and store results in dictionary
 										//if (DEBUG) { trace("  ["+sim_board.board_name+"] Simulate this subboard: " + subnet_board.board_name); }
-										boardToTroublePoints[subnet_board.board_name] = simulateBoard(subnet_board, boards_in_progress, boards_touched, simulate_recursion_boards);
+										boardToConflicts[subnet_board.board_name] = simulateBoard(subnet_board, boards_in_progress, boards_touched, simulate_recursion_boards);
 									}
 								} else {
 									changedSinceLastSim = false;
@@ -322,11 +336,15 @@ package system
 								var subnet_port:SubnetworkPort = (my_port as SubnetworkPort);
 								// Mark the ball types on *this* board based on the outputs of the subnet_board (undetermined get set as ghost balls)
 								var out_type:uint;
+								var out_props:PropDictionary;
 								if (!useDefaultBoardOutputs && subnet_port.linked_subnetwork_edge) {
 									out_type = subnet_port.linked_subnetwork_edge.exit_ball_type;
+									out_props = subnet_port.linked_subnetwork_edge.getExitProps().clone();
 									subnet_port.default_ball_type = out_type; // update best-known default
+									subnet_port.default_props = out_props;
 								} else {
 									out_type = subnet_port.default_ball_type;
+									out_props = subnet_port.default_props.clone();
 								}
 								switch (out_type) {
 									case Edge.BALL_TYPE_WIDE:
@@ -357,6 +375,7 @@ package system
 										throw new Error("Flow sensitive PipeSimulator: Ball type not defined - " + out_type);
 										break;
 								}
+								subnet_port.edge.setEnterProps(out_props);
 							}
 							queue.push(e);
 							break;
@@ -377,8 +396,25 @@ package system
 					throw new Error("Flow sensitive PipeSimulator: Traversed to edge where we begin with ball_type == BALL_TYPE_UNDETERMINED. Cannot proceed.");
 				}
 				
+				// Deal with incoming properties
+				// Outgoing properties = incoming || edge set properties
+				// Contlict properties = edge set properties NOT IN incoming
+				var outgoing_props:PropDictionary = edge.getEnterProps().clone();
+				var prop:String;
+				var edgeProps:PropDictionary = edge.linked_edge_set.getProps().clone();
+				if (edge.has_buzzsaw || edge.has_pinch || !edge.is_wide) edgeProps.setProp(PropDictionary.PROP_NARROW, true);
+				for (prop in edgeProps.iterProps()) {
+					outgoing_props.setProp(prop, true);
+					if ((prop == PropDictionary.PROP_NARROW) && edge.has_buzzsaw) continue; // no conflict
+					// If there is a prop in the edge set that isn't in the entering prop, mark as conflict props
+					if (!edge.getEnterProps().hasProp(prop)) {
+						conflictDict.addEdgeConflict(edge, prop);
+					}
+				}
+				edge.setExitProps(outgoing_props);
+				
 				// Move from top of this edges's pipe to the bottom
-				// If there's a pinch point, remove any large balls and insert a trouble point
+				// If there's a pinch point, remove any large balls and insert a conflict
 				var outgoing_ball_type:uint = edge.enter_ball_type;
 				if (edge.has_buzzsaw) {
 					// Top of pipe has a Buzzsaw. That means pass any small balls through, otherwise no balls
@@ -408,7 +444,7 @@ package system
 							break;
 						case Edge.BALL_TYPE_WIDE:
 							if (edge.has_pinch || !edge.is_wide) {
-								conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
+								//conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
 								outgoing_ball_type = Edge.BALL_TYPE_NONE;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE;
@@ -416,7 +452,7 @@ package system
 							break;
 						case Edge.BALL_TYPE_WIDE_AND_NARROW:
 							if (edge.has_pinch || !edge.is_wide) {
-								conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
+								//conflictDict.addEdgeConflict(edge, PropDictionary.PROP_NARROW);
 								outgoing_ball_type = Edge.BALL_TYPE_NARROW;
 							} else {
 								outgoing_ball_type = Edge.BALL_TYPE_WIDE_AND_NARROW;
@@ -427,6 +463,7 @@ package system
 							break;
 					}
 				}
+				
 				// If already simulated, move on
 				if (edge.exit_ball_type == outgoing_ball_type) {
 					continue;
@@ -451,16 +488,29 @@ package system
 						var subnet_incoming_edge:Edge = (edge.to_port as SubnetworkPort).linked_subnetwork_edge;
 						var subnet_is_external:Boolean = (node as SubnetworkNode).associated_board_is_external;
 						var subnet_stub_is_wide:Boolean;
+						edgeProps = new PropDictionary();
 						if (subnet_incoming_edge && (!subnet_is_external || SIMULATE_EXTERNAL_BOARDS)) {
 							subnet_stub_is_wide = subnet_incoming_edge.is_wide;
+							edgeProps = subnet_incoming_edge.linked_edge_set.getProps().clone();
 						} else {
 							subnet_stub_is_wide = (edge.to_port as SubnetworkPort).default_is_wide;
+							edgeProps.setProp(PropDictionary.PROP_NARROW, !subnet_stub_is_wide);
 						}
+						
+						// Deal with properties
+						var exit_props:PropDictionary = edge.getExitProps().clone();
+						for (prop in edgeProps.iterProps()) {
+							// If there is a prop in the edge set that isn't in the entering prop, mark as conflict props
+							if (!edge.getExitProps().hasProp(prop)) {
+								conflictDict.addPortConflict(edge.to_port, prop);
+							}
+						}
+						
 						if (!subnet_stub_is_wide) {
 							switch (edge.exit_ball_type) {
 								case Edge.BALL_TYPE_WIDE:
 								case Edge.BALL_TYPE_WIDE_AND_NARROW:
-									conflictDict.addPortConflict(edge.to_port, PropDictionary.PROP_NARROW);
+									//conflictDict.addPortConflict(edge.to_port, PropDictionary.PROP_NARROW);
 									break;
 							}
 						}
@@ -501,6 +551,18 @@ package system
 							} else {
 								outgoingMergeEdge.enter_ball_type = Edge.BALL_TYPE_NONE;
 							}
+							
+							// Deal with properties - only add if BOTH merging edges have the property
+							props = other_edge.getExitProps().clone();
+							props.addProps(edge.getExitProps());
+							outgoing_props = new PropDictionary();
+							for (prop in props.iterProps()) {
+								if (other_edge.getExitProps().hasProp(prop) && edge.getExitProps().hasProp(prop)) {
+									outgoing_props.setProp(prop, true);
+								}
+							}
+							outgoingMergeEdge.setEnterProps(outgoing_props);
+							
 							// Remove edges from waiting list if they're in there
 							if (edges_awaiting_others.indexOf(edge) > -1) {
 								edges_awaiting_others.splice(edges_awaiting_others.indexOf(edge), 1);
@@ -525,8 +587,10 @@ package system
 					//other nodes
 					case NodeTypes.SPLIT : {
 						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+						node.outgoing_ports[0].edge.setEnterProps(edge.getExitProps());
 						if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge);//enqueue
 						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+						node.outgoing_ports[1].edge.setEnterProps(edge.getExitProps());
 						if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
 					}
 						break;
@@ -536,11 +600,15 @@ package system
 						// and a large ball down the wide pipe, rather that "sorting" the balls
 						for (i = 0; i < node.outgoing_ports.length; i++) {
 							var outgoing_port:Port = node.outgoing_ports[i];
+							outgoing_props = node.incoming_ports[0].edge.getExitProps().clone();
 							if (outgoing_port.edge.is_wide) {
 								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+								outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
 							} else {
 								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
 							}
+							outgoing_port.edge.setEnterProps(outgoing_props);
 							if (queue.indexOf(outgoing_port.edge) == -1) queue.push(outgoing_port.edge); //enqueue
 						}
 					}
@@ -550,6 +618,15 @@ package system
 						// Process the GET node when the "VALUE" edge is reached
 						if ((node as MapGetNode).valueEdge == edge) {
 							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
+							// Deal with props, no props except possible narrow
+							outgoing_props = new PropDictionary();
+							switch (node.outgoing_ports[0].edge.enter_ball_type) {
+								case Edge.BALL_TYPE_NARROW:
+								case Edge.BALL_TYPE_NONE:
+									outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
+									break;
+							}
+							node.outgoing_ports[0].edge.setEnterProps(outgoing_props);
 							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
 						}
 					}
@@ -559,6 +636,7 @@ package system
 						// Apparently there is a possibility that the CONNECT node doesn't have an output
 						if (node.outgoing_ports.length == 1) {
 							node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
+							node.outgoing_ports[0].edge.setEnterProps(edge.getExitProps());
 							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
 						} else {
 							//trace("WARNING! Found CONNECT node (node_id:" + node.node_id + ") with " + node.outgoing_ports.length + " output ports.");
@@ -599,6 +677,9 @@ package system
 					var other_merge_edge:Edge = getOtherMergeEdge(edge_to_proceed);
 					if (other_merge_edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
 						other_merge_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+						outgoing_props = new PropDictionary();
+						outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
+						other_merge_edge.setEnterProps(outgoing_props);
 					}
 					// enqueue other edge, move to top of queue (remove if in queue, then add to beginning)
 					if (queue.indexOf(other_merge_edge) > -1) {
@@ -624,8 +705,10 @@ package system
 			
 			/* Here we're looping over any subnetwork board that has pipes that output into this board and was already being simulated (recursive case).
 			* We want to:
-			* 	1) Check if there are any "ghost" or "undetermined" outputs. If there are none, this board is ready to be used.
-			* 		a) If there are any ghost outputs, 
+			* 	Check if there are any "ghost" or "undetermined" outputs:
+			*     F: If there are none, this board is ready to be used.
+			*     T: If there are any ghost outputs, check for unfinished merges where at least one merge input has a
+			*        valid ball type (not "ghost" or "undetermined") and continue with that merge
 			*/
 			var new_ghost_outputs:uint = 0;
 			while (simulate_recursion_boards && (latest_ghost_outputs > 0)) {
@@ -634,7 +717,7 @@ package system
 					// Re-simulate this board, but don't use the current stack of recursive calls, this should allow the top-level
 					// board to see the updated output ball types
 					//if (DEBUG) { trace("  ["+sim_board.board_name+"] Recursively simulating " + recursive_board.board_name + " within " + sim_board.board_name); }
-					boardToTroublePoints[recursive_board.board_name] = simulateBoard(recursive_board, null, null, false);
+					boardToConflicts[recursive_board.board_name] = simulateBoard(recursive_board, null, null, false);
 					new_ghost_outputs = 0;
 					// Check for any ghost outputs on *this* board
 					for (var edgeK2:String in sim_board.outgoingEdgeDictionary) {
@@ -662,10 +745,15 @@ package system
 							var oEdge3:Edge = outgoing_vec3[i];
 							if ( (oEdge3.exit_ball_type == Edge.BALL_TYPE_UNDETERMINED) || 
 								(oEdge3.exit_ball_type == Edge.BALL_TYPE_GHOST) ) {
+								outgoing_props = oEdge3.getEnterProps().clone();
 								if (oEdge3.is_wide) {
-									oEdge3.exit_ball_type == Edge.BALL_TYPE_WIDE;
+									oEdge3.exit_ball_type = Edge.BALL_TYPE_WIDE;
+									outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
+									oEdge3.setExitProps(outgoing_props);
 								} else {
-									oEdge3.exit_ball_type == Edge.BALL_TYPE_NARROW;
+									oEdge3.exit_ball_type = Edge.BALL_TYPE_NARROW;
+									outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
+									oEdge3.setExitProps(outgoing_props);
 								}
 							}
 						}

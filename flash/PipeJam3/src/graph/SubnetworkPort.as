@@ -11,10 +11,12 @@ package graph
 		public var linked_subnetwork_edge:Edge;
 		
 		public var default_ball_type:uint;
+		public var default_props:PropDictionary;
 		public var default_is_wide:Boolean;
 		
 		public function SubnetworkPort(_node:SubnetworkNode, _edge:Edge, _id:String, _type:uint = INCOMING_PORT_TYPE) {
 			super(_node, _edge, _id, _type);
+			default_props = new PropDictionary();
 			if (type == INCOMING_PORT_TYPE) {
 				default_ball_type = Edge.BALL_TYPE_NONE;
 				default_is_wide = true;
@@ -22,6 +24,7 @@ package graph
 				default_ball_type = Edge.BALL_TYPE_NARROW;
 				default_is_wide = false;
 			}
+			default_props.setProp(PropDictionary.PROP_NARROW, !default_is_wide);
 		}
 		
 	}

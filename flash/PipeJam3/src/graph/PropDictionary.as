@@ -75,6 +75,13 @@ package graph
 			return true;
 		}
 		
+		public function clone():PropDictionary
+		{
+			var ret:PropDictionary = new PropDictionary();
+			ret.addProps(this);
+			return ret;
+		}
+		
 		public static function getProps(props:PropDictionary, prefix:String):Vector.<String>
 		{
 			var ret:Vector.<String> = new Vector.<String>();

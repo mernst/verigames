@@ -63,10 +63,6 @@ package graph
 		/** True if this edge's width can be changed by the user, if false pipe is gray and cannot be changed */
 		public var editable:Boolean = false;
 		
-		/* current state of the pipe */
-		/** True if edge has attribute width="wide" in XML, false otherwise */
-		public var is_wide:Boolean = false;
-		
 		/** True if edge has attribute buzzsaw="true" in XML, false otherwise */
 		public var has_buzzsaw:Boolean = false;
 		
@@ -85,7 +81,8 @@ package graph
 		private var m_prev_exit_ball_type:uint = BALL_TYPE_UNDETERMINED;
 		
 		// Testbed:
-		private var m_props:PropDictionary = new PropDictionary();
+		private var m_enterProps:PropDictionary = new PropDictionary();
+		private var m_exitProps:PropDictionary = new PropDictionary();
 		private var m_conflictProps:PropDictionary = new PropDictionary();
 		
 		/**
@@ -134,7 +131,10 @@ package graph
 				}
 				if (String(metadata.data.width).toLowerCase() == "wide") {
 					starting_is_wide = true;
-					is_wide = true;
+					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, false);
+					//is_wide = true;
+				} else {
+					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, true);
 				}
 				if (String(metadata.data.buzzsaw).toLowerCase() == "true") {
 					starting_has_buzzsaw = true;
@@ -148,12 +148,6 @@ package graph
 			metadata = null;
 			
 			Network.edgeDictionary[edge_id] = this;
-		}
-		
-		public function updateEdgeWidth(isWide:Boolean):void
-		{
-			if(editable)
-				is_wide = isWide;
 		}
 		
 		public function isStartingEdge():Boolean
@@ -170,20 +164,6 @@ package graph
 			}
 			
 			return false;
-		}
-		
-		//returns the active stamps associated with this edge
-		protected function getActiveStampVector():Vector.<StampRef> {
-			var activeStampVector:Vector.<StampRef> = new Vector.<StampRef>;
-			
-			var numActiveStamps:uint = linked_edge_set.num_active_stamps;
-			for(var i:uint = 0; i < numActiveStamps; i++)
-			{
-				var activeStamp:StampRef = linked_edge_set.getActiveStampAt(i);
-				activeStampVector[activeStampVector.length] = activeStamp;				
-			}
-			
-			return activeStampVector;
 		}
 		
 		public function get from_node():Node {
@@ -251,15 +231,18 @@ package graph
 		}
 		
 		// Set this edge to UNDETERMINED and outgoing Edge's
-		public function setUndeterminedAndRecurse():void
+		public function resetPropsAndRecurse():void
 		{
+			m_enterProps = new PropDictionary();
+			m_exitProps = new PropDictionary();
+			//m_conflictProps = new PropDictionary();
 			if ((m_enter_ball_type == BALL_TYPE_UNDETERMINED) && (m_exit_ball_type == BALL_TYPE_UNDETERMINED)) {
 				return;
 			}
 			m_enter_ball_type = BALL_TYPE_UNDETERMINED;
 			m_exit_ball_type = BALL_TYPE_UNDETERMINED;
 			for each (var outport:Port in to_port.node.outgoing_ports) {
-				outport.edge.setUndeterminedAndRecurse();
+				outport.edge.resetPropsAndRecurse();
 			}
 		}
 		
@@ -291,6 +274,31 @@ package graph
 					return true;
 			}
 			return false;
+		}
+		
+		public function get is_wide():Boolean
+		{
+			return !linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW);
+		}
+		
+		public function setEnterProps(props:PropDictionary):void
+		{
+			m_enterProps = props.clone();
+		}
+		
+		public function setExitProps(props:PropDictionary):void
+		{
+			m_exitProps = props.clone();
+		}
+		
+		public function getEnterProps():PropDictionary
+		{
+			return m_enterProps;
+		}
+		
+		public function getExitProps():PropDictionary
+		{
+			return m_exitProps;
 		}
 		
 		// Testbed:
