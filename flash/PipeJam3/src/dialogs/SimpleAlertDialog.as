@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
@@ -17,11 +17,13 @@ package scenes.game.components.dialogs
 	{
 		protected var ok_button:NineSliceButton;
 		private var m_socialText:String;
+		private var m_callback:Function;
 		
-		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "")
+		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "", callback:Function = null)
 		{
 			super();
 			m_socialText = _socialText;
+			m_callback = callback;
 			
 			var background:NineSliceBatch = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxFree");
 			addChild(background);
@@ -76,6 +78,9 @@ package scenes.game.components.dialogs
 		private function onOKButtonTriggered(evt:Event):void
 		{
 			visible = false;
+			parent.removeChild(this);
+			if(m_callback != null)
+				m_callback();
 		}
 	}
 }

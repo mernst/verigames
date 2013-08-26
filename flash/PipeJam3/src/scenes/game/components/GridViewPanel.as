@@ -2,7 +2,6 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import starling.animation.DelayedCall;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -13,10 +12,15 @@ package scenes.game.components
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.PixelSnapping;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	import flash.utils.ByteArray;
 	
 	import particle.FanfareParticleSystem;
 	
@@ -29,7 +33,9 @@ package scenes.game.components
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	
+	import starling.animation.DelayedCall;
 	import starling.animation.Transitions;
+	import starling.core.RenderSupport;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
@@ -43,8 +49,10 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-		
+	
 	import utils.XMath;
+	import utils.Base64Decoder;
+	import utils.Base64Encoder;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -836,13 +844,88 @@ package scenes.game.components
 			return true;
 		}
 		
-/*		public function drawScaled(obj:DisplayObject, thumbWidth:Number, thumbHeight:Number):Bitmap {
+		//returns ByteArray that contains bitmap that is the same aspect ratio as view, with maxwidth or maxheight (or both, if same as aspect ratio) respected
+		//byte array is compressed and contains it's width as as unsigned int at the start of the array
+		public function getThumbnail(_maxwidth:Number, _maxheight:Number):ByteArray
+		{
+			var  backgroundColor:Number = 0x262257;
+			//save current state
+			var savedClipRect:Rectangle = clipRect;
+			var currentX:Number = content.x;
+			var currentY:Number = content.y;
+			var currentXScale:Number = content.scaleX;
+			var currentYScale:Number = content.scaleY;
+			recenter();
+			this.clipRect = null;
+			//remove these to help with compression
+			removeChild(m_backgroundImage);
+			removeChild(m_border);
+			
+			var bmpdata:BitmapData = drawToBitmapData(backgroundColor);
+	
+			var scaleWidth:Number = _maxwidth/bmpdata.width;
+			var scaleHeight:Number = _maxheight/bmpdata.height;
+			var newWidth:Number, newHeight:Number;
+			if(scaleWidth < scaleHeight)
+			{
+				scaleHeight = scaleWidth;
+				newWidth = _maxwidth;
+				newHeight = bmpdata.height*scaleHeight;
+			}
+			else
+			{
+				scaleWidth = scaleHeight;
+				newHeight = _maxheight;
+				newWidth = bmpdata.width*scaleWidth;
+			}
+			
+			//crashes on my machine in debug, even though should be supported in 11.3
+	//		var byteArray:ByteArray = new ByteArray;
+	//		bmpdata.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
+			
 			var m:Matrix = new Matrix();
-			m.scale(WIDTH / obj.width, HEIGHT / obj.height);
-			var bmp:BitmapData = new BitmapData(thumbWidth, thumbHeight, false);
-			bmp.draw(obj, m);
-			var byteArray:ByteArray = new ByteArray(); 
-			bitmapData.encode(new Rectangle(0,0,640,480), new flash.display.JPEGEncoderOptions(), byteArray);
-		}*/
+			m.scale(scaleWidth, scaleHeight);
+			var smallBMD:BitmapData = new BitmapData(newWidth, newHeight);
+			smallBMD.draw(bmpdata, m);
+		
+			//restore state
+			content.x = currentX;
+			content.y = currentY;
+			content.scaleX = currentXScale;
+			content.scaleY = currentYScale;
+			clipRect = savedClipRect;
+			addChildAt(this.m_backgroundImage, 0);
+			addChildAt(this.m_border, 1);
+			
+			var bytes:ByteArray = new ByteArray;
+			bytes.writeUnsignedInt(smallBMD.width);
+			//fix bottom to be above score area
+			var fixedRect:Rectangle = smallBMD.rect.clone();
+			fixedRect.height = Math.floor(smallBMD.height*(clipRect.height/320));
+			bytes.writeBytes(smallBMD.getPixels(fixedRect));
+			bytes.compress();
+			
+			return bytes;
+		}
+		
+		public function drawToBitmapData(_backgroundColor:Number = 0x00000000, destination:BitmapData=null):BitmapData
+		{
+			var support:RenderSupport = new RenderSupport();
+			var star:Starling = Starling.current;
+
+			if (destination == null)
+				destination = new BitmapData(480, 320);
+
+			support.renderTarget = null;
+			support.setOrthographicProjection(0, 0, 960, 640);
+			support.clear(_backgroundColor, 1);
+			render(support, 1.0);
+			support.finishQuadBatch();
+
+			Starling.current.context.drawToBitmapData(destination);
+		//	Starling.current.context.present(); // required on some platforms to avoid flickering
+
+			return destination;
+		}
 	}
 }

@@ -45,10 +45,17 @@ function unzipFiles(event) {
     //wait for Ajax request to complete, if successful move on to the next stage
     request.done(function (response) {
         if (response === "SUCCESS") {
-console.log("success unzipping files");
-            $('#unzip-spin').html("<img style='opacity:1.0' width='25' height='25' " +
-                "src='./resources/success.png'/>");
-            compileFiles();
+		console.log("success unzipping files");
+		if(document.forms[0].isXML.checked.toString() == 'false')
+		{
+            		$('#unzip-spin').html("<img style='opacity:1.0' width='25' height='25' " +
+                		"src='./resources/success.png'/>");
+            		compileFiles();
+		}
+		else
+		{
+			createGameFilesFromXML();
+		}
         }
     });
 }

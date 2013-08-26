@@ -43,11 +43,19 @@ public class WorldLayout
   public static void layout(World w)
   {
     checkNotUnderConstruction(w);
+    int totalBoards = 0;
+    for(Level l : w.getLevels().values() ) {
+        totalBoards += l.getBoards().values().size();
+    }
+
+    int currentBoard = 0;
     for (Level l : w.getLevels().values())
     {
       for (Board b : l.getBoards().values())
       {
+        System.out.print("Printing board: " + currentBoard + " of " + totalBoards);
         BoardLayout.layout(b);
+        ++currentBoard;
       }
     }
   }

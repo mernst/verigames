@@ -1,4 +1,4 @@
-package scenes.game.components.dialogs
+package dialogs
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;

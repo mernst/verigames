@@ -66,6 +66,14 @@ public class NninfChecker extends GameChecker<NninfAnnotatedTypeFactory> {
                  /*|| ty instanceof AnnotatedTypeVariable*/);
     }
 
+    public AnnotationMirror defaultQualifier(AnnotatedTypeMirror ty) {
+        if( ty instanceof AnnotatedPrimitiveType ) {
+            return NONNULL;
+        } else {
+            return defaultQualifier();
+        }
+    }
+
     @Override
     public AnnotationMirror defaultQualifier() {
         return this.NULLABLE;

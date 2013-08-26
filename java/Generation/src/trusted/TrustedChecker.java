@@ -70,6 +70,14 @@ public class TrustedChecker extends GameChecker<BasicAnnotatedTypeFactory<?>> {
                 || ty instanceof AnnotatedTypeVariable);
     }
 
+    public AnnotationMirror defaultQualifier(AnnotatedTypeMirror ty) {
+        if( ! needsAnnotation( ty ) ) {
+           return TRUSTED;
+        } else {
+           return UNTRUSTED;
+        }
+    }
+
     @Override
     public AnnotationMirror defaultQualifier() {
         return this.UNTRUSTED;

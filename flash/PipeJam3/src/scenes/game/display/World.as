@@ -4,6 +4,9 @@ package scenes.game.display
 	
 	import audio.AudioManager;
 	
+	import dialogs.InGameMenuDialog;
+	import dialogs.SimpleAlertDialog;
+	
 	import events.EdgeSetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
@@ -12,9 +15,13 @@ package scenes.game.display
 	import events.NavigationEvent;
 	import events.UndoEvent;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.PixelSnapping;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.System;
+	import flash.utils.ByteArray;
 	
 	import graph.Edge;
 	import graph.EdgeSetRef;
@@ -22,27 +29,27 @@ package scenes.game.display
 	import graph.Network;
 	import graph.Node;
 	
+	import networking.Achievements;
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.components.GameControlPanel;
 	import scenes.game.components.GridViewPanel;
-	import scenes.game.components.dialogs.InGameMenuDialog;
-	import scenes.game.components.dialogs.SimpleAlertDialog;
 	
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.textures.Texture;
 	
 	import system.PipeSimulator;
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
-	import flash.utils.ByteArray;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -145,8 +152,9 @@ package scenes.game.display
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				if(LoginHelper.getLoginHelper().levelObject is int)
-					currentLevelNumber = LoginHelper.getLoginHelper().levelObject as int;
+				var obj:Object = LoginHelper.getLoginHelper().levelObject;
+				if(obj && obj.levelId is int)
+					currentLevelNumber = obj.levelId as int;
 				else
 					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
 				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
@@ -166,6 +174,9 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
+			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
+			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
@@ -216,7 +227,7 @@ package scenes.game.display
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.layoutName;
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.name;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
@@ -260,7 +271,11 @@ package scenes.game.display
 			var socialText:String = "";
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
-				dialogText = "Level Saved";
+				dialogText = "Level Saved.";
+			}
+			else if(event.type == MenuEvent.SAVE_LAYOUT)
+			{
+				dialogText = "Layout Saved.";
 			}
 			else
 			{
@@ -275,17 +290,36 @@ package scenes.game.display
 			alert.x = (450 - alert.width)/2;
 			alert.y = (320 - alert.height)/2;
 			
-		}			
+		}
+		
+		public function achievementAdded(event:MenuEvent):void
+		{
+			var dialogText:String = event.data as String;
+			var dialogWidth:Number = 160;
+			var dialogHeight:Number = 60;
+			var socialText:String = "";
+			
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, switchToLevelSelect);
+			addChild(alert);
+			
+			alert.x = (450 - alert.width)/2;
+			alert.y = (320 - alert.height)/2;
+		}
+		
+		protected function switchToLevelSelect():void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
+		}
 
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
 			if(active_level != null) {
-				active_level.setNewLayout(event.layoutName, event.layoutXML, true);
+				active_level.setNewLayout(event.data.name, event.data.layoutFile, true);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.layoutXML.@id;
+					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile.@id;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
@@ -421,23 +455,25 @@ package scenes.game.display
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
 					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
 				}
-				if(LoginHelper.getLoginHelper().levelObject is int)
+				var obj:Object = LoginHelper.getLoginHelper().levelObject;
+				if(obj && obj.levelId is int)
 				{
-					if(currentLevelNumber != LoginHelper.getLoginHelper().levelObject as int) //first time through I'm supposing these are different
-						currentLevelNumber = LoginHelper.getLoginHelper().levelObject as int;
+					if(currentLevelNumber != obj.levelId as int) //first time through I'm supposing these are different
+						currentLevelNumber = obj.levelId as int;
 					else
 					{
 						currentLevelNumber++;
-						LoginHelper.getLoginHelper().levelObject = int(currentLevelNumber);
+						obj.levelId = int(currentLevelNumber);
 						if(currentLevelNumber > PipeJamGameScene.maxTutorialLevelCompleted)
 							PipeJamGameScene.maxTutorialLevelCompleted = currentLevelNumber;
 					}
 				}
 				else
 					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
+
 				if(currentLevelNumber >= levels.length)
 				{
-					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
+					Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
 					return;
 				}
 			}
@@ -546,9 +582,9 @@ package scenes.game.display
 						active_level.toggleUneditableStrings();
 					break;
 					case 76: //'l' for copy layout
-						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
-							active_level.updateLayoutXML();
+							active_level.updateLayoutXML(this);
 							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
 						}
 						break;
@@ -569,6 +605,13 @@ package scenes.game.display
 				}
 			}
 		}
+		
+		public function getThumbnail(_maxwidth:Number, _maxheight:Number):ByteArray
+		{
+			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
+		}
+		
+		
 		
 		protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
@@ -642,11 +685,15 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			removeEventListener(MenuEvent.RECENTER, onRecenter);
+			
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			

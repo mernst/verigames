@@ -132,7 +132,7 @@ class NninfGameSolver extends GameSolver {
             if (elr == NninfConstants.NULLABLE) {
               if (ell == LiteralThis) {
                 // Nothing to do if the LHS is "this", always non-null.
-              } else if (ell.isInstanceOf[Constant]){
+              } else if (ell.isInstanceOf[Constant] || ell.isInstanceOf[AbstractLiteral] ){
                 // TODO
               } else if (ell.isInstanceOf[Literal] ) {
                 // TODO
@@ -143,11 +143,7 @@ class NninfGameSolver extends GameSolver {
                 val board = variablePosToBoard(ctx);
 
 
-                val elllast = try {
-                  findIntersection(board, ellvar)
-                } catch { //TODO JB: Remove this when generics are covered
-                  case _ => return true
-                }
+                val elllast = findIntersection(board, ellvar)
 
                 val chute = toChute(ellvar)
                 chute.setPinched(true)

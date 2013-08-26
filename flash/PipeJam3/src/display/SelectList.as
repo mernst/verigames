@@ -1,13 +1,8 @@
-package scenes.game.components.dialogs
+package display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
-	import display.BasicButton;
-	import display.NineSliceBatch;
-	import display.NineSliceButton;
-	import display.NineSliceToggleButton;
-	import display.ScrollBarThumb;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -15,7 +10,7 @@ package scenes.game.components.dialogs
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
-	import scenes.game.components.dialogs.SimpleTwoButtonDialog;
+	import dialogs.SimpleTwoButtonDialog;
 	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -29,7 +24,7 @@ package scenes.game.components.dialogs
 	
 	import utils.XMath;
 	
-	public class SelectLevelList extends BaseComponent
+	public class SelectList extends BaseComponent
 	{
 		protected var mainAtlas:TextureAtlas;
 		protected var levelAtlas:TextureAtlas;
@@ -38,14 +33,14 @@ package scenes.game.components.dialogs
 		
 		private var background:NineSliceBatch;
 		
-		private var scrollbarBackground:Image;
+		protected var scrollbarBackground:Image;
 		private var upArrow:Image;
 		private var downArrow:Image;
-		private var thumb:ScrollBarThumb;
-	
+		protected var thumb:ScrollBarThumb;
+		
 		//remember passed in height, as # of child objects could expand content pane
 		//and we want the clip rect to be this size
-		private var initialHeight:Number;
+		protected var initialHeight:Number;
 		
 		private var thumbTrackDistance:Number;
 		private var thumbTrackTop:Number;
@@ -58,12 +53,12 @@ package scenes.game.components.dialogs
 		protected var buttonPaneArray:Array;
 		public var currentSelection:BasicButton;
 		
-		public function SelectLevelList(_width:Number, _height:Number)
+		public function SelectList(_width:Number, _height:Number)
 		{
 			initialHeight = _height;
 			
-	//		background = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "BlueLightBox");
-	//		addChild(background);
+			//		background = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "BlueLightBox");
+			//		addChild(background);
 			
 			var scrollbarWidth:Number = 10.0;
 			
@@ -109,8 +104,8 @@ package scenes.game.components.dialogs
 			buttonPane.y = 0;
 			addChild(buttonPane);
 			
-	//		addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
-	//		addEventListener(Event.TRIGGERED, onButtonToggle);
+			//		addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
+			//		addEventListener(Event.TRIGGERED, onButtonToggle);
 		}
 		
 		protected function onTouchUpArrow(event:TouchEvent):void
@@ -132,7 +127,7 @@ package scenes.game.components.dialogs
 			{
 				this.addEventListener(Event.ENTER_FRAME, updateUpArrowScroll);
 			}
-
+				
 			else if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
 				this.removeEventListener(Event.ENTER_FRAME, updateUpArrowScroll);
@@ -213,7 +208,7 @@ package scenes.game.components.dialogs
 			if (touches.length == 0) {
 				return;
 			}
-
+			
 			var touch:Touch = event.getTouch(scrollbarBackground);
 			if(touch == null)
 				return;
@@ -278,7 +273,7 @@ package scenes.game.components.dialogs
 			thumb.setThumbPercent(totalNewScrollDistance*100);
 		}
 		
-		private function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String, deleteButtonName:String = null, deleteIconCallback:Function = null):DisplayObject
+		protected function makeDocState(label:String, labelSz:uint, iconTexName:String, bgTexName:String, deleteButtonName:String = null, deleteIconCallback:Function = null):DisplayObject
 		{
 			const ICON_SZ:Number = 40;
 			const DOC_WIDTH:Number = 128;
@@ -341,7 +336,7 @@ package scenes.game.components.dialogs
 					var overstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconMouseover", "DocumentBackgroundMouseover", "DeleteButtonMouseover", deleteCallback);
 					newButton = new BasicButton(upstate, overstate, downstate);
 					newButton.data = objArray[ii];
-
+					
 				} else {
 					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
 					newButton = new BasicButton(lockstate, lockstate, lockstate);
@@ -366,7 +361,7 @@ package scenes.game.components.dialogs
 		}
 		
 		protected var currentDeleteTarget:BasicButton;
-		private function deleteSavedGame(event:TouchEvent):void
+		protected function deleteSavedGame(event:TouchEvent):void
 		{
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
@@ -390,49 +385,9 @@ package scenes.game.components.dialogs
 			}
 		}
 		
-		private function reallyDeleteSavedGame(answer:int):void
+		protected function reallyDeleteSavedGame(answer:int):void
 		{
-			if(answer == 2)
-			{
-				//remove button from dialog
-				var index:int = buttonPaneArray.indexOf(currentDeleteTarget);
-				if(index != -1)
-				{
-					buttonPaneArray.splice(index, 1);
-					
-					buttonPane.removeChildren();
-					
-					var xpos:Number = width - scrollbarBackground.width;
-					var widthSpacing:Number = xpos/2;
-					var heightSpacing:Number = 60;
-					
-					for(var ii:int = 0; ii<buttonPaneArray.length; ii++)
-					{
-						buttonPaneArray[ii].x = (widthSpacing) * (ii%2);
-						buttonPaneArray[ii].y = Math.floor(ii/2) * (heightSpacing);
-						buttonPane.addChild(buttonPaneArray[ii]);
-					}
-					
-					if(buttonPaneArray.length > 0)
-					{
-						currentSelection = buttonPaneArray[0];
-						currentSelection.setStatePosition(BasicButton.DOWN_STATE);
-					}
-					else
-					{
-						currentSelection = null;
-					}
-					
-					if(buttonPane.height<initialHeight)
-						thumb.enabled = false;
-					else
-						thumb.enabled = true;
-				
-					//and then remove level
-					var levelID:String = currentDeleteTarget.data._id.$oid;
-					LoginHelper.getLoginHelper().deleteSavedLevel(levelID);
-				}
-			}
+
 		}
 		
 		private function onLevelButtonTouched(event:Event):void
@@ -441,10 +396,6 @@ package scenes.game.components.dialogs
 			currentSelection = event.target as BasicButton;
 			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
 			dispatchEventWith(Event.TRIGGERED);
-		}
-		
-		protected function draw():void
-		{
 		}
 	}
 }

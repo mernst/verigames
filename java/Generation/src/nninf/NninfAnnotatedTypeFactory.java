@@ -35,7 +35,7 @@ public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfCh
         addAliasedAnnotation(checkers.quals.Unqualified.class,       checker.UNKNOWNKEYFOR);
 
         defaults.addAbsoluteDefault(checker.NONNULL,  DefaultLocation.OTHERWISE);
-        defaults.addAbsoluteDefault(checker.NULLABLE, DefaultLocation.LOCALS);
+        defaults.addAbsoluteDefault(checker.NULLABLE, DefaultLocation.LOCAL_VARIABLE);
 
         postInit();
     }

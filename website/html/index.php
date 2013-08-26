@@ -13,6 +13,7 @@
 <?php
 	include("./scripts/header.php");
 ?>
+	<form style="display: hidden" action="/cgi-bin/uploadAndSubmitLevelsForm.py" method="POST" id="postFiles">
 		<div id="content">
 			<div id="welcome">
 				<h3>Welcome!</h3>
@@ -22,8 +23,11 @@
 				 	as you play.  Once finished, you can view and download your annotated code.
 				</p>
 				<p>
-					You can choose to upload .java, .zip or .jar files.  Be sure to include all the files that
+					You can choose to upload source as uncompressed .java files or as a zip archive, or compiled as a .jar file. Be sure to include all the files that
 					are required to compile your program. 
+				</p>
+				<p>
+					Alternatively, you can upload a game-ready xml file as a zip file.  
 				</p>
 			</div>
 			<div id="upload">
@@ -42,20 +46,19 @@
 							<option value="infer-nninf.sh">Nullness Checker</option>
 							<option value="infer-trusted.sh">Trusted Checker</option>
 						</select>
+						<input name="isXML" type="checkbox">XML Files</input>
      					</div>
 				</div>
 				<div id="queue">	
 				</div>
 				<span id="uploadIt">Upload Files</span>
-				</div>
 			</div>
 		</div>
 		<div id="clear_footer">
 		</div>
-	</div>
-<form style="display: hidden" action="/cgi-bin/uploadAndSubmitLevelsForm.py" method="POST" id="postFiles">
-  <input type="hidden" id="resultdir" name="resultdir" value=""/>
-</form>
+
+  	<input type="hidden" id="resultdir" name="resultdir" value=""/>
+	</form>
 <?php
 	include("./scripts/footer.php");
 ?>

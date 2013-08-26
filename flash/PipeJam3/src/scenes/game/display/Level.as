@@ -2,8 +2,11 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	
 	import audio.AudioManager;
+	
 	import deng.fzip.FZip;
+	
 	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
@@ -11,12 +14,14 @@ package scenes.game.display
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
+	
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
+	
 	import graph.BoardNodes;
 	import graph.Edge;
 	import graph.EdgeSetRef;
@@ -26,7 +31,9 @@ package scenes.game.display
 	import graph.Port;
 	import graph.PropDictionary;
 	import networking.LoginHelper;
+	
 	import scenes.BaseComponent;
+	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -38,6 +45,7 @@ package scenes.game.display
 	import starling.events.TouchPhase;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
+	
 	import utils.Base64Encoder;
 	import utils.XString;
 	
@@ -105,13 +113,10 @@ package scenes.game.display
 		
 		/**
 		 * Level contains multiple boards that each contain multiple pipes
-		 * @param	_x X coordinate, this is currently unused
-		 * @param	_y Y coordinate, this is currently unused
-		 * @param	_width Width, this is currently unused
-		 * @param	_height Height, this is currently unused
 		 * @param	_name Name of the level
-		 * @param	_world The parent world that contains this level
 		 * @param  _levelNodes The node objects used to create this level (including name obfuscater)
+		 * @param  _levelLayoutXML the layout xml
+		 * @param  _levelConstraintsXML the constraints xml
 		 */
 		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML)
 		{
@@ -557,16 +562,23 @@ package scenes.game.display
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
 		{
-			updateLayoutXML();
+			updateLevelXML();
 			
-			if(LoginHelper.getLoginHelper().levelObject != null)
+			var levelObject:Object = LoginHelper.getLoginHelper().levelObject;
+			if(levelObject != null)
 			{
-				m_levelLayoutXMLWrapper.@id = event.layoutName;
-				LoginHelper.getLoginHelper().levelObject.layoutName = event.layoutName;
+				m_levelLayoutXMLWrapper.@id = event.data.name;
+				levelObject.layoutName = event.data.name;
+				levelObject.layoutDescription = event.data.description;
 				var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
 				var layoutZipEncodedString:String = encodeBytes(layoutZip);
-				LoginHelper.getLoginHelper().saveLayoutFile(layoutZipEncodedString);	
+				LoginHelper.getLoginHelper().saveLayoutFile(layoutSaved, layoutZipEncodedString);	
 			}
+		}
+		
+		protected function layoutSaved(result:int, e:flash.events.Event):void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT));
 		}
 		
 		public function zipXMLFile(xmlFile:XML, name:String):ByteArray
@@ -591,7 +603,11 @@ package scenes.game.display
 		
 		public function updateLevelXML():void
 		{
-			updateLayoutXML();
+			var worldParent:DisplayObject = parent;
+			while(worldParent && !(worldParent is World))
+				worldParent = worldParent.parent;
+			
+			updateLayoutXML(worldParent as World, true);
 			updateConstraintXML();
 		}
 		
@@ -700,7 +716,7 @@ package scenes.game.display
 		}
 		
 		//update current layout info based on node/edge position
-		public function updateLayoutXML():void
+		public function updateLayoutXML(world:World, includeThumbnail:Boolean = false):void
 		{
 			var children:XMLList = m_levelLayoutXML.children();
 			for each(var child:XML in children)
@@ -760,6 +776,16 @@ package scenes.game.display
 			
 			m_levelLayoutXMLWrapper = <layout/>;
 			m_levelLayoutXMLWrapper.appendChild(m_levelLayoutXML);
+			if(includeThumbnail)
+			{
+				var byteArray:ByteArray = world.getThumbnail(300, 300);
+				var thumbXML:XML = <thumb/>;
+				var enc:Base64Encoder = new Base64Encoder();
+				enc.encodeBytes(byteArray);
+				thumbXML.appendChild(enc.toString());
+				m_levelLayoutXMLWrapper.appendChild(thumbXML);
+
+			}
 		}
 		
 		//update current constraint info based on node constraints
