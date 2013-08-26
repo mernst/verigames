@@ -24,8 +24,8 @@ package graph
 				stamp_dictionary[_edge_set_id] = new StampRef(_edge_set_id, _active, this);
 			} else if ((stamp_dictionary[_edge_set_id] as StampRef).active != _active) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = _active;
-				m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, true);
 			}
+			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, _active);
 		}
 		
 		public function removeStamp(_edge_set_id:String):void {

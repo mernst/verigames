@@ -619,14 +619,7 @@ package system
 						if ((node as MapGetNode).valueEdge == edge) {
 							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
 							// Deal with props, no props except possible narrow
-							outgoing_props = new PropDictionary();
-							switch (node.outgoing_ports[0].edge.enter_ball_type) {
-								case Edge.BALL_TYPE_NARROW:
-								case Edge.BALL_TYPE_NONE:
-									outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
-									break;
-							}
-							node.outgoing_ports[0].edge.setEnterProps(outgoing_props);
+							node.outgoing_ports[0].edge.setEnterProps((node as MapGetNode).getOutputProps());
 							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
 						}
 					}

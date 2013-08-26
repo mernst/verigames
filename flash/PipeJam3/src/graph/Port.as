@@ -1,6 +1,6 @@
 package graph
 {
-	import events.PortTroublePointEvent;
+	import events.ConflictChangeEvent;
 	import flash.events.EventDispatcher;
 	import system.VerigameServerConstants;
 	import flash.geom.Point;
@@ -43,7 +43,7 @@ package graph
 			if (hasConflictProp(prop)) return;
 			m_conflictProps.setProp(prop, true);
 			if (!anyConflictPre) {
-				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, this));
+				dispatchEvent(new ConflictChangeEvent());
 			}
 		}
 		
@@ -53,13 +53,18 @@ package graph
 			if (!hasConflictProp(prop)) return;
 			m_conflictProps.setProp(prop, false);
 			if (anyConflictPre && !hasAnyConflict()) {
-				dispatchEvent(new PortTroublePointEvent(PortTroublePointEvent.PORT_TROUBLE_POINT_CHANGE, this));
+				dispatchEvent(new ConflictChangeEvent());
 			}
 		}
 		
 		override public function toString():String
 		{
 			return node.node_id + ((type == INCOMING_PORT_TYPE) ? "_I" : "_O") + port_id;
+		}
+		
+		public function getConflictProps():PropDictionary
+		{
+			return m_conflictProps;
 		}
 		
 		// Testbed:

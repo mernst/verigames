@@ -49,6 +49,16 @@ package graph
 			return Edge.BALL_TYPE_WIDE;
 		}
 		
+		public function getOutputProps():PropDictionary
+		{
+			var props:PropDictionary = new PropDictionary();
+			if (argumentHasMapStamp()) {
+				// Pass argument props as output
+				props = argumentEdge.getExitProps().clone();
+			}
+			return props;
+		}
+		
 		public function argumentHasMapStamp():Boolean
 		{
 			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;

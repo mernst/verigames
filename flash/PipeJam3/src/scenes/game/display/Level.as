@@ -250,7 +250,12 @@ package scenes.game.display
 					}
 				}
 				
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				var joint:GameJointNode;
+				if (foundNode && (foundNode.kind == NodeTypes.GET)) {
+					joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				} else {
+					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				}
 				joint.visible = getVisible(jointLayoutXML);
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
@@ -912,7 +917,7 @@ package scenes.game.display
 		private function refreshTroublePoints():void
 		{
 			for (var i:int = 0; i < m_edgeList.length; i++) {
-				m_edgeList[i].refreshTroublePoints();
+				m_edgeList[i].onConflictChange();
 			}
 		}
 		

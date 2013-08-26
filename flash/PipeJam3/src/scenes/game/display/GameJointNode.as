@@ -13,8 +13,8 @@ package scenes.game.display
 	
 	public class GameJointNode extends GameNodeBase
 	{	
-		private var m_node:Node;
-		private var m_port:Port;
+		protected var m_node:Node;
+		protected var m_port:Port;
 		
 		public function GameJointNode( _layoutXML:XML, _draggable:Boolean, _node:Node = null, _port:Port = null) 
 		{
@@ -40,6 +40,11 @@ package scenes.game.display
 		override public function updateSize():void
 		{
 			// joints have no concept of width at this point
+		}
+		
+		override public function updatePortIndexes():void
+		{
+			
 		}
 		
 		override public function isWide():Boolean

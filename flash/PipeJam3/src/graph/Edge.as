@@ -1,10 +1,9 @@
 package graph
 {
+	import events.ConflictChangeEvent;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
-	
 	import events.BallTypeChangeEvent;
-	import events.EdgeTroublePointEvent;
 	import graph.Node;
 	import utils.Metadata;
 	
@@ -248,22 +247,16 @@ package graph
 		
 		public function addConflict(prop:String):void
 		{
-			var anyConflictPre:Boolean = hasAnyConflict();
 			if (hasConflictProp(prop)) return;
 			m_conflictProps.setProp(prop, true);
-			if (!anyConflictPre) {
-				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, this));
-			}
+			dispatchEvent(new ConflictChangeEvent());
 		}
 		
 		public function removeConflict(prop:String):void
 		{
-			var anyConflictPre:Boolean = hasAnyConflict();
 			if (!hasConflictProp(prop)) return;
 			m_conflictProps.setProp(prop, false);
-			if (anyConflictPre && !hasAnyConflict()) {
-				dispatchEvent(new EdgeTroublePointEvent(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_CHANGE, this));
-			}
+			dispatchEvent(new ConflictChangeEvent());
 		}
 		
 		private function ballUnknown(typ:uint):Boolean
@@ -299,6 +292,11 @@ package graph
 		public function getExitProps():PropDictionary
 		{
 			return m_exitProps;
+		}
+		
+		public function getConflictProps():PropDictionary
+		{
+			return m_conflictProps;
 		}
 		
 		// Testbed:
