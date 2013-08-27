@@ -37,14 +37,16 @@ package graph
 			if (stamp_dictionary[_edge_set_id]) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = true;
 			}
-			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, true);
+			var change:Boolean = m_props.setPropCheck(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, true);
+			if (change) onActivationChange();
 		}
 		
 		public function deactivateStamp(_edge_set_id:String):void {
 			if (stamp_dictionary[_edge_set_id]) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = false;
 			}
-			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, false);
+			var change:Boolean = m_props.setPropCheck(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, false);
+			if (change) onActivationChange();
 		}
 		
 		public function hasActiveStampOfEdgeSetId(_edge_set_id:String):Boolean {
@@ -72,8 +74,8 @@ package graph
 			return i;
 		}
 		
-		public function onActivationChange(_stampRef:StampRef):void {
-			var ev:StampChangeEvent = new StampChangeEvent(StampChangeEvent.STAMP_ACTIVATION, _stampRef);
+		public function onActivationChange():void {
+			var ev:StampChangeEvent = new StampChangeEvent(StampChangeEvent.STAMP_ACTIVATION, this);
 			dispatchEvent(ev);
 		}
 		

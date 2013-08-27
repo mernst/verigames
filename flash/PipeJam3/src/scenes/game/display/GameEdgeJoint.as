@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import events.BallTypeChangeEvent;
 	import events.EdgeContainerEvent;
 	
@@ -140,43 +141,7 @@ package scenes.game.display
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
 
-			var assetName:String;
-			
-			if (isRound) {
-				if(m_isEditable == true)
-				{
-					if (m_isWide == true)
-						assetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
-				}
-				else //not adjustable
-				{
-					if(m_isWide == true)
-						assetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
-				}
-			} else {
-				if(true)//m_isEditable == true)
-				{
-					if (m_isWide == true)
-						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
-				}
-				else //not adjustable
-				{
-					if(m_isWide == true)
-						assetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
-				}
-			}
-			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var startTexture:Texture = atlas.getTexture(assetName);
-			m_image = new Image(startTexture);
+			m_image = createJoint(isRound, m_isEditable, m_isWide);
 			m_image.width = m_image.height = lineSize;
 			
 			if(isHoverOn)
@@ -198,6 +163,47 @@ package scenes.game.display
 //			txt.x = 1;
 //			m_shape.addChild(txt);
 //			addChild(m_shape);
+		}
+		
+		public static function createJoint(isRound:Boolean, editable:Boolean, wide:Boolean):Image
+		{
+			var assetName:String;
+			
+			if (isRound) {
+				if(editable == true)
+				{
+					if (wide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
+				}
+				else //not adjustable
+				{
+					if(wide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
+				}
+			} else {
+				if(true)//m_isEditable == true)
+				{
+					if (wide == true)
+						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
+				}
+				else //not adjustable
+				{
+					if(wide == true)
+						assetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
+					else
+						assetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
+				}
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
+			return new Image(startTexture);
 		}
 		
 		public function onEnterFrame(event:Event):void

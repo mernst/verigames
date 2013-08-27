@@ -22,7 +22,6 @@ package graph
 		
 		public function set active(b:Boolean):void {
 			m_active = b;
-			pipe_edge_set_ref.onActivationChange(this);
 		}
 		
 		public function toString():String {
