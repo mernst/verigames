@@ -54,7 +54,7 @@ package graph
 			var props:PropDictionary = new PropDictionary();
 			if (argumentHasMapStamp()) {
 				// Pass argument props as output
-				props = argumentEdge.getExitProps().clone();
+				props = valueEdge.getExitProps().clone();
 			}
 			return props;
 		}

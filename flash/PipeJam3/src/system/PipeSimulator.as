@@ -615,12 +615,26 @@ package system
 						break;
 					
 					case NodeTypes.GET : {
-						// Process the GET node when the "VALUE" edge is reached
-						if ((node as MapGetNode).valueEdge == edge) {
-							node.outgoing_ports[0].edge.enter_ball_type = (node as MapGetNode).getOutputBallType();
-							// Deal with props, no props except possible narrow
-							node.outgoing_ports[0].edge.setEnterProps((node as MapGetNode).getOutputProps());
-							if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge); //enqueue
+						// Process the GET node when the "VALUE" or "ARGUMENT" edge is reached
+						var getNode:MapGetNode = node as MapGetNode;
+						if ((edge == getNode.valueEdge) || (edge == getNode.argumentEdge)) {
+							if ((getNode.argumentEdge.exit_ball_type != Edge.BALL_TYPE_UNDETERMINED) &&
+								(getNode.valueEdge.exit_ball_type != Edge.BALL_TYPE_UNDETERMINED)) {
+								// Process if argument and value have both been determined
+								node.outgoing_ports[0].edge.enter_ball_type = getNode.getOutputBallType();
+								// Deal with props: no props except narrow
+								node.outgoing_ports[0].edge.setEnterProps(getNode.getOutputProps());
+								// Remove value/argument from queues
+								if (edges_awaiting_others.indexOf(getNode.valueEdge) > -1) edges_awaiting_others.splice(edges_awaiting_others.indexOf(getNode.valueEdge), 1);
+								if (queue.indexOf(getNode.valueEdge) > -1)    queue.splice(queue.indexOf(getNode.valueEdge), 1);
+								if (queue.indexOf(getNode.argumentEdge) > -1) queue.splice(queue.indexOf(getNode.argumentEdge), 1);
+								// enqueue outgoing edge
+								if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge);
+							} else if (edge == getNode.valueEdge) {
+								// If argument edge has not made a determination yet, push value edge to the back of the queue and try later
+								if (queue.indexOf(edge) == -1) queue.push(edge);
+								if (edges_awaiting_others.indexOf(edge) == -1) edges_awaiting_others.push(edge);
+							}
 						}
 					}
 						break;
@@ -667,18 +681,27 @@ package system
 						queue = new Vector.<Edge>();
 					}
 					// Mark other edge's output as ghost (or whatever input ball type is if not undetermined)
-					var other_merge_edge:Edge = getOtherMergeEdge(edge_to_proceed);
-					if (other_merge_edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
-						other_merge_edge.enter_ball_type = Edge.BALL_TYPE_GHOST;
+					var other_edge_to_proceed:Edge;
+					if (edge_to_proceed.to_node.kind == NodeTypes.MERGE) {
+						other_edge_to_proceed = getOtherMergeEdge(edge_to_proceed);
+					} else if (edge_to_proceed.to_node is MapGetNode) {
+						var mapget:MapGetNode = edge_to_proceed.to_node as MapGetNode;
+						other_edge_to_proceed = mapget.argumentEdge;
+					}
+					if (other_edge_to_proceed.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
+						other_edge_to_proceed.enter_ball_type = Edge.BALL_TYPE_GHOST;
 						outgoing_props = new PropDictionary();
 						outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
-						other_merge_edge.setEnterProps(outgoing_props);
+						other_edge_to_proceed.setEnterProps(outgoing_props);
 					}
 					// enqueue other edge, move to top of queue (remove if in queue, then add to beginning)
-					if (queue.indexOf(other_merge_edge) > -1) {
-						queue.splice(queue.indexOf(other_merge_edge), 1);
+					if (edges_awaiting_others.indexOf(other_edge_to_proceed) > -1) {
+						edges_awaiting_others.splice(edges_awaiting_others.indexOf(other_edge_to_proceed), 1);
 					}
-					queue.unshift(other_merge_edge);
+					if (queue.indexOf(other_edge_to_proceed) > -1) {
+						queue.splice(queue.indexOf(other_edge_to_proceed), 1);
+					}
+					queue.unshift(other_edge_to_proceed);
 				}
 			}
 			
