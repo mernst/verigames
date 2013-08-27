@@ -166,7 +166,7 @@ def parsedot(line, returnonlyendpts = True):
 	if lb == -1:
 		print "Couldn't process dot output: %s" % line
 		return None
-	id = line[:lb].strip()
+	id = line[:lb].strip().replace('"','').replace(' ','').replace('->',' -> ')
 	attr = line[lb:]
 	attribs = parseattrib(attr)
 	if attribs.get('pos'):
