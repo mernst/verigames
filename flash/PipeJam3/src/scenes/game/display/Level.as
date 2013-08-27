@@ -29,7 +29,7 @@ package scenes.game.display
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	
+	import graph.PropDictionary;
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
@@ -255,7 +255,12 @@ package scenes.game.display
 					}
 				}
 				
-				var joint:GameJointNode = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				var joint:GameJointNode;
+				if (foundNode && (foundNode.kind == NodeTypes.GET)) {
+					joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				} else {
+					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				}
 				joint.visible = getVisible(jointLayoutXML);
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
@@ -929,30 +934,16 @@ package scenes.game.display
 			}
 			var edgeSetID:String = evt.edgeSetChanged.m_id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
-			if(edgeSet != null)
-				for each (var edgeID:String in edgeSet.edge_ids)
-				{
-					var edge:Edge = this.edgeDictionary[edgeID];
-					if(edge != null)
-					{
-						edge.is_wide = evt.newIsWide;
-					}
-					//var outID:String = edgeID + "__OUT__";
-					//var outgoingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[outID];
-					//if(outgoingGameEdgeContainer)
-						//outgoingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-					//var inID:String = edgeID+"__IN__";
-					//var incomingGameEdgeContainer:GameEdgeContainer = edgeContainerDictionary[inID];
-					//if(incomingGameEdgeContainer)
-						//incomingGameEdgeContainer.setIncomingWidth(edge.is_wide);
-				}
+			if(edgeSet != null) {
+				edgeSet.getProps().setProp(PropDictionary.PROP_NARROW, !evt.newIsWide);
+			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent, evt.point));
 		}
 		
 		private function refreshTroublePoints():void
 		{
 			for (var i:int = 0; i < m_edgeList.length; i++) {
-				m_edgeList[i].refreshTroublePoints();
+				m_edgeList[i].onConflictChange();
 			}
 		}
 		

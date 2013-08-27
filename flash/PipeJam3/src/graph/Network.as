@@ -154,18 +154,6 @@ package graph
 				markChildrenWithTopEdges(topEdge, outgoingEdge);
 			}
 		}
-		
-		public function updateEdgeSetWidth(edgeSet:EdgeSetRef, isWide:Boolean):void
-		{
-			for each (var edgeID:String in edgeSet.edge_ids)
-			{
-				var edge:Edge = edgeDictionary[edgeID];
-				edge.updateEdgeWidth(isWide);
-			}
-		}
-		
-		
-		
 	}
 
 }

@@ -1,6 +1,8 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import graph.PropDictionary;
+	import starling.display.Quad;
 	
 	import display.NineSliceBatch;
 	
@@ -191,6 +193,19 @@ package scenes.game.display
 				addChild(m_scoreBlock);
 			}
 			useHandCursor = m_isEditable;
+			
+			if (m_edgeSet) {
+				var i:int = 0;
+				for (var prop:String in m_edgeSet.getProps().iterProps()) {
+					if (prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
+						var keyQuad:Quad = new Quad(3, 3, 0xFF00FF);
+						keyQuad.x = 1 + i * 4;
+						keyQuad.y = m_boundingBox.height - 4;
+						addChild(keyQuad);
+						i++;
+					}
+				}
+			}
 			
 			//			var number:String = ""+m_id.substring(4);
 			//			var txt:TextField = new TextField(m_shape.width, m_shape.height, number, "Veranda", 6); 

@@ -374,6 +374,7 @@ package scenes.game.display
 					var edgeID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex].attribute("id").toString();
 					var edgeVector:Vector.<Edge> = my_level.edgeDictionary[edgeID];
 					for each (var currentEdge:Edge in edgeVector) {
+						// TODO: Check this functionality
 						var linkedEdgeSet:EdgeSetRef =  currentEdge.linked_edge_set;
 						var stampLength:uint = linkedEdgeSet.num_stamps;
 						for(var stampIndex:uint = 0; stampIndex < stampLength; stampIndex++) {

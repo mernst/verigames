@@ -3,14 +3,14 @@ package scenes.game.display
 	import display.NineSliceBatch;
 	import display.TextBubble;
 	import events.BallTypeChangeEvent;
+	import events.ConflictChangeEvent;
 	import events.EdgeContainerEvent;
-	import events.EdgeTroublePointEvent;
-	import events.PortTroublePointEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
+	import graph.PropDictionary;
 	import particle.ErrorParticleSystem;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
@@ -66,8 +66,7 @@ package scenes.game.display
 		public var errorTextBubbleContainer:Sprite = new Sprite();
 		public var errorTextBubble:TextBubble;
 		
-		private var m_edgeHasError:Boolean = false;
-		private var m_portHasError:Boolean = false;
+		private var m_errorProps:PropDictionary;
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		private var m_hidingErrorText:Boolean = false;
@@ -390,13 +389,11 @@ package scenes.game.display
 				removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			}
 			for each (var removeListEdge:Edge in m_listeningToEdges) {
-				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onEdgeTroublePointAdded);
-				removeListEdge.removeEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onEdgeTroublePointRemoved);
+				removeListEdge.removeEventListener(ConflictChangeEvent.CONFLICT_CHANGE, onConflictChange);
 			}
 			m_listeningToEdges = new Vector.<Edge>();
 			for each (var removeListPort:Port in m_listeningToPorts) {
-				removeListPort.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				removeListPort.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
+				removeListPort.removeEventListener(ConflictChangeEvent.CONFLICT_CHANGE, onConflictChange);
 			}
 			m_listeningToPorts = new Vector.<Port>();
 			if (graphEdge) {
@@ -414,44 +411,44 @@ package scenes.game.display
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
 		{
 			if (m_listeningToEdges.indexOf(_edge) == -1) {
-				if (_edge.has_error) {
-					onEdgeTroublePointAdded(null);
-				}
-				_edge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_ADDED, onEdgeTroublePointAdded);
-				_edge.addEventListener(EdgeTroublePointEvent.EDGE_TROUBLE_POINT_REMOVED, onEdgeTroublePointRemoved);
+				_edge.addEventListener(ConflictChangeEvent.CONFLICT_CHANGE, onConflictChange);
 				m_listeningToEdges.push(_edge);
+				onConflictChange();
 			}
 		}
 		
-		private function onEdgeTroublePointAdded(evt:EdgeTroublePointEvent):void
+		public function onConflictChange(evt:ConflictChangeEvent = null):void
 		{
-			m_edgeHasError = true;
-			if (m_hasError) {
-				return;
+			m_errorProps = new PropDictionary();
+			var i:int, prop:String, added:Boolean;
+			var conflicts:int = 0;
+			for (i = 0; i < m_listeningToEdges.length; i++) {
+				for (prop in m_listeningToEdges[i].getConflictProps().iterProps()) {
+					added = m_errorProps.setPropCheck(prop, true);
+					if (added) conflicts++;
+				}
 			}
-			m_hasError = true;
-			addError();
-		}
-		
-		private function onEdgeTroublePointRemoved(evt:EdgeTroublePointEvent):void
-		{
-			m_edgeHasError = false;
-			m_hasError = m_portHasError;
-			if (m_hasError) {
-				return;
+			for (i = 0; i < m_listeningToPorts.length; i++) {
+				for (prop in m_listeningToPorts[i].getConflictProps().iterProps()) {
+					added = m_errorProps.setPropCheck(prop, true);
+					if (added) conflicts++;
+				}
 			}
-			removeError();
+			if (conflicts > 0) {
+				addError();
+				m_hasError = true;
+			} else {
+				removeError();
+				m_hasError = false;
+			}
 		}
 		
 		public function listenToPortForTroublePoints(_port:Port):void
 		{
 			if (m_listeningToPorts.indexOf(_port) == -1) {
-				if (_port.has_error) {
-					onPortTroublePointAdded(null);
-				}
-				_port.addEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				_port.addEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
+				_port.addEventListener(ConflictChangeEvent.CONFLICT_CHANGE, onConflictChange);
 				m_listeningToPorts.push(_port);
+				onConflictChange();
 			}
 		}
 		
@@ -464,10 +461,9 @@ package scenes.game.display
 		{
 			var portIndx:int = m_listeningToPorts.indexOf(_port);
 			if (portIndx > -1) {
-				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_ADDED, onPortTroublePointAdded);
-				_port.removeEventListener(PortTroublePointEvent.PORT_TROUBLE_POINT_REMOVED, onPortTroublePointRemoved);
-				onPortTroublePointRemoved(null);
+				_port.removeEventListener(ConflictChangeEvent.CONFLICT_CHANGE, onConflictChange);
 				m_listeningToPorts.splice(portIndx, 1);
+				onConflictChange();
 			}
 		}
 		
@@ -493,11 +489,11 @@ package scenes.game.display
 		
 		private function addError():void
 		{
-			if (m_errorParticleSystem == null) {
-				m_errorParticleSystem = new ErrorParticleSystem();
-				m_errorParticleSystem.touchable = false;
-				m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
-			}
+			if (m_errorParticleSystem) m_errorParticleSystem.removeFromParent(true);
+			m_errorParticleSystem = new ErrorParticleSystem(m_errorProps);
+			m_errorParticleSystem.touchable = false;
+			m_errorParticleSystem.scaleX = m_errorParticleSystem.scaleY = 4.0 / Constants.GAME_SCALE;
+			
 			errorContainer.touchable = false;
 			errorContainer.addChild(m_errorParticleSystem);
 			
@@ -530,59 +526,6 @@ package scenes.game.display
 				m_innerBoxSegment.draw();
 				positionChildren(); // last segment's endpoint will change as the plug moves up/down
 			}
-		}
-		
-		/**
-		 * Check all appropriate graph edges/ports for errors, in case they have changed while we
-		 * are out of synch (after loading new constraints, etc)
-		 */
-		public function refreshTroublePoints():void
-		{
-			var anyPortErrors:Boolean = false;
-			for (var p:int = 0; p < m_listeningToPorts.length; p++) {
-				if (m_listeningToPorts[p].has_error) {
-					anyPortErrors = true;
-					break;
-				}
-			}
-			if (anyPortErrors) {
-				if (!m_portHasError) onPortTroublePointAdded(null);
-			} else {
-				if (m_portHasError) onPortTroublePointRemoved(null);
-			}
-			
-			var anyEdgeErrors:Boolean = false;
-			for (var e:int = 0; e < m_listeningToEdges.length; e++) {
-				if (m_listeningToEdges[e].has_error) {
-					anyEdgeErrors = true;
-					break;
-				}
-			}
-			if (anyEdgeErrors) {
-				if (!m_edgeHasError) onEdgeTroublePointAdded(null);
-			} else {
-				if (m_edgeHasError) onEdgeTroublePointRemoved(null);
-			}
-		}
-		
-		private function onPortTroublePointAdded(evt:PortTroublePointEvent):void
-		{
-			m_portHasError = true;
-			if (m_hasError) {
-				return;
-			}
-			m_hasError = true;
-			addError();
-		}
-		
-		private function onPortTroublePointRemoved(evt:PortTroublePointEvent):void
-		{
-			m_portHasError = false;
-			m_hasError = m_edgeHasError;
-			if (m_hasError) {
-				return;
-			}
-			removeError();
 		}
 		
 		private function onHoverOver(event:EdgeContainerEvent):void

@@ -11,6 +11,7 @@ package graph
 		public var edge_set_dictionary:Dictionary;
 		public var id:String;
 		public var edge_ids:Vector.<String> = new Vector.<String>();
+		private var m_props:PropDictionary = new PropDictionary();
 		
 		public function EdgeSetRef(_id:String, _edge_set_dictionary:Dictionary) 
 		{
@@ -24,24 +25,26 @@ package graph
 			} else if ((stamp_dictionary[_edge_set_id] as StampRef).active != _active) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = _active;
 			}
+			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, _active);
 		}
 		
 		public function removeStamp(_edge_set_id:String):void {
-			if (stamp_dictionary[_edge_set_id] != null) {
-				delete stamp_dictionary[_edge_set_id];
-			}
+			delete stamp_dictionary[_edge_set_id];
+			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, false);
 		}
 		
 		public function activateStamp(_edge_set_id:String):void {
-			if (stamp_dictionary[_edge_set_id] != null) {
+			if (stamp_dictionary[_edge_set_id]) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = true;
 			}
+			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, true);
 		}
 		
 		public function deactivateStamp(_edge_set_id:String):void {
-			if (stamp_dictionary[_edge_set_id] != null) {
+			if (stamp_dictionary[_edge_set_id]) {
 				(stamp_dictionary[_edge_set_id] as StampRef).active = false;
 			}
+			m_props.setProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id, false);
 		}
 		
 		public function hasActiveStampOfEdgeSetId(_edge_set_id:String):Boolean {
@@ -69,46 +72,15 @@ package graph
 			return i;
 		}
 		
-		public function getStampEdgeSetIdAt(index:uint):String {
-			var i:int = 0;
-			for (var edge_set_id:String in stamp_dictionary) {
-				if (i == index) {
-					return (stamp_dictionary[edge_set_id] as StampRef).edge_set_id;
-				}
-				i++;
-			}
-			return "";
-		}
-		
-		public function getActiveStampEdgeSetIdAt(index:uint):String {
-			var i:int = 0;
-			for (var edge_set_id:String in stamp_dictionary) {
-				if ((stamp_dictionary[edge_set_id] as StampRef).active) {
-					if (i == index) {
-						return (stamp_dictionary[edge_set_id] as StampRef).edge_set_id;
-					}
-					i++;
-				}
-			}
-			return "";
-		}
-		
-		public function getActiveStampAt(index:uint):StampRef {
-			var i:int = 0;
-			for (var edge_set_id:String in stamp_dictionary) {
-				if ((stamp_dictionary[edge_set_id] as StampRef).active) {
-					if (i == index) {
-						return (stamp_dictionary[edge_set_id] as StampRef);
-					}
-					i++;
-				}
-			}
-			return null;
-		}
-		
 		public function onActivationChange(_stampRef:StampRef):void {
-			var ev:StampChangeEvent = new StampChangeEvent(StampChangeEvent.STAMP_ACTIVATION,_stampRef);
+			var ev:StampChangeEvent = new StampChangeEvent(StampChangeEvent.STAMP_ACTIVATION, _stampRef);
 			dispatchEvent(ev);
+		}
+		
+		// Testbed
+		public function getProps():PropDictionary
+		{
+			return m_props;
 		}
 	}
 
