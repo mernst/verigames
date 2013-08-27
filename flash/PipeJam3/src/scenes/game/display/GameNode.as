@@ -23,7 +23,7 @@ package scenes.game.display
 	
 	public class GameNode extends GameNodeBase
 	{
-		protected var m_edgeSet:EdgeSetRef;
+		public var m_edgeSet:EdgeSetRef;
 		
 		public var m_numIncomingNodeEdges:int;
 		public var m_numOutgoingNodeEdges:int;
@@ -31,6 +31,7 @@ package scenes.game.display
 		private var m_edgeSetEdges:Vector.<Edge>;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
+		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		
 		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
@@ -112,13 +113,21 @@ package scenes.game.display
 		{
 			if(m_isEditable)
 			{
-				var newIsWide:Boolean = !m_isWide;
-				handleWidthChange(newIsWide, false, pt);
-				//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
-				
-				var eventToUndo:EdgeSetChangeEvent = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide);
-				var eventToDispatch:UndoEvent = new UndoEvent(eventToUndo, this);
-				dispatchEvent(eventToDispatch);
+				var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;
+				if (m_propertyMode == PropDictionary.PROP_NARROW) {
+					var newIsWide:Boolean = !m_isWide;
+					handleWidthChange(newIsWide, false, pt);
+					//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
+					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide);
+					eventToDispatch = new UndoEvent(eventToUndo, this);
+					dispatchEvent(eventToDispatch);
+				} else {
+					var edgeSetValue:Boolean = m_edgeSet.getProps().hasProp(m_propertyMode);
+					dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue, null, false, pt));
+					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue);
+					eventToDispatch = new UndoEvent(eventToUndo, this);
+					dispatchEvent(eventToDispatch);
+				}
 			}
 		}
 		
@@ -126,11 +135,15 @@ package scenes.game.display
 		{
 			if (undoEvent is EdgeSetChangeEvent) {
 				var evt:EdgeSetChangeEvent = undoEvent as EdgeSetChangeEvent;
-				if (isUndo) {
-					handleWidthChange(!evt.newIsWide);
-				} else {
-					handleWidthChange(evt.newIsWide);
+				if (evt.prop == PropDictionary.PROP_NARROW) {
+					if (isUndo) {
+						handleWidthChange(evt.propValue);
+					} else {
+						handleWidthChange(!evt.propValue);
+					}
 				}
+			} else {
+				m_isDirty = true;
 			}
 		}
 		
@@ -142,7 +155,7 @@ package scenes.game.display
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, newIsWide, null, silent, pt));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide, null, silent, pt));
 			for each (var iedge:GameEdgeContainer in m_incomingEdges) {
 				iedge.updateSize();
 				iedge.setInnerSegmentBorderWidth(m_isWide);
@@ -152,6 +165,12 @@ package scenes.game.display
 				oedge.updateSize();
 				oedge.setInnerSegmentBorderWidth(m_isWide);
 			}
+		}
+		
+		public function setPropertyMode(prop:String):void
+		{
+			m_propertyMode = prop;
+			m_isDirty = true;
 		}
 		
 		override public function draw():void
@@ -197,7 +216,8 @@ package scenes.game.display
 			if (m_edgeSet) {
 				var i:int = 0;
 				for (var prop:String in m_edgeSet.getProps().iterProps()) {
-					if (prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
+					if (prop == PropDictionary.PROP_NARROW) continue;
+					if (prop == m_propertyMode) {
 						var keyQuad:Quad = new Quad(3, 3, 0xFF00FF);
 						keyQuad.x = 1 + i * 4;
 						keyQuad.y = m_boundingBox.height - 4;

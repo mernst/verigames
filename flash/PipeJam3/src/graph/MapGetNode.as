@@ -65,6 +65,11 @@ package graph
 			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
 		}
 		
+		public function getMapProperty():String
+		{
+			return (PropDictionary.PROP_KEYFOR_PREFIX + mapEdge.linked_edge_set.id.toString());
+		}
+		
 		public function get mapEdge():Edge {
 			var my_port:Port = getIncomingPort(MAP_PORT_IDENTIFIER);
 			if (my_port) {

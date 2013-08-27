@@ -1,6 +1,9 @@
 package scenes.game.display 
 {
 	import assets.AssetInterface;
+	import events.PropertyModeChangeEvent;
+	import graph.NodeTypes;
+	import graph.PropDictionary;
 	
 	import display.NineSliceBatch;
 	
@@ -41,11 +44,52 @@ package scenes.game.display
 				if (m_valueEdge) m_valueEdge.graphEdge.removeEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
 				m_valueEdge = edge;
 				m_valueEdge.graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
+				alignOutputEdge();
 			} else if (edge.graphEdge == getNode.argumentEdge) {
 				if (m_argumentEdge) m_argumentEdge.graphEdge.linked_edge_set.removeEventListener(StampChangeEvent.STAMP_ACTIVATION, update);
 				m_argumentEdge = edge;
 				m_argumentEdge.graphEdge.linked_edge_set.addEventListener(StampChangeEvent.STAMP_ACTIVATION, update);
 			}
+		}
+		
+		public function getUpstreamEdgeContainers():Vector.<GameEdgeContainer>
+		{
+			var vec:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			if (!m_argumentEdge) return vec;
+			var edgesToCheck:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			edgesToCheck.push(m_argumentEdge);
+			var visitedEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			while (edgesToCheck.length > 0) {
+				var edge:GameEdgeContainer = edgesToCheck.shift();
+				if (visitedEdges.indexOf(edge) > -1) continue; // avoid looping
+				visitedEdges.push(edge);
+				if (edge.graphEdge) {
+					// TODO: do we need to enforce edge.graphEdge.linked_edge_set.stamp_dictionary[getNode.mapEdge.linked_edge_set.id] ??
+					if (vec.indexOf(edge) == -1) {
+						vec.push(edge);
+						switch (edge.graphEdge.from_node.kind) {
+							case NodeTypes.GET:
+								// Don't continue traversing through this node, KeyFor does not propagate thru
+								continue;
+							case NodeTypes.BALL_SIZE_TEST:
+							case NodeTypes.CONNECT:
+							case NodeTypes.MERGE:
+							case NodeTypes.SPLIT:
+							case NodeTypes.SUBBOARD: // ??
+							case NodeTypes.BALL_SIZE_TEST:
+								// Continue traversing back through these nodes, KeyFor propagates through these
+								break;
+						}
+						if (edge.m_fromComponent) {
+							var i:int;
+							for (i = 0; i < edge.m_fromComponent.m_incomingEdges.length; i++) {
+								edgesToCheck.push(edge.m_fromComponent.m_incomingEdges[i]);
+							}
+						}
+					}
+				}
+			}
+			return vec;
 		}
 		
 		private function update(evt:Event):void
@@ -57,9 +101,18 @@ package scenes.game.display
 		{
 			super.setOutgoingEdge(edge);
 			m_outputEdge = edge;
+			alignOutputEdge();
 		}
 		
-		private function get getNode():MapGetNode
+		private function alignOutputEdge():void
+		{
+			if (!m_outputEdge || !m_valueEdge) return;
+			// Have output edge line up with value edge
+			var newStart:Point = new Point(m_valueEdge.m_endPoint.x + m_valueEdge.x - m_outputEdge.x, m_outputEdge.m_startPoint.y);
+			m_outputEdge.setStartPosition(newStart);
+		}
+		
+		public function get getNode():MapGetNode
 		{
 			return m_node as MapGetNode;
 		}
@@ -133,7 +186,7 @@ package scenes.game.display
 		
 		override public function onClicked(pt:Point):void
 		{
-			
+			dispatchEvent(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, getNode.getMapProperty()));
 		}
 	}
 

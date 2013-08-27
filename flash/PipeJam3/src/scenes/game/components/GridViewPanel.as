@@ -2,6 +2,8 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import events.PropertyModeChangeEvent;
+	import graph.PropDictionary;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -61,6 +63,8 @@ package scenes.game.components
 		public static const HEIGHT:Number = 262;
 		
 		private var m_currentLevel:Level;
+		private var inactiveContent:Sprite;
+		private var contentBarrier:Quad;
 		private var content:BaseComponent;
 		private var errorBubbleContainer:Sprite;
 		private var currentMode:int;
@@ -92,6 +96,13 @@ package scenes.game.components
 			m_backgroundImage.height = Constants.GameHeight;
 			m_backgroundImage.blendMode = BlendMode.NONE;
 			addChild(m_backgroundImage);
+			
+			inactiveContent = new Sprite();
+			addChild(inactiveContent);
+			
+			contentBarrier = new Quad(m_backgroundImage.width, m_backgroundImage.height, 0x0);
+			contentBarrier.alpha = 0.2;
+			addChild(contentBarrier);
 			
 			content = new BaseComponent();
 			addChild(content);
@@ -162,8 +173,10 @@ package scenes.game.components
 					currentMode = NORMAL_MODE;
 				else
 				{
-					if(this.m_currentLevel && event.target == m_backgroundImage)
-						this.m_currentLevel.unselectAll();
+					if (m_currentLevel && ((event.target == m_backgroundImage) || (event.target == contentBarrier))) {
+						m_currentLevel.unselectAll();
+						m_currentLevel.onPropertyModeChange(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW));
+					}
 				}
 			}
 			else if(event.getTouches(this, TouchPhase.MOVED).length)
@@ -196,7 +209,7 @@ package scenes.game.components
 					if (touches.length == 1)
 					{
 						// one finger touching -> move
-						if(touches[0].target == m_backgroundImage)
+						if ((touches[0].target == m_backgroundImage) || (touches[0].target == contentBarrier))
 						{
 							if (getPanZoomAllowed())
 							{
@@ -363,6 +376,8 @@ package scenes.game.components
 			// Perform scaling
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
+			inactiveContent.scaleX = content.scaleX;
+			inactiveContent.scaleY = content.scaleY;
 			onContentScaleChanged();
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
@@ -373,6 +388,8 @@ package scenes.game.components
 			
 			content.x -= dX * content.scaleX;
 			content.y -= dY * content.scaleY;
+			inactiveContent.x = content.x;
+			inactiveContent.y = content.y;
 			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
@@ -443,22 +460,34 @@ package scenes.game.components
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
-					if (getPanZoomAllowed()) content.y += 5;
+					if (getPanZoomAllowed()) {
+						content.y += 5;
+						inactiveContent.y = content.y;
+					}
 					break;
 				case Keyboard.DOWN:
 				case Keyboard.S:
 				case Keyboard.NUMPAD_2:
-					if (getPanZoomAllowed()) content.y -= 5;
+					if (getPanZoomAllowed()) {
+						content.y -= 5;
+						inactiveContent.y = content.y;
+					}
 					break;
 				case Keyboard.LEFT:
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
-					if (getPanZoomAllowed()) content.x += 5;
+					if (getPanZoomAllowed()) {
+						content.x += 5;
+						inactiveContent.x = content.x;
+					}
 					break;
 				case Keyboard.RIGHT:
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
-					if (getPanZoomAllowed()) content.x -= 5;
+					if (getPanZoomAllowed()) {
+						content.x -= 5;
+						inactiveContent.x = content.x;
+					}
 					break;
 				case Keyboard.EQUAL:
 				case Keyboard.NUMPAD_ADD:
@@ -524,6 +553,9 @@ package scenes.game.components
 				}
 			}
 			
+			inactiveContent.removeChildren();
+			inactiveContent.addChild(m_currentLevel.inactiveLayer);
+			
 			// Remove old error text containers and place new ones
 			for (var i:int = 0; i < m_errorTextBubbles.length; i++) m_errorTextBubbles[i].removeFromParent();
 			m_errorTextBubbles = new Vector.<Sprite>();
@@ -564,8 +596,10 @@ package scenes.game.components
 		{
 			content.x = 0;
 			content.y = 0;
+			inactiveContent.x = inactiveContent.y = 0;
 			
 			content.scaleX = content.scaleY = STARTING_SCALE;
+			inactiveContent.scaleX = inactiveContent.scaleY = STARTING_SCALE;
 			onContentScaleChanged();
 			content.addChild(m_currentLevel);
 			
@@ -615,6 +649,8 @@ package scenes.game.components
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
 				content.x += startPtOffset.x * content.scaleX;
 				content.y += startPtOffset.y * content.scaleY;
+				inactiveContent.x = content.x;
+				inactiveContent.y = content.y;
 				scaleContent(m_currentLevel.tutorialManager.getStartScaleFactor());
 			}
 		}
@@ -724,8 +760,10 @@ package scenes.game.components
 		 */
 		public function panTo(panX:Number, panY:Number, createUndoEvent:Boolean = true):void
 		{
-			content.x = ( -panX * content.scaleX + clipRect.width / 2) ;
-			content.y = ( -panY * content.scaleY + clipRect.height / 2) ;
+			content.x = ( -panX * content.scaleX + clipRect.width / 2);
+			inactiveContent.x = content.x;
+			content.y = ( -panY * content.scaleY + clipRect.height / 2);
+			inactiveContent.y = content.y;
 		}
 		
 		/**
@@ -835,6 +873,8 @@ package scenes.game.components
 					content.x = endPoint.x;
 					content.y = endPoint.y;
 				}
+				inactiveContent.x = content.x;
+				inactiveContent.y = content.y;
 			}
 		}
 		
@@ -891,8 +931,12 @@ package scenes.game.components
 			//restore state
 			content.x = currentX;
 			content.y = currentY;
+			inactiveContent.x = content.x;
+			inactiveContent.x = content.y;
 			content.scaleX = currentXScale;
 			content.scaleY = currentYScale;
+			inactiveContent.scaleX = content.scaleX;
+			inactiveContent.scaleY = content.scaleY;
 			clipRect = savedClipRect;
 			addChildAt(this.m_backgroundImage, 0);
 			addChildAt(this.m_border, 1);

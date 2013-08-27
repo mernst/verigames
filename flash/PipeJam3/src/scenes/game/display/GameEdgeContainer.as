@@ -118,10 +118,10 @@ package scenes.game.display
 			outgoingEdgePosition = -1;
 			incomingEdgePosition = -1;
 			
+			setupPoints();
+			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
-			
-			setupPoints();
 			
 			var innerBoxPt:Point;
 			var boxHeight:Number;
@@ -1120,18 +1120,20 @@ package scenes.game.display
 			}
 		}
 		
-		// point should be in local coordinates
 		public function setStartPosition(newPoint:Point):void
 		{
-			m_startJoint.x = newPoint.x;
-			m_startJoint.y = newPoint.y;
+			m_startPoint = newPoint.clone();
+			createJointPointsArray(m_startPoint, m_endPoint);
+			positionChildren();
+			m_isDirty = true;
 		}
 		
-		// point should be in local coordinates
 		public function setEndPosition(newPoint:Point):void
 		{
-			m_endJoint.x = newPoint.x;
-			m_endJoint.y = newPoint.y;
+			m_endPoint = newPoint.clone();
+			createJointPointsArray(m_startPoint, m_endPoint);
+			positionChildren();
+			m_isDirty = true;
 		}
 		
 		public function getOriginalStartPosition():Point
