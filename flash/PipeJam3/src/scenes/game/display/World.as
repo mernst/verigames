@@ -143,7 +143,7 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:Event):void
 		{
-			edgeSetGraphViewPanel = new GridViewPanel();
+			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
@@ -739,6 +739,14 @@ package scenes.game.display
 			}
 			
 			return null;
+		}
+		
+		public function hasDialogOpen():Boolean
+		{
+			if(inGameMenuBox && inGameMenuBox.visible)
+				return true;
+			else
+				return false;
 		}
 	}
 }
