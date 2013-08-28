@@ -2,16 +2,21 @@ package scenes.game.display
 {
 	import display.NineSliceBatch;
 	import display.TextBubble;
-	import events.BallTypeChangeEvent;
+	
 	import events.ConflictChangeEvent;
 	import events.EdgeContainerEvent;
+	import events.EdgePropChangeEvent;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
 	import graph.Edge;
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.PropDictionary;
+	
 	import particle.ErrorParticleSystem;
+	
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -118,10 +123,10 @@ package scenes.game.display
 			outgoingEdgePosition = -1;
 			incomingEdgePosition = -1;
 			
+			setupPoints();
+			
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
-			
-			setupPoints();
 			
 			var innerBoxPt:Point;
 			var boxHeight:Number;
@@ -181,9 +186,10 @@ package scenes.game.display
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			
 			if (isTopOfEdge()) {
-				graphEdge.addEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_PROPS_CHANGED, onPropsChange);
 				// Also need to update the inner box segment when the exit ball type changes
-				graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 				if (!edgeIsCopy) {
 					// If normal edge leading into box, mark trouble points
 					listenToEdgeForTroublePoints(graphEdge);
@@ -192,7 +198,8 @@ package scenes.game.display
 				// then listen for trouble points at the actual edge which will leading from the joint above
 				// to the actual edge-set box
 			} else {
-				graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
 			}
 			// For edges leading into SUBNETWORK (the lower CPY lines) the edge.to_port could
 			// have trouble points
@@ -397,15 +404,23 @@ package scenes.game.display
 			}
 			m_listeningToPorts = new Vector.<Port>();
 			if (graphEdge) {
-				graphEdge.removeEventListener(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
-				graphEdge.removeEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.removeEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 			}
 			super.dispose();
 		}
 		
-		private function onBallTypeChange(evt:BallTypeChangeEvent):void
+		private function onBallTypeChange(evt:EdgePropChangeEvent):void
 		{
 			updateSize();
+		}
+		
+		private var m_props:PropDictionary = new PropDictionary();
+		private function onPropsChange(evt:EdgePropChangeEvent):void
+		{
+			m_props = evt.newProps.clone();
+			m_hasProp = m_props.hasProp(m_propertyMode);
+			setPropertyMode(m_propertyMode, m_hasProp);
 		}
 		
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
@@ -1120,18 +1135,24 @@ package scenes.game.display
 			}
 		}
 		
-		// point should be in local coordinates
 		public function setStartPosition(newPoint:Point):void
 		{
-			m_startJoint.x = newPoint.x;
-			m_startJoint.y = newPoint.y;
+			m_startPoint = newPoint.clone();
+			createJointPointsArray(m_startPoint, m_endPoint);
+			if (m_edgeSegments && m_edgeJoints) {
+				positionChildren();
+				m_isDirty = true;
+			}
 		}
 		
-		// point should be in local coordinates
 		public function setEndPosition(newPoint:Point):void
 		{
-			m_endJoint.x = newPoint.x;
-			m_endJoint.y = newPoint.y;
+			m_endPoint = newPoint.clone();
+			createJointPointsArray(m_startPoint, m_endPoint);
+			if (m_edgeSegments && m_edgeJoints) {
+				positionChildren();
+				m_isDirty = true;
+			}
 		}
 		
 		public function getOriginalStartPosition():Point
@@ -1242,6 +1263,19 @@ package scenes.game.display
 		
 		override public function flatten():void {
 			return;
+		}
+		
+		override public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		{
+			hasProp = m_props.hasProp(prop);
+			super.setPropertyMode(prop, hasProp);
+			var i:int;
+			for (i = 0; i < m_edgeJoints.length; i++) {
+				m_edgeJoints[i].setPropertyMode(prop, hasProp);
+			}
+			for (i = 0; i < m_edgeSegments.length; i++) {
+				m_edgeSegments[i].setPropertyMode(prop, hasProp);
+			}
 		}
 		
 		//set width of innersegment 

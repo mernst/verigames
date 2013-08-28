@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import events.PropertyModeChangeEvent;
 	
 	import audio.AudioManager;
 	
@@ -96,6 +97,12 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_visibleNodeManager:VisibleNodeManager;
 		private var m_hidingErrorText:Boolean = false;
+		
+		private var m_nodesInactiveContainer:Sprite = new Sprite();
+		private var m_jointsInactiveContainer:Sprite = new Sprite();
+		private var m_errorInactiveContainer:Sprite = new Sprite();
+		private var m_edgesInactiveContainer:Sprite = new Sprite();
+		public var inactiveLayer:Sprite = new Sprite();
 		
 		private var m_nodesContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
@@ -333,6 +340,7 @@ package scenes.game.display
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
+			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
 			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
@@ -541,6 +549,16 @@ package scenes.game.display
 					m_backgroundImage.blendMode = BlendMode.NONE;
 					addChild(m_backgroundImage);
 				}
+				
+				if (inactiveLayer == null)  inactiveLayer  = new Sprite();
+				if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
+				if (m_jointsInactiveContainer == null) m_jointsInactiveContainer = new Sprite();
+				if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
+				if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
+				inactiveLayer.addChild(m_nodesInactiveContainer);
+				inactiveLayer.addChild(m_jointsInactiveContainer);
+				inactiveLayer.addChild(m_errorInactiveContainer);
+				inactiveLayer.addChild(m_edgesInactiveContainer);
 				
 				if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
 				if (m_jointsContainer == null) m_jointsContainer = new Sprite();
@@ -898,6 +916,7 @@ package scenes.game.display
 			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			removeEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
+			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
 			removeEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
@@ -955,18 +974,102 @@ package scenes.game.display
 		{
 			if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
 			if (!evt.silent) {
-				if (evt.newIsWide) {
+				if (!evt.propValue) {
+					// Wide
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
 				} else {
+					// Narrow
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
 				}
 			}
-			var edgeSetID:String = evt.edgeSetChanged.m_id;
+			var edgeSetID:String = evt.edgeSetChanged.m_edgeSet.id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
 			if(edgeSet != null) {
-				edgeSet.getProps().setProp(PropDictionary.PROP_NARROW, !evt.newIsWide);
+				edgeSet.getProps().setProp(evt.prop, evt.propValue);
 			}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.newIsWide, this, evt.silent, evt.point));
+			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
+		}
+		
+		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
+		public function onPropertyModeChange(evt:PropertyModeChangeEvent):void
+		{
+			var i:int;
+			if (evt.prop == PropDictionary.PROP_NARROW) {
+				m_propertyMode = PropDictionary.PROP_NARROW;
+				for (i = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].setPropertyMode(m_propertyMode);
+					activate(m_edgeList[i]);
+				}
+				for (i = 0; i < m_nodeList.length; i++) {
+					m_nodeList[i].setPropertyMode(m_propertyMode);
+					activate(m_nodeList[i]);
+				}
+				for (i = 0; i < m_jointList.length; i++) {
+					m_jointList[i].setPropertyMode(m_propertyMode);
+					activate(m_jointList[i]);
+				}
+			} else {
+				m_propertyMode = evt.prop;
+				var edgesToActivate:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+				for (i = 0; i < m_jointList.length; i++) {
+					if (m_jointList[i] is GameMapGetJoint) {
+						var mapget:GameMapGetJoint = m_jointList[i] as GameMapGetJoint;
+						if (mapget.getNode.getMapProperty() == evt.prop) {
+							m_jointList[i].setPropertyMode(m_propertyMode, true);
+							edgesToActivate = edgesToActivate.concat(mapget.getUpstreamEdgeContainers());
+							continue;
+						}
+					}
+					m_jointList[i].setPropertyMode(m_propertyMode);
+					deactivate(m_jointList[i]);
+				}
+				var gameNodesToActivate:Vector.<GameNode> = new Vector.<GameNode>();
+				var gameJointsToActivate:Vector.<GameJointNode> = new Vector.<GameJointNode>();
+				for (i = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].setPropertyMode(m_propertyMode);
+					if (edgesToActivate.indexOf(m_edgeList[i]) > -1) {
+						if (m_edgeList[i].m_fromComponent is GameNode) {
+							gameNodesToActivate.push(m_edgeList[i].m_fromComponent as GameNode);
+						} else if (m_edgeList[i].m_fromComponent is GameJointNode) {
+							gameJointsToActivate.push(m_edgeList[i].m_fromComponent as GameJointNode);
+						}
+					} else {
+						deactivate(m_edgeList[i]);
+					}
+				}
+				for (i = 0; i < m_nodeList.length; i++) {
+					m_nodeList[i].setPropertyMode(m_propertyMode);
+					if (gameNodesToActivate.indexOf(m_nodeList[i]) == -1) {
+						deactivate(m_nodeList[i]);
+					}
+				}
+				for (i = 0; i < gameJointsToActivate.length; i++) {
+					gameJointsToActivate[i].setPropertyMode(m_propertyMode);
+					activate(gameJointsToActivate[i]);
+				}
+			}
+		}
+		
+		private function activate(comp:GameComponent):void
+		{
+			if (comp is GameEdgeContainer) {
+				m_edgesContainer.addChild(comp);
+			} else if (comp is GameNode) {
+				m_nodesContainer.addChild(comp);
+			} else if (comp is GameJointNode) {
+				m_jointsContainer.addChild(comp);
+			}
+		}
+		
+		private function deactivate(comp:GameComponent):void
+		{
+			if (comp is GameEdgeContainer) {
+				m_edgesInactiveContainer.addChild(comp);
+			} else if (comp is GameNode) {
+				m_nodesInactiveContainer.addChild(comp);
+			} else if (comp is GameJointNode) {
+				m_jointsInactiveContainer.addChild(comp);
+			}
 		}
 		
 		private function refreshTroublePoints():void

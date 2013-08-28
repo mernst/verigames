@@ -67,7 +67,7 @@ def getboardedge(lname, bname, inout, portnum):
 	if ports is None:
 		return None
 	port = ports.get(portnum)
-	if ports is None:
+	if port is None:
 		return None
 	return port
 

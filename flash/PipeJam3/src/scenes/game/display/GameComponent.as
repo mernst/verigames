@@ -3,6 +3,8 @@ package scenes.game.display
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import graph.PropDictionary;
+	
 	import scenes.BaseComponent;
 	
 	import starling.display.DisplayObjectContainer;
@@ -26,6 +28,8 @@ package scenes.game.display
 		public var m_shouldShowError:Boolean = true;
 		public var isHoverOn:Boolean = false;
 		public var draggable:Boolean = true;
+		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
+		protected var m_hasProp:Boolean = false;
 		
 		public var m_forceColor:Number = -1;
 		
@@ -155,6 +159,14 @@ package scenes.game.display
 		
 		public function updateSize():void
 		{
+		}
+		
+		
+		public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		{
+			m_propertyMode = prop;
+			m_hasProp = hasProp;
+			m_isDirty = true;
 		}
 	}
 }

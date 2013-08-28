@@ -2,10 +2,12 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	
-	import events.BallTypeChangeEvent;
+	import events.EdgePropChangeEvent;
 	import events.EdgeContainerEvent;
 	
 	import flash.geom.Point;
+	
+	import graph.PropDictionary;
 	
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -144,12 +146,12 @@ package scenes.game.display
 			m_image = createJoint(isRound, m_isEditable, m_isWide);
 			m_image.width = m_image.height = lineSize;
 			
-			if(isHoverOn)
-			{
+			
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && m_hasProp) {
+				m_image.color = 0xffffff;
+			} else if (isHoverOn){
 				m_image.color = 0xeeeeee;
-			}
-			else
-			{
+			} else {
 				m_image.color = 0xcccccc;
 			}
 			

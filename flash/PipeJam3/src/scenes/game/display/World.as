@@ -406,7 +406,7 @@ package scenes.game.display
 		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_id, evt.level.level_name);
+			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_edgeSet.id, evt.level.level_name);
 			var oldScore:int = gameControlPanel.getCurrentScore();
 			var newScore:int = gameControlPanel.updateScore(evt.level, false);
 			if (newScore >= evt.level.getTargetScore()) {
@@ -422,8 +422,9 @@ package scenes.game.display
 			}
 			if (!evt.silent && PipeJam3.logging) {
 				var details:Object = new Object();
-				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_id;
-				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_WIDTH] = evt.edgeSetChanged.isWide() ? VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_WIDE : VerigameServerConstants.ACTION_VALUE_EDGE_WIDTH_NARROW;
+				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+				details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
+				details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
 				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
 			}
 		}

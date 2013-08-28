@@ -2,6 +2,7 @@ package particle
 {
 	import flash.utils.Dictionary;
 	import graph.PropDictionary;
+	import starling.display.Quad;
 	import starling.extensions.ColorArgb;
 	
 	import events.ErrorEvent;
@@ -24,6 +25,7 @@ package particle
 		private static var errorConfig:XML;
 		private static var errorTexture:Texture;
 		private var mParticleSystem:PDParticleSystem;
+		private var mHitQuad:Quad;
 		
 		protected static var nextID:int = 0;
 		public var id:int;
@@ -56,6 +58,9 @@ package particle
 					}
 				}
 			}
+			mHitQuad = new Quad(20, 10, 0xFFFFFF);
+			mHitQuad.x = mHitQuad.y = -mHitQuad.width / 2.0;
+			mHitQuad.alpha = 0;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
             addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -63,6 +68,8 @@ package particle
         
         private function onAddedToStage(evt:Event):void
         {
+			addChild(mHitQuad);
+			
             mParticleSystem.emitterX = 0;
             mParticleSystem.emitterY = 0;
             mParticleSystem.start();

@@ -1,12 +1,15 @@
  package scenes.game.display
 {
 	import assets.AssetInterface;
+	
 	import events.EdgeContainerEvent;
 	import events.MoveEvent;
 	
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import graph.PropDictionary;
 	
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
@@ -247,12 +250,11 @@
 				m_quad.y = (m_endPt.y > 0) ? 0 : -m_quad.height;
 			}
 			
-			if(isHoverOn)
-			{
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && m_hasProp) {
+				m_quad.color = 0xffffff;
+			} else if (isHoverOn){
 				m_quad.color = 0xeeeeee;
-			}
-			else
-			{
+			} else {
 				m_quad.color = 0xcccccc;
 			}
 			

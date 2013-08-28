@@ -54,7 +54,7 @@ package graph
 			var props:PropDictionary = new PropDictionary();
 			if (argumentHasMapStamp()) {
 				// Pass argument props as output
-				props = argumentEdge.getExitProps().clone();
+				props = valueEdge.getExitProps().clone();
 			}
 			return props;
 		}
@@ -63,6 +63,11 @@ package graph
 		{
 			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;
 			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
+		}
+		
+		public function getMapProperty():String
+		{
+			return (PropDictionary.PROP_KEYFOR_PREFIX + mapEdge.linked_edge_set.id.toString());
 		}
 		
 		public function get mapEdge():Edge {
