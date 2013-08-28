@@ -572,6 +572,9 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.startLevel();
 				m_levelStartTime = new Date().time;
 			}
+			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+			onPropertyModeChange(propChangeEvt);
+			dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
 			setConstraints();

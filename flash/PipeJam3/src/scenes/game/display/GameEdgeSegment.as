@@ -45,10 +45,12 @@
 		public var plug:Sprite;
 		public var socket:Sprite;
 		
-		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
 			super("");
 			draggable = _draggable;
+			if (_props != null) m_props = _props;
+			m_propertyMode = _propMode;
 			m_isWide = _isWide;
 			m_dir = _dir;
 			m_isInnerBoxSegment = _isInnerBoxSegment;

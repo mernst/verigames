@@ -37,9 +37,11 @@ package scenes.game.display
 		static public var END_JOINT:int = 2;
 		static public var INNER_CIRCLE_JOINT:int = 3;
 		
-		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
+		public function GameEdgeJoint(jointType:int = 0, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
 			super("");
+			if (_props != null) m_props = _props;
+			m_propertyMode = _propMode;
 			draggable = _draggable;
 			m_isWide = _isWide;
 			m_jointType = jointType;

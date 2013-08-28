@@ -6,7 +6,6 @@ package scenes.game.display
 	
 	import events.EdgePropChangeEvent;
 	import events.PropertyModeChangeEvent;
-	import events.StampChangeEvent;
 	
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -49,9 +48,9 @@ package scenes.game.display
 				m_valueEdge.graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
 				alignOutputEdge();
 			} else if (edge.graphEdge == getNode.argumentEdge) {
-				if (m_argumentEdge) m_argumentEdge.graphEdge.linked_edge_set.removeEventListener(StampChangeEvent.STAMP_ACTIVATION, update);
+				if (m_argumentEdge) m_argumentEdge.graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, update);
 				m_argumentEdge = edge;
-				m_argumentEdge.graphEdge.linked_edge_set.addEventListener(StampChangeEvent.STAMP_ACTIVATION, update);
+				m_argumentEdge.graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, update);
 			}
 		}
 		

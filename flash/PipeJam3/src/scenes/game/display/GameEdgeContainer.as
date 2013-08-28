@@ -184,14 +184,17 @@ package scenes.game.display
 			var innerIsEnd:Boolean = toBox && (m_extensionEdge == null);
 			
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
-			
+			// Initialize props
+			var enterPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.ENTER_PROPS_CHANGED, graphEdge, graphEdge.getEnterProps(), graphEdge.getEnterProps());
+			var exitPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.EXIT_PROPS_CHANGED, graphEdge, graphEdge.getExitProps(), graphEdge.getExitProps());
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
-				setProps(graphEdge.getEnterProps());
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_PROPS_CHANGED, onPropsChange);
-				// TODO: props on inner segments
+				onPropsChange(enterPropsEvt);
 				// Also need to update the inner box segment when the exit ball type changes
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
+				onPropsChange(exitPropsEvt);
 				if (!edgeIsCopy) {
 					// If normal edge leading into box, mark trouble points
 					listenToEdgeForTroublePoints(graphEdge);
@@ -201,9 +204,10 @@ package scenes.game.display
 				// to the actual edge-set box
 			} else {
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
-				setProps(graphEdge.getExitProps());
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
+				onPropsChange(exitPropsEvt);
 			}
+			
 			// For edges leading into SUBNETWORK (the lower CPY lines) the edge.to_port could
 			// have trouble points
 			switch (graphEdge.to_node.kind) {
@@ -409,6 +413,8 @@ package scenes.game.display
 			if (graphEdge) {
 				graphEdge.removeEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
 				graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				graphEdge.removeEventListener(EdgePropChangeEvent.ENTER_PROPS_CHANGED, onPropsChange);
+				graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
 			}
 			super.dispose();
 		}
@@ -420,8 +426,20 @@ package scenes.game.display
 		
 		private function onPropsChange(evt:EdgePropChangeEvent):void
 		{
-			setProps(evt.newProps);
-			m_isDirty = true;
+			var updateInnerSegment:Boolean = false;
+			if (isTopOfEdge() && (evt.type == EdgePropChangeEvent.EXIT_PROPS_CHANGED)) {
+				updateInnerSegment = true;
+			} else {
+				setProps(evt.newProps);
+				m_isDirty = true;
+				if (!isTopOfEdge()) updateInnerSegment = true;
+			}
+			if (updateInnerSegment && m_innerBoxSegment) {
+				// Change inner box segment
+				if (m_innerBoxSegment.edgeSegment)      m_innerBoxSegment.edgeSegment.setProps(evt.newProps);
+				if (m_innerBoxSegment.innerCircleJoint) m_innerBoxSegment.innerCircleJoint.setProps(evt.newProps);
+				m_innerBoxSegment.m_isDirty = true;
+			}
 		}
 		
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
@@ -674,7 +692,7 @@ package scenes.game.display
 			m_edgeJoints = new Vector.<GameEdgeJoint>;
 			
 			//create start joint, and then create rest when we create connecting segment
-			m_startJoint = new GameEdgeJoint(0, m_isWide, m_isEditable, draggable);
+			m_startJoint = new GameEdgeJoint(0, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
 			m_edgeJoints.push(m_startJoint);
 			
 			//now create segments and joints for second position to n
@@ -691,7 +709,7 @@ package scenes.game.display
 				{
 					isFirstSegment = true;
 				}
-				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, false, isFirstSegment, isLastSegment, m_isWide, true, draggable);
+				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, false, isFirstSegment, isLastSegment, m_isWide, true, draggable, m_props, m_propertyMode);
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -701,14 +719,14 @@ package scenes.game.display
 				var joint:GameEdgeJoint;
 				if(index+1 != numJoints)
 				{
-					joint = new GameEdgeJoint(jointType, m_isWide, m_isEditable, draggable);
+					joint = new GameEdgeJoint(jointType, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
 					m_edgeJoints.push(joint);
 					if (jointType == GameEdgeJoint.MARKER_JOINT) {
 						m_markerJoint = joint;
 					}
 				}
 			}
-			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_isWide, m_isEditable, draggable);
+			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
 			m_edgeJoints.push(m_endJoint);
 		}
 		
@@ -1287,6 +1305,10 @@ package scenes.game.display
 			}
 			for (i = 0; i < m_edgeSegments.length; i++) {
 				m_edgeSegments[i].setPropertyMode(prop);
+			}
+			if (m_innerBoxSegment) {
+				if (m_innerBoxSegment.edgeSegment)      m_innerBoxSegment.edgeSegment.setPropertyMode(prop);
+				if (m_innerBoxSegment.innerCircleJoint) m_innerBoxSegment.innerCircleJoint.setPropertyMode(prop);
 			}
 		}
 		
