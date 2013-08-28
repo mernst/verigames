@@ -328,13 +328,6 @@ abstract class GameSolver extends ConstraintSolver {
 
       startClassTypeParams()
 
-      //Add the type parameter lower bounds above subboard intersections that need them as input
-      // (see addConstraintLowerBounds )
-      constraints
-        .filter( _.isInstanceOf[SubboardCallConstraint[_]] )
-        .map(    _.asInstanceOf[SubboardCallConstraint[_]] )
-        .foreach( addMissingMethodVars _ )
-
       refinementVariables.foreach(
         refVar => {
           //create the refinement variable no ball start
@@ -348,6 +341,13 @@ abstract class GameSolver extends ConstraintSolver {
           handleConstraint(world, SubtypeConstraint(refVar, refVar.declVar))
         }
       )
+
+      //Add the type parameter lower bounds above subboard intersections that need them as input
+      // (see addConstraintLowerBounds )
+      constraints
+        .filter( _.isInstanceOf[SubboardCallConstraint[_]] )
+        .map(    _.asInstanceOf[SubboardCallConstraint[_]] )
+        .foreach( addMissingMethodVars _ )
 
       //One of these constraints is the one between overridden method return types
       //TODO: Log these and eliminate them.
@@ -591,8 +591,6 @@ abstract class GameSolver extends ConstraintSolver {
       isMethodReceiver( board, variable )
     }
 
-    //TODO: This will erroneously identify a ClassTypeParameterVP from outside the class
-    //TODO: as a receiver param if it somehow ends up on that board
     def isGetterOrSetterReceiver( board : Board, variable : AbstractVariable ) = {
       ( isFieldGetterBoard( board ) || isFieldSetterBoard( board ) ) &&
         ( variable.varpos.isInstanceOf[ClassTypeParameterVP] ||

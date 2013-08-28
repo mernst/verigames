@@ -113,6 +113,10 @@ public class GameVisitor extends InferenceVisitor {
         return reduce(scan(node, p), r);
     }
 
+    private Void scanAndReduce(Iterable<? extends Tree> nodes, Void p, Void r) {
+        return reduce(scan(nodes, p), r);
+    }
+
     /** Log all assignments. */
     @Override
     public Void visitAssignment(AssignmentTree node, Void p) {
@@ -172,7 +176,9 @@ public class GameVisitor extends InferenceVisitor {
             if (TreeUtils.isMethodInvocation(node, mapGet, env)) {
                 // TODO: log the call to Map.get.
             } else {
-                scan(node.getMethodSelect(), p);
+                Void r = scan(node.getTypeArguments(), p);
+                r = scan(node.getMethodSelect(), p);
+                r = scanAndReduce(node.getArguments(), p, r);
                 logMethodInvocation(node);
             }
         } else {
@@ -202,8 +208,9 @@ public class GameVisitor extends InferenceVisitor {
 
     @Override
     public Void visitNewClass( NewClassTree newClassTree, Void p) {
+        super.visitNewClass( newClassTree, p);
         logConstructorInvocationConstraints( newClassTree );
-        return super.visitNewClass( newClassTree, p);
+        return null;
     }
 
     @Override

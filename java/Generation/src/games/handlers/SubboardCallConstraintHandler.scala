@@ -222,7 +222,24 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   }
 
   def connectResultAsOutput( subboardISect : Subboard ) {
+    //Results are unique in the sense that they are not necessarily passed as input to the subboard call
+    //the only way they can be passed as inputs is if the result of a previous call is fed into the next call.
+    //If the result variables are on the board (but not fed into this call) then merge the previous output
+    //with the current output
+    val nonArgumentResults  =
+      constraint.result
+        .filterNot( outputMap.contains _ ) //If it's fed in as input, the caller board connection will be capped
+        .filterNot( isUniqueSlot _ )
+        .map( _.asInstanceOf[AbstractVariable] )
+        .filter( v => boardNVariableToIntersection.contains( (callerBoard, v) ) )
+
     connectAsOutput( subboardISect, constraint.result, ReturnOutPort )
+
+    //This will cause the merge step to also merge the latest intersection on the board with those already
+    //in the output map
+    nonArgumentResults.foreach( resSlot =>
+      addToOutputMap( resSlot, boardNVariableToIntersection( (callerBoard, resSlot) ) )
+    )
   }
 
   def cap( slot : Slot, isect : Intersection ) {
@@ -250,7 +267,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
    */
   def mergeOutputs() {
     for ((slot, subboardOutputs) <- outputMap) {
-      val mergedIntersection = merge( subboardOutputs, () => createChute(slot) )
+      val mergedIntersection = merge(subboardOutputs, () => createChute(slot) )
       updateIntersection(callerBoard, slot, mergedIntersection)
     }
   }
@@ -268,15 +285,20 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   // needed)
   //
   // Mutates: callerBoard
-  def merge(intersections: List[Intersection], chuteFactory: () => Chute): Intersection = intersections match {
-    // if there's only one intersection, just return that one
-    case hd::Nil => hd
-    case first :: second :: tl => {
-      val mergeIntersection = callerBoard.add(first, "toMerge", MERGE, "first", chuteFactory())._2
-      callerBoard.addEdge(second, "toMerge", mergeIntersection, "second", chuteFactory())
-      merge(mergeIntersection :: tl, chuteFactory)
+  def merge(intersections: List[Intersection], chuteFactory: () => Chute): Intersection = {
+    if(intersections.isEmpty) {
+      throw new IllegalArgumentException("empty list passed to merge")
     }
-    case Nil => throw new IllegalArgumentException("empty list passed to merge")
+
+    if( intersections.size == 1 ) {
+      intersections.head
+    } else {
+      intersections.tail.foldLeft(intersections.head)( (prev : Intersection, current : Intersection) => {
+        val mergeIntersection = callerBoard.add( prev, "toMerge", MERGE, "first", chuteFactory() )._2
+        callerBoard.addEdge(current, "toMerge", mergeIntersection, "second", chuteFactory())
+        mergeIntersection
+      })
+    }
   }
 
 
