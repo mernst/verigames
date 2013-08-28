@@ -11,6 +11,7 @@ import checkers.inference.AbstractLiteral
 import games.GameSolver
 import misc.util.VGJavaConversions._
 import Intersection.Kind._
+import nninf.handlers.NninfEqualityConstraintHandler
 
 class NninfGameSolver extends GameSolver {
 
@@ -99,33 +100,7 @@ class NninfGameSolver extends GameSolver {
               }
             }
           }
-          case EqualityConstraint(leftslot, rightslot) => {/*
-            if (rightslot == NninfConstants.NONNULL ||
-                rightslot == NninfConstants.NULLABLE) {
-              // Assume leftslot is a variable. Alternatives?
-              val leftvar = leftslot.asInstanceOf[Variable]
-              val board = variablePosToBoard(leftvar.varpos)
-              val con = Intersection.factory(Intersection.Kind.CONNECT)
-              val lastIntersection = boardNVariableToIntersection((board, leftvar))
-
-              board.addNode(con)
-
-              val pipe = new Chute(leftvar.id, leftvar.toString())
-
-              if (rightslot == NninfConstants.NULLABLE) {
-                pipe.setNarrow(false)
-              } else {
-                pipe.setNarrow(true)
-              }
-              pipe.setEditable(false)
-
-              board.addEdge(lastIntersection, 0, con, 0, pipe)
-
-              boardNVariableToIntersection.update((board, leftvar), con)
-            } else {
-              println("TODO: EqualityConstraint not handled: " + constraint)
-            }*/
-          }
+          case eqConstraint : EqualityConstraint => NninfEqualityConstraintHandler( eqConstraint, this ).handle()
           case InequalityConstraint(ctx, ell, elr) => {
             // println(ell + " != " + elr)
             // TODO: support var!=NULLABLE for now
