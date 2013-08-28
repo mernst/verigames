@@ -31,7 +31,6 @@ package scenes.game.display
 		private var m_edgeSetEdges:Vector.<Edge>;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
-		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		
 		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
@@ -127,6 +126,7 @@ package scenes.game.display
 					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue);
 					eventToDispatch = new UndoEvent(eventToUndo, this);
 					dispatchEvent(eventToDispatch);
+					m_isDirty = true;
 				}
 			}
 		}
@@ -165,12 +165,6 @@ package scenes.game.display
 				oedge.updateSize();
 				oedge.setInnerSegmentBorderWidth(m_isWide);
 			}
-		}
-		
-		public function setPropertyMode(prop:String):void
-		{
-			m_propertyMode = prop;
-			m_isDirty = true;
 		}
 		
 		override public function draw():void
@@ -257,5 +251,14 @@ package scenes.game.display
 		{
 			return m_isWide;
 		}
+		
+		override public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		{
+			if (m_edgeSet && m_edgeSet.getProps().hasProp(prop)) {
+				hasProp = true;
+			}
+			super.setPropertyMode(prop, hasProp);
+		}
+		
 	}
 }

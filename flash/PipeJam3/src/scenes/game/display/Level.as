@@ -956,7 +956,7 @@ package scenes.game.display
 			var edgeSetID:String = evt.edgeSetChanged.m_edgeSet.id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
 			if(edgeSet != null) {
-				edgeSet.getProps().setProp(PropDictionary.PROP_NARROW, evt.propValue);
+				edgeSet.getProps().setProp(evt.prop, evt.propValue);
 			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
 		}
@@ -965,9 +965,10 @@ package scenes.game.display
 		public function onPropertyModeChange(evt:PropertyModeChangeEvent):void
 		{
 			var i:int;
-			if ((evt.prop == PropDictionary.PROP_NARROW) || (m_propertyMode == evt.prop)) {
+			if (evt.prop == PropDictionary.PROP_NARROW) {
 				m_propertyMode = PropDictionary.PROP_NARROW;
 				for (i = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].setPropertyMode(m_propertyMode);
 					activate(m_edgeList[i]);
 				}
 				for (i = 0; i < m_nodeList.length; i++) {
@@ -975,6 +976,7 @@ package scenes.game.display
 					activate(m_nodeList[i]);
 				}
 				for (i = 0; i < m_jointList.length; i++) {
+					m_jointList[i].setPropertyMode(m_propertyMode);
 					activate(m_jointList[i]);
 				}
 			} else {
@@ -984,15 +986,18 @@ package scenes.game.display
 					if (m_jointList[i] is GameMapGetJoint) {
 						var mapget:GameMapGetJoint = m_jointList[i] as GameMapGetJoint;
 						if (mapget.getNode.getMapProperty() == evt.prop) {
+							m_jointList[i].setPropertyMode(m_propertyMode, true);
 							edgesToActivate = edgesToActivate.concat(mapget.getUpstreamEdgeContainers());
 							continue;
 						}
 					}
+					m_jointList[i].setPropertyMode(m_propertyMode);
 					deactivate(m_jointList[i]);
 				}
 				var gameNodesToActivate:Vector.<GameNode> = new Vector.<GameNode>();
 				var gameJointsToActivate:Vector.<GameJointNode> = new Vector.<GameJointNode>();
 				for (i = 0; i < m_edgeList.length; i++) {
+					m_edgeList[i].setPropertyMode(m_propertyMode);
 					if (edgesToActivate.indexOf(m_edgeList[i]) > -1) {
 						if (m_edgeList[i].m_fromComponent is GameNode) {
 							gameNodesToActivate.push(m_edgeList[i].m_fromComponent as GameNode);
@@ -1004,12 +1009,13 @@ package scenes.game.display
 					}
 				}
 				for (i = 0; i < m_nodeList.length; i++) {
-					m_nodeList[i].setPropertyMode(evt.prop);
+					m_nodeList[i].setPropertyMode(m_propertyMode);
 					if (gameNodesToActivate.indexOf(m_nodeList[i]) == -1) {
 						deactivate(m_nodeList[i]);
 					}
 				}
 				for (i = 0; i < gameJointsToActivate.length; i++) {
+					gameJointsToActivate[i].setPropertyMode(m_propertyMode);
 					activate(gameJointsToActivate[i]);
 				}
 			}

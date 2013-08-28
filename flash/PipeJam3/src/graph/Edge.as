@@ -3,7 +3,7 @@ package graph
 	import events.ConflictChangeEvent;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
-	import events.BallTypeChangeEvent;
+	import events.EdgePropChangeEvent;
 	import graph.Node;
 	import utils.Metadata;
 	
@@ -201,7 +201,7 @@ package graph
 				// If setting a type to a KNOWN ball type (done simulating, for example) record change
 				m_enter_ball_type = typ;
 				if (m_prev_enter_ball_type != m_enter_ball_type) {
-					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.ENTER_BALL_TYPE_CHANGED, m_prev_enter_ball_type, m_enter_ball_type, this));
+					dispatchEvent(new EdgePropChangeEvent(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, this, null, null, m_prev_enter_ball_type, m_enter_ball_type));
 				}
 				m_prev_enter_ball_type = m_enter_ball_type;
 			} else {
@@ -220,7 +220,7 @@ package graph
 				// If setting a type to a KNOWN ball type (done simulating, for example) record change
 				m_exit_ball_type = typ;
 				if (m_prev_exit_ball_type != m_exit_ball_type) {
-					dispatchEvent(new BallTypeChangeEvent(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, m_prev_exit_ball_type, m_exit_ball_type, this));
+					dispatchEvent(new EdgePropChangeEvent(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, this, null, null, m_prev_exit_ball_type, m_exit_ball_type));
 				}
 				m_prev_exit_ball_type = m_exit_ball_type;
 			} else {
@@ -276,11 +276,13 @@ package graph
 		
 		public function setEnterProps(props:PropDictionary):void
 		{
+			dispatchEvent(new EdgePropChangeEvent(EdgePropChangeEvent.ENTER_PROPS_CHANGED, this, m_enterProps.clone(), props.clone()));
 			m_enterProps = props.clone();
 		}
 		
 		public function setExitProps(props:PropDictionary):void
 		{
+			dispatchEvent(new EdgePropChangeEvent(EdgePropChangeEvent.EXIT_PROPS_CHANGED, this, m_exitProps.clone(), props.clone()));
 			m_exitProps = props.clone();
 		}
 		

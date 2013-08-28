@@ -2,8 +2,6 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import events.PropertyModeChangeEvent;
-	import graph.PropDictionary;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -11,6 +9,7 @@ package scenes.game.components
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
+	import events.PropertyModeChangeEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
@@ -23,6 +22,8 @@ package scenes.game.components
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
+	
+	import graph.PropDictionary;
 	
 	import particle.FanfareParticleSystem;
 	
@@ -52,9 +53,9 @@ package scenes.game.components
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	import utils.XMath;
 	import utils.Base64Decoder;
 	import utils.Base64Encoder;
+	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -101,7 +102,8 @@ package scenes.game.components
 			addChild(inactiveContent);
 			
 			contentBarrier = new Quad(m_backgroundImage.width, m_backgroundImage.height, 0x0);
-			contentBarrier.alpha = 0.2;
+			contentBarrier.alpha = 0.8;
+			contentBarrier.visible = false;
 			addChild(contentBarrier);
 			
 			content = new BaseComponent();
@@ -128,9 +130,19 @@ package scenes.game.components
 			
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
+			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void
+		{
+			if (evt.prop == PropDictionary.PROP_NARROW) {
+				contentBarrier.visible = false;
+			} else {
+				contentBarrier.visible = true;
+			}
 		}
 		
 		private function endSelectMode():void
@@ -175,7 +187,9 @@ package scenes.game.components
 				{
 					if (m_currentLevel && ((event.target == m_backgroundImage) || (event.target == contentBarrier))) {
 						m_currentLevel.unselectAll();
-						m_currentLevel.onPropertyModeChange(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW));
+						var evt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+						m_currentLevel.onPropertyModeChange(evt);
+						onPropertyModeChange(evt);
 					}
 				}
 			}
@@ -431,9 +445,8 @@ package scenes.game.components
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
-			if (content) {
-				content.removeEventListener(TouchEvent.TOUCH, onTouch);
-			}
+			content.removeEventListener(TouchEvent.TOUCH, onTouch);
+			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -538,7 +551,6 @@ package scenes.game.components
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
 					}
-					
 				}
 				m_currentLevel = level;
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);

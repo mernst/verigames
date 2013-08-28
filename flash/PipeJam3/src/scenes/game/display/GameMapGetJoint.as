@@ -1,13 +1,11 @@
 package scenes.game.display 
 {
 	import assets.AssetInterface;
-	import events.PropertyModeChangeEvent;
-	import graph.NodeTypes;
-	import graph.PropDictionary;
 	
 	import display.NineSliceBatch;
 	
-	import events.BallTypeChangeEvent;
+	import events.EdgePropChangeEvent;
+	import events.PropertyModeChangeEvent;
 	import events.StampChangeEvent;
 	
 	import flash.events.Event;
@@ -16,7 +14,9 @@ package scenes.game.display
 	import graph.Edge;
 	import graph.MapGetNode;
 	import graph.Node;
+	import graph.NodeTypes;
 	import graph.Port;
+	import graph.PropDictionary;
 	
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -41,9 +41,9 @@ package scenes.game.display
 		{
 			super.setIncomingEdge(edge);
 			if (edge.graphEdge == getNode.valueEdge) {
-				if (m_valueEdge) m_valueEdge.graphEdge.removeEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
+				if (m_valueEdge) m_valueEdge.graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
 				m_valueEdge = edge;
-				m_valueEdge.graphEdge.addEventListener(BallTypeChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
+				m_valueEdge.graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, update);
 				alignOutputEdge();
 			} else if (edge.graphEdge == getNode.argumentEdge) {
 				if (m_argumentEdge) m_argumentEdge.graphEdge.linked_edge_set.removeEventListener(StampChangeEvent.STAMP_ACTIVATION, update);
@@ -186,7 +186,10 @@ package scenes.game.display
 		
 		override public function onClicked(pt:Point):void
 		{
-			dispatchEvent(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, getNode.getMapProperty()));
+			var prop:String = getNode.getMapProperty();
+			// If already in mode for this map, revert to NARROW mode
+			if (m_propertyMode == prop) prop = PropDictionary.PROP_NARROW;
+			dispatchEvent(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, prop));
 		}
 	}
 
