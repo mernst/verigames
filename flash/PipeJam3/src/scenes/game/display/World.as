@@ -367,24 +367,19 @@ package scenes.game.display
 				} else {
 					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
 				}
-				//Update the xml with the stamp state information. Currently updating all stamp states, changed or not.
-				var numEdgeSets:uint = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"].length();
-				for(var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
-					
-					var edgeID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex].attribute("id").toString();
-					var edgeVector:Vector.<Edge> = my_level.edgeDictionary[edgeID];
-					for each (var currentEdge:Edge in edgeVector) {
-						// TODO: Check this functionality
-						var linkedEdgeSet:EdgeSetRef =  currentEdge.linked_edge_set;
-						var stampLength:uint = linkedEdgeSet.num_stamps;
-						for(var stampIndex:uint = 0; stampIndex < stampLength; stampIndex++) {
-							var stampID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@id;
-							output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@active
-								= linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+				//Update the xml with the stamp state information. Only update existing stamps, not adding new ones
+				var edgeSetXML:XMLList = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"];
+				var numEdgeSets:uint = edgeSetXML.length();
+				for (var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
+					var edgeSetID:String = edgeSetXML[edgeSetIndex].attribute("id").toString();
+					if (my_level.levelNodes.edge_set_dictionary.hasOwnProperty(edgeSetID)) {
+						var linkedEdgeSet:EdgeSetRef = my_level.levelNodes.edge_set_dictionary[edgeSetID] as EdgeSetRef;
+						for (var stampIndex:uint = 0; stampIndex < edgeSetXML[edgeSetIndex]["stamp"].length(); stampIndex++) {
+							var stampID:String = edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@id;
+							edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@active = linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
 						}
 					}
 				}
-				
 			}	
 			return output_xml;
 		}

@@ -44,7 +44,6 @@ package scenes.game.display
 		public static const ERROR_COLOR:uint = 0xF05A28;
 		public static const SCORE_COLOR:uint = 0x0;
 		public static const SELECTED_COLOR:uint = 0xFF0000;
-		public static const KEYFOR_COLOR:uint = 0xFF00FF;
 		
 		public function GameComponent(_id:String)
 		{

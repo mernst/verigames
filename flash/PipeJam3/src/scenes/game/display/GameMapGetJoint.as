@@ -66,8 +66,7 @@ package scenes.game.display
 				var edge:GameEdgeContainer = edgesToCheck.shift();
 				if (visitedEdges.indexOf(edge) > -1) continue; // avoid looping
 				visitedEdges.push(edge);
-				if (edge.graphEdge) {
-					// TODO: do we need to enforce edge.graphEdge.linked_edge_set.stamp_dictionary[getNode.mapEdge.linked_edge_set.id] ??
+				if (edge.graphEdge && edge.graphEdge.linked_edge_set.canSetProp(getNode.getMapProperty())) {
 					if (vec.indexOf(edge) == -1) {
 						vec.push(edge);
 						switch (edge.graphEdge.from_node.kind) {

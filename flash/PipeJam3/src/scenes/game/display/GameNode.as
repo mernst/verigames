@@ -112,17 +112,18 @@ package scenes.game.display
 		
 		public override function onClicked(pt:Point):void
 		{
-			if(m_isEditable)
-			{
-				var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;
-				if (m_propertyMode == PropDictionary.PROP_NARROW) {
+			var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;
+			if (m_propertyMode == PropDictionary.PROP_NARROW) {
+				if(m_isEditable) {
 					var newIsWide:Boolean = !m_isWide;
 					handleWidthChange(newIsWide, false, pt);
 					//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide);
 					eventToDispatch = new UndoEvent(eventToUndo, this);
 					dispatchEvent(eventToDispatch);
-				} else {
+				}
+			} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
+				if (m_edgeSet.canSetProp(m_propertyMode)) {
 					var edgeSetValue:Boolean = m_edgeSet.getProps().hasProp(m_propertyMode);
 					dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue, null, false, pt));
 					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue);
