@@ -1,6 +1,7 @@
 import org.apache.http.HttpResponse;
 
 import com.cra.csfvRaRest.PrincipalType;
+import com.cra.csfvRaRest.schemas.responses.SearchLevelsResponse;
 
 public class RATestBed {
 
@@ -36,7 +37,8 @@ public class RATestBed {
 			//players
 			//51365e65e4b0ad10f4079c88
 			
-		//	ra.printResponseAndEntity(ra.searchForLevels(0));
+			SearchLevelsResponse sr = ra.searchForLevels(0);
+//			ra.printResponseAndEntity(ra.searchForLevels(0));
 //					ra.printResponseAndEntity(ra.setPriority("5181402de4b03743be6d8f66", 11));
 //					ra.printResponseAndEntity(ra.setPriority("51815c35e4b03743be6d8f7f", 11));
 //					ra.printResponseAndEntity(ra.activateLevel("5181402de4b03743be6d8f66", true));
@@ -46,18 +48,22 @@ public class RATestBed {
 //			response = requestMatch("51365e65e4b0ad10f4079c88");
 //			JSONObject obj = printResponse(response);
 //	//		System.out.println(response.toString());
-//			//JSONObject obj = getJSONFromEntity(response);
-//			JSONArray arr = obj.getJSONArray("matches");
-//			for(int i = 0; i< arr.length(); i++)
-//			{
+			//JSONObject obj = getJSONFromEntity(sr.toString());
+			//JSONArray arr = obj.getJSONArray("ids");
+			for(String id : sr.ids)
+			//for(int i = 0; i< arr.length(); i++)
+			{
 //				String val = arr.getJSONObject(i).getString("levelId");
 //				if(val != null)
 //				{
-//					System.out.println(val);
-//					printResponse(deleteLevel(val));
+//				if(!id.equals("521692a9e4b06c4c132c473a"))
+//				{
+//					System.out.println(id);
+//					ra.printResponseAndEntity(ra.deleteLevel(id));
+//				}
 //					//printResponse(getLevelMetadata(val));
 //				}
-//			}
+			}
 		//	printResponse(refuseMatch("51365e65e4b0ad10f4079c88"));
 		//	printResponse(searchForLevels(10));
 //			System.out.println("create");
@@ -98,13 +104,15 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.setPriority("51ecd34be4b0a12f02c4c89c", 10));
 //			ra.printResponseAndEntity(ra.setPriority("51ecd34ce4b0a12f02c4c89e", 10));
 //			ra.printResponseAndEntity(ra.setPriority("51ecd34ce4b0a12f02c4c8a0", 10));
-//			ra.printResponseAndEntity(ra.setPriority("51ecd34de4b0a12f02c4c8a2", 10));
-			ra.printResponseAndEntity(ra.activateAllAgents(PrincipalType.LEVEL));
+//			ra.printResponseAndEntity(ra.setPriority("521682c8e4b06c4c132c472a", 10));
+//			ra.printResponseAndEntity(ra.activateAllAgents(PrincipalType.LEVEL));
 
-//			ra.setPriority("519cfae3e4b0615b7829e519", 10);
+//			ra.printResponseAndEntity(ra.setPriority("521692a9e4b06c4c132c473a", 10));
+//			ra.printResponseAndEntity(ra.setPriority("51fa8e49e4b0a12f02c4c9fb", 0));
+//			ra.printResponseAndEntity(ra.setPriority("51faab87e4b0a12f02c4ca08", 0));
 //		
-//			ra.printResponseAndEntity(ra.activateLevel("51ce2403a8e0a34d75516858", true));
-//			ra.activateLevel("519cfb31e4b0615b7829e529", true);
+//			ra.printResponseAndEntity(ra.activateLevel("521692a9e4b06c4c132c473a", true));
+//			ra.activateLevel("521682c8e4b06c4c132c472a", false);
 //			ra.activateLevel("519cfae3e4b0615b7829e519", true);
 			
 //			ra.printResponseAndEntity(ra.refreshLevel("51cb3240e4b0fa95a28f6ceb"));
@@ -125,9 +133,9 @@ public class RATestBed {
 //			ra.agentExists("51cb6fc7ddfe66b65d000021", PrincipalType.PLAYER);
 			
 //			ra.getReport();
-//			ra.getVersion();
-			ra.printResponseAndEntity(ra.requestMatch("51ca04c81a0b4f4809000037", 10));
-			ra.printResponseAndEntity(ra.refuseMatches("51ca04c81a0b4f4809000037"));
+			ra.getVersion();
+//			ra.printResponseAndEntity(ra.requestMatch("51e5b3460240288229000026", 10));
+//			ra.printResponseAndEntity(ra.refuseMatches("51e5b3460240288229000026"));
 
 		}
 		catch(Exception e)

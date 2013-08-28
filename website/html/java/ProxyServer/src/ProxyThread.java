@@ -33,10 +33,10 @@ public class ProxyThread extends Thread {
     private static final int BUFFER_SIZE = 32768;
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
-	String betaurl = "http://api.pipejam.verigames.com";
+	String betaurl = "http://api.flowjam.verigames.com";
 	private String url = betaurl;
 	//used for verifycookie call to verify player
-	private String gameURL = "http://pipejam.verigames.com";
+	private String gameURL = "http://flowjam.verigames.com";
 	private String httpport = ":80";
 
 	private int LOG_REQUEST = 0;
