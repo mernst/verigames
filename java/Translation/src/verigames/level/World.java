@@ -1,5 +1,7 @@
 package verigames.level;
 
+import checkers.inference.InferenceMain;
+
 import java.util.*;
 
 /**
@@ -98,28 +100,28 @@ public class World
           List<String> subboardInputs  = subboard.getInputIDs();
           List<String> subboardOutputs = subboard.getOutputIDs();
 
+          if(InferenceMain.STRICT_MODE()) {
+            if (boardInputs.size() != subboardInputs.size())
+              throw new IllegalStateException("subboard " + name + " has " +
+                  subboardInputs.size() + " inputs but its referent has " +
+                  boardInputs.size() + " inputs");
+            if (boardOutputs.size() != subboardOutputs.size())
+              throw new IllegalStateException("subboard " + name + " has " +
+                  subboardOutputs.size() + " outputs but its referent has " +
+                  boardOutputs.size() + " outputs" + " caller: " + board.getName());
 
-          /** TODO JB:  Put this back in when we figure out missing board info
-          if (boardInputs.size() != subboardInputs.size())
-            throw new IllegalStateException("subboard " + name + " has " +
-                subboardInputs.size() + " inputs but its referent has " +
-                boardInputs.size() + " inputs");
-          if (boardOutputs.size() != subboardOutputs.size())
-            throw new IllegalStateException("subboard " + name + " has " +
-                subboardOutputs.size() + " outputs but its referent has " +
-                boardOutputs.size() + " outputs" + " caller: " + board.getName());
+            if (!boardInputs.equals(subboardInputs))
+              throw new IllegalStateException(String.format("subboard %s does " +
+                  "not have the same input port identifiers as board: subboard " +
+                  "has: %s, board has: %s", name, subboardInputs.toString(),
+                  boardInputs.toString()));
 
-          if (!boardInputs.equals(subboardInputs))
-            throw new IllegalStateException(String.format("subboard %s does " +
-                "not have the same input port identifiers as board: subboard " +
-                "has: %s, board has: %s", name, subboardInputs.toString(),
-                boardInputs.toString()));
-
-          if (!boardOutputs.equals(subboardOutputs))
-            throw new IllegalStateException(String.format("subboard %s does " +
-                "not have the same output port identifiers as board: subboard " +
-                "has: %s, board has: %s, caller: %s", name, subboardOutputs.toString(),
-                boardOutputs.toString(), board.getName())); **/
+            if (!boardOutputs.equals(subboardOutputs))
+              throw new IllegalStateException(String.format("subboard %s does " +
+                  "not have the same output port identifiers as board: subboard " +
+                  "has: %s, board has: %s, caller: %s", name, subboardOutputs.toString(),
+                  boardOutputs.toString(), board.getName()));
+          }
         }
       }
     }
