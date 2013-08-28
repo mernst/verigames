@@ -33,14 +33,14 @@ package scenes.game.display
 		public var m_toPortID:String;
 		public var m_extensionEdge:GameEdgeContainer;
 		//if there's an extension edge, this tells us if it's outgoing or incoming
-		protected var m_extensionEdgeIsOutgoing:Boolean;
+		private var m_extensionEdgeIsOutgoing:Boolean;
 		
 		private var m_dir:String;
 		private var m_innerSegmentBorderIsWide:Boolean = false;
 		public var m_edgeArray:Array;
 		
-		protected var m_edgeSegments:Vector.<GameEdgeSegment>;
-		private var m_edgeJoints:Vector.<GameEdgeJoint>;
+		private var m_edgeSegments:Vector.<GameEdgeSegment> = new Vector.<GameEdgeSegment>();
+		private var m_edgeJoints:Vector.<GameEdgeJoint> = new Vector.<GameEdgeJoint>();
 		public var m_innerSegmentIsEditable:Boolean = true;
 		
 		//save start and end points, so we can remake line
@@ -187,7 +187,9 @@ package scenes.game.display
 			
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
+				setProps(graphEdge.getEnterProps());
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_PROPS_CHANGED, onPropsChange);
+				// TODO: props on inner segments
 				// Also need to update the inner box segment when the exit ball type changes
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 				if (!edgeIsCopy) {
@@ -199,6 +201,7 @@ package scenes.game.display
 				// to the actual edge-set box
 			} else {
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
+				setProps(graphEdge.getExitProps());
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
 			}
 			// For edges leading into SUBNETWORK (the lower CPY lines) the edge.to_port could
@@ -390,8 +393,8 @@ package scenes.game.display
 				m_errorParticleSystem.removeFromParent(true);
 			}
 			disposeChildren();
-			m_edgeSegments = null;
-			m_edgeJoints = null;
+			m_edgeSegments = new Vector.<GameEdgeSegment>();
+			m_edgeJoints = new Vector.<GameEdgeJoint>();
 			if (hasEventListener(EdgeContainerEvent.CREATE_JOINT)) {
 				removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			}
@@ -415,12 +418,10 @@ package scenes.game.display
 			updateSize();
 		}
 		
-		private var m_props:PropDictionary = new PropDictionary();
 		private function onPropsChange(evt:EdgePropChangeEvent):void
 		{
-			m_props = evt.newProps.clone();
-			m_hasProp = m_props.hasProp(m_propertyMode);
-			setPropertyMode(m_propertyMode, m_hasProp);
+			setProps(evt.newProps);
+			m_isDirty = true;
 		}
 		
 		public function listenToEdgeForTroublePoints(_edge:Edge):void
@@ -1265,16 +1266,27 @@ package scenes.game.display
 			return;
 		}
 		
-		override public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		override public function setProps(props:PropDictionary):void
 		{
-			hasProp = m_props.hasProp(prop);
-			super.setPropertyMode(prop, hasProp);
+			super.setProps(props);
 			var i:int;
 			for (i = 0; i < m_edgeJoints.length; i++) {
-				m_edgeJoints[i].setPropertyMode(prop, hasProp);
+				m_edgeJoints[i].setProps(props);
 			}
 			for (i = 0; i < m_edgeSegments.length; i++) {
-				m_edgeSegments[i].setPropertyMode(prop, hasProp);
+				m_edgeSegments[i].setProps(props);
+			}
+		}
+		
+		override public function setPropertyMode(prop:String):void
+		{
+			super.setPropertyMode(prop);
+			var i:int;
+			for (i = 0; i < m_edgeJoints.length; i++) {
+				m_edgeJoints[i].setPropertyMode(prop);
+			}
+			for (i = 0; i < m_edgeSegments.length; i++) {
+				m_edgeSegments[i].setPropertyMode(prop);
 			}
 		}
 		

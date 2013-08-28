@@ -130,10 +130,9 @@ package graph
 				}
 				if (String(metadata.data.width).toLowerCase() == "wide") {
 					starting_is_wide = true;
-					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, false);
-					//is_wide = true;
+					linked_edge_set.setProp(PropDictionary.PROP_NARROW, false);
 				} else {
-					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, true);
+					linked_edge_set.setProp(PropDictionary.PROP_NARROW, true);
 				}
 				if (String(metadata.data.buzzsaw).toLowerCase() == "true") {
 					starting_has_buzzsaw = true;

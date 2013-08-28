@@ -956,7 +956,7 @@ package scenes.game.display
 			var edgeSetID:String = evt.edgeSetChanged.m_edgeSet.id;
 			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
 			if(edgeSet != null) {
-				edgeSet.getProps().setProp(evt.prop, evt.propValue);
+				edgeSet.setProp(evt.prop, evt.propValue);
 			}
 			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
 		}
@@ -986,7 +986,7 @@ package scenes.game.display
 					if (m_jointList[i] is GameMapGetJoint) {
 						var mapget:GameMapGetJoint = m_jointList[i] as GameMapGetJoint;
 						if (mapget.getNode.getMapProperty() == evt.prop) {
-							m_jointList[i].setPropertyMode(m_propertyMode, true);
+							m_jointList[i].setPropertyMode(m_propertyMode);
 							edgesToActivate = edgesToActivate.concat(mapget.getUpstreamEdgeContainers());
 							continue;
 						}

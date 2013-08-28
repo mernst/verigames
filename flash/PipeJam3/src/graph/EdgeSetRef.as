@@ -50,10 +50,13 @@ package graph
 		}
 		
 		public function hasActiveStampOfEdgeSetId(_edge_set_id:String):Boolean {
+			return m_props.hasProp(PropDictionary.PROP_KEYFOR_PREFIX + _edge_set_id);
+			/*
 			if (stamp_dictionary[_edge_set_id] == null) {
 				return false;
 			}
 			return (stamp_dictionary[_edge_set_id] as StampRef).active;
+			*/
 		}
 		
 		public function get num_stamps():uint {
@@ -77,6 +80,12 @@ package graph
 		public function onActivationChange():void {
 			var ev:StampChangeEvent = new StampChangeEvent(StampChangeEvent.STAMP_ACTIVATION, this);
 			dispatchEvent(ev);
+		}
+		
+		public function setProp(prop:String, val:Boolean):void
+		{
+			var change:Boolean = m_props.setPropCheck(prop, val);
+			if (change && (prop.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0)) onActivationChange();
 		}
 		
 		// Testbed

@@ -39,6 +39,8 @@ package scenes.game.display
 			m_edgeSet = edgeSet;
 			m_edgeSetEdges = edgeSetEdges;
 			
+			if (m_edgeSet) m_props = m_edgeSet.getProps().clone();
+			
 			shapeWidth = m_boundingBox.width;
 			shapeHeight = m_boundingBox.height;
 			
@@ -212,7 +214,7 @@ package scenes.game.display
 				for (var prop:String in m_edgeSet.getProps().iterProps()) {
 					if (prop == PropDictionary.PROP_NARROW) continue;
 					if (prop == m_propertyMode) {
-						var keyQuad:Quad = new Quad(3, 3, 0xFF00FF);
+						var keyQuad:Quad = new Quad(3, 3, KEYFOR_COLOR);
 						keyQuad.x = 1 + i * 4;
 						keyQuad.y = m_boundingBox.height - 4;
 						addChild(keyQuad);
@@ -250,14 +252,6 @@ package scenes.game.display
 		override public function isWide():Boolean
 		{
 			return m_isWide;
-		}
-		
-		override public function setPropertyMode(prop:String, hasProp:Boolean = false):void
-		{
-			if (m_edgeSet && m_edgeSet.getProps().hasProp(prop)) {
-				hasProp = true;
-			}
-			super.setPropertyMode(prop, hasProp);
 		}
 		
 	}

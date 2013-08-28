@@ -147,7 +147,7 @@ package scenes.game.display
 			m_image.width = m_image.height = lineSize;
 			
 			
-			if ((m_propertyMode != PropDictionary.PROP_NARROW) && m_hasProp) {
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
 				m_image.color = 0xffffff;
 			} else if (isHoverOn){
 				m_image.color = 0xeeeeee;
