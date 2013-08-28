@@ -30,6 +30,7 @@ package scenes.game.display
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.PropDictionary;
+	
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
@@ -37,6 +38,7 @@ package scenes.game.display
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Shape;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -172,6 +174,7 @@ package scenes.game.display
 			edgeContainerDictionary = new Dictionary();
 
 			// Process <box> 's
+			var visibleNodes:int = 0;
 			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
 				var boxEdgeSetId:String = boxLayoutXML.@id;
@@ -201,6 +204,10 @@ package scenes.game.display
 				}
 				
 				gameNode.visible = getVisible(boxLayoutXML);
+				if(gameNode.visible)
+					visibleNodes++;
+				else
+					boxLayoutXML.@visible="false";
 				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
@@ -216,6 +223,7 @@ package scenes.game.display
 			m_jointList = new Vector.<GameJointNode>();
 			jointDictionary = new Dictionary();
 			// Process <joint> 's
+			var visibleJoints:int = 0;
 			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
 			{
 				var jointID:String = jointLayoutXML.@id;
@@ -243,6 +251,7 @@ package scenes.game.display
 						case NodeTypes.INCOMING:
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
 						case NodeTypes.END:
+							jointLayoutXML.@visible="false";
 							continue;
 						case NodeTypes.OUTGOING:
 							// Only create the joint for an outgoing node if other lines connect
@@ -250,6 +259,7 @@ package scenes.game.display
 							// to this OUTGOING edge)
 							var numOutputs:Number = Number(jointLayoutXML.@outputs);
 							if (isNaN(numOutputs) || (numOutputs == 0)) {
+								jointLayoutXML.@visible="false";
 								continue;
 							}
 					}
@@ -262,6 +272,10 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
+				if(joint.visible)
+					visibleJoints++;
+				else
+					jointLayoutXML.@visible="false";
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
 				if (joint.visible) {
@@ -273,11 +287,20 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
+			var visibleLines:int = 0;
 			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
+				var boundingBox:Rectangle;
 				var edgeVisible:Boolean = getVisible(edgeXML);
+				if(edgeVisible)
+				{
+					visibleLines++;
+					boundingBox = createLine(edgeXML, copyLines);
+				}
+				else
+					edgeXML.@visible="false";
+
 				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
@@ -316,6 +339,8 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			
+			trace(visibleNodes, visibleJoints, visibleLines);
 		}
 		
 		public function setConstraints():void
@@ -469,6 +494,7 @@ package scenes.game.display
 			}
 			
 			newGameEdge.visible = getVisible(edgeXML);
+			
 			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
@@ -701,13 +727,16 @@ package scenes.game.display
 						var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
 						edgeArray.push(pt);
 					}
-					edgeContainer.setupPoints(edgeArray);
+					edgeContainer.m_edgeArray = edgeArray;
+					edgeContainer.setupPoints();
 					minX = Math.min(minX, edgeContainer.m_boundingBox.left);
 					minY = Math.min(minY, edgeContainer.m_boundingBox.top);
 					maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
 					maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
 					edgeContainer.createLine();
 				}
+				
+
 			}
 			trace("Level " + m_levelLayoutXML.attribute("id") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -763,9 +792,9 @@ package scenes.game.display
 						{
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
-							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							currentLayoutX = (pt.x + edgeContainer.x) / Constants.GAME_SCALE;
 							ptXML.@x = currentLayoutX.toFixed(2);
-							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							currentLayoutY = (pt.y + edgeContainer.y) / Constants.GAME_SCALE;
 							ptXML.@y = currentLayoutY.toFixed(2);
 							
 							child.appendChild(ptXML);
