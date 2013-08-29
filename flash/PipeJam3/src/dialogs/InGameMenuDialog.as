@@ -171,8 +171,7 @@ package dialogs
 				submitLayoutDialog.clipRect = new Rectangle(background.width, y + (height - submitLayoutDialog.height), 
 					submitLayoutDialog.width, submitLayoutDialog.height);
 				
-				var juggler:Juggler = Starling.juggler;
-				juggler.tween(submitLayoutDialog, 1.0, {
+				Starling.juggler.tween(submitLayoutDialog, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
 					x: background.width 
 				});	
@@ -198,8 +197,6 @@ package dialogs
 			var layoutSelectScene:LayoutSelectScene = new LayoutSelectScene();
 			layoutSelectScene.setLayouts(layoutList);
 			parent.addChild(layoutSelectScene);
-			
-			
 		}
 		
 		public function onBackToGameButtonTriggered():void

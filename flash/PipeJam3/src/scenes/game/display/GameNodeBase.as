@@ -36,9 +36,8 @@ package scenes.game.display
 		
 		public function GameNodeBase(_layoutXML:XML)
 		{
-			m_toolTipText = "Node";
 			super(_layoutXML.@id);
-
+			
 			m_layoutXML = _layoutXML;
 			m_boundingBox = findBoundingBox(m_layoutXML);
 			

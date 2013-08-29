@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import graph.PropDictionary;
+	import events.ToolTipEvent;
 	import starling.display.Quad;
 	
 	import display.NineSliceBatch;
@@ -34,7 +35,6 @@ package scenes.game.display
 		
 		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
-			m_toolTipText = "Widget";
 			super(nodeXML);
 			draggable = _draggable;
 			m_edgeSet = edgeSet;
@@ -254,6 +254,13 @@ package scenes.game.display
 		override public function isWide():Boolean
 		{
 			return m_isWide;
+		}
+		
+		override protected function getToolTipEvent():ToolTipEvent
+		{
+			var lockedTxt:String = isEditable() ? "" : "Locked ";
+			var wideTxt:String = isWide() ? "Wide " : "Narrow ";
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, lockedTxt + wideTxt + "Widget", 8);
 		}
 		
 	}

@@ -37,7 +37,6 @@ package scenes.game.display
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		protected var m_props:PropDictionary = new PropDictionary();
 		protected var m_hoverTimer:Timer;
-		protected var m_toolTipText:String = "";
 		public var m_forceColor:Number = -1;
 		
 		public static const NARROW_COLOR:uint = 0x6ED4FF;
@@ -58,7 +57,7 @@ package scenes.game.display
 			
 			m_id = _id;
 			m_isSelected = false;
-			if (m_toolTipText.length > 0) {
+			if (getToolTipEvent()) {
 				addEventListener(TouchEvent.TOUCH, onTouch);
 			}
 		}
@@ -192,7 +191,7 @@ package scenes.game.display
 		{
 			if (event.getTouches(this, TouchPhase.HOVER).length || event.getTouches(this, TouchPhase.MOVED).length) {
 				if (!m_hoverTimer) {
-					m_hoverTimer = new Timer(1500);
+					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000);
 					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
 					m_hoverTimer.start();
 				}
@@ -212,12 +211,22 @@ package scenes.game.display
 			removeEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
-		protected function onHoverEnd() {
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.CLEAR_TOOL_TIP, this, ""));
+		protected function getToolTipEvent():ToolTipEvent
+		{
+			return null; // implement in subclasses if toolTip text is desired
 		}
 		
-		protected function onHoverDetected(evt:TimerEvent) {
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, m_toolTipText));
+		protected function onHoverEnd():void
+		{
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.CLEAR_TOOL_TIP, this));
+		}
+		
+		protected function onHoverDetected(evt:TimerEvent):void
+		{
+			var toolTipEvt:ToolTipEvent = getToolTipEvent();
+			if (toolTipEvt) {
+				dispatchEvent(toolTipEvt);
+			}
 		}
 	}
 }

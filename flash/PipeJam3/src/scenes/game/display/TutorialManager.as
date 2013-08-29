@@ -372,8 +372,8 @@ package scenes.game.display
 						null, null);*/
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Gray passages won't change width\n" +
-						"even if their widget is changed.",
+						"GRAY passages are LOCKED and won't change\n" +
+						"width even if their widget is changed.",
 						null,
 						pointToPassage("e20__IN__"),
 						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);

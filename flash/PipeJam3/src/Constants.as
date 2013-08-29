@@ -11,6 +11,8 @@ package
 		/** [Game Sizes] = GAME_SCALE * [XML Layout Sizes] */
 		public static const GAME_SCALE:Number = 10.0;
 		
+		public static const TOOL_TIP_DELAY_SEC:Number = 1.0;
+		
 		public static const POINTS_PER_LINE:Number = 75;
 		public static const WIDE_INPUT_POINTS:Number = 25;
 		public static const NARROW_OUTPUT_POINTS:Number = 25;

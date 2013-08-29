@@ -157,10 +157,11 @@ package scenes.game.components
 		
 		private function onToolTipAdded(evt:ToolTipEvent):void
 		{
-			if (m_toolTip) m_toolTip.removeFromParent(true);
-			m_toolTip = new TextBubble(evt.text, 30, 0xEEEEEE, evt.component, null, NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.BOTTOM_LEFT, null, true, 10, 2, 0.5, 3, false, 0xEEEEEE);
-			m_toolTip.showText();
-			addChild(m_toolTip);
+			if (evt.text && evt.text.length) {
+				if (m_toolTip) m_toolTip.removeFromParent(true);
+				m_toolTip = new TextBubble(evt.text, evt.fontSize, 0xEEEEEE, evt.component, null, NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER, null, true, evt.fontSize / 1.5, 0, 0, 2, false, 0xEEEEEE);
+				addChild(m_toolTip);
+			}
 		}
 		
 		private function onToolTipCleared(evt:ToolTipEvent):void
@@ -462,8 +463,12 @@ package scenes.game.components
 				return;
 			}
 			if (m_tutorialText) {
-				m_tutorialText.dispose();
+				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
+			}
+			if (m_toolTip) {
+				m_toolTip.removeFromParent(true);
+				m_toolTip = null;
 			}
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -607,6 +612,10 @@ package scenes.game.components
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
+			}
+			if (m_toolTip) {
+				m_toolTip.removeFromParent(true);
+				m_toolTip = null;
 			}
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();

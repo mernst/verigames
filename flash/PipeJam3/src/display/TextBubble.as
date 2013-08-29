@@ -41,7 +41,7 @@ package display
 								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:Number = -1)
+								   _showBox:Boolean = true, _arrowColor:uint = 0xFFEC00)
 		{
 			m_fontSize = _fontSize;
 			m_pointAt = _pointAt;
@@ -92,14 +92,9 @@ package display
 			// arrow
 			if (m_pointAt) {
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrowWhite);
 				m_tutorialArrow = new Image(arrowTexture);
-				if (_arrowColor >= 0) {
-					m_tutorialArrow.setVertexColor(0, _arrowColor);
-					m_tutorialArrow.setVertexColor(1, _arrowColor);
-					m_tutorialArrow.setVertexColor(2, _arrowColor);
-					m_tutorialArrow.setVertexColor(3, _arrowColor);
-				}
+				m_tutorialArrow.color = _arrowColor;
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;
 				XSprite.setPivotCenter(m_tutorialArrow);
 				addChild(m_tutorialArrow);
