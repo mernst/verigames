@@ -16,6 +16,8 @@ package scenes.layoutselectscene
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.PixelSnapping;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import networking.*;
@@ -371,6 +373,18 @@ package scenes.layoutselectscene
 				}
 
 			}
+		}
+		
+		public function rotateAroundCenter (ob:*, angleDegrees:Number):void
+		{
+			var point:Point = new Point(ob.x, ob.y);
+			var m:Matrix=ob.transform.matrix;
+			m.tx -= point.x;
+			m.ty -= point.y;
+			m.rotate(angleDegrees*(Math.PI/180));
+			m.tx += point.x;
+			m.ty += point.y;
+			ob.transform.matrix=m;
 		}
 	}
 }

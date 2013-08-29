@@ -1,19 +1,19 @@
 package system 
 {
-	import graph.LevelNodes;
-	import graph.Network;
+	import flash.utils.Dictionary;
+	
+	import graph.BoardNodes;
 	import graph.Edge;
+	import graph.LevelNodes;
 	import graph.MapGetNode;
+	import graph.Network;
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.BoardNodes;
 	import graph.PropDictionary;
 	import graph.ConflictDictionary;
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
-	
-	import flash.utils.Dictionary;
 	
 	/**
 	 * The PipeSimulator class calculates and stores where conflicts
@@ -589,9 +589,15 @@ package system
 						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
 						node.outgoing_ports[0].edge.setEnterProps(edge.getExitProps());
 						if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge);//enqueue
-						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+						if(node.outgoing_ports.length == 2)
+						{
+							node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
 						node.outgoing_ports[1].edge.setEnterProps(edge.getExitProps());
-						if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
+							if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
+						}
+						else
+							trace("error in simulator");
+
 					}
 						break;
 					

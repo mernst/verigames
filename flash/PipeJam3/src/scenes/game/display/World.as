@@ -143,7 +143,7 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:Event):void
 		{
-			edgeSetGraphViewPanel = new GridViewPanel();
+			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
@@ -196,27 +196,35 @@ package scenes.game.display
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			if(evt.menuShowing)
+			var juggler:Juggler;
+			if(inGameMenuBox == null)
 			{
-				if(inGameMenuBox == null)
-				{
-					inGameMenuBox = new InGameMenuDialog();
-					addChild(inGameMenuBox);
-					inGameMenuBox.x = 0;
-					//add clip rect so box seems to slide up out of the gameControlPanel
-					inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				}
+				inGameMenuBox = new InGameMenuDialog();
+				addChild(inGameMenuBox);
+				inGameMenuBox.x = 0;
+				//add clip rect so box seems to slide up out of the gameControlPanel
+				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
+				
 				inGameMenuBox.y = gameControlPanel.y;
 				inGameMenuBox.visible = true;
-				var juggler:Juggler = Starling.juggler;
+				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
 					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
- 
 			}
-			else
+			else if (inGameMenuBox.visible)
 				inGameMenuBox.onBackToGameButtonTriggered();
+			else //exists but not visible
+			{
+				inGameMenuBox.y = gameControlPanel.y;
+				inGameMenuBox.visible = true;
+				juggler = Starling.juggler;
+				juggler.tween(inGameMenuBox, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+				});
+			}
 				
 		}
 		
@@ -726,6 +734,14 @@ package scenes.game.display
 			}
 			
 			return null;
+		}
+		
+		public function hasDialogOpen():Boolean
+		{
+			if(inGameMenuBox && inGameMenuBox.visible)
+				return true;
+			else
+				return false;
 		}
 	}
 }
