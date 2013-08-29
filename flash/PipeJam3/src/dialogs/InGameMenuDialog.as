@@ -158,9 +158,24 @@ package dialogs
 					x: background.width 
 				});	
 			}
-			else
+			else if(submitLayoutDialog.visible)
 			{
 				hideSecondaryDialog(submitLayoutDialog, false);
+			}
+			else
+			{
+				submitLayoutDialog.resetText();
+				submitLayoutDialog.x = background.width - submitLayoutDialog.width;
+				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
+				submitLayoutDialog.visible = true;
+				submitLayoutDialog.clipRect = new Rectangle(background.width, y + (height - submitLayoutDialog.height), 
+					submitLayoutDialog.width, submitLayoutDialog.height);
+				
+				var juggler:Juggler = Starling.juggler;
+				juggler.tween(submitLayoutDialog, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					x: background.width 
+				});	
 			}
 		}
 		

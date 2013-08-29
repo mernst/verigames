@@ -133,5 +133,12 @@ package dialogs
 			data.description = description.text;
 			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT, data));		
 		}
+		
+		public function resetText():void
+		{
+			input.text = "Layout Name";
+			description.text = "Add Description Here";
+			
+		}
 	}
 }

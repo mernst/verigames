@@ -1,25 +1,16 @@
 package scenes.game.display
 {
 	import display.NineSliceBatch;
-	
-	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
-	
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	
-	import starling.display.BlendMode;
-	import starling.display.Quad;
-	import starling.display.Shape;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	
 	import utils.XMath;
 	
 	public class GameNodeBase extends GameComponent

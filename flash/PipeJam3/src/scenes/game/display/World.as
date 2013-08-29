@@ -143,7 +143,7 @@ package scenes.game.display
 		
 		protected function onAddedToStage(event:Event):void
 		{
-			edgeSetGraphViewPanel = new GridViewPanel();
+			edgeSetGraphViewPanel = new GridViewPanel(this);
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
@@ -196,27 +196,35 @@ package scenes.game.display
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			if(evt.menuShowing)
+			var juggler:Juggler;
+			if(inGameMenuBox == null)
 			{
-				if(inGameMenuBox == null)
-				{
-					inGameMenuBox = new InGameMenuDialog();
-					addChild(inGameMenuBox);
-					inGameMenuBox.x = 0;
-					//add clip rect so box seems to slide up out of the gameControlPanel
-					inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				}
+				inGameMenuBox = new InGameMenuDialog();
+				addChild(inGameMenuBox);
+				inGameMenuBox.x = 0;
+				//add clip rect so box seems to slide up out of the gameControlPanel
+				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
+				
 				inGameMenuBox.y = gameControlPanel.y;
 				inGameMenuBox.visible = true;
-				var juggler:Juggler = Starling.juggler;
+				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
 					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
- 
 			}
-			else
+			else if (inGameMenuBox.visible)
 				inGameMenuBox.onBackToGameButtonTriggered();
+			else //exists but not visible
+			{
+				inGameMenuBox.y = gameControlPanel.y;
+				inGameMenuBox.visible = true;
+				juggler = Starling.juggler;
+				juggler.tween(inGameMenuBox, 1.0, {
+					transition: Transitions.EASE_IN_OUT,
+					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+				});
+			}
 				
 		}
 		
@@ -367,24 +375,19 @@ package scenes.game.display
 				} else {
 					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
 				}
-				//Update the xml with the stamp state information. Currently updating all stamp states, changed or not.
-				var numEdgeSets:uint = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"].length();
-				for(var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
-					
-					var edgeID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex].attribute("id").toString();
-					var edgeVector:Vector.<Edge> = my_level.edgeDictionary[edgeID];
-					for each (var currentEdge:Edge in edgeVector) {
-						// TODO: Check this functionality
-						var linkedEdgeSet:EdgeSetRef =  currentEdge.linked_edge_set;
-						var stampLength:uint = linkedEdgeSet.num_stamps;
-						for(var stampIndex:uint = 0; stampIndex < stampLength; stampIndex++) {
-							var stampID:String = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@id;
-							output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"][edgeSetIndex]["stamp"][stampIndex].@active
-								= linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+				//Update the xml with the stamp state information. Only update existing stamps, not adding new ones
+				var edgeSetXML:XMLList = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"];
+				var numEdgeSets:uint = edgeSetXML.length();
+				for (var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
+					var edgeSetID:String = edgeSetXML[edgeSetIndex].attribute("id").toString();
+					if (my_level.levelNodes.edge_set_dictionary.hasOwnProperty(edgeSetID)) {
+						var linkedEdgeSet:EdgeSetRef = my_level.levelNodes.edge_set_dictionary[edgeSetID] as EdgeSetRef;
+						for (var stampIndex:uint = 0; stampIndex < edgeSetXML[edgeSetIndex]["stamp"].length(); stampIndex++) {
+							var stampID:String = edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@id;
+							edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@active = linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
 						}
 					}
 				}
-				
 			}	
 			return output_xml;
 		}
@@ -731,6 +734,14 @@ package scenes.game.display
 			}
 			
 			return null;
+		}
+		
+		public function hasDialogOpen():Boolean
+		{
+			if(inGameMenuBox && inGameMenuBox.visible)
+				return true;
+			else
+				return false;
 		}
 	}
 }

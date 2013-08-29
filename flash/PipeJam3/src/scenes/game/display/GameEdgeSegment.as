@@ -45,10 +45,12 @@
 		public var plug:Sprite;
 		public var socket:Sprite;
 		
-		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true)
+		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
 			super("");
 			draggable = _draggable;
+			if (_props != null) m_props = _props;
+			m_propertyMode = _propMode;
 			m_isWide = _isWide;
 			m_dir = _dir;
 			m_isInnerBoxSegment = _isInnerBoxSegment;
@@ -197,60 +199,15 @@
 		public function draw():void
 		{
 			unflatten();
-			var lineSize:Number = isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-			var color:int = getColor();
 			
 			if (m_quad) {
 				m_quad.removeFromParent(true);
 				m_quad = null;
 			}
 			
-			var assetName:String;
+			m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
 			
-			if(m_isEditable == true)
-			{
-				if (m_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
-			}
-			else //not adjustable
-			{
-				if(m_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
-			}
-			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var startTexture:Texture = atlas.getTexture(assetName);
-			
-			var pctTextWidth:Number;
-			var pctTextHeight:Number;
-			if(m_endPt.x != 0 && m_endPt.y !=0)
-			{
-				throw new Error("Diagonal lines deprecated. Segment from to " + m_endPt);
-			}
-			else if(m_endPt.x != 0)
-			{
-				m_quad = new Image(startTexture);
-				m_quad.width = Math.abs(m_endPt.x);
-				m_quad.height = lineSize;
-				
-				m_quad.x = (m_endPt.x > 0) ? 0 : -m_quad.width;
-				m_quad.y = -lineSize/2.0;
-			}
-			else
-			{
-				m_quad = new Image(startTexture);
-				m_quad.width = lineSize;
-				m_quad.height = Math.abs(m_endPt.y);
-				
-				m_quad.x = -lineSize/2.0;
-				m_quad.y = (m_endPt.y > 0) ? 0 : -m_quad.height;
-			}
-			
-			if ((m_propertyMode != PropDictionary.PROP_NARROW) && m_hasProp) {
+			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
 				m_quad.color = 0xffffff;
 			} else if (isHoverOn){
 				m_quad.color = 0xeeeeee;
@@ -271,6 +228,57 @@
 				this.blendMode = BlendMode.NONE;
 			}
 			flatten();
+		}
+		
+		public static function createEdgeSegment(_toPt:Point, _isWide:Boolean, _isEditable:Boolean):Image
+		{
+			var lineSize:Number = _isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
+			var assetName:String;
+			if(_isEditable == true)
+			{
+				if (_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
+			}
+			else //not adjustable
+			{
+				if(_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var startTexture:Texture = atlas.getTexture(assetName);
+			
+			var pctTextWidth:Number;
+			var pctTextHeight:Number;
+			var newSegment:Image;
+			if(_toPt.x != 0 && _toPt.y !=0)
+			{
+				throw new Error("Diagonal lines deprecated. Segment from to " + _toPt);
+			}
+			else if(_toPt.x != 0)
+			{
+				newSegment = new Image(startTexture);
+				newSegment.width = Math.abs(_toPt.x);
+				newSegment.height = lineSize;
+				
+				newSegment.x = (_toPt.x > 0) ? 0 : -newSegment.width;
+				newSegment.y = -lineSize/2.0;
+			}
+			else
+			{
+				newSegment = new Image(startTexture);
+				newSegment.width = lineSize;
+				newSegment.height = Math.abs(_toPt.y);
+				
+				newSegment.x = -lineSize/2.0;
+				newSegment.y = (_toPt.y > 0) ? 0 : -newSegment.height;
+			}
+			
+			return newSegment;
 		}
 		
 		override public function flatten():void

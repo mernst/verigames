@@ -352,7 +352,8 @@ package display
 			}
 			
 			currentSelection = buttonPaneArray[0];
-			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
+			if(currentSelection)
+				currentSelection.setStatePosition(BasicButton.DOWN_STATE);
 			
 			if(buttonPane.height<initialHeight)
 				thumb.enabled = false;
@@ -392,7 +393,8 @@ package display
 		
 		private function onLevelButtonTouched(event:Event):void
 		{
-			currentSelection.setStatePosition(BasicButton.UP_STATE);
+			if(currentSelection)
+				currentSelection.setStatePosition(BasicButton.UP_STATE);
 			currentSelection = event.target as BasicButton;
 			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
 			dispatchEventWith(Event.TRIGGERED);

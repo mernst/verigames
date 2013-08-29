@@ -35,6 +35,7 @@ package scenes.game.components
 	import scenes.game.display.Level;
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
+	import scenes.game.display.World;
 	
 	import starling.animation.DelayedCall;
 	import starling.animation.Transitions;
@@ -77,6 +78,9 @@ package scenes.game.components
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
 		
+		private var m_world:World;
+
+		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
@@ -87,8 +91,9 @@ package scenes.game.components
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
-		public function GridViewPanel()
+		public function GridViewPanel(world:World)
 		{
+			m_world = world;
 			currentMode = NORMAL_MODE;
 			
 			var background:Texture = AssetInterface.getTexture("Game", "StationaryBackgroundClass");
@@ -468,6 +473,9 @@ package scenes.game.components
 		
 		private function onKeyDown(event:KeyboardEvent):void
 		{
+			if(m_world.hasDialogOpen())
+					return;
+			
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:

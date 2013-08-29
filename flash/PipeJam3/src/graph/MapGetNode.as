@@ -61,8 +61,7 @@ package graph
 		
 		public function argumentHasMapStamp():Boolean
 		{
-			var mapEdgeSet:EdgeSetRef = mapEdge.linked_edge_set;
-			return argumentEdge.linked_edge_set.hasActiveStampOfEdgeSetId(mapEdgeSet.id);
+			return argumentEdge.getExitProps().hasProp(getMapProperty());
 		}
 		
 		public function getMapProperty():String

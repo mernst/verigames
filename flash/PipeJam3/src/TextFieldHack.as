@@ -71,6 +71,8 @@ package
 		private var mHAlign:String;
 		private var mVAlign:String;
 		private var mBold:Boolean;
+		private var mWrap:Boolean;
+		private var mMultiline:Boolean;
 		private var mItalic:Boolean;
 		private var mUnderline:Boolean;
 		private var mAutoScale:Boolean;
@@ -94,7 +96,7 @@ package
 		
 		/** Create a new text field with the given properties. */
 		public function TextFieldHack(width:Number, height:Number, text:String, fontName:String="Verdana",
-								  fontSize:Number=12, color:uint=0x0, bold:Boolean=false)
+								  fontSize:Number=12, color:uint=0x0, bold:Boolean=false, wrap:Boolean=false)
 		{
 			mText = text ? text : "";
 			mFontSize = fontSize;
@@ -104,6 +106,7 @@ package
 			mBorder = null;
 			mKerning = true;
 			mBold = bold;
+			mWrap = wrap;
 			this.fontName = fontName;
 			
 			mHitArea = new Quad(width, height);
@@ -164,7 +167,7 @@ package
 			sNativeTextField.antiAliasType = AntiAliasType.ADVANCED;
 			sNativeTextField.selectable = false;            
 			sNativeTextField.multiline = true;            
-			sNativeTextField.wordWrap = false;            
+			sNativeTextField.wordWrap = mWrap;            
 			sNativeTextField.text = mText;
 			sNativeTextField.embedFonts = true;
 			sNativeTextField.filters = mNativeFilters;

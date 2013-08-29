@@ -162,8 +162,7 @@ package scenes.game.components
 		
 		private function onMenuButtonTriggered():void
 		{
-			menuShowing = !menuShowing;
-			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU, "", menuShowing));
+			dispatchEvent(new NavigationEvent(NavigationEvent.SHOW_GAME_MENU));
 		}
 		
 		private function onStartOverButtonTriggered():void

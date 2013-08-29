@@ -17,7 +17,9 @@ package utils
 	{
 	
 		public static function parseLevelXML(my_level_xml:XML, obfuscater:NameObfuscater = null):LevelNodes {
-			var my_levelNodes:LevelNodes = new LevelNodes(my_level_xml.attribute("name").toString(), obfuscater);
+			var level_edge_set_dictionary:Dictionary = new Dictionary();
+			var my_levelNodes:LevelNodes = new LevelNodes(my_level_xml.attribute("name").toString(), obfuscater, level_edge_set_dictionary);
+			var edge_id_to_edge_set_dictionary:Dictionary = new Dictionary();
 			
 			if (my_level_xml["boards"].length() == 0) {
 				Game.printDebug("NO <boards> found. Level not created...");
@@ -38,7 +40,6 @@ package utils
 			}
 			
 			// Obtain linked edge sets
-			var edge_set_dictionary:Dictionary = new Dictionary();
 			if (my_level_xml["linked-edges"][0]["edge-set"].length() == 0) {
 				Game.printDebug("NO <linked-edges> <edge-set> 's found. Level not created...");
 				return null;
@@ -50,9 +51,10 @@ package utils
 					if (my_id.length == 0) {
 						my_id = edge_set_index.toString();
 					}
-					var my_edge_set:EdgeSetRef = new EdgeSetRef(my_id, edge_set_dictionary);
+					var my_edge_set:EdgeSetRef = new EdgeSetRef(my_id);
 					for (var le_id_indx:uint = 0; le_id_indx < le_set["edgeref"].attribute("id").length(); le_id_indx++) {
-						edge_set_dictionary[le_set["edgeref"].attribute("id")[le_id_indx].toString()] = my_edge_set;
+						level_edge_set_dictionary[my_id] = my_edge_set;
+						edge_id_to_edge_set_dictionary[le_set["edgeref"].attribute("id")[le_id_indx].toString()] = my_edge_set;
 						my_edge_set.edge_ids.push(le_set["edgeref"].attribute("id")[le_id_indx].toString());
 					}
 					for (var stamp_id_indx:uint = 0; stamp_id_indx < le_set["stamp"].length(); stamp_id_indx++) {
@@ -129,7 +131,7 @@ package utils
 					}
 					*/
 					// Add this edge!
-					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_set_dictionary[e1.attribute("id").toString()], md1);
+					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], md1);
 				}
 			} // loop over every node a.k.a. board
 			

@@ -30,6 +30,7 @@ package scenes
 		static protected var busyAnimationImages:Vector.<Texture> = null;
 		
 		protected var busyAnimationMovieClip:MovieClip;
+		public static const KEYFOR_COLOR:uint = 0xFF00FF;
 		
 		public function BaseComponent()
 		{
