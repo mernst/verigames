@@ -34,6 +34,7 @@ package scenes.game.display
 		
 		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
 		{
+			m_toolTipText = "Widget";
 			super(nodeXML);
 			draggable = _draggable;
 			m_edgeSet = edgeSet;

@@ -5,11 +5,13 @@ package scenes.game.components
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
+	import display.TextBubble;
 	
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.PropertyModeChangeEvent;
+	import events.ToolTipEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
@@ -74,6 +76,7 @@ package scenes.game.components
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
+		private var m_toolTip:TextBubble;
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
@@ -136,6 +139,8 @@ package scenes.game.components
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -148,6 +153,19 @@ package scenes.game.components
 			} else {
 				contentBarrier.visible = true;
 			}
+		}
+		
+		private function onToolTipAdded(evt:ToolTipEvent):void
+		{
+			if (m_toolTip) m_toolTip.removeFromParent(true);
+			m_toolTip = new TextBubble(evt.text, 30, 0xEEEEEE, evt.component, null, NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.BOTTOM_LEFT, null, true, 10, 2, 0.5, 3, false, 0xEEEEEE);
+			m_toolTip.showText();
+			addChild(m_toolTip);
+		}
+		
+		private function onToolTipCleared(evt:ToolTipEvent):void
+		{
+			if (m_toolTip) m_toolTip.removeFromParent(true);
 		}
 		
 		private function endSelectMode():void
@@ -452,6 +470,8 @@ package scenes.game.components
 			}
 			content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);

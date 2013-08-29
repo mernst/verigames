@@ -95,7 +95,7 @@
 		private var hasMovedOutsideClickDist:Boolean = false;
 		private var startingPoint:Point;
 		private static const CLICK_DIST:Number = 0.2; //for extensions, register distance dragged
-		public function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			if (touches.length == 0) {

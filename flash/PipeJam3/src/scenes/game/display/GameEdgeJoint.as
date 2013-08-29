@@ -75,7 +75,7 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			if (!draggable) return;
 			
