@@ -1090,7 +1090,7 @@ package scenes.game.display
 					doc = doc.parent;
 				}
 			}
-			super.onTouch(event); // TODO: need to prevent from oscillating between innersegment tooltip and link tooltip
+			super.onTouch(event);
 		}
 		
 		private function onInnerBoxSegmentClicked(event:TouchEvent):void

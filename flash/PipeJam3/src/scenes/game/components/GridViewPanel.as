@@ -157,8 +157,7 @@ package scenes.game.components
 		
 		private function onToolTipAdded(evt:ToolTipEvent):void
 		{
-			if (evt.text && evt.text.length) {
-				if (m_toolTip) m_toolTip.removeFromParent(true);
+			if (evt.text && evt.text.length && !m_toolTip) {
 				m_toolTip = new TextBubble(evt.text, evt.fontSize, 0xEEEEEE, evt.component, null, NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER, null, true, evt.fontSize / 1.5, 0, 0, 2, false, 0xEEEEEE);
 				addChild(m_toolTip);
 			}
@@ -167,6 +166,7 @@ package scenes.game.components
 		private function onToolTipCleared(evt:ToolTipEvent):void
 		{
 			if (m_toolTip) m_toolTip.removeFromParent(true);
+			m_toolTip = null;
 		}
 		
 		private function endSelectMode():void
