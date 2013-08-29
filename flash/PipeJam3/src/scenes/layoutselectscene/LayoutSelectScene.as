@@ -220,7 +220,7 @@ package scenes.layoutselectscene
 				{
 					if(currentSelectedLayout.description.length > 0)
 					{
-						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF);
+						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF, true);
 						TextFactory.getInstance().updateAlign(descriptionText, 0, 1);
 						addChild(descriptionText);
 						descriptionText.x = levelSelectInfoPanel.x+ 10;

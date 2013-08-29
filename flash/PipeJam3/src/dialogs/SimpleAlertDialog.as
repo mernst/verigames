@@ -34,7 +34,7 @@ package dialogs
 			label.x = (width - label.width)/2;
 			label.y = 10;
 			
-			ok_button = ButtonFactory.getInstance().createDefaultButton("OK", 40, 20);
+			ok_button = ButtonFactory.getInstance().createButton("OK", 40, 20, 8, 8);
 			ok_button.addEventListener(starling.events.Event.TRIGGERED, onOKButtonTriggered);
 			addChild(ok_button);
 			ok_button.x = (_width - ok_button.width)/2;
