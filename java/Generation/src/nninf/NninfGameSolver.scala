@@ -180,11 +180,13 @@ class NninfGameSolver extends GameSolver {
         case LiteralThis =>
           boardNVariableToIntersection.update( (board, boardToSelfVariable( board )), inters )
 
+        //TODO: Is this right?
+        case cv: CombVariable        =>  boardNVariableToIntersection.update((board, cv), inters)
+
         case LiteralNull             => // Nothing to do, we're always creating a new black ball
         case lit: AbstractLiteral    => // Also nothing to do for other literals
         case NninfConstants.NULLABLE => // Nothing to do, we're always creating a new black ball
         case NninfConstants.NONNULL  => // Nothing to do, we're always creating a new white ball
-        case cv: CombVariable        => // TODO: Combvariables appear for BinaryTrees.
 
         case _ =>  println("updateIntersection: unmatched slot: " + slot)
 
