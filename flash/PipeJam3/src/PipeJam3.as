@@ -37,7 +37,7 @@ package
 		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
-		public static var USE_LOCAL_PROXY:Boolean = true;
+		public static var USE_LOCAL_PROXY:Boolean = false;
 		
 		public static var logging:LoggingServerInterface;
 		

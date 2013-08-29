@@ -596,7 +596,7 @@ package system
 							if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
 						}
 						else
-							trace("error in simulator");
+							throw new Error("Simulator: split found with # outputs = " + node.outgoing_ports.length); 
 
 					}
 						break;
