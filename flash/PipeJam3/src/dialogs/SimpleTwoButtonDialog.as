@@ -33,13 +33,13 @@ package dialogs
 			label.x = (width - label.width)/2;
 			label.y = 10;
 			
-			button2_button = ButtonFactory.getInstance().createDefaultButton(button2String, 40, 20);
+			button2_button = ButtonFactory.getInstance().createButton(button2String, 40, 20, 8, 8);
 			button2_button.addEventListener(starling.events.Event.TRIGGERED, onButtonTriggered);
 			addChild(button2_button);
 			button2_button.x = _width - button2_button.width - 12;
 			button2_button.y = _height - 16 - 12;
 			
-			button1_button = ButtonFactory.getInstance().createDefaultButton(button1String, 40, 20);
+			button1_button = ButtonFactory.getInstance().createButton(button1String, 40, 20, 8, 8);
 			button1_button.addEventListener(starling.events.Event.TRIGGERED, onButtonTriggered);
 			addChild(button1_button);
 			button1_button.x = _width - button1_button.width - 12 - button2_button.width - 12;
