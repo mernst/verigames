@@ -1,0 +1,47 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SuperConstructor extends type; tree <<missing tree>> within 
+class SuperConstructor {
+    
+    SuperConstructor() {
+        super();
+    }
+}
+
+subtype constraint: Variable 1 at method SuperConstructor#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class SuperConstructor extends type; tree <<missing tree>> within 
+class SuperConstructor {
+    
+    SuperConstructor() {
+        super();
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor
+
+subtype constraint: Variable 3 at method SubConstructor#<init>():V return type; tree 
+public <init>() {
+    super();
+}  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SubConstructor#<init>():V constraint position; 
+calledVp: method SuperConstructor#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 1 at method SuperConstructor#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 1 at method SuperConstructor#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Constant(@nninf.quals.Nullable)
+

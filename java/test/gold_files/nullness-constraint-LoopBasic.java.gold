@@ -1,0 +1,205 @@
+Constraints:
+equality constraint: Variable 5 at method LoopBasic#proceed():Z return type; tree boolean = Constant(@nninf.quals.NonNull)
+
+equality constraint: Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int = Constant(@nninf.quals.NonNull)
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+class LoopBasic {
+    
+    LoopBasic() {
+        super();
+    }
+    
+    void foo(LoopBasic lb) {
+        for (int i = 0; i < 5; i++) {
+            lb.bar();
+        }
+        while (lb.proceed()) {
+            lb.bar();
+        }
+    }
+    
+    void bar() {
+        return;
+    }
+    
+    boolean proceed() {
+        return Math.random() < 0.5;
+    }
+}
+
+subtype constraint: Variable 1 at method LoopBasic#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+class LoopBasic {
+    
+    LoopBasic() {
+        super();
+    }
+    
+    void foo(LoopBasic lb) {
+        for (int i = 0; i < 5; i++) {
+            lb.bar();
+        }
+        while (lb.proceed()) {
+            lb.bar();
+        }
+    }
+    
+    void bar() {
+        return;
+    }
+    
+    boolean proceed() {
+        return Math.random() < 0.5;
+    }
+}
+
+subtype constraint: Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree <<missing tree>> within 
+void foo(LoopBasic lb) {
+    for (int i = 0; i < 5; i++) {
+        lb.bar();
+    }
+    while (lb.proceed()) {
+        lb.bar();
+    }
+}Atm: @VarAnnot(2) LoopBasic  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+class LoopBasic {
+    
+    LoopBasic() {
+        super();
+    }
+    
+    void foo(LoopBasic lb) {
+        for (int i = 0; i < 5; i++) {
+            lb.bar();
+        }
+        while (lb.proceed()) {
+            lb.bar();
+        }
+    }
+    
+    void bar() {
+        return;
+    }
+    
+    boolean proceed() {
+        return Math.random() < 0.5;
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int
+
+inequality constraint at method LoopBasic#foo(LLoopBasic;):V constraint position: Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method LoopBasic#foo(LLoopBasic;):V constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method LoopBasic#foo(LLoopBasic;):V constraint position: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic != Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
+calledVp: method LoopBasic#bar():V; 
+receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
+
+subtype constraint: Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int  <:  CombVariable #8
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  CombVariable #8
+
+inequality constraint at method LoopBasic#foo(LLoopBasic;):V constraint position: CombVariable #8 != Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
+calledVp: method LoopBasic#proceed():Z; 
+receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at method LoopBasic#proceed():Z return type; tree boolean); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
+calledVp: method LoopBasic#bar():V; 
+receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
+
+inequality constraint at method LoopBasic#foo(LLoopBasic;):V constraint position: Variable 5 at method LoopBasic#proceed():Z return type; tree boolean != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 4 at method LoopBasic#bar():V receiver; tree <<missing tree>> within 
+void bar() {
+    return;
+}Atm: @VarAnnot(4) LoopBasic  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+class LoopBasic {
+    
+    LoopBasic() {
+        super();
+    }
+    
+    void foo(LoopBasic lb) {
+        for (int i = 0; i < 5; i++) {
+            lb.bar();
+        }
+        while (lb.proceed()) {
+            lb.bar();
+        }
+    }
+    
+    void bar() {
+        return;
+    }
+    
+    boolean proceed() {
+        return Math.random() < 0.5;
+    }
+}
+
+subtype constraint: Variable 6 at method LoopBasic#proceed():Z receiver; tree <<missing tree>> within 
+boolean proceed() {
+    return Math.random() < 0.5;
+}Atm: @VarAnnot(6) LoopBasic  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+class LoopBasic {
+    
+    LoopBasic() {
+        super();
+    }
+    
+    void foo(LoopBasic lb) {
+        for (int i = 0; i < 5; i++) {
+            lb.bar();
+        }
+        while (lb.proceed()) {
+            lb.bar();
+        }
+    }
+    
+    void bar() {
+        return;
+    }
+    
+    boolean proceed() {
+        return Math.random() < 0.5;
+    }
+}
+
+inequality constraint at method LoopBasic#proceed():Z constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Constant(@nninf.quals.NonNull)  <:  CombVariable #9
+
+subtype constraint: CombVariable #9  <:  Variable 5 at method LoopBasic#proceed():Z return type; tree boolean
+

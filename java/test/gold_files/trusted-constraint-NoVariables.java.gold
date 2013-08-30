@@ -1,0 +1,155 @@
+Constraints:
+equality constraint: Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 7 at class NoVariables field minValue; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 8 at class NoVariables field maxValue; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 9 at class NoVariables field value; tree int = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Literal(STRING_LITERAL, "Here to make sure we don't just exit because there are no variables!")  <:  Variable 1 at class NoVariables field catcher; tree String
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
+class NoVariables {
+    private String catcher = "Here to make sure we don\'t just exit because there are no variables!";
+    private int minValue;
+    private int maxValue;
+    private int value;
+    
+    public NoVariables(int min, int max, int value) {
+        super();
+        this.minValue = min;
+        this.maxValue = max;
+        this.value = value;
+    }
+    
+    public void log() {
+    }
+}
+
+subtype constraint: Variable 2 at method NoVariables#<init>(III):V return type; tree 
+public <init>(int min, int max, int value) {
+    super();
+    this.minValue = min;
+    this.maxValue = max;
+    this.value = value;
+}  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
+class NoVariables {
+    private String catcher = "Here to make sure we don\'t just exit because there are no variables!";
+    private int minValue;
+    private int maxValue;
+    private int value;
+    
+    public NoVariables(int min, int max, int value) {
+        super();
+        this.minValue = min;
+        this.maxValue = max;
+        this.value = value;
+    }
+    
+    public void log() {
+    }
+}
+
+subtype constraint: Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int  <:  Variable 7 at class NoVariables field minValue; tree int
+
+subtype constraint: Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int  <:  Variable 8 at class NoVariables field maxValue; tree int
+
+subtype constraint: Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int  <:  Variable 9 at class NoVariables field value; tree int
+
+subtype constraint: Variable 6 at method NoVariables#log():V receiver; tree <<missing tree>> within 
+public void log() {
+}Atm: @VarAnnot(6) NoVariables  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
+class NoVariables {
+    private String catcher = "Here to make sure we don\'t just exit because there are no variables!";
+    private int minValue;
+    private int maxValue;
+    private int value;
+    
+    public NoVariables(int min, int max, int value) {
+        super();
+        this.minValue = min;
+        this.maxValue = max;
+        this.value = value;
+    }
+    
+    public void log() {
+    }
+}
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    private NoVariables nv;
+    
+    public void throwsAnExceptionInGameSolver() {
+        nv.log();
+    }
+}
+
+subtype constraint: Variable 11 at method Other#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    private NoVariables nv;
+    
+    public void throwsAnExceptionInGameSolver() {
+        nv.log();
+    }
+}
+
+subtype constraint: Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
+public void throwsAnExceptionInGameSolver() {
+    nv.log();
+}Atm: @VarAnnot(12) Other  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    private NoVariables nv;
+    
+    public void throwsAnExceptionInGameSolver() {
+        nv.log();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
+calledVp: class Other field nv; 
+receiver: Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
+public void throwsAnExceptionInGameSolver() {
+    nv.log();
+}Atm: @VarAnnot(12) Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 13 at class Other field nv; tree NoVariables); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
+calledVp: method NoVariables#log():V; 
+receiver: Variable 13 at class Other field nv; tree NoVariables; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
+

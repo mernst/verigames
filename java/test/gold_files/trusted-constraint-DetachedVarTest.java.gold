@@ -1,0 +1,109 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class DetachedVarTest extends type; tree <<missing tree>> within 
+class DetachedVarTest {
+    
+    DetachedVarTest() {
+        super();
+    }
+    
+    public DetachedVarTest[] test() {
+        return null;
+    }
+}
+
+subtype constraint: Variable 1 at method DetachedVarTest#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class DetachedVarTest extends type; tree <<missing tree>> within 
+class DetachedVarTest {
+    
+    DetachedVarTest() {
+        super();
+    }
+    
+    public DetachedVarTest[] test() {
+        return null;
+    }
+}
+
+subtype constraint: Variable 4 at method DetachedVarTest#test():[LDetachedVarTest; receiver; tree <<missing tree>> within 
+public DetachedVarTest[] test() {
+    return null;
+}Atm: @VarAnnot(4) DetachedVarTest  <:  Variable 0 at class DetachedVarTest extends type; tree <<missing tree>> within 
+class DetachedVarTest {
+    
+    DetachedVarTest() {
+        super();
+    }
+    
+    public DetachedVarTest[] test() {
+        return null;
+    }
+}
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[]
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 5 at class DetachedVarAccess extends type; tree <<missing tree>> within 
+class DetachedVarAccess {
+    
+    DetachedVarAccess() {
+        super();
+    }
+    
+    private void method(DetachedVarTest dt) {
+        for (final DetachedVarTest dvt : dt.test()) {
+            System.out.println(dvt);
+        }
+    }
+}
+
+subtype constraint: Variable 6 at method DetachedVarAccess#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 5 at class DetachedVarAccess extends type; tree <<missing tree>> within 
+class DetachedVarAccess {
+    
+    DetachedVarAccess() {
+        super();
+    }
+    
+    private void method(DetachedVarTest dt) {
+        for (final DetachedVarTest dvt : dt.test()) {
+            System.out.println(dvt);
+        }
+    }
+}
+
+subtype constraint: Variable 7 at method DetachedVarAccess#method(LDetachedVarTest;):V receiver; tree <<missing tree>> within 
+private void method(DetachedVarTest dt) {
+    for (final DetachedVarTest dvt : dt.test()) {
+        System.out.println(dvt);
+    }
+}Atm: @VarAnnot(7) DetachedVarAccess  <:  Variable 5 at class DetachedVarAccess extends type; tree <<missing tree>> within 
+class DetachedVarAccess {
+    
+    DetachedVarAccess() {
+        super();
+    }
+    
+    private void method(DetachedVarTest dt) {
+        for (final DetachedVarTest dvt : dt.test()) {
+            System.out.println(dvt);
+        }
+    }
+}
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position; 
+calledVp: method DetachedVarTest#test():[LDetachedVarTest;; 
+receiver: Variable 8 at method DetachedVarAccess#method(LDetachedVarTest;):V parameter 0; tree DetachedVarTest; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[], Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]); 
+)
+
+subtype constraint: Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]  <:  Variable 10 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable dvt(0); tree DetachedVarTest
+

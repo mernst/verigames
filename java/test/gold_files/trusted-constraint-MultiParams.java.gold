@@ -1,0 +1,89 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
+class MultiParams {
+    
+    MultiParams() {
+        super();
+    }
+    
+    void foo() {
+        foo(new Object(), null);
+    }
+    
+    void foo(Object a, String b) {
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 1 at method MultiParams#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
+class MultiParams {
+    
+    MultiParams() {
+        super();
+    }
+    
+    void foo() {
+        foo(new Object(), null);
+    }
+    
+    void foo(Object a, String b) {
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
+void foo() {
+    foo(new Object(), null);
+}Atm: @VarAnnot(2) MultiParams  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
+class MultiParams {
+    
+    MultiParams() {
+        super();
+    }
+    
+    void foo() {
+        foo(new Object(), null);
+    }
+    
+    void foo(Object a, String b) {
+        a.toString();
+    }
+}
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#foo():V constraint position; 
+calledVp: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V; 
+receiver: Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
+void foo() {
+    foo(new Object(), null);
+}Atm: @VarAnnot(2) MultiParams; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 6 at method MultiParams#foo():V creation 0; tree Object, Literal(NULL_LITERAL, "null") ); 
+result: List(); 
+)
+
+subtype constraint: Variable 3 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V receiver; tree <<missing tree>> within 
+void foo(Object a, String b) {
+    a.toString();
+}Atm: @VarAnnot(3) MultiParams  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
+class MultiParams {
+    
+    MultiParams() {
+        super();
+    }
+    
+    void foo() {
+        foo(new Object(), null);
+    }
+    
+    void foo(Object a, String b) {
+        a.toString();
+    }
+}
+
