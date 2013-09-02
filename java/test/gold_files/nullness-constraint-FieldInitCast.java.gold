@@ -1,0 +1,40 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class FieldInitCast extends type; tree <<missing tree>> within 
+class FieldInitCast {
+    
+    FieldInitCast() {
+        super();
+    }
+    Object f;
+    String g = (String)f;
+}
+
+subtype constraint: Variable 4 at method FieldInitCast#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class FieldInitCast extends type; tree <<missing tree>> within 
+class FieldInitCast {
+    
+    FieldInitCast() {
+        super();
+    }
+    Object f;
+    String g = (String)f;
+}
+
+subtype constraint: Variable 1 at class FieldInitCast field f; tree Object  <:  Variable 3 at class FieldInitCast field g cast 0; tree String
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class FieldInitCast field g constraint position; 
+calledVp: class FieldInitCast field f; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 1 at class FieldInitCast field f; tree Object); 
+)
+
+subtype constraint: Variable 3 at class FieldInitCast field g cast 0; tree String  <:  Variable 2 at class FieldInitCast field g; tree String
+

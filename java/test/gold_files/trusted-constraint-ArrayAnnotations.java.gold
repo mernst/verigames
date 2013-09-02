@@ -1,0 +1,22 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class ArrayAnnotations extends type; tree <<missing tree>> within 
+class ArrayAnnotations {
+    
+    ArrayAnnotations() {
+        super();
+    }
+    String[][][] s;
+}
+
+subtype constraint: Variable 1 at method ArrayAnnotations#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class ArrayAnnotations extends type; tree <<missing tree>> within 
+class ArrayAnnotations {
+    
+    ArrayAnnotations() {
+        super();
+    }
+    String[][][] s;
+}
+

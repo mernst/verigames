@@ -1,0 +1,207 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class FieldGenerics extends type; tree <<missing tree>> within 
+public class FieldGenerics {
+    private Generic<String> gen;
+    
+    public FieldGenerics() {
+        super();
+        gen = new Generic<String>("str");
+    }
+    
+    private void accessGen() {
+        gen.accessor();
+    }
+}
+
+subtype constraint: Variable 1 at method FieldGenerics#<init>():V return type; tree 
+public <init>() {
+    super();
+    gen = new Generic<String>("str");
+}  <:  Variable 0 at class FieldGenerics extends type; tree <<missing tree>> within 
+public class FieldGenerics {
+    private Generic<String> gen;
+    
+    public FieldGenerics() {
+        super();
+        gen = new Generic<String>("str");
+    }
+    
+    private void accessGen() {
+        gen.accessor();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldGenerics#<init>():V constraint position; 
+calledVp: class FieldGenerics field gen; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String>, Variable 4 at class FieldGenerics field gen; tree String at position ((3,0)) within Generic<String>); 
+)
+
+subtype constraint: Variable 6 at method Generic#<init>(Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Literal(STRING_LITERAL, "str")  <:  Variable 6 at method Generic#<init>(Ljava/lang/Object;):V parameter 0; tree T
+
+subtype constraint: Literal(STRING_LITERAL, "str")  <:  Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method FieldGenerics#<init>():V constraint position; 
+calledVp: method Generic#<init>(Ljava/lang/Object;):V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 12 at class Generic class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 8 at method FieldGenerics#<init>():V creation 0; tree String at position ((3,0)) within Generic<String>) >; 
+args: ( Literal(STRING_LITERAL, "str") ); 
+result: List(Variable 5 at method Generic#<init>(Ljava/lang/Object;):V return type; tree 
+public <init>(T t) {
+    this.t = t;
+}); 
+)
+
+inequality constraint at method FieldGenerics#<init>():V constraint position: Variable 7 at method FieldGenerics#<init>():V creation 0; tree Generic within Generic<String> != Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method FieldGenerics#<init>():V constraint position; 
+calledVp: class FieldGenerics field gen; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 7 at method FieldGenerics#<init>():V creation 0; tree Generic within Generic<String>, Variable 8 at method FieldGenerics#<init>():V creation 0; tree String at position ((3,0)) within Generic<String> ); 
+result: List(); 
+)
+
+subtype constraint: Variable 7 at method FieldGenerics#<init>():V creation 0; tree Generic within Generic<String>  <:  Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String>
+
+equality constraint: Variable 4 at class FieldGenerics field gen; tree String at position ((3,0)) within Generic<String> = Variable 8 at method FieldGenerics#<init>():V creation 0; tree String at position ((3,0)) within Generic<String>
+
+subtype constraint: Variable 2 at method FieldGenerics#accessGen():V receiver; tree <<missing tree>> within 
+private void accessGen() {
+    gen.accessor();
+}Atm: @VarAnnot(2) FieldGenerics  <:  Variable 0 at class FieldGenerics extends type; tree <<missing tree>> within 
+public class FieldGenerics {
+    private Generic<String> gen;
+    
+    public FieldGenerics() {
+        super();
+        gen = new Generic<String>("str");
+    }
+    
+    private void accessGen() {
+        gen.accessor();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldGenerics#accessGen():V constraint position; 
+calledVp: class FieldGenerics field gen; 
+receiver: Variable 2 at method FieldGenerics#accessGen():V receiver; tree <<missing tree>> within 
+private void accessGen() {
+    gen.accessor();
+}Atm: @VarAnnot(2) FieldGenerics; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String>, Variable 4 at class FieldGenerics field gen; tree String at position ((3,0)) within Generic<String>); 
+)
+
+inequality constraint at method FieldGenerics#accessGen():V constraint position: Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String> != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 9 at method Generic#accessor():Ljava/lang/Object; return type; tree T  <:  Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method FieldGenerics#accessGen():V constraint position; 
+calledVp: method Generic#accessor():Ljava/lang/Object;; 
+receiver: Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 12 at class Generic class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 4 at class FieldGenerics field gen; tree String at position ((3,0)) within Generic<String>) >; 
+args: (  ); 
+result: List(Variable 9 at method Generic#accessor():Ljava/lang/Object; return type; tree T); 
+)
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 11 at class Generic class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object
+
+subtype constraint: Variable 14 at class Generic field t; tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 13 at class Generic extends type; tree <<missing tree>> within 
+class Generic<T extends Object> {
+    private T t;
+    
+    public Generic(T t) {
+        this.t = t;
+    }
+    
+    public T accessor() {
+        return t;
+    }
+}
+
+subtype constraint: Variable 5 at method Generic#<init>(Ljava/lang/Object;):V return type; tree 
+public <init>(T t) {
+    this.t = t;
+}  <:  Variable 13 at class Generic extends type; tree <<missing tree>> within 
+class Generic<T extends Object> {
+    private T t;
+    
+    public Generic(T t) {
+        this.t = t;
+    }
+    
+    public T accessor() {
+        return t;
+    }
+}
+
+subtype constraint: Variable 12 at class Generic class type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method Generic#<init>(Ljava/lang/Object;):V constraint position; 
+calledVp: class Generic field t; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 12 at class Generic class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 11 at class Generic class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object) >; 
+args: (  ); 
+result: List(Variable 14 at class Generic field t; tree T); 
+)
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method Generic#<init>(Ljava/lang/Object;):V constraint position; 
+calledVp: class Generic field t; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 12 at class Generic class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 11 at class Generic class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object) >; 
+args: ( Variable 12 at class Generic class type parameter 0; tree T extends Object ); 
+result: List(); 
+)
+
+subtype constraint: Variable 12 at class Generic class type parameter 0; tree T extends Object  <:  Variable 14 at class Generic field t; tree T
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method Generic#accessor():Ljava/lang/Object; constraint position; 
+calledVp: class Generic field t; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 12 at class Generic class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 11 at class Generic class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object) >; 
+args: (  ); 
+result: List(Variable 14 at class Generic field t; tree T); 
+)
+
+subtype constraint: Variable 14 at class Generic field t; tree T  <:  Variable 9 at method Generic#accessor():Ljava/lang/Object; return type; tree T
+

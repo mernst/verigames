@@ -1,0 +1,226 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MethodBoundedGenerics extends type; tree <<missing tree>> within 
+class MethodBoundedGenerics {
+    
+    MethodBoundedGenerics() {
+        super();
+    }
+    
+    @Nullable()
+    public <@NonNull() T>T method(@Nullable()
+    T inc, T inc2) {
+        inc.toString();
+        T loc1 = inc2;
+        loc1 = inc;
+        inc = null;
+        @NonNull()
+        T loc3 = inc2;
+        loc3 = inc;
+        @Nullable()
+        T loc2 = inc;
+        List<@NonNull() T> list = new ArrayList<@NonNull() T>();
+        list.add(loc2);
+        return loc3;
+    }
+    
+    public void test() {
+        @Nullable()
+        String s = null;
+        @Nullable()
+        String s2 = this.method(s, "t");
+    }
+}
+
+subtype constraint: Variable 1 at method MethodBoundedGenerics#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class MethodBoundedGenerics extends type; tree <<missing tree>> within 
+class MethodBoundedGenerics {
+    
+    MethodBoundedGenerics() {
+        super();
+    }
+    
+    @Nullable()
+    public <@NonNull() T>T method(@Nullable()
+    T inc, T inc2) {
+        inc.toString();
+        T loc1 = inc2;
+        loc1 = inc;
+        inc = null;
+        @NonNull()
+        T loc3 = inc2;
+        loc3 = inc;
+        @Nullable()
+        T loc2 = inc;
+        List<@NonNull() T> list = new ArrayList<@NonNull() T>();
+        list.add(loc2);
+        return loc3;
+    }
+    
+    public void test() {
+        @Nullable()
+        String s = null;
+        @Nullable()
+        String s2 = this.method(s, "t");
+    }
+}
+
+subtype constraint: Variable 5 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; receiver; tree <<missing tree>> within 
+@Nullable()
+public <@NonNull() T>T method(@Nullable()
+T inc, T inc2) {
+    inc.toString();
+    T loc1 = inc2;
+    loc1 = inc;
+    inc = null;
+    @NonNull()
+    T loc3 = inc2;
+    loc3 = inc;
+    @Nullable()
+    T loc2 = inc;
+    List<@NonNull() T> list = new ArrayList<@NonNull() T>();
+    list.add(loc2);
+    return loc3;
+}Atm: @VarAnnot(5) MethodBoundedGenerics  <:  Variable 0 at class MethodBoundedGenerics extends type; tree <<missing tree>> within 
+class MethodBoundedGenerics {
+    
+    MethodBoundedGenerics() {
+        super();
+    }
+    
+    @Nullable()
+    public <@NonNull() T>T method(@Nullable()
+    T inc, T inc2) {
+        inc.toString();
+        T loc1 = inc2;
+        loc1 = inc;
+        inc = null;
+        @NonNull()
+        T loc3 = inc2;
+        loc3 = inc;
+        @Nullable()
+        T loc2 = inc;
+        List<@NonNull() T> list = new ArrayList<@NonNull() T>();
+        list.add(loc2);
+        return loc3;
+    }
+    
+    public void test() {
+        @Nullable()
+        String s = null;
+        @Nullable()
+        String s2 = this.method(s, "t");
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object
+
+subtype constraint: Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T  <:  Constant(@nninf.quals.Nullable)
+
+inequality constraint at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T  <:  Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T
+
+subtype constraint: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T
+
+subtype constraint: RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T
+
+subtype constraint: RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T
+
+subtype constraint: RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T
+
+inequality constraint at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position: Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList<@NonNull() T> != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList<@NonNull() T>  <:  Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List<@NonNull() T>
+
+equality constraint: Variable 16 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree @NonNull() T at position ((3,0)) within List<@NonNull() T> = Variable 18 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree @NonNull() T at position ((3,0)) within ArrayList<@NonNull() T>
+
+inequality constraint at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position: Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List<@NonNull() T> != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T  <:  Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T
+
+subtype constraint: Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T  <:  Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 8 at method MethodBoundedGenerics#test():V receiver; tree <<missing tree>> within 
+public void test() {
+    @Nullable()
+    String s = null;
+    @Nullable()
+    String s2 = this.method(s, "t");
+}Atm: @VarAnnot(8) MethodBoundedGenerics  <:  Variable 0 at class MethodBoundedGenerics extends type; tree <<missing tree>> within 
+class MethodBoundedGenerics {
+    
+    MethodBoundedGenerics() {
+        super();
+    }
+    
+    @Nullable()
+    public <@NonNull() T>T method(@Nullable()
+    T inc, T inc2) {
+        inc.toString();
+        T loc1 = inc2;
+        loc1 = inc;
+        inc = null;
+        @NonNull()
+        T loc3 = inc2;
+        loc3 = inc;
+        @Nullable()
+        T loc2 = inc;
+        List<@NonNull() T> list = new ArrayList<@NonNull() T>();
+        list.add(loc2);
+        return loc3;
+    }
+    
+    public void test() {
+        @Nullable()
+        String s = null;
+        @Nullable()
+        String s2 = this.method(s, "t");
+    }
+}
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 19 at method MethodBoundedGenerics#test():V local variable s(0); tree String
+
+subtype constraint: Variable 19 at method MethodBoundedGenerics#test():V local variable s(0); tree String  <:  CombVariable #22
+
+subtype constraint: Literal(STRING_LITERAL, "t")  <:  CombVariable #22
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodBoundedGenerics#test():V constraint position; 
+calledVp: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object;; 
+receiver: Variable 8 at method MethodBoundedGenerics#test():V receiver; tree <<missing tree>> within 
+public void test() {
+    @Nullable()
+    String s = null;
+    @Nullable()
+    String s2 = this.method(s, "t");
+}Atm: @VarAnnot(8) MethodBoundedGenerics; 
+methodTypeParamLBs: < Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: < List(Variable 21 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree <<missing tree>> at position ((3,0)) within this.method(s, "t")Atm: @VarAnnot(21) Object) >; 
+classTypeArgs: <  >; 
+args: ( Variable 19 at method MethodBoundedGenerics#test():V local variable s(0); tree String, Literal(STRING_LITERAL, "t") ); 
+result: List(Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T); 
+)
+
+subtype constraint: Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T  <:  Variable 20 at method MethodBoundedGenerics#test():V local variable s2(0); tree String
+

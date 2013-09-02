@@ -1,0 +1,53 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
+
+subtype constraint: Variable 1 at method First#<init>():V return type; tree 
+public <init>() {
+    super();
+}  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
+
+subtype constraint: Variable 2 at method First#m():V receiver; tree <<missing tree>> within 
+void m() {
+    Object o = new Object();
+    o = null;
+}Atm: @VarAnnot(2) First  <:  Variable 0 at class First extends type; tree <<missing tree>> within 
+public class First {
+    
+    public First() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        o = null;
+    }
+}
+
+inequality constraint at method First#m():V constraint position: Variable 4 at method First#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 4 at method First#m():V creation 0; tree Object  <:  Variable 3 at method First#m():V local variable o(0); tree Object
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method First#m():V local variable o(0); tree Object
+

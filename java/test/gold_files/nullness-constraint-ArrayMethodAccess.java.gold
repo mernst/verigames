@@ -1,0 +1,65 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class ArrayMethodAccess extends type; tree <<missing tree>> within 
+class ArrayMethodAccess {
+    
+    ArrayMethodAccess() {
+        super();
+    }
+    private String[] array;
+    
+    public void context() {
+        System.out.println(array.toString());
+    }
+}
+
+subtype constraint: Variable 1 at method ArrayMethodAccess#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class ArrayMethodAccess extends type; tree <<missing tree>> within 
+class ArrayMethodAccess {
+    
+    ArrayMethodAccess() {
+        super();
+    }
+    private String[] array;
+    
+    public void context() {
+        System.out.println(array.toString());
+    }
+}
+
+subtype constraint: Variable 2 at method ArrayMethodAccess#context():V receiver; tree <<missing tree>> within 
+public void context() {
+    System.out.println(array.toString());
+}Atm: @VarAnnot(2) ArrayMethodAccess  <:  Variable 0 at class ArrayMethodAccess extends type; tree <<missing tree>> within 
+class ArrayMethodAccess {
+    
+    ArrayMethodAccess() {
+        super();
+    }
+    private String[] array;
+    
+    public void context() {
+        System.out.println(array.toString());
+    }
+}
+
+inequality constraint at method ArrayMethodAccess#context():V constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method ArrayMethodAccess#context():V constraint position; 
+calledVp: class ArrayMethodAccess field array; 
+receiver: Variable 2 at method ArrayMethodAccess#context():V receiver; tree <<missing tree>> within 
+public void context() {
+    System.out.println(array.toString());
+}Atm: @VarAnnot(2) ArrayMethodAccess; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 3 at class ArrayMethodAccess field array; tree String[], Variable 4 at class ArrayMethodAccess field array; tree String at position ((0,0)) within String[]); 
+)
+
+inequality constraint at method ArrayMethodAccess#context():V constraint position: Variable 3 at class ArrayMethodAccess field array; tree String[] != Constant(@nninf.quals.Nullable)
+

@@ -1,0 +1,109 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class CallThis extends type; tree <<missing tree>> within 
+class CallThis {
+    String s;
+    Object o;
+    
+    CallThis(String s1) {
+        this(s1, null);
+    }
+    
+    CallThis(String in_s2, Object in_o2) {
+        super();
+        this.s = in_s2;
+        this.o = in_o2;
+    }
+}
+
+subtype constraint: Variable 1 at method CallThis#<init>(Ljava/lang/String;):V return type; tree 
+<init>(String s1) {
+    this(s1, null);
+}  <:  Variable 0 at class CallThis extends type; tree <<missing tree>> within 
+class CallThis {
+    String s;
+    Object o;
+    
+    CallThis(String s1) {
+        this(s1, null);
+    }
+    
+    CallThis(String in_s2, Object in_o2) {
+        super();
+        this.s = in_s2;
+        this.o = in_o2;
+    }
+}
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#<init>(Ljava/lang/String;):V constraint position; 
+calledVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 2 at method CallThis#<init>(Ljava/lang/String;):V parameter 0; tree String, Literal(NULL_LITERAL, "null") ); 
+result: List(Variable 3 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V return type; tree 
+<init>(String in_s2, Object in_o2) {
+    super();
+    this.s = in_s2;
+    this.o = in_o2;
+}); 
+)
+
+subtype constraint: Variable 3 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V return type; tree 
+<init>(String in_s2, Object in_o2) {
+    super();
+    this.s = in_s2;
+    this.o = in_o2;
+}  <:  Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Variable 3 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V return type; tree 
+<init>(String in_s2, Object in_o2) {
+    super();
+    this.s = in_s2;
+    this.o = in_o2;
+}  <:  Variable 0 at class CallThis extends type; tree <<missing tree>> within 
+class CallThis {
+    String s;
+    Object o;
+    
+    CallThis(String s1) {
+        this(s1, null);
+    }
+    
+    CallThis(String in_s2, Object in_o2) {
+        super();
+        this.s = in_s2;
+        this.o = in_o2;
+    }
+}
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
+calledVp: class CallThis field s; 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 4 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V parameter 0; tree String ); 
+result: List(); 
+)
+
+subtype constraint: Variable 4 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V parameter 0; tree String  <:  Variable 6 at class CallThis field s; tree String
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
+calledVp: class CallThis field o; 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 5 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V parameter 1; tree Object ); 
+result: List(); 
+)
+
+subtype constraint: Variable 5 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V parameter 1; tree Object  <:  Variable 7 at class CallThis field o; tree Object
+
