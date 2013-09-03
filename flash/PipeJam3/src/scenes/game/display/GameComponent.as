@@ -191,7 +191,7 @@ package scenes.game.display
 		{
 			if (event.getTouches(this, TouchPhase.HOVER).length || event.getTouches(this, TouchPhase.MOVED).length) {
 				if (!m_hoverTimer) {
-					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000);
+					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 1);
 					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
 					m_hoverTimer.start();
 				}

@@ -3,6 +3,7 @@ package display
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import display.NineSliceBatch;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
@@ -41,7 +42,8 @@ package display
 								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:uint = 0xFFEC00)
+								   _showBox:Boolean = true, _arrowColor:uint = 0xFFEC00, _outlineWeight:Number = 0,
+								   _outlineColor:uint = 0x0)
 		{
 			m_fontSize = _fontSize;
 			m_pointAt = _pointAt;
@@ -85,6 +87,7 @@ package display
 			
 			// text field
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, size.x - 2 * m_inset, size.y - 2 * m_inset, m_fontSize, _fontColor);
+			if (_outlineWeight > 0) TextFactory.getInstance().updateFilter(textField, new GlowFilter(_outlineColor, 1, _outlineWeight, _outlineWeight, 4 * _outlineWeight));
 			textField.x = m_inset;
 			textField.y = m_inset;
 			m_textContainer.addChild(textField);
