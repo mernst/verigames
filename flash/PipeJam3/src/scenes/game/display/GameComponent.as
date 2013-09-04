@@ -213,6 +213,12 @@ package scenes.game.display
 		override public function dispose():void
 		{
 			super.dispose();
+			if (m_hoverTimer) {
+				m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
+				m_hoverTimer.stop();
+				m_hoverTimer = null;
+			}
+			m_hoverPointGlobal = null;
 			removeEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		

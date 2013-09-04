@@ -174,8 +174,40 @@ package scenes.game.display
 						widthTxt = evt.edgeSetChanged.isWide() ? "Wide" : "Narrow";
 						tip = new TutorialManagerTextInfo(widthTxt + " Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
-						tip = new TutorialManagerTextInfo(widthTxt + " Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+						tip = new TutorialManagerTextInfo(widthTxt + " Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
 						tips.push(tip);
+						m_currentToolTipsText = tips;
+						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					}
+					break;
+				case MERGE_TUTORIAL:
+					if ((evt.edgeSetChanged.m_id == "Merges1") || (evt.edgeSetChanged.m_id == "Merges2")) {
+						if (evt.edgeSetChanged.m_outgoingEdges.length != 1) break;
+						if (evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent == null) break;
+						if (evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges.length != 2) break;
+						var edge1:GameEdgeContainer = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[0];
+						var edge2:GameEdgeContainer = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[1];
+						if (edge2.m_id == "e1__OUT__") {
+							edge1 = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[1];
+							edge2 = evt.edgeSetChanged.m_outgoingEdges[0].m_toComponent.m_incomingEdges[0];
+						}
+						var edge1Wide:Boolean = edge1.isWide();
+						var edge2Wide:Boolean = edge2.isWide();
+						if ((edge1.m_id != "e1__OUT__") || (edge2.m_id != "e2__OUT__")) break;
+						if (evt.edgeSetChanged.m_id == "Merges1") edge1Wide = evt.edgeSetChanged.isWide();
+						if (evt.edgeSetChanged.m_id == "Merges2") edge2Wide = evt.edgeSetChanged.isWide();
+						if (edge1Wide || edge2Wide) {
+							if (edge1Wide) {
+								tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
+								tips.push(tip);
+							}
+							if (edge2Wide) {
+								tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e2__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+								tips.push(tip);
+							}
+							tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e3__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
+							tips.push(tip);
+						}
 						m_currentToolTipsText = tips;
 						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
 					}
@@ -185,6 +217,7 @@ package scenes.game.display
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
 		{
+			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
 			switch (m_tutorialTag) {
 				case GROUP_SELECT_TUTORIAL:
 					if (!m_levelFinished && (updatedGameNodes.length > 1)) {
@@ -192,6 +225,15 @@ package scenes.game.display
 						Starling.juggler.delayCall(function():void {
 							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
 						}, 0.5);
+					}
+					break;
+				case LAYOUT_TUTORIAL:
+					for (var i:int = 0; i < updatedGameNodes.length; i++) {
+						if (updatedGameNodes[i].m_id == "Layout1") {
+							m_currentToolTipsText = tips;
+							dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+							break;
+						}
 					}
 					break;
 			}
@@ -411,16 +453,32 @@ package scenes.game.display
 				case SPLIT_TUTORIAL:
 					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
-					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
+					tips.push(tip);
+					break;
+				case MERGE_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e2__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e3__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.LEFT);
+					tips.push(tip);
+					break;
+				case LAYOUT_TUTORIAL:
+					tip = new TutorialManagerTextInfo(
+						"Widgets can be dragged to\n" +
+						"help organize the layout.\n" +
+						"Separate the Widgets.",
+						null,
+						pointToNode("Layout1"),
+						NineSliceBatch.BOTTOM_LEFT, null);
 					tips.push(tip);
 					break;
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
 				case OPTIMIZE_TUTORIAL:
-				case MERGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 				case ZOOM_PAN_TUTORIAL:
-				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case SKILLS_A_TUTORIAL:
@@ -537,10 +595,10 @@ package scenes.game.display
 						null, null);
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Widgets can be dragged to help organize\n" +
-						"the layout. Separate the Widgets.",
+						"The LAYOUT can be changed to help visualize the\n" +
+						"problem. Layout moves will not affect your score.",
 						null,
-						pointToNode("Layout1"),
+						null,
 						null, null);
 				case GROUP_SELECT_TUTORIAL:
 					return new TutorialManagerTextInfo(
