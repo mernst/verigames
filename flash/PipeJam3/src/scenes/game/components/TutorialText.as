@@ -13,11 +13,9 @@ package scenes.game.components
 		private static const ARROW_BOUNCE:Number = 2;
 		private static const ARROW_BOUNCE_SPEED:Number = 0.5;
 		private static const INSET:Number = 3;
-		private static const PADDING_SZ:Number = ARROW_SZ + 2 * ARROW_BOUNCE + 4 * INSET;
 		
 		public function TutorialText(level:Level, info:TutorialManagerTextInfo)
 		{
-			
 			// get pointing setup
 			var pointAt:DisplayObject = (info.pointAtFn != null) ? info.pointAtFn(level) : null;
 			

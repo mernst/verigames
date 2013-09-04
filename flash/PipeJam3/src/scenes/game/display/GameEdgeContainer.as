@@ -1345,7 +1345,8 @@ package scenes.game.display
 		
 		override protected function getToolTipEvent():ToolTipEvent
 		{
-			var lockedTxt:String = isEditable() ? "" : "Locked ";
+			// TODO: Edges appear to have isEditable == false that shouldn't, until this is fixed don't display "Locked" text
+			var lockedTxt:String = "";//isEditable() ? "" : "Locked ";
 			var widthTxt:String = isWide() ? "Wide " : "Narrow ";
 			var jamTxt:String = hasError() ? "\nwith Jam" : "";
 			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, lockedTxt + widthTxt + "Link" + jamTxt, 8);

@@ -2,6 +2,7 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.ToolTipText;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
@@ -76,7 +77,8 @@ package scenes.game.components
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
-		private var m_toolTip:TextBubble;
+		private var m_activeToolTip:TextBubble;
+		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
@@ -157,16 +159,16 @@ package scenes.game.components
 		
 		private function onToolTipAdded(evt:ToolTipEvent):void
 		{
-			if (evt.text && evt.text.length && !m_toolTip) {
-				m_toolTip = new TextBubble(evt.text, evt.fontSize, 0xEEEEEE, evt.component, null, NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER, null, true, evt.fontSize / 1.5, 0, 0, 2, false, 0xEEEEEE, 2, 0x0);
-				addChild(m_toolTip);
+			if (evt.text && evt.text.length && evt.component && m_currentLevel && !m_activeToolTip) {
+				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, null, evt.component);
+				addChild(m_activeToolTip);
 			}
 		}
 		
 		private function onToolTipCleared(evt:ToolTipEvent):void
 		{
-			if (m_toolTip) m_toolTip.removeFromParent(true);
-			m_toolTip = null;
+			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
+			m_activeToolTip = null;
 		}
 		
 		private function endSelectMode():void
@@ -466,10 +468,12 @@ package scenes.game.components
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			if (m_toolTip) {
-				m_toolTip.removeFromParent(true);
-				m_toolTip = null;
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
 			}
+			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
@@ -583,6 +587,7 @@ package scenes.game.components
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 					}
 				}
 				m_currentLevel = level;
@@ -595,6 +600,7 @@ package scenes.game.components
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 				}
 			}
 			
@@ -613,9 +619,18 @@ package scenes.game.components
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			if (m_toolTip) {
-				m_toolTip.removeFromParent(true);
-				m_toolTip = null;
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
 			}
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
@@ -634,10 +649,24 @@ package scenes.game.components
 				m_tutorialText = null;
 			}
 			
-			var levelTextInfo:TutorialManagerTextInfo = evt.newTextInfo;
+			var levelTextInfo:TutorialManagerTextInfo = (evt.newTextInfo.length == 1) ? evt.newTextInfo[0] : null;
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
+			}
+		}
+		
+		public function onPersistentToolTipTextChange(evt:TutorialEvent):void
+		{
+			var i:int;
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
 			}
 		}
 		

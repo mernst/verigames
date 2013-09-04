@@ -36,13 +36,15 @@ package display
 		protected var m_pointPosNeedsInit:Boolean = true;
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
 		
+		protected static const GOLD:uint = 0xFFEC00;
+		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
 		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 
 								   _pointFrom:String = NineSliceBatch.BOTTOM_LEFT, 
 								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:uint = 0xFFEC00, _outlineWeight:Number = 0,
+								   _showBox:Boolean = true, _arrowColor:uint = GOLD, _outlineWeight:Number = 0,
 								   _outlineColor:uint = 0x0)
 		{
 			m_fontSize = _fontSize;

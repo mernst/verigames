@@ -44,6 +44,7 @@ package scenes.game.display
 		private var m_levelFinished:Boolean = false;
 		// If default text is ovewridden, store here (otherwise if null, use default text)
 		private var m_currentTutorialText:TutorialManagerTextInfo;
+		private var m_currentToolTipsText:Vector.<TutorialManagerTextInfo>;
 		
 		public function TutorialManager(_tutorialTag:String)
 		{
@@ -86,6 +87,7 @@ package scenes.game.display
 		public function startLevel():void
 		{
 			m_currentTutorialText = null;
+			m_currentToolTipsText = null;
 			m_levelFinished = false;
 			m_levelStarted = true;
 		}
@@ -93,6 +95,7 @@ package scenes.game.display
 		public function endLevel():void
 		{
 			m_currentTutorialText = null;
+			m_currentToolTipsText = null;
 			m_levelFinished = true;
 			m_levelStarted = false;
 		}
@@ -117,17 +120,67 @@ package scenes.game.display
 				case CREATE_JOINT_TUTORIAL:
 					var toPos:String = (event.segment.m_endPt.y != 0) ? NineSliceBatch.LEFT : NineSliceBatch.TOP;
 					m_currentTutorialText = new TutorialManagerTextInfo(
-						"Drag the new link segment",
+						"Drag the new Link segment",
 						null,
 						pointToEdgeSegment(event.container.m_id, event.segmentIndex),
 						toPos, NineSliceBatch.CENTER);
-					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, m_currentTutorialText));
+					var txtVec:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
+					txtVec.push(m_currentTutorialText);
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TUTORIAL_TEXT, "", true, txtVec));
 					break;
 			}
 		}
 		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
+			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
+			var tip:TutorialManagerTextInfo, widthTxt:String;
+			switch (m_tutorialTag) {
+				case CLASH_TUTORIAL:
+					if (evt.edgeSetChanged.isWide()) {
+						tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+						tips.push(tip);
+					}
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
+				case LINKS_TUTORIAL:
+					var edgeId:String;
+					if (evt.edgeSetChanged.m_id == "SatisfyBoxes1") {
+						edgeId = "e1__OUT__";
+					} else if (evt.edgeSetChanged.m_id == "SatisfyBoxes3") {
+						edgeId = "e3__OUT__";
+					} else {
+						break;
+					}
+					widthTxt = evt.edgeSetChanged.isWide() ? "Wide Link" : "Narrow Link";
+					tip = new TutorialManagerTextInfo(widthTxt, null, pointToEdge(edgeId), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tips.push(tip);
+					m_currentToolTipsText = tips;
+					dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					break;
+				case WIDEN_TUTORIAL:
+					if (evt.edgeSetChanged.m_id == "WidenBoxes10") {
+						if (!evt.edgeSetChanged.isWide()) {
+							tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+							tips.push(tip);
+						}
+						m_currentToolTipsText = tips;
+						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					}
+					break;
+				case SPLIT_TUTORIAL:
+					if (evt.edgeSetChanged.m_id == "Splits1") {
+						widthTxt = evt.edgeSetChanged.isWide() ? "Wide" : "Narrow";
+						tip = new TutorialManagerTextInfo(widthTxt + " Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+						tips.push(tip);
+						tip = new TutorialManagerTextInfo(widthTxt + " Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+						tips.push(tip);
+						m_currentToolTipsText = tips;
+						dispatchEvent(new TutorialEvent(TutorialEvent.NEW_TOOLTIP_TEXT, "", true, tips));
+					}
+					break;
+			}
 		}
 		
 		public function onGameNodeMoved(updatedGameNodes:Vector.<GameNode>):void
@@ -138,7 +191,7 @@ package scenes.game.display
 						m_levelFinished = true;
 						Starling.juggler.delayCall(function():void {
 							dispatchEvent(new TutorialEvent(TutorialEvent.SHOW_CONTINUE));
-						}, 2.0);
+						}, 0.5);
 					}
 					break;
 			}
@@ -313,6 +366,74 @@ package scenes.game.display
 			};
 		}
 		
+		public function getPersistentToolTipsInfo():Vector.<TutorialManagerTextInfo>
+		{
+			if (m_currentToolTipsText != null) return m_currentToolTipsText;
+			var tips:Vector.<TutorialManagerTextInfo> = new Vector.<TutorialManagerTextInfo>();
+			var tip:TutorialManagerTextInfo;
+			switch (m_tutorialTag) {
+				case LOCKED_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Locked\nNarrow\nWidget", null, pointToNode("LockedWidget2"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Locked\nWide\nWidget", null, pointToNode("LockedWidget5"), NineSliceBatch.BOTTOM, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case CLASH_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case LINKS_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Narrow Link", null, pointToEdge("e1__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Wide Link", null, pointToEdge("e3__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.RIGHT);
+					tips.push(tip);
+					break;
+				case PASSAGE_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Start Passage", null, pointToPassage("e33__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Thru Passage", null, pointToPassage("e32__OUT__"), NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("End Passage", null, pointToPassage("e53__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case WIDEN_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case PINCH_TUTORIAL:
+					//tip = new TutorialManagerTextInfo("Locked\nGray\nPassage", null, pointToPassage("e20__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					//tips.push(tip);
+					tip = new TutorialManagerTextInfo("Unlocked\nBlue\nPassage", null, pointToPassage("e30__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Locked\nGray\nPassage", null, pointToPassage("e40__IN__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case SPLIT_TUTORIAL:
+					tip = new TutorialManagerTextInfo("Wide Input", null, pointToEdge("e1__OUT__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					tip = new TutorialManagerTextInfo("Wide Output", null, pointToEdge("e2__IN__"), NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER);
+					tips.push(tip);
+					break;
+				case WIDGET_TUTORIAL:
+				case WIDGET_PRACTICE_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
+				case MERGE_TUTORIAL:
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+				case ZOOM_PAN_TUTORIAL:
+				case LAYOUT_TUTORIAL:
+				case GROUP_SELECT_TUTORIAL:
+				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
+				// Not used:
+				case END_TUTORIAL:
+				case NARROW_TUTORIAL:
+				case COLOR_TUTORIAL:
+					break;
+			}
+			return tips;
+		}
+		
 		public function getTextInfo():TutorialManagerTextInfo
 		{
 			if (m_currentTutorialText != null) return m_currentTutorialText;
@@ -326,13 +447,13 @@ package scenes.game.display
 						NineSliceBatch.TOP, null);
 				case WIDGET_PRACTICE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Practice clicking on widgets and matching colors.\n",
+						"Practice clicking on Widgets and matching colors.\n",
 						null,
 						null,
 						null, null);
 				case LOCKED_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Gray widgets are locked.\n" +
+						"Gray Widgets are locked.\n" +
 						"Their colors can't be changed.",
 						null,
 						pointToNode("LockedWidget2"),
@@ -340,25 +461,25 @@ package scenes.game.display
 				case LINKS_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets are connected\n" +
-						"by LINKS. Light widgets\n" +
-						"create narrow links, dark\n" +
-						"widgets create wide\n" +
-						"links.",
+						"by LINKS. Light Widgets\n" +
+						"create narrow Links, dark\n" +
+						"Widgets create wide\n" +
+						"Links.",
 						null,
 						pointToEdge("e1__OUT__"),
 						NineSliceBatch.LEFT, null);
 				case PASSAGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Links can begin in, end in, or go\n" +
-						"through PASSAGES. Change a widget's\n" +
-						"color to change its passages.",
+						"thru PASSAGES. Change a Widget's\n" +
+						"color to change its Passages.",
 						null,
 						pointToPassage("e32__IN__"),
 						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"CLASHES happen when wide links enter\n" +
-						"narrow passages. Each clash penalizes\n" +
+						"CLASHES happen when wide Links enter\n" +
+						"narrow Passages. Each Clash penalizes\n" +
 						"your score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
@@ -372,36 +493,37 @@ package scenes.game.display
 						null, null);*/
 				case PINCH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"GRAY passages are LOCKED and won't change\n" +
-						"width even if their widget is changed.",
+						"GRAY Passages are LOCKED and\n" +
+						"won't change width even if\n" +
+						"their Widget is changed.",
 						null,
 						pointToPassage("e20__IN__"),
 						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Sometimes the best score still has clashes.\n" +
+						"Sometimes the best score still has Clashes.\n" +
 						"Try different configurations to improve your score!",
 						null,
 						null,
 						null, null);
 				case SPLIT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"When a link is SPLIT, the outgoing\n" +
-						"links will match the incoming link.",
+						"When a link is SPLIT, the output\n" +
+						"Links will match the input Link.",
 						null,
 						pointToJoint("n10__IN__0"),
 						NineSliceBatch.TOP_RIGHT, null);
 				case MERGE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"When links MERGE, the outgoing\n" +
-						"link will be wide if any\n" +
-						"incoming link is wide.",
+						"When Links MERGE, the output\n" +
+						"Link will be wide if any\n" +
+						"input Link is wide.",
 						null,
 						pointToJoint("n123"),
 						NineSliceBatch.RIGHT, null);
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Practice splits and merges.",
+						"Practice Splits and Merges.",
 						null,
 						null,
 						null, null);
@@ -416,22 +538,22 @@ package scenes.game.display
 				case LAYOUT_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Widgets can be dragged to help organize\n" +
-						"the layout. Separate the widgets.",
+						"the layout. Separate the Widgets.",
 						null,
 						pointToNode("Layout1"),
 						null, null);
 				case GROUP_SELECT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"SELECT groups of widgets by holding <SHIFT>\n" +
+						"SELECT groups of Widgets by holding <SHIFT>\n" +
 						"and click-dragging the mouse. SELECT and\n" +
-						"move a group of widgets to continue.",
+						"move a group of Widgets to continue.",
 						null,
 						null,
 						null, null);
 				case CREATE_JOINT_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Create a joint on any link by\n" +
-						"double-clicking a spot on the link.",
+						"Create a joint on any Link by\n" +
+						"double-clicking a spot on the Link.",
 						null,
 						null,
 						null, null);
@@ -456,15 +578,15 @@ package scenes.game.display
 						null, null);
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Click the upper widgets to narrow their links\n" +
-						"and fix the clashes.",
+						"Click the upper Widgets to narrow their Links\n" +
+						"and fix the Clashes.",
 						null,
 						null,
 						null, null);
 				case COLOR_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Some widgets want to be a certain color. Match\n" +
-						"the widgets to the color squares to collect\n" +
+						"Some Widgets want to be a certain color. Match\n" +
+						"the Widgets to the color squares to collect\n" +
 						"bonus points.",
 						null,
 						null,

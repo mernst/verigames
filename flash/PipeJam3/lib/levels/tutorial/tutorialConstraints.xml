@@ -11,6 +11,7 @@
     <box id="WidgetPractice1" width="wide" editable="true"/>
   </level>
   <level id="LockedWidget" qid="3" targetScore="550">
+    <box id="LockedWidget5" width="wide" editable="false"/>
     <box id="LockedWidget4" width="wide" editable="true"/>
     <box id="LockedWidget3" width="narrow" editable="true"/>
     <box id="LockedWidget2" width="narrow" editable="false"/>
