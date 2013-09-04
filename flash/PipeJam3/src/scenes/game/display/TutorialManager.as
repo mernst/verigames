@@ -431,7 +431,7 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case PASSAGE_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Start Passage", null, pointToPassage("e33__OUT__"), NineSliceBatch.BOTTOM_RIGHT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Start Passage", null, pointToPassage("e33__OUT__"), NineSliceBatch.TOP_RIGHT, NineSliceBatch.BOTTOM_RIGHT);
 					tips.push(tip);
 					tip = new TutorialManagerTextInfo("Thru Passage", null, pointToPassage("e32__OUT__"), NineSliceBatch.TOP_RIGHT, NineSliceBatch.TOP);
 					tips.push(tip);

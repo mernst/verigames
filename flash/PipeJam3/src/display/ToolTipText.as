@@ -8,7 +8,7 @@ package display
 	public class ToolTipText extends TextBubble
 	{
 		private static const ACTIVE_FONT_SZ:Number = 8;
-		private static const PERSISTENT_FONT_SZ:Number = 12;
+		private static const PERSISTENT_FONT_SZ:Number = 10;
 		private static const INSET:Number = 1.5;
 		private static const OUTLINE_CLR:uint = 0x0;
 		private static const OUTLINE_WEIGHT:Number = 2;
