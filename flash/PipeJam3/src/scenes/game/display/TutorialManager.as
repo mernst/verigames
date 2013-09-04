@@ -138,7 +138,7 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case CLASH_TUTORIAL:
 					if (evt.edgeSetChanged.isWide()) {
-						tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+						tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -162,7 +162,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					if (evt.edgeSetChanged.m_id == "WidenBoxes10") {
 						if (!evt.edgeSetChanged.isWide()) {
-							tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+							tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 							tips.push(tip);
 						}
 						m_currentToolTipsText = tips;
@@ -421,7 +421,7 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case CLASH_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case LINKS_TUTORIAL:
@@ -439,7 +439,7 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case WIDEN_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nNarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case PINCH_TUTORIAL:
