@@ -35,6 +35,7 @@ package display
 		protected var m_pointPos:Point = new Point();
 		protected var m_pointPosNeedsInit:Boolean = true;
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
+		protected var m_globalToPoint:Point;
 		
 		protected static const GOLD:uint = 0xFFEC00;
 		
@@ -218,7 +219,7 @@ package display
 				if (desiredParent) {
 					pt = m_pointAt.parent.localToGlobal(pt);
 					pt = desiredParent.globalToLocal(pt);
-					pt = desiredParent.localToGlobal(pt);
+					pt = (m_globalToPoint != null) ? m_globalToPoint : desiredParent.localToGlobal(pt);
 					pt = parent.globalToLocal(pt);
 					
 					if (m_pointPosNeedsInit || m_pointPosAlwaysUpdate) {
@@ -239,6 +240,11 @@ package display
 				x = Constants.GameWidth / 2;
 				y = height / 2 - m_paddingSz + m_inset;
 			}
+		}
+		
+		public function setGlobalToPoint(pt:Point):void
+		{
+			m_globalToPoint = pt;
 		}
 		
 		private function sign(x:Number):Number

@@ -1,5 +1,6 @@
 package events
 {
+	import flash.geom.Point;
 	import scenes.game.display.GameComponent;
 	
 	import starling.events.Event;
@@ -12,14 +13,16 @@ package events
 		public var text:String;
 		public var fontSize:Number;
 		public var persistent:Boolean;
+		public var point:Point;
 		
-		public function ToolTipEvent(type:String, _component:GameComponent, _text:String = "", _fontSize:Number = 8, _persistent:Boolean = false)
+		public function ToolTipEvent(type:String, _component:GameComponent, _text:String = "", _fontSize:Number = 8, _persistent:Boolean = false, _pt:Point = null)
 		{
 			super(type, true);
 			component = _component;
 			text = _text;
 			fontSize = _fontSize;
 			persistent = _persistent;
+			point = _pt;
 		}
 	}
 }

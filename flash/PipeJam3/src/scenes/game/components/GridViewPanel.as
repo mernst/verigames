@@ -161,6 +161,7 @@ package scenes.game.components
 		{
 			if (evt.text && evt.text.length && evt.component && m_currentLevel && !m_activeToolTip) {
 				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, null, evt.component);
+				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
 				addChild(m_activeToolTip);
 			}
 		}
