@@ -205,14 +205,17 @@
 				m_quad = null;
 			}
 			
-			m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
 			
 			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
-				m_quad.color = 0xffffff;
-			} else if (isHoverOn){
-				m_quad.color = 0xeeeeee;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, false);
+				m_quad.color = KEYFOR_COLOR;
 			} else {
-				m_quad.color = 0xcccccc;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, true);
+				if (isHoverOn){
+					m_quad.color = 0xeeeeee;
+				} else {
+					m_quad.color = 0xcccccc;
+				}
 			}
 			
 			addChild(m_quad);
