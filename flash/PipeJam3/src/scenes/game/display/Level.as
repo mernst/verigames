@@ -117,6 +117,16 @@ package scenes.game.display
 		private var timer:Timer;
 		private var initialized:Boolean = false;
 		
+		/** Current Score of the player */
+		private var m_currentScore:int = 0;
+		
+		/** Most recent score of the player */
+		private var m_prevScore:int = 0;
+		
+		/** Base Score = # of lines * possible conflict points */
+		private var m_baseScore:int = 0;
+		
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -128,7 +138,7 @@ package scenes.game.display
 		 * @param  _levelLayoutXML the layout xml
 		 * @param  _levelConstraintsXML the constraints xml
 		 */
-		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML)
+		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int = int.MAX_VALUE)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
@@ -143,10 +153,7 @@ package scenes.game.display
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
 			
-			m_targetScore = int.MAX_VALUE;
-			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
-				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
-			}
+			m_targetScore = _targetScore;
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
@@ -1663,5 +1670,107 @@ package scenes.game.display
 			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
 			return true;
 		}
+		
+		public function get currentScore():int { return m_currentScore; }
+		public function get prevScore():int { return m_prevScore; }
+		public function get baseScore():int { return m_baseScore; }
+		
+		public function updateScore():void
+		{
+			/* Old scoring:
+			* 
+			For pipes:
+			No points for any red pipe.
+			For green pipes:
+			10 points for every wide input pipe
+			5 points for every narrow input pipe
+			10 points for every narrow output pipe
+			5 points for every wide output pipe
+			1 point for every internal pipe, no matter what its width
+			
+			For solving the game:
+			30 points per board solved
+			- Changed this to 30 from 10 = original
+			
+			100 points per level solved
+			1000 points per world solved
+			
+			For each exception to the laws of physics:
+			-50 points
+			*/
+			
+			/*
+			 * New Scoring:
+			 * +75 for each line going thru/starting/ending @ a box
+			 * +25 for wide inputs
+			 * +25 for narrow outputs
+			 * -75 for errors
+			*/
+			
+			m_prevScore = m_currentScore;
+			var wideInputs:int = 0;
+			var narrowOutputs:int = 0;
+			var errors:int = 0;
+			var totalLines:int = 0;
+			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
+			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
+			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			// Pass over all nodes, find nodes involved in scoring
+			var allNodes:Vector.<GameNode> = getNodes();
+			for (var nodeI:int = 0; nodeI < allNodes.length; nodeI++)
+			{
+				var nodeSet:GameNode = allNodes[nodeI];
+				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
+					totalLines += nodeSet.getNumLines();
+					if (nodeSet.isWide()) {
+						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
+							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
+							scoringNodes.push(nodeSet);
+						} else if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
+							potentialScoringNodes.push(nodeSet);
+						}
+					} else {
+						if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
+							narrowOutputs += nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges;
+							scoringNodes.push(nodeSet);
+						} else if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
+							potentialScoringNodes.push(nodeSet);
+						}
+					}
+				}
+				for (var ie:int = 0; ie < nodeSet.m_incomingEdges.length; ie++) {
+					var incomingEdge:GameEdgeContainer = nodeSet.m_incomingEdges[ie];
+					if (incomingEdge.hasError()) {
+						if (errorEdges.indexOf(incomingEdge) == -1) {
+							errors++;
+							errorEdges.push(incomingEdge);
+						} else {
+							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
+						}
+					}
+				}
+			}
+			
+			var allJoints:Vector.<GameJointNode> = getJoints();
+			for (var j:int = 0; j < allJoints.length; j++) {
+				var myJoint:GameJointNode = allJoints[j];
+				for (var jie:int = 0; jie < myJoint.m_incomingEdges.length; jie++) {
+					var injEdge:GameEdgeContainer = myJoint.m_incomingEdges[jie];
+					if (injEdge.hasError()) {
+						if (errorEdges.indexOf(injEdge) == -1) {
+							errorEdges.push(injEdge);
+							errors++;
+						} else {
+							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
+						}
+					}
+				}
+			}
+			
+			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
+		}
+		
 	}
 }

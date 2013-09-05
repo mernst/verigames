@@ -1,6 +1,10 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	import events.ConflictChangeEvent;
+	import graph.ConflictDictionary;
+	import graph.Port;
+	import graph.PropDictionary;
 	
 	import audio.AudioManager;
 	
@@ -127,7 +131,13 @@ package scenes.game.display
 				
 				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
 				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML);
+				
+				var targetScore:int = int.MAX_VALUE;
+				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
+					targetScore = int(levelConstraintsXML.attribute("targetScore"));
+				}
+				
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
@@ -136,6 +146,28 @@ package scenes.game.display
 			}
 			
 			m_simulator = new PipeSimulator(m_network);
+			
+			for (var i:int = 0; i < levels.length; i++) {
+				var edgeSetsToNarrow:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
+				var edgeSetsToWiden:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
+				if (levels[i].getTargetScore() == int.MAX_VALUE) {
+					// If no target score, establish one by making simple moves
+					for (var boardName:String in m_simulator.boardToConflicts) {
+						var boardConflicts:ConflictDictionary = (m_simulator.boardToConflicts[boardName] as ConflictDictionary);
+						for (var portKey:String in boardConflicts.iterPorts()) {
+							var port:Port = boardConflicts.getPort(portKey);
+							var portConfl:PropDictionary = boardConflicts.getPortConflicts(portKey);
+							
+						}
+						for (var edgeKey:String in boardConflicts.iterEdges()) {
+							var edge:Edge = boardConflicts.getEdge(edgeKey);
+							var edgeConfl:PropDictionary = boardConflicts.getEdgeConflicts(edgeKey);
+							
+						}
+					}
+					levels[i].restart(); // reset to original configuration (undo moves)
+				}
+			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
@@ -259,7 +291,7 @@ package scenes.game.display
 				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
-				var currentScore:int = gameControlPanel.getCurrentScore();
+				var currentScore:int = active_level.currentScore;
 				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, currentScore, event.type, PipeJamGame.ALL_IN_ONE);	
 				
 				if (PipeJam3.logging) {
@@ -409,9 +441,12 @@ package scenes.game.display
 		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
+			if (!evt.level) return;
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_edgeSet.id, evt.level.level_name);
-			var oldScore:int = gameControlPanel.getCurrentScore();
-			var newScore:int = gameControlPanel.updateScore(evt.level, false);
+			evt.level.updateScore();
+			gameControlPanel.updateScore(evt.level, false);
+			var oldScore:int = evt.level.prevScore;
+			var newScore:int = evt.level.currentScore;
 			if (newScore >= evt.level.getTargetScore()) {
 				edgeSetGraphViewPanel.displayContinueButton(true);
 			} else {
@@ -670,6 +705,7 @@ package scenes.game.display
 			active_level = newLevel;
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
+			newLevel.updateScore();
 			gameControlPanel.newLevelSelected(newLevel);
 		//	newLevel.setConstraints();
 		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);

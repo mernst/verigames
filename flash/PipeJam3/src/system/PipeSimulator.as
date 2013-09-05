@@ -43,7 +43,7 @@ package system
 		private var network:Network;
 		
 		/* A map from boardname ConflictDict associated with that level.*/
-		private var boardToConflicts:Dictionary;
+		public var boardToConflicts:Dictionary;
 		private var prevBoardToConflicts:Dictionary;
 		
 		/**

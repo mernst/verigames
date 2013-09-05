@@ -68,12 +68,6 @@ package scenes.game.components
 		
 		private var menuShowing:Boolean = false;
 		
-		/** Current Score of the player */
-		private var m_currentScore:int = 0;
-		
-		/** Most recent score of the player */
-		private var m_prevScore:int = 0;
-		
 		/** Goes over the scorebar but under the menu, transparent in scorebar area */
 		private var m_scorebarForeground:Image;
 		
@@ -205,104 +199,18 @@ package scenes.game.components
 		}
 		
 		/**
-		 * Re-calculates score and updates the score on the screen
+		 * Updates the score on the screen
 		 */
-		public function updateScore(level:Level, skipAnimatons:Boolean):int 
+		public function updateScore(level:Level, skipAnimatons:Boolean):void 
 		{
+			var currentScore:int = level.currentScore
+			var baseScore:int = level.baseScore;
 			
-			/* Old scoring:
-			* 
-			For pipes:
-			No points for any red pipe.
-			For green pipes:
-			10 points for every wide input pipe
-			5 points for every narrow input pipe
-			10 points for every narrow output pipe
-			5 points for every wide output pipe
-			1 point for every internal pipe, no matter what its width
-			
-			For solving the game:
-			30 points per board solved
-			- Changed this to 30 from 10 = original
-			
-			100 points per level solved
-			1000 points per world solved
-			
-			For each exception to the laws of physics:
-			-50 points
-			*/
-			
-			/*
-			 * New Scoring:
-			 * +75 for each line going thru/starting/ending @ a box
-			 * +25 for wide inputs
-			 * +25 for narrow outputs
-			 * -75 for errors
-			*/
-			
-			m_prevScore = m_currentScore;
-			var wideInputs:int = 0;
-			var narrowOutputs:int = 0;
-			var errors:int = 0;
-			var totalLines:int = 0;
-			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-			// Pass over all nodes, find nodes involved in scoring
-			for each(var nodeSet:GameNode in level.getNodes())
-			{
-				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
-					totalLines += nodeSet.getNumLines();
-					if (nodeSet.isWide()) {
-						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
-							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
-							scoringNodes.push(nodeSet);
-						} else if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
-							potentialScoringNodes.push(nodeSet);
-						}
-					} else {
-						if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
-							narrowOutputs += nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges;
-							scoringNodes.push(nodeSet);
-						} else if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
-							potentialScoringNodes.push(nodeSet);
-						}
-					}
-				}
-				for each (var incomingEdge:GameEdgeContainer in nodeSet.m_incomingEdges) {
-					if (incomingEdge.hasError()) {
-						if (errorEdges.indexOf(incomingEdge) == -1) {
-							errors++;
-							errorEdges.push(incomingEdge);
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
-					}
-				}
-			}
-			
-			for each (var myJoint:GameJointNode in level.getJoints()) {
-				for each (var injEdge:GameEdgeContainer in myJoint.m_incomingEdges) {
-					if (injEdge.hasError()) {
-						if (errorEdges.indexOf(injEdge) == -1) {
-							errorEdges.push(injEdge);
-							errors++;
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
-					}
-				}
-			}
-			
-			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
-			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
-			var baseScore:Number = Constants.POINTS_PER_LINE * totalLines;
-			
-			TextFactory.getInstance().updateText(m_scoreTextfield, m_currentScore.toString());
+			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			
 			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, m_currentScore) / baseScore;
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / baseScore;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
@@ -381,7 +289,7 @@ package scenes.game.components
 				   x: newScoreX
 				});
 			} else {
-				return m_currentScore;
+				return;
 			}
 			
 			// If we've spilled off to the right, shrink it down after we've animated showing the difference
@@ -412,15 +320,8 @@ package scenes.game.components
 				   scaleX: newScaleX
 				});
 			}
-			
-			return m_currentScore;
 		}
-
-		public function getCurrentScore():int
-		{
-			return m_currentScore;
-		}
-
+		
 		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
 		{
 			conflictMap.errorAdded(errorParticleSystem, level);
