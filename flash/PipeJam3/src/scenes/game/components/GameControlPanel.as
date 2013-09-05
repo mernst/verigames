@@ -23,6 +23,7 @@ package scenes.game.components
 	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import networking.LoginHelper;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -300,6 +301,8 @@ package scenes.game.components
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, m_currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			if(LoginHelper.getLoginHelper().levelObject != null)
+				LoginHelper.getLoginHelper().levelObject.score = m_currentScore;
 			
 			// Aim for starting score to be 2/3 of the width of the scorebar area
 			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, m_currentScore) / baseScore;

@@ -169,6 +169,7 @@ package networking
 			if(result == LoginHelper.EVENT_COMPLETE)
 			{
 				playerLoggedIn = true; //whee
+				Achievements.getAchievementsEarnedForPlayer();
 				controller.setStatus(VALIDATION_SUCCEEDED);
 			}
 			else

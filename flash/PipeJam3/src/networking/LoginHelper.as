@@ -40,6 +40,8 @@ package networking
 		public static var REPORT_PERFORMANCE:int = 18;
 		public static var REPORT_PREFERENCE:int = 19;
 		public static var ADD_ACHIEVEMENT:int = 20;
+		public static var REPORT_LEADERBOARD_SCORE:int = 21;
+		public static var GET_ACHIEVEMENTS:int = 22;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -226,7 +228,7 @@ package networking
 		protected var m_levelFilesString:String;
 		protected var m_currentMessageType:String;
 		protected var m_fileType:int;
-		public function submitLevel(_levelFilesString:String, _currentScore:int, type:String, fileType:int = 1):void
+		public function submitLevel(_levelFilesString:String, type:String, fileType:int = 1):void
 		{
 			//this involves:
 			//saving the level (layout and constraints, on either save or submit/share)
@@ -237,7 +239,6 @@ package networking
 			m_levelFilesString = _levelFilesString;
 			m_currentMessageType = type;
 			m_fileType = fileType;
-			levelObject.score = _currentScore;
 		
 			//need to create an RA Level so we can use the levelID
 			if(type == MenuEvent.SUBMIT_LEVEL)
@@ -258,6 +259,11 @@ package networking
 				m_world.dispatchEvent(new MenuEvent(LEVEL_SAVED));
 			else
 				m_world.dispatchEvent(new MenuEvent(LEVEL_SUBMITTED));
+		}
+		
+		public function reportScore():void
+		{
+			sendMessage(LoginHelper.REPORT_LEADERBOARD_SCORE, null);
 		}
 		
 		public function onRALevelCreated(result:int, e:flash.events.Event):void
