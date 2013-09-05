@@ -1,0 +1,56 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
+class StaticInit {
+    
+    StaticInit() {
+        super();
+    }
+    static Object f;
+    static {
+        f = new Object();
+    }
+}
+
+subtype constraint: Variable 3 at method StaticInit#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
+class StaticInit {
+    
+    StaticInit() {
+        super();
+    }
+    static Object f;
+    static {
+        f = new Object();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class StaticInit static initializer *0 constraint position; 
+calledVp: class StaticInit static field f; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 1 at class StaticInit static field f; tree Object); 
+)
+
+inequality constraint at class StaticInit static initializer *0 constraint position: Variable 2 at class StaticInit static initializer *0 creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: class StaticInit static initializer *0 constraint position; 
+calledVp: class StaticInit static field f; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 2 at class StaticInit static initializer *0 creation 0; tree Object ); 
+result: List(); 
+)
+
+subtype constraint: Variable 2 at class StaticInit static initializer *0 creation 0; tree Object  <:  Variable 1 at class StaticInit static field f; tree Object
+

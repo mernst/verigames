@@ -1,6 +1,7 @@
 package scenes.game.display 
 {
 	import assets.AssetInterface;
+	import events.ToolTipEvent;
 	
 	import display.NineSliceBatch;
 	
@@ -201,6 +202,13 @@ package scenes.game.display
 			// If already in mode for this map, revert to NARROW mode
 			if (m_propertyMode == prop) prop = PropDictionary.PROP_NARROW;
 			dispatchEvent(new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, prop));
+		}
+		
+		override protected function getToolTipEvent():ToolTipEvent
+		{
+			var label:String = "";
+			if (getNode) label = getNode.argumentHasMapStamp() ? "Activated Map": "Unactivated Map";
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, label, 8);
 		}
 	}
 

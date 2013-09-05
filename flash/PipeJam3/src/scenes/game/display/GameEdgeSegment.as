@@ -95,7 +95,7 @@
 		private var hasMovedOutsideClickDist:Boolean = false;
 		private var startingPoint:Point;
 		private static const CLICK_DIST:Number = 0.2; //for extensions, register distance dragged
-		public function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			if (touches.length == 0) {
@@ -205,14 +205,16 @@
 				m_quad = null;
 			}
 			
-			m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
-			
 			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
-				m_quad.color = 0xffffff;
-			} else if (isHoverOn){
-				m_quad.color = 0xeeeeee;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, false);
+				m_quad.color = KEYFOR_COLOR;
 			} else {
-				m_quad.color = 0xcccccc;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
+				if (isHoverOn){
+					m_quad.color = 0xeeeeee;
+				} else {
+					m_quad.color = 0xcccccc;
+				}
 			}
 			
 			addChild(m_quad);

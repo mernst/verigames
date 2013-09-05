@@ -1,0 +1,119 @@
+Constraints:
+equality constraint: Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
+class PrimitivesAndBoxes {
+    
+    PrimitivesAndBoxes() {
+        super();
+    }
+    
+    public void method() {
+        Integer testy = 2;
+        int primitive = 1;
+        Integer boxed = primitive;
+        boxed = forceNarrow(boxed);
+    }
+    
+    public int forceNarrow(int i) {
+        return i;
+    }
+}
+
+subtype constraint: Variable 1 at method PrimitivesAndBoxes#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
+class PrimitivesAndBoxes {
+    
+    PrimitivesAndBoxes() {
+        super();
+    }
+    
+    public void method() {
+        Integer testy = 2;
+        int primitive = 1;
+        Integer boxed = primitive;
+        boxed = forceNarrow(boxed);
+    }
+    
+    public int forceNarrow(int i) {
+        return i;
+    }
+}
+
+subtype constraint: Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
+public void method() {
+    Integer testy = 2;
+    int primitive = 1;
+    Integer boxed = primitive;
+    boxed = forceNarrow(boxed);
+}Atm: @VarAnnot(2) PrimitivesAndBoxes  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
+class PrimitivesAndBoxes {
+    
+    PrimitivesAndBoxes() {
+        super();
+    }
+    
+    public void method() {
+        Integer testy = 2;
+        int primitive = 1;
+        Integer boxed = primitive;
+        boxed = forceNarrow(boxed);
+    }
+    
+    public int forceNarrow(int i) {
+        return i;
+    }
+}
+
+subtype constraint: Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrimitivesAndBoxes#method():V constraint position; 
+calledVp: method PrimitivesAndBoxes#forceNarrow(I):I; 
+receiver: Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
+public void method() {
+    Integer testy = 2;
+    int primitive = 1;
+    Integer boxed = primitive;
+    boxed = forceNarrow(boxed);
+}Atm: @VarAnnot(2) PrimitivesAndBoxes; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer ); 
+result: List(Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int); 
+)
+
+subtype constraint: Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer
+
+subtype constraint: Variable 4 at method PrimitivesAndBoxes#forceNarrow(I):I receiver; tree <<missing tree>> within 
+public int forceNarrow(int i) {
+    return i;
+}Atm: @VarAnnot(4) PrimitivesAndBoxes  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
+class PrimitivesAndBoxes {
+    
+    PrimitivesAndBoxes() {
+        super();
+    }
+    
+    public void method() {
+        Integer testy = 2;
+        int primitive = 1;
+        Integer boxed = primitive;
+        boxed = forceNarrow(boxed);
+    }
+    
+    public int forceNarrow(int i) {
+        return i;
+    }
+}
+
+subtype constraint: Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int  <:  Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int
+

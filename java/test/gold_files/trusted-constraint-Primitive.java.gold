@@ -1,0 +1,111 @@
+Constraints:
+equality constraint: Variable 1 at class Primitive field i; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 4 at method Primitive#m(I):I return type; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 6 at method Primitive#m(I):I parameter 0; tree int = Constant(@trusted.quals.Untrusted)
+
+equality constraint: Variable 8 at method Primitive#call():V local variable i(0); tree int = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Primitive extends type; tree <<missing tree>> within 
+class Primitive {
+    
+    Primitive() {
+        super();
+    }
+    int i = 5;
+    
+    int m(int p) {
+        return p;
+    }
+    
+    void call() {
+        int i = m(9);
+    }
+    Object o = null;
+}
+
+subtype constraint: Variable 3 at method Primitive#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class Primitive extends type; tree <<missing tree>> within 
+class Primitive {
+    
+    Primitive() {
+        super();
+    }
+    int i = 5;
+    
+    int m(int p) {
+        return p;
+    }
+    
+    void call() {
+        int i = m(9);
+    }
+    Object o = null;
+}
+
+subtype constraint: Variable 5 at method Primitive#m(I):I receiver; tree <<missing tree>> within 
+int m(int p) {
+    return p;
+}Atm: @VarAnnot(5) Primitive  <:  Variable 0 at class Primitive extends type; tree <<missing tree>> within 
+class Primitive {
+    
+    Primitive() {
+        super();
+    }
+    int i = 5;
+    
+    int m(int p) {
+        return p;
+    }
+    
+    void call() {
+        int i = m(9);
+    }
+    Object o = null;
+}
+
+subtype constraint: Variable 6 at method Primitive#m(I):I parameter 0; tree int  <:  Variable 4 at method Primitive#m(I):I return type; tree int
+
+subtype constraint: Variable 7 at method Primitive#call():V receiver; tree <<missing tree>> within 
+void call() {
+    int i = m(9);
+}Atm: @VarAnnot(7) Primitive  <:  Variable 0 at class Primitive extends type; tree <<missing tree>> within 
+class Primitive {
+    
+    Primitive() {
+        super();
+    }
+    int i = 5;
+    
+    int m(int p) {
+        return p;
+    }
+    
+    void call() {
+        int i = m(9);
+    }
+    Object o = null;
+}
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Primitive#call():V constraint position; 
+calledVp: method Primitive#m(I):I; 
+receiver: Variable 7 at method Primitive#call():V receiver; tree <<missing tree>> within 
+void call() {
+    int i = m(9);
+}Atm: @VarAnnot(7) Primitive; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Constant(@trusted.quals.Untrusted) ); 
+result: List(Variable 4 at method Primitive#m(I):I return type; tree int); 
+)
+
+subtype constraint: Variable 4 at method Primitive#m(I):I return type; tree int  <:  Variable 8 at method Primitive#call():V local variable i(0); tree int
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 2 at class Primitive field o; tree Object
+

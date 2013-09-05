@@ -1,0 +1,235 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(Other p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 1 at method Other#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(Other p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 2 at method Other#m1(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+void m1(Object o) {
+}Atm: @VarAnnot(2) Other  <:  Variable 0 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(Other p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 5 at method Other#m2():Ljava/lang/Object; receiver; tree <<missing tree>> within 
+Object m2() {
+    return new Object();
+}Atm: @VarAnnot(5) Other  <:  Variable 0 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(Other p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+inequality constraint at method Other#m2():Ljava/lang/Object; constraint position: Variable 8 at method Other#m2():Ljava/lang/Object; creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 8 at method Other#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 4 at method Other#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 6 at method Other#m3(LOther;):V receiver; tree <<missing tree>> within 
+void m3(Other p) {
+    p.m1(new Object());
+    Object x = p.m2();
+}Atm: @VarAnnot(6) Other  <:  Variable 0 at class Other extends type; tree <<missing tree>> within 
+class Other {
+    
+    Other() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(Other p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 7 at method Other#m3(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method Other#m3(LOther;):V constraint position: Variable 9 at method Other#m3(LOther;):V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Other#m3(LOther;):V constraint position; 
+calledVp: method Other#m1(Ljava/lang/Object;):V; 
+receiver: Variable 7 at method Other#m3(LOther;):V parameter 0; tree Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 9 at method Other#m3(LOther;):V creation 0; tree Object ); 
+result: List(); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Other#m3(LOther;):V constraint position; 
+calledVp: method Other#m2():Ljava/lang/Object;; 
+receiver: Variable 7 at method Other#m3(LOther;):V parameter 0; tree Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 4 at method Other#m2():Ljava/lang/Object; return type; tree Object); 
+)
+
+subtype constraint: Variable 4 at method Other#m2():Ljava/lang/Object; return type; tree Object  <:  Variable 10 at method Other#m3(LOther;):V local variable x(0); tree Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 11 at class CallOther extends type; tree <<missing tree>> within 
+class CallOther {
+    
+    CallOther() {
+        super();
+    }
+    
+    void foo(Other o) {
+        o.m1(null);
+        o.m2();
+        o.m3(o);
+    }
+}
+
+subtype constraint: Variable 12 at method CallOther#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 11 at class CallOther extends type; tree <<missing tree>> within 
+class CallOther {
+    
+    CallOther() {
+        super();
+    }
+    
+    void foo(Other o) {
+        o.m1(null);
+        o.m2();
+        o.m3(o);
+    }
+}
+
+subtype constraint: Variable 13 at method CallOther#foo(LOther;):V receiver; tree <<missing tree>> within 
+void foo(Other o) {
+    o.m1(null);
+    o.m2();
+    o.m3(o);
+}Atm: @VarAnnot(13) CallOther  <:  Variable 11 at class CallOther extends type; tree <<missing tree>> within 
+class CallOther {
+    
+    CallOther() {
+        super();
+    }
+    
+    void foo(Other o) {
+        o.m1(null);
+        o.m2();
+        o.m3(o);
+    }
+}
+
+inequality constraint at method CallOther#foo(LOther;):V constraint position: Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other != Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallOther#foo(LOther;):V constraint position; 
+calledVp: method Other#m1(Ljava/lang/Object;):V; 
+receiver: Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Literal(NULL_LITERAL, "null") ); 
+result: List(); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallOther#foo(LOther;):V constraint position; 
+calledVp: method Other#m2():Ljava/lang/Object;; 
+receiver: Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 4 at method Other#m2():Ljava/lang/Object; return type; tree Object); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallOther#foo(LOther;):V constraint position; 
+calledVp: method Other#m3(LOther;):V; 
+receiver: Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other ); 
+result: List(); 
+)
+

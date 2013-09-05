@@ -1,5 +1,6 @@
 package nninf;
 
+import checkers.inference.InferenceMain;
 import checkers.inference.InferenceUtils;
 import com.sun.source.util.TreePath;
 import games.GameVisitor;
@@ -170,7 +171,7 @@ public class NninfVisitor extends GameVisitor {
     @Override
     public Void visitMemberSelect(MemberSelectTree node, Void p) {
         //TODO JB: Talk to Werner/Mike about class A extends OtherClass.InnerClass
-        if( InferenceUtils.isInExtendsImplements( node, atypeFactory ) ) {
+        if( InferenceUtils.isInExtendsImplements( node, atypeFactory ) && !InferenceMain.STRICT_MODE() ) {
             return null;
         }
 

@@ -14,6 +14,7 @@ public class NodeElement extends Element
 	public boolean isBox = false;
 	
 	public boolean counted = false;
+	public boolean hasConflict = false;
 	
 	public NodeElement(String _id, String _levelID)
 	{

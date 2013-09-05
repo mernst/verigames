@@ -1,5 +1,7 @@
 package verigames.level;
 
+import checkers.inference.InferenceMain;
+
 import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
@@ -415,13 +417,20 @@ public class Level
 
     /* Make sure that all chutes that are linked to each other have the same
      * width. */
+
     for (Set<Chute> linkedChutes : linkedEdgeClasses)
     {
       Boolean isNarrow = null;
 
       /* This is kept so that a detailed error message explaining which chutes
        * differ can be printed if there is an error. */
+
+      boolean fixedNarrow = false;
+      boolean fixedWide   = false;
+      boolean conflictingChutes = false;
+
       Chute initialChute = null;
+
       for (Chute c : linkedChutes)
       {
         if (isNarrow == null)
@@ -430,10 +439,40 @@ public class Level
           initialChute = c;
         }
 
-        if (c.isNarrow() != isNarrow)
-          throw new IllegalStateException(
-              "Two linked chutes have different widths: " +
-              initialChute + " and " + c);
+        if( !c.isEditable() ) {
+            if( c.isNarrow() ) {
+              fixedNarrow = true;
+            } else {
+              fixedWide   = true;
+            }
+        }
+
+        if (c.isNarrow() != isNarrow) {
+          conflictingChutes = true;
+        }
+      }
+
+      if( conflictingChutes ) {
+        if( InferenceMain.STRICT_MODE() ) {
+            String chutes = "";
+            for( Chute c : linkedChutes ) {
+                chutes += c + ", ";
+            }
+            throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
+        }
+
+        //TODO: When an equality constraints links two chutes, make sure all chutes of that
+        //TODO: type are the same width
+
+        if( fixedNarrow || !fixedWide ) {
+            for( Chute c : linkedChutes ) {
+                c.setNarrow( true );
+            }
+        } else {
+            for( Chute c : linkedChutes ) {
+                c.setNarrow( false );
+            }
+        }
       }
     }
   }
@@ -479,7 +518,12 @@ public class Level
       Set<Chute> linkedChutes = new LinkedHashSet<>();
       for (int varID : linkedVarIDSet)
       {
-        linkedChutes.addAll(IDMap.get(varID));
+        //TODO JB: IDENTIFY WHY THIS RETURNS NULL
+        final Set<Chute> toLink = IDMap.get(varID);
+        if( toLink != null ) {
+          linkedChutes.addAll( toLink );
+        }
+
         // we don't want to add this later
         IDMap.remove(varID);
       }

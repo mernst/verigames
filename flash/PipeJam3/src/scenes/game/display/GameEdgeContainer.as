@@ -2,6 +2,8 @@ package scenes.game.display
 {
 	import display.NineSliceBatch;
 	import display.TextBubble;
+	import events.ToolTipEvent;
+	import starling.display.DisplayObject;
 	
 	import events.ConflictChangeEvent;
 	import events.EdgeContainerEvent;
@@ -1076,6 +1078,21 @@ package scenes.game.display
 			return newJointsCreated;
 		}
 		
+		override protected function onTouch(event:TouchEvent):void
+		{
+			if (!event.target) return;
+			if (event.target is DisplayObject) {
+				var doc:DisplayObject = event.target as DisplayObject;
+				while (doc.parent) {
+					if (doc.parent is InnerBoxSegment) {
+						return; // let tool tip events flow through to inner box segment
+					}
+					doc = doc.parent;
+				}
+			}
+			super.onTouch(event);
+		}
+		
 		private function onInnerBoxSegmentClicked(event:TouchEvent):void
 		{
 			var touchClick:Touch = event.getTouch(this, TouchPhase.ENDED);
@@ -1324,6 +1341,15 @@ package scenes.game.display
 			{
 				m_innerBoxSegment.updateBorderWidth(_isWide);
 			}
+		}
+		
+		override protected function getToolTipEvent():ToolTipEvent
+		{
+			// TODO: Edges appear to have isEditable == false that shouldn't, until this is fixed don't display "Locked" text
+			var lockedTxt:String = "";//isEditable() ? "" : "Locked ";
+			var widthTxt:String = isWide() ? "Wide " : "Narrow ";
+			var jamTxt:String = hasError() ? "\nwith Jam" : "";
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, lockedTxt + widthTxt + "Link" + jamTxt, 8);
 		}
 	}
 }

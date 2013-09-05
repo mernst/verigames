@@ -11,6 +11,7 @@
     <box id="WidgetPractice1" width="wide" editable="true"/>
   </level>
   <level id="LockedWidget" qid="3" targetScore="550">
+    <box id="LockedWidget5" width="wide" editable="false"/>
     <box id="LockedWidget4" width="wide" editable="true"/>
     <box id="LockedWidget3" width="narrow" editable="true"/>
     <box id="LockedWidget2" width="narrow" editable="false"/>
@@ -95,10 +96,10 @@
   </level>
   <level id="GroupSelect" qid="18">
     <box id="es18" width="wide" editable="true"/>
-    <box id="es11" width="narrow" editable="false"/>
+    <box id="es11" width="wide" editable="false"/>
     <box id="es17" width="wide" editable="true"/>
-    <box id="es16" width="narrow" editable="true"/>
-    <box id="es15" width="narrow" editable="false"/>
+    <box id="es16" width="wide" editable="true"/>
+    <box id="es15" width="wide" editable="false"/>
     <box id="es14" width="wide" editable="true"/>
   </level>
   <level id="CreateJoint" qid="19">

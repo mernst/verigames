@@ -2,14 +2,17 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.ToolTipText;
 	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
+	import display.TextBubble;
 	
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.PropertyModeChangeEvent;
+	import events.ToolTipEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
 	
@@ -74,6 +77,8 @@ package scenes.game.components
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
+		private var m_activeToolTip:TextBubble;
+		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
@@ -136,6 +141,8 @@ package scenes.game.components
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -148,6 +155,21 @@ package scenes.game.components
 			} else {
 				contentBarrier.visible = true;
 			}
+		}
+		
+		private function onToolTipAdded(evt:ToolTipEvent):void
+		{
+			if (evt.text && evt.text.length && evt.component && m_currentLevel && !m_activeToolTip) {
+				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, null, evt.component);
+				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
+				addChild(m_activeToolTip);
+			}
+		}
+		
+		private function onToolTipCleared(evt:ToolTipEvent):void
+		{
+			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
+			m_activeToolTip = null;
 		}
 		
 		private function endSelectMode():void
@@ -444,14 +466,22 @@ package scenes.game.components
 				return;
 			}
 			if (m_tutorialText) {
-				m_tutorialText.dispose();
+				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
 			content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -558,6 +588,7 @@ package scenes.game.components
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 					}
 				}
 				m_currentLevel = level;
@@ -570,6 +601,7 @@ package scenes.game.components
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 				}
 			}
 			
@@ -588,6 +620,19 @@ package scenes.game.components
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
+			}
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
 			if (levelTextInfo) {
@@ -605,10 +650,24 @@ package scenes.game.components
 				m_tutorialText = null;
 			}
 			
-			var levelTextInfo:TutorialManagerTextInfo = evt.newTextInfo;
+			var levelTextInfo:TutorialManagerTextInfo = (evt.newTextInfo.length == 1) ? evt.newTextInfo[0] : null;
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
+			}
+		}
+		
+		public function onPersistentToolTipTextChange(evt:TutorialEvent):void
+		{
+			var i:int;
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
 			}
 		}
 		

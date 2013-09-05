@@ -157,6 +157,8 @@ package display
 				if (m_current == m_down) {
 					if (hitTest(touch.getLocation(this))) {
 						toState(m_over);
+						if(!m_data) m_data = new Object;
+						m_data.tapCount = touch.tapCount;
 					} else {
 						toState(m_up);
 					}

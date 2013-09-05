@@ -3,6 +3,7 @@ package system
 	import flash.utils.Dictionary;
 	
 	import graph.BoardNodes;
+	import graph.ConflictDictionary;
 	import graph.Edge;
 	import graph.LevelNodes;
 	import graph.MapGetNode;
@@ -11,7 +12,6 @@ package system
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.PropDictionary;
-	import graph.ConflictDictionary;
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
 	
@@ -596,22 +596,39 @@ package system
 							if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
 						}
 						else
-							trace("error in simulator");
+							throw new Error("Simulator: split found with # outputs = " + node.outgoing_ports.length); 
 
 					}
 						break;
 					
 					case NodeTypes.BALL_SIZE_TEST : {
-						// new implementation: always output a small ball down the small pipe
-						// and a large ball down the wide pipe, rather that "sorting" the balls
+						// "Sort" the balls
 						for (i = 0; i < node.outgoing_ports.length; i++) {
 							var outgoing_port:Port = node.outgoing_ports[i];
 							outgoing_props = node.incoming_ports[0].edge.getExitProps().clone();
 							if (outgoing_port.edge.is_wide) {
-								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+								switch (node.incoming_ports[0].edge.exit_ball_type) {
+									case Edge.BALL_TYPE_WIDE:
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										break;
+									default:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										outgoing_props = new PropDictionary();
+										break;
+								}
 								outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
 							} else {
-								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								switch (node.incoming_ports[0].edge.exit_ball_type) {
+									case Edge.BALL_TYPE_NARROW:
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+										break;
+									default:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										outgoing_props = new PropDictionary();
+										break;
+								}
 								outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
 							}
 							outgoing_port.edge.setEnterProps(outgoing_props);

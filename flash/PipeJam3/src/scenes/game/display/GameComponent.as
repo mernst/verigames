@@ -1,7 +1,12 @@
 package scenes.game.display
 {
+	import events.ToolTipEvent;
+	import starling.events.Touch;
+	
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Timer;
 	
 	import graph.PropDictionary;
 	
@@ -10,6 +15,8 @@ package scenes.game.display
 	import starling.display.DisplayObjectContainer;
 	import starling.display.materials.StandardMaterial;
 	import starling.events.Event;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	public class GameComponent extends BaseComponent
 	{
@@ -30,7 +37,8 @@ package scenes.game.display
 		public var draggable:Boolean = true;
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		protected var m_props:PropDictionary = new PropDictionary();
-		
+		protected var m_hoverTimer:Timer;
+		protected var m_hoverPointGlobal:Point;
 		public var m_forceColor:Number = -1;
 		
 		public static const NARROW_COLOR:uint = 0x6ED4FF;
@@ -51,6 +59,9 @@ package scenes.game.display
 			
 			m_id = _id;
 			m_isSelected = false;
+			if (getToolTipEvent()) {
+				addEventListener(TouchEvent.TOUCH, onTouch);
+			}
 		}
 		
 		public function componentMoved(delta:Point):void
@@ -176,6 +187,58 @@ package scenes.game.display
 		{
 			m_propertyMode = prop;
 			m_isDirty = true;
+		}
+		
+		protected function onTouch(event:TouchEvent):void
+		{
+			if (event.getTouches(this, TouchPhase.HOVER).length || event.getTouches(this, TouchPhase.MOVED).length) {
+				var touch:Touch = event.getTouches(this, TouchPhase.HOVER).length ? event.getTouches(this, TouchPhase.HOVER)[0] : event.getTouches(this, TouchPhase.MOVED)[0];
+				m_hoverPointGlobal = new Point(touch.globalX, touch.globalY);
+				if (!m_hoverTimer) {
+					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 1);
+					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
+					m_hoverTimer.start();
+				}
+			} else {
+				if (m_hoverTimer) {
+					m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
+					m_hoverTimer.stop();
+					m_hoverTimer = null;
+				}
+				m_hoverPointGlobal = null;
+				onHoverEnd();
+			}
+		}
+		
+		override public function dispose():void
+		{
+			super.dispose();
+			if (m_hoverTimer) {
+				m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
+				m_hoverTimer.stop();
+				m_hoverTimer = null;
+			}
+			m_hoverPointGlobal = null;
+			removeEventListener(TouchEvent.TOUCH, onTouch);
+		}
+		
+		protected function getToolTipEvent():ToolTipEvent
+		{
+			return null; // implement in subclasses if toolTip text is desired
+		}
+		
+		protected function onHoverEnd():void
+		{
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.CLEAR_TOOL_TIP, this));
+		}
+		
+		protected function onHoverDetected(evt:TimerEvent):void
+		{
+			var toolTipEvt:ToolTipEvent = getToolTipEvent();
+			if (toolTipEvt) {
+				if (m_hoverPointGlobal) toolTipEvt.point = m_hoverPointGlobal.clone();
+				dispatchEvent(toolTipEvt);
+			}
 		}
 	}
 }

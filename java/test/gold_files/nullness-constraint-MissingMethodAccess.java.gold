@@ -1,0 +1,160 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
+public class MissingMethodAccess {
+    
+    public MissingMethodAccess() {
+        super();
+    }
+    
+    public void access() {
+    }
+}
+
+subtype constraint: Variable 1 at method MissingMethodAccess#<init>():V return type; tree 
+public <init>() {
+    super();
+}  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
+public class MissingMethodAccess {
+    
+    public MissingMethodAccess() {
+        super();
+    }
+    
+    public void access() {
+    }
+}
+
+subtype constraint: Variable 2 at method MissingMethodAccess#access():V receiver; tree <<missing tree>> within 
+public void access() {
+}Atm: @VarAnnot(2) MissingMethodAccess  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
+public class MissingMethodAccess {
+    
+    public MissingMethodAccess() {
+        super();
+    }
+    
+    public void access() {
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    private MissingMethodAccess mmAccess;
+    
+    public OtherAccess() {
+        super();
+        mmAccess = new MissingMethodAccess();
+    }
+    
+    public void localAccess() {
+        mmAccess.access();
+    }
+}
+
+subtype constraint: Variable 4 at method OtherAccess#<init>():V return type; tree 
+public <init>() {
+    super();
+    mmAccess = new MissingMethodAccess();
+}  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    private MissingMethodAccess mmAccess;
+    
+    public OtherAccess() {
+        super();
+        mmAccess = new MissingMethodAccess();
+    }
+    
+    public void localAccess() {
+        mmAccess.access();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method OtherAccess#<init>():V constraint position; 
+calledVp: class OtherAccess field mmAccess; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method OtherAccess#<init>():V constraint position; 
+calledVp: method MissingMethodAccess#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 1 at method MissingMethodAccess#<init>():V return type; tree 
+public <init>() {
+    super();
+}); 
+)
+
+inequality constraint at method OtherAccess#<init>():V constraint position: Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess != Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method OtherAccess#<init>():V constraint position; 
+calledVp: class OtherAccess field mmAccess; 
+receiver: Constant(@nninf.quals.Nullable); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess ); 
+result: List(); 
+)
+
+subtype constraint: Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess
+
+subtype constraint: Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
+public void localAccess() {
+    mmAccess.access();
+}Atm: @VarAnnot(5) OtherAccess  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    private MissingMethodAccess mmAccess;
+    
+    public OtherAccess() {
+        super();
+        mmAccess = new MissingMethodAccess();
+    }
+    
+    public void localAccess() {
+        mmAccess.access();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method OtherAccess#localAccess():V constraint position; 
+calledVp: class OtherAccess field mmAccess; 
+receiver: Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
+public void localAccess() {
+    mmAccess.access();
+}Atm: @VarAnnot(5) OtherAccess; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess); 
+)
+
+inequality constraint at method OtherAccess#localAccess():V constraint position: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess != Constant(@nninf.quals.Nullable)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method OtherAccess#localAccess():V constraint position; 
+calledVp: method MissingMethodAccess#access():V; 
+receiver: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(); 
+)
+

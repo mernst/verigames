@@ -336,10 +336,10 @@ package scenes.game.components
 				m_targetScoreContainer.addChild(m_targetScoreTextfield);
 				m_targetScoreContainer.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * level.getTargetScore() / baseScore;
 				m_scoreBarContainer.addChildAt(m_targetScoreContainer, 0);
+				m_scoreBarContainer.visible = true;
 			} else {
-				if (m_targetScoreContainer) {
-					m_targetScoreContainer.removeFromParent();
-				}
+				if (m_targetScoreContainer) m_targetScoreContainer.removeFromParent();
+				if (level.m_tutorialTag && m_scoreBarContainer) m_scoreBarContainer.visible = false;
 			}
 			
 			if (newBarWidth < SCORE_PANEL_AREA.width / 10) {

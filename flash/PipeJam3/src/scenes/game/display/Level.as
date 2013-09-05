@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import display.ToolTipText;
 	import events.PropertyModeChangeEvent;
 	
 	import audio.AudioManager;
@@ -1576,6 +1577,11 @@ package scenes.game.display
 		public function getLevelTextInfo():TutorialManagerTextInfo
 		{
 			return tutorialManager ? tutorialManager.getTextInfo() : null;
+		}
+		
+		public function getLevelToolTipsInfo():Vector.<TutorialManagerTextInfo>
+		{
+			return tutorialManager ? tutorialManager.getPersistentToolTipsInfo() : (new Vector.<TutorialManagerTextInfo>());
 		}
 		
 		public function getTargetScore():int

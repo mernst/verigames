@@ -75,7 +75,7 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			if (!draggable) return;
 			
@@ -144,19 +144,20 @@ package scenes.game.display
 			}
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
-
-			m_image = createJoint(isRound, m_isEditable, m_isWide);
-			m_image.width = m_image.height = lineSize;
-			
 			
 			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
-				m_image.color = 0xffffff;
-			} else if (isHoverOn){
-				m_image.color = 0xeeeeee;
+				m_image = createJoint(isRound, false, m_isWide);
+				m_image.color = KEYFOR_COLOR;
 			} else {
-				m_image.color = 0xcccccc;
+				var isGray:Boolean = isRound ? m_isEditable : true; // TODO: for now, all non-round joints forced as editable
+				m_image = createJoint(isRound, isGray, m_isWide);
+				if (isHoverOn){
+					m_image.color = 0xeeeeee;
+				} else {
+					m_image.color = 0xcccccc;
+				}
 			}
-			
+			m_image.width = m_image.height = lineSize;
 			m_image.x = -lineSize/2;
 			m_image.y = -lineSize/2;
 			addChild(m_image);
@@ -189,7 +190,7 @@ package scenes.game.display
 						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
 				}
 			} else {
-				if(true)//m_isEditable == true)
+				if(editable == true)
 				{
 					if (wide == true)
 						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;

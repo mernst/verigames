@@ -185,6 +185,7 @@
 	<SubTexture name="ThumbSelected" x="826" y="82" width="11" height="11" />
 	<SubTexture name="TrackBackground" x="830" y="94" width="6" height="6" />
 	<SubTexture name="TutorialArrow" x="817" y="6" width="10" height="19" />
+	<SubTexture name="TutorialArrowWhite" x="804" y="6" width="10" height="19" />
 	<SubTexture name="TutorialBox" x="2" y="536" width="192" height="192" />
 	<SubTexture name="TutorialBoxBottom" x="66" y="664" width="64" height="64" />
 	<SubTexture name="TutorialBoxBottomLeft" x="2" y="664" width="64" height="64" />
