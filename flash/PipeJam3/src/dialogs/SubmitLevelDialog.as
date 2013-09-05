@@ -208,9 +208,11 @@ package dialogs
 			dRating = Math.round(dRating);
 			dRating /= 100;
 			loginHelper.levelObject.difficultyRating = dRating;
-			loginHelper.reportPlayerPreference((eRating*20).toString()); //0-100 scale
-			loginHelper.reportPlayerPerformance((dRating*20).toString()); //0-100 scale
+			loginHelper.reportPlayerPreference((int(Math.round(eRating*20))).toString()); //0-100 scale
+			loginHelper.reportPlayerPerformance((int(Math.round(dRating*20))).toString()); //0-100 scale
 			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+			LoginHelper.getLoginHelper().reportScore();
 		}
 	}
 }
