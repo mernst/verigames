@@ -253,7 +253,7 @@ package networking
 					var targetScore:int = parseInt(levelObj.targetScore);
 					if(levelScore > targetScore)
 					leaderboardScore = 2;
-					request = "/api/scores&method=URL";
+					request = "/api/score&method=URL";
 					dataObj = new Object;
 					dataObj.playerId = playerID;
 					dataObj.gameId = GAME_ID;
