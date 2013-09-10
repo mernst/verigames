@@ -153,7 +153,7 @@ public class ProxyThread extends Thread {
             		else if(urlTokens[1].indexOf("DATABASE") != -1)
             			doDatabase(urlToCall, out, decodedBytes);
             		else if(urlTokens[1].indexOf("URL") != -1)
-            			response = doURL(urlToCall);
+            			response = doURL(urlToCall, decodedBytes);
             		else
             			response = doPost(urlToCall); //post
             	}
@@ -214,7 +214,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpGet method = new HttpGet(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send GET request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -236,7 +236,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpPut method = new HttpPut(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send PUT request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -247,7 +247,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpDelete method = new HttpDelete(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send DELETE request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -501,35 +501,32 @@ public class ProxyThread extends Thread {
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 
-    public HttpResponse doURL(String request) throws Exception  
+    public HttpResponse doURL(String request, byte[] buf) throws Exception  
     {
     	String url = null;
     	String postData = null;
     	
-    	String urlTokens[] = request.split("/");
-    	
-    	
-    	if(request.indexOf("/achievement/assign") != -1)
+    	url = "http://localhost:3000" + request;
+      	log(LOG_TO_DB, url);
+     	HttpClient client = new DefaultHttpClient();
+    	if(buf != null)
     	{
-    		if(ProxyServer.runLocally)
-    			url = "http://localhost/AddAchievements.py";
-    		else
-    			url = "http://localhost:3000/api/achievements/assign";
-    		
-    		String createdOn = String.valueOf(new Date().getTime());
-    		postData = "details={\"id\":\""+urlTokens[5]+"\",\"playerId\":\""+urlTokens[4]+"\",\"gameId\":\""+urlTokens[3]+"\",\"createdOn\":\""+createdOn+"\"} ";
+	       	postData = new String(buf);
+	       	log(LOG_TO_DB, postData);
+        
+	       	HttpPost method = new HttpPost(url);
+	       	StringEntity params = new StringEntity(postData);
+	       	method.setHeader("Content-type", "application/json");
+	       	method.setEntity(params);
+	       	HttpResponse response = client.execute(method);
+	        return response;
     	}
-    	
-        HttpClient client = new DefaultHttpClient();
-        HttpPost method = new HttpPost(url);
-        log(LOG_TO_DB, url);
-        StringEntity params =new StringEntity(postData);
-        log(LOG_TO_DB, postData);
-        method.addHeader("content-type", "application/x-www-form-urlencoded");
-        method.setEntity(params);
-        HttpResponse response = client.execute(method);
-
-        return response;
+    	else
+    	{
+    		HttpGet method = new HttpGet(url);
+    		HttpResponse response = client.execute(method);
+    		return response;
+    	}
 	}
     
     public void log(int type, String line)

@@ -102,11 +102,16 @@ public class LevelCleanup {
                         File[] listOfFiles = root.listFiles();
         
                         for (File file : listOfFiles) {
-                            if (file.isFile()) {
-                                    if(file.getName().endsWith("Layout.xml"))
-                                    {
-                                        handleFile(file);
-                                    }
+                        	try{
+	                            if (file.isFile()) {
+	                                    if(file.getName().endsWith("Layout.xml"))
+	                                    {
+	                                        handleFile(file);
+	                                    }
+	                            }
+                            }catch(Exception e)
+                            {
+                            	System.out.println("error while processing " + file.getName()); 
                             }
                         }
                 }
@@ -127,12 +132,16 @@ public class LevelCleanup {
             {
                System.out.println(e);     
             }
+            
+            System.out.println("Run Completed"); 
         }
         
+        static String layoutFileName = null;
+        static boolean printedFileName = false;
         public static void handleFile(File file)
         {
-        	 
-             String layoutFileName = file.getPath();
+        	printedFileName = false;
+            layoutFileName = file.getPath();
              int strLen = layoutFileName.length();
              String constraintsFileName = file.getPath().substring(0, strLen-10) + "Constraints.xml";
              File constraintsFile = new File(constraintsFileName);
@@ -146,7 +155,7 @@ public class LevelCleanup {
             rater.outputLayout(file, outputDirectory);
             
             rater.reportOnFile(file);
-            printWriter.print(mostNumConflicts + " " + totalEditableChains + " " + totalUneditableChains);
+        //    printWriter.print(mostNumConflicts + " " + totalEditableChains + " " + totalUneditableChains);
             
             
         }
@@ -333,8 +342,10 @@ public class LevelCleanup {
             for(int i = 0; i<nodeChain.size(); i++)
             {
                 NodeElement node = nodeChain.get(i);
+               
                 if(node.isBox)
                 {
+                	boolean nodeIsEditable = node.isEditable;
                     for(int j = 0; j<node.outputPorts.size(); j++)
                     {
                         String outputEdgeID = node.outputPorts.get(j);
@@ -346,12 +357,18 @@ public class LevelCleanup {
                         {
                             String jointOutputEdgeID = toJoint.outputPorts.get(0);
                             EdgeElement outgoingJointEdge = edges.get(jointOutputEdgeID);
-                            NodeElement toNode = nodes.get(outgoingJointEdge.toNodeID);;
+                            NodeElement toNode = nodes.get(outgoingJointEdge.toNodeID); 
+                            if(toNode.hasConflict)
+                            	continue;
+                            boolean toNodeIsEditable = toNode.isEditable;
                             boolean outgoingWidth = toNode.isWide;
                             if(incomingWidth && !outgoingWidth)
                             {
                               //  printWriter.println("conflict Node Type " + node.id + " " + outputEdgeID + " " + toNode.id);
-                                chainInfo.numConflicts++;
+                            	if(toNodeIsEditable || node.isEditable)
+                            		chainInfo.numConflicts++;
+                            	toNode.hasConflict = true;
+                            	break;
                             }
                         }
                     }
@@ -397,7 +414,16 @@ public class LevelCleanup {
         
         public void reportOnChain(Vector<NodeElement> nodeChain, ChainInfo chainInfo)
         {
-        	printWriter.println("Chain Length " + nodeChain.size() + " " + "editable " + chainInfo.isEditable + " " + "Num Conflicts " + chainInfo.numConflicts);
+        	if(chainInfo.numConflicts > 0)
+        	{
+        		if(printedFileName == false)
+        		{
+                	printWriter.println(layoutFileName);
+                	printedFileName = true;
+        		}
+
+        		printWriter.println("Chain Length " + nodeChain.size() + " " + "editable " + chainInfo.isEditable + " " + "Num Conflicts " + chainInfo.numConflicts);
+        	}
         	if(chainInfo.numConflicts > mostNumConflicts)
         		mostNumConflicts = chainInfo.numConflicts;
         }
@@ -421,8 +447,8 @@ public class LevelCleanup {
             			+"\" conflicts=\""+totalConflicts+"\" bonus_nodes=\""+totalBonusNodes
             			+"\" scriptname=\"" + scriptName + "\"/>");
           //  printWriter.println("Chain Count " + nodeChains.size());
-            printWriter.println("editableChainCount " + editableChainCount + " " + "editableNodes " + editableNodes);
-            printWriter.println("uneditableChainCount " + uneditableChainCount + " " + "uneditableNodes " + uneditableNodes);
+  //          printWriter.println("editableChainCount " + editableChainCount + " " + "editableNodes " + editableNodes);
+   //         printWriter.println("uneditableChainCount " + uneditableChainCount + " " + "uneditableNodes " + uneditableNodes);
         //    printWriter.println("numChainsWithConflicts " + numChainsWithConflicts);
          //   printWriter.println("longestChainSizeWithConflict " + longestChainSizeWithConflict + " " + "numNodesWithConflictInChain " + numNodesWithConflictInChain);
        totalEditableChains += editableChainCount;

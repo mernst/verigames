@@ -140,7 +140,7 @@ package dialogs
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void
-		{
+		{			
 			//get the name
 			if(submitLayoutDialog == null)
 			{
@@ -152,8 +152,7 @@ package dialogs
 				submitLayoutDialog.clipRect = new Rectangle(background.width, y + (height - submitLayoutDialog.height), 
 										submitLayoutDialog.width, submitLayoutDialog.height);
 
-				var juggler:Juggler = Starling.juggler;
-				juggler.tween(submitLayoutDialog, 1.0, {
+				Starling.juggler.tween(submitLayoutDialog, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
 					x: background.width 
 				});	

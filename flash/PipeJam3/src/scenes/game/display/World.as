@@ -270,13 +270,12 @@ package scenes.game.display
 				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
-				var currentScore:int = active_level.currentScore;
-				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, currentScore, event.type, PipeJamGame.ALL_IN_ONE);	
+				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
 				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = gameControlPanel.getCurrentScore();
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
@@ -494,7 +493,10 @@ package scenes.game.display
 
 				if(currentLevelNumber >= levels.length)
 				{
-					Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
+					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
+						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
+					else
+						switchToLevelSelect();
 					return;
 				}
 			}

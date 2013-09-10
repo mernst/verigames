@@ -37,7 +37,7 @@ public class RATestBed {
 			//players
 			//51365e65e4b0ad10f4079c88
 			
-			SearchLevelsResponse sr = ra.searchForLevels(0);
+//			SearchLevelsResponse sr = ra.searchForLevels(0);
 //			ra.printResponseAndEntity(ra.searchForLevels(0));
 //					ra.printResponseAndEntity(ra.setPriority("5181402de4b03743be6d8f66", 11));
 //					ra.printResponseAndEntity(ra.setPriority("51815c35e4b03743be6d8f7f", 11));
@@ -50,7 +50,7 @@ public class RATestBed {
 //	//		System.out.println(response.toString());
 			//JSONObject obj = getJSONFromEntity(sr.toString());
 			//JSONArray arr = obj.getJSONArray("ids");
-			for(String id : sr.ids)
+//			for(String id : sr.ids)
 			//for(int i = 0; i< arr.length(); i++)
 			{
 //				String val = arr.getJSONObject(i).getString("levelId");
@@ -69,7 +69,7 @@ public class RATestBed {
 //			System.out.println("create");
 //			ra.printResponseAndEntity(ra.createLevel("517994e7a8e0f633776c98f3"));
 //			System.out.println("activate");
-//			ra.printResponseAndEntity(ra.activateLevel("51815c35e4b03743be6d8f7f", true));
+//			ra.printResponseAndEntity(ra.activateLevel("521692a9e4b06c4c132c473a", true));
 //			System.out.println("set");
 //			ra.printResponseAndEntity(ra.setLevelMetadata("517994e7a8e0f633776c98f3"));
 //			System.out.println("get");
@@ -101,8 +101,8 @@ public class RATestBed {
 //			ra.deleteLevel("51965a51e4b0615b7829e510").toString();
 //			ra.deleteLevel("51965a54e4b0615b7829e511").toString();
 //
-//			ra.printResponseAndEntity(ra.setPriority("51ecd34be4b0a12f02c4c89c", 10));
-//			ra.printResponseAndEntity(ra.setPriority("51ecd34ce4b0a12f02c4c89e", 10));
+//			ra.printResponseAndEntity(ra.setPriority("5227af7fe4b06c4c132c7330", 10));
+//			ra.printResponseAndEntity(ra.setPriority("5227af80e4b06c4c132c7333", 10));
 //			ra.printResponseAndEntity(ra.setPriority("51ecd34ce4b0a12f02c4c8a0", 10));
 //			ra.printResponseAndEntity(ra.setPriority("521682c8e4b06c4c132c472a", 10));
 //			ra.printResponseAndEntity(ra.activateAllAgents(PrincipalType.LEVEL));
@@ -111,7 +111,8 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.setPriority("51fa8e49e4b0a12f02c4c9fb", 0));
 //			ra.printResponseAndEntity(ra.setPriority("51faab87e4b0a12f02c4ca08", 0));
 //		
-//			ra.printResponseAndEntity(ra.activateLevel("521692a9e4b06c4c132c473a", true));
+//			ra.printResponseAndEntity(ra.activateLevel("5227af7fe4b06c4c132c7330", true));
+//			ra.printResponseAndEntity(ra.activateLevel("5227af80e4b06c4c132c7333", true));
 //			ra.activateLevel("521682c8e4b06c4c132c472a", false);
 //			ra.activateLevel("519cfae3e4b0615b7829e519", true);
 			
@@ -132,8 +133,8 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.activateAgent("51ca04c81a0b4f4809000037", true));
 //			ra.agentExists("51cb6fc7ddfe66b65d000021", PrincipalType.PLAYER);
 			
-//			ra.getReport();
-			ra.getVersion();
+			ra.getReport();
+//			ra.getVersion();
 //			ra.printResponseAndEntity(ra.requestMatch("51e5b3460240288229000026", 10));
 //			ra.printResponseAndEntity(ra.refuseMatches("51e5b3460240288229000026"));
 
