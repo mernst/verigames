@@ -63,7 +63,7 @@ package networking
 		
 		static public function isAchievementNew(achievementNumber:String):Boolean
 		{
-			if(currentAchievementList[achievementNumber] != null)
+			if(currentAchievementList && (currentAchievementList[achievementNumber] != null))
 				return false;
 			else
 				return true;
