@@ -126,7 +126,6 @@ package scenes.game.display
 		/** Base Score = # of lines * possible conflict points */
 		private var m_baseScore:int = 0;
 		
-		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -199,23 +198,17 @@ package scenes.game.display
 					if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT) == 0) {
 						// Found a reference to an external SUBBOARD, create fixed node
 						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
-						var isStarting:Boolean = false;
 						if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT_OUT) > -1) {
 							isWide = false;
-							isStarting = true;
 						}
-						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide, isStarting);
+						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide);
 					} else {
 						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
 					}
 				} else {
 					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
 					//grab an example edge for it's attributes FIX - use constraints xml file
-					var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
-					for each (var myEdgeId:String in edgeSet.edge_ids) {
-						edgeSetEdges.push(edgeDictionary[myEdgeId]);
-					}
-					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, edgeSetEdges);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet);
 				}
 				
 				gameNode.visible = getVisible(boxLayoutXML);
@@ -385,12 +378,11 @@ package scenes.game.display
 					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
-			refreshTroublePoints();
-//			if(gameNode)
-//			{
-//				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, gameNode.m_isWide, null, false, null));
-//			}
-				
+			if(gameNode)
+			{
+				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, true, null));
+			}
+			refreshTroublePoints();	
 		}
 		
 		protected function createLine(edgeXML:XML, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
@@ -544,9 +536,6 @@ package scenes.game.display
 		public function start():void
 		{
 			if (!initialized) {
-				initialize();
-				setConstraints();
-				
 				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
 					var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
@@ -577,6 +566,10 @@ package scenes.game.display
 				addChild(m_jointsContainer);
 				addChild(m_errorContainer);
 				addChild(m_edgesContainer);
+				
+				initialize();
+				setConstraints();
+				
 				initialized = true;
 			}
 			
@@ -983,8 +976,9 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
+			//trace("Level: onEdgeSetChange");
 			if (!evt.silent) {
+				if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
 				if (!evt.propValue) {
 					// Wide
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
@@ -993,12 +987,11 @@ package scenes.game.display
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
 				}
 			}
-			var edgeSetID:String = evt.edgeSetChanged.m_edgeSet.id;
-			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
+			var edgeSet:EdgeSetRef = evt.edgeSetChanged.m_edgeSet;
 			if(edgeSet != null) {
 				edgeSet.setProp(evt.prop, evt.propValue);
 			}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
+			if (!evt.silent) dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -1386,7 +1379,7 @@ package scenes.game.display
 			{
 				//gameEdge.x = gameEdge.m_boundingBox.x + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.x;
 				//gameEdge.y = gameEdge.m_boundingBox.y + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.y;
-				gameEdge.draw();
+				gameEdge.m_isDirty = true;
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
 //				gameEdge.visible = false;
@@ -1596,6 +1589,11 @@ package scenes.game.display
 			return m_targetScore;
 		}
 		
+		public function setTargetScore(score:int):void
+		{
+			m_targetScore = score;
+		}
+		
 		public function get original_level_name():String
 		{
 			return m_levelLayoutXML.attribute("id");
@@ -1671,6 +1669,14 @@ package scenes.game.display
 			return true;
 		}
 		
+		public function boardInLevel(boardName:String):Boolean
+		{
+			if (levelNodes && levelNodes.boardNodesDictionary) {
+				return levelNodes.boardNodesDictionary.hasOwnProperty(boardName);
+			}
+			return false;
+		}
+		
 		public function get currentScore():int { return m_currentScore; }
 		public function get prevScore():int { return m_prevScore; }
 		public function get baseScore():int { return m_baseScore; }
@@ -1714,14 +1720,16 @@ package scenes.game.display
 			var totalLines:int = 0;
 			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
 			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			var errorEdges:Vector.<Edge> = new Vector.<Edge>();
+			var errorPorts:Vector.<Port> = new Vector.<Port>();
 			// Pass over all nodes, find nodes involved in scoring
 			var allNodes:Vector.<GameNode> = getNodes();
 			for (var nodeI:int = 0; nodeI < allNodes.length; nodeI++)
 			{
 				var nodeSet:GameNode = allNodes[nodeI];
+				// TODO: this should be here: totalLines += nodeSet.getNumLines();
 				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
-					totalLines += nodeSet.getNumLines();
+					totalLines += nodeSet.getNumLines(); // TODO: move above
 					if (nodeSet.isWide()) {
 						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
 							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
@@ -1740,13 +1748,18 @@ package scenes.game.display
 				}
 				for (var ie:int = 0; ie < nodeSet.m_incomingEdges.length; ie++) {
 					var incomingEdge:GameEdgeContainer = nodeSet.m_incomingEdges[ie];
-					if (incomingEdge.hasError()) {
-						if (errorEdges.indexOf(incomingEdge) == -1) {
-							errors++;
-							errorEdges.push(incomingEdge);
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
+					if (!incomingEdge.graphEdge) continue;
+					if (incomingEdge.graphEdge.hasAnyConflict() && (errorEdges.indexOf(incomingEdge.graphEdge) == -1)) {
+						errors++;
+						errorEdges.push(incomingEdge.graphEdge);
+					}
+					if (incomingEdge.graphEdge.from_port && incomingEdge.graphEdge.from_port.hasAnyConflict() && (errorPorts.indexOf(incomingEdge.graphEdge.from_port) == -1)) {
+						errors++;
+						errorPorts.push(incomingEdge.graphEdge.from_port);
+					}
+					if (incomingEdge.graphEdge.to_port && incomingEdge.graphEdge.to_port.hasAnyConflict() && (errorPorts.indexOf(incomingEdge.graphEdge.to_port) == -1)) {
+						errors++;
+						errorPorts.push(incomingEdge.graphEdge.to_port);
 					}
 				}
 			}
@@ -1756,13 +1769,18 @@ package scenes.game.display
 				var myJoint:GameJointNode = allJoints[j];
 				for (var jie:int = 0; jie < myJoint.m_incomingEdges.length; jie++) {
 					var injEdge:GameEdgeContainer = myJoint.m_incomingEdges[jie];
-					if (injEdge.hasError()) {
-						if (errorEdges.indexOf(injEdge) == -1) {
-							errorEdges.push(injEdge);
-							errors++;
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
+					if (!injEdge.graphEdge) continue;
+					if (injEdge.graphEdge.hasAnyConflict() && (errorEdges.indexOf(injEdge.graphEdge) == -1)) {
+						errors++;
+						errorEdges.push(injEdge.graphEdge);
+					}
+					if (injEdge.graphEdge.from_port && injEdge.graphEdge.from_port.hasAnyConflict() && (errorPorts.indexOf(injEdge.graphEdge.from_port) == -1)) {
+						errors++;
+						errorPorts.push(injEdge.graphEdge.from_port);
+					}
+					if (injEdge.graphEdge.to_port && injEdge.graphEdge.to_port.hasAnyConflict() && (errorPorts.indexOf(injEdge.graphEdge.to_port) == -1)) {
+						errors++;
+						errorPorts.push(injEdge.graphEdge.to_port);
 					}
 				}
 			}

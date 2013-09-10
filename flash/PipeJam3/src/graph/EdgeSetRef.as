@@ -9,9 +9,11 @@ package graph
 	{
 		public var id:String;
 		public var edge_ids:Vector.<String> = new Vector.<String>();
+		public var edges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_props:PropDictionary = new PropDictionary();
 		// Possible stamps that the edge set can have, can only activate possible props
 		private var m_possibleProps:PropDictionary;
+		public var editable:Boolean = false;
 		
 		public function EdgeSetRef(_id:String) 
 		{

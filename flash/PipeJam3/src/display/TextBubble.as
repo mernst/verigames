@@ -124,12 +124,12 @@ package display
 			addEventListener(Event.ADDED_TO_STAGE, onAdded); // allow this to be removed and re-added
 		}
 
-		private function onEnterFrame(evt:Event):void
+		protected function onEnterFrame(evt:Event):void
 		{
 			var timeSec:Number = new Date().time / 1000.0;
 			var timeArrowOffset:Number = m_arrowBounce * (int(timeSec / m_arrowBounceSpeed) % 2);
 			
-			if (m_pointAt) {
+			if (m_pointAt && m_pointAt.parent) {
 				var pt:Point = new Point();
 				var offset:Point = new Point();
 				

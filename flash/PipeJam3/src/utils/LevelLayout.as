@@ -55,7 +55,6 @@ package utils
 					for (var le_id_indx:uint = 0; le_id_indx < le_set["edgeref"].attribute("id").length(); le_id_indx++) {
 						level_edge_set_dictionary[my_id] = my_edge_set;
 						edge_id_to_edge_set_dictionary[le_set["edgeref"].attribute("id")[le_id_indx].toString()] = my_edge_set;
-						my_edge_set.edge_ids.push(le_set["edgeref"].attribute("id")[le_id_indx].toString());
 					}
 					for (var stamp_id_indx:uint = 0; stamp_id_indx < le_set["stamp"].length(); stamp_id_indx++) {
 						var isActive:Boolean = XString.stringToBool(String(le_set["stamp"][stamp_id_indx].attribute("active")));

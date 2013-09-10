@@ -5,6 +5,7 @@ package scenes.game.display
 	import graph.ConflictDictionary;
 	import graph.Port;
 	import graph.PropDictionary;
+	import system.Solver;
 	
 	import audio.AudioManager;
 	
@@ -146,28 +147,6 @@ package scenes.game.display
 			}
 			
 			m_simulator = new PipeSimulator(m_network);
-			
-			for (var i:int = 0; i < levels.length; i++) {
-				var edgeSetsToNarrow:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
-				var edgeSetsToWiden:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
-				if (levels[i].getTargetScore() == int.MAX_VALUE) {
-					// If no target score, establish one by making simple moves
-					for (var boardName:String in m_simulator.boardToConflicts) {
-						var boardConflicts:ConflictDictionary = (m_simulator.boardToConflicts[boardName] as ConflictDictionary);
-						for (var portKey:String in boardConflicts.iterPorts()) {
-							var port:Port = boardConflicts.getPort(portKey);
-							var portConfl:PropDictionary = boardConflicts.getPortConflicts(portKey);
-							
-						}
-						for (var edgeKey:String in boardConflicts.iterEdges()) {
-							var edge:Edge = boardConflicts.getEdge(edgeKey);
-							var edgeConfl:PropDictionary = boardConflicts.getEdgeConflicts(edgeKey);
-							
-						}
-					}
-					levels[i].restart(); // reset to original configuration (undo moves)
-				}
-			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);			
@@ -445,25 +424,27 @@ package scenes.game.display
 			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_edgeSet.id, evt.level.level_name);
 			evt.level.updateScore();
 			gameControlPanel.updateScore(evt.level, false);
-			var oldScore:int = evt.level.prevScore;
-			var newScore:int = evt.level.currentScore;
-			if (newScore >= evt.level.getTargetScore()) {
-				edgeSetGraphViewPanel.displayContinueButton(true);
-			} else {
-				edgeSetGraphViewPanel.hideContinueButton();
-			}
-			if (evt.point) {
-				if (oldScore != newScore) {
-					var thisPt:Point = globalToLocal(evt.point);
-					TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+			if (!evt.silent) {
+				var oldScore:int = evt.level.prevScore;
+				var newScore:int = evt.level.currentScore;
+				if (newScore >= evt.level.getTargetScore()) {
+					edgeSetGraphViewPanel.displayContinueButton(true);
+				} else {
+					edgeSetGraphViewPanel.hideContinueButton();
 				}
-			}
-			if (!evt.silent && PipeJam3.logging) {
-				var details:Object = new Object();
-				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
-				details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
-				details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
-				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+				if (evt.point) {
+					if (oldScore != newScore) {
+						var thisPt:Point = globalToLocal(evt.point);
+						TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+					}
+				}
+				if (PipeJam3.logging) {
+					var details:Object = new Object();
+					details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
+					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+				}
 			}
 		}
 		
@@ -488,6 +469,7 @@ package scenes.game.display
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
+			var prevLevelNumber:Number = currentLevelNumber;
 			if(PipeJamGameScene.inTutorial)
 			{
 				if (evt.menuShowing && active_level) {
@@ -521,7 +503,7 @@ package scenes.game.display
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber]);
+					selectLevel(levels[currentLevelNumber], currentLevelNumber == prevLevelNumber);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
@@ -703,9 +685,20 @@ package scenes.game.display
 			}
 			
 			active_level = newLevel;
+			
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			newLevel.updateScore();
+			
+			var startTime:Number = new Date().getTime();
+			if (active_level.getTargetScore() == int.MAX_VALUE) {
+				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
+				active_level.setTargetScore(newTarget);
+				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
+				active_level.updateScore();
+			}
+			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
+			
 			gameControlPanel.newLevelSelected(newLevel);
 		//	newLevel.setConstraints();
 		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);

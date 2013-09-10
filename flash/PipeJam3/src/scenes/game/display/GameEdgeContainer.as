@@ -187,16 +187,12 @@ package scenes.game.display
 			
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			// Initialize props
-			var enterPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.ENTER_PROPS_CHANGED, graphEdge, graphEdge.getEnterProps(), graphEdge.getEnterProps());
-			var exitPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.EXIT_PROPS_CHANGED, graphEdge, graphEdge.getExitProps(), graphEdge.getExitProps());
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_PROPS_CHANGED, onPropsChange);
-				onPropsChange(enterPropsEvt);
 				// Also need to update the inner box segment when the exit ball type changes
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
-				onPropsChange(exitPropsEvt);
 				if (!edgeIsCopy) {
 					// If normal edge leading into box, mark trouble points
 					listenToEdgeForTroublePoints(graphEdge);
@@ -207,7 +203,6 @@ package scenes.game.display
 			} else {
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_BALL_TYPE_CHANGED, onBallTypeChange);
 				graphEdge.addEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
-				onPropsChange(exitPropsEvt);
 			}
 			
 			// For edges leading into SUBNETWORK (the lower CPY lines) the edge.to_port could
@@ -1114,6 +1109,18 @@ package scenes.game.display
 		//only use if the container it's self draws specific items.
 		public function draw():void
 		{
+			// Refresh props
+			var enterPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.ENTER_PROPS_CHANGED, graphEdge, graphEdge.getEnterProps(), graphEdge.getEnterProps());
+			var exitPropsEvt:EdgePropChangeEvent = new EdgePropChangeEvent(EdgePropChangeEvent.EXIT_PROPS_CHANGED, graphEdge, graphEdge.getExitProps(), graphEdge.getExitProps());
+			if (isTopOfEdge()) {
+				onPropsChange(enterPropsEvt);
+				// Also need to update the inner box segment when the exit ball type changes
+				onPropsChange(exitPropsEvt);
+			} else {
+				onPropsChange(exitPropsEvt);
+			}
+			onConflictChange();
+			
 			for each (var seg:GameEdgeSegment in m_edgeSegments) {
 				seg.draw();
 			}

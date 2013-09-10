@@ -1,11 +1,10 @@
 package display
 {
-	import display.TextBubble;
 	import scenes.game.display.Level;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	
-	public class ToolTipText extends TextBubble
+	public class ToolTipText extends TextBubbleFollowComponent
 	{
 		private static const ACTIVE_FONT_SZ:Number = 8;
 		private static const PERSISTENT_FONT_SZ:Number = 10;
@@ -13,20 +12,15 @@ package display
 		private static const OUTLINE_CLR:uint = 0x0;
 		private static const OUTLINE_WEIGHT:Number = 2;
 		
-		public function ToolTipText(text:String, level:Level, persistent:Boolean, pointAtFunction:Function = null, pointAtObject:DisplayObject = null, pointFrom:String = NineSliceBatch.TOP_LEFT, pointTo:String = NineSliceBatch.CENTER)
+		public function ToolTipText(text:String, level:Level, persistent:Boolean, pointAtFunction:Function, pointFrom:String = NineSliceBatch.TOP_LEFT, pointTo:String = NineSliceBatch.CENTER)
 		{
-			var pointAtComponent:DisplayObject = pointAtObject ? pointAtObject : pointAtFunction(level);
-			
-			var pointPosAlwaysUpdate:Boolean = true;
-			if (level.tutorialManager && !level.tutorialManager.getPanZoomAllowed() && level.tutorialManager.getLayoutFixed()) {
-				pointPosAlwaysUpdate = false;
-			}
-			
 			var fontSz:uint = persistent ? PERSISTENT_FONT_SZ : ACTIVE_FONT_SZ;
 			var textColor:uint = persistent ? GOLD : 0xFFFFFF;
 			var inset:Number = fontSz / 6.0;
 			
-			super(text, fontSz, textColor, pointAtComponent, level, pointFrom, pointTo, null, pointPosAlwaysUpdate, fontSz / 1.5, 0, 0, INSET, false, textColor, OUTLINE_WEIGHT, OUTLINE_CLR);
+			super(pointAtFunction, level, text, fontSz, textColor, pointFrom, pointTo, null, fontSz / 1.5, 0, 0, INSET, false, textColor, OUTLINE_WEIGHT, OUTLINE_CLR);
 		}
+		
+		
 	}
 }

@@ -33,13 +33,16 @@ package scenes.game.display
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
 		
-		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
+		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null)
 		{
 			super(nodeXML);
 			draggable = _draggable;
 			m_edgeSet = edgeSet;
-			m_edgeSetEdges = edgeSetEdges;
-			
+			if (m_edgeSet != null) {
+				m_edgeSetEdges = m_edgeSet.edges;
+			} else {
+				m_edgeSetEdges = new Vector.<Edge>();
+			}
 			if (m_edgeSet) m_props = m_edgeSet.getProps().clone();
 			
 			shapeWidth = m_boundingBox.width;
@@ -73,20 +76,6 @@ package scenes.game.display
 			}
 			
 			draw();
-		}
-		
-		public function isStartingNode():Boolean
-		{			
-			for each(var edgeID:String in m_edgeSet.edge_ids)
-			{
-				var edge:Edge = Network.edgeDictionary[edgeID];
-				for each(var port:Port in edge.from_node.incoming_ports)
-				{
-					if(port.edge.linked_edge_set.id != m_edgeSet.id)
-						return true;
-				}
-			}
-			return false;
 		}
 		
 		public function getExtensionEdge(portID:String, isOutgoingPort:Boolean):GameEdgeContainer
@@ -153,9 +142,9 @@ package scenes.game.display
 		
 		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false, pt:Point = null):void
 		{
-			if (m_isWide == newIsWide) return;
+			var redraw:Boolean = (m_isWide != newIsWide);
 			m_isWide = newIsWide;
-			m_isDirty = true;
+			m_isDirty = redraw;
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)

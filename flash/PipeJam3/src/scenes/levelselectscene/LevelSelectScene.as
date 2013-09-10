@@ -69,7 +69,7 @@ package scenes.levelselectscene
 		{
 			super.addedToStage(event);
 			
-			background = new Image(AssetInterface.getTexture("Game", "StationaryBackgroundClass"));
+			background = new Image(AssetInterface.getTexture("Game", "Background0Class"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;

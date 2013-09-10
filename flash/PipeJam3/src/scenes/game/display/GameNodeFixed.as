@@ -3,25 +3,16 @@ package scenes.game.display
 	
 	public class GameNodeFixed extends GameNode 
 	{
-		
-		private var m_isStartingNode:Boolean;
-		
-		public function GameNodeFixed(_layoutXML:XML, _draggable:Boolean, _isWide:Boolean, _isStartingNode:Boolean) 
+		public function GameNodeFixed(_layoutXML:XML, _draggable:Boolean, _isWide:Boolean) 
 		{
 			super(_layoutXML, _draggable);
 			m_isEditable = false;
 			m_isWide = _isWide;
-			m_isStartingNode = _isStartingNode;
 		}
 		
 		override public function isWide():Boolean
 		{
 			return m_isWide;
-		}
-		
-		override public function isStartingNode():Boolean
-		{
-			return m_isStartingNode;
 		}
 	}
 

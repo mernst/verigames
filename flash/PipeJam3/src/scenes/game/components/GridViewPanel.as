@@ -74,6 +74,7 @@ package scenes.game.components
 		private var errorBubbleContainer:Sprite;
 		private var currentMode:int;
 		private var continueButton:NineSliceButton;
+		private var m_backgroundLayer:Sprite = new Sprite();
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
@@ -101,12 +102,8 @@ package scenes.game.components
 			m_world = world;
 			currentMode = NORMAL_MODE;
 			
-			var background:Texture = AssetInterface.getTexture("Game", "StationaryBackgroundClass");
-			m_backgroundImage = new Image(background);
-			m_backgroundImage.width = Constants.GameWidth;
-			m_backgroundImage.height = Constants.GameHeight;
-			m_backgroundImage.blendMode = BlendMode.NONE;
-			addChild(m_backgroundImage);
+			addChild(m_backgroundLayer);
+			swapBackgroundImage();
 			
 			inactiveContent = new Sprite();
 			addChild(inactiveContent);
@@ -160,7 +157,10 @@ package scenes.game.components
 		private function onToolTipAdded(evt:ToolTipEvent):void
 		{
 			if (evt.text && evt.text.length && evt.component && m_currentLevel && !m_activeToolTip) {
-				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, null, evt.component);
+				function pointAt(lev:Level):DisplayObject {
+					return evt.component;
+				}
+				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, pointAt);
 				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
 				addChild(m_activeToolTip);
 			}
@@ -465,6 +465,7 @@ package scenes.game.components
 			if (m_disposed) {
 				return;
 			}
+			if (m_backgroundImage) m_backgroundImage.removeFromParent(true);
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
@@ -592,6 +593,19 @@ package scenes.game.components
 					}
 				}
 				m_currentLevel = level;
+				var seed:int = m_currentLevel.levelNodes.qid;
+				if (seed < 0) {
+					seed = 0;
+					for (var c:int = 0; c < m_currentLevel.level_name.length; c++) {
+						var code:Number = m_currentLevel.level_name.charCodeAt(c);
+						if (isNaN(code)) {
+							seed += c;
+						} else {
+							seed += Math.max(Math.round(code), 1);
+						}
+					}
+				}
+				swapBackgroundImage(seed);
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 				if (m_currentLevel.tutorialManager) {
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
@@ -629,7 +643,7 @@ package scenes.game.components
 			
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (i = 0; i < toolTips.length; i++) {
-				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
 				addChild(tip);
 				m_persistentToolTips.push(tip);
 			}
@@ -665,7 +679,7 @@ package scenes.game.components
 			
 			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
 			for (i = 0; i < toolTips.length; i++) {
-				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, null, toolTips[i].pointFrom, toolTips[i].pointTo);
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
 				addChild(tip);
 				m_persistentToolTips.push(tip);
 			}
@@ -1049,6 +1063,18 @@ package scenes.game.components
 		//	Starling.current.context.present(); // required on some platforms to avoid flickering
 
 			return destination;
+		}
+		
+		private function swapBackgroundImage(seed:int = 0):void
+		{
+			if (m_backgroundImage) m_backgroundImage.removeFromParent(true);
+			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
+			var background:Texture = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+			m_backgroundImage = new Image(background);
+			m_backgroundImage.width = Constants.GameWidth;
+			m_backgroundImage.height = Constants.GameHeight;
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);
 		}
 	}
 }

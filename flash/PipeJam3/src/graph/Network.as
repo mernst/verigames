@@ -14,10 +14,6 @@ package graph
 		public var original_world_name:String;
 		public var obfuscator:NameObfuscater;
 		
-		/** Dictionary mapping edge ids to edges */
-		//static because edges are created before the network object
-		public static var edgeDictionary:Dictionary = new Dictionary();
-		
 		/** This is a dictionary of LevelNodes, which is a dictionary of BoardNodes, which is a dictionary of Nodes; INDEXED BY LEVEL NAME, BOARD NAME, AND NODE ID, RESPECTIVELY */
 		public var LevelNodesDictionary:Dictionary = new Dictionary();
 		public var levelNodeNameArray:Array = new Array();
@@ -105,54 +101,6 @@ package graph
 			}
 			
 			return new_name;
-		}
-		
-		//collect all outgoing edges belonging to nodes that start balls, and then
-		//trace downward, marking each edge with a pointer to that topmost edge.
-		public function setTopMostEdgeInEdges():void
-		{
-			//map from edge id to edge
-			var topMostEdgeSet:Dictionary = new Dictionary;
-			
-			for(var edgeID:String in edgeDictionary)
-			{
-				var edge:Edge = edgeDictionary[edgeID];
-				if(edge.from_node.kind == NodeTypes.START_PIPE_DEPENDENT_BALL ||
-					edge.from_node.kind == NodeTypes.START_LARGE_BALL ||
-					edge.from_node.kind == NodeTypes.START_SMALL_BALL ||
-					edge.from_node.kind == NodeTypes.INCOMING)
-				{
-					topMostEdgeSet[edge.edge_id] = edge;
-				}
-			}
-			
-			for(var topEdgeID:String in topMostEdgeSet)
-			{
-				var topEdge:Edge = topMostEdgeSet[topEdgeID];
-				markChildrenWithTopEdges(topEdge, topEdge);
-			}
-		}
-		
-		//mark current, and then recursively call on outgoing edges
-		public function markChildrenWithTopEdges(topEdge:Edge, currentEdge:Edge):void
-		{
-			//if we aren't in the dictionary currently, add ourselves
-			if(currentEdge.topmostEdgeDictionary[topEdge.edge_id] == null)
-			{
-				currentEdge.topmostEdgeIDArray[currentEdge.topmostEdgeIDArray.length] = topEdge.edge_id;
-				currentEdge.topmostEdgeDictionary[topEdge.edge_id] = topEdge;
-				if(currentEdge.topmostEdgeIDArray.length > 1)
-					var debugVar:uint = 3;
-			}
-			var node:Node = currentEdge.to_node;
-			for(var outgoingPortID:String in node.outgoing_ports)
-			{
-				var outgoingPort:Port = node.outgoing_ports[outgoingPortID];
-				var outgoingEdge:Edge = outgoingPort.edge;
-				
-				
-				markChildrenWithTopEdges(topEdge, outgoingEdge);
-			}
 		}
 	}
 
