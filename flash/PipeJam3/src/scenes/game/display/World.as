@@ -275,7 +275,7 @@ package scenes.game.display
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = gameControlPanel.getCurrentScore();
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
