@@ -34,9 +34,11 @@ package dialogs
 		protected var buttonHeight:int = 24;
 		protected var buttonWidth:int = (shapeWidth - 3*buttonPaddingWidth)/2;
 		protected var shapeHeight:int = 4*buttonPaddingHeight + buttonHeight + textInputHeight + descriptionInputHeight + labelHeight;
+		protected var m_defaultName:String;
 		
-		public function SubmitLayoutDialog()
+		public function SubmitLayoutDialog(defaultName:String = "Layout Name")
 		{
+			m_defaultName = defaultName;
 			super();
 			
 			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
@@ -79,7 +81,7 @@ package dialogs
 			input.height = 18;
 			input.x = buttonPaddingWidth;
 			input.y = buttonPaddingHeight + 12;
-			input.text = "Layout Name";
+			input.text = m_defaultName;
 			input.selectRange(0, input.text.length);
 			input.addEventListener(FeathersEventType.FOCUS_IN, onFocus);
 			input.addEventListener(FeathersEventType.ENTER, onSubmitButtonTriggered);
@@ -99,7 +101,7 @@ package dialogs
 			description.x = buttonPaddingWidth;
 			description.y = input.y + input.height + buttonPaddingHeight;
 			description.text = "Add Description Here";
-			description.selectRange(0, input.text.length);
+			description.selectRange(0, description.text.length);
 			description.addEventListener(FeathersEventType.FOCUS_IN, onFocus);
 			description.addEventListener(FeathersEventType.ENTER, onSubmitButtonTriggered);
 		}
@@ -134,11 +136,11 @@ package dialogs
 			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT, data));		
 		}
 		
-		public function resetText():void
+		public function resetText(defaultName:String = "Layout Name"):void
 		{
-			input.text = "Layout Name";
+			m_defaultName = defaultName;
+			input.text = m_defaultName;
 			description.text = "Add Description Here";
-			
 		}
 	}
 }

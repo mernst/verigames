@@ -246,7 +246,7 @@ package scenes.game.display
 					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
 			}
-				
+			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void

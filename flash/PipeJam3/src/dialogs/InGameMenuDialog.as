@@ -118,6 +118,12 @@ package dialogs
 			loginHelper = LoginHelper.getLoginHelper();
 		}
 		
+		private var m_levelName:String = "";
+		public function setActiveLevelName(name:String):void
+		{
+			m_levelName = name;
+		}
+		
 		private function onSaveScoreButtonTriggered():void
 		{
 			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
@@ -144,7 +150,11 @@ package dialogs
 			//get the name
 			if(submitLayoutDialog == null)
 			{
-				submitLayoutDialog = new SubmitLayoutDialog();
+				if (m_levelName && m_levelName.length) {
+					submitLayoutDialog = new SubmitLayoutDialog(m_levelName);
+				} else {
+					submitLayoutDialog = new SubmitLayoutDialog();
+				}
 				parent.addChild(submitLayoutDialog);
 				submitLayoutDialog.x = background.width - submitLayoutDialog.width;
 				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
@@ -163,7 +173,11 @@ package dialogs
 			}
 			else
 			{
-				submitLayoutDialog.resetText();
+				if (m_levelName && m_levelName.length) {
+					submitLayoutDialog.resetText(m_levelName);
+				} else {
+					submitLayoutDialog.resetText();
+				}
 				submitLayoutDialog.x = background.width - submitLayoutDialog.width;
 				submitLayoutDialog.y = y + (height - submitLayoutDialog.height);
 				submitLayoutDialog.visible = true;
