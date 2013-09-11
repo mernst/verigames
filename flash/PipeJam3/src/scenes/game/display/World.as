@@ -1,10 +1,15 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
+	import display.NineSliceBatch;
+	import display.TextBubble;
+	import display.ToolTipText;
 	import events.ConflictChangeEvent;
+	import events.ToolTipEvent;
 	import graph.ConflictDictionary;
 	import graph.Port;
 	import graph.PropDictionary;
+	import starling.display.DisplayObject;
 	import system.Solver;
 	
 	import audio.AudioManager;
@@ -94,6 +99,7 @@ package scenes.game.display
 		private var m_constraintsXML:XML;
 		
 		static public var m_world:World;
+		private var m_activeToolTip:TextBubble;
 		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
@@ -201,6 +207,9 @@ package scenes.game.display
 			addEventListener(ErrorEvent.ERROR_REMOVED, onErrorRemoved);
 			addEventListener(ErrorEvent.ERROR_MOVED, onErrorMoved);
 			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
+			
+			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
 			AudioManager.getInstance().audioDriver().reset();
 			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
@@ -699,6 +708,11 @@ package scenes.game.display
 				active_level.dispose();
 			}
 			
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			
 			active_level = newLevel;
 			
 			newLevel.start();
@@ -724,6 +738,11 @@ package scenes.game.display
 		{
 			AudioManager.getInstance().audioDriver().reset();
 			
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			
 			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
@@ -743,7 +762,8 @@ package scenes.game.display
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			removeEventListener(MenuEvent.RECENTER, onRecenter);
-			
+			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			
@@ -789,5 +809,38 @@ package scenes.game.display
 			else
 				return false;
 		}
+		
+		
+		private function onToolTipAdded(evt:ToolTipEvent):void
+		{
+			if (evt.text && evt.text.length && evt.component && active_level && !m_activeToolTip) {
+				function pointAt(lev:Level):DisplayObject {
+					return evt.component;
+				}
+				var pointFrom:String = NineSliceBatch.TOP_LEFT;
+				var onTop:Boolean = evt.point.y < 80;
+				var onLeft:Boolean = evt.point.x < 80;
+				if (onTop && onLeft) {
+					// If in top left corner, move to bottom right
+					pointFrom = NineSliceBatch.BOTTOM_RIGHT;
+				} else if (onLeft) {
+					// If on left, move to top right
+					pointFrom = NineSliceBatch.TOP_RIGHT;
+				} else if (onTop) {
+					// If on top, move to bottom left
+					pointFrom = NineSliceBatch.BOTTOM_LEFT;
+				}
+				m_activeToolTip = new ToolTipText(evt.text, active_level, false, pointAt, pointFrom);
+				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
+				addChild(m_activeToolTip);
+			}
+		}
+		
+		private function onToolTipCleared(evt:ToolTipEvent):void
+		{
+			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
+			m_activeToolTip = null;
+		}
+		
 	}
 }

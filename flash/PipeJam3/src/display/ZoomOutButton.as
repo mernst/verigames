@@ -10,6 +10,7 @@ package display
 	{
 		public function ZoomOutButton()
 		{
+			m_toolTipText = "Zoom Out";
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ZoomOutButton))]),

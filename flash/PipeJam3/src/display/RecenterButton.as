@@ -10,6 +10,7 @@ package display
 	{
 		public function RecenterButton()
 		{
+			m_toolTipText = "Recenter";
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_RecenterButton))]),

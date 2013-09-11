@@ -235,7 +235,7 @@ package scenes.game.components
 			
 			if (level.getTargetScore() < int.MAX_VALUE) {
 				if (!m_targetScoreLine) {
-					m_targetScoreLine = new TargetScoreDisplay(level.getTargetScore().toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR);
+					m_targetScoreLine = new TargetScoreDisplay(level.getTargetScore().toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Target Score");
 				} else {
 					m_targetScoreLine.update(level.getTargetScore().toString());
 				}
@@ -248,7 +248,7 @@ package scenes.game.components
 			}
 			
 			if (!m_bestScoreLine) {
-				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD);
+				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Best Score\nClick to Load");
 				m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
 				m_bestScoreLine.useHandCursor = true;
 				m_bestScoreLine.x = bestScoreX;
@@ -265,7 +265,7 @@ package scenes.game.components
 			} else {
 				TextFactory.getInstance().updateColor(m_scoreTextfield, 0x0);
 			}
-			trace("newBarWidth:" + newBarWidth + " bestScoreX:" + bestScoreX + " bestScore:" + bestScore);
+			
 			var FLASHING_ANIM_SEC:Number = 0; // TODO: make this nonzero when animation is in place
 			var DELAY:Number = 0.5;
 			var BAR_SLIDING_ANIM_SEC:Number = 1.0;

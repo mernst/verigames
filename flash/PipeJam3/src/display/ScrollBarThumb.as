@@ -54,8 +54,10 @@ package display
 		protected var mEnabled:Boolean = true;
 		protected var mIsDown:Boolean = false;
 		protected var mIsHovering:Boolean = false;
-		protected function onTouch(event:TouchEvent):void
-		{			
+		protected override function onTouch(event:TouchEvent):void
+		{
+			super.onTouch(event);
+			
 			if(enabled == false)
 				return;
 			

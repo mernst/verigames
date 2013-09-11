@@ -2,36 +2,24 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import display.ToolTipText;
-	
-	import display.NineSliceBatch;
 	import display.NineSliceButton;
-	import display.TextBubble;
-	
+	import display.ToolTipText;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.PropertyModeChangeEvent;
-	import events.ToolTipEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
-	
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.PixelSnapping;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
-	
 	import graph.PropDictionary;
-	
 	import particle.FanfareParticleSystem;
-	
 	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
@@ -39,7 +27,7 @@ package scenes.game.components
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
-	
+	import scenes.game.PipeJamGameScene;
 	import starling.animation.DelayedCall;
 	import starling.animation.Transitions;
 	import starling.core.RenderSupport;
@@ -55,10 +43,6 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
-	
-	import utils.Base64Decoder;
-	import utils.Base64Encoder;
 	import utils.XMath;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
@@ -78,7 +62,6 @@ package scenes.game.components
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
-		private var m_activeToolTip:TextBubble;
 		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
@@ -138,8 +121,6 @@ package scenes.game.components
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
-			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -152,24 +133,6 @@ package scenes.game.components
 			} else {
 				contentBarrier.visible = true;
 			}
-		}
-		
-		private function onToolTipAdded(evt:ToolTipEvent):void
-		{
-			if (evt.text && evt.text.length && evt.component && m_currentLevel && !m_activeToolTip) {
-				function pointAt(lev:Level):DisplayObject {
-					return evt.component;
-				}
-				m_activeToolTip = new ToolTipText(evt.text, m_currentLevel, false, pointAt);
-				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
-				addChild(m_activeToolTip);
-			}
-		}
-		
-		private function onToolTipCleared(evt:ToolTipEvent):void
-		{
-			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
-			m_activeToolTip = null;
 		}
 		
 		private function endSelectMode():void
@@ -470,10 +433,6 @@ package scenes.game.components
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			if (m_activeToolTip) {
-				m_activeToolTip.removeFromParent(true);
-				m_activeToolTip = null;
-			}
 			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
 			m_persistentToolTips = new Vector.<ToolTipText>();
 			if (Starling.current && Starling.current.nativeStage) {
@@ -481,8 +440,6 @@ package scenes.game.components
 			}
 			content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
-			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -633,10 +590,6 @@ package scenes.game.components
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
-			}
-			if (m_activeToolTip) {
-				m_activeToolTip.removeFromParent(true);
-				m_activeToolTip = null;
 			}
 			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
 			m_persistentToolTips = new Vector.<ToolTipText>();

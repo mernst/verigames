@@ -71,34 +71,34 @@ package dialogs
 			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
-			exit_button = ButtonFactory.getInstance().createButton("Exit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			exit_button = ButtonFactory.getInstance().createButton("Exit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Return to\nLevel Select");
 			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
 			exit_button.x = buttonPaddingWidth;
 			exit_button.y = background.height - buttonPaddingHeight - exit_button.height;
 			addChild(exit_button);
 			
-			submit_layout_button = ButtonFactory.getInstance().createButton("Share Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_layout_button = ButtonFactory.getInstance().createButton("Share Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Share your\nlayout with\nother players");
 			submit_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
 			submit_layout_button.x = buttonPaddingWidth;
 			submit_layout_button.y = exit_button.y - buttonPaddingHeight - submit_layout_button.height;
 			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) submit_layout_button.enabled = false;
 			addChild(submit_layout_button);
 			
-			select_layout_button = ButtonFactory.getInstance().createButton("Select Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			select_layout_button = ButtonFactory.getInstance().createButton("Select Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Load a\nsaved layout,\nscoring will\nnot change");
 			select_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
 			select_layout_button.x = buttonPaddingWidth;
 			select_layout_button.y = submit_layout_button.y - buttonPaddingHeight - select_layout_button.height;
 			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) select_layout_button.enabled = false;
 			addChild(select_layout_button);
 			
-			save_score_button = ButtonFactory.getInstance().createButton("Save Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			save_score_button = ButtonFactory.getInstance().createButton("Save Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Save or share\nyour progress");
 			save_score_button.addEventListener(starling.events.Event.TRIGGERED, onSaveScoreButtonTriggered);
 			save_score_button.x = buttonPaddingWidth;
 			save_score_button.y = select_layout_button.y - buttonPaddingHeight - save_score_button.height;
 			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) save_score_button.enabled = false;
 			addChild(save_score_button);
 			
-			submit_score_button = ButtonFactory.getInstance().createButton("Submit Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_score_button = ButtonFactory.getInstance().createButton("Submit Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Submit your\nsolution for\ncredit");
 			submit_score_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitScoreButtonTriggered);
 			submit_score_button.x = buttonPaddingWidth;
 			submit_score_button.y = save_score_button.y - buttonPaddingHeight - submit_score_button.height;
