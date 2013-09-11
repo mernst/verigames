@@ -715,6 +715,8 @@ package scenes.game.display
 			
 			active_level = newLevel;
 			
+			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
+			
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			newLevel.updateScore();
