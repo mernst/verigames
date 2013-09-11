@@ -1,5 +1,6 @@
 package scenes
 {
+	import display.ToolTippableSprite;
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.geom.Point;
@@ -17,7 +18,7 @@ package scenes
 	import starling.display.MovieClip;
 	import starling.display.DisplayObjectContainer;
 
-	public class BaseComponent extends starling.display.Sprite
+	public class BaseComponent extends ToolTippableSprite
 	{	
 		private var mClipRect:Rectangle;
 		

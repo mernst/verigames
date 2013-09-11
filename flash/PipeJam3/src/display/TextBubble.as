@@ -37,7 +37,7 @@ package display
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
 		protected var m_globalToPoint:Point;
 		
-		protected static const GOLD:uint = 0xFFEC00;
+		public static const GOLD:uint = 0xFFEC00;
 		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
 		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 

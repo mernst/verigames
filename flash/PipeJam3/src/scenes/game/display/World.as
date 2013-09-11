@@ -187,6 +187,7 @@ package scenes.game.display
 			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
@@ -324,6 +325,11 @@ package scenes.game.display
 			alert.y = (320 - alert.height)/2;
 		}
 		
+		private function loadBestScore(event:MenuEvent):void
+		{
+			if (active_level) active_level.loadBestScoringConfiguration();
+		}
+		
 		protected function switchToLevelSelect():void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
@@ -420,12 +426,15 @@ package scenes.game.display
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			if (!evt.level) return;
-			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_edgeSet.id, evt.level.level_name);
-			evt.level.updateScore();
+			var edgeSetId:String = "";
+			if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
+			m_simulator.updateOnBoxSizeChange(edgeSetId, evt.level.level_name);
+			evt.level.updateScore(true);
 			gameControlPanel.updateScore(evt.level, false);
 			if (!evt.silent) {
 				var oldScore:int = evt.level.prevScore;
 				var newScore:int = evt.level.currentScore;
+				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
 				if (newScore >= evt.level.getTargetScore()) {
 					edgeSetGraphViewPanel.displayContinueButton(true);
 				} else {
@@ -611,6 +620,12 @@ package scenes.game.display
 							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
 						}
 						break;
+					case 66: //'b' for load Best scoring config
+						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.loadBestScoringConfiguration();
+						}
+						break;
 					case 67: //'c' for copy constraints
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
@@ -633,8 +648,6 @@ package scenes.game.display
 		{
 			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
 		}
-		
-		
 		
 		protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
@@ -700,6 +713,7 @@ package scenes.game.display
 				active_level.updateScore();
 			}
 			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
+			active_level.resetBestScore();
 			
 			gameControlPanel.newLevelSelected(newLevel);
 		//	newLevel.setConstraints();
@@ -722,6 +736,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);

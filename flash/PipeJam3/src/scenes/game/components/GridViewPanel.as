@@ -195,7 +195,7 @@ package scenes.game.components
 		}
 		
 		protected var startingPoint:Point;
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			//trace("Mode:" + currentMode);
 			if(event.getTouches(this, TouchPhase.ENDED).length)

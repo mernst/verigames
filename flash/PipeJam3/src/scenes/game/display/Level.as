@@ -83,6 +83,7 @@ package scenes.game.display
 		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
 		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
+		private var m_levelBestScoreConstraintsXML:XML; //best configuration so far
 		public var m_levelConstraintsXMLWrapper:XML;
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialManager;
@@ -119,6 +120,7 @@ package scenes.game.display
 		
 		/** Current Score of the player */
 		private var m_currentScore:int = 0;
+		private var m_bestScore:int = 0;
 		
 		/** Most recent score of the player */
 		private var m_prevScore:int = 0;
@@ -142,9 +144,12 @@ package scenes.game.display
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			levelNodes = _levelNodes;
-			m_levelOriginalLayoutXML = m_levelLayoutXML = _levelLayoutXML;
+			m_levelLayoutXML = _levelLayoutXML.copy();
+			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
 			m_levelLayoutName = _levelLayoutXML.@id;
-			m_levelOriginalConstraintsXML = m_levelConstraintsXML = _levelConstraintsXML;
+			m_levelBestScoreConstraintsXML = _levelConstraintsXML.copy();
+			m_levelOriginalConstraintsXML = _levelConstraintsXML.copy();
+			m_levelConstraintsXML = _levelConstraintsXML.copy();
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
@@ -352,11 +357,16 @@ package scenes.game.display
 			trace(visibleNodes, visibleJoints, visibleLines);
 		}
 		
-		public function setConstraints():void
+		public function loadBestScoringConfiguration():void
+		{
+			setConstraints(m_levelBestScoreConstraintsXML);
+		}
+		
+		private function setConstraints(constraintsXML:XML):void
 		{
 			var gameNode:GameNode;
 			
-			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
+			for each(var boxConstraint:XML in constraintsXML.box)
 			{
 				gameNode = boxDictionary[String(boxConstraint.@id)];
 				if (!gameNode) {
@@ -380,7 +390,7 @@ package scenes.game.display
 			}
 			if(gameNode)
 			{
-				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, true, null));
+				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
 			}
 			refreshTroublePoints();	
 		}
@@ -568,7 +578,7 @@ package scenes.game.display
 				addChild(m_edgesContainer);
 				
 				initialize();
-				setConstraints();
+				setConstraints(m_levelConstraintsXML);
 				
 				initialized = true;
 			}
@@ -588,6 +598,8 @@ package scenes.game.display
 				jointElem.updatePortIndexes();
 			}
 			
+			m_bestScore = m_currentScore;
+			
 			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
 		}
 		
@@ -603,8 +615,8 @@ package scenes.game.display
 			onPropertyModeChange(propChangeEvt);
 			dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutXML);
-			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
-			setConstraints();
+			m_levelConstraintsXML = m_levelOriginalConstraintsXML.copy();
+			setConstraints(m_levelConstraintsXML);
 			trace("Restarted: " + m_levelLayoutXML.@id);
 		}
 		
@@ -666,7 +678,7 @@ package scenes.game.display
 		
 		public function setNewLayout(name:String, newLayoutXML:XML, useExistingLines:Boolean = false):void
 		{
-			m_levelLayoutXML = newLayoutXML;
+			m_levelLayoutXML = newLayoutXML.copy();
 			m_levelLayoutName = name;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutXML.level != undefined)
@@ -842,8 +854,15 @@ package scenes.game.display
 		//update current constraint info based on node constraints
 		public function updateConstraintXML():void
 		{
-			delete m_levelConstraintsXML.box;
-			
+			fillConstraintsXML(m_levelConstraintsXML);
+			// TODO: Hardcoding "world" id correct?
+			m_levelConstraintsXMLWrapper = <constraints id="world"/>;
+			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
+		}
+		
+		private function fillConstraintsXML(constraintsXML:XML):void
+		{
+			delete constraintsXML.box;
 			for each(var node:GameNode in m_nodeList)
 			{
 				var id:String = node.m_id;
@@ -858,12 +877,9 @@ package scenes.game.display
 				child.@id = id;
 				child.@width = widthString;
 				child.@editable = editableString;
-					
-				m_levelConstraintsXML.appendChild(child);
+				
+				constraintsXML.appendChild(child);
 			}
-			// TODO: Hardcoding "world" id correct?
-			m_levelConstraintsXMLWrapper = <constraints id="world"/>;
-			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
 		
 		override public function dispose():void
@@ -932,7 +948,7 @@ package scenes.game.display
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			if(event.getTouches(this, TouchPhase.MOVED).length){
@@ -1678,10 +1694,17 @@ package scenes.game.display
 		}
 		
 		public function get currentScore():int { return m_currentScore; }
+		public function get bestScore():int { return m_bestScore; }
 		public function get prevScore():int { return m_prevScore; }
 		public function get baseScore():int { return m_baseScore; }
 		
-		public function updateScore():void
+		public function resetBestScore():void
+		{
+			m_bestScore = m_currentScore;
+			m_levelBestScoreConstraintsXML = m_levelConstraintsXML.copy();
+		}
+		
+		public function updateScore(recordBestScore:Boolean = false):void
 		{
 			/* Old scoring:
 			* 
@@ -1787,6 +1810,11 @@ package scenes.game.display
 			
 			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
 			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			if (recordBestScore && (m_currentScore > m_bestScore)) {
+				m_bestScore = m_currentScore;
+				trace("New best score: " + m_bestScore);
+				fillConstraintsXML(m_levelBestScoreConstraintsXML);
+			}
 			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
 		}
 		
