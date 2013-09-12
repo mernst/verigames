@@ -6,6 +6,7 @@ package scenes.game.display
 	import starling.core.Starling;
 	
 	import events.EdgeSetChangeEvent;
+	import networking.TutorialController;
 	
 	import flash.geom.Point;
 	
@@ -13,7 +14,7 @@ package scenes.game.display
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	
-	public class TutorialManager extends EventDispatcher
+	public class TutorialLevelManager extends EventDispatcher
 	{
 		// This is the order the tutorials appers in:
 		public static const WIDGET_TUTORIAL:String = "widget";
@@ -46,7 +47,7 @@ package scenes.game.display
 		private var m_currentTutorialText:TutorialManagerTextInfo;
 		private var m_currentToolTipsText:Vector.<TutorialManagerTextInfo>;
 		
-		public function TutorialManager(_tutorialTag:String)
+		public function TutorialLevelManager(_tutorialTag:String)
 		{
 			m_tutorialTag = _tutorialTag;
 			switch (m_tutorialTag) {

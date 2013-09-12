@@ -44,6 +44,7 @@ package scenes.game.components
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
 	import utils.XMath;
+	import networking.TutorialController;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
@@ -751,7 +752,7 @@ package scenes.game.components
 			}
 			
 			//assume we are in the tutorial, and we just finished a level
-			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
+			TutorialController.getTutorialController().addCompletedTutorial(m_currentLevel.m_tutorialTag, true);
 		}
 		
 		private function startFanfare():void

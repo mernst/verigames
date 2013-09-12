@@ -1,20 +1,28 @@
 package scenes.splashscreen
 {
 	import display.NineSliceButton;
+	
 	import events.NavigationEvent;
+	
 	import feathers.themes.*;
+	
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
 	import flash.text.*;
+	
+	import networking.HTTPCookies;
+	import networking.PlayerValidation;
+	import networking.TutorialController;
+	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
+	import scenes.game.display.Level;
+	
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
 	import starling.text.*;
-	import networking.PlayerValidation;
-	import networking.HTTPCookies;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
@@ -161,13 +169,10 @@ package scenes.splashscreen
 		
 		protected function isTutorialDone():Boolean
 		{
-			PipeJamGameScene.numTutorialLevels = PipeJamGameScene.tutorialXML["level"].length();
+			//check on next level, returns -1 if 
+			var isDone:Boolean = TutorialController.getTutorialController().isTutorialDone();
 			
-			var tutorialStatus:String = PipeJam3.LOCAL_DEPLOYMENT ? "0" : HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
-			if(!isNaN(parseInt(tutorialStatus)))
-				PipeJamGameScene.maxTutorialLevelCompleted = parseInt(tutorialStatus);
-			
-			if(PipeJamGameScene.maxTutorialLevelCompleted >= PipeJamGameScene.numTutorialLevels)
+			if(isDone)
 				return true;
 			else
 				return false;
@@ -176,7 +181,7 @@ package scenes.splashscreen
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
 			//go to the beginning
-			PipeJamGameScene.resetTutorialStatus();
+			TutorialController.getTutorialController().resetTutorialStatus();
 			
 			loadTutorial();
 			

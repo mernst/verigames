@@ -98,6 +98,7 @@ package
 			else
 			{
 				PlayerValidation.playerID = PlayerValidation.playerIDForTesting;
+				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
 				showScene("SplashScreen");				
 			}
 			

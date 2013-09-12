@@ -1,28 +1,24 @@
 package scenes.game.display
 {
 	import assets.AssetsAudio;
-	import display.NineSliceBatch;
-	import display.TextBubble;
-	import display.ToolTipText;
-	import events.ConflictChangeEvent;
-	import events.ToolTipEvent;
-	import graph.ConflictDictionary;
-	import graph.Port;
-	import graph.PropDictionary;
-	import starling.display.DisplayObject;
-	import system.Solver;
 	
 	import audio.AudioManager;
 	
 	import dialogs.InGameMenuDialog;
 	import dialogs.SimpleAlertDialog;
 	
+	import display.NineSliceBatch;
+	import display.TextBubble;
+	import display.ToolTipText;
+	
+	import events.ConflictChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
+	import events.ToolTipEvent;
 	import events.UndoEvent;
 	
 	import flash.display.Bitmap;
@@ -33,14 +29,18 @@ package scenes.game.display
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	
+	import graph.ConflictDictionary;
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	import graph.Port;
+	import graph.PropDictionary;
 	
 	import networking.Achievements;
 	import networking.LoginHelper;
+	import networking.TutorialController;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -50,6 +50,7 @@ package scenes.game.display
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -57,6 +58,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.PipeSimulator;
+	import system.Solver;
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
@@ -168,14 +170,32 @@ package scenes.game.display
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
-			{
+			{				
 				var obj:Object = LoginHelper.getLoginHelper().levelObject;
-				if(obj && obj.levelId is int)
-					currentLevelNumber = obj.levelId as int;
+				var tutorialController:TutorialController = TutorialController.getTutorialController();
+				var nextLevelQID:int;
+				if(!obj)
+				{
+					obj = new Object;
+					LoginHelper.getLoginHelper().levelObject = obj;
+					obj.levelId = tutorialController.getFirstTutorialLevel();
+					if(!tutorialController.isTutorialLevelCompleted(obj.levelId))
+						nextLevelQID = obj.levelId;
+					else
+						nextLevelQID = tutorialController.getNextUnplayedTutorial();
+				}
 				else
-					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
-				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
-				firstLevel = levels[levelNumberToUse];
+					nextLevelQID = obj.levelId;
+				
+				for each(var level:Level in levels)
+				{
+					if(level.m_levelQID == String(nextLevelQID))
+					{
+						firstLevel = level;
+						obj.levelId = nextLevelQID;
+						break;
+					}
+				}
 			}
 			
 			selectLevel(firstLevel);
@@ -489,33 +509,39 @@ package scenes.game.display
 			var prevLevelNumber:Number = currentLevelNumber;
 			if(PipeJamGameScene.inTutorial)
 			{
+				var tutorialController:TutorialController = TutorialController.getTutorialController()
 				if (evt.menuShowing && active_level) {
-					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
-					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
+					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
+					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
-				var obj:Object = LoginHelper.getLoginHelper().levelObject;
-				if(obj && obj.levelId is int)
-				{
-					if(currentLevelNumber != obj.levelId as int) //first time through I'm supposing these are different
-						currentLevelNumber = obj.levelId as int;
-					else
-					{
-						currentLevelNumber++;
-						obj.levelId = int(currentLevelNumber);
-						if(currentLevelNumber > PipeJamGameScene.maxTutorialLevelCompleted)
-							PipeJamGameScene.maxTutorialLevelCompleted = currentLevelNumber;
-					}
-				}
-				else
-					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
+				
+				
+				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
 
-				if(currentLevelNumber >= levels.length)
+				//if this is the first time we've completed these, post the achievement, else just move on
+				if(tutorialsDone)
 				{
 					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
 						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
 					else
 						switchToLevelSelect();
 					return;
+				}
+				else
+				{
+					//get the next level to show, set the levelID, and currentLevelNumber
+					var obj:Object = LoginHelper.getLoginHelper().levelObject;
+					obj.levelId = tutorialController.getNextUnplayedTutorial();
+					
+					currentLevelNumber = 0;
+					for each(var level:Level in levels)
+					{
+						if(level.m_levelQID == obj.levelId)
+							break;
+						
+						currentLevelNumber++;
+					}
+					
 				}
 			}
 			else

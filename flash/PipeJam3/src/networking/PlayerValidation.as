@@ -170,6 +170,7 @@ package networking
 			{
 				playerLoggedIn = true; //whee
 				Achievements.getAchievementsEarnedForPlayer();
+				TutorialController.getTutorialController().getTutorialsCompletedByPlayer();
 				controller.setStatus(VALIDATION_SUCCEEDED);
 			}
 			else
