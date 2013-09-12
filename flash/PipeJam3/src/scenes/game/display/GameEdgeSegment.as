@@ -236,35 +236,38 @@
 		{
 			var lineSize:Number = _isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var assetName:String;
-			if(_isEditable == true)
-			{
-				if (_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
-			}
-			else //not adjustable
-			{
-				if(_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
-			}
-			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var startTexture:Texture = atlas.getTexture(assetName);
-			
-			var pctTextWidth:Number;
-			var pctTextHeight:Number;
-			var newSegment:Image;
 			if(_toPt.x != 0 && _toPt.y !=0)
 			{
 				throw new Error("Diagonal lines deprecated. Segment from to " + _toPt);
 			}
-			else if(_toPt.x != 0)
+			var isHoriz:Boolean = (_toPt.x != 0);
+			
+			if(_isEditable == true)
+			{
+				if (_isWide == true)
+					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_BlueDarkSegmentHoriz : AssetInterface.PipeJamSubTexture_BlueDarkSegmentVert;
+				else
+					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_BlueLightSegmentHoriz : AssetInterface.PipeJamSubTexture_BlueLightSegmentVert;
+			}
+			else //not adjustable
+			{
+				if(_isWide == true)
+					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_GrayDarkSegmentHoriz : AssetInterface.PipeJamSubTexture_GrayDarkSegmentVert;
+				else
+					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_GrayLightSegmentHoriz : AssetInterface.PipeJamSubTexture_GrayLightSegmentVert;
+			}
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var segmentTexture:Texture = atlas.getTexture(assetName);
+			
+			var pctTextWidth:Number;
+			var pctTextHeight:Number;
+			var newSegment:Image;
+			
+			if(isHoriz)
 			{
 				// Horizontal
-				newSegment = new Image(startTexture);
+				newSegment = new Image(segmentTexture);
 				newSegment.width = Math.abs(_toPt.x);
 				newSegment.height = lineSize;
 				
@@ -274,14 +277,11 @@
 			else
 			{
 				// Vertical
-				newSegment = new Image(startTexture);
-				newSegment.width = Math.abs(_toPt.y);
-				newSegment.height = lineSize;
-				newSegment.pivotX = 0;//lineSize / 2;
-				newSegment.pivotY = 0;//lineSize / 2;
-				newSegment.rotation = Math.PI / 2;
+				newSegment = new Image(segmentTexture);
+				newSegment.width = lineSize;
+				newSegment.height = Math.abs(_toPt.y);
 				
-				newSegment.x = lineSize / 2.0;
+				newSegment.x = -lineSize / 2.0;
 				newSegment.y = (_toPt.y > 0) ? 0 : -newSegment.height;
 			}
 			
