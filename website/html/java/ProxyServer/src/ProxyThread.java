@@ -30,6 +30,7 @@ public class ProxyThread extends Thread {
     private DBCollection savedLevelsCollection = null;
     private DBCollection submittedLayoutsCollection = null;
     private DBCollection logCollection = null;
+    private DBCollection tutorialCollection = null;
     private static final int BUFFER_SIZE = 32768;
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
@@ -39,17 +40,17 @@ public class ProxyThread extends Thread {
 	private String gameURL = "http://flowjam.verigames.com";
 	private String httpport = ":80";
 
-	private int LOG_REQUEST = 0;
-	private int LOG_RESPONSE = 1;
-	private int LOG_TO_DB = 2;
-	private int LOG_ERROR = 3;
-	private int LOG_EXCEPTION = 4;
+	static public int LOG_REQUEST = 0;
+	static public int LOG_RESPONSE = 1;
+	static public int LOG_TO_DB = 2;
+	static public int LOG_ERROR = 3;
+	static public int LOG_EXCEPTION = 4;
 	
 	
 	String currentLayoutFileID = null;
 	String currentConstraintFileID = null;
     public ProxyThread(Socket socket, GridFS fs, DBCollection levelCollection, DBCollection submittedLevelsCollection, 
-    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection) {
+    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection, DBCollection tutorialCollection) {
         super("ProxyThread");
         this.socket = socket;
         this.fs = fs;
@@ -58,6 +59,7 @@ public class ProxyThread extends Thread {
         this.savedLevelsCollection = savedLevelsCollection;
         this.submittedLayoutsCollection = submittedLayoutsCollection;
         this.logCollection = logCollection;
+        this.tutorialCollection = tutorialCollection;
     }
 
     public void run() {
@@ -144,6 +146,11 @@ public class ProxyThread extends Thread {
             	}
             	else
             	{
+            		if(ProxyServer.testSilent == true)
+            		{
+            			out.writeChars("test");
+            			out.flush();
+            		}
             		if(urlTokens[1].indexOf("GET") != -1)
             			response = doGet(urlToCall);
             		else if(urlTokens[1].indexOf("PUT") != -1)
@@ -259,7 +266,6 @@ public class ProxyThread extends Thread {
     		"<?xml version=\"1.0\"?>" +
     		"<cross-domain-policy>" +
     		"<site-control permitted-cross-domain-policies=\"all\"/>" +
-    		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
     		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
     		"<allow-access-from domain=\"*.verigames.com\" to-ports=\"8001\"/>" +
     		"<allow-http-request-headers-from domain=\"*\" headers=\"*\"/>" +
@@ -412,6 +418,47 @@ public class ProxyThread extends Thread {
 				submitLayout(buf, fileInfo, out);
 			}
 		}
+		else if(request.indexOf("/tutorial/level/complete") != -1)
+		{
+    		if(fileInfo.length < 6)
+			{
+				out.write("Error: tutorial info not saved".getBytes());
+				log(LOG_ERROR, "Error: tutorial info not saved");
+				return;
+			}
+    		DBObject levelObj = new BasicDBObject();
+			levelObj.put("playerID", fileInfo[4]);
+	        levelObj.put("levelID", fileInfo[5]);
+			log(LOG_TO_DB, levelObj.toMap().toString());
+			WriteResult r1 = tutorialCollection.insert(levelObj);
+			log(LOG_ERROR, r1.getLastError().toString());
+			
+			out.write("{success: true}".getBytes());
+		}
+		else if(request.indexOf("/tutorial/levels/completed") != -1)
+		{
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no player ID".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /layout/get/name
+			//returns: layout with specified name
+			BasicDBObject findobj = new BasicDBObject();
+			findobj.put("playerID", fileInfo[4]);
+	        DBCursor cursor = tutorialCollection.find(findobj);	  
+	        StringBuffer buff = new StringBuffer(request+"//");
+	        try {
+            	while(cursor.hasNext()) {
+ 	        	   DBObject obj = cursor.next();
+		        	   buff.append(obj.toString());  
+		           }
+		           out.write(buff.toString().getBytes());
+		           log(LOG_TO_DB, "tutorial complete info returned");
+		        } finally {
+		        }
+		}
 	}
     
     public void submitLayout(byte[] buf, String[] fileInfo, DataOutputStream out) throws Exception
@@ -458,7 +505,10 @@ public class ProxyThread extends Thread {
 	     out.write("file saved".getBytes());
 	        
     	if(fileInfo[2].indexOf("submit") != -1)
+    	{
     		putLevelObjectInCollection(this.submittedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    	}
     	else
     		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
     }

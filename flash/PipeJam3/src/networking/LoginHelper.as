@@ -156,13 +156,13 @@ package networking
 		
 		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
 		{
-			if(e != null)
+			if(e != null && (e.target.data as String).length > 0)
 			{
 				matchArrayObjects = JSON.parse(e.target.data).matches;
 				//handle callback ourselves since we want to use request info, not refuse;
-				onRequestLevelFinishedCallback(result);
-				sendMessage(LoginHelper.REFUSE_LEVELS, null);
 			}
+			onRequestLevelFinishedCallback(result);
+			sendMessage(LoginHelper.REFUSE_LEVELS, null);
 		}
 		
 		public function refuseLevels():void

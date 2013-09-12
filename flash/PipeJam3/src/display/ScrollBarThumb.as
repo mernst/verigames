@@ -56,8 +56,6 @@ package display
 		protected var mIsHovering:Boolean = false;
 		protected override function onTouch(event:TouchEvent):void
 		{
-			super.onTouch(event);
-			
 			if(enabled == false)
 				return;
 			
@@ -100,12 +98,14 @@ package display
 					//find the difference between old and new click position here, apply to y position
 					y = startYPosition + (currentPosition.y - startYClickPoint);
 					y = XMath.clamp(y, minYPosition, maxYPosition);
+				//	trace(y/(maxYPosition - minYPosition));
 					dispatchEvent(new Event(Event.TRIGGERED, true, (y - minYPosition)/(maxYPosition - minYPosition)));
 				}
 				else
 				{
 					toState(m_up);
 					y = startYPosition;
+					
 					dispatchEvent(new Event(Event.TRIGGERED, true, y/(maxYPosition - minYPosition)));
 				}
 				
