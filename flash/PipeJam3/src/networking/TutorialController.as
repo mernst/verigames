@@ -136,7 +136,10 @@ package networking
 		//returns qid of next level to play, else 0
 		public function getNextUnplayedTutorial():int
 		{
-			var currentLevelQID:int = LoginHelper.getLoginHelper().levelObject.levelId;
+			var currentLevelQID:int;
+			
+			currentLevelQID = LoginHelper.getLoginHelper().levelObject.levelId;
+			
 			var currentLevel:XML = qidToTutorialDictionary[currentLevelQID];
 			
 			var currentPosition:int = currentLevel.@position;
@@ -192,10 +195,20 @@ package networking
 			clearPlayedTutorials();
 		}
 		
+		//check if entire tutorial is done
+		// compare saved
 		public function isTutorialDone():Boolean
 		{
-			// TODO Auto Generated method stub
-			return false;
+			for each(var position:int in tutorialOrderedList)
+			{
+				var level:XML = orderToTutorialDictionary[position];
+				var qid:String = level.attribute("qid");
+				
+				if(isTutorialLevelCompleted(qid) == false)
+					return false;				
+			}
+
+			return true;
 		}
 	}
 }

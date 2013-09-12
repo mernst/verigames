@@ -509,7 +509,7 @@ package scenes.game.display
 			var prevLevelNumber:Number = currentLevelNumber;
 			if(PipeJamGameScene.inTutorial)
 			{
-				var tutorialController:TutorialController = TutorialController.getTutorialController()
+				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				if (evt.menuShowing && active_level) {
 					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
 					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
