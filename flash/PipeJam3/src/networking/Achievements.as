@@ -11,7 +11,7 @@ package networking
 	import starling.display.Sprite;
 	import flash.utils.Dictionary;
 	
-	
+	//extend Sprite so we can recieve messages
 	public class Achievements extends Sprite
 	{
 		public static var TUTORIAL_FINISHED:String = "5228b505cb99a6030800002a";
