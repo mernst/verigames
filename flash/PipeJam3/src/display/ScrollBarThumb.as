@@ -98,7 +98,7 @@ package display
 					//find the difference between old and new click position here, apply to y position
 					y = startYPosition + (currentPosition.y - startYClickPoint);
 					y = XMath.clamp(y, minYPosition, maxYPosition);
-				//	trace(y/(maxYPosition - minYPosition));
+
 					dispatchEvent(new Event(Event.TRIGGERED, true, (y - minYPosition)/(maxYPosition - minYPosition)));
 				}
 				else
