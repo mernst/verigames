@@ -98,7 +98,7 @@ package display
 			// arrow
 			if (m_pointAt) {
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrowWhite);
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
 				m_tutorialArrow.color = _arrowColor;
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;

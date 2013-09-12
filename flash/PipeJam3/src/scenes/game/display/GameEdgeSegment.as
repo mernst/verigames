@@ -263,6 +263,7 @@
 			}
 			else if(_toPt.x != 0)
 			{
+				// Horizontal
 				newSegment = new Image(startTexture);
 				newSegment.width = Math.abs(_toPt.x);
 				newSegment.height = lineSize;
@@ -272,11 +273,15 @@
 			}
 			else
 			{
+				// Vertical
 				newSegment = new Image(startTexture);
-				newSegment.width = lineSize;
-				newSegment.height = Math.abs(_toPt.y);
+				newSegment.width = Math.abs(_toPt.y);
+				newSegment.height = lineSize;
+				newSegment.pivotX = 0;//lineSize / 2;
+				newSegment.pivotY = 0;//lineSize / 2;
+				newSegment.rotation = Math.PI / 2;
 				
-				newSegment.x = -lineSize/2.0;
+				newSegment.x = lineSize / 2.0;
 				newSegment.y = (_toPt.y > 0) ? 0 : -newSegment.height;
 			}
 			
