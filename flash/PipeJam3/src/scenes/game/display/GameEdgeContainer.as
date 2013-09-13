@@ -85,6 +85,7 @@ package scenes.game.display
 		public static var TOP_WALL:int = 3;
 		public static var BOTTOM_WALL:int = 4;
 		
+		public static const EDGES_OVERLAPPING_JOINTS:Boolean = true;
 		public static var WIDE_WIDTH:Number = .3 * Constants.GAME_SCALE;
 		public static var NARROW_WIDTH:Number = .1 * Constants.GAME_SCALE;
 		public static var ERROR_WIDTH:Number = .6 * Constants.GAME_SCALE;
@@ -767,7 +768,8 @@ package scenes.game.display
 			for(var segIndex:int = 0; segIndex<m_edgeSegments.length; segIndex++)
 			{
 				segment = m_edgeSegments[segIndex];
-				var startPoint:Point = m_jointPoints[segIndex];
+				var prevPoint:Point = (segIndex > 0) ? m_jointPoints[segIndex - 1].clone() : null;
+				var startPoint:Point = m_jointPoints[segIndex].clone();
 				var endPoint:Point = m_jointPoints[segIndex+1].clone();
 				
 				// For plugs, make the end segment stop in the center of the plug rather than
@@ -777,12 +779,25 @@ package scenes.game.display
 				}
 				
 				segment.updateSegment(startPoint, endPoint);
-				segment.x = m_jointPoints[segIndex].x;
-				segment.y = m_jointPoints[segIndex].y;
+				var diff:Point = endPoint.subtract(startPoint);
+				var dx:Number = 0;
+				var dy:Number = 0;
+				if (!EDGES_OVERLAPPING_JOINTS) {
+					var lineSize:Number = isWide() ? WIDE_WIDTH : NARROW_WIDTH;
+					if (diff.x != 0) {
+						dx = (diff.x > 0) ? (lineSize / 2.0) : (-lineSize / 2.0);
+					} else {
+						dy = (diff.y > 0) ? (lineSize / 2.0) : (-lineSize / 2.0);
+					}
+				}
+				segment.x = m_jointPoints[segIndex].x + dx;
+				segment.y = m_jointPoints[segIndex].y + dy;
 				
-				addChild(segment);
+				addChildAt(segment, 0);
 				
 				var joint:GameEdgeJoint = m_edgeJoints[segIndex];
+				if (prevPoint) joint.setIncomingPoint(prevPoint.subtract(m_jointPoints[segIndex]));
+				joint.setOutgoingPoint(endPoint.subtract(m_jointPoints[segIndex]));
 				joint.x = m_jointPoints[segIndex].x;
 				joint.y = m_jointPoints[segIndex].y;
 				
@@ -791,7 +806,7 @@ package scenes.game.display
 					errorContainer.y = this.y + joint.y;
 				}
 				if (segIndex > 0) {
-					addChildAt(joint, 0);
+					addChild(joint);
 				}
 			}
 			
@@ -800,6 +815,10 @@ package scenes.game.display
 			//add joint at end
 			lastJoint.x = m_jointPoints[m_edgeSegments.length].x;
 			lastJoint.y = m_jointPoints[m_edgeSegments.length].y;
+			if (m_edgeSegments.length - 1 >= 0) {
+				var inPoint:Point = m_jointPoints[m_edgeSegments.length - 1].clone();
+				lastJoint.setIncomingPoint(inPoint.subtract(m_jointPoints[m_edgeSegments.length]));
+			}
 			//addChildAt(lastJoint, 0);
 			
 			addChild(m_innerBoxSegment); // inner segment topmost

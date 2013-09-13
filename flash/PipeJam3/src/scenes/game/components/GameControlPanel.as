@@ -42,9 +42,10 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 58;
+		private static const HEIGHT:Number = 82;
 		
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(85, 5, 395, 41);
+		public static const OVERLAP:Number = 44;
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 25, 284 - 10, 44);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -91,10 +92,19 @@ package scenes.game.components
 		
 		public function addedToStage(event:Event):void
 		{
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
+			m_scorebarForeground = new Image(foregroundTexture);
+			m_scorebarForeground.touchable = false;
+			m_scorebarForeground.width = WIDTH;
+			m_scorebarForeground.height = HEIGHT;
+			addChild(m_scorebarForeground);
+			
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
-			var quad:Quad = new Quad(SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height, 0x0);
+			var quad:Quad = new Quad(SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height, 0x231F20);
+			quad.alpha = 0;
 			m_scorePanel.addChild(quad);
 			addChild(m_scorePanel);
 			
@@ -110,48 +120,40 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);
 			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
-			m_scorebarForeground = new Image(foregroundTexture);
-			m_scorebarForeground.touchable = false;
-			m_scorebarForeground.width = WIDTH;
-			m_scorebarForeground.height = HEIGHT;
-			addChild(m_scorebarForeground);
-			
 			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 6;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 11;
+			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 + 8;
 			addChild(m_menuButton);
 			
 			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
 			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
 			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
-			m_ResetButton.y = HEIGHT - m_ResetButton.height - 8;
+			m_ResetButton.y = HEIGHT - m_ResetButton.height - 2;
 			addChild(m_ResetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_zoomInButton.y = 1 * HEIGHT / 4 - 5;
+			m_zoomInButton.x = WIDTH - 55;
+			m_zoomInButton.y = 15;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
 			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
 			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomOutButton);
-			m_zoomOutButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_zoomOutButton.y = 2 * HEIGHT / 4 - 5;
+			m_zoomOutButton.x = m_zoomInButton.x + m_zoomInButton.width + 4;
+			m_zoomOutButton.y = m_zoomInButton.y;
 			addChild(m_zoomOutButton);
 			
 			m_recenterButton = new RecenterButton();
 			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
 			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_recenterButton);
-			m_recenterButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_recenterButton.y = 3 * HEIGHT / 4 - 5;
+			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
 			conflictMap = new ConflictMap();
@@ -159,7 +161,7 @@ package scenes.game.components
 			conflictMap.y = 2;
 			conflictMap.width = width-conflictMap.x - 2;
 			conflictMap.height = height-conflictMap.y - 2;
-			addChild(conflictMap);
+			//addChild(conflictMap);
 		}
 		
 		private function onMenuButtonTriggered():void

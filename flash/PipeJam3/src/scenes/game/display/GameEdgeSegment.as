@@ -245,30 +245,34 @@
 			if(_isEditable == true)
 			{
 				if (_isWide == true)
-					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_BlueDarkSegmentHoriz : AssetInterface.PipeJamSubTexture_BlueDarkSegmentVert;
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegmentPrefix;
 				else
-					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_BlueLightSegmentHoriz : AssetInterface.PipeJamSubTexture_BlueLightSegmentVert;
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegmentPrefix;
 			}
 			else //not adjustable
 			{
 				if(_isWide == true)
-					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_GrayDarkSegmentHoriz : AssetInterface.PipeJamSubTexture_GrayDarkSegmentVert;
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegmentPrefix;
 				else
-					assetName = isHoriz ? AssetInterface.PipeJamSubTexture_GrayLightSegmentHoriz : AssetInterface.PipeJamSubTexture_GrayLightSegmentVert;
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegmentPrefix;
 			}
+			assetName += isHoriz ? "Horiz" : "Vert";
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			var segmentTexture:Texture = atlas.getTexture(assetName);
 			
 			var pctTextWidth:Number;
 			var pctTextHeight:Number;
-			var newSegment:Image;
+			var newSegment:Image = new Image(segmentTexture);
 			
 			if(isHoriz)
 			{
 				// Horizontal
-				newSegment = new Image(segmentTexture);
-				newSegment.width = Math.abs(_toPt.x);
+				if (GameEdgeContainer.EDGES_OVERLAPPING_JOINTS) {
+					newSegment.width = Math.abs(_toPt.x);
+				} else {
+					newSegment.width = Math.max(.1, Math.abs(_toPt.x) - lineSize);
+				}
 				newSegment.height = lineSize;
 				
 				newSegment.x = (_toPt.x > 0) ? 0 : -newSegment.width;
@@ -277,9 +281,12 @@
 			else
 			{
 				// Vertical
-				newSegment = new Image(segmentTexture);
 				newSegment.width = lineSize;
-				newSegment.height = Math.abs(_toPt.y);
+				if (GameEdgeContainer.EDGES_OVERLAPPING_JOINTS) {
+					newSegment.height = Math.abs(_toPt.y);
+				} else {
+					newSegment.height = Math.max(.1, Math.abs(_toPt.y) - lineSize);
+				}
 				
 				newSegment.x = -lineSize / 2.0;
 				newSegment.y = (_toPt.y > 0) ? 0 : -newSegment.height;

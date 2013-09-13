@@ -164,7 +164,7 @@ package scenes.game.display
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT;
+			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
@@ -221,29 +221,33 @@ package scenes.game.display
 			if(inGameMenuBox == null)
 			{
 				inGameMenuBox = new InGameMenuDialog();
-				addChild(inGameMenuBox);
+				var childIndex:int = numChildren - 1;
+				if (gameControlPanel && gameControlPanel.parent == this) {
+					getChildIndex(gameControlPanel);
+				}
+				addChildAt(inGameMenuBox, childIndex);
 				inGameMenuBox.x = 0;
 				//add clip rect so box seems to slide up out of the gameControlPanel
-				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
+				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
 				
-				inGameMenuBox.y = gameControlPanel.y;
+				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
 				inGameMenuBox.visible = true;
 				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
 			}
 			else if (inGameMenuBox.visible)
 				inGameMenuBox.onBackToGameButtonTriggered();
 			else //exists but not visible
 			{
-				inGameMenuBox.y = gameControlPanel.y;
+				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
 				inGameMenuBox.visible = true;
 				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
 			}
 			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);

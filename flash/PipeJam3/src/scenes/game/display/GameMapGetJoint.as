@@ -132,7 +132,7 @@ package scenes.game.display
 			m_connectionLayer = new Sprite();
 			if (m_valueEdge && m_argumentEdge && m_outputEdge) {
 				var valWidth:Number = m_valueEdge.isWide() ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
-				var seg1:Image, seg2:Image, seg3:Image, j1:Image, j2:Image, connectColor:uint;
+				var seg1:Image, seg2:Image, seg3:Image, j1:Sprite, j2:Sprite, connectColor:uint;
 				if (getNode.argumentHasMapStamp()) {
 					seg1 = GameEdgeSegment.createEdgeSegment(new Point(0, m_boundingBox.height / 2.0), m_valueEdge.isWide(), m_valueEdge.isEditable());
 					seg1.x = m_valueEdge.m_endPoint.x - seg1.width / 2.0 + m_valueEdge.x - this.x;
@@ -172,11 +172,10 @@ package scenes.game.display
 					seg3.y = m_outputEdge.m_startPoint.y + m_outputEdge.y - this.y - seg3.height;
 					seg3.color = 0x0;
 					m_connectionLayer.addChild(seg3);
-					j2 = GameEdgeJoint.createJoint(false, false, true);
+					j2 = GameEdgeJoint.createJoint(false, false, true, null, null, 0x0);
 					j2.width = j2.height = GameEdgeContainer.WIDE_WIDTH;
 					j2.x = seg3.x;
 					j2.y = seg3.y - j2.height / 2.0;
-					j2.color = 0x0;
 					m_connectionLayer.addChildAt(j2, 0);
 					connectColor = 0x0;
 				}

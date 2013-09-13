@@ -49,7 +49,7 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static const WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 262;
+		public static const HEIGHT:Number = 238 + 44;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;
@@ -75,7 +75,7 @@ package scenes.game.components
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
 		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
-		private static const MAX_SCALE:Number = 250.0 / Constants.GAME_SCALE;
+		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
@@ -667,7 +667,8 @@ package scenes.game.components
 			
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
-			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * HEIGHT)) {
+			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
+			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * VIEW_HEIGHT)) {
 				// If about the size of the window, just center the level
 				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				globPt = m_currentLevel.localToGlobal(centerPt);
@@ -675,7 +676,7 @@ package scenes.game.components
 				moveContent(localPt.x, localPt.y);
 				const BUFFER:Number = 1.5;
 				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
-					HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
+					VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
@@ -712,7 +713,7 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
-				continueButton.y = HEIGHT - continueButton.height - 5;
+				continueButton.y = HEIGHT - continueButton.height - 5 - GameControlPanel.OVERLAP;
 			}
 			
 			if (continueButton.parent == null) {

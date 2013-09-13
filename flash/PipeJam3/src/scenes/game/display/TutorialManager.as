@@ -301,7 +301,7 @@ package scenes.game.display
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
-					return 0.8;
+					return 0.7;
 				case ZOOM_PAN_TUTORIAL:
 					return 3.0;
 				case LAYOUT_TUTORIAL:
@@ -309,10 +309,10 @@ package scenes.game.display
 					return 0.6;
 				case PASSAGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return 1.2;
+					return 1.0;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
-					return 1.5;
+					return 1.1;
 				case LINKS_TUTORIAL:
 				case PINCH_TUTORIAL:
 				case WIDEN_TUTORIAL:
@@ -333,18 +333,18 @@ package scenes.game.display
 				case WIDGET_TUTORIAL:
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
-				case WIDEN_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
 				case GROUP_SELECT_TUTORIAL:
-				case OPTIMIZE_TUTORIAL:
 					return new Point(0, 11);// move down by 15px
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
-					return new Point(15, 0);//move right 15px (pan left)
-				case PINCH_TUTORIAL:
+					return new Point(15, -4);//move right 15px (pan left)
+				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
+				case PINCH_TUTORIAL:
+					return new Point(0, -15);// move up by 15px
 				case MERGE_TUTORIAL:
 					return new Point(-5, 0);//move left 5px
 				case ZOOM_PAN_TUTORIAL:
@@ -353,6 +353,7 @@ package scenes.game.display
 				case NARROW_TUTORIAL:
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
+				case OPTIMIZE_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
 				case END_TUTORIAL:
 					return new Point();

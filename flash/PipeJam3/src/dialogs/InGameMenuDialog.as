@@ -60,6 +60,8 @@ package dialogs
 		
 		protected var hideMainDialog:Boolean = true;
 		
+		public static const BOTTOM_BUFFER:Number = 25; // bottom part obscured by control panel, build in a buffer
+		
 		public function InGameMenuDialog()
 		{
 			super();
@@ -67,14 +69,14 @@ package dialogs
 			if(!PipeJam3.RELEASE_BUILD)
 				numButtons ++;
 			
-			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight;
+			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight + BOTTOM_BUFFER;
 			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			
 			exit_button = ButtonFactory.getInstance().createButton("Exit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Return to\nLevel Select");
 			exit_button.addEventListener(starling.events.Event.TRIGGERED, onExitButtonTriggered);
 			exit_button.x = buttonPaddingWidth;
-			exit_button.y = background.height - buttonPaddingHeight - exit_button.height;
+			exit_button.y = background.height - buttonPaddingHeight - exit_button.height - BOTTOM_BUFFER;
 			addChild(exit_button);
 			
 			submit_layout_button = ButtonFactory.getInstance().createButton("Share Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Share your\nlayout with\nother players");
