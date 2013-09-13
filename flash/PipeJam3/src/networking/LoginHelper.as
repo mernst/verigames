@@ -42,6 +42,8 @@ package networking
 		public static var ADD_ACHIEVEMENT:int = 20;
 		public static var REPORT_LEADERBOARD_SCORE:int = 21;
 		public static var GET_ACHIEVEMENTS:int = 22;
+		public static var TUTORIAL_LEVEL_COMPLETE:int = 23;
+		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 24;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -154,13 +156,13 @@ package networking
 		
 		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
 		{
-			if(e != null)
+			if(e != null && (e.target.data as String).length > 0)
 			{
 				matchArrayObjects = JSON.parse(e.target.data).matches;
 				//handle callback ourselves since we want to use request info, not refuse;
-				onRequestLevelFinishedCallback(result);
-				sendMessage(LoginHelper.REFUSE_LEVELS, null);
 			}
+			onRequestLevelFinishedCallback(result);
+			sendMessage(LoginHelper.REFUSE_LEVELS, null);
 		}
 		
 		public function refuseLevels():void
@@ -286,11 +288,20 @@ package networking
 			}
 		}
 	
+		//save the current level id and the player id for lookup later.
+		public function reportTutorialLevelComplete():void
+		{
+			sendMessage(TUTORIAL_LEVEL_COMPLETE, null);
+			
+		}
+		
 		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null, filetype:int = 0):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
 			networkConnection.sendMessage(type, callback, data, name, infoObj, filetype);
 		}
+		
+
 	}
 }	
 

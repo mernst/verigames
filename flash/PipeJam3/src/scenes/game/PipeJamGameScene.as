@@ -16,6 +16,7 @@ package scenes.game
 	import scenes.game.display.World;
 	import networking.LoginHelper;
 	import networking.HTTPCookies;
+	import networking.TutorialController;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -41,22 +42,7 @@ package scenes.game
 		);
 		
 		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
-		
-		[Embed(source = "../../../lib/levels/tutorial/tutorial.xml", mimeType = "application/octet-stream")]
-		static public const tutorialFileClass:Class;
-		static public const tutorialXML:XML = XML(new tutorialFileClass());
-		
-		[Embed(source = "../../../lib/levels/tutorial/tutorialLayout.xml", mimeType = "application/octet-stream")]
-		static public const tutorialLayoutFileClass:Class;
-		static public const tutorialLayoutXML:XML = XML(new tutorialLayoutFileClass());
-		
-		[Embed(source = "../../../lib/levels/tutorial/tutorialConstraints.xml", mimeType = "application/octet-stream")]
-		static public const tutorialConstraintsFileClass:Class;
-		static public const tutorialConstraintsXML:XML = XML(new tutorialConstraintsFileClass());
-		
-		static public var numTutorialLevels:int = 0;
-		static public var maxTutorialLevelCompleted:int = 0;
-		static public var currentTutorialLevel:int = 0;
+				
 		static public var inTutorial:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
@@ -90,7 +76,7 @@ package scenes.game
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			var fileName:String;
-			
+						
 			super.addedToStage(event);
 			
 			if(loginHelper.levelObject && loginHelper.levelObject.levelId is int && loginHelper.levelObject.levelId < 1000) // in the tutorial if a short level id
@@ -110,9 +96,10 @@ package scenes.game
 			{
 				//reset these so we wait till we set them all
 				m_layoutLoaded = m_worldLoaded = m_constraintsLoaded = false;
-				onLayoutLoaded(tutorialLayoutXML);
-				onConstraintsLoaded(tutorialConstraintsXML);
-				onWorldLoaded(tutorialXML);
+				
+				onLayoutLoaded(TutorialController.tutorialLayoutXML);
+				onConstraintsLoaded(TutorialController.tutorialConstraintsXML);
+				onWorldLoaded(TutorialController.tutorialXML);
 			}
 			else
 			{
@@ -323,21 +310,6 @@ package scenes.game
 			}
 			
 			return world;
-		}
-		
-		public static var solvedTutorialLevelTags:Vector.<String> = new Vector.<String>();
-		public static function solvedTutorialLevel(_tutorialTag:String):void {
-			if (!_tutorialTag) return;
-			if (solvedTutorialLevelTags.indexOf(_tutorialTag) > -1) return;//already solved
-			solvedTutorialLevelTags.push(_tutorialTag);
-			maxTutorialLevelCompleted++;
-			HTTPCookies.setCookie(HTTPCookies.TUTORIALS_COMPLETED, maxTutorialLevelCompleted);
-		}
-		
-		public static function resetTutorialStatus():void
-		{
-			solvedTutorialLevelTags = new Vector.<String>();
-			maxTutorialLevelCompleted = 0;
 		}
 	}
 }

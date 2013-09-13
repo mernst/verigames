@@ -2,12 +2,12 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
-	import display.ToolTipText;
-	import events.PropertyModeChangeEvent;
 	
 	import audio.AudioManager;
 	
 	import deng.fzip.FZip;
+	
+	import display.ToolTipText;
 	
 	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
@@ -15,6 +15,7 @@ package scenes.game.display
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
 	import events.MoveEvent;
+	import events.PropertyModeChangeEvent;
 	import events.UndoEvent;
 	
 	import flash.events.TimerEvent;
@@ -78,6 +79,7 @@ package scenes.game.display
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
 		public var m_levelLayoutName:String;
+		public var m_levelQID:String;
 		private var m_levelOriginalLayoutXML:XML; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutXMLWrapper:XML;
@@ -86,7 +88,7 @@ package scenes.game.display
 		private var m_levelBestScoreConstraintsXML:XML; //best configuration so far
 		public var m_levelConstraintsXMLWrapper:XML;
 		public var m_tutorialTag:String;
-		public var tutorialManager:TutorialManager;
+		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;
 		
@@ -147,13 +149,14 @@ package scenes.game.display
 			m_levelLayoutXML = _levelLayoutXML.copy();
 			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
 			m_levelLayoutName = _levelLayoutXML.@id;
+			m_levelQID = _levelLayoutXML.@qid;
 			m_levelBestScoreConstraintsXML = _levelConstraintsXML.copy();
 			m_levelOriginalConstraintsXML = _levelConstraintsXML.copy();
 			m_levelConstraintsXML = _levelConstraintsXML.copy();
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
-				tutorialManager = new TutorialManager(m_tutorialTag);
+				tutorialManager = new TutorialLevelManager(m_tutorialTag);
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
 			

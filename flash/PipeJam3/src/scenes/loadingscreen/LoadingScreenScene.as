@@ -11,6 +11,7 @@ package scenes.loadingscreen
 	import flash.utils.Timer;
 	
 	import networking.PlayerValidation;
+	import networking.TutorialController;
 	
 	import particle.ErrorParticleSystem;
 	
@@ -40,12 +41,20 @@ package scenes.loadingscreen
 
 		
 		//would like to dispatch an event and end up here, but
-		public static var loadingScreenScene:LoadingScreenScene;
+		protected static var loadingScreenScene:LoadingScreenScene;
 		
 		public function LoadingScreenScene(game:PipeJamGame)
 		{
 			super(game);
 			loadingScreenScene = this;
+		}
+		
+		public static function getLoadingScreenScene():LoadingScreenScene
+		{
+			if(loadingScreenScene != null)
+				return loadingScreenScene;
+			else
+				return new LoadingScreenScene(null);
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
@@ -111,13 +120,26 @@ package scenes.loadingscreen
 			
 		public function changeScene(e:TimerEvent = null):void
 		{	
-			if (timer) {
+			var tutorialController:TutorialController = TutorialController.getTutorialController();
+			if (timer && timer.running)
+			{
+				return;
+			}
+			else if (timer && !timer.running && tutorialController.completedTutorialList != null) {
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, changeScene);
 			}
+			else if (tutorialController.completedTutorialList == null)
+			{
+				timer = new Timer(200, 1);
+				timer.addEventListener(TimerEvent.TIMER, changeScene);
+				timer.start(); //repeat until tutorial list is returned
+				return;
+			}
 			timer == null;
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
+			if(tutorialController.completedTutorialList != null)
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
 		override public function setStatus(text:String):void

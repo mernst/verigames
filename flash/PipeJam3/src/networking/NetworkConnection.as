@@ -220,6 +220,16 @@ package networking
 					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
 
 					break;
+				case LoginHelper.TUTORIAL_LEVEL_COMPLETE:
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					request = "/tutorial/level/complete/"+playerID+"/"+levelObj.levelId+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.GET_COMPLETED_TUTORIAL_LEVELS:
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					request = "/tutorial/levels/completed/"+playerID+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
 				case LoginHelper.VERIFY_SESSION:
 					specificURL = "http://flowjam.verigames.com/verifySession";
 					request = "?cookies="+name;
