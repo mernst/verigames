@@ -177,7 +177,7 @@ package scenes.levelselectscene
 						
 			setTutorialXMLFile(TutorialController.tutorialXML);
 			
-			if(TutorialController.getTutorialController().getNextUnplayedTutorial() != 0)
+			if(!TutorialController.getTutorialController().isTutorialDone())
 				onTutorialButtonTriggered(null);
 			else
 				onNewButtonTriggered(null);
