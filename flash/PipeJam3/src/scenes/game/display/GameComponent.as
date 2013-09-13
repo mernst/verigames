@@ -2,14 +2,9 @@ package scenes.game.display
 {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
 	import graph.PropDictionary;
-	
 	import scenes.BaseComponent;
-	
 	import starling.display.DisplayObjectContainer;
-	import starling.display.materials.StandardMaterial;
-	import starling.events.Event;
 	
 	public class GameComponent extends BaseComponent
 	{
@@ -20,7 +15,7 @@ package scenes.game.display
 		public var m_isDirty:Boolean = false;
 		
 		public var m_boundingBox:Rectangle;
-				
+		
 		//these are here in that they determine color, so all screen objects need them set
 		public var m_isWide:Boolean = false;
 		public var m_hasError:Boolean = false;
@@ -29,21 +24,20 @@ package scenes.game.display
 		public var isHoverOn:Boolean = false;
 		public var draggable:Boolean = true;
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
-		protected var m_hasProp:Boolean = false;
-		
+		protected var m_props:PropDictionary = new PropDictionary();
 		public var m_forceColor:Number = -1;
 		
-		public static var NARROW_COLOR:uint = 0x6ED4FF;// 0x1A85FF;
-		public static var NARROW_COLOR_BORDER:uint = 0x1773B8
-		public static var WIDE_COLOR:uint = 0x0077FF;// 0x3427FF;
-		public static var WIDE_COLOR_BORDER:uint = 0x1B3C86;
-		public static var UNADJUSTABLE_WIDE_COLOR:uint = 0x808184;// 0x3A3F4C;
-		public static var UNADJUSTABLE_WIDE_COLOR_BORDER:uint = 0x404144;
-		public static var UNADJUSTABLE_NARROW_COLOR:uint = 0xD0D2D3;// 0x3A3F4C;
-		public static var UNADJUSTABLE_NARROW_COLOR_BORDER:uint = 0x0;//0x909293;
-		public static var ERROR_COLOR:uint = 0xF05A28;// 0xE92227;
-		public static var SCORE_COLOR:uint = 0x0;// 0xFFDC1A;
-		public static var SELECTED_COLOR:uint = 0xff0000;
+		public static const NARROW_COLOR:uint = 0x6ED4FF;
+		public static const NARROW_COLOR_BORDER:uint = 0x1773B8
+		public static const WIDE_COLOR:uint = 0x0077FF;
+		public static const WIDE_COLOR_BORDER:uint = 0x1B3C86;
+		public static const UNADJUSTABLE_WIDE_COLOR:uint = 0x808184;
+		public static const UNADJUSTABLE_WIDE_COLOR_BORDER:uint = 0x404144;
+		public static const UNADJUSTABLE_NARROW_COLOR:uint = 0xD0D2D3;
+		public static const UNADJUSTABLE_NARROW_COLOR_BORDER:uint = 0x0;
+		public static const ERROR_COLOR:uint = 0xF05A28;
+		public static const SCORE_COLOR:uint = 0x0;
+		public static const SELECTED_COLOR:uint = 0xFF0000;
 		
 		public function GameComponent(_id:String)
 		{
@@ -161,12 +155,22 @@ package scenes.game.display
 		{
 		}
 		
-		
-		public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		protected function get hasProp():Boolean
 		{
-			m_propertyMode = prop;
-			m_hasProp = hasProp;
+			return m_props.hasProp(m_propertyMode);
+		}
+		
+		public function setProps(props:PropDictionary):void
+		{
+			m_props = props.clone();
 			m_isDirty = true;
 		}
+		
+		public function setPropertyMode(prop:String):void
+		{
+			m_propertyMode = prop;
+			m_isDirty = true;
+		}
+		
 	}
 }

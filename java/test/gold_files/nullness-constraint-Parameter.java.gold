@@ -1,0 +1,45 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Parameter extends type; tree <<missing tree>> within 
+class Parameter {
+    
+    Parameter() {
+        super();
+    }
+    
+    void m(Object o) {
+        o.toString();
+    }
+}
+
+subtype constraint: Variable 1 at method Parameter#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class Parameter extends type; tree <<missing tree>> within 
+class Parameter {
+    
+    Parameter() {
+        super();
+    }
+    
+    void m(Object o) {
+        o.toString();
+    }
+}
+
+subtype constraint: Variable 2 at method Parameter#m(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+void m(Object o) {
+    o.toString();
+}Atm: @VarAnnot(2) Parameter  <:  Variable 0 at class Parameter extends type; tree <<missing tree>> within 
+class Parameter {
+    
+    Parameter() {
+        super();
+    }
+    
+    void m(Object o) {
+        o.toString();
+    }
+}
+
+inequality constraint at method Parameter#m(Ljava/lang/Object;):V constraint position: Variable 3 at method Parameter#m(Ljava/lang/Object;):V parameter 0; tree Object != Constant(@nninf.quals.Nullable)
+

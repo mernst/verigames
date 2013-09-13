@@ -1,5 +1,6 @@
 package scenes
 {
+	import display.ToolTippableSprite;
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.geom.Point;
@@ -17,7 +18,7 @@ package scenes
 	import starling.display.MovieClip;
 	import starling.display.DisplayObjectContainer;
 
-	public class BaseComponent extends starling.display.Sprite
+	public class BaseComponent extends ToolTippableSprite
 	{	
 		private var mClipRect:Rectangle;
 		
@@ -30,6 +31,7 @@ package scenes
 		static protected var busyAnimationImages:Vector.<Texture> = null;
 		
 		protected var busyAnimationMovieClip:MovieClip;
+		public static const KEYFOR_COLOR:uint = 0xFF00FF;
 		
 		public function BaseComponent()
 		{

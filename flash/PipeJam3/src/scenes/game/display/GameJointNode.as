@@ -2,9 +2,11 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import display.NineSliceBatch;
+	import events.ToolTipEvent;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import graph.Node;
+	import graph.NodeTypes;
 	import graph.Port;
 	import scenes.BaseComponent;
 	import starling.display.Quad;
@@ -50,6 +52,40 @@ package scenes.game.display
 		override public function isWide():Boolean
 		{
 			return m_isWide;
+		}
+		
+		override protected function getToolTipEvent():ToolTipEvent
+		{
+			var label:String = "Link connector";
+			if (m_node) {
+				switch (m_node.kind) {
+					case NodeTypes.SPLIT:
+					case NodeTypes.OUTGOING:
+						if (m_outgoingEdges.length > 1) {
+							label = "Split";
+						}
+						break;
+					case NodeTypes.MERGE:
+						if (m_incomingEdges.length > 1) {
+							label = "Merge";
+						}
+						break;
+					case NodeTypes.GET:
+						label = "Map";
+						break;
+					case NodeTypes.BALL_SIZE_TEST:
+						label = "Diverter";
+						break;
+					case NodeTypes.START_LARGE_BALL:
+						label = "Wide link start";
+						break;
+					case NodeTypes.START_NO_BALL:
+					case NodeTypes.START_SMALL_BALL:
+						label = "Narrow link start";
+						break;
+				}
+			}
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, label, 8);
 		}
 	}
 

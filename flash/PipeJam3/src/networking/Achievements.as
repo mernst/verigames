@@ -9,16 +9,35 @@ package networking
 	import scenes.game.display.World;
 	import events.MenuEvent;
 	import starling.display.Sprite;
+	import flash.utils.Dictionary;
 	
-	
+	//extend Sprite so we can recieve messages
 	public class Achievements extends Sprite
 	{
-		public static var TUTORIAL_FINISHED:String = "521553d9d171ab5017000043";
+		public static var TUTORIAL_FINISHED:String = "5228b505cb99a6030800002a";
 		public static var TUTORIAL_FINISHED_STRING:String = "Achievement: You've Finished All the Tutorials!";
 
 		
 		protected var m_type:String;
 		protected var m_message:String;
+		
+		static protected var currentAchievementList:Dictionary;
+		
+		public static function getAchievementsEarnedForPlayer():void
+		{
+			LoginHelper.getLoginHelper().sendMessage(LoginHelper.GET_ACHIEVEMENTS, getAchievements);
+		}
+		
+		protected static function getAchievements(result:int, e:Event):void
+		{
+			var achievementObject:Object = JSON.parse(e.target.data);
+			currentAchievementList = new Dictionary;
+			for each(var achievement:Object in achievementObject.playerAchievements)
+			{
+				currentAchievementList[achievement.achievementId] = achievement;
+			}
+		}
+		
 		public static function addAchievement(type:String, message:String):void
 		{
 			var newAchievement:Achievements = new Achievements(type, message);
@@ -37,9 +56,17 @@ package networking
 			LoginHelper.getLoginHelper().sendMessage(LoginHelper.ADD_ACHIEVEMENT, postMessage, null, m_type);
 		}
 		
-		public function postMessage(result:int, e:Event):void
+		protected function postMessage(result:int, e:Event):void
 		{
 			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.ACHIEVEMENT_ADDED, m_message));
+		}
+		
+		static public function isAchievementNew(achievementNumber:String):Boolean
+		{
+			if(currentAchievementList && (currentAchievementList[achievementNumber] != null))
+				return false;
+			else
+				return true;
 		}
 	}
 }

@@ -1,0 +1,141 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
+class CallLocal {
+    
+    CallLocal() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(CallLocal p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 1 at method CallLocal#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
+class CallLocal {
+    
+    CallLocal() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(CallLocal p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 2 at method CallLocal#m1(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+void m1(Object o) {
+}Atm: @VarAnnot(2) CallLocal  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
+class CallLocal {
+    
+    CallLocal() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(CallLocal p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 5 at method CallLocal#m2():Ljava/lang/Object; receiver; tree <<missing tree>> within 
+Object m2() {
+    return new Object();
+}Atm: @VarAnnot(5) CallLocal  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
+class CallLocal {
+    
+    CallLocal() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(CallLocal p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+subtype constraint: Variable 8 at method CallLocal#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object
+
+subtype constraint: Variable 6 at method CallLocal#m3(LCallLocal;):V receiver; tree <<missing tree>> within 
+void m3(CallLocal p) {
+    p.m1(new Object());
+    Object x = p.m2();
+}Atm: @VarAnnot(6) CallLocal  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
+class CallLocal {
+    
+    CallLocal() {
+        super();
+    }
+    
+    void m1(Object o) {
+    }
+    
+    Object m2() {
+        return new Object();
+    }
+    
+    void m3(CallLocal p) {
+        p.m1(new Object());
+        Object x = p.m2();
+    }
+}
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallLocal#m3(LCallLocal;):V constraint position; 
+calledVp: method CallLocal#m1(Ljava/lang/Object;):V; 
+receiver: Variable 7 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 9 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object ); 
+result: List(); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallLocal#m3(LCallLocal;):V constraint position; 
+calledVp: method CallLocal#m2():Ljava/lang/Object;; 
+receiver: Variable 7 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object); 
+)
+
+subtype constraint: Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object  <:  Variable 10 at method CallLocal#m3(LCallLocal;):V local variable x(0); tree Object
+

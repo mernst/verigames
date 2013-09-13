@@ -7,10 +7,12 @@ package networking
 	import flash.net.*;
 	import flash.system.Security;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 	
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.World;
 	
+	import utils.Base64Decoder;
 	import utils.Base64Encoder;
 
 	//used by LoginHelper, one NetworkConnection object created for each connection and used only once
@@ -102,10 +104,17 @@ package networking
 		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, info:Object = null, filetype:int = 0):void
 		{
 			var request:String;
-			var levelObj:Object;
+			var levelObj:Object = LoginHelper.getLoginHelper().levelObject;
+			var enc:Base64Encoder = Base64Encoder.getEncoder();
 			var specificURL:String = null;
 			var method:String;
 			var playerID:String = PlayerValidation.playerID;
+			var levelID:String
+				if(levelObj != null)
+					levelID = levelObj.levelId;
+				
+			var dataObj:Object;
+
 			
 			m_callback = callback;
 			
@@ -132,7 +141,7 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.START_LEVEL:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/started&method=PUT";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelID+"/started&method=PUT";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.STOP_LEVEL:
@@ -140,11 +149,11 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.REPORT_PREFERENCE:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/preference/"+name+"/report&method=POST";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelID+"/preference/"+name+"/report&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.REPORT_PERFORMANCE:
-					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelObj.levelId+"/performance/"+name+"/report&method=POST";
+					request = "/ra/games/"+GAME_ID+"/players/"+playerID+"/levels/"+ levelID +"/performance/"+name+"/report&method=POST";
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.CREATE_RA_LEVEL:
@@ -179,10 +188,9 @@ package networking
 					method = URLRequestMethod.POST; 
 					break;
 				case LoginHelper.SAVE_LEVEL:
-					levelObj =  LoginHelper.getLoginHelper().levelObject;
 					var props:Object = levelObj.metadata.properties;
 					var scoreASString:String = levelObj.score;
-					var levelID:String = info as String;
+					levelID = info as String;
 					method = URLRequestMethod.POST;
 					var requestStart:String = "";
 					var requestMiddle:String = "";
@@ -197,8 +205,8 @@ package networking
 					else
 					{
 						requestStart = "/level/submit/";
-						var eRating:Number = levelObj.enjoymentRating;
-						var dRating:Number = levelObj.difficultyRating;
+						var eRating:int = int(Math.round(levelObj.enjoymentRating*20));
+						var dRating:int = int(Math.round(levelObj.difficultyRating*20));
 						requestEnd = "/" + eRating+ "/"+ dRating+"/"+filetype;
 					}
 					
@@ -212,6 +220,16 @@ package networking
 					request = requestStart + requestMiddle + requestEnd + "&method=DATABASE";
 
 					break;
+				case LoginHelper.TUTORIAL_LEVEL_COMPLETE:
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					request = "/tutorial/level/complete/"+playerID+"/"+levelObj.levelId+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.GET_COMPLETED_TUTORIAL_LEVELS:
+					levelObj =  LoginHelper.getLoginHelper().levelObject;
+					request = "/tutorial/levels/completed/"+playerID+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
 				case LoginHelper.VERIFY_SESSION:
 					specificURL = "http://flowjam.verigames.com/verifySession";
 					request = "?cookies="+name;
@@ -222,8 +240,47 @@ package networking
 					request = "";
 					method = URLRequestMethod.POST; 
 					break;
+				case LoginHelper.GET_ACHIEVEMENTS:
+					request = "/api/achievements/search/player?playerId=" + playerID + "&method=URL";
+					method = URLRequestMethod.GET; 
+					break;
 				case LoginHelper.ADD_ACHIEVEMENT:
-					request = "/achievement/assign/"+GAME_ID+"/"+playerID+"/"+name+"&method=URL";
+					request = "/api/achievement/assign&method=URL";
+					dataObj = new Object;
+					dataObj.playerId = playerID;
+					dataObj.gameId = GAME_ID;
+					dataObj.achievementId = name;
+					dataObj.earnedOn = (new Date()).time;
+					
+					data = JSON.stringify(dataObj);
+					enc.encode(data);
+					data = enc.toString();
+					method = URLRequestMethod.POST; 
+					break;
+				case LoginHelper.REPORT_LEADERBOARD_SCORE:
+					var leaderboardScore:int = 1;
+					var levelScore:int = parseInt(levelObj.score);
+					var targetScore:int = parseInt(levelObj.targetScore);
+					if(levelScore > targetScore)
+					leaderboardScore = 2;
+					request = "/api/score&method=URL";
+					dataObj = new Object;
+					dataObj.playerId = playerID;
+					dataObj.gameId = GAME_ID;
+					dataObj.levelId = levelID;
+					var parameters:Array = new Array;
+					var paramScoreObj:Object = new Object;
+					paramScoreObj.name = "score";
+					paramScoreObj.value = levelObj.score;
+					var paramLeaderScoreObj:Object = new Object;
+					paramLeaderScoreObj.name = "leaderboardScore";
+					paramLeaderScoreObj.value = leaderboardScore;
+					parameters.push(paramScoreObj);
+					parameters.push(paramLeaderScoreObj);
+					dataObj.parameter = parameters;
+					data = JSON.stringify(dataObj);
+					enc.encode(data);
+					data = enc.toString();
 					method = URLRequestMethod.POST; 
 					break;
 				default:

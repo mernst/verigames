@@ -127,13 +127,13 @@ package graph
 				}
 				if (String(metadata.data.editable).toLowerCase() == "true") {
 					editable = true;
+					linked_edge_set.editable = true;
 				}
 				if (String(metadata.data.width).toLowerCase() == "wide") {
 					starting_is_wide = true;
-					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, false);
-					//is_wide = true;
+					linked_edge_set.setProp(PropDictionary.PROP_NARROW, false);
 				} else {
-					linked_edge_set.getProps().setProp(PropDictionary.PROP_NARROW, true);
+					linked_edge_set.setProp(PropDictionary.PROP_NARROW, true);
 				}
 				if (String(metadata.data.buzzsaw).toLowerCase() == "true") {
 					starting_has_buzzsaw = true;
@@ -144,9 +144,9 @@ package graph
 				}
 			}
 			
-			metadata = null;
+			linked_edge_set.edges.push(this);
 			
-			Network.edgeDictionary[edge_id] = this;
+			metadata = null;
 		}
 		
 		public function isStartingEdge():Boolean
@@ -272,6 +272,126 @@ package graph
 		public function get is_wide():Boolean
 		{
 			return !linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW);
+		}
+		
+		/**
+		 * Traverse upsteam returning any editable edge sets that may have set the desired property/value
+		 * combination for this edge (the edge set of the starting edges that this edge originated
+		 * from)
+		 * @param	prop Property of intereset
+		 * @param	value Value of property of interest
+		 * @return List of editable starting edgeSets upstream matching desired prop, value
+		 */
+		public function getOriginatingEdgeSetsMatchingPropValue(prop:String, value:Boolean):Vector.<EdgeSetRef>
+		{
+			var edgeSets:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
+			var edgesToExamine:Vector.<Edge> = new Vector.<Edge>();
+			var edgesExamined:Dictionary = new Dictionary();
+			edgesToExamine.push(this);
+			while (edgesToExamine.length > 0) {
+				var thisEdge:Edge = edgesToExamine.shift();
+				if (edgesExamined.hasOwnProperty(thisEdge.edge_id)) continue;
+				edgesExamined[thisEdge.edge_id] = true;
+				if (!thisEdge.from_node) continue;
+				// Test for originating set and matching this prop
+				if (thisEdge.from_node.isOriginationNode && 
+				    thisEdge.linked_edge_set.editable &&
+				    (thisEdge.linked_edge_set.getProps().hasProp(prop) == value) &&
+					(edgeSets.indexOf(thisEdge.linked_edge_set) == -1))
+				{
+					edgeSets.push(thisEdge.linked_edge_set);
+				}
+				var nextPorts:Vector.<Port> = thisEdge.from_node.incoming_ports;
+				if (thisEdge.from_port is SubnetworkPort) {
+					// Connect through subnet if possible, otherwise don't bother
+					var subnetPort:SubnetworkPort = thisEdge.from_port as SubnetworkPort;
+					nextPorts = new Vector.<Port>();
+					if (subnetPort) nextPorts.push(subnetPort.linked_subnetwork_edge.to_port);
+				}
+				for (var i:int = 0; i < nextPorts.length; i++) {
+					var nextEdge:Edge = nextPorts[i].edge;
+					if (!nextEdge) continue;
+					if (nextEdge.getExitProps().hasProp(prop) != value) continue;
+					// Only continue upstream thru value or argument (if keyfor)
+					if (thisEdge.from_node.kind == NodeTypes.GET) {
+						var map:MapGetNode = thisEdge.from_node as MapGetNode;
+						if ((nextEdge == map.mapEdge) || (nextEdge == map.keyEdge)) continue;
+						if ((prop == PropDictionary.PROP_NARROW) && (nextEdge != map.valueEdge)) continue;
+						if ((prop == PropDictionary.PROP_NARROW) && !map.argumentHasMapStamp()) continue;
+					}
+					if (edgesExamined.hasOwnProperty(nextEdge.edge_id)) continue;
+					edgesToExamine.push(nextEdge);
+				}
+			}
+			return edgeSets;
+		}
+		
+		/**
+		 * Traverse down the edge and out_node, continuing through any edges originating in an edge-set
+		 * traversed, return any editable edgeSets matching desired prop, value
+		 * @param	prop Property of intereset
+		 * @param	value Value of property of interest
+		 * @return List of editable edgeSets matching desired prop, value
+		 */
+		public function getDownStreamEdgeSetsMatchingPropValue(prop:String, value:Boolean):Vector.<EdgeSetRef>
+		{
+			var edgeSets:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
+			var edgesToExamine:Vector.<Edge> = new Vector.<Edge>();
+			var edgesExamined:Dictionary = new Dictionary();
+			edgesToExamine.push(this);
+			while (edgesToExamine.length > 0) {
+				var thisEdge:Edge = edgesToExamine.shift();
+				if (edgesExamined.hasOwnProperty(thisEdge.edge_id)) continue;
+				edgesExamined[thisEdge.edge_id] = true;
+				if (!thisEdge.linked_edge_set.editable) continue;
+				if (!thisEdge.linked_edge_set.getProps().hasProp(prop) == value) continue;
+				// Special case: skip pinched edges, they are essentially uneditable
+				if (thisEdge.has_pinch && (prop == PropDictionary.PROP_NARROW)) continue;
+				if (edgeSets.indexOf(thisEdge.linked_edge_set) == -1) {
+					edgeSets.push(thisEdge.linked_edge_set);
+					// Continue with any edges originating from this edge set
+					for (var oe:int = 0; oe < thisEdge.linked_edge_set.edges.length; oe++) {
+						var outEdge:Edge = thisEdge.linked_edge_set.edges[oe];
+						if (!outEdge) continue;
+						if (!outEdge.isStartingEdge()) continue;
+						if (edgesExamined.hasOwnProperty(outEdge.edge_id)) continue;
+						edgesToExamine.push(outEdge);
+					}
+				}
+				// Continue through to_node
+				var toNode:Node = thisEdge.to_node;
+				if (!toNode) continue;
+				// Special cases: GET/SUBBOARD stop downstream traversal for most cases
+				var nextPorts:Vector.<Port> = toNode.outgoing_ports;
+				var map:MapGetNode = null;
+				switch (toNode.kind) {
+					// Continue to connecting INCOMING edge if possible, otherwise don't continue
+					case NodeTypes.SUBBOARD:
+						nextPorts = new Vector.<Port>();
+						if (thisEdge.to_port is SubnetworkPort) {
+							var subnetPort:SubnetworkPort = thisEdge.to_port as SubnetworkPort;
+							if (subnetPort.linked_subnetwork_edge && subnetPort.linked_subnetwork_edge.from_port) {
+								nextPorts.push(subnetPort.linked_subnetwork_edge.from_port);
+							}
+						}
+						break;
+					// Only continue upstream thru value or argument (if keyfor)
+					case NodeTypes.GET:
+						map = toNode as MapGetNode;
+						break;
+				}
+				for (var op:int = 0; op < nextPorts.length; op++) {
+					var nextEdge:Edge = nextPorts[op].edge;
+					if (!nextEdge) continue;
+					// Skip mapget node for most cases
+					if (map && (nextEdge == map.mapEdge)) continue;
+					if (map && (nextEdge == map.keyEdge)) continue;
+					if (map && !map.argumentHasMapStamp()) continue;
+					if (edgesExamined.hasOwnProperty(nextEdge.edge_id)) continue;
+					edgesToExamine.push(nextEdge);
+				}
+			}
+			return edgeSets;
 		}
 		
 		public function setEnterProps(props:PropDictionary):void

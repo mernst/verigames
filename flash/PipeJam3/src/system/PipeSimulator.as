@@ -1,19 +1,19 @@
 package system 
 {
-	import graph.LevelNodes;
-	import graph.Network;
+	import flash.utils.Dictionary;
+	
+	import graph.BoardNodes;
+	import graph.ConflictDictionary;
 	import graph.Edge;
+	import graph.LevelNodes;
 	import graph.MapGetNode;
+	import graph.Network;
 	import graph.Node;
 	import graph.NodeTypes;
 	import graph.Port;
-	import graph.BoardNodes;
 	import graph.PropDictionary;
-	import graph.ConflictDictionary;
 	import graph.SubnetworkNode;
 	import graph.SubnetworkPort;
-	
-	import flash.utils.Dictionary;
 	
 	/**
 	 * The PipeSimulator class calculates and stores where conflicts
@@ -43,7 +43,7 @@ package system
 		private var network:Network;
 		
 		/* A map from boardname ConflictDict associated with that level.*/
-		private var boardToConflicts:Dictionary;
+		public var boardToConflicts:Dictionary;
 		private var prevBoardToConflicts:Dictionary;
 		
 		/**
@@ -589,23 +589,46 @@ package system
 						node.outgoing_ports[0].edge.enter_ball_type = edge.exit_ball_type;
 						node.outgoing_ports[0].edge.setEnterProps(edge.getExitProps());
 						if (queue.indexOf(node.outgoing_ports[0].edge) == -1) queue.push(node.outgoing_ports[0].edge);//enqueue
-						node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
+						if(node.outgoing_ports.length == 2)
+						{
+							node.outgoing_ports[1].edge.enter_ball_type = edge.exit_ball_type;
 						node.outgoing_ports[1].edge.setEnterProps(edge.getExitProps());
-						if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
+							if (queue.indexOf(node.outgoing_ports[1].edge) == -1) queue.push(node.outgoing_ports[1].edge);//enqueue
+						}
+						else
+							throw new Error("Simulator: split found with # outputs = " + node.outgoing_ports.length); 
+
 					}
 						break;
 					
 					case NodeTypes.BALL_SIZE_TEST : {
-						// new implementation: always output a small ball down the small pipe
-						// and a large ball down the wide pipe, rather that "sorting" the balls
+						// "Sort" the balls
 						for (i = 0; i < node.outgoing_ports.length; i++) {
 							var outgoing_port:Port = node.outgoing_ports[i];
 							outgoing_props = node.incoming_ports[0].edge.getExitProps().clone();
 							if (outgoing_port.edge.is_wide) {
-								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+								switch (node.incoming_ports[0].edge.exit_ball_type) {
+									case Edge.BALL_TYPE_WIDE:
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										break;
+									default:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										outgoing_props = new PropDictionary();
+										break;
+								}
 								outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
 							} else {
-								outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+								switch (node.incoming_ports[0].edge.exit_ball_type) {
+									case Edge.BALL_TYPE_NARROW:
+									case Edge.BALL_TYPE_WIDE_AND_NARROW:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NARROW;
+										break;
+									default:
+										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
+										outgoing_props = new PropDictionary();
+										break;
+								}
 								outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
 							}
 							outgoing_port.edge.setEnterProps(outgoing_props);

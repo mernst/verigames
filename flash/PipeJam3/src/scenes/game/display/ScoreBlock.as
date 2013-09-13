@@ -68,7 +68,7 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			if(event.getTouches(this, TouchPhase.ENDED).length)

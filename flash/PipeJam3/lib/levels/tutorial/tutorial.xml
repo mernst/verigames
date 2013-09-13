@@ -293,6 +293,9 @@
     <edgeref id="e41"/>
 	<edgeref id="e42"/>
    </edge-set>
+   <edge-set id="LockedWidget5">
+    <edgeref id="e5"/>
+   </edge-set>
   </linked-edges>
   <boards>
    <board name="LockedWidget--Board">
@@ -340,6 +343,16 @@
      <input/>
      <output>
       <port num="0" edge="e33"/>
+     </output>
+     <layout>
+      <x>0.0</x>
+      <y>0.0</y>
+     </layout>
+    </node>
+	<node kind="START_PIPE_DEPENDENT_BALL" id="n5">
+     <input/>
+     <output>
+      <port num="0" edge="e5"/>
      </output>
      <layout>
       <x>0.0</x>
@@ -409,6 +422,13 @@
      <output/>
      <layout><x>0.0</x><y>0.0</y></layout>
     </node>
+	<node kind="END" id="n50">
+     <input>
+      <port num="0" edge="e5"/>
+     </input>
+     <output/>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
     <edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e1" buzzsaw="false">
      <from><noderef id="n1" port="0"/></from>
      <to><noderef id="n10" port="0"/></to>
@@ -442,6 +462,11 @@
 	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e42" buzzsaw="false">
      <from><noderef id="n42" port="0"/></from>
      <to><noderef id="n420" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e5" buzzsaw="false">
+     <from><noderef id="n5" port="0"/></from>
+     <to><noderef id="n50" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
    </board>
@@ -2046,7 +2071,7 @@
           <input><port num="0" edge="e18x0"/></input>
           <output><port num="0" edge="e15x3"/></output>
         </node>
-        <edge id="e11x0"  width="narrow" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e11x0"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n11" port="0"/></from>
           <to><noderef id="nEND11x0" port="0"/></to>
         </edge>
@@ -2054,27 +2079,27 @@
           <from><noderef id="nSTA14x0" port="0"/></from>
           <to><noderef id="n13" port="0"/></to>
         </edge>
-        <edge id="e15x0"  width="narrow" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e15x0"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="nSTA15x0" port="0"/></from>
           <to><noderef id="n12" port="0"/></to>
         </edge>
-        <edge id="e15x1"  width="narrow" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e15x1"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n13" port="0"/></from>
           <to><noderef id="nEND15x1" port="0"/></to>
         </edge>
-        <edge id="e15x2"  width="narrow" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e15x2"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n14" port="0"/></from>
           <to><noderef id="nEND15x2" port="0"/></to>
         </edge>
-        <edge id="e15x3"  width="narrow" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e15x3"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n15" port="0"/></from>
           <to><noderef id="nEND15x3" port="0"/></to>
         </edge>
-        <edge id="e16x0"  width="narrow" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e16x0"  width="wide" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="nSTA16x0" port="0"/></from>
           <to><noderef id="n11" port="0"/></to>
         </edge>
-        <edge id="e16x1"  width="narrow" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e16x1"  width="wide" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n12" port="0"/></from>
           <to><noderef id="nEND16x1" port="0"/></to>
         </edge>

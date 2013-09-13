@@ -1,0 +1,228 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class NestedClassWithTypeAnnotations extends type; tree <<missing tree>> within 
+class NestedClassWithTypeAnnotations {
+    
+    NestedClassWithTypeAnnotations() {
+        super();
+    }
+    O1.O2<String, Object>.O3.Nested<Foo, Bar> o;
+}
+
+subtype constraint: Variable 1 at method NestedClassWithTypeAnnotations#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class NestedClassWithTypeAnnotations extends type; tree <<missing tree>> within 
+class NestedClassWithTypeAnnotations {
+    
+    NestedClassWithTypeAnnotations() {
+        super();
+    }
+    O1.O2<String, Object>.O3.Nested<Foo, Bar> o;
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 5 at class O1 extends type; tree <<missing tree>> within 
+class O1 {
+    
+    O1() {
+        super();
+    }
+    
+    class O2<S, T> {
+        
+        O2() {
+            super();
+        }
+        
+        class O3 {
+            
+            O3() {
+                super();
+            }
+            
+            class Nested<U, V> {
+                
+                Nested() {
+                    super();
+                }
+            }
+        }
+    }
+}
+
+subtype constraint: Variable 6 at method O1#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 5 at class O1 extends type; tree <<missing tree>> within 
+class O1 {
+    
+    O1() {
+        super();
+    }
+    
+    class O2<S, T> {
+        
+        O2() {
+            super();
+        }
+        
+        class O3 {
+            
+            O3() {
+                super();
+            }
+            
+            class Nested<U, V> {
+                
+                Nested() {
+                    super();
+                }
+            }
+        }
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 7 at class O1$O2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within SAtm: @VarAnnot(7) Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 9 at class O1$O2 class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within TAtm: @VarAnnot(9) Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 11 at class O1$O2 extends type; tree <<missing tree>> within 
+class O2<S, T> {
+    
+    O2() {
+        super();
+    }
+    
+    class O3 {
+        
+        O3() {
+            super();
+        }
+        
+        class Nested<U, V> {
+            
+            Nested() {
+                super();
+            }
+        }
+    }
+}
+
+subtype constraint: Variable 12 at method O1$O2#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 11 at class O1$O2 extends type; tree <<missing tree>> within 
+class O2<S, T> {
+    
+    O2() {
+        super();
+    }
+    
+    class O3 {
+        
+        O3() {
+            super();
+        }
+        
+        class Nested<U, V> {
+            
+            Nested() {
+                super();
+            }
+        }
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 13 at class O1$O2$O3 extends type; tree <<missing tree>> within 
+class O3 {
+    
+    O3() {
+        super();
+    }
+    
+    class Nested<U, V> {
+        
+        Nested() {
+            super();
+        }
+    }
+}
+
+subtype constraint: Variable 14 at method O1$O2$O3#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 13 at class O1$O2$O3 extends type; tree <<missing tree>> within 
+class O3 {
+    
+    O3() {
+        super();
+    }
+    
+    class Nested<U, V> {
+        
+        Nested() {
+            super();
+        }
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within UAtm: @VarAnnot(15) Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 17 at class O1$O2$O3$Nested class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within VAtm: @VarAnnot(17) Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 19 at class O1$O2$O3$Nested extends type; tree <<missing tree>> within 
+class Nested<U, V> {
+    
+    Nested() {
+        super();
+    }
+}
+
+subtype constraint: Variable 20 at method O1$O2$O3$Nested#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 19 at class O1$O2$O3$Nested extends type; tree <<missing tree>> within 
+class Nested<U, V> {
+    
+    Nested() {
+        super();
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 21 at class Foo extends type; tree <<missing tree>> within 
+class Foo {
+    
+    Foo() {
+        super();
+    }
+}
+
+subtype constraint: Variable 22 at method Foo#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 21 at class Foo extends type; tree <<missing tree>> within 
+class Foo {
+    
+    Foo() {
+        super();
+    }
+}
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 23 at class Bar extends type; tree <<missing tree>> within 
+class Bar {
+    
+    Bar() {
+        super();
+    }
+}
+
+subtype constraint: Variable 24 at method Bar#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 23 at class Bar extends type; tree <<missing tree>> within 
+class Bar {
+    
+    Bar() {
+        super();
+    }
+}
+

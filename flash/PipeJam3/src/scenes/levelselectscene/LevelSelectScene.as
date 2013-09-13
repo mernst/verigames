@@ -62,14 +62,13 @@ package scenes.levelselectscene
 			super(game);
 			
 			loginHelper = LoginHelper.getLoginHelper();
-
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
 		{
 			super.addedToStage(event);
 			
-			background = new Image(AssetInterface.getTexture("Game", "StationaryBackgroundClass"));
+			background = new Image(AssetInterface.getTexture("Game", "Background0Class"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
@@ -175,10 +174,13 @@ package scenes.levelselectscene
 			loginHelper.requestLevels(onRequestLevels);
 			loginHelper.getLevelMetadata(onRequestLevels);
 			loginHelper.getSavedLevels(onRequestSavedLevels);
+						
+			setTutorialXMLFile(TutorialController.tutorialXML);
 			
-			setTutorialXMLFile(PipeJamGameScene.tutorialXML);
-			
-			onTutorialButtonTriggered(null);
+			if(TutorialController.getTutorialController().getNextUnplayedTutorial() != 0)
+				onTutorialButtonTriggered(null);
+			else
+				onNewButtonTriggered(null);
 			
 			addEventListener(Event.TRIGGERED, updateSelectedLevelInfo);
 		}
@@ -468,20 +470,20 @@ package scenes.levelselectscene
 		public function setTutorialXMLFile(tutorialXML:XML):void
 		{
 			var tutorialLevels:XMLList = tutorialXML["level"];
+			var tutorialController:TutorialController = TutorialController.getTutorialController();
 			
+				
 			var tutorialArray:Array = new Array;
-			var count:int = 0;
-			for each(var level:XML in tutorialLevels)
+			for each(var levelXML:XML in tutorialLevels)
 			{
 				var obj:Object = new Object;
-				obj.levelId = count;
-				obj.name = level.@name.toString();
-				if(count <= PipeJamGameScene.maxTutorialLevelCompleted)
-					obj.unlocked = true;
-				else
-					obj.unlocked = false;
+				obj.levelId = levelXML.@qid.toString();
+				obj.name = levelXML.@name.toString();
+				
+				//unlock all that user should be able play, check the ones they have played
+				obj.unlocked = tutorialController.tutorialShouldBeUnlocked(obj.levelId);
+				obj.checked = tutorialController.isTutorialLevelCompleted(obj.levelId);
 				tutorialArray.push(obj);
-				count++;
 			}
 			tutorialListBox.setButtonArray(tutorialArray, false);
 		}

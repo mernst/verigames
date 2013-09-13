@@ -2,11 +2,12 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
-	import events.PropertyModeChangeEvent;
 	
 	import audio.AudioManager;
 	
 	import deng.fzip.FZip;
+	
+	import display.ToolTipText;
 	
 	import events.EdgeContainerEvent;
 	import events.EdgeSetChangeEvent;
@@ -14,6 +15,7 @@ package scenes.game.display
 	import events.GroupSelectionEvent;
 	import events.MenuEvent;
 	import events.MoveEvent;
+	import events.PropertyModeChangeEvent;
 	import events.UndoEvent;
 	
 	import flash.events.TimerEvent;
@@ -31,6 +33,7 @@ package scenes.game.display
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.PropDictionary;
+	
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
@@ -38,6 +41,7 @@ package scenes.game.display
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Shape;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -75,14 +79,16 @@ package scenes.game.display
 		//the level node and decendents
 		private var m_levelLayoutXML:XML;
 		public var m_levelLayoutName:String;
+		public var m_levelQID:String;
 		private var m_levelOriginalLayoutXML:XML; //used for restarting the level
 		//used when saving, as we need a parent graph element for the above level node
 		public var m_levelLayoutXMLWrapper:XML;
 		private var m_levelConstraintsXML:XML;
 		private var m_levelOriginalConstraintsXML:XML; //used for restarting the level
+		private var m_levelBestScoreConstraintsXML:XML; //best configuration so far
 		public var m_levelConstraintsXMLWrapper:XML;
 		public var m_tutorialTag:String;
-		public var tutorialManager:TutorialManager;
+		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
 		private var m_targetScore:int;
 		
@@ -114,6 +120,20 @@ package scenes.game.display
 		private var timer:Timer;
 		private var initialized:Boolean = false;
 		
+		/** Current Score of the player */
+		private var m_currentScore:int = 0;
+		private var m_bestScore:int = 0;
+		
+		/** Most recent score of the player */
+		private var m_prevScore:int = 0;
+		
+		/** Base Score = # of lines * possible conflict points */
+		private var m_baseScore:int = 0;
+		
+		/** Set to true when the target score is reached. */
+		public var targetScoreReached:Boolean;
+
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -125,26 +145,27 @@ package scenes.game.display
 		 * @param  _levelLayoutXML the layout xml
 		 * @param  _levelConstraintsXML the constraints xml
 		 */
-		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML)
+		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int = int.MAX_VALUE)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
 			levelNodes = _levelNodes;
-			m_levelOriginalLayoutXML = m_levelLayoutXML = _levelLayoutXML;
+			m_levelLayoutXML = _levelLayoutXML.copy();
+			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
 			m_levelLayoutName = _levelLayoutXML.@id;
-			m_levelOriginalConstraintsXML = m_levelConstraintsXML = _levelConstraintsXML;
+			m_levelQID = _levelLayoutXML.@qid;
+			m_levelBestScoreConstraintsXML = _levelConstraintsXML.copy();
+			m_levelOriginalConstraintsXML = _levelConstraintsXML.copy();
+			m_levelConstraintsXML = _levelConstraintsXML.copy();
 			
 			m_tutorialTag = m_levelLayoutXML.attribute("tutorial").toString();
 			if (m_tutorialTag && (m_tutorialTag.length > 0)) {
-				tutorialManager = new TutorialManager(m_tutorialTag);
+				tutorialManager = new TutorialLevelManager(m_tutorialTag);
 				m_layoutFixed = tutorialManager.getLayoutFixed();
 			}
 			
-			m_targetScore = int.MAX_VALUE;
-			if ((m_levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(m_levelConstraintsXML.attribute("targetScore")))) {
-				m_targetScore = int(m_levelConstraintsXML.attribute("targetScore"));
-			}
-			
+			m_targetScore = _targetScore;
+			targetScoreReached = false;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
@@ -179,6 +200,7 @@ package scenes.game.display
 			edgeContainerDictionary = new Dictionary();
 
 			// Process <box> 's
+			var visibleNodes:int = 0;
 			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
 			{
 				var boxEdgeSetId:String = boxLayoutXML.@id;
@@ -188,26 +210,24 @@ package scenes.game.display
 					if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT) == 0) {
 						// Found a reference to an external SUBBOARD, create fixed node
 						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
-						var isStarting:Boolean = false;
 						if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT_OUT) > -1) {
 							isWide = false;
-							isStarting = true;
 						}
-						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide, isStarting);
+						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide);
 					} else {
 						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
 					}
 				} else {
 					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
 					//grab an example edge for it's attributes FIX - use constraints xml file
-					var edgeSetEdges:Vector.<Edge> = new Vector.<Edge>();
-					for each (var myEdgeId:String in edgeSet.edge_ids) {
-						edgeSetEdges.push(edgeDictionary[myEdgeId]);
-					}
-					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, edgeSetEdges);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet);
 				}
 				
 				gameNode.visible = getVisible(boxLayoutXML);
+				if(gameNode.visible)
+					visibleNodes++;
+				else
+					boxLayoutXML.@visible="false";
 				
 				m_nodeList.push(gameNode);
 				boxDictionary[boxEdgeSetId] = gameNode;
@@ -223,6 +243,7 @@ package scenes.game.display
 			m_jointList = new Vector.<GameJointNode>();
 			jointDictionary = new Dictionary();
 			// Process <joint> 's
+			var visibleJoints:int = 0;
 			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
 			{
 				var jointID:String = jointLayoutXML.@id;
@@ -250,6 +271,7 @@ package scenes.game.display
 						case NodeTypes.INCOMING:
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
 						case NodeTypes.END:
+							jointLayoutXML.@visible="false";
 							continue;
 						case NodeTypes.OUTGOING:
 							// Only create the joint for an outgoing node if other lines connect
@@ -257,6 +279,7 @@ package scenes.game.display
 							// to this OUTGOING edge)
 							var numOutputs:Number = Number(jointLayoutXML.@outputs);
 							if (isNaN(numOutputs) || (numOutputs == 0)) {
+								jointLayoutXML.@visible="false";
 								continue;
 							}
 					}
@@ -269,6 +292,10 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
+				if(joint.visible)
+					visibleJoints++;
+				else
+					jointLayoutXML.@visible="false";
 				m_jointList.push(joint);
 				jointDictionary[joint.m_id] = joint;
 				if (joint.visible) {
@@ -280,11 +307,20 @@ package scenes.game.display
 			}
 			
 			// Process <line> 's
+			var visibleLines:int = 0;
 			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
+				var boundingBox:Rectangle;
 				var edgeVisible:Boolean = getVisible(edgeXML);
+				if(edgeVisible)
+				{
+					visibleLines++;
+					boundingBox = createLine(edgeXML, copyLines);
+				}
+				else
+					edgeXML.@visible="false";
+
 				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
@@ -324,13 +360,20 @@ package scenes.game.display
 			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
 			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
 			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			
+			trace(visibleNodes, visibleJoints, visibleLines);
 		}
 		
-		public function setConstraints():void
+		public function loadBestScoringConfiguration():void
+		{
+			setConstraints(m_levelBestScoreConstraintsXML);
+		}
+		
+		private function setConstraints(constraintsXML:XML):void
 		{
 			var gameNode:GameNode;
 			
-			for each(var boxConstraint:XML in m_levelConstraintsXML.box)
+			for each(var boxConstraint:XML in constraintsXML.box)
 			{
 				gameNode = boxDictionary[String(boxConstraint.@id)];
 				if (!gameNode) {
@@ -352,12 +395,11 @@ package scenes.game.display
 					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
 				}
 			}
-			refreshTroublePoints();
-//			if(gameNode)
-//			{
-//				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, gameNode.m_isWide, null, false, null));
-//			}
-				
+			if(gameNode)
+			{
+				dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !gameNode.m_isWide, this, false, null));
+			}
+			refreshTroublePoints();	
 		}
 		
 		protected function createLine(edgeXML:XML, copyLines:Vector.<GameEdgeContainer> = null):Rectangle
@@ -478,6 +520,7 @@ package scenes.game.display
 			
 			newGameEdge.visible = getVisible(edgeXML);
 			
+			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
 				copyLines.push(newGameEdge);
@@ -510,9 +553,6 @@ package scenes.game.display
 		public function start():void
 		{
 			if (!initialized) {
-				initialize();
-				setConstraints();
-				
 				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
 					var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
@@ -543,6 +583,10 @@ package scenes.game.display
 				addChild(m_jointsContainer);
 				addChild(m_errorContainer);
 				addChild(m_edgesContainer);
+				
+				initialize();
+				setConstraints(m_levelConstraintsXML);
+				
 				initialized = true;
 			}
 			
@@ -561,6 +605,8 @@ package scenes.game.display
 				jointElem.updatePortIndexes();
 			}
 			
+			m_bestScore = m_currentScore;
+			
 			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
 		}
 		
@@ -572,9 +618,12 @@ package scenes.game.display
 				if (tutorialManager) tutorialManager.startLevel();
 				m_levelStartTime = new Date().time;
 			}
+			var propChangeEvt:PropertyModeChangeEvent = new PropertyModeChangeEvent(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, PropDictionary.PROP_NARROW);
+			onPropertyModeChange(propChangeEvt);
+			dispatchEvent(propChangeEvt);
 			setNewLayout(null, m_levelOriginalLayoutXML);
-			m_levelConstraintsXML = m_levelOriginalConstraintsXML;
-			setConstraints();
+			m_levelConstraintsXML = m_levelOriginalConstraintsXML.copy();
+			setConstraints(m_levelConstraintsXML);
 			trace("Restarted: " + m_levelLayoutXML.@id);
 		}
 		
@@ -636,7 +685,7 @@ package scenes.game.display
 		
 		public function setNewLayout(name:String, newLayoutXML:XML, useExistingLines:Boolean = false):void
 		{
-			m_levelLayoutXML = newLayoutXML;
+			m_levelLayoutXML = newLayoutXML.copy();
 			m_levelLayoutName = name;
 			//we might have ended up with a 'world', just grab the first level
 			if(m_levelLayoutXML.level != undefined)
@@ -719,13 +768,16 @@ package scenes.game.display
 						var pt:Point = new Point(pointXML.@x * Constants.GAME_SCALE, pointXML.@y * Constants.GAME_SCALE);
 						edgeArray.push(pt);
 					}
-					edgeContainer.setupPoints(edgeArray);
+					edgeContainer.m_edgeArray = edgeArray;
+					edgeContainer.setupPoints();
 					minX = Math.min(minX, edgeContainer.m_boundingBox.left);
 					minY = Math.min(minY, edgeContainer.m_boundingBox.top);
 					maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
 					maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
 					edgeContainer.createLine();
 				}
+				
+
 			}
 			trace("Level " + m_levelLayoutXML.attribute("id") + " m_boundingBox = " + m_boundingBox);
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -781,9 +833,9 @@ package scenes.game.display
 						{
 							var pt:Point = edgeContainer.m_jointPoints[i];
 							var ptXML:XML = <point></point>;
-							currentLayoutX = (pt.x + edgeContainer.m_boundingBox.x) / Constants.GAME_SCALE;
+							currentLayoutX = (pt.x + edgeContainer.x) / Constants.GAME_SCALE;
 							ptXML.@x = currentLayoutX.toFixed(2);
-							currentLayoutY = (pt.y + edgeContainer.m_boundingBox.y) / Constants.GAME_SCALE;
+							currentLayoutY = (pt.y + edgeContainer.y) / Constants.GAME_SCALE;
 							ptXML.@y = currentLayoutY.toFixed(2);
 							
 							child.appendChild(ptXML);
@@ -809,8 +861,15 @@ package scenes.game.display
 		//update current constraint info based on node constraints
 		public function updateConstraintXML():void
 		{
-			delete m_levelConstraintsXML.box;
-			
+			fillConstraintsXML(m_levelConstraintsXML);
+			// TODO: Hardcoding "world" id correct?
+			m_levelConstraintsXMLWrapper = <constraints id="world"/>;
+			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
+		}
+		
+		private function fillConstraintsXML(constraintsXML:XML):void
+		{
+			delete constraintsXML.box;
 			for each(var node:GameNode in m_nodeList)
 			{
 				var id:String = node.m_id;
@@ -825,12 +884,9 @@ package scenes.game.display
 				child.@id = id;
 				child.@width = widthString;
 				child.@editable = editableString;
-					
-				m_levelConstraintsXML.appendChild(child);
+				
+				constraintsXML.appendChild(child);
 			}
-			// TODO: Hardcoding "world" id correct?
-			m_levelConstraintsXMLWrapper = <constraints id="world"/>;
-			m_levelConstraintsXMLWrapper.appendChild(m_levelConstraintsXML);
 		}
 		
 		override public function dispose():void
@@ -899,7 +955,7 @@ package scenes.game.display
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); //if re-added to stage, start up again
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			if(event.getTouches(this, TouchPhase.MOVED).length){
@@ -943,8 +999,9 @@ package scenes.game.display
 		//assume this only generates on toggle width events
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
+			//trace("Level: onEdgeSetChange");
 			if (!evt.silent) {
+				if (tutorialManager) tutorialManager.onEdgeSetChange(evt);
 				if (!evt.propValue) {
 					// Wide
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_LOW_BELT);
@@ -953,12 +1010,11 @@ package scenes.game.display
 					AudioManager.getInstance().audioDriver().playSfx(AssetsAudio.SFX_HIGH_BELT);
 				}
 			}
-			var edgeSetID:String = evt.edgeSetChanged.m_edgeSet.id;
-			var edgeSet:EdgeSetRef = edgeSetDictionary[edgeSetID];
+			var edgeSet:EdgeSetRef = evt.edgeSetChanged.m_edgeSet;
 			if(edgeSet != null) {
-				edgeSet.getProps().setProp(evt.prop, evt.propValue);
+				edgeSet.setProp(evt.prop, evt.propValue);
 			}
-			dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
+			if (!evt.silent) dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, evt.edgeSetChanged, evt.prop, evt.propValue, this, evt.silent, evt.point));
 		}
 		
 		private var m_propertyMode:String = PropDictionary.PROP_NARROW;
@@ -986,7 +1042,7 @@ package scenes.game.display
 					if (m_jointList[i] is GameMapGetJoint) {
 						var mapget:GameMapGetJoint = m_jointList[i] as GameMapGetJoint;
 						if (mapget.getNode.getMapProperty() == evt.prop) {
-							m_jointList[i].setPropertyMode(m_propertyMode, true);
+							m_jointList[i].setPropertyMode(m_propertyMode);
 							edgesToActivate = edgesToActivate.concat(mapget.getUpstreamEdgeContainers());
 							continue;
 						}
@@ -1346,7 +1402,7 @@ package scenes.game.display
 			{
 				//gameEdge.x = gameEdge.m_boundingBox.x + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.x;
 				//gameEdge.y = gameEdge.m_boundingBox.y + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.y;
-				gameEdge.draw();
+				gameEdge.m_isDirty = true;
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
 //				gameEdge.visible = false;
@@ -1546,9 +1602,19 @@ package scenes.game.display
 			return tutorialManager ? tutorialManager.getTextInfo() : null;
 		}
 		
+		public function getLevelToolTipsInfo():Vector.<TutorialManagerTextInfo>
+		{
+			return tutorialManager ? tutorialManager.getPersistentToolTipsInfo() : (new Vector.<TutorialManagerTextInfo>());
+		}
+		
 		public function getTargetScore():int
 		{
 			return m_targetScore;
+		}
+		
+		public function setTargetScore(score:int):void
+		{
+			m_targetScore = score;
 		}
 		
 		public function get original_level_name():String
@@ -1625,5 +1691,139 @@ package scenes.game.display
 			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
 			return true;
 		}
+		
+		public function boardInLevel(boardName:String):Boolean
+		{
+			if (levelNodes && levelNodes.boardNodesDictionary) {
+				return levelNodes.boardNodesDictionary.hasOwnProperty(boardName);
+			}
+			return false;
+		}
+		
+		public function get currentScore():int { return m_currentScore; }
+		public function get bestScore():int { return m_bestScore; }
+		public function get prevScore():int { return m_prevScore; }
+		public function get baseScore():int { return m_baseScore; }
+		
+		public function resetBestScore():void
+		{
+			m_bestScore = m_currentScore;
+			m_levelBestScoreConstraintsXML = m_levelConstraintsXML.copy();
+		}
+		
+		public function updateScore(recordBestScore:Boolean = false):void
+		{
+			/* Old scoring:
+			* 
+			For pipes:
+			No points for any red pipe.
+			For green pipes:
+			10 points for every wide input pipe
+			5 points for every narrow input pipe
+			10 points for every narrow output pipe
+			5 points for every wide output pipe
+			1 point for every internal pipe, no matter what its width
+			
+			For solving the game:
+			30 points per board solved
+			- Changed this to 30 from 10 = original
+			
+			100 points per level solved
+			1000 points per world solved
+			
+			For each exception to the laws of physics:
+			-50 points
+			*/
+			
+			/*
+			 * New Scoring:
+			 * +75 for each line going thru/starting/ending @ a box
+			 * +25 for wide inputs
+			 * +25 for narrow outputs
+			 * -75 for errors
+			*/
+			
+			m_prevScore = m_currentScore;
+			var wideInputs:int = 0;
+			var narrowOutputs:int = 0;
+			var errors:int = 0;
+			var totalLines:int = 0;
+			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
+			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
+			var errorEdges:Vector.<Edge> = new Vector.<Edge>();
+			var errorPorts:Vector.<Port> = new Vector.<Port>();
+			// Pass over all nodes, find nodes involved in scoring
+			var allNodes:Vector.<GameNode> = getNodes();
+			for (var nodeI:int = 0; nodeI < allNodes.length; nodeI++)
+			{
+				var nodeSet:GameNode = allNodes[nodeI];
+				// TODO: this should be here: totalLines += nodeSet.getNumLines();
+				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
+					totalLines += nodeSet.getNumLines(); // TODO: move above
+					if (nodeSet.isWide()) {
+						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
+							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
+							scoringNodes.push(nodeSet);
+						} else if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
+							potentialScoringNodes.push(nodeSet);
+						}
+					} else {
+						if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
+							narrowOutputs += nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges;
+							scoringNodes.push(nodeSet);
+						} else if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
+							potentialScoringNodes.push(nodeSet);
+						}
+					}
+				}
+				for (var ie:int = 0; ie < nodeSet.m_incomingEdges.length; ie++) {
+					var incomingEdge:GameEdgeContainer = nodeSet.m_incomingEdges[ie];
+					if (!incomingEdge.graphEdge) continue;
+					if (incomingEdge.graphEdge.hasAnyConflict() && (errorEdges.indexOf(incomingEdge.graphEdge) == -1)) {
+						errors++;
+						errorEdges.push(incomingEdge.graphEdge);
+					}
+					if (incomingEdge.graphEdge.from_port && incomingEdge.graphEdge.from_port.hasAnyConflict() && (errorPorts.indexOf(incomingEdge.graphEdge.from_port) == -1)) {
+						errors++;
+						errorPorts.push(incomingEdge.graphEdge.from_port);
+					}
+					if (incomingEdge.graphEdge.to_port && incomingEdge.graphEdge.to_port.hasAnyConflict() && (errorPorts.indexOf(incomingEdge.graphEdge.to_port) == -1)) {
+						errors++;
+						errorPorts.push(incomingEdge.graphEdge.to_port);
+					}
+				}
+			}
+			
+			var allJoints:Vector.<GameJointNode> = getJoints();
+			for (var j:int = 0; j < allJoints.length; j++) {
+				var myJoint:GameJointNode = allJoints[j];
+				for (var jie:int = 0; jie < myJoint.m_incomingEdges.length; jie++) {
+					var injEdge:GameEdgeContainer = myJoint.m_incomingEdges[jie];
+					if (!injEdge.graphEdge) continue;
+					if (injEdge.graphEdge.hasAnyConflict() && (errorEdges.indexOf(injEdge.graphEdge) == -1)) {
+						errors++;
+						errorEdges.push(injEdge.graphEdge);
+					}
+					if (injEdge.graphEdge.from_port && injEdge.graphEdge.from_port.hasAnyConflict() && (errorPorts.indexOf(injEdge.graphEdge.from_port) == -1)) {
+						errors++;
+						errorPorts.push(injEdge.graphEdge.from_port);
+					}
+					if (injEdge.graphEdge.to_port && injEdge.graphEdge.to_port.hasAnyConflict() && (errorPorts.indexOf(injEdge.graphEdge.to_port) == -1)) {
+						errors++;
+						errorPorts.push(injEdge.graphEdge.to_port);
+					}
+				}
+			}
+			
+			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
+			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
+			if (recordBestScore && (m_currentScore > m_bestScore)) {
+				m_bestScore = m_currentScore;
+				trace("New best score: " + m_bestScore);
+				fillConstraintsXML(m_levelBestScoreConstraintsXML);
+			}
+			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
+		}
+		
 	}
 }

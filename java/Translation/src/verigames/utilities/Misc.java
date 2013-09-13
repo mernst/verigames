@@ -1,5 +1,7 @@
 package verigames.utilities;
 
+import checkers.inference.InferenceMain;
+
 /**
  * A class containing miscellaneous utilities used in implementation of the
  * packages. Not for use by clients.
@@ -13,7 +15,7 @@ public class Misc
   public static void ensure(boolean value, String msg)
   {
     if (!value)
-      throw new AssertionError(msg);
+      throw new AssertionError( msg );
   }
 
   /**
@@ -21,5 +23,5 @@ public class Misc
    * However, some classes may ignore this value in favor of their own, for
    * greater granularity.
    */
-  public static final boolean CHECK_REP_ENABLED = false;
+  public static final boolean CHECK_REP_ENABLED = InferenceMain.STRICT_MODE();
 }

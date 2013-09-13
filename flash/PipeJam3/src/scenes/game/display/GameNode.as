@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import graph.PropDictionary;
+	import events.ToolTipEvent;
 	import starling.display.Quad;
 	
 	import display.NineSliceBatch;
@@ -32,12 +33,17 @@ package scenes.game.display
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
 		
-		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, edgeSetEdges:Vector.<Edge> = null)
+		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null)
 		{
 			super(nodeXML);
 			draggable = _draggable;
 			m_edgeSet = edgeSet;
-			m_edgeSetEdges = edgeSetEdges;
+			if (m_edgeSet != null) {
+				m_edgeSetEdges = m_edgeSet.edges;
+			} else {
+				m_edgeSetEdges = new Vector.<Edge>();
+			}
+			if (m_edgeSet) m_props = m_edgeSet.getProps().clone();
 			
 			shapeWidth = m_boundingBox.width;
 			shapeHeight = m_boundingBox.height;
@@ -72,20 +78,6 @@ package scenes.game.display
 			draw();
 		}
 		
-		public function isStartingNode():Boolean
-		{			
-			for each(var edgeID:String in m_edgeSet.edge_ids)
-			{
-				var edge:Edge = Network.edgeDictionary[edgeID];
-				for each(var port:Port in edge.from_node.incoming_ports)
-				{
-					if(port.edge.linked_edge_set.id != m_edgeSet.id)
-						return true;
-				}
-			}
-			return false;
-		}
-		
 		public function getExtensionEdge(portID:String, isOutgoingPort:Boolean):GameEdgeContainer
 		{
 			if(isOutgoingPort)
@@ -110,17 +102,18 @@ package scenes.game.display
 		
 		public override function onClicked(pt:Point):void
 		{
-			if(m_isEditable)
-			{
-				var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;
-				if (m_propertyMode == PropDictionary.PROP_NARROW) {
+			var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;
+			if (m_propertyMode == PropDictionary.PROP_NARROW) {
+				if(m_isEditable) {
 					var newIsWide:Boolean = !m_isWide;
 					handleWidthChange(newIsWide, false, pt);
 					//dispatchEvent(new starling.events.Event(Level.UNSELECT_ALL, true, this));
 					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, PropDictionary.PROP_NARROW, !newIsWide);
 					eventToDispatch = new UndoEvent(eventToUndo, this);
 					dispatchEvent(eventToDispatch);
-				} else {
+				}
+			} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
+				if (m_edgeSet.canSetProp(m_propertyMode)) {
 					var edgeSetValue:Boolean = m_edgeSet.getProps().hasProp(m_propertyMode);
 					dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue, null, false, pt));
 					eventToUndo = new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, !edgeSetValue);
@@ -149,9 +142,9 @@ package scenes.game.display
 		
 		public function handleWidthChange(newIsWide:Boolean, silent:Boolean = false, pt:Point = null):void
 		{
-			if (m_isWide == newIsWide) return;
+			var redraw:Boolean = (m_isWide != newIsWide);
 			m_isWide = newIsWide;
-			m_isDirty = true;
+			m_isDirty = redraw;
 			// Need to dispatch AFTER setting width, this will trigger the score update
 			// (we don't want to update the score with old values, we only know they're old
 			// if we properly mark them dirty first)
@@ -212,7 +205,7 @@ package scenes.game.display
 				for (var prop:String in m_edgeSet.getProps().iterProps()) {
 					if (prop == PropDictionary.PROP_NARROW) continue;
 					if (prop == m_propertyMode) {
-						var keyQuad:Quad = new Quad(3, 3, 0xFF00FF);
+						var keyQuad:Quad = new Quad(3, 3, KEYFOR_COLOR);
 						keyQuad.x = 1 + i * 4;
 						keyQuad.y = m_boundingBox.height - 4;
 						addChild(keyQuad);
@@ -252,12 +245,11 @@ package scenes.game.display
 			return m_isWide;
 		}
 		
-		override public function setPropertyMode(prop:String, hasProp:Boolean = false):void
+		override protected function getToolTipEvent():ToolTipEvent
 		{
-			if (m_edgeSet && m_edgeSet.getProps().hasProp(prop)) {
-				hasProp = true;
-			}
-			super.setPropertyMode(prop, hasProp);
+			var lockedTxt:String = isEditable() ? "" : "Locked ";
+			var wideTxt:String = isWide() ? "Wide " : "Narrow ";
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, lockedTxt + wideTxt + "Widget", 8);
 		}
 		
 	}

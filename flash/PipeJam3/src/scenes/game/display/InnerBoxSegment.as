@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import events.ToolTipEvent;
 	import flash.geom.Point;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
@@ -306,6 +307,19 @@ package scenes.game.display
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			super.dispose();
+		}
+		
+		override protected function getToolTipEvent():ToolTipEvent
+		{
+			var lockedTxt:String = isEditable() ? "" : "Locked ";
+			var widthTxt:String = m_borderIsWide ? "Wide " : "Narrow ";
+			var startEndTxt:String = "";
+			if (isEnd) {
+				startEndTxt = "End ";
+			} else if (innerCircleJoint) {
+				startEndTxt = "Start ";
+			}
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, lockedTxt + widthTxt + startEndTxt + "Passage", 8);
 		}
 	}
 }

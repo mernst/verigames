@@ -1,0 +1,260 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class fromPicard.IlluminaDataType extends type; tree <<missing tree>> within 
+enum IlluminaDataType {
+    /*public static final*/ Position /* = new IlluminaDataType() */,
+    /*public static final*/ BaseCalls /* = new IlluminaDataType() */,
+    /*public static final*/ QualityScores /* = new IlluminaDataType() */,
+    /*public static final*/ RawIntensities /* = new IlluminaDataType() */,
+    /*public static final*/ Noise /* = new IlluminaDataType() */,
+    /*public static final*/ PF /* = new IlluminaDataType() */,
+    /*public static final*/ Barcodes /* = new IlluminaDataType() */;
+    
+    private IlluminaDataType() {
+        super();
+    }
+}
+
+subtype constraint: Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}  <:  Variable 0 at class fromPicard.IlluminaDataType extends type; tree <<missing tree>> within 
+enum IlluminaDataType {
+    /*public static final*/ Position /* = new IlluminaDataType() */,
+    /*public static final*/ BaseCalls /* = new IlluminaDataType() */,
+    /*public static final*/ QualityScores /* = new IlluminaDataType() */,
+    /*public static final*/ RawIntensities /* = new IlluminaDataType() */,
+    /*public static final*/ Noise /* = new IlluminaDataType() */,
+    /*public static final*/ PF /* = new IlluminaDataType() */,
+    /*public static final*/ Barcodes /* = new IlluminaDataType() */;
+    
+    private IlluminaDataType() {
+        super();
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Position constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field Position; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Position constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 1 at class fromPicard.IlluminaDataType static field Position creation -1; tree IlluminaDataType  <:  Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field BaseCalls constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field BaseCalls; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field BaseCalls constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType  <:  Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field QualityScores constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field QualityScores; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field QualityScores constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType  <:  Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field RawIntensities constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field RawIntensities; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field RawIntensities constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType  <:  Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Noise constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field Noise; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Noise constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType  <:  Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field PF constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field PF; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field PF constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType  <:  Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType
+
+checkers.inference.FieldAccessConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Barcodes constraint position; 
+calledVp: class fromPicard.IlluminaDataType static field Barcodes; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class fromPicard.IlluminaDataType static field Barcodes constraint position; 
+calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 8 at method fromPicard.IlluminaDataType#<init>():V return type; tree 
+private <init>() {
+    super();
+}); 
+)
+
+subtype constraint: Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType  <:  Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 16 at class fromPicard.IlluminaBasecallsToSam extends type; tree <<missing tree>> within 
+public class IlluminaBasecallsToSam {
+    
+    public IlluminaBasecallsToSam() {
+        super();
+    }
+    public static final IlluminaDataType[] DATA_TYPES_NO_BARCODE = {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF};
+}
+
+subtype constraint: Variable 20 at method fromPicard.IlluminaBasecallsToSam#<init>():V return type; tree 
+public <init>() {
+    super();
+}  <:  Variable 16 at class fromPicard.IlluminaBasecallsToSam extends type; tree <<missing tree>> within 
+public class IlluminaBasecallsToSam {
+    
+    public IlluminaBasecallsToSam() {
+        super();
+    }
+    public static final IlluminaDataType[] DATA_TYPES_NO_BARCODE = {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF};
+}
+
+subtype constraint: Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}  <:  Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]
+

@@ -18,7 +18,7 @@ public class RA
 	static final Gson gson = getGson();
 
 	static String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
-	static String betaurl = "http://api.pipejam.verigames.com";//"http://ec2-54-226-188-147.compute-1.amazonaws.com"; 
+	static String betaurl = "http://api.flowjam.verigames.com";//"http://ec2-54-226-188-147.compute-1.amazonaws.com"; 
 	static String stagingRAServer = "http://ec2-23-22-125-169.compute-1.amazonaws.com";
 	static String url = betaurl;
 	int port = 80;
@@ -270,32 +270,20 @@ public class RA
 		    SetLevelMetadataResponse response = gson.fromJson(jsonString, SetLevelMetadataResponse.class);
 		    return response;
 	}
-/*	
-	public HttpResponse searchForLevels(int count)
-	{
-		return searchForLevels(count, null);
-	}
+
 	
 	//doesn't seem to work...
-	public HttpResponse searchForLevels(int count, HttpEntity entity)
+	public SearchLevelsResponse searchForLevels(int count)
 	{
-		String getLevelMetadata = "/ra/games/1/levels/count/" + count + "/search";
-		getLevelMetadata = "/ra/games/1/levels/count/10/search";
-		try{
-		//	String bar = "{\"parameter\":[{\"name\":\"param_one\",\"isRequired\":true,\"from\":5.5314183915768576,\"to\":5.531429454424704},{\"name\":\"param_two\",\"isRequired\":true,\"from\":0.8688698078309287,\"to\":0.8688715455722822},{\"name\":\"param_three\",\"isRequired\":true,\"from\":-37.28989792267633,\"to\":-37.28982334295506}],\"property\":[],\"tag\":[],\"label\":[],\"priority\":[],\"parentId\":[],\"predecessorId\":[]}";
-		//	String bar1 = "{\"parameter\":[{\"name\":\"param_one\",\"isRequired\":true,\"from\":5.5314183915768576,\"to\":5.531429454424704},{\"name\":\"param_two\",\"isRequired\":true,\"from\":0.8688698078309287,\"to\":0.8688715455722822},{\"name\":\"param_three\",\"isRequired\":true,\"from\":-37.28989792267633,\"to\":-37.28982334295506}],\"property\":[],\"tag\":[],\"label\":[],\"priority\":[],\"parentId\":[],\"predecessorId\":[]}";
-			
-		//	String bar1 = "{parameter:[{name:param_two,isRequired:true,from:0.7665302026030788,to:0.7665317356650171},{name:param_one,isRequired:true,from:13.846440805352552,to:13.846468498261855},{name:param_three,isRequired:true,from:-22.86268968934822,to:-22.862643964014563}],property:[],tag:[],label:[],priority:[],parentId:[],predecessorId:[]}";
-	//		entity = new StringEntity(bar1);
-			HttpResponse response = doPost(url, getLevelMetadata, entity);
-			return response;
-		}
-		catch(Exception e)
-		{
-		}
-		return null;
+		String requestUrl = "/ra/games/1/levels/count/" + count + "/search";
+	    String requestBodyJson = gson.toJson(new Constraint());
+	    String jsonString = RestAssured.given().contentType("application/json").body(requestBodyJson).when().post(requestUrl).body()
+	        .asString();
+	    SearchLevelsResponse response = gson.fromJson(jsonString, SearchLevelsResponse.class);
+	    System.out.println("Response: " + response.toString());
+	    return response;
 	}
-	*/
+
 
 /*	
 	public HttpResponse getLevelStatusReport(String levelID)

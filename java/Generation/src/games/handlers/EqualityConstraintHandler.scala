@@ -5,6 +5,9 @@ import verigames.level.{Board, Subboard, Chute, Intersection}
 import checkers.inference._
 import checkers.types.AnnotatedTypeMirror
 import checkers.types.AnnotatedTypeMirror.{AnnotatedTypeVariable, AnnotatedDeclaredType}
+import verigames.level.Intersection.Kind._
+import checkers.inference.EqualityConstraint
+import checkers.inference.CombVariable
 
 /**
  * Handler for an equality constraint--for equality constraints, we just need to
@@ -15,23 +18,46 @@ import checkers.types.AnnotatedTypeMirror.{AnnotatedTypeVariable, AnnotatedDecla
  * @param gameSolver
  */
 
-case class EqualityConstraintHandler( override val constraint : EqualityConstraint,
-                                      gameSolver : GameSolver )
+abstract class EqualityConstraintHandler( override val constraint : EqualityConstraint,
+                                 gameSolver : GameSolver )
   extends ConstraintHandler[EqualityConstraint] {
+  import Intersection.Kind._
+  import gameSolver._
+
+  //Put Constants and Literals in here that represent what types are implicitly narrow or wide
+  //See isNarrow, isWide, these will be used in handleMixed to automatically generate the right
+  //forced-narrow or forced-wide pipe
+  val narrowSlotTypes : List[Slot]
+  val wideSlotTypes   : List[Slot]
+
+  def isNarrow( nonVar : Slot ) = narrowSlotTypes.find( _ == nonVar ).isDefined
+  def isWide(   nonVar : Slot ) = wideSlotTypes.find(   _ == nonVar ).isDefined
 
   //NOTE: If a variable isn't declared in this file then it likely comes from gameSolver
-  val EqualityConstraint(leftVar : AbstractVariable, rightVar : AbstractVariable) = constraint
+  val EqualityConstraint(leftSlot : Slot, rightSlot : Slot) = constraint
 
   override def handle( ) {
-    import gameSolver._
-    val leftBoard  = gameSolver.variablePosToBoard(leftVar.varpos)
-    val rightBoard = gameSolver.variablePosToBoard(rightVar.varpos)
+    ( leftSlot, rightSlot ) match {
+      case ( combVar1 : CombVariable, _ )  => println( "Handle combVars in equality constraints" )
+      case ( _, combVar2 : CombVariable )  => println( "Handle combVars in equality constraints" )
 
-    val leftCon  = Intersection.factory(Intersection.Kind.CONNECT)
-    val rightCon = Intersection.factory(Intersection.Kind.CONNECT)
+      case ( leftVar : AbstractVariable, rightVar : AbstractVariable )  => handleVars( leftVar, rightVar )
+      case ( leftVar : AbstractVariable, _ )  => handleMixed( leftVar,  rightSlot )
+      case ( _, rightVar : AbstractVariable ) => handleMixed( rightVar, leftSlot  )
+      case _ => handleConstants( leftSlot, rightSlot )
+    }
 
-    val lastLeft  = gameSolver.boardNVariableToIntersection((leftBoard, leftVar))
-    val lastRight = gameSolver.boardNVariableToIntersection((rightBoard, rightVar))
+  }
+
+  protected def handleVars( leftVar : AbstractVariable, rightVar : AbstractVariable ) {
+    val leftBoard  = variablePosToBoard(leftVar.varpos)
+    val rightBoard = variablePosToBoard(rightVar.varpos)
+
+    val leftCon  = Intersection.factory( CONNECT )
+    val rightCon = Intersection.factory( CONNECT )
+
+    val lastLeft  = boardNVariableToIntersection((leftBoard, leftVar))
+    val lastRight = boardNVariableToIntersection((rightBoard, rightVar))
 
     leftBoard.addNode(leftCon)
     rightBoard.addNode(rightCon)
@@ -40,7 +66,7 @@ case class EqualityConstraintHandler( override val constraint : EqualityConstrai
     val rightPipe = new Chute(rightVar.id, rightVar.toString())
 
     val level = variablePosToLevel(leftVar.varpos)
-    level.linkByVarID(leftVar.id, rightVar.id)
+    level.linkByVarID( leftVar.id, rightVar.id )
 
     leftBoard.addEdge(lastLeft, "output", leftCon, "input", leftPipe)
     rightBoard.addEdge(lastRight, "output", rightCon, "input", rightPipe)
@@ -48,4 +74,39 @@ case class EqualityConstraintHandler( override val constraint : EqualityConstrai
     boardNVariableToIntersection.update((leftBoard, leftVar), leftCon)
     boardNVariableToIntersection.update((rightBoard, rightVar), rightCon)
   }
+
+  protected def handleMixed( variable : AbstractVariable, nonVariable : Slot ) {
+    if( isNarrow( nonVariable ) ) {
+      forceNarrow( variable )
+    } else if( isWide( nonVariable ) ) {
+      forceWide( variable )
+    } else {
+      println( "Unhandled equality constraint. ( " + variable + ", " + nonVariable + ") " )
+    }
+  }
+
+  protected def handleConstants( leftSlot : Slot, rightSlot : Slot ) {
+    //So this shouldn't happen because all trees that are usually annotated but have a Constant on them
+    //should just have an equality constraint between the variable and the Constant
+    //but lets check and throw if they don't agree
+    assert ( isNarrow( leftSlot ) == isNarrow(rightSlot ) )
+    assert ( isWide(   leftSlot ) == isWide(  rightSlot ) )
+  }
+
+  private def forceWidth( variable : AbstractVariable, isNarrow : Boolean ) {
+
+    val board = variablePosToBoard( variable.varpos )
+    val lastIntersection = boardNVariableToIntersection( (board, variable) )
+
+    val pipe = new Chute( variable.id, variable.toString )
+    pipe.setNarrow( isNarrow )
+    pipe.setEditable(false)
+
+    val con  = board.add( lastIntersection, "output", CONNECT, "input", pipe ).getSecond
+    boardNVariableToIntersection( (board, variable) ) = con
+  }
+
+  protected def forceNarrow( variable : AbstractVariable ) = forceWidth( variable, true  )
+
+  protected def forceWide( variable : AbstractVariable )   = forceWidth( variable, false )
 }

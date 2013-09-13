@@ -16,6 +16,8 @@ package scenes.layoutselectscene
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.PixelSnapping;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import networking.*;
@@ -81,7 +83,7 @@ package scenes.layoutselectscene
 		{
 			super.addedToStage(event);
 			
-			background = new Image(AssetInterface.getTexture("Game", "StationaryBackgroundClass"));
+			background = new Image(AssetInterface.getTexture("Game", "Background0Class"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
@@ -218,7 +220,7 @@ package scenes.layoutselectscene
 				{
 					if(currentSelectedLayout.description.length > 0)
 					{
-						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF);
+						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF, true);
 						TextFactory.getInstance().updateAlign(descriptionText, 0, 1);
 						addChild(descriptionText);
 						descriptionText.x = levelSelectInfoPanel.x+ 10;
@@ -371,6 +373,18 @@ package scenes.layoutselectscene
 				}
 
 			}
+		}
+		
+		public function rotateAroundCenter (ob:*, angleDegrees:Number):void
+		{
+			var point:Point = new Point(ob.x, ob.y);
+			var m:Matrix=ob.transform.matrix;
+			m.tx -= point.x;
+			m.ty -= point.y;
+			m.rotate(angleDegrees*(Math.PI/180));
+			m.tx += point.x;
+			m.ty += point.y;
+			ob.transform.matrix=m;
 		}
 	}
 }

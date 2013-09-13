@@ -98,9 +98,9 @@ package
 			return createTextField(text, "Verdana", width, height, fontSize, color);
 		}
 		
-		public function createTextField(text:String, fontName:String, width:Number, height:Number, fontSize:Number, color:uint):TextFieldWrapper
+		public function createTextField(text:String, fontName:String, width:Number, height:Number, fontSize:Number, color:uint, wrap:Boolean = false):TextFieldWrapper
 		{
-			var ret:TextFieldHack = new TextFieldHack(width, height, text, fontName, fontSize, color, false);
+			var ret:TextFieldHack = new TextFieldHack(width, height, text, fontName, fontSize, color, false, wrap);
 			//ret.border = true;
 			ret.touchable = false;
 			return ret;

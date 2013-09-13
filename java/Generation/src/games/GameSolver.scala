@@ -328,13 +328,6 @@ abstract class GameSolver extends ConstraintSolver {
 
       startClassTypeParams()
 
-      //Add the type parameter lower bounds above subboard intersections that need them as input
-      // (see addConstraintLowerBounds )
-      constraints
-        .filter( _.isInstanceOf[SubboardCallConstraint[_]] )
-        .map(    _.asInstanceOf[SubboardCallConstraint[_]] )
-        .foreach( addMissingMethodVars _ )
-
       refinementVariables.foreach(
         refVar => {
           //create the refinement variable no ball start
@@ -349,34 +342,54 @@ abstract class GameSolver extends ConstraintSolver {
         }
       )
 
+      //Add the type parameter lower bounds above subboard intersections that need them as input
+      // (see addConstraintLowerBounds )
+      constraints
+        .filter( _.isInstanceOf[SubboardCallConstraint[_]] )
+        .map(    _.asInstanceOf[SubboardCallConstraint[_]] )
+        .foreach( addMissingMethodVars _ )
+
       //One of these constraints is the one between overridden method return types
       //TODO: Log these and eliminate them.
       //There are variables that may be in a subtype relationship that are still not on the boards in which they are
       //needed for now just add a pipe-dependent start
       constraints.foreach( constraint => {
-        val(sub, sup, board) = constraint match {
-          case SubtypeConstraint(sub: Slot, sup: Slot) => (sub, sup, findBoard(sub, sup))
+        val slotToBoard = new ListBuffer[(AbstractVariable, Board)]
+        constraint match {
+          case SubtypeConstraint(sub: Slot, sup: Slot) =>
+            val board = findBoard(sub, sup)
+            slotToBoard ++= List(sub, sup)
+              .filterNot( isUniqueSlot _)
+              .map( _.asInstanceOf[AbstractVariable])
+              .map( av => av -> board )
 
-          case EqualityConstraint(ell: Slot, elr: Slot) => (elr, ell, findBoard(elr, ell))
+          case EqualityConstraint(ell: Slot, elr: Slot) =>
+            slotToBoard ++= List(ell, elr)
+              .filterNot( isUniqueSlot _)
+              .map( _.asInstanceOf[AbstractVariable])
+              .map( av => av -> variablePosToBoard( av.varpos ) )
 
-          case InequalityConstraint(context: VariablePosition, ell: Slot, elr: Slot) => (elr, ell, variablePosToBoard(context))
+          case InequalityConstraint(context: VariablePosition, ell: Slot, elr: Slot) =>
+            val board = variablePosToBoard( context )
+            slotToBoard ++= List(ell, elr)
+              .filterNot( isUniqueSlot _)
+              .map( _.asInstanceOf[AbstractVariable])
+              .map( av => av -> board )
 
-          case _ => (null, null, null)
+          case _ =>
         }
 
-        if( sub != null ) {
+        if( !slotToBoard.isEmpty ) {
 
-          if( board != null ) { //TODO: FIGURE OUT WHICH THIS IS HAPPENING ON
-            val missing = List(sub, sup)
-              .filterNot( isUniqueSlot _ )
-              .map( _.asInstanceOf[AbstractVariable] )
-              .filterNot( variable => boardNVariableToIntersection.contains( board, variable ))
+          val missing = slotToBoard.filterNot( {
+            //TODO: Why are some boards null and why do we ignore that?
+            case (variable, board) =>  board == null || boardNVariableToIntersection.contains( board, variable )
+          })
 
-            missing.foreach(cvar => {
-              val connect = board.add(START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute(cvar))._2
-              boardNVariableToIntersection += ((board, cvar) -> connect)
-            } )
-          }
+          missing.foreach( { case (variable, board) =>
+            val connect = board.add(START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute(variable))._2
+            boardNVariableToIntersection += ((board, variable) -> connect)
+          })
         }
       })
 
@@ -591,8 +604,6 @@ abstract class GameSolver extends ConstraintSolver {
       isMethodReceiver( board, variable )
     }
 
-    //TODO: This will erroneously identify a ClassTypeParameterVP from outside the class
-    //TODO: as a receiver param if it somehow ends up on that board
     def isGetterOrSetterReceiver( board : Board, variable : AbstractVariable ) = {
       ( isFieldGetterBoard( board ) || isFieldSetterBoard( board ) ) &&
         ( variable.varpos.isInstanceOf[ClassTypeParameterVP] ||

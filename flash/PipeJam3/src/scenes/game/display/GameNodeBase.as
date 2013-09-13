@@ -2,19 +2,14 @@ package scenes.game.display
 {
 	import display.NineSliceBatch;
 	
-	import events.EdgeSetChangeEvent;
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
 	import events.MoveEvent;
 	import events.UndoEvent;
 	
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
-	import starling.display.BlendMode;
-	import starling.display.Quad;
-	import starling.display.Shape;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -42,7 +37,7 @@ package scenes.game.display
 		public function GameNodeBase(_layoutXML:XML)
 		{
 			super(_layoutXML.@id);
-
+			
 			m_layoutXML = _layoutXML;
 			m_boundingBox = findBoundingBox(m_layoutXML);
 			
@@ -145,12 +140,8 @@ package scenes.game.display
 			if (m_box9slice) {
 				m_box9slice.removeFromParent(true);
 			}
-			if (hasEventListener(Event.ENTER_FRAME)) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
-			if (hasEventListener(TouchEvent.TOUCH)) {
-				removeEventListener(TouchEvent.TOUCH, onTouch);
-			}
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			removeEventListener(TouchEvent.TOUCH, onTouch);
 			super.dispose();
 		}
 		
@@ -159,10 +150,12 @@ package scenes.game.display
 		private var startingTouchPoint:Point;
 		private var startingPoint:Point;
 		private static const CLICK_DIST:Number = 0.2; // if the node is moved just a tiny bit, chances are the user meant to click rather than move
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
+			super.onTouch(event);
 			var touches:Vector.<Touch> = event.touches;
 			var touch:Touch = touches[0];
+			
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{

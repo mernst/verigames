@@ -12,6 +12,8 @@ package graph
 		private var m_obfuscator:NameObfuscater;
 		
 		public var metadata:Dictionary = new Dictionary();
+		// Edge set id -> Edge set ref
+		public var edge_set_dictionary:Dictionary;
 		
 		/** This is a dictionary of BoardNodes, which is a dictionary of Nodes; INDEXED BY BOARD NAME AND NODE ID, RESPECTIVELY */
 		public var boardNodesDictionary:Dictionary = new Dictionary();
@@ -20,7 +22,7 @@ package graph
 		public var boardNodeNameArray:Array = new Array;
 		public var qid:int = -1;
 		
-		public function LevelNodes(_original_level_name:String, _obfuscater:NameObfuscater = null) 
+		public function LevelNodes(_original_level_name:String, _obfuscater:NameObfuscater = null, _edge_set_dictionary:Dictionary = null) 
 		{
 			original_level_name = _original_level_name;
 			m_obfuscator = _obfuscater;
@@ -29,6 +31,8 @@ package graph
 			} else {
 				level_name = _original_level_name;
 			}
+			edge_set_dictionary = _edge_set_dictionary;
+			if (edge_set_dictionary == null) edge_set_dictionary = new Dictionary();
 		}
 		
 		public function addNode(_node:Node, _original_board_name:String):void {

@@ -18,6 +18,9 @@
     <edgeref id="e41"/>
 	<edgeref id="e42"/>
    </edge-set>
+   <edge-set id="LockedWidget5">
+    <edgeref id="e5"/>
+   </edge-set>
   </linked-edges>
   <boards>
    <board name="LockedWidget--Board">
@@ -65,6 +68,16 @@
      <input/>
      <output>
       <port num="0" edge="e33"/>
+     </output>
+     <layout>
+      <x>0.0</x>
+      <y>0.0</y>
+     </layout>
+    </node>
+	<node kind="START_PIPE_DEPENDENT_BALL" id="n5">
+     <input/>
+     <output>
+      <port num="0" edge="e5"/>
      </output>
      <layout>
       <x>0.0</x>
@@ -134,6 +147,13 @@
      <output/>
      <layout><x>0.0</x><y>0.0</y></layout>
     </node>
+	<node kind="END" id="n50">
+     <input>
+      <port num="0" edge="e5"/>
+     </input>
+     <output/>
+     <layout><x>0.0</x><y>0.0</y></layout>
+    </node>
     <edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e1" buzzsaw="false">
      <from><noderef id="n1" port="0"/></from>
      <to><noderef id="n10" port="0"/></to>
@@ -167,6 +187,11 @@
 	<edge description="this" variableID="-1" pinch="false" width="wide" editable="true" id="e42" buzzsaw="false">
      <from><noderef id="n42" port="0"/></from>
      <to><noderef id="n420" port="0"/></to>
+     <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
+    </edge>
+	<edge description="this" variableID="-1" pinch="false" width="wide" editable="false" id="e5" buzzsaw="false">
+     <from><noderef id="n5" port="0"/></from>
+     <to><noderef id="n50" port="0"/></to>
      <edge-layout><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point><point><x>0</x><y>0</y></point></edge-layout>
     </edge>
    </board>

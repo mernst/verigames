@@ -46,6 +46,9 @@ package graph
 		/** The unique id given as input from XML (unique within a given world) */
 		public var node_id:String;
 		
+		/** True if start node/incoming node */
+		public var isOriginationNode:Boolean = false;
+		
 		/**
 		 * Directed Graph Node created when a graph structure is read in from XML (or internally for pipe objects - but this is being deprecated)
 		 * @param	_x X coordinate of this node in board space
@@ -72,6 +75,16 @@ package graph
 			metadata = null;
 			incoming_ports = new Vector.<Port>();
 			outgoing_ports = new Vector.<Port>();
+			
+			switch (kind) {
+				case NodeTypes.START_LARGE_BALL:
+				case NodeTypes.START_NO_BALL:
+				case NodeTypes.START_PIPE_DEPENDENT_BALL:
+				case NodeTypes.START_SMALL_BALL:
+				case NodeTypes.INCOMING:
+					isOriginationNode = true;
+					break;
+			}
 		}
 		
 		/**

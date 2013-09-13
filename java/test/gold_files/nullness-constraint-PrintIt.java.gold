@@ -1,0 +1,53 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class PrintIt extends type; tree <<missing tree>> within 
+class PrintIt {
+    
+    PrintIt() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        System.out.println("Object of the day: " + o);
+    }
+}
+
+subtype constraint: Variable 1 at method PrintIt#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class PrintIt extends type; tree <<missing tree>> within 
+class PrintIt {
+    
+    PrintIt() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        System.out.println("Object of the day: " + o);
+    }
+}
+
+subtype constraint: Variable 2 at method PrintIt#m():V receiver; tree <<missing tree>> within 
+void m() {
+    Object o = new Object();
+    System.out.println("Object of the day: " + o);
+}Atm: @VarAnnot(2) PrintIt  <:  Variable 0 at class PrintIt extends type; tree <<missing tree>> within 
+class PrintIt {
+    
+    PrintIt() {
+        super();
+    }
+    
+    void m() {
+        Object o = new Object();
+        System.out.println("Object of the day: " + o);
+    }
+}
+
+inequality constraint at method PrintIt#m():V constraint position: Variable 4 at method PrintIt#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 4 at method PrintIt#m():V creation 0; tree Object  <:  Variable 3 at method PrintIt#m():V local variable o(0); tree Object
+
+inequality constraint at method PrintIt#m():V constraint position: Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable)
+

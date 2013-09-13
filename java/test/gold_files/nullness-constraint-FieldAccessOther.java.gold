@@ -1,0 +1,148 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class FieldAccessOther class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class FieldAccessOther extends type; tree <<missing tree>> within 
+class FieldAccessOther<T extends Object> {
+    
+    FieldAccessOther() {
+        super();
+    }
+    public String field = "";
+    
+    public void locAccess() {
+        String la = field;
+        String la2 = this.field;
+    }
+}
+
+subtype constraint: Variable 4 at method FieldAccessOther#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 2 at class FieldAccessOther extends type; tree <<missing tree>> within 
+class FieldAccessOther<T extends Object> {
+    
+    FieldAccessOther() {
+        super();
+    }
+    public String field = "";
+    
+    public void locAccess() {
+        String la = field;
+        String la2 = this.field;
+    }
+}
+
+subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 3 at class FieldAccessOther field field; tree String
+
+subtype constraint: Variable 5 at method FieldAccessOther#locAccess():V receiver; tree <<missing tree>> within 
+public void locAccess() {
+    String la = field;
+    String la2 = this.field;
+}Atm: @VarAnnot(5) FieldAccessOther<T extends Object>  <:  Variable 2 at class FieldAccessOther extends type; tree <<missing tree>> within 
+class FieldAccessOther<T extends Object> {
+    
+    FieldAccessOther() {
+        super();
+    }
+    public String field = "";
+    
+    public void locAccess() {
+        String la = field;
+        String la2 = this.field;
+    }
+}
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldAccessOther#locAccess():V constraint position; 
+calledVp: class FieldAccessOther field field; 
+receiver: Variable 5 at method FieldAccessOther#locAccess():V receiver; tree <<missing tree>> within 
+public void locAccess() {
+    String la = field;
+    String la2 = this.field;
+}Atm: @VarAnnot(5) FieldAccessOther<T extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class FieldAccessOther class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object) >; 
+args: (  ); 
+result: List(Variable 3 at class FieldAccessOther field field; tree String); 
+)
+
+subtype constraint: Variable 3 at class FieldAccessOther field field; tree String  <:  Variable 6 at method FieldAccessOther#locAccess():V local variable la(0); tree String
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method FieldAccessOther#locAccess():V constraint position; 
+calledVp: class FieldAccessOther field field; 
+receiver: Variable 5 at method FieldAccessOther#locAccess():V receiver; tree <<missing tree>> within 
+public void locAccess() {
+    String la = field;
+    String la2 = this.field;
+}Atm: @VarAnnot(5) FieldAccessOther<T extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class FieldAccessOther class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object) >; 
+args: (  ); 
+result: List(Variable 3 at class FieldAccessOther field field; tree String); 
+)
+
+subtype constraint: Variable 3 at class FieldAccessOther field field; tree String  <:  Variable 7 at method FieldAccessOther#locAccess():V local variable la2(0); tree String
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 8 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    
+    OtherAccess() {
+        super();
+    }
+    
+    public void method(FieldAccessOther<String> fao) {
+        String loc = fao.field;
+    }
+}
+
+subtype constraint: Variable 9 at method OtherAccess#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 8 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    
+    OtherAccess() {
+        super();
+    }
+    
+    public void method(FieldAccessOther<String> fao) {
+        String loc = fao.field;
+    }
+}
+
+subtype constraint: Variable 10 at method OtherAccess#method(LFieldAccessOther;):V receiver; tree <<missing tree>> within 
+public void method(FieldAccessOther<String> fao) {
+    String loc = fao.field;
+}Atm: @VarAnnot(10) OtherAccess  <:  Variable 8 at class OtherAccess extends type; tree <<missing tree>> within 
+class OtherAccess {
+    
+    OtherAccess() {
+        super();
+    }
+    
+    public void method(FieldAccessOther<String> fao) {
+        String loc = fao.field;
+    }
+}
+
+inequality constraint at method OtherAccess#method(LFieldAccessOther;):V constraint position: Variable 11 at method OtherAccess#method(LFieldAccessOther;):V parameter 0; tree FieldAccessOther within FieldAccessOther<String> != Constant(@nninf.quals.Nullable)
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method OtherAccess#method(LFieldAccessOther;):V constraint position; 
+calledVp: class FieldAccessOther field field; 
+receiver: Variable 11 at method OtherAccess#method(LFieldAccessOther;):V parameter 0; tree FieldAccessOther within FieldAccessOther<String>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 12 at method OtherAccess#method(LFieldAccessOther;):V parameter 0; tree String at position ((3,0)) within FieldAccessOther<String>) >; 
+args: (  ); 
+result: List(Variable 3 at class FieldAccessOther field field; tree String); 
+)
+
+subtype constraint: Variable 3 at class FieldAccessOther field field; tree String  <:  Variable 13 at method OtherAccess#method(LFieldAccessOther;):V local variable loc(0); tree String
+

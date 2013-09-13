@@ -4,6 +4,7 @@ import com.mongodb.gridfs.*;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class MongoTestBed {
 
 
         //staging game level server
-        Mongo mongo = new Mongo( "api.pipejam.verigames.com" );
+        Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
         String dbName = "gameapi";
@@ -113,7 +114,7 @@ public class MongoTestBed {
 //        
 //      		
 //        //write output to temp file
-//        File temp = new File("C:\\Users\\craigc\\Documents\\Pipejam\\flash\\PipeJam3\\SampleWorlds\\DemoWorld\\test\\delme.tmp");
+ //       File temp = new File("C:\\Users\\craigc\\Documents\\Pipejam\\flash\\PipeJam3\\SampleWorlds\\DemoWorld\\test\\delme.tmp");
 //        outFile.writeTo(temp);
         
 //        BasicDBObject field = new BasicDBObject();
@@ -160,24 +161,28 @@ public class MongoTestBed {
 	            System.out.println("Collection " + s);
 	            if(s.equals("log"))
 	            {
+	       //     	PrintWriter writer = new PrintWriter(s+".txt", "UTF-8");
 		            DBCollection coll = db.getCollection(s);
-		            ObjectId field = new ObjectId("521525e6a8e09714605209b5");
+		            ObjectId field = new ObjectId("521692a6a8e0e7d8db85c971");
 		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
 		            BasicDBObject field1 = new BasicDBObject();
 		            field1.put("_id", field);
-		            //    DBCursor cursor = coll.find(field1);
-		                  DBCursor cursor = coll.find();
+		            //   DBCursor cursor = coll.find(field1);
+		                   DBCursor cursor = coll.find();
 		    	        try {
 		    	           while(cursor.hasNext()) {
 		    	        	   count++;
 		    	        	   DBObject obj = cursor.next();
 		    	        	   System.out.println(obj); 
+		    	      //  	   writer.println(obj);
 		    	        	   
-		    	      //  	   coll.remove(obj);
+		    	     //   	   coll.remove(obj);
 		    	           }
 		    	        } finally {
 		    	           cursor.close();
 		    	        }
+		  //  	   writer.close();
+
 	            }
 	        }
     	    count++;

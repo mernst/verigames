@@ -10,6 +10,7 @@ package display
 	{
 		public function ZoomInButton()
 		{
+			m_toolTipText = "Zoom In";
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			super(
 				Vector.<DisplayObject>([new Image(atlas.getTexture(AssetInterface.PipeJamSubTexture_ZoomInButton))]),

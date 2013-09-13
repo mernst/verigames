@@ -1,6 +1,7 @@
 package display 
 {
 	import assets.AssetsAudio;
+	import events.ToolTipEvent;
 	
 	import audio.AudioManager;
 	
@@ -14,7 +15,7 @@ package display
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
-	public class NineSliceButton extends Sprite 
+	public class NineSliceButton extends ToolTippableSprite 
 	{
 		private var m_buttonBatch:NineSliceBatch;
 		private var m_buttonOverBatch:NineSliceBatch;
@@ -32,14 +33,17 @@ package display
 		
 		protected var fontName:String;
 		protected var fontColor:uint;
+		protected var m_toolTipText:String;
 		
 		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                                _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
 										_atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String = "", 
-										_atlasXMLButtonClickTexturePrefix:String = "", _fontColorOver:uint = 0xFFFFFF, _fontColorClick:uint = 0xFFFFFF)
+										_atlasXMLButtonClickTexturePrefix:String = "", _fontColorOver:uint = 0xFFFFFF, _fontColorClick:uint = 0xFFFFFF,
+										_toolTipText:String = "")
 		{
 			fontName = _fontName;
 			fontColor =  _fontColor;
+			m_toolTipText = _toolTipText;
 			
 			m_buttonBatch = new NineSliceBatch(_width, _height, _cX, _cY, _atlasFile, _atlasImgName, _atlasXMLName, _atlasXMLButtonTexturePrefix);
 			m_textField = TextFactory.getInstance().createTextField(_text, _fontName, TXT_PCT * _width, TXT_PCT * _height, TXT_PCT * _height, _fontColor);
@@ -86,8 +90,10 @@ package display
 		protected var mIsDown:Boolean = false;
 		protected var mIsHovering:Boolean = false;
 		// Adaptive from starling.display.Button
-		protected function onTouch(event:TouchEvent):void
+		protected override function onTouch(event:TouchEvent):void
         {
+			super.onTouch(event);
+			
             Mouse.cursor = (useHandCursor && mEnabled && event.interactsWith(this)) ? 
                 MouseCursor.BUTTON : MouseCursor.AUTO;
             
@@ -195,6 +201,11 @@ package display
 				removeEventListener(TouchEvent.TOUCH, onTouch);
 				alpha = 0.3;
 			}
+		}
+		
+		protected override function getToolTipEvent():ToolTipEvent
+		{
+			return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, m_toolTipText);
 		}
 	}
 }
