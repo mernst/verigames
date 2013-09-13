@@ -100,10 +100,14 @@ package scenes.loadingscreen
 		}
 		
 		public var count:int = 0;
+		public var playerTimeOut:Boolean = false;
 		public function playerValidationAttempted(e:TimerEvent = null):void
 		{
 			if(e && e.target == timeoutTimer && sessionVerificationHasBeenAttempted == false)
+			{
 				setStatus("Player Validation Timed Out");
+				playerTimeOut = true;
+			}
 
 			sessionVerificationHasBeenAttempted = true;
 			if (timeoutTimer) 
@@ -121,7 +125,9 @@ package scenes.loadingscreen
 		public function changeScene(e:TimerEvent = null):void
 		{	
 			var tutorialController:TutorialController = TutorialController.getTutorialController();
-			if (timer && timer.running)
+			//would like some way for this to show message when validation failed, not just timed out
+			//but without playerTimeOut flag, this never exits the loading screen
+			if (timer && timer.running && playerTimeOut)
 			{
 				return;
 			}
@@ -129,7 +135,7 @@ package scenes.loadingscreen
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, changeScene);
 			}
-			else if (tutorialController.completedTutorialList == null)
+			else if (tutorialController.completedTutorialList == null && PlayerValidation.playerLoggedIn)
 			{
 				timer = new Timer(200, 1);
 				timer.addEventListener(TimerEvent.TIMER, changeScene);
@@ -138,7 +144,7 @@ package scenes.loadingscreen
 			}
 			timer == null;
 			
-			if(tutorialController.completedTutorialList != null)
+			if(tutorialController.completedTutorialList != null || PlayerValidation.playerLoggedIn == false)
 				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
