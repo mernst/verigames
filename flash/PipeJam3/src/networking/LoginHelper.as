@@ -237,7 +237,6 @@ package networking
 			//saving the score, level and player info
 			//reporting the player performance/preference to the RA
 			
-			//currently we just do 1 and 2
 			m_levelFilesString = _levelFilesString;
 			m_currentMessageType = type;
 			m_fileType = fileType;

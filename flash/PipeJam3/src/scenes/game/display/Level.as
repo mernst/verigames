@@ -130,6 +130,10 @@ package scenes.game.display
 		/** Base Score = # of lines * possible conflict points */
 		private var m_baseScore:int = 0;
 		
+		/** Set to true when the target score is reached. */
+		public var targetScoreReached:Boolean;
+
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -161,7 +165,7 @@ package scenes.game.display
 			}
 			
 			m_targetScore = _targetScore;
-			
+			targetScoreReached = false;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}

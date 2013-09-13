@@ -755,6 +755,8 @@ package scenes.game.display
 			if (active_level.getTargetScore() == int.MAX_VALUE) {
 				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
 				active_level.setTargetScore(newTarget);
+				if(LoginHelper.getLoginHelper().levelObject != null)
+					LoginHelper.getLoginHelper().levelObject.targetScore = newTarget;
 				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
 				active_level.updateScore();
 			}
