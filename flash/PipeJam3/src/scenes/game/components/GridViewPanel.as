@@ -717,8 +717,10 @@ package scenes.game.components
 				continueButton.y = HEIGHT - continueButton.height - 5 - GameControlPanel.OVERLAP;
 			}
 			
-			if (continueButton.parent == null) {
-				addChild(continueButton);
+				if (!m_currentLevel.targetScoreReached) {
+					m_currentLevel.targetScoreReached = true;
+					if(PipeJamGameScene.inTutorial)
+						addChild(continueButton);
 				
 				// Fanfare
 				removeFanfare();
@@ -735,25 +737,31 @@ package scenes.game.components
 					m_fanfareContainer.addChild(fanfare);
 				}
 				
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
-				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
-				m_fanfareTextContainer.addChild(textField);
-				addChild(m_fanfareTextContainer);
-				
-				var origX:Number = m_fanfareTextContainer.x;
-				var origY:Number = m_fanfareTextContainer.y;
-				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 1.0;
-				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
 				startFanfare();
-				for (i = 0; i < m_fanfare.length; i++) {
-					Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+				var LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 0.0;
+				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
+				//don't add text or tween things unless in tutorial
+				if(PipeJamGameScene.inTutorial)
+				{
+					//make delay longer when in tutorial
+					LEVEL_COMPLETE_TEXT_PAUSE_SEC = 1.0;
+					var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
+					TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+					m_fanfareTextContainer.addChild(textField);
+					addChild(m_fanfareTextContainer);
+				
+					var origX:Number = m_fanfareTextContainer.x;
+					var origY:Number = m_fanfareTextContainer.y;
+					for (i = 0; i < m_fanfare.length; i++) {
+						Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+					}
+					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 				}
 				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
-				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
 			}
 			
-			//assume we are in the tutorial, and we just finished a level
-			TutorialController.getTutorialController().addCompletedTutorial(m_currentLevel.m_tutorialTag, true);
+			if(PipeJamGameScene.inTutorial)
+				TutorialController.getTutorialController().addCompletedTutorial(m_currentLevel.m_tutorialTag, true);
 		}
 		
 		private function startFanfare():void
