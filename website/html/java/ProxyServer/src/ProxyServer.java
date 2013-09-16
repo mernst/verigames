@@ -22,12 +22,9 @@ public class ProxyServer {
 	static public String version = "1.0b";
 	static public int port = 8001;	//default
 	static DBCollection logColl;
-	//set to true to not log, and display log to console
-	static public boolean runLocally = false;
+	static public boolean runLocally = true;
 	
-	//not currently doing anything, will eventually allow for receiving messages but not forward them
-	//make sure it's false
-	static public boolean testSilent = false;
+	static public boolean testSilent = true;
 	
     public static void main(String[] args) throws IOException {
     	

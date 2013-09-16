@@ -36,9 +36,9 @@ package scenes.game
 		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
 		static public var dArray:Array = new Array(
-			"../../../../SampleWorlds/MapGet.zip",
-			"../../../../SampleWorlds/MapGetConstraints.zip",
-			"../../../../SampleWorlds/MapGetLayout.zip"
+			"../SampleWorlds/MapGet.zip",
+			"../SampleWorlds/MapGetConstraints.zip",
+			"../SampleWorlds/MapGetLayout.zip"
 		);
 		
 		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
