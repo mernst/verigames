@@ -92,6 +92,8 @@ package
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
 			
+			var paramObj:String = String(LoaderInfo(Starling.current.nativeStage.loaderInfo).parameters.level);
+			
 			// create and show menu screen
 			if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 				showScene("LoadingScene");

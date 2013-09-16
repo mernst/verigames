@@ -85,10 +85,15 @@ package starling.display
         private static var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
         private static var sRenderMatrix:Matrix3D = new Matrix3D();
         private static var sProgramNameCache:Dictionary = new Dictionary();
+		
+		protected static var currentObjectCount:int = 0;
+		public var objectIndex:int;
         
         /** Creates a new QuadBatch instance with empty batch data. */
         public function QuadBatch()
         {
+			objectIndex = currentObjectCount++;
+			
             mVertexData = new VertexData(0, true);
             mIndexData = new <uint>[];
             mNumQuads = 0;
@@ -169,7 +174,7 @@ package starling.display
             if (mIndexBuffer)     mIndexBuffer.dispose();
             if (numVertices == 0) return;
             if (context == null)  throw new MissingContextError();
-            
+            trace(objectIndex, numVertices);
             mVertexBuffer = context.createVertexBuffer(numVertices, VertexData.ELEMENTS_PER_VERTEX);
             mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, numVertices);
             
@@ -337,6 +342,7 @@ package starling.display
         public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:Texture, 
                                       smoothing:String, blendMode:String, numQuads:int=1):Boolean
         {
+			
             if (mNumQuads == 0) return false;
             else if (mNumQuads + numQuads > 8192) return true; // maximum buffer size
             else if (mTexture == null && texture == null) return false;
@@ -346,7 +352,16 @@ package starling.display
                        mSmoothing != smoothing ||
                        mTinted != (tinted || parentAlpha != 1.0) ||
                        this.blendMode != blendMode;
-            else return true;
+            else
+			{
+//				if(mTexture && texture)
+//					trace (mTexture.base, texture.base, mTexture.repeat,texture.repeat, mSmoothing,smoothing, mTinted,tinted,parentAlpha, this.blendMode, blendMode);
+//				else if(mTexture)
+//						trace ("texture != mTexture", mSmoothing,smoothing, mTinted,tinted,parentAlpha, this.blendMode, blendMode);
+//				else
+//					trace (mSmoothing,smoothing, mTinted,tinted,parentAlpha, this.blendMode, blendMode);
+				return true;
+			}
         }
         
         // display object methods

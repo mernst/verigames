@@ -26,6 +26,8 @@ package scenes.game.components
 	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.PipeJamGameScene;
+	
 	import networking.LoginHelper;
 	
 	import starling.animation.Transitions;
@@ -65,6 +67,12 @@ package scenes.game.components
 		
 		/** Button to start the level over */
 		private var m_ResetButton:NineSliceButton;
+		
+		/** Button to save the level */
+		private var m_saveButton:NineSliceButton;
+		
+		/** Button to share the level */
+		private var m_shareButton:NineSliceButton;
 
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
@@ -156,12 +164,17 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
-			conflictMap = new ConflictMap();
-			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
-			conflictMap.y = 2;
-			conflictMap.width = width-conflictMap.x - 2;
-			conflictMap.height = height-conflictMap.y - 2;
-			//addChild(conflictMap);
+			m_saveButton = ButtonFactory.getInstance().createButton("Save", 50, 18, 8, 8);
+			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
+			m_saveButton.x = m_zoomInButton.x - 5;
+			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height + 2;
+			addChild(m_saveButton);
+			
+			m_shareButton = ButtonFactory.getInstance().createButton("Share", 50, 18, 8, 8);
+			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
+			m_shareButton.x = m_saveButton.x;
+			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
+			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -189,6 +202,17 @@ package scenes.game.components
 			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
 		}
 		
+		private function onShareButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
+			
+		}
+		
+		private function onSaveButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+		}
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
@@ -197,8 +221,9 @@ package scenes.game.components
 		public function newLevelSelected(level:Level):void 
 		{
 			updateScore(level, true);
-			conflictMap.updateLevel(level);
+	//		conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
+			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -206,6 +231,12 @@ package scenes.game.components
 			m_zoomInButton.visible = viz;
 			m_zoomOutButton.visible = viz;
 			m_recenterButton.visible = viz;
+		}
+		
+		private function setSharingButtonVisibility(viz:Boolean):void
+		{
+			m_saveButton.visible = viz;
+			m_shareButton.visible = viz;
 		}
 		
 		/**
@@ -365,17 +396,17 @@ package scenes.game.components
 		
 		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
 		{
-			conflictMap.errorAdded(errorParticleSystem, level);
+//			conflictMap.errorAdded(errorParticleSystem, level);
 		}
 		
 		public function errorRemoved(errorParticleSystem:ErrorParticleSystem):void
 		{
-			conflictMap.errorRemoved(errorParticleSystem);
+//			conflictMap.errorRemoved(errorParticleSystem);
 		}
 		
 		public function errorMoved(errorParticleSystem:ErrorParticleSystem):void
 		{
-			conflictMap.errorMoved(errorParticleSystem);
+//			conflictMap.errorMoved(errorParticleSystem);
 		}
 	}
 }

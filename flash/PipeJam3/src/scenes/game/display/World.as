@@ -74,7 +74,6 @@ package scenes.game.display
 		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
-		protected var currentLevelNumber:Number = 0;
 		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
@@ -121,7 +120,7 @@ package scenes.game.display
 			m_constraintsXML = _constraints;
 			
 			m_world = this;
-			
+			this.alpha = .999;
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -331,7 +330,7 @@ package scenes.game.display
 			}
 			else
 			{
-				dialogText = "Level Submitted! Thanks!";
+				dialogText = "Level Submitted! Thanks!\nYou can access that level in the saved level list.";
 				socialText = "I just finished a level!";
 				dialogHeight = 110;
 			}
@@ -500,17 +499,27 @@ package scenes.game.display
 		
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var currentLevelID:String = loginHelper.levelObject.levelId;
+			var level:Level;
+			//find the level with the current ID
+			for each(level in levels)
+			{
+				if(level.m_levelQID == currentLevelID)
+					break;
+			}
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber], true);
+					selectLevel(level, true);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = currentLevelNumber;
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var prevLevelNumber:Number = loginHelper.levelObject.levelId;
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -523,6 +532,7 @@ package scenes.game.display
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
 
 				//if this is the first time we've completed these, post the achievement, else just move on
+				var currentLevelNumber:int;
 				if(tutorialsDone)
 				{
 					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
