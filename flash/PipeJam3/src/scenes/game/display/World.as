@@ -229,8 +229,8 @@ package scenes.game.display
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
-			AudioManager.getInstance().audioDriver().reset();
-			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
+			AudioManager.getInstance().reset();
+			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
@@ -794,7 +794,7 @@ package scenes.game.display
 		
 		private function onRemovedFromStage():void
 		{
-			AudioManager.getInstance().audioDriver().reset();
+			AudioManager.getInstance().reset();
 			
 			if (m_activeToolTip) {
 				m_activeToolTip.removeFromParent(true);

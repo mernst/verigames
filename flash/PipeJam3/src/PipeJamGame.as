@@ -68,7 +68,7 @@ package
 			scenesToCreate["LevelSelectScene"] = LevelSelectScene;
 			scenesToCreate["PipeJamGame"] = PipeJamGameScene;
 			
-			AudioManager.getInstance().audioDriver().reset();
+			AudioManager.getInstance().reset();
 			//AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_MUSIC));
 			AudioManager.getInstance().audioDriver().sfxOn = AudioManager.getInstance().audioDriver().musicOn = !Boolean(Cache.getSave(Constants.CACHE_MUTE_SFX));
 			
