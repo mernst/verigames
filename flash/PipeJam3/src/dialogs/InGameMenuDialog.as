@@ -83,21 +83,21 @@ package dialogs
 			submit_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitLayoutButtonTriggered);
 			submit_layout_button.x = buttonPaddingWidth;
 			submit_layout_button.y = exit_button.y - buttonPaddingHeight - submit_layout_button.height;
-			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) submit_layout_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial || PipeJamGameScene.inDemo) submit_layout_button.enabled = false;
 			addChild(submit_layout_button);
 			
 			select_layout_button = ButtonFactory.getInstance().createButton("Select Layout", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Load a\nsaved layout,\nscoring will\nnot change");
 			select_layout_button.addEventListener(starling.events.Event.TRIGGERED, onSelectLayoutButtonTriggered);
 			select_layout_button.x = buttonPaddingWidth;
 			select_layout_button.y = submit_layout_button.y - buttonPaddingHeight - select_layout_button.height;
-			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) select_layout_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial || PipeJamGameScene.inDemo) select_layout_button.enabled = false;
 			addChild(select_layout_button);
 			
 			save_score_button = ButtonFactory.getInstance().createButton("Save Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Save or share\nyour progress");
 			save_score_button.addEventListener(starling.events.Event.TRIGGERED, onSaveScoreButtonTriggered);
 			save_score_button.x = buttonPaddingWidth;
 			save_score_button.y = select_layout_button.y - buttonPaddingHeight - save_score_button.height;
-			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) save_score_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial || PipeJamGameScene.inDemo) save_score_button.enabled = false;
 			addChild(save_score_button);
 			
 			submit_score_button = ButtonFactory.getInstance().createButton("Submit Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0, "Submit your\nsolution for\ncredit");
@@ -105,7 +105,7 @@ package dialogs
 			submit_score_button.x = buttonPaddingWidth;
 			submit_score_button.y = save_score_button.y - buttonPaddingHeight - submit_score_button.height;
 			
-			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial) submit_score_button.enabled = false;
+			if (PipeJam3.TUTORIAL_DEMO || PipeJamGameScene.inTutorial || PipeJamGameScene.inDemo) submit_score_button.enabled = false;
 			addChild(submit_score_button);
 			
 			if(!PipeJam3.RELEASE_BUILD)

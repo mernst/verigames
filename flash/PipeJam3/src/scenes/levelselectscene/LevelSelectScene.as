@@ -307,6 +307,7 @@ package scenes.levelselectscene
 			
 			if (dataObj) {
 				if (dataObj.hasOwnProperty("levelId")) {
+					PipeJamGameScene.inDemo = false;
 					LoginHelper.getLoginHelper().levelObject = dataObj;
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 				}

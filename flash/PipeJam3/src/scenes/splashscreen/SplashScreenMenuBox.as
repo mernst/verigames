@@ -190,6 +190,7 @@ package scenes.splashscreen
 		protected function loadTutorial():void
 		{
 			PipeJamGameScene.inTutorial = true;
+			PipeJamGameScene.inDemo = false;
 			PipeJam3.initialLevelDisplay = false;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
@@ -198,6 +199,8 @@ package scenes.splashscreen
 		protected static var fileNumber:int = 0;
 		protected function onDemoButtonTriggered(e:starling.events.Event):void
 		{
+			PipeJamGameScene.inTutorial = false;
+			PipeJamGameScene.inDemo = true;
 			if(PipeJamGameScene.dArray.length == fileNumber)
 				fileNumber = 0;
 			PipeJamGameScene.worldFile = PipeJamGameScene.dArray[fileNumber];
