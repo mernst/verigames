@@ -45,7 +45,7 @@ package scenes.game.components
 		private static const HEIGHT:Number = 82;
 		
 		public static const OVERLAP:Number = 44;
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 25, 284 - 10, 44);
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 25, 284 - 25, 44);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -215,34 +215,37 @@ package scenes.game.components
 		{
 			var currentScore:int = level.currentScore
 			var bestScore:int = level.bestScore;
-			var baseScore:int = level.baseScore;
+			var targetScore:int = level.getTargetScore();
+			var maxScoreShown:Number = Math.max(currentScore, bestScore);
+			maxScoreShown = Math.max(1, maxScoreShown); // avoid divide by zero
+			if (targetScore < int.MAX_VALUE) maxScoreShown = Math.max(maxScoreShown, targetScore);
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			if(LoginHelper.getLoginHelper().levelObject != null)
 				LoginHelper.getLoginHelper().levelObject.score = currentScore;
 			
-			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / baseScore;
-			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / baseScore;
+			// Aim for max score shown to be 2/3 of the width of the scorebar area
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / maxScoreShown;
+			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / maxScoreShown;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
 				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
 				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
 				m_scoreBar.y = SCORE_PANEL_AREA.height / 6.0;
-				m_scoreBarContainer.addChild(m_scoreBar);
 				m_scoreTextfield.x = newScoreX;
 			}
+			m_scoreBarContainer.addChild(m_scoreBar);
 			
-			if (level.getTargetScore() < int.MAX_VALUE) {
+			if (targetScore < int.MAX_VALUE) {
 				if (!m_targetScoreLine) {
-					m_targetScoreLine = new TargetScoreDisplay(level.getTargetScore().toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Target Score");
+					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
 				} else {
-					m_targetScoreLine.update(level.getTargetScore().toString());
+					m_targetScoreLine.update(targetScore.toString());
 				}
-				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * level.getTargetScore() / baseScore;
-				m_scoreBarContainer.addChildAt(m_targetScoreLine, 0);
+				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * targetScore / maxScoreShown;
+				m_scoreBarContainer.addChild(m_targetScoreLine);
 				m_scoreBarContainer.visible = true;
 			} else {
 				if (m_targetScoreLine) m_targetScoreLine.removeFromParent();
@@ -250,7 +253,7 @@ package scenes.game.components
 			}
 			
 			if (!m_bestScoreLine) {
-				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Best Score\nClick to Load");
+				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
 				m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
 				m_bestScoreLine.useHandCursor = true;
 				m_bestScoreLine.x = bestScoreX;
