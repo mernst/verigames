@@ -245,11 +245,11 @@ package networking
 			if(type == MenuEvent.SUBMIT_LEVEL)
 				sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelObject.name);
 			else //save level
-				submitLevelWithID(null, fileType);
+				saveLevelWithID(null, fileType);
 		}	
 		
 		//if levelID == null, we are just saving, not submitting (which creates a new level id for future use...)
-		public function submitLevelWithID(levelID:String, fileType:int):void
+		public function saveLevelWithID(levelID:String, fileType:int):void
 		{
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, m_levelFilesString, levelObject.name, levelID, fileType);
 		}
@@ -272,7 +272,7 @@ package networking
 			var raLevelObj:Object = JSON.parse(e.target.data);
 			var levelID:String = raLevelObj.id;
 			m_levelCreated = true;
-			submitLevelWithID(levelID, m_fileType);
+			saveLevelWithID(levelID, m_fileType);
 		}
 		
 	

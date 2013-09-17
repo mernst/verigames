@@ -506,14 +506,13 @@ public class ProxyThread extends Thread {
 	        
     	if(fileInfo[2].indexOf("submit") != -1)
     	{
-    		putLevelObjectInCollection(this.submittedLevelsCollection, fileInfo);
-    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(fileInfo, false);
     	}
     	else
-    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(fileInfo, true);
     }
     
-    public void putLevelObjectInCollection(DBCollection collection, String[] fileInfo)
+    public void putLevelObjectInCollection(String[] fileInfo, boolean saveOnly)
     {
     	 DBObject submittedLevelObj = new BasicDBObject();
     	 submittedLevelObj.put("player", fileInfo[3]);
@@ -534,7 +533,7 @@ public class ProxyThread extends Thread {
         properties.put("conflicts", fileInfo[14]);
         properties.put("bonusnodes", fileInfo[15]);
     	
-        if(fileInfo.length > 17)
+        if(!saveOnly)
         {
         	properties.put("enjoymentRating", fileInfo[16]);
         	properties.put("difficultyRating", fileInfo[17]);
@@ -547,7 +546,14 @@ public class ProxyThread extends Thread {
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
         log(LOG_TO_DB, submittedLevelObj.toMap().toString());
-		WriteResult r2 = collection.insert(submittedLevelObj);
+        WriteResult r2 = null;
+        if(!saveOnly)
+        {
+        	r2 = submittedLevelsCollection.insert(submittedLevelObj);
+        	log(LOG_ERROR, r2.getLastError().toString());
+        }
+        
+        r2 = savedLevelsCollection.insert(submittedLevelObj);
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 

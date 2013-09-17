@@ -22,12 +22,15 @@ public class ProxyServer {
 	static public String version = "1.0b";
 	static public int port = 8001;	//default
 	static DBCollection logColl;
-	static public boolean runLocally = true;
+	//set to true to not log, and display log to console
+	static public boolean runLocally = false;
 	
-	static public boolean testSilent = true;
+	//not currently doing anything, will eventually allow for receiving messages but not forward them
+	//make sure it's false
+	static public boolean testSilent = false;
 	
-    public static void main(String[] args) throws IOException {
-    	
+    public static void main(String[] args) throws IOException 
+    {
         //Connect to database
         Mongo mongo = new Mongo( dbURL );
         String dbName = "gameapi";
