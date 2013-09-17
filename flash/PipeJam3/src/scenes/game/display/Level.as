@@ -370,10 +370,10 @@ package scenes.game.display
 		
 		public function loadBestScoringConfiguration():void
 		{
-			setConstraints(m_levelBestScoreConstraintsXML);
+			setConstraints(m_levelBestScoreConstraintsXML, true);
 		}
 		
-		private function setConstraints(constraintsXML:XML):void
+		private function setConstraints(constraintsXML:XML, updateTutorialManager:Boolean = false):void
 		{
 			var gameNode:GameNode;
 			
@@ -385,13 +385,20 @@ package scenes.game.display
 				}
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
+				var widthMismatch:Boolean = (gameNode.isWide() != constraintIsWide);
 				if (constraintIsEditable) {
 					gameNode.handleWidthChange(constraintIsWide, true);
+					if (updateTutorialManager && tutorialManager && widthMismatch) {
+						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
+					}
 				} else {
-					if (gameNode.isWide() != constraintIsWide) {
+					if (widthMismatch) {
 						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
 					gameNode.handleWidthChange(constraintIsWide, true);
+					if (updateTutorialManager && tutorialManager && widthMismatch) {
+						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
+					}
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
 					gameNode.m_isEditable = constraintIsEditable;
