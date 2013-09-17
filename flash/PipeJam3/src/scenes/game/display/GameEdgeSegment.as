@@ -310,6 +310,11 @@
 			}
 		}
 		
+		public function onDeleted():void
+		{
+			dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.SEGMENT_DELETED, this));
+		}
+		
 		// Make lines slightly darker to be more visible
 		override public function getColor():int
 		{

@@ -510,6 +510,9 @@ package scenes.game.components
 				case Keyboard.SPACE:
 					recenter();
 					break;
+				case Keyboard.DELETE:
+					if (m_currentLevel) m_currentLevel.onDeletePressed();
+					break;
 			}
 		}
 		

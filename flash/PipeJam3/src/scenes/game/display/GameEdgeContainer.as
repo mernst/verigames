@@ -231,6 +231,7 @@ package scenes.game.display
 				createLine();
 				
 				addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+				addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
 				addEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
 				addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
 				addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
@@ -381,6 +382,7 @@ package scenes.game.display
 			
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
 			removeEventListener(EdgeContainerEvent.RUBBER_BAND_SEGMENT, onRubberBandSegment);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
@@ -656,6 +658,52 @@ package scenes.game.display
 				//reorder to place on top
 				parent.setChildIndex(this, parent.numChildren);
 			}
+		}
+		
+		private function onSegmentDeleted(event:EdgeContainerEvent):void
+		{
+			var segment:GameEdgeSegment = event.segment;
+			var segmentIndex:int = event.segmentIndex;
+			if (!segment) return;
+			if (isNaN(segmentIndex)) return;
+			if (segmentIndex - 1 < 0) return;
+			if (segmentIndex + 2 > m_jointPoints.length - 1) return;
+			if (m_jointPoints.length <= 4) return;
+			// Remove pt1, pt2. Update pt0, pt3
+			var pt0:Point = m_jointPoints[segmentIndex - 1];
+			var pt1:Point = m_jointPoints[segmentIndex];
+			var pt2:Point = m_jointPoints[segmentIndex + 1];
+			var pt3:Point = m_jointPoints[segmentIndex + 2];
+			var isHoriz:Boolean;
+			// 0: vert, 1:horiz, 2: vert, etc. abort if this alternating pattern is untrue
+			if (pt1.x == pt2.x) {
+				if (segmentIndex % 2 != 0) return;
+				isHoriz = false;
+			} else if (pt1.y == pt2.y) {
+				if (segmentIndex % 2 != 1) return;
+				isHoriz = true;
+			} else {
+				return; // diagonal found, abort
+			}
+			if (isHoriz) {
+				if (segmentIndex + 2 == m_jointPoints.length - 1) {
+					// If pt3 is endpoint
+					pt0.x = pt3.x;
+				} else {
+					pt3.x = pt0.x;
+				}
+			} else {
+				if (segmentIndex + 2 == m_jointPoints.length - 1) {
+					// If pt3 is endpoint
+					pt0.y = pt3.y;
+				} else {
+					pt3.y = pt0.y
+				}
+			}
+			// Remove pt1, pt2
+			m_jointPoints.splice(segmentIndex, 2);
+			createChildren();
+			positionChildren();
 		}
 		
 		//called when a segment is double-clicked on

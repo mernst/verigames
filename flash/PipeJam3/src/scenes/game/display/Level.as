@@ -101,6 +101,7 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_visibleNodeManager:VisibleNodeManager;
 		private var m_hidingErrorText:Boolean = false;
+		private var m_segmentHovered:GameEdgeSegment;
 		
 		private var m_nodesInactiveContainer:Sprite = new Sprite();
 		private var m_jointsInactiveContainer:Sprite = new Sprite();
@@ -352,6 +353,9 @@ package scenes.game.display
 			
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
+			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
@@ -552,6 +556,7 @@ package scenes.game.display
 		
 		public function start():void
 		{
+			m_segmentHovered = null;
 			if (!initialized) {
 				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
@@ -612,6 +617,7 @@ package scenes.game.display
 		
 		public function restart():void
 		{
+			m_segmentHovered = null;
 			if (!initialized) {
 				start();
 			} else {
@@ -943,6 +949,9 @@ package scenes.game.display
 			
 			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			removeEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
+			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
@@ -989,6 +998,21 @@ package scenes.game.display
 				}
 				tutorialManager.onSegmentMoved(event, pointingAt);
 			}
+		}
+		
+		private function onSegmentDeleted(event:EdgeContainerEvent):void
+		{
+			// TODO: notify tutorial manager
+		}
+		
+		private function onHoverOver(event:EdgeContainerEvent):void
+		{
+			m_segmentHovered = event.segment;
+		}
+		
+		private function onHoverOut(event:EdgeContainerEvent):void
+		{
+			m_segmentHovered = null;
 		}
 		
 		//called when a segment is double-clicked on
@@ -1699,6 +1723,15 @@ package scenes.game.display
 				return levelNodes.boardNodesDictionary.hasOwnProperty(boardName);
 			}
 			return false;
+		}
+		
+		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
+		public function onDeletePressed():void
+		{
+			// Only delete if layout moves are allowed
+			if (tutorialManager && tutorialManager.getLayoutFixed()) return;
+			if (!SEGMENT_DELETION_ENABLED) return;
+			if (m_segmentHovered) m_segmentHovered.onDeleted();
 		}
 		
 		public function get currentScore():int { return m_currentScore; }
