@@ -1,0 +1,109 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class TryCatch extends type; tree <<missing tree>> within 
+class TryCatch {
+    
+    TryCatch() {
+        super();
+    }
+    
+    void test() {
+        Exception e = new Exception();
+        String a = null;
+        try {
+            if (true) {
+                throw e;
+            }
+            a = "";
+        } catch (Exception e2) {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 1 at method TryCatch#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class TryCatch extends type; tree <<missing tree>> within 
+class TryCatch {
+    
+    TryCatch() {
+        super();
+    }
+    
+    void test() {
+        Exception e = new Exception();
+        String a = null;
+        try {
+            if (true) {
+                throw e;
+            }
+            a = "";
+        } catch (Exception e2) {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 2 at method TryCatch#test():V receiver; tree <<missing tree>> within 
+void test() {
+    Exception e = new Exception();
+    String a = null;
+    try {
+        if (true) {
+            throw e;
+        }
+        a = "";
+    } catch (Exception e2) {
+        a = "";
+    }
+    a.toString();
+}Atm: @VarAnnot(2) TryCatch  <:  Variable 0 at class TryCatch extends type; tree <<missing tree>> within 
+class TryCatch {
+    
+    TryCatch() {
+        super();
+    }
+    
+    void test() {
+        Exception e = new Exception();
+        String a = null;
+        try {
+            if (true) {
+                throw e;
+            }
+            a = "";
+        } catch (Exception e2) {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+inequality constraint at method TryCatch#test():V constraint position: Variable 4 at method TryCatch#test():V creation 0; tree Exception != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 4 at method TryCatch#test():V creation 0; tree Exception  <:  Variable 3 at method TryCatch#test():V local variable e(0); tree Exception
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 5 at method TryCatch#test():V local variable a(0); tree String
+
+inequality constraint at method TryCatch#test():V constraint position: Variable 3 at method TryCatch#test():V local variable e(0); tree Exception != Constant(@nninf.quals.Nullable)
+
+equality constraint: RefinementVariable #6 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None) = Literal(STRING_LITERAL, "")
+
+subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 5 at method TryCatch#test():V local variable a(0); tree String
+
+equality constraint: RefinementVariable #7 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None) = Literal(STRING_LITERAL, "")
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None
+
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None
+
+subtype constraint: RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None  <:  Variable 5 at method TryCatch#test():V local variable a(0); tree String
+
+inequality constraint at method TryCatch#test():V constraint position: RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None != Constant(@nninf.quals.Nullable)
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  Variable 5 at method TryCatch#test():V local variable a(0); tree String
+
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  Variable 5 at method TryCatch#test():V local variable a(0); tree String
+

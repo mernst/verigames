@@ -1,0 +1,49 @@
+Constraints:
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(String a) {
+        a = a == null ? null : a;
+    }
+}
+
+subtype constraint: Variable 1 at method Ternary#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(String a) {
+        a = a == null ? null : a;
+    }
+}
+
+subtype constraint: Variable 2 at method Ternary#test(Ljava/lang/String;):V receiver; tree <<missing tree>> within 
+void test(String a) {
+    a = a == null ? null : a;
+}Atm: @VarAnnot(2) Ternary  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(String a) {
+        a = a == null ? null : a;
+    }
+}
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String
+
+equality constraint: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: None = Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String
+
+subtype constraint: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: None  <:  Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String
+
