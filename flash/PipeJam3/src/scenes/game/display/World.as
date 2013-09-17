@@ -168,7 +168,7 @@ package scenes.game.display
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
-			{				
+			{
 				var obj:Object = LoginHelper.getLoginHelper().levelObject;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
@@ -501,13 +501,15 @@ package scenes.game.display
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
 			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
-			var currentLevelID:String = loginHelper.levelObject.levelId;
-			var level:Level;
-			//find the level with the current ID
-			for each(level in levels)
-			{
-				if(level.m_levelQID == currentLevelID)
-					break;
+			var level:Level = active_level;
+			if (loginHelper.levelObject != null) {
+				var currentLevelID:String = loginHelper.levelObject.levelId;
+				//find the level with the current ID
+				for each(level in levels)
+				{
+					if(level.m_levelQID == currentLevelID)
+						break;
+				}
 			}
 			var callback:Function =
 				function():void
