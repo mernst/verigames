@@ -74,7 +74,6 @@ package scenes.game.display
 		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
-		protected var currentLevelNumber:Number = 0;
 		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
@@ -121,7 +120,6 @@ package scenes.game.display
 			m_constraintsXML = _constraints;
 			
 			m_world = this;
-			
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -332,6 +330,7 @@ package scenes.game.display
 			else
 			{
 				dialogText = "Level Submitted! Thanks!";
+				//dialogText = "Level Submitted! Thanks!\nYou can access that level in the saved level list.";
 				socialText = "I just finished a level!";
 				dialogHeight = 110;
 			}
@@ -367,7 +366,7 @@ package scenes.game.display
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
-
+		
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
@@ -400,7 +399,7 @@ package scenes.game.display
 				}
 				//found xml representation?
 				if (my_level_xml_indx > -1) {
-				//loop through all boards, find the edges. Update these with new buzzsaw and width info.
+					//loop through all boards, find the edges. Update these with new buzzsaw and width info.
 					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
 						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
 							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
@@ -440,7 +439,7 @@ package scenes.game.display
 			}	
 			return output_xml;
 		}
-
+		
 		public function onZoomIn(event:MenuEvent):void
 		{
 			edgeSetGraphViewPanel.zoomInDiscrete();
@@ -481,7 +480,8 @@ package scenes.game.display
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
-					details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+					if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet)
+						details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
@@ -500,17 +500,28 @@ package scenes.game.display
 		
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var currentLevelID:String = loginHelper.levelObject.levelId;
+			var level:Level;
+			//find the level with the current ID
+			for each(level in levels)
+			{
+				if(level.m_levelQID == currentLevelID)
+					break;
+			}
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber], true);
+					selectLevel(level, true);
 				};
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = currentLevelNumber;
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var prevLevelNumber:Number = loginHelper.levelObject.levelId;
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -519,10 +530,21 @@ package scenes.game.display
 					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
 				
-				
+				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
-
+				//if there are no more unplayed levels, check next if we are in levelselect screen choice
+				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
+				{
+					//and if so, set to false, unless at the end of the tutorials
+					var obj:Object = LoginHelper.getLoginHelper().levelObject;
+					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
+					if(currentLevelId != 0)
+						tutorialsDone = false;
+					
+				}
+				
 				//if this is the first time we've completed these, post the achievement, else just move on
+				var currentLevelNumber:int;
 				if(tutorialsDone)
 				{
 					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
@@ -649,9 +671,9 @@ package scenes.game.display
 						break;
 					}
 					case 72: //'h' for hide
-					if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
-						active_level.toggleUneditableStrings();
-					break;
+						if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
+							active_level.toggleUneditableStrings();
+						break;
 					case 76: //'l' for copy layout
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
@@ -764,8 +786,8 @@ package scenes.game.display
 			active_level.resetBestScore();
 			
 			gameControlPanel.newLevelSelected(newLevel);
-		//	newLevel.setConstraints();
-		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
+			//	newLevel.setConstraints();
+			//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
 		
 		private function onRemovedFromStage():void

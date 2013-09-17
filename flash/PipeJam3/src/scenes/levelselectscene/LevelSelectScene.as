@@ -298,7 +298,10 @@ package scenes.levelselectscene
 			var dataObj:Object = currentVisibleListBox.currentSelection.data;
 			
 			if(currentVisibleListBox == tutorialListBox)
+			{
+				TutorialController.getTutorialController().fromLevelSelectList = true;
 				PipeJamGameScene.inTutorial = true;
+			}
 			else
 				PipeJamGameScene.inTutorial = false;
 			

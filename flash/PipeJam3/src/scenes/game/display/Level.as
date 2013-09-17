@@ -624,6 +624,7 @@ package scenes.game.display
 			setNewLayout(null, m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML.copy();
 			setConstraints(m_levelConstraintsXML);
+			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutXML.@id);
 		}
 		

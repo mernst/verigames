@@ -44,6 +44,7 @@ package networking
 		
 		protected static var tutorialController:TutorialController;
 		
+		public var fromLevelSelectList:Boolean = false;
 		
 		static public function getTutorialController():TutorialController
 		{
@@ -144,7 +145,8 @@ package networking
 			
 			var currentPosition:int = currentLevel.@position;
 			
-			var nextPosition:int = currentPosition++;
+			currentPosition++;
+			var nextPosition:int = currentPosition;
 			
 			var levelFound:Boolean = false;
 			while(!levelFound)
@@ -153,6 +155,11 @@ package networking
 					return 0;
 				
 				var nextQID:int = orderToTutorialDictionary[nextPosition].@qid;
+				
+				//if we chose the last level from the level select screen, assume we want to play in order, done or not
+				if(fromLevelSelectList)
+					return nextQID;
+				
 				if(completedTutorialList[nextQID] == null)
 					return nextQID;
 				
@@ -195,8 +202,7 @@ package networking
 			clearPlayedTutorials();
 		}
 		
-		//check if entire tutorial is done
-		// compare saved
+
 		public function isTutorialDone():Boolean
 		{
 			for each(var position:int in tutorialOrderedList)
@@ -207,7 +213,7 @@ package networking
 				if(isTutorialLevelCompleted(qid) == false)
 					return false;				
 			}
-
+			
 			return true;
 		}
 	}
