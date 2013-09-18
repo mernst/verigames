@@ -60,6 +60,7 @@ package dialogs
 		
 		protected var hideMainDialog:Boolean = true;
 		
+		public static const TOP_BUFFER:Number = 5;
 		public static const BOTTOM_BUFFER:Number = 20; // bottom part obscured by control panel, build in a buffer
 		
 		public function InGameMenuDialog()
@@ -69,7 +70,7 @@ package dialogs
 			if(!PipeJam3.RELEASE_BUILD)
 				numButtons ++;
 			
-			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight + BOTTOM_BUFFER;
+			var backgroundHeight:int = numButtons*buttonHeight + (numButtons+1)*buttonPaddingHeight + BOTTOM_BUFFER + TOP_BUFFER;
 			background = new NineSliceBatch(shapeWidth, backgroundHeight, backgroundHeight / 3.0, backgroundHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxAttached");
 			addChild(background);
 			

@@ -254,12 +254,13 @@ package scenes.game.display
 				//add clip rect so box seems to slide up out of the gameControlPanel
 				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
 				
-				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
+				var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
+				inGameMenuBox.y = bottomMenuY;
 				inGameMenuBox.visible = true;
 				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: bottomMenuY - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
 			}
 			else if (inGameMenuBox.visible)
@@ -271,7 +272,7 @@ package scenes.game.display
 				juggler = Starling.juggler;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: bottomMenuY - inGameMenuBox.height // -> tween.animate("x", 50)
 				});
 			}
 			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);

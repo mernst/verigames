@@ -193,6 +193,7 @@
 	<SubTexture name="ResetButtonSelected" x="985" y="95" width="30" height="30" />
 	<SubTexture name="ScoreBarBlue" x="825" y="44" width="48" height="48" />
 	<SubTexture name="ScoreBarForeground" x="1" y="419" width="960" height="161" />
+	<SubTexture name="ScoreBarForegroundTutorial" x="1" y="840" width="960" height="161" />
 	<SubTexture name="ScoreBarOrange" x="877" y="44" width="46" height="46" />
 	<SubTexture name="SettingsButton" x="857" y="127" width="30" height="30" />
 	<SubTexture name="SettingsButtonOver" x="857" y="159" width="30" height="30" />
