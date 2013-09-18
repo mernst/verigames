@@ -294,7 +294,7 @@ package scenes.game.display
 		{
 			if(shareDialog == null)
 			{
-				shareDialog = new SaveDialog(148, 60);
+				shareDialog = new SaveDialog(150, 60);
 			}
 			
 			addChild(shareDialog);
