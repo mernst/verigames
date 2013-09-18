@@ -200,7 +200,7 @@ package networking
 					{
 						requestStart = "/level/save/";
 						levelID = levelObj.levelId;
-						requestEnd = "/"+filetype;
+						requestEnd = "/"+filetype+"/"+levelObj.shareWithGroup;
 					}
 					else
 					{
@@ -289,10 +289,15 @@ package networking
 			}
 			
 			var urlRequest:URLRequest;
+			var rand:String = "";
+			/* //this might be needed as it seems IE caches all requests, so things don't update properly 
+			if(request.indexOf('&') != -1)
+				rand = "&rand="+String(Math.random());
+			*/
 			if(specificURL != null)
-				urlRequest = new URLRequest(specificURL+request);
+				urlRequest = new URLRequest(specificURL+request+rand);
 			else
-				urlRequest = new URLRequest(PROXY_URL+request);
+				urlRequest = new URLRequest(PROXY_URL+request+rand);
 			
 			if(method == URLRequestMethod.GET)
 				urlRequest.method = method;
