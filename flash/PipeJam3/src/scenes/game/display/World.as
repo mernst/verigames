@@ -241,7 +241,7 @@ package scenes.game.display
 				inGameMenuBox = new InGameMenuDialog();
 				var childIndex:int = numChildren - 1;
 				if (gameControlPanel && gameControlPanel.parent == this) {
-					getChildIndex(gameControlPanel);
+					childIndex = getChildIndex(gameControlPanel);
 				}
 				addChildAt(inGameMenuBox, childIndex);
 				inGameMenuBox.x = 0;
