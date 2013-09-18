@@ -31,6 +31,7 @@ package
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import events.MenuEvent;
 	import starling.text.TextField;
 	import starling.utils.VAlign;
 	
@@ -78,17 +79,21 @@ package
 			AudioManager.getInstance().setMusicButton(m_musicButton, updateMusicState);
 			*/
 			m_sfxButton = new SoundButton();
-			XSprite.setupDisplayObject(m_sfxButton, 30, Constants.GameHeight - 16, 12.5);
+			XSprite.setupDisplayObject(m_sfxButton, 30, Constants.GameHeight - 20, 12.5);
 			AudioManager.getInstance().setAllAudioButton(m_sfxButton, updateSfxState);
 			
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, addedToStage);
 			this.addEventListener(starling.events.Event.REMOVED_FROM_STAGE, removedFromStage);
+			
+			this.addEventListener(MenuEvent.TOGGLE_SOUND_CONTROL, toggleSoundControl);
 		}
 		
 		
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
 		{
+			var paramObj:String = String(LoaderInfo(Starling.current.nativeStage.loaderInfo).parameters.level);
+			
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
 			
@@ -110,6 +115,11 @@ package
 		protected function removedFromStage(event:starling.events.Event):void
 		{
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		}
+		
+		protected function toggleSoundControl(event:starling.events.Event):void
+		{
+			m_sfxButton.visible = event.data;
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void

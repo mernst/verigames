@@ -5,6 +5,7 @@ package scenes.game.display
 	import audio.AudioManager;
 	
 	import dialogs.InGameMenuDialog;
+	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
 	
 	import display.NineSliceBatch;
@@ -71,6 +72,8 @@ package scenes.game.display
 		protected var edgeSetGraphViewPanel:GridViewPanel;
 		public var gameControlPanel:GameControlPanel;
 		protected var inGameMenuBox:InGameMenuDialog;
+		
+		protected var shareDialog:SaveDialog;
 		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
@@ -210,9 +213,8 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -288,6 +290,19 @@ package scenes.game.display
 			}
 		}
 		
+		protected function postSaveDialog(event:MenuEvent):void
+		{
+			if(shareDialog == null)
+			{
+				shareDialog = new SaveDialog(150, 60);
+			}
+			
+			addChild(shareDialog);
+			
+			shareDialog.x = (480 - shareDialog.width)/2;
+			shareDialog.y = (320 - shareDialog.height)/2 - 20;
+		}
+		
 		public function onPutLevelInDatabase(event:MenuEvent):void
 		{
 			//type:String, currentScore:int = event.type, currentScore
@@ -323,6 +338,7 @@ package scenes.game.display
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
 			var socialText:String = "";
+			var numLinesInText:int = 1;
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
 				dialogText = "Level Saved.";
@@ -333,13 +349,13 @@ package scenes.game.display
 			}
 			else
 			{
-				dialogText = "Level Submitted! Thanks!";
-				//dialogText = "Level Submitted! Thanks!\nYou can access that level in the saved level list.";
+				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
+				numLinesInText = 3;
 				socialText = "I just finished a level!";
 				dialogHeight = 110;
 			}
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null, numLinesInText);
 			addChild(alert);
 			
 			alert.x = (450 - alert.width)/2;
@@ -543,7 +559,6 @@ package scenes.game.display
 				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
 				{
 					//and if so, set to false, unless at the end of the tutorials
-					obj = LoginHelper.getLoginHelper().levelObject;
 					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
 					if(currentLevelId != 0)
 						tutorialsDone = false;
@@ -563,7 +578,7 @@ package scenes.game.display
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
-					obj = LoginHelper.getLoginHelper().levelObject;
+					var obj:Object = LoginHelper.getLoginHelper().levelObject;
 					obj.levelId = tutorialController.getNextUnplayedTutorial();
 					
 					currentLevelNumber = 0;
@@ -813,9 +828,8 @@ package scenes.game.display
 			
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);

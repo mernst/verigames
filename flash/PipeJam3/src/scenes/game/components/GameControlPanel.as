@@ -26,6 +26,8 @@ package scenes.game.components
 	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.PipeJamGameScene;
+	
 	import networking.LoginHelper;
 	
 	import starling.animation.Transitions;
@@ -67,7 +69,13 @@ package scenes.game.components
 		private var m_menuButton:NineSliceButton;
 		
 		/** Button to start the level over */
-		private var m_ResetButton:NineSliceButton;
+		private var m_resetButton:NineSliceButton;
+		
+		/** Button to save the level */
+		private var m_saveButton:NineSliceButton;
+		
+		/** Button to share the level */
+		private var m_shareButton:NineSliceButton;
 
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
@@ -130,23 +138,23 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			addChild(m_levelNameTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 20, 8, 8);
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 14, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 + 2;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
 			
-			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
-			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
-			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
-			m_ResetButton.y = HEIGHT - m_ResetButton.height - 2;
-			addChild(m_ResetButton);
+			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8);
+			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
+			m_resetButton.x = m_menuButton.x + (m_menuButton.width - m_resetButton.width);
+			m_resetButton.y = m_menuButton.y + m_menuButton.height + 3;
+			addChild(m_resetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = WIDTH - 55;
+			m_zoomInButton.x = WIDTH - 61;
 			m_zoomInButton.y = 10;
 			addChild(m_zoomInButton);
 			
@@ -172,6 +180,18 @@ package scenes.game.components
 			conflictMap.width = width-conflictMap.x - 2;
 			conflictMap.height = height-conflictMap.y - 2;
 			//addChild(conflictMap);
+			
+			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8);
+			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
+			m_saveButton.x = width - m_saveButton.width - 16;
+			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
+			addChild(m_saveButton);
+			
+			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8);
+			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
+			m_shareButton.x = m_saveButton.x;
+			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
+			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -199,6 +219,18 @@ package scenes.game.components
 			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
 		}
 		
+		private function onShareButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+		}
+		
+		private function onSaveButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.POST_SAVE_DIALOG));
+			
+		}
+		
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
@@ -211,6 +243,7 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
+			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -218,6 +251,12 @@ package scenes.game.components
 			m_zoomInButton.visible = viz;
 			m_zoomOutButton.visible = viz;
 			m_recenterButton.visible = viz;
+		}
+		
+		private function setSharingButtonVisibility(viz:Boolean):void
+		{
+			m_saveButton.visible = viz;
+			m_shareButton.visible = viz;
 		}
 		
 		/**
