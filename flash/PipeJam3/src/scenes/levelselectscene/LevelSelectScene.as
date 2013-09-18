@@ -9,6 +9,7 @@ package scenes.levelselectscene
 	import display.NineSliceToggleButton;
 	
 	import events.NavigationEvent;
+	import events.MenuEvent;
 	
 	import feathers.controls.List;
 	
@@ -183,6 +184,8 @@ package scenes.levelselectscene
 				onNewButtonTriggered(null);
 			
 			addEventListener(Event.TRIGGERED, updateSelectedLevelInfo);
+			
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, false);
 		}
 		
 		private function onTutorialButtonTriggered(e:Event):void
@@ -289,6 +292,7 @@ package scenes.levelselectscene
 		private function onCancelButtonTriggered(e:Event):void
 		{
 			loginHelper.refuseLevels();
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 			
 		}
@@ -296,6 +300,7 @@ package scenes.levelselectscene
 		private function onSelectButtonTriggered(ev:Event):void
 		{
 			var dataObj:Object = currentVisibleListBox.currentSelection.data;
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			
 			if(currentVisibleListBox == tutorialListBox)
 			{

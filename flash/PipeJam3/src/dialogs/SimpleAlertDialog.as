@@ -2,16 +2,18 @@ package dialogs
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	import display.BasicButton;
-	import flash.geom.Rectangle;
-	import starling.display.Image;
-	import starling.textures.Texture;
 	
+	import display.BasicButton;
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	
+	import flash.geom.Rectangle;
+	
 	import scenes.BaseComponent;
+	
+	import starling.display.Image;
 	import starling.events.Event;
+	import starling.textures.Texture;
 
 	public class SimpleAlertDialog extends BaseComponent
 	{
@@ -19,7 +21,7 @@ package dialogs
 		private var m_socialText:String;
 		private var m_callback:Function;
 		
-		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "", callback:Function = null)
+		public function SimpleAlertDialog(text:String, _width:Number, _height:Number, _socialText:String = "", callback:Function = null, numLinesInText:int = 1)
 		{
 			super();
 			m_socialText = _socialText;
@@ -28,7 +30,7 @@ package dialogs
 			var background:NineSliceBatch = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxFree");
 			addChild(background);
 			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, 120, 14, 12, 0x0077FF);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField(text, AssetsFont.FONT_UBUNTU, 120, 14*numLinesInText, 12, 0x0077FF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
 			label.x = (width - label.width)/2;
