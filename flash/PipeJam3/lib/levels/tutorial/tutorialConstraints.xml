@@ -36,7 +36,7 @@
     <box id="Clashes1" width="wide" editable="true"/>
     <box id="Clashes2" width="narrow" editable="false"/>
   </level>
-  <level id="WidenBoxes" qid="7" targetScore="375">
+  <level id="Widen" qid="7" targetScore="375">
     <box id="WidenBoxes30" width="narrow" editable="true"/>
     <box id="WidenBoxes20" width="wide" editable="true"/>
     <box id="WidenBoxes10" width="narrow" editable="true"/>
@@ -45,7 +45,7 @@
     <box id="WidenBoxes1" width="wide" editable="false"/>
     <box id="WidenBoxes4" width="wide" editable="false"/>
   </level>
-  <level id="NarrowBoxes" qid="8" targetScore="450">
+  <level id="LockedPassage" qid="8" targetScore="450">
     <box id="NarrowBoxes30" width="wide" editable="true"/>
     <box id="NarrowBoxes20" width="narrow" editable="true"/>
     <box id="NarrowBoxes10" width="narrow" editable="true"/>
@@ -73,7 +73,7 @@
     <box id="Merges3" width="narrow" editable="false"/>
     <box id="Merges1" width="wide" editable="true"/>
   </level>
-  <level id="SplitMergePractice" qid="17" targetScore="575">
+  <level id="SplitMerge" qid="17" targetScore="575">
     <box id="SplitMergePractice6" width="narrow" editable="false"/>
     <box id="SplitMergePractice7" width="narrow" editable="false"/>
     <box id="SplitMergePractice4" width="wide" editable="true"/>

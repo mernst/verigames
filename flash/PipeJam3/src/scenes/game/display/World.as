@@ -534,11 +534,12 @@ package scenes.game.display
 				
 				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
+				var obj:Object;
 				//if there are no more unplayed levels, check next if we are in levelselect screen choice
 				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
 				{
 					//and if so, set to false, unless at the end of the tutorials
-					var obj:Object = LoginHelper.getLoginHelper().levelObject;
+					obj = LoginHelper.getLoginHelper().levelObject;
 					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
 					if(currentLevelId != 0)
 						tutorialsDone = false;
@@ -558,7 +559,7 @@ package scenes.game.display
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
-					var obj:Object = LoginHelper.getLoginHelper().levelObject;
+					obj = LoginHelper.getLoginHelper().levelObject;
 					obj.levelId = tutorialController.getNextUnplayedTutorial();
 					
 					currentLevelNumber = 0;

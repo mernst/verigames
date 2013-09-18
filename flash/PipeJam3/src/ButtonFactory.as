@@ -10,6 +10,7 @@ package
 		private static var m_instance:ButtonFactory;
 		
 		public static const BUTTON_TEXT_COLOR:uint = 0x4F2C12;
+		public static const BUTTON_BACKGROUND_COLOR:uint = 0xF3D18D;
 		
 		public static function getInstance():ButtonFactory
 		{

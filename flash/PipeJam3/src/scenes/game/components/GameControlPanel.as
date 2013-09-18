@@ -60,6 +60,9 @@ package scenes.game.components
 		/** Text showing current score on score_pane */
 		private var m_scoreTextfield:TextFieldWrapper;
 		
+		/** Text showing current score on score_pane */
+		private var m_levelNameTextfield:TextFieldWrapper;
+		
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
@@ -119,6 +122,13 @@ package scenes.game.components
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);
+			
+			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, WIDTH - 2, 10, 10, GameComponent.WIDE_COLOR);
+			m_levelNameTextfield.touchable = false;
+			m_levelNameTextfield.x = 0;
+			m_levelNameTextfield.y = -10;
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
+			addChild(m_levelNameTextfield);
 			
 			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
@@ -197,6 +207,8 @@ package scenes.game.components
 		public function newLevelSelected(level:Level):void 
 		{
 			updateScore(level, true);
+			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 		}

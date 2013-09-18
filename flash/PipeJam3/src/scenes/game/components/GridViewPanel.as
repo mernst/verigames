@@ -717,7 +717,7 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
-				continueButton.y = HEIGHT - continueButton.height - 5 - GameControlPanel.OVERLAP;
+				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
 			}
 			
 				if (!m_currentLevel.targetScoreReached) {
