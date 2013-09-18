@@ -50,7 +50,7 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static const WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 238 + 44;
+		public static const HEIGHT:Number = 238 + 44 + 10;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;

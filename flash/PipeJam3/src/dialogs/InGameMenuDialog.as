@@ -60,7 +60,7 @@ package dialogs
 		
 		protected var hideMainDialog:Boolean = true;
 		
-		public static const BOTTOM_BUFFER:Number = 25; // bottom part obscured by control panel, build in a buffer
+		public static const BOTTOM_BUFFER:Number = 20; // bottom part obscured by control panel, build in a buffer
 		
 		public function InGameMenuDialog()
 		{

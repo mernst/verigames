@@ -42,10 +42,10 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 82;
+		private static const HEIGHT:Number = 82 - 20;
 		
-		public static const OVERLAP:Number = 44;
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 25, 284 - 25, 44);
+		public static const OVERLAP:Number = 44 - 10;
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -130,10 +130,10 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			addChild(m_levelNameTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 20, 8, 8);
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 + 8;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 + 2;
 			addChild(m_menuButton);
 			
 			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
@@ -147,7 +147,7 @@ package scenes.game.components
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
 			m_zoomInButton.x = WIDTH - 55;
-			m_zoomInButton.y = 15;
+			m_zoomInButton.y = 10;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
