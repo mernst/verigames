@@ -331,7 +331,7 @@
       <point x="14.35" y="5.56"/>
     </line>
   </level>
-  <level id="SatisfyBoxes" qid="4" tutorial="links">
+  <level id="Links" qid="4" tutorial="links">
     <box height="1.0" id="SatisfyBoxes1" lines="1" width="1.81" x="1.51" y="1.90" visible="true"/>
     <box height="1.0" id="SatisfyBoxes2" lines="1" width="1.81" x="9.39" y="2.31" visible="true"/>
     <box height="1.0" id="SatisfyBoxes3" lines="2" width="2.4" x="5.16" y="2.64" visible="true"/>
@@ -537,7 +537,7 @@
       <tojoint id="n530" port="0"/>
     <point x="3.69" y="9.91"/><point x="3.69" y="10.91"/></line>
   </level>
-  <level id="Clashes" qid="6" tutorial="clash">
+  <level id="Jams" qid="6" tutorial="clash">
     <box height="1.0" id="Clashes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Clashes2" lines="1" width="1.81" x="0.9" y="5.6"/>
     <joint height="0.51" id="n12" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>

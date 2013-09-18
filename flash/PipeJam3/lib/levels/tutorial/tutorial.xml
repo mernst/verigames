@@ -472,7 +472,7 @@
    </board>
   </boards>
  </level>
- <level name="SatisfyBoxes" qid="4">
+ <level name="Links" qid="4">
   <linked-edges>
    <edge-set id="SatisfyBoxes1">
     <edgeref id="e1"/>
@@ -752,7 +752,7 @@
    </board>
   </boards>
  </level>
- <level name="Clashes" qid="6">
+ <level name="Jams" qid="6">
   <linked-edges>
    <edge-set id="Clashes1">
     <edgeref id="e1"/>
