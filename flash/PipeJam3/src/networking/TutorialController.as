@@ -73,6 +73,7 @@ package networking
 		
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void
 		{
+			if (!LoginHelper.getLoginHelper().levelObject) return;
 			var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
 			if(completedTutorialList[currentLevel] == null)
 			{
@@ -138,7 +139,7 @@ package networking
 		public function getNextUnplayedTutorial():int
 		{
 			var currentLevelQID:int;
-			
+			if (!LoginHelper.getLoginHelper().levelObject) return 0;
 			currentLevelQID = LoginHelper.getLoginHelper().levelObject.levelId;
 			
 			var currentLevel:XML = qidToTutorialDictionary[currentLevelQID];

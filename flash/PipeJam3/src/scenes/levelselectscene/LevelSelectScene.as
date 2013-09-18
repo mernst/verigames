@@ -252,21 +252,21 @@ package scenes.levelselectscene
 				
 				if(currentSelectedLevel.hasOwnProperty("metadata"))
 				{
-					numNodesText = TextFactory.getInstance().createTextField("Boxes: " + currentSelectedLevel.metadata.properties.visibleboxes, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numNodesText = TextFactory.getInstance().createTextField("Widgets: " + currentSelectedLevel.metadata.properties.visibleboxes, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
 					TextFactory.getInstance().updateAlign(numNodesText, 0, 1);
 					addChild(numNodesText);
 					numNodesText.x = levelSelectInfoPanel.x + 10;
 					numNodesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
 				
-					numEdgesText = TextFactory.getInstance().createTextField("Lines: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
 					TextFactory.getInstance().updateAlign(numEdgesText, 0, 1);
 					addChild(numEdgesText);
 					numEdgesText.x = levelSelectInfoPanel.x + 10;
 					numEdgesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
 	
-					numConflictsText = TextFactory.getInstance().createTextField("Conflicts: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
 					TextFactory.getInstance().updateAlign(numConflictsText, 0, 1);
 					addChild(numConflictsText);
 					numConflictsText.x = levelSelectInfoPanel.x + 10;

@@ -201,6 +201,7 @@ package dialogs
 			eRating *= 100;
 			eRating = Math.round(eRating);
 			eRating /= 100;
+			if (loginHelper.levelObject == null) loginHelper.levelObject = new Object();
 			loginHelper.levelObject.enjoymentRating = eRating;
 			var dRating:Number = this.difficultyRating*5.0;
 			//round to two decimal places
