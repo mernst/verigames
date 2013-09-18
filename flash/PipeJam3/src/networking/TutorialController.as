@@ -74,6 +74,7 @@ package networking
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void
 		{
 			if (!LoginHelper.getLoginHelper().levelObject) return;
+			if (!completedTutorialList) completedTutorialList = new Dictionary();
 			var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
 			if(completedTutorialList[currentLevel] == null)
 			{
@@ -93,7 +94,7 @@ package networking
 		
 		public function isTutorialLevelCompleted(tutorialQID:String):Boolean
 		{
-			return completedTutorialList[tutorialQID] != null;
+			return (completedTutorialList && (completedTutorialList[tutorialQID] != null));
 		}
 		
 		//first tutorial should be unlocked
@@ -105,7 +106,7 @@ package networking
 			
 			if(tutorialQIDInt == getFirstTutorialLevel())
 				return true;
-			else if(completedTutorialList[tutorialQID] != null)
+			else if(completedTutorialList && (completedTutorialList[tutorialQID] != null))
 				return true;
 			else
 			{
@@ -130,6 +131,7 @@ package networking
 		//returns the first tutorial level qid in the sequence
 		public function getFirstTutorialLevel():int
 		{
+			if (!tutorialOrderedList) return 0;
 			var order:Number = tutorialOrderedList[0];
 			return orderToTutorialDictionary[order].@qid;
 		}

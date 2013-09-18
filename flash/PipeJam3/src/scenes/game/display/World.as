@@ -554,7 +554,6 @@ package scenes.game.display
 				
 				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
-				var obj:Object;
 				//if there are no more unplayed levels, check next if we are in levelselect screen choice
 				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
 				{
