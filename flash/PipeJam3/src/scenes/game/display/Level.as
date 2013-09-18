@@ -133,7 +133,8 @@ package scenes.game.display
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
-
+		
+		public var original_level_name:String;
 		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
@@ -146,10 +147,11 @@ package scenes.game.display
 		 * @param  _levelLayoutXML the layout xml
 		 * @param  _levelConstraintsXML the constraints xml
 		 */
-		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int = int.MAX_VALUE)
+		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int, _originalLevelName:String)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
+			original_level_name = _originalLevelName;
 			levelNodes = _levelNodes;
 			m_levelLayoutXML = _levelLayoutXML.copy();
 			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
@@ -1647,11 +1649,6 @@ package scenes.game.display
 		public function setTargetScore(score:int):void
 		{
 			m_targetScore = score;
-		}
-		
-		public function get original_level_name():String
-		{
-			return m_levelLayoutXML.attribute("id");
 		}
 		
 		public function getTimeMs():Number

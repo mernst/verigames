@@ -143,8 +143,12 @@ package scenes.game.display
 				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
 					targetScore = int(levelConstraintsXML.attribute("targetScore"));
 				}
-				
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore);
+				var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+				var levelNameFound:String = my_levelNodes.original_level_name;
+				if (!PipeJamGameScene.inTutorial && loginHelper.levelObject && loginHelper.levelObject.name) {
+					levelNameFound = loginHelper.levelObject.name;
+				}
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
