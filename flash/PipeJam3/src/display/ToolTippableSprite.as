@@ -13,6 +13,7 @@ package display
 	{
 		protected var m_hoverTimer:Timer;
 		protected var m_hoverPointGlobal:Point;
+		private var m_hoverDisabled:Boolean = false;
 		
 		public function ToolTippableSprite() 
 		{
@@ -65,8 +66,25 @@ package display
 			dispatchEvent(new ToolTipEvent(ToolTipEvent.CLEAR_TOOL_TIP, this));
 		}
 		
+		public function disableHover():void
+		{
+			m_hoverDisabled = true;
+			if (m_hoverTimer) {
+				m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
+				m_hoverTimer.stop();
+				m_hoverTimer = null;
+			}
+			m_hoverPointGlobal = null;
+		}
+		
+		public function enableHover():void
+		{
+			m_hoverDisabled = false;
+		}
+		
 		protected function onHoverDetected(evt:TimerEvent):void
 		{
+			if (m_hoverDisabled) return;
 			var toolTipEvt:ToolTipEvent = getToolTipEvent();
 			if (toolTipEvt) {
 				if (m_hoverPointGlobal) toolTipEvt.point = m_hoverPointGlobal.clone();
