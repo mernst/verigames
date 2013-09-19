@@ -144,7 +144,7 @@ package scenes.game.components
 			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
 			
-			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8, "Reset the board to\nit's starting condition");
+			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8, "Reset the board to\nits starting condition");
 			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
 			m_resetButton.x = m_menuButton.x + (m_menuButton.width - m_resetButton.width);
 			m_resetButton.y = m_menuButton.y + m_menuButton.height + 3;
