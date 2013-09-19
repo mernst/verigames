@@ -490,8 +490,17 @@ package scenes.levelselectscene
 				obj.name = levelXML.@name.toString();
 				
 				//unlock all that user should be able play, check the ones they have played
-				obj.unlocked = tutorialController.tutorialShouldBeUnlocked(obj.levelId);
-				obj.checked = tutorialController.isTutorialLevelCompleted(obj.levelId);
+				if(PipeJam3.RELEASE_BUILD)
+				{
+					obj.unlocked = tutorialController.tutorialShouldBeUnlocked(obj.levelId);
+					obj.checked = tutorialController.isTutorialLevelCompleted(obj.levelId);
+				}
+				else
+				{
+					obj.unlocked = true;
+					obj.checked = true;
+					
+				}
 				tutorialArray.push(obj);
 			}
 			tutorialListBox.setButtonArray(tutorialArray, false);
