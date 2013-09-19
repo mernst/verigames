@@ -310,7 +310,7 @@ package scenes.game.display
 					return 0.6;
 				case PASSAGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return 1.0;
+					return 1.25;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
 					return 1.1;
@@ -335,8 +335,9 @@ package scenes.game.display
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LAYOUT_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
+				//case SPLIT_MERGE_PRACTICE_TUTORIAL:
+				//	return new Point(0, 10);// move down by 10px (pan up)
 				case GROUP_SELECT_TUTORIAL:
 					return new Point(0, 11);// move down by 15px
 				case LINKS_TUTORIAL:
@@ -344,6 +345,8 @@ package scenes.game.display
 					return new Point(15, -4);//move right 15px (pan left)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+					return new Point(0, -5);// move up by 5px
 				case PINCH_TUTORIAL:
 					return new Point(0, -15);// move up by 15px
 				case MERGE_TUTORIAL:
