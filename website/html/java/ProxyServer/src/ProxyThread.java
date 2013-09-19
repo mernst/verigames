@@ -506,14 +506,13 @@ public class ProxyThread extends Thread {
 	        
     	if(fileInfo[2].indexOf("submit") != -1)
     	{
-    		putLevelObjectInCollection(this.submittedLevelsCollection, fileInfo);
-    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(fileInfo, true);
     	}
     	else
-    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(fileInfo, false);
     }
     
-    public void putLevelObjectInCollection(DBCollection collection, String[] fileInfo)
+    public void putLevelObjectInCollection(String[] fileInfo, boolean submitAlso)
     {
     	 DBObject submittedLevelObj = new BasicDBObject();
     	 submittedLevelObj.put("player", fileInfo[3]);
@@ -534,20 +533,32 @@ public class ProxyThread extends Thread {
         properties.put("conflicts", fileInfo[14]);
         properties.put("bonusnodes", fileInfo[15]);
     	
-        if(fileInfo.length > 17)
+        if(submitAlso)
         {
         	properties.put("enjoymentRating", fileInfo[16]);
         	properties.put("difficultyRating", fileInfo[17]);
         	submittedLevelObj.put("version", fileInfo[18]);
+        	submittedLevelObj.put("shareWithGroup", 1);
         }
         else
+        {
         	submittedLevelObj.put("version", fileInfo[16]);
+        	submittedLevelObj.put("shareWithGroup", fileInfo[17]);
+        }
+        submittedLevelObj.put("createdDate", new Date());
         
         DBObject metadata = new BasicDBObject();
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
         log(LOG_TO_DB, submittedLevelObj.toMap().toString());
-		WriteResult r2 = collection.insert(submittedLevelObj);
+        WriteResult r2 = null;
+        if(submitAlso)
+        {
+        	r2 = submittedLevelsCollection.insert(submittedLevelObj);
+        	log(LOG_ERROR, r2.getLastError().toString());
+        }
+        
+        r2 = savedLevelsCollection.insert(submittedLevelObj);
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 

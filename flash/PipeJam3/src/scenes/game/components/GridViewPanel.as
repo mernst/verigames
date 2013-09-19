@@ -50,7 +50,7 @@ package scenes.game.components
 	public class GridViewPanel extends BaseComponent
 	{
 		public static const WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 238 + 44;
+		public static const HEIGHT:Number = 238 + 44 + 10;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;
@@ -510,6 +510,9 @@ package scenes.game.components
 				case Keyboard.SPACE:
 					recenter();
 					break;
+				case Keyboard.DELETE:
+					if (m_currentLevel) m_currentLevel.onDeletePressed();
+					break;
 			}
 		}
 		
@@ -714,13 +717,13 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
-				continueButton.y = HEIGHT - continueButton.height - 5 - GameControlPanel.OVERLAP;
+				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
 			}
 			
-				if (!m_currentLevel.targetScoreReached) {
-					m_currentLevel.targetScoreReached = true;
-					if(PipeJamGameScene.inTutorial)
-						addChild(continueButton);
+			if (!m_currentLevel.targetScoreReached) {
+				m_currentLevel.targetScoreReached = true;
+				if(PipeJamGameScene.inTutorial)
+					addChild(continueButton);
 				
 				// Fanfare
 				removeFanfare();
@@ -728,7 +731,10 @@ package scenes.game.components
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
-				for (var i:int = 5; i <= continueButton.width - 5; i += 10) {
+				var levelCompleteText:String = PipeJamGameScene.inTutorial ? "Level Complete!" : "Great work!\nBut keep playing to further improve your score."
+				var textWidth:Number = PipeJamGameScene.inTutorial ? continueButton.width : 208;
+				
+				for (var i:int = 5; i <= textWidth - 5; i += 10) {
 					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
 					fanfare.x = i;
 					fanfare.y = continueButton.height / 2;
@@ -738,26 +744,28 @@ package scenes.game.components
 				}
 				
 				startFanfare();
-				var LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 0.0;
-				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
-				//don't add text or tween things unless in tutorial
-				if(PipeJamGameScene.inTutorial)
-				{
-					//make delay longer when in tutorial
-					LEVEL_COMPLETE_TEXT_PAUSE_SEC = 1.0;
-					var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
-					TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
-					m_fanfareTextContainer.addChild(textField);
-					addChild(m_fanfareTextContainer);
+				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = PipeJamGameScene.inTutorial ? 2.0 : 0.0;
+				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
+				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, 0xFFEC00);
+				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
+				m_fanfareTextContainer.addChild(textField);
+				m_fanfareTextContainer.alpha = 1;
+				addChild(m_fanfareTextContainer);
 				
+				if (PipeJamGameScene.inTutorial) {
+					// For tutorial, move text and button off to the side
 					var origX:Number = m_fanfareTextContainer.x;
 					var origY:Number = m_fanfareTextContainer.y;
 					for (i = 0; i < m_fanfare.length; i++) {
 						Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
 					}
 					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
+				} else {
+					// For real levels, gradually fade out text
+					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_FADE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, alpha: 0, transition:Transitions.EASE_IN } );
 				}
-				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
+				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC + LEVEL_COMPLETE_TEXT_FADE_SEC - 0.5);
 			}
 			
 			if(PipeJamGameScene.inTutorial)

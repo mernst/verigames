@@ -139,7 +139,7 @@ package scenes.game.display
 			switch (m_tutorialTag) {
 				case CLASH_TUTORIAL:
 					if (evt.edgeSetChanged.isWide()) {
-						tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+						tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 						tips.push(tip);
 					}
 					m_currentToolTipsText = tips;
@@ -163,7 +163,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					if (evt.edgeSetChanged.m_id == "WidenBoxes10") {
 						if (!evt.edgeSetChanged.isWide()) {
-							tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+							tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 							tips.push(tip);
 						}
 						m_currentToolTipsText = tips;
@@ -310,7 +310,7 @@ package scenes.game.display
 					return 0.6;
 				case PASSAGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
-					return 1.0;
+					return 1.25;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
 					return 1.1;
@@ -335,8 +335,9 @@ package scenes.game.display
 				case WIDGET_PRACTICE_TUTORIAL:
 				case LOCKED_TUTORIAL:
 				case LAYOUT_TUTORIAL:
-				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
+				//case SPLIT_MERGE_PRACTICE_TUTORIAL:
+				//	return new Point(0, 10);// move down by 10px (pan up)
 				case GROUP_SELECT_TUTORIAL:
 					return new Point(0, 11);// move down by 15px
 				case LINKS_TUTORIAL:
@@ -344,6 +345,8 @@ package scenes.game.display
 					return new Point(15, -4);//move right 15px (pan left)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
+				case SPLIT_MERGE_PRACTICE_TUTORIAL:
+					return new Point(0, -5);// move up by 5px
 				case PINCH_TUTORIAL:
 					return new Point(0, -15);// move up by 15px
 				case MERGE_TUTORIAL:
@@ -423,7 +426,7 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case CLASH_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e2__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case LINKS_TUTORIAL:
@@ -441,7 +444,7 @@ package scenes.game.display
 					tips.push(tip);
 					break;
 				case WIDEN_TUTORIAL:
-					tip = new TutorialManagerTextInfo("Clash! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
+					tip = new TutorialManagerTextInfo("Jam! Wide Link to\nnarrow Passage", null, pointToClash("e10__IN__"), NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.CENTER);
 					tips.push(tip);
 					break;
 				case PINCH_TUTORIAL:
@@ -538,8 +541,8 @@ package scenes.game.display
 						NineSliceBatch.LEFT, NineSliceBatch.BOTTOM_LEFT);
 				case CLASH_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"CLASHES happen when wide Links enter\n" +
-						"narrow Passages. Each Clash penalizes\n" +
+						"JAMS happen when wide Links enter\n" +
+						"narrow Passages. Each Jam penalizes\n" +
 						"your score by " + Constants.ERROR_POINTS.toString() + " points.",
 						null,
 						pointToClash("e2__IN__"),
@@ -547,7 +550,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					return null;/* new TutorialManagerTextInfo(
 						"Click the widgets to widen their passages\n" +
-						"and fix the clashes.",
+						"and fix the jams.",
 						null,
 						null,
 						null, null);*/
@@ -561,7 +564,7 @@ package scenes.game.display
 						NineSliceBatch.BOTTOM_LEFT, NineSliceBatch.LEFT);
 				case OPTIMIZE_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Sometimes the best score still has Clashes.\n" +
+						"Sometimes the best score still has Jams.\n" +
 						"Try different configurations to improve your score!",
 						null,
 						null,
@@ -634,12 +637,12 @@ package scenes.game.display
 					return new TutorialManagerTextInfo(
 						"Optimize your first real level!",
 						null,
-						null,
+						null, 
 						null, null);
 				case NARROW_TUTORIAL:
 					return new TutorialManagerTextInfo(
 						"Click the upper Widgets to narrow their Links\n" +
-						"and fix the Clashes.",
+						"and fix the Jams.",
 						null,
 						null,
 						null, null);

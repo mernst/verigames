@@ -145,17 +145,27 @@ package scenes.game.display
 			super.dispose();
 		}
 		
-		private var isMoving:Boolean = false;
+		private var m_isMoving:Boolean = false;
+		private function set isMoving(value:Boolean):void {
+			if (m_isMoving == value) return;
+			m_isMoving = value;
+			if (m_isMoving) {
+				disableHover();
+			} else {
+				enableHover();
+			}
+		}
+		private function get isMoving():Boolean { return m_isMoving; }
+		
 		private var hasMovedOutsideClickDist:Boolean = false;
 		private var startingTouchPoint:Point;
 		private var startingPoint:Point;
 		private static const CLICK_DIST:Number = 0.2; // if the node is moved just a tiny bit, chances are the user meant to click rather than move
 		override protected function onTouch(event:TouchEvent):void
 		{
-			super.onTouch(event);
 			var touches:Vector.<Touch> = event.touches;
 			var touch:Touch = touches[0];
-			
+			super.onTouch(event);
 			//trace(m_id);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
 			{
@@ -231,7 +241,8 @@ package scenes.game.display
 				{
 					var touchXY:Point = new Point(touch.globalX, touch.globalY);
 					touchXY = this.globalToLocal(touchXY);
-					if(!isMoving) {
+					if (!isMoving) {
+						onHoverEnd();
 						startingTouchPoint = touchXY;
 						startingPoint = new Point(x, y);
 						isMoving = true;

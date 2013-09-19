@@ -36,14 +36,15 @@ package scenes.game
 		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
 		static public var dArray:Array = new Array(
-			"../SampleWorlds/MapGet.zip",
-			"../SampleWorlds/MapGetConstraints.zip",
-			"../SampleWorlds/MapGetLayout.zip"
+			"../../../../SampleWorlds/templevels/Chute.zip",
+			"../../../../SampleWorlds/templevels/ChuteConstraints.zip",
+			"../../../../SampleWorlds/templevels/ChuteLayout.zip"
 		);
 		
 		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
 				
 		static public var inTutorial:Boolean = false;
+		static public var inDemo:Boolean = false;
 		
 		static public var worldFile:String = demoButtonWorldFile;
 		static public var layoutFile:String = demoButtonLayoutFile;
@@ -82,6 +83,7 @@ package scenes.game
 			if(loginHelper.levelObject && loginHelper.levelObject.levelId is int && loginHelper.levelObject.levelId < 1000) // in the tutorial if a short level id
 			{
 				PipeJamGameScene.inTutorial = true;
+				PipeJamGameScene.inDemo = false;
 				fileName = "tutorial";
 			}
 			if (DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)

@@ -86,7 +86,7 @@ package assets
 		public static const PipeJamSubTexture_MenuButtonOverPrefix:String = "MenuButtonOver";
 		public static const PipeJamSubTexture_MenuButtonSelectedPrefix:String = "MenuButtonSelected";
 		public static const PipeJamSubTexture_MenuArrowHorizonal:String = "MenuArrowHorizonal";
-		public static const PipeJamSubTexture_MenuArrowVertical:String = "MenuArrowVertical";
+		public static const PipeJamSubTexture_MenuArrowVertical:String = "ScrollbarArrowUp";
 		public static const PipeJamSubTexture_TutorialArrow:String = "TutorialArrow";
 		public static const PipeJamSubTexture_TutorialBoxPrefix:String = "TutorialBox";
 		public static const PipeJamSubTexture_BackButton:String = "BackButton";
@@ -110,10 +110,10 @@ package assets
 		public static const PipeJamSubTexture_TextInput:String = "TextInput";
 		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
 		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";
-		public static const PipeJamSubTexture_Thumb:String = "Thumb";
-		public static const PipeJamSubTexture_ThumbOver:String = "ThumbOver";
-		public static const PipeJamSubTexture_ThumbSelected:String = "ThumbSelected";
-		public static const PipeJamSubTexture_ScrollBarTrack:String = "TrackBackground";
+		public static const PipeJamSubTexture_Thumb:String = "ScrollbarButton";
+		public static const PipeJamSubTexture_ThumbOver:String = "ScrollbarButtonMouseover";
+		public static const PipeJamSubTexture_ThumbSelected:String = "ScrollbarButtonClick";
+		public static const PipeJamSubTexture_ScrollBarTrack:String = "Scrollbar";
 		
         public static function getTexture(file:String, name:String):Texture
         {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="NarrowBoxes" qid="8">
+ <level name="LockedPassage" qid="8">
   <linked-edges>
    <edge-set id="NarrowBoxes1">
     <edgeref id="e1"/>

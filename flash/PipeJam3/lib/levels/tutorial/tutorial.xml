@@ -472,7 +472,7 @@
    </board>
   </boards>
  </level>
- <level name="SatisfyBoxes" qid="4">
+ <level name="Links" qid="4">
   <linked-edges>
    <edge-set id="SatisfyBoxes1">
     <edgeref id="e1"/>
@@ -752,7 +752,7 @@
    </board>
   </boards>
  </level>
- <level name="Clashes" qid="6">
+ <level name="Jams" qid="6">
   <linked-edges>
    <edge-set id="Clashes1">
     <edgeref id="e1"/>
@@ -798,7 +798,7 @@
    </board>
   </boards>
  </level>
- <level name="WidenBoxes" qid="7">
+ <level name="Widen" qid="7">
   <linked-edges>
    <edge-set id="WidenBoxes1">
     <edgeref id="e1"/>
@@ -1001,7 +1001,7 @@
    </board>
   </boards>
  </level>
- <level name="NarrowBoxes" qid="8">
+ <level name="LockedPassage" qid="8">
   <linked-edges>
    <edge-set id="NarrowBoxes1">
     <edgeref id="e1"/>
@@ -1666,7 +1666,7 @@
    </board>
   </boards>
  </level>
- <level name="SplitMergePractice" qid="17">
+ <level name="SplitMerge" qid="17">
   <linked-edges>
    <edge-set id="SplitMergePractice1">
     <edgeref id="e1"/>

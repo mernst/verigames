@@ -5,6 +5,7 @@ package scenes.game.display
 	import audio.AudioManager;
 	
 	import dialogs.InGameMenuDialog;
+	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
 	
 	import display.NineSliceBatch;
@@ -72,9 +73,10 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var inGameMenuBox:InGameMenuDialog;
 		
+		protected var shareDialog:SaveDialog;
+		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
-		protected var currentLevelNumber:Number = 0;
 		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
@@ -121,7 +123,6 @@ package scenes.game.display
 			m_constraintsXML = _constraints;
 			
 			m_world = this;
-			
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -145,8 +146,12 @@ package scenes.game.display
 				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
 					targetScore = int(levelConstraintsXML.attribute("targetScore"));
 				}
-				
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore);
+				var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+				var levelNameFound:String = my_levelNodes.original_level_name;
+				if (!PipeJamGameScene.inTutorial && loginHelper.levelObject && loginHelper.levelObject.name) {
+					levelNameFound = loginHelper.levelObject.name;
+				}
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
@@ -170,7 +175,7 @@ package scenes.game.display
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
-			{				
+			{
 				var obj:Object = LoginHelper.getLoginHelper().levelObject;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
@@ -208,9 +213,8 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -231,43 +235,51 @@ package scenes.game.display
 			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
-			AudioManager.getInstance().audioDriver().reset();
-			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
+			AudioManager.getInstance().reset();
+			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			var juggler:Juggler;
+			if (!gameControlPanel) return;
+			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
+			var juggler:Juggler = Starling.juggler;
+			var animateUp:Boolean = false;
 			if(inGameMenuBox == null)
 			{
 				inGameMenuBox = new InGameMenuDialog();
+				inGameMenuBox.x = 0;
+				inGameMenuBox.y = bottomMenuY;
 				var childIndex:int = numChildren - 1;
 				if (gameControlPanel && gameControlPanel.parent == this) {
-					getChildIndex(gameControlPanel);
+					childIndex = getChildIndex(gameControlPanel);
+					trace("childindex:" + childIndex);
+				} else {
+					trace("not");
 				}
 				addChildAt(inGameMenuBox, childIndex);
-				inGameMenuBox.x = 0;
 				//add clip rect so box seems to slide up out of the gameControlPanel
 				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				
-				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
-				juggler.tween(inGameMenuBox, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
-				});
+				animateUp = true;
 			}
-			else if (inGameMenuBox.visible)
+			else if (inGameMenuBox.visible && !inGameMenuBox.animatingDown)
 				inGameMenuBox.onBackToGameButtonTriggered();
-			else //exists but not visible
+			else // animate up
 			{
-				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
+				animateUp = true;
+			}
+			if (animateUp) {
+				if (!inGameMenuBox.visible) {
+					inGameMenuBox.y = bottomMenuY;
+					inGameMenuBox.visible = true;
+				}
+				juggler.removeTweens(inGameMenuBox);
+				inGameMenuBox.animatingDown = false;
+				inGameMenuBox.animatingUp = true;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: bottomMenuY - inGameMenuBox.height, // -> tween.animate("x", 50)
+					onComplete: function():void { if (inGameMenuBox) inGameMenuBox.animatingUp = false; }
 				});
 			}
 			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
@@ -284,6 +296,19 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
+		}
+		
+		protected function postSaveDialog(event:MenuEvent):void
+		{
+			if(shareDialog == null)
+			{
+				shareDialog = new SaveDialog(150, 100);
+			}
+			
+			edgeSetGraphViewPanel.addChild(shareDialog);
+			
+			shareDialog.x = (480 - shareDialog.width)/2;
+			shareDialog.y = (320 - shareDialog.height)/2 - 20;
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -321,6 +346,7 @@ package scenes.game.display
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
 			var socialText:String = "";
+			var numLinesInText:int = 1;
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
 				dialogText = "Level Saved.";
@@ -331,12 +357,13 @@ package scenes.game.display
 			}
 			else
 			{
-				dialogText = "Level Submitted! Thanks!";
+				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
+				numLinesInText = 3;
 				socialText = "I just finished a level!";
 				dialogHeight = 110;
 			}
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null, numLinesInText);
 			addChild(alert);
 			
 			alert.x = (450 - alert.width)/2;
@@ -367,7 +394,7 @@ package scenes.game.display
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
-
+		
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
@@ -400,7 +427,7 @@ package scenes.game.display
 				}
 				//found xml representation?
 				if (my_level_xml_indx > -1) {
-				//loop through all boards, find the edges. Update these with new buzzsaw and width info.
+					//loop through all boards, find the edges. Update these with new buzzsaw and width info.
 					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
 						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
 							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
@@ -440,7 +467,7 @@ package scenes.game.display
 			}	
 			return output_xml;
 		}
-
+		
 		public function onZoomIn(event:MenuEvent):void
 		{
 			edgeSetGraphViewPanel.zoomInDiscrete();
@@ -481,7 +508,8 @@ package scenes.game.display
 				}
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
-					details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+					if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet)
+						details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
@@ -500,17 +528,30 @@ package scenes.game.display
 		
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var level:Level = active_level;
+			if (loginHelper.levelObject != null) {
+				var currentLevelID:String = loginHelper.levelObject.levelId;
+				//find the level with the current ID
+				for each(level in levels)
+				{
+					if(level.m_levelQID == currentLevelID)
+						break;
+				}
+			}
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber], true);
+					selectLevel(level, true);
 				};
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var prevLevelNumber:Number = currentLevelNumber;
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var prevLevelNumber:Number = loginHelper.levelObject.levelId;
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -519,10 +560,20 @@ package scenes.game.display
 					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
 				
-				
+				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
-
+				//if there are no more unplayed levels, check next if we are in levelselect screen choice
+				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
+				{
+					//and if so, set to false, unless at the end of the tutorials
+					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
+					if(currentLevelId != 0)
+						tutorialsDone = false;
+					
+				}
+				
 				//if this is the first time we've completed these, post the achievement, else just move on
+				var currentLevelNumber:int;
 				if(tutorialsDone)
 				{
 					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
@@ -649,9 +700,9 @@ package scenes.game.display
 						break;
 					}
 					case 72: //'h' for hide
-					if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
-						active_level.toggleUneditableStrings();
-					break;
+						if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
+							active_level.toggleUneditableStrings();
+						break;
 					case 76: //'l' for copy layout
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
@@ -764,13 +815,13 @@ package scenes.game.display
 			active_level.resetBestScore();
 			
 			gameControlPanel.newLevelSelected(newLevel);
-		//	newLevel.setConstraints();
-		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
+			//	newLevel.setConstraints();
+			//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
 		
 		private function onRemovedFromStage():void
 		{
-			AudioManager.getInstance().audioDriver().reset();
+			AudioManager.getInstance().reset();
 			
 			if (m_activeToolTip) {
 				m_activeToolTip.removeFromParent(true);
@@ -784,9 +835,8 @@ package scenes.game.display
 			
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);

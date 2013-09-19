@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="Clashes" qid="6" tutorial="clash">
+  <level id="Jams" qid="6" tutorial="clash">
     <box height="1.0" id="Clashes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Clashes2" lines="1" width="1.81" x="0.9" y="5.6"/>
     <joint height="0.51" id="n12" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>

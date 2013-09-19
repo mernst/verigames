@@ -8,11 +8,13 @@ package events
 		public static const SET_NEW_LAYOUT:String = "set_new_layout";
 		public static const SUBMIT_LEVEL:String = "submit_level";
 		public static const SAVE_LEVEL:String = "save_level";
+		public static const POST_SAVE_DIALOG:String = "post_save_dialog";
 		public static const ZOOM_IN:String = "zoom_in";
 		public static const ZOOM_OUT:String = "zoom_out";
 		public static const RECENTER:String = "recenter";
 		public static const ACHIEVEMENT_ADDED:String = "achievementAdded";
 		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";
+		public static const TOGGLE_SOUND_CONTROL:String = "toggle_sound_control";
 		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{

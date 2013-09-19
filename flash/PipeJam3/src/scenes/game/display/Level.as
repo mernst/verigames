@@ -101,6 +101,7 @@ package scenes.game.display
 		private var m_jointList:Vector.<GameJointNode>;
 		private var m_visibleNodeManager:VisibleNodeManager;
 		private var m_hidingErrorText:Boolean = false;
+		private var m_segmentHovered:GameEdgeSegment;
 		
 		private var m_nodesInactiveContainer:Sprite = new Sprite();
 		private var m_jointsInactiveContainer:Sprite = new Sprite();
@@ -132,7 +133,8 @@ package scenes.game.display
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
-
+		
+		public var original_level_name:String;
 		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
@@ -145,10 +147,11 @@ package scenes.game.display
 		 * @param  _levelLayoutXML the layout xml
 		 * @param  _levelConstraintsXML the constraints xml
 		 */
-		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int = int.MAX_VALUE)
+		public function Level( _name:String, _levelNodes:LevelNodes, _levelLayoutXML:XML, _levelConstraintsXML:XML, _targetScore:int, _originalLevelName:String)
 		{
 			UNLOCK_ALL_LEVELS_FOR_DEBUG = PipeJamGame.DEBUG_MODE;
 			level_name = _name;
+			original_level_name = _originalLevelName;
 			levelNodes = _levelNodes;
 			m_levelLayoutXML = _levelLayoutXML.copy();
 			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
@@ -352,6 +355,9 @@ package scenes.game.display
 			
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
+			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
 			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
@@ -366,10 +372,10 @@ package scenes.game.display
 		
 		public function loadBestScoringConfiguration():void
 		{
-			setConstraints(m_levelBestScoreConstraintsXML);
+			setConstraints(m_levelBestScoreConstraintsXML, true);
 		}
 		
-		private function setConstraints(constraintsXML:XML):void
+		private function setConstraints(constraintsXML:XML, updateTutorialManager:Boolean = false):void
 		{
 			var gameNode:GameNode;
 			
@@ -381,13 +387,20 @@ package scenes.game.display
 				}
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
+				var widthMismatch:Boolean = (gameNode.isWide() != constraintIsWide);
 				if (constraintIsEditable) {
 					gameNode.handleWidthChange(constraintIsWide, true);
+					if (updateTutorialManager && tutorialManager && widthMismatch) {
+						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
+					}
 				} else {
-					if (gameNode.isWide() != constraintIsWide) {
+					if (widthMismatch) {
 						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
 					}
 					gameNode.handleWidthChange(constraintIsWide, true);
+					if (updateTutorialManager && tutorialManager && widthMismatch) {
+						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
+					}
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
 					gameNode.m_isEditable = constraintIsEditable;
@@ -552,6 +565,7 @@ package scenes.game.display
 		
 		public function start():void
 		{
+			m_segmentHovered = null;
 			if (!initialized) {
 				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
 					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
@@ -612,6 +626,7 @@ package scenes.game.display
 		
 		public function restart():void
 		{
+			m_segmentHovered = null;
 			if (!initialized) {
 				start();
 			} else {
@@ -624,6 +639,7 @@ package scenes.game.display
 			setNewLayout(null, m_levelOriginalLayoutXML);
 			m_levelConstraintsXML = m_levelOriginalConstraintsXML.copy();
 			setConstraints(m_levelConstraintsXML);
+			targetScoreReached = false;
 			trace("Restarted: " + m_levelLayoutXML.@id);
 		}
 		
@@ -942,6 +958,9 @@ package scenes.game.display
 			
 			removeEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
 			removeEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
+			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
 			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
@@ -988,6 +1007,21 @@ package scenes.game.display
 				}
 				tutorialManager.onSegmentMoved(event, pointingAt);
 			}
+		}
+		
+		private function onSegmentDeleted(event:EdgeContainerEvent):void
+		{
+			// TODO: notify tutorial manager
+		}
+		
+		private function onHoverOver(event:EdgeContainerEvent):void
+		{
+			m_segmentHovered = event.segment;
+		}
+		
+		private function onHoverOut(event:EdgeContainerEvent):void
+		{
+			m_segmentHovered = null;
 		}
 		
 		//called when a segment is double-clicked on
@@ -1617,11 +1651,6 @@ package scenes.game.display
 			m_targetScore = score;
 		}
 		
-		public function get original_level_name():String
-		{
-			return m_levelLayoutXML.attribute("id");
-		}
-		
 		public function getTimeMs():Number
 		{
 			return new Date().time - m_levelStartTime;
@@ -1698,6 +1727,15 @@ package scenes.game.display
 				return levelNodes.boardNodesDictionary.hasOwnProperty(boardName);
 			}
 			return false;
+		}
+		
+		public static const SEGMENT_DELETION_ENABLED:Boolean = false;
+		public function onDeletePressed():void
+		{
+			// Only delete if layout moves are allowed
+			if (tutorialManager && tutorialManager.getLayoutFixed()) return;
+			if (!SEGMENT_DELETION_ENABLED) return;
+			if (m_segmentHovered) m_segmentHovered.onDeleted();
 		}
 		
 		public function get currentScore():int { return m_currentScore; }

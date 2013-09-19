@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="WidenBoxes" qid="7">
+ <level name="Widen" qid="7">
   <linked-edges>
    <edge-set id="WidenBoxes1">
     <edgeref id="e1"/>

@@ -44,6 +44,7 @@ package networking
 		
 		protected static var tutorialController:TutorialController;
 		
+		public var fromLevelSelectList:Boolean = false;
 		
 		static public function getTutorialController():TutorialController
 		{
@@ -72,12 +73,17 @@ package networking
 		
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void
 		{
-			var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
-			if(completedTutorialList[currentLevel] == null)
+			if(PipeJam3.RELEASE_BUILD)
 			{
-				var newTutorialObj:TutorialController = new TutorialController();
-				completedTutorialList[currentLevel] = newTutorialObj;
-				newTutorialObj.post();
+				if (!LoginHelper.getLoginHelper().levelObject) return;
+				if (!completedTutorialList) completedTutorialList = new Dictionary();
+				var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
+				if(completedTutorialList[currentLevel] == null)
+				{
+					var newTutorialObj:TutorialController = new TutorialController();
+					completedTutorialList[currentLevel] = newTutorialObj;
+					newTutorialObj.post();
+				}
 			}
 		}
 		public function post():void
@@ -91,7 +97,7 @@ package networking
 		
 		public function isTutorialLevelCompleted(tutorialQID:String):Boolean
 		{
-			return completedTutorialList[tutorialQID] != null;
+			return (completedTutorialList && (completedTutorialList[tutorialQID] != null));
 		}
 		
 		//first tutorial should be unlocked
@@ -103,7 +109,7 @@ package networking
 			
 			if(tutorialQIDInt == getFirstTutorialLevel())
 				return true;
-			else if(completedTutorialList[tutorialQID] != null)
+			else if(completedTutorialList && (completedTutorialList[tutorialQID] != null))
 				return true;
 			else
 			{
@@ -128,6 +134,7 @@ package networking
 		//returns the first tutorial level qid in the sequence
 		public function getFirstTutorialLevel():int
 		{
+			if (!tutorialOrderedList) return 0;
 			var order:Number = tutorialOrderedList[0];
 			return orderToTutorialDictionary[order].@qid;
 		}
@@ -137,14 +144,15 @@ package networking
 		public function getNextUnplayedTutorial():int
 		{
 			var currentLevelQID:int;
-			
+			if (!LoginHelper.getLoginHelper().levelObject) return 0;
 			currentLevelQID = LoginHelper.getLoginHelper().levelObject.levelId;
 			
 			var currentLevel:XML = qidToTutorialDictionary[currentLevelQID];
 			
 			var currentPosition:int = currentLevel.@position;
 			
-			var nextPosition:int = currentPosition++;
+			currentPosition++;
+			var nextPosition:int = currentPosition;
 			
 			var levelFound:Boolean = false;
 			while(!levelFound)
@@ -153,6 +161,11 @@ package networking
 					return 0;
 				
 				var nextQID:int = orderToTutorialDictionary[nextPosition].@qid;
+				
+				//if we chose the last level from the level select screen, assume we want to play in order, done or not
+				if(fromLevelSelectList)
+					return nextQID;
+				
 				if(completedTutorialList[nextQID] == null)
 					return nextQID;
 				
@@ -195,8 +208,7 @@ package networking
 			clearPlayedTutorials();
 		}
 		
-		//check if entire tutorial is done
-		// compare saved
+
 		public function isTutorialDone():Boolean
 		{
 			for each(var position:int in tutorialOrderedList)
@@ -207,7 +219,7 @@ package networking
 				if(isTutorialLevelCompleted(qid) == false)
 					return false;				
 			}
-
+			
 			return true;
 		}
 	}

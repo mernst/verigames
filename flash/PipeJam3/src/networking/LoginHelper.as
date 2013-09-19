@@ -62,6 +62,19 @@ package networking
 		
 		protected static var loginHelper:LoginHelper = null;		
 
+		/** this is the main holder of information about the level.
+		 * It should have these properties:
+		 * 		name - the file/level name
+		 * 		layoutName - the same as 'name', unless they loaded a different layout
+		 * 		layoutDescription
+		 * 		id
+		 * 		properties - an object containing such things as number of conflicts, visible nodes, etc.
+		 * 		score
+		 * 		
+		 * It might have these properties:
+		 * 		enjoymentRating
+		 * 		difficultyRating
+		 * */
 		public var levelObject:Object = null;
 		
 		public var levelInfoVector:Vector.<Object> = null;
@@ -245,11 +258,11 @@ package networking
 			if(type == MenuEvent.SUBMIT_LEVEL)
 				sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelObject.name);
 			else //save level
-				submitLevelWithID(null, fileType);
+				saveLevelWithID(null, fileType);
 		}	
 		
 		//if levelID == null, we are just saving, not submitting (which creates a new level id for future use...)
-		public function submitLevelWithID(levelID:String, fileType:int):void
+		public function saveLevelWithID(levelID:String, fileType:int):void
 		{
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, m_levelFilesString, levelObject.name, levelID, fileType);
 		}
@@ -272,7 +285,7 @@ package networking
 			var raLevelObj:Object = JSON.parse(e.target.data);
 			var levelID:String = raLevelObj.id;
 			m_levelCreated = true;
-			submitLevelWithID(levelID, m_fileType);
+			saveLevelWithID(levelID, m_fileType);
 		}
 		
 	

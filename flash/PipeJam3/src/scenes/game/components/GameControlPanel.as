@@ -26,6 +26,8 @@ package scenes.game.components
 	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.PipeJamGameScene;
+	
 	import networking.LoginHelper;
 	
 	import starling.animation.Transitions;
@@ -42,10 +44,10 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 82;
+		private static const HEIGHT:Number = 82 - 20;
 		
-		public static const OVERLAP:Number = 44;
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 25, 284 - 10, 44);
+		public static const OVERLAP:Number = 44 - 10;
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -60,11 +62,20 @@ package scenes.game.components
 		/** Text showing current score on score_pane */
 		private var m_scoreTextfield:TextFieldWrapper;
 		
+		/** Text showing current score on score_pane */
+		private var m_levelNameTextfield:TextFieldWrapper;
+		
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
 		/** Button to start the level over */
-		private var m_ResetButton:NineSliceButton;
+		private var m_resetButton:NineSliceButton;
+		
+		/** Button to save the level */
+		private var m_saveButton:NineSliceButton;
+		
+		/** Button to share the level */
+		private var m_shareButton:NineSliceButton;
 
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
@@ -120,24 +131,31 @@ package scenes.game.components
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
+			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, WIDTH - 2, 10, 10, GameComponent.WIDE_COLOR);
+			m_levelNameTextfield.touchable = false;
+			m_levelNameTextfield.x = 0;
+			m_levelNameTextfield.y = -10;
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
+			addChild(m_levelNameTextfield);
+			
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 14, 8, 8, "See other options");
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
 			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 + 8;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
 			
-			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
-			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
-			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
-			m_ResetButton.y = HEIGHT - m_ResetButton.height - 2;
-			addChild(m_ResetButton);
+			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8, "Reset the board to\nits starting condition");
+			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
+			m_resetButton.x = m_menuButton.x + (m_menuButton.width - m_resetButton.width);
+			m_resetButton.y = m_menuButton.y + m_menuButton.height + 3;
+			addChild(m_resetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = WIDTH - 55;
-			m_zoomInButton.y = 15;
+			m_zoomInButton.x = WIDTH - 61;
+			m_zoomInButton.y = 10;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
@@ -162,6 +180,18 @@ package scenes.game.components
 			conflictMap.width = width-conflictMap.x - 2;
 			conflictMap.height = height-conflictMap.y - 2;
 			//addChild(conflictMap);
+			
+			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
+			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
+			m_saveButton.x = width - m_saveButton.width - 16;
+			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
+			addChild(m_saveButton);
+			
+			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8, "Report your score\nto help verify\nthis level");
+			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
+			m_shareButton.x = m_saveButton.x;
+			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
+			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -189,6 +219,18 @@ package scenes.game.components
 			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
 		}
 		
+		private function onShareButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+		}
+		
+		private function onSaveButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.POST_SAVE_DIALOG));
+			
+		}
+		
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
@@ -197,8 +239,11 @@ package scenes.game.components
 		public function newLevelSelected(level:Level):void 
 		{
 			updateScore(level, true);
+			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
+			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -208,6 +253,12 @@ package scenes.game.components
 			m_recenterButton.visible = viz;
 		}
 		
+		private function setSharingButtonVisibility(viz:Boolean):void
+		{
+			m_saveButton.visible = viz;
+			m_shareButton.visible = viz;
+		}
+		
 		/**
 		 * Updates the score on the screen
 		 */
@@ -215,34 +266,37 @@ package scenes.game.components
 		{
 			var currentScore:int = level.currentScore
 			var bestScore:int = level.bestScore;
-			var baseScore:int = level.baseScore;
+			var targetScore:int = level.getTargetScore();
+			var maxScoreShown:Number = Math.max(currentScore, bestScore);
+			maxScoreShown = Math.max(1, maxScoreShown); // avoid divide by zero
+			if (targetScore < int.MAX_VALUE) maxScoreShown = Math.max(maxScoreShown, targetScore);
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			if(LoginHelper.getLoginHelper().levelObject != null)
 				LoginHelper.getLoginHelper().levelObject.score = currentScore;
 			
-			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / baseScore;
-			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / baseScore;
+			// Aim for max score shown to be 2/3 of the width of the scorebar area
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / maxScoreShown;
+			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / maxScoreShown;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
 				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
 				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
 				m_scoreBar.y = SCORE_PANEL_AREA.height / 6.0;
-				m_scoreBarContainer.addChild(m_scoreBar);
 				m_scoreTextfield.x = newScoreX;
 			}
+			m_scoreBarContainer.addChild(m_scoreBar);
 			
-			if (level.getTargetScore() < int.MAX_VALUE) {
+			if (targetScore < int.MAX_VALUE) {
 				if (!m_targetScoreLine) {
-					m_targetScoreLine = new TargetScoreDisplay(level.getTargetScore().toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Target Score");
+					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
 				} else {
-					m_targetScoreLine.update(level.getTargetScore().toString());
+					m_targetScoreLine.update(targetScore.toString());
 				}
-				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * level.getTargetScore() / baseScore;
-				m_scoreBarContainer.addChildAt(m_targetScoreLine, 0);
+				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * targetScore / maxScoreShown;
+				m_scoreBarContainer.addChild(m_targetScoreLine);
 				m_scoreBarContainer.visible = true;
 			} else {
 				if (m_targetScoreLine) m_targetScoreLine.removeFromParent();
@@ -250,7 +304,7 @@ package scenes.game.components
 			}
 			
 			if (!m_bestScoreLine) {
-				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Best Score\nClick to Load");
+				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
 				m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
 				m_bestScoreLine.useHandCursor = true;
 				m_bestScoreLine.x = bestScoreX;
