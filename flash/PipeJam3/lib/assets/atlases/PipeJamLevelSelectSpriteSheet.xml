@@ -86,17 +86,17 @@
 	<SubTexture name="DocumentIconTop" x="146" y="610" width="92" height="16" />
 	<SubTexture name="DocumentIconTopLeft" x="130" y="610" width="16" height="16" />
 	<SubTexture name="DocumentIconTopRight" x="238" y="610" width="16" height="16" />
-	<SubTexture name="LevelSelectWindow" x="0" y="0" width="940" height="590" />
+	<SubTexture name="LevelSelectWindow" x="0" y="0" width="610" height="590" />
 	<SubTexture name="LevelSelectWindowBar" x="2" y="868" width="590" height="67" />
-	<SubTexture name="LevelSelectWindowBottom" x="64" y="521" width="812" height="69" />
+	<SubTexture name="LevelSelectWindowBottom" x="64" y="521" width="486" height="69" />
 	<SubTexture name="LevelSelectWindowBottomLeft" x="0" y="521" width="64" height="69" />
-	<SubTexture name="LevelSelectWindowBottomRight" x="876" y="521" width="64" height="69" />
-	<SubTexture name="LevelSelectWindowCenter" x="64" y="95" width="812" height="427" />
+	<SubTexture name="LevelSelectWindowBottomRight" x="546" y="521" width="64" height="69" />
+	<SubTexture name="LevelSelectWindowCenter" x="64" y="95" width="486" height="427" />
 	<SubTexture name="LevelSelectWindowLeft" x="0" y="95" width="64" height="427" />
-	<SubTexture name="LevelSelectWindowRight" x="876" y="95" width="64" height="427" />
-	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="812" height="95" />
+	<SubTexture name="LevelSelectWindowRight" x="546" y="95" width="64" height="427" />
+	<SubTexture name="LevelSelectWindowTop" x="64" y="0" width="486" height="95" />
 	<SubTexture name="LevelSelectWindowTopLeft" x="0" y="0" width="64" height="95" />
-	<SubTexture name="LevelSelectWindowTopRight" x="876" y="0" width="64" height="95" />
+	<SubTexture name="LevelSelectWindowTopRight" x="546" y="0" width="64" height="95" />
 	<SubTexture name="MinusButton" x="846" y="601" width="30" height="30" />
 	<SubTexture name="MinusButtonClick" x="846" y="665" width="30" height="30" />
 	<SubTexture name="MinusButtonMouseover" x="846" y="633" width="30" height="30" />

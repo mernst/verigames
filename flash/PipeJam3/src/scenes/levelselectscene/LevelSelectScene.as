@@ -76,17 +76,17 @@ package scenes.levelselectscene
 			addChild(background);
 			
 			var levelSelectWidth:Number = 305;
-			var levelSelectHeight:Number =  300;
+			var levelSelectHeight:Number =  320;
 			levelSelectBackground = new NineSliceBatch(levelSelectWidth, levelSelectHeight, levelSelectWidth /6.0, levelSelectHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
 			levelSelectBackground.x = 10;
-			levelSelectBackground.y = 10;
+			levelSelectBackground.y = 5;
 			addChild(levelSelectBackground);
 			
 			var levelSelectInfoWidth:Number = 150;
-			var levelSelectInfoHeight:Number =  300;
+			var levelSelectInfoHeight:Number =  320;
 			levelSelectInfoPanel = new NineSliceBatch(levelSelectInfoWidth, levelSelectInfoHeight, levelSelectInfoWidth /6.0, levelSelectInfoHeight / 6.0, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", "LevelSelectWindow");
 			levelSelectInfoPanel.x = width - levelSelectInfoWidth - 10;
-			levelSelectInfoPanel.y = 10;
+			levelSelectInfoPanel.y = 5;
 			addChild(levelSelectInfoPanel);
 			
 			//select side widgets
@@ -95,13 +95,13 @@ package scenes.levelselectscene
 			var buttonHeight:Number = 25;
 			var buttonY:Number = 30;
 			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Level", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0x0077FF);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Level", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
 			label.x = (levelSelectWidth - label.width)/2 + levelSelectBackground.x;
 			label.y = 10;
 			
-			infoLabel = TextFactory.getInstance().createTextField("Level Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0x0077FF);
+			infoLabel = TextFactory.getInstance().createTextField("Level Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(infoLabel, 1, 1);
 			addChild(infoLabel);
 			infoLabel.x = (levelSelectInfoWidth - infoLabel.width)/2 + levelSelectInfoPanel.x;
@@ -125,29 +125,29 @@ package scenes.levelselectscene
 			saved_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
 			saved_levels_button.y = buttonY + label.y;
 			
-			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 60, 24);
+			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 50, 18);
 			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			addChild(select_button);
-			select_button.x = levelSelectWidth-60-buttonPadding;
-			select_button.y = levelSelectHeight - select_button.height - 3;	
+			select_button.x = levelSelectWidth-50-buttonPadding;
+			select_button.y = levelSelectHeight - select_button.height - 12;	
 			
-			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 60, 24);
+			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 50, 18);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
 			cancel_button.x = select_button.x - cancel_button.width - buttonPadding;
-			cancel_button.y = levelSelectHeight - cancel_button.height - 3;
+			cancel_button.y = levelSelectHeight - cancel_button.height - 12;
 			
-			tutorialListBox = new SelectLevelList(levelSelectWidth - 2*buttonPadding, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
-			tutorialListBox.y = tutorial_levels_button.y + tutorial_levels_button.height + buttonPadding - 4;
-			tutorialListBox.x = (levelSelectWidth - tutorialListBox.width)/2+levelSelectBackground.x;
+			tutorialListBox = new SelectLevelList(levelSelectWidth - 3*buttonPadding - 4, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding - 2);
+			tutorialListBox.y = tutorial_levels_button.y + tutorial_levels_button.height + buttonPadding - 2;
+			tutorialListBox.x = (levelSelectWidth - tutorialListBox.width)/2+levelSelectBackground.x+2;
 			addChild(tutorialListBox);
 			
-			newLevelListBox = new SelectLevelList(levelSelectWidth - 2*buttonPadding, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
+			newLevelListBox = new SelectLevelList(levelSelectWidth - 3*buttonPadding - 4, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding - 2);
 			newLevelListBox.y = tutorialListBox.y;
 			newLevelListBox.x = tutorialListBox.x;
 			addChild(newLevelListBox);
 			
-			savedLevelsListBox = new SelectLevelList(levelSelectWidth - 2*buttonPadding, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding);
+			savedLevelsListBox = new SelectLevelList(levelSelectWidth - 3*buttonPadding - 4, levelSelectHeight - label.height - tutorial_levels_button.height - cancel_button.height - 4*buttonPadding - 2);
 			savedLevelsListBox.y = tutorialListBox.y;
 			savedLevelsListBox.x = tutorialListBox.x;
 			addChild(savedLevelsListBox);
@@ -240,7 +240,7 @@ package scenes.levelselectscene
 				removeChild(nameText);
 				if(currentSelectedLevel.hasOwnProperty("name"))
 				{
-					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLevel.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLevel.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(nameText, 0, 1);
 					addChild(nameText);
 					nameText.x = levelSelectInfoPanel.x+ 10;
@@ -255,21 +255,21 @@ package scenes.levelselectscene
 				
 				if(currentSelectedLevel.hasOwnProperty("metadata"))
 				{
-					numNodesText = TextFactory.getInstance().createTextField("Widgets: " + currentSelectedLevel.metadata.properties.visibleboxes, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numNodesText = TextFactory.getInstance().createTextField("Widgets: " + currentSelectedLevel.metadata.properties.visibleboxes, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numNodesText, 0, 1);
 					addChild(numNodesText);
 					numNodesText.x = levelSelectInfoPanel.x + 10;
 					numNodesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
 				
-					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numEdgesText = TextFactory.getInstance().createTextField("Links: " + currentSelectedLevel.metadata.properties.visiblelines, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numEdgesText, 0, 1);
 					addChild(numEdgesText);
 					numEdgesText.x = levelSelectInfoPanel.x + 10;
 					numEdgesText.y = nextTextBoxYPos; //line up with list box
 					nextTextBoxYPos += 20;
 	
-					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					numConflictsText = TextFactory.getInstance().createTextField("Jams: " + currentSelectedLevel.metadata.properties.conflicts, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(numConflictsText, 0, 1);
 					addChild(numConflictsText);
 					numConflictsText.x = levelSelectInfoPanel.x + 10;
@@ -278,7 +278,7 @@ package scenes.levelselectscene
 	
 					if(currentSelectedLevel.hasOwnProperty("score"))
 					{
-						scoreText = TextFactory.getInstance().createTextField("Score: " + currentSelectedLevel.score, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+						scoreText = TextFactory.getInstance().createTextField("Score: " + currentSelectedLevel.score, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 						TextFactory.getInstance().updateAlign(scoreText, 0, 1);
 						addChild(scoreText);
 						scoreText.x = levelSelectInfoPanel.x + 10;
