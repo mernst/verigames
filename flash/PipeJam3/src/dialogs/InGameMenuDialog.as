@@ -116,7 +116,7 @@ package dialogs
 				next_level_button = ButtonFactory.getInstance().createButton("Next Level", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 				next_level_button.addEventListener(starling.events.Event.TRIGGERED, onNextLevelButtonTriggered);
 				next_level_button.x = buttonPaddingWidth;
-				next_level_button.y = submit_score_button.y - buttonPaddingHeight - next_level_button.height;
+				next_level_button.y = select_layout_button.y - buttonPaddingHeight - next_level_button.height;
 				addChild(next_level_button);
 			}
 			
