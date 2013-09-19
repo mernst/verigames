@@ -65,14 +65,14 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
-			const BUTTON_CENTER_X:Number = 241; // center point to put Play and Log In buttons
+			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
 			
-			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 112, 42);
+			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = 230;
 			
 			if (!PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT) {
-				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 96, 32);
+				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 72, 32);
 				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
 				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
 				signin_button.y = play_button.y + play_button.height + 10;

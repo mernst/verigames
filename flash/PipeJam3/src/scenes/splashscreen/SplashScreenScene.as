@@ -35,8 +35,8 @@ package scenes.splashscreen
 			addChild(background);
 			
 			particleSystem = new ErrorParticleSystem();
-			particleSystem.x = (726.0 / 2.0) * background.width / Constants.GameWidth;
-			particleSystem.y = (601.0 / 2.0) * background.height / Constants.GameHeight;
+			particleSystem.x = (721.0 / 2.0) * background.width / Constants.GameWidth;
+			particleSystem.y = (555.0 / 2.0) * background.height / Constants.GameHeight;
 			particleSystem.scaleX = particleSystem.scaleY = 8.0;
 			addChild(particleSystem);
 			
