@@ -28,7 +28,7 @@ package display
 		
 		public function ScrollBarThumb(minYPos:Number, maxYPos:Number)
 		{
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			var thumbUp:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_Thumb);
 			var thumbOver:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbOver);
 			var thumbDown:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ThumbSelected);
@@ -43,10 +43,14 @@ package display
 				Vector.<DisplayObject>([thumbOnDownImage])
 			);
 			
+			width = width/2;
+			height = height/2;
+			
 			minYPosition = minYPos;
-			maxYPosition = maxYPos-thumbUpImage.height;
+			maxYPosition = maxYPos-height;
 			
 			y = minYPosition;
+
 			
 			addEventListener(TouchEvent.TOUCH, onTouch);
 		}
@@ -63,6 +67,8 @@ package display
 			
 			if (touch == null)
 			{
+				mIsHovering = false;
+				toState(m_up);
 			}
 			else if (touch.phase == TouchPhase.BEGAN)
 			{
@@ -113,6 +119,7 @@ package display
 			else if (touch.phase == TouchPhase.ENDED)
 			{
 				toState(m_up);
+				mIsHovering = false;
 			} 
 			else 
 			{

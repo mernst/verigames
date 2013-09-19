@@ -102,6 +102,9 @@ package assets
 		[Embed(source = "../../lib/assets/socialmedia/twitter-bird-dark-bgs.png")]
 		public static const TwitterLogoWhiteClass:Class;
 		
+		[Embed(source = "../../lib/assets/checkmark.png")]
+		public static const CheckmarkClass:Class;
+		
 		// Bitmap Fonts
 		
 		[Embed(source="../../media/fonts/1x/desyrel.fnt", mimeType="application/octet-stream")]
