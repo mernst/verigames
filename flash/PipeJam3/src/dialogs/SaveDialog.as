@@ -31,32 +31,34 @@ package dialogs
 		{
 			super();
 			
-			var background:NineSliceBatch = new NineSliceBatch(_width, _height, _width /6.0, _height / 6.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxFree");
+			var background:NineSliceBatch = new NineSliceBatch(_width*2, _height*2, 64, 64, "Game", "DialogWindowPNG", "DialogWindowXML", "DialogWindow");
+			background.scaleX = background.scaleY = .5;
+
 			addChild(background);
 			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Share with your group also?", AssetsFont.FONT_UBUNTU, _width - 10, 16, 12, 0x0077FF);
-			TextFactory.getInstance().updateAlign(label, 0, 1);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Share with\nyour group\nalso?", AssetsFont.FONT_UBUNTU, _width - 30, 32, 18, 0xFFFFFF);
+			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
-			label.x = 5;
-			label.y = 5;
+			label.x = 15;
+			label.y = 15;
 			
-			cancel_button = ButtonFactory.getInstance().createButton("Cancel", 40, 16, 8, 8);
+			cancel_button = ButtonFactory.getInstance().createButton("Cancel", 36, 16, 8, 8);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
-			cancel_button.x = _width - cancel_button.width - 8;
-			cancel_button.y = _height - cancel_button.height - 8;	
+			cancel_button.x = _width - cancel_button.width - 15;
+			cancel_button.y = _height - cancel_button.height - 18;	
 			
-			dont_share_button = ButtonFactory.getInstance().createButton("No", 40, 16, 8, 8);
+			dont_share_button = ButtonFactory.getInstance().createButton("No", 36, 16, 8, 8);
 			dont_share_button.addEventListener(starling.events.Event.TRIGGERED, onNoButtonTriggered);
 			addChild(dont_share_button);
-			dont_share_button.x = cancel_button.x - dont_share_button.width - 8;
-			dont_share_button.y = _height - dont_share_button.height - 8;	
+			dont_share_button.x = cancel_button.x - dont_share_button.width - 6;
+			dont_share_button.y = _height - dont_share_button.height - 18;	
 			
-			share_button = ButtonFactory.getInstance().createButton("Yes", 40, 16, 8, 8);
+			share_button = ButtonFactory.getInstance().createButton("Yes", 36, 16, 8, 8);
 			share_button.addEventListener(starling.events.Event.TRIGGERED, onYesButtonTriggered);
 			addChild(share_button);
-			share_button.x = dont_share_button.x - cancel_button.width - 8;
-			share_button.y = _height - share_button.height - 8;
+			share_button.x = dont_share_button.x - cancel_button.width - 6;
+			share_button.y = _height - share_button.height - 18;
 		}
 		
 		private function onCancelButtonTriggered(evt:Event):void

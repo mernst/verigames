@@ -295,10 +295,10 @@ package scenes.game.display
 		{
 			if(shareDialog == null)
 			{
-				shareDialog = new SaveDialog(150, 60);
+				shareDialog = new SaveDialog(150, 100);
 			}
 			
-			addChild(shareDialog);
+			edgeSetGraphViewPanel.addChild(shareDialog);
 			
 			shareDialog.x = (480 - shareDialog.width)/2;
 			shareDialog.y = (320 - shareDialog.height)/2 - 20;

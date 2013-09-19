@@ -44,6 +44,12 @@ package assets
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.xml", mimeType = "application/octet-stream")]
 		public static const PipeJamSpriteSheetXML:Class;
 		
+		[Embed(source = "../../lib/assets/atlases/DialogWindow.png")]
+		public static const DialogWindowPNG:Class;
+		
+		[Embed(source = "../../lib/assets/atlases/DialogWindow.xml", mimeType = "application/octet-stream")]
+		public static const DialogWindowXML:Class;
+		
 		[Embed(source = "../../lib/assets/atlases/PipeJamLevelSelectSpriteSheet.png")]
 		public static const PipeJamLevelSelectSpriteSheetPNG:Class;
 		
