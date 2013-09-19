@@ -59,6 +59,8 @@ package dialogs
 		protected var numButtons:int = 5;
 		
 		protected var hideMainDialog:Boolean = true;
+		public var animatingDown:Boolean = false;
+		public var animatingUp:Boolean = false;
 		
 		public static const TOP_BUFFER:Number = 5;
 		public static const BOTTOM_BUFFER:Number = 20; // bottom part obscured by control panel, build in a buffer
@@ -164,7 +166,6 @@ package dialogs
 				submitLayoutDialog.visible = true;
 				submitLayoutDialog.clipRect = new Rectangle(background.width, y + (height - submitLayoutDialog.height), 
 										submitLayoutDialog.width, submitLayoutDialog.height);
-
 				Starling.juggler.tween(submitLayoutDialog, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
 					x: background.width 
@@ -245,6 +246,9 @@ package dialogs
 		protected function hideSelf():void
 		{
 			var juggler:Juggler = Starling.juggler;
+			juggler.removeTweens(this);
+			animatingUp = false;
+			animatingDown = true;
 			juggler.tween(this, 1.0, {
 				transition: Transitions.EASE_IN_OUT,
 				onComplete: onHideSelfComplete,
@@ -254,6 +258,7 @@ package dialogs
 		
 		protected function onHideSelfComplete():void
 		{
+			animatingDown = false;
 			visible = false;
 		}
 		
@@ -277,9 +282,6 @@ package dialogs
 			if(hideMainDialog)
 				hideSelf();
 		}
-		
-
-
 		
 		private function onNextLevelButtonTriggered():void
 		{

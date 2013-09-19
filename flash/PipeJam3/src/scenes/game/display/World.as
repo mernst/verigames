@@ -241,38 +241,45 @@ package scenes.game.display
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			var juggler:Juggler;
+			if (!gameControlPanel) return;
+			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
+			var juggler:Juggler = Starling.juggler;
+			var animateUp:Boolean = false;
 			if(inGameMenuBox == null)
 			{
 				inGameMenuBox = new InGameMenuDialog();
+				inGameMenuBox.x = 0;
+				inGameMenuBox.y = bottomMenuY;
 				var childIndex:int = numChildren - 1;
 				if (gameControlPanel && gameControlPanel.parent == this) {
 					childIndex = getChildIndex(gameControlPanel);
+					trace("childindex:" + childIndex);
+				} else {
+					trace("not");
 				}
 				addChildAt(inGameMenuBox, childIndex);
-				inGameMenuBox.x = 0;
 				//add clip rect so box seems to slide up out of the gameControlPanel
 				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				
-				var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
-				inGameMenuBox.y = bottomMenuY;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
-				juggler.tween(inGameMenuBox, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					y: bottomMenuY - inGameMenuBox.height // -> tween.animate("x", 50)
-				});
+				animateUp = true;
 			}
-			else if (inGameMenuBox.visible)
+			else if (inGameMenuBox.visible && !inGameMenuBox.animatingDown)
 				inGameMenuBox.onBackToGameButtonTriggered();
-			else //exists but not visible
+			else // animate up
 			{
-				inGameMenuBox.y = gameControlPanel.y + GameControlPanel.OVERLAP;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
+				animateUp = true;
+			}
+			if (animateUp) {
+				if (!inGameMenuBox.visible) {
+					inGameMenuBox.y = bottomMenuY;
+					inGameMenuBox.visible = true;
+				}
+				juggler.removeTweens(inGameMenuBox);
+				inGameMenuBox.animatingDown = false;
+				inGameMenuBox.animatingUp = true;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: bottomMenuY - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: bottomMenuY - inGameMenuBox.height, // -> tween.animate("x", 50)
+					onComplete: function():void { if (inGameMenuBox) inGameMenuBox.animatingUp = false; }
 				});
 			}
 			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
