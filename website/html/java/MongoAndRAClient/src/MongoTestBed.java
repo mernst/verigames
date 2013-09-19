@@ -159,16 +159,16 @@ public class MongoTestBed {
 //        	if(count > 34)
         	{
 	            System.out.println("Collection " + s);
-	            if(s.equals("log"))
+	            if(s.equals("CompletedTutorials"))
 	            {
-	       //     	PrintWriter writer = new PrintWriter(s+".txt", "UTF-8");
+	            //	PrintWriter writer = new PrintWriter(s+"2.txt", "UTF-8");
 		            DBCollection coll = db.getCollection(s);
-		            ObjectId field = new ObjectId("521692a6a8e0e7d8db85c971");
+		            ObjectId field = new ObjectId("51e5b3460240288229000026");
 		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
 		            BasicDBObject field1 = new BasicDBObject();
-		            field1.put("_id", field);
-		            //   DBCursor cursor = coll.find(field1);
-		                   DBCursor cursor = coll.find();
+		            field1.put("playerID", "51e5b3460240288229000026");
+		               DBCursor cursor = coll.find(field1);
+		               //      DBCursor cursor = coll.find();
 		    	        try {
 		    	           while(cursor.hasNext()) {
 		    	        	   count++;
@@ -176,12 +176,12 @@ public class MongoTestBed {
 		    	        	   System.out.println(obj); 
 		    	      //  	   writer.println(obj);
 		    	        	   
-		    	     //   	   coll.remove(obj);
+		    	      //  	   coll.remove(obj);
 		    	           }
 		    	        } finally {
 		    	           cursor.close();
 		    	        }
-		  //  	   writer.close();
+		    	//   writer.close();
 
 	            }
 	        }

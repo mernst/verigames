@@ -86,9 +86,14 @@ package starling.display
         private static var sRenderMatrix:Matrix3D = new Matrix3D();
         private static var sProgramNameCache:Dictionary = new Dictionary();
         
-        /** Creates a new QuadBatch instance with empty batch data. */
-        public function QuadBatch()
-        {
+	
+		protected static var currentObjectCount:int = 0;
+		public var objectIndex:int;
+		
+		/** Creates a new QuadBatch instance with empty batch data. */
+		public function QuadBatch()
+		{
+			objectIndex = currentObjectCount++;
             mVertexData = new VertexData(0, true);
             mIndexData = new <uint>[];
             mNumQuads = 0;

@@ -62,6 +62,19 @@ package networking
 		
 		protected static var loginHelper:LoginHelper = null;		
 
+		/** this is the main holder of information about the level.
+		 * It should have these properties:
+		 * 		name - the file/level name
+		 * 		layoutName - the same as 'name', unless they loaded a different layout
+		 * 		layoutDescription
+		 * 		id
+		 * 		properties - an object containing such things as number of conflicts, visible nodes, etc.
+		 * 		score
+		 * 		
+		 * It might have these properties:
+		 * 		enjoymentRating
+		 * 		difficultyRating
+		 * */
 		public var levelObject:Object = null;
 		
 		public var levelInfoVector:Vector.<Object> = null;

@@ -73,14 +73,17 @@ package networking
 		
 		public function addCompletedTutorial(qid:String, markComplete:Boolean):void
 		{
-			if (!LoginHelper.getLoginHelper().levelObject) return;
-			if (!completedTutorialList) completedTutorialList = new Dictionary();
-			var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
-			if(completedTutorialList[currentLevel] == null)
+			if(PipeJam3.RELEASE_BUILD)
 			{
-				var newTutorialObj:TutorialController = new TutorialController();
-				completedTutorialList[currentLevel] = newTutorialObj;
-				newTutorialObj.post();
+				if (!LoginHelper.getLoginHelper().levelObject) return;
+				if (!completedTutorialList) completedTutorialList = new Dictionary();
+				var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
+				if(completedTutorialList[currentLevel] == null)
+				{
+					var newTutorialObj:TutorialController = new TutorialController();
+					completedTutorialList[currentLevel] = newTutorialObj;
+					newTutorialObj.post();
+				}
 			}
 		}
 		public function post():void
