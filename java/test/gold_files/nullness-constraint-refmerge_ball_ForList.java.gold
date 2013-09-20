@@ -1,0 +1,89 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
+class ForList {
+    
+    ForList() {
+        super();
+    }
+    
+    void test(List input) {
+        Object out = null;
+        for (Object o : input) {
+            if (out == null) {
+                out = o;
+            }
+            out.toString();
+        }
+    }
+}
+
+subtype constraint: Variable 1 at method ForList#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
+class ForList {
+    
+    ForList() {
+        super();
+    }
+    
+    void test(List input) {
+        Object out = null;
+        for (Object o : input) {
+            if (out == null) {
+                out = o;
+            }
+            out.toString();
+        }
+    }
+}
+
+subtype constraint: Variable 2 at method ForList#test(Ljava/util/List;):V receiver; tree <<missing tree>> within 
+void test(List input) {
+    Object out = null;
+    for (Object o : input) {
+        if (out == null) {
+            out = o;
+        }
+        out.toString();
+    }
+}Atm: @VarAnnot(2) ForList  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
+class ForList {
+    
+    ForList() {
+        super();
+    }
+    
+    void test(List input) {
+        Object out = null;
+        for (Object o : input) {
+            if (out == null) {
+                out = o;
+            }
+            out.toString();
+        }
+    }
+}
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object
+
+equality constraint: RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()) = Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object
+
+subtype constraint: Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object
+
+subtype constraint: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object
+
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()  <:  CombVariable #8
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #8
+
+inequality constraint at method ForList#test(Ljava/util/List;):V constraint position: Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method ForList#test(Ljava/util/List;):V constraint position: RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method ForList#test(Ljava/util/List;):V constraint position: Variable 3 at method ForList#test(Ljava/util/List;):V parameter 0; tree List != Constant(@nninf.quals.Nullable)
+

@@ -1,4 +1,6 @@
 Constraints:
+equality constraint: Variable 3 at method While#test(Z):V parameter 0; tree boolean = Constant(@trusted.quals.Untrusted)
+
 subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class While extends type; tree <<missing tree>> within 
 class While {
     
@@ -6,17 +8,15 @@ class While {
         super();
     }
     
-    void test() {
+    void test(boolean b) {
         String a = "";
-        while (a != null) {
-            a.toString();
-            if (true) {
-                a = null;
+        while (b) {
+            if (a == null) {
+                a.toString();
             } else {
-                a = "";
+                a = null;
             }
         }
-        a.toString();
     }
 }
 
@@ -30,32 +30,28 @@ class While {
         super();
     }
     
-    void test() {
+    void test(boolean b) {
         String a = "";
-        while (a != null) {
-            a.toString();
-            if (true) {
-                a = null;
+        while (b) {
+            if (a == null) {
+                a.toString();
             } else {
-                a = "";
+                a = null;
             }
         }
-        a.toString();
     }
 }
 
-subtype constraint: Variable 2 at method While#test():V receiver; tree <<missing tree>> within 
-void test() {
+subtype constraint: Variable 2 at method While#test(Z):V receiver; tree <<missing tree>> within 
+void test(boolean b) {
     String a = "";
-    while (a != null) {
-        a.toString();
-        if (true) {
-            a = null;
+    while (b) {
+        if (a == null) {
+            a.toString();
         } else {
-            a = "";
+            a = null;
         }
     }
-    a.toString();
 }Atm: @VarAnnot(2) While  <:  Variable 0 at class While extends type; tree <<missing tree>> within 
 class While {
     
@@ -63,47 +59,25 @@ class While {
         super();
     }
     
-    void test() {
+    void test(boolean b) {
         String a = "";
-        while (a != null) {
-            a.toString();
-            if (true) {
-                a = null;
+        while (b) {
+            if (a == null) {
+                a.toString();
             } else {
-                a = "";
+                a = null;
             }
         }
-        a.toString();
     }
 }
 
-subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 3 at method While#test():V local variable a(0); tree String
+subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String
 
-equality constraint: RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))) = Literal(NULL_LITERAL, "null")
+equality constraint: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null")
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method While#test():V local variable a(0); tree String
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String
 
-equality constraint: RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)) = Literal(STRING_LITERAL, "")
+subtype constraint: Variable 4 at method While#test(Z):V local variable a(0); tree String  <:  RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None
-
-subtype constraint: Variable 3 at method While#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))
-
-subtype constraint: RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)))  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))
-
-subtype constraint: RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)
-
-subtype constraint: RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)
-
-subtype constraint: RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None
-
-subtype constraint: RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)))  <:  Variable 3 at method While#test():V local variable a(0); tree String
-
-subtype constraint: RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))  <:  Variable 3 at method While#test():V local variable a(0); tree String
-
-subtype constraint: RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None))  <:  Variable 3 at method While#test():V local variable a(0); tree String
-
-subtype constraint: RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Some(RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None)  <:  Variable 3 at method While#test():V local variable a(0); tree String
-
-subtype constraint: RefinementVariable #8 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: None  <:  Variable 3 at method While#test():V local variable a(0); tree String
+subtype constraint: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
 
