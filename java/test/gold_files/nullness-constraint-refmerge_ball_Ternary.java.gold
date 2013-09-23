@@ -41,13 +41,25 @@ class Ternary {
     }
 }
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #8
 
-subtype constraint: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String  <:  CombVariable #5
+subtype constraint: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  CombVariable #8
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #5
+ballsizetest constraint: varVariable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree Stringsuper: RefinementVariable #5 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) subtype: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())
+
+inequality constraint at RefinementVP in method Ternary#test(Ljava/lang/String;):V: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String  <:  CombVariable #9
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #9
 
 inequality constraint at method Ternary#test(Ljava/lang/String;):V constraint position: Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable)
 
-equality constraint: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() = Literal(NULL_LITERAL, "null")
+equality constraint: RefinementVariable #7 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() = Literal(NULL_LITERAL, "null")
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String
+
+subtype constraint: RefinementVariable #5 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()
 

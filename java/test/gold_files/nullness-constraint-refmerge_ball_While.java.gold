@@ -73,21 +73,31 @@ class While {
 
 subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String
 
-inequality constraint at method While#test(Z):V constraint position: Variable 4 at method While#test(Z):V local variable a(0); tree String != Constant(@nninf.quals.Nullable)
+subtype constraint: Variable 4 at method While#test(Z):V local variable a(0); tree String  <:  RefinementVariable #8 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())
 
-equality constraint: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null")
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #8 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())
+
+subtype constraint: RefinementVariable #8 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
+
+ballsizetest constraint: varRefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()super: RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()) subtype: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: true mergedTo: Set()
+
+inequality constraint at RefinementVP in method While#test(Z):V: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: true mergedTo: Set() != Constant(@nninf.quals.Nullable)
+
+inequality constraint at method While#test(Z):V constraint position: RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable)
+
+equality constraint: RefinementVariable #7 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(NULL_LITERAL, "null")
 
 subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String
 
-subtype constraint: Variable 4 at method While#test(Z):V local variable a(0); tree String  <:  CombVariable #7
+subtype constraint: RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #7
+subtype constraint: RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  CombVariable #10
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #10
 
 inequality constraint at method While#test(Z):V constraint position: Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable)
 
 inequality constraint at method While#test(Z):V constraint position: Variable 3 at method While#test(Z):V parameter 0; tree boolean != Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 4 at method While#test(Z):V local variable a(0); tree String  <:  RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
-
-subtype constraint: RefinementVariable #5 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()
 
