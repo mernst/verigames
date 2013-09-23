@@ -4,14 +4,17 @@ package events
 	
 	public class MenuEvent extends Event 
 	{
-		public static var SAVE_LAYOUT:String = "save_layout";
-		public static var SET_NEW_LAYOUT:String = "set_new_layout";
-		public static var SUBMIT_LEVEL:String = "submit_level";
-		public static var SAVE_LEVEL:String = "save_level";
-		public static var ZOOM_IN:String = "zoom_in";
-		public static var ZOOM_OUT:String = "zoom_out";
-		public static var RECENTER:String = "recenter";
-		public static var ACHIEVEMENT_ADDED:String = "achievementAdded";
+		public static const SAVE_LAYOUT:String = "save_layout";
+		public static const SET_NEW_LAYOUT:String = "set_new_layout";
+		public static const SUBMIT_LEVEL:String = "submit_level";
+		public static const SAVE_LEVEL:String = "save_level";
+		public static const POST_SAVE_DIALOG:String = "post_save_dialog";
+		public static const ZOOM_IN:String = "zoom_in";
+		public static const ZOOM_OUT:String = "zoom_out";
+		public static const RECENTER:String = "recenter";
+		public static const ACHIEVEMENT_ADDED:String = "achievementAdded";
+		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";
+		public static const TOGGLE_SOUND_CONTROL:String = "toggle_sound_control";
 		
 		public function MenuEvent(_type:String, _eventData:Object = null) 
 		{

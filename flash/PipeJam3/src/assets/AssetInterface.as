@@ -48,28 +48,28 @@ package assets
 		public static const PipeJamSubTexture_GrayDarkEnd:String = "GrayDarkEnd";
 		public static const PipeJamSubTexture_GrayDarkPlug:String = "GrayDarkPlug";
 		public static const PipeJamSubTexture_GrayDarkJoint:String = "GrayDarkJoint";
-		public static const PipeJamSubTexture_GrayDarkSegment:String = "GrayDarkSegment";
+		public static const PipeJamSubTexture_GrayDarkSegmentPrefix:String = "GrayDarkSegment";
 		public static const PipeJamSubTexture_GrayLightBoxPrefix:String = "GrayLightBox";
 		public static const PipeJamSubTexture_GrayLightBoxSelectPrefix:String = "GrayLightBoxSelect";
 		public static const PipeJamSubTexture_GrayLightStart:String = "GrayLightStart";
 		public static const PipeJamSubTexture_GrayLightEnd:String = "GrayLightEnd";
 		public static const PipeJamSubTexture_GrayLightPlug:String = "GrayLightPlug";
 		public static const PipeJamSubTexture_GrayLightJoint:String = "GrayLightJoint";
-		public static const PipeJamSubTexture_GrayLightSegment:String = "GrayLightSegment";
+		public static const PipeJamSubTexture_GrayLightSegmentPrefix:String = "GrayLightSegment";
 		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
 		public static const PipeJamSubTexture_BlueDarkBoxSelectPrefix:String = "BlueDarkBoxSelect";
 		public static const PipeJamSubTexture_BlueDarkStart:String = "BlueDarkStart";
 		public static const PipeJamSubTexture_BlueDarkEnd:String = "BlueDarkEnd";
 		public static const PipeJamSubTexture_BlueDarkPlug:String = "BlueDarkPlug";
 		public static const PipeJamSubTexture_BlueDarkJoint:String = "BlueDarkJoint";
-		public static const PipeJamSubTexture_BlueDarkSegment:String = "BlueDarkSegment";
+		public static const PipeJamSubTexture_BlueDarkSegmentPrefix:String = "BlueDarkSegment";
 		public static const PipeJamSubTexture_BlueLightBoxPrefix:String = "BlueLightBox";
 		public static const PipeJamSubTexture_BlueLightBoxSelectPrefix:String = "BlueLightBoxSelect";
 		public static const PipeJamSubTexture_BlueLightStart:String = "BlueLightStart";
 		public static const PipeJamSubTexture_BlueLightEnd:String = "BlueLightEnd";
 		public static const PipeJamSubTexture_BlueLightPlug:String = "BlueLightPlug";
 		public static const PipeJamSubTexture_BlueLightJoint:String = "BlueLightJoint";
-		public static const PipeJamSubTexture_BlueLightSegment:String = "BlueLightSegment";
+		public static const PipeJamSubTexture_BlueLightSegmentPrefix:String = "BlueLightSegment";
 		public static const PipeJamSubTexture_OrangeAdaptor:String = "OrangeAdaptor";
 		public static const PipeJamSubTexture_OrangeAdaptorPlug:String = "OrangeAdaptorPlug";
 		public static const PipeJamSubTexture_OrangeScore:String = "OrangeScore";
@@ -86,9 +86,8 @@ package assets
 		public static const PipeJamSubTexture_MenuButtonOverPrefix:String = "MenuButtonOver";
 		public static const PipeJamSubTexture_MenuButtonSelectedPrefix:String = "MenuButtonSelected";
 		public static const PipeJamSubTexture_MenuArrowHorizonal:String = "MenuArrowHorizonal";
-		public static const PipeJamSubTexture_MenuArrowVertical:String = "MenuArrowVertical";
+		public static const PipeJamSubTexture_MenuArrowVertical:String = "ScrollbarArrowUp";
 		public static const PipeJamSubTexture_TutorialArrow:String = "TutorialArrow";
-		public static const PipeJamSubTexture_TutorialArrowWhite:String = "TutorialArrowWhite";
 		public static const PipeJamSubTexture_TutorialBoxPrefix:String = "TutorialBox";
 		public static const PipeJamSubTexture_BackButton:String = "BackButton";
 		public static const PipeJamSubTexture_BackButtonOver:String = "BackButtonOver";
@@ -111,10 +110,10 @@ package assets
 		public static const PipeJamSubTexture_TextInput:String = "TextInput";
 		public static const PipeJamSubTexture_TextInputOver:String = "TextInputOver";
 		public static const PipeJamSubTexture_TextInputSelected:String = "TextInputSelected";
-		public static const PipeJamSubTexture_Thumb:String = "Thumb";
-		public static const PipeJamSubTexture_ThumbOver:String = "ThumbOver";
-		public static const PipeJamSubTexture_ThumbSelected:String = "ThumbSelected";
-		public static const PipeJamSubTexture_ScrollBarTrack:String = "TrackBackground";
+		public static const PipeJamSubTexture_Thumb:String = "ScrollbarButton";
+		public static const PipeJamSubTexture_ThumbOver:String = "ScrollbarButtonMouseover";
+		public static const PipeJamSubTexture_ThumbSelected:String = "ScrollbarButtonClick";
+		public static const PipeJamSubTexture_ScrollBarTrack:String = "Scrollbar";
 		
         public static function getTexture(file:String, name:String):Texture
         {

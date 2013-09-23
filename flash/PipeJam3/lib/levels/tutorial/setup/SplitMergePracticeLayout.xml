@@ -1,5 +1,5 @@
 <graph id="world">
-  <level id="SplitMergePractice" qid="17" tutorial="splitmergepractice">
+  <level id="SplitMerge" qid="17" tutorial="splitmergepractice">
     <box height="1.0" id="SplitMergePractice1" lines="2" width="2.4" x="4.66" y="2.61" visible="true"/>
     <box height="1.0" id="SplitMergePractice2" lines="1" width="1.81" x="9.40" y="2.57" visible="true"/>
     <box height="1.0" id="SplitMergePractice3" lines="2" width="2.4" x="6.93" y="6.08" visible="true"/>

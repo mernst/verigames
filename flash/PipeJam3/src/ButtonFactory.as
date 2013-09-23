@@ -9,6 +9,9 @@ package
 	{
 		private static var m_instance:ButtonFactory;
 		
+		public static const BUTTON_TEXT_COLOR:uint = 0x4F2C12;
+		public static const BUTTON_BACKGROUND_COLOR:uint = 0xF3D18D;
+		
 		public static function getInstance():ButtonFactory
 		{
 			if (m_instance == null) {
@@ -26,11 +29,12 @@ package
 			return createButton(text, width, height, height / 3.0, height / 3.0);
 		}
 		
-		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceButton
+		public function createButton(text:String, width:Number, height:Number, cX:Number, cY:Number, toolTipText:String = ""):NineSliceButton
 		{
 			return new NineSliceButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
-				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
-				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
+				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
+				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix,
+				0xFFFFFF, 0xFFFFFF, toolTipText);
 		}
 		
 		public function createDefaultToggleButton(text:String, width:Number, height:Number):NineSliceToggleButton
@@ -41,14 +45,14 @@ package
 		public function createToggleButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
 		{
 			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", 
-				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, 0x0077FF,
+				AssetInterface.PipeJamSubTexture_MenuButtonPrefix, AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
 				AssetInterface.PipeJamSubTexture_MenuButtonOverPrefix, AssetInterface.PipeJamSubTexture_MenuButtonSelectedPrefix);
 		}
 		
 		public function createTabButton(text:String, width:Number, height:Number, cX:Number, cY:Number):NineSliceToggleButton
 		{
 			return new NineSliceToggleButton(text, width, height, cX, cY, "Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML", 
-				"TabInactive", AssetsFont.FONT_UBUNTU, 0x0077FF,
+				"TabInactive", AssetsFont.FONT_UBUNTU, BUTTON_TEXT_COLOR,
 				"TabInactiveMouseover", "TabActive");
 		}
 	}

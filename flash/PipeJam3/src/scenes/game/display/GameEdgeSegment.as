@@ -205,14 +205,16 @@
 				m_quad = null;
 			}
 			
-			m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
-			
 			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
-				m_quad.color = 0xffffff;
-			} else if (isHoverOn){
-				m_quad.color = 0xeeeeee;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, false);
+				m_quad.color = KEYFOR_COLOR;
 			} else {
-				m_quad.color = 0xcccccc;
+				m_quad = createEdgeSegment(m_endPt, m_isWide, m_isEditable);
+				if (isHoverOn){
+					m_quad.color = 0xeeeeee;
+				} else {
+					m_quad.color = 0xcccccc;
+				}
 			}
 			
 			addChild(m_quad);
@@ -234,35 +236,43 @@
 		{
 			var lineSize:Number = _isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
 			var assetName:String;
-			if(_isEditable == true)
-			{
-				if (_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegment;
-			}
-			else //not adjustable
-			{
-				if(_isWide == true)
-					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegment;
-				else
-					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegment;
-			}
-			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var startTexture:Texture = atlas.getTexture(assetName);
-			
-			var pctTextWidth:Number;
-			var pctTextHeight:Number;
-			var newSegment:Image;
 			if(_toPt.x != 0 && _toPt.y !=0)
 			{
 				throw new Error("Diagonal lines deprecated. Segment from to " + _toPt);
 			}
-			else if(_toPt.x != 0)
+			var isHoriz:Boolean = (_toPt.x != 0);
+			
+			if(_isEditable == true)
 			{
-				newSegment = new Image(startTexture);
-				newSegment.width = Math.abs(_toPt.x);
+				if (_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_BlueDarkSegmentPrefix;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_BlueLightSegmentPrefix;
+			}
+			else //not adjustable
+			{
+				if(_isWide == true)
+					assetName = AssetInterface.PipeJamSubTexture_GrayDarkSegmentPrefix;
+				else
+					assetName = AssetInterface.PipeJamSubTexture_GrayLightSegmentPrefix;
+			}
+			assetName += isHoriz ? "Horiz" : "Vert";
+			
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var segmentTexture:Texture = atlas.getTexture(assetName);
+			
+			var pctTextWidth:Number;
+			var pctTextHeight:Number;
+			var newSegment:Image = new Image(segmentTexture);
+			
+			if(isHoriz)
+			{
+				// Horizontal
+				if (GameEdgeContainer.EDGES_OVERLAPPING_JOINTS) {
+					newSegment.width = Math.abs(_toPt.x);
+				} else {
+					newSegment.width = Math.max(.1, Math.abs(_toPt.x) - lineSize);
+				}
 				newSegment.height = lineSize;
 				
 				newSegment.x = (_toPt.x > 0) ? 0 : -newSegment.width;
@@ -270,11 +280,15 @@
 			}
 			else
 			{
-				newSegment = new Image(startTexture);
+				// Vertical
 				newSegment.width = lineSize;
-				newSegment.height = Math.abs(_toPt.y);
+				if (GameEdgeContainer.EDGES_OVERLAPPING_JOINTS) {
+					newSegment.height = Math.abs(_toPt.y);
+				} else {
+					newSegment.height = Math.max(.1, Math.abs(_toPt.y) - lineSize);
+				}
 				
-				newSegment.x = -lineSize/2.0;
+				newSegment.x = -lineSize / 2.0;
 				newSegment.y = (_toPt.y > 0) ? 0 : -newSegment.height;
 			}
 			
@@ -294,6 +308,11 @@
 				draw();
 				m_isDirty = false;
 			}
+		}
+		
+		public function onDeleted():void
+		{
+			dispatchEvent(new EdgeContainerEvent(EdgeContainerEvent.SEGMENT_DELETED, this));
 		}
 		
 		// Make lines slightly darker to be more visible

@@ -1,5 +1,6 @@
 package display
 {
+	import events.ToolTipEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
@@ -18,7 +19,7 @@ package display
 	[Event(name="triggered", type="starling.events.Event")]
 	[Event(name="hoverOver", type="starling.events.Event")]
 	
-	public class BasicButton extends DisplayObjectContainer
+	public class BasicButton extends ToolTippableSprite
 	{
 		private static const DEBUG_HIT:Boolean = false;
 		
@@ -39,6 +40,7 @@ package display
 		private var m_useHandCursor:Boolean;
 
 		private var m_data:Object;
+		protected var m_toolTipText:String;
 		
 		public function BasicButton(up:DisplayObject, over:DisplayObject, down:DisplayObject, hitSubRect:Rectangle = null)
 		{
@@ -126,8 +128,10 @@ package display
 		}
 		
 		protected var lastTouchState:DisplayObject = m_up;
-		private function onTouch(event:TouchEvent):void
+		protected override function onTouch(event:TouchEvent):void
 		{
+			super.onTouch(event);
+			
 			Mouse.cursor = (m_useHandCursor && m_enabled && event.interactsWith(this)) ? MouseCursor.BUTTON : MouseCursor.AUTO;
 			
 			var touch:Touch = event.getTouch(this);
@@ -157,6 +161,8 @@ package display
 				if (m_current == m_down) {
 					if (hitTest(touch.getLocation(this))) {
 						toState(m_over);
+						if(!m_data) m_data = new Object;
+						m_data.tapCount = touch.tapCount;
 					} else {
 						toState(m_up);
 					}
@@ -184,7 +190,12 @@ package display
 				toState(m_over);
 			else if(stateString == DOWN_STATE)
 				toState(m_down);
-
+		}
+		
+		protected override function getToolTipEvent():ToolTipEvent
+		{
+			if (m_toolTipText) return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, m_toolTipText);
+			return null;
 		}
 	}
 }

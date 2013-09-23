@@ -25,10 +25,10 @@ def atlasXMLFromInkscapeSVG(svgfile):
         if g.getAttribute('inkscape:label') == 'Guide':
             for rect in g.getElementsByTagName('rect'):
                 name = rect.getAttribute('id')
-                x = int(rect.getAttribute('x'))
-                y = int(rect.getAttribute('y'))
-                w = int(rect.getAttribute('width'))
-                h = int(rect.getAttribute('height'))
+                x = int(round(float(rect.getAttribute('x'))))
+                y = int(round(float(rect.getAttribute('y'))))
+                w = int(round(float(rect.getAttribute('width'))))
+                h = int(round(float(rect.getAttribute('height'))))
 
                 if name.endswith('_FRAME'):
                     subtex_frame[name[:-6]] = (x, y, w, h)

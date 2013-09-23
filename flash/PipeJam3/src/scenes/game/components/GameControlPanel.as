@@ -2,6 +2,9 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	import display.TextBubble;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	import display.BasicButton;
 	import display.NineSliceButton;
@@ -23,6 +26,9 @@ package scenes.game.components
 	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
+	import scenes.game.PipeJamGameScene;
+	
+	import networking.LoginHelper;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -38,9 +44,10 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 58;
+		private static const HEIGHT:Number = 82 - 20;
 		
-		private static const SCORE_PANEL_AREA:Rectangle = new Rectangle(85, 5, 395, 41);
+		public static const OVERLAP:Number = 44 - 10;
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -55,11 +62,20 @@ package scenes.game.components
 		/** Text showing current score on score_pane */
 		private var m_scoreTextfield:TextFieldWrapper;
 		
+		/** Text showing current score on score_pane */
+		private var m_levelNameTextfield:TextFieldWrapper;
+		
 		/** Button to bring the up the menu */
 		private var m_menuButton:NineSliceButton;
 		
 		/** Button to start the level over */
-		private var m_ResetButton:NineSliceButton;
+		private var m_resetButton:NineSliceButton;
+		
+		/** Button to save the level */
+		private var m_saveButton:NineSliceButton;
+		
+		/** Button to share the level */
+		private var m_shareButton:NineSliceButton;
 
 		/** Navigation buttons */
 		private var m_zoomInButton:BasicButton;
@@ -68,18 +84,14 @@ package scenes.game.components
 		
 		private var menuShowing:Boolean = false;
 		
-		/** Current Score of the player */
-		private var m_currentScore:int = 0;
-		
-		/** Most recent score of the player */
-		private var m_prevScore:int = 0;
-		
 		/** Goes over the scorebar but under the menu, transparent in scorebar area */
 		private var m_scorebarForeground:Image;
 		
 		/** Display the target score the player is looking to beat for the level */
-		private var m_targetScoreContainer:Sprite;
-		private var m_targetScoreTextfield:TextFieldWrapper;
+		private var m_targetScoreLine:TargetScoreDisplay;
+		
+		/** Display the best score the player has achieved this session for the level */
+		private var m_bestScoreLine:TargetScoreDisplay;
 		
 		protected var conflictMap:ConflictMap;
 		
@@ -91,10 +103,19 @@ package scenes.game.components
 		
 		public function addedToStage(event:Event):void
 		{
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
+			m_scorebarForeground = new Image(foregroundTexture);
+			m_scorebarForeground.touchable = false;
+			m_scorebarForeground.width = WIDTH;
+			m_scorebarForeground.height = HEIGHT;
+			addChild(m_scorebarForeground);
+			
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
-			var quad:Quad = new Quad(SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height, 0x0);
+			var quad:Quad = new Quad(SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height, 0x231F20);
+			quad.alpha = 0;
 			m_scorePanel.addChild(quad);
 			addChild(m_scorePanel);
 			
@@ -104,52 +125,53 @@ package scenes.game.components
 			m_scorePanel.clipRect = new Rectangle(topLeftScorePanel.x, topLeftScorePanel.y, m_scorePanel.width, m_scorePanel.height);
 			
 			m_scoreTextfield = TextFactory.getInstance().createTextField("0", AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, 2.0 * SCORE_PANEL_AREA.height / 3.0, 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.SCORE_COLOR);
+			m_scoreTextfield.touchable = false;
 			m_scoreTextfield.x = (SCORE_PANEL_AREA.width - m_scoreTextfield.width) / 2 ;
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);
 			
-			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var foregroundTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_ScoreBarForeground);
-			m_scorebarForeground = new Image(foregroundTexture);
-			m_scorebarForeground.width = WIDTH;
-			m_scorebarForeground.height = HEIGHT;
-			addChild(m_scorebarForeground);
+			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, WIDTH - 2, 10, 10, GameComponent.WIDE_COLOR);
+			m_levelNameTextfield.touchable = false;
+			m_levelNameTextfield.x = 0;
+			m_levelNameTextfield.y = -10;
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
+			addChild(m_levelNameTextfield);
 			
-			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 56, 24, 8, 8);
+			m_menuButton = ButtonFactory.getInstance().createButton("Menu", 44, 14, 8, 8, "See other options");
 			m_menuButton.addEventListener(Event.TRIGGERED, onMenuButtonTriggered);
-			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 6;
-			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2 - 11;
+			m_menuButton.x = (SCORE_PANEL_AREA.x - m_menuButton.width) / 2 - 2;
+			m_menuButton.y = HEIGHT/2 - m_menuButton.height/2;
 			addChild(m_menuButton);
 			
-			m_ResetButton = ButtonFactory.getInstance().createButton("Reset", 30, 16, 8, 8);
-			m_ResetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
-			m_ResetButton.x = SCORE_PANEL_AREA.x / 2 - 5 - 6;
-			m_ResetButton.y = HEIGHT - m_ResetButton.height - 8;
-			addChild(m_ResetButton);
+			m_resetButton = ButtonFactory.getInstance().createButton("Reset", 35, 14, 8, 8, "Reset the board to\nits starting condition");
+			m_resetButton.addEventListener(Event.TRIGGERED, onStartOverButtonTriggered);
+			m_resetButton.x = m_menuButton.x + (m_menuButton.width - m_resetButton.width);
+			m_resetButton.y = m_menuButton.y + m_menuButton.height + 3;
+			addChild(m_resetButton);
 			
 			m_zoomInButton = new ZoomInButton();
 			m_zoomInButton.addEventListener(Event.TRIGGERED, onZoomInButtonTriggered);
 			m_zoomInButton.scaleX = m_zoomInButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomInButton);
-			m_zoomInButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_zoomInButton.y = 1 * HEIGHT / 4 - 5;
+			m_zoomInButton.x = WIDTH - 61;
+			m_zoomInButton.y = 10;
 			addChild(m_zoomInButton);
 			
 			m_zoomOutButton = new ZoomOutButton();
 			m_zoomOutButton.addEventListener(Event.TRIGGERED, onZoomOutButtonTriggered);
 			m_zoomOutButton.scaleX = m_zoomOutButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_zoomOutButton);
-			m_zoomOutButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_zoomOutButton.y = 2 * HEIGHT / 4 - 5;
+			m_zoomOutButton.x = m_zoomInButton.x + m_zoomInButton.width + 4;
+			m_zoomOutButton.y = m_zoomInButton.y;
 			addChild(m_zoomOutButton);
 			
 			m_recenterButton = new RecenterButton();
 			m_recenterButton.addEventListener(Event.TRIGGERED, onRecenterButtonTriggered);
 			m_recenterButton.scaleX = m_recenterButton.scaleY = 0.5;
 			XSprite.setPivotCenter(m_recenterButton);
-			m_recenterButton.x = m_menuButton.x + m_menuButton.width + 7;
-			m_recenterButton.y = 3 * HEIGHT / 4 - 5;
+			m_recenterButton.x = m_zoomOutButton.x + m_zoomOutButton.width + 4;
+			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
 			conflictMap = new ConflictMap();
@@ -157,7 +179,19 @@ package scenes.game.components
 			conflictMap.y = 2;
 			conflictMap.width = width-conflictMap.x - 2;
 			conflictMap.height = height-conflictMap.y - 2;
-			addChild(conflictMap);
+			//addChild(conflictMap);
+			
+			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
+			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
+			m_saveButton.x = width - m_saveButton.width - 16;
+			m_saveButton.y = m_zoomInButton.y + m_zoomInButton.height - 1;
+			addChild(m_saveButton);
+			
+			m_shareButton = ButtonFactory.getInstance().createButton("Report", 44, 12, 8, 8, "Report your score\nto help verify\nthis level");
+			m_shareButton.addEventListener(Event.TRIGGERED, onShareButtonTriggered);
+			m_shareButton.x = m_saveButton.x;
+			m_shareButton.y = m_saveButton.y + m_saveButton.height + 3;
+			addChild(m_shareButton);
 		}
 		
 		private function onMenuButtonTriggered():void
@@ -185,6 +219,18 @@ package scenes.game.components
 			dispatchEvent(new MenuEvent(MenuEvent.RECENTER));
 		}
 		
+		private function onShareButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+		}
+		
+		private function onSaveButtonTriggered():void
+		{
+			dispatchEvent(new MenuEvent(MenuEvent.POST_SAVE_DIALOG));
+			
+		}
+		
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
@@ -193,8 +239,11 @@ package scenes.game.components
 		public function newLevelSelected(level:Level):void 
 		{
 			updateScore(level, true);
+			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
+			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
 			conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
+			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
 
 		private function setNavigationButtonVisibility(viz:Boolean):void
@@ -204,142 +253,69 @@ package scenes.game.components
 			m_recenterButton.visible = viz;
 		}
 		
-		/**
-		 * Re-calculates score and updates the score on the screen
-		 */
-		public function updateScore(level:Level, skipAnimatons:Boolean):int 
+		private function setSharingButtonVisibility(viz:Boolean):void
 		{
+			m_saveButton.visible = viz;
+			m_shareButton.visible = viz;
+		}
+		
+		/**
+		 * Updates the score on the screen
+		 */
+		public function updateScore(level:Level, skipAnimatons:Boolean):void 
+		{
+			var currentScore:int = level.currentScore
+			var bestScore:int = level.bestScore;
+			var targetScore:int = level.getTargetScore();
+			var maxScoreShown:Number = Math.max(currentScore, bestScore);
+			maxScoreShown = Math.max(1, maxScoreShown); // avoid divide by zero
+			if (targetScore < int.MAX_VALUE) maxScoreShown = Math.max(maxScoreShown, targetScore);
 			
-			/* Old scoring:
-			* 
-			For pipes:
-			No points for any red pipe.
-			For green pipes:
-			10 points for every wide input pipe
-			5 points for every narrow input pipe
-			10 points for every narrow output pipe
-			5 points for every wide output pipe
-			1 point for every internal pipe, no matter what its width
-			
-			For solving the game:
-			30 points per board solved
-			- Changed this to 30 from 10 = original
-			
-			100 points per level solved
-			1000 points per world solved
-			
-			For each exception to the laws of physics:
-			-50 points
-			*/
-			
-			/*
-			 * New Scoring:
-			 * +75 for each line going thru/starting/ending @ a box
-			 * +25 for wide inputs
-			 * +25 for narrow outputs
-			 * -75 for errors
-			*/
-			
-			m_prevScore = m_currentScore;
-			var wideInputs:int = 0;
-			var narrowOutputs:int = 0;
-			var errors:int = 0;
-			var totalLines:int = 0;
-			var scoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			var potentialScoringNodes:Vector.<GameNode> = new Vector.<GameNode>();
-			var errorEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-			// Pass over all nodes, find nodes involved in scoring
-			for each(var nodeSet:GameNode in level.getNodes())
-			{
-				if (nodeSet.isEditable()) { // don't count star points for uneditable boxes
-					totalLines += nodeSet.getNumLines();
-					if (nodeSet.isWide()) {
-						if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
-							wideInputs += nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges;
-							scoringNodes.push(nodeSet);
-						} else if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
-							potentialScoringNodes.push(nodeSet);
-						}
-					} else {
-						if (nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges > 0) {
-							narrowOutputs += nodeSet.m_numOutgoingNodeEdges - nodeSet.m_numIncomingNodeEdges;
-							scoringNodes.push(nodeSet);
-						} else if (nodeSet.m_numIncomingNodeEdges - nodeSet.m_numOutgoingNodeEdges > 0) {
-							potentialScoringNodes.push(nodeSet);
-						}
-					}
-				}
-				for each (var incomingEdge:GameEdgeContainer in nodeSet.m_incomingEdges) {
-					if (incomingEdge.hasError()) {
-						if (errorEdges.indexOf(incomingEdge) == -1) {
-							errors++;
-							errorEdges.push(incomingEdge);
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
-					}
-				}
-			}
-			
-			for each (var myJoint:GameJointNode in level.getJoints()) {
-				for each (var injEdge:GameEdgeContainer in myJoint.m_incomingEdges) {
-					if (injEdge.hasError()) {
-						if (errorEdges.indexOf(injEdge) == -1) {
-							errorEdges.push(injEdge);
-							errors++;
-						} else {
-							trace("WARNING! Seem to be marking the same GameEdgeContainer as an error twice, this shouldn't be possible (same GameEdgeContainer is listed as 'incoming' for > 1 GameNode")
-						}
-					}
-				}
-			}
-			
-			//trace("totalLines:" + totalLines + " wideInputs:" + wideInputs + " narrowOutputs:" + narrowOutputs + " errors:" + errors);
-			m_currentScore = Constants.POINTS_PER_LINE * totalLines + Constants.WIDE_INPUT_POINTS * wideInputs + Constants.NARROW_OUTPUT_POINTS * narrowOutputs + Constants.ERROR_POINTS * errors;
-			var baseScore:Number = Constants.POINTS_PER_LINE * totalLines;
-			
-			TextFactory.getInstance().updateText(m_scoreTextfield, m_currentScore.toString());
+			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
+			if(LoginHelper.getLoginHelper().levelObject != null)
+				LoginHelper.getLoginHelper().levelObject.score = currentScore;
 			
-			// Aim for starting score to be 2/3 of the width of the scorebar area
-			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, m_currentScore) / baseScore;
+			// Aim for max score shown to be 2/3 of the width of the scorebar area
+			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / maxScoreShown;
+			var bestScoreX:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, bestScore) / maxScoreShown;
 			var newScoreX:Number = newBarWidth - m_scoreTextfield.width;
 			if (!m_scoreBar) {
 				m_scoreBar = new Quad(Math.max(1, newBarWidth), 2.0 * SCORE_PANEL_AREA.height / 3.0, GameComponent.NARROW_COLOR);
 				m_scoreBar.setVertexColor(2, GameComponent.WIDE_COLOR);
 				m_scoreBar.setVertexColor(3, GameComponent.WIDE_COLOR);
 				m_scoreBar.y = SCORE_PANEL_AREA.height / 6.0;
-				m_scoreBarContainer.addChild(m_scoreBar);
 				m_scoreTextfield.x = newScoreX;
 			}
+			m_scoreBarContainer.addChild(m_scoreBar);
 			
-			if (level.getTargetScore() < int.MAX_VALUE) {
-				if (!m_targetScoreContainer) {
-					m_targetScoreContainer = new Sprite();
-					// Add a dotted line effect
-					for (var dq:int = 0; dq < 10; dq++) {
-						var dottedQ:Quad = new Quad(1, 1, GameComponent.WIDE_COLOR);
-						dottedQ.x = -dottedQ.width / 2;
-						dottedQ.y = ((dq + 1.0) / 11.0) * SCORE_PANEL_AREA.height;
-						m_targetScoreContainer.addChild(dottedQ);
-					}
-					m_targetScoreTextfield = TextFactory.getInstance().createTextField(level.getTargetScore().toString(), AssetsFont.FONT_UBUNTU, SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height / 3.0, SCORE_PANEL_AREA.height / 3.0, GameComponent.WIDE_COLOR);
-					m_targetScoreTextfield.x = 2.0;
+			if (targetScore < int.MAX_VALUE) {
+				if (!m_targetScoreLine) {
+					m_targetScoreLine = new TargetScoreDisplay(targetScore.toString(), 0.6 * GameControlPanel.SCORE_PANEL_AREA.height, TextBubble.GOLD, TextBubble.GOLD, "Target Score");
 				} else {
-					TextFactory.getInstance().updateText(m_targetScoreTextfield, level.getTargetScore().toString());
+					m_targetScoreLine.update(targetScore.toString());
 				}
-				TextFactory.getInstance().updateAlign(m_targetScoreTextfield, 0, 1);
-				m_targetScoreTextfield.y = SCORE_PANEL_AREA.height / 3.0;
-				m_targetScoreContainer.addChild(m_targetScoreTextfield);
-				m_targetScoreContainer.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * level.getTargetScore() / baseScore;
-				m_scoreBarContainer.addChildAt(m_targetScoreContainer, 0);
+				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * targetScore / maxScoreShown;
+				m_scoreBarContainer.addChild(m_targetScoreLine);
+				m_scoreBarContainer.visible = true;
 			} else {
-				if (m_targetScoreContainer) {
-					m_targetScoreContainer.removeFromParent();
-				}
+				if (m_targetScoreLine) m_targetScoreLine.removeFromParent();
+				if (level.m_tutorialTag && m_scoreBarContainer) m_scoreBarContainer.visible = false;
 			}
 			
+			if (!m_bestScoreLine) {
+				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
+				m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
+				m_bestScoreLine.useHandCursor = true;
+				m_bestScoreLine.x = bestScoreX;
+			} else {
+				m_bestScoreLine.update(bestScore.toString());
+			}
+			m_bestScoreLine.alpha = 0.8;
+			m_scoreBarContainer.addChild(m_bestScoreLine);
+			
 			if (newBarWidth < SCORE_PANEL_AREA.width / 10) {
+				// If bar is not wide enough, put the text to the right of it instead of inside the bar
 				TextFactory.getInstance().updateColor(m_scoreTextfield, 0xFFFFFF);
 				newScoreX = -m_scoreTextfield.width + SCORE_PANEL_AREA.width / 10;
 			} else {
@@ -354,6 +330,8 @@ package scenes.game.components
 				m_scoreBar.width = newBarWidth;
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				m_scoreTextfield.x = newScoreX;
+				Starling.juggler.removeTweens(m_bestScoreLine);
+				m_bestScoreLine.x = bestScoreX;
 			} else if (newBarWidth < m_scoreBar.width) {
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
@@ -365,6 +343,11 @@ package scenes.game.components
 				Starling.juggler.tween(m_scoreTextfield, BAR_SLIDING_ANIM_SEC, {
 				   transition: Transitions.EASE_OUT,
 				   x: newScoreX
+				});
+				Starling.juggler.removeTweens(m_bestScoreLine);
+				Starling.juggler.tween(m_bestScoreLine, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   x: bestScoreX
 				});
 			} else if (newBarWidth > m_scoreBar.width) {
 				// If we're growing, flash the difference first then grow
@@ -380,8 +363,13 @@ package scenes.game.components
 				   delay: FLASHING_ANIM_SEC,
 				   x: newScoreX
 				});
+				Starling.juggler.removeTweens(m_bestScoreLine);
+				Starling.juggler.tween(m_bestScoreLine, BAR_SLIDING_ANIM_SEC, {
+				   transition: Transitions.EASE_OUT,
+				   x: bestScoreX
+				});
 			} else {
-				return m_currentScore;
+				return;
 			}
 			
 			// If we've spilled off to the right, shrink it down after we've animated showing the difference
@@ -412,15 +400,23 @@ package scenes.game.components
 				   scaleX: newScaleX
 				});
 			}
-			
-			return m_currentScore;
 		}
-
-		public function getCurrentScore():int
+		
+		private function onTouchBestScore(evt:TouchEvent):void
 		{
-			return m_currentScore;
+			if (!m_bestScoreLine) return;
+			if (evt.getTouches(m_bestScoreLine, TouchPhase.ENDED).length) {
+				// Clicked, load best score!
+				dispatchEvent(new MenuEvent(MenuEvent.LOAD_BEST_SCORE));
+			} else if (evt.getTouches(m_bestScoreLine, TouchPhase.HOVER).length) {
+				// Hover over
+				m_bestScoreLine.alpha = 1;
+			} else {
+				// Hover out
+				m_bestScoreLine.alpha = 0.8;
+			}
 		}
-
+		
 		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
 		{
 			conflictMap.errorAdded(errorParticleSystem, level);
@@ -436,6 +432,61 @@ package scenes.game.components
 			conflictMap.errorMoved(errorParticleSystem);
 		}
 	}
-	
+}
 
+import display.ToolTippableSprite;
+import events.ToolTipEvent;
+import scenes.game.components.GameControlPanel;
+import assets.AssetsFont;
+import starling.display.Quad;
+import starling.display.Sprite;
+
+class TargetScoreDisplay extends ToolTippableSprite
+{
+	private var m_targetScoreTextfield:TextFieldHack;
+	private var m_textHitArea:Quad;
+	private var m_toolTipText:String;
+	
+	public function TargetScoreDisplay(score:String, textY:Number, lineColor:uint, fontColor:uint, toolTipText:String = "")
+	{
+		m_toolTipText = toolTipText;
+		// Add a dotted line effect
+		for (var dq:int = 0; dq < 10; dq++) {
+			var dottedQ:Quad = new Quad(1, 1, lineColor);
+			dottedQ.x = -dottedQ.width / 2;
+			dottedQ.y = ((dq + 1.0) / 11.0) * GameControlPanel.SCORE_PANEL_AREA.height;
+			addChild(dottedQ);
+		}
+		m_targetScoreTextfield = TextFactory.getInstance().createTextField(score, AssetsFont.FONT_UBUNTU, GameControlPanel.SCORE_PANEL_AREA.width, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, GameControlPanel.SCORE_PANEL_AREA.height / 3.0, fontColor) as TextFieldHack;
+		m_targetScoreTextfield.x = 2.0;
+		
+		TextFactory.getInstance().updateAlign(m_targetScoreTextfield, 0, 1);
+		m_targetScoreTextfield.y = textY;
+		addChild(m_targetScoreTextfield);
+		// Create hit areas for capturing mouse events
+		m_textHitArea = new Quad(m_targetScoreTextfield.textBounds.width, m_targetScoreTextfield.textBounds.height, 0xFFFFFF);
+		m_textHitArea.x = m_targetScoreTextfield.x + m_targetScoreTextfield.textBounds.x;
+		m_textHitArea.y = m_targetScoreTextfield.y + m_targetScoreTextfield.textBounds.y;
+		m_textHitArea.alpha = 0;
+		addChild(m_textHitArea);
+		var lineHitArea:Quad = new Quad(8, GameControlPanel.SCORE_PANEL_AREA.height, 0xFFFFFF);
+		lineHitArea.x = -4;
+		lineHitArea.alpha = 0;
+		addChild(lineHitArea);
+	}
+	
+	public function update(score:String):void
+	{
+		TextFactory.getInstance().updateText(m_targetScoreTextfield, score);
+		TextFactory.getInstance().updateAlign(m_targetScoreTextfield, 0, 1);
+		m_textHitArea.width = m_targetScoreTextfield.textBounds.width;
+		m_textHitArea.height = m_targetScoreTextfield.textBounds.height;
+		m_textHitArea.x = m_targetScoreTextfield.x + m_targetScoreTextfield.textBounds.x;
+		m_textHitArea.y = m_targetScoreTextfield.y + m_targetScoreTextfield.textBounds.y;
+	}
+	
+	protected override function getToolTipEvent():ToolTipEvent
+	{
+		return new ToolTipEvent(ToolTipEvent.ADD_TOOL_TIP, this, m_toolTipText);
+	}
 }

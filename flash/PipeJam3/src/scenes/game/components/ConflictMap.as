@@ -46,7 +46,7 @@ package scenes.game.components
 			ErrorParticleSystem.errorList = new Dictionary;
 		}
 		
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
 			//trace(m_id);

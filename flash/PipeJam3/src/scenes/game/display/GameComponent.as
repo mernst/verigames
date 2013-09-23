@@ -1,21 +1,10 @@
 package scenes.game.display
 {
-	import events.ToolTipEvent;
-	
-	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Timer;
-	
 	import graph.PropDictionary;
-	
 	import scenes.BaseComponent;
-	
 	import starling.display.DisplayObjectContainer;
-	import starling.display.materials.StandardMaterial;
-	import starling.events.Event;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 	public class GameComponent extends BaseComponent
 	{
@@ -26,7 +15,7 @@ package scenes.game.display
 		public var m_isDirty:Boolean = false;
 		
 		public var m_boundingBox:Rectangle;
-				
+		
 		//these are here in that they determine color, so all screen objects need them set
 		public var m_isWide:Boolean = false;
 		public var m_hasError:Boolean = false;
@@ -36,7 +25,6 @@ package scenes.game.display
 		public var draggable:Boolean = true;
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		protected var m_props:PropDictionary = new PropDictionary();
-		protected var m_hoverTimer:Timer;
 		public var m_forceColor:Number = -1;
 		
 		public static const NARROW_COLOR:uint = 0x6ED4FF;
@@ -57,9 +45,6 @@ package scenes.game.display
 			
 			m_id = _id;
 			m_isSelected = false;
-			if (getToolTipEvent()) {
-				addEventListener(TouchEvent.TOUCH, onTouch);
-			}
 		}
 		
 		public function componentMoved(delta:Point):void
@@ -187,46 +172,5 @@ package scenes.game.display
 			m_isDirty = true;
 		}
 		
-		protected function onTouch(event:TouchEvent):void
-		{
-			if (event.getTouches(this, TouchPhase.HOVER).length || event.getTouches(this, TouchPhase.MOVED).length) {
-				if (!m_hoverTimer) {
-					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000);
-					m_hoverTimer.addEventListener(TimerEvent.TIMER, onHoverDetected);
-					m_hoverTimer.start();
-				}
-			} else {
-				if (m_hoverTimer) {
-					m_hoverTimer.removeEventListener(TimerEvent.TIMER, onHoverDetected);
-					m_hoverTimer.stop();
-					m_hoverTimer = null;
-				}
-				onHoverEnd();
-			}
-		}
-		
-		override public function dispose():void
-		{
-			super.dispose();
-			removeEventListener(TouchEvent.TOUCH, onTouch);
-		}
-		
-		protected function getToolTipEvent():ToolTipEvent
-		{
-			return null; // implement in subclasses if toolTip text is desired
-		}
-		
-		protected function onHoverEnd():void
-		{
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.CLEAR_TOOL_TIP, this));
-		}
-		
-		protected function onHoverDetected(evt:TimerEvent):void
-		{
-			var toolTipEvt:ToolTipEvent = getToolTipEvent();
-			if (toolTipEvt) {
-				dispatchEvent(toolTipEvt);
-			}
-		}
 	}
 }

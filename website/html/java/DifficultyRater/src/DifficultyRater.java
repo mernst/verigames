@@ -50,10 +50,13 @@ public class DifficultyRater {
 		File root = new File(args[0]);
 		if(root.isDirectory())
 		{
+			int count = 0;
 			File[] listOfFiles = root.listFiles();
 	
 			for (File file : listOfFiles) {
 			    if (file.isFile()) {
+			    	count++;
+			 //   	System.out.println(count);
 			        System.out.println("<file name=\""+file.getName()+"\" ");
 			        DifficultyRater rater = new DifficultyRater(args);
 					rater.parseFile(file);

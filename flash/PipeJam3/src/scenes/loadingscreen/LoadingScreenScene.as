@@ -11,6 +11,7 @@ package scenes.loadingscreen
 	import flash.utils.Timer;
 	
 	import networking.PlayerValidation;
+	import networking.TutorialController;
 	
 	import particle.ErrorParticleSystem;
 	
@@ -40,12 +41,20 @@ package scenes.loadingscreen
 
 		
 		//would like to dispatch an event and end up here, but
-		public static var loadingScreenScene:LoadingScreenScene;
+		protected static var loadingScreenScene:LoadingScreenScene;
 		
 		public function LoadingScreenScene(game:PipeJamGame)
 		{
 			super(game);
 			loadingScreenScene = this;
+		}
+		
+		public static function getLoadingScreenScene():LoadingScreenScene
+		{
+			if(loadingScreenScene != null)
+				return loadingScreenScene;
+			else
+				return new LoadingScreenScene(null);
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
@@ -91,10 +100,14 @@ package scenes.loadingscreen
 		}
 		
 		public var count:int = 0;
+		public var playerTimeOut:Boolean = false;
 		public function playerValidationAttempted(e:TimerEvent = null):void
 		{
 			if(e && e.target == timeoutTimer && sessionVerificationHasBeenAttempted == false)
+			{
 				setStatus("Player Validation Timed Out");
+				playerTimeOut = true;
+			}
 
 			sessionVerificationHasBeenAttempted = true;
 			if (timeoutTimer) 
@@ -111,13 +124,28 @@ package scenes.loadingscreen
 			
 		public function changeScene(e:TimerEvent = null):void
 		{	
-			if (timer) {
+			var tutorialController:TutorialController = TutorialController.getTutorialController();
+			//would like some way for this to show message when validation failed, not just timed out
+			//but without playerTimeOut flag, this never exits the loading screen
+			if (timer && timer.running && playerTimeOut)
+			{
+				return;
+			}
+			else if (timer && !timer.running && tutorialController.completedTutorialList != null) {
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, changeScene);
 			}
+			else if (tutorialController.completedTutorialList == null && PlayerValidation.playerLoggedIn)
+			{
+				timer = new Timer(200, 1);
+				timer.addEventListener(TimerEvent.TIMER, changeScene);
+				timer.start(); //repeat until tutorial list is returned
+				return;
+			}
 			timer == null;
 			
-			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
+			if(tutorialController.completedTutorialList != null || PlayerValidation.playerLoggedIn == false)
+				dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
 		
 		override public function setStatus(text:String):void

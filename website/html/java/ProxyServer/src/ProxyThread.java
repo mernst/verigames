@@ -30,6 +30,7 @@ public class ProxyThread extends Thread {
     private DBCollection savedLevelsCollection = null;
     private DBCollection submittedLayoutsCollection = null;
     private DBCollection logCollection = null;
+    private DBCollection tutorialCollection = null;
     private static final int BUFFER_SIZE = 32768;
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
@@ -39,17 +40,17 @@ public class ProxyThread extends Thread {
 	private String gameURL = "http://flowjam.verigames.com";
 	private String httpport = ":80";
 
-	private int LOG_REQUEST = 0;
-	private int LOG_RESPONSE = 1;
-	private int LOG_TO_DB = 2;
-	private int LOG_ERROR = 3;
-	private int LOG_EXCEPTION = 4;
+	static public int LOG_REQUEST = 0;
+	static public int LOG_RESPONSE = 1;
+	static public int LOG_TO_DB = 2;
+	static public int LOG_ERROR = 3;
+	static public int LOG_EXCEPTION = 4;
 	
 	
 	String currentLayoutFileID = null;
 	String currentConstraintFileID = null;
     public ProxyThread(Socket socket, GridFS fs, DBCollection levelCollection, DBCollection submittedLevelsCollection, 
-    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection) {
+    		DBCollection savedLevelsCollection, DBCollection submittedLayoutsCollection, DBCollection logCollection, DBCollection tutorialCollection) {
         super("ProxyThread");
         this.socket = socket;
         this.fs = fs;
@@ -58,6 +59,7 @@ public class ProxyThread extends Thread {
         this.savedLevelsCollection = savedLevelsCollection;
         this.submittedLayoutsCollection = submittedLayoutsCollection;
         this.logCollection = logCollection;
+        this.tutorialCollection = tutorialCollection;
     }
 
     public void run() {
@@ -144,6 +146,11 @@ public class ProxyThread extends Thread {
             	}
             	else
             	{
+            		if(ProxyServer.testSilent == true)
+            		{
+            			out.writeChars("test");
+            			out.flush();
+            		}
             		if(urlTokens[1].indexOf("GET") != -1)
             			response = doGet(urlToCall);
             		else if(urlTokens[1].indexOf("PUT") != -1)
@@ -153,7 +160,7 @@ public class ProxyThread extends Thread {
             		else if(urlTokens[1].indexOf("DATABASE") != -1)
             			doDatabase(urlToCall, out, decodedBytes);
             		else if(urlTokens[1].indexOf("URL") != -1)
-            			response = doURL(urlToCall);
+            			response = doURL(urlToCall, decodedBytes);
             		else
             			response = doPost(urlToCall); //post
             	}
@@ -214,7 +221,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpGet method = new HttpGet(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send GET request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -236,7 +243,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpPut method = new HttpPut(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send PUT request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -247,7 +254,7 @@ public class ProxyThread extends Thread {
         HttpClient client = new DefaultHttpClient();
         HttpDelete method = new HttpDelete(url+httpport+request);
         log(LOG_REQUEST, url+httpport+request);
-        // Send POST request
+        // Send DELETE request
         HttpResponse response = client.execute(method);
 
         return response;
@@ -259,7 +266,6 @@ public class ProxyThread extends Thread {
     		"<?xml version=\"1.0\"?>" +
     		"<cross-domain-policy>" +
     		"<site-control permitted-cross-domain-policies=\"all\"/>" +
-    		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
     		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
     		"<allow-access-from domain=\"*.verigames.com\" to-ports=\"8001\"/>" +
     		"<allow-http-request-headers-from domain=\"*\" headers=\"*\"/>" +
@@ -412,6 +418,47 @@ public class ProxyThread extends Thread {
 				submitLayout(buf, fileInfo, out);
 			}
 		}
+		else if(request.indexOf("/tutorial/level/complete") != -1)
+		{
+    		if(fileInfo.length < 6)
+			{
+				out.write("Error: tutorial info not saved".getBytes());
+				log(LOG_ERROR, "Error: tutorial info not saved");
+				return;
+			}
+    		DBObject levelObj = new BasicDBObject();
+			levelObj.put("playerID", fileInfo[4]);
+	        levelObj.put("levelID", fileInfo[5]);
+			log(LOG_TO_DB, levelObj.toMap().toString());
+			WriteResult r1 = tutorialCollection.insert(levelObj);
+			log(LOG_ERROR, r1.getLastError().toString());
+			
+			out.write("{success: true}".getBytes());
+		}
+		else if(request.indexOf("/tutorial/levels/completed") != -1)
+		{
+			if(fileInfo.length < 5)
+			{
+				out.write("Error: no player ID".getBytes());
+				log(LOG_ERROR, "Error: no player ID");
+				return;
+			}
+			//format:  /layout/get/name
+			//returns: layout with specified name
+			BasicDBObject findobj = new BasicDBObject();
+			findobj.put("playerID", fileInfo[4]);
+	        DBCursor cursor = tutorialCollection.find(findobj);	  
+	        StringBuffer buff = new StringBuffer(request+"//");
+	        try {
+            	while(cursor.hasNext()) {
+ 	        	   DBObject obj = cursor.next();
+		        	   buff.append(obj.toString());  
+		           }
+		           out.write(buff.toString().getBytes());
+		           log(LOG_TO_DB, "tutorial complete info returned");
+		        } finally {
+		        }
+		}
 	}
     
     public void submitLayout(byte[] buf, String[] fileInfo, DataOutputStream out) throws Exception
@@ -458,12 +505,14 @@ public class ProxyThread extends Thread {
 	     out.write("file saved".getBytes());
 	        
     	if(fileInfo[2].indexOf("submit") != -1)
-    		putLevelObjectInCollection(this.submittedLevelsCollection, fileInfo);
+    	{
+    		putLevelObjectInCollection(fileInfo, true);
+    	}
     	else
-    		putLevelObjectInCollection(this.savedLevelsCollection, fileInfo);
+    		putLevelObjectInCollection(fileInfo, false);
     }
     
-    public void putLevelObjectInCollection(DBCollection collection, String[] fileInfo)
+    public void putLevelObjectInCollection(String[] fileInfo, boolean submitAlso)
     {
     	 DBObject submittedLevelObj = new BasicDBObject();
     	 submittedLevelObj.put("player", fileInfo[3]);
@@ -484,52 +533,61 @@ public class ProxyThread extends Thread {
         properties.put("conflicts", fileInfo[14]);
         properties.put("bonusnodes", fileInfo[15]);
     	
-        if(fileInfo.length > 17)
+        if(submitAlso)
         {
         	properties.put("enjoymentRating", fileInfo[16]);
         	properties.put("difficultyRating", fileInfo[17]);
         	submittedLevelObj.put("version", fileInfo[18]);
+        	submittedLevelObj.put("shareWithGroup", 1);
         }
         else
+        {
         	submittedLevelObj.put("version", fileInfo[16]);
+        	submittedLevelObj.put("shareWithGroup", fileInfo[17]);
+        }
+        submittedLevelObj.put("createdDate", new Date());
         
         DBObject metadata = new BasicDBObject();
         metadata.put("properties", properties);
         submittedLevelObj.put("metadata", metadata);
         log(LOG_TO_DB, submittedLevelObj.toMap().toString());
-		WriteResult r2 = collection.insert(submittedLevelObj);
+        WriteResult r2 = null;
+        if(submitAlso)
+        {
+        	r2 = submittedLevelsCollection.insert(submittedLevelObj);
+        	log(LOG_ERROR, r2.getLastError().toString());
+        }
+        
+        r2 = savedLevelsCollection.insert(submittedLevelObj);
 		log(LOG_ERROR, r2.getLastError().toString());
     }
 
-    public HttpResponse doURL(String request) throws Exception  
+    public HttpResponse doURL(String request, byte[] buf) throws Exception  
     {
     	String url = null;
     	String postData = null;
     	
-    	String urlTokens[] = request.split("/");
-    	
-    	
-    	if(request.indexOf("/achievement/assign") != -1)
+    	url = "http://localhost:3000" + request;
+      	log(LOG_TO_DB, url);
+     	HttpClient client = new DefaultHttpClient();
+    	if(buf != null)
     	{
-    		if(ProxyServer.runLocally)
-    			url = "http://localhost/AddAchievements.py";
-    		else
-    			url = "http://localhost:3000/api/achievements/assign";
-    		
-    		String createdOn = String.valueOf(new Date().getTime());
-    		postData = "details={\"id\":\""+urlTokens[5]+"\",\"playerId\":\""+urlTokens[4]+"\",\"gameId\":\""+urlTokens[3]+"\",\"createdOn\":\""+createdOn+"\"} ";
+	       	postData = new String(buf);
+	       	log(LOG_TO_DB, postData);
+        
+	       	HttpPost method = new HttpPost(url);
+	       	StringEntity params = new StringEntity(postData);
+	       	method.setHeader("Content-type", "application/json");
+	       	method.setEntity(params);
+	       	HttpResponse response = client.execute(method);
+	        return response;
     	}
-    	
-        HttpClient client = new DefaultHttpClient();
-        HttpPost method = new HttpPost(url);
-        log(LOG_TO_DB, url);
-        StringEntity params =new StringEntity(postData);
-        log(LOG_TO_DB, postData);
-        method.addHeader("content-type", "application/x-www-form-urlencoded");
-        method.setEntity(params);
-        HttpResponse response = client.execute(method);
-
-        return response;
+    	else
+    	{
+    		HttpGet method = new HttpGet(url);
+    		HttpResponse response = client.execute(method);
+    		return response;
+    	}
 	}
     
     public void log(int type, String line)

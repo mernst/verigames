@@ -83,7 +83,7 @@ package scenes.layoutselectscene
 		{
 			super.addedToStage(event);
 			
-			background = new Image(AssetInterface.getTexture("Game", "StationaryBackgroundClass"));
+			background = new Image(AssetInterface.getTexture("Game", "Background0Class"));
 			background.scaleX = stage.stageWidth/background.width;
 			background.scaleY = stage.stageHeight/background.height;
 			background.blendMode = BlendMode.NONE;
@@ -102,44 +102,26 @@ package scenes.layoutselectscene
 			var buttonHeight:Number = 25;
 			var buttonY:Number = 30;
 			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Layout", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0x0077FF);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Layout", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
 			label.x = (levelSelectWidth - label.width)/2 + levelSelectBackground.x;
 			label.y = 10;
 			
-//			tutorial_levels_button = ButtonFactory.getInstance().createTabButton("Intro", buttonWidth, buttonHeight, 6, 6);
-//			tutorial_levels_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
-//			addChild(tutorial_levels_button);
-//			tutorial_levels_button.x = buttonPadding+12;
-//			tutorial_levels_button.y = buttonY + label.y;
-//			
-//			new_levels_button = ButtonFactory.getInstance().createTabButton("Current", buttonWidth, buttonHeight, 6, 6);
-//			new_levels_button.addEventListener(starling.events.Event.TRIGGERED, onNewButtonTriggered);
-//			addChild(new_levels_button);
-//			new_levels_button.x = tutorial_levels_button.x+buttonWidth+buttonPadding;
-//			new_levels_button.y = buttonY + label.y;
-//			
-//			saved_levels_button = ButtonFactory.getInstance().createTabButton("Saved", buttonWidth, buttonHeight, 6, 6);
-//			saved_levels_button.addEventListener(starling.events.Event.TRIGGERED, onSavedButtonTriggered);
-//			addChild(saved_levels_button);
-//			saved_levels_button.x = new_levels_button.x+buttonWidth+buttonPadding;
-//			saved_levels_button.y = buttonY + label.y;
-			
-			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 60, 24);
+			select_button = ButtonFactory.getInstance().createDefaultButton("Select", 50, 18);
 			select_button.addEventListener(starling.events.Event.TRIGGERED, onSelectButtonTriggered);
 			addChild(select_button);
-			select_button.x = levelSelectWidth-60-buttonPadding;
-			select_button.y = levelSelectHeight - select_button.height - 3;	
+			select_button.x = levelSelectWidth-50-buttonPadding;
+			select_button.y = levelSelectHeight - select_button.height - 6;	
 			
-			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 60, 24);
+			cancel_button = ButtonFactory.getInstance().createDefaultButton("Cancel", 50, 18);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
 			cancel_button.x = select_button.x - cancel_button.width - buttonPadding;
-			cancel_button.y = levelSelectHeight - cancel_button.height - 3;
+			cancel_button.y = select_button.y;
 			
-			allLayoutslListBox = new SelectLayoutList(levelSelectWidth - 2*buttonPadding, 193);
-			allLayoutslListBox.y = buttonY + label.y + buttonHeight + buttonPadding - 4;
+			allLayoutslListBox = new SelectLayoutList(levelSelectWidth - 3*buttonPadding, 198);
+			allLayoutslListBox.y = buttonY + label.y + buttonHeight + buttonPadding;
 			allLayoutslListBox.x = (levelSelectWidth - allLayoutslListBox.width)/2+levelSelectBackground.x;
 			addChild(allLayoutslListBox);
 			
@@ -159,7 +141,7 @@ package scenes.layoutselectscene
 			levelSelectInfoPanel.y = 10;
 			addChild(levelSelectInfoPanel);
 			
-			infoLabel = TextFactory.getInstance().createTextField("Layout Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0x0077FF);
+			infoLabel = TextFactory.getInstance().createTextField("Layout Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(infoLabel, 1, 1);
 			addChild(infoLabel);
 			infoLabel.x = (levelSelectInfoWidth - infoLabel.width)/2 + levelSelectInfoPanel.x;
@@ -181,6 +163,8 @@ package scenes.layoutselectscene
 			onAllButtonTriggered(null);
 			
 			addEventListener(Event.TRIGGERED, updateSelectedLevelInfo);
+			
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, false);
 		}
 		
 		private function onAllButtonTriggered(e:Event):void
@@ -203,7 +187,7 @@ package scenes.layoutselectscene
 				removeChild(nameText);
 				if(currentSelectedLayout.hasOwnProperty("name"))
 				{
-					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLayout.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLayout.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(nameText, 0, 1);
 					addChild(nameText);
 					nameText.x = levelSelectInfoPanel.x+ 10;
@@ -220,7 +204,7 @@ package scenes.layoutselectscene
 				{
 					if(currentSelectedLayout.description.length > 0)
 					{
-						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF, true);
+						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0xFFFFFF, true);
 						TextFactory.getInstance().updateAlign(descriptionText, 0, 1);
 						addChild(descriptionText);
 						descriptionText.x = levelSelectInfoPanel.x+ 10;
@@ -265,6 +249,7 @@ package scenes.layoutselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			this.parent.removeChild(this);
 		}
 		
@@ -280,7 +265,9 @@ package scenes.layoutselectscene
 				data.layoutFile = dataObj.layoutFile;
 				dispatchEvent(new MenuEvent(MenuEvent.SET_NEW_LAYOUT, data));
 			}
+			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			this.parent.removeChild(this);
+			
 			
 		}
 		

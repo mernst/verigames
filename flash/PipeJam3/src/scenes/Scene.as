@@ -1,5 +1,6 @@
 package scenes
 {
+	import audio.AudioManager;
     import starling.display.Sprite;
     import starling.events.Event;
     
@@ -22,11 +23,12 @@ package scenes
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
 		{
+			AudioManager.getInstance().reset();
 		}
 		
 		protected function removedFromStage(event:starling.events.Event):void
 		{
-			
+			AudioManager.getInstance().reset();
 		}
 		
 		public function setGame(game:Game):void

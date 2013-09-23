@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
 <world version="1">
- <level name="SplitMergePractice" qid="17">
+ <level name="SplitMerge" qid="17">
   <linked-edges>
    <edge-set id="SplitMergePractice1">
     <edgeref id="e1"/>

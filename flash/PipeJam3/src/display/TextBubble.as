@@ -3,6 +3,7 @@ package display
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	import display.NineSliceBatch;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
@@ -34,6 +35,9 @@ package display
 		protected var m_pointPos:Point = new Point();
 		protected var m_pointPosNeedsInit:Boolean = true;
 		protected var m_arrowTextSeparationAdjustment:Number = 0;
+		protected var m_globalToPoint:Point;
+		
+		public static const GOLD:uint = 0xFFEC00;
 		
 		public function TextBubble(_text:String, _fontSize:Number = 10, _fontColor:uint = 0xEEEEEE, 
 		                           _pointAt:DisplayObject = null, _pointAtContainer:DisplayObjectContainer = null, 
@@ -41,7 +45,8 @@ package display
 								   _pointTo:String = NineSliceBatch.BOTTOM_LEFT, _size:Point = null, 
 								   _pointPosAlwaysUpdate:Boolean = true, _arrowSz:Number = 10, 
 								   _arrowBounce:Number = 2, _arrowBounceSpeed:Number = 0.5, _inset:Number = 3,
-								   _showBox:Boolean = true, _arrowColor:uint = 0xFFEC00)
+								   _showBox:Boolean = true, _arrowColor:uint = GOLD, _outlineWeight:Number = 0,
+								   _outlineColor:uint = 0x0)
 		{
 			m_fontSize = _fontSize;
 			m_pointAt = _pointAt;
@@ -85,6 +90,7 @@ package display
 			
 			// text field
 			var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(_text, AssetsFont.FONT_UBUNTU, size.x - 2 * m_inset, size.y - 2 * m_inset, m_fontSize, _fontColor);
+			if (_outlineWeight > 0) TextFactory.getInstance().updateFilter(textField, new GlowFilter(_outlineColor, 1, _outlineWeight, _outlineWeight, 4 * _outlineWeight));
 			textField.x = m_inset;
 			textField.y = m_inset;
 			m_textContainer.addChild(textField);
@@ -92,7 +98,7 @@ package display
 			// arrow
 			if (m_pointAt) {
 				var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrowWhite);
+				var arrowTexture:Texture = atlas.getTexture(AssetInterface.PipeJamSubTexture_TutorialArrow);
 				m_tutorialArrow = new Image(arrowTexture);
 				m_tutorialArrow.color = _arrowColor;
 				m_tutorialArrow.width = m_tutorialArrow.height = m_arrowSz;
@@ -118,12 +124,12 @@ package display
 			addEventListener(Event.ADDED_TO_STAGE, onAdded); // allow this to be removed and re-added
 		}
 
-		private function onEnterFrame(evt:Event):void
+		protected function onEnterFrame(evt:Event):void
 		{
 			var timeSec:Number = new Date().time / 1000.0;
 			var timeArrowOffset:Number = m_arrowBounce * (int(timeSec / m_arrowBounceSpeed) % 2);
 			
-			if (m_pointAt) {
+			if (m_pointAt && m_pointAt.parent) {
 				var pt:Point = new Point();
 				var offset:Point = new Point();
 				
@@ -213,7 +219,7 @@ package display
 				if (desiredParent) {
 					pt = m_pointAt.parent.localToGlobal(pt);
 					pt = desiredParent.globalToLocal(pt);
-					pt = desiredParent.localToGlobal(pt);
+					pt = (m_globalToPoint != null) ? m_globalToPoint : desiredParent.localToGlobal(pt);
 					pt = parent.globalToLocal(pt);
 					
 					if (m_pointPosNeedsInit || m_pointPosAlwaysUpdate) {
@@ -234,6 +240,11 @@ package display
 				x = Constants.GameWidth / 2;
 				y = height / 2 - m_paddingSz + m_inset;
 			}
+		}
+		
+		public function setGlobalToPoint(pt:Point):void
+		{
+			m_globalToPoint = pt;
 		}
 		
 		private function sign(x:Number):Number

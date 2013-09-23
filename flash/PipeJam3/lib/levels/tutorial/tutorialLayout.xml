@@ -165,110 +165,173 @@
     </line>
   </level>
   <level id="LockedWidget" qid="3" tutorial="locked">
-    <box height="1.0" id="LockedWidget1" lines="1" width="1.81" x="5.72" y="3.40" visible="true"/>
-    <box height="1.0" id="LockedWidget2" lines="1" width="1.81" x="7.37" y="0.84" visible="true"/>
-    <box height="1.0" id="LockedWidget3" lines="3" width="3.0" x="9.50" y="1.97" visible="true"/>
-    <box height="1.0" id="LockedWidget4" lines="2" width="2.4" x="4.30" y="1.87" visible="true"/>
-    <joint height="0.51" id="n10__IN__0" inputs="1" outputs="0" width="0.59" x="0.88" y="4.32"/>
-    <joint height="0.51" id="n20" inputs="1" outputs="0" width="0.59" x="3.68" y="4.32"/>
-    <joint height="0.51" id="n310" inputs="1" outputs="0" width="0.59" x="5.49" y="4.32"/>
-    <joint height="0.51" id="n420" inputs="1" outputs="0" width="0.59" x="12.11" y="4.32"/>
-    <joint height="0.51" id="n42__OUT__0" inputs="0" outputs="1" width="0.59" x="12.33" y="0.26"/>
-    <joint height="0.51" id="n41__OUT__0" inputs="0" outputs="1" width="0.59" x="10.74" y="0.26"/>
-    <joint height="0.51" id="n410" inputs="1" outputs="0" width="0.59" x="10.51" y="4.32"/>
-    <joint height="0.51" id="n31" inputs="0" outputs="1" width="0.59" x="5.49" y="0.26"/>
-    <joint height="0.51" id="n1" inputs="0" outputs="1" width="0.59" x="0.88" y="0.26"/>
-    <joint height="0.51" id="n2" inputs="0" outputs="1" width="0.59" x="3.68" y="0.26"/>
-    <joint height="0.51" id="n33" inputs="0" outputs="1" width="0.59" x="8.68" y="0.26"/>
-    <joint height="0.51" id="n330" inputs="1" outputs="0" width="0.59" x="8.68" y="4.32"/>
-    <joint height="0.51" id="n32" inputs="0" outputs="1" width="0.59" x="7.08" y="0.26"/>
-    <joint height="0.51" id="n320" inputs="1" outputs="0" width="0.59" x="7.08" y="4.32"/>
+    <box height="1.0" id="LockedWidget1" lines="1" width="1.81" x="3.83" y="3.90" visible="true"/>
+    <box height="1.0" id="LockedWidget2" lines="1" width="1.81" x="5.50" y="1.39" visible="true"/>
+    <box height="1.0" id="LockedWidget3" lines="3" width="3.0" x="10.86" y="3.85" visible="true"/>
+    <box height="1.0" id="LockedWidget4" lines="2" width="2.4" x="7.17" y="4.85" visible="true"/>
+    <box height="1.0" id="LockedWidget5" lines="1" width="1.81" x="9.09" y="1.39" visible="true"/>
+    <joint height="0.51" id="n10__IN__0" inputs="1" kind="OUTGOING" outputs="0" width="0.59" x="0.88" y="5.82" visible="false"/>
+    <joint height="0.51" id="n20" inputs="1" kind="END" outputs="0" width="0.59" x="3.68" y="5.82" visible="false"/>
+    <joint height="0.51" id="n310" inputs="1" kind="END" outputs="0" width="0.59" x="5.49" y="5.82" visible="false"/>
+    <joint height="0.51" id="n420" inputs="1" kind="END" outputs="0" width="0.59" x="12.4" y="5.82" visible="false"/>
+    <joint height="0.51" id="n50" inputs="1" kind="END" outputs="0" width="0.59" x="14.33" y="5.82" visible="false"/>
+    <joint height="0.51" id="n5" inputs="0" kind="START_PIPE_DEPENDENT_BALL" outputs="1" width="0.59" x="14.33" y="0.26" visible="false"/>
+    <joint height="0.51" id="n42__OUT__0" inputs="0" kind="INCOMING" outputs="1" width="0.59" x="11.97" y="0.26" visible="false"/>
+    <joint height="0.51" id="n41__OUT__0" inputs="0" kind="INCOMING" outputs="1" width="0.59" x="10.38" y="0.26" visible="false"/>
+    <joint height="0.51" id="n410" inputs="1" kind="END" outputs="0" width="0.59" x="10.81" y="5.82" visible="false"/>
+    <joint height="0.51" id="n31" inputs="0" kind="START_PIPE_DEPENDENT_BALL" outputs="1" width="0.59" x="5.49" y="0.26" visible="false"/>
+    <joint height="0.51" id="n1" inputs="0" kind="START_PIPE_DEPENDENT_BALL" outputs="1" width="0.59" x="0.88" y="0.26" visible="false"/>
+    <joint height="0.51" id="n2" inputs="0" kind="START_PIPE_DEPENDENT_BALL" outputs="1" width="0.59" x="3.68" y="0.26" visible="false"/>
+    <joint height="0.51" id="n33" inputs="0" kind="START_PIPE_DEPENDENT_BALL" outputs="1" width="0.59" x="8.68" y="0.26" visible="false"/>
+    <joint height="0.51" id="n330" inputs="1" kind="END" outputs="0" width="0.59" x="8.68" y="5.82" visible="false"/>
+    <joint height="0.51" id="n32__OUT__0" inputs="0" kind="INCOMING" outputs="1" width="0.59" x="7.08" y="0.26" visible="false"/>
+    <joint height="0.51" id="n320" inputs="1" kind="END" outputs="0" width="0.59" x="7.08" y="5.82" visible="false"/>
     <line id="e1__IN__">
       <fromjoint id="n1" port="0"/>
       <tobox id="LockedWidget1" port="0"/>
-      <point x="0.89" y="0.52"/>
-      <point x="0.89" y="1.77"/>
+      <point x="0.89" y="0.53"/>
+      <point x="0.89" y="0.91"/>
+      <point x="0.89" y="2.15"/>
+      <point x="0.89" y="2.53"/>
     </line>
     <line id="e1__OUT__">
       <frombox id="LockedWidget1" port="0"/>
       <tojoint id="n10__IN__0" port="0"/>
-      <point x="0.89" y="2.8"/>
-      <point x="0.89" y="4.05"/>
+      <point x="0.89" y="3.56"/>
+      <point x="0.89" y="3.94"/>
+      <point x="0.89" y="5.18"/>
+      <point x="0.89" y="5.56"/>
     </line>
     <line id="e2__IN__">
       <fromjoint id="n2" port="0"/>
       <tobox id="LockedWidget2" port="0"/>
-      <point x="3.69" y="0.52"/>
-      <point x="3.69" y="1.77"/>
+      <point x="3.69" y="0.53"/>
+      <point x="3.69" y="0.91"/>
+      <point x="3.69" y="2.15"/>
+      <point x="3.69" y="2.53"/>
     </line>
     <line id="e2__OUT__">
       <frombox id="LockedWidget2" port="0"/>
       <tojoint id="n20" port="0"/>
-      <point x="3.69" y="2.8"/>
-      <point x="3.69" y="4.05"/>
+      <point x="3.69" y="3.56"/>
+      <point x="3.69" y="3.94"/>
+      <point x="3.69" y="5.18"/>
+      <point x="3.69" y="5.56"/>
     </line>
     <line id="e31__IN__">
       <fromjoint id="n31" port="0"/>
       <tobox id="LockedWidget3" port="0"/>
-      <point x="5.5" y="0.52"/>
-      <point x="6.47" y="1.52"/>
+      <point x="5.5" y="0.53"/>
+      <point x="5.5" y="0.91"/>
+      <point x="6.0" y="0.91"/>
+      <point x="6.0" y="2.16"/>
+      <point x="6.49" y="2.16"/>
+      <point x="6.49" y="2.53"/>
     </line>
     <line id="e31__OUT__">
       <frombox id="LockedWidget3" port="0"/>
       <tojoint id="n310" port="0"/>
-      <point x="6.47" y="3.05"/>
-      <point x="5.5" y="4.05"/>
+      <point x="6.49" y="3.56"/>
+      <point x="6.49" y="3.93"/>
+      <point x="6.0" y="3.93"/>
+      <point x="6.0" y="5.18"/>
+      <point x="5.5" y="5.18"/>
+      <point x="5.5" y="5.56"/>
     </line>
     <line id="e32__IN__">
-      <fromjoint id="n32" port="0"/>
+      <fromjoint id="n32__OUT__0" port="0"/>
       <tobox id="LockedWidget3" port="1"/>
-      <point x="7.1" y="0.52"/>
-      <point x="7.1" y="1.52"/>
+      <point x="7.1" y="0.53"/>
+      <point x="7.1" y="0.91"/>
+      <point x="7.1" y="1.78"/>
+      <point x="7.1" y="2.53"/>
     </line>
     <line id="e32__OUT__">
       <frombox id="LockedWidget3" port="1"/>
       <tojoint id="n320" port="0"/>
-      <point x="7.1" y="3.05"/>
-      <point x="7.1" y="4.05"/>
+      <point x="7.1" y="3.56"/>
+      <point x="7.1" y="4.31"/>
+      <point x="7.1" y="5.18"/>
+      <point x="7.1" y="5.56"/>
     </line>
     <line id="e33__IN__">
       <fromjoint id="n33" port="0"/>
       <tobox id="LockedWidget3" port="2"/>
-      <point x="8.69" y="0.52"/>
-      <point x="7.74" y="1.52"/>
+      <point x="8.69" y="0.53"/>
+      <point x="8.69" y="0.91"/>
+      <point x="8.21" y="0.91"/>
+      <point x="8.21" y="1.41"/>
+      <point x="7.72" y="1.41"/>
+      <point x="7.72" y="2.53"/>
     </line>
     <line id="e33__OUT__">
       <frombox id="LockedWidget3" port="2"/>
       <tojoint id="n330" port="0"/>
-      <point x="7.74" y="3.05"/>
-      <point x="8.69" y="4.05"/>
+      <point x="7.72" y="3.56"/>
+      <point x="7.72" y="4.68"/>
+      <point x="8.21" y="4.68"/>
+      <point x="8.21" y="5.18"/>
+      <point x="8.69" y="5.18"/>
+      <point x="8.69" y="5.56"/>
     </line>
     <line id="e41__IN__">
       <fromjoint id="n41__OUT__0" port="0"/>
       <tobox id="LockedWidget4" port="0"/>
-      <point x="10.75" y="0.52"/>
-      <point x="11.11" y="1.65"/>
+      <point x="10.39" y="0.53"/>
+      <point x="10.39" y="0.91"/>
+      <point x="10.66" y="0.91"/>
+      <point x="10.66" y="2.15"/>
+      <point x="10.93" y="2.15"/>
+      <point x="10.93" y="2.525"/>
     </line>
     <line id="e41__OUT__">
       <frombox id="LockedWidget4" port="0"/>
       <tojoint id="n410" port="0"/>
-      <point x="11.11" y="2.93"/>
-      <point x="10.53" y="4.05"/>
+      <point x="10.93" y="3.555"/>
+      <point x="10.93" y="3.93"/>
+      <point x="10.88" y="3.93"/>
+      <point x="10.88" y="5.18"/>
+      <point x="10.82" y="5.18"/>
+      <point x="10.82" y="5.56"/>
     </line>
     <line id="e42__IN__">
       <fromjoint id="n42__OUT__0" port="0"/>
       <tobox id="LockedWidget4" port="1"/>
-      <point x="12.35" y="0.52"/>
-      <point x="11.76" y="1.65"/>
+      <point x="11.99" y="0.53"/>
+      <point x="11.99" y="0.91"/>
+      <point x="11.78" y="0.91"/>
+      <point x="11.78" y="1.77"/>
+      <point x="11.56" y="1.77"/>
+      <point x="11.56" y="2.525"/>
     </line>
     <line id="e42__OUT__">
       <frombox id="LockedWidget4" port="1"/>
       <tojoint id="n420" port="0"/>
-      <point x="11.76" y="2.93"/>
-      <point x="12.13" y="4.05"/>
+      <point x="11.56" y="3.555"/>
+      <point x="11.56" y="4.3"/>
+      <point x="11.99" y="4.3"/>
+      <point x="11.99" y="5.18"/>
+      <point x="12.42" y="5.18"/>
+      <point x="12.42" y="5.56"/>
+    </line>
+    <line id="e5__IN__">
+      <fromjoint id="n5" port="0"/>
+      <tobox id="LockedWidget5" port="0"/>
+      <point x="14.35" y="0.53"/>
+      <point x="14.35" y="0.91"/>
+      <point x="14.35" y="2.15"/>
+      <point x="14.35" y="2.53"/>
+    </line>
+    <line id="e5__OUT__">
+      <frombox id="LockedWidget5" port="0"/>
+      <tojoint id="n50" port="0"/>
+      <point x="14.35" y="3.56"/>
+      <point x="14.35" y="3.94"/>
+      <point x="14.35" y="5.18"/>
+      <point x="14.35" y="5.56"/>
     </line>
   </level>
-  <level id="SatisfyBoxes" qid="4" tutorial="links">
+  <level id="Links" qid="4" tutorial="links">
     <box height="1.0" id="SatisfyBoxes1" lines="1" width="1.81" x="1.51" y="1.90" visible="true"/>
     <box height="1.0" id="SatisfyBoxes2" lines="1" width="1.81" x="9.39" y="2.31" visible="true"/>
     <box height="1.0" id="SatisfyBoxes3" lines="2" width="2.4" x="5.16" y="2.64" visible="true"/>
@@ -474,7 +537,7 @@
       <tojoint id="n530" port="0"/>
     <point x="3.69" y="9.91"/><point x="3.69" y="10.91"/></line>
   </level>
-  <level id="Clashes" qid="6" tutorial="clash">
+  <level id="Jams" qid="6" tutorial="clash">
     <box height="1.0" id="Clashes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="Clashes2" lines="1" width="1.81" x="0.9" y="5.6"/>
     <joint height="0.51" id="n12" inputs="1" outputs="1" width="0.59" x="0.88" y="3.82"/>
@@ -497,7 +560,7 @@
       <tojoint id="n2" port="0"/>
     <point x="0.89" y="6.11"/><point x="0.89" y="7.11"/></line>
   </level>
-  <level id="WidenBoxes" qid="7" tutorial="widen">
+  <level id="Widen" qid="7" tutorial="widen">
     <box height="1.0" id="WidenBoxes1" lines="1" width="1.81" x="0.9" y="2.04"/>
     <box height="1.0" id="WidenBoxes2" lines="1" width="1.81" x="3.71" y="2.04"/>
     <box height="1.0" id="WidenBoxes3" lines="1" width="1.81" x="6.51" y="2.04"/>
@@ -582,7 +645,7 @@
       <tojoint id="n400" port="0"/>
     <point x="8.22" y="6.36"/><point x="8.69" y="7.36"/></line>
   </level>
-  <level id="NarrowBoxes" qid="8" tutorial="pinch">
+  <level id="LockedPassage" qid="8" tutorial="pinch">
     <box height="1.0" id="NarrowBoxes1" lines="1" width="1.81" x="0.33" y="1.50" visible="true"/>
     <box height="1.0" id="NarrowBoxes2" lines="1" width="1.81" x="4.48" y="2.40" visible="true"/>
     <box height="1.0" id="NarrowBoxes3" lines="1" width="1.81" x="8.12" y="1.31" visible="true"/>
@@ -1055,7 +1118,7 @@
       <tojoint id="n3" port="0"/>
     <point x="2.28" y="6.11"/><point x="2.28" y="7.11"/></line>
   </level>
-  <level id="SplitMergePractice" qid="17" tutorial="splitmergepractice">
+  <level id="SplitMerge" qid="17" tutorial="splitmergepractice">
     <box height="1.0" id="SplitMergePractice1" lines="2" width="2.4" x="4.66" y="2.61" visible="true"/>
     <box height="1.0" id="SplitMergePractice2" lines="1" width="1.81" x="9.40" y="2.57" visible="true"/>
     <box height="1.0" id="SplitMergePractice3" lines="2" width="2.4" x="6.93" y="6.08" visible="true"/>

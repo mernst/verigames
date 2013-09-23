@@ -201,6 +201,7 @@ package dialogs
 			eRating *= 100;
 			eRating = Math.round(eRating);
 			eRating /= 100;
+			if (loginHelper.levelObject == null) loginHelper.levelObject = new Object();
 			loginHelper.levelObject.enjoymentRating = eRating;
 			var dRating:Number = this.difficultyRating*5.0;
 			//round to two decimal places
@@ -208,9 +209,11 @@ package dialogs
 			dRating = Math.round(dRating);
 			dRating /= 100;
 			loginHelper.levelObject.difficultyRating = dRating;
-			loginHelper.reportPlayerPreference((eRating*20).toString()); //0-100 scale
-			loginHelper.reportPlayerPerformance((dRating*20).toString()); //0-100 scale
+			loginHelper.reportPlayerPreference((int(Math.round(eRating*20))).toString()); //0-100 scale
+			loginHelper.reportPlayerPerformance((int(Math.round(dRating*20))).toString()); //0-100 scale
 			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
+			
+			LoginHelper.getLoginHelper().reportScore();
 		}
 	}
 }

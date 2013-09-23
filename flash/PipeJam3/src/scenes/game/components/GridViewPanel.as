@@ -2,35 +2,24 @@ package scenes.game.components
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
-	
-	import display.NineSliceBatch;
 	import display.NineSliceButton;
-	import display.TextBubble;
-	
+	import display.ToolTipText;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
 	import events.PropertyModeChangeEvent;
-	import events.ToolTipEvent;
 	import events.TutorialEvent;
 	import events.UndoEvent;
-	
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.PixelSnapping;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
-	
 	import graph.PropDictionary;
-	
 	import particle.FanfareParticleSystem;
-	
 	import scenes.BaseComponent;
-	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
 	import scenes.game.display.GameNode;
@@ -38,7 +27,7 @@ package scenes.game.components
 	import scenes.game.display.OutlineFilter;
 	import scenes.game.display.TutorialManagerTextInfo;
 	import scenes.game.display.World;
-	
+	import scenes.game.PipeJamGameScene;
 	import starling.animation.DelayedCall;
 	import starling.animation.Transitions;
 	import starling.core.RenderSupport;
@@ -54,17 +43,14 @@ package scenes.game.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
-	
-	import utils.Base64Decoder;
-	import utils.Base64Encoder;
 	import utils.XMath;
+	import networking.TutorialController;
 	
 	//GamePanel is the main game play area, with a central sprite and right and bottom scrollbars. 
 	public class GridViewPanel extends BaseComponent
 	{
 		public static const WIDTH:Number = Constants.GameWidth;
-		public static const HEIGHT:Number = 262;
+		public static const HEIGHT:Number = 238 + 44 + 10;
 		
 		private var m_currentLevel:Level;
 		private var inactiveContent:Sprite;
@@ -73,10 +59,11 @@ package scenes.game.components
 		private var errorBubbleContainer:Sprite;
 		private var currentMode:int;
 		private var continueButton:NineSliceButton;
+		private var m_backgroundLayer:Sprite = new Sprite();
 		private var m_backgroundImage:Image;
 		private var m_border:Image;
 		private var m_tutorialText:TutorialText;
-		private var m_toolTip:TextBubble;
+		private var m_persistentToolTips:Vector.<ToolTipText> = new Vector.<ToolTipText>();
 		private var m_continueButtonForced:Boolean = false; //true to force the continue button to display, ignoring score
 		private var m_spotlight:Image;
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
@@ -99,12 +86,8 @@ package scenes.game.components
 			m_world = world;
 			currentMode = NORMAL_MODE;
 			
-			var background:Texture = AssetInterface.getTexture("Game", "StationaryBackgroundClass");
-			m_backgroundImage = new Image(background);
-			m_backgroundImage.width = Constants.GameWidth;
-			m_backgroundImage.height = Constants.GameHeight;
-			m_backgroundImage.blendMode = BlendMode.NONE;
-			addChild(m_backgroundImage);
+			addChild(m_backgroundLayer);
+			swapBackgroundImage();
 			
 			inactiveContent = new Sprite();
 			addChild(inactiveContent);
@@ -139,8 +122,6 @@ package scenes.game.components
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
-			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -153,20 +134,6 @@ package scenes.game.components
 			} else {
 				contentBarrier.visible = true;
 			}
-		}
-		
-		private function onToolTipAdded(evt:ToolTipEvent):void
-		{
-			if (evt.text && evt.text.length) {
-				if (m_toolTip) m_toolTip.removeFromParent(true);
-				m_toolTip = new TextBubble(evt.text, evt.fontSize, 0xEEEEEE, evt.component, null, NineSliceBatch.TOP_LEFT, NineSliceBatch.CENTER, null, true, evt.fontSize / 1.5, 0, 0, 2, false, 0xEEEEEE);
-				addChild(m_toolTip);
-			}
-		}
-		
-		private function onToolTipCleared(evt:ToolTipEvent):void
-		{
-			if (m_toolTip) m_toolTip.removeFromParent(true);
 		}
 		
 		private function endSelectMode():void
@@ -192,7 +159,7 @@ package scenes.game.components
 		}
 		
 		protected var startingPoint:Point;
-		private function onTouch(event:TouchEvent):void
+		override protected function onTouch(event:TouchEvent):void
 		{
 			//trace("Mode:" + currentMode);
 			if(event.getTouches(this, TouchPhase.ENDED).length)
@@ -462,21 +429,18 @@ package scenes.game.components
 			if (m_disposed) {
 				return;
 			}
+			if (m_backgroundImage) m_backgroundImage.removeFromParent(true);
 			if (m_tutorialText) {
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			if (m_toolTip) {
-				m_toolTip.removeFromParent(true);
-				m_toolTip = null;
-			}
+			for (var i:int = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
 			if (Starling.current && Starling.current.nativeStage) {
 				Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
 			content.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
-			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			if (stage) {
 				stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 				stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -546,6 +510,9 @@ package scenes.game.components
 				case Keyboard.SPACE:
 					recenter();
 					break;
+				case Keyboard.DELETE:
+					if (m_currentLevel) m_currentLevel.onDeletePressed();
+					break;
 			}
 		}
 		
@@ -583,9 +550,23 @@ package scenes.game.components
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 					}
 				}
 				m_currentLevel = level;
+				var seed:int = m_currentLevel.levelNodes.qid;
+				if (seed < 0) {
+					seed = 0;
+					for (var c:int = 0; c < m_currentLevel.level_name.length; c++) {
+						var code:Number = m_currentLevel.level_name.charCodeAt(c);
+						if (isNaN(code)) {
+							seed += c;
+						} else {
+							seed += Math.max(Math.round(code), 1);
+						}
+					}
+				}
+				swapBackgroundImage(seed);
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
 				if (m_currentLevel.tutorialManager) {
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
@@ -595,6 +576,7 @@ package scenes.game.components
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_CLASH, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_SCOREBLOCK, onHighlightTutorialEvent);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TUTORIAL_TEXT, onTutorialTextChange);
+					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.NEW_TOOLTIP_TEXT, onPersistentToolTipTextChange);
 				}
 			}
 			
@@ -613,9 +595,14 @@ package scenes.game.components
 				m_tutorialText.removeFromParent(true);
 				m_tutorialText = null;
 			}
-			if (m_toolTip) {
-				m_toolTip.removeFromParent(true);
-				m_toolTip = null;
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
 			}
 			
 			var levelTextInfo:TutorialManagerTextInfo = m_currentLevel.getLevelTextInfo();
@@ -634,10 +621,24 @@ package scenes.game.components
 				m_tutorialText = null;
 			}
 			
-			var levelTextInfo:TutorialManagerTextInfo = evt.newTextInfo;
+			var levelTextInfo:TutorialManagerTextInfo = (evt.newTextInfo.length == 1) ? evt.newTextInfo[0] : null;
 			if (levelTextInfo) {
 				m_tutorialText = new TutorialText(m_currentLevel, levelTextInfo);
 				addChild(m_tutorialText);
+			}
+		}
+		
+		public function onPersistentToolTipTextChange(evt:TutorialEvent):void
+		{
+			var i:int;
+			for (i = 0; i < m_persistentToolTips.length; i++) m_persistentToolTips[i].removeFromParent(true);
+			m_persistentToolTips = new Vector.<ToolTipText>();
+			
+			var toolTips:Vector.<TutorialManagerTextInfo> = m_currentLevel.getLevelToolTipsInfo();
+			for (i = 0; i < toolTips.length; i++) {
+				var tip:ToolTipText = new ToolTipText(toolTips[i].text, m_currentLevel, true, toolTips[i].pointAtFn, toolTips[i].pointFrom, toolTips[i].pointTo);
+				addChild(tip);
+				m_persistentToolTips.push(tip);
 			}
 		}
 		
@@ -670,7 +671,8 @@ package scenes.game.components
 			
 			var i:int;
 			var centerPt:Point, globPt:Point, localPt:Point;
-			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * HEIGHT)) {
+			const VIEW_HEIGHT:Number = HEIGHT - GameControlPanel.OVERLAP;
+			if ((m_currentLevel.m_boundingBox.width * content.scaleX < MAX_SCALE * WIDTH) && (m_currentLevel.m_boundingBox.height * content.scaleX  < MAX_SCALE * VIEW_HEIGHT)) {
 				// If about the size of the window, just center the level
 				centerPt = new Point(m_currentLevel.m_boundingBox.left + m_currentLevel.m_boundingBox.width / 2, m_currentLevel.m_boundingBox.top + m_currentLevel.m_boundingBox.height / 2);
 				globPt = m_currentLevel.localToGlobal(centerPt);
@@ -678,7 +680,7 @@ package scenes.game.components
 				moveContent(localPt.x, localPt.y);
 				const BUFFER:Number = 1.5;
 				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
-					HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
+					VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
@@ -715,11 +717,13 @@ package scenes.game.components
 				continueButton = ButtonFactory.getInstance().createDefaultButton("Next Level", 128, 32);
 				continueButton.addEventListener(Event.TRIGGERED, onNextLevelButtonTriggered);
 				continueButton.x = WIDTH - continueButton.width - 5;
-				continueButton.y = HEIGHT - continueButton.height - 5;
+				continueButton.y = HEIGHT - continueButton.height - 20 - GameControlPanel.OVERLAP;
 			}
 			
-			if (continueButton.parent == null) {
-				addChild(continueButton);
+			if (!m_currentLevel.targetScoreReached) {
+				m_currentLevel.targetScoreReached = true;
+				if(PipeJamGameScene.inTutorial)
+					addChild(continueButton);
 				
 				// Fanfare
 				removeFanfare();
@@ -727,7 +731,10 @@ package scenes.game.components
 				m_fanfareContainer.x = m_fanfareTextContainer.x = WIDTH / 2 - continueButton.width / 2;
 				m_fanfareContainer.y = m_fanfareTextContainer.y = continueButton.y - continueButton.height;
 				
-				for (var i:int = 5; i <= continueButton.width - 5; i += 10) {
+				var levelCompleteText:String = PipeJamGameScene.inTutorial ? "Level Complete!" : "Great work!\nBut keep playing to further improve your score."
+				var textWidth:Number = PipeJamGameScene.inTutorial ? continueButton.width : 208;
+				
+				for (var i:int = 5; i <= textWidth - 5; i += 10) {
 					var fanfare:FanfareParticleSystem = new FanfareParticleSystem();
 					fanfare.x = i;
 					fanfare.y = continueButton.height / 2;
@@ -736,25 +743,33 @@ package scenes.game.components
 					m_fanfareContainer.addChild(fanfare);
 				}
 				
-				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField("Level Complete!", AssetsFont.FONT_UBUNTU, continueButton.width, continueButton.height, 16, 0xFFEC00);
+				startFanfare();
+				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = PipeJamGameScene.inTutorial ? 2.0 : 0.0;
+				const LEVEL_COMPLETE_TEXT_FADE_SEC:Number = PipeJamGameScene.inTutorial ? 0.0 : 1.0;
+				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = PipeJamGameScene.inTutorial ? 1.0 : 5.0;
+				var textField:TextFieldWrapper = TextFactory.getInstance().createTextField(levelCompleteText, AssetsFont.FONT_UBUNTU, textWidth, continueButton.height, 16, 0xFFEC00);
 				TextFactory.getInstance().updateFilter(textField, OutlineFilter.getOutlineFilter());
 				m_fanfareTextContainer.addChild(textField);
+				m_fanfareTextContainer.alpha = 1;
 				addChild(m_fanfareTextContainer);
 				
-				var origX:Number = m_fanfareTextContainer.x;
-				var origY:Number = m_fanfareTextContainer.y;
-				const LEVEL_COMPLETE_TEXT_PAUSE_SEC:Number = 1.0;
-				const LEVEL_COMPLETE_TEXT_MOVE_SEC:Number = 2.0;
-				startFanfare();
-				for (i = 0; i < m_fanfare.length; i++) {
-					Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+				if (PipeJamGameScene.inTutorial) {
+					// For tutorial, move text and button off to the side
+					var origX:Number = m_fanfareTextContainer.x;
+					var origY:Number = m_fanfareTextContainer.y;
+					for (i = 0; i < m_fanfare.length; i++) {
+						Starling.juggler.tween(m_fanfare[i], LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, particleX:(continueButton.x - origX), particleY:(continueButton.y - continueButton.height - origY), transition:Transitions.EASE_OUT } );
+					}
+					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
+				} else {
+					// For real levels, gradually fade out text
+					Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_FADE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, alpha: 0, transition:Transitions.EASE_IN } );
 				}
-				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC - 0.5);
-				Starling.juggler.tween(m_fanfareTextContainer, LEVEL_COMPLETE_TEXT_MOVE_SEC, { delay:LEVEL_COMPLETE_TEXT_PAUSE_SEC, x:continueButton.x, y:continueButton.y - continueButton.height, transition:Transitions.EASE_OUT } );
+				m_stopFanfareDelayedCall = Starling.juggler.delayCall(stopFanfare, LEVEL_COMPLETE_TEXT_PAUSE_SEC + LEVEL_COMPLETE_TEXT_MOVE_SEC + LEVEL_COMPLETE_TEXT_FADE_SEC - 0.5);
 			}
 			
-			//assume we are in the tutorial, and we just finished a level
-			PipeJamGameScene.solvedTutorialLevel(m_currentLevel.m_tutorialTag);
+			if(PipeJamGameScene.inTutorial)
+				TutorialController.getTutorialController().addCompletedTutorial(m_currentLevel.m_tutorialTag, true);
 		}
 		
 		private function startFanfare():void
@@ -1019,6 +1034,18 @@ package scenes.game.components
 		//	Starling.current.context.present(); // required on some platforms to avoid flickering
 
 			return destination;
+		}
+		
+		private function swapBackgroundImage(seed:int = 0):void
+		{
+			if (m_backgroundImage) m_backgroundImage.removeFromParent(true);
+			var backMod:int = seed % Constants.NUM_BACKGROUNDS;
+			var background:Texture = AssetInterface.getTexture("Game", "Background" + backMod + "Class");
+			m_backgroundImage = new Image(background);
+			m_backgroundImage.width = Constants.GameWidth;
+			m_backgroundImage.height = Constants.GameHeight;
+			m_backgroundImage.blendMode = BlendMode.NONE;
+			if (m_backgroundLayer) m_backgroundLayer.addChild(m_backgroundImage);
 		}
 	}
 }

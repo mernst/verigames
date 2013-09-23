@@ -30,6 +30,7 @@ package audio
 		/** Button for user to turn all sounds off (sfx + musix) */
 		private var m_audioButton:BasicButton;
 		private var m_audioCallback:Function;
+		private var m_currentMusic:String = "";
 		
 		private static var m_instance:AudioManager; // singleton instance
 
@@ -63,7 +64,19 @@ package audio
 		{
 			return m_audioDriver;
 		}
-
+		
+		public function reset():void
+		{
+			playMusic("");
+			m_audioDriver.reset();
+		}
+		
+		public function playMusic(music:String):void
+		{
+			m_currentMusic = music;
+			m_audioDriver.playMusic(m_currentMusic);
+		}
+		
 		private function loadAudioFromEmbedded():void
 		{
 			var audioXML:XML = AssetsAudio.getEmbeddedAudioXML();

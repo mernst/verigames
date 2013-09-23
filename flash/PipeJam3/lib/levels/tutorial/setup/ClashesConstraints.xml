@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <graph id="world">
-  <level id="Clashes" qid="6" targetScore="75">
+  <level id="Jams" qid="6" targetScore="75">
     <box id="Clashes1" width="wide" editable="true"/>
     <box id="Clashes2" width="narrow" editable="false"/>
   </level>

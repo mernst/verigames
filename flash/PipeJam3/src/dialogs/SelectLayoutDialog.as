@@ -136,6 +136,7 @@ package dialogs
 		
 		private function setNewLayout(byteArray:ByteArray):void
 		{
+			if (!LoginHelper.getLoginHelper().levelObject) return;
 			var name:String = LoginHelper.getLoginHelper().levelObject.layoutName;
 			var layoutFile:XML = new XML(byteArray);
 			var data:Object = new Object;

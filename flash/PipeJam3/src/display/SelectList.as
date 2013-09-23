@@ -3,6 +3,7 @@ package display
 	import assets.AssetInterface;
 	import assets.AssetsFont;
 	
+	import dialogs.SimpleTwoButtonDialog;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -10,7 +11,6 @@ package display
 	import networking.LoginHelper;
 	
 	import scenes.BaseComponent;
-	import dialogs.SimpleTwoButtonDialog;
 	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -65,24 +65,24 @@ package display
 			mainAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
 			levelAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamLevelSelectSpriteSheetPNG", "PipeJamLevelSelectSpriteSheetXML");
 			
-			upArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			upArrow = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
 			addChild(upArrow);
 			upArrow.scaleX = .5;
 			upArrow.scaleY = .5;
-			upArrow.x = _width - upArrow.width - 1.5;
+			upArrow.x = _width - upArrow.width - 3.5;
 			upArrow.addEventListener(TouchEvent.TOUCH, onTouchUpArrow);
 			
-			downArrow = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
+			downArrow = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_MenuArrowVertical));
 			addChild(downArrow);
 			downArrow.scaleX = .5;
 			downArrow.scaleY = -.5;
-			downArrow.x = _width - downArrow.width - 1.5;
+			downArrow.x = _width - downArrow.width - 3.5;
 			downArrow.y = _height;
 			downArrow.addEventListener(TouchEvent.TOUCH, onTouchDownArrow);
 			
-			scrollbarBackground = new Image(mainAtlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
+			scrollbarBackground = new Image(levelAtlas.getTexture(AssetInterface.PipeJamSubTexture_ScrollBarTrack));
 			addChild(scrollbarBackground);
-			scrollbarBackground.x = _width - scrollbarWidth;
+			scrollbarBackground.x = _width - scrollbarWidth-4;
 			scrollbarBackground.y = upArrow.height + 1;
 			scrollbarBackground.height = _height - upArrow.height - downArrow.height - 2;
 			scrollbarBackground.width = scrollbarWidth;
@@ -91,7 +91,7 @@ package display
 			thumb = new ScrollBarThumb(scrollbarBackground.y, scrollbarBackground.y+scrollbarBackground.height);
 			thumb.addEventListener(starling.events.Event.TRIGGERED, onThumbTriggered);
 			addChild(thumb);
-			thumb.x = scrollbarBackground.x + scrollbarWidth/2 - thumb.width/2 - 1.5;
+			thumb.x = scrollbarBackground.x + scrollbarWidth/2 - thumb.width/2;
 			thumb.y = scrollbarBackground.y;
 			
 			thumbTrackTop = thumb.y;
@@ -261,15 +261,22 @@ package display
 			}
 		}
 		
-		private function scrollPanel(percentScrolled:Number):void
+		public function scrollPanel(percentScrolled:Number):void
 		{
+			//remove false events
+			if(thumb.enabled == false)
+				return;
+			else if(percentScrolled > 0 && thumb.y >= thumbTrackBottom)
+				return;
+			else if(percentScrolled < 0 && thumb.y <= thumbTrackTop)
+				return;
+			
 			var currentPercent:Number = buttonPane.y/-(buttonPane.height-initialHeight);
 			percentScrolled = percentScrolled*scrollMultiplier;
 			var totalNewScrollDistance:Number = currentPercent+percentScrolled/100;
 			totalNewScrollDistance = XMath.clamp(totalNewScrollDistance, 0, 1);
 			
 			buttonPane.y = -(buttonPane.height-initialHeight)*totalNewScrollDistance;
-			trace(totalNewScrollDistance, buttonPane.y);
 			thumb.setThumbPercent(totalNewScrollDistance*100);
 		}
 		
@@ -337,6 +344,14 @@ package display
 					newButton = new BasicButton(upstate, overstate, downstate);
 					newButton.data = objArray[ii];
 					
+					if (objArray[ii].checked) {
+						
+						var checkmarkTexture:Texture = AssetInterface.getTexture("Game", "CheckmarkClass");
+						var checkmark:Image = new Image(checkmarkTexture);
+						checkmark.x = checkmark.y = 10;
+						newButton.addChild(checkmark);
+					}
+					
 				} else {
 					var lockstate:DisplayObject = makeDocState(label, labelSz, "DocumentIconLocked", "DocumentBackgroundLocked");
 					newButton = new BasicButton(lockstate, lockstate, lockstate);
@@ -393,7 +408,7 @@ package display
 		
 		private function onLevelButtonTouched(event:Event):void
 		{
-			if(currentSelection)
+			if(currentSelection != event.target)
 				currentSelection.setStatePosition(BasicButton.UP_STATE);
 			currentSelection = event.target as BasicButton;
 			currentSelection.setStatePosition(BasicButton.DOWN_STATE);

@@ -40,6 +40,10 @@ package networking
 		public static var REPORT_PERFORMANCE:int = 18;
 		public static var REPORT_PREFERENCE:int = 19;
 		public static var ADD_ACHIEVEMENT:int = 20;
+		public static var REPORT_LEADERBOARD_SCORE:int = 21;
+		public static var GET_ACHIEVEMENTS:int = 22;
+		public static var TUTORIAL_LEVEL_COMPLETE:int = 23;
+		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 24;
 		
 		static public var EVENT_COMPLETE:int = 1;
 		static public var EVENT_ERROR:int = 2;
@@ -58,6 +62,19 @@ package networking
 		
 		protected static var loginHelper:LoginHelper = null;		
 
+		/** this is the main holder of information about the level.
+		 * It should have these properties:
+		 * 		name - the file/level name
+		 * 		layoutName - the same as 'name', unless they loaded a different layout
+		 * 		layoutDescription
+		 * 		id
+		 * 		properties - an object containing such things as number of conflicts, visible nodes, etc.
+		 * 		score
+		 * 		
+		 * It might have these properties:
+		 * 		enjoymentRating
+		 * 		difficultyRating
+		 * */
 		public var levelObject:Object = null;
 		
 		public var levelInfoVector:Vector.<Object> = null;
@@ -152,13 +169,13 @@ package networking
 		
 		public function onRequestLevelFinished(result:int, e:flash.events.Event):void
 		{
-			if(e != null)
+			if(e != null && (e.target.data as String).length > 0)
 			{
 				matchArrayObjects = JSON.parse(e.target.data).matches;
 				//handle callback ourselves since we want to use request info, not refuse;
-				onRequestLevelFinishedCallback(result);
-				sendMessage(LoginHelper.REFUSE_LEVELS, null);
 			}
+			onRequestLevelFinishedCallback(result);
+			sendMessage(LoginHelper.REFUSE_LEVELS, null);
 		}
 		
 		public function refuseLevels():void
@@ -226,28 +243,26 @@ package networking
 		protected var m_levelFilesString:String;
 		protected var m_currentMessageType:String;
 		protected var m_fileType:int;
-		public function submitLevel(_levelFilesString:String, _currentScore:int, type:String, fileType:int = 1):void
+		public function submitLevel(_levelFilesString:String, type:String, fileType:int = 1):void
 		{
 			//this involves:
 			//saving the level (layout and constraints, on either save or submit/share)
 			//saving the score, level and player info
 			//reporting the player performance/preference to the RA
 			
-			//currently we just do 1 and 2
 			m_levelFilesString = _levelFilesString;
 			m_currentMessageType = type;
 			m_fileType = fileType;
-			levelObject.score = _currentScore;
 		
 			//need to create an RA Level so we can use the levelID
 			if(type == MenuEvent.SUBMIT_LEVEL)
 				sendMessage(CREATE_RA_LEVEL, onRALevelCreated, null, levelObject.name);
 			else //save level
-				submitLevelWithID(null, fileType);
+				saveLevelWithID(null, fileType);
 		}	
 		
 		//if levelID == null, we are just saving, not submitting (which creates a new level id for future use...)
-		public function submitLevelWithID(levelID:String, fileType:int):void
+		public function saveLevelWithID(levelID:String, fileType:int):void
 		{
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, m_levelFilesString, levelObject.name, levelID, fileType);
 		}
@@ -260,12 +275,17 @@ package networking
 				m_world.dispatchEvent(new MenuEvent(LEVEL_SUBMITTED));
 		}
 		
+		public function reportScore():void
+		{
+			sendMessage(LoginHelper.REPORT_LEADERBOARD_SCORE, null);
+		}
+		
 		public function onRALevelCreated(result:int, e:flash.events.Event):void
 		{
 			var raLevelObj:Object = JSON.parse(e.target.data);
 			var levelID:String = raLevelObj.id;
 			m_levelCreated = true;
-			submitLevelWithID(levelID, m_fileType);
+			saveLevelWithID(levelID, m_fileType);
 		}
 		
 	
@@ -280,11 +300,20 @@ package networking
 			}
 		}
 	
+		//save the current level id and the player id for lookup later.
+		public function reportTutorialLevelComplete():void
+		{
+			sendMessage(TUTORIAL_LEVEL_COMPLETE, null);
+			
+		}
+		
 		public function sendMessage(type:int, callback:Function, data:String = null, name:String = null, infoObj:Object = null, filetype:int = 0):void
 		{
 			var networkConnection:NetworkConnection = new NetworkConnection();
 			networkConnection.sendMessage(type, callback, data, name, infoObj, filetype);
 		}
+		
+
 	}
 }	
 

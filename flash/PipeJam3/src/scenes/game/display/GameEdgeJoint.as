@@ -1,6 +1,7 @@
 package scenes.game.display
 {
 	import assets.AssetInterface;
+	import starling.display.Sprite;
 	
 	import events.EdgePropChangeEvent;
 	import events.EdgeContainerEvent;
@@ -23,14 +24,15 @@ package scenes.game.display
 	public class GameEdgeJoint extends GameComponent
 	{		
 		public var m_jointType:int;
-		
 		//used when moving connection points to allow for snapping back to start, or swapping positions with other connections
 		public var m_originalPoint:Point;
 		public var m_position:int;
-		
 		public var m_closestWall:int = 0;
 		
-		private var m_image:Image;
+		private var m_jointImage:Sprite;
+		
+		private var m_incomingPt:Point;
+		private var m_outgoingPt:Point;
 		
 		static public var STANDARD_JOINT:int = 0;
 		static public var MARKER_JOINT:int = 1;
@@ -51,11 +53,11 @@ package scenes.game.display
 			m_isEditable = _isEditable;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			if (jointType == INNER_CIRCLE_JOINT) {
+			//if (jointType == INNER_CIRCLE_JOINT) {
 				touchable = false;
-			} else {
-				addEventListener(TouchEvent.TOUCH, onTouch);
-			}
+			//} else {
+			//	addEventListener(TouchEvent.TOUCH, onTouch);
+			//}
 		}
 		
 		override public function dispose():void
@@ -68,11 +70,27 @@ package scenes.game.display
 			}
 
 			disposeChildren();
-			if (m_image) {
-				m_image.removeFromParent(true);
-				m_image = null;
+			if (m_jointImage) {
+				m_jointImage.removeFromParent(true);
+				m_jointImage = null;
 			}
 			super.dispose();
+		}
+		
+		public function setIncomingPoint(pt:Point):void
+		{
+			trace("incoming: " + pt);
+			if (pt.x != 0 && pt.y != 0) return;
+			m_incomingPt = pt;
+			m_isDirty = true;
+		}
+		
+		public function setOutgoingPoint(pt:Point):void
+		{
+			trace("outgoing: " + pt);
+			if (pt.x != 0 && pt.y != 0) return;
+			m_outgoingPt = pt;
+			m_isDirty = true;
 		}
 		
 		override protected function onTouch(event:TouchEvent):void
@@ -107,28 +125,6 @@ package scenes.game.display
 			}
 		}
 		
-		protected function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
-		{
-			var pt1:Point = x.localToGlobal(new Point(x.m_startJoint.x, x.m_startJoint.y));
-			var pt2:Point = y.localToGlobal(new Point(y.m_startJoint.x, y.m_startJoint.y));
-			//	trace(pt1.x + " " +pt2.x);
-			if(pt1.x < pt2.x)
-				return -1;
-			else
-				return 1;
-		}
-			
-		protected function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
-		{
-			var pt1:Point = x.localToGlobal(new Point(x.m_endJoint.x, x.m_endJoint.y));
-			var pt2:Point = y.localToGlobal(new Point(y.m_endJoint.x, y.m_endJoint.y));
-			trace(pt1.x + " " +pt2.x);
-			if(pt1.x < pt2.x)
-				return -1;
-			else
-				return 1;
-		}
-		
 		public function draw():void
 		{
 			var lineSize:Number = m_isWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH;
@@ -138,29 +134,25 @@ package scenes.game.display
 				lineSize *= 1.5;
 			}
 			
-			if (m_image) {
-				m_image.removeFromParent(true);
-				m_image = null;
+			if (m_jointImage) {
+				m_jointImage.removeFromParent(true);
+				m_jointImage = null;
 			}
 			
 			var isRound:Boolean = (m_jointType == INNER_CIRCLE_JOINT);
-
-			m_image = createJoint(isRound, m_isEditable, m_isWide);
-			m_image.width = m_image.height = lineSize;
-			
 			
 			if ((m_propertyMode != PropDictionary.PROP_NARROW) && hasProp) {
-				m_image.color = 0xffffff;
-			} else if (isHoverOn){
-				m_image.color = 0xeeeeee;
+				m_jointImage = createJoint(isRound, false, m_isWide, m_incomingPt, m_outgoingPt, KEYFOR_COLOR);
 			} else {
-				m_image.color = 0xcccccc;
+				var isGray:Boolean = isRound ? m_isEditable : true; // TODO: for now, all non-round joints forced as editable
+				var myColor:uint = isHoverOn ? 0xeeeeee : 0xcccccc;
+				m_jointImage = createJoint(isRound, isGray, m_isWide, m_incomingPt, m_outgoingPt, myColor);
 			}
+			m_jointImage.width = m_jointImage.height = lineSize;
+			m_jointImage.x = -lineSize/2;
+			m_jointImage.y = -lineSize/2;
+			addChild(m_jointImage);
 			
-			m_image.x = -lineSize/2;
-			m_image.y = -lineSize/2;
-			addChild(m_image);
-
 //			var number:String = ""+count;
 //			var txt:TextField = new TextField(10, 10, number, "Veranda", 6,0x00ff00); 
 //			txt.y = 1;
@@ -169,45 +161,123 @@ package scenes.game.display
 //			addChild(m_shape);
 		}
 		
-		public static function createJoint(isRound:Boolean, editable:Boolean, wide:Boolean):Image
+		// These are used to load assets such as GrayDarkSegmentTop
+		private static const TOP:String = "Top";
+		private static const BOTTOM:String = "Bottom";
+		private static const LEFT:String = "Left";
+		private static const RIGHT:String = "Right";
+		private static function getDir(pt:Point):String
 		{
-			var assetName:String;
-			
+			if (pt.x > 0) return LEFT;
+			if (pt.x < 0) return RIGHT;
+			if (pt.y > 0) return TOP;
+			return BOTTOM;
+		}
+		
+		private static function setupConnector(connector:Image, joint:Image, dir:String):void
+		{
+			switch (dir) {
+				case TOP:
+					connector.width = joint.width;
+					connector.height = joint.height / 2.0;
+					connector.x = joint.x;
+					connector.y = joint.y + connector.height;
+					break;
+				case BOTTOM:
+					connector.width = joint.width;
+					connector.height = joint.height / 2.0;
+					connector.x = joint.x;
+					connector.y = joint.y;
+					break;
+				case LEFT:
+					connector.width = joint.width / 2.0;
+					connector.height = joint.height;
+					connector.x = joint.x + connector.width;
+					connector.y = joint.y;
+					break;
+				case RIGHT:
+					connector.width = joint.width / 2.0;
+					connector.height = joint.height;
+					connector.x = joint.x;
+					connector.y = joint.y;
+					break;
+			}
+		}
+		
+		public static function createJoint(isRound:Boolean, editable:Boolean, wide:Boolean, fromPt:Point = null, toPt:Point = null, applyColor:int = -1):Sprite
+		{	
+			var jointAssetName:String;
+			var connectorAssetName:String;
 			if (isRound) {
+				fromPt = toPt = null; // starting/ending joints don't need connectors
 				if(editable == true)
 				{
-					if (wide == true)
-						assetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
+					if (wide == true) {
+						jointAssetName = AssetInterface.PipeJamSubTexture_BlueDarkStart;
+					} else {
+						jointAssetName = AssetInterface.PipeJamSubTexture_BlueLightStart;
+					}
 				}
 				else //not adjustable
 				{
-					if(wide == true)
-						assetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
+					if(wide == true) {
+						jointAssetName = AssetInterface.PipeJamSubTexture_GrayDarkStart;
+					} else {
+						jointAssetName = AssetInterface.PipeJamSubTexture_GrayLightStart;
+					}
 				}
 			} else {
-				if(true)//m_isEditable == true)
+				if(editable == true)
 				{
-					if (wide == true)
-						assetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
+					if (wide == true) {
+						jointAssetName = AssetInterface.PipeJamSubTexture_BlueDarkJoint;
+						connectorAssetName = AssetInterface.PipeJamSubTexture_BlueDarkSegmentPrefix;
+					} else {
+						jointAssetName = AssetInterface.PipeJamSubTexture_BlueLightJoint;
+						connectorAssetName = AssetInterface.PipeJamSubTexture_BlueLightSegmentPrefix;
+					}
 				}
 				else //not adjustable
 				{
-					if(wide == true)
-						assetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
-					else
-						assetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
+					if(wide == true) {
+						jointAssetName = AssetInterface.PipeJamSubTexture_GrayDarkJoint;
+						connectorAssetName = AssetInterface.PipeJamSubTexture_GrayDarkSegmentPrefix;
+					} else {
+						jointAssetName = AssetInterface.PipeJamSubTexture_GrayLightJoint;
+						connectorAssetName = AssetInterface.PipeJamSubTexture_GrayLightSegmentPrefix;
+					}
 				}
 			}
 			
 			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
-			var startTexture:Texture = atlas.getTexture(assetName);
-			return new Image(startTexture);
+			var jointTexture:Texture = atlas.getTexture(jointAssetName);
+			var jointImg:Image = new Image(jointTexture);
+			if (applyColor >= 0) jointImg.color = applyColor;
+			
+			var jointSprite:Sprite = new Sprite();
+			jointSprite.addChild(jointImg);
+			
+			var inDir:String = "";
+			if (fromPt) {
+				inDir = getDir(fromPt);
+				var inTexture:Texture = atlas.getTexture(connectorAssetName + inDir);
+				var inImg:Image = new Image(inTexture);
+				setupConnector(inImg, jointImg, inDir);
+				if (applyColor >= 0) inImg.color = applyColor;
+				jointSprite.addChild(inImg);
+			}
+			var outDir:String = ""
+			if (toPt) outDir = getDir(toPt);
+			if (toPt && (inDir != outDir)) {
+				// Don't both making two of the same image
+				var outTexture:Texture = atlas.getTexture(connectorAssetName + outDir);
+				var outImg:Image = new Image(outTexture);
+				setupConnector(outImg, jointImg, outDir);
+				if (applyColor >= 0) outImg.color = applyColor;
+				jointSprite.addChild(outImg);
+			}
+			
+			return jointSprite;
 		}
 		
 		public function onEnterFrame(event:Event):void

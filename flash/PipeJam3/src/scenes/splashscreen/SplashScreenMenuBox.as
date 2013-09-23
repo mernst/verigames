@@ -1,20 +1,29 @@
 package scenes.splashscreen
 {
 	import display.NineSliceButton;
+	
 	import events.NavigationEvent;
+	
 	import feathers.themes.*;
+	
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
 	import flash.net.*;
 	import flash.text.*;
+	
+	import networking.HTTPCookies;
+	import networking.LoginHelper;
+	import networking.PlayerValidation;
+	import networking.TutorialController;
+	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
+	import scenes.game.display.Level;
+	
 	import starling.core.Starling;
 	import starling.display.*;
 	import starling.events.Event;
 	import starling.text.*;
-	import networking.PlayerValidation;
-	import networking.HTTPCookies;
 	
 	public class SplashScreenMenuBox extends BaseComponent
 	{
@@ -57,14 +66,14 @@ package scenes.splashscreen
 		{
 			m_mainMenu = new Sprite();
 			
-			const BUTTON_CENTER_X:Number = 241; // center point to put Play and Log In buttons
+			const BUTTON_CENTER_X:Number = 252; // center point to put Play and Log In buttons
 			
-			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 112, 42);
+			play_button = ButtonFactory.getInstance().createDefaultButton("Play", 88, 32);
 			play_button.x = BUTTON_CENTER_X - play_button.width / 2;
 			play_button.y = 230;
 			
 			if (!PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT) {
-				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 96, 32);
+				signin_button = ButtonFactory.getInstance().createDefaultButton("Log In", 72, 32);
 				signin_button.addEventListener(starling.events.Event.TRIGGERED, onSignInButtonTriggered);
 				signin_button.x = BUTTON_CENTER_X - signin_button.width / 2;
 				signin_button.y = play_button.y + play_button.height + 10;
@@ -161,13 +170,10 @@ package scenes.splashscreen
 		
 		protected function isTutorialDone():Boolean
 		{
-			PipeJamGameScene.numTutorialLevels = PipeJamGameScene.tutorialXML["level"].length();
+			//check on next level, returns -1 if 
+			var isDone:Boolean = TutorialController.getTutorialController().isTutorialDone();
 			
-			var tutorialStatus:String = PipeJam3.LOCAL_DEPLOYMENT ? "0" : HTTPCookies.getCookie(HTTPCookies.TUTORIALS_COMPLETED);
-			if(!isNaN(parseInt(tutorialStatus)))
-				PipeJamGameScene.maxTutorialLevelCompleted = parseInt(tutorialStatus);
-			
-			if(PipeJamGameScene.maxTutorialLevelCompleted >= PipeJamGameScene.numTutorialLevels)
+			if(isDone)
 				return true;
 			else
 				return false;
@@ -176,7 +182,7 @@ package scenes.splashscreen
 		protected function onTutorialButtonTriggered(e:starling.events.Event):void
 		{
 			//go to the beginning
-			PipeJamGameScene.resetTutorialStatus();
+			TutorialController.getTutorialController().resetTutorialStatus();
 			
 			loadTutorial();
 			
@@ -185,6 +191,7 @@ package scenes.splashscreen
 		protected function loadTutorial():void
 		{
 			PipeJamGameScene.inTutorial = true;
+			PipeJamGameScene.inDemo = false;
 			PipeJam3.initialLevelDisplay = false;
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
@@ -193,12 +200,16 @@ package scenes.splashscreen
 		protected static var fileNumber:int = 0;
 		protected function onDemoButtonTriggered(e:starling.events.Event):void
 		{
+			PipeJamGameScene.inTutorial = false;
+			PipeJamGameScene.inDemo = true;
 			if(PipeJamGameScene.dArray.length == fileNumber)
 				fileNumber = 0;
 			PipeJamGameScene.worldFile = PipeJamGameScene.dArray[fileNumber];
 			PipeJamGameScene.layoutFile = PipeJamGameScene.dArray[fileNumber+2];
 			PipeJamGameScene.constraintsFile = PipeJamGameScene.dArray[fileNumber+1];
 			fileNumber+=3;
+//			LoginHelper.getLoginHelper().levelObject = new Object;
+			//--LoginHelper.getLoginHelper().levelObject.levelId = PipeJamGameScene.worldFile;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

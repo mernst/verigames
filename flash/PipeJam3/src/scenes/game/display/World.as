@@ -5,14 +5,21 @@ package scenes.game.display
 	import audio.AudioManager;
 	
 	import dialogs.InGameMenuDialog;
+	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
 	
+	import display.NineSliceBatch;
+	import display.TextBubble;
+	import display.ToolTipText;
+	
+	import events.ConflictChangeEvent;
 	import events.EdgeSetChangeEvent;
 	import events.ErrorEvent;
 	import events.GameComponentEvent;
 	import events.MenuEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
+	import events.ToolTipEvent;
 	import events.UndoEvent;
 	
 	import flash.display.Bitmap;
@@ -23,14 +30,18 @@ package scenes.game.display
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	
+	import graph.ConflictDictionary;
 	import graph.Edge;
 	import graph.EdgeSetRef;
 	import graph.LevelNodes;
 	import graph.Network;
 	import graph.Node;
+	import graph.Port;
+	import graph.PropDictionary;
 	
 	import networking.Achievements;
 	import networking.LoginHelper;
+	import networking.TutorialController;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -40,6 +51,7 @@ package scenes.game.display
 	import starling.animation.Juggler;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -47,6 +59,7 @@ package scenes.game.display
 	import starling.textures.Texture;
 	
 	import system.PipeSimulator;
+	import system.Solver;
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
@@ -60,9 +73,10 @@ package scenes.game.display
 		public var gameControlPanel:GameControlPanel;
 		protected var inGameMenuBox:InGameMenuDialog;
 		
+		protected var shareDialog:SaveDialog;
+		
 		/** All the levels in this world */
 		public var levels:Vector.<Level> = new Vector.<Level>();
-		protected var currentLevelNumber:Number = 0;
 		
 		/** Current level being played by the user */
 		public var active_level:Level = null;
@@ -89,6 +103,7 @@ package scenes.game.display
 		private var m_constraintsXML:XML;
 		
 		static public var m_world:World;
+		private var m_activeToolTip:TextBubble;
 		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
@@ -108,7 +123,6 @@ package scenes.game.display
 			m_constraintsXML = _constraints;
 			
 			m_world = this;
-			
 			undoStack = new Vector.<UndoEvent>();
 			redoStack = new Vector.<UndoEvent>();
 			
@@ -127,7 +141,17 @@ package scenes.game.display
 				
 				var levelLayoutXML:XML = findLevelFile(my_levelNodes.original_level_name, m_layoutXML);
 				var levelConstraintsXML:XML = findLevelFile(my_levelNodes.original_level_name, m_constraintsXML);
-				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML);
+				
+				var targetScore:int = int.MAX_VALUE;
+				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
+					targetScore = int(levelConstraintsXML.attribute("targetScore"));
+				}
+				var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+				var levelNameFound:String = my_levelNodes.original_level_name;
+				if (!PipeJamGameScene.inTutorial && loginHelper.levelObject && loginHelper.levelObject.name) {
+					levelNameFound = loginHelper.levelObject.name;
+				}
+				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore, levelNameFound);
 				levels.push(my_level);
 				
 				if (!firstLevel) {
@@ -147,18 +171,36 @@ package scenes.game.display
 			addChild(edgeSetGraphViewPanel);
 			
 			gameControlPanel = new GameControlPanel();
-			gameControlPanel.y = GridViewPanel.HEIGHT;
+			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				var obj:Object = LoginHelper.getLoginHelper().levelObject;
-				if(obj && obj.levelId is int)
-					currentLevelNumber = obj.levelId as int;
+				var tutorialController:TutorialController = TutorialController.getTutorialController();
+				var nextLevelQID:int;
+				if(!obj)
+				{
+					obj = new Object;
+					LoginHelper.getLoginHelper().levelObject = obj;
+					obj.levelId = tutorialController.getFirstTutorialLevel();
+					if(!tutorialController.isTutorialLevelCompleted(obj.levelId))
+						nextLevelQID = obj.levelId;
+					else
+						nextLevelQID = tutorialController.getNextUnplayedTutorial();
+				}
 				else
-					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
-				var levelNumberToUse:Number = XMath.clamp(currentLevelNumber, 0, levels.length - 1);
-				firstLevel = levels[levelNumberToUse];
+					nextLevelQID = obj.levelId;
+				
+				for each(var level:Level in levels)
+				{
+					if(level.m_levelQID == String(nextLevelQID))
+					{
+						firstLevel = level;
+						obj.levelId = nextLevelQID;
+						break;
+					}
+				}
 			}
 			
 			selectLevel(firstLevel);
@@ -171,11 +213,11 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			addEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			
 			addEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
@@ -190,42 +232,57 @@ package scenes.game.display
 			addEventListener(ErrorEvent.ERROR_MOVED, onErrorMoved);
 			addEventListener(MoveEvent.MOVE_TO_POINT, onMoveToPointEvent);
 			
-			AudioManager.getInstance().audioDriver().reset();
-			AudioManager.getInstance().audioDriver().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
+			addEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			addEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
+			
+			AudioManager.getInstance().reset();
+			AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
 		}
 		
 		private function onShowGameMenuEvent(evt:NavigationEvent):void
 		{
-			var juggler:Juggler;
+			if (!gameControlPanel) return;
+			var bottomMenuY:Number = gameControlPanel.y + GameControlPanel.OVERLAP + 5;
+			var juggler:Juggler = Starling.juggler;
+			var animateUp:Boolean = false;
 			if(inGameMenuBox == null)
 			{
 				inGameMenuBox = new InGameMenuDialog();
-				addChild(inGameMenuBox);
 				inGameMenuBox.x = 0;
+				inGameMenuBox.y = bottomMenuY;
+				var childIndex:int = numChildren - 1;
+				if (gameControlPanel && gameControlPanel.parent == this) {
+					childIndex = getChildIndex(gameControlPanel);
+					trace("childindex:" + childIndex);
+				} else {
+					trace("not");
+				}
+				addChildAt(inGameMenuBox, childIndex);
 				//add clip rect so box seems to slide up out of the gameControlPanel
-				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
-				
-				inGameMenuBox.y = gameControlPanel.y;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
-				juggler.tween(inGameMenuBox, 1.0, {
-					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
-				});
+				inGameMenuBox.clipRect = new Rectangle(0,gameControlPanel.y + GameControlPanel.OVERLAP - inGameMenuBox.height, inGameMenuBox.width, inGameMenuBox.height);
+				animateUp = true;
 			}
-			else if (inGameMenuBox.visible)
+			else if (inGameMenuBox.visible && !inGameMenuBox.animatingDown)
 				inGameMenuBox.onBackToGameButtonTriggered();
-			else //exists but not visible
+			else // animate up
 			{
-				inGameMenuBox.y = gameControlPanel.y;
-				inGameMenuBox.visible = true;
-				juggler = Starling.juggler;
+				animateUp = true;
+			}
+			if (animateUp) {
+				if (!inGameMenuBox.visible) {
+					inGameMenuBox.y = bottomMenuY;
+					inGameMenuBox.visible = true;
+				}
+				juggler.removeTweens(inGameMenuBox);
+				inGameMenuBox.animatingDown = false;
+				inGameMenuBox.animatingUp = true;
 				juggler.tween(inGameMenuBox, 1.0, {
 					transition: Transitions.EASE_IN_OUT,
-					y: gameControlPanel.y - inGameMenuBox.height // -> tween.animate("x", 50)
+					y: bottomMenuY - inGameMenuBox.height, // -> tween.animate("x", 50)
+					onComplete: function():void { if (inGameMenuBox) inGameMenuBox.animatingUp = false; }
 				});
 			}
-				
+			if (active_level) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 		}
 		
 		public function onSaveLayoutFile(event:MenuEvent):void
@@ -239,6 +296,19 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SAVE_LAYOUT, details, active_level.getTimeMs());
 				}
 			}
+		}
+		
+		protected function postSaveDialog(event:MenuEvent):void
+		{
+			if(shareDialog == null)
+			{
+				shareDialog = new SaveDialog(150, 100);
+			}
+			
+			edgeSetGraphViewPanel.addChild(shareDialog);
+			
+			shareDialog.x = (480 - shareDialog.width)/2;
+			shareDialog.y = (320 - shareDialog.height)/2 - 20;
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -259,13 +329,12 @@ package scenes.game.display
 				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
-				var currentScore:int = gameControlPanel.getCurrentScore();
-				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, currentScore, event.type, PipeJamGame.ALL_IN_ONE);	
+				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
 				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name; // yes, we can get this from the quest data but include it here for convenience
-					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = currentScore;
+					details[VerigameServerConstants.ACTION_PARAMETER_SCORE] = active_level.currentScore;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
@@ -277,6 +346,7 @@ package scenes.game.display
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
 			var socialText:String = "";
+			var numLinesInText:int = 1;
 			if(event.type == MenuEvent.SAVE_LEVEL)
 			{
 				dialogText = "Level Saved.";
@@ -287,12 +357,13 @@ package scenes.game.display
 			}
 			else
 			{
-				dialogText = "Level Submitted! Thanks!";
+				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
+				numLinesInText = 3;
 				socialText = "I just finished a level!";
 				dialogHeight = 110;
 			}
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText);
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null, numLinesInText);
 			addChild(alert);
 			
 			alert.x = (450 - alert.width)/2;
@@ -314,11 +385,16 @@ package scenes.game.display
 			alert.y = (320 - alert.height)/2;
 		}
 		
+		private function loadBestScore(event:MenuEvent):void
+		{
+			if (active_level) active_level.loadBestScoringConfiguration();
+		}
+		
 		protected function switchToLevelSelect():void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
-
+		
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
@@ -351,7 +427,7 @@ package scenes.game.display
 				}
 				//found xml representation?
 				if (my_level_xml_indx > -1) {
-				//loop through all boards, find the edges. Update these with new buzzsaw and width info.
+					//loop through all boards, find the edges. Update these with new buzzsaw and width info.
 					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
 						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
 							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
@@ -391,7 +467,7 @@ package scenes.game.display
 			}	
 			return output_xml;
 		}
-
+		
 		public function onZoomIn(event:MenuEvent):void
 		{
 			edgeSetGraphViewPanel.zoomInDiscrete();
@@ -409,26 +485,35 @@ package scenes.game.display
 		
 		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
-			m_simulator.updateOnBoxSizeChange(evt.edgeSetChanged.m_edgeSet.id, evt.level.level_name);
-			var oldScore:int = gameControlPanel.getCurrentScore();
-			var newScore:int = gameControlPanel.updateScore(evt.level, false);
-			if (newScore >= evt.level.getTargetScore()) {
-				edgeSetGraphViewPanel.displayContinueButton(true);
-			} else {
-				edgeSetGraphViewPanel.hideContinueButton();
-			}
-			if (evt.point) {
-				if (oldScore != newScore) {
-					var thisPt:Point = globalToLocal(evt.point);
-					TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+			if (!evt.level) return;
+			var edgeSetId:String = "";
+			if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
+			m_simulator.updateOnBoxSizeChange(edgeSetId, evt.level.level_name);
+			evt.level.updateScore(true);
+			gameControlPanel.updateScore(evt.level, false);
+			if (!evt.silent) {
+				var oldScore:int = evt.level.prevScore;
+				var newScore:int = evt.level.currentScore;
+				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
+				if (newScore >= evt.level.getTargetScore()) {
+					edgeSetGraphViewPanel.displayContinueButton(true);
+				} else {
+					edgeSetGraphViewPanel.hideContinueButton();
 				}
-			}
-			if (!evt.silent && PipeJam3.logging) {
-				var details:Object = new Object();
-				details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
-				details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
-				details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
-				PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+				if (evt.point) {
+					if (oldScore != newScore) {
+						var thisPt:Point = globalToLocal(evt.point);
+						TextPopup.popupText(this, thisPt, (newScore > oldScore ? "+" : "") + (newScore - oldScore).toString(), newScore > oldScore ? 0x99FF99 : 0xFF9999);
+					}
+				}
+				if (PipeJam3.logging) {
+					var details:Object = new Object();
+					if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet)
+						details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
+					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
+					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+				}
 			}
 		}
 		
@@ -443,42 +528,75 @@ package scenes.game.display
 		
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var level:Level = active_level;
+			if (loginHelper.levelObject != null) {
+				var currentLevelID:String = loginHelper.levelObject.levelId;
+				//find the level with the current ID
+				for each(level in levels)
+				{
+					if(level.m_levelQID == currentLevelID)
+						break;
+				}
+			}
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber], true);
+					selectLevel(level, true);
 				};
+			
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
+			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
+			var prevLevelNumber:Number = loginHelper.levelObject.levelId;
 			if(PipeJamGameScene.inTutorial)
 			{
+				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				if (evt.menuShowing && active_level) {
-					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on
-					PipeJamGameScene.solvedTutorialLevel(active_level.m_tutorialTag);
+					// If using in-menu "Next Level" debug button, mark the current level as complete in order to move on. Don't mark as completed
+					tutorialController.addCompletedTutorial(active_level.m_tutorialTag, false);
 				}
-				var obj:Object = LoginHelper.getLoginHelper().levelObject;
-				if(obj && obj.levelId is int)
+				
+				//should check if we are from the level select screen...
+				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
+				//if there are no more unplayed levels, check next if we are in levelselect screen choice
+				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
 				{
-					if(currentLevelNumber != obj.levelId as int) //first time through I'm supposing these are different
-						currentLevelNumber = obj.levelId as int;
+					//and if so, set to false, unless at the end of the tutorials
+					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
+					if(currentLevelId != 0)
+						tutorialsDone = false;
+					
+				}
+				
+				//if this is the first time we've completed these, post the achievement, else just move on
+				var currentLevelNumber:int;
+				if(tutorialsDone)
+				{
+					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
+						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
 					else
-					{
-						currentLevelNumber++;
-						obj.levelId = int(currentLevelNumber);
-						if(currentLevelNumber > PipeJamGameScene.maxTutorialLevelCompleted)
-							PipeJamGameScene.maxTutorialLevelCompleted = currentLevelNumber;
-					}
+						switchToLevelSelect();
+					return;
 				}
 				else
-					currentLevelNumber = PipeJamGameScene.maxTutorialLevelCompleted;
-
-				if(currentLevelNumber >= levels.length)
 				{
-					Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
-					return;
+					//get the next level to show, set the levelID, and currentLevelNumber
+					var obj:Object = LoginHelper.getLoginHelper().levelObject;
+					obj.levelId = tutorialController.getNextUnplayedTutorial();
+					
+					currentLevelNumber = 0;
+					for each(var level:Level in levels)
+					{
+						if(level.m_levelQID == obj.levelId)
+							break;
+						
+						currentLevelNumber++;
+					}
+					
 				}
 			}
 			else
@@ -486,7 +604,7 @@ package scenes.game.display
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber]);
+					selectLevel(levels[currentLevelNumber], currentLevelNumber == prevLevelNumber);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
@@ -582,14 +700,20 @@ package scenes.game.display
 						break;
 					}
 					case 72: //'h' for hide
-					if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
-						active_level.toggleUneditableStrings();
-					break;
+						if ((this.active_level != null) && !PipeJam3.RELEASE_BUILD)
+							active_level.toggleUneditableStrings();
+						break;
 					case 76: //'l' for copy layout
 						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
 						{
 							active_level.updateLayoutXML(this);
 							System.setClipboard(active_level.m_levelLayoutXMLWrapper.toString());
+						}
+						break;
+					case 66: //'b' for load Best scoring config
+						if(this.active_level != null)// && !PipeJam3.RELEASE_BUILD)
+						{
+							active_level.loadBestScoringConfiguration();
 						}
 						break;
 					case 67: //'c' for copy constraints
@@ -614,8 +738,6 @@ package scenes.game.display
 		{
 			return edgeSetGraphViewPanel.getThumbnail(_maxwidth, _maxheight);
 		}
-		
-		
 		
 		protected function handleUndoRedoEvent(event:UndoEvent, isUndo:Boolean):void
 		{
@@ -667,17 +789,44 @@ package scenes.game.display
 				active_level.dispose();
 			}
 			
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
+			
 			active_level = newLevel;
+			
+			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
+			
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
+			newLevel.updateScore();
+			
+			var startTime:Number = new Date().getTime();
+			if (active_level.getTargetScore() == int.MAX_VALUE) {
+				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
+				active_level.setTargetScore(newTarget);
+				if(LoginHelper.getLoginHelper().levelObject != null)
+					LoginHelper.getLoginHelper().levelObject.targetScore = newTarget;
+				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
+				active_level.updateScore();
+			}
+			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
+			active_level.resetBestScore();
+			
 			gameControlPanel.newLevelSelected(newLevel);
-		//	newLevel.setConstraints();
-		//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
+			//	newLevel.setConstraints();
+			//	m_simulator.updateOnBoxSizeChange(null, newLevel.level_name);
 		}
 		
 		private function onRemovedFromStage():void
 		{
-			AudioManager.getInstance().audioDriver().reset();
+			AudioManager.getInstance().reset();
+			
+			if (m_activeToolTip) {
+				m_activeToolTip.removeFromParent(true);
+				m_activeToolTip = null;
+			}
 			
 			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
@@ -686,18 +835,19 @@ package scenes.game.display
 			
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SUBMIT_LEVEL, onLevelUploadSuccess);
-			removeEventListener(MenuEvent.SAVE_LEVEL, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
+			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			
 			removeEventListener(MenuEvent.SET_NEW_LAYOUT, setNewLayout);	
 			removeEventListener(UndoEvent.UNDO_EVENT, saveEvent);
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			removeEventListener(MenuEvent.RECENTER, onRecenter);
-			
+			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
+			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
 			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			
@@ -743,5 +893,38 @@ package scenes.game.display
 			else
 				return false;
 		}
+		
+		
+		private function onToolTipAdded(evt:ToolTipEvent):void
+		{
+			if (evt.text && evt.text.length && evt.component && active_level && !m_activeToolTip) {
+				function pointAt(lev:Level):DisplayObject {
+					return evt.component;
+				}
+				var pointFrom:String = NineSliceBatch.TOP_LEFT;
+				var onTop:Boolean = evt.point.y < 80;
+				var onLeft:Boolean = evt.point.x < 80;
+				if (onTop && onLeft) {
+					// If in top left corner, move to bottom right
+					pointFrom = NineSliceBatch.BOTTOM_RIGHT;
+				} else if (onLeft) {
+					// If on left, move to top right
+					pointFrom = NineSliceBatch.TOP_RIGHT;
+				} else if (onTop) {
+					// If on top, move to bottom left
+					pointFrom = NineSliceBatch.BOTTOM_LEFT;
+				}
+				m_activeToolTip = new ToolTipText(evt.text, active_level, false, pointAt, pointFrom);
+				if (evt.point) m_activeToolTip.setGlobalToPoint(evt.point.clone());
+				addChild(m_activeToolTip);
+			}
+		}
+		
+		private function onToolTipCleared(evt:ToolTipEvent):void
+		{
+			if (m_activeToolTip) m_activeToolTip.removeFromParent(true);
+			m_activeToolTip = null;
+		}
+		
 	}
 }
