@@ -277,7 +277,6 @@ package display
 			totalNewScrollDistance = XMath.clamp(totalNewScrollDistance, 0, 1);
 			
 			buttonPane.y = -(buttonPane.height-initialHeight)*totalNewScrollDistance;
-			trace(totalNewScrollDistance, buttonPane.y);
 			thumb.setThumbPercent(totalNewScrollDistance*100);
 		}
 		

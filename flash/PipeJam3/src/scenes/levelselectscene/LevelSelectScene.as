@@ -161,6 +161,7 @@ package scenes.levelselectscene
 		protected  override function removedFromStage(event:Event):void
 		{
 			removeEventListener(Event.TRIGGERED, updateSelectedLevelInfo);
+			Starling.current.nativeStage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
 		public function initialize():void
@@ -297,7 +298,7 @@ package scenes.levelselectscene
 		protected function onMouseWheel(event:MouseEvent):void
 		{
 			var delta:Number = event.delta;
-			currentVisibleListBox.scrollPanel(delta);
+			currentVisibleListBox.scrollPanel(-delta);
 		}
 		
 		private function onCancelButtonTriggered(e:Event):void
@@ -305,7 +306,6 @@ package scenes.levelselectscene
 			loginHelper.refuseLevels();
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
-			
 		}
 		
 		private function onSelectButtonTriggered(ev:Event):void

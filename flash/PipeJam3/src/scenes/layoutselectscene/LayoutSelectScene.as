@@ -102,7 +102,7 @@ package scenes.layoutselectscene
 			var buttonHeight:Number = 25;
 			var buttonY:Number = 30;
 			
-			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Layout", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0x0077FF);
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Select Layout", AssetsFont.FONT_UBUNTU, 120, 30, 24, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
 			label.x = (levelSelectWidth - label.width)/2 + levelSelectBackground.x;
@@ -141,7 +141,7 @@ package scenes.layoutselectscene
 			levelSelectInfoPanel.y = 10;
 			addChild(levelSelectInfoPanel);
 			
-			infoLabel = TextFactory.getInstance().createTextField("Layout Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0x0077FF);
+			infoLabel = TextFactory.getInstance().createTextField("Layout Info", AssetsFont.FONT_UBUNTU, 80, 24, 18, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(infoLabel, 1, 1);
 			addChild(infoLabel);
 			infoLabel.x = (levelSelectInfoWidth - infoLabel.width)/2 + levelSelectInfoPanel.x;
@@ -187,7 +187,7 @@ package scenes.layoutselectscene
 				removeChild(nameText);
 				if(currentSelectedLayout.hasOwnProperty("name"))
 				{
-					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLayout.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0x0077FF);
+					nameText = TextFactory.getInstance().createTextField("Name: " + currentSelectedLayout.name, AssetsFont.FONT_UBUNTU, 140, 18, 12, 0xFFFFFF);
 					TextFactory.getInstance().updateAlign(nameText, 0, 1);
 					addChild(nameText);
 					nameText.x = levelSelectInfoPanel.x+ 10;
@@ -204,7 +204,7 @@ package scenes.layoutselectscene
 				{
 					if(currentSelectedLayout.description.length > 0)
 					{
-						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0x0077FF, true);
+						descriptionText = TextFactory.getInstance().createTextField("Description:\r\t" + currentSelectedLayout.description, AssetsFont.FONT_UBUNTU, 140, 60, 12, 0xFFFFFF, true);
 						TextFactory.getInstance().updateAlign(descriptionText, 0, 1);
 						addChild(descriptionText);
 						descriptionText.x = levelSelectInfoPanel.x+ 10;
