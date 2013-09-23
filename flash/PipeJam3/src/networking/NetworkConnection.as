@@ -290,10 +290,10 @@ package networking
 			
 			var urlRequest:URLRequest;
 			var rand:String = "";
-			/* //this might be needed as it seems IE caches all requests, so things don't update properly 
+			 //IE caches all requests, so things don't update properly without this
 			if(request.indexOf('&') != -1)
-				rand = "&rand="+String(Math.random());
-			*/
+				rand = "&rand="+String(Math.random()*1000);
+			
 			if(specificURL != null)
 				urlRequest = new URLRequest(specificURL+request+rand);
 			else
