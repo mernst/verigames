@@ -20,9 +20,12 @@ package scenes.levelselectscene
 	import scenes.Scene;
 	import scenes.game.PipeJamGameScene;
 	
+	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.events.Event;
+	import events.MouseWheelEvent;
+	import flash.events.MouseEvent;
 	
 	public class LevelSelectScene extends Scene
 	{		
@@ -184,7 +187,7 @@ package scenes.levelselectscene
 				onNewButtonTriggered(null);
 			
 			addEventListener(Event.TRIGGERED, updateSelectedLevelInfo);
-			
+			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, false);
 		}
 		
@@ -234,7 +237,7 @@ package scenes.levelselectscene
 		{
 			var nextTextBoxYPos:Number = tutorialListBox.y;
 			if(currentVisibleListBox.currentSelection && currentVisibleListBox.currentSelection.data)
-				{
+			{
 				var currentSelectedLevel:Object = currentVisibleListBox.currentSelection.data;
 				
 				removeChild(nameText);
@@ -286,7 +289,15 @@ package scenes.levelselectscene
 						nextTextBoxYPos += 20;
 					}
 				}
+				if(e && e.data && e.data.tapCount == 2)
+					onSelectButtonTriggered(e);
 			}
+		}
+		
+		protected function onMouseWheel(event:MouseEvent):void
+		{
+			var delta:Number = event.delta;
+			currentVisibleListBox.scrollPanel(delta);
 		}
 		
 		private function onCancelButtonTriggered(e:Event):void

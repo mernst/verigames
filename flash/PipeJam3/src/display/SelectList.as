@@ -261,8 +261,16 @@ package display
 			}
 		}
 		
-		private function scrollPanel(percentScrolled:Number):void
+		public function scrollPanel(percentScrolled:Number):void
 		{
+			//remove false events
+			if(thumb.enabled == false)
+				return;
+			else if(percentScrolled > 0 && thumb.y >= thumbTrackBottom)
+				return;
+			else if(percentScrolled < 0 && thumb.y <= thumbTrackTop)
+				return;
+			
 			var currentPercent:Number = buttonPane.y/-(buttonPane.height-initialHeight);
 			percentScrolled = percentScrolled*scrollMultiplier;
 			var totalNewScrollDistance:Number = currentPercent+percentScrolled/100;
@@ -401,7 +409,7 @@ package display
 		
 		private function onLevelButtonTouched(event:Event):void
 		{
-			if(currentSelection)
+			if(currentSelection != event.target)
 				currentSelection.setStatePosition(BasicButton.UP_STATE);
 			currentSelection = event.target as BasicButton;
 			currentSelection.setStatePosition(BasicButton.DOWN_STATE);
