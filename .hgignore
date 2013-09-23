@@ -26,6 +26,8 @@ syntax: glob
 .#*
 .gradle
 *.pyc
+*dotfiles/
+*.swp
 
 
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/.settings/
