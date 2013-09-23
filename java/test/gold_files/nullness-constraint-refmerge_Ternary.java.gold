@@ -47,10 +47,6 @@ class Ternary {
     }
 }
 
-subtype constraint: Literal(STRING_LITERAL, "")  <:  CombVariable #5
-
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #5
-
 inequality constraint at method Ternary#test(Z):V constraint position: Variable 3 at method Ternary#test(Z):V parameter 0; tree boolean != Constant(@nninf.quals.Nullable)
 
 subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Ternary#test(Z):V local variable a(0); tree String

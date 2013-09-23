@@ -13,12 +13,12 @@
    </edge-set>
    <edge-set id="Ternary2">
     <edgeref id="e3" />
-    <edgeref id="e8" />
+    <edgeref id="e7" />
     <edgeref id="e12" />
    </edge-set>
    <edge-set id="Ternary3">
     <edgeref id="e4" />
-    <edgeref id="e7" />
+    <edgeref id="e9" />
     <edgeref id="e13" />
    </edge-set>
    <edge-set id="Ternary4">
@@ -27,8 +27,8 @@
    <edge-set id="Ternary11">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="Ternary16">
-    <edgeref id="e9" />
+   <edge-set id="Ternary15">
+    <edgeref id="e8" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -274,7 +274,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e8" num="output" />
+      <port edge="e7" num="output" />
      </output>
      <layout>
       </layout>
@@ -292,25 +292,15 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e7" num="output" />
+      <port edge="e9" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n16" kind="CONNECT">
+    <node id="n16" kind="MERGE">
      <input>
-      <port edge="e7" num="input" />
-     </input>
-     <output>
-      <port edge="e13" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n17" kind="MERGE">
-     <input>
-      <port edge="e8" num="left" />
-      <port edge="e9" num="right" />
+      <port edge="e7" num="left" />
+      <port edge="e8" num="right" />
      </input>
      <output>
       <port edge="e12" num="output" />
@@ -318,10 +308,20 @@
      <layout>
       </layout>
     </node>
-    <node id="n18" kind="START_LARGE_BALL">
+    <node id="n17" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e9" num="output" />
+      <port edge="e8" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n18" kind="CONNECT">
+     <input>
+      <port edge="e9" num="input" />
+     </input>
+     <output>
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
@@ -394,30 +394,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()" editable="false" id="e7" pinch="false" variableID="4" width="wide">
-     <from>
-      <noderef id="n11" port="output" />
-     </from>
-     <to>
-      <noderef id="n16" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e8" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e7" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
      <to>
-      <noderef id="n17" port="left" />
+      <noderef id="n16" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -436,12 +418,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e9" pinch="false" variableID="-2" width="wide">
+    <edge buzzsaw="false" description="null" editable="false" id="e8" pinch="false" variableID="-2" width="wide">
      <from>
-      <noderef id="n18" port="output" />
+      <noderef id="n17" port="output" />
      </from>
      <to>
-      <noderef id="n17" port="right" />
+      <noderef id="n16" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -450,6 +432,24 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()" editable="false" id="e9" pinch="false" variableID="4" width="wide">
+     <from>
+      <noderef id="n11" port="output" />
+     </from>
+     <to>
+      <noderef id="n18" port="input" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -480,7 +480,7 @@
     </edge>
     <edge buzzsaw="false" description="Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e12" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n17" port="output" />
+      <noderef id="n16" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam0" />
@@ -498,7 +498,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method Ternary#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()" editable="false" id="e13" pinch="false" variableID="4" width="wide">
      <from>
-      <noderef id="n16" port="output" />
+      <noderef id="n18" port="output" />
      </from>
      <to>
       <noderef id="n19" port="input" />
