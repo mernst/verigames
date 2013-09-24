@@ -1,0 +1,59 @@
+Constraints:
+equality constraint: Variable 3 at method Ternary#test(Z):V parameter 0; tree boolean = Constant(@nninf.quals.NonNull)
+
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(boolean b) {
+        String a = b ? "" : null;
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 1 at method Ternary#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(boolean b) {
+        String a = b ? "" : null;
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 2 at method Ternary#test(Z):V receiver; tree <<missing tree>> within 
+void test(boolean b) {
+    String a = b ? "" : null;
+    a.toString();
+}Atm: @VarAnnot(2) Ternary  <:  Variable 0 at class Ternary extends type; tree <<missing tree>> within 
+class Ternary {
+    
+    Ternary() {
+        super();
+    }
+    
+    void test(boolean b) {
+        String a = b ? "" : null;
+        a.toString();
+    }
+}
+
+subtype constraint: Literal(STRING_LITERAL, "")  <:  CombVariable #5
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #5
+
+inequality constraint at method Ternary#test(Z):V constraint position: Variable 3 at method Ternary#test(Z):V parameter 0; tree boolean != Constant(@nninf.quals.Nullable)
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Ternary#test(Z):V local variable a(0); tree String
+
+inequality constraint at method Ternary#test(Z):V constraint position: Variable 4 at method Ternary#test(Z):V local variable a(0); tree String != Constant(@nninf.quals.Nullable)
+

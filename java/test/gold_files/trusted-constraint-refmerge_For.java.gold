@@ -1,0 +1,71 @@
+Constraints:
+equality constraint: Variable 3 at method For#test(ILjava/lang/String;):V parameter 0; tree int = Constant(@trusted.quals.Untrusted)
+
+subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class For extends type; tree <<missing tree>> within 
+class For {
+    
+    For() {
+        super();
+    }
+    
+    void test(int i, String b) {
+        String a = "";
+        for (; ; i++) {
+            a.toString();
+            a = b;
+        }
+    }
+}
+
+subtype constraint: Variable 1 at method For#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class For extends type; tree <<missing tree>> within 
+class For {
+    
+    For() {
+        super();
+    }
+    
+    void test(int i, String b) {
+        String a = "";
+        for (; ; i++) {
+            a.toString();
+            a = b;
+        }
+    }
+}
+
+subtype constraint: Variable 2 at method For#test(ILjava/lang/String;):V receiver; tree <<missing tree>> within 
+void test(int i, String b) {
+    String a = "";
+    for (; ; i++) {
+        a.toString();
+        a = b;
+    }
+}Atm: @VarAnnot(2) For  <:  Variable 0 at class For extends type; tree <<missing tree>> within 
+class For {
+    
+    For() {
+        super();
+    }
+    
+    void test(int i, String b) {
+        String a = "";
+        for (; ; i++) {
+            a.toString();
+            a = b;
+        }
+    }
+}
+
+subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String
+
+equality constraint: RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()) = Variable 4 at method For#test(ILjava/lang/String;):V parameter 1; tree String
+
+subtype constraint: Variable 4 at method For#test(ILjava/lang/String;):V parameter 1; tree String  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String
+
+subtype constraint: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String  <:  RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()
+

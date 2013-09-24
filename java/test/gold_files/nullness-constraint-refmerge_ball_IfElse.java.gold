@@ -1,0 +1,93 @@
+Constraints:
+subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class IfElse extends type; tree <<missing tree>> within 
+class IfElse {
+    
+    IfElse() {
+        super();
+    }
+    
+    void test() {
+        String a = null;
+        if (a == null) {
+            a = "";
+        } else {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 1 at method IfElse#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 0 at class IfElse extends type; tree <<missing tree>> within 
+class IfElse {
+    
+    IfElse() {
+        super();
+    }
+    
+    void test() {
+        String a = null;
+        if (a == null) {
+            a = "";
+        } else {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+subtype constraint: Variable 2 at method IfElse#test():V receiver; tree <<missing tree>> within 
+void test() {
+    String a = null;
+    if (a == null) {
+        a = "";
+    } else {
+        a = "";
+    }
+    a.toString();
+}Atm: @VarAnnot(2) IfElse  <:  Variable 0 at class IfElse extends type; tree <<missing tree>> within 
+class IfElse {
+    
+    IfElse() {
+        super();
+    }
+    
+    void test() {
+        String a = null;
+        if (a == null) {
+            a = "";
+        } else {
+            a = "";
+        }
+        a.toString();
+    }
+}
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String
+
+ballsizetest constraint: varVariable 3 at method IfElse#test():V local variable a(0); tree Stringsuper: RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set() subtype: RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()
+
+inequality constraint at RefinementVP in method IfElse#test():V: RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set() != Constant(@nninf.quals.Nullable)
+
+equality constraint: RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "")
+
+subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String
+
+equality constraint: RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "")
+
+subtype constraint: Variable 3 at method IfElse#test():V local variable a(0); tree String  <:  CombVariable #9
+
+subtype constraint: Literal(NULL_LITERAL, "null")  <:  CombVariable #9
+
+inequality constraint at method IfElse#test():V constraint position: Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable)
+
+subtype constraint: RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()
+
+subtype constraint: RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String
+
+inequality constraint at method IfElse#test():V constraint position: RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable)
+
