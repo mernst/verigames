@@ -24,7 +24,9 @@ package
 	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.*;
 	import scenes.levelselectscene.LevelSelectScene;
-	
+	import display.GameObjectBatch;
+	import display.NineSliceBatch;
+
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -56,6 +58,9 @@ package
 		
 		private var m_musicButton:MusicButton;
 		private var m_sfxButton:SoundButton;
+		
+		private var m_gameObjectBatch:GameObjectBatch;
+
 		
 		public function PipeJamGame()
 		{
@@ -96,6 +101,10 @@ package
 			
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
+			
+			m_gameObjectBatch = new GameObjectBatch;
+			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
+			
 			
 			// create and show menu screen
 			if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)

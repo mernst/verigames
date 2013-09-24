@@ -175,6 +175,8 @@ package scenes.game.display
 		
 		protected function initialize():void
 		{
+			this.alpha = .999;
+
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			selectedComponents = new Vector.<GameComponent>;
 			
@@ -561,6 +563,7 @@ package scenes.game.display
 			}
 			
 			refreshTroublePoints();
+			flatten();
 		}
 		
 		public function start():void
@@ -1710,9 +1713,13 @@ package scenes.game.display
 		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
-			this.m_nodesContainer.flatten();
-			this.m_jointsContainer.flatten();
-			this.m_edgesContainer.removeChildren();
+			if(false) //don't flatten, as texture can be too big
+			{
+				this.m_nodesContainer.flatten();
+				this.m_jointsContainer.flatten();
+			}
+			//doesn't have texture size problem on board I tried, but I don't know why not
+	//		this.m_edgesContainer.flatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean

@@ -83,6 +83,8 @@ package scenes.game.components
 		
 		public function GridViewPanel(world:World)
 		{
+			this.alpha = .999;
+
 			m_world = world;
 			currentMode = NORMAL_MODE;
 			

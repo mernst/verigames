@@ -2,10 +2,11 @@ package display
 {
 	import assets.AssetInterface;
 	import starling.display.Image;
-	import starling.display.QuadBatch;
 	import starling.textures.TextureAtlas;
+	import starling.display.Sprite;
+	import scenes.BaseComponent;
 	
-	public class NineSliceBatch extends QuadBatch 
+	public class NineSliceBatch extends Sprite 
 	{
 		public static const TOP_LEFT:String = "TopLeft";
 		public static const TOP:String = "Top";
@@ -37,6 +38,9 @@ package display
 		private var mUseTopLeft:Boolean = true,    mUseTop:Boolean = true,    mUseTopRight:Boolean = true;
         private var mUseLeft:Boolean = true,       mUseCenter:Boolean = true, mUseRight:Boolean = true;
         private var mUseBottomLeft:Boolean = true, mUseBottom:Boolean = true, mUseBottomRight:Boolean = true;
+		
+		/* created by World and set before first nineslice created. */
+		static public var gameObjectBatch:GameObjectBatch;
 		
 		public function NineSliceBatch(_width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                               _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
@@ -141,7 +145,6 @@ package display
 		
 		private function addImages():void
 		{
-			this.reset();
 			if (mUseTopLeft) addImage(mTopLeft);
 			if (mUseTop) addImage(mTop);
 			if (mUseTopRight) addImage(mTopRight);
@@ -151,6 +154,12 @@ package display
 			if (mUseBottomLeft) addImage(mBottomLeft);
 			if (mUseBottom) addImage(mBottom);
 			if (mUseRight) addImage(mBottomRight);
+		}
+		
+		private function addImage(image:Image):void
+		{
+			this.addChild(image);
+			gameObjectBatch.addImage(image);
 		}
 	}
 

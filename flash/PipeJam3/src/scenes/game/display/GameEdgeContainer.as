@@ -1368,11 +1368,6 @@ package scenes.game.display
 					}
 				}
 			}
-			flatten();
-		}
-		
-		override public function flatten():void {
-			return;
 		}
 		
 		override public function setProps(props:PropDictionary):void
