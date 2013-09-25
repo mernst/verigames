@@ -216,7 +216,7 @@ package scenes.game.display
 		
 		public function draw():void
 		{
-			unflatten();
+			//unflatten();
 			
 			var singleProngToDoubleOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
@@ -272,7 +272,7 @@ package scenes.game.display
 				}
 			}
 			
-			flatten();
+			//flatten();
 		}
 		
 		override public function setIsWide(b:Boolean):void
