@@ -2,9 +2,12 @@ package display
 {
 	import assets.AssetInterface;
 	import assets.AssetsFont;
+	
 	import display.NineSliceBatch;
+	
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -13,6 +16,7 @@ package display
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
+	
 	import utils.XSprite;
 	
 	public class TextBubble extends Sprite
@@ -236,6 +240,35 @@ package display
 				m_tutorialArrow.rotation = Math.atan2(-offset.y, -offset.x);
 				m_tutorialArrow.x = -offset.x * (width / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
 				m_tutorialArrow.y = -offset.y * (height / 2 - m_paddingSz + arrowPos + m_arrowTextSeparationAdjustment);
+			} else if (m_pointFrom != null) {
+				var newX:Number = Constants.GameWidth / 2;
+				var newY:Number = height / 2 - m_paddingSz + m_inset;
+				switch (m_pointFrom) {
+					case NineSliceBatch.CENTER:
+						//newY = ;
+						break;
+					case NineSliceBatch.TOP_LEFT:
+						newX = width / 2 - m_paddingSz + m_inset;
+						break;
+					case NineSliceBatch.TOP_RIGHT:
+						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						break;
+					case NineSliceBatch.LEFT:
+						newX = width / 2 - m_paddingSz + m_inset;
+						//newY = ;
+						break;
+					case NineSliceBatch.RIGHT:
+						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						//newY = ;
+						break;
+					case NineSliceBatch.BOTTOM:
+					case NineSliceBatch.BOTTOM_LEFT:
+					case NineSliceBatch.BOTTOM_RIGHT:
+						//newY = ;
+						break;
+				}
+				x = newX;
+				y = newY;
 			} else {
 				x = Constants.GameWidth / 2;
 				y = height / 2 - m_paddingSz + m_inset;
