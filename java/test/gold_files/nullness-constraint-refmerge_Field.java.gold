@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Field extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Field extends type; tree <<missing tree>> within 
 class Field {
     
     Field() {
@@ -11,9 +11,9 @@ class Field {
     void test() {
         String two = f1;
     }
-}
+} )
 
-subtype constraint: Variable 3 at method Field#<init>():V return type; tree 
+SubtypeConstraint( Variable 3 at method Field#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class Field extends type; tree <<missing tree>> within 
@@ -28,9 +28,9 @@ class Field {
     void test() {
         String two = f1;
     }
-}
+} )
 
-subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 1 at class Field static field f1; tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 1 at class Field static field f1; tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class Field static field f2 constraint position; 
@@ -44,9 +44,9 @@ args: (  );
 result: List(Variable 1 at class Field static field f1; tree String); 
 )
 
-subtype constraint: Variable 1 at class Field static field f1; tree String  <:  Variable 2 at class Field static field f2; tree String
+SubtypeConstraint( Variable 1 at class Field static field f1; tree String  <:  Variable 2 at class Field static field f2; tree String )
 
-subtype constraint: Variable 4 at method Field#test():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 4 at method Field#test():V receiver; tree <<missing tree>> within 
 void test() {
     String two = f1;
 }Atm: @VarAnnot(4) Field  <:  Variable 0 at class Field extends type; tree <<missing tree>> within 
@@ -61,7 +61,7 @@ class Field {
     void test() {
         String two = f1;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Field#test():V constraint position; 
@@ -75,5 +75,5 @@ args: (  );
 result: List(Variable 1 at class Field static field f1; tree String); 
 )
 
-subtype constraint: Variable 1 at class Field static field f1; tree String  <:  Variable 5 at method Field#test():V local variable two(0); tree String
+SubtypeConstraint( Variable 1 at class Field static field f1; tree String  <:  Variable 5 at method Field#test():V local variable two(0); tree String )
 

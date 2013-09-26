@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class TryCatchParam extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class TryCatchParam extends type; tree <<missing tree>> within 
 class TryCatchParam {
     
     TryCatchParam() {
@@ -18,9 +18,9 @@ class TryCatchParam {
         }
         a.toString();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method TryCatchParam#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method TryCatchParam#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class TryCatchParam extends type; tree <<missing tree>> within 
@@ -42,9 +42,9 @@ class TryCatchParam {
         }
         a.toString();
     }
-}
+} )
 
-subtype constraint: Variable 2 at method TryCatchParam#test(Ljava/lang/String;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method TryCatchParam#test(Ljava/lang/String;):V receiver; tree <<missing tree>> within 
 void test(String a) {
     Exception e = new Exception();
     try {
@@ -75,29 +75,29 @@ class TryCatchParam {
         }
         a.toString();
     }
-}
+} )
 
-inequality constraint at method TryCatchParam#test(Ljava/lang/String;):V constraint position: Variable 5 at method TryCatchParam#test(Ljava/lang/String;):V creation 0; tree Exception != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method TryCatchParam#test(Ljava/lang/String;):V constraint position, Variable 5 at method TryCatchParam#test(Ljava/lang/String;):V creation 0; tree Exception != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 5 at method TryCatchParam#test(Ljava/lang/String;):V creation 0; tree Exception  <:  Variable 4 at method TryCatchParam#test(Ljava/lang/String;):V local variable e(0); tree Exception
+SubtypeConstraint( Variable 5 at method TryCatchParam#test(Ljava/lang/String;):V creation 0; tree Exception  <:  Variable 4 at method TryCatchParam#test(Ljava/lang/String;):V local variable e(0); tree Exception )
 
-inequality constraint at method TryCatchParam#test(Ljava/lang/String;):V constraint position: Variable 4 at method TryCatchParam#test(Ljava/lang/String;):V local variable e(0); tree Exception != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method TryCatchParam#test(Ljava/lang/String;):V constraint position, Variable 4 at method TryCatchParam#test(Ljava/lang/String;):V local variable e(0); tree Exception != Constant(@nninf.quals.Nullable) )
 
-equality constraint: RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "")
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
 
-subtype constraint: Literal(STRING_LITERAL, "")  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-equality constraint: RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "")
+EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
 
-subtype constraint: RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) )
 
-subtype constraint: RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) )
 
-subtype constraint: RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-inequality constraint at method TryCatchParam#test(Ljava/lang/String;):V constraint position: RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method TryCatchParam#test(Ljava/lang/String;):V constraint position, RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()
+SubtypeConstraint( Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
 
-subtype constraint: RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
 
