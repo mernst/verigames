@@ -262,6 +262,8 @@ package scenes.game.display
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case END_TUTORIAL:
 					return true;
 			}
@@ -289,6 +291,8 @@ package scenes.game.display
 					return true;
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return false;
@@ -311,6 +315,8 @@ package scenes.game.display
 				case PASSAGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return 1.25;
+				case SKILLS_A_TUTORIAL:
+					return 1.35;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
 					return 1.1;
@@ -322,6 +328,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
 			}
