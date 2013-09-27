@@ -6,9 +6,13 @@ package
 	
 	import cgs.Cache.Cache;
 	
+	import display.GameObjectBatch;
 	import display.MusicButton;
+	import display.NineSliceBatch;
 	import display.PipeJamTheme;
 	import display.SoundButton;
+	
+	import events.MenuEvent;
 	
 	import feathers.themes.AeonDesktopTheme;
 	
@@ -18,22 +22,20 @@ package
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	
+	import networking.*;
+	
 	import scenes.*;
 	import scenes.game.*;
-	import networking.*;
+	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.*;
-	import scenes.levelselectscene.LevelSelectScene;
-	import display.GameObjectBatch;
-	import display.NineSliceBatch;
-
+	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	import events.MenuEvent;
 	import starling.text.TextField;
 	import starling.utils.VAlign;
 	
@@ -58,25 +60,15 @@ package
 		
 		private var m_gameObjectBatch:GameObjectBatch;
 		
-		/** this is the main holder of information about the level.
-		 * It should have these properties:
-		 * 		name - the file/level name
-		 * 		layoutName - the same as 'name', unless they loaded a different layout
-		 * 		layoutDescription
-		 * 		id
-		 * 		properties - an object containing such things as number of conflicts, visible nodes, etc.
-		 * 		score
-		 * 		
-		 * It might have these properties:
-		 * 		enjoymentRating
-		 * 		difficultyRating
-		 * */
+		/** this is the main holder of information about the level. */
 		public static var levelInfo:LevelInformation;
 
+		public static var m_pipeJamGame:PipeJamGame;
 		
 		public function PipeJamGame()
 		{
 			super();
+			m_pipeJamGame = this;
 			
 			// load general assets
 			prepareAssets();

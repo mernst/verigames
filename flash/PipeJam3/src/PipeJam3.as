@@ -11,18 +11,19 @@ package
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
+	import flash.external.ExternalInterface;
 	
 	import net.hires.debug.Stats;
 	
-	import networking.HTTPCookies;
-	import networking.LevelInformation;
-	import networking.PlayerValidation;
+	import networking.*;
+	
 	import scenes.splashscreen.SplashScreenScene;
 	
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import events.NavigationEvent;
 	
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
@@ -98,6 +99,8 @@ package
 			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
+			
+			ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 		}
 		
 		private function onContextCreated(event:flash.events.Event):void
@@ -130,9 +133,15 @@ package
 		}
 		
 		//call from JavaScript to load specific level
-		public function loadLevel(levelID:String):void
+		public function loadLevelFromObjectID(levelID:String):void
 		{
-			
+			GameFileHandler.loadLevelInfoFromObjectID(levelID, loadLevel);
+		}
+		
+		protected function loadLevel(result:int, objVector:Vector.<Object>):void
+		{
+			PipeJamGame.levelInfo = new LevelInformation(objVector[0]);		
+			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}
 	

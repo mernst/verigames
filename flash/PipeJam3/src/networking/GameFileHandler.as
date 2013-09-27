@@ -32,6 +32,7 @@ package networking
 		public static var CREATE_RA_LEVEL:int = 6;	
 		public static var SAVE_LEVEL:int = 7;
 		public static var GET_ALL_SAVED_LEVELS:int = 8;
+		public static var GET_SAVED_LEVEL:int = 15;
 		public static var DELETE_SAVED_LEVEL:int = 9;
 		public static var START_LEVEL:int = 10;
 		public static var STOP_LEVEL:int = 11;
@@ -50,7 +51,7 @@ package networking
 		static public var matchArrayObjects:Object = null;
 		static public var savedMatchArrayObjects:Vector.<Object> = null;
 		
-		static public var numLevels:int = 5;
+		static public var numLevels:int = 10;
 
 		protected var m_callback:Function;
 		protected var fzip:FZip;
@@ -63,6 +64,11 @@ package networking
 		public var m_levelCreated:Boolean = false;
 		public var m_levelSubmitted:Boolean = false;
 
+		static public function loadLevelInfoFromObjectID(id:String, callback:Function):void
+		{
+			var fileHandler:GameFileHandler = new GameFileHandler(callback);
+			fileHandler.sendMessage(GET_SAVED_LEVEL, fileHandler.defaultJSONCallback, null, id);
+		}
 		
 		static public function getFileByID(id:String, callback:Function):void
 		{
@@ -114,12 +120,14 @@ package networking
 		
 		static public function reportPlayerPerformance(score:String):void
 		{
+			PipeJamGame.levelInfo.performance = score;
 			var fileHandler:GameFileHandler = new GameFileHandler();
 			fileHandler.sendMessage(REPORT_PERFORMANCE, null, null, score);
 		}
 		
 		static public function reportPlayerPreference(score:String):void
 		{
+			PipeJamGame.levelInfo.preference = score;
 			var fileHandler:GameFileHandler = new GameFileHandler();
 			fileHandler.sendMessage(REPORT_PREFERENCE, null, null, score);
 		}
@@ -365,14 +373,6 @@ package networking
 			m_callback(result);
 		}
 		
-		public function onLevelSubmitted(result:int, e:flash.events.Event):void
-		{
-			if(m_saveType == MenuEvent.SAVE_LEVEL)
-				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SAVED));
-			else
-				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
-		}
-		
 
 		public function onRALevelCreated(result:int, e:flash.events.Event):void
 		{
@@ -386,6 +386,14 @@ package networking
 		public function saveLevelWithID(levelID:String):void
 		{
 			sendMessage(SAVE_LEVEL, onLevelSubmitted, levelID, m_levelFilesString);
+		}
+		
+		public function onLevelSubmitted(result:int, e:flash.events.Event):void
+		{
+			if(m_saveType == MenuEvent.SAVE_LEVEL)
+				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SAVED));
+			else
+				World.m_world.dispatchEvent(new MenuEvent(MenuEvent.LEVEL_SUBMITTED));
 		}
 		
 		public function onDBLevelCreated():void
@@ -449,6 +457,10 @@ package networking
 					break;
 				case GET_ALL_SAVED_LEVELS:
 					request = "/level/get/saved/"+PlayerValidation.playerID+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case GET_SAVED_LEVEL:
+					request = "/level/get/saved/0/"+data+"&method=DATABASE";
 					method = URLRequestMethod.POST; 
 					break;
 				case SAVE_LAYOUT:
