@@ -69,7 +69,7 @@
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-	//		this.blendMode = BlendMode.NONE;
+			this.blendMode = BlendMode.NONE;
 			m_isDirty = true;
 		}
 		
@@ -225,9 +225,9 @@
 				addChild(plug);
 			}
 			if (plug || socket) {
-		//		this.blendMode = BlendMode.NORMAL;
+				this.blendMode = BlendMode.NORMAL;
 			} else {
-		//		this.blendMode = BlendMode.NONE;
+				this.blendMode = BlendMode.NONE;
 			}
 		}
 		

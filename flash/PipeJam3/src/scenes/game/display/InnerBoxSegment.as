@@ -53,7 +53,7 @@ package scenes.game.display
 			isEnd = _isEnd;
 			m_plugIsWide = plugIsWide;
 			m_plugIsEditable = plugIsEditable;
-	//		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
+			edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 			if (createInnerCircle) {
@@ -63,7 +63,8 @@ package scenes.game.display
 			m_plugContainer = new Sprite();
 			
 			draw();
-	//		addChild(edgeSegmentOutline);
+			if(edgeSegmentOutline)
+				addChild(edgeSegmentOutline);
 			addChild(edgeSegment);
 			if (innerCircleJoint) {
 				addChild(innerCircleJoint);
