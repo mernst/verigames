@@ -34,7 +34,7 @@ package scenes.game.display
 	import graph.Port;
 	import graph.PropDictionary;
 	
-	import networking.LoginHelper;
+	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
 	
@@ -53,6 +53,7 @@ package scenes.game.display
 	
 	import utils.Base64Encoder;
 	import utils.XString;
+	import networking.LevelInformation;
 	
 	/**
 	 * Level all game components - boxes, lines and joints
@@ -650,15 +651,15 @@ package scenes.game.display
 		{
 			updateLevelXML();
 			
-			var levelObject:Object = LoginHelper.getLoginHelper().levelObject;
+			var levelObject:LevelInformation = PipeJamGame.levelInfo;
 			if(levelObject != null)
 			{
 				m_levelLayoutXMLWrapper.@id = event.data.name;
-				levelObject.layoutName = event.data.name;
-				levelObject.layoutDescription = event.data.description;
+				levelObject.m_layoutName = event.data.name;
+				levelObject.m_layoutDescription = event.data.description;
 				var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
 				var layoutZipEncodedString:String = encodeBytes(layoutZip);
-				LoginHelper.getLoginHelper().saveLayoutFile(layoutSaved, layoutZipEncodedString);	
+				GameFileHandler.saveLayoutFile(layoutSaved, layoutZipEncodedString);	
 			}
 		}
 		

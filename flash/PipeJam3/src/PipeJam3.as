@@ -15,7 +15,7 @@ package
 	import net.hires.debug.Stats;
 	
 	import networking.HTTPCookies;
-	import networking.LoginHelper;
+	import networking.LevelInformation;
 	import networking.PlayerValidation;
 	import scenes.splashscreen.SplashScreenScene;
 	
@@ -31,10 +31,12 @@ package
 	
 	public class PipeJam3 extends flash.display.Sprite 
 	{
+		static public var GAME_ID:int = 1;
+
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = false;
+		public static var RELEASE_BUILD:Boolean = true;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
@@ -125,6 +127,12 @@ package
 			
 			// Set the updated view port
 			Starling.current.viewPort = viewPort;
+		}
+		
+		//call from JavaScript to load specific level
+		public function loadLevel(levelID:String):void
+		{
+			
 		}
 	}
 	

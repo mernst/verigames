@@ -42,8 +42,6 @@ package scenes.layoutselectscene
 		protected var levelSelectBackground:NineSliceBatch;
 		protected var levelSelectInfoPanel:NineSliceBatch;
 		
-		protected var loginHelper:LoginHelper;
-		
 		protected var levelList:List = null;
 
 		
@@ -74,9 +72,7 @@ package scenes.layoutselectscene
 		public function LayoutSelectScene(game:PipeJamGame = null)
 		{
 			super(game);
-			
-			loginHelper = LoginHelper.getLoginHelper();
-			
+
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
@@ -221,7 +217,7 @@ package scenes.layoutselectscene
 					addChild(thumbnailViewer);
 					
 					if(!currentSelectedLayout.hasOwnProperty("layoutFile"))
-						LoginHelper.getLoginHelper().getNewLayout(currentSelectedLayout.layoutID, getNewLayout);
+						GameFileHandler.getFileByID(currentSelectedLayout.layoutID, getNewLayout);
 					else
 						showThumbnail();
 				}
@@ -229,10 +225,9 @@ package scenes.layoutselectscene
 		}
 		
 		//get layout and display thumbnail. Also attach xml to object so I don't have to get again if choosen
-		private function getNewLayout(byteArray:ByteArray):void
+		private function getNewLayout(layoutFile:XML):void
 		{
 			//unpack xml, find correct object, attach to it, and if object == current selection, show thumb
-			var layoutFile:XML = new XML(byteArray);
 			var currentSelectedLayout:Object = currentVisibleListBox.currentSelection.data;	
 			
 			for each(var obj:Object in m_layouts)
@@ -273,7 +268,7 @@ package scenes.layoutselectscene
 		
 		private function setNewLayout(byteArray:ByteArray):void
 		{
-			var name:String = LoginHelper.getLoginHelper().levelObject.layoutName;
+			var name:String = PipeJamGame.levelInfo.m_layoutName;
 			var layoutFile:XML = new XML(byteArray);
 			var data:Object = new Object;
 			data.name = name;

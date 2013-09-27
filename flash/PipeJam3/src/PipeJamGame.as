@@ -46,10 +46,7 @@ package
 		
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
-		
-		/** list of all network connection objects spawned */
-		protected static var networkConnections:Vector.<NetworkConnection>;
-		
+				
 		public static var SEPARATE_FILES:int = 1;
 		public static var ALL_IN_ONE:int = 2;
 		
@@ -60,6 +57,21 @@ package
 		private var m_sfxButton:SoundButton;
 		
 		private var m_gameObjectBatch:GameObjectBatch;
+		
+		/** this is the main holder of information about the level.
+		 * It should have these properties:
+		 * 		name - the file/level name
+		 * 		layoutName - the same as 'name', unless they loaded a different layout
+		 * 		layoutDescription
+		 * 		id
+		 * 		properties - an object containing such things as number of conflicts, visible nodes, etc.
+		 * 		score
+		 * 		
+		 * It might have these properties:
+		 * 		enjoymentRating
+		 * 		difficultyRating
+		 * */
+		public static var levelInfo:LevelInformation;
 
 		
 		public function PipeJamGame()
@@ -181,23 +193,5 @@ package
 				}
 			}
 		}
-		
-		public static function addNetworkConnection(connection:NetworkConnection):void
-		{
-			if(networkConnections == null)
-				networkConnections = new Vector.<NetworkConnection>;
-			
-			networkConnections.push(connection);
-			
-			//clean up list some, if any of the earliest connections done
-			var frontNC:NetworkConnection = networkConnections[0];
-			while(frontNC && frontNC.done == true)
-			{
-				networkConnections.pop();
-				frontNC.dispose();
-				frontNC = networkConnections[0];
-			}
-		}
-		
 	}
 }

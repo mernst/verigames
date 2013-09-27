@@ -4,6 +4,7 @@ package networking
 	
 	import flash.events.Event;
 	import flash.utils.Dictionary;
+	import flash.net.URLRequestMethod;
 	
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
@@ -32,6 +33,9 @@ package networking
 		static public const tutorialConstraintsFileClass:Class;
 		static public const tutorialConstraintsXML:XML = XML(new tutorialConstraintsFileClass());
 
+		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
+		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
+
 		//used as a ordered array of order values containing all tutorial orders
 		protected var tutorialOrderedList:Vector.<Number>;
 		
@@ -56,7 +60,7 @@ package networking
 		
 		public function getTutorialsCompletedByPlayer():void
 		{
-			LoginHelper.getLoginHelper().sendMessage(LoginHelper.GET_COMPLETED_TUTORIAL_LEVELS, getTutorialsCompleted);
+			sendMessage(GET_COMPLETED_TUTORIAL_LEVELS, getTutorialsCompleted);
 		}
 		
 		protected function getTutorialsCompleted(result:int, completedTutorials:Vector.<Object>):void
@@ -75,9 +79,9 @@ package networking
 		{
 			if(PipeJam3.RELEASE_BUILD)
 			{
-				if (!LoginHelper.getLoginHelper().levelObject) return;
+				if (!PipeJamGame.levelInfo) return;
 				if (!completedTutorialList) completedTutorialList = new Dictionary();
-				var currentLevel:int = LoginHelper.getLoginHelper().levelObject.levelId;
+				var currentLevel:int = parseInt(PipeJamGame.levelInfo.m_levelId);
 				if(completedTutorialList[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
@@ -88,7 +92,7 @@ package networking
 		}
 		public function post():void
 		{
-			LoginHelper.getLoginHelper().sendMessage(LoginHelper.TUTORIAL_LEVEL_COMPLETE, postMessage, null);
+			sendMessage(TUTORIAL_LEVEL_COMPLETE, postMessage);
 		}
 		
 		protected function postMessage(result:int, e:Event):void
@@ -99,6 +103,7 @@ package networking
 		{
 			return (completedTutorialList && (completedTutorialList[tutorialQID] != null));
 		}
+
 		
 		//first tutorial should be unlocked
 		//any played tutorials should be unlocked
@@ -139,13 +144,14 @@ package networking
 			return orderToTutorialDictionary[order].@qid;
 		}
 		
-		//uses the current loginhelper.levelObj.levelId to find the next level in sequence that hasn't been played
+		//uses the current PipeJamGame.levelInfo.levelId to find the next level in sequence that hasn't been played
 		//returns qid of next level to play, else 0
 		public function getNextUnplayedTutorial():int
 		{
 			var currentLevelQID:int;
-			if (!LoginHelper.getLoginHelper().levelObject) return 0;
-			currentLevelQID = LoginHelper.getLoginHelper().levelObject.levelId;
+			if (!PipeJamGame.levelInfo) 
+				return 0;
+			currentLevelQID = parseInt(PipeJamGame.levelInfo.m_levelId);
 			
 			var currentLevel:XML = qidToTutorialDictionary[currentLevelQID];
 			
@@ -221,6 +227,26 @@ package networking
 			}
 			
 			return true;
+		}
+		
+		public function sendMessage(type:int, callback:Function):void
+		{
+			var request:String;
+			var method:String;
+			var url:String = null;
+			switch(type)
+			{
+				case TUTORIAL_LEVEL_COMPLETE:
+					request = "/tutorial/level/complete/"+PlayerValidation.playerID+"/"+PipeJamGame.levelInfo.m_levelId+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+				case GET_COMPLETED_TUTORIAL_LEVELS:
+					request = "/tutorial/levels/completed/"+PlayerValidation.playerID+"&method=DATABASE";
+					method = URLRequestMethod.POST; 
+					break;
+			}
+			
+			NetworkConnection.sendMessage(callback, request, null, null, method);
 		}
 	}
 }

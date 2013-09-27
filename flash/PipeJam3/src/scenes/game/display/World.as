@@ -39,9 +39,7 @@ package scenes.game.display
 	import graph.Port;
 	import graph.PropDictionary;
 	
-	import networking.Achievements;
-	import networking.LoginHelper;
-	import networking.TutorialController;
+	import networking.*;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -146,10 +144,9 @@ package scenes.game.display
 				if ((levelConstraintsXML.attribute("targetScore") != undefined) && !isNaN(int(levelConstraintsXML.attribute("targetScore")))) {
 					targetScore = int(levelConstraintsXML.attribute("targetScore"));
 				}
-				var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 				var levelNameFound:String = my_levelNodes.original_level_name;
-				if (!PipeJamGameScene.inTutorial && loginHelper.levelObject && loginHelper.levelObject.name) {
-					levelNameFound = loginHelper.levelObject.name;
+				if (!PipeJamGameScene.inTutorial && PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_name) {
+					levelNameFound = PipeJamGame.levelInfo.m_name;
 				}
 				var my_level:Level = new Level(my_level_name, my_levelNodes, levelLayoutXML, levelConstraintsXML, targetScore, levelNameFound);
 				levels.push(my_level);
@@ -176,28 +173,28 @@ package scenes.game.display
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
-				var obj:Object = LoginHelper.getLoginHelper().levelObject;
+				var obj:LevelInformation = PipeJamGame.levelInfo;
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
 				var nextLevelQID:int;
 				if(!obj)
 				{
-					obj = new Object;
-					LoginHelper.getLoginHelper().levelObject = obj;
-					obj.levelId = tutorialController.getFirstTutorialLevel();
-					if(!tutorialController.isTutorialLevelCompleted(obj.levelId))
-						nextLevelQID = obj.levelId;
+					obj = new LevelInformation();
+					PipeJamGame.levelInfo = obj;
+					obj.m_levelId = String(tutorialController.getFirstTutorialLevel());
+					if(!tutorialController.isTutorialLevelCompleted(obj.m_levelId))
+						nextLevelQID = parseInt(obj.m_levelId);
 					else
 						nextLevelQID = tutorialController.getNextUnplayedTutorial();
 				}
 				else
-					nextLevelQID = obj.levelId;
+					nextLevelQID = parseInt(obj.m_levelId);
 				
 				for each(var level:Level in levels)
 				{
 					if(level.m_levelQID == String(nextLevelQID))
 					{
 						firstLevel = level;
-						obj.levelId = nextLevelQID;
+						obj.m_levelId = String(nextLevelQID);
 						break;
 					}
 				}
@@ -213,9 +210,13 @@ package scenes.game.display
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			
 			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			addEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
+			
+			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
+			addEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
+			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			
@@ -329,7 +330,7 @@ package scenes.game.display
 				var zip:ByteArray = active_level.zipXMLFile(collectionXML, "container");
 				var zipEncodedString:String = active_level.encodeBytes(zip);
 				
-				LoginHelper.getLoginHelper().submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
+				GameFileHandler.submitLevel(zipEncodedString, event.type, PipeJamGame.ALL_IN_ONE);	
 				
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
@@ -347,7 +348,7 @@ package scenes.game.display
 			var dialogHeight:Number = 60;
 			var socialText:String = "";
 			var numLinesInText:int = 1;
-			if(event.type == MenuEvent.SAVE_LEVEL)
+			if(event.type == MenuEvent.LEVEL_SAVED)
 			{
 				dialogText = "Level Saved.";
 			}
@@ -398,7 +399,7 @@ package scenes.game.display
 		
 		public function setNewLayout(event:MenuEvent):void
 		{
-			if(active_level != null) {
+			if(active_level != null && event.data.layoutFile) {
 				active_level.setNewLayout(event.data.name, event.data.layoutFile, true);
 				if (PipeJam3.logging) {
 					var details:Object = new Object();
@@ -528,10 +529,9 @@ package scenes.game.display
 		
 		private function onLevelStartOver(evt:NavigationEvent):void
 		{
-			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			var level:Level = active_level;
-			if (loginHelper.levelObject != null) {
-				var currentLevelID:String = loginHelper.levelObject.levelId;
+			if (PipeJamGame.levelInfo != null) {
+				var currentLevelID:String = PipeJamGame.levelInfo.m_levelId;
 				//find the level with the current ID
 				for each(level in levels)
 				{
@@ -550,8 +550,7 @@ package scenes.game.display
 		
 		private function onNextLevel(evt:NavigationEvent):void
 		{
-			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
-			var prevLevelNumber:Number = loginHelper.levelObject.levelId;
+			var prevLevelNumber:Number = parseInt(PipeJamGame.levelInfo.m_levelId);
 			if(PipeJamGameScene.inTutorial)
 			{
 				var tutorialController:TutorialController = TutorialController.getTutorialController();
@@ -576,8 +575,8 @@ package scenes.game.display
 				var currentLevelNumber:int;
 				if(tutorialsDone)
 				{
-					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED))
-						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED, Achievements.TUTORIAL_FINISHED_STRING);
+					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID))
+						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED_ID, Achievements.TUTORIAL_FINISHED_STRING);
 					else
 						switchToLevelSelect();
 					return;
@@ -585,13 +584,13 @@ package scenes.game.display
 				else
 				{
 					//get the next level to show, set the levelID, and currentLevelNumber
-					var obj:Object = LoginHelper.getLoginHelper().levelObject;
-					obj.levelId = tutorialController.getNextUnplayedTutorial();
+					var obj:LevelInformation = PipeJamGame.levelInfo;
+					obj.m_levelId = String(tutorialController.getNextUnplayedTutorial());
 					
 					currentLevelNumber = 0;
 					for each(var level:Level in levels)
 					{
-						if(level.m_levelQID == obj.levelId)
+						if(level.m_levelQID == obj.m_levelId)
 							break;
 						
 						currentLevelNumber++;
@@ -806,8 +805,8 @@ package scenes.game.display
 			if (active_level.getTargetScore() == int.MAX_VALUE) {
 				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
 				active_level.setTargetScore(newTarget);
-				if(LoginHelper.getLoginHelper().levelObject != null)
-					LoginHelper.getLoginHelper().levelObject.targetScore = newTarget;
+				if(PipeJamGame.levelInfo != null)
+					PipeJamGame.levelInfo.m_targetScore = newTarget;
 				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
 				active_level.updateScore();
 			}
@@ -837,7 +836,8 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			removeEventListener(MenuEvent.SAVE_LAYOUT, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
+			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			removeEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
 			

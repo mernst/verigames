@@ -215,9 +215,7 @@ package scenes.game.display
 		}
 		
 		public function draw():void
-		{
-			//unflatten();
-			
+		{			
 			var singleProngToDoubleOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
 				singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
@@ -271,8 +269,6 @@ package scenes.game.display
 					innerCircleJoint.x += offset;
 				}
 			}
-			
-			//flatten();
 		}
 		
 		override public function setIsWide(b:Boolean):void

@@ -411,7 +411,7 @@ public class ProxyThread extends Thread {
 		else if(request.indexOf("/layout/save") != -1)
 		{
     		//input should be a layout file
-			//format:  /layout/save/related parent xml doc id/layoutname/file contents
+			//format:  /layout/save/playerID/related parent xml doc id/layoutname::description/file contents
     		//returns: success message
 			if(buf != null)
 			{
@@ -496,9 +496,9 @@ public class ProxyThread extends Thread {
 	     xmlIn.put("player", fileInfo[3]);
 	     xmlIn.put("xmlID", fileInfo[4]+"C");
 	     xmlIn.put("name", fileInfo[7]);
-	     if(fileInfo.length > 17)
+	     if(fileInfo.length > 18)
 	    	 xmlIn.put("version", fileInfo[18]); //submit
-	     else
+	     else if(fileInfo.length > 16)
 	    	 xmlIn.put("version", fileInfo[16]); //save
 	     xmlIn.save();
 	     currentConstraintFileID = xmlIn.getId().toString();

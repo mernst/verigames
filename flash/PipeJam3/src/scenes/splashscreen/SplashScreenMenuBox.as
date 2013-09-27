@@ -12,7 +12,7 @@ package scenes.splashscreen
 	import flash.text.*;
 	
 	import networking.HTTPCookies;
-	import networking.LoginHelper;
+	import networking.LevelInformation;
 	import networking.PlayerValidation;
 	import networking.TutorialController;
 	
@@ -202,14 +202,11 @@ package scenes.splashscreen
 		{
 			PipeJamGameScene.inTutorial = false;
 			PipeJamGameScene.inDemo = true;
-			if(PipeJamGameScene.dArray.length == fileNumber)
+			if(PipeJamGameScene.demoArray.length == fileNumber)
 				fileNumber = 0;
-			PipeJamGameScene.worldFile = PipeJamGameScene.dArray[fileNumber];
-			PipeJamGameScene.layoutFile = PipeJamGameScene.dArray[fileNumber+2];
-			PipeJamGameScene.constraintsFile = PipeJamGameScene.dArray[fileNumber+1];
-			fileNumber+=3;
-//			LoginHelper.getLoginHelper().levelObject = new Object;
-			//--LoginHelper.getLoginHelper().levelObject.levelId = PipeJamGameScene.worldFile;
+			PipeJamGame.levelInfo = new LevelInformation;
+			PipeJamGame.levelInfo.m_baseFileName = PipeJamGameScene.demoArray[fileNumber];
+			fileNumber++;
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 		

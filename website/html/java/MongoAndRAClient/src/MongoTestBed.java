@@ -159,7 +159,7 @@ public class MongoTestBed {
 //        	if(count > 34)
         	{
 	            System.out.println("Collection " + s);
-	            if(s.equals("log"))
+	            if(s.equals("SavedLevels"))
 	            {
 	          //  	PrintWriter writer = new PrintWriter(s+"923.txt", "UTF-8");
 		            DBCollection coll = db.getCollection(s);
@@ -174,7 +174,7 @@ public class MongoTestBed {
 		    	        	   count++;
 		    	        	   DBObject obj = cursor.next();
 		    	        	   System.out.println(obj); 
-		    	   //     	   writer.println(obj);
+		    	     //   	   writer.println(obj);
 		    	        	   
 		    	   //     	   coll.remove(obj);
 		    	           }
