@@ -44,7 +44,7 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 82 - 20;
+		public static const HEIGHT:Number = 82 - 20;
 		
 		public static const OVERLAP:Number = 44 - 10;
 		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
