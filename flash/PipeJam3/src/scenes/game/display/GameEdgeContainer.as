@@ -544,7 +544,7 @@ package scenes.game.display
 			
 			if (toBox && m_innerBoxSegment && !m_innerBoxSegment.m_hasError) {
 				m_innerBoxSegment.m_hasError = true;
-				m_innerBoxSegment.draw();
+				m_innerBoxSegment.m_isDirty = true;
 				
 				positionChildren(); // last segment's endpoint will change as the plug moves up/down
 			}
@@ -557,7 +557,7 @@ package scenes.game.display
 			if (errorTextBubble) errorTextBubble.removeFromParent();
 			if (toBox && m_innerBoxSegment && m_innerBoxSegment.m_hasError) {
 				m_innerBoxSegment.m_hasError = false;
-				m_innerBoxSegment.draw();
+				m_innerBoxSegment.m_isDirty = true;
 				positionChildren(); // last segment's endpoint will change as the plug moves up/down
 			}
 		}
@@ -1189,16 +1189,16 @@ package scenes.game.display
 			onConflictChange();
 			
 			for each (var seg:GameEdgeSegment in m_edgeSegments) {
-				seg.draw();
+				seg.m_isDirty = true;//.draw();
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
-				joint.draw();
+				joint.m_isDirty = true;//.draw();
 				if (joint.m_jointType == GameEdgeJoint.END_JOINT) {
 					errorContainer.x = this.x + joint.x;
 					errorContainer.y = this.y + joint.y;
 				}
 			}
-			m_innerBoxSegment.draw();
+			m_innerBoxSegment.m_isDirty = true;
 		}
 		
 		override public function getScore():Number
@@ -1239,7 +1239,7 @@ package scenes.game.display
 					joint.m_isDirty = true;
 				}
 				
-				m_innerBoxSegment.draw();
+				m_innerBoxSegment.m_isDirty = true;
 				
 				m_isDirty = false;
 			}
@@ -1368,11 +1368,6 @@ package scenes.game.display
 					}
 				}
 			}
-			flatten();
-		}
-		
-		override public function flatten():void {
-			return;
 		}
 		
 		override public function setProps(props:PropDictionary):void

@@ -290,7 +290,7 @@ package scenes.levelselectscene
 						nextTextBoxYPos += 20;
 					}
 				}
-				if(e && e.data && e.data.tapCount == 2)
+				if(e && e.data && e.data.hasOwnProperty("tapCount") && e.data.tapCount == 2)
 					onSelectButtonTriggered(e);
 			}
 		}

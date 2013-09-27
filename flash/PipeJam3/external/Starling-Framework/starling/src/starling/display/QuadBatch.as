@@ -75,7 +75,7 @@ package starling.display
         private var mTexture:Texture;
         private var mSmoothing:String;
         
-        private var mVertexData:VertexData;
+        public var mVertexData:VertexData;
         private var mVertexBuffer:VertexBuffer3D;
         private var mIndexData:Vector.<uint>;
         private var mIndexBuffer:IndexBuffer3D;
@@ -174,7 +174,7 @@ package starling.display
             if (mIndexBuffer)     mIndexBuffer.dispose();
             if (numVertices == 0) return;
             if (context == null)  throw new MissingContextError();
-            
+			trace("+", objectIndex, mVertexData.numVertices);
             mVertexBuffer = context.createVertexBuffer(numVertices, VertexData.ELEMENTS_PER_VERTEX);
             mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, numVertices);
             
@@ -346,11 +346,13 @@ package starling.display
             else if (mNumQuads + numQuads > 8192) return true; // maximum buffer size
             else if (mTexture == null && texture == null) return false;
             else if (mTexture != null && texture != null)
-                return mTexture.base != texture.base ||
+			{
+				return mTexture.base != texture.base ||
                        mTexture.repeat != texture.repeat ||
                        mSmoothing != smoothing ||
                        mTinted != (tinted || parentAlpha != 1.0) ||
                        this.blendMode != blendMode;
+			}
             else return true;
         }
         
@@ -387,7 +389,7 @@ package starling.display
         public static function compile(object:DisplayObject, 
                                        quadBatches:Vector.<QuadBatch>):void
         {
-            compileObject(object, quadBatches, -1, new Matrix());
+            compileObject(object, quadBatches, -1, new Matrix(), object.parent.alpha);
         }
         
         private static function compileObject(object:DisplayObject, 

@@ -36,9 +36,9 @@ package scenes.game
 		static public var demoButtonConstraintsFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeaderConstraints.zip";
 		
 		static public var dArray:Array = new Array(
-			"../../../../SampleWorlds/templevels/Chute.zip",
-			"../../../../SampleWorlds/templevels/ChuteConstraints.zip",
-			"../../../../SampleWorlds/templevels/ChuteLayout.zip"
+			"../../../../../../Picard/version3/levels/5220c523e4b06c4c132c6705.zip",
+			"../../../../../../Picard/version3/output/5220c523e4b06c4c132c6705Constraints.zip",
+			"../../../../../../Picard/version3/layouts/5220c523e4b06c4c132c6705Layout.zip"
 		);
 		
 		static private const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

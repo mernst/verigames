@@ -229,7 +229,6 @@
 			} else {
 				this.blendMode = BlendMode.NONE;
 			}
-			flatten();
 		}
 		
 		public static function createEdgeSegment(_toPt:Point, _isWide:Boolean, _isEditable:Boolean):Image
@@ -298,7 +297,8 @@
 		override public function flatten():void
 		{
 			if (plug || socket) return;
-			super.flatten();
+			if(false) //don't flatten
+				super.flatten();
 		}
 		
 		public function onEnterFrame(event:Event):void

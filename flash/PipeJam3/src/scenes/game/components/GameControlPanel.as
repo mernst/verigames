@@ -91,6 +91,12 @@ package scenes.game.components
 		private var m_targetScoreLine:TargetScoreDisplay;
 		
 		/** Display the best score the player has achieved this session for the level */
+		private var m_bestPlayerScoreLine:TargetScoreDisplay;
+		
+		/** Display the last saved score by this player for this level */
+		private var m_lastSavedScoreLine:TargetScoreDisplay;
+		
+		/** Display the current best score for this level */
 		private var m_bestScoreLine:TargetScoreDisplay;
 		
 		protected var conflictMap:ConflictMap;
@@ -303,16 +309,16 @@ package scenes.game.components
 				if (level.m_tutorialTag && m_scoreBarContainer) m_scoreBarContainer.visible = false;
 			}
 			
-			if (!m_bestScoreLine) {
-				m_bestScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
-				m_bestScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
-				m_bestScoreLine.useHandCursor = true;
-				m_bestScoreLine.x = bestScoreX;
+			if (!m_bestPlayerScoreLine) {
+				m_bestPlayerScoreLine = new TargetScoreDisplay(bestScore.toString(), 0.3 * GameControlPanel.SCORE_PANEL_AREA.height, GameComponent.WIDE_COLOR, GameComponent.WIDE_COLOR, "Best Score\nClick to Load");
+				m_bestPlayerScoreLine.addEventListener(TouchEvent.TOUCH, onTouchBestScore);
+				m_bestPlayerScoreLine.useHandCursor = true;
+				m_bestPlayerScoreLine.x = bestScoreX;
 			} else {
-				m_bestScoreLine.update(bestScore.toString());
+				m_bestPlayerScoreLine.update(bestScore.toString());
 			}
-			m_bestScoreLine.alpha = 0.8;
-			m_scoreBarContainer.addChild(m_bestScoreLine);
+			m_bestPlayerScoreLine.alpha = 0.8;
+			m_scoreBarContainer.addChild(m_bestPlayerScoreLine);
 			
 			if (newBarWidth < SCORE_PANEL_AREA.width / 10) {
 				// If bar is not wide enough, put the text to the right of it instead of inside the bar
@@ -330,8 +336,8 @@ package scenes.game.components
 				m_scoreBar.width = newBarWidth;
 				Starling.juggler.removeTweens(m_scoreTextfield);
 				m_scoreTextfield.x = newScoreX;
-				Starling.juggler.removeTweens(m_bestScoreLine);
-				m_bestScoreLine.x = bestScoreX;
+				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
+				m_bestPlayerScoreLine.x = bestScoreX;
 			} else if (newBarWidth < m_scoreBar.width) {
 				// If we're shrinking, shrink right away - then show flash showing the difference
 				Starling.juggler.removeTweens(m_scoreBar);
@@ -344,8 +350,8 @@ package scenes.game.components
 				   transition: Transitions.EASE_OUT,
 				   x: newScoreX
 				});
-				Starling.juggler.removeTweens(m_bestScoreLine);
-				Starling.juggler.tween(m_bestScoreLine, BAR_SLIDING_ANIM_SEC, {
+				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
+				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
 				   transition: Transitions.EASE_OUT,
 				   x: bestScoreX
 				});
@@ -363,8 +369,8 @@ package scenes.game.components
 				   delay: FLASHING_ANIM_SEC,
 				   x: newScoreX
 				});
-				Starling.juggler.removeTweens(m_bestScoreLine);
-				Starling.juggler.tween(m_bestScoreLine, BAR_SLIDING_ANIM_SEC, {
+				Starling.juggler.removeTweens(m_bestPlayerScoreLine);
+				Starling.juggler.tween(m_bestPlayerScoreLine, BAR_SLIDING_ANIM_SEC, {
 				   transition: Transitions.EASE_OUT,
 				   x: bestScoreX
 				});
@@ -404,16 +410,16 @@ package scenes.game.components
 		
 		private function onTouchBestScore(evt:TouchEvent):void
 		{
-			if (!m_bestScoreLine) return;
-			if (evt.getTouches(m_bestScoreLine, TouchPhase.ENDED).length) {
+			if (!m_bestPlayerScoreLine) return;
+			if (evt.getTouches(m_bestPlayerScoreLine, TouchPhase.ENDED).length) {
 				// Clicked, load best score!
 				dispatchEvent(new MenuEvent(MenuEvent.LOAD_BEST_SCORE));
-			} else if (evt.getTouches(m_bestScoreLine, TouchPhase.HOVER).length) {
+			} else if (evt.getTouches(m_bestPlayerScoreLine, TouchPhase.HOVER).length) {
 				// Hover over
-				m_bestScoreLine.alpha = 1;
+				m_bestPlayerScoreLine.alpha = 1;
 			} else {
 				// Hover out
-				m_bestScoreLine.alpha = 0.8;
+				m_bestPlayerScoreLine.alpha = 0.8;
 			}
 		}
 		

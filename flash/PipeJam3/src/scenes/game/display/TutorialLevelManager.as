@@ -262,6 +262,8 @@ package scenes.game.display
 				case LAYOUT_TUTORIAL:
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case END_TUTORIAL:
 					return true;
 			}
@@ -289,6 +291,8 @@ package scenes.game.display
 					return true;
 				case GROUP_SELECT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 				case END_TUTORIAL:
 					return false;
@@ -311,6 +315,10 @@ package scenes.game.display
 				case PASSAGE_TUTORIAL:
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return 1.25;
+				case SKILLS_A_TUTORIAL:
+					return 1.4;
+				case SKILLS_B_TUTORIAL:
+					return 1.2;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
 					return 1.1;
@@ -336,18 +344,19 @@ package scenes.game.display
 				case LOCKED_TUTORIAL:
 				case LAYOUT_TUTORIAL:
 					return new Point(0, 5);// move down by 5px (pan up)
-				//case SPLIT_MERGE_PRACTICE_TUTORIAL:
-				//	return new Point(0, 10);// move down by 10px (pan up)
 				case GROUP_SELECT_TUTORIAL:
-					return new Point(0, 11);// move down by 15px
+					return new Point(0, 11);// move down by 11px
 				case LINKS_TUTORIAL:
 				case PASSAGE_TUTORIAL:
 					return new Point(15, -4);//move right 15px (pan left)
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
+				case SKILLS_B_TUTORIAL:
+					return new Point(0, -30);// move up by 30px
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, -5);// move up by 5px
 				case PINCH_TUTORIAL:
+				case SKILLS_A_TUTORIAL:
 					return new Point(0, -15);// move up by 15px
 				case MERGE_TUTORIAL:
 					return new Point(-5, 0);//move left 5px
@@ -622,16 +631,16 @@ package scenes.game.display
 						null, null);
 				case SKILLS_A_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Use the skills you've learned to solve a bigger challenge!",
+						"Use the skills\nyou've learned to\nsolve a bigger\nchallenge!",
 						null,
 						null,
-						null, null);
+						NineSliceBatch.TOP_LEFT, null);
 				case SKILLS_B_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Good work! Now try this one!",
+						"Good work!\nNow try this one!",
 						null,
 						null,
-						null, null);
+						NineSliceBatch.TOP_LEFT, null);
 				// The following are not currently in use:
 				case END_TUTORIAL:
 					return new TutorialManagerTextInfo(

@@ -191,8 +191,6 @@ package scenes.game.display
 				m_connectionLayer.addChild(q2);
 			}
 			addChild(m_connectionLayer);
-			
-			this.flatten();
 		}
 		
 		override public function onClicked(pt:Point):void
