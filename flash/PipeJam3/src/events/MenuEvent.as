@@ -11,6 +11,7 @@ package events
 		public static const SAVE_LEVEL:String = "save_level";
 		public static var LEVEL_SAVED:String = "level_saved";
 		public static const POST_SAVE_DIALOG:String = "post_save_dialog";
+		public static const POST_SUBMIT_DIALOG:String = "post_submit_dialog";
 		public static const ZOOM_IN:String = "zoom_in";
 		public static const ZOOM_OUT:String = "zoom_out";
 		public static const RECENTER:String = "recenter";

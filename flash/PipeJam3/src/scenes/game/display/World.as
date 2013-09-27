@@ -61,6 +61,7 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
+	import dialogs.SubmitLevelDialog;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -208,14 +209,16 @@ package scenes.game.display
 			addEventListener(NavigationEvent.START_OVER, onLevelStartOver);
 			addEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
-			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
-			
 			addEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			addEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
-			
-			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
 			addEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);
+			
+			addEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
+			addEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
+			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
+			
+			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
+			
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -310,6 +313,15 @@ package scenes.game.display
 			
 			shareDialog.x = (480 - shareDialog.width)/2;
 			shareDialog.y = (320 - shareDialog.height)/2 - 20;
+		}
+		
+		protected function postSubmitDialog(event:MenuEvent):void
+		{
+			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(200, 200);
+			edgeSetGraphViewPanel.addChild(submitLevelDialog);
+			
+			submitLevelDialog.x = (480 - submitLevelDialog.width)/2;
+			submitLevelDialog.y = (320 - submitLevelDialog.height)/2 - 10;
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -835,6 +847,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
+			removeEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
 			removeEventListener(MenuEvent.SAVE_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
 			removeEventListener(MenuEvent.LEVEL_SAVED, onLevelUploadSuccess);

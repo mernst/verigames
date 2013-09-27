@@ -46,8 +46,9 @@ package networking
 		public var m_properties:Object;
 		public var m_metadata:Object;
 		
-		public var preference:Number;
-		public var performance:Number;	
+		//these are currently the same values as the two ratings below
+		public var preference:String;
+		public var performance:String;	
 		
 		public var enjoymentRating:Number;
 		public var difficultyRating:Number;		

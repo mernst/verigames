@@ -227,8 +227,7 @@ package scenes.game.components
 		
 		private function onShareButtonTriggered():void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
-			
+			dispatchEvent(new MenuEvent(MenuEvent.POST_SUBMIT_DIALOG));
 		}
 		
 		private function onSaveButtonTriggered():void
