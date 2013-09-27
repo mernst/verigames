@@ -1720,7 +1720,7 @@ package scenes.game.display
 				this.m_jointsContainer.flatten();
 			}
 			//doesn't have texture size problem on board I tried, but I don't know why not
-	//		this.m_edgesContainer.flatten();
+			this.m_edgesContainer.flatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean

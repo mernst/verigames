@@ -163,24 +163,25 @@ public class MongoTestBed {
 	            {
 	          //  	PrintWriter writer = new PrintWriter(s+"923.txt", "UTF-8");
 		            DBCollection coll = db.getCollection(s);
-		            ObjectId field = new ObjectId("51e5b3460240288229000026");
+		            ObjectId field = new ObjectId("523384b4e4b0cdd0531ff621");
 		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
 		            BasicDBObject field1 = new BasicDBObject();
 		            field1.put("playerID", "51e5b3460240288229000026");
-		           //    DBCursor cursor = coll.find(field1);
-		                     DBCursor cursor = coll.find();
-		    	        try {
-		    	           while(cursor.hasNext()) {
-		    	        	   count++;
-		    	        	   DBObject obj = cursor.next();
-		    	        	   System.out.println(obj); 
-		    	     //   	   writer.println(obj);
-		    	        	   
-		    	   //     	   coll.remove(obj);
-		    	           }
-		    	        } finally {
-		    	           cursor.close();
-		    	        }
+		               DBObject obj = coll.findOne(field);
+		               System.out.println(obj);
+		          //           DBCursor cursor = coll.find();
+//		    	        try {
+//		    	           while(cursor.hasNext()) {
+//		    	        	   count++;
+//		    	        	   DBObject obj = cursor.next();
+//		    	        	   System.out.println(obj); 
+//		    	     //   	   writer.println(obj);
+//		    	        	   
+//		    	   //     	   coll.remove(obj);
+//		    	           }
+//		    	        } finally {
+//		    	           cursor.close();
+//		    	        }
 		    //	   writer.close();
 
 	            }

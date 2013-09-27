@@ -53,7 +53,7 @@ package scenes.game.display
 			isEnd = _isEnd;
 			m_plugIsWide = plugIsWide;
 			m_plugIsEditable = plugIsEditable;
-			edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
+	//		edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 			if (createInnerCircle) {
@@ -63,7 +63,7 @@ package scenes.game.display
 			m_plugContainer = new Sprite();
 			
 			draw();
-			addChild(edgeSegmentOutline);
+	//		addChild(edgeSegmentOutline);
 			addChild(edgeSegment);
 			if (innerCircleJoint) {
 				addChild(innerCircleJoint);
@@ -240,14 +240,17 @@ package scenes.game.display
 				edgeSegment.y = interiorPt.y;
 			}
 			edgeSegment.isHoverOn = isHoverOn;
-			if (edgeSegmentOutline.width != getBorderWidth()) {
-				edgeSegmentOutline.width = getBorderWidth();
+			if(edgeSegmentOutline)
+			{
+				if (edgeSegmentOutline.width != getBorderWidth()) {
+					edgeSegmentOutline.width = getBorderWidth();
+				}
+				if (edgeSegmentOutline.color != getBorderColor()) {
+					edgeSegmentOutline.color = getBorderColor();
+				}
+				edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
+				edgeSegmentOutline.y = edgeSegment.y;
 			}
-			if (edgeSegmentOutline.color != getBorderColor()) {
-				edgeSegmentOutline.color = getBorderColor();
-			}
-			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
-			edgeSegmentOutline.y = edgeSegment.y;
 			edgeSegment.setIsWide(m_isWide);
 			edgeSegment.draw();
 			
@@ -260,7 +263,8 @@ package scenes.game.display
 
 			if (m_socket && !m_plugIsWide && m_isWide) {
 				const offset:Number = 0.075 * Constants.GAME_SCALE;
-				edgeSegmentOutline.x += offset;
+				if(edgeSegmentOutline)
+					edgeSegmentOutline.x += offset;
 				edgeSegment.x += offset;
 				if (m_plug) {
 					m_plug.x -= offset;

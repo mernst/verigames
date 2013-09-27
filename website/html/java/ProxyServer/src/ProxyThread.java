@@ -301,19 +301,37 @@ public class ProxyThread extends Thread {
 				log(LOG_ERROR, "Error: no player ID");
 				return;
 			}
-			//format:  /level/get/saved/player id
-			//returns: list of all saved levels associated with the player id
-    		StringBuffer buff = new StringBuffer(request+"//");
-    		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
-    		   DBCursor cursor = savedLevelsCollection.find(nameObj);
-            try {
-            	while(cursor.hasNext()) {
- 	        	   DBObject obj = cursor.next();
-		        	   buff.append(obj.toString());  
-		           }
-		           out.write(buff.toString().getBytes());
-		        } finally {
+			if(fileInfo[4].equals("0") == false)
+			{
+				//format:  /level/get/saved/player id
+				//returns: list of all saved levels associated with the player id
+	    		StringBuffer buff = new StringBuffer(request+"//");
+	    		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
+	    		   DBCursor cursor = savedLevelsCollection.find(nameObj);
+	            try {
+	            	while(cursor.hasNext()) {
+	 	        	   DBObject obj = cursor.next();
+			        	   buff.append(obj.toString());  
+			           }
+			           out.write(buff.toString().getBytes());
+			        } catch(Exception e) {
+			        	buff.append("Error: Can't lookup player saved levels"); 
+			        	out.write(buff.toString().getBytes());
+			        }
+			}
+			else if(fileInfo.length>5 && (fileInfo[5].equals("0") == false))
+			{
+    			StringBuffer buff = new StringBuffer(request+"//");
+				try{
+				ObjectId idObj = new ObjectId(fileInfo[5]);
+    			DBObject obj = savedLevelsCollection.findOne(idObj);
+    			buff.append(obj.toString()); 
+    			out.write(buff.toString().getBytes());
+				} catch(Exception e) {
+		        	buff.append("Error: Can't lookup specific level"); 
+		        	out.write(buff.toString().getBytes());
 		        }
+			}
 		}
 		else if(request.indexOf("/level/delete") != -1) //delete saved level
 		{

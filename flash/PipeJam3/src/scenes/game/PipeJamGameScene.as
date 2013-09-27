@@ -30,7 +30,7 @@ package scenes.game
 		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader";
 		
 		static public var demoArray:Array = new Array(
-			"../../../../SampleWorlds/net_sf_picard_metrics_VersionHeader"
+			"../../../../SampleWorlds/5220c523e4b06c4c132c6705"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
