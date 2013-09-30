@@ -35,8 +35,8 @@ public class BallSizeTest extends Intersection
    * uneditable and wide
    */
 
-  private static final String SMALL_PORT = "small";
-  private static final String LARGE_PORT = "large";
+  public static final String SMALL_PORT = "small";
+  public static final String LARGE_PORT = "large";
 
   private static final boolean CHECK_REP_ENABLED =
       verigames.utilities.Misc.CHECK_REP_ENABLED;

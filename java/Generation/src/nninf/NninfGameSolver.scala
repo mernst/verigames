@@ -96,6 +96,8 @@ class NninfGameSolver extends GameSolver {
                     updateIntersection(board, sub, split)
                     updateIntersection(board, sup, merge)
                   }
+                } else {
+                  println ("TODO: unhandled subtype relationship: " + sub + " :> " + sup)
                 }
               }
             }

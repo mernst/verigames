@@ -12,7 +12,7 @@ import verigames.level.Intersection.Kind._
 import verigames.layout.LayoutDebugger
 
 import scala.collection.JavaConversions._
-import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallConstraintHandler, FieldAssignmentConstraintHandler, FieldAccessConstraintHandler}
+import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallConstraintHandler, FieldAssignmentConstraintHandler, FieldAccessConstraintHandler, BallSizeTestConstraintHandler}
 import checkers.inference.util.CollectionUtil
 import checkers.types.AnnotatedTypeMirror
 
@@ -87,6 +87,12 @@ abstract class GameSolver extends ConstraintSolver {
      */
     val boardNVariableToIntersection = new LinkedHashMap[(Board, AbstractVariable), Intersection]
 
+    /**
+     * Keep the starting intersection for variables introduced by BallSizeTest.
+     * These intersections will later be connected to the outputs of their respective BallSizeTest
+     */
+    val boardNBSVariableToStart = new LinkedHashMap[(Board, AbstractVariable), Intersection]
+
     //HELPER METHODS FOR DEBUGGING THE GAMESOLVER
     def variablesOnBoard( target : Board ) = {
       boardNVariableToIntersection
@@ -106,7 +112,7 @@ abstract class GameSolver extends ConstraintSolver {
     val boardToSelfVariable = new LinkedHashMap[Board, Variable]
 
 
-    def solve(variables: List[Variable],
+    override def solve(variables: List[Variable],
     combvariables: List[CombVariable],
     refinementVariables : List[RefinementVariable],
     constraints: List[Constraint],
@@ -328,19 +334,25 @@ abstract class GameSolver extends ConstraintSolver {
 
       startClassTypeParams()
 
-      refinementVariables.foreach(
-        refVar => {
-          //create the refinement variable no ball start
+      // Introduce refinement variables to the board.
+      refinementVariables.foreach(refVar => refVar match {
+        case RefinementVariable(_,_,_,true) => {
+          // Variables created for a BallSizeTest
+          // The SMALL and LARGE output of the BallSizeTest are started with a CONNECT to another CONNECT.
+          // The BallSizeTestConstraintHandler then attaches the starting CONNECTs to the respective
+          // outputs of the BallSizeTest intersection. The CONNECT's created to introduce the BSTest
+          // refinement variables are kept in a new hash, boardNBSVariableToStart which is used to look them up later.
           val board = variablePosToBoard(refVar.varpos)
-          val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(refVar))._2
-          boardNVariableToIntersection += ((board, refVar) -> connect)
-
-          //enforce the subtype rule of refinement <: declaration
-          //TODO: I don't like calling handleConstraint here but I also don't
-          //TODO: Like duplicating the handling of Subtype relationships
-          handleConstraint(world, SubtypeConstraint(refVar, refVar.declVar))
+          val result = board.add(CONNECT, "output", CONNECT, "input", toChute(refVar))
+          boardNVariableToIntersection += ((board, refVar) -> result._2)
+          boardNBSVariableToStart += ((board, refVar) -> result._1)
         }
-      )
+        case _ => {
+          val board = variablePosToBoard(refVar.varpos)
+          val connect = board.add(START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute(refVar))._2
+          boardNVariableToIntersection += ((board, refVar) -> connect)
+        }
+      })
 
       //Add the type parameter lower bounds above subboard intersections that need them as input
       // (see addConstraintLowerBounds )
@@ -380,7 +392,6 @@ abstract class GameSolver extends ConstraintSolver {
         }
 
         if( !slotToBoard.isEmpty ) {
-
           val missing = slotToBoard.filterNot( {
             //TODO: Why are some boards null and why do we ignore that?
             case (variable, board) =>  board == null || boardNVariableToIntersection.contains( board, variable )
@@ -392,8 +403,6 @@ abstract class GameSolver extends ConstraintSolver {
           })
         }
       })
-
-
     }
 
 
@@ -458,6 +467,9 @@ abstract class GameSolver extends ConstraintSolver {
 
           case staticCall : StaticMethodCallConstraint =>
             StaticMethodCallConstraintHandler( staticCall, this ).handle()
+
+          case bsTest : BallSizeTestConstraint =>
+            BallSizeTestConstraintHandler(bsTest, this).handle()
 
           case _ =>
             // Don't do anything here and hope the subclass does something.
@@ -762,25 +774,18 @@ abstract class GameSolver extends ConstraintSolver {
         }
       }
 
-      def varPositionAndLiteralToBoard(varPos : VariablePosition, literal : AbstractLiteral) = {
-        if (varPos.isInstanceOf[ParameterVP]) {
-          null
-        } else {
-          variablePosToBoard(varPos)
-        }
-      }
-
       (slot1, slot2) match {
         case (cvar1: Variable, cvar2: Variable) => varPositionsToBoard(cvar1.varpos, cvar2.varpos)
 
         case (cvar: Variable, refVar: RefinementVariable) => varPositionsToBoard(cvar.varpos, refVar.varpos)
         case (refVar: RefinementVariable, cvar: Variable) => varPositionsToBoard(cvar.varpos, refVar.varpos)
+        case (refVar: RefinementVariable, cvar: RefinementVariable) => varPositionsToBoard(cvar.varpos, refVar.varpos)
 
-        case (cvar: Variable, lit: AbstractLiteral)  => varPositionAndLiteralToBoard(cvar.varpos, lit)
-        case (lit: AbstractLiteral, cvar: Variable)  => varPositionAndLiteralToBoard(cvar.varpos, lit)
+        case (cvar: Variable, lit: AbstractLiteral)  => variablePosToBoard(cvar.varpos)
+        case (lit: AbstractLiteral, cvar: Variable)  => variablePosToBoard(cvar.varpos)
 
-        case (refVar: RefinementVariable, lit: AbstractLiteral)  => varPositionAndLiteralToBoard(refVar.declVar.varpos, lit)
-        case (lit: AbstractLiteral, refVar: RefinementVariable)  => varPositionAndLiteralToBoard(refVar.declVar.varpos, lit)
+        case (refVar: RefinementVariable, lit: AbstractLiteral)  => variablePosToBoard(refVar.declVar.varpos)
+        case (lit: AbstractLiteral, refVar: RefinementVariable)  => variablePosToBoard(refVar.declVar.varpos)
 
         case (cvar1: Variable, c: Constant) => variablePosToBoard(cvar1.varpos)
         case (c: Constant, cvar2: Variable) => variablePosToBoard(cvar2.varpos)

@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jsr308-langtools"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/xom-1.2.7.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/checker-framework-inference"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

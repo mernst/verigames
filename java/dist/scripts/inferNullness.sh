@@ -8,4 +8,4 @@ case `uname -s` in
 esac
 
 sh $thisDir"/inference.sh" checkers.inference.TTIRun --checker nninf.NninfChecker --visitor nninf.NninfVisitor \
---solver nninf.NninfGameSolver $@
+--solver nninf.NninfGameSolver --transfer nninf.NninfTransfer $@

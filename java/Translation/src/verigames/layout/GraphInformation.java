@@ -4,7 +4,7 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
-import checkers.nullness.quals.AssertNonNullIfTrue;
+import checkers.nullness.quals.EnsuresNonNullIf;
 
 /*>>>
 import checkers.nullness.quals.*;
@@ -221,7 +221,7 @@ class GraphInformation
     /**
      * Returns true iff the graph attributes have been set
      */
-    @AssertNonNullIfTrue("graphAttributes")
+    @EnsuresNonNullIf(expression="this.graphAttributes", result=true)
     public boolean areGraphAttributesSet()
     {
       return graphAttributes != null;

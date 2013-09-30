@@ -52,9 +52,14 @@ class DotPrinter extends AbstractDotPrinter
 
           optionsString = String.format("[shape=record, fixedsize=true, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
+        } else {
+          String label = String.format("%s#%d", n.getIntersectionKind().toString().toLowerCase(), n.getUID());
+          if (n.getOutputIDs().size() > 0) {
+              String variableId = "Variable: " + n.getOutput(n.getOutputIDs().get(0)).getVariableID();
+              label = String.format("%s\n%s#%d", variableId, n.getIntersectionKind().toString().toLowerCase(), n.getUID());
+          }
+          optionsString = String.format("[label=\"%s\"]", label);
         }
-        else
-          optionsString = "";
       }
 
       final String prefix;
@@ -142,6 +147,21 @@ class DotPrinter extends AbstractDotPrinter
     }
   }
 
+  public static String getChuteLabel(Chute e) {
+      String label = Integer.toString(e.getUID());
+      label += "Var: " + e.getVariableID();
+      if (e.isPinched()) {
+          label += " PINCHED";
+      }
+      if (!e.isEditable()) {
+          label += " UNEDITABLE";
+      }
+      if (!e.isNarrow()) {
+          label += " WIDE";
+      }
+      return label;
+  }
+
   /**
    * An {@code Object} that prints {@link verigames.level.Chute Chute} objects to
    * Graphviz's DOT format, with attributes tailored to the edge layout pass.
@@ -156,9 +176,8 @@ class DotPrinter extends AbstractDotPrinter
        * side and enter the "north" side of nodes. */
       String start = getNodeString(e.getStart(), "o", e.getStartPort(), ":s");
       String end = getNodeString(e.getEnd(), "i", e.getEndPort(), ":n");
-      String label = Integer.toString(e.getUID());
 
-      out.println(start + " -> " + end + " [label=" + label + "];");
+      out.println(start + " -> " + end + " [label=\"" + getChuteLabel(e) + "\"];");
     }
 
     /**
@@ -222,7 +241,7 @@ class DotPrinter extends AbstractDotPrinter
     // headclip,tailclip=false: draw edges to the centers of nodes, instead of
     // stopping at their edges. Important because the nodes are circles, not
     // points. For an explanation, see nodeSettings.
-    return "dir=none, headclip=false, tailclip=false";
+    return "headclip=false, tailclip=false";
   }
 
   @Override
