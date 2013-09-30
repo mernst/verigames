@@ -6,6 +6,7 @@ import difflib
 import sys
 import filecmp
 import xml.etree.ElementTree as ET
+import re
 
 # To add a new checker, for example 'foo':
 # 1) append it to the 'allCheckers' list below
@@ -33,8 +34,10 @@ thisFile = os.path.realpath(__file__)
 parent   = os.path.dirname(thisFile)
 
 allCheckers = ["nullness", "trusted"]
-checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor"],
-        "trusted": ["trusted.TrustedChecker", "trusted.TrustedVisitor"] }
+checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor",
+                            "nninf.NninfTransfer", "checkers.inference.InferenceAnalysis"],
+               "trusted":  ["trusted.TrustedChecker", "trusted.TrustedVisitor",
+                            "checkers.inference.InferenceTransfer", "checkers.inference.InferenceAnalysis"]  }
 
 solverArgs = {"nullness": ["nninf.NninfGameSolver"],
         "trusted" : ["trusted.TrustedGameSolver"] }
@@ -101,14 +104,15 @@ def checker_to_args(checkerName):
     chArgs = checkerArgs[checkerName]
     soArgs = solverArgs[checkerName]
     executable = "../../dist/scripts/inference.sh" #os.path(parent, "..", "dist", "inference.sh")
-    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0], 
-            "--visitor", chArgs[1], "--solver", soArgs[0] ]
+    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0],
+            "--visitor", chArgs[1], "--solver", soArgs[0], "--transfer", chArgs[2],
+            "--analysis", chArgs[3]]
 
-EXPECTED_DIR="gold_files"
-EXAMPLES_DIR="/examples/"
+EXPECTED_DIR = "gold_files"
 def get_expected_name(checker, test, java_file):
     return os.path.join('../', EXPECTED_DIR, get_test_name(checker, test, java_file) + '.gold')
 
+EXAMPLES_DIR = "/examples/"
 def get_test_name(checker, test, java_file):
     return '%s-%s-%s' % (checker, test, java_file.partition(EXAMPLES_DIR)[2].replace("/", "_"))
 
@@ -135,13 +139,19 @@ def run_xml_tests(checker, java_files, outfile_path, generate):
             ret = subprocess.call(args, stdout=outfile, stderr=outfile)
             if ret != 0: # Error
                 error = True
-                print "Error: xml for " + checker + " returned error code " + str(ret)
+                if generate:
+                    print "Error: Test xml for %s exited with return code %d. Creating empty gold file." %\
+                            (checker, ret)
+                elif os.path.getsize(expectedName) == 0:
+                    print "Error: Previously erroring test still erroring. xml for " + checker + " returned error code " + str(ret)
+                else:
+                    print "ERROR: Test erroring that was not erroring before. xml for " + checker + " returned error code " + str(ret)
             else:
                 subprocess.call(["rm", "inference.jaif"]) # cleanup
                 subprocess.call(["mv", "World.xml", actualName]) # organize
 
                 # Remove layout information
-                if not generate:
+                if not generate and os.path.getsize(expectedName) > 0:
                     remove_layout(expectedName)
                 if os.path.isfile(actualName):
                     remove_layout(actualName)
@@ -181,7 +191,10 @@ def run_constraint_tests(checker, java_files, outfile_path, generate):
 
             if ret != 0: # Error
                 error = True
-                print "Error: constraint for " + checker + " returned error code " + str(ret)
+                if os.path.getsize(expectedName) == 0:
+                    print "Error: Previously erroring test still erroring. constraint for " + checker + " returned error code " + str(ret)
+                else:
+                    print "ERROR: Test erroring that was not erroring before. constraint for " + checker + " returned error code " + str(ret)
             else:
                 subprocess.call(["rm", "../../Generation/World.xml", "../../Generation/inference.jaif"]) # cleanup
 
@@ -214,21 +227,22 @@ def check_output(expectedName, actualName, diffName, ret):
 def main():
     p = optparse.OptionParser()
     p.add_option('--checker', '-c', default="all", help="The type system to use: nninf, trusted, or all. Default is all")
-    p.add_option('--tests', '-t', default="all", help="The test suite to run: constraint, xml, or all. Default is all")
+    p.add_option('--test-suite', '-s', default="all", help="The test suite to run: constraint, xml, or all. Default is all")
     p.add_option('--debug', '-d',  action="store_true", dest="debug", help="Remote debug using port 5005.")
     p.add_option('--outfile', '-o', default=os.devnull, help="File to append output from tests.")
     p.add_option('--update-gold', '-u', default=False, action="store_true", help="Update the gold files.")
+    p.add_option('--test', '-t', default=None, help="Individual test to run and check. (Regex filter)")
     options, arguments = p.parse_args()
 
     checkers = allCheckers if options.checker == "all" else [options.checker]
-    testsuites = allTests if options.tests == "all" else [options.tests]
-
+    testsuites = allTests if options.test_suite == "all" else [options.test_suite]
     if checkers[0] not in allCheckers:
         print "Unknown checker."
         return
     if testsuites[0] not in allTests:
         print "Unknown test suite."
         return
+    test_pattern = re.compile(options.test) if options.test else None
 
     print "Type systems: " + str(checkers)
     print "Test suites: " + str(testsuites)
@@ -264,7 +278,12 @@ def main():
         dirs = [test_dir] + [os.path.join(test_dir, subdir) for subdir in get_immediate_subdirectories(test_dir)]
         for directory in dirs:
             java_files = get_all_java_file_paths(directory)
+
             for java_file in java_files:
+                # If given a test regex, match
+                if test_pattern and not test_pattern.search(java_file):
+                    continue
+
                 print java_file
                 for checker in checkers:
                     if testsuite == "xml" :
@@ -276,9 +295,13 @@ def main():
                         numTests += 1
                         if error:
                             numErrors += 1
-                        if failure:
+                        elif failure:
                             numFails += 1
                             failingTests = failingTests + [testsuite + ", " + checker + ", " + java_file]
+                            print "Failure"
+                        else:
+                            print "Success"
+
 
         if failingTests:
             print
