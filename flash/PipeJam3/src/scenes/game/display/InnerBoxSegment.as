@@ -56,6 +56,7 @@ package scenes.game.display
 			edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
+			trace(m_id + " height:" + m_height);
 			if (createInnerCircle) {
 				innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
 			}
