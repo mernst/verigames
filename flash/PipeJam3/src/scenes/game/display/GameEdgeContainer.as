@@ -163,11 +163,13 @@ package scenes.game.display
 				m_extensionEdge = (toComponent as GameNode).getExtensionEdge(_toPortID, false);
 				m_extensionEdgeIsOutgoing = false;
 			}
+			// Don't associate extension edges if either edge is hidden
+			if (m_extensionEdge && m_extensionEdge.hideSegments) m_extensionEdge = null;
+			if (hideSegments) m_extensionEdge = null;
 			if (m_extensionEdge) {
-				innerCircle = m_extensionEdge.hideSegments;
+				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
-				if (!m_extensionEdge.hideSegments && 
-					m_extensionEdge.m_innerBoxSegment && 
+				if (m_extensionEdge.m_innerBoxSegment && 
 					m_extensionEdge.m_innerBoxSegment.isEnd) {
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
@@ -189,7 +191,7 @@ package scenes.game.display
 				}
 			}
 			var innerIsEnd:Boolean = (m_extensionEdge == null) ? toBox : (toBox && !m_extensionEdge.visible);
-			trace(m_id + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
+			trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
 			// Initialize props
 			if (isTopOfEdge()) {
@@ -745,6 +747,7 @@ package scenes.game.display
 			
 			//create start joint, and then create rest when we create connecting segment
 			m_startJoint = new GameEdgeJoint(0, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
+			m_startJoint.visible = !hideSegments;
 			m_edgeJoints.push(m_startJoint);
 			
 			//now create segments and joints for second position to n
@@ -762,6 +765,7 @@ package scenes.game.display
 					isFirstSegment = true;
 				}
 				var segment:GameEdgeSegment = new GameEdgeSegment(m_dir, false, isFirstSegment, isLastSegment, m_isWide, true, draggable, m_props, m_propertyMode);
+				segment.visible = !hideSegments;
 				m_edgeSegments.push(segment);
 				
 				//add joint at end of segment
@@ -772,6 +776,7 @@ package scenes.game.display
 				if(index+1 != numJoints)
 				{
 					joint = new GameEdgeJoint(jointType, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
+					joint.visible = !hideSegments;
 					m_edgeJoints.push(joint);
 					if (jointType == GameEdgeJoint.MARKER_JOINT) {
 						m_markerJoint = joint;
@@ -779,6 +784,7 @@ package scenes.game.display
 				}
 			}
 			m_endJoint = new GameEdgeJoint(GameEdgeJoint.END_JOINT, m_isWide, m_isEditable, draggable, m_props, m_propertyMode);
+			m_endJoint.visible = !hideSegments;
 			m_edgeJoints.push(m_endJoint);
 		}
 		
@@ -808,7 +814,7 @@ package scenes.game.display
 				m_innerBoxSegment.m_isDirty = true;
 			}
 			
-			if (!hideSegments) {
+			//if (!hideSegments) {
 				var previousSegment:GameEdgeSegment = null;
 				//move each segment to where they should be, and add them, then add front joint
 				var a:int = 0;
@@ -875,7 +881,7 @@ package scenes.game.display
 					lastJoint.setIncomingPoint(inPoint.subtract(m_jointPoints[m_edgeSegments.length]));
 				}
 				//addChildAt(lastJoint, 0);
-			}
+			//}
 			
 			addChild(m_innerBoxSegment); // inner segment topmost
 			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
