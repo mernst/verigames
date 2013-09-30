@@ -34,7 +34,7 @@ package scenes.game.display
 	import graph.Port;
 	import graph.PropDictionary;
 	
-	import networking.LoginHelper;
+	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
 	
@@ -53,6 +53,7 @@ package scenes.game.display
 	
 	import utils.Base64Encoder;
 	import utils.XString;
+	import networking.LevelInformation;
 	
 	/**
 	 * Level all game components - boxes, lines and joints
@@ -99,7 +100,6 @@ package scenes.game.display
 		private var m_nodeList:Vector.<GameNode>;
 		public var m_edgeList:Vector.<GameEdgeContainer>;
 		private var m_jointList:Vector.<GameJointNode>;
-		private var m_visibleNodeManager:VisibleNodeManager;
 		private var m_hidingErrorText:Boolean = false;
 		private var m_segmentHovered:GameEdgeSegment;
 		
@@ -118,7 +118,6 @@ package scenes.game.display
 		private var m_backgroundImage:Image;
 		private var m_levelStartTime:Number;
 		
-		private var timer:Timer;
 		private var initialized:Boolean = false;
 		
 		/** Current Score of the player */
@@ -350,7 +349,6 @@ package scenes.game.display
 			//		trace("edge count = " + m_edgeVector.length);
 			//set bounds based on largest x, y found in boxes, joints, edges
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-	//		m_visibleNodeManager = new VisibleNodeManager(m_boundingBox.width, this);
 			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
 			
 			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
@@ -537,7 +535,6 @@ package scenes.game.display
 			}
 			newGameEdge.visible = getVisible(edgeXML);
 			
-			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
 				copyLines.push(newGameEdge);
@@ -652,15 +649,15 @@ package scenes.game.display
 		{
 			updateLevelXML();
 			
-			var levelObject:Object = LoginHelper.getLoginHelper().levelObject;
+			var levelObject:LevelInformation = PipeJamGame.levelInfo;
 			if(levelObject != null)
 			{
 				m_levelLayoutXMLWrapper.@id = event.data.name;
-				levelObject.layoutName = event.data.name;
-				levelObject.layoutDescription = event.data.description;
+				levelObject.m_layoutName = event.data.name;
+				levelObject.m_layoutDescription = event.data.description;
 				var layoutZip:ByteArray = zipXMLFile(this.m_levelLayoutXMLWrapper, "layout");
 				var layoutZipEncodedString:String = encodeBytes(layoutZip);
-				LoginHelper.getLoginHelper().saveLayoutFile(layoutSaved, layoutZipEncodedString);	
+				GameFileHandler.saveLayoutFile(layoutSaved, layoutZipEncodedString);	
 			}
 		}
 		
@@ -917,12 +914,6 @@ package scenes.game.display
 			if (m_disposed) {
 				return;
 			}
-			
-			if (timer) {
-				timer.stop();
-				timer.removeEventListener(TimerEvent.TIMER, updateVisibleList);
-			}
-			timer == null;
 			
 			if (tutorialManager) tutorialManager.endLevel();
 			
@@ -1333,7 +1324,6 @@ package scenes.game.display
 				newRight = Math.max(newRight, evt.component.m_boundingBox.left);
 				newTop = Math.min(newTop, evt.component.m_boundingBox.top);
 				newBottom = Math.max(newBottom, evt.component.m_boundingBox.bottom);
-			//	m_visibleNodeManager.updateNode(evt.component as GameNodeBase);
 				if (tutorialManager && (evt.component is GameNode)) {
 					movedNodes.push(evt.component as GameNode);
 					tutorialManager.onGameNodeMoved(movedNodes);
@@ -1349,8 +1339,7 @@ package scenes.game.display
 					newRight = Math.max(newRight, component.m_boundingBox.left);
 					newTop = Math.min(newTop, component.m_boundingBox.top);
 					newBottom = Math.max(newBottom, component.m_boundingBox.bottom);
-//					if(component is GameNodeBase)
-//						m_visibleNodeManager.updateNode(component as GameNodeBase);
+
 					if (component is GameNode) {
 						movedNodes.push(component as GameNode);
 						movedGameNode = true;
@@ -1417,35 +1406,30 @@ package scenes.game.display
 			var nodeCount:int = 0;
 			for each(var gameNode:GameNode in m_nodeList)
 			{
-				gameNode.x = gameNode.m_boundingBox.x;// - m_boundingBox.x;
-				gameNode.y = gameNode.m_boundingBox.y;// - m_boundingBox.y;
+				gameNode.x = gameNode.m_boundingBox.x;
+				gameNode.y = gameNode.m_boundingBox.y;
 				gameNode.m_isDirty = true;
 				m_nodesContainer.addChild(gameNode);
-//				m_visibleNodeManager.addNode(gameNode);
 				nodeCount++;
 			}
 			
 			var jointCount:int = 0;
 			for each(var gameJoint:GameJointNode in m_jointList)
 			{
-				gameJoint.x = gameJoint.m_boundingBox.x;// - m_boundingBox.x;
-				gameJoint.y = gameJoint.m_boundingBox.y;// - m_boundingBox.y;
+				gameJoint.x = gameJoint.m_boundingBox.x;
+				gameJoint.y = gameJoint.m_boundingBox.y;
 				gameJoint.m_isDirty = true;
 				m_jointsContainer.addChild(gameJoint);
-	//			m_visibleNodeManager.addNode(gameJoint);
 				jointCount++;
 			}
 			
 			var edgeCount:int = 0;
 			for each(var gameEdge:GameEdgeContainer in m_edgeList)
 			{
-				//gameEdge.x = gameEdge.m_boundingBox.x + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.x;
-				//gameEdge.y = gameEdge.m_boundingBox.y + GameEdgeContainer.WIDE_WIDTH;// - m_boundingBox.y;
 				gameEdge.m_isDirty = true;
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
-//				gameEdge.visible = false;
-//				m_visibleNodeManager.addEdge(gameEdge);
+
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
@@ -1457,22 +1441,6 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
-			//give stuff time to draw, so the update actually updates?
-			if (timer == null) {
-				timer = new Timer(100, 1);
-				timer.addEventListener(TimerEvent.TIMER, updateVisibleList);
-				timer.start();
-			}
-			updateVisibleList();
-		}
-		
-		public function updateVisibleList(e:TimerEvent = null):void
-		{			
-//			var topLeft:Point = globalToLocal(new Point(0,0));
-//			var bottomRight:Point = globalToLocal(new Point(Constants.GameWidth, GridViewPanel.HEIGHT));
-//			var rect:Rectangle = new Rectangle(topLeft.x, topLeft.y, 
-//				bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
-//			this.m_visibleNodeManager.updateVisibleList(rect);
 		}
 		
 		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean

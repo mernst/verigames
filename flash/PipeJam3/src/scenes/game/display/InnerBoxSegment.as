@@ -64,7 +64,8 @@ package scenes.game.display
 			m_plugContainer = new Sprite();
 			
 			draw();
-			addChild(edgeSegmentOutline);
+			if(edgeSegmentOutline)
+				addChild(edgeSegmentOutline);
 			addChild(edgeSegment);
 			if (innerCircleJoint) {
 				addChild(innerCircleJoint);
@@ -216,9 +217,7 @@ package scenes.game.display
 		}
 		
 		public function draw():void
-		{
-			//unflatten();
-			
+		{			
 			var singleProngToDoubleOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
 				singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
@@ -243,14 +242,17 @@ package scenes.game.display
 				edgeSegment.y = interiorPt.y;
 			}
 			edgeSegment.isHoverOn = isHoverOn;
-			if (edgeSegmentOutline.width != getBorderWidth()) {
-				edgeSegmentOutline.width = getBorderWidth();
+			if(edgeSegmentOutline)
+			{
+				if (edgeSegmentOutline.width != getBorderWidth()) {
+					edgeSegmentOutline.width = getBorderWidth();
+				}
+				if (edgeSegmentOutline.color != getBorderColor()) {
+					edgeSegmentOutline.color = getBorderColor();
+				}
+				edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
+				edgeSegmentOutline.y = edgeSegment.y;
 			}
-			if (edgeSegmentOutline.color != getBorderColor()) {
-				edgeSegmentOutline.color = getBorderColor();
-			}
-			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
-			edgeSegmentOutline.y = edgeSegment.y;
 			edgeSegment.setIsWide(m_isWide);
 			edgeSegment.draw();
 			
@@ -263,7 +265,8 @@ package scenes.game.display
 
 			if (m_socket && !m_plugIsWide && m_isWide) {
 				const offset:Number = 0.075 * Constants.GAME_SCALE;
-				edgeSegmentOutline.x += offset;
+				if(edgeSegmentOutline)
+					edgeSegmentOutline.x += offset;
 				edgeSegment.x += offset;
 				if (m_plug) {
 					m_plug.x -= offset;
@@ -272,8 +275,6 @@ package scenes.game.display
 					innerCircleJoint.x += offset;
 				}
 			}
-			
-			//flatten();
 		}
 		
 		override public function setIsWide(b:Boolean):void

@@ -226,7 +226,6 @@ package scenes.game.components
 								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
 								moveContent(newX, newY);
-								m_currentLevel.updateVisibleList();
 							}
 						}
 					}
@@ -293,10 +292,7 @@ package scenes.game.components
 			
 			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
 			
-			handleMouseWheel(delta, localMouse);
-			
-			m_currentLevel.updateVisibleList();
-			
+			handleMouseWheel(delta, localMouse);			
 		}
 		
 		private function handleMouseWheel(delta:Number, localMouse:Point = null, createUndoEvent:Boolean = true):void
@@ -453,13 +449,11 @@ package scenes.game.components
 		public function zoomInDiscrete():void
 		{
 			handleMouseWheel(5);
-			m_currentLevel.updateVisibleList();
 		}
 		
 		public function zoomOutDiscrete():void
 		{
 			handleMouseWheel(-5);
-			m_currentLevel.updateVisibleList();
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void

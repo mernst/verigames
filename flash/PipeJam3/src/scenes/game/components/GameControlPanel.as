@@ -28,7 +28,7 @@ package scenes.game.components
 	import scenes.game.display.Level;
 	import scenes.game.PipeJamGameScene;
 	
-	import networking.LoginHelper;
+	import networking.LevelInformation;
 	
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -227,8 +227,7 @@ package scenes.game.components
 		
 		private function onShareButtonTriggered():void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
-			
+			dispatchEvent(new MenuEvent(MenuEvent.POST_SUBMIT_DIALOG));
 		}
 		
 		private function onSaveButtonTriggered():void
@@ -279,8 +278,8 @@ package scenes.game.components
 			
 			TextFactory.getInstance().updateText(m_scoreTextfield, currentScore.toString());
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
-			if(LoginHelper.getLoginHelper().levelObject != null)
-				LoginHelper.getLoginHelper().levelObject.score = currentScore;
+			if(PipeJamGame.levelInfo != null)
+				PipeJamGame.levelInfo.m_score = currentScore;
 			
 			// Aim for max score shown to be 2/3 of the width of the scorebar area
 			var newBarWidth:Number = (SCORE_PANEL_AREA.width * 2 / 3) * Math.max(0, currentScore) / maxScoreShown;

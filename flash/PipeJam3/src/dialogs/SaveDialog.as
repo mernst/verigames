@@ -8,7 +8,7 @@ package dialogs
 	import display.NineSliceButton;
 	
 	import events.MenuEvent;
-	import networking.LoginHelper;
+	import networking.LevelInformation;
 	import flash.geom.Rectangle;
 	
 	import scenes.BaseComponent;
@@ -68,18 +68,16 @@ package dialogs
 		
 		private function onNoButtonTriggered(evt:Event):void
 		{
-			parent.removeChild(this);
-			var levelObject:Object = LoginHelper.getLoginHelper().levelObject;
-			levelObject.shareWithGroup = 0;
+			PipeJamGame.levelInfo.shareWithGroup = 0;
 			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
+			parent.removeChild(this);
 		}
 		
 		private function onYesButtonTriggered(evt:Event):void
 		{
-			parent.removeChild(this);
-			var levelObject:Object = LoginHelper.getLoginHelper().levelObject;
-			levelObject.shareWithGroup = 1;
+			PipeJamGame.levelInfo.shareWithGroup = 1;
 			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
+			parent.removeChild(this);
 		}
 	}
 }
