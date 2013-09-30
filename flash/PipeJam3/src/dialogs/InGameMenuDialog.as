@@ -8,7 +8,8 @@ package dialogs
 	
 	import flash.geom.Rectangle;
 	
-	import networking.LoginHelper;
+	import networking.LevelInformation;
+	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -42,14 +43,10 @@ package dialogs
 		
 		private var background:NineSliceBatch;
 		
-		private var selectLayoutDialog:SelectLayoutDialog;
-		
 		private var submitLayoutDialog:SubmitLayoutDialog;
 		
 		private var submitLevelDialog:SubmitLevelDialog;
-		
-		protected var loginHelper:LoginHelper;	
-		
+				
 		protected var shapeWidth:int = 96;
 		protected var buttonPaddingWidth:int = 8;
 		protected var buttonPaddingHeight:int = 8;
@@ -119,8 +116,6 @@ package dialogs
 				next_level_button.y = select_layout_button.y - buttonPaddingHeight - next_level_button.height;
 				addChild(next_level_button);
 			}
-			
-			loginHelper = LoginHelper.getLoginHelper();
 		}
 		
 		private var m_levelName:String = "";
@@ -197,12 +192,11 @@ package dialogs
 		
 		private function onSelectLayoutButtonTriggered():void
 		{
-			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
 			onBackToGameButtonTriggered();//close menu
-			if(loginHelper != null && loginHelper.levelObject != null)
+			if(PipeJamGame.levelInfo != null)
 			{
 				dispatchEvent(new Event(Game.START_BUSY_ANIMATION,true));
-				loginHelper.getLayoutList(onRequestLayoutList);
+				GameFileHandler.getLayoutList(onRequestLayoutList);
 			}
 			else
 				onRequestLayoutList(0, null);  //just for testing, as it leads nowhere...
@@ -225,7 +219,7 @@ package dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			loginHelper.stopLevel();
+			GameFileHandler.stopLevel();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
@@ -234,10 +228,6 @@ package dialogs
 			if(submitLayoutDialog && submitLayoutDialog.visible == true)
 			{
 				hideSecondaryDialog(submitLayoutDialog, true);
-			}
-			else if (selectLayoutDialog && selectLayoutDialog.visible == true)
-			{
-				hideSecondaryDialog(selectLayoutDialog, true);
 			}
 			else
 				hideSelf();
@@ -278,7 +268,6 @@ package dialogs
 		protected function onHideSecondaryDialogComplete():void
 		{
 			submitLayoutDialog = null;
-			selectLayoutDialog = null;
 			if(hideMainDialog)
 				hideSelf();
 		}

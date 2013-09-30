@@ -7,9 +7,7 @@ package display
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	import networking.LoginHelper;
-	
+		
 	import scenes.BaseComponent;
 	
 	import starling.display.DisplayObject;

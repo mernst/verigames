@@ -1,12 +1,14 @@
 package networking
 {
-	import scenes.Scene;
 	import flash.events.Event;
+	
+	import scenes.Scene;
 	
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import flash.net.*;
 	
 	import utils.XString;
 
@@ -21,6 +23,12 @@ package networking
 	//	Then you have to make sure they are active by activating them
 	public class PlayerValidation
 	{
+		public static var CREATE_PLAYER:int = 0;
+		public static var ACTIVATE_PLAYER:int = 1;
+		public static var VERIFY_SESSION:int = 2;
+		public static var PLAYER_EXISTS:int = 3;
+		public static var GET_ENCODED_COOKIES:int = 4;
+
 		public static var playerLoggedIn:Boolean = false;
 		
 		public static var playerID:String = "";
@@ -31,6 +39,7 @@ package networking
 		static protected var validationObject:PlayerValidation = null;
 		protected var pipejamCallbackFunction:Function;
 		protected var controller:Scene;
+		protected var encodedCookies:String;
 		
 		static public var GETTING_COOKIE:String = "Getting Cookie";
 		static public var VALIDATING_SESSION:String = "Validating Session";
@@ -39,6 +48,8 @@ package networking
 		
 		static public var VALIDATION_SUCCEEDED:String = "Player Logged In";
 		static public var VALIDATION_FAILED:String = "Validation Failed";
+		
+		//callback:Function, request:String, type:String, data:String = null, method:String = URLRequestMethod.GET, url:String = null
 		
 		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use in release builds
 		static public function validatePlayerIsLoggedInAndActive(callback:Function, _controller:Scene):void
@@ -54,7 +65,7 @@ package networking
 			validationObject.checkForCookie();
 		}
 		
-		//callback function should check PlayerValidation.playerLoggedIn for success or not - for use when debugging locally
+		//callback function should check PlayerValidation.playerLoggedIn for success or not - only for use when debugging locally
 		static public function validatePlayerIsActive(callback:Function):void
 		{
 			if(validationObject == null)
@@ -64,22 +75,26 @@ package networking
 			validationObject.checkPlayerExistence();
 		}
 		
-		protected var count:int = 0;
 		//check for session ID cookie, and if found, try to validate it
 		protected function checkForCookie():void
 		{
-			LoginHelper.getLoginHelper().getEncodedCookies(cookieCallback);
+			sendMessage(GET_ENCODED_COOKIES, cookieCallback);
 		}
 		
 		public function cookieCallback(result:int, event:flash.events.Event):void
 		{
-			if(result == LoginHelper.EVENT_COMPLETE)
+			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
 				var cookies:String = event.target.data;
 				if(cookies.indexOf("<html>") == -1 && cookies.length > 10) //not an error message or empty cookie string = {} = %7B%7D
 				{
 					controller.setStatus(VALIDATING_SESSION);
-					LoginHelper.getLoginHelper().checkSessionID(cookies, sessionIDValidityCallback);
+					//encode cookies
+					encodedCookies = escape(cookies);
+					//if encodedCookies is double encoded, we get %25 (= encoded %) in front of encoded %7Bs, etc.
+					if(encodedCookies.indexOf("%257B") != -1)
+						encodedCookies = cookies;
+					sendMessage(VERIFY_SESSION, sessionIDValidityCallback);
 					return;
 				}
 			}
@@ -93,7 +108,7 @@ package networking
 		//if the session id is valid, then get the player id and make sure they are in the RA
 		public function sessionIDValidityCallback(result:int, event:flash.events.Event):void
 		{
-			if(result == LoginHelper.EVENT_COMPLETE)
+			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
 				var response:String = event.target.data;
 				if(response.indexOf("<html>") == -1) //else assume auth required dialog
@@ -120,7 +135,7 @@ package networking
 		
 		public function checkPlayerExistence():void
 		{
-			LoginHelper.getLoginHelper().checkPlayerExistence(playerExistsCallback);
+			sendMessage(PLAYER_EXISTS, playerExistsCallback);
 		}
 		
 		public function playerExistsCallback(result:int, e:flash.events.Event):void
@@ -133,10 +148,11 @@ package networking
 					if(XString.stringToBool(exists) == false)
 					{
 						//create player, assume it works?
-						LoginHelper.getLoginHelper().createPlayer(JSON.parse(e.target.data).id, createPlayerCallback);
+						sendMessage(CREATE_PLAYER, createPlayerCallback);
 					}
 					else
-						LoginHelper.getLoginHelper().activatePlayer(JSON.parse(e.target.data).id, activatePlayerCallback);
+						sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
+						activatePlayer(activatePlayerCallback);
 					return;
 				}
 			}
@@ -153,7 +169,8 @@ package networking
 				if(e.target.data.indexOf("<html>") == -1) //if the RA is down, we get a html page telling us something or other
 				{
 					//if we get this far, assume the player got created
-					LoginHelper.getLoginHelper().activatePlayer(JSON.parse(e.target.data).id, activatePlayerCallback);
+					playerID = JSON.parse(e.target.data).id,
+					sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
 					
 					return;
 				}
@@ -166,7 +183,7 @@ package networking
 		
 		public function activatePlayerCallback(result:int, e:flash.events.Event):void
 		{
-			if(result == LoginHelper.EVENT_COMPLETE)
+			if(result == NetworkConnection.EVENT_COMPLETE)
 			{
 				playerLoggedIn = true; //whee
 				Achievements.getAchievementsEarnedForPlayer();
@@ -178,6 +195,45 @@ package networking
 			
 			
 			pipejamCallbackFunction();
+		}
+		
+		public function activatePlayer(callback:Function):void
+		{
+			sendMessage(ACTIVATE_PLAYER, callback);
+		}
+		
+		public function sendMessage(type:int, callback:Function):void
+		{
+			var request:String;
+			var method:String;
+			var url:String = null;
+			switch(type)
+			{
+				case CREATE_PLAYER:
+					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+playerID+"/new&method=POST";
+					method = URLRequestMethod.POST; 
+					break;
+				case ACTIVATE_PLAYER:
+					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/"+playerID+"/activate&method=PUT"; 
+					method = URLRequestMethod.POST; 
+					break;
+				case PLAYER_EXISTS:
+					request = "/ra/games/"+PipeJam3.GAME_ID+"/players/" + playerID + "/exists&method=GET";
+					method = URLRequestMethod.GET; 
+					break;
+				case VERIFY_SESSION:
+					url = "http://flowjam.verigames.com/verifySession";
+					request = "?cookies="+encodedCookies;
+					method = URLRequestMethod.POST; 
+					break;
+				case GET_ENCODED_COOKIES:
+					url = "http://flowjam.verigames.com/encodeCookies";
+					request = "";
+					method = URLRequestMethod.POST; 
+					break;
+			}
+			
+			NetworkConnection.sendMessage(callback, request, null, url, method);
 		}
 	}
 }

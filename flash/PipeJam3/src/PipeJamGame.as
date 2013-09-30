@@ -6,9 +6,13 @@ package
 	
 	import cgs.Cache.Cache;
 	
+	import display.GameObjectBatch;
 	import display.MusicButton;
+	import display.NineSliceBatch;
 	import display.PipeJamTheme;
 	import display.SoundButton;
+	
+	import events.MenuEvent;
 	
 	import feathers.themes.AeonDesktopTheme;
 	
@@ -18,26 +22,25 @@ package
 	import flash.system.System;
 	import flash.ui.Keyboard;
 	
+	import networking.*;
+	
 	import scenes.*;
 	import scenes.game.*;
-	import networking.*;
+	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.loadingscreen.LoadingScreenScene;
 	import scenes.splashscreen.*;
-	import scenes.levelselectscene.LevelSelectScene;
-	import display.GameObjectBatch;
-	import display.NineSliceBatch;
-
+	
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	import events.MenuEvent;
 	import starling.text.TextField;
 	import starling.utils.VAlign;
 	
 	import utils.XSprite;
+	import flash.net.URLVariables;
 	
 	public class PipeJamGame extends Game
 	{
@@ -46,10 +49,7 @@ package
 		
 		/** Set to true to print trace statements identifying the type of objects that are clicked on */
 		public static var DEBUG_IDENTIFY_CLICKED_ELEMENTS_MODE:Boolean = false;
-		
-		/** list of all network connection objects spawned */
-		protected static var networkConnections:Vector.<NetworkConnection>;
-		
+				
 		public static var SEPARATE_FILES:int = 1;
 		public static var ALL_IN_ONE:int = 2;
 		
@@ -60,11 +60,19 @@ package
 		private var m_sfxButton:SoundButton;
 		
 		private var m_gameObjectBatch:GameObjectBatch;
+		
+		/** this is the main holder of information about the level. */
+		public static var levelInfo:LevelInformation;
+
+		public static var m_pipeJamGame:PipeJamGame;
+		
+		public var m_fileName:String;
 
 		
 		public function PipeJamGame()
 		{
 			super();
+			m_pipeJamGame = this;
 			
 			// load general assets
 			prepareAssets();
@@ -96,18 +104,32 @@ package
 		
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
-		{
-			var paramObj:String = String(LoaderInfo(Starling.current.nativeStage.loaderInfo).parameters.level);
-			
+		{			
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
 			
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
+			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
+			if(obj.hasOwnProperty("file"))
+				m_fileName = obj["file"];
 			
-			// create and show menu screen
-			if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
+			var url:String = ExternalInterface.call("window.location.href.toString");
+			var paramsStart = url.indexOf('?');
+			if(paramsStart != -1)
+			{
+				var params:String = url.substring(paramsStart+1);
+			var vars:URLVariables = new URLVariables(params);
+				m_fileName = vars.file;
+			}
+			
+			// use file if set in url, else create and show menu screen
+			if(m_fileName)
+			{
+				showScene("PipeJamGame");
+			}
+			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 				showScene("LoadingScene");
 			else
 			{
@@ -181,23 +203,5 @@ package
 				}
 			}
 		}
-		
-		public static function addNetworkConnection(connection:NetworkConnection):void
-		{
-			if(networkConnections == null)
-				networkConnections = new Vector.<NetworkConnection>;
-			
-			networkConnections.push(connection);
-			
-			//clean up list some, if any of the earliest connections done
-			var frontNC:NetworkConnection = networkConnections[0];
-			while(frontNC && frontNC.done == true)
-			{
-				networkConnections.pop();
-				frontNC.dispose();
-				frontNC = networkConnections[0];
-			}
-		}
-		
 	}
 }
