@@ -40,6 +40,7 @@ package
 	import starling.utils.VAlign;
 	
 	import utils.XSprite;
+	import flash.net.URLVariables;
 	
 	public class PipeJamGame extends Game
 	{
@@ -64,6 +65,9 @@ package
 		public static var levelInfo:LevelInformation;
 
 		public static var m_pipeJamGame:PipeJamGame;
+		
+		public var m_fileName:String;
+
 		
 		public function PipeJamGame()
 		{
@@ -100,18 +104,32 @@ package
 		
 		//override to get your scene initialized for viewing
 		protected function addedToStage(event:starling.events.Event):void
-		{
-			var paramObj:String = String(LoaderInfo(Starling.current.nativeStage.loaderInfo).parameters.level);
-			
+		{			
 			theme = new PipeJamTheme( this.stage );
 			//	theme1 = new AeonDesktopTheme( this.stage );
 			
 			m_gameObjectBatch = new GameObjectBatch;
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
+			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
+			if(obj.hasOwnProperty("file"))
+				m_fileName = obj["file"];
 			
-			// create and show menu screen
-			if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
+			var url:String = ExternalInterface.call("window.location.href.toString");
+			var paramsStart = url.indexOf('?');
+			if(paramsStart != -1)
+			{
+				var params:String = url.substring(paramsStart+1);
+			var vars:URLVariables = new URLVariables(params);
+				m_fileName = vars.file;
+			}
+			
+			// use file if set in url, else create and show menu screen
+			if(m_fileName)
+			{
+				showScene("PipeJamGame");
+			}
+			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
 				showScene("LoadingScene");
 			else
 			{

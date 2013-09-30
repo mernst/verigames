@@ -209,14 +209,14 @@ package networking
 			{
 				var loadType:int = USE_LOCAL;
 				
-				var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 				var fileName:String;
-				if(PipeJamGame.levelInfo.m_baseFileName)
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_baseFileName)
 					fileName = PipeJamGame.levelInfo.m_baseFileName;
-				else if(!PipeJamGameScene.inTutorial)
-					fileName = obj["files"];
+				else
+					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
+
 				
-				if(PipeJamGame.levelInfo.m_constraintsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
+				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_constraintsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{
 					loadType = USE_DATABASE;
 					//is this an all in one file?
