@@ -487,7 +487,6 @@ package scenes.game.display
 				trace("Warning! Box not found for boxId: " + boxId);
 			}
 			
-			
 			//create edge array
 			var edgeArray:Array = new Array;
 			
@@ -739,11 +738,12 @@ package scenes.game.display
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					
 					gameNode.visible = getVisible(child);
-					
-					minX = Math.min(minX, gameNode.m_boundingBox.left);
-					minY = Math.min(minY, gameNode.m_boundingBox.top);
-					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
-					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+					if (gameNode.visible) {
+						minX = Math.min(minX, gameNode.m_boundingBox.left);
+						minY = Math.min(minY, gameNode.m_boundingBox.top);
+						maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+						maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+					}
 				}
 			}
 			//update lines
@@ -788,10 +788,12 @@ package scenes.game.display
 					}
 					edgeContainer.m_edgeArray = edgeArray;
 					edgeContainer.setupPoints();
-					minX = Math.min(minX, edgeContainer.m_boundingBox.left);
-					minY = Math.min(minY, edgeContainer.m_boundingBox.top);
-					maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
-					maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
+					if (!edgeContainer.hideSegments) {
+						minX = Math.min(minX, edgeContainer.m_boundingBox.left);
+						minY = Math.min(minY, edgeContainer.m_boundingBox.top);
+						maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
+						maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
+					}
 					edgeContainer.createLine();
 				}
 				
@@ -1398,7 +1400,7 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			trace("Bounding Box " + m_boundingBox.width + "  " + m_boundingBox.height);
+			trace("Bounding Box " + m_boundingBox);
 			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
