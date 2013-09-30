@@ -174,7 +174,7 @@ package starling.display
             if (mIndexBuffer)     mIndexBuffer.dispose();
             if (numVertices == 0) return;
             if (context == null)  throw new MissingContextError();
-			trace("+", objectIndex, mVertexData.numVertices);
+			//trace("+", objectIndex, mVertexData.numVertices);
             mVertexBuffer = context.createVertexBuffer(numVertices, VertexData.ELEMENTS_PER_VERTEX);
             mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, numVertices);
             
