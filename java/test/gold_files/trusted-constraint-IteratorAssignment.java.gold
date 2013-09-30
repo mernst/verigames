@@ -1,7 +1,7 @@
 Constraints:
-equality constraint: Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int = Constant(@trusted.quals.Untrusted)
+EqualityConstraint( Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int = Constant(@trusted.quals.Untrusted) )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class IteratorAssignment extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class IteratorAssignment extends type; tree <<missing tree>> within 
 class IteratorAssignment {
     
     IteratorAssignment() {
@@ -15,9 +15,9 @@ class IteratorAssignment {
             final int quality = intIterator.next();
         }
     }
-}
+} )
 
-subtype constraint: Variable 1 at method IteratorAssignment#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method IteratorAssignment#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class IteratorAssignment extends type; tree <<missing tree>> within 
@@ -34,9 +34,9 @@ class IteratorAssignment {
             final int quality = intIterator.next();
         }
     }
-}
+} )
 
-subtype constraint: Variable 2 at method IteratorAssignment#containerMethod():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method IteratorAssignment#containerMethod():V receiver; tree <<missing tree>> within 
 public void containerMethod() {
     final List<Integer> intList = new ArrayList<Integer>();
     final Iterator<Integer> intIterator = intList.iterator();
@@ -57,15 +57,13 @@ class IteratorAssignment {
             final int quality = intIterator.next();
         }
     }
-}
+} )
 
-subtype constraint: Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList<Integer>  <:  Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List<Integer>
+SubtypeConstraint( Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList<Integer>  <:  Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List<Integer> )
 
-equality constraint: Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> = Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList<Integer>
+EqualityConstraint( Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> = Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList<Integer> )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator<Integer>
+EqualityConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer> = Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> )
 
-equality constraint: Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer> = Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer>
-
-subtype constraint: Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer>  <:  Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int
+SubtypeConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer>  <:  Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int )
 

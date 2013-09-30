@@ -1,7 +1,7 @@
 Constraints:
-equality constraint: Variable 3 at method Second#m(Z):V parameter 0; tree boolean = Constant(@trusted.quals.Untrusted)
+EqualityConstraint( Variable 3 at method Second#m(Z):V parameter 0; tree boolean = Constant(@trusted.quals.Untrusted) )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Second extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Second extends type; tree <<missing tree>> within 
 public class Second {
     
     public Second() {
@@ -15,9 +15,9 @@ public class Second {
         }
         Object y = o;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method Second#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method Second#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 0 at class Second extends type; tree <<missing tree>> within 
@@ -34,9 +34,9 @@ public class Second {
         }
         Object y = o;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method Second#m(Z):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method Second#m(Z):V receiver; tree <<missing tree>> within 
 void m(boolean b) {
     Object o = new Object();
     if (b) {
@@ -57,11 +57,19 @@ public class Second {
         }
         Object y = o;
     }
-}
+} )
 
-subtype constraint: Variable 5 at method Second#m(Z):V creation 0; tree Object  <:  Variable 4 at method Second#m(Z):V local variable o(0); tree Object
+SubtypeConstraint( Variable 5 at method Second#m(Z):V creation 0; tree Object  <:  Variable 4 at method Second#m(Z):V local variable o(0); tree Object )
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Second#m(Z):V local variable o(0); tree Object
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
-subtype constraint: Variable 4 at method Second#m(Z):V local variable o(0); tree Object  <:  Variable 7 at method Second#m(Z):V local variable y(0); tree Object
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Second#m(Z):V local variable o(0); tree Object )
+
+SubtypeConstraint( Variable 4 at method Second#m(Z):V local variable o(0); tree Object  <:  RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set() )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set() )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set()  <:  Variable 4 at method Second#m(Z):V local variable o(0); tree Object )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 4 at method Second#m(Z):V local variable o(0); tree Object IfTest: false mergedTo: Set()  <:  Variable 8 at method Second#m(Z):V local variable y(0); tree Object )
 

@@ -394,6 +394,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e14" pinch="false" variableID="-4" width="wide">
@@ -422,6 +428,12 @@
       <noderef id="n25" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -675,6 +687,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class MyClass class type parameter bound 1 &amp; 0; tree List at position ((3,1)) within T extends List&lt;E&gt;" editable="true" id="e8" pinch="false" variableID="2" width="narrow">
@@ -703,6 +721,12 @@
       <noderef id="n17" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -775,6 +799,18 @@
       <noderef id="n11" port="outClassTypeParam3" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

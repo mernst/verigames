@@ -1,11 +1,11 @@
 Constraints:
-equality constraint: Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int = Constant(@nninf.quals.NonNull) )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
 class PrimitivesAndBoxes {
     
     PrimitivesAndBoxes() {
@@ -22,9 +22,9 @@ class PrimitivesAndBoxes {
     public int forceNarrow(int i) {
         return i;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method PrimitivesAndBoxes#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method PrimitivesAndBoxes#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
@@ -44,9 +44,9 @@ class PrimitivesAndBoxes {
     public int forceNarrow(int i) {
         return i;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
 public void method() {
     Integer testy = 2;
     int primitive = 1;
@@ -69,13 +69,9 @@ class PrimitivesAndBoxes {
     public int forceNarrow(int i) {
         return i;
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 6 at method PrimitivesAndBoxes#method():V local variable testy(0); tree Integer
-
-subtype constraint: Constant(@nninf.quals.NonNull)  <:  Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int
-
-subtype constraint: Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer
+SubtypeConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method PrimitivesAndBoxes#method():V constraint position; 
@@ -95,9 +91,11 @@ args: ( Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(
 result: List(Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int); 
 )
 
-subtype constraint: Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer
+EqualityConstraint( RefinementVariable #9 Declared Variable: Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer IfTest: false mergedTo: Set() = Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
 
-subtype constraint: Variable 4 at method PrimitivesAndBoxes#forceNarrow(I):I receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
+
+SubtypeConstraint( Variable 4 at method PrimitivesAndBoxes#forceNarrow(I):I receiver; tree <<missing tree>> within 
 public int forceNarrow(int i) {
     return i;
 }Atm: @VarAnnot(4) PrimitivesAndBoxes  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
@@ -117,7 +115,7 @@ class PrimitivesAndBoxes {
     public int forceNarrow(int i) {
         return i;
     }
-}
+} )
 
-subtype constraint: Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int  <:  Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int
+SubtypeConstraint( Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int  <:  Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
 

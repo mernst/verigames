@@ -377,6 +377,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method Simplest#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { String s = &quot;a&quot;; }Atm: @VarAnnot(2) Simplest" editable="true" id="e9" pinch="false" variableID="2" width="narrow">

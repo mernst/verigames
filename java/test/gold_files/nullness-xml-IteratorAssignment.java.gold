@@ -724,7 +724,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -804,6 +804,12 @@
       <noderef id="n29" port="left" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -958,7 +964,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="true" id="e24" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e24" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -1130,9 +1136,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="true" id="e34" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e34" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n37" port="output" />
      </from>

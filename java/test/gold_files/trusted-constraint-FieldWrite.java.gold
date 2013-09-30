@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
 class FieldWrite {
     
     FieldWrite() {
@@ -14,9 +14,9 @@ class FieldWrite {
     void n() {
         f = null;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method FieldWrite#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method FieldWrite#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
@@ -34,9 +34,9 @@ class FieldWrite {
     void n() {
         f = null;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method FieldWrite#m():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method FieldWrite#m():V receiver; tree <<missing tree>> within 
 void m() {
     f = new Object();
 }Atm: @VarAnnot(2) FieldWrite  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
@@ -54,7 +54,7 @@ class FieldWrite {
     void n() {
         f = null;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FieldWrite#m():V constraint position; 
@@ -71,6 +71,8 @@ args: (  );
 result: List(Variable 4 at class FieldWrite field f; tree Object); 
 )
 
+SubtypeConstraint( Variable 5 at method FieldWrite#m():V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FieldWrite#m():V constraint position; 
 calledVp: class FieldWrite field f; 
@@ -86,9 +88,7 @@ args: ( Variable 5 at method FieldWrite#m():V creation 0; tree Object );
 result: List(); 
 )
 
-subtype constraint: Variable 5 at method FieldWrite#m():V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object
-
-subtype constraint: Variable 3 at method FieldWrite#n():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 3 at method FieldWrite#n():V receiver; tree <<missing tree>> within 
 void n() {
     f = null;
 }Atm: @VarAnnot(3) FieldWrite  <:  Variable 0 at class FieldWrite extends type; tree <<missing tree>> within 
@@ -106,7 +106,7 @@ class FieldWrite {
     void n() {
         f = null;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FieldWrite#n():V constraint position; 
@@ -123,6 +123,8 @@ args: (  );
 result: List(Variable 4 at class FieldWrite field f; tree Object); 
 )
 
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at class FieldWrite field f; tree Object )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FieldWrite#n():V constraint position; 
 calledVp: class FieldWrite field f; 
@@ -138,9 +140,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at class FieldWrite field f; tree Object
-
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 6 at class FWOther extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 6 at class FWOther extends type; tree <<missing tree>> within 
 class FWOther {
     
     FWOther() {
@@ -163,9 +163,9 @@ class FWOther {
         p.f = new Object();
         p.f = null;
     }
-}
+} )
 
-subtype constraint: Variable 7 at method FWOther#<init>():V return type; tree 
+SubtypeConstraint( Variable 7 at method FWOther#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 6 at class FWOther extends type; tree <<missing tree>> within 
@@ -191,9 +191,9 @@ class FWOther {
         p.f = new Object();
         p.f = null;
     }
-}
+} )
 
-subtype constraint: Variable 8 at method FWOther#write1():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 8 at method FWOther#write1():V receiver; tree <<missing tree>> within 
 void write1() {
     fw.f = new Object();
     this.fw.f = null;
@@ -220,7 +220,7 @@ class FWOther {
         p.f = new Object();
         p.f = null;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FWOther#write1():V constraint position; 
@@ -238,6 +238,8 @@ args: (  );
 result: List(Variable 12 at class FWOther field fw; tree FieldWrite); 
 )
 
+SubtypeConstraint( Variable 13 at method FWOther#write1():V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FWOther#write1():V constraint position; 
 calledVp: class FieldWrite field f; 
@@ -249,8 +251,6 @@ classTypeArgs: <  >;
 args: ( Variable 13 at method FWOther#write1():V creation 0; tree Object ); 
 result: List(); 
 )
-
-subtype constraint: Variable 13 at method FWOther#write1():V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FWOther#write1():V constraint position; 
@@ -264,7 +264,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-subtype constraint: Variable 9 at method FWOther#read1():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 9 at method FWOther#read1():V receiver; tree <<missing tree>> within 
 void read1() {
     Object x;
     x = fw.f;
@@ -292,7 +292,7 @@ class FWOther {
         p.f = new Object();
         p.f = null;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FWOther#read1():V constraint position; 
@@ -311,7 +311,9 @@ args: (  );
 result: List(Variable 12 at class FWOther field fw; tree FieldWrite); 
 )
 
-subtype constraint: Variable 4 at class FieldWrite field f; tree Object  <:  Variable 14 at method FWOther#read1():V local variable x(0); tree Object
+EqualityConstraint( RefinementVariable #15 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set() = Variable 4 at class FieldWrite field f; tree Object )
+
+SubtypeConstraint( Variable 4 at class FieldWrite field f; tree Object  <:  Variable 14 at method FWOther#read1():V local variable x(0); tree Object )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FWOther#read1():V constraint position; 
@@ -330,7 +332,9 @@ args: (  );
 result: List(Variable 12 at class FWOther field fw; tree FieldWrite); 
 )
 
-subtype constraint: Variable 10 at method FWOther#write2(LFieldWrite;):V receiver; tree <<missing tree>> within 
+EqualityConstraint( RefinementVariable #16 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set() = Variable 4 at class FieldWrite field f; tree Object )
+
+SubtypeConstraint( Variable 10 at method FWOther#write2(LFieldWrite;):V receiver; tree <<missing tree>> within 
 void write2(FieldWrite p) {
     p.f = new Object();
     p.f = null;
@@ -357,7 +361,9 @@ class FWOther {
         p.f = new Object();
         p.f = null;
     }
-}
+} )
+
+SubtypeConstraint( Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 
@@ -370,8 +376,6 @@ classTypeArgs: <  >;
 args: ( Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object ); 
 result: List(); 
 )
-
-subtype constraint: Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object  <:  Variable 4 at class FieldWrite field f; tree Object
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method FWOther#write2(LFieldWrite;):V constraint position; 

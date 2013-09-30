@@ -214,6 +214,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
@@ -771,6 +777,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e18" pinch="false" variableID="4" width="narrow">
@@ -907,6 +919,12 @@
       <noderef id="n37" port="inParam1" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

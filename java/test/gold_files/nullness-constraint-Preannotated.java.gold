@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Preannotated extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Preannotated extends type; tree <<missing tree>> within 
 class Preannotated {
     
     Preannotated() {
@@ -7,9 +7,9 @@ class Preannotated {
     }
     @NonNull()
     String s = "not null";
-}
+} )
 
-subtype constraint: Variable 2 at method Preannotated#<init>():V return type; tree 
+SubtypeConstraint( Variable 2 at method Preannotated#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class Preannotated extends type; tree <<missing tree>> within 
@@ -20,7 +20,7 @@ class Preannotated {
     }
     @NonNull()
     String s = "not null";
-}
+} )
 
-subtype constraint: Literal(STRING_LITERAL, "not null")  <:  Variable 1 at class Preannotated field s; tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "not null")  <:  Variable 1 at class Preannotated field s; tree String )
 

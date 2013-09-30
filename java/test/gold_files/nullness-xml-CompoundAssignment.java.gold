@@ -283,7 +283,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -319,7 +319,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e17" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e17" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -492,7 +492,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e6" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e6" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -510,7 +510,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e8" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e8" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -544,9 +544,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e10" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e10" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n22" port="split" />
      </from>
@@ -562,9 +568,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e11" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e11" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n23" port="outputReturn0" />
      </from>
@@ -582,7 +594,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e12" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e12" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n22" port="toMerge" />
      </from>
@@ -598,9 +610,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e13" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e13" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n24" port="toMerge" />
      </from>
@@ -608,6 +626,12 @@
       <noderef id="n25" port="second" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -636,7 +660,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e15" pinch="true" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e15" pinch="true" variableID="2" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -672,7 +696,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="true" id="e21" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method CompoundAssignmentTest#method():I return type; tree int" editable="false" id="e21" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>

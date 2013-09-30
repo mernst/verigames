@@ -1,19 +1,19 @@
 Constraints:
-equality constraint: Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 7 at class NoVariables field minValue; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 7 at class NoVariables field minValue; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 8 at class NoVariables field maxValue; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 8 at class NoVariables field maxValue; tree int = Constant(@nninf.quals.NonNull) )
 
-equality constraint: Variable 9 at class NoVariables field value; tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 9 at class NoVariables field value; tree int = Constant(@nninf.quals.NonNull) )
 
-subtype constraint: Literal(STRING_LITERAL, "Here to make sure we don't just exit because there are no variables!")  <:  Variable 1 at class NoVariables field catcher; tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "Here to make sure we don't just exit because there are no variables!")  <:  Variable 1 at class NoVariables field catcher; tree String )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
 class NoVariables {
     private String catcher = "Here to make sure we don\'t just exit because there are no variables!";
     private int minValue;
@@ -29,9 +29,9 @@ class NoVariables {
     
     public void log() {
     }
-}
+} )
 
-subtype constraint: Variable 2 at method NoVariables#<init>(III):V return type; tree 
+SubtypeConstraint( Variable 2 at method NoVariables#<init>(III):V return type; tree 
 public <init>(int min, int max, int value) {
     super();
     this.minValue = min;
@@ -53,15 +53,15 @@ class NoVariables {
     
     public void log() {
     }
-}
+} )
 
-subtype constraint: Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int  <:  Variable 7 at class NoVariables field minValue; tree int
+SubtypeConstraint( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int  <:  Variable 7 at class NoVariables field minValue; tree int )
 
-subtype constraint: Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int  <:  Variable 8 at class NoVariables field maxValue; tree int
+SubtypeConstraint( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int  <:  Variable 8 at class NoVariables field maxValue; tree int )
 
-subtype constraint: Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int  <:  Variable 9 at class NoVariables field value; tree int
+SubtypeConstraint( Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int  <:  Variable 9 at class NoVariables field value; tree int )
 
-subtype constraint: Variable 6 at method NoVariables#log():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 6 at method NoVariables#log():V receiver; tree <<missing tree>> within 
 public void log() {
 }Atm: @VarAnnot(6) NoVariables  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
 class NoVariables {
@@ -79,9 +79,9 @@ class NoVariables {
     
     public void log() {
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
 class Other {
     
     Other() {
@@ -92,9 +92,9 @@ class Other {
     public void throwsAnExceptionInGameSolver() {
         nv.log();
     }
-}
+} )
 
-subtype constraint: Variable 11 at method Other#<init>():V return type; tree 
+SubtypeConstraint( Variable 11 at method Other#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
@@ -108,9 +108,9 @@ class Other {
     public void throwsAnExceptionInGameSolver() {
         nv.log();
     }
-}
+} )
 
-subtype constraint: Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
 public void throwsAnExceptionInGameSolver() {
     nv.log();
 }Atm: @VarAnnot(12) Other  <:  Variable 10 at class Other extends type; tree <<missing tree>> within 
@@ -124,7 +124,7 @@ class Other {
     public void throwsAnExceptionInGameSolver() {
         nv.log();
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
@@ -141,7 +141,7 @@ args: (  );
 result: List(Variable 13 at class Other field nv; tree NoVariables); 
 )
 
-inequality constraint at method Other#throwsAnExceptionInGameSolver():V constraint position: Variable 13 at class Other field nv; tree NoVariables != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method Other#throwsAnExceptionInGameSolver():V constraint position, Variable 13 at class Other field nv; tree NoVariables != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 

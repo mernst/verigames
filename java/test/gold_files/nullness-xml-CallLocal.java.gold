@@ -1106,6 +1106,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object" editable="true" id="e19" pinch="true" variableID="9" width="narrow">
@@ -1256,6 +1262,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object" editable="true" id="e27" pinch="false" variableID="9" width="narrow">
@@ -1364,6 +1376,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
@@ -1374,6 +1392,12 @@
       <noderef id="n48" port="first" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1428,6 +1452,12 @@
       <noderef id="n49" port="left" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1500,6 +1530,12 @@
       <noderef id="n16" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

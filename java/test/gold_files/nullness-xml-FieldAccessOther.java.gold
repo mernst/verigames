@@ -5,12 +5,12 @@
     <edgeref id="e1" />
     <edgeref id="e31" />
     <edgeref id="e92" />
-    <edgeref id="e17" />
-    <edgeref id="e78" />
-    <edgeref id="e23" />
-    <edgeref id="e84" />
     <edgeref id="e19" />
     <edgeref id="e80" />
+    <edgeref id="e23" />
+    <edgeref id="e84" />
+    <edgeref id="e17" />
+    <edgeref id="e78" />
     <edgeref id="e21" />
     <edgeref id="e37" />
     <edgeref id="e38" />
@@ -25,12 +25,12 @@
    <edge-set id="FieldAccessOther1">
     <edgeref id="e2" />
     <edgeref id="e93" />
-    <edgeref id="e18" />
-    <edgeref id="e79" />
-    <edgeref id="e24" />
-    <edgeref id="e85" />
     <edgeref id="e20" />
     <edgeref id="e81" />
+    <edgeref id="e24" />
+    <edgeref id="e85" />
+    <edgeref id="e18" />
+    <edgeref id="e79" />
     <edgeref id="e22" />
     <edgeref id="e39" />
     <edgeref id="e40" />
@@ -405,6 +405,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="" editable="false" id="e32" pinch="false" variableID="-3" width="narrow">
@@ -423,6 +429,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 3 at class FieldAccessOther field field; tree String" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
@@ -433,6 +445,12 @@
       <noderef id="n59" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -538,8 +556,8 @@
     <node id="n7" kind="INCOMING">
      <input />
      <output>
-      <port edge="e17" num="inClassTypeParam0" />
-      <port edge="e18" num="inClassTypeParam1" />
+      <port edge="e19" num="inClassTypeParam0" />
+      <port edge="e20" num="inClassTypeParam1" />
       <port edge="e4" num="inReceiver0" />
      </output>
      <layout>
@@ -547,8 +565,8 @@
     </node>
     <node id="n8" kind="OUTGOING">
      <input>
-      <port edge="e78" num="outClassTypeParam0" />
-      <port edge="e79" num="outClassTypeParam1" />
+      <port edge="e80" num="outClassTypeParam0" />
+      <port edge="e81" num="outClassTypeParam1" />
       <port edge="e76" num="outReceiver0" />
       <port edge="e5" num="outputReturn0" />
      </input>
@@ -574,22 +592,22 @@
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
+    <node id="n40" kind="CONNECT">
      <input>
-      <port edge="e17" num="input" />
+      <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e78" num="output" />
+      <port edge="e80" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="CONNECT">
+    <node id="n41" kind="CONNECT">
      <input>
-      <port edge="e18" num="input" />
+      <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e79" num="output" />
+      <port edge="e81" num="output" />
      </output>
      <layout>
       </layout>
@@ -628,14 +646,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e17" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n7" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n40" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -648,12 +672,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e18" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n7" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n39" port="input" />
+      <noderef id="n41" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -684,9 +708,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e78" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e80" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
       <noderef id="n8" port="outClassTypeParam0" />
@@ -702,9 +726,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e79" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e81" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n41" port="output" />
      </from>
      <to>
       <noderef id="n8" port="outClassTypeParam1" />
@@ -905,16 +929,16 @@
     <node id="n14" kind="INCOMING">
      <input />
      <output>
-      <port edge="e19" num="inClassTypeParam0" />
-      <port edge="e20" num="inClassTypeParam1" />
+      <port edge="e17" num="inClassTypeParam0" />
+      <port edge="e18" num="inClassTypeParam1" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n15" kind="OUTGOING">
      <input>
-      <port edge="e80" num="outClassTypeParam0" />
-      <port edge="e81" num="outClassTypeParam1" />
+      <port edge="e78" num="outClassTypeParam0" />
+      <port edge="e79" num="outClassTypeParam1" />
       <port edge="e86" num="outputReturn0" />
      </input>
      <output />
@@ -939,22 +963,22 @@
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="CONNECT">
+    <node id="n38" kind="CONNECT">
      <input>
-      <port edge="e19" num="input" />
+      <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e80" num="output" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="CONNECT">
+    <node id="n39" kind="CONNECT">
      <input>
-      <port edge="e20" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e81" num="output" />
+      <port edge="e79" num="output" />
      </output>
      <layout>
       </layout>
@@ -977,12 +1001,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e17" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n14" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n40" port="input" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -995,12 +1019,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e18" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n14" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n41" port="input" />
+      <noderef id="n39" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1011,11 +1035,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e80" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e78" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n38" port="output" />
      </from>
      <to>
       <noderef id="n15" port="outClassTypeParam0" />
@@ -1031,9 +1067,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e81" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e79" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n15" port="outClassTypeParam1" />
@@ -1706,6 +1742,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class FieldAccessOther class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e45" pinch="false" variableID="0" width="narrow">
@@ -1748,6 +1790,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 5 at method FieldAccessOther#locAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void locAccess() { String la = field; String la2 = this.field; }Atm: @VarAnnot(5) FieldAccessOther&lt;T extends Object&gt;" editable="true" id="e47" pinch="false" variableID="5" width="narrow">
@@ -1776,6 +1824,12 @@
       <noderef id="n71" port="inReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2689,6 +2743,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 11 at method OtherAccess#method(LFieldAccessOther;):V parameter 0; tree FieldAccessOther within FieldAccessOther&lt;String&gt;" editable="true" id="e14" pinch="false" variableID="11" width="narrow">
@@ -2821,6 +2881,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 11 at method OtherAccess#method(LFieldAccessOther;):V parameter 0; tree FieldAccessOther within FieldAccessOther&lt;String&gt;" editable="true" id="e65" pinch="false" variableID="11" width="narrow">
@@ -2867,6 +2933,12 @@
       <noderef id="n84" port="inClassTypeParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -3013,6 +3085,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 1 at class FieldAccessOther class type parameter 0; tree T extends Object" editable="true" id="e75" pinch="false" variableID="1" width="narrow">
@@ -3031,6 +3109,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 10 at method OtherAccess#method(LFieldAccessOther;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void method(FieldAccessOther&lt;String&gt; fao) { String loc = fao.field; }Atm: @VarAnnot(10) OtherAccess" editable="true" id="e89" pinch="false" variableID="10" width="narrow">
@@ -3041,6 +3125,12 @@
       <noderef id="n32" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -3125,6 +3215,12 @@
       <noderef id="n101" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

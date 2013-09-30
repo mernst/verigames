@@ -196,6 +196,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e16" pinch="false" variableID="-1" width="narrow">
@@ -242,6 +248,12 @@
       <noderef id="n39" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -549,6 +561,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[]" editable="true" id="e39" pinch="false" variableID="2" width="narrow">
@@ -559,12 +577,6 @@
       <noderef id="n7" port="outputReturn0" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -829,6 +841,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e23" pinch="false" variableID="-1" width="narrow">
@@ -875,6 +893,12 @@
       <noderef id="n45" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1455,6 +1479,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
@@ -1639,6 +1669,12 @@
       <noderef id="n62" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

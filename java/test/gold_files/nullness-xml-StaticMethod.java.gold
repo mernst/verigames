@@ -211,6 +211,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;String&gt; something;  public static void method(String param) { String other = param; List&lt;String&gt; otherList = something; }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
@@ -626,6 +632,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V local variable otherList(0); tree List within List&lt;String&gt;" editable="true" id="e11" pinch="false" variableID="7" width="narrow">
@@ -708,6 +720,12 @@
       <noderef id="n30" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

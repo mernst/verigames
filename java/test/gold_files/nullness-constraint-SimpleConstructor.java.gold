@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SimpleConstructor extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SimpleConstructor extends type; tree <<missing tree>> within 
 class SimpleConstructor {
     private String y;
     
@@ -20,9 +20,9 @@ class SimpleConstructor {
     public static void oneArg() {
         SimpleConstructor simpCon = new SimpleConstructor("t");
     }
-}
+} )
 
-subtype constraint: Variable 1 at method SimpleConstructor#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SimpleConstructor#<init>():V return type; tree 
 public <init>() {
     super();
     y = null;
@@ -47,7 +47,7 @@ class SimpleConstructor {
     public static void oneArg() {
         SimpleConstructor simpCon = new SimpleConstructor("t");
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method SimpleConstructor#<init>():V constraint position; 
@@ -61,6 +61,8 @@ args: (  );
 result: List(Variable 4 at class SimpleConstructor field y; tree String); 
 )
 
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at class SimpleConstructor field y; tree String )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimpleConstructor#<init>():V constraint position; 
 calledVp: class SimpleConstructor field y; 
@@ -73,9 +75,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at class SimpleConstructor field y; tree String
-
-subtype constraint: Variable 2 at method SimpleConstructor#<init>(Ljava/lang/String;):V return type; tree 
+SubtypeConstraint( Variable 2 at method SimpleConstructor#<init>(Ljava/lang/String;):V return type; tree 
 public <init>(String in) {
     super();
     y = in;
@@ -100,7 +100,7 @@ class SimpleConstructor {
     public static void oneArg() {
         SimpleConstructor simpCon = new SimpleConstructor("t");
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method SimpleConstructor#<init>(Ljava/lang/String;):V constraint position; 
@@ -114,6 +114,8 @@ args: (  );
 result: List(Variable 4 at class SimpleConstructor field y; tree String); 
 )
 
+SubtypeConstraint( Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 4 at class SimpleConstructor field y; tree String )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimpleConstructor#<init>(Ljava/lang/String;):V constraint position; 
 calledVp: class SimpleConstructor field y; 
@@ -125,8 +127,6 @@ classTypeArgs: <  >;
 args: ( Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String ); 
 result: List(); 
 )
-
-subtype constraint: Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 4 at class SimpleConstructor field y; tree String
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SimpleConstructor#noArg():V constraint position; 
@@ -144,11 +144,11 @@ public <init>() {
 }); 
 )
 
-inequality constraint at method SimpleConstructor#noArg():V constraint position: Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method SimpleConstructor#noArg():V constraint position, Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor  <:  Variable 5 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor
+SubtypeConstraint( Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor  <:  Variable 5 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor )
 
-subtype constraint: Literal(STRING_LITERAL, "t")  <:  Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "t")  <:  Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SimpleConstructor#oneArg():V constraint position; 
@@ -166,7 +166,7 @@ public <init>(String in) {
 }); 
 )
 
-inequality constraint at method SimpleConstructor#oneArg():V constraint position: Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method SimpleConstructor#oneArg():V constraint position, Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor  <:  Variable 7 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor
+SubtypeConstraint( Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor  <:  Variable 7 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor )
 

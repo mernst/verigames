@@ -208,6 +208,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e9" pinch="false" variableID="0" width="narrow">
@@ -262,6 +274,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e12" pinch="false" variableID="-1" width="narrow">
@@ -308,6 +326,12 @@
       <noderef id="n25" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -713,6 +737,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
@@ -813,6 +843,12 @@
       <noderef id="n33" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1013,6 +1049,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e39" pinch="false" variableID="3" width="narrow">
@@ -1104,6 +1152,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="this" editable="false" id="e31" pinch="false" variableID="-1" width="narrow">
@@ -1114,6 +1168,12 @@
       <noderef id="n11" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

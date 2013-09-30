@@ -1,9 +1,9 @@
 Constraints:
-equality constraint: Variable 5 at method LoopBasic#proceed():Z return type; tree boolean = Constant(@trusted.quals.Untrusted)
+EqualityConstraint( Variable 5 at method LoopBasic#proceed():Z return type; tree boolean = Constant(@trusted.quals.Untrusted) )
 
-equality constraint: Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int = Constant(@trusted.quals.Untrusted)
+EqualityConstraint( Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int = Constant(@trusted.quals.Untrusted) )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
 class LoopBasic {
     
     LoopBasic() {
@@ -26,9 +26,9 @@ class LoopBasic {
     boolean proceed() {
         return Math.random() < 0.5;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method LoopBasic#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method LoopBasic#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
@@ -54,9 +54,9 @@ class LoopBasic {
     boolean proceed() {
         return Math.random() < 0.5;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree <<missing tree>> within 
 void foo(LoopBasic lb) {
     for (int i = 0; i < 5; i++) {
         lb.bar();
@@ -87,7 +87,7 @@ class LoopBasic {
     boolean proceed() {
         return Math.random() < 0.5;
     }
-}
+} )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
@@ -125,7 +125,7 @@ args: (  );
 result: List(); 
 )
 
-subtype constraint: Variable 4 at method LoopBasic#bar():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 4 at method LoopBasic#bar():V receiver; tree <<missing tree>> within 
 void bar() {
     return;
 }Atm: @VarAnnot(4) LoopBasic  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
@@ -151,9 +151,9 @@ class LoopBasic {
     boolean proceed() {
         return Math.random() < 0.5;
     }
-}
+} )
 
-subtype constraint: Variable 6 at method LoopBasic#proceed():Z receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 6 at method LoopBasic#proceed():Z receiver; tree <<missing tree>> within 
 boolean proceed() {
     return Math.random() < 0.5;
 }Atm: @VarAnnot(6) LoopBasic  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
@@ -179,5 +179,5 @@ class LoopBasic {
     boolean proceed() {
         return Math.random() < 0.5;
     }
-}
+} )
 

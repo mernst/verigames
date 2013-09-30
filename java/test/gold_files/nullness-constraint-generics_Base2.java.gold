@@ -1,13 +1,9 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class generics.Base class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(0) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class generics.Base class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(0) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class generics.Base class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(2) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class generics.Base class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(2) Object )
 
-subtype constraint: Variable 10 at class generics.Base field x; tree X  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 11 at class generics.Base field y; tree Y  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 4 at class generics.Base extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class generics.Base extends type; tree <<missing tree>> within 
 abstract class Base<X, Y> {
     protected X x;
     protected Y y;
@@ -19,9 +15,9 @@ abstract class Base<X, Y> {
     }
     
     public abstract void set(X x);
-}
+} )
 
-subtype constraint: Variable 5 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
+SubtypeConstraint( Variable 5 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
 public <init>(final X x, final Y y) {
     super();
     this.x = x;
@@ -38,11 +34,7 @@ abstract class Base<X, Y> {
     }
     
     public abstract void set(X x);
-}
-
-subtype constraint: Variable 1 at class generics.Base class type parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 3 at class generics.Base class type parameter 1; tree Y  <:  Constant(@nninf.quals.Nullable)
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
@@ -56,6 +48,8 @@ args: (  );
 result: List(Variable 10 at class generics.Base field x; tree X); 
 )
 
+SubtypeConstraint( Variable 1 at class generics.Base class type parameter 0; tree X  <:  Variable 10 at class generics.Base field x; tree X )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
 calledVp: class generics.Base field x; 
@@ -67,8 +61,6 @@ classTypeArgs: < List(Variable 0 at class generics.Base class type parameter bou
 args: ( Variable 1 at class generics.Base class type parameter 0; tree X ); 
 result: List(); 
 )
-
-subtype constraint: Variable 1 at class generics.Base class type parameter 0; tree X  <:  Variable 10 at class generics.Base field x; tree X
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
@@ -82,6 +74,8 @@ args: (  );
 result: List(Variable 11 at class generics.Base field y; tree Y); 
 )
 
+SubtypeConstraint( Variable 3 at class generics.Base class type parameter 1; tree Y  <:  Variable 11 at class generics.Base field y; tree Y )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
 calledVp: class generics.Base field y; 
@@ -94,9 +88,7 @@ args: ( Variable 3 at class generics.Base class type parameter 1; tree Y );
 result: List(); 
 )
 
-subtype constraint: Variable 3 at class generics.Base class type parameter 1; tree Y  <:  Variable 11 at class generics.Base field y; tree Y
-
-subtype constraint: Variable 8 at method generics.Base#set(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 8 at method generics.Base#set(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public abstract void set(X x);Atm: @VarAnnot(8) Base<X extends Object, Y extends Object>  <:  Variable 4 at class generics.Base extends type; tree <<missing tree>> within 
 abstract class Base<X, Y> {
     protected X x;
@@ -109,26 +101,18 @@ abstract class Base<X, Y> {
     }
     
     public abstract void set(X x);
-}
+} )
 
-subtype constraint: Variable 13 at class generics.PrintBase class type parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 12 at class generics.PrintBase class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(12) Object )
 
-subtype constraint: Variable 15 at class generics.PrintBase class type parameter 1; tree Y  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class generics.PrintBase class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(14) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 12 at class generics.PrintBase class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(12) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y> )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 14 at class generics.PrintBase class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(14) Object
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y>
-
-subtype constraint: Variable 17 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
+SubtypeConstraint( Variable 17 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
 public <init>(final X x, final Y y) {
     super(x, y);
-}  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y>
-
-subtype constraint: Variable 6 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 7 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree Y  <:  Constant(@nninf.quals.Nullable)
+}  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
@@ -147,23 +131,19 @@ public <init>(final X x, final Y y) {
 }); 
 )
 
-subtype constraint: Variable 5 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
+SubtypeConstraint( Variable 5 at method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
 public <init>(final X x, final Y y) {
     super();
     this.x = x;
     this.y = y;
-}  <:  Constant(@nninf.quals.Nullable)
+}  <:  Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 20 at method generics.PrintBase#set(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 20 at method generics.PrintBase#set(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void set(X x) {
     this.x = x;
-}Atm: @VarAnnot(20) PrintBase<X extends Object, Y extends Object>  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y>
+}Atm: @VarAnnot(20) PrintBase<X extends Object, Y extends Object>  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X, Y> )
 
-subtype constraint: Variable 9 at method generics.Base#set(Ljava/lang/Object;):V parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 9 at method generics.Base#set(Ljava/lang/Object;):V parameter 0; tree X  <:  Variable 21 at method generics.PrintBase#set(Ljava/lang/Object;):V parameter 0; tree X
-
-subtype constraint: Variable 21 at method generics.PrintBase#set(Ljava/lang/Object;):V parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 9 at method generics.Base#set(Ljava/lang/Object;):V parameter 0; tree X  <:  Variable 21 at method generics.PrintBase#set(Ljava/lang/Object;):V parameter 0; tree X )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method generics.PrintBase#set(Ljava/lang/Object;):V constraint position; 
@@ -180,6 +160,8 @@ args: (  );
 result: List(Variable 10 at class generics.Base field x; tree X); 
 )
 
+SubtypeConstraint( Variable 13 at class generics.PrintBase class type parameter 0; tree X  <:  Variable 10 at class generics.Base field x; tree X )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.PrintBase#set(Ljava/lang/Object;):V constraint position; 
 calledVp: class generics.Base field x; 
@@ -195,9 +177,7 @@ args: ( Variable 13 at class generics.PrintBase class type parameter 0; tree X )
 result: List(); 
 )
 
-subtype constraint: Variable 13 at class generics.PrintBase class type parameter 0; tree X  <:  Variable 10 at class generics.Base field x; tree X
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 22 at class generics.Instantiate extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 22 at class generics.Instantiate extends type; tree <<missing tree>> within 
 class Instantiate {
     
     Instantiate() {
@@ -208,9 +188,9 @@ class Instantiate {
         final Base<Integer, String> bis = new PrintBase<Integer, String>(new Integer(0), "Y");
         bis.set(new Integer(3));
     }
-}
+} )
 
-subtype constraint: Variable 23 at method generics.Instantiate#<init>():V return type; tree 
+SubtypeConstraint( Variable 23 at method generics.Instantiate#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 22 at class generics.Instantiate extends type; tree <<missing tree>> within 
@@ -224,9 +204,9 @@ class Instantiate {
         final Base<Integer, String> bis = new PrintBase<Integer, String>(new Integer(0), "Y");
         bis.set(new Integer(3));
     }
-}
+} )
 
-subtype constraint: Variable 24 at method generics.Instantiate#create():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 24 at method generics.Instantiate#create():V receiver; tree <<missing tree>> within 
 public void create() {
     final Base<Integer, String> bis = new PrintBase<Integer, String>(new Integer(0), "Y");
     bis.set(new Integer(3));
@@ -241,21 +221,13 @@ class Instantiate {
         final Base<Integer, String> bis = new PrintBase<Integer, String>(new Integer(0), "Y");
         bis.set(new Integer(3));
     }
-}
+} )
 
-subtype constraint: Variable 18 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree X  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 25 at method generics.Instantiate#create():V creation 1; tree Integer  <:  Variable 18 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree X )
 
-subtype constraint: Variable 19 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree Y  <:  Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method generics.Instantiate#create():V constraint position, Variable 25 at method generics.Instantiate#create():V creation 1; tree Integer != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 25 at method generics.Instantiate#create():V creation 1; tree Integer  <:  Variable 18 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree X
-
-subtype constraint: Variable 25 at method generics.Instantiate#create():V creation 1; tree Integer  <:  Constant(@nninf.quals.Nullable)
-
-inequality constraint at method generics.Instantiate#create():V constraint position: Variable 25 at method generics.Instantiate#create():V creation 1; tree Integer != Constant(@nninf.quals.Nullable)
-
-subtype constraint: Literal(STRING_LITERAL, "Y")  <:  Variable 19 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree Y
-
-subtype constraint: Literal(STRING_LITERAL, "Y")  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Literal(STRING_LITERAL, "Y")  <:  Variable 19 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree Y )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.Instantiate#create():V constraint position; 
@@ -272,17 +244,17 @@ public <init>(final X x, final Y y) {
 }); 
 )
 
-inequality constraint at method generics.Instantiate#create():V constraint position: Variable 29 at method generics.Instantiate#create():V creation 0; tree PrintBase within PrintBase<Integer, String> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method generics.Instantiate#create():V constraint position, Variable 29 at method generics.Instantiate#create():V creation 0; tree PrintBase within PrintBase<Integer, String> != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 29 at method generics.Instantiate#create():V creation 0; tree PrintBase within PrintBase<Integer, String>  <:  Variable 26 at method generics.Instantiate#create():V local variable bis(0); tree Base within Base<Integer, String>
+SubtypeConstraint( Variable 29 at method generics.Instantiate#create():V creation 0; tree PrintBase within PrintBase<Integer, String>  <:  Variable 26 at method generics.Instantiate#create():V local variable bis(0); tree Base within Base<Integer, String> )
 
-equality constraint: Variable 27 at method generics.Instantiate#create():V local variable bis(0); tree Integer at position ((3,0)) within Base<Integer, String> = Variable 30 at method generics.Instantiate#create():V creation 0; tree Integer at position ((3,0)) within PrintBase<Integer, String>
+EqualityConstraint( Variable 27 at method generics.Instantiate#create():V local variable bis(0); tree Integer at position ((3,0)) within Base<Integer, String> = Variable 30 at method generics.Instantiate#create():V creation 0; tree Integer at position ((3,0)) within PrintBase<Integer, String> )
 
-equality constraint: Variable 28 at method generics.Instantiate#create():V local variable bis(0); tree String at position ((3,1)) within Base<Integer, String> = Variable 31 at method generics.Instantiate#create():V creation 0; tree String at position ((3,1)) within PrintBase<Integer, String>
+EqualityConstraint( Variable 28 at method generics.Instantiate#create():V local variable bis(0); tree String at position ((3,1)) within Base<Integer, String> = Variable 31 at method generics.Instantiate#create():V creation 0; tree String at position ((3,1)) within PrintBase<Integer, String> )
 
-inequality constraint at method generics.Instantiate#create():V constraint position: Variable 26 at method generics.Instantiate#create():V local variable bis(0); tree Base within Base<Integer, String> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method generics.Instantiate#create():V constraint position, Variable 26 at method generics.Instantiate#create():V local variable bis(0); tree Base within Base<Integer, String> != Constant(@nninf.quals.Nullable) )
 
-inequality constraint at method generics.Instantiate#create():V constraint position: Variable 32 at method generics.Instantiate#create():V creation 2; tree Integer != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method generics.Instantiate#create():V constraint position, Variable 32 at method generics.Instantiate#create():V creation 2; tree Integer != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.Instantiate#create():V constraint position; 

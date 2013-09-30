@@ -261,6 +261,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
@@ -315,6 +321,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e16" pinch="false" variableID="-1" width="narrow">
@@ -361,6 +373,12 @@
       <noderef id="n32" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -898,6 +916,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e23" pinch="false" variableID="4" width="narrow">
@@ -988,6 +1012,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e28" pinch="false" variableID="8" width="narrow">
@@ -1016,6 +1046,12 @@
       <noderef id="n40" port="inParam1" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1078,6 +1114,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e33" pinch="false" variableID="8" width="narrow">
@@ -1088,6 +1130,12 @@
       <noderef id="n46" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

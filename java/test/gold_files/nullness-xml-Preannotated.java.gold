@@ -227,6 +227,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 1 at class Preannotated field s; tree String" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
@@ -354,6 +360,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="this" editable="false" id="e11" pinch="false" variableID="-1" width="narrow">
@@ -364,6 +376,12 @@
       <noderef id="n4" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

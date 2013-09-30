@@ -688,6 +688,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 6 at method Generics#foo():V creation 0; tree HashMap within HashMap&lt;String, Object&gt;" editable="true" id="e14" pinch="false" variableID="6" width="narrow">

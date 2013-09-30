@@ -243,6 +243,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e15" pinch="false" variableID="-1" width="narrow">
@@ -289,6 +295,12 @@
       <noderef id="n33" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1283,6 +1295,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method CallLocal#m3(LCallLocal;):V creation 0; tree Object" editable="true" id="e29" pinch="false" variableID="9" width="narrow">
@@ -1391,6 +1409,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
@@ -1401,6 +1425,12 @@
       <noderef id="n49" port="first" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1455,6 +1485,12 @@
       <noderef id="n50" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1527,6 +1563,18 @@
       <noderef id="n16" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

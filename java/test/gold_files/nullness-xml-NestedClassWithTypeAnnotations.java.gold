@@ -218,6 +218,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class NestedClassWithTypeAnnotations extends type; tree &lt;&lt;missing tree&gt;&gt; within  class NestedClassWithTypeAnnotations {  NestedClassWithTypeAnnotations() { super(); } O1.O2&lt;String, Object&gt;.O3.Nested&lt;Foo, Bar&gt; o; }" editable="true" id="e35" pinch="false" variableID="0" width="narrow">
@@ -541,6 +547,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="this" editable="false" id="e57" pinch="false" variableID="-1" width="narrow">
@@ -551,6 +563,18 @@
       <noderef id="n8" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1307,6 +1331,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e51" pinch="false" variableID="-4" width="wide">
@@ -1335,6 +1365,12 @@
       <noderef id="n109" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1624,6 +1660,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at class O1$O2 class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within SAtm: @VarAnnot(7) Object" editable="true" id="e63" pinch="false" variableID="7" width="narrow">
@@ -1688,6 +1730,12 @@
       <noderef id="n35" port="outClassTypeParam3" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2338,6 +2386,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e55" pinch="false" variableID="-4" width="wide">
@@ -2366,6 +2420,12 @@
       <noderef id="n113" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2655,6 +2715,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within UAtm: @VarAnnot(15) Object" editable="true" id="e59" pinch="false" variableID="15" width="narrow">
@@ -2719,6 +2785,12 @@
       <noderef id="n55" port="outClassTypeParam3" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

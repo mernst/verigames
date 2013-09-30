@@ -441,6 +441,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
@@ -964,7 +970,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="true" id="e12" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e12" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -1142,6 +1148,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e26" pinch="false" variableID="5" width="narrow">
@@ -1208,6 +1220,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e29" pinch="false" variableID="4" width="narrow">
@@ -1236,6 +1254,12 @@
       <noderef id="n48" port="inReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1394,6 +1418,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e38" pinch="false" variableID="6" width="narrow">
@@ -1404,6 +1434,12 @@
       <noderef id="n55" port="second" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1468,7 +1504,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="true" id="e48" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e48" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n39" port="output" />
      </from>
@@ -1666,6 +1702,12 @@
       <noderef id="n17" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
