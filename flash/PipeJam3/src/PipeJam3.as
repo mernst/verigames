@@ -11,18 +11,19 @@ package
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
+	import flash.external.ExternalInterface;
 	
 	import net.hires.debug.Stats;
 	
-	import networking.HTTPCookies;
-	import networking.LoginHelper;
-	import networking.PlayerValidation;
+	import networking.*;
+	
 	import scenes.splashscreen.SplashScreenScene;
 	
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import events.NavigationEvent;
 	
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
@@ -31,10 +32,12 @@ package
 	
 	public class PipeJam3 extends flash.display.Sprite 
 	{
+		static public var GAME_ID:int = 1;
+
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = false;
+		public static var RELEASE_BUILD:Boolean = true;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
@@ -96,6 +99,8 @@ package
 			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
+			
+			ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 		}
 		
 		private function onContextCreated(event:flash.events.Event):void
@@ -125,6 +130,18 @@ package
 			
 			// Set the updated view port
 			Starling.current.viewPort = viewPort;
+		}
+		
+		//call from JavaScript to load specific level
+		public function loadLevelFromObjectID(levelID:String):void
+		{
+			GameFileHandler.loadLevelInfoFromObjectID(levelID, loadLevel);
+		}
+		
+		protected function loadLevel(result:int, objVector:Vector.<Object>):void
+		{
+			PipeJamGame.levelInfo = new LevelInformation(objVector[0]);		
+			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}
 	}
 	

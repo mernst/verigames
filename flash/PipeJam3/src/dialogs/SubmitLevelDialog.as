@@ -14,7 +14,8 @@ package dialogs
 	import flash.geom.Point;
 	import flash.text.TextFormat;
 	
-	import networking.LoginHelper;
+	import networking.LevelInformation;
+	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
@@ -192,28 +193,27 @@ package dialogs
 		}
 		
 		private function onSubmitButtonTriggered(e:starling.events.Event):void
-		{
-			var loginHelper:LoginHelper = LoginHelper.getLoginHelper();
-			
+		{			
 			visible = false;
 			var eRating:Number = this.enjoymentRating*5.0;
 			//round to two decimal places
 			eRating *= 100;
 			eRating = Math.round(eRating);
 			eRating /= 100;
-			if (loginHelper.levelObject == null) loginHelper.levelObject = new Object();
-			loginHelper.levelObject.enjoymentRating = eRating;
+			if (PipeJamGame.levelInfo == null) 
+				PipeJamGame.levelInfo = new LevelInformation();
+			PipeJamGame.levelInfo.enjoymentRating = eRating;
 			var dRating:Number = this.difficultyRating*5.0;
 			//round to two decimal places
 			dRating *= 100;
 			dRating = Math.round(dRating);
 			dRating /= 100;
-			loginHelper.levelObject.difficultyRating = dRating;
-			loginHelper.reportPlayerPreference((int(Math.round(eRating*20))).toString()); //0-100 scale
-			loginHelper.reportPlayerPerformance((int(Math.round(dRating*20))).toString()); //0-100 scale
+			PipeJamGame.levelInfo.difficultyRating = dRating;
+			GameFileHandler.reportPlayerPreference((int(Math.round(eRating*20))).toString()); //0-100 scale
+			GameFileHandler.reportPlayerPerformance((int(Math.round(dRating*20))).toString()); //0-100 scale
 			dispatchEvent(new MenuEvent(MenuEvent.SUBMIT_LEVEL));
 			
-			LoginHelper.getLoginHelper().reportScore();
+			GameFileHandler.reportScore();
 		}
 	}
 }

@@ -7,7 +7,7 @@ package scenes.levelselectscene
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import networking.LoginHelper;
+	import networking.GameFileHandler;
 	
 	import scenes.BaseComponent;
 	import dialogs.SimpleTwoButtonDialog;
@@ -114,7 +114,7 @@ package scenes.levelselectscene
 				
 					//and then remove level
 					var levelID:String = currentDeleteTarget.data._id.$oid;
-					LoginHelper.getLoginHelper().deleteSavedLevel(levelID);
+					GameFileHandler.deleteSavedLevel(levelID);
 				}
 			}
 		}

@@ -8,10 +8,13 @@ package scenes.levelselectscene
 	import display.NineSliceButton;
 	import display.NineSliceToggleButton;
 	
-	import events.NavigationEvent;
 	import events.MenuEvent;
+	import events.MouseWheelEvent;
+	import events.NavigationEvent;
 	
 	import feathers.controls.List;
+	
+	import flash.events.MouseEvent;
 	
 	import networking.*;
 	
@@ -24,8 +27,6 @@ package scenes.levelselectscene
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.events.Event;
-	import events.MouseWheelEvent;
-	import flash.events.MouseEvent;
 	
 	public class LevelSelectScene extends Scene
 	{		
@@ -33,9 +34,7 @@ package scenes.levelselectscene
 		
 		protected var levelSelectBackground:NineSliceBatch;
 		protected var levelSelectInfoPanel:NineSliceBatch;
-		
-		protected var loginHelper:LoginHelper;
-		
+				
 		protected var levelList:List = null;
 		protected var matchArrayObjects:Array = null;
 		protected var matchArrayMetadata:Array = null;
@@ -64,8 +63,6 @@ package scenes.levelselectscene
 		public function LevelSelectScene(game:PipeJamGame)
 		{
 			super(game);
-			
-			loginHelper = LoginHelper.getLoginHelper();
 		}
 		
 		protected override function addedToStage(event:starling.events.Event):void
@@ -173,12 +170,12 @@ package scenes.levelselectscene
 			savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
 			newLevelListBox.startBusyAnimation(newLevelListBox);
 			
-			loginHelper.levelInfoVector = null;
-			loginHelper.matchArrayObjects = null;
-			loginHelper.savedMatchArrayObjects = null;
-			loginHelper.requestLevels(onRequestLevels);
-			loginHelper.getLevelMetadata(onRequestLevels);
-			loginHelper.getSavedLevels(onRequestSavedLevels);
+			GameFileHandler.levelInfoVector = null;
+			GameFileHandler.matchArrayObjects = null;
+			GameFileHandler.savedMatchArrayObjects = null;
+			GameFileHandler.requestLevels(onRequestLevels);
+			GameFileHandler.getLevelMetadata(onRequestLevels);
+			GameFileHandler.getSavedLevels(onRequestSavedLevels);
 						
 			setTutorialXMLFile(TutorialController.tutorialXML);
 			
@@ -303,7 +300,7 @@ package scenes.levelselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
-			loginHelper.refuseLevels();
+			GameFileHandler.refuseLevels();
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
@@ -324,18 +321,18 @@ package scenes.levelselectscene
 			if (dataObj) {
 				if (dataObj.hasOwnProperty("levelId")) {
 					PipeJamGameScene.inDemo = false;
-					LoginHelper.getLoginHelper().levelObject = dataObj;
+					PipeJamGame.levelInfo = new LevelInformation(dataObj);
 					dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 				}
 			}
 		}
 		
-		protected function onRequestLevels(result:int):void
+		protected function onRequestLevels(result:int, o:Object = null):void
 		{
 			try{
-				if(result == LoginHelper.EVENT_COMPLETE)
+				if(result == NetworkConnection.EVENT_COMPLETE)
 				{
-					if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null)
+					if(GameFileHandler.levelInfoVector != null && GameFileHandler.matchArrayObjects != null)
 						onGetLevelMetadataComplete();
 				}
 			}
@@ -349,9 +346,9 @@ package scenes.levelselectscene
 		protected function onRequestSavedLevels(result:int):void
 		{
 			try{
-				if(result == LoginHelper.EVENT_COMPLETE)
+				if(result == NetworkConnection.EVENT_COMPLETE)
 				{
-					if(loginHelper.savedMatchArrayObjects != null)
+					if(GameFileHandler.savedMatchArrayObjects != null)
 						onGetSavedLevelsComplete();
 				}
 			}
@@ -365,10 +362,10 @@ package scenes.levelselectscene
 		protected function onGetLevelMetadataComplete():void
 		{
 			matchArrayMetadata = new Array;
-			for(var i:int = 0; i<loginHelper.matchArrayObjects.length; i++)
+			for(var i:int = 0; i<GameFileHandler.matchArrayObjects.length; i++)
 			{
-				var match:Object = loginHelper.matchArrayObjects[i];
-				var savedObj:Object = fileLevelNameFromMatch(match, loginHelper.levelInfoVector, matchArrayMetadata);
+				var match:Object = GameFileHandler.matchArrayObjects[i];
+				var savedObj:Object = fileLevelNameFromMatch(match, GameFileHandler.levelInfoVector, matchArrayMetadata);
 				if(savedObj)
 					savedObj.unlocked = true;
 			}
@@ -381,9 +378,9 @@ package scenes.levelselectscene
 		protected function onGetSavedLevelsComplete():void
 		{		
 			savedLevelsArrayMetadata = new Array;
-			for(var i:int = 0; i<loginHelper.savedMatchArrayObjects.length; i++)
+			for(var i:int = 0; i<GameFileHandler.savedMatchArrayObjects.length; i++)
 			{
-				var match:Object = loginHelper.savedMatchArrayObjects[i];
+				var match:Object = GameFileHandler.savedMatchArrayObjects[i];
 				savedLevelsArrayMetadata.push(match);
 				match.unlocked = true;
 			}
@@ -395,10 +392,10 @@ package scenes.levelselectscene
 		
 		protected function onRequestLevelsComplete():void
 		{
-			if(loginHelper.levelInfoVector != null && loginHelper.matchArrayObjects != null && newLevelListBox != null)
+			if(GameFileHandler.levelInfoVector != null && GameFileHandler.matchArrayObjects != null && newLevelListBox != null)
 				newLevelListBox.stopBusyAnimation();
 			
-			if(loginHelper.savedMatchArrayObjects != null && savedLevelsListBox != null)
+			if(GameFileHandler.savedMatchArrayObjects != null && savedLevelsListBox != null)
 				savedLevelsListBox.stopBusyAnimation();
 		}
 		
@@ -472,7 +469,7 @@ package scenes.levelselectscene
 		
 		protected function onLevelSelected(e:starling.events.Event):void
 		{
-			LoginHelper.getLoginHelper().levelObject = matchArrayMetadata[levelList.selectedIndex];
+			PipeJamGame.levelInfo = new LevelInformation(matchArrayMetadata[levelList.selectedIndex]);
 			
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
 		}

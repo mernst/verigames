@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
 class ForList {
     
     ForList() {
@@ -14,9 +14,9 @@ class ForList {
         }
         out.toString();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method ForList#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method ForList#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class ForList extends type; tree <<missing tree>> within 
@@ -34,9 +34,9 @@ class ForList {
         }
         out.toString();
     }
-}
+} )
 
-subtype constraint: Variable 2 at method ForList#test(Ljava/util/List;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method ForList#test(Ljava/util/List;):V receiver; tree <<missing tree>> within 
 void test(List input) {
     Object out = null;
     for (Object o : input) {
@@ -59,15 +59,15 @@ class ForList {
         }
         out.toString();
     }
-}
+} )
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
 
-equality constraint: RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()) = Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()) = Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object )
 
-subtype constraint: Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object
+SubtypeConstraint( Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
 
-subtype constraint: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()
+SubtypeConstraint( Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set() )
 
-subtype constraint: RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set() )
 
