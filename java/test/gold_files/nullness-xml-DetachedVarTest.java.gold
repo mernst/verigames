@@ -393,6 +393,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="null" editable="false" id="e17" pinch="false" variableID="-2" width="wide">
@@ -421,12 +427,6 @@
       <noderef id="n7" port="outputReturn0" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1143,6 +1143,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method DetachedVarAccess#method(LDetachedVarTest;):V parameter 0; tree DetachedVarTest" editable="true" id="e19" pinch="false" variableID="8" width="narrow">
@@ -1329,6 +1335,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
@@ -1357,6 +1369,12 @@
       <noderef id="n50" port="left" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

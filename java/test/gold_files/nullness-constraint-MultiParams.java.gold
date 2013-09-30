@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
 class MultiParams {
     
     MultiParams() {
@@ -13,9 +13,9 @@ class MultiParams {
     void foo(Object a, String b) {
         a.toString();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method MultiParams#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method MultiParams#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
@@ -32,9 +32,9 @@ class MultiParams {
     void foo(Object a, String b) {
         a.toString();
     }
-}
+} )
 
-subtype constraint: Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     foo(new Object(), null);
 }Atm: @VarAnnot(2) MultiParams  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
@@ -51,9 +51,9 @@ class MultiParams {
     void foo(Object a, String b) {
         a.toString();
     }
-}
+} )
 
-inequality constraint at method MultiParams#foo():V constraint position: Variable 6 at method MultiParams#foo():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MultiParams#foo():V constraint position, Variable 6 at method MultiParams#foo():V creation 0; tree Object != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MultiParams#foo():V constraint position; 
@@ -70,7 +70,7 @@ args: ( Variable 6 at method MultiParams#foo():V creation 0; tree Object, Litera
 result: List(); 
 )
 
-subtype constraint: Variable 3 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 3 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V receiver; tree <<missing tree>> within 
 void foo(Object a, String b) {
     a.toString();
 }Atm: @VarAnnot(3) MultiParams  <:  Variable 0 at class MultiParams extends type; tree <<missing tree>> within 
@@ -87,7 +87,7 @@ class MultiParams {
     void foo(Object a, String b) {
         a.toString();
     }
-}
+} )
 
-inequality constraint at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position: Variable 4 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V parameter 0; tree Object != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position, Variable 4 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V parameter 0; tree Object != Constant(@nninf.quals.Nullable) )
 

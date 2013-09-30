@@ -1106,6 +1106,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method Other#m3(LOther;):V creation 0; tree Object" editable="true" id="e24" pinch="true" variableID="9" width="narrow">
@@ -1256,6 +1262,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method Other#m3(LOther;):V creation 0; tree Object" editable="true" id="e32" pinch="false" variableID="9" width="narrow">
@@ -1364,6 +1376,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method Other#m2():Ljava/lang/Object; return type; tree Object" editable="true" id="e38" pinch="false" variableID="4" width="narrow">
@@ -1374,6 +1392,12 @@
       <noderef id="n62" port="first" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1428,6 +1452,12 @@
       <noderef id="n63" port="left" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1500,6 +1530,12 @@
       <noderef id="n16" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2147,6 +2183,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other" editable="true" id="e44" pinch="false" variableID="14" width="narrow">
@@ -2183,6 +2225,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other" editable="true" id="e46" pinch="false" variableID="14" width="narrow">
@@ -2193,6 +2241,12 @@
       <noderef id="n68" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2219,6 +2273,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="null" editable="false" id="e48" pinch="false" variableID="-2" width="wide">
@@ -2229,6 +2289,12 @@
       <noderef id="n70" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2265,6 +2331,12 @@
       <noderef id="n72" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2363,6 +2435,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 14 at method CallOther#foo(LOther;):V parameter 0; tree Other" editable="true" id="e56" pinch="false" variableID="14" width="narrow">
@@ -2391,6 +2469,12 @@
       <noderef id="n78" port="inReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2505,6 +2589,12 @@
       <noderef id="n84" port="first" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

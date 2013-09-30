@@ -1,9 +1,9 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class BoxingError class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class BoxingError class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class BoxingError class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class BoxingError class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 4 at class BoxingError extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class BoxingError extends type; tree <<missing tree>> within 
 public class BoxingError<A, B> {
     
     public BoxingError() {
@@ -17,9 +17,9 @@ public class BoxingError<A, B> {
     public void localAccess() {
         toAccess('c', "BLAG");
     }
-}
+} )
 
-subtype constraint: Variable 5 at method BoxingError#<init>():V return type; tree 
+SubtypeConstraint( Variable 5 at method BoxingError#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 4 at class BoxingError extends type; tree <<missing tree>> within 
@@ -36,9 +36,9 @@ public class BoxingError<A, B> {
     public void localAccess() {
         toAccess('c', "BLAG");
     }
-}
+} )
 
-subtype constraint: Variable 11 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 11 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; receiver; tree <<missing tree>> within 
 public <C, D>D toAccess(C c1, D d1) {
     return d1;
 }Atm: @VarAnnot(11) BoxingError<A extends Object, B extends Object>  <:  Variable 4 at class BoxingError extends type; tree <<missing tree>> within 
@@ -55,25 +55,15 @@ public class BoxingError<A, B> {
     public void localAccess() {
         toAccess('c', "BLAG");
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 6 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within CAtm: @VarAnnot(6) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 6 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within CAtm: @VarAnnot(6) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 8 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within DAtm: @VarAnnot(8) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within DAtm: @VarAnnot(8) Object )
 
-subtype constraint: Variable 7 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree C  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 13 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree D  <:  Variable 10 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree D )
 
-subtype constraint: Variable 12 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree C  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 9 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 1; tree D  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 13 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree D  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 13 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree D  <:  Variable 10 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree D
-
-subtype constraint: Variable 10 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree D  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 14 at method BoxingError#localAccess():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 14 at method BoxingError#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {
     toAccess('c', "BLAG");
 }Atm: @VarAnnot(14) BoxingError<A extends Object, B extends Object>  <:  Variable 4 at class BoxingError extends type; tree <<missing tree>> within 
@@ -90,7 +80,7 @@ public class BoxingError<A, B> {
     public void localAccess() {
         toAccess('c', "BLAG");
     }
-}
+} )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method BoxingError#localAccess():V constraint position; 
@@ -103,11 +93,11 @@ methodTypeParamLBs: < Variable 7 at method BoxingError#toAccess(Ljava/lang/Objec
 classTypeParamLBs: < Variable 1 at class BoxingError class type parameter 0; tree A, Variable 3 at class BoxingError class type parameter 1; tree B >; 
 methodTypeArgs: < List(Variable 15 at MethodTypeArgumentInMethodVP in method BoxingError#localAccess():V; tree <<missing tree>> at position ((3,0)) within toAccess('c', "BLAG")Atm: @VarAnnot(15) Object), List(Variable 16 at MethodTypeArgumentInMethodVP in method BoxingError#localAccess():V; tree <<missing tree>> at position ((3,1)) within toAccess('c', "BLAG")Atm: @VarAnnot(16) Object) >; 
 classTypeArgs: < List(Variable 0 at class BoxingError class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object), List(Variable 2 at class BoxingError class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object) >; 
-args: ( Constant(@nninf.quals.NonNull), Literal(STRING_LITERAL, "BLAG") ); 
+args: ( Constant(@nninf.quals.Nullable), Literal(STRING_LITERAL, "BLAG") ); 
 result: List(Variable 10 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree D); 
 )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 17 at class OtherAccess extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 17 at class OtherAccess extends type; tree <<missing tree>> within 
 class OtherAccess {
     private BoxingError<String, Integer> gfAccess;
     
@@ -119,9 +109,9 @@ class OtherAccess {
     public void localAccess() {
         gfAccess.toAccess('c', new Object());
     }
-}
+} )
 
-subtype constraint: Variable 18 at method OtherAccess#<init>():V return type; tree 
+SubtypeConstraint( Variable 18 at method OtherAccess#<init>():V return type; tree 
 public <init>() {
     super();
     gfAccess = new BoxingError<String, Integer>();
@@ -137,7 +127,7 @@ class OtherAccess {
     public void localAccess() {
         gfAccess.toAccess('c', new Object());
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
@@ -166,7 +156,9 @@ public <init>() {
 }); 
 )
 
-inequality constraint at method OtherAccess#<init>():V constraint position: Variable 23 at method OtherAccess#<init>():V creation 0; tree BoxingError within BoxingError<String, Integer> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method OtherAccess#<init>():V constraint position, Variable 23 at method OtherAccess#<init>():V creation 0; tree BoxingError within BoxingError<String, Integer> != Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 23 at method OtherAccess#<init>():V creation 0; tree BoxingError within BoxingError<String, Integer>  <:  Variable 20 at class OtherAccess field gfAccess; tree BoxingError within BoxingError<String, Integer> )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
@@ -180,13 +172,11 @@ args: ( Variable 23 at method OtherAccess#<init>():V creation 0; tree BoxingErro
 result: List(); 
 )
 
-subtype constraint: Variable 23 at method OtherAccess#<init>():V creation 0; tree BoxingError within BoxingError<String, Integer>  <:  Variable 20 at class OtherAccess field gfAccess; tree BoxingError within BoxingError<String, Integer>
+EqualityConstraint( Variable 21 at class OtherAccess field gfAccess; tree String at position ((3,0)) within BoxingError<String, Integer> = Variable 24 at method OtherAccess#<init>():V creation 0; tree String at position ((3,0)) within BoxingError<String, Integer> )
 
-equality constraint: Variable 21 at class OtherAccess field gfAccess; tree String at position ((3,0)) within BoxingError<String, Integer> = Variable 24 at method OtherAccess#<init>():V creation 0; tree String at position ((3,0)) within BoxingError<String, Integer>
+EqualityConstraint( Variable 22 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within BoxingError<String, Integer> = Variable 25 at method OtherAccess#<init>():V creation 0; tree Integer at position ((3,1)) within BoxingError<String, Integer> )
 
-equality constraint: Variable 22 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within BoxingError<String, Integer> = Variable 25 at method OtherAccess#<init>():V creation 0; tree Integer at position ((3,1)) within BoxingError<String, Integer>
-
-subtype constraint: Variable 19 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 19 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {
     gfAccess.toAccess('c', new Object());
 }Atm: @VarAnnot(19) OtherAccess  <:  Variable 17 at class OtherAccess extends type; tree <<missing tree>> within 
@@ -201,7 +191,7 @@ class OtherAccess {
     public void localAccess() {
         gfAccess.toAccess('c', new Object());
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method OtherAccess#localAccess():V constraint position; 
@@ -218,9 +208,9 @@ args: (  );
 result: List(Variable 20 at class OtherAccess field gfAccess; tree BoxingError within BoxingError<String, Integer>, Variable 21 at class OtherAccess field gfAccess; tree String at position ((3,0)) within BoxingError<String, Integer>, Variable 22 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within BoxingError<String, Integer>); 
 )
 
-inequality constraint at method OtherAccess#localAccess():V constraint position: Variable 20 at class OtherAccess field gfAccess; tree BoxingError within BoxingError<String, Integer> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method OtherAccess#localAccess():V constraint position, Variable 20 at class OtherAccess field gfAccess; tree BoxingError within BoxingError<String, Integer> != Constant(@nninf.quals.Nullable) )
 
-inequality constraint at method OtherAccess#localAccess():V constraint position: Variable 26 at method OtherAccess#localAccess():V creation 0; tree Object != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method OtherAccess#localAccess():V constraint position, Variable 26 at method OtherAccess#localAccess():V creation 0; tree Object != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method OtherAccess#localAccess():V constraint position; 
@@ -230,7 +220,7 @@ methodTypeParamLBs: < Variable 7 at method BoxingError#toAccess(Ljava/lang/Objec
 classTypeParamLBs: < Variable 1 at class BoxingError class type parameter 0; tree A, Variable 3 at class BoxingError class type parameter 1; tree B >; 
 methodTypeArgs: < List(Variable 27 at MethodTypeArgumentInMethodVP in method OtherAccess#localAccess():V; tree <<missing tree>> at position ((3,0)) within gfAccess.toAccess('c', new Object())Atm: @VarAnnot(27) Object), List(Variable 28 at MethodTypeArgumentInMethodVP in method OtherAccess#localAccess():V; tree <<missing tree>> at position ((3,1)) within gfAccess.toAccess('c', new Object())Atm: @VarAnnot(28) Object) >; 
 classTypeArgs: < List(Variable 21 at class OtherAccess field gfAccess; tree String at position ((3,0)) within BoxingError<String, Integer>), List(Variable 22 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within BoxingError<String, Integer>) >; 
-args: ( Constant(@nninf.quals.NonNull), Variable 26 at method OtherAccess#localAccess():V creation 0; tree Object ); 
+args: ( Constant(@nninf.quals.Nullable), Variable 26 at method OtherAccess#localAccess():V creation 0; tree Object ); 
 result: List(Variable 10 at method BoxingError#toAccess(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree D); 
 )
 

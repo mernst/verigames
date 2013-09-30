@@ -57,19 +57,24 @@ class CheckerDef {
     //fully qualified solver class name
     public final String solver;
 
-    CheckerDef(command, checker, visitor, solver) {
+    public final String transfer;
+
+    public final String analysis;
+
+    CheckerDef(command, checker, visitor, solver, transfer="checkers.inference.InferenceTransfer") {
         this.command = command;
         this.checker = checker;
         this.visitor = visitor;
         this.solver  = solver;
+        this.transfer = transfer;
     }
 }
 
 //Current checkers that are supported
 //A map from checkerDef.command : checkerDef
 def checkerMap = [
-    new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver'    ),
-    new CheckerDef('nullnessTest', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'test.TestGameSolver'    ),
+    new CheckerDef('nullness', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'nninf.NninfGameSolver', 'nninf.NninfTransfer'),
+    new CheckerDef('nullnessTest', 'nninf.NninfChecker',     'nninf.NninfVisitor',     'test.TestGameSolver', 'nninf.NninfTransfer'),
     new CheckerDef('trusted',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
     new CheckerDef('trustedTest',  'trusted.TrustedChecker', 'trusted.TrustedVisitor', 'test.TestGameSolver'),
     new CheckerDef('random',  'random.RandomChecker', 'trusted.TrustedVisitor', 'trusted.TrustedGameSolver'),
@@ -112,6 +117,8 @@ tasks.add(name:'infer', type : JavaExec ) {
     args      += checkerDef.visitor
     args      += '--solver'
     args      += checkerDef.solver
+    args      += '--transfer'
+    args      += checkerDef.transfer
     args      += inferenceArgs
 
     ext.bcp = files("../dist/javac.jar", "../dist/$jreJarName")

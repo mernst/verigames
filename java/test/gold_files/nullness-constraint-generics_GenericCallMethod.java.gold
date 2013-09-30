@@ -1,15 +1,15 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
 class ListImp implements List<String> {
     
     ListImp() {
         super();
     }
-}
+} )
 
-subtype constraint: Variable 5 at method ListImp#<init>():V return type; tree 
+SubtypeConstraint( Variable 5 at method ListImp#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
@@ -18,9 +18,9 @@ class ListImp implements List<String> {
     ListImp() {
         super();
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
 class CallMethod {
     
     CallMethod() {
@@ -39,9 +39,9 @@ class CallMethod {
         cm.<ListImp>call(null);
         cm.<List<String>>call(null);
     }
-}
+} )
 
-subtype constraint: Variable 7 at method CallMethod#<init>():V return type; tree 
+SubtypeConstraint( Variable 7 at method CallMethod#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
@@ -63,9 +63,9 @@ class CallMethod {
         cm.<ListImp>call(null);
         cm.<List<String>>call(null);
     }
-}
+} )
 
-subtype constraint: Variable 12 at method CallMethod#call(LList;):Ljava/lang/String; receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 12 at method CallMethod#call(LList;):Ljava/lang/String; receiver; tree <<missing tree>> within 
 public <T extends List<String>>String call(T t) {
     return "any";
 }Atm: @VarAnnot(12) CallMethod  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
@@ -87,17 +87,13 @@ class CallMethod {
         cm.<ListImp>call(null);
         cm.<List<String>>call(null);
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String>
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
 
-subtype constraint: Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String>  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Literal(STRING_LITERAL, "any")  <:  Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String )
 
-subtype constraint: Variable 13 at method CallMethod#call(LList;):Ljava/lang/String; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Literal(STRING_LITERAL, "any")  <:  Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String
-
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 14 at method CallMethod#main():V local variable s(0); tree List within List<String>
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 14 at method CallMethod#main():V local variable s(0); tree List within List<String> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
@@ -114,11 +110,11 @@ result: List(Variable 7 at method CallMethod#<init>():V return type; tree
 }); 
 )
 
-inequality constraint at method CallMethod#main():V constraint position: Variable 17 at method CallMethod#main():V creation 0; tree CallMethod != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method CallMethod#main():V constraint position, Variable 17 at method CallMethod#main():V creation 0; tree CallMethod != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 17 at method CallMethod#main():V creation 0; tree CallMethod  <:  Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod
+SubtypeConstraint( Variable 17 at method CallMethod#main():V creation 0; tree CallMethod  <:  Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod )
 
-inequality constraint at method CallMethod#main():V constraint position: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method CallMethod#main():V constraint position, Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
@@ -135,7 +131,7 @@ result: List(Variable 5 at method ListImp#<init>():V return type; tree
 }); 
 )
 
-inequality constraint at method CallMethod#main():V constraint position: Variable 18 at method CallMethod#main():V creation 1; tree ListImp != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method CallMethod#main():V constraint position, Variable 18 at method CallMethod#main():V creation 1; tree ListImp != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
@@ -161,7 +157,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String); 
 )
 
-subtype constraint: Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String  <:  Variable 21 at method CallMethod#main():V local variable retStore(0); tree String
+SubtypeConstraint( Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String  <:  Variable 21 at method CallMethod#main():V local variable retStore(0); tree String )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 

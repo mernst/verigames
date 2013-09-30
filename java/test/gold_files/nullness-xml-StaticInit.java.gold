@@ -6,7 +6,7 @@
     <edgeref id="e8" />
     <edgeref id="e9" />
     <edgeref id="e10" />
-    <edgeref id="e17" />
+    <edgeref id="e13" />
     <edgeref id="e20" />
     <edgeref id="e2" />
     <edgeref id="e3" />
@@ -15,10 +15,10 @@
     <edgeref id="e4" />
     <edgeref id="e11" />
     <edgeref id="e12" />
-    <edgeref id="e13" />
     <edgeref id="e14" />
     <edgeref id="e15" />
     <edgeref id="e16" />
+    <edgeref id="e17" />
     <edgeref id="e18" />
     <edgeref id="e21" />
    </edge-set>
@@ -137,7 +137,7 @@
       <port edge="e10" num="second" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
@@ -152,12 +152,13 @@
      <layout>
       </layout>
     </node>
-    <node id="n22" kind="SUBBOARD" name="StaticInit-f--SET">
+    <node id="n22" kind="MERGE">
      <input>
-      <port edge="e13" num="inParam0" />
+      <port edge="e13" num="left" />
+      <port edge="e14" num="right" />
      </input>
      <output>
-      <port edge="e14" num="outParam0" />
+      <port edge="e20" num="output" />
      </output>
      <layout>
       </layout>
@@ -167,49 +168,48 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e13" num="split" />
-      <port edge="e15" num="toEnd" />
+      <port edge="e15" num="output" />
+      <port edge="e14" num="split" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="CONNECT">
+    <node id="n24" kind="SUBBOARD" name="StaticInit-f--SET">
      <input>
-      <port edge="e14" num="input" />
+      <port edge="e16" num="inParam0" />
      </input>
      <output>
-      <port edge="e16" num="output" />
+      <port edge="e17" num="outParam0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="END">
+    <node id="n25" kind="SPLIT">
      <input>
       <port edge="e15" num="input" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="MERGE">
-     <input>
-      <port edge="e17" num="left" />
-      <port edge="e18" num="right" />
-     </input>
      <output>
-      <port edge="e20" num="output" />
+      <port edge="e16" num="split" />
+      <port edge="e18" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n27" kind="SPLIT">
+    <node id="n26" kind="CONNECT">
      <input>
-      <port edge="e16" num="input" />
+      <port edge="e17" num="input" />
      </input>
      <output>
       <port edge="e21" num="output" />
-      <port edge="e18" num="split" />
      </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="END">
+     <input>
+      <port edge="e18" num="input" />
+     </input>
+     <output />
      <layout>
       </layout>
     </node>
@@ -413,12 +413,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e13" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class StaticInit static field f; tree Object" editable="true" id="e13" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n23" port="split" />
+      <noderef id="n20" port="output" />
      </from>
      <to>
-      <noderef id="n22" port="inParam0" />
+      <noderef id="n22" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -433,10 +433,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e14" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n22" port="outParam0" />
+      <noderef id="n23" port="split" />
      </from>
      <to>
-      <noderef id="n24" port="input" />
+      <noderef id="n22" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -451,7 +451,7 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n23" port="toEnd" />
+      <noderef id="n23" port="output" />
      </from>
      <to>
       <noderef id="n25" port="input" />
@@ -469,7 +469,43 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n24" port="output" />
+      <noderef id="n25" port="split" />
+     </from>
+     <to>
+      <noderef id="n24" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e17" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n24" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e18" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n25" port="toEnd" />
      </from>
      <to>
       <noderef id="n27" port="input" />
@@ -485,57 +521,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class StaticInit static field f; tree Object" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n20" port="output" />
-     </from>
-     <to>
-      <noderef id="n26" port="left" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e18" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n27" port="split" />
-     </from>
-     <to>
-      <noderef id="n26" port="right" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
     <edge buzzsaw="false" description="Variable 1 at class StaticInit static field f; tree Object" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n22" port="output" />
      </from>
      <to>
       <noderef id="n28" port="input" />
@@ -553,7 +541,7 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class StaticInit static initializer *0 creation 0; tree Object" editable="true" id="e21" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n27" port="output" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
       <noderef id="n29" port="input" />

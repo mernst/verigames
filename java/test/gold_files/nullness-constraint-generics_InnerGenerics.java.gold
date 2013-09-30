@@ -1,9 +1,9 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class Outer class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(2) Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class Outer class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(2) Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
 class Outer<T, S> {
     
     Outer() {
@@ -24,9 +24,9 @@ class Outer<T, S> {
             init(s, t);
         }
     }
-}
+} )
 
-subtype constraint: Variable 5 at method Outer#<init>():V return type; tree 
+SubtypeConstraint( Variable 5 at method Outer#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
@@ -50,13 +50,9 @@ class Outer<T, S> {
             init(s, t);
         }
     }
-}
+} )
 
-subtype constraint: Variable 15 at class Outer$Inner field s; tree S  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 16 at class Outer$Inner field t; tree T  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 protected void init(S s, T t) {
     this.s = s;
     this.t = t;
@@ -74,11 +70,7 @@ class Inner<T2 extends T> {
         super();
         init(s, t);
     }
-}
-
-subtype constraint: Variable 3 at class Outer class type parameter 1; tree S  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 1 at class Outer class type parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
@@ -96,6 +88,8 @@ args: (  );
 result: List(Variable 15 at class Outer$Inner field s; tree S); 
 )
 
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 15 at class Outer$Inner field s; tree S )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
 calledVp: class Outer$Inner field s; 
@@ -111,8 +105,6 @@ classTypeArgs: < List(Variable 0 at class Outer class type parameter bound 0 & 0
 args: ( Variable 3 at class Outer class type parameter 1; tree S ); 
 result: List(); 
 )
-
-subtype constraint: Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 15 at class Outer$Inner field s; tree S
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
@@ -130,6 +122,8 @@ args: (  );
 result: List(Variable 16 at class Outer$Inner field t; tree T); 
 )
 
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Variable 16 at class Outer$Inner field t; tree T )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
 calledVp: class Outer$Inner field t; 
@@ -146,9 +140,7 @@ args: ( Variable 1 at class Outer class type parameter 0; tree T );
 result: List(); 
 )
 
-subtype constraint: Variable 1 at class Outer class type parameter 0; tree T  <:  Variable 16 at class Outer$Inner field t; tree T
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 8 at class Outer$Inner extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at class Outer$Inner extends type; tree <<missing tree>> within 
 class Inner<T2 extends T> {
     private S s;
     private T t;
@@ -162,9 +154,9 @@ class Inner<T2 extends T> {
         super();
         init(s, t);
     }
-}
+} )
 
-subtype constraint: Variable 12 at method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
+SubtypeConstraint( Variable 12 at method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
 public <init>(S s, T t) {
     super();
     init(s, t);
@@ -182,11 +174,7 @@ class Inner<T2 extends T> {
         super();
         init(s, t);
     }
-}
-
-subtype constraint: Variable 10 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree S  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 11 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree T  <:  Constant(@nninf.quals.Nullable)
+} )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 

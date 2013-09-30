@@ -238,7 +238,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="false" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n0" port="output_0" />
      </from>
@@ -246,6 +246,12 @@
       <noderef id="n2" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -264,6 +270,12 @@
       <noderef id="n10" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -344,6 +356,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="null" editable="false" id="e41" pinch="false" variableID="-2" width="wide">
@@ -364,7 +382,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="true" id="e51" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="false" id="e51" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n39" port="output" />
      </from>
@@ -491,7 +509,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="true" id="e3" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="false" id="e3" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n6" port="output" />
      </from>
@@ -499,6 +517,12 @@
       <noderef id="n4" port="outputReturn0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -517,6 +541,12 @@
       <noderef id="n4" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -575,7 +605,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="true" id="e5" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class Primitive field i; tree int" editable="false" id="e5" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n7" port="inParam0" />
      </from>
@@ -583,6 +613,18 @@
       <noderef id="n8" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -682,6 +724,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="this" editable="false" id="e44" pinch="false" variableID="-1" width="narrow">
@@ -692,6 +740,12 @@
       <noderef id="n12" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -758,6 +812,18 @@
       <noderef id="n16" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -957,7 +1023,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e12" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e12" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>
@@ -991,9 +1057,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="true" id="e14" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="false" id="e14" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n22" port="inParam0" />
      </from>
@@ -1001,6 +1073,12 @@
       <noderef id="n27" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1045,9 +1123,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="true" id="e24" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="false" id="e24" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n41" port="output" />
      </from>
@@ -1065,7 +1149,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e25" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e25" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n40" port="output" />
      </from>
@@ -1081,9 +1165,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="true" id="e26" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="false" id="e26" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n44" port="split" />
      </from>
@@ -1101,7 +1191,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e47" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n43" port="output" />
      </from>
@@ -1149,7 +1239,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="true" id="e49" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method Primitive#m(I):I parameter 0; tree int" editable="false" id="e49" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n44" port="output" />
      </from>
@@ -1157,6 +1247,12 @@
       <noderef id="n23" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1275,7 +1371,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="START_SMALL_BALL">
+    <node id="n48" kind="START_LARGE_BALL">
      <input />
      <output>
       <port edge="e30" num="output" />
@@ -1386,7 +1482,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="true" id="e16" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="false" id="e16" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n31" port="output" />
      </from>
@@ -1404,7 +1500,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e19" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n37" port="output" />
      </from>
@@ -1480,6 +1576,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at method Primitive#call():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void call() { int i = m(9); }Atm: @VarAnnot(7) Primitive" editable="true" id="e29" pinch="false" variableID="7" width="narrow">
@@ -1500,7 +1608,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nonnull" editable="false" id="e30" pinch="false" variableID="-5" width="narrow">
+    <edge buzzsaw="false" description="nullable" editable="false" id="e30" pinch="false" variableID="-4" width="wide">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -1516,9 +1624,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nonnull" editable="false" id="e31" pinch="false" variableID="-5" width="narrow">
+    <edge buzzsaw="false" description="nullable" editable="false" id="e31" pinch="false" variableID="-4" width="wide">
      <from>
       <noderef id="n45" port="outParam0" />
      </from>
@@ -1534,9 +1648,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nonnull" editable="false" id="e32" pinch="false" variableID="-5" width="narrow">
+    <edge buzzsaw="false" description="nullable" editable="false" id="e32" pinch="false" variableID="-4" width="wide">
      <from>
       <noderef id="n49" port="toEnd" />
      </from>
@@ -1552,9 +1672,21 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e33" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n45" port="outputReturn0" />
      </from>
@@ -1590,7 +1722,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e35" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n38" port="toMerge" />
      </from>
@@ -1606,9 +1738,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e36" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n51" port="toMerge" />
      </from>
@@ -1624,9 +1762,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e37" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e37" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n53" port="output" />
      </from>
@@ -1644,7 +1788,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="true" id="e38" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="false" id="e38" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n42" port="output" />
      </from>
@@ -1660,9 +1804,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e39" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n55" port="split" />
      </from>
@@ -1670,6 +1820,12 @@
       <noderef id="n54" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1710,7 +1866,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="true" id="e53" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method Primitive#call():V local variable i(0); tree int" editable="false" id="e53" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n54" port="output" />
      </from>
@@ -1728,7 +1884,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="true" id="e56" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method Primitive#m(I):I return type; tree int" editable="false" id="e56" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n55" port="output" />
      </from>
@@ -1736,6 +1892,12 @@
       <noderef id="n63" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

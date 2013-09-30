@@ -405,6 +405,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e6" pinch="false" variableID="2" width="narrow">
@@ -549,6 +555,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e21" pinch="false" variableID="-1" width="narrow">
@@ -603,6 +615,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e24" pinch="false" variableID="7" width="narrow">
@@ -613,6 +631,12 @@
       <noderef id="n35" port="1" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -687,6 +711,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e28" pinch="false" variableID="2" width="narrow">
@@ -733,6 +763,18 @@
       <noderef id="n41" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -813,6 +855,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e46" pinch="false" variableID="4" width="narrow">
@@ -823,6 +871,12 @@
       <noderef id="n53" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1030,6 +1084,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="this" editable="false" id="e39" pinch="false" variableID="-1" width="narrow">
@@ -1040,6 +1100,12 @@
       <noderef id="n4" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

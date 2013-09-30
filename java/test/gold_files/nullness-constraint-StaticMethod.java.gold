@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class StaticMethod extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class StaticMethod extends type; tree <<missing tree>> within 
 class StaticMethod {
     
     StaticMethod() {
@@ -15,9 +15,9 @@ class StaticMethod {
     public void instMethod() {
         method("YUM");
     }
-}
+} )
 
-subtype constraint: Variable 1 at method StaticMethod#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method StaticMethod#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class StaticMethod extends type; tree <<missing tree>> within 
@@ -36,9 +36,9 @@ class StaticMethod {
     public void instMethod() {
         method("YUM");
     }
-}
+} )
 
-subtype constraint: Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String
+SubtypeConstraint( Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method StaticMethod#method(Ljava/lang/String;):V constraint position; 
@@ -52,11 +52,11 @@ args: (  );
 result: List(Variable 4 at class StaticMethod static field something; tree List within List<String>, Variable 5 at class StaticMethod static field something; tree String at position ((3,0)) within List<String>); 
 )
 
-subtype constraint: Variable 4 at class StaticMethod static field something; tree List within List<String>  <:  Variable 7 at method StaticMethod#method(Ljava/lang/String;):V local variable otherList(0); tree List within List<String>
+SubtypeConstraint( Variable 4 at class StaticMethod static field something; tree List within List<String>  <:  Variable 7 at method StaticMethod#method(Ljava/lang/String;):V local variable otherList(0); tree List within List<String> )
 
-equality constraint: Variable 8 at method StaticMethod#method(Ljava/lang/String;):V local variable otherList(0); tree String at position ((3,0)) within List<String> = Variable 5 at class StaticMethod static field something; tree String at position ((3,0)) within List<String>
+EqualityConstraint( Variable 8 at method StaticMethod#method(Ljava/lang/String;):V local variable otherList(0); tree String at position ((3,0)) within List<String> = Variable 5 at class StaticMethod static field something; tree String at position ((3,0)) within List<String> )
 
-subtype constraint: Variable 3 at method StaticMethod#instMethod():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 3 at method StaticMethod#instMethod():V receiver; tree <<missing tree>> within 
 public void instMethod() {
     method("YUM");
 }Atm: @VarAnnot(3) StaticMethod  <:  Variable 0 at class StaticMethod extends type; tree <<missing tree>> within 
@@ -75,7 +75,7 @@ class StaticMethod {
     public void instMethod() {
         method("YUM");
     }
-}
+} )
 
 checkers.inference.StaticMethodCallConstraint(
 contextVp: method StaticMethod#instMethod():V constraint position; 

@@ -2,11 +2,11 @@
  <level name="ForList">
   <linked-edges>
    <edge-set id="ForList0">
-    <edgeref id="e6" />
+    <edgeref id="e8" />
     <edgeref id="e21" />
     <edgeref id="e23" />
     <edgeref id="e31" />
-    <edgeref id="e49" />
+    <edgeref id="e51" />
     <edgeref id="e5" />
     <edgeref id="e32" />
     <edgeref id="e33" />
@@ -39,7 +39,18 @@
     <edgeref id="e47" />
    </edge-set>
    <edge-set id="ForList5">
+    <edgeref id="e6" />
+    <edgeref id="e18" />
+    <edgeref id="e20" />
+    <edgeref id="e30" />
+    <edgeref id="e49" />
+   </edge-set>
+   <edge-set id="ForList6">
     <edgeref id="e7" />
+    <edgeref id="e50" />
+   </edge-set>
+   <edge-set id="ForList7">
+    <edgeref id="e9" />
     <edgeref id="e19" />
     <edgeref id="e22" />
     <edgeref id="e24" />
@@ -47,26 +58,15 @@
     <edgeref id="e39" />
     <edgeref id="e41" />
     <edgeref id="e42" />
-    <edgeref id="e50" />
+    <edgeref id="e52" />
    </edge-set>
-   <edge-set id="ForList6">
-    <edgeref id="e8" />
+   <edge-set id="ForList8">
+    <edgeref id="e10" />
     <edgeref id="e16" />
     <edgeref id="e25" />
     <edgeref id="e27" />
     <edgeref id="e36" />
     <edgeref id="e38" />
-    <edgeref id="e51" />
-   </edge-set>
-   <edge-set id="ForList7">
-    <edgeref id="e9" />
-    <edgeref id="e18" />
-    <edgeref id="e20" />
-    <edgeref id="e30" />
-    <edgeref id="e52" />
-   </edge-set>
-   <edge-set id="ForList8">
-    <edgeref id="e10" />
     <edgeref id="e53" />
    </edge-set>
    <edge-set id="ForList9">
@@ -369,8 +369,10 @@
      <layout>
       </layout>
     </node>
-    <node id="n14" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
+    <node id="n14" kind="CONNECT">
+     <input>
+      <port edge="e29" num="input" />
+     </input>
      <output>
       <port edge="e6" num="output" />
      </output>
@@ -382,13 +384,15 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e18" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n16" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
+    <node id="n16" kind="CONNECT">
+     <input>
+      <port edge="e28" num="input" />
+     </input>
      <output>
       <port edge="e7" num="output" />
      </output>
@@ -400,7 +404,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e50" num="output" />
      </output>
      <layout>
       </layout>
@@ -418,15 +422,13 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e16" num="output" />
+      <port edge="e21" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n20" kind="CONNECT">
-     <input>
-      <port edge="e29" num="input" />
-     </input>
+    <node id="n20" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
       <port edge="e9" num="output" />
      </output>
@@ -438,15 +440,13 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e18" num="output" />
+      <port edge="e19" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n22" kind="CONNECT">
-     <input>
-      <port edge="e28" num="input" />
-     </input>
+    <node id="n22" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
       <port edge="e10" num="output" />
      </output>
@@ -458,7 +458,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e53" num="output" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
@@ -594,7 +594,7 @@
       <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e52" num="output" />
+      <port edge="e49" num="output" />
      </output>
      <layout>
       </layout>
@@ -604,7 +604,7 @@
       <port edge="e31" num="input" />
      </input>
      <output>
-      <port edge="e49" num="output" />
+      <port edge="e51" num="output" />
      </output>
      <layout>
       </layout>
@@ -657,7 +657,7 @@
       <port edge="e36" num="input" />
      </input>
      <output>
-      <port edge="e51" num="output" />
+      <port edge="e53" num="output" />
       <port edge="e38" num="split" />
      </output>
      <layout>
@@ -690,7 +690,7 @@
       <port edge="e42" num="input" />
      </input>
      <output>
-      <port edge="e50" num="output" />
+      <port edge="e52" num="output" />
      </output>
      <layout>
       </layout>
@@ -833,7 +833,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e6" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
@@ -851,7 +851,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())" editable="true" id="e7" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set()" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
@@ -869,7 +869,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e8" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -887,7 +887,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e9" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -905,7 +905,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set()" editable="true" id="e10" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e10" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
@@ -997,7 +997,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e16" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n19" port="output" />
+      <noderef id="n23" port="output" />
      </from>
      <to>
       <noderef id="n30" port="left" />
@@ -1033,7 +1033,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e18" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n21" port="output" />
+      <noderef id="n15" port="output" />
      </from>
      <to>
       <noderef id="n33" port="input" />
@@ -1051,7 +1051,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())" editable="true" id="e19" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n17" port="output" />
+      <noderef id="n21" port="output" />
      </from>
      <to>
       <noderef id="n32" port="left" />
@@ -1093,7 +1093,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e21" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n15" port="output" />
+      <noderef id="n19" port="output" />
      </from>
      <to>
       <noderef id="n35" port="input" />
@@ -1228,7 +1228,7 @@
       <noderef id="n39" port="large" />
      </from>
      <to>
-      <noderef id="n22" port="input" />
+      <noderef id="n16" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1252,7 +1252,7 @@
       <noderef id="n39" port="small" />
      </from>
      <to>
-      <noderef id="n20" port="input" />
+      <noderef id="n14" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1649,9 +1649,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e49" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e49" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
       <noderef id="n53" port="input" />
@@ -1667,9 +1667,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())" editable="true" id="e50" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set()" editable="true" id="e50" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n49" port="output" />
+      <noderef id="n17" port="output" />
      </from>
      <to>
       <noderef id="n54" port="input" />
@@ -1685,9 +1685,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e51" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e51" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n46" port="output" />
+      <noderef id="n41" port="output" />
      </from>
      <to>
       <noderef id="n55" port="input" />
@@ -1703,9 +1703,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()))" editable="true" id="e52" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())" editable="true" id="e52" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n49" port="output" />
      </from>
      <to>
       <noderef id="n56" port="input" />
@@ -1721,9 +1721,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: true mergedTo: Set()" editable="true" id="e53" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e53" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n23" port="output" />
+      <noderef id="n46" port="output" />
      </from>
      <to>
       <noderef id="n57" port="input" />

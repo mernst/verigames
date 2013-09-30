@@ -1,5 +1,6 @@
 java/.metadata/
 java/debug_world/
+java/test/test_tmp/
 java/Translation/bin/
 java/Translation/doc/
 java/Translation/check-nullness
@@ -28,6 +29,8 @@ syntax: glob
 *.pyc
 *dotfiles/
 *.swp
+*.orig
+*.rej
 
 
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/.settings/

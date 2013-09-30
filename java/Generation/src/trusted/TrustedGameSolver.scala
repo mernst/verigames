@@ -151,6 +151,9 @@ class TrustedGameSolver extends GameSolver {
           board.addNode(res)
           res
         }
+        case v: RefinementVariable => {
+          boardNVariableToIntersection((board, v))
+        }
         case _ => {
           println("findIntersection: unmatched slot: " + slot)
           null
@@ -161,6 +164,8 @@ class TrustedGameSolver extends GameSolver {
     def updateIntersection(board: Board, slot: Slot, inters: Intersection) {
       slot match {
         case v: Variable =>
+          boardNVariableToIntersection.update((board, v), inters)
+          case v: RefinementVariable =>
           boardNVariableToIntersection.update((board, v), inters)
         case TrustedConstants.UNTRUSTED => {
           // Nothing to do, we're always creating a new black ball
@@ -183,6 +188,9 @@ class TrustedGameSolver extends GameSolver {
     def createChute(slot: Slot): Chute = {
       slot match {
         case v: Variable => {
+          new Chute(v.id, v.toString())
+        }
+        case v: RefinementVariable => {
           new Chute(v.id, v.toString())
         }
         case LiteralThis => {

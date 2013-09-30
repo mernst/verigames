@@ -412,68 +412,70 @@ public class Level
     linkChutesWithLinkedID();
 
     underConstruction = false;
-    for (Board b : boardNames.values())
-      b.finishConstruction();
 
     /* Make sure that all chutes that are linked to each other have the same
-     * width. */
-
+     * width.
+     *
+     * If one chute is uneditable, all will become uneditable.
+     *
+     */
     for (Set<Chute> linkedChutes : linkedEdgeClasses)
     {
-      Boolean isNarrow = null;
+        Boolean isNarrow = null;
+        boolean fixedNarrow = false;
+        boolean fixedWide   = false;
+        boolean conflictingChutes = false;
 
-      /* This is kept so that a detailed error message explaining which chutes
-       * differ can be printed if there is an error. */
-
-      boolean fixedNarrow = false;
-      boolean fixedWide   = false;
-      boolean conflictingChutes = false;
-
-      Chute initialChute = null;
-
-      for (Chute c : linkedChutes)
-      {
-        if (isNarrow == null)
+        for (Chute c : linkedChutes)
         {
-          isNarrow = c.isNarrow();
-          initialChute = c;
-        }
+            if (isNarrow == null)
+            {
+                isNarrow = c.isNarrow();
+            }
 
-        if( !c.isEditable() ) {
-            if( c.isNarrow() ) {
-              fixedNarrow = true;
-            } else {
-              fixedWide   = true;
+            if( !c.isEditable() ) {
+                if( c.isNarrow() ) {
+                    fixedNarrow = true;
+                } else {
+                    fixedWide   = true;
+                }
+            }
+
+            if (fixedNarrow && fixedWide) {
+                conflictingChutes = true;
+                break;
             }
         }
 
-        if (c.isNarrow() != isNarrow) {
-          conflictingChutes = true;
-        }
-      }
-
-      if( conflictingChutes ) {
-        if( InferenceMain.STRICT_MODE() ) {
-            String chutes = "";
-            for( Chute c : linkedChutes ) {
-                chutes += c + ", ";
+        if( conflictingChutes ) {
+            if( InferenceMain.STRICT_MODE() ) {
+                String chutes = "";
+                for( Chute c : linkedChutes ) {
+                    chutes += c + ", ";
+                }
+                throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
             }
-            throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
         }
-
-        //TODO: When an equality constraints links two chutes, make sure all chutes of that
-        //TODO: type are the same width
 
         if( fixedNarrow || !fixedWide ) {
             for( Chute c : linkedChutes ) {
                 c.setNarrow( true );
+                if (fixedNarrow) {
+                    c.setEditable(false);
+                }
             }
         } else {
             for( Chute c : linkedChutes ) {
                 c.setNarrow( false );
+                if (fixedWide) {
+                    c.setEditable(false);
+                }
             }
         }
-      }
+    }
+
+    for (Board b : boardNames.values()) {
+        b.finishConstruction();
     }
   }
 

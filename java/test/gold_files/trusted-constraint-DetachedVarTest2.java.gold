@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class DetachedVarTest2 extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class DetachedVarTest2 extends type; tree <<missing tree>> within 
 class DetachedVarTest2 {
     
     DetachedVarTest2() {
@@ -9,9 +9,9 @@ class DetachedVarTest2 {
     public String[] test2() {
         return null;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method DetachedVarTest2#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method DetachedVarTest2#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class DetachedVarTest2 extends type; tree <<missing tree>> within 
@@ -24,9 +24,9 @@ class DetachedVarTest2 {
     public String[] test2() {
         return null;
     }
-}
+} )
 
-subtype constraint: Variable 4 at method DetachedVarTest2#test2():[Ljava/lang/String; receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 4 at method DetachedVarTest2#test2():[Ljava/lang/String; receiver; tree <<missing tree>> within 
 public String[] test2() {
     return null;
 }Atm: @VarAnnot(4) DetachedVarTest2  <:  Variable 0 at class DetachedVarTest2 extends type; tree <<missing tree>> within 
@@ -39,7 +39,7 @@ class DetachedVarTest2 {
     public String[] test2() {
         return null;
     }
-}
+} )
 
-subtype constraint: Literal(NULL_LITERAL, "null")  <:  Variable 2 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String[]
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 2 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String[] )
 

@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Generics extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Generics extends type; tree <<missing tree>> within 
 class Generics {
     
     Generics() {
@@ -9,9 +9,9 @@ class Generics {
     void foo() {
         Map<String, Object> map = new HashMap<String, Object>();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method Generics#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method Generics#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class Generics extends type; tree <<missing tree>> within 
@@ -24,9 +24,9 @@ class Generics {
     void foo() {
         Map<String, Object> map = new HashMap<String, Object>();
     }
-}
+} )
 
-subtype constraint: Variable 2 at method Generics#foo():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method Generics#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Map<String, Object> map = new HashMap<String, Object>();
 }Atm: @VarAnnot(2) Generics  <:  Variable 0 at class Generics extends type; tree <<missing tree>> within 
@@ -39,11 +39,11 @@ class Generics {
     void foo() {
         Map<String, Object> map = new HashMap<String, Object>();
     }
-}
+} )
 
-subtype constraint: Variable 6 at method Generics#foo():V creation 0; tree HashMap within HashMap<String, Object>  <:  Variable 3 at method Generics#foo():V local variable map(0); tree Map within Map<String, Object>
+SubtypeConstraint( Variable 6 at method Generics#foo():V creation 0; tree HashMap within HashMap<String, Object>  <:  Variable 3 at method Generics#foo():V local variable map(0); tree Map within Map<String, Object> )
 
-equality constraint: Variable 4 at method Generics#foo():V local variable map(0); tree String at position ((3,0)) within Map<String, Object> = Variable 7 at method Generics#foo():V creation 0; tree String at position ((3,0)) within HashMap<String, Object>
+EqualityConstraint( Variable 4 at method Generics#foo():V local variable map(0); tree String at position ((3,0)) within Map<String, Object> = Variable 7 at method Generics#foo():V creation 0; tree String at position ((3,0)) within HashMap<String, Object> )
 
-equality constraint: Variable 5 at method Generics#foo():V local variable map(0); tree Object at position ((3,1)) within Map<String, Object> = Variable 8 at method Generics#foo():V creation 0; tree Object at position ((3,1)) within HashMap<String, Object>
+EqualityConstraint( Variable 5 at method Generics#foo():V local variable map(0); tree Object at position ((3,1)) within Map<String, Object> = Variable 8 at method Generics#foo():V creation 0; tree Object at position ((3,1)) within HashMap<String, Object> )
 

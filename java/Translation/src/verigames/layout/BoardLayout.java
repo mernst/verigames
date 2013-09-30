@@ -123,7 +123,7 @@ public class BoardLayout
     for (Chute c : b.getEdges())
     {
       // get the chute UID. The printer uses this as a label to identify chutes.
-      String chuteUID = Integer.toString(c.getUID());
+      String chuteUID = DotPrinter.getChuteLabel(c);
 
       GraphInformation.EdgeAttributes edgeAttrs =
           info.getEdgeAttributes(chuteUID);

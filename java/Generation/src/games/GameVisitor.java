@@ -107,6 +107,18 @@ public class GameVisitor extends InferenceVisitor {
         return super.visitIdentifier(node, p);
     }
 
+    @Override
+    public Void visitBinary(BinaryTree node, Void p) {
+        Void res = super.visitBinary(node, p);
+        // Equal to tests might have created BallSizeTestConstraints
+        if (node.getKind() == Tree.Kind.EQUAL_TO || node.getKind() == Tree.Kind.NOT_EQUAL_TO) {
+            // Only one of operands will be cached (so only one BallSizesConstraint will be added)
+            this.logStrengtheningExpression(node.getLeftOperand());
+            this.logStrengtheningExpression(node.getRightOperand());
+        }
+        return res;
+    }
+
     //For some reason scanAndReduce is private though it's constituent methods are public,
     //we are doing some hacky things to get around duplicate constraints, this makes those easier
     private Void scanAndReduce(Tree node, Void p, Void r) {

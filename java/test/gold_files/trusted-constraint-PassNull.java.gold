@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class PassNull extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class PassNull extends type; tree <<missing tree>> within 
 public class PassNull {
     
     public PassNull() {
@@ -12,9 +12,9 @@ public class PassNull {
     
     void bar(Object o) {
     }
-}
+} )
 
-subtype constraint: Variable 1 at method PassNull#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method PassNull#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 0 at class PassNull extends type; tree <<missing tree>> within 
@@ -30,9 +30,9 @@ public class PassNull {
     
     void bar(Object o) {
     }
-}
+} )
 
-subtype constraint: Variable 2 at method PassNull#foo():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method PassNull#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     bar(null);
 }Atm: @VarAnnot(2) PassNull  <:  Variable 0 at class PassNull extends type; tree <<missing tree>> within 
@@ -48,7 +48,7 @@ public class PassNull {
     
     void bar(Object o) {
     }
-}
+} )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method PassNull#foo():V constraint position; 
@@ -65,7 +65,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-subtype constraint: Variable 3 at method PassNull#bar(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 3 at method PassNull#bar(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 void bar(Object o) {
 }Atm: @VarAnnot(3) PassNull  <:  Variable 0 at class PassNull extends type; tree <<missing tree>> within 
 public class PassNull {
@@ -80,5 +80,5 @@ public class PassNull {
     
     void bar(Object o) {
     }
-}
+} )
 

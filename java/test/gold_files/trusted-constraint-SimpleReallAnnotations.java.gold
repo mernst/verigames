@@ -1,6 +1,6 @@
 Constraints:
-subtype constraint: Variable 0 at method NNTest#<init>():V return type; tree 
+SubtypeConstraint( Variable 0 at method NNTest#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Constant(@trusted.quals.Untrusted)
+}  <:  Constant(@trusted.quals.Untrusted) )
 

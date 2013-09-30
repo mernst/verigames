@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
 public class MethodGenericsLocalCall {
     
     public MethodGenericsLocalCall() {
@@ -12,9 +12,9 @@ public class MethodGenericsLocalCall {
     public void localCall() {
         this.<String>genericMethodNoReturn("test");
     }
-}
+} )
 
-subtype constraint: Variable 1 at method MethodGenericsLocalCall#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method MethodGenericsLocalCall#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
@@ -30,9 +30,9 @@ public class MethodGenericsLocalCall {
     public void localCall() {
         this.<String>genericMethodNoReturn("test");
     }
-}
+} )
 
-subtype constraint: Variable 4 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 4 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public <T extends Object>void genericMethodNoReturn(T t1) {
 }Atm: @VarAnnot(4) MethodGenericsLocalCall  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
 public class MethodGenericsLocalCall {
@@ -47,15 +47,11 @@ public class MethodGenericsLocalCall {
     public void localCall() {
         this.<String>genericMethodNoReturn("test");
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
-subtype constraint: Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 5 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree <<missing tree>> within 
 public void localCall() {
     this.<String>genericMethodNoReturn("test");
 }Atm: @VarAnnot(6) MethodGenericsLocalCall  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
@@ -71,7 +67,7 @@ public class MethodGenericsLocalCall {
     public void localCall() {
         this.<String>genericMethodNoReturn("test");
     }
-}
+} )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MethodGenericsLocalCall#localCall():V constraint position; 

@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SuperMethod extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SuperMethod extends type; tree <<missing tree>> within 
 class SuperMethod {
     
     SuperMethod() {
@@ -8,9 +8,9 @@ class SuperMethod {
     
     public void m() {
     }
-}
+} )
 
-subtype constraint: Variable 1 at method SuperMethod#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SuperMethod#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class SuperMethod extends type; tree <<missing tree>> within 
@@ -22,9 +22,9 @@ class SuperMethod {
     
     public void m() {
     }
-}
+} )
 
-subtype constraint: Variable 2 at method SuperMethod#m():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method SuperMethod#m():V receiver; tree <<missing tree>> within 
 public void m() {
 }Atm: @VarAnnot(2) SuperMethod  <:  Variable 0 at class SuperMethod extends type; tree <<missing tree>> within 
 class SuperMethod {
@@ -35,14 +35,14 @@ class SuperMethod {
     
     public void m() {
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 3 at class SubMethod extends type; tree SuperMethod
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 3 at class SubMethod extends type; tree SuperMethod )
 
-subtype constraint: Variable 4 at method SubMethod#<init>():V return type; tree 
+SubtypeConstraint( Variable 4 at method SubMethod#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Variable 3 at class SubMethod extends type; tree SuperMethod
+}  <:  Variable 3 at class SubMethod extends type; tree SuperMethod )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubMethod#<init>():V constraint position; 
@@ -59,20 +59,20 @@ result: List(Variable 1 at method SuperMethod#<init>():V return type; tree
 }); 
 )
 
-subtype constraint: Variable 1 at method SuperMethod#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SuperMethod#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Constant(@nninf.quals.Nullable)
+}  <:  Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 5 at method SubMethod#m():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 5 at method SubMethod#m():V receiver; tree <<missing tree>> within 
 public void m() {
     super.m();
-}Atm: @VarAnnot(5) SubMethod  <:  Variable 3 at class SubMethod extends type; tree SuperMethod
+}Atm: @VarAnnot(5) SubMethod  <:  Variable 3 at class SubMethod extends type; tree SuperMethod )
 
-inequality constraint at method SubMethod#m():V constraint position: Variable 5 at method SubMethod#m():V receiver; tree <<missing tree>> within 
+InequalityConstraint( context: method SubMethod#m():V constraint position, Variable 5 at method SubMethod#m():V receiver; tree <<missing tree>> within 
 public void m() {
     super.m();
-}Atm: @VarAnnot(5) SubMethod != Constant(@nninf.quals.Nullable)
+}Atm: @VarAnnot(5) SubMethod != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubMethod#m():V constraint position; 

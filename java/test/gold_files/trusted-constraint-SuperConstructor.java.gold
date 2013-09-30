@@ -1,13 +1,13 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class SuperConstructor extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class SuperConstructor extends type; tree <<missing tree>> within 
 class SuperConstructor {
     
     SuperConstructor() {
         super();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method SuperConstructor#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SuperConstructor#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class SuperConstructor extends type; tree <<missing tree>> within 
@@ -16,14 +16,14 @@ class SuperConstructor {
     SuperConstructor() {
         super();
     }
-}
+} )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor )
 
-subtype constraint: Variable 3 at method SubConstructor#<init>():V return type; tree 
+SubtypeConstraint( Variable 3 at method SubConstructor#<init>():V return type; tree 
 public <init>() {
     super();
-}  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor
+}  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubConstructor#<init>():V constraint position; 
@@ -40,8 +40,8 @@ result: List(Variable 1 at method SuperConstructor#<init>():V return type; tree
 }); 
 )
 
-subtype constraint: Variable 1 at method SuperConstructor#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SuperConstructor#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Constant(@trusted.quals.Untrusted)
+}  <:  Constant(@trusted.quals.Untrusted) )
 

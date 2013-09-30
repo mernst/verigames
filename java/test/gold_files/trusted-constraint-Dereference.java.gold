@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Dereference extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Dereference extends type; tree <<missing tree>> within 
 class Dereference {
     
     Dereference() {
@@ -10,9 +10,9 @@ class Dereference {
     void foo() {
         Dereference d2 = d.d;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method Dereference#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method Dereference#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class Dereference extends type; tree <<missing tree>> within 
@@ -26,9 +26,9 @@ class Dereference {
     void foo() {
         Dereference d2 = d.d;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method Dereference#foo():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method Dereference#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Dereference d2 = d.d;
 }Atm: @VarAnnot(2) Dereference  <:  Variable 0 at class Dereference extends type; tree <<missing tree>> within 
@@ -42,7 +42,7 @@ class Dereference {
     void foo() {
         Dereference d2 = d.d;
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Dereference#foo():V constraint position; 
@@ -59,5 +59,5 @@ args: (  );
 result: List(Variable 3 at class Dereference field d; tree Dereference); 
 )
 
-subtype constraint: Variable 3 at class Dereference field d; tree Dereference  <:  Variable 4 at method Dereference#foo():V local variable d2(0); tree Dereference
+SubtypeConstraint( Variable 3 at class Dereference field d; tree Dereference  <:  Variable 4 at method Dereference#foo():V local variable d2(0); tree Dereference )
 

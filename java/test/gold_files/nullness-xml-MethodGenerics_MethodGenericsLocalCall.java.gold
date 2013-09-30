@@ -374,6 +374,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
@@ -446,6 +452,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e12" pinch="false" variableID="2" width="narrow">
@@ -456,6 +474,12 @@
       <noderef id="n24" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -500,6 +524,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public &lt;T extends Object&gt;void genericMethodNoReturn(T t1) { }Atm: @VarAnnot(4) MethodGenericsLocalCall" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
@@ -510,6 +540,12 @@
       <noderef id="n7" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -835,6 +871,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e15" pinch="false" variableID="6" width="narrow">
@@ -845,6 +893,12 @@
       <noderef id="n27" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -881,12 +935,6 @@
       <noderef id="n25" port="inMethodTypeParam0" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1031,6 +1079,12 @@
       <noderef id="n35" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

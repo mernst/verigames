@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SimplestField extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class SimplestField extends type; tree <<missing tree>> within 
 class SimplestField {
     
     SimplestField() {
@@ -12,9 +12,9 @@ class SimplestField {
         final String s2 = "a";
         s = s2;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method SimplestField#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method SimplestField#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class SimplestField extends type; tree <<missing tree>> within 
@@ -30,9 +30,9 @@ class SimplestField {
         final String s2 = "a";
         s = s2;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method SimplestField#s():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method SimplestField#s():V receiver; tree <<missing tree>> within 
 public void s() {
     final String s2 = "a";
     s = s2;
@@ -49,9 +49,9 @@ class SimplestField {
         final String s2 = "a";
         s = s2;
     }
-}
+} )
 
-subtype constraint: Literal(STRING_LITERAL, "a")  <:  Variable 4 at method SimplestField#s():V local variable s2(0); tree String
+SubtypeConstraint( Literal(STRING_LITERAL, "a")  <:  Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method SimplestField#s():V constraint position; 
@@ -69,6 +69,8 @@ args: (  );
 result: List(Variable 3 at class SimplestField field s; tree String); 
 )
 
+SubtypeConstraint( Variable 4 at method SimplestField#s():V local variable s2(0); tree String  <:  Variable 3 at class SimplestField field s; tree String )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimplestField#s():V constraint position; 
 calledVp: class SimplestField field s; 
@@ -84,6 +86,4 @@ classTypeArgs: <  >;
 args: ( Variable 4 at method SimplestField#s():V local variable s2(0); tree String ); 
 result: List(); 
 )
-
-subtype constraint: Variable 4 at method SimplestField#s():V local variable s2(0); tree String  <:  Variable 3 at class SimplestField field s; tree String
 

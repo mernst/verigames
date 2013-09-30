@@ -10,94 +10,94 @@
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType1">
     <edgeref id="e2" />
+    <edgeref id="e49" />
+    <edgeref id="e119" />
+    <edgeref id="e3" />
+    <edgeref id="e4" />
+   </edge-set>
+   <edge-set id="fromPicard.IlluminaDataType2">
+    <edgeref id="e5" />
     <edgeref id="e56" />
     <edgeref id="e57" />
     <edgeref id="e59" />
-    <edgeref id="e119" />
-   </edge-set>
-   <edge-set id="fromPicard.IlluminaDataType2">
-    <edgeref id="e3" />
-    <edgeref id="e65" />
-    <edgeref id="e66" />
-    <edgeref id="e68" />
     <edgeref id="e120" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType3">
-    <edgeref id="e4" />
-    <edgeref id="e74" />
-    <edgeref id="e75" />
-    <edgeref id="e77" />
+    <edgeref id="e6" />
+    <edgeref id="e58" />
     <edgeref id="e121" />
+    <edgeref id="e7" />
+    <edgeref id="e8" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType4">
-    <edgeref id="e5" />
-    <edgeref id="e83" />
-    <edgeref id="e84" />
-    <edgeref id="e86" />
+    <edgeref id="e9" />
+    <edgeref id="e65" />
+    <edgeref id="e66" />
+    <edgeref id="e68" />
     <edgeref id="e122" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType5">
-    <edgeref id="e6" />
-    <edgeref id="e92" />
-    <edgeref id="e93" />
-    <edgeref id="e95" />
+    <edgeref id="e10" />
+    <edgeref id="e67" />
     <edgeref id="e123" />
+    <edgeref id="e11" />
+    <edgeref id="e12" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType6">
-    <edgeref id="e7" />
-    <edgeref id="e101" />
-    <edgeref id="e102" />
-    <edgeref id="e104" />
+    <edgeref id="e13" />
+    <edgeref id="e74" />
+    <edgeref id="e75" />
+    <edgeref id="e77" />
     <edgeref id="e124" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType7">
-    <edgeref id="e9" />
-    <edgeref id="e49" />
+    <edgeref id="e14" />
+    <edgeref id="e76" />
     <edgeref id="e125" />
-    <edgeref id="e10" />
-    <edgeref id="e11" />
+    <edgeref id="e15" />
+    <edgeref id="e16" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType8">
-    <edgeref id="e12" />
-    <edgeref id="e58" />
+    <edgeref id="e17" />
+    <edgeref id="e83" />
+    <edgeref id="e84" />
+    <edgeref id="e86" />
     <edgeref id="e126" />
-    <edgeref id="e13" />
-    <edgeref id="e14" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType9">
-    <edgeref id="e15" />
-    <edgeref id="e67" />
-    <edgeref id="e127" />
-    <edgeref id="e16" />
-    <edgeref id="e17" />
-   </edge-set>
-   <edge-set id="fromPicard.IlluminaDataType10">
     <edgeref id="e18" />
-    <edgeref id="e76" />
-    <edgeref id="e128" />
+    <edgeref id="e85" />
+    <edgeref id="e127" />
     <edgeref id="e19" />
     <edgeref id="e20" />
    </edge-set>
-   <edge-set id="fromPicard.IlluminaDataType11">
+   <edge-set id="fromPicard.IlluminaDataType10">
     <edgeref id="e21" />
-    <edgeref id="e85" />
-    <edgeref id="e129" />
+    <edgeref id="e92" />
+    <edgeref id="e93" />
+    <edgeref id="e95" />
+    <edgeref id="e128" />
+   </edge-set>
+   <edge-set id="fromPicard.IlluminaDataType11">
     <edgeref id="e22" />
+    <edgeref id="e94" />
+    <edgeref id="e129" />
     <edgeref id="e23" />
+    <edgeref id="e24" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType12">
-    <edgeref id="e24" />
-    <edgeref id="e94" />
-    <edgeref id="e130" />
     <edgeref id="e25" />
-    <edgeref id="e26" />
+    <edgeref id="e101" />
+    <edgeref id="e102" />
+    <edgeref id="e104" />
+    <edgeref id="e130" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType13">
-    <edgeref id="e27" />
+    <edgeref id="e26" />
     <edgeref id="e103" />
     <edgeref id="e131" />
+    <edgeref id="e27" />
     <edgeref id="e28" />
-    <edgeref id="e29" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType14">
     <edgeref id="e38" />
@@ -127,7 +127,7 @@
     <edgeref id="e99" />
     <edgeref id="e100" />
     <edgeref id="e136" />
-    <edgeref id="e8" />
+    <edgeref id="e29" />
     <edgeref id="e116" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaDataType32">
@@ -178,13 +178,13 @@
     <node id="n0" kind="INCOMING">
      <input />
      <output>
-      <port edge="e9" num="output_0" />
-      <port edge="e12" num="output_1" />
-      <port edge="e15" num="output_2" />
-      <port edge="e18" num="output_3" />
-      <port edge="e21" num="output_4" />
-      <port edge="e24" num="output_5" />
-      <port edge="e27" num="output_6" />
+      <port edge="e2" num="output_0" />
+      <port edge="e6" num="output_1" />
+      <port edge="e10" num="output_2" />
+      <port edge="e14" num="output_3" />
+      <port edge="e18" num="output_4" />
+      <port edge="e22" num="output_5" />
+      <port edge="e26" num="output_6" />
      </output>
      <layout>
       </layout>
@@ -213,56 +213,12 @@
      <layout>
       </layout>
     </node>
-    <node id="n4" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e2" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n5" kind="CONNECT">
+    <node id="n4" kind="CONNECT">
      <input>
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e56" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n6" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e3" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n7" kind="CONNECT">
-     <input>
-      <port edge="e3" num="input" />
-     </input>
-     <output>
-      <port edge="e65" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n8" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e4" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n9" kind="CONNECT">
-     <input>
-      <port edge="e4" num="input" />
-     </input>
-     <output>
-      <port edge="e74" num="output" />
+      <port edge="e49" num="output" />
      </output>
      <layout>
       </layout>
@@ -280,60 +236,14 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e83" num="output" />
+      <port edge="e56" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n12" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e6" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n13" kind="CONNECT">
+    <node id="n12" kind="CONNECT">
      <input>
       <port edge="e6" num="input" />
-     </input>
-     <output>
-      <port edge="e92" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n14" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e7" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n15" kind="CONNECT">
-     <input>
-      <port edge="e7" num="input" />
-     </input>
-     <output>
-      <port edge="e101" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n20" kind="CONNECT">
-     <input>
-      <port edge="e9" num="input" />
-     </input>
-     <output>
-      <port edge="e49" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="CONNECT">
-     <input>
-      <port edge="e12" num="input" />
      </input>
      <output>
       <port edge="e58" num="output" />
@@ -341,9 +251,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="CONNECT">
+    <node id="n18" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e9" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n19" kind="CONNECT">
      <input>
-      <port edge="e15" num="input" />
+      <port edge="e9" num="input" />
+     </input>
+     <output>
+      <port edge="e65" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n20" kind="CONNECT">
+     <input>
+      <port edge="e10" num="input" />
      </input>
      <output>
       <port edge="e67" num="output" />
@@ -351,9 +279,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
+    <node id="n26" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e13" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="CONNECT">
      <input>
-      <port edge="e18" num="input" />
+      <port edge="e13" num="input" />
+     </input>
+     <output>
+      <port edge="e74" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n28" kind="CONNECT">
+     <input>
+      <port edge="e14" num="input" />
      </input>
      <output>
       <port edge="e76" num="output" />
@@ -361,9 +307,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n44" kind="CONNECT">
+    <node id="n34" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e17" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n35" kind="CONNECT">
      <input>
-      <port edge="e21" num="input" />
+      <port edge="e17" num="input" />
+     </input>
+     <output>
+      <port edge="e83" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n36" kind="CONNECT">
+     <input>
+      <port edge="e18" num="input" />
      </input>
      <output>
       <port edge="e85" num="output" />
@@ -371,9 +335,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n50" kind="CONNECT">
+    <node id="n42" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e21" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="CONNECT">
      <input>
-      <port edge="e24" num="input" />
+      <port edge="e21" num="input" />
+     </input>
+     <output>
+      <port edge="e92" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="CONNECT">
+     <input>
+      <port edge="e22" num="input" />
      </input>
      <output>
       <port edge="e94" num="output" />
@@ -381,9 +363,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n56" kind="CONNECT">
+    <node id="n50" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e25" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="CONNECT">
      <input>
-      <port edge="e27" num="input" />
+      <port edge="e25" num="input" />
+     </input>
+     <output>
+      <port edge="e101" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="CONNECT">
+     <input>
+      <port edge="e26" num="input" />
      </input>
      <output>
       <port edge="e103" num="output" />
@@ -498,7 +498,7 @@
       <port edge="e50" num="right" />
      </input>
      <output>
-      <port edge="e125" num="output" />
+      <port edge="e119" num="output" />
      </output>
      <layout>
       </layout>
@@ -585,7 +585,7 @@
       <port edge="e59" num="right" />
      </input>
      <output>
-      <port edge="e126" num="output" />
+      <port edge="e121" num="output" />
      </output>
      <layout>
       </layout>
@@ -595,7 +595,7 @@
       <port edge="e57" num="input" />
      </input>
      <output>
-      <port edge="e119" num="output" />
+      <port edge="e120" num="output" />
       <port edge="e59" num="split" />
      </output>
      <layout>
@@ -672,7 +672,7 @@
       <port edge="e68" num="right" />
      </input>
      <output>
-      <port edge="e127" num="output" />
+      <port edge="e123" num="output" />
      </output>
      <layout>
       </layout>
@@ -682,7 +682,7 @@
       <port edge="e66" num="input" />
      </input>
      <output>
-      <port edge="e120" num="output" />
+      <port edge="e122" num="output" />
       <port edge="e68" num="split" />
      </output>
      <layout>
@@ -759,7 +759,7 @@
       <port edge="e77" num="right" />
      </input>
      <output>
-      <port edge="e128" num="output" />
+      <port edge="e125" num="output" />
      </output>
      <layout>
       </layout>
@@ -769,7 +769,7 @@
       <port edge="e75" num="input" />
      </input>
      <output>
-      <port edge="e121" num="output" />
+      <port edge="e124" num="output" />
       <port edge="e77" num="split" />
      </output>
      <layout>
@@ -846,7 +846,7 @@
       <port edge="e86" num="right" />
      </input>
      <output>
-      <port edge="e129" num="output" />
+      <port edge="e127" num="output" />
      </output>
      <layout>
       </layout>
@@ -856,7 +856,7 @@
       <port edge="e84" num="input" />
      </input>
      <output>
-      <port edge="e122" num="output" />
+      <port edge="e126" num="output" />
       <port edge="e86" num="split" />
      </output>
      <layout>
@@ -933,7 +933,7 @@
       <port edge="e95" num="right" />
      </input>
      <output>
-      <port edge="e130" num="output" />
+      <port edge="e129" num="output" />
      </output>
      <layout>
       </layout>
@@ -943,7 +943,7 @@
       <port edge="e93" num="input" />
      </input>
      <output>
-      <port edge="e123" num="output" />
+      <port edge="e128" num="output" />
       <port edge="e95" num="split" />
      </output>
      <layout>
@@ -1030,7 +1030,7 @@
       <port edge="e102" num="input" />
      </input>
      <output>
-      <port edge="e124" num="output" />
+      <port edge="e130" num="output" />
       <port edge="e104" num="split" />
      </output>
      <layout>
@@ -1182,12 +1182,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n4" port="output" />
+      <noderef id="n0" port="output_0" />
      </from>
      <to>
-      <noderef id="n5" port="input" />
+      <noderef id="n4" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1198,18 +1198,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n6" port="output" />
-     </from>
-     <to>
-      <noderef id="n7" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1218,25 +1206,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n8" port="output" />
-     </from>
-     <to>
-      <noderef id="n9" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e5" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -1254,12 +1224,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e6" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n12" port="output" />
+      <noderef id="n0" port="output_1" />
      </from>
      <to>
-      <noderef id="n13" port="input" />
+      <noderef id="n12" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e9" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n18" port="output" />
+     </from>
+     <to>
+      <noderef id="n19" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1272,27 +1266,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e10" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n14" port="output" />
-     </from>
-     <to>
-      <noderef id="n15" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n0" port="output_0" />
+      <noderef id="n0" port="output_2" />
      </from>
      <to>
       <noderef id="n20" port="input" />
@@ -1314,12 +1290,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e12" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e13" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n0" port="output_1" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
-      <noderef id="n26" port="input" />
+      <noderef id="n27" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1330,44 +1306,44 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e15" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n0" port="output_2" />
-     </from>
-     <to>
-      <noderef id="n32" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e18" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e14" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n0" port="output_3" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n28" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e17" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n34" port="output" />
+     </from>
+     <to>
+      <noderef id="n35" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1380,9 +1356,51 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e21" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e18" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n0" port="output_4" />
+     </from>
+     <to>
+      <noderef id="n36" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e21" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n43" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e22" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n0" port="output_5" />
      </from>
      <to>
       <noderef id="n44" port="input" />
@@ -1402,14 +1420,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e24" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e25" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n0" port="output_5" />
+      <noderef id="n50" port="output" />
      </from>
      <to>
-      <noderef id="n50" port="input" />
+      <noderef id="n51" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1420,20 +1444,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e27" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e26" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n0" port="output_6" />
      </from>
      <to>
-      <noderef id="n56" port="input" />
+      <noderef id="n52" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1470,7 +1488,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e39" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e39" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n80" port="output" />
      </from>
@@ -1524,7 +1542,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e44" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e44" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n89" port="outputReturn0" />
      </from>
@@ -1542,7 +1560,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e45" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e45" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n81" port="toMerge" />
      </from>
@@ -1558,9 +1576,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e46" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e46" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n90" port="toMerge" />
      </from>
@@ -1614,9 +1638,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e49" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e49" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n20" port="output" />
+      <noderef id="n4" port="output" />
      </from>
      <to>
       <noderef id="n93" port="left" />
@@ -1640,6 +1664,12 @@
       <noderef id="n93" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1686,7 +1716,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e53" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e53" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n98" port="outputReturn0" />
      </from>
@@ -1704,7 +1734,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e54" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e54" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n91" port="toMerge" />
      </from>
@@ -1722,7 +1752,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e55" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e55" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n99" port="toMerge" />
      </from>
@@ -1738,11 +1768,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e56" pinch="true" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e56" pinch="true" variableID="3" width="narrow">
      <from>
-      <noderef id="n5" port="output" />
+      <noderef id="n11" port="output" />
      </from>
      <to>
       <noderef id="n101" port="input" />
@@ -1756,9 +1792,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e57" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e57" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n101" port="output" />
      </from>
@@ -1776,9 +1818,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e58" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e58" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n12" port="output" />
      </from>
      <to>
       <noderef id="n102" port="left" />
@@ -1792,9 +1834,21 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e59" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e59" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n103" port="split" />
      </from>
@@ -1802,6 +1856,12 @@
       <noderef id="n102" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1848,7 +1908,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e62" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e62" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n107" port="outputReturn0" />
      </from>
@@ -1866,7 +1926,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e63" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e63" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n100" port="toMerge" />
      </from>
@@ -1884,7 +1944,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e64" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e64" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n108" port="toMerge" />
      </from>
@@ -1900,11 +1960,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e65" pinch="true" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e65" pinch="true" variableID="5" width="narrow">
      <from>
-      <noderef id="n7" port="output" />
+      <noderef id="n19" port="output" />
      </from>
      <to>
       <noderef id="n110" port="input" />
@@ -1920,7 +1986,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e66" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e66" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n110" port="output" />
      </from>
@@ -1938,9 +2004,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e67" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e67" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n20" port="output" />
      </from>
      <to>
       <noderef id="n111" port="left" />
@@ -1956,7 +2022,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e68" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e68" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n112" port="split" />
      </from>
@@ -1964,6 +2030,12 @@
       <noderef id="n111" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2010,7 +2082,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e71" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e71" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n116" port="outputReturn0" />
      </from>
@@ -2028,7 +2100,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e72" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e72" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n109" port="toMerge" />
      </from>
@@ -2046,7 +2118,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e73" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e73" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n117" port="toMerge" />
      </from>
@@ -2062,11 +2134,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e74" pinch="true" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e74" pinch="true" variableID="7" width="narrow">
      <from>
-      <noderef id="n9" port="output" />
+      <noderef id="n27" port="output" />
      </from>
      <to>
       <noderef id="n119" port="input" />
@@ -2080,9 +2158,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e75" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e75" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n119" port="output" />
      </from>
@@ -2100,9 +2184,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e76" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e76" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n28" port="output" />
      </from>
      <to>
       <noderef id="n120" port="left" />
@@ -2116,9 +2200,21 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e77" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e77" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n121" port="split" />
      </from>
@@ -2126,6 +2222,12 @@
       <noderef id="n120" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2172,7 +2274,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e80" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e80" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n125" port="outputReturn0" />
      </from>
@@ -2190,7 +2292,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e81" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e81" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n118" port="toMerge" />
      </from>
@@ -2208,7 +2310,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e82" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e82" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n126" port="toMerge" />
      </from>
@@ -2224,11 +2326,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e83" pinch="true" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e83" pinch="true" variableID="9" width="narrow">
      <from>
-      <noderef id="n11" port="output" />
+      <noderef id="n35" port="output" />
      </from>
      <to>
       <noderef id="n128" port="input" />
@@ -2244,7 +2352,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e84" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e84" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n128" port="output" />
      </from>
@@ -2262,9 +2370,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e85" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e85" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n44" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
       <noderef id="n129" port="left" />
@@ -2280,7 +2388,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e86" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e86" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n130" port="split" />
      </from>
@@ -2288,6 +2396,12 @@
       <noderef id="n129" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2334,7 +2448,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e89" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e89" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n134" port="outputReturn0" />
      </from>
@@ -2352,7 +2466,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e90" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e90" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n127" port="toMerge" />
      </from>
@@ -2370,7 +2484,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e91" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e91" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n135" port="toMerge" />
      </from>
@@ -2386,11 +2500,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e92" pinch="true" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e92" pinch="true" variableID="11" width="narrow">
      <from>
-      <noderef id="n13" port="output" />
+      <noderef id="n43" port="output" />
      </from>
      <to>
       <noderef id="n137" port="input" />
@@ -2404,9 +2524,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e93" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e93" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n137" port="output" />
      </from>
@@ -2424,9 +2550,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e94" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e94" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n50" port="output" />
+      <noderef id="n44" port="output" />
      </from>
      <to>
       <noderef id="n138" port="left" />
@@ -2454,7 +2580,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e95" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e95" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n139" port="split" />
      </from>
@@ -2462,6 +2588,12 @@
       <noderef id="n138" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2508,7 +2640,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e98" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e98" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n143" port="outputReturn0" />
      </from>
@@ -2526,7 +2658,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e99" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e99" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n136" port="toMerge" />
      </from>
@@ -2542,9 +2674,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e100" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e100" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n144" port="toMerge" />
      </from>
@@ -2560,11 +2698,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e101" pinch="true" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e101" pinch="true" variableID="13" width="narrow">
      <from>
-      <noderef id="n15" port="output" />
+      <noderef id="n51" port="output" />
      </from>
      <to>
       <noderef id="n146" port="input" />
@@ -2580,7 +2724,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e102" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e102" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n146" port="output" />
      </from>
@@ -2598,9 +2742,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e103" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e103" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n56" port="output" />
+      <noderef id="n52" port="output" />
      </from>
      <to>
       <noderef id="n147" port="left" />
@@ -2628,7 +2772,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e104" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e104" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n148" port="split" />
      </from>
@@ -2636,6 +2780,12 @@
       <noderef id="n147" port="right" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2664,9 +2814,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e119" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e119" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n103" port="output" />
+      <noderef id="n93" port="output" />
      </from>
      <to>
       <noderef id="n164" port="input" />
@@ -2682,9 +2832,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e120" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class fromPicard.IlluminaDataType static field BaseCalls creation -1; tree IlluminaDataType" editable="true" id="e120" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n112" port="output" />
+      <noderef id="n103" port="output" />
      </from>
      <to>
       <noderef id="n165" port="input" />
@@ -2700,9 +2850,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e121" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e121" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n121" port="output" />
+      <noderef id="n102" port="output" />
      </from>
      <to>
       <noderef id="n166" port="input" />
@@ -2718,9 +2868,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e122" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class fromPicard.IlluminaDataType static field QualityScores creation -1; tree IlluminaDataType" editable="true" id="e122" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n130" port="output" />
+      <noderef id="n112" port="output" />
      </from>
      <to>
       <noderef id="n167" port="input" />
@@ -2736,9 +2886,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e123" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e123" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n139" port="output" />
+      <noderef id="n111" port="output" />
      </from>
      <to>
       <noderef id="n168" port="input" />
@@ -2754,9 +2904,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e124" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class fromPicard.IlluminaDataType static field RawIntensities creation -1; tree IlluminaDataType" editable="true" id="e124" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n148" port="output" />
+      <noderef id="n121" port="output" />
      </from>
      <to>
       <noderef id="n169" port="input" />
@@ -2772,9 +2922,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e125" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e125" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n93" port="output" />
+      <noderef id="n120" port="output" />
      </from>
      <to>
       <noderef id="n170" port="input" />
@@ -2790,9 +2940,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e126" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Noise creation -1; tree IlluminaDataType" editable="true" id="e126" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n102" port="output" />
+      <noderef id="n130" port="output" />
      </from>
      <to>
       <noderef id="n171" port="input" />
@@ -2808,9 +2958,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e127" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e127" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n111" port="output" />
+      <noderef id="n129" port="output" />
      </from>
      <to>
       <noderef id="n172" port="input" />
@@ -2826,9 +2976,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e128" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field PF creation -1; tree IlluminaDataType" editable="true" id="e128" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n120" port="output" />
+      <noderef id="n139" port="output" />
      </from>
      <to>
       <noderef id="n173" port="input" />
@@ -2844,9 +2994,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e129" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e129" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n129" port="output" />
+      <noderef id="n138" port="output" />
      </from>
      <to>
       <noderef id="n174" port="input" />
@@ -2862,9 +3012,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e130" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Barcodes creation -1; tree IlluminaDataType" editable="true" id="e130" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n138" port="output" />
+      <noderef id="n148" port="output" />
      </from>
      <to>
       <noderef id="n175" port="input" />
@@ -2880,7 +3030,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e131" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e131" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n147" port="output" />
      </from>
@@ -2916,7 +3066,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e136" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e136" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n145" port="output" />
      </from>
@@ -2935,63 +3085,35 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType--init----V">
-    <node id="n16" kind="INCOMING">
+   <board name="fromPicard.IlluminaDataType-Position--GET">
+    <node id="n5" kind="INCOMING">
      <input />
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n17" kind="OUTGOING">
+    <node id="n6" kind="OUTGOING">
      <input>
-      <port edge="e116" num="outputReturn0" />
+      <port edge="e3" num="outputReturn0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n18" kind="START_NO_BALL">
+    <node id="n7" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e8" num="output" />
+      <port edge="e3" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n19" kind="CONNECT">
-     <input>
-      <port edge="e8" num="input" />
-     </input>
-     <output>
-      <port edge="e116" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e3" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n18" port="output" />
+      <noderef id="n7" port="output" />
      </from>
      <to>
-      <noderef id="n19" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e116" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n19" port="output" />
-     </from>
-     <to>
-      <noderef id="n17" port="outputReturn0" />
+      <noderef id="n6" port="outputReturn0" />
      </to>
      <edge-layout>
       <point>
@@ -3005,7 +3127,121 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType-Position--GET">
+   <board name="fromPicard.IlluminaDataType-Position--SET">
+    <node id="n8" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e4" num="inParam0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n9" kind="OUTGOING">
+     <input>
+      <port edge="e4" num="outParam0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 2 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e4" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n8" port="inParam0" />
+     </from>
+     <to>
+      <noderef id="n9" port="outParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType-BaseCalls--GET">
+    <node id="n13" kind="INCOMING">
+     <input />
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n14" kind="OUTGOING">
+     <input>
+      <port edge="e7" num="outputReturn0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n15" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e7" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e7" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n15" port="output" />
+     </from>
+     <to>
+      <noderef id="n14" port="outputReturn0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType-BaseCalls--SET">
+    <node id="n16" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e8" num="inParam0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n17" kind="OUTGOING">
+     <input>
+      <port edge="e8" num="outParam0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 4 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e8" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n16" port="inParam0" />
+     </from>
+     <to>
+      <noderef id="n17" port="outParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType-QualityScores--GET">
     <node id="n21" kind="INCOMING">
      <input />
      <output />
@@ -3014,7 +3250,7 @@
     </node>
     <node id="n22" kind="OUTGOING">
      <input>
-      <port edge="e10" num="outputReturn0" />
+      <port edge="e11" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -3023,12 +3259,12 @@
     <node id="n23" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e10" num="output" />
+      <port edge="e11" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e10" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e11" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -3047,24 +3283,24 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType-Position--SET">
+   <board name="fromPicard.IlluminaDataType-QualityScores--SET">
     <node id="n24" kind="INCOMING">
      <input />
      <output>
-      <port edge="e11" num="inParam0" />
+      <port edge="e12" num="inParam0" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n25" kind="OUTGOING">
      <input>
-      <port edge="e11" num="outParam0" />
+      <port edge="e12" num="outParam0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 9 at class fromPicard.IlluminaDataType static field Position; tree IlluminaDataType" editable="true" id="e11" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e12" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n24" port="inParam0" />
      </from>
@@ -3083,191 +3319,35 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType-BaseCalls--GET">
-    <node id="n27" kind="INCOMING">
-     <input />
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n28" kind="OUTGOING">
-     <input>
-      <port edge="e13" num="outputReturn0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n29" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e13" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e13" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n29" port="output" />
-     </from>
-     <to>
-      <noderef id="n28" port="outputReturn0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
-   <board name="fromPicard.IlluminaDataType-BaseCalls--SET">
-    <node id="n30" kind="INCOMING">
-     <input />
-     <output>
-      <port edge="e14" num="inParam0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="OUTGOING">
-     <input>
-      <port edge="e14" num="outParam0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field BaseCalls; tree IlluminaDataType" editable="true" id="e14" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n30" port="inParam0" />
-     </from>
-     <to>
-      <noderef id="n31" port="outParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
-   <board name="fromPicard.IlluminaDataType-QualityScores--GET">
-    <node id="n33" kind="INCOMING">
-     <input />
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n34" kind="OUTGOING">
-     <input>
-      <port edge="e16" num="outputReturn0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n35" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e16" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e16" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n35" port="output" />
-     </from>
-     <to>
-      <noderef id="n34" port="outputReturn0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
-   <board name="fromPicard.IlluminaDataType-QualityScores--SET">
-    <node id="n36" kind="INCOMING">
-     <input />
-     <output>
-      <port edge="e17" num="inParam0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n37" kind="OUTGOING">
-     <input>
-      <port edge="e17" num="outParam0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 11 at class fromPicard.IlluminaDataType static field QualityScores; tree IlluminaDataType" editable="true" id="e17" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n36" port="inParam0" />
-     </from>
-     <to>
-      <noderef id="n37" port="outParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
    <board name="fromPicard.IlluminaDataType-RawIntensities--GET">
-    <node id="n39" kind="INCOMING">
+    <node id="n29" kind="INCOMING">
      <input />
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="OUTGOING">
+    <node id="n30" kind="OUTGOING">
      <input>
-      <port edge="e19" num="outputReturn0" />
+      <port edge="e15" num="outputReturn0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n31" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e15" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e19" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e15" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n31" port="output" />
      </from>
      <to>
-      <noderef id="n40" port="outputReturn0" />
+      <noderef id="n30" port="outputReturn0" />
      </to>
      <edge-layout>
       <point>
@@ -3282,28 +3362,28 @@
     </edge>
    </board>
    <board name="fromPicard.IlluminaDataType-RawIntensities--SET">
-    <node id="n42" kind="INCOMING">
+    <node id="n32" kind="INCOMING">
      <input />
      <output>
-      <port edge="e20" num="inParam0" />
+      <port edge="e16" num="inParam0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="OUTGOING">
+    <node id="n33" kind="OUTGOING">
      <input>
-      <port edge="e20" num="outParam0" />
+      <port edge="e16" num="outParam0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e20" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class fromPicard.IlluminaDataType static field RawIntensities; tree IlluminaDataType" editable="true" id="e16" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n42" port="inParam0" />
+      <noderef id="n32" port="inParam0" />
      </from>
      <to>
-      <noderef id="n43" port="outParam0" />
+      <noderef id="n33" port="outParam0" />
      </to>
      <edge-layout>
       <point>
@@ -3318,6 +3398,84 @@
     </edge>
    </board>
    <board name="fromPicard.IlluminaDataType-Noise--GET">
+    <node id="n37" kind="INCOMING">
+     <input />
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="OUTGOING">
+     <input>
+      <port edge="e19" num="outputReturn0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e19" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e19" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
+     </from>
+     <to>
+      <noderef id="n38" port="outputReturn0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType-Noise--SET">
+    <node id="n40" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e20" num="inParam0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="OUTGOING">
+     <input>
+      <port edge="e20" num="outParam0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 10 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e20" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n40" port="inParam0" />
+     </from>
+     <to>
+      <noderef id="n41" port="outParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType-PF--GET">
     <node id="n45" kind="INCOMING">
      <input />
      <output />
@@ -3326,7 +3484,7 @@
     </node>
     <node id="n46" kind="OUTGOING">
      <input>
-      <port edge="e22" num="outputReturn0" />
+      <port edge="e23" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -3335,12 +3493,12 @@
     <node id="n47" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e22" num="output" />
+      <port edge="e23" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e22" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e23" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n47" port="output" />
      </from>
@@ -3359,24 +3517,24 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType-Noise--SET">
+   <board name="fromPicard.IlluminaDataType-PF--SET">
     <node id="n48" kind="INCOMING">
      <input />
      <output>
-      <port edge="e23" num="inParam0" />
+      <port edge="e24" num="inParam0" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n49" kind="OUTGOING">
      <input>
-      <port edge="e23" num="outParam0" />
+      <port edge="e24" num="outParam0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 13 at class fromPicard.IlluminaDataType static field Noise; tree IlluminaDataType" editable="true" id="e23" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e24" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n48" port="inParam0" />
      </from>
@@ -3395,113 +3553,35 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="fromPicard.IlluminaDataType-PF--GET">
-    <node id="n51" kind="INCOMING">
-     <input />
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n52" kind="OUTGOING">
-     <input>
-      <port edge="e25" num="outputReturn0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n53" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e25" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e25" pinch="false" variableID="14" width="narrow">
-     <from>
-      <noderef id="n53" port="output" />
-     </from>
-     <to>
-      <noderef id="n52" port="outputReturn0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
-   <board name="fromPicard.IlluminaDataType-PF--SET">
-    <node id="n54" kind="INCOMING">
-     <input />
-     <output>
-      <port edge="e26" num="inParam0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n55" kind="OUTGOING">
-     <input>
-      <port edge="e26" num="outParam0" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field PF; tree IlluminaDataType" editable="true" id="e26" pinch="false" variableID="14" width="narrow">
-     <from>
-      <noderef id="n54" port="inParam0" />
-     </from>
-     <to>
-      <noderef id="n55" port="outParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-   </board>
    <board name="fromPicard.IlluminaDataType-Barcodes--GET">
-    <node id="n57" kind="INCOMING">
+    <node id="n53" kind="INCOMING">
      <input />
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n58" kind="OUTGOING">
+    <node id="n54" kind="OUTGOING">
      <input>
-      <port edge="e28" num="outputReturn0" />
+      <port edge="e27" num="outputReturn0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n55" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e27" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e28" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e27" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n59" port="output" />
+      <noderef id="n55" port="output" />
      </from>
      <to>
-      <noderef id="n58" port="outputReturn0" />
+      <noderef id="n54" port="outputReturn0" />
      </to>
      <edge-layout>
       <point>
@@ -3516,28 +3596,98 @@
     </edge>
    </board>
    <board name="fromPicard.IlluminaDataType-Barcodes--SET">
-    <node id="n60" kind="INCOMING">
+    <node id="n56" kind="INCOMING">
      <input />
      <output>
-      <port edge="e29" num="inParam0" />
+      <port edge="e28" num="inParam0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="OUTGOING">
+    <node id="n57" kind="OUTGOING">
      <input>
-      <port edge="e29" num="outParam0" />
+      <port edge="e28" num="outParam0" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 15 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e29" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class fromPicard.IlluminaDataType static field Barcodes; tree IlluminaDataType" editable="true" id="e28" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n60" port="inParam0" />
+      <noderef id="n56" port="inParam0" />
      </from>
      <to>
-      <noderef id="n61" port="outParam0" />
+      <noderef id="n57" port="outParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="fromPicard.IlluminaDataType--init----V">
+    <node id="n58" kind="INCOMING">
+     <input />
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="OUTGOING">
+     <input>
+      <port edge="e116" num="outputReturn0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n60" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e29" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="CONNECT">
+     <input>
+      <port edge="e29" num="input" />
+     </input>
+     <output>
+      <port edge="e116" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n60" port="output" />
+     </from>
+     <to>
+      <noderef id="n61" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method fromPicard.IlluminaDataType#&lt;init&gt;():V return type; tree  private &lt;init&gt;() { super(); }" editable="true" id="e116" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n61" port="output" />
+     </from>
+     <to>
+      <noderef id="n59" port="outputReturn0" />
      </to>
      <edge-layout>
       <point>
@@ -3900,6 +4050,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e36" pinch="false" variableID="19" width="narrow">
@@ -4188,6 +4344,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e134" pinch="false" variableID="19" width="narrow">
@@ -4341,6 +4503,18 @@
       <noderef id="n69" port="outParam0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

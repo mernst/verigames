@@ -1,29 +1,27 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class mList class type parameter bound 0 & 0; tree Object at position ((3,0)) within M extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class mList class type parameter bound 0 & 0; tree Object at position ((3,0)) within M extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class mList class type parameter bound 1 & 0; tree Object at position ((3,1)) within M2 extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class mList class type parameter bound 1 & 0; tree Object at position ((3,1)) within M2 extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 4 at class MyList class type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class MyList class type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 6 at class MyList class type parameter bound 1 & 0; tree Object at position ((3,1)) within E2 extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 6 at class MyList class type parameter bound 1 & 0; tree Object at position ((3,1)) within E2 extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 8 at class MyList extends type; tree Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at class MyList extends type; tree Object )
 
-subtype constraint: Variable 9 at method MyList#<init>():V return type; tree 
+SubtypeConstraint( Variable 9 at method MyList#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Variable 8 at class MyList extends type; tree Object
+}  <:  Variable 8 at class MyList extends type; tree Object )
 
-subtype constraint: Variable 13 at class MyClass class type parameter 0; tree T extends MyList<String, Integer>  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class MyClass class type parameter bound 0 & 0; tree MyList at position ((3,0)) within T extends MyList<String, Integer> )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 10 at class MyClass class type parameter bound 0 & 0; tree MyList at position ((3,0)) within T extends MyList<String, Integer>
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double>
-
-subtype constraint: Variable 18 at method MyClass#<init>():V return type; tree 
+SubtypeConstraint( Variable 18 at method MyClass#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double>
+}  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#<init>():V constraint position; 
@@ -40,22 +38,12 @@ result: List(Variable 9 at method MyList#<init>():V return type; tree
 }); 
 )
 
-subtype constraint: Variable 9 at method MyList#<init>():V return type; tree 
+SubtypeConstraint( Variable 9 at method MyList#<init>():V return type; tree 
 <init>() {
     super();
-}  <:  Constant(@nninf.quals.Nullable)
+}  <:  Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 19 at method MyClass#m(LMyList;):V receiver; tree MyClass<T>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double>
-
-subtype constraint: Variable 28 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V parameter 0; tree F  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 29 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V parameter 1; tree G  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 22 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter 0; tree F extends Object  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 24 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 1 & 0; tree F at position ((3,1), (3,0)) within G extends MyList<F, Integer>  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 26 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter 1; tree G extends MyList<F, Integer>  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 19 at method MyClass#m(LMyList;):V receiver; tree MyClass<T>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#m(LMyList;):V constraint position; 
@@ -69,22 +57,22 @@ args: ( Literal(NULL_LITERAL, "null"), Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-subtype constraint: Variable 27 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 27 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V receiver; tree <<missing tree>> within 
 <F extends Object, G extends MyList<F, Integer>>void whatever(F f, G g) {
-}Atm: @VarAnnot(27) MyClass<T extends MyList<String, Integer>>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double>
+}Atm: @VarAnnot(27) MyClass<T extends MyList<String, Integer>>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 21 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within F extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 21 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within F extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 23 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 1 & 0; tree MyList at position ((3,1)) within G extends MyList<F, Integer>
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 23 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 1 & 0; tree MyList at position ((3,1)) within G extends MyList<F, Integer> )
 
-subtype constraint: Variable 30 at method MyClass#context():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 30 at method MyClass#context():V receiver; tree <<missing tree>> within 
 void context() {
     MyList<String, Integer> s = new MyList<String, Integer>();
     MyClass<MyList<String, Integer>> myc;
     myc = new MyClass<MyList<String, Integer>>();
     myc.m(s);
     whatever("Sam", s);
-}Atm: @VarAnnot(30) MyClass<T extends MyList<String, Integer>>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double>
+}Atm: @VarAnnot(30) MyClass<T extends MyList<String, Integer>>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 
@@ -101,13 +89,13 @@ result: List(Variable 9 at method MyList#<init>():V return type; tree
 }); 
 )
 
-inequality constraint at method MyClass#context():V constraint position: Variable 36 at method MyClass#context():V creation 0; tree MyList within MyList<String, Integer> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MyClass#context():V constraint position, Variable 36 at method MyClass#context():V creation 0; tree MyList within MyList<String, Integer> != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 36 at method MyClass#context():V creation 0; tree MyList within MyList<String, Integer>  <:  Variable 33 at method MyClass#context():V local variable s(0); tree MyList within MyList<String, Integer>
+SubtypeConstraint( Variable 36 at method MyClass#context():V creation 0; tree MyList within MyList<String, Integer>  <:  Variable 33 at method MyClass#context():V local variable s(0); tree MyList within MyList<String, Integer> )
 
-equality constraint: Variable 34 at method MyClass#context():V local variable s(0); tree String at position ((3,0)) within MyList<String, Integer> = Variable 37 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyList<String, Integer>
+EqualityConstraint( Variable 34 at method MyClass#context():V local variable s(0); tree String at position ((3,0)) within MyList<String, Integer> = Variable 37 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyList<String, Integer> )
 
-equality constraint: Variable 35 at method MyClass#context():V local variable s(0); tree Integer at position ((3,1)) within MyList<String, Integer> = Variable 38 at method MyClass#context():V creation 0; tree Integer at position ((3,1)) within MyList<String, Integer>
+EqualityConstraint( Variable 35 at method MyClass#context():V local variable s(0); tree Integer at position ((3,1)) within MyList<String, Integer> = Variable 38 at method MyClass#context():V creation 0; tree Integer at position ((3,1)) within MyList<String, Integer> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 
@@ -124,26 +112,20 @@ result: List(Variable 18 at method MyClass#<init>():V return type; tree
 }); 
 )
 
-inequality constraint at method MyClass#context():V constraint position: Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>> != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MyClass#context():V constraint position, Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>> != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>>  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>>
+EqualityConstraint( RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> IfTest: false mergedTo: Set() = Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>> )
 
-equality constraint: Variable 40 at method MyClass#context():V local variable myc(0); tree MyList at position ((3,0)) within MyClass<MyList<String, Integer>> = Variable 44 at method MyClass#context():V creation 1; tree MyList at position ((3,0)) within MyClass<MyList<String, Integer>>
+SubtypeConstraint( Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>>  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> )
 
-equality constraint: Variable 41 at method MyClass#context():V local variable myc(0); tree String at position ((3,0), (3,0)) within MyClass<MyList<String, Integer>> = Variable 45 at method MyClass#context():V creation 1; tree String at position ((3,0), (3,0)) within MyClass<MyList<String, Integer>>
+SubtypeConstraint( RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> IfTest: false mergedTo: Set()  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> )
 
-equality constraint: Variable 42 at method MyClass#context():V local variable myc(0); tree Integer at position ((3,0), (3,1)) within MyClass<MyList<String, Integer>> = Variable 46 at method MyClass#context():V creation 1; tree Integer at position ((3,0), (3,1)) within MyClass<MyList<String, Integer>>
-
-subtype constraint: RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>>  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>>
-
-inequality constraint at method MyClass#context():V constraint position: RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> != Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 20 at method MyClass#m(LMyList;):V parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MyClass#context():V constraint position, RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 
 calledVp: method MyClass#m(LMyList;):V; 
-receiver: RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>>; 
+receiver: RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> IfTest: false mergedTo: Set(); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 13 at class MyClass class type parameter 0; tree T extends MyList<String, Integer> >; 
 methodTypeArgs: <  >; 
@@ -151,8 +133,6 @@ classTypeArgs: < List(Variable 40 at method MyClass#context():V local variable m
 args: ( Variable 33 at method MyClass#context():V local variable s(0); tree MyList within MyList<String, Integer> ); 
 result: List(); 
 )
-
-subtype constraint: Variable 50 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree <<missing tree>> at position ((3,1), (3,0), (2,0)) within whatever("Sam", s)Atm: @VarAnnot(50) F extends @VarAnnot(22) Object  <:  Constant(@nninf.quals.Nullable)
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 

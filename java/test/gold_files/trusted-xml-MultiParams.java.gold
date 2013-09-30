@@ -273,6 +273,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 1 at method MultiParams#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e13" pinch="false" variableID="1" width="narrow">
@@ -627,6 +633,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method MultiParams#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { foo(new Object(), null); }Atm: @VarAnnot(2) MultiParams" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
@@ -637,6 +649,12 @@
       <noderef id="n26" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -769,6 +787,12 @@
       <noderef id="n32" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
 public class MissingMethodAccess {
     
     public MissingMethodAccess() {
@@ -8,9 +8,9 @@ public class MissingMethodAccess {
     
     public void access() {
     }
-}
+} )
 
-subtype constraint: Variable 1 at method MissingMethodAccess#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method MissingMethodAccess#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
@@ -22,9 +22,9 @@ public class MissingMethodAccess {
     
     public void access() {
     }
-}
+} )
 
-subtype constraint: Variable 2 at method MissingMethodAccess#access():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method MissingMethodAccess#access():V receiver; tree <<missing tree>> within 
 public void access() {
 }Atm: @VarAnnot(2) MissingMethodAccess  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
 public class MissingMethodAccess {
@@ -35,9 +35,9 @@ public class MissingMethodAccess {
     
     public void access() {
     }
-}
+} )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
 class OtherAccess {
     private MissingMethodAccess mmAccess;
     
@@ -49,9 +49,9 @@ class OtherAccess {
     public void localAccess() {
         mmAccess.access();
     }
-}
+} )
 
-subtype constraint: Variable 4 at method OtherAccess#<init>():V return type; tree 
+SubtypeConstraint( Variable 4 at method OtherAccess#<init>():V return type; tree 
 public <init>() {
     super();
     mmAccess = new MissingMethodAccess();
@@ -67,7 +67,7 @@ class OtherAccess {
     public void localAccess() {
         mmAccess.access();
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
@@ -96,6 +96,8 @@ public <init>() {
 }); 
 )
 
+SubtypeConstraint( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
 calledVp: class OtherAccess field mmAccess; 
@@ -108,9 +110,7 @@ args: ( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMeth
 result: List(); 
 )
 
-subtype constraint: Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess
-
-subtype constraint: Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {
     mmAccess.access();
 }Atm: @VarAnnot(5) OtherAccess  <:  Variable 3 at class OtherAccess extends type; tree <<missing tree>> within 
@@ -125,7 +125,7 @@ class OtherAccess {
     public void localAccess() {
         mmAccess.access();
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method OtherAccess#localAccess():V constraint position; 

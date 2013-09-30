@@ -1,7 +1,7 @@
 Constraints:
-equality constraint: Variable 2 at method CompoundAssignmentTest#method():I return type; tree int = Constant(@trusted.quals.Untrusted)
+EqualityConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int = Constant(@trusted.quals.Untrusted) )
 
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class CompoundAssignmentTest extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class CompoundAssignmentTest extends type; tree <<missing tree>> within 
 class CompoundAssignmentTest {
     
     CompoundAssignmentTest() {
@@ -16,9 +16,9 @@ class CompoundAssignmentTest {
     public static int method() {
         return 1;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method CompoundAssignmentTest#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method CompoundAssignmentTest#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class CompoundAssignmentTest extends type; tree <<missing tree>> within 
@@ -36,9 +36,9 @@ class CompoundAssignmentTest {
     public static int method() {
         return 1;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method CompoundAssignmentTest#method():I return type; tree int  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer
+SubtypeConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
 
 checkers.inference.StaticMethodCallConstraint(
 contextVp: method CompoundAssignmentTest#main():V constraint position; 

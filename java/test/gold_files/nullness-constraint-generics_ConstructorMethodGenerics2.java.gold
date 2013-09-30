@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MyConstructor extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MyConstructor extends type; tree <<missing tree>> within 
 class MyConstructor {
     
     <E extends Object>MyConstructor(E e) {
@@ -9,9 +9,9 @@ class MyConstructor {
     public static void main() {
         final MyConstructor ms = new MyConstructor("string");
     }
-}
+} )
 
-subtype constraint: Variable 3 at method MyConstructor#<init>(Ljava/lang/Object;):V return type; tree 
+SubtypeConstraint( Variable 3 at method MyConstructor#<init>(Ljava/lang/Object;):V return type; tree 
 <E extends Object><init>(E e) {
     super();
 }  <:  Variable 0 at class MyConstructor extends type; tree <<missing tree>> within 
@@ -24,17 +24,11 @@ class MyConstructor {
     public static void main() {
         final MyConstructor ms = new MyConstructor("string");
     }
-}
+} )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 1 at method MyConstructor#<init>(Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 1 at method MyConstructor#<init>(Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object )
 
-subtype constraint: Variable 2 at method MyConstructor#<init>(Ljava/lang/Object;):V method type parameter 0; tree E extends Object  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 4 at method MyConstructor#<init>(Ljava/lang/Object;):V parameter 0; tree E  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Literal(STRING_LITERAL, "string")  <:  Variable 4 at method MyConstructor#<init>(Ljava/lang/Object;):V parameter 0; tree E
-
-subtype constraint: Literal(STRING_LITERAL, "string")  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Literal(STRING_LITERAL, "string")  <:  Variable 4 at method MyConstructor#<init>(Ljava/lang/Object;):V parameter 0; tree E )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyConstructor#main():V constraint position; 
@@ -51,7 +45,7 @@ result: List(Variable 3 at method MyConstructor#<init>(Ljava/lang/Object;):V ret
 }); 
 )
 
-inequality constraint at method MyConstructor#main():V constraint position: Variable 6 at method MyConstructor#main():V creation 0; tree MyConstructor != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method MyConstructor#main():V constraint position, Variable 6 at method MyConstructor#main():V creation 0; tree MyConstructor != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 6 at method MyConstructor#main():V creation 0; tree MyConstructor  <:  Variable 5 at method MyConstructor#main():V local variable ms(0); tree MyConstructor
+SubtypeConstraint( Variable 6 at method MyConstructor#main():V creation 0; tree MyConstructor  <:  Variable 5 at method MyConstructor#main():V local variable ms(0); tree MyConstructor )
 

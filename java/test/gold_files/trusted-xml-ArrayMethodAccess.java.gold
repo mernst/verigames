@@ -237,6 +237,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 0 at class ArrayMethodAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayMethodAccess {  ArrayMethodAccess() { super(); } private String[] array;  public void context() { System.out.println(array.toString()); } }" editable="true" id="e11" pinch="false" variableID="0" width="narrow">
@@ -291,6 +297,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="untrusted string" editable="true" id="e14" pinch="false" variableID="-1" width="narrow">
@@ -337,6 +349,12 @@
       <noderef id="n25" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -900,6 +918,12 @@
       <noderef id="n11" port="outReceiver0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

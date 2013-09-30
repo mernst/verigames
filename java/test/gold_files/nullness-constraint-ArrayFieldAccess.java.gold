@@ -1,13 +1,13 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MyObj extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class MyObj extends type; tree <<missing tree>> within 
 class MyObj {
     
     MyObj() {
         super();
     }
-}
+} )
 
-subtype constraint: Variable 1 at method MyObj#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method MyObj#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class MyObj extends type; tree <<missing tree>> within 
@@ -16,11 +16,11 @@ class MyObj {
     MyObj() {
         super();
     }
-}
+} )
 
-equality constraint: Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int = Constant(@nninf.quals.NonNull)
+EqualityConstraint( Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int = Constant(@nninf.quals.NonNull) )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ArrayFieldAccess extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ArrayFieldAccess extends type; tree <<missing tree>> within 
 class ArrayFieldAccess {
     
     ArrayFieldAccess() {
@@ -32,9 +32,9 @@ class ArrayFieldAccess {
         int i = array.length;
         array[i] = new MyObj();
     }
-}
+} )
 
-subtype constraint: Variable 3 at method ArrayFieldAccess#<init>():V return type; tree 
+SubtypeConstraint( Variable 3 at method ArrayFieldAccess#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 2 at class ArrayFieldAccess extends type; tree <<missing tree>> within 
@@ -49,9 +49,9 @@ class ArrayFieldAccess {
         int i = array.length;
         array[i] = new MyObj();
     }
-}
+} )
 
-subtype constraint: Variable 4 at method ArrayFieldAccess#context():V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 4 at method ArrayFieldAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     int i = array.length;
     array[i] = new MyObj();
@@ -67,7 +67,7 @@ class ArrayFieldAccess {
         int i = array.length;
         array[i] = new MyObj();
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayFieldAccess#context():V constraint position; 
@@ -85,7 +85,7 @@ args: (  );
 result: List(Variable 5 at class ArrayFieldAccess field array; tree MyObj[], Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]); 
 )
 
-inequality constraint at method ArrayFieldAccess#context():V constraint position: Variable 5 at class ArrayFieldAccess field array; tree MyObj[] != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method ArrayFieldAccess#context():V constraint position, Variable 5 at class ArrayFieldAccess field array; tree MyObj[] != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayFieldAccess#context():V constraint position; 
@@ -118,7 +118,7 @@ result: List(Variable 1 at method MyObj#<init>():V return type; tree
 }); 
 )
 
-inequality constraint at method ArrayFieldAccess#context():V constraint position: Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj != Constant(@nninf.quals.Nullable)
+InequalityConstraint( context: method ArrayFieldAccess#context():V constraint position, Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj != Constant(@nninf.quals.Nullable) )
 
-subtype constraint: Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj  <:  Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]
+SubtypeConstraint( Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj  <:  Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[] )
 

@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
 class StaticInit {
     
     StaticInit() {
@@ -9,9 +9,9 @@ class StaticInit {
     static {
         f = new Object();
     }
-}
+} )
 
-subtype constraint: Variable 3 at method StaticInit#<init>():V return type; tree 
+SubtypeConstraint( Variable 3 at method StaticInit#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 0 at class StaticInit extends type; tree <<missing tree>> within 
@@ -24,7 +24,7 @@ class StaticInit {
     static {
         f = new Object();
     }
-}
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class StaticInit static initializer *0 constraint position; 
@@ -38,6 +38,8 @@ args: (  );
 result: List(Variable 1 at class StaticInit static field f; tree Object); 
 )
 
+SubtypeConstraint( Variable 2 at class StaticInit static initializer *0 creation 0; tree Object  <:  Variable 1 at class StaticInit static field f; tree Object )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: class StaticInit static initializer *0 constraint position; 
 calledVp: class StaticInit static field f; 
@@ -49,6 +51,4 @@ classTypeArgs: <  >;
 args: ( Variable 2 at class StaticInit static initializer *0 creation 0; tree Object ); 
 result: List(); 
 )
-
-subtype constraint: Variable 2 at class StaticInit static initializer *0 creation 0; tree Object  <:  Variable 1 at class StaticInit static field f; tree Object
 

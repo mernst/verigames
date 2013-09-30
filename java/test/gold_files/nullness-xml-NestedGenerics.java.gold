@@ -35,22 +35,22 @@
     <edgeref id="e1" />
     <edgeref id="e31" />
     <edgeref id="e51" />
-    <edgeref id="e26" />
-    <edgeref id="e48" />
-    <edgeref id="e24" />
-    <edgeref id="e46" />
     <edgeref id="e22" />
     <edgeref id="e44" />
+    <edgeref id="e24" />
+    <edgeref id="e46" />
+    <edgeref id="e26" />
+    <edgeref id="e48" />
    </edge-set>
    <edge-set id="NestedGenerics4">
     <edgeref id="e2" />
     <edgeref id="e52" />
-    <edgeref id="e27" />
-    <edgeref id="e49" />
-    <edgeref id="e25" />
-    <edgeref id="e47" />
     <edgeref id="e23" />
     <edgeref id="e45" />
+    <edgeref id="e25" />
+    <edgeref id="e47" />
+    <edgeref id="e27" />
+    <edgeref id="e49" />
    </edge-set>
    <edge-set id="NestedGenerics5">
     <edgeref id="e3" />
@@ -554,6 +554,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 4 at class NestedGenerics field sm; tree String at position ((3,0)) within Map&lt;String, List&lt;Integer&gt;&gt;" editable="true" id="e8" pinch="false" variableID="4" width="narrow">
@@ -752,6 +758,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at class NestedGenerics field sm creation 0; tree HashMap within HashMap&lt;String, List&lt;Integer&gt;&gt;" editable="true" id="e32" pinch="true" variableID="7" width="narrow">
@@ -780,12 +792,6 @@
       <noderef id="n46" port="input" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -920,6 +926,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 10 at class NestedGenerics field sm creation 0; tree Integer at position ((3,1), (3,0)) within HashMap&lt;String, List&lt;Integer&gt;&gt;" editable="true" id="e41" pinch="false" variableID="10" width="narrow">
@@ -1046,6 +1064,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 7 at class NestedGenerics field sm creation 0; tree HashMap within HashMap&lt;String, List&lt;Integer&gt;&gt;" editable="true" id="e57" pinch="false" variableID="7" width="narrow">
@@ -1161,8 +1191,8 @@
     <node id="n7" kind="INCOMING">
      <input />
      <output>
-      <port edge="e26" num="inClassTypeParam0" />
-      <port edge="e27" num="inClassTypeParam1" />
+      <port edge="e22" num="inClassTypeParam0" />
+      <port edge="e23" num="inClassTypeParam1" />
       <port edge="e4" num="inReceiver0" />
      </output>
      <layout>
@@ -1170,8 +1200,8 @@
     </node>
     <node id="n8" kind="OUTGOING">
      <input>
-      <port edge="e48" num="outClassTypeParam0" />
-      <port edge="e49" num="outClassTypeParam1" />
+      <port edge="e44" num="outClassTypeParam0" />
+      <port edge="e45" num="outClassTypeParam1" />
       <port edge="e42" num="outReceiver0" />
       <port edge="e5" num="outputReturn0" />
       <port edge="e9" num="outputReturn1" />
@@ -1224,22 +1254,22 @@
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="CONNECT">
+    <node id="n32" kind="CONNECT">
      <input>
-      <port edge="e26" num="input" />
+      <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e48" num="output" />
+      <port edge="e44" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="CONNECT">
+    <node id="n33" kind="CONNECT">
      <input>
-      <port edge="e27" num="input" />
+      <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e49" num="output" />
+      <port edge="e45" num="output" />
      </output>
      <layout>
       </layout>
@@ -1314,6 +1344,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 6 at class NestedGenerics field sm; tree Integer at position ((3,1), (3,0)) within Map&lt;String, List&lt;Integer&gt;&gt;" editable="true" id="e15" pinch="false" variableID="6" width="narrow">
@@ -1332,14 +1368,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e26" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e22" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n7" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n36" port="input" />
+      <noderef id="n32" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1352,12 +1394,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e27" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e23" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n7" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
+      <noderef id="n33" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1386,11 +1428,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e48" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e44" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n36" port="output" />
+      <noderef id="n32" port="output" />
      </from>
      <to>
       <noderef id="n8" port="outClassTypeParam0" />
@@ -1404,16 +1452,34 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e49" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e45" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n37" port="output" />
+      <noderef id="n33" port="output" />
      </from>
      <to>
       <noderef id="n8" port="outClassTypeParam1" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1669,16 +1735,16 @@
     <node id="n28" kind="INCOMING">
      <input />
      <output>
-      <port edge="e22" num="inClassTypeParam0" />
-      <port edge="e23" num="inClassTypeParam1" />
+      <port edge="e26" num="inClassTypeParam0" />
+      <port edge="e27" num="inClassTypeParam1" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n29" kind="OUTGOING">
      <input>
-      <port edge="e44" num="outClassTypeParam0" />
-      <port edge="e45" num="outClassTypeParam1" />
+      <port edge="e48" num="outClassTypeParam0" />
+      <port edge="e49" num="outClassTypeParam1" />
       <port edge="e50" num="outputReturn0" />
      </input>
      <output />
@@ -1703,22 +1769,22 @@
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="CONNECT">
+    <node id="n36" kind="CONNECT">
      <input>
-      <port edge="e22" num="input" />
+      <port edge="e26" num="input" />
      </input>
      <output>
-      <port edge="e44" num="output" />
+      <port edge="e48" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n33" kind="CONNECT">
+    <node id="n37" kind="CONNECT">
      <input>
-      <port edge="e23" num="input" />
+      <port edge="e27" num="input" />
      </input>
      <output>
-      <port edge="e45" num="output" />
+      <port edge="e49" num="output" />
      </output>
      <layout>
       </layout>
@@ -1741,12 +1807,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e22" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e26" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n28" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n32" port="input" />
+      <noderef id="n36" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1759,12 +1825,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e23" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e27" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n28" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n33" port="input" />
+      <noderef id="n37" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1775,11 +1841,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e44" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class NestedGenerics class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within XAtm: @VarAnnot(0) Object" editable="true" id="e48" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
       <noderef id="n29" port="outClassTypeParam0" />
@@ -1795,9 +1873,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e45" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class NestedGenerics class type parameter 0; tree X" editable="true" id="e49" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n33" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
       <noderef id="n29" port="outClassTypeParam1" />

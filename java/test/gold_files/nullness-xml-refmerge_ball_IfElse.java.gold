@@ -23,32 +23,32 @@
    </edge-set>
    <edge-set id="IfElse3">
     <edgeref id="e4" />
-    <edgeref id="e21" />
-    <edgeref id="e23" />
+    <edgeref id="e18" />
     <edgeref id="e34" />
    </edge-set>
    <edge-set id="IfElse4">
     <edgeref id="e5" />
-    <edgeref id="e24" />
-    <edgeref id="e26" />
     <edgeref id="e35" />
    </edge-set>
    <edge-set id="IfElse5">
     <edgeref id="e6" />
+    <edgeref id="e21" />
+    <edgeref id="e23" />
+    <edgeref id="e36" />
+   </edge-set>
+   <edge-set id="IfElse6">
+    <edgeref id="e7" />
+    <edgeref id="e24" />
+    <edgeref id="e26" />
+    <edgeref id="e37" />
+   </edge-set>
+   <edge-set id="IfElse7">
+    <edgeref id="e8" />
     <edgeref id="e22" />
     <edgeref id="e25" />
     <edgeref id="e27" />
     <edgeref id="e29" />
     <edgeref id="e30" />
-    <edgeref id="e36" />
-   </edge-set>
-   <edge-set id="IfElse6">
-    <edgeref id="e7" />
-    <edgeref id="e18" />
-    <edgeref id="e37" />
-   </edge-set>
-   <edge-set id="IfElse7">
-    <edgeref id="e8" />
     <edgeref id="e38" />
    </edge-set>
    <edge-set id="IfElse8">
@@ -324,8 +324,10 @@
      <layout>
       </layout>
     </node>
-    <node id="n11" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
+    <node id="n11" kind="CONNECT">
+     <input>
+      <port edge="e17" num="input" />
+     </input>
      <output>
       <port edge="e4" num="output" />
      </output>
@@ -337,13 +339,15 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e18" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n13" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
+    <node id="n13" kind="CONNECT">
+     <input>
+      <port edge="e16" num="input" />
+     </input>
      <output>
       <port edge="e5" num="output" />
      </output>
@@ -355,7 +359,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e24" num="output" />
+      <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
@@ -373,15 +377,13 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e22" num="output" />
+      <port edge="e21" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n17" kind="CONNECT">
-     <input>
-      <port edge="e17" num="input" />
-     </input>
+    <node id="n17" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
       <port edge="e7" num="output" />
      </output>
@@ -393,15 +395,13 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e18" num="output" />
+      <port edge="e24" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n19" kind="CONNECT">
-     <input>
-      <port edge="e16" num="input" />
-     </input>
+    <node id="n19" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
       <port edge="e8" num="output" />
      </output>
@@ -413,7 +413,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e38" num="output" />
+      <port edge="e22" num="output" />
      </output>
      <layout>
       </layout>
@@ -474,7 +474,7 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
@@ -514,7 +514,7 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e36" num="output" />
       <port edge="e23" num="split" />
      </output>
      <layout>
@@ -536,7 +536,7 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e35" num="output" />
+      <port edge="e37" num="output" />
       <port edge="e26" num="split" />
      </output>
      <layout>
@@ -569,7 +569,7 @@
       <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e38" num="output" />
      </output>
      <layout>
       </layout>
@@ -658,7 +658,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e4" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -676,7 +676,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e5" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -694,7 +694,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()" editable="true" id="e6" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -712,7 +712,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e7" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -730,7 +730,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e8" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -855,7 +855,7 @@
       <noderef id="n29" port="large" />
      </from>
      <to>
-      <noderef id="n19" port="input" />
+      <noderef id="n13" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -873,7 +873,7 @@
       <noderef id="n29" port="small" />
      </from>
      <to>
-      <noderef id="n17" port="input" />
+      <noderef id="n11" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -894,7 +894,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e18" pinch="true" variableID="4" width="narrow">
      <from>
-      <noderef id="n18" port="output" />
+      <noderef id="n12" port="output" />
      </from>
      <to>
       <noderef id="n30" port="input" />
@@ -954,7 +954,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e21" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n12" port="output" />
+      <noderef id="n16" port="output" />
      </from>
      <to>
       <noderef id="n34" port="input" />
@@ -972,7 +972,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()" editable="true" id="e22" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n16" port="output" />
+      <noderef id="n20" port="output" />
      </from>
      <to>
       <noderef id="n33" port="left" />
@@ -1014,7 +1014,7 @@
     </edge>
     <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e24" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n14" port="output" />
+      <noderef id="n18" port="output" />
      </from>
      <to>
       <noderef id="n36" port="input" />
@@ -1198,9 +1198,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e34" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n34" port="output" />
+      <noderef id="n30" port="output" />
      </from>
      <to>
       <noderef id="n41" port="input" />
@@ -1216,9 +1216,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e35" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e35" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n36" port="output" />
+      <noderef id="n14" port="output" />
      </from>
      <to>
       <noderef id="n42" port="input" />
@@ -1234,9 +1234,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()" editable="true" id="e36" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e36" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n34" port="output" />
      </from>
      <to>
       <noderef id="n43" port="input" />
@@ -1252,9 +1252,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e37" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e37" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n30" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
       <noderef id="n44" port="input" />
@@ -1270,9 +1270,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set()" editable="true" id="e38" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()" editable="true" id="e38" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n20" port="output" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n45" port="input" />

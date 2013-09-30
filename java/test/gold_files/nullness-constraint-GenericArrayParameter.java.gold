@@ -1,11 +1,9 @@
 Constraints:
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 0 at class GenericInterface class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class GenericInterface class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
-subtype constraint: Variable 1 at class GenericInterface class type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 5 at class GenericArray class type parameter bound 0 & 0; tree Object at position ((3,0)) within Z extends Object )
 
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 5 at class GenericArray class type parameter bound 0 & 0; tree Object at position ((3,0)) within Z extends Object
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 7 at class GenericArray extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class GenericArray extends type; tree <<missing tree>> within 
 class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     
     GenericArray() {
@@ -20,9 +18,9 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     public String[] map(String[] toMap) {
         return toMap;
     }
-}
+} )
 
-subtype constraint: Variable 11 at method GenericArray#<init>():V return type; tree 
+SubtypeConstraint( Variable 11 at method GenericArray#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 7 at class GenericArray extends type; tree <<missing tree>> within 
@@ -40,11 +38,9 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     public String[] map(String[] toMap) {
         return toMap;
     }
-}
+} )
 
-subtype constraint: Variable 19 at class GenericArray field z; tree Z  <:  Constant(@nninf.quals.Nullable)
-
-subtype constraint: Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void setZ(Z z) {
     this.z = z;
 }Atm: @VarAnnot(12) GenericArray<Z extends Object>  <:  Variable 7 at class GenericArray extends type; tree <<missing tree>> within 
@@ -62,9 +58,7 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     public String[] map(String[] toMap) {
         return toMap;
     }
-}
-
-subtype constraint: Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Constant(@nninf.quals.Nullable)
+} )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method GenericArray#setZ(Ljava/lang/Object;):V constraint position; 
@@ -81,6 +75,8 @@ args: (  );
 result: List(Variable 19 at class GenericArray field z; tree Z); 
 )
 
+SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Variable 19 at class GenericArray field z; tree Z )
+
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method GenericArray#setZ(Ljava/lang/Object;):V constraint position; 
 calledVp: class GenericArray field z; 
@@ -96,9 +92,7 @@ args: ( Variable 6 at class GenericArray class type parameter 0; tree Z extends 
 result: List(); 
 )
 
-subtype constraint: Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Variable 19 at class GenericArray field z; tree Z
-
-subtype constraint: Variable 16 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 16 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; receiver; tree <<missing tree>> within 
 public String[] map(String[] toMap) {
     return toMap;
 }Atm: @VarAnnot(16) GenericArray<Z extends Object>  <:  Variable 7 at class GenericArray extends type; tree <<missing tree>> within 
@@ -116,34 +110,30 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     public String[] map(String[] toMap) {
         return toMap;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; return type; tree T  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 14 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String[]  <:  Variable 2 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; return type; tree T )
 
-subtype constraint: Variable 4 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable)
+SubtypeConstraint( Variable 15 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String at position ((0,0)) within String[]  <:  Variable 10 at class GenericArray implements type 0; tree String at position ((3,0), (0,0)) within GenericInterface<String[]> )
 
-subtype constraint: Variable 14 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String[]  <:  Variable 2 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; return type; tree T
+SubtypeConstraint( Variable 4 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 17 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String[] )
 
-subtype constraint: Variable 15 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String at position ((0,0)) within String[]  <:  Variable 10 at class GenericArray implements type 0; tree String at position ((3,0), (0,0)) within GenericInterface<String[]>
+SubtypeConstraint( Variable 10 at class GenericArray implements type 0; tree String at position ((3,0), (0,0)) within GenericInterface<String[]>  <:  Variable 18 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String at position ((0,0)) within String[] )
 
-subtype constraint: Variable 4 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 17 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String[]
+SubtypeConstraint( Variable 17 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String[]  <:  Variable 14 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String[] )
 
-subtype constraint: Variable 10 at class GenericArray implements type 0; tree String at position ((3,0), (0,0)) within GenericInterface<String[]>  <:  Variable 18 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String at position ((0,0)) within String[]
+SubtypeConstraint( Variable 18 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String at position ((0,0)) within String[]  <:  Variable 15 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String at position ((0,0)) within String[] )
 
-subtype constraint: Variable 17 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String[]  <:  Variable 14 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String[]
-
-subtype constraint: Variable 18 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; parameter 0; tree String at position ((0,0)) within String[]  <:  Variable 15 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String at position ((0,0)) within String[]
-
-subtype constraint: Constant(@nninf.quals.Nullable)  <:  Variable 20 at class GenericFields extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 20 at class GenericFields extends type; tree <<missing tree>> within 
 class GenericFields {
     
     GenericFields() {
         super();
     }
     private GenericArray<String> genArray;
-}
+} )
 
-subtype constraint: Variable 21 at method GenericFields#<init>():V return type; tree 
+SubtypeConstraint( Variable 21 at method GenericFields#<init>():V return type; tree 
 <init>() {
     super();
 }  <:  Variable 20 at class GenericFields extends type; tree <<missing tree>> within 
@@ -153,5 +143,5 @@ class GenericFields {
         super();
     }
     private GenericArray<String> genArray;
-}
+} )
 

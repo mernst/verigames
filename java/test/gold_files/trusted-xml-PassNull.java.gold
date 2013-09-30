@@ -261,6 +261,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 1 at method PassNull#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
@@ -534,6 +540,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e14" pinch="false" variableID="2" width="narrow">
@@ -544,6 +556,12 @@
       <noderef id="n23" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -570,6 +588,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="null" editable="false" id="e16" pinch="false" variableID="-3" width="narrow">
@@ -588,6 +612,12 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
     <edge buzzsaw="false" description="null" editable="false" id="e17" pinch="false" variableID="-3" width="narrow">
@@ -598,6 +628,18 @@
       <noderef id="n26" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>

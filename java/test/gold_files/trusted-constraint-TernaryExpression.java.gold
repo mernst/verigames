@@ -1,5 +1,5 @@
 Constraints:
-subtype constraint: Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class TernaryExpression extends type; tree <<missing tree>> within 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class TernaryExpression extends type; tree <<missing tree>> within 
 public class TernaryExpression {
     
     public TernaryExpression() {
@@ -9,9 +9,9 @@ public class TernaryExpression {
     public void foo(Object o) {
         Object b = o == null ? new Object() : o;
     }
-}
+} )
 
-subtype constraint: Variable 1 at method TernaryExpression#<init>():V return type; tree 
+SubtypeConstraint( Variable 1 at method TernaryExpression#<init>():V return type; tree 
 public <init>() {
     super();
 }  <:  Variable 0 at class TernaryExpression extends type; tree <<missing tree>> within 
@@ -24,9 +24,9 @@ public class TernaryExpression {
     public void foo(Object o) {
         Object b = o == null ? new Object() : o;
     }
-}
+} )
 
-subtype constraint: Variable 2 at method TernaryExpression#foo(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+SubtypeConstraint( Variable 2 at method TernaryExpression#foo(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void foo(Object o) {
     Object b = o == null ? new Object() : o;
 }Atm: @VarAnnot(2) TernaryExpression  <:  Variable 0 at class TernaryExpression extends type; tree <<missing tree>> within 
@@ -39,9 +39,11 @@ public class TernaryExpression {
     public void foo(Object o) {
         Object b = o == null ? new Object() : o;
     }
-}
+} )
 
-subtype constraint: Variable 4 at method TernaryExpression#foo(Ljava/lang/Object;):V creation 0; tree Object  <:  Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object
+SubtypeConstraint( Variable 4 at method TernaryExpression#foo(Ljava/lang/Object;):V creation 0; tree Object  <:  CombVariable #6 )
 
-subtype constraint: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object  <:  Variable 5 at method TernaryExpression#foo(Ljava/lang/Object;):V local variable b(0); tree Object
+SubtypeConstraint( Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object  <:  CombVariable #6 )
+
+SubtypeConstraint( CombVariable #6  <:  Variable 5 at method TernaryExpression#foo(Ljava/lang/Object;):V local variable b(0); tree Object )
 
