@@ -98,12 +98,12 @@
     <box id="es18" width="wide" editable="true"/>
     <box id="es11" width="wide" editable="false"/>
     <box id="es17" width="wide" editable="true"/>
-    <box id="es16" width="wide" editable="true"/>
+    <box id="es16" width="wide" editable="false"/>
     <box id="es15" width="wide" editable="false"/>
     <box id="es14" width="wide" editable="true"/>
   </level>
   <level id="CreateJoint" qid="19">
-    <box id="es2" width="wide" editable="true"/>
+    <box id="es2" width="wide" editable="false"/>
     <box id="es1" width="wide" editable="true"/>
   </level>
   <level id="SkillsA" qid="14" targetScore="1625">
