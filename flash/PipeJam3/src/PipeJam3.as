@@ -99,8 +99,9 @@ package
 			//FlexGlobals.topLevelApplication.stage.addEventListener(Event.RESIZE, updateSize);
 			stage.addEventListener(flash.events.Event.RESIZE, updateSize);
 			stage.dispatchEvent(new flash.events.Event(flash.events.Event.RESIZE));
-			
-			ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
+			if (ExternalInterface.available) {
+				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
+			}
 		}
 		
 		private function onContextCreated(event:flash.events.Event):void
