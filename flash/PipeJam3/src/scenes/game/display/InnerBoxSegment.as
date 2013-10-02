@@ -25,7 +25,8 @@ package scenes.game.display
 		
 		public var innerCircleJoint:GameEdgeJoint;
 		public var edgeSegment:GameEdgeSegment;
-		public var edgeSegmentOutline:Quad;
+		public var edgeSegmentOutline:Image;
+		private var m_edgeOutlineAssetName:String = "";
 		public var interiorPt:Point;
 		private var m_dir:String;
 		private var m_height:Number;
@@ -39,8 +40,9 @@ package scenes.game.display
 		private var m_plugAssetName:String = "";
 		private var m_socket:Image;
 		private var m_plug:Image;
+		private var m_hideSegments:Boolean;
 		
-		public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
+		public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean, _hideSegments:Boolean)
 		{
 			super("IS" + id++);
 			draggable = _draggable;
@@ -53,30 +55,29 @@ package scenes.game.display
 			isEnd = _isEnd;
 			m_plugIsWide = plugIsWide;
 			m_plugIsEditable = plugIsEditable;
-			edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
+			m_hideSegments = _hideSegments;
+			updateEdgeOutline();
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
+			edgeSegment.visible = !m_hideSegments;
 			trace(m_id + " height:" + m_height);
 			if (createInnerCircle) {
 				innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
 			}
 			m_socketContainer = new Sprite();
+			m_socketContainer.touchable = false;
+			m_socketContainer.visible = !m_hideSegments;
 			m_plugContainer = new Sprite();
-			
+			m_plugContainer.touchable = false;
+			m_plugContainer.visible = !m_hideSegments;
 			draw();
-			if(edgeSegmentOutline)
-				addChild(edgeSegmentOutline);
-			addChild(edgeSegment);
-			if (innerCircleJoint) {
-				addChild(innerCircleJoint);
-			}
-			edgeSegment.socket = m_socketContainer;
-			edgeSegment.plug = m_plugContainer;
-			edgeSegment.m_isDirty = true;
 			
 			m_isDirty = false;
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
+		
+		public function get plug():Sprite { return m_plugContainer; }
+		public function get socket():Sprite { return m_socketContainer; }
 		
 		public function getPlugYOffset():Number
 		{
@@ -186,13 +187,27 @@ package scenes.game.display
 			return 2 * BORDER_SIZE + (m_borderIsWide ? GameEdgeContainer.WIDE_WIDTH : GameEdgeContainer.NARROW_WIDTH);
 		}
 		
-		private function getBorderColor():uint
+		private function getBorderAssetName():String
 		{
 			if (m_isEditable) {
-				return m_isWide ? GameComponent.WIDE_COLOR_BORDER : GameComponent.NARROW_COLOR_BORDER;
+				//return m_isWide ? GameComponent.WIDE_COLOR_BORDER : GameComponent.NARROW_COLOR_BORDER;
+				return m_isWide ? AssetInterface.PipeJamSubTexture_BorderBlueDark : AssetInterface.PipeJamSubTexture_BorderBlueLight;
 			} else {
-				return m_isWide ? GameComponent.UNADJUSTABLE_WIDE_COLOR_BORDER : GameComponent.UNADJUSTABLE_NARROW_COLOR_BORDER;
+				//return m_isWide ? GameComponent.UNADJUSTABLE_WIDE_COLOR_BORDER : GameComponent.UNADJUSTABLE_NARROW_COLOR_BORDER;
+				return m_isWide ? AssetInterface.PipeJamSubTexture_BorderGrayDark : AssetInterface.PipeJamSubTexture_BorderGrayLight;
 			}
+		}
+		
+		private function updateEdgeOutline():void
+		{
+			var assetName:String = getBorderAssetName();
+			if (edgeSegmentOutline && (m_edgeOutlineAssetName == assetName)) return;
+			if (edgeSegmentOutline) edgeSegmentOutline.removeFromParent(true);
+			var atlas:TextureAtlas = AssetInterface.getTextureAtlas("Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML");
+			var outlineTexture:Texture = atlas.getTexture(assetName);
+			edgeSegmentOutline = new Image(outlineTexture);
+			m_edgeOutlineAssetName = assetName;
+			m_isDirty = true; // addChild in draw() method
 		}
 		
 		private function onEnterFrame(event:Event):void
@@ -216,8 +231,22 @@ package scenes.game.display
 			m_isDirty = true;
 		}
 		
+		override public function set visible(value:Boolean):void
+		{
+			super.visible = value;
+			if (plug)   plug.visible = value && !m_hideSegments;
+			if (socket) socket.visible = value && !m_hideSegments;
+		}
+		/*
+		override public function removeFromParent(dispose:Boolean = false):void
+		{
+			super.removeFromParent(dispose);
+			if (plug)   plug.removeFromParent(dispose);
+			if (socket) socket.removeFromParent(dispose);
+		}
+		*/
 		public function draw():void
-		{			
+		{
 			var singleProngToDoubleOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
 				singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
@@ -242,17 +271,13 @@ package scenes.game.display
 				edgeSegment.y = interiorPt.y;
 			}
 			edgeSegment.isHoverOn = isHoverOn;
-			if(edgeSegmentOutline)
-			{
-				if (edgeSegmentOutline.width != getBorderWidth()) {
-					edgeSegmentOutline.width = getBorderWidth();
-				}
-				if (edgeSegmentOutline.color != getBorderColor()) {
-					edgeSegmentOutline.color = getBorderColor();
-				}
-				edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
-				edgeSegmentOutline.y = edgeSegment.y;
-			}
+			
+			updateEdgeOutline();
+			edgeSegmentOutline.width = getBorderWidth();
+			edgeSegmentOutline.height = m_height;
+			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
+			edgeSegmentOutline.y = edgeSegment.y;
+			
 			edgeSegment.setIsWide(m_isWide);
 			edgeSegment.draw();
 			
@@ -275,6 +300,10 @@ package scenes.game.display
 					innerCircleJoint.x += offset;
 				}
 			}
+			
+			if(edgeSegmentOutline) addChild(edgeSegmentOutline);
+			addChild(edgeSegment);
+			if (innerCircleJoint) addChild(innerCircleJoint);
 		}
 		
 		override public function setIsWide(b:Boolean):void

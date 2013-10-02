@@ -107,12 +107,14 @@ package scenes.game.display
 		private var m_jointsInactiveContainer:Sprite = new Sprite();
 		private var m_errorInactiveContainer:Sprite = new Sprite();
 		private var m_edgesInactiveContainer:Sprite = new Sprite();
+		private var m_plugsInactiveContainer:Sprite = new Sprite();
 		public var inactiveLayer:Sprite = new Sprite();
 		
 		private var m_nodesContainer:Sprite = new Sprite();
 		private var m_jointsContainer:Sprite = new Sprite();
 		private var m_errorContainer:Sprite = new Sprite();
 		private var m_edgesContainer:Sprite = new Sprite();
+		private var m_plugsContainer:Sprite = new Sprite();
 		
 		public var m_boundingBox:Rectangle;
 		private var m_backgroundImage:Image;
@@ -584,20 +586,24 @@ package scenes.game.display
 				if (m_jointsInactiveContainer == null) m_jointsInactiveContainer = new Sprite();
 				if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
 				if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
+				if (m_plugsInactiveContainer == null)  m_plugsInactiveContainer  = new Sprite();
 				inactiveLayer.addChild(m_nodesInactiveContainer);
 				inactiveLayer.addChild(m_jointsInactiveContainer);
 				inactiveLayer.addChild(m_errorInactiveContainer);
 				inactiveLayer.addChild(m_edgesInactiveContainer);
+				inactiveLayer.addChild(m_plugsInactiveContainer);
 				
 				if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
 				if (m_jointsContainer == null) m_jointsContainer = new Sprite();
 				if (m_errorContainer == null)  m_errorContainer  = new Sprite();
 				if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
-				m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1);
+				if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
+				//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
 				addChild(m_nodesContainer);
 				addChild(m_jointsContainer);
 				addChild(m_errorContainer);
 				addChild(m_edgesContainer);
+				addChild(m_plugsContainer);
 				
 				initialize();
 				setConstraints(m_levelConstraintsXML);
@@ -951,6 +957,10 @@ package scenes.game.display
 				while (m_edgesContainer.numChildren > 0) m_edgesContainer.getChildAt(0).removeFromParent(true);
 				m_edgesContainer.removeFromParent(true);
 			}
+			if (m_plugsContainer) {
+				while (m_plugsContainer.numChildren > 0) m_plugsContainer.getChildAt(0).removeFromParent(true);
+				m_plugsContainer.removeFromParent(true);
+			}
 			
 			disposeChildren();
 			
@@ -1112,7 +1122,10 @@ package scenes.game.display
 		private function activate(comp:GameComponent):void
 		{
 			if (comp is GameEdgeContainer) {
-				m_edgesContainer.addChild(comp);
+				var edge:GameEdgeContainer = comp as GameEdgeContainer;
+				m_edgesContainer.addChild(edge);
+				if (edge.socket) m_plugsContainer.addChild(edge.socket);
+				if (edge.plug)   m_plugsContainer.addChild(edge.plug);
 			} else if (comp is GameNode) {
 				m_nodesContainer.addChild(comp);
 			} else if (comp is GameJointNode) {
@@ -1123,7 +1136,10 @@ package scenes.game.display
 		private function deactivate(comp:GameComponent):void
 		{
 			if (comp is GameEdgeContainer) {
-				m_edgesInactiveContainer.addChild(comp);
+				var edge:GameEdgeContainer = comp as GameEdgeContainer;
+				m_edgesInactiveContainer.addChild(edge);
+				if (edge.socket) m_plugsInactiveContainer.addChild(edge.socket);
+				if (edge.plug)   m_plugsInactiveContainer.addChild(edge.plug);
 			} else if (comp is GameNode) {
 				m_nodesInactiveContainer.addChild(comp);
 			} else if (comp is GameJointNode) {
@@ -1431,7 +1447,8 @@ package scenes.game.display
 				gameEdge.m_isDirty = true;
 				m_edgesContainer.addChild(gameEdge);
 				m_errorContainer.addChild(gameEdge.errorContainer);
-
+				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
+				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 				edgeCount++;
 			}
 			trace("Nodes " + nodeCount + " NodeJoints " + jointCount + " Edges " + edgeCount);
@@ -1644,8 +1661,11 @@ package scenes.game.display
 				this.m_jointsContainer.addChild(component);
 			else if(component is GameEdgeContainer)
 			{
-				this.m_edgesContainer.addChild(component);
-				this.m_errorContainer.addChild((component as GameEdgeContainer).errorContainer);
+				var gameEdge:GameEdgeContainer = component as GameEdgeContainer;
+				this.m_edgesContainer.addChild(gameEdge);
+				this.m_errorContainer.addChild(gameEdge.errorContainer);
+				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
+				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 			}
 		}
 		
@@ -1657,8 +1677,11 @@ package scenes.game.display
 				this.m_jointsContainer.removeChild(component);
 			else if(component is GameEdgeContainer)
 			{
-				this.m_edgesContainer.removeChild(component);
-				this.m_errorContainer.removeChild((component as GameEdgeContainer).errorContainer);
+				var gameEdge:GameEdgeContainer = component as GameEdgeContainer;
+				this.m_edgesContainer.removeChild(gameEdge);
+				this.m_errorContainer.removeChild(gameEdge.errorContainer);
+				if (gameEdge.socket) m_plugsContainer.addChild(gameEdge.socket);
+				if (gameEdge.plug)   m_plugsContainer.addChild(gameEdge.plug);
 			}
 		}
 		

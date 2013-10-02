@@ -56,6 +56,11 @@ package assets
 		public static const PipeJamSubTexture_GrayLightPlug:String = "GrayLightPlug";
 		public static const PipeJamSubTexture_GrayLightJoint:String = "GrayLightJoint";
 		public static const PipeJamSubTexture_GrayLightSegmentPrefix:String = "GrayLightSegment";
+		public static const PipeJamSubTexture_BorderBlueDark:String = "BlueDarkEnd";//"BorderBlueDark";
+		public static const PipeJamSubTexture_BorderBlueLight:String = "BlueLightEnd";//"BorderBlueLight";
+		public static const PipeJamSubTexture_BorderGrayDark:String = "GrayDarkEnd";// "BorderGrayDark";
+		public static const PipeJamSubTexture_BorderGrayLight:String = "GrayLightEnd";//"BorderGrayLight";
+		
 		public static const PipeJamSubTexture_BlueDarkBoxPrefix:String = "BlueDarkBox";
 		public static const PipeJamSubTexture_BlueDarkBoxSelectPrefix:String = "BlueDarkBoxSelect";
 		public static const PipeJamSubTexture_BlueDarkStart:String = "BlueDarkStart";
