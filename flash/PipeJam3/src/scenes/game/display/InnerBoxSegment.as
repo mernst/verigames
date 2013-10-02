@@ -23,6 +23,7 @@ package scenes.game.display
 		
 		private static var id:int = 0;
 		
+		public var hasInnerCircle:Boolean;
 		public var innerCircleJoint:GameEdgeJoint;
 		public var edgeSegment:GameEdgeSegment;
 		public var edgeSegmentOutline:Quad;
@@ -40,7 +41,7 @@ package scenes.game.display
 		private var m_socket:Image;
 		private var m_plug:Image;
 		
-		public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, createInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
+		public function InnerBoxSegment(_interiorPt:Point, height:Number, dir:String, isWide:Boolean, borderIsWide:Boolean, isEditable:Boolean, _hasInnerCircle:Boolean, _isEnd:Boolean, plugIsWide:Boolean, plugIsEditable:Boolean, _draggable:Boolean)
 		{
 			super("IS" + id++);
 			draggable = _draggable;
@@ -53,13 +54,12 @@ package scenes.game.display
 			isEnd = _isEnd;
 			m_plugIsWide = plugIsWide;
 			m_plugIsEditable = plugIsEditable;
+			hasInnerCircle = _hasInnerCircle;
 			edgeSegmentOutline = new Quad(getBorderWidth(), m_height, getBorderColor());
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 			trace(m_id + " height:" + m_height);
-			if (createInnerCircle) {
-				innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
-			}
+			
 			m_socketContainer = new Sprite();
 			m_plugContainer = new Sprite();
 			
@@ -217,7 +217,13 @@ package scenes.game.display
 		}
 		
 		public function draw():void
-		{			
+		{
+			if (hasInnerCircle) {
+				if (!innerCircleJoint) innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);
+			} else {
+				if (innerCircleJoint) innerCircleJoint.removeFromParent(true);
+				innerCircleJoint = null;
+			}
 			var singleProngToDoubleOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
 				singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;

@@ -169,16 +169,24 @@ package scenes.game.display
 				if (m_extensionEdgeIsOutgoing) {
 					m_extensionEdge.hideInnerSegment = false;
 					m_extensionEdge.m_innerBoxSegment.visible = true;
+					if (!m_extensionEdge.m_innerBoxSegment.hasInnerCircle) {
+						m_extensionEdge.m_innerBoxSegment.hasInnerCircle = true;
+						m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
+					}
+					innerCircle = false;
 				} else {
 					hideInnerSegment = false; // mark invisible when created below
+					innerCircle = true;
 				}
-			} else {
+			} else if (m_extensionEdge) {
 				// Don't associate extension edges if one edge is hidden
-				if (m_extensionEdge && m_extensionEdge.hideSegments) m_extensionEdge = null;
-				if (hideSegments) m_extensionEdge = null;
+				if (m_extensionEdge.hideSegments || hideSegments) {
+					m_extensionEdge = null;
+				} else {
+					innerCircle = false;
+				}
 			}
 			if (m_extensionEdge) {
-				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && 
 					m_extensionEdge.m_innerBoxSegment.isEnd) {
@@ -897,9 +905,9 @@ package scenes.game.display
 			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
-		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
+		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean, force:Boolean = false):void 
 		{
-			if(!m_isSelected)
+			if(!m_isSelected || force)
 			{
 				if(isOutgoing)
 				{
@@ -1043,7 +1051,7 @@ package scenes.game.display
 			}
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
-			segmentOutgoing = true;
+			
 			if(this.m_extensionEdge)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);

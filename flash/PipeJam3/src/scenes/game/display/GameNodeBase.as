@@ -59,19 +59,19 @@ package scenes.game.display
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
 			var currentPos:int = 0;
+			m_PortToEdgeArray = new Array();
 			for(var i:int = 0; i<m_outgoingEdges.length; i++)
 			{
 				var startingCurrentPos:int = currentPos;
 				var oedge:GameEdgeContainer = m_outgoingEdges[i];
-				
+				//if (oedge.hideInnerSegment) continue;
 				var oedgeXPos:Number = oedge.localToGlobal(oedge.m_edgeArray[0]).x;
 				
 				for(var j:int = 0; j<m_incomingEdges.length; j++)
 				{
 					var iedge:GameEdgeContainer = m_incomingEdges[j];
-					if(iedge.incomingEdgePosition != -1)
-						continue;
-					
+					if (iedge.incomingEdgePosition != -1) continue;
+					//if (oedge.hideInnerSegment && iedge.hideInnerSegment) continue;
 					var iedgeXPos:Number = iedge.localToGlobal(iedge.m_edgeArray[iedge.m_edgeArray.length-1]).x;
 					
 					//compare positions of all nodes and set positions accordingly
@@ -309,11 +309,11 @@ package scenes.game.display
 		{
 			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
 			{
-				oedge1.rubberBandEdge(endPt, true);
+				oedge1.rubberBandEdge(endPt, true, true);
 			}
 			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
 			{
-				iedge1.rubberBandEdge(endPt, false);
+				iedge1.rubberBandEdge(endPt, false, true);
 			}
 		}
 		
@@ -332,9 +332,8 @@ package scenes.game.display
 		//adds edge to outgoing edge method (unless currently in vector), then sorts
 		public function setOutgoingEdge(edge:GameEdgeContainer):void
 		{
-			if(m_outgoingEdges.indexOf(edge) == -1) {
-				m_outgoingEdges.push(edge);
-			}
+			if (m_outgoingEdges.indexOf(edge) > -1) return;
+			m_outgoingEdges.push(edge);
 			
 			//I want the edges to be in ascending order according to x position, so do that here
 			//only works when added to stage, so don't rely on initial placements
@@ -347,8 +346,8 @@ package scenes.game.display
 		//adds edge to incoming edge method (unless currently in vector), then sorts
 		public function setIncomingEdge(edge:GameEdgeContainer):void
 		{
-			if(m_incomingEdges.indexOf(edge) == -1)
-				m_incomingEdges.push(edge);
+			if (m_incomingEdges.indexOf(edge) > -1) return;
+			m_incomingEdges.push(edge);
 			
 			//I want the edges to be in ascending order according to x position, so do that here
 			//only works when added to stage, so don't rely on initial placements
@@ -467,17 +466,19 @@ package scenes.game.display
 		
 		protected function updateEdges(edge:GameEdgeContainer, newPosition:Point, nextEdge:GameEdgeContainer, newNextPosition:Point):void
 		{
+			var isNextEdgeOutgoing:Boolean = nextEdge.m_fromComponent == this ? true : false;
+			for (var ee:int = 0; ee < m_PortToEdgeArray.length; ee++) trace(ee + " " + m_PortToEdgeArray[ee].m_id);
+			trace("rb edge0 " + nextEdge.m_id + " pt:" + (isNextEdgeOutgoing ? nextEdge.m_startPoint : nextEdge.m_endPoint));
 			updateEdgePosition(edge, newPosition);
 			updateNextEdgePosition(nextEdge, newNextPosition);
-			
-			var isNextEdgeOutgoing:Boolean = nextEdge.m_fromComponent == this ? true : false;
-			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing);
+			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing, true);
 			trace("rb edge " + nextEdge.m_id + " pt:" + (isNextEdgeOutgoing ? nextEdge.m_startPoint : nextEdge.m_endPoint));
 			if(nextEdge.m_extensionEdge)
 			{
 				var isNextExtensionEdgeOutgoing:Boolean = nextEdge.m_extensionEdge.m_fromComponent == this ? true : false;
+				trace("rb edgex0 " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdge.m_extensionEdge.m_startPoint : nextEdge.m_extensionEdge.m_endPoint));
 				updateNextEdgePosition(nextEdge.m_extensionEdge, newNextPosition);
-				nextEdge.m_extensionEdge.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing);
+				nextEdge.m_extensionEdge.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing, true);
 				trace("rb edgex " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdge.m_extensionEdge.m_startPoint : nextEdge.m_extensionEdge.m_endPoint));
 			}
 			
