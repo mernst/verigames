@@ -765,6 +765,10 @@ abstract class GameSolver extends ConstraintSolver {
           board2
         } else if (varPos2.isInstanceOf[ReturnVP]) {
           board2
+        } else if (varPos1.isInstanceOf[FieldVP]) {
+          board2
+        } else if (varPos2.isInstanceOf[FieldVP]) {
+          board1
         } else {
           /* We only need to handle variables that will end up on the same board.
            * For all other variables, there will be a MethodCall, FieldRead, or FieldUpdate

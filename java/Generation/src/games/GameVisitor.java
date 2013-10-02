@@ -7,6 +7,7 @@ import javax.lang.model.element.ExecutableElement;
 import checkers.inference.ConstraintManager;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
+import checkers.inference.RefinementVariable;
 import checkers.source.SourceVisitor;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.util.AnnotatedTypes;
@@ -96,12 +97,21 @@ public class GameVisitor extends InferenceVisitor {
     }*/
     
 
-    /** An identifier is a field access sometimes, i.e. when there is an implicit "this". */
+    /**
+     * An identifier is a field access sometimes, i.e. when there is an implicit "this". 
+     * Don't generate access constraints for RefinementVariables.
+     *
+     * Assignments used to create field boards, but no longer do because the identifier is a RefinementVariable 
+     *
+     **/
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
         Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() && !node.toString().equals("this")) { //TODO JB: Ask Werner if I should protect against
-            logFieldAccess(node);                                          //TODO JB: Calling assignments field accesses here
+        if (elem.getKind().isField() 
+                && !node.toString().equals("this")
+                && !(InferenceMain.slotMgr().extractSlot(this.atypeFactory.getAnnotatedType(node)) instanceof RefinementVariable)) {
+
+            logFieldAccess(node);
         }
 
         return super.visitIdentifier(node, p);
