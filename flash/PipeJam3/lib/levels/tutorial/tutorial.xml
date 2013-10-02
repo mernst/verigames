@@ -2095,11 +2095,11 @@
           <from><noderef id="n15" port="0"/></from>
           <to><noderef id="nEND15x3" port="0"/></to>
         </edge>
-        <edge id="e16x0"  width="wide" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e16x0"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="nSTA16x0" port="0"/></from>
           <to><noderef id="n11" port="0"/></to>
         </edge>
-        <edge id="e16x1"  width="wide" editable="true" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e16x1"  width="wide" editable="false" description="GroupSelect" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n12" port="0"/></from>
           <to><noderef id="nEND16x1" port="0"/></to>
         </edge>
@@ -2141,7 +2141,7 @@
           <from><noderef id="nSTA1x0" port="0"/></from>
           <to><noderef id="n1" port="0"/></to>
         </edge>
-        <edge id="e2x0"  width="wide" editable="true" description="CreateJoint" variableID="-1" pinch="false" buzzsaw="false">
+        <edge id="e2x0"  width="wide" editable="false" description="CreateJoint" variableID="-1" pinch="false" buzzsaw="false">
           <from><noderef id="n1" port="0"/></from>
           <to><noderef id="nEND2x0" port="0"/></to>
         </edge>

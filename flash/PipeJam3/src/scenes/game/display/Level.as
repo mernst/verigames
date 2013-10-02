@@ -152,8 +152,8 @@ package scenes.game.display
 			level_name = _name;
 			original_level_name = _originalLevelName;
 			levelNodes = _levelNodes;
-			m_levelLayoutXML = _levelLayoutXML.copy();
-			m_levelOriginalLayoutXML = _levelLayoutXML.copy();
+			m_levelLayoutXML = _levelLayoutXML;//.copy();
+			m_levelOriginalLayoutXML = _levelLayoutXML;//.copy();
 			m_levelLayoutName = _levelLayoutXML.@id;
 			m_levelQID = _levelLayoutXML.@qid;
 			m_levelBestScoreConstraintsXML = _levelConstraintsXML.copy();
@@ -276,7 +276,7 @@ package scenes.game.display
 						case NodeTypes.START_PIPE_DEPENDENT_BALL:
 						case NodeTypes.END:
 							jointLayoutXML.@visible="false";
-							continue;
+							break;
 						case NodeTypes.OUTGOING:
 							// Only create the joint for an outgoing node if other lines connect
 							// to it (these lines are the SUBBOARD outgoing ports that correspond
@@ -284,8 +284,8 @@ package scenes.game.display
 							var numOutputs:Number = Number(jointLayoutXML.@outputs);
 							if (isNaN(numOutputs) || (numOutputs == 0)) {
 								jointLayoutXML.@visible="false";
-								continue;
 							}
+							break;
 					}
 				}
 				
@@ -296,6 +296,7 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
+				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
 				if(joint.visible)
 					visibleJoints++;
 				else
@@ -315,16 +316,13 @@ package scenes.game.display
 			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
 			for each(var edgeXML:XML in m_levelLayoutXML.line)
 			{
-				var boundingBox:Rectangle;
-				var edgeVisible:Boolean = getVisible(edgeXML);
-				if(edgeVisible)
-				{
+				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
+				var edgeVisible:Boolean = (boundingBox != null);
+				if(edgeVisible) {
 					visibleLines++;
-					boundingBox = createLine(edgeXML, copyLines);
-				}
-				else
+				} else {
 					edgeXML.@visible="false";
-
+				}
 				if (boundingBox && edgeVisible) {
 					minX = Math.min(minX, boundingBox.x);
 					minY = Math.min(minY, boundingBox.y);
@@ -455,26 +453,31 @@ package scenes.game.display
 			if (!newEdge) {
 				throw new Error("Attempting to create line with no graph edge found, line id:" + edgeContainerID);
 			}
-			// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+			// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, hide these
+			var hideLine:Boolean = false;
 			if (dir == GameEdgeContainer.DIR_JOINT_TO_BOX) {
 				switch (newEdge.from_node.kind) {
 					case NodeTypes.INCOMING:
 					case NodeTypes.START_PIPE_DEPENDENT_BALL:
-						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-						return null;
+						//trace("Hide line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						hideLine = true;
+						break;
 				}
 			} else {
 				switch (newEdge.to_node.kind) {
 					case NodeTypes.OUTGOING:
 						// Only need to create outgoing joint if others come out of it,
 						// if joint was not created, don't create the line
-						if (!myJoint) {
-							return null;
+						if (myJoint && myJoint.visible) {
+							hideLine = false;
+						} else {
+							hideLine = true;
 						}
 						break;
 					case NodeTypes.END:
-						//trace("Skip line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
-						return null;
+						//trace("Hide line id:" + edgeContainerID + " from:" + newEdge.from_node.kind + " to:" + newEdge.to_node.kind);
+						hideLine = true;
+						break;
 				}
 			}
 			if (!myJoint) {
@@ -483,7 +486,6 @@ package scenes.game.display
 			if (!myNode) {
 				trace("Warning! Box not found for boxId: " + boxId);
 			}
-			
 			
 			//create edge array
 			var edgeArray:Array = new Array;
@@ -526,11 +528,10 @@ package scenes.game.display
 			// get editable property from related edge or end segment/joint
 			var edgeIsCopy:Boolean = (edgeContainerID.indexOf(Constants.XML_ANNOT_COPY) > -1);
 			if (dir == GameEdgeContainer.DIR_BOX_TO_JOINT) {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myNode, myJoint, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy, hideLine);
 			} else {
-				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy);
+				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy, hideLine);
 			}
-			
 			newGameEdge.visible = getVisible(edgeXML);
 			
 			m_edgeList.push(newGameEdge);
@@ -547,7 +548,7 @@ package scenes.game.display
 			}
 			
 			edgeContainerDictionary[edgeContainerID] = newGameEdge;
-			return newGameEdge.m_boundingBox;
+			return hideLine ? null : newGameEdge.m_boundingBox;
 		}
 		
 		protected function onAddedToStage(event:Event):void
@@ -737,11 +738,12 @@ package scenes.game.display
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					
 					gameNode.visible = getVisible(child);
-					
-					minX = Math.min(minX, gameNode.m_boundingBox.left);
-					minY = Math.min(minY, gameNode.m_boundingBox.top);
-					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
-					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+					if (gameNode.visible) {
+						minX = Math.min(minX, gameNode.m_boundingBox.left);
+						minY = Math.min(minY, gameNode.m_boundingBox.top);
+						maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+						maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+					}
 				}
 			}
 			//update lines
@@ -786,10 +788,12 @@ package scenes.game.display
 					}
 					edgeContainer.m_edgeArray = edgeArray;
 					edgeContainer.setupPoints();
-					minX = Math.min(minX, edgeContainer.m_boundingBox.left);
-					minY = Math.min(minY, edgeContainer.m_boundingBox.top);
-					maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
-					maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
+					if (!edgeContainer.hideSegments) {
+						minX = Math.min(minX, edgeContainer.m_boundingBox.left);
+						minY = Math.min(minY, edgeContainer.m_boundingBox.top);
+						maxX = Math.max(maxX, edgeContainer.m_boundingBox.right);
+						maxY = Math.max(maxY, edgeContainer.m_boundingBox.bottom);
+					}
 					edgeContainer.createLine();
 				}
 				
@@ -1396,7 +1400,7 @@ package scenes.game.display
 		//to move/update objects use update events
 		public function draw():void
 		{
-			trace("Bounding Box " + m_boundingBox.width + "  " + m_boundingBox.height);
+			trace("Bounding Box " + m_boundingBox);
 			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;

@@ -2,8 +2,11 @@ package scenes.game.display
 {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
 	import graph.PropDictionary;
+	
 	import scenes.BaseComponent;
+	
 	import starling.display.DisplayObjectContainer;
 	
 	public class GameComponent extends BaseComponent

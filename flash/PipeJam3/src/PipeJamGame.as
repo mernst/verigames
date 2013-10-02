@@ -114,14 +114,15 @@ package
 			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 			if(obj.hasOwnProperty("file"))
 				m_fileName = obj["file"];
-			
-			var url:String = ExternalInterface.call("window.location.href.toString");
-			var paramsStart = url.indexOf('?');
-			if(paramsStart != -1)
-			{
-				var params:String = url.substring(paramsStart+1);
-			var vars:URLVariables = new URLVariables(params);
-				m_fileName = vars.file;
+			if (ExternalInterface.available) {
+				var url:String = ExternalInterface.call("window.location.href.toString");
+				var paramsStart:int = url.indexOf('?');
+				if(paramsStart != -1)
+				{
+					var params:String = url.substring(paramsStart+1);
+					var vars:URLVariables = new URLVariables(params);
+					m_fileName = vars.file;
+				}
 			}
 			
 			// use file if set in url, else create and show menu screen

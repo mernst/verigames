@@ -44,7 +44,7 @@ package scenes.game.components
 	public class GameControlPanel extends BaseComponent
 	{
 		private static const WIDTH:Number = Constants.GameWidth;
-		private static const HEIGHT:Number = 82 - 20;
+		public static const HEIGHT:Number = 82 - 20;
 		
 		public static const OVERLAP:Number = 44 - 10;
 		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
@@ -303,9 +303,11 @@ package scenes.game.components
 				m_targetScoreLine.x = (SCORE_PANEL_AREA.width * 2.0 / 3.0) * targetScore / maxScoreShown;
 				m_scoreBarContainer.addChild(m_targetScoreLine);
 				m_scoreBarContainer.visible = true;
+				m_scoreTextfield.visible = true;
 			} else {
 				if (m_targetScoreLine) m_targetScoreLine.removeFromParent();
-				if (level.m_tutorialTag && m_scoreBarContainer) m_scoreBarContainer.visible = false;
+				if (m_scoreBarContainer) m_scoreBarContainer.visible = false;
+				m_scoreTextfield.visible = false;
 			}
 			
 			if (!m_bestPlayerScoreLine) {

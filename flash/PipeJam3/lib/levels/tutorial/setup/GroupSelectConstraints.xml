@@ -4,7 +4,7 @@
     <box id="es18" width="wide" editable="true"/>
     <box id="es11" width="wide" editable="false"/>
     <box id="es17" width="wide" editable="true"/>
-    <box id="es16" width="wide" editable="true"/>
+    <box id="es16" width="wide" editable="false"/>
     <box id="es15" width="wide" editable="false"/>
     <box id="es14" width="wide" editable="true"/>
   </level>

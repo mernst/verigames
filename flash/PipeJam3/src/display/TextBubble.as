@@ -8,6 +8,8 @@ package display
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	
+	import scenes.game.components.GameControlPanel;
+	
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
@@ -245,7 +247,7 @@ package display
 				var newY:Number = height / 2 - m_paddingSz + m_inset;
 				switch (m_pointFrom) {
 					case NineSliceBatch.CENTER:
-						//newY = ;
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
 					case NineSliceBatch.TOP_LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
@@ -255,16 +257,21 @@ package display
 						break;
 					case NineSliceBatch.LEFT:
 						newX = width / 2 - m_paddingSz + m_inset;
-						//newY = ;
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
 					case NineSliceBatch.RIGHT:
 						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
-						//newY = ;
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) / 2;
 						break;
 					case NineSliceBatch.BOTTOM:
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
+						break;
 					case NineSliceBatch.BOTTOM_LEFT:
+						newX = width / 2 - m_paddingSz + m_inset;
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 					case NineSliceBatch.BOTTOM_RIGHT:
-						//newY = ;
+						newX = Constants.GameWidth - (width / 2 - m_paddingSz + m_inset);
+						newY = (Constants.GameHeight - GameControlPanel.HEIGHT) - (height / 2 - m_paddingSz + m_inset) - 12;
 						break;
 				}
 				x = newX;

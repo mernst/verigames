@@ -79,7 +79,7 @@ package scenes.game.display
 		
 		public function setIncomingPoint(pt:Point):void
 		{
-			trace("incoming: " + pt);
+			//trace("incoming: " + pt);
 			if (pt.x != 0 && pt.y != 0) return;
 			m_incomingPt = pt;
 			m_isDirty = true;
@@ -87,7 +87,7 @@ package scenes.game.display
 		
 		public function setOutgoingPoint(pt:Point):void
 		{
-			trace("outgoing: " + pt);
+			//trace("outgoing: " + pt);
 			if (pt.x != 0 && pt.y != 0) return;
 			m_outgoingPt = pt;
 			m_isDirty = true;

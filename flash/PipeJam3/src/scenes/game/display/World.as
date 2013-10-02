@@ -814,7 +814,8 @@ package scenes.game.display
 			newLevel.updateScore();
 			
 			var startTime:Number = new Date().getTime();
-			if (active_level.getTargetScore() == int.MAX_VALUE) {
+			var isTutorialLevel:Boolean = (active_level.m_tutorialTag && active_level.m_tutorialTag.length);
+			if (!isTutorialLevel && (active_level.getTargetScore() == int.MAX_VALUE)) {
 				var newTarget:int = Solver.getInstance().findTargetScore(active_level, m_simulator);
 				active_level.setTargetScore(newTarget);
 				if(PipeJamGame.levelInfo != null)
