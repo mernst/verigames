@@ -42,9 +42,6 @@
 		public var currentTouch:Touch;
 		public var currentDragSegment:Boolean = false;
 		
-		public var plug:Sprite;
-		public var socket:Sprite;
-		
 		public function GameEdgeSegment(_dir:String, _isInnerBoxSegment:Boolean = false, _isFirstSegment:Boolean = false, _isLastSegment:Boolean = false, _isWide:Boolean = false, _isEditable:Boolean = false, _draggable:Boolean = true, _props:PropDictionary = null, _propMode:String = PropDictionary.PROP_NARROW)
 		{
 			super("");
@@ -218,17 +215,8 @@
 			}
 			
 			addChild(m_quad);
-			if (socket) {
-				addChild(socket);
-			}
-			if (plug) {
-				addChild(plug);
-			}
-			if (plug || socket) {
-				this.blendMode = BlendMode.NORMAL;
-			} else {
-				this.blendMode = BlendMode.NONE;
-			}
+			
+			this.blendMode = BlendMode.NONE;
 		}
 		
 		public static function createEdgeSegment(_toPt:Point, _isWide:Boolean, _isEditable:Boolean):Image
@@ -296,7 +284,6 @@
 		
 		override public function flatten():void
 		{
-			if (plug || socket) return;
 			if(false) //don't flatten
 				super.flatten();
 		}
