@@ -169,17 +169,12 @@ package scenes.game.display
 				if (m_extensionEdgeIsOutgoing) {
 					m_extensionEdge.hideInnerSegment = false;
 					m_extensionEdge.m_innerBoxSegment.visible = true;
-					if (!m_extensionEdge.m_innerBoxSegment.hasInnerCircle) {
-						m_extensionEdge.m_innerBoxSegment.hasInnerCircle = true;
-						m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
-					}
-					innerCircle = false;
 				} else {
 					hideInnerSegment = false; // mark invisible when created below
-					innerCircle = true;
 				}
 				m_extensionEdge = null;
 			} else {
+				// Don't associate extension edges if one edge is hidden
 				if (m_extensionEdge && m_extensionEdge.hideSegments) m_extensionEdge = null;
 				if (hideSegments) m_extensionEdge = null;
 			}
@@ -211,6 +206,7 @@ package scenes.game.display
 			trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable, hideSegments);
 			if (hideInnerSegment) m_innerBoxSegment.visible = false;
+			updateOutsideEdgeComponents();
 			
 			// Initialize props
 			if (isTopOfEdge()) {
@@ -310,6 +306,7 @@ package scenes.game.display
 					m_jointPoints.push(pt1.clone());
 				}
 				correctJointPointDiagonals();
+				updateOutsideEdgeComponents();
 				updateBoundingBox();
 			}
 		}
@@ -403,14 +400,14 @@ package scenes.game.display
 		{
 			super.visible = value;
 			errorContainer.visible = value;
-			if (plug)   plug.visible = value;
-			if (socket) socket.visible = value;
+			if (plug)   plug.visible = !hideSegments && value;
+			if (socket) socket.visible = !hideSegments && value;
 		}
 		
 		override public function removeFromParent(dispose:Boolean = false):void
 		{
 			super.removeFromParent(dispose);
-			errorContainer.removeFromParent(dispose);
+			//errorContainer.removeFromParent(dispose);
 			if (plug)   plug.removeFromParent(dispose);
 			if (socket) socket.removeFromParent(dispose);
 		}
@@ -433,8 +430,8 @@ package scenes.game.display
 			
 			if (errorContainer) errorContainer.removeFromParent(true);
 			if (m_errorParticleSystem) m_errorParticleSystem.removeFromParent(true);
-			if (plug)   plug.removeFromParent();
-			if (socket) socket.removeFromParent();
+			if (plug)   plug.removeFromParent(true);
+			if (socket) socket.removeFromParent(true);
 			
 			disposeChildren();
 			m_edgeSegments = new Vector.<GameEdgeSegment>();
@@ -753,6 +750,7 @@ package scenes.game.display
 			// Remove pt1, pt2
 			m_jointPoints.splice(segmentIndex, 2);
 			createChildren();
+			updateOutsideEdgeComponents();
 			positionChildren();
 		}
 		
@@ -880,6 +878,7 @@ package scenes.game.display
 				// connecting all the way to the box
 				if (toBox && segment.m_isLastSegment && m_innerBoxSegment && (m_innerBoxSegment.getPlugYOffset() != 0)) {
 					endPoint.y -= m_innerBoxSegment.getPlugYOffset() - 0.65 * InnerBoxSegment.PLUG_HEIGHT;
+					updateOutsideEdgeComponents();
 				}
 				
 				segment.updateSegment(startPoint, endPoint);
@@ -909,8 +908,6 @@ package scenes.game.display
 					addChild(joint);
 				}
 			}
-			
-			updateOutsideEdgeComponents();
 			
 			//deal with last joint special, since it's at the end of a segment
 			var lastJoint:GameEdgeJoint = m_edgeJoints[m_edgeSegments.length];
@@ -1008,6 +1005,7 @@ package scenes.game.display
 				//						trace("remove " + i); 
 				//					}
 				//				}
+				updateOutsideEdgeComponents();
 				updateBoundingBox();
 				positionChildren();
 				m_isDirty = true;
@@ -1161,6 +1159,7 @@ package scenes.game.display
 			if (newEdgesNeeded) {
 				createChildren();
 			}
+			updateOutsideEdgeComponents();
 			updateBoundingBox();
 		}
 		
@@ -1260,7 +1259,6 @@ package scenes.game.display
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.m_isDirty = true;//.draw();
 			}
-			updateOutsideEdgeComponents();
 			m_innerBoxSegment.m_isDirty = true;
 		}
 		
