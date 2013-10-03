@@ -256,19 +256,23 @@ package scenes.game.display
 				if (innerCircleJoint) innerCircleJoint.removeFromParent(true);
 				innerCircleJoint = null;
 			}
-			var singleProngToDoubleOffset:Number = 0.0;
+			var socketOffset:Number = 0.0;
+			var borderOffset:Number = 0.0;
+			var plugOffset:Number = 0.0;
 			if (!m_isWide && m_borderIsWide) {
-				singleProngToDoubleOffset = 0.075 * Constants.GAME_SCALE;
+				socketOffset = borderOffset = 0.075 * Constants.GAME_SCALE;
+			} else if (!m_plugIsWide && m_borderIsWide) {
+				plugOffset = socketOffset = 0.075 * Constants.GAME_SCALE;
 			}
 			
 			updatePlug();
 			if (m_plug) {
-				m_plug.x = - m_plug.width / 2;
+				m_plug.x = - m_plug.width / 2 + plugOffset;
 				m_plug.y = - getPlugYOffset();
 			}
 			updateSocket();
 			if (m_socket) {
-				m_socket.x = - m_socket.width / 2 + singleProngToDoubleOffset;
+				m_socket.x = - m_socket.width / 2 + socketOffset;
 				m_socket.y = 0;
 			}
 			
@@ -284,7 +288,7 @@ package scenes.game.display
 			updateEdgeOutline();
 			edgeSegmentOutline.width = getBorderWidth();
 			edgeSegmentOutline.height = m_height;
-			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + singleProngToDoubleOffset;
+			edgeSegmentOutline.x = interiorPt.x - edgeSegmentOutline.width / 2.0 + borderOffset;
 			edgeSegmentOutline.y = edgeSegment.y;
 			
 			edgeSegment.setIsWide(m_isWide);
