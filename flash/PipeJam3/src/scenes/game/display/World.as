@@ -787,10 +787,16 @@ package scenes.game.display
 					details = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
 					qid = (active_level.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelNodes.qid;
+					//if (PipeJamGame.levelInfo) {
+					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
+					//}
 					PipeJam3.logging.logQuestEnd(qid, details);
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
+				if (PipeJamGame.levelInfo) {
+					details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
+				}
 				qid = (newLevel.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelNodes.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}

@@ -75,7 +75,50 @@ package networking
 			}
 		}
 		
-
+		public function createLevelObject():Object
+		{
+			var levelObj:Object = new Object();
+			levelObj.m_version = m_version;
+			
+			levelObj.m_levelId = m_levelId;
+			levelObj.m_xmlID = m_xmlID;
+			levelObj.m_layoutID = m_layoutID;
+			levelObj.m_constraintsID = m_constraintsID;
+			
+			levelObj.m_name = m_name;
+			levelObj.m_layoutName = m_layoutName;
+			levelObj.m_layoutDescription = m_layoutDescription;
+			
+			levelObj.m_baseFileName = m_baseFileName;
+			
+			levelObj.m_score = m_score;
+			levelObj.m_targetScore = m_targetScore;
+			
+			levelObj.m_checked = m_checked;
+			levelObj.m_unlocked = m_unlocked;
+			
+			levelObj.m_properties = cloneObj(m_properties);
+			levelObj.m_metadata = cloneObj(m_metadata);
+			
+			levelObj.preference = preference;
+			levelObj.performance = performance;
+			
+			levelObj.enjoymentRating = enjoymentRating;
+			levelObj.difficultyRating = difficultyRating;	
+			
+			levelObj.shareWithGroup = shareWithGroup;
+			
+			return levelObj;
+		}
+		
+		private static function cloneObj(obj):Object
+		{
+			var clone:Object = new Object();
+			for (var key in obj) {
+				clone[key] = obj[key];
+			}
+			return clone;
+		}
 	}
 }	
 
