@@ -113,8 +113,10 @@ package
 			
 			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
 			if(obj.hasOwnProperty("file"))
+			{
 				m_fileName = obj["file"];
-			if (ExternalInterface.available) {
+			}
+			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
 				if(paramsStart != -1)

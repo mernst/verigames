@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
@@ -35,6 +38,45 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
+        
+  //     listCollection(db, "CompletedTutorials");
+       HashMap<String, String> map = new HashMap();
+       map.put("playerID", "51e5b3460240288229000026");
+       map.put("levelID", "12");
+       listEntries(db, "CompletedTutorials", map, false);
+    //    listLog(db);
+    //     saveAndCleanLog(db, "930");
+        
+	    mongo.close();
+	}
+	
+	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+               System.out.println(obj);
+               if(remove)
+            	   collection.remove(obj);
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+			
+		
+	}
+        
  //       db.createCollection("SavedLevels", null);
   //      DBCollection foo = db.getCollection("SubmittedLevels");
    //     db.createCollection("SubmittedLayouts", null);
@@ -146,138 +188,201 @@ public class MongoTestBed {
 //	    outputImage.close();
 //	    
 //	    System.out.println(xmlin.getId() + " " + gxlin.getId());
-        
-        Set<String> colls = db.getCollectionNames();
-
- //       String levelName = "";
-        int count = 0;
-        for (String s : colls) {
-//        	if(s.equalsIgnoreCase("level") || s.equalsIgnoreCase("levels"))
-//        	{
-//        		levelName = s;
-//        	}
-//        	if(count > 34)
-        	{
-	            System.out.println("Collection " + s);
-	            if(s.equals("SavedLevels"))
-	            {
-	          //  	PrintWriter writer = new PrintWriter(s+"923.txt", "UTF-8");
-		            DBCollection coll = db.getCollection(s);
-		            ObjectId field = new ObjectId("523384b4e4b0cdd0531ff621");
-		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
-		            BasicDBObject field1 = new BasicDBObject();
-		            field1.put("playerID", "51e5b3460240288229000026");
-		               DBObject obj = coll.findOne(field);
-		               System.out.println(obj);
-		          //           DBCursor cursor = coll.find();
+	
+	   static void findObjects(DB db, String objectID, String collectionName)
+	    {
+//	        Set<String> colls = db.getCollectionNames();
+//
+//	        int count = 0;
+//	        for (String s : colls) {
+//
+//	            System.out.println("Collection " + s);
+//	            if(s.equals("log"))
+//	            {
+//	            	PrintWriter writer = new PrintWriter(s+"930.txt", "UTF-8");
+//		            DBCollection coll = db.getCollection(s);
+//		            ObjectId field = new ObjectId(objectID);
+//		           // field.put("$oid", "51ed5bb9a8e0be024c017fa2");
+//		            BasicDBObject field1 = new BasicDBObject();
+//		            field1.put("playerID", "51e5b3460240288229000026");
+//		            DBObject obj = coll.findOne(field);
+//		            System.out.println(obj);
+//		                     DBCursor cursor = coll.find();
 //		    	        try {
 //		    	           while(cursor.hasNext()) {
 //		    	        	   count++;
 //		    	        	   DBObject obj = cursor.next();
 //		    	        	   System.out.println(obj); 
-//		    	     //   	   writer.println(obj);
+//		    	        	   writer.println(obj);
 //		    	        	   
-//		    	   //     	   coll.remove(obj);
+//		    	        	   coll.remove(obj);
 //		    	           }
 //		    	        } finally {
 //		    	           cursor.close();
 //		    	        }
-		    //	   writer.close();
-
-	            }
-	        }
-    	    count++;
- //   	    if(count > 70)
- //   	        break;
-        }
-//        DBCollection coll = db.getCollection("Level");
-//        DBObject obj1 = coll.findOne("51802cf5e4b03743be6d8f42");
-//		   System.out.println(obj1);
-//    	   DBObject metadata = (DBObject) obj1.get("metadata");
-//    	   if(metadata != null)
-//    	   {
-//        	   BasicDBList param = (BasicDBList) metadata.get("parameter");
-//        	   if(param != null)
-//        	   {
-//	        	   DBObject firstElem = (DBObject) param.get("0");
-//	        	   if(firstElem != null)
-//	        	   {
-//	        		   System.out.println(firstElem.get("name"));
-//	        	//	   firstElem.put("name", "test");
-//	        	//	   coll.save(firstElem);
-//	        	   }
-//        	   }
-//    	   }
-//        System.out.println("start");
-//        BasicDBObject field = new BasicDBObject("xmlID", "519cfaad4942a9056790d98fC");
-//      field.put("xmlID", "51eccd89a8e04b0d79b61d87");
-//		   List<GridFSDBFile> cursor = fs.find(field);
-//        try {
-//           for(int i=0; i<cursor.size();i++) {
-//        	   GridFSDBFile obj = cursor.get(i);
-//        	   System.out.println(obj);	 
-//        	   
-////
-////        	   if(i ==  cursor.size()-2)
-////        	   {
-////        		   FileOutputStream outputImage = new FileOutputStream("here.zip");
-////        		    obj.writeTo( outputImage );
-////        		    outputImage.close();
-////        	   }
-//        	   if(i ==  1)
-//        	   {
-//        		   FileOutputStream outputImage = new FileOutputStream("here2.zip");
-//        		    obj.writeTo( outputImage );
-//        		    outputImage.close();
-//        	   }
-////        	if(i>0)
-////        		fs.remove(obj);
-//           }
-//        } finally {
-//        }
-//        System.out.println("start");
-//        DBCollection coll = db.getCollection("Level");
-//		   DBCursor cursor = coll.find();
-//	        try {
-//	           while(cursor.hasNext()) {
-//	        	   DBObject obj = cursor.next();
-//	        	   System.out.println(obj);  
-//	        	   if(removeLevels)
-//	        		   coll.remove(obj);
-//	           }
-//	        } finally {
-//	           cursor.close();
+//		    	   writer.close();
+//	            }
 //	        }
-//	        System.out.println("end");
-//        coll = db.getCollection("User");
-//        cursor = coll.find();
-//        try {
-//           while(cursor.hasNext()) {
-//               System.out.println(cursor.next());
-//           }
-//        } finally {
-//           cursor.close();
-//        }
-//        
-//        coll = db.getCollection("OAuth2Client");
-//        cursor = coll.find();
-//        try {
-//           while(cursor.hasNext()) {
-//               System.out.println(cursor.next());
-//           }
-//        } finally {
-//           cursor.close();
-//        }
-        
-//        DBCursor cursor = fs.getFileList();
-//        List<DBObject> objList = cursor.toArray();
-//        for(int i = 0; i<objList.size(); i++)
-//        {
-//        	System.out.println(objList.get(i).toString());
-//        }
- 
-	    mongo.close();
+	    }
+	   
+	   static void listCollectionNames(DB db)
+	    {
+	        Set<String> colls = db.getCollectionNames();
+	        for (String s : colls) 
+	        {
+	        	System.out.println(s);
+	        }
+	    }
+	
+	   static void findOneObject(DB db, String collectionName, String objectID)
+	    {
+	        DBCollection coll = db.getCollection(collectionName);
+		    ObjectId field = new ObjectId(objectID);
+		    DBObject obj = coll.findOne(field);
+		    System.out.println(obj);
+	    }
+	   
+	   static void listCollection(DB db, String collectionName)
+	    {
+            DBCollection coll = db.getCollection(collectionName);
+            DBCursor cursor = coll.find();
+    	        try {
+    	           while(cursor.hasNext()) {
+    	        	   DBObject obj = cursor.next();
+    	        	   System.out.println(obj);    
+    	           }
+    	        } finally {
+    	           cursor.close();
+    	        }
+	    }
+    static void listNonLogCollections(DB db)
+    {
+        Set<String> colls = db.getCollectionNames();
+
+        for (String s : colls) 
+        {
+            if(!s.equals("log"))
+            {
+	            DBCollection coll = db.getCollection(s);
+	            DBCursor cursor = coll.find();
+	    	        try {
+	    	           while(cursor.hasNext()) {
+	    	        	   DBObject obj = cursor.next();
+	    	        	   System.out.println(obj);    
+	    	           }
+	    	        } finally {
+	    	           cursor.close();
+	    	        }
+            }
+        }
     }
     
+    static void listLog(DB db)
+    {
+     	DBCollection coll = db.getCollection("log");
+    	DBCursor cursor = coll.find();
+	        try {
+	           while(cursor.hasNext()) {
+	        	   DBObject obj = cursor.next();
+	        	   System.out.println(obj); 
+	           }
+	        } finally {
+	           cursor.close();
+	        }
+
+    }
+    
+    static void saveAndCleanLog(DB db, String date)
+    {
+    	File file = new File("log"+date+".txt");
+    	if(file.exists()) //don't allow writing over current log files
+    	{
+    		System.out.println("File already exists");
+    		return;
+    	}
+    	PrintWriter writer = null;
+    	DBCursor cursor = null;
+    	try 
+    	{
+    		writer = new PrintWriter("log"+date+".txt", "UTF-8");
+            DBCollection coll = db.getCollection("log");
+            cursor = coll.find();
+            while(cursor.hasNext()) {
+        	   DBObject obj = cursor.next();
+        	   
+        	   writer.println(obj);
+        	   coll.remove(obj);
+            }
+    	}
+    	catch(Exception e)
+    	{
+    		System.out.println(e);
+    	} 
+    	finally {
+    	    cursor.close();
+    	    writer.close();
+        }
+    }
+    
+    static void listMetadata(DB db, String collectionName)
+    {
+    	System.out.println("Unless you've modified this, it's not doing what you want");
+        DBCollection coll = db.getCollection(collectionName);
+        DBCursor cursor = coll.find();
+        while(cursor.hasNext()) {
+    	   DBObject obj = cursor.next();
+    	   DBObject metadata = (DBObject) obj.get("metadata");
+		   if(metadata != null)
+		   {
+			   BasicDBList param = (BasicDBList) metadata.get("parameter");
+			   if(param != null)
+			   {
+				   DBObject firstElem = (DBObject) param.get("0");
+				   if(firstElem != null)
+				   {
+					   System.out.println(firstElem.get("name"));
+				   }
+			   }
+		   }
+        }
+    }
+    
+    static void writeFileLocally(GridFS fs, String objectID ) throws Exception
+    {
+        BasicDBObject field = new BasicDBObject();
+        field.put("xmlID", objectID);
+		List<GridFSDBFile> cursor = fs.find(field);
+        try {
+           for(int i=0; i<cursor.size();i++) {
+        	   GridFSDBFile obj = cursor.get(i);	   
+
+        	   if(i ==  cursor.size()-2)
+        	   {
+        		   FileOutputStream outputImage = new FileOutputStream("here.zip");
+        		    obj.writeTo( outputImage );
+        		    outputImage.close();
+        	   }
+        	   if(i ==  1)
+        	   {
+        		   FileOutputStream outputImage = new FileOutputStream("here2.zip");
+        		    obj.writeTo( outputImage );
+        		    outputImage.close();
+        	   }
+//        	if(i>0)
+//        		fs.remove(obj);
+           }
+        } finally {
+        }
+    }
+
+    static void listFiles(GridFS fs)
+    {
+        DBCursor cursor = fs.getFileList();
+        List<DBObject> objList = cursor.toArray();
+        for(int i = 0; i<objList.size(); i++)
+        {
+        	System.out.println(objList.get(i).toString());
+        }
+    }
 
 }
