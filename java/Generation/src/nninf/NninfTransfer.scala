@@ -45,7 +45,8 @@ class NninfTransfer(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer])
     val receiver = FlowExpressions.internalReprOf(analysis.getFactory(), secondNode)
     if (firstNode.isInstanceOf[NullLiteralNode]
         && InferenceMain.getRealChecker.needsAnnotation(varAtm)
-        && CFAbstractStore.canInsertReceiver(receiver)) {
+        && (receiver.isInstanceOf[FlowExpressions.FieldAccess]
+            || receiver.isInstanceOf[FlowExpressions.LocalVariable])) {
 
       var inputVar = slotMgr.extractSlot(varAtm).asInstanceOf[AbstractVariable]
       var thenStore = res.getThenStore()
