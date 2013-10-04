@@ -151,8 +151,9 @@ package networking
 						sendMessage(CREATE_PLAYER, createPlayerCallback);
 					}
 					else
+					{
 						sendMessage(ACTIVATE_PLAYER, activatePlayerCallback);
-						activatePlayer(activatePlayerCallback);
+					}
 					return;
 				}
 			}
