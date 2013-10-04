@@ -49,11 +49,11 @@ public class GameLevelInserter {
         	String raLevelID = "3";
         	String priorityLevel = "5";
         	boolean activate = false;
-        	if(args.length>4)
+        	if(args.length>3)
         	{
-	        	raLevelID = args[2];
-	        	priorityLevel = args[3];
-	        	activate = Boolean.parseBoolean(args[4]);
+	        	//raLevelID = args[2];
+	        	priorityLevel = args[2];
+	        	activate = Boolean.parseBoolean(args[3]);
         	}
         	
 	        if(dir.isDirectory())

@@ -172,6 +172,7 @@ package scenes.game.display
 				} else {
 					hideInnerSegment = false; // mark invisible when created below
 				}
+				m_extensionEdge = null;
 			} else {
 				// Don't associate extension edges if one edge is hidden
 				if (m_extensionEdge && m_extensionEdge.hideSegments) m_extensionEdge = null;
@@ -203,8 +204,10 @@ package scenes.game.display
 			}
 			var innerIsEnd:Boolean = (m_extensionEdge == null) ? toBox : (toBox && !m_extensionEdge.visible);
 			trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable, hideSegments);
 			if (hideInnerSegment) m_innerBoxSegment.visible = false;
+			updateOutsideEdgeComponents();
+			
 			// Initialize props
 			if (isTopOfEdge()) {
 				graphEdge.addEventListener(EdgePropChangeEvent.ENTER_BALL_TYPE_CHANGED, onBallTypeChange);
@@ -303,6 +306,7 @@ package scenes.game.display
 					m_jointPoints.push(pt1.clone());
 				}
 				correctJointPointDiagonals();
+				updateOutsideEdgeComponents();
 				updateBoundingBox();
 			}
 		}
@@ -392,6 +396,22 @@ package scenes.game.display
 			return false;
 		}
 		
+		override public function set visible(value:Boolean):void
+		{
+			super.visible = value;
+			errorContainer.visible = value;
+			if (plug)   plug.visible = !hideSegments && value;
+			if (socket) socket.visible = !hideSegments && value;
+		}
+		
+		override public function removeFromParent(dispose:Boolean = false):void
+		{
+			super.removeFromParent(dispose);
+			//errorContainer.removeFromParent(dispose);
+			if (plug)   plug.removeFromParent(dispose);
+			if (socket) socket.removeFromParent(dispose);
+		}
+		
 		override public function dispose():void
 		{
 			if (m_disposed) {
@@ -408,12 +428,11 @@ package scenes.game.display
 			removeEventListener(EdgeContainerEvent.RESTORE_CURRENT_LOCATION, onRestoreLocation);
 			removeEventListener(EdgeContainerEvent.INNER_SEGMENT_CLICKED, onInnerBoxSegmentClicked);
 			
-			if (errorContainer) {
-				errorContainer.removeFromParent(true);
-			}
-			if (m_errorParticleSystem) {
-				m_errorParticleSystem.removeFromParent(true);
-			}
+			if (errorContainer) errorContainer.removeFromParent(true);
+			if (m_errorParticleSystem) m_errorParticleSystem.removeFromParent(true);
+			if (plug)   plug.removeFromParent(true);
+			if (socket) socket.removeFromParent(true);
+			
 			disposeChildren();
 			m_edgeSegments = new Vector.<GameEdgeSegment>();
 			m_edgeJoints = new Vector.<GameEdgeJoint>();
@@ -435,6 +454,16 @@ package scenes.game.display
 				graphEdge.removeEventListener(EdgePropChangeEvent.EXIT_PROPS_CHANGED, onPropsChange);
 			}
 			super.dispose();
+		}
+		
+		public function get plug():Sprite {
+			if (m_innerBoxSegment == null) return null;
+			return m_innerBoxSegment.plug;
+		}
+		
+		public function get socket():Sprite {
+			if (m_innerBoxSegment == null) return null;
+			return m_innerBoxSegment.socket;
 		}
 		
 		private function onBallTypeChange(evt:EdgePropChangeEvent):void
@@ -721,6 +750,7 @@ package scenes.game.display
 			// Remove pt1, pt2
 			m_jointPoints.splice(segmentIndex, 2);
 			createChildren();
+			updateOutsideEdgeComponents();
 			positionChildren();
 		}
 		
@@ -847,7 +877,8 @@ package scenes.game.display
 				// For plugs, make the end segment stop in the center of the plug rather than
 				// connecting all the way to the box
 				if (toBox && segment.m_isLastSegment && m_innerBoxSegment && (m_innerBoxSegment.getPlugYOffset() != 0)) {
-					endPoint.y -= m_innerBoxSegment.getPlugYOffset() - InnerBoxSegment.PLUG_HEIGHT / 2.0;
+					endPoint.y -= m_innerBoxSegment.getPlugYOffset() - 0.65 * InnerBoxSegment.PLUG_HEIGHT;
+					updateOutsideEdgeComponents();
 				}
 				
 				segment.updateSegment(startPoint, endPoint);
@@ -873,10 +904,6 @@ package scenes.game.display
 				joint.x = m_jointPoints[segIndex].x;
 				joint.y = m_jointPoints[segIndex].y;
 				
-				if (joint.m_jointType == GameEdgeJoint.END_JOINT) {
-					errorContainer.x = this.x + joint.x;
-					errorContainer.y = this.y + joint.y;
-				}
 				if (segIndex > 0) {
 					addChild(joint);
 				}
@@ -897,9 +924,28 @@ package scenes.game.display
 			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
-		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
+		private function updateOutsideEdgeComponents():void
 		{
-			if(!m_isSelected)
+			var offX:Number = (m_jointPoints && m_jointPoints.length) ? m_jointPoints[m_jointPoints.length - 1].x : 0;
+			var offY:Number = (m_jointPoints && m_jointPoints.length) ? m_jointPoints[m_jointPoints.length - 1].y : 0;
+			var newX:Number = this.x + offX;
+			var newY:Number = this.y + offY;
+			
+			errorContainer.x = newX;
+			errorContainer.y = newY;
+			if (plug) {
+				plug.x = newX;
+				plug.y = newY;
+			}
+			if (socket) {
+				socket.x = newX;
+				socket.y = newY;
+			}
+		}
+		
+		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean, force:Boolean = false):void 
+		{
+			if(!m_isSelected || force)
 			{
 				if(isOutgoing)
 				{
@@ -959,6 +1005,7 @@ package scenes.game.display
 				//						trace("remove " + i); 
 				//					}
 				//				}
+				updateOutsideEdgeComponents();
 				updateBoundingBox();
 				positionChildren();
 				m_isDirty = true;
@@ -1043,7 +1090,7 @@ package scenes.game.display
 			}
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
-			segmentOutgoing = true;
+			
 			if(this.m_extensionEdge)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);
@@ -1112,6 +1159,7 @@ package scenes.game.display
 			if (newEdgesNeeded) {
 				createChildren();
 			}
+			updateOutsideEdgeComponents();
 			updateBoundingBox();
 		}
 		
@@ -1210,10 +1258,6 @@ package scenes.game.display
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
 				joint.m_isDirty = true;//.draw();
-				if (joint.m_jointType == GameEdgeJoint.END_JOINT) {
-					errorContainer.x = this.x + joint.x;
-					errorContainer.y = this.y + joint.y;
-				}
 			}
 			m_innerBoxSegment.m_isDirty = true;
 		}
