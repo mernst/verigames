@@ -186,7 +186,11 @@ package networking
 		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, constraintsFileLoadedCallback:Function):void
 		{
 			var gameFileHandler:GameFileHandler;
-			if(PipeJamGame.levelInfo && parseInt(PipeJamGame.levelInfo.m_levelId) is int && parseInt(PipeJamGame.levelInfo.m_levelId) < 1000) // in the tutorial if a short level id
+			
+			var levelID:int = 100000;
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_levelId.length < 5)
+				levelID = parseInt(PipeJamGame.levelInfo.m_levelId);
+			if(levelID < 1000) // in the tutorial if a short level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
