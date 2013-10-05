@@ -186,20 +186,24 @@ package networking
 		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, constraintsFileLoadedCallback:Function):void
 		{
 			var gameFileHandler:GameFileHandler;
-			if (!PipeJam3.REPLAY_DQID && PipeJamGame.levelInfo && parseInt(PipeJamGame.levelInfo.m_levelId) is int && parseInt(PipeJamGame.levelInfo.m_levelId) < 1000) // in the tutorial if a short level id
+			
+			var levelID:int = 100000;
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_levelId.length < 5)
+				levelID = parseInt(PipeJamGame.levelInfo.m_levelId);
+			if(levelID < 1000) // in the tutorial if a short level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
 //				fileName = "tutorial";
 			}
-			if (!PipeJam3.REPLAY_DQID && PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
+			if (PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP && !PipeJam3.RELEASE_BUILD)
 			{
 				//load the zip file from it's location
 				loadType = USE_URL;
 				gameFileHandler = new GameFileHandler(worldFileLoadedCallback);
 				gameFileHandler.loadFile(USE_LOCAL, PipeJamGameScene.DEBUG_PLAY_WORLD_ZIP, gameFileHandler.zipLoaded);
 			}
-			else if (!PipeJam3.REPLAY_DQID && PipeJamGameScene.inTutorial)
+			else if(PipeJamGameScene.inTutorial)
 			{
 				layoutFileLoadedCallback(TutorialController.tutorialLayoutXML);
 				constraintsFileLoadedCallback(TutorialController.tutorialConstraintsXML);
@@ -214,7 +218,7 @@ package networking
 					fileName = PipeJamGame.levelInfo.m_baseFileName;
 				else
 					fileName = PipeJamGame.m_pipeJamGame.m_fileName;
-				
+
 				
 				if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_constraintsID != null && !PipeJamGameScene.inTutorial) //load from MongoDB
 				{

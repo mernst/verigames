@@ -112,11 +112,11 @@ package
 			NineSliceBatch.gameObjectBatch = m_gameObjectBatch;
 			
 			var obj:Object = Starling.current.nativeStage.loaderInfo.parameters;
-			if (PipeJam3.REPLAY_DQID)
+			if(obj.hasOwnProperty("file"))
+			{
 				m_fileName = obj["file"];
-			else if(obj.hasOwnProperty("file"))
-				m_fileName = obj["file"];
-			if (ExternalInterface.available) {
+			}
+			else if (ExternalInterface.available) {
 				var url:String = ExternalInterface.call("window.location.href.toString");
 				var paramsStart:int = url.indexOf('?');
 				if(paramsStart != -1)
@@ -127,7 +127,7 @@ package
 				}
 			}
 			
-			// use file if set in url or from replay, else create and show menu screen
+			// use file if set in url, else create and show menu screen
 			if(m_fileName)
 			{
 				showScene("PipeJamGame");

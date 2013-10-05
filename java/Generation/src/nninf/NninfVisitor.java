@@ -171,7 +171,7 @@ public class NninfVisitor extends GameVisitor {
     @Override
     public Void visitMemberSelect(MemberSelectTree node, Void p) {
         //TODO JB: Talk to Werner/Mike about class A extends OtherClass.InnerClass
-        if( InferenceUtils.isInExtendsImplements( node, atypeFactory ) && !InferenceMain.STRICT_MODE() ) {
+        if( InferenceUtils.isInExtendsImplements( node, atypeFactory )) {
             return null;
         }
 

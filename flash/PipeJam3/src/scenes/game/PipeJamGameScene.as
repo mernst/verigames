@@ -34,7 +34,7 @@ package scenes.game
 		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../../../../SampleWorlds/5220c523e4b06c4c132c6705"
+			"../../../../../../../save/all/DashingClay"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

@@ -130,7 +130,7 @@ public class MongoLevelInserter {
 			{
 				Node node = nList.item(i);
 				Element element = (Element) node;
-				String nodeName = element.getAttribute("name");
+				String nodeName = element.getAttribute("id");
 				if(nodeName.equals(name))
 				{
 					numBoxes = Integer.parseInt(element.getAttribute("nodes"));
