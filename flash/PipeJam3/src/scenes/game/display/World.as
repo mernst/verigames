@@ -496,7 +496,7 @@ package scenes.game.display
 			edgeSetGraphViewPanel.recenter();
 		}
 		
-		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			if (!evt.level) return;
 			var edgeSetId:String = "";
@@ -574,7 +574,7 @@ package scenes.game.display
 				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
 				//if there are no more unplayed levels, check next if we are in levelselect screen choice
-				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
+				if(tutorialsDone == true && tutorialController.fromLevelSelectList)
 				{
 					//and if so, set to false, unless at the end of the tutorials
 					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();
@@ -791,6 +791,8 @@ package scenes.game.display
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
+				details["levelId"] = PipeJamGame.levelInfo ? PipeJamGame.levelInfo.m_levelId : "";
+				var tmp = PipeJamGame.levelInfo;
 				qid = (newLevel.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelNodes.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}

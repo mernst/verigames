@@ -5,7 +5,9 @@ package server
 	import cgs.server.logging.CGSServerProps;
 	import cgs.server.logging.GameServerData;
 	import cgs.server.logging.actions.ClientAction;
+	
 	import flash.display.Stage;
+	
 	import mochi.as3.MochiServices;
 	
 	import system.VerigameServerConstants;
@@ -20,13 +22,26 @@ package server
 		
 		private var m_cgsServer:CGSServer;
 		private var m_useMochi:Boolean = PipeJam3.RELEASE_BUILD;
+		private var m_props:CGSServerProps;
 		public var uid:String;
 		public var serverInitialized:Boolean = false;
 		public var serverToUse:String = PipeJam3.RELEASE_BUILD ? CGSServerProps.PRODUCTION_SERVER : CGSServerProps.DEVELOPMENT_SERVER
 		public var saveCacheToServer:Boolean = false;
 		public var provideIp:Boolean = true;
 		
-		public function LoggingServerInterface(_setupKey:String, _stage:Stage = null, _forceUid:String = "")
+		public function LoggingServerInterface(_setupKey:String, _stage:Stage = null, _forceUid:String = "", _replay:Boolean = false)
+		{
+			setupServer(_setupKey, _stage, _forceUid);
+			if (!_replay) {
+				m_cgsServer.initialize(m_props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
+				
+				if (m_useMochi) {
+					MochiServices.connect(VerigameServerConstants.MOCHI_GAME_ID, _stage, onMochiError);
+				}
+			}
+		}
+		
+		public function setupServer(_setupKey:String, _stage:Stage = null, _forceUid:String = ""):void
 		{
 			//Initialize logging
 			m_cgsServer = new CGSServer();
@@ -39,7 +54,7 @@ package server
 					break;
 			}
 			
-			var props:CGSServerProps = new CGSServerProps(
+			m_props = new CGSServerProps(
 				VerigameServerConstants.VERIGAME_SKEY,
 				GameServerData.NO_SKEY_HASH,
 				VerigameServerConstants.VERIGAME_GAME_NAME,
@@ -50,17 +65,14 @@ package server
 				CGSServerProps.VERSION2
 			);
 			
-			props.cacheUid = false;
-			props.uidValidCallback = onUidSet;
-			//props.loadServerCacheDataByCid = true;
-			if (_forceUid.length > 0) props.forceUid = _forceUid;
-			m_cgsServer.setup(props);
-			m_cgsServer.initialize(props, saveCacheToServer, onServerInit, null, provideIp ? _stage : null);
-			
-			if (m_useMochi) {
-				MochiServices.connect(VerigameServerConstants.MOCHI_GAME_ID, _stage, onMochiError);
-			}
+			m_props.cacheUid = false;
+			m_props.uidValidCallback = onUidSet;
+			//m_props.loadServerCacheDataByCid = true;
+			if (_forceUid.length > 0) m_props.forceUid = _forceUid;
+			m_cgsServer.setup(m_props);
 		}
+		
+		public function get cgsServer():CGSServer { return m_cgsServer; }
 		
 		private function onMochiError(errorCode:String):void {
 			trace("MOCHI errorCode: " + errorCode);

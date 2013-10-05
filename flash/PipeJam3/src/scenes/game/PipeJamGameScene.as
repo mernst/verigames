@@ -16,6 +16,7 @@ package scenes.game
 	
 	import scenes.Scene;
 	import scenes.game.display.World;
+	import scenes.game.display.ReplayWorld;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -137,9 +138,9 @@ package scenes.game
 		{
 			if(nextParseState)
 				nextParseState.removeFromParent();
-				
-			active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);		
-				
+			
+			active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);
+			
 			addChild(active_world);
 		}
 		
@@ -155,7 +156,12 @@ package scenes.game
 				
 				m_network = _worldNodes;
 				PipeJamGame.printDebug("Creating World...");
-				var world:World = new World(_worldNodes, _world_xml, _layout, _constraints);				
+				var world:World;
+				if (PipeJam3.REPLAY_DQID) {
+					world = new ReplayWorld(_worldNodes, _world_xml, _layout, _constraints);
+				} else {
+					world = new World(_worldNodes, _world_xml, _layout, _constraints);
+				}
 			} catch (error:Error) {
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
 				var debug:int = 0;
