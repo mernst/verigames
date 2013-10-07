@@ -448,7 +448,7 @@ public class Level
         }
 
         if( conflictingChutes ) {
-            if( InferenceMain.STRICT_MODE() ) {
+            if( InferenceMain.STRICT() ) {
                 String chutes = "";
                 for( Chute c : linkedChutes ) {
                     chutes += c + ", ";

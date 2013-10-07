@@ -132,7 +132,9 @@ abstract class GameSolver extends ConstraintSolver {
 
       println("Determining layout")
       // Assign a layout to the world.
-      verigames.layout.WorldLayout.layout(world)
+      if( InferenceMain.DO_LAYOUT ) {
+          verigames.layout.WorldLayout.layout(world)
+      }
 
       println("Writing XML output")
       // TODO: add an option for the file name
@@ -190,8 +192,11 @@ abstract class GameSolver extends ConstraintSolver {
         }
       }
       catch {
-        case exc : Exception => LayoutDebugger.layout(world, "./debug_world")
-                                throw exc
+        case exc : Exception =>
+          if( InferenceMain.PRINT_BOARDS_ON_ERROR ) {
+            LayoutDebugger.layout(world, "./debug_world")
+          }
+          throw exc
       }
 
       world
