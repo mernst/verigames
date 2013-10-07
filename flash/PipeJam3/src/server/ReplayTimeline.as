@@ -47,9 +47,9 @@ package server
 		
 		[Embed(source="../../lib/assets/pause.png")]
 		protected var PauseImageClass:Class;
-//		private var run_button:BitmapButton;
-//		private var pause_button:BitmapButton;
-//		private var stop_button:BitmapButton;
+		//private var run_button:BitmapButton;
+		//private var pause_button:BitmapButton;
+		//private var stop_button:BitmapButton;
 		
 		public function ReplayTimeline(actionObjects:Vector.<Object>, skipCallback:Function, toIndexCallback:Function, desiredWidth:Number, y_pos:Number)
 		{
