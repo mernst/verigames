@@ -10,13 +10,13 @@ import com.sun.source.tree.MethodInvocationTree;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
 import javacutils.ElementUtils;
 import javacutils.TreeUtils;
 
 public class RandomAnnotatedTypeFactory extends
-		BasicAnnotatedTypeFactory<RandomChecker> {
+        SubtypingAnnotatedTypeFactory<RandomChecker> {
     private final ExecutableElement nextInt;
     private final ExecutableElement nextDouble;
     private final ExecutableElement nextBoolean;

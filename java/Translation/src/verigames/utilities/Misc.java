@@ -23,5 +23,5 @@ public class Misc
    * However, some classes may ignore this value in favor of their own, for
    * greater granularity.
    */
-  public static final boolean CHECK_REP_ENABLED = InferenceMain.STRICT_MODE();
+  public static final boolean CHECK_REP_ENABLED = InferenceMain.STRICT();
 }

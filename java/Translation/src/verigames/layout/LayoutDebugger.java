@@ -25,29 +25,32 @@ public class LayoutDebugger
   public static void layout(World w, String folder) {
     for (Level l : w.getLevels().values()) {
       for (Map.Entry<String, Board> entry : l.getBoards().entrySet()) {
-        String name = entry.getKey();
-        final int maxLength = 70;
-
-        if(name.length() > maxLength) {    //TODO JB: FIGURE OUT A BETTER NAME COMPRESSION
-            name = name.substring(name.length() - maxLength, name.length());
-        }
-
-        System.out.println(name.length() + " Writing " + name);
 
         Board b = entry.getValue();
-        layout(name, b, folder);
+        layout(entry.getKey(), b, folder);
       }
     }
   }
 
-  private static void layout(String boardName, Board b, String folder) {
-    printBoardVariables(boardName, b, folder);
+  public static String layout(String boardName, Board b, String folder) {
+
+    String name = boardName;
+    final int maxLength = 70;
+
+    if(name.length() > maxLength) {    //TODO JB: FIGURE OUT A BETTER NAME COMPRESSION
+        name = name.substring(name.length() - maxLength, name.length());
+    }
+
+    System.out.println(name.length() + " Writing " + name);
+
+    printBoardVariables(name, b, folder);
 
     AbstractDotPrinter printer = new DotPrinter();
-    String command = "dot -Tsvg -o " + folder + "/" + boardName + ".svg";
+    String command = "dot -Tsvg -o " + folder + "/" + name + ".svg";
     AbstractDotParser parser = new StubParser();
     GraphvizRunner runner = new GraphvizRunner(printer, command, parser);
     runner.run(b);
+    return boardName;
   }
 
   private static class StubParser extends AbstractDotParser {
