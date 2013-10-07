@@ -3,14 +3,14 @@ package trusted;
 import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceUtils;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
 import javacutils.TreeUtils;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompilationUnitTree;
 
-public class TrustedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<TrustedChecker> {
+public class TrustedAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<TrustedChecker> {
 
     public TrustedAnnotatedTypeFactory(TrustedChecker checker,
             CompilationUnitTree root) {

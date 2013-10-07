@@ -16,13 +16,13 @@ import com.sun.source.tree.Tree;
 import checkers.lock.quals.GuardedBy;
 import checkers.quals.Unqualified;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.util.AnnotationBuilder;
 import javacutils.AnnotationUtils;
 import javacutils.TreeUtils;
 import javacutils.TypesUtils;
 
-public class LockInfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<LockInfChecker>{
+public class LockInfAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<LockInfChecker>{
 
     private List<String> heldLocks = new ArrayList<String>();
     private final AnnotationMirror GUARDED_BY;

@@ -1,7 +1,7 @@
 package trusted;
 
 
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import games.GameChecker;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -32,7 +32,7 @@ import com.sun.source.tree.CompilationUnitTree;
  * 
  */
 @TypeQualifiers({ Trusted.class, Untrusted.class })
-public class TrustedChecker extends GameChecker<BasicAnnotatedTypeFactory<?>> {
+public class TrustedChecker extends GameChecker<SubtypingAnnotatedTypeFactory<?>> {
     public AnnotationMirror UNTRUSTED, TRUSTED;
 
     @Override
@@ -48,7 +48,7 @@ public class TrustedChecker extends GameChecker<BasicAnnotatedTypeFactory<?>> {
     }
 
     @Override
-    public BasicAnnotatedTypeFactory<? extends TrustedChecker> createFactory(CompilationUnitTree root) {
+    public SubtypingAnnotatedTypeFactory<? extends TrustedChecker> createFactory(CompilationUnitTree root) {
         return new TrustedAnnotatedTypeFactory(this, root);
     }
 

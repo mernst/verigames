@@ -6,11 +6,11 @@ import com.sun.source.tree.CompilationUnitTree;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.types.TreeAnnotator;
 import javacutils.TreeUtils;
 
-public class HardCodedAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<HardCodedChecker> {
+public class HardCodedAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<HardCodedChecker> {
 
     public HardCodedAnnotatedTypeFactory(HardCodedChecker checker,
             CompilationUnitTree root) {
