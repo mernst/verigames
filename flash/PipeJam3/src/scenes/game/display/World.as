@@ -496,7 +496,7 @@ package scenes.game.display
 			edgeSetGraphViewPanel.recenter();
 		}
 		
-		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			if (!evt.level) return;
 			var edgeSetId:String = "";
@@ -574,7 +574,7 @@ package scenes.game.display
 				//should check if we are from the level select screen...
 				var tutorialsDone:Boolean = tutorialController.isTutorialDone();
 				//if there are no more unplayed levels, check next if we are in levelselect screen choice
-				if(tutorialsDone == true && TutorialController.getTutorialController().fromLevelSelectList)
+				if(tutorialsDone == true && tutorialController.fromLevelSelectList)
 				{
 					//and if so, set to false, unless at the end of the tutorials
 					var currentLevelId:int = tutorialController.getNextUnplayedTutorial();

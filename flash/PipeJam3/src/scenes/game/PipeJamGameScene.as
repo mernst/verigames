@@ -16,6 +16,7 @@ package scenes.game
 	
 	import scenes.Scene;
 	import scenes.game.display.World;
+	import scenes.game.display.ReplayWorld;
 	
 	import starling.core.Starling;
 	import starling.display.*;
@@ -33,7 +34,7 @@ package scenes.game
 		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../../../../SampleWorlds/5220c523e4b06c4c132c6705"
+			"../../../../../../../save/all/DashingClay"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";
@@ -137,9 +138,9 @@ package scenes.game
 		{
 			if(nextParseState)
 				nextParseState.removeFromParent();
-				
-			active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);		
-				
+			
+			active_world = createWorldFromNodes(m_network, m_worldXML, m_layoutXML, m_constraintsXML);
+			
 			addChild(active_world);
 		}
 		
@@ -155,7 +156,12 @@ package scenes.game
 				
 				m_network = _worldNodes;
 				PipeJamGame.printDebug("Creating World...");
-				var world:World = new World(_worldNodes, _world_xml, _layout, _constraints);				
+				var world:World;
+				if (PipeJam3.REPLAY_DQID) {
+					world = new ReplayWorld(_worldNodes, _world_xml, _layout, _constraints);
+				} else {
+					world = new World(_worldNodes, _world_xml, _layout, _constraints);
+				}
 			} catch (error:Error) {
 				throw new Error("ERROR: " + error.message + "\n" + (error as Error).getStackTrace());
 				var debug:int = 0;

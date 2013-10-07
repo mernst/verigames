@@ -186,7 +186,13 @@ package networking
 		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, constraintsFileLoadedCallback:Function):void
 		{
 			var gameFileHandler:GameFileHandler;
-			if(PipeJamGame.levelInfo && parseInt(PipeJamGame.levelInfo.m_levelId) is int && parseInt(PipeJamGame.levelInfo.m_levelId) < 1000) // in the tutorial if a short level id
+			//do this so I can debug the object...
+			var levelInformation:LevelInformation = PipeJamGame.levelInfo;
+			
+			var m_id:int = 100000;
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_id && PipeJamGame.levelInfo.m_id.length < 5)
+				m_id = parseInt(PipeJamGame.levelInfo.m_id);
+			if(m_id < 1000) // in the tutorial if a low level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
@@ -308,7 +314,7 @@ package networking
 
 			}
 			else
-			{//loading layouts is again broken...
+			{
 				zipFile = fzip.getFileAt(0);
 				var containerXML:XML = new XML(zipFile.content);
 				trace(zipFile.filename);
@@ -328,7 +334,6 @@ package networking
 				{
 					//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
 					zipFile = fzip.getFileAt(0);
-					trace(zipFile.filename);
 					var xml:XML = new XML(zipFile.content);
 					m_callback(xml);
 				}

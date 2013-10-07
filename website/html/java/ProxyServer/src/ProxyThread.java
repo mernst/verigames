@@ -307,7 +307,8 @@ public class ProxyThread extends Thread {
 				//returns: list of all saved levels associated with the player id
 	    		StringBuffer buff = new StringBuffer(request+"//");
 	    		DBObject nameObj = new BasicDBObject("player", fileInfo[4]);
-	    		   DBCursor cursor = savedLevelsCollection.find(nameObj);
+	    		DBCursor cursor = savedLevelsCollection.find(nameObj);
+
 	            try {
 	            	while(cursor.hasNext()) {
 	 	        	   DBObject obj = cursor.next();
@@ -325,6 +326,10 @@ public class ProxyThread extends Thread {
 				try{
 				ObjectId idObj = new ObjectId(fileInfo[5]);
     			DBObject obj = savedLevelsCollection.findOne(idObj);
+	    		//is this is a saved level ID? else check regular levels
+	    		if(obj == null)
+	    			obj = levelCollection.findOne(idObj);
+	    		
     			buff.append(obj.toString()); 
     			out.write(buff.toString().getBytes());
 				} catch(Exception e) {

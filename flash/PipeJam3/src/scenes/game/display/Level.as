@@ -1718,7 +1718,7 @@ package scenes.game.display
 		}
 		
 		public function getPanZoomAllowed():Boolean
-		{
+		{ 
 			if (tutorialManager) return tutorialManager.getPanZoomAllowed();
 			return true;
 		}

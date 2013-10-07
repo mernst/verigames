@@ -203,7 +203,7 @@ package scenes.game.display
 				}
 			}
 			var innerIsEnd:Boolean = (m_extensionEdge == null) ? toBox : (toBox && !m_extensionEdge.visible);
-			trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
+		//	trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
 			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable, hideSegments);
 			if (hideInnerSegment) m_innerBoxSegment.visible = false;
 			updateOutsideEdgeComponents();

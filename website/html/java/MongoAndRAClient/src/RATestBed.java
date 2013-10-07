@@ -74,9 +74,6 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.setLevelMetadata("517994e7a8e0f633776c98f3"));
 //			System.out.println("get");
 //			ra.printResponseAndEntity(ra.getLevelMetadata("517994e7a8e0f633776c98f3"));
-//			ra.printResponse(ra.activateAllLevels(true));
-		//	printResponse(activateAllPlayers(true));
-		//	printResponse(activateAllPlayers(false));
 		//	printResponse(activatePlayer("515f58b4e4b03743be6d8d65", true));
 			
 			
@@ -100,6 +97,7 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.deleteLevel("51ec960ce4b0a12f02c4c858"));
 //			ra.deleteLevel("51965a51e4b0615b7829e510").toString();
 //			ra.deleteLevel("51965a54e4b0615b7829e511").toString();
+
 //
 //			ra.printResponseAndEntity(ra.setPriority("523b2c7de4b08aff27a273c1", 10));
 //			ra.printResponseAndEntity(ra.setPriority("5238c53de4b08aff27a27396", 10));
@@ -107,17 +105,17 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.setPriority("5238c53ee4b08aff27a2739c", 10));
 //			ra.printResponseAndEntity(ra.activateAllAgents(PrincipalType.LEVEL));
 
-//			ra.printResponseAndEntity(ra.setPriority("5238c53ce4b08aff27a27390", 10));
+			ra.printResponseAndEntity(ra.setPriority("523b2c7de4b08aff27a273c1", 0));
 //			ra.printResponseAndEntity(ra.setPriority("51fa8e49e4b0a12f02c4c9fb", 0));
 //			ra.printResponseAndEntity(ra.setPriority("51faab87e4b0a12f02c4ca08", 0));
 //		
-			ra.printResponseAndEntity(ra.activateLevel("523b2c7de4b08aff27a273c1", false));
+//			ra.printResponseAndEntity(ra.activateLevel("523b2c7de4b08aff27a273c1", false));
 //			ra.printResponseAndEntity(ra.activateLevel("5238c53de4b08aff27a27396", true));
 //			ra.printResponseAndEntity(ra.activateLevel("5238c53ee4b08aff27a27399", true));
 //			ra.printResponseAndEntity(ra.activateLevel("5238c53ee4b08aff27a2739c", true));
 //			ra.printResponseAndEntity(ra.activateLevel("5238c53ce4b08aff27a27390", true));
 //			ra.printResponseAndEntity(ra.activateLevel("5227af80e4b06c4c132c7333", true));
-//			ra.activateLevel("521682c8e4b06c4c132c472a", false);
+//			ra.activateLevel("524ee8dbe4b04c664619fb92", true);
 //			ra.activateLevel("519cfae3e4b0615b7829e519", true);
 			
 //			ra.printResponseAndEntity(ra.refreshLevel("51cb3240e4b0fa95a28f6ceb"));
