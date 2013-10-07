@@ -26,7 +26,12 @@ package networking
 
 		public var m_version:int;
 		
+		public var m_id:String;
+		
+		/** the RA level. */
 		public var m_levelId:String;
+		
+		/** various DB file ids */
 		public var m_xmlID:String
 		public var m_layoutID:String;
 		public var m_constraintsID:String;
@@ -60,6 +65,14 @@ package networking
 		{
 			if(levelObj)
 			{
+				if(levelObj._id != null)
+				{
+					if(levelObj._id is String)
+						m_id = levelObj._id;
+					else
+						m_id = levelObj._id.$oid;
+				}
+				
 				//steal properties for ourselves...  "Mine all Mine, me precious"
 				for(var id:String in levelObj) {
 					var value:Object = levelObj[id];

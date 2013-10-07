@@ -186,11 +186,13 @@ package networking
 		static public function loadGameFiles(worldFileLoadedCallback:Function, layoutFileLoadedCallback:Function, constraintsFileLoadedCallback:Function):void
 		{
 			var gameFileHandler:GameFileHandler;
+			//do this so I can debug the object...
+			var levelInformation:LevelInformation = PipeJamGame.levelInfo;
 			
-			var levelID:int = 100000;
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_levelId && PipeJamGame.levelInfo.m_levelId.length < 5)
-				levelID = parseInt(PipeJamGame.levelInfo.m_levelId);
-			if(levelID < 1000) // in the tutorial if a short level id
+			var m_id:int = 100000;
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_id && PipeJamGame.levelInfo.m_id.length < 5)
+				m_id = parseInt(PipeJamGame.levelInfo.m_id);
+			if(m_id < 1000) // in the tutorial if a low level id
 			{
 				PipeJamGameScene.inTutorial = true;
 				PipeJamGameScene.inDemo = false;
