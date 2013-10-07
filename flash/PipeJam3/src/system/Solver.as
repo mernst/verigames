@@ -33,7 +33,7 @@ package system
 				allMovesPerformed = allMovesPerformed.concat(suggestedMoves);
 				if (score < bestScore) break;
 				bestScore = score;
-				trace("New Target: " + bestScore);
+			//	trace("New Target: " + bestScore);
 			}
 			// Undo moves to reset level graph
 			for (var m:int = 0; m < allMovesPerformed.length; m++) {
@@ -107,15 +107,15 @@ package system
 			for (var m:int = 0; m < moveSets.length; m++) {
 				var movesToTry:MoveSet = moveSets[m];
 				prevScore = level.currentScore;
-				trace("Checking moves:");
+			//	trace("Checking moves:");
 				var movesToSuggest:Vector.<EdgeSetChangeEvent> = performMoves(movesToTry);
 				simulator.updateOnBoxSizeChange("", level.level_name);
 				level.updateScore();
 				if (level.currentScore >= prevScore) {
-					trace("Good moves! Net score increase: " + (level.currentScore - prevScore));
+				//	trace("Good moves! Net score increase: " + (level.currentScore - prevScore));
 					suggestedMoves = suggestedMoves.concat(movesToSuggest);
 				} else {
-					trace("Bad moves! Net score increase: " + (level.currentScore - prevScore) + " Undoing...");
+				//	trace("Bad moves! Net score increase: " + (level.currentScore - prevScore) + " Undoing...");
 					performMoves(movesToTry, true);
 					simulator.updateOnBoxSizeChange("", level.level_name);
 					level.updateScore();
@@ -153,7 +153,7 @@ package system
 			var newValue:Boolean = undo ? !evt.propValue : evt.propValue;
 			if (gameNode.m_edgeSet.getProps().hasProp(evt.prop) == newValue) return false;
 			gameNode.m_edgeSet.setProp(evt.prop, newValue);
-			/*if (!undo)*/ trace("--> Make " + gameNode.m_id + (newValue ? " NARROW" : " WIDE"));
+	//		/*if (!undo)*/ trace("--> Make " + gameNode.m_id + (newValue ? " NARROW" : " WIDE"));
 			return true;
 		}
 		

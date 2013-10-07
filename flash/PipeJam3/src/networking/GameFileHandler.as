@@ -188,7 +188,7 @@ package networking
 			var gameFileHandler:GameFileHandler;
 			
 			var levelID:int = 100000;
-			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_levelId.length < 5)
+			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_levelId && PipeJamGame.levelInfo.m_levelId.length < 5)
 				levelID = parseInt(PipeJamGame.levelInfo.m_levelId);
 			if(levelID < 1000) // in the tutorial if a short level id
 			{
@@ -312,7 +312,7 @@ package networking
 
 			}
 			else
-			{//loading layouts is again broken...
+			{
 				zipFile = fzip.getFileAt(0);
 				var containerXML:XML = new XML(zipFile.content);
 				trace(zipFile.filename);
@@ -332,7 +332,6 @@ package networking
 				{
 					//		trace("zip failed unexpected # of files:" + fz1.getFileCount());
 					zipFile = fzip.getFileAt(0);
-					trace(zipFile.filename);
 					var xml:XML = new XML(zipFile.content);
 					m_callback(xml);
 				}
