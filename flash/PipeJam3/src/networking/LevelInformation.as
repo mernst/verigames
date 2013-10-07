@@ -124,10 +124,10 @@ package networking
 			return levelObj;
 		}
 		
-		private static function cloneObj(obj):Object
+		private static function cloneObj(obj:Object):Object
 		{
 			var clone:Object = new Object();
-			for (var key in obj) {
+			for (var key:Object in obj) {
 				clone[key] = obj[key];
 			}
 			return clone;
