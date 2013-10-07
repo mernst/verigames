@@ -76,7 +76,7 @@ package scenes.levelselectscene
 		
 		protected override function reallyDeleteSavedGame(answer:int):void
 		{
-			if(answer == 2)
+			if(answer == 1)
 			{
 				//remove button from dialog
 				var index:int = buttonPaneArray.indexOf(currentDeleteTarget);
