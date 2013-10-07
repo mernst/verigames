@@ -174,8 +174,8 @@ package starling.display
             if (mIndexBuffer)     mIndexBuffer.dispose();
             if (numVertices == 0) return;
             if (context == null)  throw new MissingContextError();
-			if(objectIndex > 46)
-				trace("+", objectIndex, mVertexData.numVertices);
+//			if(objectIndex > 46)
+//				trace("+", objectIndex, mVertexData.numVertices);
             mVertexBuffer = context.createVertexBuffer(numVertices, VertexData.ELEMENTS_PER_VERTEX);
             mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, numVertices);
             
@@ -343,13 +343,13 @@ package starling.display
         public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:Texture, 
                                       smoothing:String, blendMode:String, numQuads:int=1):Boolean
         {
-			if(objectIndex > 46)
-				if((mTexture != null && texture != null) && (mTexture.base != texture.base ||
-					mTexture.repeat != texture.repeat ||
-					mSmoothing != smoothing ||
-					mTinted != (tinted || parentAlpha != 1.0) ||
-					this.blendMode != blendMode) == true)
-					trace(true);
+//			if(objectIndex > 46)
+//				if((mTexture != null && texture != null) && (mTexture.base != texture.base ||
+//					mTexture.repeat != texture.repeat ||
+//					mSmoothing != smoothing ||
+//					mTinted != (tinted || parentAlpha != 1.0) ||
+//					this.blendMode != blendMode) == true)
+//					trace(true);
             if (mNumQuads == 0) return false;
             else if (mNumQuads + numQuads > 8192) return true; // maximum buffer size
             else if (mTexture == null && texture == null) return false;
