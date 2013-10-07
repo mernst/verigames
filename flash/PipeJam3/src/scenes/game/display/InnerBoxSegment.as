@@ -62,7 +62,7 @@ package scenes.game.display
 			edgeSegment = new GameEdgeSegment(m_dir, true, false, false, m_isWide, m_isEditable, draggable);
 			edgeSegment.updateSegment(new Point(0, 0), new Point(0, m_height));
 			edgeSegment.visible = !m_hideSegments;
-			trace(m_id + " height:" + m_height);
+	//		trace(m_id + " height:" + m_height);
 			
 			if (hasInnerCircle) {
 				innerCircleJoint = new GameEdgeJoint(GameEdgeJoint.INNER_CIRCLE_JOINT, m_isWide, m_isEditable, draggable);

@@ -44,11 +44,11 @@ public class MongoTestBed {
 //       map.put("playerID", "51e5b3460240288229000026");
 //       map.put("levelID", "12");
 //       listEntries(db, "CompletedTutorials", map, false);
-    //    listLog(db);
-    //     saveAndCleanLog(db, "930");
+   //     listLog(db);
+   //      saveAndCleanLog(db, "1004");
         
-        listCollectionNames(db);
-        listCollection(db, "Level");
+      //  listCollectionNames(db);
+        listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
 	

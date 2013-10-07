@@ -2,16 +2,20 @@ package
 {
 	import audio.AudioManager;
 	
+	import cgs.server.logging.data.QuestData;
+	
 	import com.spikything.utils.MouseWheelTrap;
+	
+	import events.NavigationEvent;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
-	import flash.external.ExternalInterface;
 	
 	import net.hires.debug.Stats;
 	
@@ -23,7 +27,6 @@ package
 	
 	import starling.core.Starling;
 	import starling.events.Event;
-	import events.NavigationEvent;
 	
 	//import mx.core.FlexGlobals;
 	//import spark.components.Application;
@@ -37,10 +40,11 @@ package
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
-		public static var RELEASE_BUILD:Boolean = true;
+		public static var RELEASE_BUILD:Boolean = false;
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
+		public static var REPLAY_DQID:String;//= "dqid_524f4e00a573f2.42178328";
 		
 		public static var logging:LoggingServerInterface;
 		
@@ -56,12 +60,13 @@ package
 			
 			addEventListener(flash.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
-			if(RELEASE_BUILD == true && !LOCAL_DEPLOYMENT) 
+			if (REPLAY_DQID || LoggingServerInterface.LOGGING_ON) 
 			{
-				if (LoggingServerInterface.LOGGING_ON) {
-					logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage);
+				logging = new LoggingServerInterface(LoggingServerInterface.SETUP_KEY_FRIENDS_AND_FAMILY_BETA, stage, "", REPLAY_DQID != null);
+				if (REPLAY_DQID) {
+					ReplayController.getInstance().loadQuestData(REPLAY_DQID, logging.cgsServer, onReplayQuestDataLoaded);
 				}
-			}		
+			}	
 		}
 		
 		public function onAddedToStage(evt:flash.events.Event):void {
@@ -143,6 +148,18 @@ package
 		{
 			PipeJamGame.levelInfo = new LevelInformation(objVector[0]);		
 			PipeJamGame.m_pipeJamGame.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "PipeJamGame"));
+		}
+		
+		private function onReplayQuestDataLoaded(questData:QuestData, err:String = null):void
+		{
+			trace("Found " + (questData.actions ? questData.actions.length : 0) + " actions");
+			if (err) trace("Error: " + err);
+			if (questData && questData.startData && questData.startData.details && questData.startData.details.levelId) {
+				trace("Replaying levelId: " + questData.startData.details.levelId);
+				loadLevelFromObjectID(questData.startData.details.levelId);
+			} else {
+				trace("Error: Couldn't find levelId for replay.");
+			}
 		}
 	}
 	
