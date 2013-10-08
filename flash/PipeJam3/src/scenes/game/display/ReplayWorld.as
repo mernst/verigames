@@ -106,7 +106,7 @@ package scenes.game.display
 					return;
 				}
 				edgeSetGraphViewPanel.centerOnComponent(gameNode);
-				PipeJam3.showReplayText("Preview: " + edgeSetId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : "")));
+				PipeJam3.showReplayText("Preview: " + edgeSetId + " " + propChanged + " -> " + newPropValue + (isUndo ? " (undo)" : ""));
 			} else {
 				PipeJam3.showReplayText("Replay action preview failed, edgeSetId: " + edgeSetId + " propChanged: " + propChanged);
 			}

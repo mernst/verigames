@@ -906,17 +906,24 @@ package scenes.game.display
 				var editable:Boolean = node.m_isEditable;
 				var editableString:String = (editable == true) ? "true" : "false";
 				
-				// For jam (aka buzzsaw), only consider narrowness - no concept of a keyfor buzzsaw at this point
-				var edgeHasJam:Boolean = my_edge.hasConflictProp(PropDictionary.PROP_NARROW);
-				var portHasJam:Boolean = my_edge.to_port.hasConflictProp(PropDictionary.PROP_NARROW);
-				
 				var child:XML = <box/>;
 				child.@id = id;
 				child.@width = widthString;
 				child.@editable = editableString;
-				child.@jam = (edgeHasJam || portHasJam).toString();
 				
 				constraintsXML.appendChild(child);
+			}
+			for each(var edge:GameEdgeContainer in m_edgeList)
+			{
+				var hasJam:Boolean = edge.m_errorProps.hasProp(PropDictionary.PROP_NARROW);
+				
+				var lineXML:XML = <line/>;
+				lineXML.@id = edge.m_id
+				lineXML.@width = edge.isWide().toString();
+				lineXML.@editable = edge.isEditable().toString();
+				lineXML.@jam = hasJam.toString(); // used for annotating code (buzzsaw)
+				
+				constraintsXML.appendChild(lineXML);
 			}
 		}
 		

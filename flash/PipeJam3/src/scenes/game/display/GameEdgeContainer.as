@@ -73,7 +73,7 @@ package scenes.game.display
 		public var errorTextBubbleContainer:Sprite = new Sprite();
 		public var errorTextBubble:TextBubble;
 		
-		private var m_errorProps:PropDictionary;
+		public var m_errorProps:PropDictionary;
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		private var m_hidingErrorText:Boolean = false;
