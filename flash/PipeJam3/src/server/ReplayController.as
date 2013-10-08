@@ -18,7 +18,8 @@ package server
 		private var m_questDataLoadedCallback:Function;
 		private var m_currentActionIndex:int = -1;
 		private var m_nextActionIndex:int = -1;
-		private var m_previewingAction:Boolean = false;
+		//private var m_previewingAction:Boolean = false;
+		private var m_lastDir:int = 1;
 		
 		public static function getInstance():ReplayController
 		{
@@ -37,28 +38,12 @@ package server
 			if (numActions == 0) return;
 			if ((m_currentActionIndex == -1) && (m_nextActionIndex == -1)) {
 				attemptPreviewAction(questData.actions, 0, world, 1);
-			} else if (m_previewingAction) {
-				if (m_currentActionIndex == m_nextActionIndex) {
-					// if indices are equal, perform action
-					attemptPerformAction(questData.actions, m_currentActionIndex, world, 1);
-				} else if (m_nextActionIndex < m_currentActionIndex) {
-					// if we're moving backward, move forward and preview next action
-					attemptPreviewAction(questData.actions, m_currentActionIndex + 1, world, 1);
-				} else {
-					// If we're moving forward
-					attemptPreviewAction(questData.actions, m_currentActionIndex + 1, world, 1);
-				}
+			} else if ((m_currentActionIndex == m_nextActionIndex) && (m_lastDir == 1)) {
+				// Perform previewed action
+				attemptPerformAction(questData.actions, m_currentActionIndex, world, 1);
 			} else {
-				if (m_currentActionIndex == m_nextActionIndex) {
-					// if indices are equal, preview next action
-					attemptPreviewAction(questData.actions, m_currentActionIndex + 1, world, 1);
-				} else if (m_nextActionIndex < m_currentActionIndex) {
-					// if we're moving backward, move forward and preview next action
-					attemptPreviewAction(questData.actions, m_currentActionIndex + 1, world, 1);
-				} else {
-					// If we're moving forward
-					attemptPreviewAction(questData.actions, m_currentActionIndex + 1, world, 1);
-				}
+				// Otherwise preview next action
+				attemptPreviewAction(questData.actions, (m_lastDir == 1) ? (m_currentActionIndex + 1) : m_currentActionIndex, world, 1);
 			}
 		}
 		
@@ -70,28 +55,12 @@ package server
 			if (questData.actions == null) return;
 			var numActions:int = questData.actions.length;
 			if (numActions == 0) return;
-			if (m_previewingAction) {
-				if (m_currentActionIndex == m_nextActionIndex) {
-					// if indices are equal, perform action
-					attemptPerformAction(questData.actions, m_currentActionIndex, world, -1);
-				} else if (m_nextActionIndex < m_currentActionIndex) {
-					// if we're moving backward, move continue and preview prev action
-					attemptPreviewAction(questData.actions, m_currentActionIndex - 1, world, -1);
-				} else {
-					// If we're moving forward
-					attemptPreviewAction(questData.actions, m_currentActionIndex - 1, world, -1);
-				}
+			if ((m_currentActionIndex == m_nextActionIndex) && (m_lastDir == -1)) {
+				// Perform previewed action
+				attemptPerformAction(questData.actions, m_currentActionIndex, world, -1);
 			} else {
-				if (m_currentActionIndex == m_nextActionIndex) {
-					// if indices are equal, preview prev action
-					attemptPreviewAction(questData.actions, m_currentActionIndex - 1, world, -1);
-				} else if (m_nextActionIndex < m_currentActionIndex) {
-					// if we're moving backward, move backward and preview prev action
-					attemptPreviewAction(questData.actions, m_currentActionIndex - 1, world, -1);
-				} else {
-					// If we're moving forward
-					attemptPreviewAction(questData.actions, m_currentActionIndex - 1, world, -1);
-				}
+				// Otherwise preview prev action
+				attemptPreviewAction(questData.actions, (m_lastDir == -1) ? (m_currentActionIndex - 1) : m_currentActionIndex, world, -1);
 			}
 		}
 		
@@ -103,10 +72,11 @@ package server
 			if (!(actions[attemptIndex] is ClientAction)) return;
 			var action:ClientAction = actions[attemptIndex] as ClientAction;
 			// perform the action now
-			world.performAction(action);
+			world.performAction(action, dir == -1);
 			m_currentActionIndex = attemptIndex;
 			m_nextActionIndex = m_currentActionIndex + dir;
-			m_previewingAction = false;
+			m_lastDir = dir;
+			//m_previewingAction = false;
 		}
 		
 		private function attemptPreviewAction(actions:Array, attemptIndex:int, world:ReplayWorld, dir:int):void
@@ -117,30 +87,26 @@ package server
 			if (!(actions[attemptIndex] is ClientAction)) return;
 			var action:ClientAction = actions[attemptIndex] as ClientAction;
 			// preview the action now
-			world.previewAction(action);
+			world.previewAction(action, dir == -1);
 			m_currentActionIndex = attemptIndex;
-			if (m_previewingAction) {
-				// If going from preview to new preview, mark equal so that next action performed is the previewed one
-				m_nextActionIndex = m_currentActionIndex;
-			} else {
-				m_nextActionIndex = m_currentActionIndex + dir;
-			}
-			m_previewingAction = true;
+			m_nextActionIndex = m_currentActionIndex;
+			m_lastDir = dir;
+			//m_previewingAction = true;
 		}
 		
 		public function ReplayController(lock:SingletonLock):void
 		{
 			m_currentActionIndex = m_nextActionIndex = -1;
-			m_previewingAction = false;
+			//m_previewingAction = false;
 		}
 		
 		/**
 		 * Load quest data from server, callback should have signature:
 		 * function onQuestDataLoaded(questData:QuestData, errMessage:String = null):void {}
 		 */
-		public function loadQuestData(dqid:String, server:CGSServer, callback:Function):void
+		public function loadQuestData(dqid:String, cgsServer:CGSServer, callback:Function):void
 		{
-			server.requestQuestData(dqid, onLoadQuestData);
+			cgsServer.requestQuestData(dqid, onLoadQuestData);
 			m_questDataLoadedCallback = callback;
 		}
 		
@@ -148,7 +114,7 @@ package server
 		{
 			questData = _questData;
 			m_currentActionIndex = m_nextActionIndex = -1;
-			m_previewingAction = false;
+			//m_previewingAction = false;
 			
 			if (m_questDataLoadedCallback == null) return;
 			

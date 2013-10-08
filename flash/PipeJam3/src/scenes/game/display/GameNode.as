@@ -129,11 +129,11 @@ package scenes.game.display
 			if (undoEvent is EdgeSetChangeEvent) {
 				var evt:EdgeSetChangeEvent = undoEvent as EdgeSetChangeEvent;
 				if (evt.prop == PropDictionary.PROP_NARROW) {
-					if (isUndo) {
-						handleWidthChange(evt.propValue);
-					} else {
-						handleWidthChange(!evt.propValue);
-					}
+					// This is a confusing double negative, if narrow is TRUE then isWide = false, but negate for undo
+					handleWidthChange(isUndo ? evt.propValue : !evt.propValue);
+				} else if (m_propertyMode.indexOf(PropDictionary.PROP_KEYFOR_PREFIX) == 0) {
+					dispatchEvent(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, this, m_propertyMode, isUndo ? !evt.propValue : evt.propValue, null, false, null));
+					m_isDirty = true;
 				}
 			} else {
 				m_isDirty = true;

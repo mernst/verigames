@@ -1039,7 +1039,7 @@ package scenes.game.display
 		}
 		
 		//assume this only generates on toggle width events
-		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			//trace("Level: onEdgeSetChange");
 			if (!evt.silent) {

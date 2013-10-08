@@ -92,7 +92,7 @@ package networking
 		{
 			var levelObj:Object = new Object();
 			levelObj.m_version = m_version;
-			
+			levelObj.m_id = m_id;
 			levelObj.m_levelId = m_levelId;
 			levelObj.m_xmlID = m_xmlID;
 			levelObj.m_layoutID = m_layoutID;
