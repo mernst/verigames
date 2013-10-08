@@ -163,7 +163,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   public void setNarrow(boolean narrow)
   {
     //TODO JB: REMOVE THE ALLOWANCE UNDER WEAK MODE
-    if (!underConstruction() && InferenceMain.STRICT_MODE())
+    if (!underConstruction() && InferenceMain.STRICT())
       throw new IllegalStateException("Mutation attempted on constructed Chute");
     this.narrow = narrow;
     checkRep();

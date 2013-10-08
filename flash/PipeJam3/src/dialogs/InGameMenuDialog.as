@@ -44,9 +44,7 @@ package dialogs
 		private var background:NineSliceBatch;
 		
 		private var submitLayoutDialog:SubmitLayoutDialog;
-		
-		private var submitLevelDialog:SubmitLevelDialog;
-				
+						
 		protected var shapeWidth:int = 96;
 		protected var buttonPaddingWidth:int = 8;
 		protected var buttonPaddingHeight:int = 8;
@@ -122,27 +120,6 @@ package dialogs
 		public function setActiveLevelName(name:String):void
 		{
 			m_levelName = name;
-		}
-		
-		private function onSaveScoreButtonTriggered():void
-		{
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LEVEL));
-		}
-		
-		private function onSubmitScoreButtonTriggered():void
-		{
-			if(submitLevelDialog == null)
-			{
-				submitLevelDialog = new SubmitLevelDialog(200, 200);
-				parent.addChild(submitLevelDialog);
-				
-				submitLevelDialog.x = (480 - submitLevelDialog.width)/2;
-				submitLevelDialog.y = (320 - submitLevelDialog.height)/2;
-				submitLevelDialog.visible = true;
-				//add clip rect so box seems to slide up out of the gameControlPanel
-			}
-			else
-				submitLevelDialog.visible = !submitLevelDialog.visible;
 		}
 		
 		private function onSubmitLayoutButtonTriggered():void

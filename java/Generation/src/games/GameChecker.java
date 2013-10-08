@@ -4,10 +4,10 @@ import checkers.basetype.BaseTypeChecker;
 import checkers.inference.InferenceAnnotatedTypeFactory;
 import checkers.inference.InferenceTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.types.TypeHierarchy;
 
-public abstract class GameChecker<REAL_TYPE_FACTORY extends BasicAnnotatedTypeFactory<?>>
+public abstract class GameChecker<REAL_TYPE_FACTORY extends SubtypingAnnotatedTypeFactory<?>>
        extends BaseTypeChecker<REAL_TYPE_FACTORY> implements InferenceTypeChecker {
 
     @Override

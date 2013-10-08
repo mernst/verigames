@@ -100,7 +100,7 @@ public class World
           List<String> subboardInputs  = subboard.getInputIDs();
           List<String> subboardOutputs = subboard.getOutputIDs();
 
-          if(InferenceMain.STRICT_MODE()) {
+          if(InferenceMain.STRICT()) {
             if (boardInputs.size() != subboardInputs.size())
               throw new IllegalStateException("subboard " + name + " has " +
                   subboardInputs.size() + " inputs but its referent has " +

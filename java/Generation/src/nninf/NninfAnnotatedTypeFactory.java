@@ -4,7 +4,7 @@ import java.util.List;
 
 import checkers.quals.DefaultLocation;
 import checkers.types.AnnotatedTypeFactory;
-import checkers.types.BasicAnnotatedTypeFactory;
+import checkers.types.SubtypingAnnotatedTypeFactory;
 import checkers.types.AnnotatedTypeMirror;
 import checkers.types.AnnotatedTypeMirror.AnnotatedExecutableType;
 import checkers.types.GeneralAnnotatedTypeFactory;
@@ -14,7 +14,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
 
-public class NninfAnnotatedTypeFactory extends BasicAnnotatedTypeFactory<NninfChecker> {
+public class NninfAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<NninfChecker> {
     NninfChecker checker;
     MapGetHeuristics mapGetHeuristics;
 

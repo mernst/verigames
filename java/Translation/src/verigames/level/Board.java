@@ -3,10 +3,12 @@ package verigames.level;
 import static verigames.utilities.Misc.ensure;
 
 import verigames.graph.Graph;
+import verigames.layout.LayoutDebugger;
 import verigames.level.Intersection.Kind;
 import verigames.utilities.MultiBiMap;
 import verigames.utilities.Pair;
 
+import java.io.File;
 import java.util.Set;
 
 /*>>>
@@ -347,8 +349,19 @@ public class Board extends Graph<Intersection, Chute>
   public void finishConstruction()
   {
     super.finishConstruction();
-    if (!this.isAcyclic())
-      throw new CycleException();
+    if (!this.isAcyclic()) {
+      try {
+          System.out.println("Printing cyclic board: " + this.getName());
+          System.out.flush();
+          final String outDir = System.getProperty("user.dir");
+          final String boardName = LayoutDebugger.layout("cyclicBoard", this, outDir);
+          System.out.println("Printed to: " + (new File(outDir, boardName)));
+      } catch(Exception exc) {
+          throw new RuntimeException("Exception trying to print cyclic board.  Board=" + getName(), exc);
+      }
+
+      throw new CycleException("Board=" + getName());
+    }
   }
 
   @Override

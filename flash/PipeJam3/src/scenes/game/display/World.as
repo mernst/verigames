@@ -7,6 +7,7 @@ package scenes.game.display
 	import dialogs.InGameMenuDialog;
 	import dialogs.SaveDialog;
 	import dialogs.SimpleAlertDialog;
+	import dialogs.SubmitLevelDialog;
 	
 	import display.NineSliceBatch;
 	import display.TextBubble;
@@ -61,7 +62,6 @@ package scenes.game.display
 	import system.VerigameServerConstants;
 	
 	import utils.XMath;
-	import dialogs.SubmitLevelDialog;
 	
 	/**
 	 * World that contains levels that each contain boards that each contain pipes
@@ -309,19 +309,13 @@ package scenes.game.display
 				shareDialog = new SaveDialog(150, 100);
 			}
 			
-			edgeSetGraphViewPanel.addChild(shareDialog);
-			
-			shareDialog.x = (480 - shareDialog.width)/2;
-			shareDialog.y = (320 - shareDialog.height)/2 - 20;
+			addChild(shareDialog);
 		}
 		
 		protected function postSubmitDialog(event:MenuEvent):void
 		{
-			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(200, 200);
-			edgeSetGraphViewPanel.addChild(submitLevelDialog);
-			
-			submitLevelDialog.x = (480 - submitLevelDialog.width)/2;
-			submitLevelDialog.y = (320 - submitLevelDialog.height)/2 - 10;
+			var submitLevelDialog:SubmitLevelDialog = new SubmitLevelDialog(150, 150);
+			addChild(submitLevelDialog);
 		}
 		
 		public function onPutLevelInDatabase(event:MenuEvent):void
@@ -357,7 +351,7 @@ package scenes.game.display
 		{
 			var dialogText:String;
 			var dialogWidth:Number = 160;
-			var dialogHeight:Number = 60;
+			var dialogHeight:Number = 80;
 			var socialText:String = "";
 			var numLinesInText:int = 1;
 			if(event.type == MenuEvent.LEVEL_SAVED)
@@ -373,15 +367,11 @@ package scenes.game.display
 				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
 				numLinesInText = 3;
 				socialText = "I just finished a level!";
-				dialogHeight = 110;
+				dialogHeight = 130;
 			}
 			
 			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null, numLinesInText);
 			addChild(alert);
-			
-			alert.x = (450 - alert.width)/2;
-			alert.y = (320 - alert.height)/2;
-			
 		}
 		
 		public function achievementAdded(event:MenuEvent):void

@@ -392,9 +392,9 @@ package display
 				
 				currentDeleteTarget = displayObject as BasicButton;
 				
-				var simpleTwoButtonDialog:SimpleTwoButtonDialog = new SimpleTwoButtonDialog("Delete Saved Game?", "No", "Yes", dialogWidth, dialogHeight, reallyDeleteSavedGame);
-				simpleTwoButtonDialog.x = (width - dialogWidth)/2;
-				simpleTwoButtonDialog.y = 50;
+				var simpleTwoButtonDialog:SimpleTwoButtonDialog = new SimpleTwoButtonDialog("Delete Saved Game?", "Yes", "No", dialogWidth, dialogHeight, reallyDeleteSavedGame);
+//				simpleTwoButtonDialog.x = (width - dialogWidth)/2;
+//				simpleTwoButtonDialog.y = 50;
 				addChild(simpleTwoButtonDialog);
 			}
 		}

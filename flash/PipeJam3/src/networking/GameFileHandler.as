@@ -270,6 +270,7 @@ package networking
 		{
 			fzip = new FZip();
 			fzip.addEventListener(flash.events.Event.COMPLETE, zipLoaded);
+			fzip..addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			
 			var loader:URLLoader = new URLLoader();
 			switch(loadType)
@@ -294,6 +295,10 @@ package networking
 			}
 		}
 		
+		private function ioErrorHandler(event:IOErrorEvent):void {
+			trace("ioErrorHandler: " + event);
+		}
+		
 		private function zipLoaded(e:flash.events.Event):void {
 			fzip.removeEventListener(flash.events.Event.COMPLETE, zipLoaded);
 			var zipFile:FZipFile;
@@ -303,9 +308,9 @@ package networking
 				for (var i:int = 0; i < fzip.getFileCount(); i++) {
 					zipFile = fzip.getFileAt(i);
 					if (zipFile.filename.toLowerCase().indexOf("layout") > -1) {
-						xmlArray[1] = new XML(zipFile.content);
-					} else if (zipFile.filename.toLowerCase().indexOf("constraints") > -1) {
 						xmlArray[2] = new XML(zipFile.content);
+					} else if (zipFile.filename.toLowerCase().indexOf("constraints") > -1) {
+						xmlArray[1] = new XML(zipFile.content);
 					} else {
 						xmlArray[0] = new XML(zipFile.content);
 					}

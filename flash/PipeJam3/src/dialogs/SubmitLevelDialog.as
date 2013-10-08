@@ -14,8 +14,8 @@ package dialogs
 	import flash.geom.Point;
 	import flash.text.TextFormat;
 	
-	import networking.LevelInformation;
 	import networking.GameFileHandler;
+	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	import scenes.game.display.Level;
@@ -31,7 +31,7 @@ package dialogs
 	import starling.extensions.pixelmask.PixelMaskDisplayObject;
 	import starling.textures.Texture;
 	
-	public class SubmitLevelDialog extends BaseComponent
+	public class SubmitLevelDialog extends BaseDialog
 	{
 		/** Button to save the current layout */
 		public var submit_button:NineSliceButton;
@@ -39,7 +39,7 @@ package dialogs
 		/** Button to close the dialog */
 		public var cancel_button:NineSliceButton;
 		
-		private var background:NineSliceBatch;
+		private var starScaleFactor:Number = .4;
 		
 		private var enjoymentQuad:Quad;
 		private var difficultyQuad:Quad;
@@ -50,103 +50,88 @@ package dialogs
 		public var enjoymentRating:Number = 2.5;
 		public var difficultyRating:Number = 2.5;
 		
-		protected var paddingWidth:int = 8;
-		protected var paddingHeight:int = 8;
-		protected var buttonHeight:int = 24;
-		protected var buttonWidth:int = 40;
-		
-		public function SubmitLevelDialog(shapeWidth:Number, shapeHeight:Number)
+		public function SubmitLevelDialog(_width:Number, _height:Number)
 		{
-			super();
-			
-			background = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", "MenuBoxFree");
-			addChild(background);
-			
-			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
-			submit_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitButtonTriggered);
-			submit_button.x = background.width - paddingWidth - buttonWidth;
-			submit_button.y = background.height - paddingHeight - buttonHeight;
-			addChild(submit_button);	
+			super(_width, _height);
 			
 			cancel_button = ButtonFactory.getInstance().createButton("Cancel", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
-			cancel_button.x = background.width - 2*paddingWidth - 2*buttonWidth;
-			cancel_button.y = background.height - paddingHeight - buttonHeight;
-			addChild(cancel_button);
+			cancel_button.x = background.width*.5 + background.x + 4;
+			cancel_button.y = background.height - buttonHeight + background.y - 15;
+			addChild(cancel_button);	
 			
-			addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);	
-		}
-		
-		protected function onAddedToStage(event:starling.events.Event):void
-		{
-			var title:Label = new Label();
-			title.text = "Rate It!";
-			addChild(title);
-			title.textRendererProperties.textFormat = new TextFormat( AssetsFont.FONT_UBUNTU, 20, 0xffffff ); 
-			title.x = (width-100)/2;
+			submit_button = ButtonFactory.getInstance().createButton("Submit", buttonWidth, buttonHeight, buttonHeight / 2.0, buttonHeight / 2.0);
+			submit_button.addEventListener(starling.events.Event.TRIGGERED, onSubmitButtonTriggered);
+			submit_button.x = background.width*.5 + background.x - 4 - submit_button.width;
+			submit_button.y = cancel_button.y;
+			addChild(submit_button);	
 			
-			var label1:Label = new Label();
-			label1.text = "Did you enjoy that level?";
-			label1.x = paddingWidth;
-			label1.y = paddingHeight*2 + 20;
+			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Rate It!", AssetsFont.FONT_UBUNTU, _width - 30, 18, 18, 0xFFFFFF);
+			TextFactory.getInstance().updateAlign(label, 1, 1);
+			addChild(label);
+			label.x = 15 + background.x;
+			label.y = 10 + background.y;
+			
+			var label1:TextFieldWrapper = TextFactory.getInstance().createTextField("Did you enjoy that level?", AssetsFont.FONT_UBUNTU, _width - 30, 32, 18, 0x243079);
+			TextFactory.getInstance().updateAlign(label1, 1, 1);
+			label1.x =  15 + background.x;
+			label1.y = label.y  + label.height - 6;
 			addChild(label1);
-			label1.textRendererProperties.textFormat = new TextFormat( AssetsFont.FONT_UBUNTU, 12, 0xffffff ); 
 			
 			var enjoymentStarsMaskBackgroundTexture:Texture = AssetInterface.getTexture("Game", "RatingStarsClass");
 			var enjoymentStarsMask:Image = new Image(enjoymentStarsMaskBackgroundTexture);
-			enjoymentStarsMask.width *= .6;
-			enjoymentStarsMask.height *= .6;
+			enjoymentStarsMask.width *= starScaleFactor;
+			enjoymentStarsMask.height *= starScaleFactor;
 			
 			var enjoymentStars:PixelMaskDisplayObject = new PixelMaskDisplayObject();
-			enjoymentStars.x = paddingWidth*2;
-			enjoymentStars.y = paddingHeight*2.5 + label1.y + label1.height;
 			enjoymentStars.width = enjoymentStarsMask.width;
 			enjoymentStars.height = enjoymentStarsMask.height;
+			enjoymentStars.x = background.x + .5*background.width - .5*enjoymentStarsMask.width;
+			enjoymentStars.y = label1.y + label1.height - 3;
 			enjoymentStars.addEventListener(TouchEvent.TOUCH, overEnjoymentStars);
 			
-			enjoymentQuad = new Quad(enjoymentStarsMask.width/2, enjoymentStarsMask.height, 0xff0000);
+			enjoymentQuad = new Quad(enjoymentStarsMask.width/2, enjoymentStarsMask.height, 0x243079);
 			enjoymentStars.mask = enjoymentStarsMask;
 			
 			var enjoymentBackgroundStarsTexture:Texture = AssetInterface.getTexture("Game", "RatingStarsClass");
 			enjoymentStarsBackground = new Image(enjoymentBackgroundStarsTexture);
 			enjoymentStarsBackground.x = enjoymentStars.x;
 			enjoymentStarsBackground.y = enjoymentStars.y;
-			enjoymentStarsBackground.width *= .6;
-			enjoymentStarsBackground.height *= .6;
+			enjoymentStarsBackground.width *= starScaleFactor;
+			enjoymentStarsBackground.height *= starScaleFactor;
 			enjoymentStarsBackground.addEventListener(TouchEvent.TOUCH, overEnjoymentStars);
 			
 			addChild(enjoymentStarsBackground);
 			addChild(enjoymentStars);
 			enjoymentStars.addChild(enjoymentQuad);
 
-			var label2:Label = new Label();
-			label2.text = "How hard was it?";
-			label2.x = paddingWidth;
-			label2.y = paddingHeight*2 + enjoymentStars.y + enjoymentStars.height;
+			var label2:TextFieldWrapper = TextFactory.getInstance().createTextField("How hard was it?", AssetsFont.FONT_UBUNTU, _width - 30, 32, 18, 0x243079);
+			TextFactory.getInstance().updateAlign(label1, 1, 1);
+			label2.x = 15 + background.x;
+			label2.y = enjoymentStars.y + enjoymentStars.height - 4;
 			addChild(label2);
-			label2.textRendererProperties.textFormat = new TextFormat( AssetsFont.FONT_UBUNTU, 12, 0xffffff ); 
 			
 			var difficultyStarsMaskBackgroundTexture:Texture = AssetInterface.getTexture("Menu", "RatingStarsClass");
 			var difficultyStarsMask:Image = new Image(difficultyStarsMaskBackgroundTexture);
-			difficultyStarsMask.width *= .6;
-			difficultyStarsMask.height *= .6;
+			difficultyStarsMask.width *= starScaleFactor;
+			difficultyStarsMask.height *= starScaleFactor;
 			
 			var difficultyStars:PixelMaskDisplayObject = new PixelMaskDisplayObject();
-			difficultyStars.x = paddingWidth*2;
-			difficultyStars.y = paddingHeight*2.5 + label2.y + label2.height;
+			difficultyStars.x = enjoymentStars.x
+			difficultyStars.y = label2.y + label2.height - 7;
 			difficultyStars.width = difficultyStarsMask.width;
 			difficultyStars.height = difficultyStarsMask.height;
 			difficultyStars.addEventListener(TouchEvent.TOUCH, overDifficultyStars);
 			
-			difficultyQuad = new Quad(difficultyStarsMask.width/2, difficultyStarsMask.height, 0xff0000);
+			difficultyQuad = new Quad(difficultyStarsMask.width/2, difficultyStarsMask.height, 0x243079);
 			difficultyStars.mask = difficultyStarsMask;
 			
 			var difficultyBackgroundStarsTexture:Texture = AssetInterface.getTexture("Menu", "RatingStarsClass");
 			difficultyStarsBackground = new Image(difficultyBackgroundStarsTexture);
 			difficultyStarsBackground.x = difficultyStars.x;
 			difficultyStarsBackground.y = difficultyStars.y;
-			difficultyStarsBackground.width *= .6;
-			difficultyStarsBackground.height *= .6;
+			difficultyStarsBackground.width *= starScaleFactor;
+			difficultyStarsBackground.height *= starScaleFactor;
 			difficultyStarsBackground.addEventListener(TouchEvent.TOUCH, overDifficultyStars);
 			addChild(difficultyStarsBackground);
 			addChild(difficultyStars);
@@ -179,7 +164,7 @@ package dialogs
 					var touchPoint:Point = touch.getLocation(this);
 					var globalPoint:Point = localToGlobal(touchPoint);
 					var localPoint:Point = obj.globalToLocal(globalPoint);
-					quad.width = localPoint.x*.6; //we shrink the image by this...
+					quad.width = localPoint.x*starScaleFactor;
 					return quad.width/obj.width;
 				}
 			}

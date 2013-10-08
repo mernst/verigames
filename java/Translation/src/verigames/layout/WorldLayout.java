@@ -53,7 +53,7 @@ public class WorldLayout
     {
       for (Board b : l.getBoards().values())
       {
-        System.out.print("Printing board: " + currentBoard + " of " + totalBoards);
+        System.out.println("Printing board: " + currentBoard + " of " + totalBoards);
         BoardLayout.layout(b);
         ++currentBoard;
       }

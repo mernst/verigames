@@ -8,12 +8,15 @@ package dialogs
 	import display.NineSliceButton;
 	
 	import events.MenuEvent;
-	import networking.LevelInformation;
+	
 	import flash.geom.Rectangle;
+	
+	import networking.LevelInformation;
 	
 	import scenes.BaseComponent;
 	
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -21,7 +24,7 @@ package dialogs
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	public class SaveDialog extends BaseComponent
+	public class SaveDialog extends BaseDialog
 	{
 		protected var cancel_button:NineSliceButton;
 		protected var dont_share_button:NineSliceButton;
@@ -29,36 +32,32 @@ package dialogs
 				
 		public function SaveDialog(_width:Number, _height:Number)
 		{
-			super();
-			
-			var background:NineSliceBatch = new NineSliceBatch(_width*2, _height*2, 64, 64, "Game", "DialogWindowPNG", "DialogWindowXML", "DialogWindow");
-			background.scaleX = background.scaleY = .5;
-
-			addChild(background);
+			super(_width, _height);
 			
 			var label:TextFieldWrapper = TextFactory.getInstance().createTextField("Share with\nyour group\nalso?", AssetsFont.FONT_UBUNTU, _width - 30, 32, 18, 0xFFFFFF);
 			TextFactory.getInstance().updateAlign(label, 1, 1);
 			addChild(label);
-			label.x = 15;
-			label.y = 15;
+			label.x = 15 + background.x;
+			label.y = 15 + background.y;
 			
-			cancel_button = ButtonFactory.getInstance().createButton("Cancel", 36, 16, 8, 8);
+			cancel_button = ButtonFactory.getInstance().createButton("Cancel", buttonWidth, buttonHeight, 8, 8);
 			cancel_button.addEventListener(starling.events.Event.TRIGGERED, onCancelButtonTriggered);
 			addChild(cancel_button);
-			cancel_button.x = _width - cancel_button.width - 15;
-			cancel_button.y = _height - cancel_button.height - 18;	
+			cancel_button.x = _width - cancel_button.width - 15 + background.x;
+			cancel_button.y = _height - cancel_button.height - 18 + background.y;	
 			
-			dont_share_button = ButtonFactory.getInstance().createButton("No", 36, 16, 8, 8);
+			dont_share_button = ButtonFactory.getInstance().createButton("No", buttonWidth, buttonHeight, 8, 8);
 			dont_share_button.addEventListener(starling.events.Event.TRIGGERED, onNoButtonTriggered);
 			addChild(dont_share_button);
+			//add background to y but not x because caucel_button has already been adjusted by background.x
 			dont_share_button.x = cancel_button.x - dont_share_button.width - 6;
-			dont_share_button.y = _height - dont_share_button.height - 18;	
+			dont_share_button.y = _height - dont_share_button.height - 18 + background.y;	
 			
-			share_button = ButtonFactory.getInstance().createButton("Yes", 36, 16, 8, 8);
+			share_button = ButtonFactory.getInstance().createButton("Yes", buttonWidth, buttonHeight, 8, 8);
 			share_button.addEventListener(starling.events.Event.TRIGGERED, onYesButtonTriggered);
 			addChild(share_button);
 			share_button.x = dont_share_button.x - cancel_button.width - 6;
-			share_button.y = _height - share_button.height - 18;
+			share_button.y = _height - share_button.height - 18 + background.y;
 		}
 		
 		private function onCancelButtonTriggered(evt:Event):void
