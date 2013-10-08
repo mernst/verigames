@@ -73,7 +73,7 @@
       </fileset>
   </path>
 
-  <target name="test" depends="buildall, test.graph, test.level, test.layout, test.utilities">
+  <target name="test" depends="clean, buildall, test.graph, test.level, test.layout, test.utilities">
     <fail message="TEST FAILED" if="test.failure"/>
   </target>
 
