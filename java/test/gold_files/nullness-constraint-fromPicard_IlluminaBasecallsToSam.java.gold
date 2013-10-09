@@ -318,5 +318,5 @@ args: (  );
 result: List(Constant(@nninf.quals.Nullable)); 
 )
 
-SubtypeConstraint( Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}  <:  Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[] )
+SubtypeConstraint( Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}  <:  Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[] )
 

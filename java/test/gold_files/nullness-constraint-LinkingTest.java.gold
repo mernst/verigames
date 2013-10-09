@@ -1,7 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within LAtm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree L  <:  Variable 0 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within LAtm: @VarAnnot(0) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within ALAtm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at class ArrayList class type parameter 0; tree AL  <:  Variable 2 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within ALAtm: @VarAnnot(2) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class ArrayList extends type; tree <<missing tree>> within 
 class ArrayList<AL> implements List<AL> {
@@ -22,7 +22,7 @@ class ArrayList<AL> implements List<AL> {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class Prev class type parameter bound 0 & 0; tree List at position ((3,0)) within E extends List<Integer> )
+SubtypeConstraint( Variable 9 at class Prev class type parameter 0; tree E extends List<Integer>  <:  Variable 7 at class Prev class type parameter bound 0 & 0; tree List at position ((3,0)) within E extends List<Integer> )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
 class Prev<E extends List<Integer>> {
@@ -62,7 +62,7 @@ class Prev<E extends List<Integer>> {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
+SubtypeConstraint( Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String>  <:  Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
 

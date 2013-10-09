@@ -1301,7 +1301,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable array#num0(-1); tree .@.checkers.inference.quals.VarAnnot(value = 3) DetachedVarTest @.checkers.inference.quals.VarAnnot(value = 2) []" editable="true" id="e8" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable array#num0(-1); tree .@checkers.inference.quals.VarAnnot(value = 3) DetachedVarTest @checkers.inference.quals.VarAnnot(value = 2) []" editable="true" id="e8" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -1625,7 +1625,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable array#num0(-1); tree .@.checkers.inference.quals.VarAnnot(value = 3) DetachedVarTest @.checkers.inference.quals.VarAnnot(value = 2) []" editable="true" id="e45" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable array#num0(-1); tree .@checkers.inference.quals.VarAnnot(value = 3) DetachedVarTest @checkers.inference.quals.VarAnnot(value = 2) []" editable="true" id="e45" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>

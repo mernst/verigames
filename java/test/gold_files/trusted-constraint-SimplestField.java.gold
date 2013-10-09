@@ -53,23 +53,7 @@ class SimplestField {
 
 SubtypeConstraint( Literal(STRING_LITERAL, "a")  <:  Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
 
-checkers.inference.FieldAccessConstraint(
-contextVp: method SimplestField#s():V constraint position; 
-calledVp: class SimplestField field s; 
-receiver: Variable 2 at method SimplestField#s():V receiver; tree <<missing tree>> within 
-public void s() {
-    final String s2 = "a";
-    s = s2;
-}Atm: @VarAnnot(2) SimplestField; 
-methodTypeParamLBs: <  >; 
-classTypeParamLBs: <  >; 
-methodTypeArgs: <  >; 
-classTypeArgs: <  >; 
-args: (  ); 
-result: List(Variable 3 at class SimplestField field s; tree String); 
-)
-
-SubtypeConstraint( Variable 4 at method SimplestField#s():V local variable s2(0); tree String  <:  Variable 3 at class SimplestField field s; tree String )
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()  <:  Variable 3 at class SimplestField field s; tree String )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimplestField#s():V constraint position; 
@@ -86,4 +70,8 @@ classTypeArgs: <  >;
 args: ( Variable 4 at method SimplestField#s():V local variable s2(0); tree String ); 
 result: List(); 
 )
+
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set() = Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
+
+SubtypeConstraint( Variable 4 at method SimplestField#s():V local variable s2(0); tree String  <:  Variable 3 at class SimplestField field s; tree String )
 

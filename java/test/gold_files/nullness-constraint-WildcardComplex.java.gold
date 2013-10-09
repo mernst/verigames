@@ -1,9 +1,9 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Collection class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T0Atm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class Collection class type parameter 0; tree T0  <:  Variable 0 at class Collection class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T0Atm: @VarAnnot(0) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at class List class type parameter 0; tree T1  <:  Variable 2 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(2) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 5 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(5) Object )
+SubtypeConstraint( Variable 6 at class ArrayList class type parameter 0; tree T1  <:  Variable 5 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(5) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class ArrayList extends type; tree <<missing tree>> within 
 class ArrayList<T1> implements List<T1> {
@@ -24,7 +24,7 @@ class ArrayList<T1> implements List<T1> {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class WildcardComplex class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(10) Object )
+SubtypeConstraint( Variable 11 at class WildcardComplex class type parameter 0; tree T  <:  Variable 10 at class WildcardComplex class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(10) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 12 at class WildcardComplex extends type; tree <<missing tree>> within 
 class WildcardComplex<T> {

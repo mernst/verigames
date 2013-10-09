@@ -1,0 +1,24 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class MyClass class type parameter 0; tree E extends Object  <:  Variable 0 at class MyClass class type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object )
+
+SubtypeConstraint( Variable 3 at class MyClass class type parameter 1; tree T extends List<E>  <:  Variable 2 at class MyClass class type parameter bound 1 & 0; tree List at position ((3,1)) within T extends List<E> )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 4 at class MyClass extends type; tree <<missing tree>> within 
+class MyClass<E extends Object, T extends List<E>> {
+    
+    MyClass() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 5 at method MyClass#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 4 at class MyClass extends type; tree <<missing tree>> within 
+class MyClass<E extends Object, T extends List<E>> {
+    
+    MyClass() {
+        super();
+    }
+} )
+

@@ -81,9 +81,9 @@ class O1 {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class O1$O2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within SAtm: @VarAnnot(7) Object )
+SubtypeConstraint( Variable 8 at class O1$O2 class type parameter 0; tree S  <:  Variable 7 at class O1$O2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within SAtm: @VarAnnot(7) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 9 at class O1$O2 class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within TAtm: @VarAnnot(9) Object )
+SubtypeConstraint( Variable 10 at class O1$O2 class type parameter 1; tree T  <:  Variable 9 at class O1$O2 class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within TAtm: @VarAnnot(9) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 11 at class O1$O2 extends type; tree <<missing tree>> within 
 class O2<S, T> {
@@ -165,9 +165,9 @@ class O3 {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within UAtm: @VarAnnot(15) Object )
+SubtypeConstraint( Variable 16 at class O1$O2$O3$Nested class type parameter 0; tree U  <:  Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within UAtm: @VarAnnot(15) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 17 at class O1$O2$O3$Nested class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within VAtm: @VarAnnot(17) Object )
+SubtypeConstraint( Variable 18 at class O1$O2$O3$Nested class type parameter 1; tree V  <:  Variable 17 at class O1$O2$O3$Nested class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within VAtm: @VarAnnot(17) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 19 at class O1$O2$O3$Nested extends type; tree <<missing tree>> within 
 class Nested<U, V> {

@@ -1,7 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class Outer class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 2 at class Outer class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(2) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
 class Outer<T, S> {
@@ -51,6 +51,8 @@ class Outer<T, S> {
         }
     }
 } )
+
+SubtypeConstraint( Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 protected void init(S s, T t) {

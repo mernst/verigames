@@ -2,148 +2,147 @@
  <level name="SimpleConstructor">
   <linked-edges>
    <edge-set id="SimpleConstructor0">
-    <edgeref id="e4" />
-    <edgeref id="e26" />
-    <edgeref id="e65" />
-    <edgeref id="e24" />
-    <edgeref id="e73" />
+    <edgeref id="e14" />
     <edgeref id="e39" />
-    <edgeref id="e74" />
+    <edgeref id="e41" />
+    <edgeref id="e49" />
+    <edgeref id="e78" />
+    <edgeref id="e3" />
+    <edgeref id="e45" />
+    <edgeref id="e46" />
+    <edgeref id="e47" />
+    <edgeref id="e48" />
+    <edgeref id="e50" />
+    <edgeref id="e51" />
+    <edgeref id="e53" />
+    <edgeref id="e59" />
+    <edgeref id="e71" />
+   </edge-set>
+   <edge-set id="SimpleConstructor1">
+    <edgeref id="e4" />
+    <edgeref id="e35" />
+    <edgeref id="e72" />
+    <edgeref id="e17" />
+    <edgeref id="e26" />
+    <edgeref id="e81" />
+    <edgeref id="e19" />
+    <edgeref id="e40" />
+    <edgeref id="e52" />
+    <edgeref id="e83" />
     <edgeref id="e6" />
     <edgeref id="e8" />
    </edge-set>
-   <edge-set id="SimpleConstructor1">
-    <edgeref id="e13" />
-    <edgeref id="e16" />
-    <edgeref id="e19" />
-    <edgeref id="e34" />
-    <edgeref id="e70" />
-   </edge-set>
    <edge-set id="SimpleConstructor2">
-    <edgeref id="e14" />
-    <edgeref id="e18" />
+    <edgeref id="e15" />
     <edgeref id="e20" />
-    <edgeref id="e71" />
-    <edgeref id="e1" />
-    <edgeref id="e62" />
-    <edgeref id="e47" />
-    <edgeref id="e75" />
+    <edgeref id="e23" />
+    <edgeref id="e37" />
+    <edgeref id="e79" />
    </edge-set>
    <edge-set id="SimpleConstructor3">
-    <edgeref id="e15" />
-    <edgeref id="e33" />
-    <edgeref id="e35" />
-    <edgeref id="e72" />
-    <edgeref id="e2" />
-    <edgeref id="e63" />
-    <edgeref id="e56" />
-    <edgeref id="e76" />
+    <edgeref id="e16" />
+    <edgeref id="e22" />
+    <edgeref id="e24" />
+    <edgeref id="e80" />
+    <edgeref id="e1" />
+    <edgeref id="e69" />
+    <edgeref id="e54" />
+    <edgeref id="e84" />
    </edge-set>
    <edge-set id="SimpleConstructor4">
-    <edgeref id="e3" />
-    <edgeref id="e43" />
-    <edgeref id="e44" />
-    <edgeref id="e45" />
-    <edgeref id="e46" />
-    <edgeref id="e52" />
-    <edgeref id="e64" />
+    <edgeref id="e18" />
+    <edgeref id="e36" />
+    <edgeref id="e38" />
+    <edgeref id="e82" />
+    <edgeref id="e2" />
+    <edgeref id="e70" />
+    <edgeref id="e63" />
+    <edgeref id="e85" />
    </edge-set>
    <edge-set id="SimpleConstructor5">
-    <edgeref id="e9" />
-    <edgeref id="e49" />
-    <edgeref id="e66" />
+    <edgeref id="e13" />
+    <edgeref id="e25" />
+    <edgeref id="e27" />
+    <edgeref id="e77" />
    </edge-set>
    <edge-set id="SimpleConstructor6">
-    <edgeref id="e10" />
-    <edgeref id="e48" />
-    <edgeref id="e50" />
-    <edgeref id="e67" />
+    <edgeref id="e9" />
+    <edgeref id="e56" />
+    <edgeref id="e73" />
    </edge-set>
    <edge-set id="SimpleConstructor7">
-    <edgeref id="e11" />
-    <edgeref id="e58" />
-    <edgeref id="e68" />
+    <edgeref id="e10" />
+    <edgeref id="e55" />
+    <edgeref id="e57" />
+    <edgeref id="e74" />
    </edge-set>
    <edge-set id="SimpleConstructor8">
+    <edgeref id="e11" />
+    <edgeref id="e65" />
+    <edgeref id="e75" />
+   </edge-set>
+   <edge-set id="SimpleConstructor9">
     <edgeref id="e12" />
-    <edgeref id="e57" />
-    <edgeref id="e59" />
-    <edgeref id="e69" />
+    <edgeref id="e64" />
+    <edgeref id="e66" />
+    <edgeref id="e76" />
    </edge-set>
-   <edge-set id="SimpleConstructor14">
-    <edgeref id="e17" />
-   </edge-set>
-   <edge-set id="SimpleConstructor18">
-    <edgeref id="e25" />
-   </edge-set>
-   <edge-set id="SimpleConstructor28">
+   <edge-set id="SimpleConstructor15">
     <edgeref id="e21" />
    </edge-set>
-   <edge-set id="SimpleConstructor29">
-    <edgeref id="e22" />
-   </edge-set>
-   <edge-set id="SimpleConstructor30">
-    <edgeref id="e23" />
-   </edge-set>
-   <edge-set id="SimpleConstructor32">
-    <edgeref id="e27" />
-   </edge-set>
-   <edge-set id="SimpleConstructor33">
-    <edgeref id="e28" />
+   <edge-set id="SimpleConstructor19">
+    <edgeref id="e34" />
    </edge-set>
    <edge-set id="SimpleConstructor34">
-    <edgeref id="e29" />
+    <edgeref id="e28" />
    </edge-set>
    <edge-set id="SimpleConstructor35">
-    <edgeref id="e30" />
+    <edgeref id="e29" />
    </edge-set>
    <edge-set id="SimpleConstructor36">
-    <edgeref id="e31" />
+    <edgeref id="e30" />
    </edge-set>
    <edge-set id="SimpleConstructor37">
+    <edgeref id="e31" />
+   </edge-set>
+   <edge-set id="SimpleConstructor38">
     <edgeref id="e32" />
    </edge-set>
-   <edge-set id="SimpleConstructor42">
-    <edgeref id="e36" />
+   <edge-set id="SimpleConstructor39">
+    <edgeref id="e33" />
    </edge-set>
-   <edge-set id="SimpleConstructor43">
-    <edgeref id="e37" />
-   </edge-set>
-   <edge-set id="SimpleConstructor44">
-    <edgeref id="e38" />
-   </edge-set>
-   <edge-set id="SimpleConstructor46">
-    <edgeref id="e40" />
-   </edge-set>
-   <edge-set id="SimpleConstructor47">
-    <edgeref id="e41" />
-   </edge-set>
-   <edge-set id="SimpleConstructor48">
+   <edge-set id="SimpleConstructor50">
     <edgeref id="e42" />
    </edge-set>
-   <edge-set id="SimpleConstructor53">
-    <edgeref id="e51" />
+   <edge-set id="SimpleConstructor51">
+    <edgeref id="e43" />
    </edge-set>
-   <edge-set id="SimpleConstructor58">
+   <edge-set id="SimpleConstructor52">
+    <edgeref id="e44" />
+   </edge-set>
+   <edge-set id="SimpleConstructor62">
+    <edgeref id="e58" />
+   </edge-set>
+   <edge-set id="SimpleConstructor68">
     <edgeref id="e5" />
    </edge-set>
-   <edge-set id="SimpleConstructor60">
-    <edgeref id="e60" />
+   <edge-set id="SimpleConstructor70">
+    <edgeref id="e67" />
    </edge-set>
-   <edge-set id="SimpleConstructor61">
+   <edge-set id="SimpleConstructor71">
     <edgeref id="e7" />
    </edge-set>
-   <edge-set id="SimpleConstructor63">
+   <edge-set id="SimpleConstructor73">
+    <edgeref id="e68" />
+   </edge-set>
+   <edge-set id="SimpleConstructor85">
+    <edgeref id="e60" />
+   </edge-set>
+   <edge-set id="SimpleConstructor86">
     <edgeref id="e61" />
    </edge-set>
-   <edge-set id="SimpleConstructor75">
-    <edgeref id="e53" />
-   </edge-set>
-   <edge-set id="SimpleConstructor76">
-    <edgeref id="e54" />
-   </edge-set>
-   <edge-set id="SimpleConstructor77">
-    <edgeref id="e55" />
+   <edge-set id="SimpleConstructor87">
+    <edgeref id="e62" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -167,43 +166,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e26" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e13" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n32" kind="CONNECT">
-     <input>
-      <port edge="e13" num="input" />
-     </input>
-     <output>
-      <port edge="e16" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e14" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n34" kind="CONNECT">
-     <input>
-      <port edge="e14" num="input" />
-     </input>
-     <output>
-      <port edge="e18" num="0" />
+      <port edge="e35" num="0" />
      </output>
      <layout>
       </layout>
@@ -221,120 +184,156 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e33" num="0" />
+      <port edge="e20" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="START_LARGE_BALL">
+    <node id="n37" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e17" num="0" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="MERGE">
+    <node id="n38" kind="CONNECT">
      <input>
-      <port edge="e16" num="0" />
-      <port edge="e17" num="1" />
+      <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e19" num="0" />
+      <port edge="e22" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="MERGE">
-     <input>
-      <port edge="e19" num="0" />
-      <port edge="e20" num="1" />
-     </input>
+    <node id="n41" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
-      <port edge="e34" num="0" />
+      <port edge="e18" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="SPLIT">
+    <node id="n42" kind="CONNECT">
      <input>
-      <port edge="e18" num="0" />
+      <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e20" num="1" />
-      <port edge="e71" num="output" />
+      <port edge="e36" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e21" num="0" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n46" kind="MERGE">
      <input>
-      <port edge="e26" num="0" />
-      <port edge="e25" num="1" />
+      <port edge="e20" num="0" />
+      <port edge="e21" num="1" />
      </input>
      <output>
-      <port edge="e65" num="output" />
+      <port edge="e23" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="START_SMALL_BALL">
-     <input />
-     <output>
-      <port edge="e25" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n55" kind="MERGE">
+    <node id="n47" kind="MERGE">
      <input>
-      <port edge="e34" num="0" />
-      <port edge="e35" num="1" />
+      <port edge="e23" num="0" />
+      <port edge="e24" num="1" />
      </input>
      <output>
-      <port edge="e70" num="output" />
+      <port edge="e37" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n56" kind="SPLIT">
+    <node id="n48" kind="SPLIT">
      <input>
-      <port edge="e33" num="0" />
+      <port edge="e22" num="0" />
      </input>
      <output>
-      <port edge="e35" num="1" />
+      <port edge="e24" num="1" />
+      <port edge="e80" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="MERGE">
+     <input>
+      <port edge="e35" num="0" />
+      <port edge="e34" num="1" />
+     </input>
+     <output>
       <port edge="e72" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n82" kind="END">
-     <input>
-      <port edge="e65" num="input" />
-     </input>
-     <output />
+    <node id="n59" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e34" num="0" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n87" kind="END">
+    <node id="n60" kind="MERGE">
      <input>
-      <port edge="e70" num="input" />
+      <port edge="e37" num="0" />
+      <port edge="e38" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e79" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="SPLIT">
+     <input>
+      <port edge="e36" num="0" />
+     </input>
+     <output>
+      <port edge="e38" num="1" />
+      <port edge="e82" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
     <node id="n88" kind="END">
      <input>
-      <port edge="e71" num="input" />
+      <port edge="e72" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n89" kind="END">
+    <node id="n95" kind="END">
      <input>
-      <port edge="e72" num="input" />
+      <port edge="e79" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n96" kind="END">
+     <input>
+      <port edge="e80" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n98" kind="END">
+     <input>
+      <port edge="e82" num="input" />
      </input>
      <output />
      <layout>
@@ -358,43 +357,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n31" port="output" />
-     </from>
-     <to>
-      <noderef id="n32" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n33" port="output" />
-     </from>
-     <to>
-      <noderef id="n34" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e15" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n35" port="output" />
      </from>
@@ -412,36 +375,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e16" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n32" port="0" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e17" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n37" port="0" />
-     </from>
-     <to>
-      <noderef id="n38" port="1" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -454,12 +393,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e18" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e18" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n34" port="0" />
+      <noderef id="n41" port="output" />
      </from>
      <to>
-      <noderef id="n40" port="0" />
+      <noderef id="n42" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -472,81 +411,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n38" port="0" />
-     </from>
-     <to>
-      <noderef id="n39" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n40" port="1" />
-     </from>
-     <to>
-      <noderef id="n39" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e25" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n47" port="0" />
-     </from>
-     <to>
-      <noderef id="n46" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n11" port="0" />
+      <noderef id="n36" port="0" />
      </from>
      <to>
       <noderef id="n46" port="0" />
@@ -568,12 +435,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e21" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n36" port="0" />
+      <noderef id="n45" port="0" />
      </from>
      <to>
-      <noderef id="n56" port="0" />
+      <noderef id="n46" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -586,12 +453,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e34" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e22" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n39" port="0" />
+      <noderef id="n38" port="0" />
      </from>
      <to>
-      <noderef id="n55" port="0" />
+      <noderef id="n48" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e23" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n46" port="0" />
+     </from>
+     <to>
+      <noderef id="n47" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -610,12 +495,84 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e35" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e24" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n56" port="1" />
+      <noderef id="n48" port="1" />
      </from>
      <to>
-      <noderef id="n55" port="1" />
+      <noderef id="n47" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e34" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n59" port="0" />
+     </from>
+     <to>
+      <noderef id="n58" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n11" port="0" />
+     </from>
+     <to>
+      <noderef id="n58" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e36" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n42" port="0" />
+     </from>
+     <to>
+      <noderef id="n61" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -628,12 +585,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e65" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n46" port="output" />
+      <noderef id="n47" port="0" />
      </from>
      <to>
-      <noderef id="n82" port="input" />
+      <noderef id="n60" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e38" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n61" port="1" />
+     </from>
+     <to>
+      <noderef id="n60" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -646,27 +627,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e70" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e72" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n55" port="output" />
-     </from>
-     <to>
-      <noderef id="n87" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e71" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n58" port="output" />
      </from>
      <to>
       <noderef id="n88" port="input" />
@@ -680,6 +643,18 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class SimpleConstructor extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimpleConstructor { private String y;  public SimpleConstructor() { super(); y = null; }  public SimpleConstructor(String in) { super(); y = in; }  public static void noArg() { SimpleConstructor simpCon = new SimpleConstructor(); }  public static void oneArg() { SimpleConstructor simpCon = new SimpleConstructor(&quot;t&quot;); } }" editable="true" id="e79" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n60" port="output" />
+     </from>
+     <to>
+      <noderef id="n95" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -688,12 +663,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e72" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e80" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n56" port="output" />
+      <noderef id="n48" port="output" />
      </from>
      <to>
-      <noderef id="n89" port="input" />
+      <noderef id="n96" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e82" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n61" port="output" />
+     </from>
+     <to>
+      <noderef id="n98" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -716,7 +715,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e62" num="outputReturn0" />
+      <port edge="e69" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -735,125 +734,144 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e62" num="output" />
+      <port edge="e69" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="SUBBOARD" name="SimpleConstructor-y--GET">
-     <input>
-      <port edge="e21" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e22" num="outReceiver0" />
-      <port edge="e24" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n42" kind="START_LARGE_BALL">
+    <node id="n31" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="CONNECT">
+    <node id="n32" kind="CONNECT">
      <input>
-      <port edge="e22" num="input" />
+      <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e23" num="toEnd" />
+      <port edge="e25" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n44" kind="END">
-     <input>
-      <port edge="e23" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n45" kind="CONNECT">
-     <input>
-      <port edge="e24" num="input" />
-     </input>
-     <output>
-      <port edge="e73" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n48" kind="SUBBOARD" name="SimpleConstructor-y--SET">
-     <input>
-      <port edge="e30" num="inParam0" />
-      <port edge="e27" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e31" num="outParam0" />
-      <port edge="e28" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n49" kind="START_LARGE_BALL">
+    <node id="n39" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e27" num="output" />
+      <port edge="e17" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n50" kind="CONNECT">
+    <node id="n40" kind="CONNECT">
      <input>
-      <port edge="e28" num="input" />
+      <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e29" num="toEnd" />
+      <port edge="e26" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n51" kind="END">
+    <node id="n49" kind="MERGE">
      <input>
-      <port edge="e29" num="input" />
+      <port edge="e26" num="0" />
+      <port edge="e27" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e81" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n52" kind="START_SMALL_BALL">
+    <node id="n50" kind="SPLIT">
+     <input>
+      <port edge="e25" num="0" />
+     </input>
+     <output>
+      <port edge="e27" num="1" />
+      <port edge="e77" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="SUBBOARD" name="SimpleConstructor-y--SET">
+     <input>
+      <port edge="e31" num="inParam0" />
+      <port edge="e28" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e32" num="outParam0" />
+      <port edge="e29" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n53" kind="CONNECT">
      <input>
-      <port edge="e31" num="input" />
+      <port edge="e29" num="input" />
      </input>
      <output>
-      <port edge="e32" num="toEnd" />
+      <port edge="e30" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n54" kind="END">
      <input>
-      <port edge="e32" num="input" />
+      <port edge="e30" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n90" kind="END">
+    <node id="n55" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e31" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n56" kind="CONNECT">
      <input>
-      <port edge="e73" num="input" />
+      <port edge="e32" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="END">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n93" kind="END">
+     <input>
+      <port edge="e77" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n97" kind="END">
+     <input>
+      <port edge="e81" num="input" />
      </input>
      <output />
      <layout>
@@ -875,26 +893,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e21" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e13" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n42" port="output" />
+      <noderef id="n31" port="output" />
      </from>
      <to>
-      <noderef id="n41" port="inReceiver0" />
+      <noderef id="n32" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -907,36 +913,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e22" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n41" port="outReceiver0" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
-      <noderef id="n43" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e23" pinch="false" variableID="-4" width="wide">
-     <from>
-      <noderef id="n43" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n44" port="input" />
+      <noderef id="n40" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -949,20 +931,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e24" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e25" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n41" port="outputReturn0" />
+      <noderef id="n32" port="0" />
      </from>
      <to>
-      <noderef id="n45" port="input" />
+      <noderef id="n50" port="0" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -973,14 +949,38 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e27" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n49" port="output" />
+      <noderef id="n40" port="0" />
      </from>
      <to>
-      <noderef id="n48" port="inReceiver0" />
+      <noderef id="n49" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e27" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n50" port="1" />
+     </from>
+     <to>
+      <noderef id="n49" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -999,10 +999,10 @@
     </edge>
     <edge buzzsaw="false" description="untrusted" editable="false" id="e28" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n48" port="outReceiver0" />
+      <noderef id="n52" port="output" />
      </from>
      <to>
-      <noderef id="n50" port="input" />
+      <noderef id="n51" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -1023,49 +1023,7 @@
     </edge>
     <edge buzzsaw="false" description="untrusted" editable="false" id="e29" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n50" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n51" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e30" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n52" port="output" />
-     </from>
-     <to>
-      <noderef id="n48" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e31" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n48" port="outParam0" />
+      <noderef id="n51" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n53" port="input" />
@@ -1081,7 +1039,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e32" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="untrusted" editable="false" id="e30" pinch="false" variableID="-4" width="wide">
      <from>
       <noderef id="n53" port="toEnd" />
      </from>
@@ -1099,7 +1057,73 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e62" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="null" editable="false" id="e31" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n55" port="output" />
+     </from>
+     <to>
+      <noderef id="n51" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e32" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n51" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n56" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e33" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n56" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n57" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e69" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -1117,12 +1141,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e73" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e77" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n45" port="output" />
+      <noderef id="n50" port="output" />
      </from>
      <to>
-      <noderef id="n90" port="input" />
+      <noderef id="n93" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e81" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n49" port="output" />
+     </from>
+     <to>
+      <noderef id="n97" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1147,8 +1189,8 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e64" num="outParam0" />
-      <port edge="e63" num="outputReturn0" />
+      <port edge="e71" num="outParam0" />
+      <port edge="e70" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1167,7 +1209,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e63" num="output" />
+      <port edge="e70" num="output" />
      </output>
      <layout>
       </layout>
@@ -1177,147 +1219,208 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e43" num="output" />
+      <port edge="e45" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n57" kind="SUBBOARD" name="SimpleConstructor-y--GET">
-     <input>
-      <port edge="e36" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e37" num="outReceiver0" />
-      <port edge="e39" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n58" kind="START_LARGE_BALL">
+    <node id="n33" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="CONNECT">
+    <node id="n34" kind="CONNECT">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e38" num="toEnd" />
+      <port edge="e39" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n60" kind="END">
-     <input>
-      <port edge="e38" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n61" kind="CONNECT">
-     <input>
-      <port edge="e39" num="input" />
-     </input>
-     <output>
-      <port edge="e74" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n62" kind="SUBBOARD" name="SimpleConstructor-y--SET">
-     <input>
-      <port edge="e44" num="inParam0" />
-      <port edge="e40" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e45" num="outParam0" />
-      <port edge="e41" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n63" kind="START_LARGE_BALL">
+    <node id="n43" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e40" num="output" />
+      <port edge="e19" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n64" kind="CONNECT">
+    <node id="n44" kind="CONNECT">
      <input>
-      <port edge="e41" num="input" />
+      <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e42" num="toEnd" />
+      <port edge="e40" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n65" kind="END">
+    <node id="n62" kind="MERGE">
      <input>
-      <port edge="e42" num="input" />
+      <port edge="e40" num="0" />
+      <port edge="e41" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e52" num="0" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="SPLIT">
+    <node id="n63" kind="SPLIT">
+     <input>
+      <port edge="e39" num="0" />
+     </input>
+     <output>
+      <port edge="e41" num="1" />
+      <port edge="e49" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n64" kind="SUBBOARD" name="SimpleConstructor-y--SET">
+     <input>
+      <port edge="e46" num="inParam0" />
+      <port edge="e42" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e47" num="outParam0" />
+      <port edge="e43" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e42" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="CONNECT">
      <input>
       <port edge="e43" num="input" />
      </input>
      <output>
-      <port edge="e44" num="split" />
-      <port edge="e46" num="toEnd" />
+      <port edge="e44" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n67" kind="CONNECT">
+    <node id="n67" kind="END">
      <input>
-      <port edge="e45" num="input" />
-     </input>
-     <output>
-      <port edge="e52" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n68" kind="END">
-     <input>
-      <port edge="e46" num="input" />
+      <port edge="e44" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n73" kind="MERGE">
+    <node id="n68" kind="SPLIT">
      <input>
-      <port edge="e52" num="0" />
-      <port edge="e51" num="1" />
+      <port edge="e45" num="input" />
      </input>
      <output>
-      <port edge="e64" num="output" />
+      <port edge="e46" num="split" />
+      <port edge="e48" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n74" kind="START_SMALL_BALL">
-     <input />
+    <node id="n69" kind="CONNECT">
+     <input>
+      <port edge="e47" num="input" />
+     </input>
+     <output>
+      <port edge="e50" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n70" kind="END">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n71" kind="CONNECT">
+     <input>
+      <port edge="e49" num="input" />
+     </input>
+     <output>
+      <port edge="e78" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n72" kind="CONNECT">
+     <input>
+      <port edge="e50" num="input" />
+     </input>
      <output>
       <port edge="e51" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n91" kind="END">
+    <node id="n73" kind="MERGE">
      <input>
-      <port edge="e74" num="input" />
+      <port edge="e52" num="0" />
+      <port edge="e53" num="1" />
+     </input>
+     <output>
+      <port edge="e83" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n74" kind="SPLIT">
+     <input>
+      <port edge="e51" num="0" />
+     </input>
+     <output>
+      <port edge="e59" num="0" />
+      <port edge="e53" num="1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n79" kind="MERGE">
+     <input>
+      <port edge="e59" num="0" />
+      <port edge="e58" num="1" />
+     </input>
+     <output>
+      <port edge="e71" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n80" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e58" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n94" kind="END">
+     <input>
+      <port edge="e78" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n99" kind="END">
+     <input>
+      <port edge="e83" num="input" />
      </input>
      <output />
      <layout>
@@ -1331,12 +1434,6 @@
       <noderef id="n9" port="input" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1365,12 +1462,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e36" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e14" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n58" port="output" />
+      <noderef id="n33" port="output" />
      </from>
      <to>
-      <noderef id="n57" port="inReceiver0" />
+      <noderef id="n34" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1383,36 +1480,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e37" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n57" port="outReceiver0" />
+      <noderef id="n43" port="output" />
      </from>
      <to>
-      <noderef id="n59" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e38" pinch="false" variableID="-4" width="wide">
-     <from>
-      <noderef id="n59" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n60" port="input" />
+      <noderef id="n44" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1425,36 +1498,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e39" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n57" port="outputReturn0" />
+      <noderef id="n34" port="0" />
      </from>
      <to>
-      <noderef id="n61" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e40" pinch="false" variableID="-4" width="wide">
-     <from>
-      <noderef id="n63" port="output" />
-     </from>
-     <to>
-      <noderef id="n62" port="inReceiver0" />
+      <noderef id="n63" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1467,12 +1516,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e41" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e40" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n62" port="outReceiver0" />
+      <noderef id="n44" port="0" />
      </from>
      <to>
-      <noderef id="n64" port="input" />
+      <noderef id="n62" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e41" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n63" port="1" />
+     </from>
+     <to>
+      <noderef id="n62" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1487,10 +1554,10 @@
     </edge>
     <edge buzzsaw="false" description="untrusted" editable="false" id="e42" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n64" port="toEnd" />
+      <noderef id="n65" port="output" />
      </from>
      <to>
-      <noderef id="n65" port="input" />
+      <noderef id="n64" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -1503,9 +1570,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e43" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="untrusted" editable="false" id="e43" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n10" port="output" />
+      <noderef id="n64" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n66" port="input" />
@@ -1521,27 +1588,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e44" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="untrusted" editable="false" id="e44" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n66" port="split" />
-     </from>
-     <to>
-      <noderef id="n62" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e45" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n62" port="outParam0" />
+      <noderef id="n66" port="toEnd" />
      </from>
      <to>
       <noderef id="n67" port="input" />
@@ -1557,9 +1606,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e46" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e45" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n66" port="toEnd" />
+      <noderef id="n10" port="output" />
      </from>
      <to>
       <noderef id="n68" port="input" />
@@ -1575,12 +1624,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e51" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e46" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n74" port="0" />
+      <noderef id="n68" port="split" />
      </from>
      <to>
-      <noderef id="n73" port="1" />
+      <noderef id="n64" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -1593,9 +1642,105 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e52" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e47" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n67" port="0" />
+      <noderef id="n64" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n69" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e48" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n68" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n70" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e49" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n63" port="output" />
+     </from>
+     <to>
+      <noderef id="n71" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e50" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n69" port="output" />
+     </from>
+     <to>
+      <noderef id="n72" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e51" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n72" port="0" />
+     </from>
+     <to>
+      <noderef id="n74" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e52" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n62" port="0" />
      </from>
      <to>
       <noderef id="n73" port="0" />
@@ -1617,7 +1762,85 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e63" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e53" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n74" port="1" />
+     </from>
+     <to>
+      <noderef id="n73" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="t" editable="false" id="e58" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n80" port="0" />
+     </from>
+     <to>
+      <noderef id="n79" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e59" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n74" port="0" />
+     </from>
+     <to>
+      <noderef id="n79" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e70" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -1635,9 +1858,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e64" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e71" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n73" port="output" />
+      <noderef id="n79" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam0" />
@@ -1653,12 +1876,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e74" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()" editable="true" id="e78" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n61" port="output" />
+      <noderef id="n71" port="output" />
      </from>
      <to>
-      <noderef id="n91" port="input" />
+      <noderef id="n94" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class SimpleConstructor field y; tree String" editable="true" id="e83" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n73" port="output" />
+     </from>
+     <to>
+      <noderef id="n99" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1683,7 +1924,7 @@
     </node>
     <node id="n13" kind="OUTGOING">
      <input>
-      <port edge="e60" num="outReceiver0" />
+      <port edge="e67" num="outReceiver0" />
       <port edge="e6" num="outputReturn0" />
      </input>
      <output />
@@ -1695,7 +1936,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e60" num="output" />
+      <port edge="e67" num="output" />
      </output>
      <layout>
       </layout>
@@ -1750,7 +1991,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e60" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e67" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
@@ -1788,7 +2029,7 @@
     <node id="n17" kind="OUTGOING">
      <input>
       <port edge="e8" num="outParam0" />
-      <port edge="e61" num="outReceiver0" />
+      <port edge="e68" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1799,7 +2040,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e61" num="output" />
+      <port edge="e68" num="output" />
      </output>
      <layout>
       </layout>
@@ -1840,7 +2081,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e61" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e68" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -1885,7 +2126,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e49" num="0" />
+      <port edge="e56" num="0" />
      </output>
      <layout>
       </layout>
@@ -1903,76 +2144,76 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e48" num="0" />
+      <port edge="e55" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n69" kind="SUBBOARD" name="SimpleConstructor--init----V">
+    <node id="n75" kind="SUBBOARD" name="SimpleConstructor--init----V">
      <input />
      <output>
-      <port edge="e47" num="outputReturn0" />
+      <port edge="e54" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n70" kind="CONNECT">
+    <node id="n76" kind="CONNECT">
      <input>
-      <port edge="e47" num="input" />
+      <port edge="e54" num="input" />
      </input>
      <output>
-      <port edge="e75" num="output" />
+      <port edge="e84" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="MERGE">
+    <node id="n77" kind="MERGE">
      <input>
-      <port edge="e49" num="0" />
-      <port edge="e50" num="1" />
+      <port edge="e56" num="0" />
+      <port edge="e57" num="1" />
      </input>
      <output>
-      <port edge="e66" num="output" />
+      <port edge="e73" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="SPLIT">
+    <node id="n78" kind="SPLIT">
      <input>
-      <port edge="e48" num="0" />
+      <port edge="e55" num="0" />
      </input>
      <output>
-      <port edge="e50" num="1" />
-      <port edge="e67" num="output" />
+      <port edge="e57" num="1" />
+      <port edge="e74" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n83" kind="END">
+    <node id="n89" kind="END">
      <input>
-      <port edge="e66" num="input" />
+      <port edge="e73" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n84" kind="END">
+    <node id="n90" kind="END">
      <input>
-      <port edge="e67" num="input" />
+      <port edge="e74" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n92" kind="END">
+    <node id="n100" kind="END">
      <input>
-      <port edge="e75" num="input" />
+      <port edge="e84" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 5 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e9" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e9" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -1990,7 +2231,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e10" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e10" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -2008,12 +2249,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e47" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e54" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n69" port="outputReturn0" />
+      <noderef id="n75" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n70" port="input" />
+      <noderef id="n76" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2026,12 +2267,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e48" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e55" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n24" port="0" />
      </from>
      <to>
-      <noderef id="n72" port="0" />
+      <noderef id="n78" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2044,12 +2285,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e49" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e56" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n22" port="0" />
      </from>
      <to>
-      <noderef id="n71" port="0" />
+      <noderef id="n77" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2068,12 +2309,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e50" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e57" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n72" port="1" />
+      <noderef id="n78" port="1" />
      </from>
      <to>
-      <noderef id="n71" port="1" />
+      <noderef id="n77" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2086,12 +2327,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e66" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#noArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e73" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n71" port="output" />
+      <noderef id="n77" port="output" />
      </from>
      <to>
-      <noderef id="n83" port="input" />
+      <noderef id="n89" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2104,12 +2345,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e67" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#noArg():V creation 0; tree SimpleConstructor" editable="true" id="e74" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n72" port="output" />
+      <noderef id="n78" port="output" />
      </from>
      <to>
-      <noderef id="n84" port="input" />
+      <noderef id="n90" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2122,12 +2363,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e75" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimpleConstructor#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); y = null; }" editable="true" id="e84" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n70" port="output" />
+      <noderef id="n76" port="output" />
      </from>
      <to>
-      <noderef id="n92" port="input" />
+      <noderef id="n100" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2167,7 +2408,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e58" num="0" />
+      <port edge="e65" num="0" />
      </output>
      <layout>
       </layout>
@@ -2185,97 +2426,89 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e57" num="0" />
+      <port edge="e64" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n75" kind="SUBBOARD" name="SimpleConstructor--init--Ljava-lang-String---V">
+    <node id="n81" kind="SUBBOARD" name="SimpleConstructor--init--Ljava-lang-String---V">
      <input>
-      <port edge="e53" num="inParam0" />
+      <port edge="e60" num="inParam0" />
      </input>
      <output>
-      <port edge="e54" num="outParam0" />
-      <port edge="e56" num="outputReturn0" />
+      <port edge="e61" num="outParam0" />
+      <port edge="e63" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="START_SMALL_BALL">
+    <node id="n82" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e53" num="output" />
+      <port edge="e60" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n77" kind="CONNECT">
+    <node id="n83" kind="CONNECT">
      <input>
-      <port edge="e54" num="input" />
+      <port edge="e61" num="input" />
      </input>
      <output>
-      <port edge="e55" num="toEnd" />
+      <port edge="e62" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n78" kind="END">
+    <node id="n84" kind="END">
      <input>
-      <port edge="e55" num="input" />
+      <port edge="e62" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n79" kind="CONNECT">
+    <node id="n85" kind="CONNECT">
      <input>
-      <port edge="e56" num="input" />
+      <port edge="e63" num="input" />
      </input>
      <output>
+      <port edge="e85" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n86" kind="MERGE">
+     <input>
+      <port edge="e65" num="0" />
+      <port edge="e66" num="1" />
+     </input>
+     <output>
+      <port edge="e75" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n87" kind="SPLIT">
+     <input>
+      <port edge="e64" num="0" />
+     </input>
+     <output>
+      <port edge="e66" num="1" />
       <port edge="e76" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n80" kind="MERGE">
+    <node id="n91" kind="END">
      <input>
-      <port edge="e58" num="0" />
-      <port edge="e59" num="1" />
-     </input>
-     <output>
-      <port edge="e68" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n81" kind="SPLIT">
-     <input>
-      <port edge="e57" num="0" />
-     </input>
-     <output>
-      <port edge="e59" num="1" />
-      <port edge="e69" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n85" kind="END">
-     <input>
-      <port edge="e68" num="input" />
+      <port edge="e75" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n86" kind="END">
-     <input>
-      <port edge="e69" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n93" kind="END">
+    <node id="n92" kind="END">
      <input>
       <port edge="e76" num="input" />
      </input>
@@ -2283,7 +2516,15 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e11" pinch="false" variableID="7" width="narrow">
+    <node id="n101" kind="END">
+     <input>
+      <port edge="e85" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 9 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e11" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -2301,7 +2542,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e12" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e12" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n29" port="output" />
      </from>
@@ -2319,12 +2560,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e53" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="t" editable="false" id="e60" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n76" port="output" />
+      <noderef id="n82" port="output" />
      </from>
      <to>
-      <noderef id="n75" port="inParam0" />
+      <noderef id="n81" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -2337,12 +2578,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e54" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="t" editable="false" id="e61" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n75" port="outParam0" />
+      <noderef id="n81" port="outParam0" />
      </from>
      <to>
-      <noderef id="n77" port="input" />
+      <noderef id="n83" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2355,12 +2596,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e55" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="t" editable="false" id="e62" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n77" port="toEnd" />
+      <noderef id="n83" port="toEnd" />
      </from>
      <to>
-      <noderef id="n78" port="input" />
+      <noderef id="n84" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2373,93 +2614,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e56" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e63" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n75" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n79" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e57" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n30" port="0" />
-     </from>
-     <to>
-      <noderef id="n81" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e58" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n28" port="0" />
-     </from>
-     <to>
-      <noderef id="n80" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e59" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n81" port="1" />
-     </from>
-     <to>
-      <noderef id="n80" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e68" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n80" port="output" />
+      <noderef id="n81" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n85" port="input" />
@@ -2473,14 +2630,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e69" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e64" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n81" port="output" />
+      <noderef id="n30" port="0" />
      </from>
      <to>
-      <noderef id="n86" port="input" />
+      <noderef id="n87" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2493,12 +2656,90 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e76" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e65" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n79" port="output" />
+      <noderef id="n28" port="0" />
      </from>
      <to>
-      <noderef id="n93" port="input" />
+      <noderef id="n86" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e66" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n87" port="1" />
+     </from>
+     <to>
+      <noderef id="n86" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 9 at method SimpleConstructor#oneArg():V local variable simpCon(0); tree SimpleConstructor" editable="true" id="e75" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n86" port="output" />
+     </from>
+     <to>
+      <noderef id="n91" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at method SimpleConstructor#oneArg():V creation 0; tree SimpleConstructor" editable="true" id="e76" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n87" port="output" />
+     </from>
+     <to>
+      <noderef id="n92" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimpleConstructor#&lt;init&gt;(Ljava/lang/String;):V return type; tree  public &lt;init&gt;(String in) { super(); y = in; }" editable="true" id="e85" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n85" port="output" />
+     </from>
+     <to>
+      <noderef id="n101" port="input" />
      </to>
      <edge-layout>
       <point>

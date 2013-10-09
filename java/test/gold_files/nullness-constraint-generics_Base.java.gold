@@ -1,7 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class generics.Base class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class generics.Base class type parameter 0; tree X  <:  Variable 0 at class generics.Base class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within XAtm: @VarAnnot(0) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class generics.Base class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at class generics.Base class type parameter 1; tree Y  <:  Variable 2 at class generics.Base class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within YAtm: @VarAnnot(2) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class generics.Base extends type; tree <<missing tree>> within 
 abstract class Base<X, Y> {
@@ -103,9 +103,9 @@ abstract class Base<X, Y> {
     public abstract void set(X x);
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 12 at class generics.PrintBase class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within X2Atm: @VarAnnot(12) Object )
+SubtypeConstraint( Variable 13 at class generics.PrintBase class type parameter 0; tree X2  <:  Variable 12 at class generics.PrintBase class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within X2Atm: @VarAnnot(12) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class generics.PrintBase class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within Y2Atm: @VarAnnot(14) Object )
+SubtypeConstraint( Variable 15 at class generics.PrintBase class type parameter 1; tree Y2  <:  Variable 14 at class generics.PrintBase class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within Y2Atm: @VarAnnot(14) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 16 at class generics.PrintBase extends type; tree Base within Base<X2, Y2> )
 

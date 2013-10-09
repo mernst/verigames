@@ -1,0 +1,193 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree L  <:  Variable 0 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within LAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Variable 3 at class ArrayList class type parameter 0; tree AL  <:  Variable 2 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within ALAtm: @VarAnnot(2) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 4 at class ArrayList extends type; tree <<missing tree>> within 
+class ArrayList<AL> implements List<AL> {
+    
+    ArrayList() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 6 at method ArrayList#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 4 at class ArrayList extends type; tree <<missing tree>> within 
+class ArrayList<AL> implements List<AL> {
+    
+    ArrayList() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 9 at class Prev class type parameter 0; tree E extends List<Integer>  <:  Variable 7 at class Prev class type parameter bound 0 & 0; tree List at position ((3,0)) within E extends List<Integer> )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
+class Prev<E extends List<Integer>> {
+    
+    Prev() {
+        super();
+    }
+    
+    void method1(E arg1) {
+    }
+} )
+
+SubtypeConstraint( Variable 11 at method Prev#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
+class Prev<E extends List<Integer>> {
+    
+    Prev() {
+        super();
+    }
+    
+    void method1(E arg1) {
+    }
+} )
+
+SubtypeConstraint( Variable 12 at method Prev#method1(LList;):V receiver; tree <<missing tree>> within 
+void method1(E arg1) {
+}Atm: @VarAnnot(12) Prev<E extends List<Integer>>  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
+class Prev<E extends List<Integer>> {
+    
+    Prev() {
+        super();
+    }
+    
+    void method1(E arg1) {
+    }
+} )
+
+SubtypeConstraint( Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String>  <:  Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+SubtypeConstraint( Variable 20 at method LinkingTest#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#<init>():V constraint position; 
+calledVp: method Prev#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 9 at class Prev class type parameter 0; tree E extends List<Integer> >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 7 at class Prev class type parameter bound 0 & 0; tree List at position ((3,0)) within E extends List<Integer>, Variable 8 at class Prev class type parameter bound 0 & 0; tree Integer at position ((3,0), (3,0)) within E extends List<Integer>) >; 
+args: (  ); 
+result: List(Variable 11 at method Prev#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+SubtypeConstraint( Variable 11 at method Prev#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 21 at method LinkingTest#method2(LList;):V receiver; tree <<missing tree>> within 
+void method2(List<T> arg2) {
+}Atm: @VarAnnot(21) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+SubtypeConstraint( Variable 24 at method LinkingTest#method3(LList;):V receiver; tree <<missing tree>> within 
+void method3(List<String> arg3) {
+}Atm: @VarAnnot(24) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+SubtypeConstraint( Variable 27 at method LinkingTest#method4(LList;):V receiver; tree <<missing tree>> within 
+void method4(List<String> arg4) {
+}Atm: @VarAnnot(27) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+SubtypeConstraint( Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
+void context(T t) {
+    method1(new ArrayList<Integer>());
+    method3(t);
+    method4(new ArrayList<String>());
+}Atm: @VarAnnot(30) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#context(LList;):V constraint position; 
+calledVp: method ArrayList#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 3 at class ArrayList class type parameter 0; tree AL >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 33 at method LinkingTest#context(LList;):V creation 0; tree Integer at position ((3,0)) within ArrayList<Integer>) >; 
+args: (  ); 
+result: List(Variable 6 at method ArrayList#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#context(LList;):V constraint position; 
+calledVp: method Prev#method1(LList;):V; 
+receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
+void context(T t) {
+    method1(new ArrayList<Integer>());
+    method3(t);
+    method4(new ArrayList<String>());
+}Atm: @VarAnnot(30) LinkingTest<T extends List<String>>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 9 at class Prev class type parameter 0; tree E extends List<Integer> >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Constant(@trusted.quals.Untrusted), Constant(@trusted.quals.Untrusted)) >; 
+args: ( Variable 32 at method LinkingTest#context(LList;):V creation 0; tree ArrayList within ArrayList<Integer> ); 
+result: List(); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#context(LList;):V constraint position; 
+calledVp: method LinkingTest#method3(LList;):V; 
+receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
+void context(T t) {
+    method1(new ArrayList<Integer>());
+    method3(t);
+    method4(new ArrayList<String>());
+}Atm: @VarAnnot(30) LinkingTest<T extends List<String>>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String> >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String>, Variable 15 at class LinkingTest class type parameter bound 0 & 0; tree String at position ((3,0), (3,0)) within T extends List<String>) >; 
+args: ( Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String>, Variable 15 at class LinkingTest class type parameter bound 0 & 0; tree String at position ((3,0), (3,0)) within T extends List<String> ); 
+result: List(); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#context(LList;):V constraint position; 
+calledVp: method ArrayList#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 3 at class ArrayList class type parameter 0; tree AL >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 35 at method LinkingTest#context(LList;):V creation 1; tree String at position ((3,0)) within ArrayList<String>) >; 
+args: (  ); 
+result: List(Variable 6 at method ArrayList#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LinkingTest#context(LList;):V constraint position; 
+calledVp: method LinkingTest#method4(LList;):V; 
+receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
+void context(T t) {
+    method1(new ArrayList<Integer>());
+    method3(t);
+    method4(new ArrayList<String>());
+}Atm: @VarAnnot(30) LinkingTest<T extends List<String>>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String> >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String>, Variable 15 at class LinkingTest class type parameter bound 0 & 0; tree String at position ((3,0), (3,0)) within T extends List<String>) >; 
+args: ( Variable 34 at method LinkingTest#context(LList;):V creation 1; tree ArrayList within ArrayList<String>, Variable 3 at class ArrayList class type parameter 0; tree AL ); 
+result: List(); 
+)
+

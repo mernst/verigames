@@ -61,11 +61,11 @@ class IfElseParam {
     }
 } )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
 

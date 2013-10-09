@@ -2,94 +2,103 @@
  <level name="FieldWrite">
   <linked-edges>
    <edge-set id="FieldWrite0">
-    <edgeref id="e4" />
-    <edgeref id="e54" />
-    <edgeref id="e95" />
-    <edgeref id="e104" />
-    <edgeref id="e132" />
-    <edgeref id="e38" />
-    <edgeref id="e145" />
-    <edgeref id="e51" />
-    <edgeref id="e146" />
-    <edgeref id="e6" />
-    <edgeref id="e8" />
-   </edge-set>
-   <edge-set id="FieldWrite1">
-    <edgeref id="e26" />
-    <edgeref id="e30" />
-    <edgeref id="e33" />
-    <edgeref id="e141" />
-   </edge-set>
-   <edge-set id="FieldWrite2">
-    <edgeref id="e27" />
-    <edgeref id="e32" />
-    <edgeref id="e34" />
-    <edgeref id="e142" />
-    <edgeref id="e1" />
-    <edgeref id="e124" />
-   </edge-set>
-   <edge-set id="FieldWrite3">
-    <edgeref id="e9" />
-    <edgeref id="e43" />
-    <edgeref id="e44" />
-    <edgeref id="e45" />
-    <edgeref id="e47" />
-    <edgeref id="e133" />
-   </edge-set>
-   <edge-set id="FieldWrite4">
-    <edgeref id="e35" />
-    <edgeref id="e36" />
-    <edgeref id="e37" />
-    <edgeref id="e39" />
-    <edgeref id="e40" />
-    <edgeref id="e41" />
+    <edgeref id="e23" />
     <edgeref id="e42" />
-    <edgeref id="e46" />
-    <edgeref id="e125" />
-   </edge-set>
-   <edge-set id="FieldWrite5">
+    <edgeref id="e44" />
+    <edgeref id="e53" />
+    <edgeref id="e155" />
+    <edgeref id="e9" />
     <edgeref id="e48" />
     <edgeref id="e49" />
     <edgeref id="e50" />
     <edgeref id="e52" />
+    <edgeref id="e54" />
     <edgeref id="e55" />
-    <edgeref id="e56" />
     <edgeref id="e57" />
-    <edgeref id="e61" />
-    <edgeref id="e126" />
+    <edgeref id="e150" />
    </edge-set>
-   <edge-set id="FieldWrite10">
+   <edge-set id="FieldWrite1">
+    <edgeref id="e4" />
+    <edgeref id="e69" />
+    <edgeref id="e106" />
+    <edgeref id="e118" />
+    <edgeref id="e149" />
+    <edgeref id="e30" />
+    <edgeref id="e43" />
+    <edgeref id="e56" />
+    <edgeref id="e162" />
     <edgeref id="e31" />
+    <edgeref id="e59" />
+    <edgeref id="e163" />
+    <edgeref id="e6" />
+    <edgeref id="e8" />
    </edge-set>
-   <edge-set id="FieldWrite14">
-    <edgeref id="e53" />
+   <edge-set id="FieldWrite2">
+    <edgeref id="e28" />
+    <edgeref id="e37" />
+    <edgeref id="e40" />
+    <edgeref id="e160" />
    </edge-set>
-   <edge-set id="FieldWrite23">
+   <edge-set id="FieldWrite3">
+    <edgeref id="e29" />
+    <edgeref id="e39" />
+    <edgeref id="e41" />
+    <edgeref id="e161" />
+    <edgeref id="e1" />
+    <edgeref id="e141" />
+   </edge-set>
+   <edge-set id="FieldWrite4">
+    <edgeref id="e45" />
+    <edgeref id="e46" />
+    <edgeref id="e47" />
+    <edgeref id="e51" />
+    <edgeref id="e142" />
+   </edge-set>
+   <edge-set id="FieldWrite5">
+    <edgeref id="e24" />
+    <edgeref id="e58" />
+    <edgeref id="e60" />
+    <edgeref id="e156" />
+   </edge-set>
+   <edge-set id="FieldWrite6">
+    <edgeref id="e61" />
+    <edgeref id="e62" />
+    <edgeref id="e63" />
+    <edgeref id="e67" />
+    <edgeref id="e143" />
+   </edge-set>
+   <edge-set id="FieldWrite11">
+    <edgeref id="e38" />
+   </edge-set>
+   <edge-set id="FieldWrite15">
+    <edgeref id="e68" />
+   </edge-set>
+   <edge-set id="FieldWrite24">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="FieldWrite41">
+   <edge-set id="FieldWrite48">
     <edgeref id="e3" />
    </edge-set>
-   <edge-set id="FieldWrite50">
-    <edgeref id="e58" />
-   </edge-set>
-   <edge-set id="FieldWrite51">
-    <edgeref id="e59" />
-   </edge-set>
-   <edge-set id="FieldWrite52">
-    <edgeref id="e60" />
-   </edge-set>
-   <edge-set id="FieldWrite56">
-    <edgeref id="e5" />
+   <edge-set id="FieldWrite57">
+    <edgeref id="e64" />
    </edge-set>
    <edge-set id="FieldWrite58">
-    <edgeref id="e120" />
+    <edgeref id="e65" />
    </edge-set>
    <edge-set id="FieldWrite59">
+    <edgeref id="e66" />
+   </edge-set>
+   <edge-set id="FieldWrite64">
+    <edgeref id="e5" />
+   </edge-set>
+   <edge-set id="FieldWrite66">
+    <edgeref id="e137" />
+   </edge-set>
+   <edge-set id="FieldWrite67">
     <edgeref id="e7" />
    </edge-set>
-   <edge-set id="FieldWrite61">
-    <edgeref id="e121" />
+   <edge-set id="FieldWrite69">
+    <edgeref id="e138" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -113,146 +122,146 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e54" num="0" />
+      <port edge="e69" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n58" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n62" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="CONNECT">
+    <node id="n63" kind="CONNECT">
      <input>
-      <port edge="e26" num="input" />
+      <port edge="e28" num="input" />
      </input>
      <output>
-      <port edge="e30" num="0" />
+      <port edge="e37" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n60" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n64" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e27" num="output" />
+      <port edge="e29" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="CONNECT">
+    <node id="n65" kind="CONNECT">
      <input>
-      <port edge="e27" num="input" />
+      <port edge="e29" num="input" />
      </input>
      <output>
-      <port edge="e32" num="0" />
+      <port edge="e39" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="START_LARGE_BALL">
+    <node id="n80" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e31" num="0" />
+      <port edge="e38" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n67" kind="MERGE">
+    <node id="n81" kind="MERGE">
      <input>
-      <port edge="e30" num="0" />
-      <port edge="e31" num="1" />
+      <port edge="e37" num="0" />
+      <port edge="e38" num="1" />
      </input>
      <output>
-      <port edge="e33" num="0" />
+      <port edge="e40" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n68" kind="MERGE">
+    <node id="n82" kind="MERGE">
      <input>
-      <port edge="e33" num="0" />
-      <port edge="e34" num="1" />
+      <port edge="e40" num="0" />
+      <port edge="e41" num="1" />
      </input>
      <output>
-      <port edge="e141" num="output" />
+      <port edge="e160" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n69" kind="SPLIT">
+    <node id="n83" kind="SPLIT">
      <input>
-      <port edge="e32" num="0" />
+      <port edge="e39" num="0" />
      </input>
      <output>
-      <port edge="e34" num="1" />
-      <port edge="e142" num="output" />
+      <port edge="e41" num="1" />
+      <port edge="e161" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n87" kind="MERGE">
+    <node id="n106" kind="MERGE">
      <input>
-      <port edge="e54" num="0" />
-      <port edge="e53" num="1" />
+      <port edge="e69" num="0" />
+      <port edge="e68" num="1" />
      </input>
      <output>
-      <port edge="e95" num="output" />
+      <port edge="e106" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n88" kind="START_SMALL_BALL">
+    <node id="n107" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e53" num="0" />
+      <port edge="e68" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n126" kind="CONNECT">
+    <node id="n140" kind="CONNECT">
      <input>
-      <port edge="e95" num="input" />
+      <port edge="e106" num="input" />
      </input>
      <output>
-      <port edge="e104" num="output" />
+      <port edge="e118" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n134" kind="CONNECT">
+    <node id="n150" kind="CONNECT">
      <input>
-      <port edge="e104" num="input" />
+      <port edge="e118" num="input" />
      </input>
      <output>
-      <port edge="e132" num="output" />
+      <port edge="e149" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n149" kind="END">
+    <node id="n167" kind="END">
      <input>
-      <port edge="e132" num="input" />
+      <port edge="e149" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n158" kind="END">
+    <node id="n178" kind="END">
      <input>
-      <port edge="e141" num="input" />
+      <port edge="e160" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n159" kind="END">
+    <node id="n179" kind="END">
      <input>
-      <port edge="e142" num="input" />
+      <port edge="e161" num="input" />
      </input>
      <output />
      <layout>
@@ -276,12 +285,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e26" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e28" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n58" port="output" />
+      <noderef id="n62" port="output" />
      </from>
      <to>
-      <noderef id="n59" port="input" />
+      <noderef id="n63" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -294,12 +303,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e27" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n60" port="output" />
+      <noderef id="n64" port="output" />
      </from>
      <to>
-      <noderef id="n61" port="input" />
+      <noderef id="n65" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -312,72 +321,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e30" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n59" port="0" />
+      <noderef id="n63" port="0" />
      </from>
      <to>
-      <noderef id="n67" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e31" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n66" port="0" />
-     </from>
-     <to>
-      <noderef id="n67" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e32" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n61" port="0" />
-     </from>
-     <to>
-      <noderef id="n69" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e33" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n67" port="0" />
-     </from>
-     <to>
-      <noderef id="n68" port="0" />
+      <noderef id="n81" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -396,12 +345,48 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e34" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e38" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n69" port="1" />
+      <noderef id="n80" port="0" />
      </from>
      <to>
-      <noderef id="n68" port="1" />
+      <noderef id="n81" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e39" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n65" port="0" />
+     </from>
+     <to>
+      <noderef id="n83" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e40" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n81" port="0" />
+     </from>
+     <to>
+      <noderef id="n82" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -420,12 +405,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e53" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e41" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n88" port="0" />
+      <noderef id="n83" port="1" />
      </from>
      <to>
-      <noderef id="n87" port="1" />
+      <noderef id="n82" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -444,12 +429,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e54" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="null" editable="false" id="e68" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n107" port="0" />
+     </from>
+     <to>
+      <noderef id="n106" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e69" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="0" />
      </from>
      <to>
-      <noderef id="n87" port="0" />
+      <noderef id="n106" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -468,12 +477,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e95" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e106" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n87" port="output" />
+      <noderef id="n106" port="output" />
      </from>
      <to>
-      <noderef id="n126" port="input" />
+      <noderef id="n140" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -486,12 +495,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e104" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e118" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n126" port="output" />
+      <noderef id="n140" port="output" />
      </from>
      <to>
-      <noderef id="n134" port="input" />
+      <noderef id="n150" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -504,12 +513,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e132" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e149" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n134" port="output" />
+      <noderef id="n150" port="output" />
      </from>
      <to>
-      <noderef id="n149" port="input" />
+      <noderef id="n167" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -522,12 +531,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e141" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldWrite extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldWrite {  FieldWrite() { super(); } Object f;  void m() { f = new Object(); }  void n() { f = null; } }" editable="true" id="e160" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n68" port="output" />
+      <noderef id="n82" port="output" />
      </from>
      <to>
-      <noderef id="n158" port="input" />
+      <noderef id="n178" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -540,12 +549,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e142" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e161" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n69" port="output" />
+      <noderef id="n83" port="output" />
      </from>
      <to>
-      <noderef id="n159" port="input" />
+      <noderef id="n179" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -568,7 +577,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e124" num="outputReturn0" />
+      <port edge="e141" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -587,7 +596,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e124" num="output" />
+      <port edge="e141" num="output" />
      </output>
      <layout>
       </layout>
@@ -610,7 +619,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e124" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method FieldWrite#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e141" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -640,7 +649,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e125" num="outReceiver0" />
+      <port edge="e142" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -651,7 +660,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e35" num="output" />
+      <port edge="e45" num="output" />
      </output>
      <layout>
       </layout>
@@ -669,142 +678,200 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e43" num="output" />
+      <port edge="e48" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n70" kind="SUBBOARD" name="FieldWrite-f--GET">
+    <node id="n52" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e23" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n53" kind="CONNECT">
      <input>
-      <port edge="e36" num="inReceiver0" />
+      <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e37" num="outReceiver0" />
-      <port edge="e38" num="outputReturn0" />
+      <port edge="e42" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="SPLIT">
+    <node id="n66" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e30" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n67" kind="CONNECT">
      <input>
-      <port edge="e35" num="input" />
+      <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e36" num="split" />
-      <port edge="e39" num="toEnd" />
+      <port edge="e43" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="CONNECT">
+    <node id="n84" kind="MERGE">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e43" num="0" />
+      <port edge="e44" num="1" />
      </input>
      <output>
-      <port edge="e40" num="output" />
+      <port edge="e56" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n73" kind="CONNECT">
+    <node id="n85" kind="SPLIT">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e42" num="0" />
      </input>
      <output>
-      <port edge="e145" num="output" />
+      <port edge="e44" num="1" />
+      <port edge="e53" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n74" kind="END">
+    <node id="n86" kind="SUBBOARD" name="FieldWrite-f--SET">
      <input>
-      <port edge="e39" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n75" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e44" num="inParam0" />
-      <port edge="e41" num="inReceiver0" />
+      <port edge="e49" num="inParam0" />
+      <port edge="e46" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e45" num="outParam0" />
-      <port edge="e42" num="outReceiver0" />
+      <port edge="e50" num="outParam0" />
+      <port edge="e47" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="SPLIT">
-     <input>
-      <port edge="e40" num="input" />
-     </input>
-     <output>
-      <port edge="e41" num="split" />
-      <port edge="e46" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n77" kind="CONNECT">
-     <input>
-      <port edge="e42" num="input" />
-     </input>
-     <output>
-      <port edge="e125" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n78" kind="SPLIT">
-     <input>
-      <port edge="e43" num="input" />
-     </input>
-     <output>
-      <port edge="e44" num="split" />
-      <port edge="e47" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n79" kind="CONNECT">
+    <node id="n87" kind="SPLIT">
      <input>
       <port edge="e45" num="input" />
      </input>
      <output>
-      <port edge="e133" num="output" />
+      <port edge="e46" num="split" />
+      <port edge="e51" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n80" kind="END">
-     <input>
-      <port edge="e46" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n81" kind="END">
+    <node id="n88" kind="CONNECT">
      <input>
       <port edge="e47" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e142" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n150" kind="END">
+    <node id="n89" kind="SPLIT">
      <input>
-      <port edge="e133" num="input" />
+      <port edge="e48" num="input" />
+     </input>
+     <output>
+      <port edge="e49" num="split" />
+      <port edge="e52" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n90" kind="CONNECT">
+     <input>
+      <port edge="e50" num="input" />
+     </input>
+     <output>
+      <port edge="e54" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n91" kind="END">
+     <input>
+      <port edge="e51" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n162" kind="END">
+    <node id="n92" kind="END">
      <input>
-      <port edge="e145" num="input" />
+      <port edge="e52" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n93" kind="CONNECT">
+     <input>
+      <port edge="e53" num="input" />
+     </input>
+     <output>
+      <port edge="e155" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n94" kind="CONNECT">
+     <input>
+      <port edge="e54" num="input" />
+     </input>
+     <output>
+      <port edge="e55" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n95" kind="MERGE">
+     <input>
+      <port edge="e56" num="0" />
+      <port edge="e57" num="1" />
+     </input>
+     <output>
+      <port edge="e162" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n96" kind="SPLIT">
+     <input>
+      <port edge="e55" num="0" />
+     </input>
+     <output>
+      <port edge="e57" num="1" />
+      <port edge="e150" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n168" kind="END">
+     <input>
+      <port edge="e150" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n173" kind="END">
+     <input>
+      <port edge="e155" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n180" kind="END">
+     <input>
+      <port edge="e162" num="input" />
      </input>
      <output />
      <layout>
@@ -846,192 +913,102 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e35" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e23" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n52" port="output" />
+     </from>
+     <to>
+      <noderef id="n53" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e30" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n66" port="output" />
+     </from>
+     <to>
+      <noderef id="n67" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n53" port="0" />
+     </from>
+     <to>
+      <noderef id="n85" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e43" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n67" port="0" />
+     </from>
+     <to>
+      <noderef id="n84" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e44" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n85" port="1" />
+     </from>
+     <to>
+      <noderef id="n84" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e45" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
      <to>
-      <noderef id="n71" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e36" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n71" port="split" />
-     </from>
-     <to>
-      <noderef id="n70" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e37" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n70" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n72" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e38" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n70" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n73" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e39" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n71" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n74" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e40" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n72" port="output" />
-     </from>
-     <to>
-      <noderef id="n76" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e41" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n76" port="split" />
-     </from>
-     <to>
-      <noderef id="n75" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e42" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n75" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n77" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e43" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n21" port="output" />
-     </from>
-     <to>
-      <noderef id="n78" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e44" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n78" port="split" />
-     </from>
-     <to>
-      <noderef id="n75" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e45" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n75" port="outParam0" />
-     </from>
-     <to>
-      <noderef id="n79" port="input" />
+      <noderef id="n87" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1046,28 +1023,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e46" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n76" port="toEnd" />
+      <noderef id="n87" port="split" />
      </from>
      <to>
-      <noderef id="n80" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e47" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n78" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n81" port="input" />
+      <noderef id="n86" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -1086,9 +1045,237 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e125" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e47" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n77" port="output" />
+      <noderef id="n86" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n88" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e48" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n21" port="output" />
+     </from>
+     <to>
+      <noderef id="n89" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e49" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n89" port="split" />
+     </from>
+     <to>
+      <noderef id="n86" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e50" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n86" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n90" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e51" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n87" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n91" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e52" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n89" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n92" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e53" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n85" port="output" />
+     </from>
+     <to>
+      <noderef id="n93" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e54" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n90" port="output" />
+     </from>
+     <to>
+      <noderef id="n94" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e55" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n94" port="0" />
+     </from>
+     <to>
+      <noderef id="n96" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e56" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n84" port="0" />
+     </from>
+     <to>
+      <noderef id="n95" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e57" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n96" port="1" />
+     </from>
+     <to>
+      <noderef id="n95" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method FieldWrite#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { f = new Object(); }Atm: @VarAnnot(2) FieldWrite" editable="true" id="e142" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n88" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outReceiver0" />
@@ -1102,14 +1289,26 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e133" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method FieldWrite#m():V creation 0; tree Object" editable="true" id="e150" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n79" port="output" />
+      <noderef id="n96" port="output" />
      </from>
      <to>
-      <noderef id="n150" port="input" />
+      <noderef id="n168" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1120,10 +1319,16 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e155" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n93" port="output" />
+     </from>
+     <to>
+      <noderef id="n173" port="input" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -1134,12 +1339,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e145" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e162" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n73" port="output" />
+      <noderef id="n95" port="output" />
      </from>
      <to>
-      <noderef id="n162" port="input" />
+      <noderef id="n180" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1164,7 +1369,7 @@
     </node>
     <node id="n10" kind="OUTGOING">
      <input>
-      <port edge="e126" num="outReceiver0" />
+      <port edge="e143" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1175,131 +1380,147 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e48" num="output" />
+      <port edge="e61" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n82" kind="SUBBOARD" name="FieldWrite-f--GET">
-     <input>
-      <port edge="e49" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e50" num="outReceiver0" />
-      <port edge="e51" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n83" kind="SPLIT">
-     <input>
-      <port edge="e48" num="input" />
-     </input>
-     <output>
-      <port edge="e49" num="split" />
-      <port edge="e52" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n84" kind="CONNECT">
-     <input>
-      <port edge="e50" num="input" />
-     </input>
-     <output>
-      <port edge="e55" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n85" kind="CONNECT">
-     <input>
-      <port edge="e51" num="input" />
-     </input>
-     <output>
-      <port edge="e146" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n86" kind="END">
-     <input>
-      <port edge="e52" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n89" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e58" num="inParam0" />
-      <port edge="e56" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e59" num="outParam0" />
-      <port edge="e57" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n90" kind="SPLIT">
-     <input>
-      <port edge="e55" num="input" />
-     </input>
-     <output>
-      <port edge="e56" num="split" />
-      <port edge="e61" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n91" kind="CONNECT">
-     <input>
-      <port edge="e57" num="input" />
-     </input>
-     <output>
-      <port edge="e126" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n92" kind="START_SMALL_BALL">
+    <node id="n54" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e58" num="output" />
+      <port edge="e24" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n93" kind="CONNECT">
+    <node id="n55" kind="CONNECT">
      <input>
-      <port edge="e59" num="input" />
+      <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e60" num="toEnd" />
+      <port edge="e58" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n94" kind="END">
-     <input>
-      <port edge="e60" num="input" />
-     </input>
-     <output />
+    <node id="n68" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e31" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n95" kind="END">
+    <node id="n69" kind="CONNECT">
+     <input>
+      <port edge="e31" num="input" />
+     </input>
+     <output>
+      <port edge="e59" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n97" kind="MERGE">
+     <input>
+      <port edge="e59" num="0" />
+      <port edge="e60" num="1" />
+     </input>
+     <output>
+      <port edge="e163" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n98" kind="SPLIT">
+     <input>
+      <port edge="e58" num="0" />
+     </input>
+     <output>
+      <port edge="e60" num="1" />
+      <port edge="e156" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n99" kind="SUBBOARD" name="FieldWrite-f--SET">
+     <input>
+      <port edge="e64" num="inParam0" />
+      <port edge="e62" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e65" num="outParam0" />
+      <port edge="e63" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n100" kind="SPLIT">
      <input>
       <port edge="e61" num="input" />
      </input>
+     <output>
+      <port edge="e62" num="split" />
+      <port edge="e67" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n101" kind="CONNECT">
+     <input>
+      <port edge="e63" num="input" />
+     </input>
+     <output>
+      <port edge="e143" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n102" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e64" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n103" kind="CONNECT">
+     <input>
+      <port edge="e65" num="input" />
+     </input>
+     <output>
+      <port edge="e66" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n104" kind="END">
+     <input>
+      <port edge="e66" num="input" />
+     </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n163" kind="END">
+    <node id="n105" kind="END">
      <input>
-      <port edge="e146" num="input" />
+      <port edge="e67" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n174" kind="END">
+     <input>
+      <port edge="e156" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n181" kind="END">
+     <input>
+      <port edge="e163" num="input" />
      </input>
      <output />
      <layout>
@@ -1321,14 +1542,26 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e48" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e24" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n11" port="output" />
+      <noderef id="n54" port="output" />
      </from>
      <to>
-      <noderef id="n83" port="input" />
+      <noderef id="n55" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1341,12 +1574,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e49" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n83" port="split" />
+      <noderef id="n68" port="output" />
      </from>
      <to>
-      <noderef id="n82" port="inReceiver0" />
+      <noderef id="n69" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1359,12 +1592,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e50" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e58" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n82" port="outReceiver0" />
+      <noderef id="n55" port="0" />
      </from>
      <to>
-      <noderef id="n84" port="input" />
+      <noderef id="n98" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1377,12 +1610,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e51" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e59" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n82" port="outputReturn0" />
+      <noderef id="n69" port="0" />
      </from>
      <to>
-      <noderef id="n85" port="input" />
+      <noderef id="n97" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1395,144 +1628,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e52" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e60" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n83" port="toEnd" />
+      <noderef id="n98" port="1" />
      </from>
      <to>
-      <noderef id="n86" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e55" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n84" port="output" />
-     </from>
-     <to>
-      <noderef id="n90" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e56" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n90" port="split" />
-     </from>
-     <to>
-      <noderef id="n89" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e57" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n89" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n91" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e58" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n92" port="output" />
-     </from>
-     <to>
-      <noderef id="n89" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e59" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n89" port="outParam0" />
-     </from>
-     <to>
-      <noderef id="n93" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e60" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n93" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n94" port="input" />
+      <noderef id="n97" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1559,10 +1660,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e61" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n90" port="toEnd" />
+      <noderef id="n11" port="output" />
      </from>
      <to>
-      <noderef id="n95" port="input" />
+      <noderef id="n100" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1575,9 +1676,165 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e126" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e62" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n91" port="output" />
+      <noderef id="n100" port="split" />
+     </from>
+     <to>
+      <noderef id="n99" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e63" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n99" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n101" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e64" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n102" port="output" />
+     </from>
+     <to>
+      <noderef id="n99" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e65" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n99" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n103" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e66" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n103" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n104" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e67" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n100" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n105" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method FieldWrite#n():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void n() { f = null; }Atm: @VarAnnot(3) FieldWrite" editable="true" id="e143" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n101" port="output" />
      </from>
      <to>
       <noderef id="n10" port="outReceiver0" />
@@ -1593,12 +1850,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e146" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 4 at class FieldWrite field f; tree Object IfTest: false mergedTo: Set()" editable="true" id="e156" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n85" port="output" />
+      <noderef id="n98" port="output" />
      </from>
      <to>
-      <noderef id="n163" port="input" />
+      <noderef id="n174" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e163" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n97" port="output" />
+     </from>
+     <to>
+      <noderef id="n181" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1623,7 +1898,7 @@
     </node>
     <node id="n14" kind="OUTGOING">
      <input>
-      <port edge="e120" num="outReceiver0" />
+      <port edge="e137" num="outReceiver0" />
       <port edge="e6" num="outputReturn0" />
      </input>
      <output />
@@ -1635,7 +1910,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e120" num="output" />
+      <port edge="e137" num="output" />
      </output>
      <layout>
       </layout>
@@ -1690,7 +1965,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e120" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e137" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1728,7 +2003,7 @@
     <node id="n18" kind="OUTGOING">
      <input>
       <port edge="e8" num="outParam0" />
-      <port edge="e121" num="outReceiver0" />
+      <port edge="e138" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1739,7 +2014,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e121" num="output" />
+      <port edge="e138" num="output" />
      </output>
      <layout>
       </layout>
@@ -1780,7 +2055,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e121" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e138" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -1804,145 +2079,160 @@
  <level name="FWOther">
   <linked-edges>
    <edge-set id="FWOther0">
-    <edgeref id="e24" />
-    <edgeref id="e103" />
-    <edgeref id="e139" />
-    <edgeref id="e23" />
-    <edgeref id="e94" />
-    <edgeref id="e138" />
+    <edgeref id="e26" />
+    <edgeref id="e117" />
+    <edgeref id="e158" />
+    <edgeref id="e34" />
+    <edgeref id="e83" />
+    <edgeref id="e166" />
+    <edgeref id="e35" />
+    <edgeref id="e107" />
+    <edgeref id="e109" />
+    <edgeref id="e167" />
+    <edgeref id="e36" />
+    <edgeref id="e120" />
+    <edgeref id="e168" />
+    <edgeref id="e25" />
+    <edgeref id="e105" />
+    <edgeref id="e157" />
    </edge-set>
    <edge-set id="FWOther1">
     <edgeref id="e15" />
-    <edgeref id="e134" />
-    <edgeref id="e25" />
-    <edgeref id="e70" />
-    <edgeref id="e72" />
-    <edgeref id="e73" />
-    <edgeref id="e74" />
-    <edgeref id="e75" />
-    <edgeref id="e76" />
+    <edgeref id="e151" />
+    <edgeref id="e27" />
+    <edgeref id="e78" />
     <edgeref id="e80" />
-    <edgeref id="e82" />
-    <edgeref id="e83" />
-    <edgeref id="e84" />
-    <edgeref id="e88" />
-    <edgeref id="e140" />
-    <edgeref id="e92" />
+    <edgeref id="e81" />
+    <edgeref id="e85" />
+    <edgeref id="e86" />
+    <edgeref id="e87" />
+    <edgeref id="e91" />
+    <edgeref id="e93" />
+    <edgeref id="e94" />
+    <edgeref id="e95" />
     <edgeref id="e99" />
-    <edgeref id="e101" />
-    <edgeref id="e102" />
-    <edgeref id="e147" />
+    <edgeref id="e159" />
+    <edgeref id="e103" />
+    <edgeref id="e113" />
+    <edgeref id="e115" />
+    <edgeref id="e116" />
+    <edgeref id="e169" />
     <edgeref id="e17" />
     <edgeref id="e19" />
    </edge-set>
    <edge-set id="FWOther2">
-    <edgeref id="e28" />
-    <edgeref id="e62" />
-    <edgeref id="e65" />
-    <edgeref id="e143" />
+    <edgeref id="e32" />
+    <edgeref id="e70" />
+    <edgeref id="e73" />
+    <edgeref id="e164" />
    </edge-set>
    <edge-set id="FWOther3">
-    <edgeref id="e29" />
-    <edgeref id="e64" />
-    <edgeref id="e66" />
-    <edgeref id="e144" />
+    <edgeref id="e33" />
+    <edgeref id="e72" />
+    <edgeref id="e74" />
+    <edgeref id="e165" />
     <edgeref id="e10" />
-    <edgeref id="e127" />
+    <edgeref id="e144" />
    </edge-set>
    <edge-set id="FWOther4">
     <edgeref id="e20" />
-    <edgeref id="e77" />
-    <edgeref id="e78" />
-    <edgeref id="e79" />
-    <edgeref id="e81" />
-    <edgeref id="e135" />
+    <edgeref id="e82" />
+    <edgeref id="e84" />
+    <edgeref id="e88" />
+    <edgeref id="e89" />
+    <edgeref id="e90" />
+    <edgeref id="e92" />
+    <edgeref id="e152" />
    </edge-set>
    <edge-set id="FWOther5">
-    <edgeref id="e67" />
-    <edgeref id="e68" />
-    <edgeref id="e69" />
-    <edgeref id="e71" />
-    <edgeref id="e128" />
+    <edgeref id="e75" />
+    <edgeref id="e76" />
+    <edgeref id="e77" />
+    <edgeref id="e79" />
+    <edgeref id="e145" />
    </edge-set>
    <edge-set id="FWOther6">
     <edgeref id="e21" />
-    <edgeref id="e136" />
+    <edgeref id="e108" />
+    <edgeref id="e153" />
    </edge-set>
    <edge-set id="FWOther7">
-    <edgeref id="e89" />
-    <edgeref id="e90" />
-    <edgeref id="e91" />
-    <edgeref id="e93" />
-    <edgeref id="e96" />
-    <edgeref id="e97" />
-    <edgeref id="e98" />
     <edgeref id="e100" />
-    <edgeref id="e129" />
+    <edgeref id="e101" />
+    <edgeref id="e102" />
+    <edgeref id="e104" />
+    <edgeref id="e110" />
+    <edgeref id="e111" />
+    <edgeref id="e112" />
+    <edgeref id="e114" />
+    <edgeref id="e146" />
    </edge-set>
    <edge-set id="FWOther8">
     <edgeref id="e14" />
-    <edgeref id="e105" />
-    <edgeref id="e106" />
-    <edgeref id="e107" />
-    <edgeref id="e111" />
-    <edgeref id="e113" />
-    <edgeref id="e114" />
-    <edgeref id="e115" />
-    <edgeref id="e119" />
+    <edgeref id="e122" />
+    <edgeref id="e123" />
+    <edgeref id="e124" />
+    <edgeref id="e128" />
+    <edgeref id="e130" />
     <edgeref id="e131" />
+    <edgeref id="e132" />
+    <edgeref id="e136" />
+    <edgeref id="e148" />
    </edge-set>
    <edge-set id="FWOther9">
     <edgeref id="e22" />
-    <edgeref id="e108" />
-    <edgeref id="e109" />
-    <edgeref id="e110" />
-    <edgeref id="e112" />
-    <edgeref id="e137" />
+    <edgeref id="e119" />
+    <edgeref id="e121" />
+    <edgeref id="e125" />
+    <edgeref id="e126" />
+    <edgeref id="e127" />
+    <edgeref id="e129" />
+    <edgeref id="e154" />
    </edge-set>
    <edge-set id="FWOther10">
-    <edgeref id="e130" />
+    <edgeref id="e147" />
    </edge-set>
    <edge-set id="FWOther15">
-    <edgeref id="e63" />
+    <edgeref id="e71" />
    </edge-set>
    <edge-set id="FWOther24">
     <edgeref id="e11" />
    </edge-set>
-   <edge-set id="FWOther45">
-    <edgeref id="e85" />
+   <edge-set id="FWOther49">
+    <edgeref id="e96" />
    </edge-set>
-   <edge-set id="FWOther46">
-    <edgeref id="e86" />
+   <edge-set id="FWOther50">
+    <edgeref id="e97" />
    </edge-set>
-   <edge-set id="FWOther47">
-    <edgeref id="e87" />
+   <edge-set id="FWOther51">
+    <edgeref id="e98" />
    </edge-set>
-   <edge-set id="FWOther52">
+   <edge-set id="FWOther57">
     <edgeref id="e12" />
    </edge-set>
-   <edge-set id="FWOther75">
+   <edge-set id="FWOther85">
     <edgeref id="e13" />
    </edge-set>
-   <edge-set id="FWOther89">
-    <edgeref id="e116" />
+   <edge-set id="FWOther103">
+    <edgeref id="e133" />
    </edge-set>
-   <edge-set id="FWOther90">
-    <edgeref id="e117" />
+   <edge-set id="FWOther104">
+    <edgeref id="e134" />
    </edge-set>
-   <edge-set id="FWOther91">
-    <edgeref id="e118" />
+   <edge-set id="FWOther105">
+    <edgeref id="e135" />
    </edge-set>
-   <edge-set id="FWOther96">
+   <edge-set id="FWOther111">
     <edgeref id="e16" />
    </edge-set>
-   <edge-set id="FWOther98">
-    <edgeref id="e122" />
+   <edge-set id="FWOther113">
+    <edgeref id="e139" />
    </edge-set>
-   <edge-set id="FWOther99">
+   <edge-set id="FWOther114">
     <edgeref id="e18" />
    </edge-set>
-   <edge-set id="FWOther101">
-    <edgeref id="e123" />
+   <edge-set id="FWOther116">
+    <edgeref id="e140" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -1966,113 +2256,113 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e134" num="output" />
+      <port edge="e151" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n62" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n70" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n63" kind="CONNECT">
+    <node id="n71" kind="CONNECT">
      <input>
-      <port edge="e28" num="input" />
+      <port edge="e32" num="input" />
      </input>
      <output>
-      <port edge="e62" num="0" />
+      <port edge="e70" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n64" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n72" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n65" kind="CONNECT">
+    <node id="n73" kind="CONNECT">
      <input>
-      <port edge="e29" num="input" />
+      <port edge="e33" num="input" />
      </input>
      <output>
-      <port edge="e64" num="0" />
+      <port edge="e72" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n96" kind="START_LARGE_BALL">
+    <node id="n108" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e63" num="0" />
+      <port edge="e71" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n97" kind="MERGE">
+    <node id="n109" kind="MERGE">
      <input>
-      <port edge="e62" num="0" />
-      <port edge="e63" num="1" />
+      <port edge="e70" num="0" />
+      <port edge="e71" num="1" />
      </input>
      <output>
-      <port edge="e65" num="0" />
+      <port edge="e73" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n98" kind="MERGE">
+    <node id="n110" kind="MERGE">
      <input>
-      <port edge="e65" num="0" />
-      <port edge="e66" num="1" />
+      <port edge="e73" num="0" />
+      <port edge="e74" num="1" />
      </input>
      <output>
-      <port edge="e143" num="output" />
+      <port edge="e164" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n99" kind="SPLIT">
+    <node id="n111" kind="SPLIT">
      <input>
-      <port edge="e64" num="0" />
+      <port edge="e72" num="0" />
      </input>
      <output>
-      <port edge="e66" num="1" />
-      <port edge="e144" num="output" />
+      <port edge="e74" num="1" />
+      <port edge="e165" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n151" kind="END">
+    <node id="n169" kind="END">
      <input>
-      <port edge="e134" num="input" />
+      <port edge="e151" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n160" kind="END">
+    <node id="n182" kind="END">
      <input>
-      <port edge="e143" num="input" />
+      <port edge="e164" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n161" kind="END">
+    <node id="n183" kind="END">
      <input>
-      <port edge="e144" num="input" />
+      <port edge="e165" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e15" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e15" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n22" port="output_0" />
      </from>
@@ -2102,12 +2392,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e28" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e32" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n62" port="output" />
+      <noderef id="n70" port="output" />
      </from>
      <to>
-      <noderef id="n63" port="input" />
+      <noderef id="n71" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2120,12 +2410,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e33" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n64" port="output" />
+      <noderef id="n72" port="output" />
      </from>
      <to>
-      <noderef id="n65" port="input" />
+      <noderef id="n73" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2138,72 +2428,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e62" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e70" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n63" port="0" />
+      <noderef id="n71" port="0" />
      </from>
      <to>
-      <noderef id="n97" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e63" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n96" port="0" />
-     </from>
-     <to>
-      <noderef id="n97" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e64" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n65" port="0" />
-     </from>
-     <to>
-      <noderef id="n99" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e65" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n97" port="0" />
-     </from>
-     <to>
-      <noderef id="n98" port="0" />
+      <noderef id="n109" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2222,12 +2452,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e66" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e71" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n99" port="1" />
+      <noderef id="n108" port="0" />
      </from>
      <to>
-      <noderef id="n98" port="1" />
+      <noderef id="n109" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2240,12 +2470,72 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e134" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e72" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n73" port="0" />
+     </from>
+     <to>
+      <noderef id="n111" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e73" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n109" port="0" />
+     </from>
+     <to>
+      <noderef id="n110" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e74" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n111" port="1" />
+     </from>
+     <to>
+      <noderef id="n110" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e151" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n38" port="output" />
      </from>
      <to>
-      <noderef id="n151" port="input" />
+      <noderef id="n169" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2258,12 +2548,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e143" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at class FWOther extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FWOther {  FWOther() { super(); } FieldWrite fw;  void write1() { fw.f = new Object(); this.fw.f = null; }  void read1() { Object x; x = fw.f; x = fw.f; }  void write2(FieldWrite p) { p.f = new Object(); p.f = null; } }" editable="true" id="e164" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n98" port="output" />
+      <noderef id="n110" port="output" />
      </from>
      <to>
-      <noderef id="n160" port="input" />
+      <noderef id="n182" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2276,12 +2566,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e144" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e165" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n99" port="output" />
+      <noderef id="n111" port="output" />
      </from>
      <to>
-      <noderef id="n161" port="input" />
+      <noderef id="n183" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2304,7 +2594,7 @@
     </node>
     <node id="n25" kind="OUTGOING">
      <input>
-      <port edge="e127" num="outputReturn0" />
+      <port edge="e144" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -2323,12 +2613,12 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e127" num="output" />
+      <port edge="e144" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e10" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e10" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n26" port="output" />
      </from>
@@ -2346,7 +2636,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e127" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method FWOther#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e144" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -2376,7 +2666,7 @@
     </node>
     <node id="n29" kind="OUTGOING">
      <input>
-      <port edge="e128" num="outReceiver0" />
+      <port edge="e145" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -2387,7 +2677,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e67" num="output" />
+      <port edge="e75" num="output" />
      </output>
      <layout>
       </layout>
@@ -2405,238 +2695,286 @@
       <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e77" num="output" />
+      <port edge="e82" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n56" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n60" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e25" num="output" />
+      <port edge="e27" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n57" kind="CONNECT">
+    <node id="n61" kind="CONNECT">
      <input>
-      <port edge="e25" num="input" />
+      <port edge="e27" num="input" />
      </input>
      <output>
-      <port edge="e72" num="toMerge" />
+      <port edge="e80" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n100" kind="SUBBOARD" name="FWOther-fw--GET">
+    <node id="n74" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e34" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n75" kind="CONNECT">
      <input>
-      <port edge="e68" num="inReceiver0" />
+      <port edge="e34" num="input" />
      </input>
      <output>
-      <port edge="e69" num="outReceiver0" />
-      <port edge="e70" num="outputReturn0" />
+      <port edge="e83" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n101" kind="SPLIT">
+    <node id="n112" kind="SUBBOARD" name="FWOther-fw--GET">
      <input>
-      <port edge="e67" num="input" />
+      <port edge="e76" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e68" num="split" />
-      <port edge="e71" num="toEnd" />
+      <port edge="e77" num="outReceiver0" />
+      <port edge="e78" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n102" kind="CONNECT">
+    <node id="n113" kind="SPLIT">
      <input>
-      <port edge="e69" num="input" />
+      <port edge="e75" num="input" />
      </input>
      <output>
-      <port edge="e128" num="output" />
+      <port edge="e76" num="split" />
+      <port edge="e79" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n103" kind="CONNECT">
-     <input>
-      <port edge="e70" num="input" />
-     </input>
-     <output>
-      <port edge="e73" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n104" kind="END">
-     <input>
-      <port edge="e71" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n105" kind="MERGE">
-     <input>
-      <port edge="e72" num="first" />
-      <port edge="e73" num="second" />
-     </input>
-     <output>
-      <port edge="e74" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n106" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e78" num="inParam0" />
-      <port edge="e75" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e79" num="outParam0" />
-      <port edge="e76" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n107" kind="SPLIT">
-     <input>
-      <port edge="e74" num="input" />
-     </input>
-     <output>
-      <port edge="e75" num="split" />
-      <port edge="e80" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n108" kind="CONNECT">
-     <input>
-      <port edge="e76" num="input" />
-     </input>
-     <output>
-      <port edge="e82" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n109" kind="SPLIT">
+    <node id="n114" kind="CONNECT">
      <input>
       <port edge="e77" num="input" />
      </input>
      <output>
-      <port edge="e78" num="split" />
-      <port edge="e81" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n110" kind="CONNECT">
-     <input>
-      <port edge="e79" num="input" />
-     </input>
-     <output>
-      <port edge="e135" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n111" kind="END">
-     <input>
-      <port edge="e80" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n112" kind="END">
-     <input>
-      <port edge="e81" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n113" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e85" num="inParam0" />
-      <port edge="e83" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e86" num="outParam0" />
-      <port edge="e84" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n114" kind="SPLIT">
-     <input>
-      <port edge="e82" num="input" />
-     </input>
-     <output>
-      <port edge="e83" num="split" />
-      <port edge="e88" num="toEnd" />
+      <port edge="e145" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n115" kind="CONNECT">
      <input>
-      <port edge="e84" num="input" />
+      <port edge="e78" num="input" />
      </input>
      <output>
-      <port edge="e140" num="output" />
+      <port edge="e81" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n116" kind="START_SMALL_BALL">
-     <input />
+    <node id="n116" kind="END">
+     <input>
+      <port edge="e79" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n117" kind="MERGE">
+     <input>
+      <port edge="e80" num="first" />
+      <port edge="e81" num="second" />
+     </input>
      <output>
       <port edge="e85" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n117" kind="CONNECT">
+    <node id="n118" kind="MERGE">
      <input>
-      <port edge="e86" num="input" />
+      <port edge="e83" num="0" />
+      <port edge="e84" num="1" />
      </input>
      <output>
-      <port edge="e87" num="toEnd" />
+      <port edge="e166" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n118" kind="END">
+    <node id="n119" kind="SPLIT">
+     <input>
+      <port edge="e82" num="0" />
+     </input>
+     <output>
+      <port edge="e84" num="1" />
+      <port edge="e88" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n120" kind="SUBBOARD" name="FieldWrite-f--SET">
+     <input>
+      <port edge="e89" num="inParam0" />
+      <port edge="e86" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e90" num="outParam0" />
+      <port edge="e87" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n121" kind="SPLIT">
+     <input>
+      <port edge="e85" num="input" />
+     </input>
+     <output>
+      <port edge="e86" num="split" />
+      <port edge="e91" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n122" kind="CONNECT">
      <input>
       <port edge="e87" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e93" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n119" kind="END">
+    <node id="n123" kind="SPLIT">
      <input>
       <port edge="e88" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e89" num="split" />
+      <port edge="e92" num="toEnd" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n152" kind="END">
+    <node id="n124" kind="CONNECT">
      <input>
-      <port edge="e135" num="input" />
+      <port edge="e90" num="input" />
+     </input>
+     <output>
+      <port edge="e152" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n125" kind="END">
+     <input>
+      <port edge="e91" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n157" kind="END">
+    <node id="n126" kind="END">
      <input>
-      <port edge="e140" num="input" />
+      <port edge="e92" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n127" kind="SUBBOARD" name="FieldWrite-f--SET">
+     <input>
+      <port edge="e96" num="inParam0" />
+      <port edge="e94" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e97" num="outParam0" />
+      <port edge="e95" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n128" kind="SPLIT">
+     <input>
+      <port edge="e93" num="input" />
+     </input>
+     <output>
+      <port edge="e94" num="split" />
+      <port edge="e99" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n129" kind="CONNECT">
+     <input>
+      <port edge="e95" num="input" />
+     </input>
+     <output>
+      <port edge="e159" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n130" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e96" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n131" kind="CONNECT">
+     <input>
+      <port edge="e97" num="input" />
+     </input>
+     <output>
+      <port edge="e98" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n132" kind="END">
+     <input>
+      <port edge="e98" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n133" kind="END">
+     <input>
+      <port edge="e99" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n170" kind="END">
+     <input>
+      <port edge="e152" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n177" kind="END">
+     <input>
+      <port edge="e159" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n184" kind="END">
+     <input>
+      <port edge="e166" num="input" />
      </input>
      <output />
      <layout>
@@ -2660,7 +2998,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e20" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e20" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n46" port="output" />
      </from>
@@ -2678,12 +3016,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e25" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e27" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n56" port="output" />
+      <noderef id="n60" port="output" />
      </from>
      <to>
-      <noderef id="n57" port="input" />
+      <noderef id="n61" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2696,12 +3034,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(8) FWOther" editable="true" id="e67" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n74" port="output" />
+     </from>
+     <to>
+      <noderef id="n75" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e75" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n30" port="output" />
      </from>
      <to>
-      <noderef id="n101" port="input" />
+      <noderef id="n113" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2714,12 +3070,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(8) FWOther" editable="true" id="e68" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e76" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n101" port="split" />
+      <noderef id="n113" port="split" />
      </from>
      <to>
-      <noderef id="n100" port="inReceiver0" />
+      <noderef id="n112" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -2732,273 +3088,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(8) FWOther" editable="true" id="e69" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e77" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n100" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n102" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e70" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n100" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n103" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(8) FWOther" editable="true" id="e71" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n101" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n104" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e72" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n57" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n105" port="first" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e73" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n103" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n105" port="second" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e74" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n105" port="output" />
-     </from>
-     <to>
-      <noderef id="n107" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e75" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n107" port="split" />
-     </from>
-     <to>
-      <noderef id="n106" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e76" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n106" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n108" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e77" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n47" port="output" />
-     </from>
-     <to>
-      <noderef id="n109" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e78" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n109" port="split" />
-     </from>
-     <to>
-      <noderef id="n106" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e79" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n106" port="outParam0" />
-     </from>
-     <to>
-      <noderef id="n110" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e80" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n107" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n111" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e81" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n109" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n112" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e82" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n108" port="output" />
+      <noderef id="n112" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n114" port="input" />
@@ -3014,33 +3106,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e83" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e78" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n114" port="split" />
-     </from>
-     <to>
-      <noderef id="n113" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e84" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n113" port="outReceiver0" />
+      <noderef id="n112" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n115" port="input" />
@@ -3054,20 +3122,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e85" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e79" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n116" port="output" />
+      <noderef id="n113" port="toEnd" />
      </from>
      <to>
-      <noderef id="n113" port="inParam0" />
+      <noderef id="n116" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3086,12 +3148,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e86" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e80" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n113" port="outParam0" />
+      <noderef id="n61" port="toMerge" />
      </from>
      <to>
-      <noderef id="n117" port="input" />
+      <noderef id="n117" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e81" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n115" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n117" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -3110,12 +3190,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e87" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e82" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n117" port="toEnd" />
+      <noderef id="n47" port="0" />
      </from>
      <to>
-      <noderef id="n118" port="input" />
+      <noderef id="n119" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3128,12 +3208,66 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e88" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e83" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n114" port="toEnd" />
+      <noderef id="n75" port="0" />
      </from>
      <to>
-      <noderef id="n119" port="input" />
+      <noderef id="n118" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e84" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n119" port="1" />
+     </from>
+     <to>
+      <noderef id="n118" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e85" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n117" port="output" />
+     </from>
+     <to>
+      <noderef id="n121" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e86" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n121" port="split" />
+     </from>
+     <to>
+      <noderef id="n120" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -3152,9 +3286,279 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(8) FWOther" editable="true" id="e128" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e87" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n102" port="output" />
+      <noderef id="n120" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n122" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e88" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n119" port="output" />
+     </from>
+     <to>
+      <noderef id="n123" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e89" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n123" port="split" />
+     </from>
+     <to>
+      <noderef id="n120" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e90" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n120" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n124" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e91" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n121" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n125" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e92" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n123" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n126" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e93" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n122" port="output" />
+     </from>
+     <to>
+      <noderef id="n128" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e94" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n128" port="split" />
+     </from>
+     <to>
+      <noderef id="n127" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e95" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n127" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n129" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e96" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n130" port="output" />
+     </from>
+     <to>
+      <noderef id="n127" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e97" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n127" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n131" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e98" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n131" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n132" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e99" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n128" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n133" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at method FWOther#write1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write1() { fw.f = new Object(); this.fw.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e145" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n114" port="output" />
      </from>
      <to>
       <noderef id="n29" port="outReceiver0" />
@@ -3182,12 +3586,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e135" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method FWOther#write1():V creation 0; tree Object" editable="true" id="e152" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n110" port="output" />
+      <noderef id="n124" port="output" />
      </from>
      <to>
-      <noderef id="n152" port="input" />
+      <noderef id="n170" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3200,12 +3604,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e140" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e159" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n115" port="output" />
+      <noderef id="n129" port="output" />
      </from>
      <to>
-      <noderef id="n157" port="input" />
+      <noderef id="n177" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e166" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n118" port="output" />
+     </from>
+     <to>
+      <noderef id="n184" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3230,7 +3652,7 @@
     </node>
     <node id="n32" kind="OUTGOING">
      <input>
-      <port edge="e129" num="outReceiver0" />
+      <port edge="e146" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -3241,7 +3663,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e89" num="output" />
+      <port edge="e100" num="output" />
      </output>
      <layout>
       </layout>
@@ -3259,205 +3681,253 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e136" num="output" />
+      <port edge="e108" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n52" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n56" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e25" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n53" kind="CONNECT">
+    <node id="n57" kind="CONNECT">
      <input>
-      <port edge="e23" num="input" />
+      <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e94" num="output" />
+      <port edge="e105" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n54" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n58" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e24" num="output" />
+      <port edge="e26" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n55" kind="CONNECT">
+    <node id="n59" kind="CONNECT">
      <input>
-      <port edge="e24" num="input" />
+      <port edge="e26" num="input" />
      </input>
      <output>
-      <port edge="e103" num="output" />
+      <port edge="e117" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n120" kind="SUBBOARD" name="FWOther-fw--GET">
+    <node id="n76" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e35" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n77" kind="CONNECT">
      <input>
-      <port edge="e90" num="inReceiver0" />
+      <port edge="e35" num="input" />
      </input>
      <output>
-      <port edge="e91" num="outReceiver0" />
-      <port edge="e92" num="outputReturn0" />
+      <port edge="e107" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n121" kind="SPLIT">
+    <node id="n134" kind="SUBBOARD" name="FWOther-fw--GET">
      <input>
-      <port edge="e89" num="input" />
+      <port edge="e101" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e90" num="split" />
-      <port edge="e93" num="toEnd" />
+      <port edge="e102" num="outReceiver0" />
+      <port edge="e103" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n122" kind="CONNECT">
-     <input>
-      <port edge="e91" num="input" />
-     </input>
-     <output>
-      <port edge="e96" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n123" kind="CONNECT">
-     <input>
-      <port edge="e92" num="input" />
-     </input>
-     <output>
-      <port edge="e101" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n124" kind="END">
-     <input>
-      <port edge="e93" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n125" kind="CONNECT">
-     <input>
-      <port edge="e94" num="input" />
-     </input>
-     <output>
-      <port edge="e138" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n127" kind="SUBBOARD" name="FWOther-fw--GET">
-     <input>
-      <port edge="e97" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e98" num="outReceiver0" />
-      <port edge="e99" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n128" kind="SPLIT">
-     <input>
-      <port edge="e96" num="input" />
-     </input>
-     <output>
-      <port edge="e97" num="split" />
-      <port edge="e100" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n129" kind="CONNECT">
-     <input>
-      <port edge="e98" num="input" />
-     </input>
-     <output>
-      <port edge="e129" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n130" kind="CONNECT">
-     <input>
-      <port edge="e99" num="input" />
-     </input>
-     <output>
-      <port edge="e102" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n131" kind="END">
+    <node id="n135" kind="SPLIT">
      <input>
       <port edge="e100" num="input" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n132" kind="MERGE">
-     <input>
-      <port edge="e101" num="first" />
-      <port edge="e102" num="second" />
-     </input>
      <output>
-      <port edge="e147" num="output" />
+      <port edge="e101" num="split" />
+      <port edge="e104" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n133" kind="CONNECT">
+    <node id="n136" kind="CONNECT">
+     <input>
+      <port edge="e102" num="input" />
+     </input>
+     <output>
+      <port edge="e110" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n137" kind="CONNECT">
      <input>
       <port edge="e103" num="input" />
      </input>
      <output>
-      <port edge="e139" num="output" />
+      <port edge="e115" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n153" kind="END">
+    <node id="n138" kind="END">
      <input>
-      <port edge="e136" num="input" />
+      <port edge="e104" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n155" kind="END">
+    <node id="n139" kind="CONNECT">
      <input>
-      <port edge="e138" num="input" />
+      <port edge="e105" num="input" />
+     </input>
+     <output>
+      <port edge="e157" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n141" kind="MERGE">
+     <input>
+      <port edge="e108" num="0" />
+      <port edge="e109" num="1" />
+     </input>
+     <output>
+      <port edge="e153" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n142" kind="SPLIT">
+     <input>
+      <port edge="e107" num="0" />
+     </input>
+     <output>
+      <port edge="e109" num="1" />
+      <port edge="e167" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n143" kind="SUBBOARD" name="FWOther-fw--GET">
+     <input>
+      <port edge="e111" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e112" num="outReceiver0" />
+      <port edge="e113" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n144" kind="SPLIT">
+     <input>
+      <port edge="e110" num="input" />
+     </input>
+     <output>
+      <port edge="e111" num="split" />
+      <port edge="e114" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n145" kind="CONNECT">
+     <input>
+      <port edge="e112" num="input" />
+     </input>
+     <output>
+      <port edge="e146" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n146" kind="CONNECT">
+     <input>
+      <port edge="e113" num="input" />
+     </input>
+     <output>
+      <port edge="e116" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n147" kind="END">
+     <input>
+      <port edge="e114" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n156" kind="END">
+    <node id="n148" kind="MERGE">
      <input>
-      <port edge="e139" num="input" />
+      <port edge="e115" num="first" />
+      <port edge="e116" num="second" />
+     </input>
+     <output>
+      <port edge="e169" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n149" kind="CONNECT">
+     <input>
+      <port edge="e117" num="input" />
+     </input>
+     <output>
+      <port edge="e158" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n171" kind="END">
+     <input>
+      <port edge="e153" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n164" kind="END">
+    <node id="n175" kind="END">
      <input>
-      <port edge="e147" num="input" />
+      <port edge="e157" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n176" kind="END">
+     <input>
+      <port edge="e158" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n185" kind="END">
+     <input>
+      <port edge="e167" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n187" kind="END">
+     <input>
+      <port edge="e169" num="input" />
      </input>
      <output />
      <layout>
@@ -3481,7 +3951,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method FWOther#read1():V local variable x(0); tree Object" editable="true" id="e21" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 16 at method FWOther#read1():V local variable x(0); tree Object" editable="true" id="e21" pinch="false" variableID="16" width="narrow">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -3499,12 +3969,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e23" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #17 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e25" pinch="false" variableID="17" width="narrow">
      <from>
-      <noderef id="n52" port="output" />
+      <noderef id="n56" port="output" />
      </from>
      <to>
-      <noderef id="n53" port="input" />
+      <noderef id="n57" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3517,12 +3987,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e24" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #18 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e26" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n54" port="output" />
+      <noderef id="n58" port="output" />
      </from>
      <to>
-      <noderef id="n55" port="input" />
+      <noderef id="n59" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3535,12 +4005,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e89" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n76" port="output" />
+     </from>
+     <to>
+      <noderef id="n77" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e100" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n33" port="output" />
      </from>
      <to>
-      <noderef id="n121" port="input" />
+      <noderef id="n135" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3553,12 +4041,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e90" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e101" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n121" port="split" />
+      <noderef id="n135" port="split" />
      </from>
      <to>
-      <noderef id="n120" port="inReceiver0" />
+      <noderef id="n134" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -3571,12 +4059,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e91" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e102" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n120" port="outReceiver0" />
+      <noderef id="n134" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n122" port="input" />
+      <noderef id="n136" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3587,14 +4075,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e92" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e103" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n120" port="outputReturn0" />
+      <noderef id="n134" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n123" port="input" />
+      <noderef id="n137" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3607,12 +4101,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e93" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e104" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n121" port="toEnd" />
+      <noderef id="n135" port="toEnd" />
      </from>
      <to>
-      <noderef id="n124" port="input" />
+      <noderef id="n138" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3625,12 +4119,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e94" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #17 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e105" pinch="false" variableID="17" width="narrow">
      <from>
-      <noderef id="n53" port="output" />
+      <noderef id="n57" port="output" />
      </from>
      <to>
-      <noderef id="n125" port="input" />
+      <noderef id="n139" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3643,12 +4137,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e96" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e107" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n122" port="output" />
+      <noderef id="n77" port="0" />
      </from>
      <to>
-      <noderef id="n128" port="input" />
+      <noderef id="n142" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3659,26 +4153,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e97" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 16 at method FWOther#read1():V local variable x(0); tree Object" editable="true" id="e108" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n128" port="split" />
+      <noderef id="n49" port="0" />
      </from>
      <to>
-      <noderef id="n127" port="inReceiver0" />
+      <noderef id="n141" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3689,14 +4171,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e98" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e109" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n127" port="outReceiver0" />
+      <noderef id="n142" port="1" />
      </from>
      <to>
-      <noderef id="n129" port="input" />
+      <noderef id="n141" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -3707,14 +4195,26 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e99" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e110" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n127" port="outputReturn0" />
+      <noderef id="n136" port="output" />
      </from>
      <to>
-      <noderef id="n130" port="input" />
+      <noderef id="n144" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3727,12 +4227,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e100" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e111" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n128" port="toEnd" />
+      <noderef id="n144" port="split" />
      </from>
      <to>
-      <noderef id="n131" port="input" />
+      <noderef id="n143" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -3745,12 +4245,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e101" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e112" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n123" port="toMerge" />
+      <noderef id="n143" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n132" port="first" />
+      <noderef id="n145" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3761,32 +4261,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e102" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e113" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n130" port="toMerge" />
+      <noderef id="n143" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n132" port="second" />
+      <noderef id="n146" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3797,20 +4279,62 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e103" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e114" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n55" port="output" />
+      <noderef id="n144" port="toEnd" />
      </from>
      <to>
-      <noderef id="n133" port="input" />
+      <noderef id="n147" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e115" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n137" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n148" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e116" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n146" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n148" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -3823,9 +4347,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(9) FWOther" editable="true" id="e129" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #18 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e117" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n129" port="output" />
+      <noderef id="n59" port="output" />
+     </from>
+     <to>
+      <noderef id="n149" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at method FWOther#read1():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void read1() { Object x; x = fw.f; x = fw.f; }Atm: @VarAnnot(11) FWOther" editable="true" id="e146" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n145" port="output" />
      </from>
      <to>
       <noderef id="n32" port="outReceiver0" />
@@ -3841,12 +4383,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method FWOther#read1():V local variable x(0); tree Object" editable="true" id="e136" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 16 at method FWOther#read1():V local variable x(0); tree Object" editable="true" id="e153" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n49" port="output" />
+      <noderef id="n141" port="output" />
      </from>
      <to>
-      <noderef id="n153" port="input" />
+      <noderef id="n171" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3859,12 +4401,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e138" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #17 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e157" pinch="false" variableID="17" width="narrow">
      <from>
-      <noderef id="n125" port="output" />
+      <noderef id="n139" port="output" />
      </from>
      <to>
-      <noderef id="n155" port="input" />
+      <noderef id="n175" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3877,12 +4419,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 14 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e139" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #18 Declared Variable: Variable 16 at method FWOther#read1():V local variable x(0); tree Object IfTest: false mergedTo: Set()" editable="true" id="e158" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n133" port="output" />
+      <noderef id="n149" port="output" />
      </from>
      <to>
-      <noderef id="n156" port="input" />
+      <noderef id="n176" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3895,12 +4437,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e147" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e167" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n132" port="output" />
+      <noderef id="n142" port="output" />
      </from>
      <to>
-      <noderef id="n164" port="input" />
+      <noderef id="n185" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e169" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n148" port="output" />
+     </from>
+     <to>
+      <noderef id="n187" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3926,8 +4492,8 @@
     </node>
     <node id="n35" kind="OUTGOING">
      <input>
-      <port edge="e131" num="outParam0" />
-      <port edge="e130" num="outReceiver0" />
+      <port edge="e148" num="outParam0" />
+      <port edge="e147" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -3938,7 +4504,7 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e130" num="output" />
+      <port edge="e147" num="output" />
      </output>
      <layout>
       </layout>
@@ -3948,7 +4514,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e105" num="output" />
+      <port edge="e122" num="output" />
      </output>
      <layout>
       </layout>
@@ -3966,151 +4532,199 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e108" num="output" />
+      <port edge="e119" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n135" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e109" num="inParam0" />
-      <port edge="e106" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e110" num="outParam0" />
-      <port edge="e107" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n136" kind="SPLIT">
-     <input>
-      <port edge="e105" num="input" />
-     </input>
-     <output>
-      <port edge="e106" num="split" />
-      <port edge="e111" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n137" kind="CONNECT">
-     <input>
-      <port edge="e107" num="input" />
-     </input>
-     <output>
-      <port edge="e113" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n138" kind="SPLIT">
-     <input>
-      <port edge="e108" num="input" />
-     </input>
-     <output>
-      <port edge="e109" num="split" />
-      <port edge="e112" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n139" kind="CONNECT">
-     <input>
-      <port edge="e110" num="input" />
-     </input>
-     <output>
-      <port edge="e137" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n140" kind="END">
-     <input>
-      <port edge="e111" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n141" kind="END">
-     <input>
-      <port edge="e112" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n142" kind="SUBBOARD" name="FieldWrite-f--SET">
-     <input>
-      <port edge="e116" num="inParam0" />
-      <port edge="e114" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e117" num="outParam0" />
-      <port edge="e115" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n143" kind="SPLIT">
-     <input>
-      <port edge="e113" num="input" />
-     </input>
-     <output>
-      <port edge="e114" num="split" />
-      <port edge="e119" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n144" kind="CONNECT">
-     <input>
-      <port edge="e115" num="input" />
-     </input>
-     <output>
-      <port edge="e131" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n145" kind="START_SMALL_BALL">
+    <node id="n78" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e116" num="output" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n146" kind="CONNECT">
+    <node id="n79" kind="CONNECT">
      <input>
-      <port edge="e117" num="input" />
+      <port edge="e36" num="input" />
      </input>
      <output>
-      <port edge="e118" num="toEnd" />
+      <port edge="e120" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n147" kind="END">
+    <node id="n151" kind="MERGE">
      <input>
-      <port edge="e118" num="input" />
+      <port edge="e120" num="0" />
+      <port edge="e121" num="1" />
+     </input>
+     <output>
+      <port edge="e168" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n152" kind="SPLIT">
+     <input>
+      <port edge="e119" num="0" />
+     </input>
+     <output>
+      <port edge="e121" num="1" />
+      <port edge="e125" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n153" kind="SUBBOARD" name="FieldWrite-f--SET">
+     <input>
+      <port edge="e126" num="inParam0" />
+      <port edge="e123" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e127" num="outParam0" />
+      <port edge="e124" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n154" kind="SPLIT">
+     <input>
+      <port edge="e122" num="input" />
+     </input>
+     <output>
+      <port edge="e123" num="split" />
+      <port edge="e128" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n155" kind="CONNECT">
+     <input>
+      <port edge="e124" num="input" />
+     </input>
+     <output>
+      <port edge="e130" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n156" kind="SPLIT">
+     <input>
+      <port edge="e125" num="input" />
+     </input>
+     <output>
+      <port edge="e126" num="split" />
+      <port edge="e129" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n157" kind="CONNECT">
+     <input>
+      <port edge="e127" num="input" />
+     </input>
+     <output>
+      <port edge="e154" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n158" kind="END">
+     <input>
+      <port edge="e128" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n148" kind="END">
+    <node id="n159" kind="END">
      <input>
-      <port edge="e119" num="input" />
+      <port edge="e129" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n154" kind="END">
+    <node id="n160" kind="SUBBOARD" name="FieldWrite-f--SET">
      <input>
-      <port edge="e137" num="input" />
+      <port edge="e133" num="inParam0" />
+      <port edge="e131" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e134" num="outParam0" />
+      <port edge="e132" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n161" kind="SPLIT">
+     <input>
+      <port edge="e130" num="input" />
+     </input>
+     <output>
+      <port edge="e131" num="split" />
+      <port edge="e136" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n162" kind="CONNECT">
+     <input>
+      <port edge="e132" num="input" />
+     </input>
+     <output>
+      <port edge="e148" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n163" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e133" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n164" kind="CONNECT">
+     <input>
+      <port edge="e134" num="input" />
+     </input>
+     <output>
+      <port edge="e135" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n165" kind="END">
+     <input>
+      <port edge="e135" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n166" kind="END">
+     <input>
+      <port edge="e136" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n172" kind="END">
+     <input>
+      <port edge="e154" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n186" kind="END">
+     <input>
+      <port edge="e168" num="input" />
      </input>
      <output />
      <layout>
@@ -4146,7 +4760,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e14" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e14" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n34" port="inParam0" />
      </from>
@@ -4164,7 +4778,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e22" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e22" pinch="false" variableID="19" width="narrow">
      <from>
       <noderef id="n50" port="output" />
      </from>
@@ -4182,12 +4796,96 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e105" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n78" port="output" />
+     </from>
+     <to>
+      <noderef id="n79" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e119" pinch="false" variableID="19" width="narrow">
+     <from>
+      <noderef id="n51" port="0" />
+     </from>
+     <to>
+      <noderef id="n152" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e120" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n79" port="0" />
+     </from>
+     <to>
+      <noderef id="n151" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e121" pinch="false" variableID="19" width="narrow">
+     <from>
+      <noderef id="n152" port="1" />
+     </from>
+     <to>
+      <noderef id="n151" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e122" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n136" port="input" />
+      <noderef id="n154" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4200,12 +4898,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e106" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e123" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n136" port="split" />
+      <noderef id="n154" port="split" />
      </from>
      <to>
-      <noderef id="n135" port="inReceiver0" />
+      <noderef id="n153" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -4222,14 +4920,26 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e107" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e124" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n135" port="outReceiver0" />
+      <noderef id="n153" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n137" port="input" />
+      <noderef id="n155" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4242,12 +4952,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e108" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e125" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n51" port="output" />
+      <noderef id="n152" port="output" />
      </from>
      <to>
-      <noderef id="n138" port="input" />
+      <noderef id="n156" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4258,14 +4968,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e109" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e126" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n138" port="split" />
+      <noderef id="n156" port="split" />
      </from>
      <to>
-      <noderef id="n135" port="inParam0" />
+      <noderef id="n153" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -4282,14 +4998,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e110" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e127" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n135" port="outParam0" />
+      <noderef id="n153" port="outParam0" />
      </from>
      <to>
-      <noderef id="n139" port="input" />
+      <noderef id="n157" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4302,12 +5024,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e111" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e128" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n136" port="toEnd" />
+      <noderef id="n154" port="toEnd" />
      </from>
      <to>
-      <noderef id="n140" port="input" />
+      <noderef id="n158" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4326,12 +5048,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e112" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e129" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n138" port="toEnd" />
+      <noderef id="n156" port="toEnd" />
      </from>
      <to>
-      <noderef id="n141" port="input" />
+      <noderef id="n159" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4342,20 +5064,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e113" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e130" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n137" port="output" />
+      <noderef id="n155" port="output" />
      </from>
      <to>
-      <noderef id="n143" port="input" />
+      <noderef id="n161" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4368,12 +5084,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e114" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e131" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n143" port="split" />
+      <noderef id="n161" port="split" />
      </from>
      <to>
-      <noderef id="n142" port="inReceiver0" />
+      <noderef id="n160" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -4386,12 +5102,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e115" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e132" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n142" port="outReceiver0" />
+      <noderef id="n160" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n144" port="input" />
+      <noderef id="n162" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4410,12 +5126,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e116" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="null" editable="false" id="e133" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n145" port="output" />
+      <noderef id="n163" port="output" />
      </from>
      <to>
-      <noderef id="n142" port="inParam0" />
+      <noderef id="n160" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -4434,12 +5150,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e117" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="null" editable="false" id="e134" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n142" port="outParam0" />
+      <noderef id="n160" port="outParam0" />
      </from>
      <to>
-      <noderef id="n146" port="input" />
+      <noderef id="n164" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4452,12 +5168,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e118" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="null" editable="false" id="e135" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n146" port="toEnd" />
+      <noderef id="n164" port="toEnd" />
      </from>
      <to>
-      <noderef id="n147" port="input" />
+      <noderef id="n165" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4470,12 +5186,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e119" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e136" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n143" port="toEnd" />
+      <noderef id="n161" port="toEnd" />
      </from>
      <to>
-      <noderef id="n148" port="input" />
+      <noderef id="n166" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4488,7 +5204,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method FWOther#write2(LFieldWrite;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write2(FieldWrite p) { p.f = new Object(); p.f = null; }Atm: @VarAnnot(10) FWOther" editable="true" id="e130" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at method FWOther#write2(LFieldWrite;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void write2(FieldWrite p) { p.f = new Object(); p.f = null; }Atm: @VarAnnot(12) FWOther" editable="true" id="e147" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n36" port="output" />
      </from>
@@ -4518,9 +5234,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e131" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method FWOther#write2(LFieldWrite;):V parameter 0; tree FieldWrite" editable="true" id="e148" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n144" port="output" />
+      <noderef id="n162" port="output" />
      </from>
      <to>
       <noderef id="n35" port="outParam0" />
@@ -4542,12 +5258,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e137" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at method FWOther#write2(LFieldWrite;):V creation 0; tree Object" editable="true" id="e154" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n139" port="output" />
+      <noderef id="n157" port="output" />
      </from>
      <to>
-      <noderef id="n154" port="input" />
+      <noderef id="n172" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class FieldWrite field f; tree Object" editable="true" id="e168" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n151" port="output" />
+     </from>
+     <to>
+      <noderef id="n186" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -4572,7 +5306,7 @@
     </node>
     <node id="n40" kind="OUTGOING">
      <input>
-      <port edge="e122" num="outReceiver0" />
+      <port edge="e139" num="outReceiver0" />
       <port edge="e17" num="outputReturn0" />
      </input>
      <output />
@@ -4584,7 +5318,7 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e122" num="output" />
+      <port edge="e139" num="output" />
      </output>
      <layout>
       </layout>
@@ -4615,7 +5349,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e17" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e17" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n42" port="output" />
      </from>
@@ -4639,7 +5373,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e122" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e139" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n41" port="output" />
      </from>
@@ -4677,7 +5411,7 @@
     <node id="n44" kind="OUTGOING">
      <input>
       <port edge="e19" num="outParam0" />
-      <port edge="e123" num="outReceiver0" />
+      <port edge="e140" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -4688,7 +5422,7 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e123" num="output" />
+      <port edge="e140" num="output" />
      </output>
      <layout>
       </layout>
@@ -4711,7 +5445,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class FWOther field fw; tree FieldWrite" editable="true" id="e19" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at class FWOther field fw; tree FieldWrite" editable="true" id="e19" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n43" port="inParam0" />
      </from>
@@ -4741,7 +5475,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e123" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e140" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n45" port="output" />
      </from>
