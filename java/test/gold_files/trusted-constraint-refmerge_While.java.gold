@@ -75,11 +75,11 @@ class While {
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method While#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method While#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Variable 3 at method While#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) )
 

@@ -1,7 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class GenericFieldAccess class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class GenericFieldAccess class type parameter 0; tree A  <:  Variable 0 at class GenericFieldAccess class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class GenericFieldAccess class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at class GenericFieldAccess class type parameter 1; tree B  <:  Variable 2 at class GenericFieldAccess class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 4 at class GenericFieldAccess extends type; tree <<missing tree>> within 
 public class GenericFieldAccess<A, B> {
@@ -73,18 +73,6 @@ class OtherAccess {
     }
 } )
 
-checkers.inference.FieldAccessConstraint(
-contextVp: method OtherAccess#<init>():V constraint position; 
-calledVp: class OtherAccess field gfAccess; 
-receiver: Constant(@nninf.quals.Nullable); 
-methodTypeParamLBs: <  >; 
-classTypeParamLBs: <  >; 
-methodTypeArgs: <  >; 
-classTypeArgs: <  >; 
-args: (  ); 
-result: List(Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer>, Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess<String, Integer>, Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess<String, Integer>); 
-)
-
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
 calledVp: method GenericFieldAccess#<init>():V; 
@@ -102,7 +90,7 @@ public <init>() {
 
 InequalityConstraint( context: method OtherAccess#<init>():V constraint position, Variable 13 at method OtherAccess#<init>():V creation 0; tree GenericFieldAccess within GenericFieldAccess<String, Integer> != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 13 at method OtherAccess#<init>():V creation 0; tree GenericFieldAccess within GenericFieldAccess<String, Integer>  <:  Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer> )
+SubtypeConstraint( RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer> IfTest: false mergedTo: Set()  <:  Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer> )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
@@ -116,9 +104,9 @@ args: ( Variable 13 at method OtherAccess#<init>():V creation 0; tree GenericFie
 result: List(); 
 )
 
-EqualityConstraint( Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess<String, Integer> = Variable 14 at method OtherAccess#<init>():V creation 0; tree String at position ((3,0)) within GenericFieldAccess<String, Integer> )
+EqualityConstraint( RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer> IfTest: false mergedTo: Set() = Variable 13 at method OtherAccess#<init>():V creation 0; tree GenericFieldAccess within GenericFieldAccess<String, Integer> )
 
-EqualityConstraint( Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess<String, Integer> = Variable 15 at method OtherAccess#<init>():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess<String, Integer> )
+SubtypeConstraint( Variable 13 at method OtherAccess#<init>():V creation 0; tree GenericFieldAccess within GenericFieldAccess<String, Integer>  <:  Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess<String, Integer> )
 
 SubtypeConstraint( Variable 9 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {

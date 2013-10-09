@@ -19,6 +19,7 @@ package graph
 		public var boardNodesDictionary:Dictionary = new Dictionary();
 		/** This is a dictionary of Node's indexed by nodeID - so that nodes may be looked up without needing board information */
 		public var nodeIdToNodeDictionary:Dictionary = new Dictionary();
+		public var edgeIdToEdgeDictionary:Dictionary = new Dictionary();
 		public var boardNodeNameArray:Array = new Array;
 		public var qid:int = -1;
 		
@@ -51,6 +52,18 @@ package graph
 			boardNodeNameArray.push(new_board_name);
 		}
 		
+		public function addEdge(_edge:Edge):void {
+			if (edgeIdToEdgeDictionary.hasOwnProperty(_edge.edge_id)) {
+				throw new Error("Duplicate edges found for edge_id: " + _edge.edge_id);
+			}
+			edgeIdToEdgeDictionary[_edge.edge_id] = _edge;
+		}
+		
+		public function getEdge(_edge_id:String):Edge
+		{
+			return edgeIdToEdgeDictionary[_edge_id] as Edge;
+		}
+		
 		public function getBoardNodes(_original_board_name:String):BoardNodes {
 			var new_board_name:String = _original_board_name;
 			if (m_obfuscator) {
@@ -61,7 +74,7 @@ package graph
 		
 		public function getNode(_node_id:String):Node
 		{
-			return nodeIdToNodeDictionary[_node_id];
+			return nodeIdToNodeDictionary[_node_id] as Node;
 		}
 		
 		//public function getNode(_original_board_name:String, _node_id:String):Node {

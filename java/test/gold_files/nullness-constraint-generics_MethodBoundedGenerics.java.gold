@@ -114,7 +114,7 @@ class MethodBoundedGenerics {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object )
+SubtypeConstraint( Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T  <:  Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object )
 
 InequalityConstraint( context: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position, Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T != Constant(@nninf.quals.Nullable) )
 

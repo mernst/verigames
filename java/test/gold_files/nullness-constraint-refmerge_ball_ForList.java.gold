@@ -83,14 +83,6 @@ EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 4 at metho
 
 SubtypeConstraint( Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
 
-SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
-
-SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()  <:  CombVariable #11 )
-
-SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #11 )
-
-InequalityConstraint( context: method ForList#test(Ljava/util/List;):V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
-
 SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set())  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
 
 InequalityConstraint( context: method ForList#test(Ljava/util/List;):V constraint position, RefinementVariable #9 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable) )

@@ -419,10 +419,14 @@ package scenes.game.display
 			}
 		}
 		
-		public function updateXML():XML {
-			
+		/**
+		 * Updates XML with edge information (widths, etc)
+		 * @param	overwriteWorldXML: True to preserve changes across multiple levels and overwrite local XML, false to create new XML and return that
+		 * @return Instance of current world XML if overwritten, new instance with new updates if not
+		 */
+		public function updateXML(overwriteWorldXML:Boolean = true):XML {
 			//update xml from original
-			var output_xml:XML = new XML(world_xml);
+			var output_xml:XML = overwriteWorldXML ? world_xml : new XML(world_xml);
 			for each (var my_level:Level in levels) {
 				// Find this level in XML
 				if (my_level.levelNodes == null) {
@@ -441,18 +445,14 @@ package scenes.game.display
 					for (var board_index:uint = 0; board_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"].length(); board_index++) {
 						for (var edge_index:uint = 0; edge_index < output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"].length(); edge_index++) {
 							var my_edge_id:String = output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].attribute("id").toString();
-							var my_edge:Edge = my_level.edgeDictionary[my_edge_id];
+							var my_edge:Edge = my_level.levelNodes.getEdge(my_edge_id);
 							if (my_edge) {
-								var my_width:String = "narrow";
-								if (my_edge.is_wide) {
-									my_width = "wide";
-								}
-								if (my_edge.has_buzzsaw) {
-									var debug:int = 0;
-								}
+								var my_width:String = my_edge.linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW) ? "narrow" : "wide";
+								// For buzzsaw, only consider narrowness - no concept of a keyfor buzzsaw at this point
+								var edgeHasJam:Boolean = my_edge.hasConflictProp(PropDictionary.PROP_NARROW);
+								var portHasJam:Boolean = my_edge.to_port.hasConflictProp(PropDictionary.PROP_NARROW);
 								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@width = my_width;
-								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@buzzsaw = my_edge.has_buzzsaw.toString();
-								
+								output_xml["level"][my_level_xml_indx]["boards"][0]["board"][board_index]["edge"][edge_index].@buzzsaw = (edgeHasJam || portHasJam).toString();// classic: my_edge.has_buzzsaw.toString();
 							} else {
 								throw new Error("World.getUpdatedXML(): Edge pipe not found for edge id: " + my_edge_id);
 							}
@@ -779,7 +779,7 @@ package scenes.game.display
 			}
 		}
 		
-		private function selectLevel(newLevel:Level, restart:Boolean = false):void
+		protected function selectLevel(newLevel:Level, restart:Boolean = false):void
 		{
 			if (!newLevel) {
 				return;
@@ -790,11 +790,16 @@ package scenes.game.display
 					details = new Object();
 					details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = active_level.original_level_name;
 					qid = (active_level.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : active_level.levelNodes.qid;
+					//if (PipeJamGame.levelInfo) {
+					//	details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
+					//}
 					PipeJam3.logging.logQuestEnd(qid, details);
 				}
 				details = new Object();
 				details[VerigameServerConstants.ACTION_PARAMETER_LEVEL_NAME] = newLevel.original_level_name;
-				details["levelId"] = PipeJamGame.levelInfo ? PipeJamGame.levelInfo.m_levelId : "";
+				if (PipeJamGame.levelInfo) {
+					details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] = PipeJamGame.levelInfo.createLevelObject();
+				}
 				qid = (newLevel.levelNodes.qid == -1) ? VerigameServerConstants.VERIGAME_QUEST_ID_UNDEFINED_WORLD : newLevel.levelNodes.qid;
 				PipeJam3.logging.logQuestStart(qid, details);
 			}

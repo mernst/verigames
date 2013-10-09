@@ -186,17 +186,19 @@ abstract class GameSolver extends ConstraintSolver {
       // ANd add the boards to the world
       finalizeWorld(world)
 
-        val printWorld = Option(System.getProperty("PRINT_WORLD") )
+        val printWorld = Option( System.getProperty("PRINT_WORLD") )
         if( printWorld.map( _ == "true" ).getOrElse(false) ) {
-          LayoutDebugger.layout(world, "./debug_world");
+          val dest = InferenceUtils.getOrCreateDir("./debug_world")
+          LayoutDebugger.layout(world, dest.getAbsolutePath)
         }
       }
       catch {
-        case exc : Exception =>
+        case throwable : Throwable =>
           if( InferenceMain.PRINT_BOARDS_ON_ERROR ) {
-            LayoutDebugger.layout(world, "./debug_world")
+            val dest = InferenceUtils.getOrCreateDir("./debug_world")
+            LayoutDebugger.layout(world, dest.getAbsolutePath)
           }
-          throw exc
+          throw throwable
       }
 
       world

@@ -573,10 +573,12 @@ package scenes.game.display
 		{
 			super.hideComponent(hide);
 			
-			for each(var outgoingEdge:GameEdgeContainer in m_outgoingEdges)
+			for each(var outgoingEdge:GameEdgeContainer in m_outgoingEdges) {
 				outgoingEdge.hideComponent(hide);
-				for each(var incomingEdge:GameEdgeContainer in m_incomingEdges)
+			}
+			for each(var incomingEdge:GameEdgeContainer in m_incomingEdges) {
 				incomingEdge.hideComponent(hide);
+			}
 		}
 	}
 }

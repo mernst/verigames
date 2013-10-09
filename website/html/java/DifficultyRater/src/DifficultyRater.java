@@ -346,16 +346,16 @@ public class DifficultyRater {
                 if(node.isBox)
                 {
                 	boolean nodeIsEditable = node.isEditable;
-                    for(int j = 0; j<node.outputPorts.size(); j++)
+                    for(int j = 0; j<node.outputPortNames.size(); j++)
                     {
-                        String outputEdgeID = node.outputPorts.get(j);
+                        String outputEdgeID = node.outputPortNames.get(j);
                         EdgeElement outgoingEdge = edges.get(outputEdgeID);
                         
                         boolean incomingWidth = node.isWide;
                         NodeElement toJoint = nodes.get(outgoingEdge.toNodeID);
-                        if(toJoint.outputPorts.size() > 0)
+                        if(toJoint.outputPortNames.size() > 0)
                         {
-                            String jointOutputEdgeID = toJoint.outputPorts.get(0);
+                            String jointOutputEdgeID = toJoint.outputPortNames.get(0);
                             EdgeElement outgoingJointEdge = edges.get(jointOutputEdgeID);
                             NodeElement toNode = nodes.get(outgoingJointEdge.toNodeID); 
                             if(toNode.hasConflict)
@@ -458,9 +458,9 @@ public class DifficultyRater {
         
         public void traceNode(NodeElement startNode, Vector<NodeElement> returnNodes)
         {
-            for(int j = 0; j<startNode.outputPorts.size(); j++)
+            for(int j = 0; j<startNode.outputPortNames.size(); j++)
             {
-                String outputEdgeID = startNode.outputPorts.get(j);
+                String outputEdgeID = startNode.outputPortNames.get(j);
                 EdgeElement outgoingEdge = edges.get(outputEdgeID);
                 outgoingEdge.chainNumber = currentChainNumber;
                 NodeElement toNode = nodes.get(outgoingEdge.toNodeID);
@@ -473,9 +473,9 @@ public class DifficultyRater {
                 }
             }
                 
-                for(int j = 0; j<startNode.inputPorts.size(); j++)
+                for(int j = 0; j<startNode.inputPortNames.size(); j++)
             {
-                String inputEdgeID = startNode.inputPorts.get(j);
+                String inputEdgeID = startNode.inputPortNames.get(j);
                 EdgeElement incomingEdge = edges.get(inputEdgeID);
                 incomingEdge.chainNumber = currentChainNumber;
                 NodeElement fromNode = nodes.get(incomingEdge.fromNodeID);

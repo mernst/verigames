@@ -1,0 +1,175 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class GenericsAndLocals class type parameter 0; tree @NonNull() T  <:  Variable 0 at class GenericsAndLocals class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 2 at class GenericsAndLocals extends type; tree <<missing tree>> within 
+class GenericsAndLocals<@NonNull() T> {
+    
+    GenericsAndLocals() {
+        super();
+    }
+    
+    public void method() {
+        @Nullable()
+        T t = null;
+    }
+} )
+
+SubtypeConstraint( Variable 3 at method GenericsAndLocals#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 2 at class GenericsAndLocals extends type; tree <<missing tree>> within 
+class GenericsAndLocals<@NonNull() T> {
+    
+    GenericsAndLocals() {
+        super();
+    }
+    
+    public void method() {
+        @Nullable()
+        T t = null;
+    }
+} )
+
+SubtypeConstraint( Variable 4 at method GenericsAndLocals#method():V receiver; tree <<missing tree>> within 
+public void method() {
+    @Nullable()
+    T t = null;
+}Atm: @VarAnnot(4) GenericsAndLocals<T extends Object>  <:  Variable 2 at class GenericsAndLocals extends type; tree <<missing tree>> within 
+class GenericsAndLocals<@NonNull() T> {
+    
+    GenericsAndLocals() {
+        super();
+    }
+    
+    public void method() {
+        @Nullable()
+        T t = null;
+    }
+} )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 1 at class GenericsAndLocals class type parameter 0; tree @NonNull() T )
+
+SubtypeConstraint( Variable 6 at class GenericsAndLocals2 class type parameter 0; tree @Nullable() T  <:  Variable 5 at class GenericsAndLocals2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @Nullable() TAtm: @VarAnnot(5) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 7 at class GenericsAndLocals2 extends type; tree <<missing tree>> within 
+class GenericsAndLocals2<@Nullable() T> {
+    
+    GenericsAndLocals2() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Variable 8 at method GenericsAndLocals2#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 7 at class GenericsAndLocals2 extends type; tree <<missing tree>> within 
+class GenericsAndLocals2<@Nullable() T> {
+    
+    GenericsAndLocals2() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Variable 9 at method GenericsAndLocals2#method(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+public void method(@NonNull()
+T incoming) {
+    @Nullable()
+    T t = null;
+    @NonNull()
+    T t2 = incoming;
+}Atm: @VarAnnot(9) GenericsAndLocals2<T extends Object>  <:  Variable 7 at class GenericsAndLocals2 extends type; tree <<missing tree>> within 
+class GenericsAndLocals2<@Nullable() T> {
+    
+    GenericsAndLocals2() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 6 at class GenericsAndLocals2 class type parameter 0; tree @Nullable() T )
+
+SubtypeConstraint( Variable 12 at class GenericsAndLocals3 class type parameter 0; tree @NonNull() T  <:  Variable 11 at class GenericsAndLocals3 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(11) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 13 at class GenericsAndLocals3 extends type; tree <<missing tree>> within 
+class GenericsAndLocals3<@NonNull() T> {
+    
+    GenericsAndLocals3() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Variable 14 at method GenericsAndLocals3#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 13 at class GenericsAndLocals3 extends type; tree <<missing tree>> within 
+class GenericsAndLocals3<@NonNull() T> {
+    
+    GenericsAndLocals3() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Variable 15 at method GenericsAndLocals3#method(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+public void method(@NonNull()
+T incoming) {
+    @Nullable()
+    T t = null;
+    @NonNull()
+    T t2 = incoming;
+}Atm: @VarAnnot(15) GenericsAndLocals3<T extends Object>  <:  Variable 13 at class GenericsAndLocals3 extends type; tree <<missing tree>> within 
+class GenericsAndLocals3<@NonNull() T> {
+    
+    GenericsAndLocals3() {
+        super();
+    }
+    
+    public void method(@NonNull()
+    T incoming) {
+        @Nullable()
+        T t = null;
+        @NonNull()
+        T t2 = incoming;
+    }
+} )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 12 at class GenericsAndLocals3 class type parameter 0; tree @NonNull() T )
+

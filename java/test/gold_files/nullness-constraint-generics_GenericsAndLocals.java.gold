@@ -1,5 +1,5 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class GenericsAndLocals class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(0) Object )
+SubtypeConstraint( Variable 1 at class GenericsAndLocals class type parameter 0; tree @NonNull() T  <:  Variable 0 at class GenericsAndLocals class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(0) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class GenericsAndLocals extends type; tree <<missing tree>> within 
 class GenericsAndLocals<@NonNull() T> {
@@ -49,7 +49,7 @@ class GenericsAndLocals<@NonNull() T> {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 1 at class GenericsAndLocals class type parameter 0; tree @NonNull() T )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 5 at class GenericsAndLocals2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @Nullable() TAtm: @VarAnnot(5) Object )
+SubtypeConstraint( Variable 6 at class GenericsAndLocals2 class type parameter 0; tree @Nullable() T  <:  Variable 5 at class GenericsAndLocals2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @Nullable() TAtm: @VarAnnot(5) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class GenericsAndLocals2 extends type; tree <<missing tree>> within 
 class GenericsAndLocals2<@Nullable() T> {
@@ -111,7 +111,7 @@ class GenericsAndLocals2<@Nullable() T> {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 6 at class GenericsAndLocals2 class type parameter 0; tree @Nullable() T )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 11 at class GenericsAndLocals3 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(11) Object )
+SubtypeConstraint( Variable 12 at class GenericsAndLocals3 class type parameter 0; tree @NonNull() T  <:  Variable 11 at class GenericsAndLocals3 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(11) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 13 at class GenericsAndLocals3 extends type; tree <<missing tree>> within 
 class GenericsAndLocals3<@NonNull() T> {

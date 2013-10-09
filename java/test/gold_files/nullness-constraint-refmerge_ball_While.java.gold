@@ -91,13 +91,5 @@ EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 4 at metho
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String )
 
-SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 4 at method While#test(Z):V local variable a(0); tree String )
-
-SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 4 at method While#test(Z):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  CombVariable #10 )
-
-SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #10 )
-
-InequalityConstraint( context: method While#test(Z):V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
-
 InequalityConstraint( context: method While#test(Z):V constraint position, Variable 3 at method While#test(Z):V parameter 0; tree boolean != Constant(@nninf.quals.Nullable) )
 

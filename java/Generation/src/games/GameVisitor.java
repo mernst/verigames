@@ -107,11 +107,10 @@ public class GameVisitor extends InferenceVisitor {
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
         Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() 
-                && !node.toString().equals("this")
-                && !(InferenceMain.slotMgr().extractSlot(this.atypeFactory.getAnnotatedType(node)) instanceof RefinementVariable)) {
-
-            logFieldAccess(node);
+        if (elem.getKind().isField() && !node.toString().equals("this")) {
+            if (!infer || !(InferenceMain.slotMgr().extractSlot(this.atypeFactory.getAnnotatedType(node)) instanceof RefinementVariable)) {
+                logFieldAccess(node);
+            }
         }
 
         return super.visitIdentifier(node, p);
