@@ -94,7 +94,7 @@ package graph
 		 * @param	_destination_port Port on destination node to be associated with the new outgoing edge
 		 * @param	_metadata Extra information about this edge (for example: any attributes in the original XML object)
 		 */
-		public function addOutgoingEdge(_outgoing_port:String, _destination_node:Node, _destination_port:String, _linked_edge_set:EdgeSetRef, _metadata:Object = null):void {
+		public function addOutgoingEdge(_outgoing_port:String, _destination_node:Node, _destination_port:String, _linked_edge_set:EdgeSetRef, _metadata:Object = null):Edge {
 			var new_edge:Edge = new Edge(this, _outgoing_port, _destination_node, _destination_port, _linked_edge_set, _metadata);
 			outgoing_ports.push(new_edge.from_port);
 			_destination_node.connectIncomingEdge(new_edge);
@@ -102,6 +102,7 @@ package graph
 				throw new Error("Attempting to add more than one port for outgoing port id:" + new_edge.from_port.port_id);
 			}
 			outgoing_port_dict[new_edge.from_port.port_id] = new_edge.from_port;
+			return new_edge;
 		}
 		
 		/**

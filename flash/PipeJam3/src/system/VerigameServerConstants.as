@@ -31,6 +31,7 @@ package system
 		public static const VERIGAME_ACTION_SUBMIT_SCORE:int           = 21;
 		public static const VERIGAME_ACTION_LOAD_LAYOUT:int            = 22;
 		
+		public static const QUEST_PARAMETER_LEVEL_INFO:String          = "levelInfo";
 		
 		public static const ACTION_PARAMETER_START_INFO:String         = "startInfo";
 		public static const ACTION_PARAMETER_BOARD_NAME:String         = "boardName";// deprecated

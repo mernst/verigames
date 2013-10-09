@@ -73,7 +73,7 @@ package scenes.game.display
 		public var errorTextBubbleContainer:Sprite = new Sprite();
 		public var errorTextBubble:TextBubble;
 		
-		private var m_errorProps:PropDictionary;
+		public var m_errorProps:PropDictionary;
 		private var m_listeningToEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_listeningToPorts:Vector.<Port> = new Vector.<Port>();
 		private var m_hidingErrorText:Boolean = false;
@@ -400,6 +400,7 @@ package scenes.game.display
 		{
 			super.visible = value;
 			errorContainer.visible = value;
+			errorTextBubbleContainer.visible = value;
 			if (plug)   plug.visible = !hideSegments && value;
 			if (socket) socket.visible = !hideSegments && value;
 		}
@@ -566,6 +567,11 @@ package scenes.game.display
 		{
 			m_hidingErrorText = false;
 			if (errorTextBubble != null) errorTextBubble.showText();
+		}
+		
+		public override function hideComponent(hide:Boolean):void
+		{
+			super.hideComponent(hide);
 		}
 		
 		private function addError():void

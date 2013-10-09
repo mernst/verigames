@@ -130,7 +130,8 @@ package utils
 					}
 					*/
 					// Add this edge!
-					source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], md1);
+					var new_edge:Edge = source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], md1);
+					my_levelNodes.addEdge(new_edge);
 				}
 			} // loop over every node a.k.a. board
 			

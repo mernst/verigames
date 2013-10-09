@@ -1,6 +1,11 @@
 package  
 {
+	import assets.AssetsFont;
 	import audio.AudioManager;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import server.ReplayController;
+	import system.VerigameServerConstants;
 	
 	import cgs.server.logging.data.QuestData;
 	
@@ -36,7 +41,7 @@ package
 	public class PipeJam3 extends flash.display.Sprite 
 	{
 		static public var GAME_ID:int = 1;
-
+		
 		private var mStarling:Starling;
 		
 		/** Set to true if a build for the server */
@@ -44,17 +49,20 @@ package
 		public static var LOCAL_DEPLOYMENT:Boolean = false;
 		public static var TUTORIAL_DEMO:Boolean = false;
 		public static var USE_LOCAL_PROXY:Boolean = false;
-		public static var REPLAY_DQID:String;//= "dqid_524f4e00a573f2.42178328";
+		public static var REPLAY_DQID:String;// = "dqid_5252fd7aa741e8.90134465";
+		private static const REPLAY_TEXT_FORMAT:TextFormat = new TextFormat(AssetsFont.FONT_UBUNTU, 6, 0xFFFF00);
 		
 		public static var logging:LoggingServerInterface;
 		
 		protected var hasBeenAddedToStage:Boolean = false;
-
+		
 		//used to know if this is the inital launch, and the Play button should load a tutorial level or the level dialog instead
 		public static var initialLevelDisplay:Boolean = true; 
 		static public var pipeJam3:PipeJam3;
 		
-		public function PipeJam3() 
+		private static var m_replayText:TextField = new TextField();
+		
+		public function PipeJam3()
 		{
 			pipeJam3 = this;
 			
@@ -98,6 +106,14 @@ package
 			mStarling.enableErrorChecking = false;
 			mStarling.start();
 			
+			if (REPLAY_DQID) {
+				m_replayText.text = "Loading replay...";
+				m_replayText.width = Constants.GameWidth;
+				m_replayText.height = 30;
+				m_replayText.setTextFormat(REPLAY_TEXT_FORMAT);
+				mStarling.nativeOverlay.addChild(m_replayText);
+			}
+			
 			// this event is dispatched when stage3D is set up
 			mStarling.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated);
 			
@@ -108,6 +124,8 @@ package
 				ExternalInterface.addCallback("loadLevelFromObjectID", loadLevelFromObjectID);
 			}
 		}
+		
+		
 		
 		private function onContextCreated(event:flash.events.Event):void
 		{
@@ -154,12 +172,23 @@ package
 		{
 			trace("Found " + (questData.actions ? questData.actions.length : 0) + " actions");
 			if (err) trace("Error: " + err);
-			if (questData && questData.startData && questData.startData.details && questData.startData.details.levelId) {
-				trace("Replaying levelId: " + questData.startData.details.levelId);
-				loadLevelFromObjectID(questData.startData.details.levelId);
-			} else {
-				trace("Error: Couldn't find levelId for replay.");
+			if (questData && questData.startData && questData.startData.details &&
+				questData.startData.details.hasOwnProperty(VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO) &&
+				questData.startData.details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO] &&
+				questData.startData.details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO].m_id) {
+				var levelId:String = questData.startData.details[VerigameServerConstants.QUEST_PARAMETER_LEVEL_INFO].m_id as String;
+				trace("Replaying levelId: " + levelId);
+				loadLevelFromObjectID(levelId);
+				return;
 			}
+			trace("Error: Couldn't find levelId for replay.");
+		}
+		
+		public static function showReplayText(text:String):void
+		{
+			if (!m_replayText) return;
+			m_replayText.text = text;
+			m_replayText.setTextFormat(REPLAY_TEXT_FORMAT);
 		}
 	}
 	

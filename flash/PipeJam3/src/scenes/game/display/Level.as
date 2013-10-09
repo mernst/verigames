@@ -913,6 +913,18 @@ package scenes.game.display
 				
 				constraintsXML.appendChild(child);
 			}
+			for each(var edge:GameEdgeContainer in m_edgeList)
+			{
+				var hasJam:Boolean = edge.m_errorProps.hasProp(PropDictionary.PROP_NARROW);
+				
+				var lineXML:XML = <line/>;
+				lineXML.@id = edge.m_id
+				lineXML.@width = edge.isWide().toString();
+				lineXML.@editable = edge.isEditable().toString();
+				lineXML.@jam = hasJam.toString(); // used for annotating code (buzzsaw)
+				
+				constraintsXML.appendChild(lineXML);
+			}
 		}
 		
 		override public function dispose():void
@@ -1039,7 +1051,7 @@ package scenes.game.display
 		}
 		
 		//assume this only generates on toggle width events
-		private function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			//trace("Level: onEdgeSetChange");
 			if (!evt.silent) {
