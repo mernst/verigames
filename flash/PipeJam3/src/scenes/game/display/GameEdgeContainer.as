@@ -400,6 +400,7 @@ package scenes.game.display
 		{
 			super.visible = value;
 			errorContainer.visible = value;
+			errorTextBubbleContainer.visible = value;
 			if (plug)   plug.visible = !hideSegments && value;
 			if (socket) socket.visible = !hideSegments && value;
 		}
@@ -566,6 +567,11 @@ package scenes.game.display
 		{
 			m_hidingErrorText = false;
 			if (errorTextBubble != null) errorTextBubble.showText();
+		}
+		
+		public override function hideComponent(hide:Boolean):void
+		{
+			super.hideComponent(hide);
 		}
 		
 		private function addError():void
