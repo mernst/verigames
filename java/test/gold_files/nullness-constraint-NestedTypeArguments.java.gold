@@ -20,9 +20,13 @@ class NestedTypeArguments {
     Generic<? extends String, List<Object>> g;
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 6 at class Generic class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(6) Object )
+SubtypeConstraint( Variable 7 at class Generic class type parameter 0; tree T  <:  Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at class Generic class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(8) Object )
+SubtypeConstraint( Variable 7 at class Generic class type parameter 0; tree T  <:  Variable 6 at class Generic class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(6) Object )
+
+SubtypeConstraint( Variable 9 at class Generic class type parameter 1; tree S  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 9 at class Generic class type parameter 1; tree S  <:  Variable 8 at class Generic class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(8) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Generic extends type; tree <<missing tree>> within 
 class Generic<T, S> {

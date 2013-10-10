@@ -1,5 +1,5 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class ConstructorTypeArgs class type parameter bound 0 & 0; tree Object at position ((3,0)) within C extends Object )
+SubtypeConstraint( Variable 1 at class ConstructorTypeArgs class type parameter 0; tree C extends Object  <:  Variable 0 at class ConstructorTypeArgs class type parameter bound 0 & 0; tree Object at position ((3,0)) within C extends Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ConstructorTypeArgs extends type; tree <<missing tree>> within 
 class ConstructorTypeArgs<C extends Object> {
@@ -20,5 +20,11 @@ class ConstructorTypeArgs<C extends Object> {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 3 at method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
+SubtypeConstraint( Variable 4 at method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V method type parameter 0; tree T extends Object  <:  Variable 3 at method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V method type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
+
+SubtypeConstraint( Variable 4 at method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V method type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 6 at method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 1 at class ConstructorTypeArgs class type parameter 0; tree C extends Object  <:  Constant(@nninf.quals.Nullable) )
 

@@ -2,67 +2,73 @@
  <level name="SimplestField">
   <linked-edges>
    <edge-set id="SimplestField0">
-    <edgeref id="e3" />
-    <edgeref id="e35" />
-    <edgeref id="e21" />
-    <edgeref id="e39" />
-    <edgeref id="e5" />
-    <edgeref id="e7" />
-   </edge-set>
-   <edge-set id="SimplestField1">
     <edgeref id="e9" />
-    <edgeref id="e11" />
-    <edgeref id="e14" />
-    <edgeref id="e37" />
-   </edge-set>
-   <edge-set id="SimplestField2">
-    <edgeref id="e10" />
-    <edgeref id="e13" />
-    <edgeref id="e15" />
-    <edgeref id="e38" />
-    <edgeref id="e1" />
-    <edgeref id="e33" />
-   </edge-set>
-   <edge-set id="SimplestField3">
+    <edgeref id="e20" />
+    <edgeref id="e22" />
+    <edgeref id="e31" />
+    <edgeref id="e42" />
     <edgeref id="e8" />
-    <edgeref id="e17" />
+    <edgeref id="e19" />
     <edgeref id="e26" />
     <edgeref id="e27" />
     <edgeref id="e28" />
     <edgeref id="e30" />
-    <edgeref id="e36" />
+    <edgeref id="e32" />
+    <edgeref id="e33" />
+    <edgeref id="e35" />
+    <edgeref id="e41" />
+   </edge-set>
+   <edge-set id="SimplestField1">
+    <edgeref id="e3" />
+    <edgeref id="e40" />
+    <edgeref id="e12" />
+    <edgeref id="e21" />
+    <edgeref id="e34" />
+    <edgeref id="e45" />
+    <edgeref id="e5" />
+    <edgeref id="e7" />
+   </edge-set>
+   <edge-set id="SimplestField2">
+    <edgeref id="e10" />
+    <edgeref id="e13" />
+    <edgeref id="e16" />
+    <edgeref id="e43" />
+   </edge-set>
+   <edge-set id="SimplestField3">
+    <edgeref id="e11" />
+    <edgeref id="e15" />
+    <edgeref id="e17" />
+    <edgeref id="e44" />
+    <edgeref id="e1" />
+    <edgeref id="e38" />
    </edge-set>
    <edge-set id="SimplestField4">
-    <edgeref id="e18" />
-    <edgeref id="e19" />
-    <edgeref id="e20" />
-    <edgeref id="e22" />
     <edgeref id="e23" />
     <edgeref id="e24" />
     <edgeref id="e25" />
     <edgeref id="e29" />
-    <edgeref id="e34" />
+    <edgeref id="e39" />
    </edge-set>
    <edge-set id="SimplestField9">
-    <edgeref id="e12" />
+    <edgeref id="e14" />
    </edge-set>
    <edge-set id="SimplestField18">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="SimplestField20">
-    <edgeref id="e16" />
+   <edge-set id="SimplestField22">
+    <edgeref id="e18" />
    </edge-set>
-   <edge-set id="SimplestField38">
+   <edge-set id="SimplestField44">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="SimplestField40">
-    <edgeref id="e31" />
+   <edge-set id="SimplestField46">
+    <edgeref id="e36" />
    </edge-set>
-   <edge-set id="SimplestField41">
+   <edge-set id="SimplestField47">
     <edgeref id="e6" />
    </edge-set>
-   <edge-set id="SimplestField43">
-    <edgeref id="e32" />
+   <edge-set id="SimplestField49">
+    <edgeref id="e37" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -86,25 +92,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e35" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n19" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e9" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n20" kind="CONNECT">
-     <input>
-      <port edge="e9" num="input" />
-     </input>
-     <output>
-      <port edge="e11" num="0" />
+      <port edge="e40" num="output" />
      </output>
      <layout>
       </layout>
@@ -127,66 +115,84 @@
      <layout>
       </layout>
     </node>
-    <node id="n23" kind="START_LARGE_BALL">
+    <node id="n23" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e12" num="0" />
+      <port edge="e11" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="MERGE">
+    <node id="n24" kind="CONNECT">
      <input>
-      <port edge="e11" num="0" />
-      <port edge="e12" num="1" />
+      <port edge="e11" num="input" />
      </input>
+     <output>
+      <port edge="e15" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="START_LARGE_BALL">
+     <input />
      <output>
       <port edge="e14" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="MERGE">
-     <input>
-      <port edge="e14" num="0" />
-      <port edge="e15" num="1" />
-     </input>
-     <output>
-      <port edge="e37" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="SPLIT">
+    <node id="n28" kind="MERGE">
      <input>
       <port edge="e13" num="0" />
+      <port edge="e14" num="1" />
      </input>
      <output>
-      <port edge="e15" num="1" />
-      <port edge="e38" num="output" />
+      <port edge="e16" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="END">
+    <node id="n29" kind="MERGE">
      <input>
-      <port edge="e35" num="input" />
+      <port edge="e16" num="0" />
+      <port edge="e17" num="1" />
+     </input>
+     <output>
+      <port edge="e43" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n30" kind="SPLIT">
+     <input>
+      <port edge="e15" num="0" />
+     </input>
+     <output>
+      <port edge="e17" num="1" />
+      <port edge="e44" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n46" kind="END">
+     <input>
+      <port edge="e40" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="END">
+    <node id="n49" kind="END">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e43" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n44" kind="END">
+    <node id="n50" kind="END">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e44" num="input" />
      </input>
      <output />
      <layout>
@@ -222,25 +228,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e9" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n19" port="output" />
-     </from>
-     <to>
-      <noderef id="n20" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e10" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -258,36 +246,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e11" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n20" port="0" />
+      <noderef id="n23" port="output" />
      </from>
      <to>
-      <noderef id="n24" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e12" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n23" port="0" />
-     </from>
-     <to>
-      <noderef id="n24" port="1" />
+      <noderef id="n24" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -300,14 +264,20 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e13" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n22" port="0" />
      </from>
      <to>
-      <noderef id="n26" port="0" />
+      <noderef id="n28" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -318,20 +288,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e14" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e14" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n24" port="0" />
+      <noderef id="n27" port="0" />
      </from>
      <to>
-      <noderef id="n25" port="0" />
+      <noderef id="n28" port="1" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -344,10 +308,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n26" port="1" />
+      <noderef id="n24" port="0" />
      </from>
      <to>
-      <noderef id="n25" port="1" />
+      <noderef id="n30" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -360,12 +324,54 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e35" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n28" port="0" />
+     </from>
+     <to>
+      <noderef id="n29" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n30" port="1" />
+     </from>
+     <to>
+      <noderef id="n29" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e40" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
      <to>
-      <noderef id="n41" port="input" />
+      <noderef id="n46" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -378,12 +384,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class SimplestField extends type; tree &lt;&lt;missing tree&gt;&gt; within  class SimplestField {  SimplestField() { super(); } @Nullable() private String s;  public void s() { final String s2 = &quot;a&quot;; s = s2; } }" editable="true" id="e43" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n25" port="output" />
+      <noderef id="n29" port="output" />
      </from>
      <to>
-      <noderef id="n43" port="input" />
+      <noderef id="n49" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -396,12 +402,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e44" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n30" port="output" />
      </from>
      <to>
-      <noderef id="n44" port="input" />
+      <noderef id="n50" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -424,7 +430,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e33" num="outputReturn0" />
+      <port edge="e38" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -443,7 +449,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e38" num="output" />
      </output>
      <layout>
       </layout>
@@ -466,7 +472,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e33" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method SimplestField#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -496,7 +502,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e34" num="outReceiver0" />
+      <port edge="e39" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -507,7 +513,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e18" num="output" />
+      <port edge="e23" num="output" />
      </output>
      <layout>
       </layout>
@@ -525,15 +531,51 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e17" num="0" />
+      <port edge="e19" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n27" kind="MERGE">
+    <node id="n19" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e9" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n20" kind="CONNECT">
      <input>
-      <port edge="e17" num="0" />
-      <port edge="e16" num="1" />
+      <port edge="e9" num="input" />
+     </input>
+     <output>
+      <port edge="e20" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n25" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e12" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n26" kind="CONNECT">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output>
+      <port edge="e21" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n31" kind="MERGE">
+     <input>
+      <port edge="e19" num="0" />
+      <port edge="e18" num="1" />
      </input>
      <output>
       <port edge="e26" num="output" />
@@ -541,65 +583,37 @@
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="START_SMALL_BALL">
+    <node id="n32" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e16" num="0" />
+      <port edge="e18" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n29" kind="SUBBOARD" name="SimplestField-s--GET">
+    <node id="n33" kind="MERGE">
      <input>
-      <port edge="e19" num="inReceiver0" />
+      <port edge="e21" num="0" />
+      <port edge="e22" num="1" />
      </input>
      <output>
-      <port edge="e20" num="outReceiver0" />
-      <port edge="e21" num="outputReturn0" />
+      <port edge="e34" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n30" kind="SPLIT">
+    <node id="n34" kind="SPLIT">
      <input>
-      <port edge="e18" num="input" />
+      <port edge="e20" num="0" />
      </input>
      <output>
-      <port edge="e19" num="split" />
-      <port edge="e22" num="toEnd" />
+      <port edge="e22" num="1" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n31" kind="CONNECT">
-     <input>
-      <port edge="e20" num="input" />
-     </input>
-     <output>
-      <port edge="e23" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n32" kind="CONNECT">
-     <input>
-      <port edge="e21" num="input" />
-     </input>
-     <output>
-      <port edge="e39" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="END">
-     <input>
-      <port edge="e22" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n34" kind="SUBBOARD" name="SimplestField-s--SET">
+    <node id="n35" kind="SUBBOARD" name="SimplestField-s--SET">
      <input>
       <port edge="e27" num="inParam0" />
       <port edge="e24" num="inReceiver0" />
@@ -611,7 +625,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="SPLIT">
+    <node id="n36" kind="SPLIT">
      <input>
       <port edge="e23" num="input" />
      </input>
@@ -622,17 +636,17 @@
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="CONNECT">
+    <node id="n37" kind="CONNECT">
      <input>
       <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e39" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="SPLIT">
+    <node id="n38" kind="SPLIT">
      <input>
       <port edge="e26" num="input" />
      </input>
@@ -643,17 +657,17 @@
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
+    <node id="n39" kind="CONNECT">
      <input>
       <port edge="e28" num="input" />
      </input>
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="END">
+    <node id="n40" kind="END">
      <input>
       <port edge="e29" num="input" />
      </input>
@@ -661,7 +675,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="END">
+    <node id="n41" kind="END">
      <input>
       <port edge="e30" num="input" />
      </input>
@@ -669,17 +683,67 @@
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="END">
+    <node id="n42" kind="CONNECT">
      <input>
-      <port edge="e36" num="input" />
+      <port edge="e31" num="input" />
+     </input>
+     <output>
+      <port edge="e42" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="CONNECT">
+     <input>
+      <port edge="e32" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="MERGE">
+     <input>
+      <port edge="e34" num="0" />
+      <port edge="e35" num="1" />
+     </input>
+     <output>
+      <port edge="e45" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="SPLIT">
+     <input>
+      <port edge="e33" num="0" />
+     </input>
+     <output>
+      <port edge="e35" num="1" />
+      <port edge="e41" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="END">
+     <input>
+      <port edge="e41" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n45" kind="END">
+    <node id="n48" kind="END">
      <input>
-      <port edge="e39" num="input" />
+      <port edge="e42" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="END">
+     <input>
+      <port edge="e45" num="input" />
      </input>
      <output />
      <layout>
@@ -721,12 +785,48 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="a" editable="false" id="e16" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()" editable="true" id="e9" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n28" port="0" />
+      <noderef id="n19" port="output" />
      </from>
      <to>
-      <noderef id="n27" port="1" />
+      <noderef id="n20" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e12" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n25" port="output" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="a" editable="false" id="e18" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n32" port="0" />
+     </from>
+     <to>
+      <noderef id="n31" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -745,12 +845,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n18" port="0" />
      </from>
      <to>
-      <noderef id="n27" port="0" />
+      <noderef id="n31" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -761,18 +861,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e18" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n8" port="output" />
-     </from>
-     <to>
-      <noderef id="n30" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -781,30 +869,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e19" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()" editable="true" id="e20" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n30" port="split" />
+      <noderef id="n20" port="0" />
      </from>
      <to>
-      <noderef id="n29" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e20" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n29" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n31" port="input" />
+      <noderef id="n34" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -819,10 +889,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e21" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n29" port="outputReturn0" />
+      <noderef id="n26" port="0" />
      </from>
      <to>
-      <noderef id="n32" port="input" />
+      <noderef id="n33" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -835,20 +905,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e22" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()" editable="true" id="e22" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n30" port="toEnd" />
+      <noderef id="n34" port="1" />
      </from>
      <to>
-      <noderef id="n33" port="input" />
+      <noderef id="n33" port="1" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -861,10 +925,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e23" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n31" port="output" />
+      <noderef id="n8" port="output" />
      </from>
      <to>
-      <noderef id="n35" port="input" />
+      <noderef id="n36" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -879,10 +943,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n35" port="split" />
+      <noderef id="n36" port="split" />
      </from>
      <to>
-      <noderef id="n34" port="inReceiver0" />
+      <noderef id="n35" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -903,25 +967,7 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e25" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n34" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n36" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n27" port="output" />
+      <noderef id="n35" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n37" port="input" />
@@ -937,33 +983,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e27" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n37" port="split" />
-     </from>
-     <to>
-      <noderef id="n34" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e28" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n34" port="outParam0" />
+      <noderef id="n31" port="output" />
      </from>
      <to>
       <noderef id="n38" port="input" />
@@ -977,11 +999,35 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e29" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e27" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n35" port="toEnd" />
+      <noderef id="n38" port="split" />
+     </from>
+     <to>
+      <noderef id="n35" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e28" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n35" port="outParam0" />
      </from>
      <to>
       <noderef id="n39" port="input" />
@@ -997,9 +1043,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e30" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e29" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n37" port="toEnd" />
+      <noderef id="n36" port="toEnd" />
      </from>
      <to>
       <noderef id="n40" port="input" />
@@ -1015,12 +1061,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e34" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e30" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n36" port="output" />
+      <noderef id="n38" port="toEnd" />
      </from>
      <to>
-      <noderef id="n7" port="outReceiver0" />
+      <noderef id="n41" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1031,11 +1077,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()" editable="true" id="e31" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n34" port="output" />
      </from>
      <to>
       <noderef id="n42" port="input" />
@@ -1049,6 +1101,18 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e32" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
+     </from>
+     <to>
+      <noderef id="n43" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1063,12 +1127,138 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e39" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n43" port="0" />
      </from>
      <to>
-      <noderef id="n45" port="input" />
+      <noderef id="n45" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n33" port="0" />
+     </from>
+     <to>
+      <noderef id="n44" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n45" port="1" />
+     </from>
+     <to>
+      <noderef id="n44" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method SimplestField#s():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void s() { final String s2 = &quot;a&quot;; s = s2; }Atm: @VarAnnot(2) SimplestField" editable="true" id="e39" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n37" port="output" />
+     </from>
+     <to>
+      <noderef id="n7" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method SimplestField#s():V local variable s2(0); tree String" editable="true" id="e41" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n45" port="output" />
+     </from>
+     <to>
+      <noderef id="n47" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()" editable="true" id="e42" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n48" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class SimplestField field s; tree String" editable="true" id="e45" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n44" port="output" />
+     </from>
+     <to>
+      <noderef id="n51" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1093,7 +1283,7 @@
     </node>
     <node id="n11" kind="OUTGOING">
      <input>
-      <port edge="e31" num="outReceiver0" />
+      <port edge="e36" num="outReceiver0" />
       <port edge="e5" num="outputReturn0" />
      </input>
      <output />
@@ -1105,7 +1295,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
@@ -1160,7 +1350,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e31" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e36" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -1198,7 +1388,7 @@
     <node id="n15" kind="OUTGOING">
      <input>
       <port edge="e7" num="outParam0" />
-      <port edge="e32" num="outReceiver0" />
+      <port edge="e37" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1209,7 +1399,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e37" num="output" />
      </output>
      <layout>
       </layout>
@@ -1250,7 +1440,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e32" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e37" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>

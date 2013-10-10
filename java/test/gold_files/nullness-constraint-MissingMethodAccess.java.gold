@@ -69,18 +69,6 @@ class OtherAccess {
     }
 } )
 
-checkers.inference.FieldAccessConstraint(
-contextVp: method OtherAccess#<init>():V constraint position; 
-calledVp: class OtherAccess field mmAccess; 
-receiver: Constant(@nninf.quals.Nullable); 
-methodTypeParamLBs: <  >; 
-classTypeParamLBs: <  >; 
-methodTypeArgs: <  >; 
-classTypeArgs: <  >; 
-args: (  ); 
-result: List(Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess); 
-)
-
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
 calledVp: method MissingMethodAccess#<init>():V; 
@@ -98,7 +86,7 @@ public <init>() {
 
 InequalityConstraint( context: method OtherAccess#<init>():V constraint position, Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: Set()  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
@@ -111,6 +99,10 @@ classTypeArgs: <  >;
 args: ( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess ); 
 result: List(); 
 )
+
+EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: Set() = Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess )
+
+SubtypeConstraint( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
 
 SubtypeConstraint( Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {

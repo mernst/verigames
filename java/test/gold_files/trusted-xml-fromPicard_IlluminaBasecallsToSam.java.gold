@@ -3612,22 +3612,22 @@
   <linked-edges>
    <edge-set id="fromPicard.IlluminaBasecallsToSam0">
     <edgeref id="e30" />
-    <edgeref id="e109" />
-    <edgeref id="e127" />
-    <edgeref id="e31" />
-    <edgeref id="e32" />
-   </edge-set>
-   <edge-set id="fromPicard.IlluminaBasecallsToSam1">
-    <edgeref id="e33" />
-    <edgeref id="e128" />
-    <edgeref id="e34" />
-    <edgeref id="e35" />
-   </edge-set>
-   <edge-set id="fromPicard.IlluminaBasecallsToSam2">
-    <edgeref id="e36" />
     <edgeref id="e108" />
     <edgeref id="e110" />
+    <edgeref id="e127" />
+   </edge-set>
+   <edge-set id="fromPicard.IlluminaBasecallsToSam1">
+    <edgeref id="e31" />
+    <edgeref id="e109" />
+    <edgeref id="e128" />
+    <edgeref id="e32" />
+    <edgeref id="e33" />
+   </edge-set>
+   <edge-set id="fromPicard.IlluminaBasecallsToSam2">
+    <edgeref id="e34" />
     <edgeref id="e129" />
+    <edgeref id="e35" />
+    <edgeref id="e36" />
    </edge-set>
    <edge-set id="fromPicard.IlluminaBasecallsToSam3">
     <edgeref id="e40" />
@@ -3652,8 +3652,8 @@
     <node id="n62" kind="INCOMING">
      <input />
      <output>
-      <port edge="e30" num="output_0" />
-      <port edge="e33" num="output_1" />
+      <port edge="e31" num="output_0" />
+      <port edge="e34" num="output_1" />
      </output>
      <layout>
       </layout>
@@ -3664,9 +3664,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n64" kind="CONNECT">
+    <node id="n64" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e30" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="CONNECT">
      <input>
       <port edge="e30" num="input" />
+     </input>
+     <output>
+      <port edge="e108" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="CONNECT">
+     <input>
+      <port edge="e31" num="input" />
      </input>
      <output>
       <port edge="e109" num="0" />
@@ -3674,30 +3692,12 @@
      <layout>
       </layout>
     </node>
-    <node id="n70" kind="CONNECT">
+    <node id="n72" kind="CONNECT">
      <input>
-      <port edge="e33" num="input" />
+      <port edge="e34" num="input" />
      </input>
      <output>
-      <port edge="e128" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n72" kind="START_NO_BALL">
-     <input />
-     <output>
-      <port edge="e36" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n73" kind="CONNECT">
-     <input>
-      <port edge="e36" num="input" />
-     </input>
-     <output>
-      <port edge="e108" num="0" />
+      <port edge="e129" num="output" />
      </output>
      <layout>
       </layout>
@@ -3785,7 +3785,7 @@
       <port edge="e110" num="1" />
      </input>
      <output>
-      <port edge="e127" num="output" />
+      <port edge="e128" num="output" />
      </output>
      <layout>
       </layout>
@@ -3796,7 +3796,7 @@
      </input>
      <output>
       <port edge="e110" num="1" />
-      <port edge="e129" num="output" />
+      <port edge="e127" num="output" />
      </output>
      <layout>
       </layout>
@@ -3841,12 +3841,30 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e30" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e30" pinch="false" variableID="17" width="narrow">
+     <from>
+      <noderef id="n64" port="output" />
+     </from>
+     <to>
+      <noderef id="n65" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e31" pinch="false" variableID="18" width="narrow">
      <from>
       <noderef id="n62" port="output_0" />
      </from>
      <to>
-      <noderef id="n64" port="input" />
+      <noderef id="n66" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3871,12 +3889,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e33" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e34" pinch="false" variableID="19" width="narrow">
      <from>
       <noderef id="n62" port="output_1" />
      </from>
      <to>
-      <noderef id="n70" port="input" />
+      <noderef id="n72" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3885,24 +3903,6 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e36" pinch="false" variableID="19" width="narrow">
-     <from>
-      <noderef id="n72" port="output" />
-     </from>
-     <to>
-      <noderef id="n73" port="input" />
-     </to>
-     <edge-layout>
       <point>
        </point>
       <point>
@@ -4057,9 +4057,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e108" pinch="false" variableID="19" width="narrow">
+    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e108" pinch="false" variableID="17" width="narrow">
      <from>
-      <noderef id="n73" port="0" />
+      <noderef id="n65" port="0" />
      </from>
      <to>
       <noderef id="n151" port="0" />
@@ -4075,9 +4075,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e109" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e109" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n64" port="0" />
+      <noderef id="n66" port="0" />
      </from>
      <to>
       <noderef id="n150" port="0" />
@@ -4093,7 +4093,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e110" pinch="false" variableID="19" width="narrow">
+    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e110" pinch="false" variableID="17" width="narrow">
      <from>
       <noderef id="n151" port="1" />
      </from>
@@ -4111,9 +4111,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e127" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e127" pinch="false" variableID="17" width="narrow">
      <from>
-      <noderef id="n150" port="output" />
+      <noderef id="n151" port="output" />
      </from>
      <to>
       <noderef id="n166" port="input" />
@@ -4129,9 +4129,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e128" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e128" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n70" port="output" />
+      <noderef id="n150" port="output" />
      </from>
      <to>
       <noderef id="n167" port="input" />
@@ -4145,22 +4145,22 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}" editable="true" id="e129" pinch="false" variableID="19" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e129" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n151" port="output" />
+      <noderef id="n72" port="output" />
      </from>
      <to>
       <noderef id="n168" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -4209,43 +4209,43 @@
     </edge>
    </board>
    <board name="fromPicard.IlluminaBasecallsToSam-DATA_TYPES_NO_BARCODE--GET">
-    <node id="n65" kind="INCOMING">
+    <node id="n67" kind="INCOMING">
      <input />
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="OUTGOING">
+    <node id="n68" kind="OUTGOING">
      <input>
-      <port edge="e31" num="outputReturn0" />
-      <port edge="e34" num="outputReturn1" />
+      <port edge="e32" num="outputReturn0" />
+      <port edge="e35" num="outputReturn1" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n67" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n69" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n73" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e31" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e32" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n67" port="output" />
+      <noderef id="n69" port="output" />
      </from>
      <to>
-      <noderef id="n66" port="outputReturn0" />
+      <noderef id="n68" port="outputReturn0" />
      </to>
      <edge-layout>
       <point>
@@ -4258,12 +4258,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e34" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e35" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n71" port="output" />
+      <noderef id="n73" port="output" />
      </from>
      <to>
-      <noderef id="n66" port="outputReturn1" />
+      <noderef id="n68" port="outputReturn1" />
      </to>
      <edge-layout>
       <point>
@@ -4278,30 +4278,30 @@
     </edge>
    </board>
    <board name="fromPicard.IlluminaBasecallsToSam-DATA_TYPES_NO_BARCODE--SET">
-    <node id="n68" kind="INCOMING">
+    <node id="n70" kind="INCOMING">
      <input />
      <output>
-      <port edge="e32" num="inParam0" />
-      <port edge="e35" num="inParam1" />
+      <port edge="e33" num="inParam0" />
+      <port edge="e36" num="inParam1" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n69" kind="OUTGOING">
+    <node id="n71" kind="OUTGOING">
      <input>
-      <port edge="e32" num="outParam0" />
-      <port edge="e35" num="outParam1" />
+      <port edge="e33" num="outParam0" />
+      <port edge="e36" num="outParam1" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e32" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[]" editable="true" id="e33" pinch="false" variableID="18" width="narrow">
      <from>
-      <noderef id="n68" port="inParam0" />
+      <noderef id="n70" port="inParam0" />
      </from>
      <to>
-      <noderef id="n69" port="outParam0" />
+      <noderef id="n71" port="outParam0" />
      </to>
      <edge-layout>
       <point>
@@ -4326,12 +4326,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e35" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="Variable 19 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType at position ((0,0)) within IlluminaDataType[]" editable="true" id="e36" pinch="false" variableID="19" width="narrow">
      <from>
-      <noderef id="n68" port="inParam1" />
+      <noderef id="n70" port="inParam1" />
      </from>
      <to>
-      <noderef id="n69" port="outParam1" />
+      <noderef id="n71" port="outParam1" />
      </to>
      <edge-layout>
       <point>

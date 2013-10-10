@@ -40,7 +40,9 @@ class Outer {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at class Outer$Inner class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(8) Object )
+SubtypeConstraint( Variable 9 at class Outer$Inner class type parameter 0; tree T1  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 9 at class Outer$Inner class type parameter 0; tree T1  <:  Variable 8 at class Outer$Inner class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(8) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Outer$Inner extends type; tree <<missing tree>> within 
 public static class Inner<T1> {
@@ -85,8 +87,6 @@ class Outer {
 
 SubtypeConstraint( Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner<String>  <:  Variable 8 at class Outer$Inner class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(8) Object )
 
-SubtypeConstraint( Variable 8 at class Outer$Inner class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(8) Object  <:  Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner<String> )
-
 SubtypeConstraint( Variable 9 at class Outer$Inner class type parameter 0; tree T1  <:  Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner<String> )
 
 InequalityConstraint( context: method Outer#method():LOuter$Inner; constraint position, Variable 6 at method Outer#method():LOuter$Inner; creation 0; tree Implementor within Implementor<String> != Constant(@nninf.quals.Nullable) )
@@ -95,7 +95,9 @@ SubtypeConstraint( Variable 6 at method Outer#method():LOuter$Inner; creation 0;
 
 EqualityConstraint( Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner<String> = Variable 7 at method Outer#method():LOuter$Inner; creation 0; tree String at position ((3,0)) within Implementor<String> )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 12 at class Implementor class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T2Atm: @VarAnnot(12) Object )
+SubtypeConstraint( Variable 13 at class Implementor class type parameter 0; tree T2  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 13 at class Implementor class type parameter 0; tree T2  <:  Variable 12 at class Implementor class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T2Atm: @VarAnnot(12) Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class Implementor extends type; tree Outer.Inner within Outer.Inner<T2> )
 

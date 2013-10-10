@@ -30,11 +30,11 @@ class UseMap {
     }
 } )
 
-SubtypeConstraint( Variable 4 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String>  <:  Variable 1 at class UseMap field sm; tree Map within Map<String, String> )
+SubtypeConstraint( Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String>  <:  Variable 4 at class UseMap field sm; tree Map within Map<String, String> )
 
-EqualityConstraint( Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String> = Variable 5 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap<String, String> )
+EqualityConstraint( Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String> = Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap<String, String> )
 
-EqualityConstraint( Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String> = Variable 6 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap<String, String> )
+EqualityConstraint( Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String> = Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap<String, String> )
 
 SubtypeConstraint( Variable 8 at method UseMap#m():V receiver; tree <<missing tree>> within 
 void m() {
@@ -67,8 +67,8 @@ classTypeParamLBs: <  >;
 methodTypeArgs: <  >; 
 classTypeArgs: <  >; 
 args: (  ); 
-result: List(Variable 1 at class UseMap field sm; tree Map within Map<String, String>, Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String>, Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>); 
+result: List(Variable 4 at class UseMap field sm; tree Map within Map<String, String>, Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String>, Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>); 
 )
 
-SubtypeConstraint( Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>  <:  Variable 9 at method UseMap#m():V local variable s(0); tree String )
+SubtypeConstraint( Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>  <:  Variable 10 at method UseMap#m():V local variable s(0); tree String )
 

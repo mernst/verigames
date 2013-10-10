@@ -1,0 +1,172 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 2 at class Outer class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within SAtm: @VarAnnot(2) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
+class Outer<T, S> {
+    
+    Outer() {
+        super();
+    }
+    
+    class Inner<T2 extends T> {
+        private S s;
+        private T t;
+        
+        protected void init(S s, T t) {
+            this.s = s;
+            this.t = t;
+        }
+        
+        public Inner(S s, T t) {
+            super();
+            init(s, t);
+        }
+    }
+} )
+
+SubtypeConstraint( Variable 5 at method Outer#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 4 at class Outer extends type; tree <<missing tree>> within 
+class Outer<T, S> {
+    
+    Outer() {
+        super();
+    }
+    
+    class Inner<T2 extends T> {
+        private S s;
+        private T t;
+        
+        protected void init(S s, T t) {
+            this.s = s;
+            this.t = t;
+        }
+        
+        public Inner(S s, T t) {
+            super();
+            init(s, t);
+        }
+    }
+} )
+
+SubtypeConstraint( Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 15 at class Outer$Inner field s; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 16 at class Outer$Inner field t; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+protected void init(S s, T t) {
+    this.s = s;
+    this.t = t;
+}Atm: @VarAnnot(9) Inner<T2 extends T extends Object>  <:  Variable 8 at class Outer$Inner extends type; tree <<missing tree>> within 
+class Inner<T2 extends T> {
+    private S s;
+    private T t;
+    
+    protected void init(S s, T t) {
+        this.s = s;
+        this.t = t;
+    }
+    
+    public Inner(S s, T t) {
+        super();
+        init(s, t);
+    }
+} )
+
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 15 at class Outer$Inner field s; tree S )
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
+calledVp: class Outer$Inner field s; 
+receiver: Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+protected void init(S s, T t) {
+    this.s = s;
+    this.t = t;
+}Atm: @VarAnnot(9) Inner<T2 extends T extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object) >; 
+args: ( Variable 3 at class Outer class type parameter 1; tree S ); 
+result: List(); 
+)
+
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Variable 16 at class Outer$Inner field t; tree T )
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
+calledVp: class Outer$Inner field t; 
+receiver: Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
+protected void init(S s, T t) {
+    this.s = s;
+    this.t = t;
+}Atm: @VarAnnot(9) Inner<T2 extends T extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object) >; 
+args: ( Variable 1 at class Outer class type parameter 0; tree T ); 
+result: List(); 
+)
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 8 at class Outer$Inner extends type; tree <<missing tree>> within 
+class Inner<T2 extends T> {
+    private S s;
+    private T t;
+    
+    protected void init(S s, T t) {
+        this.s = s;
+        this.t = t;
+    }
+    
+    public Inner(S s, T t) {
+        super();
+        init(s, t);
+    }
+} )
+
+SubtypeConstraint( Variable 12 at method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V return type; tree 
+public <init>(S s, T t) {
+    super();
+    init(s, t);
+}  <:  Variable 8 at class Outer$Inner extends type; tree <<missing tree>> within 
+class Inner<T2 extends T> {
+    private S s;
+    private T t;
+    
+    protected void init(S s, T t) {
+        this.s = s;
+        this.t = t;
+    }
+    
+    public Inner(S s, T t) {
+        super();
+        init(s, t);
+    }
+} )
+
+SubtypeConstraint( Variable 10 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 11 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
+calledVp: method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V; 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class Outer class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(0) Object) >; 
+args: ( Variable 3 at class Outer class type parameter 1; tree S, Variable 1 at class Outer class type parameter 0; tree T ); 
+result: List(); 
+)
+

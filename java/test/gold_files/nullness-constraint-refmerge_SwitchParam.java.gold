@@ -87,17 +87,19 @@ class Switch {
     }
 } )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
-
-SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String )
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 4 at method Switch#test(Ljava/lang/String;):V local variable i(0); tree int )
 
 EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
+SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String )
+
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
+
 InequalityConstraint( context: method Switch#test(Ljava/lang/String;):V constraint position, Variable 4 at method Switch#test(Ljava/lang/String;):V local variable i(0); tree int != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) )
-
 SubtypeConstraint( Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) )
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) )
 
 SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
 

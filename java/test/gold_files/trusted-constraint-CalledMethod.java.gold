@@ -1,0 +1,127 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
+class ListImp implements List<String> {
+    
+    ListImp() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 5 at method ListImp#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
+class ListImp implements List<String> {
+    
+    ListImp() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
+class CallMethod {
+    
+    CallMethod() {
+        super();
+    }
+    
+    public String call(List<String> str) {
+        return "any";
+    }
+    
+    public static void main() {
+        CallMethod cm = new CallMethod();
+        cm.call(new ListImp());
+    }
+} )
+
+SubtypeConstraint( Variable 7 at method CallMethod#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
+class CallMethod {
+    
+    CallMethod() {
+        super();
+    }
+    
+    public String call(List<String> str) {
+        return "any";
+    }
+    
+    public static void main() {
+        CallMethod cm = new CallMethod();
+        cm.call(new ListImp());
+    }
+} )
+
+SubtypeConstraint( Variable 9 at method CallMethod#call(LList;):Ljava/lang/String; receiver; tree <<missing tree>> within 
+public String call(List<String> str) {
+    return "any";
+}Atm: @VarAnnot(9) CallMethod  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
+class CallMethod {
+    
+    CallMethod() {
+        super();
+    }
+    
+    public String call(List<String> str) {
+        return "any";
+    }
+    
+    public static void main() {
+        CallMethod cm = new CallMethod();
+        cm.call(new ListImp());
+    }
+} )
+
+SubtypeConstraint( Literal(STRING_LITERAL, "any")  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallMethod#main():V constraint position; 
+calledVp: method CallMethod#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 7 at method CallMethod#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+SubtypeConstraint( Variable 13 at method CallMethod#main():V creation 0; tree CallMethod  <:  Variable 12 at method CallMethod#main():V local variable cm(0); tree CallMethod )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallMethod#main():V constraint position; 
+calledVp: method ListImp#<init>():V; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Variable 5 at method ListImp#<init>():V return type; tree 
+<init>() {
+    super();
+}); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallMethod#main():V constraint position; 
+calledVp: method CallMethod#call(LList;):Ljava/lang/String;; 
+receiver: Variable 12 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 14 at method CallMethod#main():V creation 1; tree ListImp, Variable 4 at class ListImp implements type 0; tree String at position ((3,0)) within List<String> ); 
+result: List(Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String); 
+)
+

@@ -44,6 +44,8 @@ class ArrayMethodAccess {
     }
 } )
 
+InequalityConstraint( context: method ArrayMethodAccess#context():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayMethodAccess#context():V constraint position; 
 calledVp: class ArrayMethodAccess field array; 

@@ -3,61 +3,65 @@
   <linked-edges>
    <edge-set id="IteratorAssignment0">
     <edgeref id="e8" />
-    <edgeref id="e23" />
     <edgeref id="e25" />
     <edgeref id="e27" />
-    <edgeref id="e35" />
+    <edgeref id="e29" />
+    <edgeref id="e37" />
     <edgeref id="e4" />
     <edgeref id="e21" />
-    <edgeref id="e24" />
-    <edgeref id="e31" />
+    <edgeref id="e26" />
+    <edgeref id="e33" />
     <edgeref id="e6" />
     <edgeref id="e22" />
-    <edgeref id="e33" />
+    <edgeref id="e35" />
    </edge-set>
    <edge-set id="IteratorAssignment1">
     <edgeref id="e10" />
     <edgeref id="e13" />
     <edgeref id="e16" />
-    <edgeref id="e37" />
+    <edgeref id="e39" />
    </edge-set>
    <edge-set id="IteratorAssignment2">
     <edgeref id="e11" />
     <edgeref id="e15" />
     <edgeref id="e17" />
-    <edgeref id="e38" />
+    <edgeref id="e40" />
     <edgeref id="e1" />
-    <edgeref id="e28" />
+    <edgeref id="e30" />
    </edge-set>
    <edge-set id="IteratorAssignment3">
     <edgeref id="e3" />
     <edgeref id="e19" />
-    <edgeref id="e30" />
+    <edgeref id="e32" />
    </edge-set>
    <edge-set id="IteratorAssignment4">
     <edgeref id="e5" />
     <edgeref id="e18" />
     <edgeref id="e20" />
-    <edgeref id="e32" />
+    <edgeref id="e34" />
    </edge-set>
    <edge-set id="IteratorAssignment5">
     <edgeref id="e7" />
-    <edgeref id="e34" />
+    <edgeref id="e23" />
+    <edgeref id="e36" />
    </edge-set>
    <edge-set id="IteratorAssignment6">
     <edgeref id="e9" />
     <edgeref id="e12" />
-    <edgeref id="e26" />
-    <edgeref id="e36" />
+    <edgeref id="e28" />
+    <edgeref id="e38" />
    </edge-set>
    <edge-set id="IteratorAssignment7">
-    <edgeref id="e29" />
+    <edgeref id="e31" />
    </edge-set>
    <edge-set id="IteratorAssignment11">
     <edgeref id="e14" />
    </edge-set>
    <edge-set id="IteratorAssignment19">
     <edgeref id="e2" />
+   </edge-set>
+   <edge-set id="IteratorAssignment34">
+    <edgeref id="e24" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -135,7 +139,7 @@
       <port edge="e17" num="1" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e39" num="output" />
      </output>
      <layout>
       </layout>
@@ -146,22 +150,22 @@
      </input>
      <output>
       <port edge="e17" num="1" />
-      <port edge="e38" num="output" />
+      <port edge="e40" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="END">
+    <node id="n49" kind="END">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e39" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="END">
+    <node id="n50" kind="END">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e40" num="input" />
      </input>
      <output />
      <layout>
@@ -305,12 +309,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e39" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n30" port="output" />
      </from>
      <to>
-      <noderef id="n47" port="input" />
+      <noderef id="n49" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -323,12 +327,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e40" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n31" port="output" />
      </from>
      <to>
-      <noderef id="n48" port="input" />
+      <noderef id="n50" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -351,7 +355,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e28" num="outputReturn0" />
+      <port edge="e30" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -370,7 +374,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -393,7 +397,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e30" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -423,7 +427,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e29" num="outReceiver0" />
+      <port edge="e31" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -434,7 +438,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
@@ -524,7 +528,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e23" num="0" />
      </output>
      <layout>
       </layout>
@@ -542,7 +546,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e25" num="output" />
      </output>
      <layout>
       </layout>
@@ -570,7 +574,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e26" num="0" />
+      <port edge="e28" num="0" />
      </output>
      <layout>
       </layout>
@@ -581,7 +585,7 @@
       <port edge="e20" num="1" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
@@ -592,7 +596,7 @@
      </input>
      <output>
       <port edge="e20" num="1" />
-      <port edge="e32" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
@@ -602,7 +606,7 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e24" num="output" />
+      <port edge="e26" num="output" />
      </output>
      <layout>
       </layout>
@@ -612,35 +616,23 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="CONNECT">
-     <input>
-      <port edge="e23" num="input" />
-     </input>
+    <node id="n36" kind="START_LARGE_BALL">
+     <input />
      <output>
-      <port edge="e25" num="0" />
+      <port edge="e24" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="CONNECT">
+    <node id="n37" kind="MERGE">
      <input>
-      <port edge="e24" num="input" />
-     </input>
-     <output>
-      <port edge="e31" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n38" kind="MERGE">
-     <input>
-      <port edge="e26" num="0" />
-      <port edge="e27" num="1" />
+      <port edge="e23" num="0" />
+      <port edge="e24" num="1" />
      </input>
      <output>
       <port edge="e36" num="output" />
@@ -648,30 +640,45 @@
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="SPLIT">
+    <node id="n38" kind="CONNECT">
      <input>
-      <port edge="e25" num="0" />
+      <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e27" num="1" />
-      <port edge="e35" num="output" />
+      <port edge="e27" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="END">
+    <node id="n39" kind="CONNECT">
      <input>
-      <port edge="e30" num="input" />
+      <port edge="e26" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e33" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="END">
+    <node id="n40" kind="MERGE">
      <input>
-      <port edge="e31" num="input" />
+      <port edge="e28" num="0" />
+      <port edge="e29" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e38" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="SPLIT">
+     <input>
+      <port edge="e27" num="0" />
+     </input>
+     <output>
+      <port edge="e29" num="1" />
+      <port edge="e37" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
@@ -710,6 +717,22 @@
     <node id="n46" kind="END">
      <input>
       <port edge="e36" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="END">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n48" kind="END">
+     <input>
+      <port edge="e38" num="input" />
      </input>
      <output />
      <layout>
@@ -973,12 +996,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e23" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e23" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n20" port="output" />
+      <noderef id="n18" port="0" />
      </from>
      <to>
-      <noderef id="n36" port="input" />
+      <noderef id="n37" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -989,14 +1012,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e24" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e24" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n34" port="output" />
+      <noderef id="n36" port="0" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
+      <noderef id="n37" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1011,10 +1040,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e25" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n36" port="0" />
+      <noderef id="n20" port="output" />
      </from>
      <to>
-      <noderef id="n39" port="0" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1027,12 +1056,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e26" pinch="false" variableID="9" width="wide">
+    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n27" port="0" />
+      <noderef id="n34" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="0" />
+      <noderef id="n39" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1047,10 +1076,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e27" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n39" port="1" />
+      <noderef id="n38" port="0" />
      </from>
      <to>
-      <noderef id="n38" port="1" />
+      <noderef id="n41" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1063,7 +1092,43 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method IteratorAssignment#containerMethod():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } }Atm: @VarAnnot(2) IteratorAssignment" editable="true" id="e29" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e28" pinch="false" variableID="9" width="wide">
+     <from>
+      <noderef id="n27" port="0" />
+     </from>
+     <to>
+      <noderef id="n40" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e29" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n41" port="1" />
+     </from>
+     <to>
+      <noderef id="n40" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method IteratorAssignment#containerMethod():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } }Atm: @VarAnnot(2) IteratorAssignment" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -1093,45 +1158,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List&lt;Integer&gt;" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List&lt;Integer&gt;" editable="true" id="e32" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n32" port="output" />
-     </from>
-     <to>
-      <noderef id="n40" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n37" port="output" />
-     </from>
-     <to>
-      <noderef id="n41" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e32" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n33" port="output" />
      </from>
      <to>
       <noderef id="n42" port="input" />
@@ -1147,9 +1176,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList&lt;Integer&gt;" editable="true" id="e33" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n35" port="output" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n43" port="input" />
@@ -1165,9 +1194,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e34" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e34" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n18" port="output" />
+      <noderef id="n33" port="output" />
      </from>
      <to>
       <noderef id="n44" port="input" />
@@ -1183,12 +1212,48 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e35" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList&lt;Integer&gt;" editable="true" id="e35" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n35" port="output" />
      </from>
      <to>
       <noderef id="n45" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e36" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n37" port="output" />
+     </from>
+     <to>
+      <noderef id="n46" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e37" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n47" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1207,12 +1272,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e36" pinch="false" variableID="9" width="wide">
+    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e38" pinch="false" variableID="9" width="wide">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
-      <noderef id="n46" port="input" />
+      <noderef id="n48" port="input" />
      </to>
      <edge-layout>
       <point>

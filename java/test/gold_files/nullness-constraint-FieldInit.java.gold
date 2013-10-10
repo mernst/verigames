@@ -24,7 +24,7 @@ class FieldInit {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 1 at class FieldInit field f1; tree Object )
 
-InequalityConstraint( context: class FieldInit field f2 constraint position, Variable 3 at class FieldInit field f2 creation 0; tree Object != Constant(@nninf.quals.Nullable) )
+InequalityConstraint( context: class FieldInit field f2 constraint position, Variable 2 at class FieldInit field f2 creation 0; tree Object != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 3 at class FieldInit field f2 creation 0; tree Object  <:  Variable 2 at class FieldInit field f2; tree Object )
+SubtypeConstraint( Variable 2 at class FieldInit field f2 creation 0; tree Object  <:  Variable 3 at class FieldInit field f2; tree Object )
 

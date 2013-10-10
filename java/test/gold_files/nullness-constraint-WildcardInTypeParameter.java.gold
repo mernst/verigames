@@ -1,5 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class WilcardInTypeParameter class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<?> )
+SubtypeConstraint( Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List<?>  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List<?>  <:  Variable 0 at class WilcardInTypeParameter class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<?> )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 3 at class WilcardInTypeParameter extends type; tree <<missing tree>> within 
 class WilcardInTypeParameter<T extends List<?>> {

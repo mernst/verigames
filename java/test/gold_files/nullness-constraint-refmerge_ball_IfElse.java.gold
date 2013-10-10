@@ -71,17 +71,11 @@ BallSizeTestConstraint( input:Variable 3 at method IfElse#test():V local variabl
 
 InequalityConstraint( context: RefinementVP in method IfElse#test():V, RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: true mergedTo: Set() != Constant(@nninf.quals.Nullable) )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
-
-SubtypeConstraint( Variable 3 at method IfElse#test():V local variable a(0); tree String  <:  CombVariable #9 )
-
-SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #9 )
-
-InequalityConstraint( context: method IfElse#test():V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
 

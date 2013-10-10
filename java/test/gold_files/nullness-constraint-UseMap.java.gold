@@ -30,13 +30,13 @@ class UseMap {
     }
 } )
 
-InequalityConstraint( context: class UseMap field sm constraint position, Variable 4 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String> != Constant(@nninf.quals.Nullable) )
+InequalityConstraint( context: class UseMap field sm constraint position, Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String> != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 4 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String>  <:  Variable 1 at class UseMap field sm; tree Map within Map<String, String> )
+SubtypeConstraint( Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap<String, String>  <:  Variable 4 at class UseMap field sm; tree Map within Map<String, String> )
 
-EqualityConstraint( Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String> = Variable 5 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap<String, String> )
+EqualityConstraint( Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String> = Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap<String, String> )
 
-EqualityConstraint( Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String> = Variable 6 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap<String, String> )
+EqualityConstraint( Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String> = Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap<String, String> )
 
 SubtypeConstraint( Variable 8 at method UseMap#m():V receiver; tree <<missing tree>> within 
 void m() {
@@ -69,10 +69,10 @@ classTypeParamLBs: <  >;
 methodTypeArgs: <  >; 
 classTypeArgs: <  >; 
 args: (  ); 
-result: List(Variable 1 at class UseMap field sm; tree Map within Map<String, String>, Variable 2 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String>, Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>); 
+result: List(Variable 4 at class UseMap field sm; tree Map within Map<String, String>, Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map<String, String>, Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>); 
 )
 
-InequalityConstraint( context: method UseMap#m():V constraint position, Variable 1 at class UseMap field sm; tree Map within Map<String, String> != Constant(@nninf.quals.Nullable) )
+InequalityConstraint( context: method UseMap#m():V constraint position, Variable 4 at class UseMap field sm; tree Map within Map<String, String> != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 3 at class UseMap field sm; tree String at position ((3,1)) within Map<String, String>  <:  Variable 9 at method UseMap#m():V local variable s(0); tree String )
+SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at method UseMap#m():V local variable s(0); tree String )
 

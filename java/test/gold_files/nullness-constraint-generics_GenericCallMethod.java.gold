@@ -1,5 +1,7 @@
 Constraints:
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
 class ListImp implements List<String> {
@@ -89,7 +91,11 @@ class CallMethod {
     }
 } )
 
-SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
+SubtypeConstraint( Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String>  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
+
+SubtypeConstraint( Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String>  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 13 at method CallMethod#call(LList;):Ljava/lang/String; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "any")  <:  Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String )
 
@@ -139,7 +145,7 @@ calledVp: method CallMethod#call(LList;):Ljava/lang/String;;
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 
-methodTypeArgs: < List(Variable 19 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0)) within cm.call(new ListImp())Atm: @VarAnnot(19) List<@VarAnnot(9) String>, Variable 20 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0), (3,0)) within cm.call(new ListImp())Atm: @VarAnnot(20) String) >; 
+methodTypeArgs: < List(Variable 19 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0)) within cm.call(new ListImp())Atm: @VarAnnot(19) List<String>, Variable 20 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0), (3,0)) within cm.call(new ListImp())Atm: @VarAnnot(20) String) >; 
 classTypeArgs: <  >; 
 args: ( Variable 18 at method CallMethod#main():V creation 1; tree ListImp ); 
 result: List(Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String); 
@@ -151,7 +157,7 @@ calledVp: method CallMethod#call(LList;):Ljava/lang/String;;
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 
-methodTypeArgs: < List(Variable 22 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0)) within cm.call(null)Atm: @VarAnnot(22) List<@VarAnnot(9) String>, Variable 23 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0), (3,0)) within cm.call(null)Atm: @VarAnnot(23) String) >; 
+methodTypeArgs: < List(Variable 22 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0)) within cm.call(null)Atm: @VarAnnot(22) List<String>, Variable 23 at MethodTypeArgumentInMethodVP in method CallMethod#main():V; tree <<missing tree>> at position ((3,0), (3,0)) within cm.call(null)Atm: @VarAnnot(23) String) >; 
 classTypeArgs: <  >; 
 args: ( Literal(NULL_LITERAL, "null") ); 
 result: List(Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String); 

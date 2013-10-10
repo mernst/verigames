@@ -91,9 +91,3 @@ EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 5 at metho
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String )
 
-SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  CombVariable #11 )
-
-SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #11 )
-
-InequalityConstraint( context: method For#test(ILjava/lang/String;):V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
-

@@ -3,58 +3,56 @@
   <linked-edges>
    <edge-set id="GenericFieldAccess0">
     <edgeref id="e1" />
-    <edgeref id="e43" />
-    <edgeref id="e137" />
+    <edgeref id="e45" />
+    <edgeref id="e139" />
     <edgeref id="e23" />
-    <edgeref id="e125" />
+    <edgeref id="e127" />
     <edgeref id="e27" />
-    <edgeref id="e129" />
+    <edgeref id="e131" />
    </edge-set>
    <edge-set id="GenericFieldAccess1">
     <edgeref id="e2" />
-    <edgeref id="e138" />
+    <edgeref id="e44" />
+    <edgeref id="e46" />
+    <edgeref id="e140" />
     <edgeref id="e24" />
-    <edgeref id="e126" />
+    <edgeref id="e128" />
     <edgeref id="e28" />
-    <edgeref id="e130" />
+    <edgeref id="e132" />
    </edge-set>
    <edge-set id="GenericFieldAccess2">
     <edgeref id="e3" />
-    <edgeref id="e45" />
-    <edgeref id="e139" />
+    <edgeref id="e48" />
+    <edgeref id="e141" />
     <edgeref id="e25" />
-    <edgeref id="e127" />
+    <edgeref id="e129" />
     <edgeref id="e29" />
-    <edgeref id="e131" />
+    <edgeref id="e133" />
    </edge-set>
    <edge-set id="GenericFieldAccess3">
     <edgeref id="e4" />
-    <edgeref id="e140" />
+    <edgeref id="e47" />
+    <edgeref id="e49" />
+    <edgeref id="e142" />
     <edgeref id="e26" />
-    <edgeref id="e128" />
+    <edgeref id="e130" />
     <edgeref id="e30" />
-    <edgeref id="e132" />
-   </edge-set>
-   <edge-set id="GenericFieldAccess4">
-    <edgeref id="e38" />
-    <edgeref id="e154" />
-   </edge-set>
-   <edge-set id="GenericFieldAccess5">
-    <edgeref id="e39" />
-    <edgeref id="e155" />
-    <edgeref id="e5" />
-    <edgeref id="e133" />
-   </edge-set>
-   <edge-set id="GenericFieldAccess6">
     <edgeref id="e134" />
    </edge-set>
-   <edge-set id="GenericFieldAccess13">
-    <edgeref id="e42" />
+   <edge-set id="GenericFieldAccess4">
+    <edgeref id="e39" />
+    <edgeref id="e157" />
    </edge-set>
-   <edge-set id="GenericFieldAccess15">
-    <edgeref id="e44" />
+   <edge-set id="GenericFieldAccess5">
+    <edgeref id="e40" />
+    <edgeref id="e158" />
+    <edgeref id="e5" />
+    <edgeref id="e135" />
    </edge-set>
-   <edge-set id="GenericFieldAccess33">
+   <edge-set id="GenericFieldAccess6">
+    <edgeref id="e136" />
+   </edge-set>
+   <edge-set id="GenericFieldAccess35">
     <edgeref id="e6" />
    </edge-set>
   </linked-edges>
@@ -85,7 +83,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e43" num="output" />
+      <port edge="e45" num="output" />
      </output>
      <layout>
       </layout>
@@ -103,7 +101,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e138" num="output" />
+      <port edge="e44" num="output" />
      </output>
      <layout>
       </layout>
@@ -121,7 +119,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e45" num="output" />
+      <port edge="e48" num="output" />
      </output>
      <layout>
       </layout>
@@ -139,25 +137,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e140" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n66" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e38" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n67" kind="CONNECT">
-     <input>
-      <port edge="e38" num="input" />
-     </input>
-     <output>
-      <port edge="e154" num="output" />
+      <port edge="e47" num="output" />
      </output>
      <layout>
       </layout>
@@ -175,42 +155,33 @@
       <port edge="e39" num="input" />
      </input>
      <output>
-      <port edge="e155" num="output" />
+      <port edge="e157" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n74" kind="START_LARGE_BALL">
+    <node id="n70" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e42" num="output" />
+      <port edge="e40" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n75" kind="MERGE">
+    <node id="n71" kind="CONNECT">
      <input>
-      <port edge="e42" num="left" />
-      <port edge="e43" num="right" />
+      <port edge="e40" num="input" />
      </input>
      <output>
-      <port edge="e137" num="output" />
+      <port edge="e158" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e44" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n77" kind="MERGE">
+    <node id="n78" kind="MERGE">
      <input>
-      <port edge="e44" num="left" />
-      <port edge="e45" num="right" />
+      <port edge="e45" num="left" />
+      <port edge="e46" num="right" />
      </input>
      <output>
       <port edge="e139" num="output" />
@@ -218,23 +189,40 @@
      <layout>
       </layout>
     </node>
-    <node id="n144" kind="END">
+    <node id="n79" kind="SPLIT">
      <input>
-      <port edge="e137" num="input" />
+      <port edge="e44" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e140" num="output" />
+      <port edge="e46" num="split" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n145" kind="END">
+    <node id="n80" kind="MERGE">
      <input>
-      <port edge="e138" num="input" />
+      <port edge="e48" num="left" />
+      <port edge="e49" num="right" />
      </input>
-     <output />
+     <output>
+      <port edge="e141" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n146" kind="END">
+    <node id="n81" kind="SPLIT">
+     <input>
+      <port edge="e47" num="input" />
+     </input>
+     <output>
+      <port edge="e142" num="output" />
+      <port edge="e49" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n143" kind="END">
      <input>
       <port edge="e139" num="input" />
      </input>
@@ -242,7 +230,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n147" kind="END">
+    <node id="n144" kind="END">
      <input>
       <port edge="e140" num="input" />
      </input>
@@ -250,9 +238,25 @@
      <layout>
       </layout>
     </node>
+    <node id="n145" kind="END">
+     <input>
+      <port edge="e141" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n146" kind="END">
+     <input>
+      <port edge="e142" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
     <node id="n161" kind="END">
      <input>
-      <port edge="e154" num="input" />
+      <port edge="e157" num="input" />
      </input>
      <output />
      <layout>
@@ -260,7 +264,7 @@
     </node>
     <node id="n162" kind="END">
      <input>
-      <port edge="e155" num="input" />
+      <port edge="e158" num="input" />
      </input>
      <output />
      <layout>
@@ -338,25 +342,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class GenericFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class GenericFieldAccess&lt;A, B&gt; {  public GenericFieldAccess() { super(); }  public void access() { } }" editable="true" id="e38" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n66" port="output" />
-     </from>
-     <to>
-      <noderef id="n67" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e39" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class GenericFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class GenericFieldAccess&lt;A, B&gt; {  public GenericFieldAccess() { super(); }  public void access() { } }" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n68" port="output" />
      </from>
@@ -374,12 +360,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e42" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e40" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n74" port="output" />
+      <noderef id="n70" port="output" />
      </from>
      <to>
-      <noderef id="n75" port="left" />
+      <noderef id="n71" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -392,12 +378,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e43" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e44" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n5" port="output" />
+     </from>
+     <to>
+      <noderef id="n79" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e45" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n3" port="output" />
      </from>
      <to>
-      <noderef id="n75" port="right" />
+      <noderef id="n78" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -416,12 +420,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e44" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e46" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n76" port="output" />
+      <noderef id="n79" port="split" />
      </from>
      <to>
-      <noderef id="n77" port="left" />
+      <noderef id="n78" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -434,12 +438,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e45" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e47" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n9" port="output" />
+     </from>
+     <to>
+      <noderef id="n81" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e48" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n7" port="output" />
      </from>
      <to>
-      <noderef id="n77" port="right" />
+      <noderef id="n80" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -458,9 +480,45 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e137" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e49" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n75" port="output" />
+      <noderef id="n81" port="split" />
+     </from>
+     <to>
+      <noderef id="n80" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e139" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n78" port="output" />
+     </from>
+     <to>
+      <noderef id="n143" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e140" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n79" port="output" />
      </from>
      <to>
       <noderef id="n144" port="input" />
@@ -476,9 +534,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e138" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e141" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n5" port="output" />
+      <noderef id="n80" port="output" />
      </from>
      <to>
       <noderef id="n145" port="input" />
@@ -494,9 +552,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e139" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e142" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n77" port="output" />
+      <noderef id="n81" port="output" />
      </from>
      <to>
       <noderef id="n146" port="input" />
@@ -512,27 +570,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e140" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class GenericFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class GenericFieldAccess&lt;A, B&gt; {  public GenericFieldAccess() { super(); }  public void access() { } }" editable="true" id="e157" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n9" port="output" />
-     </from>
-     <to>
-      <noderef id="n147" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class GenericFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class GenericFieldAccess&lt;A, B&gt; {  public GenericFieldAccess() { super(); }  public void access() { } }" editable="true" id="e154" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n67" port="output" />
+      <noderef id="n69" port="output" />
      </from>
      <to>
       <noderef id="n161" port="input" />
@@ -548,9 +588,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e155" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e158" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n69" port="output" />
+      <noderef id="n71" port="output" />
      </from>
      <to>
       <noderef id="n162" port="input" />
@@ -581,11 +621,11 @@
     </node>
     <node id="n11" kind="OUTGOING">
      <input>
-      <port edge="e125" num="outClassTypeParam0" />
-      <port edge="e126" num="outClassTypeParam1" />
-      <port edge="e127" num="outClassTypeParam2" />
-      <port edge="e128" num="outClassTypeParam3" />
-      <port edge="e133" num="outputReturn0" />
+      <port edge="e127" num="outClassTypeParam0" />
+      <port edge="e128" num="outClassTypeParam1" />
+      <port edge="e129" num="outClassTypeParam2" />
+      <port edge="e130" num="outClassTypeParam3" />
+      <port edge="e135" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -604,7 +644,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e133" num="output" />
+      <port edge="e135" num="output" />
      </output>
      <layout>
       </layout>
@@ -614,7 +654,7 @@
       <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e125" num="output" />
+      <port edge="e127" num="output" />
      </output>
      <layout>
       </layout>
@@ -624,7 +664,7 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e126" num="output" />
+      <port edge="e128" num="output" />
      </output>
      <layout>
       </layout>
@@ -634,7 +674,7 @@
       <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e127" num="output" />
+      <port edge="e129" num="output" />
      </output>
      <layout>
       </layout>
@@ -644,7 +684,7 @@
       <port edge="e26" num="input" />
      </input>
      <output>
-      <port edge="e128" num="output" />
+      <port edge="e130" num="output" />
      </output>
      <layout>
       </layout>
@@ -745,7 +785,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e125" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e127" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n44" port="output" />
      </from>
@@ -763,7 +803,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e126" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e128" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n45" port="output" />
      </from>
@@ -781,7 +821,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e127" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e129" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n46" port="output" />
      </from>
@@ -799,7 +839,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e128" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e130" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n47" port="output" />
      </from>
@@ -823,7 +863,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e133" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e135" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -857,11 +897,11 @@
     </node>
     <node id="n15" kind="OUTGOING">
      <input>
-      <port edge="e129" num="outClassTypeParam0" />
-      <port edge="e130" num="outClassTypeParam1" />
-      <port edge="e131" num="outClassTypeParam2" />
-      <port edge="e132" num="outClassTypeParam3" />
-      <port edge="e134" num="outReceiver0" />
+      <port edge="e131" num="outClassTypeParam0" />
+      <port edge="e132" num="outClassTypeParam1" />
+      <port edge="e133" num="outClassTypeParam2" />
+      <port edge="e134" num="outClassTypeParam3" />
+      <port edge="e136" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -872,7 +912,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e134" num="output" />
+      <port edge="e136" num="output" />
      </output>
      <layout>
       </layout>
@@ -882,7 +922,7 @@
       <port edge="e27" num="input" />
      </input>
      <output>
-      <port edge="e129" num="output" />
+      <port edge="e131" num="output" />
      </output>
      <layout>
       </layout>
@@ -892,7 +932,7 @@
       <port edge="e28" num="input" />
      </input>
      <output>
-      <port edge="e130" num="output" />
+      <port edge="e132" num="output" />
      </output>
      <layout>
       </layout>
@@ -902,7 +942,7 @@
       <port edge="e29" num="input" />
      </input>
      <output>
-      <port edge="e131" num="output" />
+      <port edge="e133" num="output" />
      </output>
      <layout>
       </layout>
@@ -912,7 +952,7 @@
       <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e132" num="output" />
+      <port edge="e134" num="output" />
      </output>
      <layout>
       </layout>
@@ -1007,7 +1047,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e129" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class GenericFieldAccess class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within AAtm: @VarAnnot(0) Object" editable="true" id="e131" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -1025,7 +1065,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e130" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e132" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n49" port="output" />
      </from>
@@ -1043,7 +1083,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e131" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class GenericFieldAccess class type parameter bound 1 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,1)) within BAtm: @VarAnnot(2) Object" editable="true" id="e133" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n50" port="output" />
      </from>
@@ -1061,7 +1101,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e132" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e134" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n51" port="output" />
      </from>
@@ -1079,7 +1119,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method GenericFieldAccess#access():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void access() { }Atm: @VarAnnot(6) GenericFieldAccess&lt;A extends Object, B extends Object&gt;" editable="true" id="e134" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method GenericFieldAccess#access():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void access() { }Atm: @VarAnnot(6) GenericFieldAccess&lt;A extends Object, B extends Object&gt;" editable="true" id="e136" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
@@ -1103,171 +1143,168 @@
  <level name="OtherAccess">
   <linked-edges>
    <edge-set id="OtherAccess0">
-    <edgeref id="e14" />
-    <edgeref id="e85" />
-    <edgeref id="e142" />
-    <edgeref id="e50" />
-    <edgeref id="e159" />
-    <edgeref id="e35" />
-    <edgeref id="e93" />
-    <edgeref id="e98" />
-    <edgeref id="e99" />
-    <edgeref id="e106" />
-    <edgeref id="e107" />
-    <edgeref id="e114" />
-    <edgeref id="e119" />
-    <edgeref id="e151" />
-    <edgeref id="e15" />
-    <edgeref id="e16" />
-    <edgeref id="e21" />
-    <edgeref id="e52" />
-    <edgeref id="e53" />
-    <edgeref id="e60" />
-    <edgeref id="e65" />
+    <edgeref id="e31" />
+    <edgeref id="e68" />
+    <edgeref id="e70" />
+    <edgeref id="e86" />
+    <edgeref id="e149" />
+    <edgeref id="e20" />
+    <edgeref id="e67" />
+    <edgeref id="e74" />
     <edgeref id="e75" />
-    <edgeref id="e76" />
     <edgeref id="e80" />
     <edgeref id="e83" />
-    <edgeref id="e86" />
-    <edgeref id="e145" />
-   </edge-set>
-   <edge-set id="OtherAccess1">
-    <edgeref id="e17" />
     <edgeref id="e87" />
-    <edgeref id="e143" />
-    <edgeref id="e51" />
-    <edgeref id="e160" />
-    <edgeref id="e36" />
-    <edgeref id="e94" />
-    <edgeref id="e100" />
-    <edgeref id="e101" />
-    <edgeref id="e110" />
-    <edgeref id="e111" />
-    <edgeref id="e116" />
-    <edgeref id="e121" />
-    <edgeref id="e152" />
-    <edgeref id="e18" />
-    <edgeref id="e19" />
-    <edgeref id="e22" />
-    <edgeref id="e56" />
-    <edgeref id="e57" />
-    <edgeref id="e62" />
-    <edgeref id="e67" />
-    <edgeref id="e77" />
-    <edgeref id="e78" />
-    <edgeref id="e81" />
-    <edgeref id="e84" />
     <edgeref id="e88" />
+    <edgeref id="e90" />
     <edgeref id="e146" />
    </edge-set>
-   <edge-set id="OtherAccess2">
+   <edge-set id="OtherAccess1">
     <edgeref id="e9" />
-    <edgeref id="e141" />
-    <edgeref id="e49" />
-    <edgeref id="e158" />
-    <edgeref id="e37" />
-    <edgeref id="e92" />
-    <edgeref id="e96" />
-    <edgeref id="e97" />
-    <edgeref id="e102" />
-    <edgeref id="e103" />
+    <edgeref id="e143" />
+    <edgeref id="e43" />
+    <edgeref id="e69" />
+    <edgeref id="e89" />
+    <edgeref id="e161" />
+    <edgeref id="e38" />
+    <edgeref id="e94" />
+    <edgeref id="e98" />
+    <edgeref id="e99" />
     <edgeref id="e104" />
     <edgeref id="e105" />
-    <edgeref id="e118" />
-    <edgeref id="e153" />
+    <edgeref id="e106" />
+    <edgeref id="e107" />
+    <edgeref id="e120" />
+    <edgeref id="e156" />
     <edgeref id="e11" />
     <edgeref id="e13" />
    </edge-set>
+   <edge-set id="OtherAccess2">
+    <edgeref id="e14" />
+    <edgeref id="e144" />
+    <edgeref id="e36" />
+    <edgeref id="e95" />
+    <edgeref id="e100" />
+    <edgeref id="e101" />
+    <edgeref id="e108" />
+    <edgeref id="e109" />
+    <edgeref id="e116" />
+    <edgeref id="e121" />
+    <edgeref id="e154" />
+    <edgeref id="e15" />
+    <edgeref id="e16" />
+   </edge-set>
    <edge-set id="OtherAccess3">
-    <edgeref id="e40" />
-    <edgeref id="e156" />
+    <edgeref id="e17" />
+    <edgeref id="e145" />
+    <edgeref id="e37" />
+    <edgeref id="e96" />
+    <edgeref id="e102" />
+    <edgeref id="e103" />
+    <edgeref id="e112" />
+    <edgeref id="e113" />
+    <edgeref id="e118" />
+    <edgeref id="e123" />
+    <edgeref id="e155" />
+    <edgeref id="e18" />
+    <edgeref id="e19" />
    </edge-set>
    <edge-set id="OtherAccess4">
     <edgeref id="e41" />
-    <edgeref id="e157" />
-    <edgeref id="e7" />
-    <edgeref id="e135" />
+    <edgeref id="e159" />
    </edge-set>
    <edge-set id="OtherAccess5">
-    <edgeref id="e20" />
-    <edgeref id="e69" />
-    <edgeref id="e73" />
-    <edgeref id="e74" />
-    <edgeref id="e79" />
-    <edgeref id="e82" />
-    <edgeref id="e144" />
+    <edgeref id="e42" />
+    <edgeref id="e160" />
+    <edgeref id="e7" />
+    <edgeref id="e137" />
    </edge-set>
    <edge-set id="OtherAccess6">
-    <edgeref id="e31" />
-    <edgeref id="e54" />
-    <edgeref id="e55" />
-    <edgeref id="e61" />
-    <edgeref id="e66" />
+    <edgeref id="e21" />
+    <edgeref id="e50" />
+    <edgeref id="e51" />
+    <edgeref id="e58" />
+    <edgeref id="e63" />
+    <edgeref id="e76" />
+    <edgeref id="e77" />
+    <edgeref id="e81" />
+    <edgeref id="e84" />
     <edgeref id="e147" />
-    <edgeref id="e33" />
-    <edgeref id="e108" />
-    <edgeref id="e109" />
-    <edgeref id="e115" />
-    <edgeref id="e120" />
-    <edgeref id="e149" />
    </edge-set>
    <edge-set id="OtherAccess7">
-    <edgeref id="e32" />
-    <edgeref id="e58" />
-    <edgeref id="e59" />
-    <edgeref id="e63" />
-    <edgeref id="e68" />
+    <edgeref id="e22" />
+    <edgeref id="e54" />
+    <edgeref id="e55" />
+    <edgeref id="e60" />
+    <edgeref id="e65" />
+    <edgeref id="e78" />
+    <edgeref id="e79" />
+    <edgeref id="e82" />
+    <edgeref id="e85" />
     <edgeref id="e148" />
-    <edgeref id="e34" />
-    <edgeref id="e112" />
-    <edgeref id="e113" />
-    <edgeref id="e117" />
-    <edgeref id="e122" />
-    <edgeref id="e150" />
    </edge-set>
    <edge-set id="OtherAccess8">
+    <edgeref id="e32" />
+    <edgeref id="e52" />
+    <edgeref id="e53" />
+    <edgeref id="e59" />
     <edgeref id="e64" />
-    <edgeref id="e161" />
+    <edgeref id="e150" />
+    <edgeref id="e34" />
+    <edgeref id="e110" />
+    <edgeref id="e111" />
+    <edgeref id="e117" />
+    <edgeref id="e122" />
+    <edgeref id="e152" />
    </edge-set>
    <edge-set id="OtherAccess9">
-    <edgeref id="e89" />
-    <edgeref id="e90" />
+    <edgeref id="e33" />
+    <edgeref id="e56" />
+    <edgeref id="e57" />
+    <edgeref id="e61" />
+    <edgeref id="e66" />
+    <edgeref id="e151" />
+    <edgeref id="e35" />
+    <edgeref id="e114" />
+    <edgeref id="e115" />
+    <edgeref id="e119" />
+    <edgeref id="e124" />
+    <edgeref id="e153" />
+   </edge-set>
+   <edge-set id="OtherAccess10">
+    <edgeref id="e62" />
+    <edgeref id="e162" />
+   </edge-set>
+   <edge-set id="OtherAccess11">
     <edgeref id="e91" />
-    <edgeref id="e95" />
-    <edgeref id="e136" />
+    <edgeref id="e92" />
+    <edgeref id="e93" />
+    <edgeref id="e97" />
+    <edgeref id="e138" />
    </edge-set>
-   <edge-set id="OtherAccess28">
-    <edgeref id="e46" />
-   </edge-set>
-   <edge-set id="OtherAccess29">
-    <edgeref id="e47" />
-   </edge-set>
-   <edge-set id="OtherAccess30">
-    <edgeref id="e48" />
-   </edge-set>
-   <edge-set id="OtherAccess52">
-    <edgeref id="e70" />
-   </edge-set>
-   <edge-set id="OtherAccess53">
+   <edge-set id="OtherAccess51">
     <edgeref id="e71" />
    </edge-set>
-   <edge-set id="OtherAccess54">
+   <edge-set id="OtherAccess52">
     <edgeref id="e72" />
    </edge-set>
-   <edge-set id="OtherAccess79">
+   <edge-set id="OtherAccess53">
+    <edgeref id="e73" />
+   </edge-set>
+   <edge-set id="OtherAccess80">
     <edgeref id="e8" />
    </edge-set>
-   <edge-set id="OtherAccess125">
+   <edge-set id="OtherAccess126">
     <edgeref id="e10" />
    </edge-set>
-   <edge-set id="OtherAccess129">
-    <edgeref id="e123" />
-   </edge-set>
    <edge-set id="OtherAccess130">
+    <edgeref id="e125" />
+   </edge-set>
+   <edge-set id="OtherAccess131">
     <edgeref id="e12" />
    </edge-set>
-   <edge-set id="OtherAccess134">
-    <edgeref id="e124" />
+   <edge-set id="OtherAccess135">
+    <edgeref id="e126" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -1293,7 +1330,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e141" num="output" />
+      <port edge="e143" num="output" />
      </output>
      <layout>
       </layout>
@@ -1303,7 +1340,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e85" num="output" />
+      <port edge="e144" num="output" />
      </output>
      <layout>
       </layout>
@@ -1313,25 +1350,7 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e87" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n70" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e40" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n71" kind="CONNECT">
-     <input>
-      <port edge="e40" num="input" />
-     </input>
-     <output>
-      <port edge="e156" num="output" />
+      <port edge="e145" num="output" />
      </output>
      <layout>
       </layout>
@@ -1349,48 +1368,30 @@
       <port edge="e41" num="input" />
      </input>
      <output>
-      <port edge="e157" num="output" />
+      <port edge="e159" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n113" kind="CONNECT">
+    <node id="n74" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e42" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n75" kind="CONNECT">
      <input>
-      <port edge="e85" num="input" />
+      <port edge="e42" num="input" />
      </input>
      <output>
-      <port edge="e142" num="output" />
+      <port edge="e160" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n115" kind="CONNECT">
-     <input>
-      <port edge="e87" num="input" />
-     </input>
-     <output>
-      <port edge="e143" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n148" kind="END">
-     <input>
-      <port edge="e141" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n149" kind="END">
-     <input>
-      <port edge="e142" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n150" kind="END">
+    <node id="n147" kind="END">
      <input>
       <port edge="e143" num="input" />
      </input>
@@ -1398,9 +1399,25 @@
      <layout>
       </layout>
     </node>
+    <node id="n148" kind="END">
+     <input>
+      <port edge="e144" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n149" kind="END">
+     <input>
+      <port edge="e145" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
     <node id="n163" kind="END">
      <input>
-      <port edge="e156" num="input" />
+      <port edge="e159" num="input" />
      </input>
      <output />
      <layout>
@@ -1408,7 +1425,7 @@
     </node>
     <node id="n164" kind="END">
      <input>
-      <port edge="e157" num="input" />
+      <port edge="e160" num="input" />
      </input>
      <output />
      <layout>
@@ -1474,25 +1491,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class OtherAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class OtherAccess { private GenericFieldAccess&lt;String, Integer&gt; gfAccess;  public OtherAccess() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }  public void localAccess() { gfAccess.access(); } }" editable="true" id="e40" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n70" port="output" />
-     </from>
-     <to>
-      <noderef id="n71" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e41" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class OtherAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class OtherAccess { private GenericFieldAccess&lt;String, Integer&gt; gfAccess;  public OtherAccess() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }  public void localAccess() { gfAccess.access(); } }" editable="true" id="e41" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n72" port="output" />
      </from>
@@ -1510,12 +1509,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e85" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e42" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n34" port="output" />
+      <noderef id="n74" port="output" />
      </from>
      <to>
-      <noderef id="n113" port="input" />
+      <noderef id="n75" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1528,27 +1527,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e87" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n36" port="output" />
-     </from>
-     <to>
-      <noderef id="n115" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e141" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e143" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n26" port="output" />
+     </from>
+     <to>
+      <noderef id="n147" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e144" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n34" port="output" />
      </from>
      <to>
       <noderef id="n148" port="input" />
@@ -1564,9 +1563,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e142" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e145" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n113" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
       <noderef id="n149" port="input" />
@@ -1582,27 +1581,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e143" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at class OtherAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class OtherAccess { private GenericFieldAccess&lt;String, Integer&gt; gfAccess;  public OtherAccess() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }  public void localAccess() { gfAccess.access(); } }" editable="true" id="e159" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n115" port="output" />
-     </from>
-     <to>
-      <noderef id="n150" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at class OtherAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class OtherAccess { private GenericFieldAccess&lt;String, Integer&gt; gfAccess;  public OtherAccess() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }  public void localAccess() { gfAccess.access(); } }" editable="true" id="e156" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n71" port="output" />
+      <noderef id="n73" port="output" />
      </from>
      <to>
       <noderef id="n163" port="input" />
@@ -1618,9 +1599,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e157" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e160" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n73" port="output" />
+      <noderef id="n75" port="output" />
      </from>
      <to>
       <noderef id="n164" port="input" />
@@ -1646,7 +1627,7 @@
     </node>
     <node id="n20" kind="OUTGOING">
      <input>
-      <port edge="e135" num="outputReturn0" />
+      <port edge="e137" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1665,7 +1646,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e135" num="output" />
+      <port edge="e137" num="output" />
      </output>
      <layout>
       </layout>
@@ -1683,7 +1664,7 @@
       <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e69" num="output" />
+      <port edge="e67" num="output" />
      </output>
      <layout>
       </layout>
@@ -1701,7 +1682,7 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e52" num="output" />
+      <port edge="e50" num="output" />
      </output>
      <layout>
       </layout>
@@ -1719,7 +1700,7 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e56" num="output" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
@@ -1737,7 +1718,7 @@
       <port edge="e31" num="input" />
      </input>
      <output>
-      <port edge="e54" num="output" />
+      <port edge="e68" num="output" />
      </output>
      <layout>
       </layout>
@@ -1755,192 +1736,175 @@
       <port edge="e32" num="input" />
      </input>
      <output>
-      <port edge="e58" num="output" />
+      <port edge="e52" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n78" kind="SUBBOARD" name="OtherAccess-gfAccess--GET">
-     <input>
-      <port edge="e46" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e47" num="outReceiver0" />
-      <port edge="e49" num="outputReturn0" />
-      <port edge="e50" num="outputReturn1" />
-      <port edge="e51" num="outputReturn2" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n79" kind="START_LARGE_BALL">
+    <node id="n56" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e46" num="output" />
+      <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n80" kind="CONNECT">
+    <node id="n57" kind="CONNECT">
      <input>
-      <port edge="e47" num="input" />
+      <port edge="e33" num="input" />
      </input>
      <output>
-      <port edge="e48" num="toEnd" />
+      <port edge="e56" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n81" kind="END">
-     <input>
-      <port edge="e48" num="input" />
-     </input>
-     <output />
+    <node id="n76" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e43" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n82" kind="CONNECT">
+    <node id="n77" kind="CONNECT">
      <input>
-      <port edge="e49" num="input" />
+      <port edge="e43" num="input" />
      </input>
      <output>
-      <port edge="e158" num="output" />
+      <port edge="e69" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n83" kind="CONNECT">
+    <node id="n82" kind="SUBBOARD" name="GenericFieldAccess--init----V">
+     <input>
+      <port edge="e51" num="inClassTypeParam0" />
+      <port edge="e53" num="inClassTypeParam1" />
+      <port edge="e55" num="inClassTypeParam2" />
+      <port edge="e57" num="inClassTypeParam3" />
+     </input>
+     <output>
+      <port edge="e58" num="outClassTypeParam0" />
+      <port edge="e59" num="outClassTypeParam1" />
+      <port edge="e60" num="outClassTypeParam2" />
+      <port edge="e61" num="outClassTypeParam3" />
+      <port edge="e62" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n83" kind="SPLIT">
      <input>
       <port edge="e50" num="input" />
      </input>
      <output>
-      <port edge="e159" num="output" />
+      <port edge="e51" num="split" />
+      <port edge="e63" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n84" kind="CONNECT">
+    <node id="n84" kind="SPLIT">
      <input>
-      <port edge="e51" num="input" />
+      <port edge="e52" num="input" />
      </input>
      <output>
-      <port edge="e160" num="output" />
+      <port edge="e53" num="split" />
+      <port edge="e64" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n85" kind="SUBBOARD" name="GenericFieldAccess--init----V">
+    <node id="n85" kind="SPLIT">
      <input>
-      <port edge="e53" num="inClassTypeParam0" />
-      <port edge="e55" num="inClassTypeParam1" />
-      <port edge="e57" num="inClassTypeParam2" />
-      <port edge="e59" num="inClassTypeParam3" />
+      <port edge="e54" num="input" />
      </input>
      <output>
-      <port edge="e60" num="outClassTypeParam0" />
-      <port edge="e61" num="outClassTypeParam1" />
-      <port edge="e62" num="outClassTypeParam2" />
-      <port edge="e63" num="outClassTypeParam3" />
-      <port edge="e64" num="outputReturn0" />
+      <port edge="e55" num="split" />
+      <port edge="e65" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n86" kind="SPLIT">
      <input>
-      <port edge="e52" num="input" />
+      <port edge="e56" num="input" />
      </input>
      <output>
-      <port edge="e53" num="split" />
-      <port edge="e65" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n87" kind="SPLIT">
-     <input>
-      <port edge="e54" num="input" />
-     </input>
-     <output>
-      <port edge="e55" num="split" />
+      <port edge="e57" num="split" />
       <port edge="e66" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n88" kind="SPLIT">
-     <input>
-      <port edge="e56" num="input" />
-     </input>
-     <output>
-      <port edge="e57" num="split" />
-      <port edge="e67" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n89" kind="SPLIT">
+    <node id="n87" kind="CONNECT">
      <input>
       <port edge="e58" num="input" />
      </input>
      <output>
-      <port edge="e59" num="split" />
-      <port edge="e68" num="toEnd" />
+      <port edge="e76" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n88" kind="CONNECT">
+     <input>
+      <port edge="e59" num="input" />
+     </input>
+     <output>
+      <port edge="e150" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n89" kind="CONNECT">
+     <input>
+      <port edge="e60" num="input" />
+     </input>
+     <output>
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n90" kind="CONNECT">
      <input>
-      <port edge="e60" num="input" />
+      <port edge="e61" num="input" />
      </input>
      <output>
-      <port edge="e75" num="output" />
+      <port edge="e151" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n91" kind="CONNECT">
      <input>
-      <port edge="e61" num="input" />
-     </input>
-     <output>
-      <port edge="e147" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n92" kind="CONNECT">
-     <input>
       <port edge="e62" num="input" />
      </input>
      <output>
-      <port edge="e77" num="output" />
+      <port edge="e162" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n93" kind="CONNECT">
+    <node id="n92" kind="END">
      <input>
       <port edge="e63" num="input" />
      </input>
-     <output>
-      <port edge="e148" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n94" kind="CONNECT">
+    <node id="n93" kind="END">
      <input>
       <port edge="e64" num="input" />
      </input>
-     <output>
-      <port edge="e161" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n95" kind="END">
+    <node id="n94" kind="END">
      <input>
       <port edge="e65" num="input" />
      </input>
@@ -1948,7 +1912,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n96" kind="END">
+    <node id="n95" kind="END">
      <input>
       <port edge="e66" num="input" />
      </input>
@@ -1956,146 +1920,144 @@
      <layout>
       </layout>
     </node>
-    <node id="n97" kind="END">
+    <node id="n96" kind="CONNECT">
      <input>
       <port edge="e67" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e74" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n98" kind="END">
+    <node id="n97" kind="MERGE">
+     <input>
+      <port edge="e69" num="left" />
+      <port edge="e70" num="right" />
+     </input>
+     <output>
+      <port edge="e89" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n98" kind="SPLIT">
      <input>
       <port edge="e68" num="input" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n99" kind="CONNECT">
-     <input>
-      <port edge="e69" num="input" />
-     </input>
      <output>
-      <port edge="e73" num="output" />
+      <port edge="e86" num="output" />
+      <port edge="e70" num="split" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n100" kind="SUBBOARD" name="OtherAccess-gfAccess--SET">
+    <node id="n99" kind="SUBBOARD" name="OtherAccess-gfAccess--SET">
      <input>
-      <port edge="e74" num="inParam0" />
-      <port edge="e76" num="inParam1" />
-      <port edge="e78" num="inParam2" />
-      <port edge="e70" num="inReceiver0" />
+      <port edge="e75" num="inParam0" />
+      <port edge="e77" num="inParam1" />
+      <port edge="e79" num="inParam2" />
+      <port edge="e71" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e79" num="outParam0" />
-      <port edge="e80" num="outParam1" />
-      <port edge="e81" num="outParam2" />
-      <port edge="e71" num="outReceiver0" />
+      <port edge="e80" num="outParam0" />
+      <port edge="e81" num="outParam1" />
+      <port edge="e82" num="outParam2" />
+      <port edge="e72" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n101" kind="START_LARGE_BALL">
+    <node id="n100" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e70" num="output" />
+      <port edge="e71" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n102" kind="CONNECT">
-     <input>
-      <port edge="e71" num="input" />
-     </input>
-     <output>
-      <port edge="e72" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n103" kind="END">
+    <node id="n101" kind="CONNECT">
      <input>
       <port edge="e72" num="input" />
      </input>
+     <output>
+      <port edge="e73" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n102" kind="END">
+     <input>
+      <port edge="e73" num="input" />
+     </input>
      <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n103" kind="SPLIT">
+     <input>
+      <port edge="e74" num="input" />
+     </input>
+     <output>
+      <port edge="e75" num="split" />
+      <port edge="e83" num="toEnd" />
+     </output>
      <layout>
       </layout>
     </node>
     <node id="n104" kind="SPLIT">
      <input>
-      <port edge="e73" num="input" />
+      <port edge="e76" num="input" />
      </input>
      <output>
-      <port edge="e74" num="split" />
-      <port edge="e82" num="toEnd" />
+      <port edge="e77" num="split" />
+      <port edge="e84" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n105" kind="SPLIT">
      <input>
-      <port edge="e75" num="input" />
+      <port edge="e78" num="input" />
      </input>
      <output>
-      <port edge="e76" num="split" />
-      <port edge="e83" num="toEnd" />
+      <port edge="e79" num="split" />
+      <port edge="e85" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n106" kind="SPLIT">
+    <node id="n106" kind="CONNECT">
      <input>
-      <port edge="e77" num="input" />
+      <port edge="e80" num="input" />
      </input>
      <output>
-      <port edge="e78" num="split" />
-      <port edge="e84" num="toEnd" />
+      <port edge="e87" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n107" kind="CONNECT">
      <input>
-      <port edge="e79" num="input" />
+      <port edge="e81" num="input" />
      </input>
      <output>
-      <port edge="e144" num="output" />
+      <port edge="e147" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n108" kind="CONNECT">
      <input>
-      <port edge="e80" num="input" />
-     </input>
-     <output>
-      <port edge="e86" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n109" kind="CONNECT">
-     <input>
-      <port edge="e81" num="input" />
-     </input>
-     <output>
-      <port edge="e88" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n110" kind="END">
-     <input>
       <port edge="e82" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e148" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n111" kind="END">
+    <node id="n109" kind="END">
      <input>
       <port edge="e83" num="input" />
      </input>
@@ -2103,7 +2065,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n112" kind="END">
+    <node id="n110" kind="END">
      <input>
       <port edge="e84" num="input" />
      </input>
@@ -2111,43 +2073,57 @@
      <layout>
       </layout>
     </node>
-    <node id="n114" kind="CONNECT">
+    <node id="n111" kind="END">
+     <input>
+      <port edge="e85" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n112" kind="CONNECT">
      <input>
       <port edge="e86" num="input" />
      </input>
      <output>
-      <port edge="e145" num="output" />
+      <port edge="e149" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n116" kind="CONNECT">
+    <node id="n113" kind="CONNECT">
+     <input>
+      <port edge="e87" num="input" />
+     </input>
+     <output>
+      <port edge="e88" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n114" kind="MERGE">
+     <input>
+      <port edge="e89" num="left" />
+      <port edge="e90" num="right" />
+     </input>
+     <output>
+      <port edge="e161" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n115" kind="SPLIT">
      <input>
       <port edge="e88" num="input" />
      </input>
      <output>
       <port edge="e146" num="output" />
+      <port edge="e90" num="split" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n151" kind="END">
-     <input>
-      <port edge="e144" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n152" kind="END">
-     <input>
-      <port edge="e145" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n153" kind="END">
+    <node id="n150" kind="END">
      <input>
       <port edge="e146" num="input" />
      </input>
@@ -2155,7 +2131,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n154" kind="END">
+    <node id="n151" kind="END">
      <input>
       <port edge="e147" num="input" />
      </input>
@@ -2163,7 +2139,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n155" kind="END">
+    <node id="n152" kind="END">
      <input>
       <port edge="e148" num="input" />
      </input>
@@ -2171,9 +2147,33 @@
      <layout>
       </layout>
     </node>
+    <node id="n153" kind="END">
+     <input>
+      <port edge="e149" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n154" kind="END">
+     <input>
+      <port edge="e150" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n155" kind="END">
+     <input>
+      <port edge="e151" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
     <node id="n165" kind="END">
      <input>
-      <port edge="e158" num="input" />
+      <port edge="e161" num="input" />
      </input>
      <output />
      <layout>
@@ -2181,23 +2181,7 @@
     </node>
     <node id="n166" kind="END">
      <input>
-      <port edge="e159" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n167" kind="END">
-     <input>
-      <port edge="e160" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n168" kind="END">
-     <input>
-      <port edge="e161" num="input" />
+      <port edge="e162" num="input" />
      </input>
      <output />
      <layout>
@@ -2275,7 +2259,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e31" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt; IfTest: false mergedTo: Set()" editable="true" id="e31" pinch="false" variableID="16" width="narrow">
      <from>
       <noderef id="n52" port="output" />
      </from>
@@ -2293,7 +2277,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e32" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e32" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n54" port="output" />
      </from>
@@ -2311,12 +2295,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e46" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n79" port="output" />
+      <noderef id="n56" port="output" />
      </from>
      <to>
-      <noderef id="n78" port="inReceiver0" />
+      <noderef id="n57" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2329,36 +2313,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e47" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e43" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n78" port="outReceiver0" />
+      <noderef id="n76" port="output" />
      </from>
      <to>
-      <noderef id="n80" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e48" pinch="false" variableID="-4" width="wide">
-     <from>
-      <noderef id="n80" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n81" port="input" />
+      <noderef id="n77" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2371,27 +2331,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e49" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e50" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n78" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n82" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e50" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n78" port="outputReturn1" />
+      <noderef id="n41" port="output" />
      </from>
      <to>
       <noderef id="n83" port="input" />
@@ -2407,9 +2349,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e51" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e51" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n78" port="outputReturn2" />
+      <noderef id="n83" port="split" />
+     </from>
+     <to>
+      <noderef id="n82" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e52" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n55" port="output" />
      </from>
      <to>
       <noderef id="n84" port="input" />
@@ -2425,9 +2385,69 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e52" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e53" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n84" port="split" />
+     </from>
+     <to>
+      <noderef id="n82" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e54" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n85" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e55" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n85" port="split" />
+     </from>
+     <to>
+      <noderef id="n82" port="inClassTypeParam2" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e56" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n57" port="output" />
      </from>
      <to>
       <noderef id="n86" port="input" />
@@ -2443,12 +2463,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e53" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e57" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n86" port="split" />
      </from>
      <to>
-      <noderef id="n85" port="inClassTypeParam0" />
+      <noderef id="n82" port="inClassTypeParam3" />
      </to>
      <edge-layout>
       <point>
@@ -2461,9 +2481,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e54" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e58" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n53" port="output" />
+      <noderef id="n82" port="outClassTypeParam0" />
      </from>
      <to>
       <noderef id="n87" port="input" />
@@ -2479,33 +2499,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e55" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e59" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n87" port="split" />
-     </from>
-     <to>
-      <noderef id="n85" port="inClassTypeParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e56" pinch="false" variableID="15" width="narrow">
-     <from>
-      <noderef id="n43" port="output" />
+      <noderef id="n82" port="outClassTypeParam1" />
      </from>
      <to>
       <noderef id="n88" port="input" />
@@ -2521,27 +2517,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e57" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e60" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n88" port="split" />
-     </from>
-     <to>
-      <noderef id="n85" port="inClassTypeParam2" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e58" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n55" port="output" />
+      <noderef id="n82" port="outClassTypeParam2" />
      </from>
      <to>
       <noderef id="n89" port="input" />
@@ -2557,27 +2535,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e59" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e61" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n89" port="split" />
-     </from>
-     <to>
-      <noderef id="n85" port="inClassTypeParam3" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e60" pinch="false" variableID="14" width="narrow">
-     <from>
-      <noderef id="n85" port="outClassTypeParam0" />
+      <noderef id="n82" port="outClassTypeParam3" />
      </from>
      <to>
       <noderef id="n90" port="input" />
@@ -2593,9 +2553,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e61" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e62" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n85" port="outClassTypeParam1" />
+      <noderef id="n82" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n91" port="input" />
@@ -2611,9 +2571,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e62" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e63" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n85" port="outClassTypeParam2" />
+      <noderef id="n83" port="toEnd" />
      </from>
      <to>
       <noderef id="n92" port="input" />
@@ -2627,11 +2587,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e63" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e64" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n85" port="outClassTypeParam3" />
+      <noderef id="n84" port="toEnd" />
      </from>
      <to>
       <noderef id="n93" port="input" />
@@ -2645,11 +2611,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e64" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e65" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n85" port="outputReturn0" />
+      <noderef id="n85" port="toEnd" />
      </from>
      <to>
       <noderef id="n94" port="input" />
@@ -2663,9 +2635,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e65" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e66" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n86" port="toEnd" />
      </from>
@@ -2681,17 +2659,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e66" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e67" pinch="true" variableID="13" width="narrow">
      <from>
-      <noderef id="n87" port="toEnd" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n96" port="input" />
@@ -2707,33 +2679,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e67" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt; IfTest: false mergedTo: Set()" editable="true" id="e68" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n88" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n97" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e68" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n89" port="toEnd" />
+      <noderef id="n53" port="output" />
      </from>
      <to>
       <noderef id="n98" port="input" />
@@ -2749,12 +2697,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e69" pinch="true" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e69" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n77" port="output" />
      </from>
      <to>
-      <noderef id="n99" port="input" />
+      <noderef id="n97" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -2767,20 +2715,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e70" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt; IfTest: false mergedTo: Set()" editable="true" id="e70" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n101" port="output" />
+      <noderef id="n98" port="split" />
      </from>
      <to>
-      <noderef id="n100" port="inReceiver0" />
+      <noderef id="n97" port="right" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -2793,7 +2735,49 @@
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e71" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n100" port="outReceiver0" />
+      <noderef id="n100" port="output" />
+     </from>
+     <to>
+      <noderef id="n99" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="nullable" editable="false" id="e72" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n99" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n101" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="nullable" editable="false" id="e73" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n101" port="toEnd" />
      </from>
      <to>
       <noderef id="n102" port="input" />
@@ -2809,9 +2793,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e72" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e74" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n102" port="toEnd" />
+      <noderef id="n96" port="output" />
      </from>
      <to>
       <noderef id="n103" port="input" />
@@ -2827,9 +2811,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e73" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e75" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n99" port="output" />
+      <noderef id="n103" port="split" />
+     </from>
+     <to>
+      <noderef id="n99" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e76" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n87" port="output" />
      </from>
      <to>
       <noderef id="n104" port="input" />
@@ -2845,12 +2847,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e74" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e77" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n104" port="split" />
      </from>
      <to>
-      <noderef id="n100" port="inParam0" />
+      <noderef id="n99" port="inParam1" />
      </to>
      <edge-layout>
       <point>
@@ -2861,11 +2863,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e75" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e78" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n90" port="output" />
+      <noderef id="n89" port="output" />
      </from>
      <to>
       <noderef id="n105" port="input" />
@@ -2881,12 +2895,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e76" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e79" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n105" port="split" />
      </from>
      <to>
-      <noderef id="n100" port="inParam1" />
+      <noderef id="n99" port="inParam2" />
      </to>
      <edge-layout>
       <point>
@@ -2903,11 +2917,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e77" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e80" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n92" port="output" />
+      <noderef id="n99" port="outParam0" />
      </from>
      <to>
       <noderef id="n106" port="input" />
@@ -2923,45 +2949,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e78" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e81" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n106" port="split" />
-     </from>
-     <to>
-      <noderef id="n100" port="inParam2" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e79" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n100" port="outParam0" />
+      <noderef id="n99" port="outParam1" />
      </from>
      <to>
       <noderef id="n107" port="input" />
@@ -2977,9 +2967,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e80" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e82" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n100" port="outParam1" />
+      <noderef id="n99" port="outParam2" />
      </from>
      <to>
       <noderef id="n108" port="input" />
@@ -2995,9 +2985,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e81" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e83" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n100" port="outParam2" />
+      <noderef id="n103" port="toEnd" />
      </from>
      <to>
       <noderef id="n109" port="input" />
@@ -3011,9 +3001,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e82" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e84" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n104" port="toEnd" />
      </from>
@@ -3035,9 +3031,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e83" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e85" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n105" port="toEnd" />
      </from>
@@ -3053,23 +3055,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e84" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt; IfTest: false mergedTo: Set()" editable="true" id="e86" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n106" port="toEnd" />
+      <noderef id="n98" port="output" />
      </from>
      <to>
       <noderef id="n112" port="input" />
@@ -3085,12 +3075,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e86" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e87" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n108" port="output" />
+      <noderef id="n106" port="output" />
      </from>
      <to>
-      <noderef id="n114" port="input" />
+      <noderef id="n113" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3103,12 +3093,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e88" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e88" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n109" port="output" />
+      <noderef id="n113" port="output" />
      </from>
      <to>
-      <noderef id="n116" port="input" />
+      <noderef id="n115" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3121,7 +3111,61 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e135" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e89" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n97" port="output" />
+     </from>
+     <to>
+      <noderef id="n114" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e90" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n115" port="split" />
+     </from>
+     <to>
+      <noderef id="n114" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method OtherAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); gfAccess = new GenericFieldAccess&lt;String, Integer&gt;(); }" editable="true" id="e137" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
@@ -3139,7 +3183,25 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e144" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="Variable 13 at method OtherAccess#&lt;init&gt;():V creation 0; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e146" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n115" port="output" />
+     </from>
+     <to>
+      <noderef id="n150" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e147" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n107" port="output" />
      </from>
@@ -3157,9 +3219,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method OtherAccess#&lt;init&gt;():V creation 0; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e145" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e148" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n114" port="output" />
+      <noderef id="n108" port="output" />
      </from>
      <to>
       <noderef id="n152" port="input" />
@@ -3175,9 +3237,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method OtherAccess#&lt;init&gt;():V creation 0; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e146" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #16 Declared Variable: Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt; IfTest: false mergedTo: Set()" editable="true" id="e149" pinch="false" variableID="16" width="narrow">
      <from>
-      <noderef id="n116" port="output" />
+      <noderef id="n112" port="output" />
      </from>
      <to>
       <noderef id="n153" port="input" />
@@ -3193,9 +3255,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e147" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e150" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n91" port="output" />
+      <noderef id="n88" port="output" />
      </from>
      <to>
       <noderef id="n154" port="input" />
@@ -3211,9 +3273,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e148" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e151" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n93" port="output" />
+      <noderef id="n90" port="output" />
      </from>
      <to>
       <noderef id="n155" port="input" />
@@ -3229,9 +3291,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e158" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e161" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n82" port="output" />
+      <noderef id="n114" port="output" />
      </from>
      <to>
       <noderef id="n165" port="input" />
@@ -3247,48 +3309,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e159" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e162" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n83" port="output" />
+      <noderef id="n91" port="output" />
      </from>
      <to>
       <noderef id="n166" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e160" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n84" port="output" />
-     </from>
-     <to>
-      <noderef id="n167" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method GenericFieldAccess#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e161" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n94" port="output" />
-     </from>
-     <to>
-      <noderef id="n168" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3313,7 +3339,7 @@
     </node>
     <node id="n24" kind="OUTGOING">
      <input>
-      <port edge="e136" num="outReceiver0" />
+      <port edge="e138" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -3324,25 +3350,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e89" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n56" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e33" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n57" kind="CONNECT">
-     <input>
-      <port edge="e33" num="input" />
-     </input>
-     <output>
-      <port edge="e108" num="output" />
+      <port edge="e91" num="output" />
      </output>
      <layout>
       </layout>
@@ -3360,7 +3368,7 @@
       <port edge="e34" num="input" />
      </input>
      <output>
-      <port edge="e112" num="output" />
+      <port edge="e110" num="output" />
      </output>
      <layout>
       </layout>
@@ -3378,7 +3386,7 @@
       <port edge="e35" num="input" />
      </input>
      <output>
-      <port edge="e98" num="toMerge" />
+      <port edge="e114" num="output" />
      </output>
      <layout>
       </layout>
@@ -3414,58 +3422,66 @@
       <port edge="e37" num="input" />
      </input>
      <output>
-      <port edge="e96" num="toMerge" />
+      <port edge="e102" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n117" kind="SUBBOARD" name="OtherAccess-gfAccess--GET">
-     <input>
-      <port edge="e90" num="inReceiver0" />
-     </input>
+    <node id="n66" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
-      <port edge="e91" num="outReceiver0" />
-      <port edge="e92" num="outputReturn0" />
-      <port edge="e93" num="outputReturn1" />
-      <port edge="e94" num="outputReturn2" />
+      <port edge="e38" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n118" kind="SPLIT">
+    <node id="n67" kind="CONNECT">
      <input>
-      <port edge="e89" num="input" />
+      <port edge="e38" num="input" />
      </input>
      <output>
-      <port edge="e90" num="split" />
-      <port edge="e95" num="toEnd" />
+      <port edge="e98" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n116" kind="SUBBOARD" name="OtherAccess-gfAccess--GET">
+     <input>
+      <port edge="e92" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e93" num="outReceiver0" />
+      <port edge="e94" num="outputReturn0" />
+      <port edge="e95" num="outputReturn1" />
+      <port edge="e96" num="outputReturn2" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n117" kind="SPLIT">
+     <input>
+      <port edge="e91" num="input" />
+     </input>
+     <output>
+      <port edge="e92" num="split" />
+      <port edge="e97" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n118" kind="CONNECT">
+     <input>
+      <port edge="e93" num="input" />
+     </input>
+     <output>
+      <port edge="e138" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n119" kind="CONNECT">
      <input>
-      <port edge="e91" num="input" />
-     </input>
-     <output>
-      <port edge="e136" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n120" kind="CONNECT">
-     <input>
-      <port edge="e92" num="input" />
-     </input>
-     <output>
-      <port edge="e97" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n121" kind="CONNECT">
-     <input>
-      <port edge="e93" num="input" />
+      <port edge="e94" num="input" />
      </input>
      <output>
       <port edge="e99" num="toMerge" />
@@ -3473,9 +3489,9 @@
      <layout>
       </layout>
     </node>
-    <node id="n122" kind="CONNECT">
+    <node id="n120" kind="CONNECT">
      <input>
-      <port edge="e94" num="input" />
+      <port edge="e95" num="input" />
      </input>
      <output>
       <port edge="e101" num="toMerge" />
@@ -3483,163 +3499,163 @@
      <layout>
       </layout>
     </node>
-    <node id="n123" kind="END">
+    <node id="n121" kind="CONNECT">
      <input>
-      <port edge="e95" num="input" />
+      <port edge="e96" num="input" />
+     </input>
+     <output>
+      <port edge="e103" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n122" kind="END">
+     <input>
+      <port edge="e97" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n124" kind="MERGE">
+    <node id="n123" kind="MERGE">
      <input>
-      <port edge="e96" num="first" />
-      <port edge="e97" num="second" />
+      <port edge="e98" num="first" />
+      <port edge="e99" num="second" />
      </input>
      <output>
-      <port edge="e102" num="output" />
+      <port edge="e104" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n124" kind="MERGE">
+     <input>
+      <port edge="e100" num="first" />
+      <port edge="e101" num="second" />
+     </input>
+     <output>
+      <port edge="e108" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n125" kind="MERGE">
      <input>
-      <port edge="e98" num="first" />
-      <port edge="e99" num="second" />
+      <port edge="e102" num="first" />
+      <port edge="e103" num="second" />
      </input>
      <output>
-      <port edge="e106" num="output" />
+      <port edge="e112" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n126" kind="MERGE">
+    <node id="n126" kind="CONNECT">
      <input>
-      <port edge="e100" num="first" />
-      <port edge="e101" num="second" />
+      <port edge="e104" num="input" />
      </input>
      <output>
-      <port edge="e110" num="output" />
+      <port edge="e105" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n127" kind="CONNECT">
+    <node id="n127" kind="SUBBOARD" name="GenericFieldAccess-access---V">
      <input>
-      <port edge="e102" num="input" />
+      <port edge="e109" num="inClassTypeParam0" />
+      <port edge="e111" num="inClassTypeParam1" />
+      <port edge="e113" num="inClassTypeParam2" />
+      <port edge="e115" num="inClassTypeParam3" />
+      <port edge="e106" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e103" num="output" />
+      <port edge="e116" num="outClassTypeParam0" />
+      <port edge="e117" num="outClassTypeParam1" />
+      <port edge="e118" num="outClassTypeParam2" />
+      <port edge="e119" num="outClassTypeParam3" />
+      <port edge="e107" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n128" kind="SUBBOARD" name="GenericFieldAccess-access---V">
-     <input>
-      <port edge="e107" num="inClassTypeParam0" />
-      <port edge="e109" num="inClassTypeParam1" />
-      <port edge="e111" num="inClassTypeParam2" />
-      <port edge="e113" num="inClassTypeParam3" />
-      <port edge="e104" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e114" num="outClassTypeParam0" />
-      <port edge="e115" num="outClassTypeParam1" />
-      <port edge="e116" num="outClassTypeParam2" />
-      <port edge="e117" num="outClassTypeParam3" />
-      <port edge="e105" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n129" kind="SPLIT">
-     <input>
-      <port edge="e103" num="input" />
-     </input>
-     <output>
-      <port edge="e104" num="split" />
-      <port edge="e118" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n130" kind="CONNECT">
+    <node id="n128" kind="SPLIT">
      <input>
       <port edge="e105" num="input" />
      </input>
      <output>
-      <port edge="e153" num="output" />
+      <port edge="e106" num="split" />
+      <port edge="e120" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n129" kind="CONNECT">
+     <input>
+      <port edge="e107" num="input" />
+     </input>
+     <output>
+      <port edge="e156" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n130" kind="SPLIT">
+     <input>
+      <port edge="e108" num="input" />
+     </input>
+     <output>
+      <port edge="e109" num="split" />
+      <port edge="e121" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n131" kind="SPLIT">
      <input>
-      <port edge="e106" num="input" />
+      <port edge="e110" num="input" />
      </input>
      <output>
-      <port edge="e107" num="split" />
-      <port edge="e119" num="toEnd" />
+      <port edge="e111" num="split" />
+      <port edge="e122" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n132" kind="SPLIT">
      <input>
-      <port edge="e108" num="input" />
+      <port edge="e112" num="input" />
      </input>
      <output>
-      <port edge="e109" num="split" />
-      <port edge="e120" num="toEnd" />
+      <port edge="e113" num="split" />
+      <port edge="e123" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n133" kind="SPLIT">
      <input>
-      <port edge="e110" num="input" />
+      <port edge="e114" num="input" />
      </input>
      <output>
-      <port edge="e111" num="split" />
-      <port edge="e121" num="toEnd" />
+      <port edge="e115" num="split" />
+      <port edge="e124" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n134" kind="SPLIT">
+    <node id="n134" kind="CONNECT">
      <input>
-      <port edge="e112" num="input" />
+      <port edge="e116" num="input" />
      </input>
      <output>
-      <port edge="e113" num="split" />
-      <port edge="e122" num="toEnd" />
+      <port edge="e154" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n135" kind="CONNECT">
      <input>
-      <port edge="e114" num="input" />
-     </input>
-     <output>
-      <port edge="e151" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n136" kind="CONNECT">
-     <input>
-      <port edge="e115" num="input" />
-     </input>
-     <output>
-      <port edge="e149" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n137" kind="CONNECT">
-     <input>
-      <port edge="e116" num="input" />
+      <port edge="e117" num="input" />
      </input>
      <output>
       <port edge="e152" num="output" />
@@ -3647,33 +3663,27 @@
      <layout>
       </layout>
     </node>
-    <node id="n138" kind="CONNECT">
+    <node id="n136" kind="CONNECT">
      <input>
-      <port edge="e117" num="input" />
+      <port edge="e118" num="input" />
      </input>
      <output>
-      <port edge="e150" num="output" />
+      <port edge="e155" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n139" kind="END">
-     <input>
-      <port edge="e118" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n140" kind="END">
+    <node id="n137" kind="CONNECT">
      <input>
       <port edge="e119" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e153" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n141" kind="END">
+    <node id="n138" kind="END">
      <input>
       <port edge="e120" num="input" />
      </input>
@@ -3681,7 +3691,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n142" kind="END">
+    <node id="n139" kind="END">
      <input>
       <port edge="e121" num="input" />
      </input>
@@ -3689,7 +3699,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n143" kind="END">
+    <node id="n140" kind="END">
      <input>
       <port edge="e122" num="input" />
      </input>
@@ -3697,31 +3707,23 @@
      <layout>
       </layout>
     </node>
+    <node id="n141" kind="END">
+     <input>
+      <port edge="e123" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n142" kind="END">
+     <input>
+      <port edge="e124" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
     <node id="n156" kind="END">
-     <input>
-      <port edge="e149" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n157" kind="END">
-     <input>
-      <port edge="e150" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n158" kind="END">
-     <input>
-      <port edge="e151" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n159" kind="END">
      <input>
       <port edge="e152" num="input" />
      </input>
@@ -3729,9 +3731,33 @@
      <layout>
       </layout>
     </node>
-    <node id="n160" kind="END">
+    <node id="n157" kind="END">
      <input>
       <port edge="e153" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n158" kind="END">
+     <input>
+      <port edge="e154" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n159" kind="END">
+     <input>
+      <port edge="e155" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n160" kind="END">
+     <input>
+      <port edge="e156" num="input" />
      </input>
      <output />
      <layout>
@@ -3755,25 +3781,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e33" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n56" port="output" />
-     </from>
-     <to>
-      <noderef id="n57" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e34" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n58" port="output" />
      </from>
@@ -3791,7 +3799,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e35" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e35" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n60" port="output" />
      </from>
@@ -3809,7 +3817,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e36" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e36" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n62" port="output" />
      </from>
@@ -3827,7 +3835,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e37" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e37" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n64" port="output" />
      </from>
@@ -3845,30 +3853,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e89" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e38" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n25" port="output" />
+      <noderef id="n66" port="output" />
      </from>
      <to>
-      <noderef id="n118" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e90" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n118" port="split" />
-     </from>
-     <to>
-      <noderef id="n117" port="inReceiver0" />
+      <noderef id="n67" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3883,10 +3873,46 @@
     </edge>
     <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e91" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n117" port="outReceiver0" />
+      <noderef id="n25" port="output" />
      </from>
      <to>
-      <noderef id="n119" port="input" />
+      <noderef id="n117" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e92" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n117" port="split" />
+     </from>
+     <to>
+      <noderef id="n116" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e93" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n116" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n118" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3905,9 +3931,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e92" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e94" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n117" port="outputReturn0" />
+      <noderef id="n116" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n119" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e95" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n116" port="outputReturn1" />
      </from>
      <to>
       <noderef id="n120" port="input" />
@@ -3923,9 +3967,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e93" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e96" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n117" port="outputReturn1" />
+      <noderef id="n116" port="outputReturn2" />
      </from>
      <to>
       <noderef id="n121" port="input" />
@@ -3939,11 +3983,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e94" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e97" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n117" port="outputReturn2" />
+      <noderef id="n117" port="toEnd" />
      </from>
      <to>
       <noderef id="n122" port="input" />
@@ -3963,20 +4019,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e95" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e98" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n118" port="toEnd" />
+      <noderef id="n67" port="toMerge" />
      </from>
      <to>
-      <noderef id="n123" port="input" />
+      <noderef id="n123" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -3995,9 +4045,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e96" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e99" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n65" port="toMerge" />
+      <noderef id="n119" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n123" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e100" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n63" port="toMerge" />
      </from>
      <to>
       <noderef id="n124" port="first" />
@@ -4011,15 +4079,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e97" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e101" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n120" port="toMerge" />
      </from>
@@ -4035,11 +4097,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e98" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e102" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n61" port="toMerge" />
+      <noderef id="n65" port="toMerge" />
      </from>
      <to>
       <noderef id="n125" port="first" />
@@ -4053,9 +4121,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e99" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e103" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n121" port="toMerge" />
      </from>
@@ -4071,6 +4145,18 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e104" pinch="true" variableID="10" width="narrow">
+     <from>
+      <noderef id="n123" port="output" />
+     </from>
+     <to>
+      <noderef id="n126" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -4079,12 +4165,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e100" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e105" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n63" port="toMerge" />
+      <noderef id="n126" port="output" />
      </from>
      <to>
-      <noderef id="n126" port="first" />
+      <noderef id="n128" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e106" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n128" port="split" />
+     </from>
+     <to>
+      <noderef id="n127" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -4101,18 +4205,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e101" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n122" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n126" port="second" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -4121,27 +4213,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e102" pinch="true" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e107" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n124" port="output" />
-     </from>
-     <to>
-      <noderef id="n127" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e103" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n127" port="output" />
+      <noderef id="n127" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n129" port="input" />
@@ -4157,39 +4231,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e104" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e108" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n129" port="split" />
-     </from>
-     <to>
-      <noderef id="n128" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e105" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n128" port="outReceiver0" />
+      <noderef id="n124" port="output" />
      </from>
      <to>
       <noderef id="n130" port="input" />
@@ -4205,9 +4249,39 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e106" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e109" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n125" port="output" />
+      <noderef id="n130" port="split" />
+     </from>
+     <to>
+      <noderef id="n127" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e110" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n59" port="output" />
      </from>
      <to>
       <noderef id="n131" port="input" />
@@ -4223,12 +4297,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e107" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e111" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n131" port="split" />
      </from>
      <to>
-      <noderef id="n128" port="inClassTypeParam0" />
+      <noderef id="n127" port="inClassTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -4251,11 +4325,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e108" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e112" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n57" port="output" />
+      <noderef id="n125" port="output" />
      </from>
      <to>
       <noderef id="n132" port="input" />
@@ -4271,12 +4351,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e109" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e113" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n132" port="split" />
      </from>
      <to>
-      <noderef id="n128" port="inClassTypeParam1" />
+      <noderef id="n127" port="inClassTypeParam2" />
      </to>
      <edge-layout>
       <point>
@@ -4293,23 +4373,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e110" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e114" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n126" port="output" />
+      <noderef id="n61" port="output" />
      </from>
      <to>
       <noderef id="n133" port="input" />
@@ -4325,12 +4393,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e111" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e115" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n133" port="split" />
      </from>
      <to>
-      <noderef id="n128" port="inClassTypeParam2" />
+      <noderef id="n127" port="inClassTypeParam3" />
      </to>
      <edge-layout>
       <point>
@@ -4347,11 +4415,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e112" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e116" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n59" port="output" />
+      <noderef id="n127" port="outClassTypeParam0" />
      </from>
      <to>
       <noderef id="n134" port="input" />
@@ -4367,39 +4441,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e113" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e117" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n134" port="split" />
-     </from>
-     <to>
-      <noderef id="n128" port="inClassTypeParam3" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e114" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n128" port="outClassTypeParam0" />
+      <noderef id="n127" port="outClassTypeParam1" />
      </from>
      <to>
       <noderef id="n135" port="input" />
@@ -4415,9 +4459,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e115" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e118" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n128" port="outClassTypeParam1" />
+      <noderef id="n127" port="outClassTypeParam2" />
      </from>
      <to>
       <noderef id="n136" port="input" />
@@ -4433,9 +4477,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e116" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e119" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n128" port="outClassTypeParam2" />
+      <noderef id="n127" port="outClassTypeParam3" />
      </from>
      <to>
       <noderef id="n137" port="input" />
@@ -4451,9 +4495,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e117" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e120" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n128" port="outClassTypeParam3" />
+      <noderef id="n128" port="toEnd" />
      </from>
      <to>
       <noderef id="n138" port="input" />
@@ -4469,9 +4513,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e118" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e121" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n129" port="toEnd" />
+      <noderef id="n130" port="toEnd" />
      </from>
      <to>
       <noderef id="n139" port="input" />
@@ -4485,9 +4529,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e119" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e122" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n131" port="toEnd" />
      </from>
@@ -4503,15 +4553,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e120" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e123" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n132" port="toEnd" />
      </from>
@@ -4529,7 +4573,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e121" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e124" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n133" port="toEnd" />
      </from>
@@ -4547,27 +4591,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e122" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e138" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n134" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n143" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at method OtherAccess#localAccess():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localAccess() { gfAccess.access(); }Atm: @VarAnnot(9) OtherAccess" editable="true" id="e136" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n119" port="output" />
+      <noderef id="n118" port="output" />
      </from>
      <to>
       <noderef id="n24" port="outReceiver0" />
@@ -4601,9 +4627,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e149" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class GenericFieldAccess class type parameter 0; tree A" editable="true" id="e152" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n136" port="output" />
+      <noderef id="n135" port="output" />
      </from>
      <to>
       <noderef id="n156" port="input" />
@@ -4619,9 +4645,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e150" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class GenericFieldAccess class type parameter 1; tree B" editable="true" id="e153" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n138" port="output" />
+      <noderef id="n137" port="output" />
      </from>
      <to>
       <noderef id="n157" port="input" />
@@ -4637,9 +4663,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e151" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="Variable 11 at class OtherAccess field gfAccess; tree String at position ((3,0)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e154" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n135" port="output" />
+      <noderef id="n134" port="output" />
      </from>
      <to>
       <noderef id="n158" port="input" />
@@ -4655,9 +4681,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e152" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="Variable 12 at class OtherAccess field gfAccess; tree Integer at position ((3,1)) within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e155" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n137" port="output" />
+      <noderef id="n136" port="output" />
      </from>
      <to>
       <noderef id="n159" port="input" />
@@ -4673,9 +4699,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e153" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at class OtherAccess field gfAccess; tree GenericFieldAccess within GenericFieldAccess&lt;String, Integer&gt;" editable="true" id="e156" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n130" port="output" />
+      <noderef id="n129" port="output" />
      </from>
      <to>
       <noderef id="n160" port="input" />
@@ -4703,7 +4729,7 @@
     </node>
     <node id="n28" kind="OUTGOING">
      <input>
-      <port edge="e123" num="outReceiver0" />
+      <port edge="e125" num="outReceiver0" />
       <port edge="e11" num="outputReturn0" />
       <port edge="e15" num="outputReturn1" />
       <port edge="e18" num="outputReturn2" />
@@ -4717,7 +4743,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e123" num="output" />
+      <port edge="e125" num="output" />
      </output>
      <layout>
       </layout>
@@ -4824,7 +4850,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e123" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e125" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n29" port="output" />
      </from>
@@ -4866,7 +4892,7 @@
       <port edge="e13" num="outParam0" />
       <port edge="e16" num="outParam1" />
       <port edge="e19" num="outParam2" />
-      <port edge="e124" num="outReceiver0" />
+      <port edge="e126" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -4877,7 +4903,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e124" num="output" />
+      <port edge="e126" num="output" />
      </output>
      <layout>
       </layout>
@@ -4966,7 +4992,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e124" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e126" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n33" port="output" />
      </from>

@@ -105,7 +105,7 @@ public class RATestBed {
 //			ra.printResponseAndEntity(ra.setPriority("5238c53ee4b08aff27a2739c", 10));
 //			ra.printResponseAndEntity(ra.activateAllAgents(PrincipalType.LEVEL));
 
-			ra.printResponseAndEntity(ra.setPriority("523b2c7de4b08aff27a273c1", 0));
+			ra.printResponseAndEntity(ra.setPriority("524ef539e4b04c664619fc4b", 20));
 //			ra.printResponseAndEntity(ra.setPriority("51fa8e49e4b0a12f02c4c9fb", 0));
 //			ra.printResponseAndEntity(ra.setPriority("51faab87e4b0a12f02c4ca08", 0));
 //		

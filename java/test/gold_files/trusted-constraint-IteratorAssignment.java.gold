@@ -63,6 +63,8 @@ SubtypeConstraint( Variable 5 at method IteratorAssignment#containerMethod():V c
 
 EqualityConstraint( Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> = Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList<Integer> )
 
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator<Integer> )
+
 EqualityConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer> = Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> )
 
 SubtypeConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer>  <:  Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int )

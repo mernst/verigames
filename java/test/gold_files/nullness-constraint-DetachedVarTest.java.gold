@@ -107,6 +107,8 @@ args: (  );
 result: List(Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[], Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]); 
 )
 
+InequalityConstraint( context: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]  <:  Variable 10 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable dvt(0); tree DetachedVarTest )
 
 InequalityConstraint( context: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position, Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[] != Constant(@nninf.quals.Nullable) )

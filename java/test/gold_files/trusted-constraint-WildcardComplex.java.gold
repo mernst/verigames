@@ -1,0 +1,63 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class Collection class type parameter 0; tree T0  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 1 at class Collection class type parameter 0; tree T0  <:  Variable 0 at class Collection class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T0Atm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Variable 3 at class List class type parameter 0; tree T1  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 3 at class List class type parameter 0; tree T1  <:  Variable 2 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(2) Object )
+
+SubtypeConstraint( Variable 6 at class ArrayList class type parameter 0; tree T1  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 6 at class ArrayList class type parameter 0; tree T1  <:  Variable 5 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(5) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 7 at class ArrayList extends type; tree <<missing tree>> within 
+class ArrayList<T1> implements List<T1> {
+    
+    ArrayList() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 9 at method ArrayList#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 7 at class ArrayList extends type; tree <<missing tree>> within 
+class ArrayList<T1> implements List<T1> {
+    
+    ArrayList() {
+        super();
+    }
+} )
+
+SubtypeConstraint( Variable 11 at class WildcardComplex class type parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 11 at class WildcardComplex class type parameter 0; tree T  <:  Variable 10 at class WildcardComplex class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(10) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 12 at class WildcardComplex extends type; tree <<missing tree>> within 
+class WildcardComplex<T> {
+    
+    WildcardComplex() {
+        super();
+    }
+    List<? extends Collection<T>> something;
+    
+    public static void method(String param) {
+    }
+} )
+
+SubtypeConstraint( Variable 13 at method WildcardComplex#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 12 at class WildcardComplex extends type; tree <<missing tree>> within 
+class WildcardComplex<T> {
+    
+    WildcardComplex() {
+        super();
+    }
+    List<? extends Collection<T>> something;
+    
+    public static void method(String param) {
+    }
+} )
+

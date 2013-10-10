@@ -3,20 +3,20 @@
   <linked-edges>
    <edge-set id="MyObj0">
     <edgeref id="e14" />
-    <edgeref id="e18" />
-    <edgeref id="e21" />
-    <edgeref id="e55" />
+    <edgeref id="e19" />
+    <edgeref id="e22" />
+    <edgeref id="e61" />
    </edge-set>
    <edge-set id="MyObj1">
     <edgeref id="e15" />
-    <edgeref id="e20" />
-    <edgeref id="e22" />
-    <edgeref id="e56" />
+    <edgeref id="e21" />
+    <edgeref id="e23" />
+    <edgeref id="e62" />
     <edgeref id="e1" />
-    <edgeref id="e48" />
+    <edgeref id="e54" />
    </edge-set>
    <edge-set id="MyObj5">
-    <edgeref id="e19" />
+    <edgeref id="e20" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -46,7 +46,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e18" num="0" />
+      <port edge="e19" num="0" />
      </output>
      <layout>
       </layout>
@@ -64,63 +64,63 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e20" num="0" />
+      <port edge="e21" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="START_LARGE_BALL">
+    <node id="n39" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e19" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n38" kind="MERGE">
-     <input>
-      <port edge="e18" num="0" />
-      <port edge="e19" num="1" />
-     </input>
-     <output>
-      <port edge="e21" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n39" kind="MERGE">
-     <input>
-      <port edge="e21" num="0" />
-      <port edge="e22" num="1" />
-     </input>
-     <output>
-      <port edge="e55" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n40" kind="SPLIT">
-     <input>
       <port edge="e20" num="0" />
-     </input>
-     <output>
-      <port edge="e22" num="1" />
-      <port edge="e56" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="END">
+    <node id="n40" kind="MERGE">
      <input>
-      <port edge="e55" num="input" />
+      <port edge="e19" num="0" />
+      <port edge="e20" num="1" />
+     </input>
+     <output>
+      <port edge="e22" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="MERGE">
+     <input>
+      <port edge="e22" num="0" />
+      <port edge="e23" num="1" />
+     </input>
+     <output>
+      <port edge="e61" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="SPLIT">
+     <input>
+      <port edge="e21" num="0" />
+     </input>
+     <output>
+      <port edge="e23" num="1" />
+      <port edge="e62" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n71" kind="END">
+     <input>
+      <port edge="e61" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n67" kind="END">
+    <node id="n72" kind="END">
      <input>
-      <port edge="e56" num="input" />
+      <port edge="e62" num="input" />
      </input>
      <output />
      <layout>
@@ -162,51 +162,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n30" port="0" />
-     </from>
-     <to>
-      <noderef id="n38" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e19" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n37" port="0" />
-     </from>
-     <to>
-      <noderef id="n38" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n32" port="0" />
      </from>
      <to>
       <noderef id="n40" port="0" />
@@ -220,38 +178,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e21" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e20" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n38" port="0" />
-     </from>
-     <to>
       <noderef id="n39" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e22" pinch="false" variableID="1" width="narrow">
-     <from>
+     </from>
+     <to>
       <noderef id="n40" port="1" />
-     </from>
-     <to>
-      <noderef id="n39" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -264,12 +204,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e55" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n32" port="0" />
      </from>
      <to>
-      <noderef id="n66" port="input" />
+      <noderef id="n42" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -282,12 +222,72 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e56" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e22" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n40" port="0" />
      </from>
      <to>
-      <noderef id="n67" port="input" />
+      <noderef id="n41" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e23" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n42" port="1" />
+     </from>
+     <to>
+      <noderef id="n41" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class MyObj extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MyObj {  MyObj() { super(); } }" editable="true" id="e61" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n71" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e62" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n72" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -310,7 +310,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e48" num="outputReturn0" />
+      <port edge="e54" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -329,7 +329,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e48" num="output" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
@@ -352,7 +352,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e48" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e54" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -377,81 +377,87 @@
   <linked-edges>
    <edge-set id="ArrayFieldAccess0">
     <edgeref id="e4" />
-    <edgeref id="e51" />
-    <edgeref id="e32" />
-    <edgeref id="e38" />
+    <edgeref id="e57" />
+    <edgeref id="e33" />
     <edgeref id="e41" />
-    <edgeref id="e42" />
-    <edgeref id="e59" />
+    <edgeref id="e44" />
+    <edgeref id="e45" />
+    <edgeref id="e66" />
     <edgeref id="e6" />
     <edgeref id="e8" />
    </edge-set>
    <edge-set id="ArrayFieldAccess1">
     <edgeref id="e9" />
-    <edgeref id="e52" />
-    <edgeref id="e33" />
-    <edgeref id="e39" />
-    <edgeref id="e43" />
-    <edgeref id="e44" />
-    <edgeref id="e60" />
+    <edgeref id="e58" />
+    <edgeref id="e18" />
+    <edgeref id="e34" />
+    <edgeref id="e36" />
+    <edgeref id="e37" />
+    <edgeref id="e42" />
+    <edgeref id="e46" />
+    <edgeref id="e47" />
+    <edgeref id="e50" />
+    <edgeref id="e65" />
     <edgeref id="e10" />
     <edgeref id="e11" />
    </edge-set>
    <edge-set id="ArrayFieldAccess2">
     <edgeref id="e16" />
-    <edgeref id="e24" />
-    <edgeref id="e27" />
-    <edgeref id="e57" />
+    <edgeref id="e25" />
+    <edgeref id="e28" />
+    <edgeref id="e63" />
    </edge-set>
    <edge-set id="ArrayFieldAccess3">
     <edgeref id="e17" />
-    <edgeref id="e26" />
-    <edgeref id="e28" />
-    <edgeref id="e58" />
+    <edgeref id="e27" />
+    <edgeref id="e29" />
+    <edgeref id="e64" />
     <edgeref id="e2" />
-    <edgeref id="e49" />
+    <edgeref id="e55" />
    </edge-set>
    <edge-set id="ArrayFieldAccess4">
     <edgeref id="e12" />
-    <edgeref id="e23" />
-    <edgeref id="e53" />
+    <edgeref id="e24" />
+    <edgeref id="e59" />
    </edge-set>
    <edge-set id="ArrayFieldAccess5">
     <edgeref id="e13" />
-    <edgeref id="e54" />
+    <edgeref id="e49" />
+    <edgeref id="e51" />
+    <edgeref id="e60" />
    </edge-set>
    <edge-set id="ArrayFieldAccess6">
-    <edgeref id="e29" />
     <edgeref id="e30" />
     <edgeref id="e31" />
-    <edgeref id="e34" />
+    <edgeref id="e32" />
     <edgeref id="e35" />
-    <edgeref id="e36" />
-    <edgeref id="e37" />
+    <edgeref id="e38" />
+    <edgeref id="e39" />
     <edgeref id="e40" />
-    <edgeref id="e50" />
+    <edgeref id="e43" />
+    <edgeref id="e56" />
    </edge-set>
    <edge-set id="ArrayFieldAccess7">
-    <edgeref id="e45" />
-    <edgeref id="e61" />
+    <edgeref id="e48" />
+    <edgeref id="e67" />
    </edge-set>
    <edge-set id="ArrayFieldAccess13">
-    <edgeref id="e25" />
+    <edgeref id="e26" />
    </edge-set>
    <edge-set id="ArrayFieldAccess23">
     <edgeref id="e3" />
    </edge-set>
-   <edge-set id="ArrayFieldAccess50">
+   <edge-set id="ArrayFieldAccess56">
     <edgeref id="e5" />
    </edge-set>
-   <edge-set id="ArrayFieldAccess53">
-    <edgeref id="e46" />
+   <edge-set id="ArrayFieldAccess59">
+    <edgeref id="e52" />
    </edge-set>
-   <edge-set id="ArrayFieldAccess54">
+   <edge-set id="ArrayFieldAccess60">
     <edgeref id="e7" />
    </edge-set>
-   <edge-set id="ArrayFieldAccess57">
-    <edgeref id="e47" />
+   <edge-set id="ArrayFieldAccess63">
+    <edgeref id="e53" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -476,7 +482,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e51" num="output" />
+      <port edge="e57" num="output" />
      </output>
      <layout>
       </layout>
@@ -486,7 +492,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e52" num="output" />
+      <port edge="e58" num="output" />
      </output>
      <layout>
       </layout>
@@ -504,7 +510,7 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e24" num="0" />
+      <port edge="e25" num="0" />
      </output>
      <layout>
       </layout>
@@ -522,69 +528,53 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e26" num="0" />
+      <port edge="e27" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="START_LARGE_BALL">
+    <node id="n44" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e25" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n43" kind="MERGE">
-     <input>
-      <port edge="e24" num="0" />
-      <port edge="e25" num="1" />
-     </input>
-     <output>
-      <port edge="e27" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n44" kind="MERGE">
-     <input>
-      <port edge="e27" num="0" />
-      <port edge="e28" num="1" />
-     </input>
-     <output>
-      <port edge="e57" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n45" kind="SPLIT">
-     <input>
       <port edge="e26" num="0" />
-     </input>
-     <output>
-      <port edge="e28" num="1" />
-      <port edge="e58" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n62" kind="END">
+    <node id="n45" kind="MERGE">
      <input>
-      <port edge="e51" num="input" />
+      <port edge="e25" num="0" />
+      <port edge="e26" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e28" num="0" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n63" kind="END">
+    <node id="n46" kind="MERGE">
      <input>
-      <port edge="e52" num="input" />
+      <port edge="e28" num="0" />
+      <port edge="e29" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e63" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n68" kind="END">
+    <node id="n47" kind="SPLIT">
+     <input>
+      <port edge="e27" num="0" />
+     </input>
+     <output>
+      <port edge="e29" num="1" />
+      <port edge="e64" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n67" kind="END">
      <input>
       <port edge="e57" num="input" />
      </input>
@@ -592,9 +582,25 @@
      <layout>
       </layout>
     </node>
-    <node id="n69" kind="END">
+    <node id="n68" kind="END">
      <input>
       <port edge="e58" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n73" kind="END">
+     <input>
+      <port edge="e63" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n74" kind="END">
+     <input>
+      <port edge="e64" num="input" />
      </input>
      <output />
      <layout>
@@ -678,51 +684,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e25" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n34" port="0" />
-     </from>
-     <to>
-      <noderef id="n43" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e25" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n42" port="0" />
-     </from>
-     <to>
-      <noderef id="n43" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n36" port="0" />
      </from>
      <to>
       <noderef id="n45" port="0" />
@@ -736,38 +700,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e27" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e26" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n43" port="0" />
-     </from>
-     <to>
       <noderef id="n44" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n45" port="1" />
      </from>
      <to>
-      <noderef id="n44" port="1" />
+      <noderef id="n45" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -780,12 +726,72 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e51" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e27" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n36" port="0" />
+     </from>
+     <to>
+      <noderef id="n47" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e28" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n45" port="0" />
+     </from>
+     <to>
+      <noderef id="n46" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n47" port="1" />
+     </from>
+     <to>
+      <noderef id="n46" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e57" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
      <to>
-      <noderef id="n62" port="input" />
+      <noderef id="n67" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -798,27 +804,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e52" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e58" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n23" port="output" />
-     </from>
-     <to>
-      <noderef id="n63" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e57" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n44" port="output" />
      </from>
      <to>
       <noderef id="n68" port="input" />
@@ -834,12 +822,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e58" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class ArrayFieldAccess extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ArrayFieldAccess {  ArrayFieldAccess() { super(); } private MyObj[] array;  public void context() { int i = array.length; array[i] = new MyObj(); } }" editable="true" id="e63" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n45" port="output" />
+      <noderef id="n46" port="output" />
      </from>
      <to>
-      <noderef id="n69" port="input" />
+      <noderef id="n73" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e64" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n47" port="output" />
+     </from>
+     <to>
+      <noderef id="n74" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -862,7 +868,7 @@
     </node>
     <node id="n9" kind="OUTGOING">
      <input>
-      <port edge="e49" num="outputReturn0" />
+      <port edge="e55" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -881,7 +887,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e49" num="output" />
+      <port edge="e55" num="output" />
      </output>
      <layout>
       </layout>
@@ -904,7 +910,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e49" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method ArrayFieldAccess#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e55" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -934,7 +940,7 @@
     </node>
     <node id="n13" kind="OUTGOING">
      <input>
-      <port edge="e50" num="outReceiver0" />
+      <port edge="e56" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -945,7 +951,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -963,7 +969,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e24" num="output" />
      </output>
      <layout>
       </layout>
@@ -981,147 +987,32 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e54" num="output" />
+      <port edge="e49" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="CONNECT">
+    <node id="n37" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e18" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="CONNECT">
      <input>
-      <port edge="e23" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e53" num="output" />
+      <port edge="e36" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="SUBBOARD" name="ArrayFieldAccess-array--GET">
+    <node id="n43" kind="CONNECT">
      <input>
-      <port edge="e30" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e31" num="outReceiver0" />
-      <port edge="e32" num="outputReturn0" />
-      <port edge="e33" num="outputReturn1" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n47" kind="SPLIT">
-     <input>
-      <port edge="e29" num="input" />
-     </input>
-     <output>
-      <port edge="e30" num="split" />
-      <port edge="e34" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n48" kind="CONNECT">
-     <input>
-      <port edge="e31" num="input" />
-     </input>
-     <output>
-      <port edge="e35" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n49" kind="CONNECT">
-     <input>
-      <port edge="e32" num="input" />
-     </input>
-     <output>
-      <port edge="e41" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n50" kind="CONNECT">
-     <input>
-      <port edge="e33" num="input" />
-     </input>
-     <output>
-      <port edge="e43" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n51" kind="END">
-     <input>
-      <port edge="e34" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n52" kind="SUBBOARD" name="ArrayFieldAccess-array--GET">
-     <input>
-      <port edge="e36" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e37" num="outReceiver0" />
-      <port edge="e38" num="outputReturn0" />
-      <port edge="e39" num="outputReturn1" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n53" kind="SPLIT">
-     <input>
-      <port edge="e35" num="input" />
-     </input>
-     <output>
-      <port edge="e36" num="split" />
-      <port edge="e40" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n54" kind="CONNECT">
-     <input>
-      <port edge="e37" num="input" />
-     </input>
-     <output>
-      <port edge="e50" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n55" kind="CONNECT">
-     <input>
-      <port edge="e38" num="input" />
-     </input>
-     <output>
-      <port edge="e42" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n56" kind="CONNECT">
-     <input>
-      <port edge="e39" num="input" />
-     </input>
-     <output>
-      <port edge="e44" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n57" kind="END">
-     <input>
-      <port edge="e40" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n58" kind="MERGE">
-     <input>
-      <port edge="e41" num="first" />
-      <port edge="e42" num="second" />
+      <port edge="e24" num="input" />
      </input>
      <output>
       <port edge="e59" num="output" />
@@ -1129,52 +1020,202 @@
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="MERGE">
+    <node id="n48" kind="SUBBOARD" name="ArrayFieldAccess-array--GET">
      <input>
-      <port edge="e43" num="first" />
-      <port edge="e44" num="second" />
+      <port edge="e31" num="inReceiver0" />
      </input>
      <output>
+      <port edge="e32" num="outReceiver0" />
+      <port edge="e33" num="outputReturn0" />
+      <port edge="e34" num="outputReturn1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n49" kind="SPLIT">
+     <input>
+      <port edge="e30" num="input" />
+     </input>
+     <output>
+      <port edge="e31" num="split" />
+      <port edge="e35" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n50" kind="CONNECT">
+     <input>
+      <port edge="e32" num="input" />
+     </input>
+     <output>
+      <port edge="e38" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="CONNECT">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output>
+      <port edge="e44" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="CONNECT">
+     <input>
+      <port edge="e34" num="input" />
+     </input>
+     <output>
+      <port edge="e37" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n53" kind="END">
+     <input>
+      <port edge="e35" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n54" kind="MERGE">
+     <input>
+      <port edge="e36" num="first" />
+      <port edge="e37" num="second" />
+     </input>
+     <output>
+      <port edge="e46" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n55" kind="SUBBOARD" name="ArrayFieldAccess-array--GET">
+     <input>
+      <port edge="e39" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e40" num="outReceiver0" />
+      <port edge="e41" num="outputReturn0" />
+      <port edge="e42" num="outputReturn1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n56" kind="SPLIT">
+     <input>
+      <port edge="e38" num="input" />
+     </input>
+     <output>
+      <port edge="e39" num="split" />
+      <port edge="e43" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="CONNECT">
+     <input>
+      <port edge="e40" num="input" />
+     </input>
+     <output>
+      <port edge="e56" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="CONNECT">
+     <input>
+      <port edge="e41" num="input" />
+     </input>
+     <output>
+      <port edge="e45" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="CONNECT">
+     <input>
+      <port edge="e42" num="input" />
+     </input>
+     <output>
+      <port edge="e47" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n60" kind="END">
+     <input>
+      <port edge="e43" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="MERGE">
+     <input>
+      <port edge="e44" num="first" />
+      <port edge="e45" num="second" />
+     </input>
+     <output>
+      <port edge="e66" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n62" kind="MERGE">
+     <input>
+      <port edge="e46" num="first" />
+      <port edge="e47" num="second" />
+     </input>
+     <output>
+      <port edge="e50" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n63" kind="SUBBOARD" name="MyObj--init----V">
+     <input />
+     <output>
+      <port edge="e48" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n64" kind="CONNECT">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output>
+      <port edge="e67" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="MERGE">
+     <input>
+      <port edge="e50" num="0" />
+      <port edge="e51" num="1" />
+     </input>
+     <output>
+      <port edge="e65" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="SPLIT">
+     <input>
+      <port edge="e49" num="0" />
+     </input>
+     <output>
+      <port edge="e51" num="1" />
       <port edge="e60" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n60" kind="SUBBOARD" name="MyObj--init----V">
-     <input />
-     <output>
-      <port edge="e45" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n61" kind="CONNECT">
-     <input>
-      <port edge="e45" num="input" />
-     </input>
-     <output>
-      <port edge="e61" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n64" kind="END">
-     <input>
-      <port edge="e53" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n65" kind="END">
-     <input>
-      <port edge="e54" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n70" kind="END">
+    <node id="n69" kind="END">
      <input>
       <port edge="e59" num="input" />
      </input>
@@ -1182,7 +1223,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="END">
+    <node id="n70" kind="END">
      <input>
       <port edge="e60" num="input" />
      </input>
@@ -1190,9 +1231,25 @@
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="END">
+    <node id="n75" kind="END">
      <input>
-      <port edge="e61" num="input" />
+      <port edge="e65" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n76" kind="END">
+     <input>
+      <port edge="e66" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n77" kind="END">
+     <input>
+      <port edge="e67" num="input" />
      </input>
      <output />
      <layout>
@@ -1252,12 +1309,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e23" pinch="false" variableID="7" width="wide">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e18" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n41" port="input" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1270,12 +1327,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e29" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e24" pinch="false" variableID="7" width="wide">
      <from>
-      <noderef id="n14" port="output" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
-      <noderef id="n47" port="input" />
+      <noderef id="n43" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1290,43 +1347,7 @@
     </edge>
     <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e30" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n47" port="split" />
-     </from>
-     <to>
-      <noderef id="n46" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n46" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n48" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e32" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n46" port="outputReturn0" />
+      <noderef id="n14" port="output" />
      </from>
      <to>
       <noderef id="n49" port="input" />
@@ -1342,9 +1363,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e33" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n46" port="outputReturn1" />
+      <noderef id="n49" port="split" />
+     </from>
+     <to>
+      <noderef id="n48" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e32" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n48" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n50" port="input" />
@@ -1360,9 +1399,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e33" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n47" port="toEnd" />
+      <noderef id="n48" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n51" port="input" />
@@ -1378,9 +1417,27 @@
        </point>
      </edge-layout>
     </edge>
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e34" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n48" port="outputReturn1" />
+     </from>
+     <to>
+      <noderef id="n52" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
     <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n48" port="output" />
+      <noderef id="n49" port="toEnd" />
      </from>
      <to>
       <noderef id="n53" port="input" />
@@ -1402,12 +1459,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e36" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n53" port="split" />
+      <noderef id="n38" port="toMerge" />
      </from>
      <to>
-      <noderef id="n52" port="inReceiver0" />
+      <noderef id="n54" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e37" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n52" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n54" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -1420,45 +1501,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e37" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e38" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n52" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n54" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e38" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n52" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n55" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e39" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n52" port="outputReturn1" />
+      <noderef id="n50" port="output" />
      </from>
      <to>
       <noderef id="n56" port="input" />
@@ -1474,9 +1519,27 @@
        </point>
      </edge-layout>
     </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n56" port="split" />
+     </from>
+     <to>
+      <noderef id="n55" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
     <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e40" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n53" port="toEnd" />
+      <noderef id="n55" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n57" port="input" />
@@ -1494,10 +1557,70 @@
     </edge>
     <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e41" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n49" port="toMerge" />
+      <noderef id="n55" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n58" port="first" />
+      <noderef id="n58" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n55" port="outputReturn1" />
+     </from>
+     <to>
+      <noderef id="n59" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e43" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n56" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n60" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e44" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n51" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n61" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -1528,12 +1651,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e42" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e45" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n55" port="toMerge" />
+      <noderef id="n58" port="toMerge" />
      </from>
      <to>
-      <noderef id="n58" port="second" />
+      <noderef id="n61" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -1546,12 +1669,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e43" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e46" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n50" port="toMerge" />
+      <noderef id="n54" port="toMerge" />
      </from>
      <to>
-      <noderef id="n59" port="first" />
+      <noderef id="n62" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e47" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n59" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n62" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -1570,63 +1711,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e44" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e48" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n56" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n59" port="second" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e45" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n60" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n61" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e50" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n54" port="output" />
-     </from>
-     <to>
-      <noderef id="n13" port="outReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e53" pinch="false" variableID="7" width="wide">
-     <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n63" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n64" port="input" />
@@ -1642,12 +1729,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj" editable="true" id="e54" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj" editable="true" id="e49" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n28" port="output" />
+      <noderef id="n28" port="0" />
      </from>
      <to>
-      <noderef id="n65" port="input" />
+      <noderef id="n66" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1660,9 +1747,87 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e59" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e50" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n58" port="output" />
+      <noderef id="n62" port="0" />
+     </from>
+     <to>
+      <noderef id="n65" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj" editable="true" id="e51" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n66" port="1" />
+     </from>
+     <to>
+      <noderef id="n65" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ArrayFieldAccess#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void context() { int i = array.length; array[i] = new MyObj(); }Atm: @VarAnnot(4) ArrayFieldAccess" editable="true" id="e56" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n57" port="output" />
+     </from>
+     <to>
+      <noderef id="n13" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int" editable="false" id="e59" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n69" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method ArrayFieldAccess#context():V creation 0; tree MyObj" editable="true" id="e60" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n66" port="output" />
      </from>
      <to>
       <noderef id="n70" port="input" />
@@ -1678,12 +1843,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e60" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class ArrayFieldAccess field array; tree MyObj at position ((0,0)) within MyObj[]" editable="true" id="e65" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n59" port="output" />
+      <noderef id="n65" port="output" />
      </from>
      <to>
-      <noderef id="n71" port="input" />
+      <noderef id="n75" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1696,12 +1861,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e61" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class ArrayFieldAccess field array; tree MyObj[]" editable="true" id="e66" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n61" port="output" />
      </from>
      <to>
-      <noderef id="n72" port="input" />
+      <noderef id="n76" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method MyObj#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e67" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n64" port="output" />
+     </from>
+     <to>
+      <noderef id="n77" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1726,7 +1909,7 @@
     </node>
     <node id="n17" kind="OUTGOING">
      <input>
-      <port edge="e46" num="outReceiver0" />
+      <port edge="e52" num="outReceiver0" />
       <port edge="e6" num="outputReturn0" />
       <port edge="e10" num="outputReturn1" />
      </input>
@@ -1739,7 +1922,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e46" num="output" />
+      <port edge="e52" num="output" />
      </output>
      <layout>
       </layout>
@@ -1814,7 +1997,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e46" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e52" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -1854,7 +2037,7 @@
      <input>
       <port edge="e8" num="outParam0" />
       <port edge="e11" num="outParam1" />
-      <port edge="e47" num="outReceiver0" />
+      <port edge="e53" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1865,7 +2048,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e47" num="output" />
+      <port edge="e53" num="output" />
      </output>
      <layout>
       </layout>
@@ -1924,7 +2107,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e47" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e53" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>

@@ -67,13 +67,9 @@ class IfElse {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
-
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 

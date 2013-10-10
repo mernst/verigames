@@ -41,7 +41,7 @@ public class LayoutDebugger
         name = name.substring(name.length() - maxLength, name.length());
     }
 
-    System.out.println(name.length() + " Writing " + name);
+    System.out.println(" Writing " + name);
 
     printBoardVariables(name, b, folder);
 

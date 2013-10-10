@@ -2,83 +2,87 @@
  <level name="StaticMethod">
   <linked-edges>
    <edge-set id="StaticMethod0">
-    <edgeref id="e4" />
+    <edgeref id="e13" />
+    <edgeref id="e25" />
+    <edgeref id="e27" />
+    <edgeref id="e36" />
+    <edgeref id="e52" />
+    <edgeref id="e11" />
+    <edgeref id="e28" />
+    <edgeref id="e29" />
+    <edgeref id="e32" />
+    <edgeref id="e34" />
+    <edgeref id="e37" />
+    <edgeref id="e38" />
     <edgeref id="e40" />
-    <edgeref id="e23" />
+    <edgeref id="e50" />
+   </edge-set>
+   <edge-set id="StaticMethod1">
+    <edgeref id="e4" />
     <edgeref id="e47" />
+    <edgeref id="e16" />
+    <edgeref id="e26" />
+    <edgeref id="e39" />
+    <edgeref id="e55" />
     <edgeref id="e5" />
     <edgeref id="e6" />
    </edge-set>
-   <edge-set id="StaticMethod1">
+   <edge-set id="StaticMethod2">
     <edgeref id="e7" />
-    <edgeref id="e41" />
+    <edgeref id="e48" />
     <edgeref id="e8" />
     <edgeref id="e9" />
-   </edge-set>
-   <edge-set id="StaticMethod2">
-    <edgeref id="e13" />
-    <edgeref id="e15" />
-    <edgeref id="e18" />
-    <edgeref id="e45" />
    </edge-set>
    <edge-set id="StaticMethod3">
     <edgeref id="e14" />
     <edgeref id="e17" />
-    <edgeref id="e19" />
-    <edgeref id="e46" />
-    <edgeref id="e1" />
-    <edgeref id="e37" />
+    <edgeref id="e20" />
+    <edgeref id="e53" />
    </edge-set>
    <edge-set id="StaticMethod4">
-    <edgeref id="e2" />
-    <edgeref id="e20" />
-    <edgeref id="e22" />
-    <edgeref id="e38" />
+    <edgeref id="e15" />
+    <edgeref id="e19" />
+    <edgeref id="e21" />
+    <edgeref id="e54" />
+    <edgeref id="e1" />
+    <edgeref id="e44" />
    </edge-set>
    <edge-set id="StaticMethod5">
-    <edgeref id="e10" />
-    <edgeref id="e21" />
-    <edgeref id="e42" />
+    <edgeref id="e2" />
+    <edgeref id="e22" />
+    <edgeref id="e24" />
+    <edgeref id="e45" />
    </edge-set>
    <edge-set id="StaticMethod6">
-    <edgeref id="e11" />
-    <edgeref id="e26" />
-    <edgeref id="e27" />
-    <edgeref id="e30" />
-    <edgeref id="e32" />
-    <edgeref id="e43" />
+    <edgeref id="e10" />
+    <edgeref id="e23" />
+    <edgeref id="e49" />
    </edge-set>
    <edge-set id="StaticMethod7">
     <edgeref id="e12" />
-    <edgeref id="e28" />
-    <edgeref id="e29" />
+    <edgeref id="e30" />
     <edgeref id="e31" />
     <edgeref id="e33" />
-    <edgeref id="e44" />
+    <edgeref id="e35" />
+    <edgeref id="e51" />
    </edge-set>
    <edge-set id="StaticMethod8">
-    <edgeref id="e39" />
+    <edgeref id="e46" />
    </edge-set>
    <edge-set id="StaticMethod14">
-    <edgeref id="e16" />
+    <edgeref id="e18" />
    </edge-set>
-   <edge-set id="StaticMethod32">
-    <edgeref id="e24" />
-   </edge-set>
-   <edge-set id="StaticMethod33">
-    <edgeref id="e25" />
-   </edge-set>
-   <edge-set id="StaticMethod47">
+   <edge-set id="StaticMethod55">
     <edgeref id="e3" />
    </edge-set>
-   <edge-set id="StaticMethod48">
-    <edgeref id="e34" />
+   <edge-set id="StaticMethod56">
+    <edgeref id="e41" />
    </edge-set>
-   <edge-set id="StaticMethod49">
-    <edgeref id="e35" />
+   <edge-set id="StaticMethod57">
+    <edgeref id="e42" />
    </edge-set>
-   <edge-set id="StaticMethod50">
-    <edgeref id="e36" />
+   <edge-set id="StaticMethod58">
+    <edgeref id="e43" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -103,7 +107,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e40" num="output" />
+      <port edge="e47" num="output" />
      </output>
      <layout>
       </layout>
@@ -113,25 +117,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e41" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e13" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n27" kind="CONNECT">
-     <input>
-      <port edge="e13" num="input" />
-     </input>
-     <output>
-      <port edge="e15" num="0" />
+      <port edge="e48" num="output" />
      </output>
      <layout>
       </layout>
@@ -154,74 +140,92 @@
      <layout>
       </layout>
     </node>
-    <node id="n30" kind="START_LARGE_BALL">
+    <node id="n30" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e16" num="0" />
+      <port edge="e15" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n31" kind="MERGE">
+    <node id="n31" kind="CONNECT">
      <input>
-      <port edge="e15" num="0" />
-      <port edge="e16" num="1" />
+      <port edge="e15" num="input" />
      </input>
+     <output>
+      <port edge="e19" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n34" kind="START_LARGE_BALL">
+     <input />
      <output>
       <port edge="e18" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="MERGE">
-     <input>
-      <port edge="e18" num="0" />
-      <port edge="e19" num="1" />
-     </input>
-     <output>
-      <port edge="e45" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="SPLIT">
+    <node id="n35" kind="MERGE">
      <input>
       <port edge="e17" num="0" />
+      <port edge="e18" num="1" />
      </input>
      <output>
-      <port edge="e19" num="1" />
-      <port edge="e46" num="output" />
+      <port edge="e20" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n51" kind="END">
+    <node id="n36" kind="MERGE">
      <input>
-      <port edge="e40" num="input" />
+      <port edge="e20" num="0" />
+      <port edge="e21" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e53" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n52" kind="END">
+    <node id="n37" kind="SPLIT">
      <input>
-      <port edge="e41" num="input" />
+      <port edge="e19" num="0" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n56" kind="END">
-     <input>
-      <port edge="e45" num="input" />
-     </input>
-     <output />
+     <output>
+      <port edge="e21" num="1" />
+      <port edge="e54" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
     <node id="n57" kind="END">
      <input>
-      <port edge="e46" num="input" />
+      <port edge="e47" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="END">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n63" kind="END">
+     <input>
+      <port edge="e53" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n64" kind="END">
+     <input>
+      <port edge="e54" num="input" />
      </input>
      <output />
      <layout>
@@ -269,25 +273,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n26" port="output" />
-     </from>
-     <to>
-      <noderef id="n27" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e14" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n28" port="output" />
      </from>
@@ -305,36 +291,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e15" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n27" port="0" />
+      <noderef id="n30" port="output" />
      </from>
      <to>
-      <noderef id="n31" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e16" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n30" port="0" />
-     </from>
-     <to>
-      <noderef id="n31" port="1" />
+      <noderef id="n31" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -347,14 +309,20 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e17" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n29" port="0" />
      </from>
      <to>
-      <noderef id="n33" port="0" />
+      <noderef id="n35" port="0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -365,20 +333,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e18" pinch="false" variableID="-1" width="narrow">
      <from>
-      <noderef id="n31" port="0" />
+      <noderef id="n34" port="0" />
      </from>
      <to>
-      <noderef id="n32" port="0" />
+      <noderef id="n35" port="1" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -391,10 +353,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n33" port="1" />
+      <noderef id="n31" port="0" />
      </from>
      <to>
-      <noderef id="n32" port="1" />
+      <noderef id="n37" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -407,12 +369,54 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e40" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n35" port="0" />
+     </from>
+     <to>
+      <noderef id="n36" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n37" port="1" />
+     </from>
+     <to>
+      <noderef id="n36" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
      <to>
-      <noderef id="n51" port="input" />
+      <noderef id="n57" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -425,12 +429,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class StaticMethod static field something; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (2,0)) within List&lt;?&gt;Atm: @VarAnnot(5) Object" editable="true" id="e41" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class StaticMethod static field something; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (2,0)) within List&lt;?&gt;Atm: @VarAnnot(5) Object" editable="true" id="e48" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
      <to>
-      <noderef id="n52" port="input" />
+      <noderef id="n58" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -443,12 +447,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e45" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class StaticMethod extends type; tree &lt;&lt;missing tree&gt;&gt; within  class StaticMethod {  StaticMethod() { super(); } public static List&lt;?&gt; something;  public static void method(String param) { String other = param; something = new ArrayList&lt;String&gt;(); }  public void instMethod() { method(&quot;YUM&quot;); } }" editable="true" id="e53" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
-      <noderef id="n56" port="input" />
+      <noderef id="n63" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -461,12 +465,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e46" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e54" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n33" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n57" port="input" />
+      <noderef id="n64" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -489,7 +493,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e37" num="outputReturn0" />
+      <port edge="e44" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -508,7 +512,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e44" num="output" />
      </output>
      <layout>
       </layout>
@@ -531,7 +535,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e37" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at method StaticMethod#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e44" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -561,7 +565,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e38" num="outParam0" />
+      <port edge="e45" num="outParam0" />
      </input>
      <output />
      <layout>
@@ -572,7 +576,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e20" num="0" />
+      <port edge="e22" num="0" />
      </output>
      <layout>
       </layout>
@@ -590,7 +594,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e21" num="0" />
+      <port edge="e23" num="0" />
      </output>
      <layout>
       </layout>
@@ -608,7 +612,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
@@ -626,167 +630,238 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="MERGE">
-     <input>
-      <port edge="e21" num="0" />
-      <port edge="e22" num="1" />
-     </input>
-     <output>
-      <port edge="e42" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n35" kind="SPLIT">
-     <input>
-      <port edge="e20" num="0" />
-     </input>
-     <output>
-      <port edge="e22" num="1" />
-      <port edge="e38" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n36" kind="SUBBOARD" name="StaticMethod-something--GET">
+    <node id="n26" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e23" num="outputReturn0" />
-      <port edge="e24" num="outputReturn1" />
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="CONNECT">
+    <node id="n27" kind="CONNECT">
      <input>
-      <port edge="e23" num="input" />
+      <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e47" num="output" />
+      <port edge="e25" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
-     <input>
-      <port edge="e24" num="input" />
-     </input>
+    <node id="n32" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
      <output>
-      <port edge="e25" num="toEnd" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="END">
+    <node id="n33" kind="CONNECT">
      <input>
-      <port edge="e25" num="input" />
+      <port edge="e16" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e26" num="0" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="SUBBOARD" name="StaticMethod-something--SET">
+    <node id="n38" kind="MERGE">
      <input>
-      <port edge="e27" num="inParam0" />
-      <port edge="e29" num="inParam1" />
+      <port edge="e23" num="0" />
+      <port edge="e24" num="1" />
      </input>
      <output>
-      <port edge="e30" num="outParam0" />
-      <port edge="e31" num="outParam1" />
+      <port edge="e49" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="SPLIT">
+     <input>
+      <port edge="e22" num="0" />
+     </input>
+     <output>
+      <port edge="e24" num="1" />
+      <port edge="e45" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n40" kind="MERGE">
+     <input>
+      <port edge="e26" num="0" />
+      <port edge="e27" num="1" />
+     </input>
+     <output>
+      <port edge="e39" num="0" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n41" kind="SPLIT">
      <input>
-      <port edge="e26" num="input" />
+      <port edge="e25" num="0" />
      </input>
      <output>
-      <port edge="e27" num="split" />
-      <port edge="e32" num="toEnd" />
+      <port edge="e27" num="1" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="SPLIT">
+    <node id="n42" kind="SUBBOARD" name="StaticMethod-something--SET">
+     <input>
+      <port edge="e29" num="inParam0" />
+      <port edge="e31" num="inParam1" />
+     </input>
+     <output>
+      <port edge="e32" num="outParam0" />
+      <port edge="e33" num="outParam1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="SPLIT">
      <input>
       <port edge="e28" num="input" />
      </input>
      <output>
       <port edge="e29" num="split" />
-      <port edge="e33" num="toEnd" />
+      <port edge="e34" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="CONNECT">
+    <node id="n44" kind="SPLIT">
      <input>
       <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e43" num="output" />
+      <port edge="e31" num="split" />
+      <port edge="e35" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n44" kind="CONNECT">
-     <input>
-      <port edge="e31" num="input" />
-     </input>
-     <output>
-      <port edge="e44" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n45" kind="END">
+    <node id="n45" kind="CONNECT">
      <input>
       <port edge="e32" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e37" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="END">
+    <node id="n46" kind="CONNECT">
      <input>
       <port edge="e33" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e51" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n53" kind="END">
+    <node id="n47" kind="END">
      <input>
-      <port edge="e42" num="input" />
+      <port edge="e34" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n54" kind="END">
+    <node id="n48" kind="END">
      <input>
-      <port edge="e43" num="input" />
+      <port edge="e35" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n55" kind="END">
+    <node id="n49" kind="CONNECT">
      <input>
-      <port edge="e44" num="input" />
+      <port edge="e36" num="input" />
+     </input>
+     <output>
+      <port edge="e52" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n50" kind="CONNECT">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output>
+      <port edge="e38" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="MERGE">
+     <input>
+      <port edge="e39" num="0" />
+      <port edge="e40" num="1" />
+     </input>
+     <output>
+      <port edge="e55" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="SPLIT">
+     <input>
+      <port edge="e38" num="0" />
+     </input>
+     <output>
+      <port edge="e40" num="1" />
+      <port edge="e50" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="END">
+     <input>
+      <port edge="e49" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n58" kind="END">
+    <node id="n60" kind="END">
      <input>
-      <port edge="e47" num="input" />
+      <port edge="e50" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="END">
+     <input>
+      <port edge="e51" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n62" kind="END">
+     <input>
+      <port edge="e52" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="END">
+     <input>
+      <port edge="e55" num="input" />
      </input>
      <output />
      <layout>
@@ -864,12 +939,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e20" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt; IfTest: false mergedTo: Set()" editable="true" id="e13" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n8" port="0" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
-      <noderef id="n35" port="0" />
+      <noderef id="n27" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -882,12 +957,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String" editable="true" id="e21" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e16" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n21" port="0" />
+      <noderef id="n32" port="output" />
      </from>
      <to>
-      <noderef id="n34" port="0" />
+      <noderef id="n33" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -902,10 +977,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e22" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n35" port="1" />
+      <noderef id="n8" port="0" />
      </from>
      <to>
-      <noderef id="n34" port="1" />
+      <noderef id="n39" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -916,20 +991,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e23" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String" editable="true" id="e23" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n36" port="outputReturn0" />
+      <noderef id="n21" port="0" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
+      <noderef id="n38" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -942,12 +1011,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e24" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n36" port="outputReturn1" />
+      <noderef id="n39" port="1" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n38" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -958,14 +1027,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted" editable="false" id="e25" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt; IfTest: false mergedTo: Set()" editable="true" id="e25" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n38" port="toEnd" />
+      <noderef id="n27" port="0" />
      </from>
      <to>
-      <noderef id="n39" port="input" />
+      <noderef id="n41" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -978,93 +1053,57 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e26" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n33" port="0" />
+     </from>
+     <to>
+      <noderef id="n40" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt; IfTest: false mergedTo: Set()" editable="true" id="e27" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n41" port="1" />
+     </from>
+     <to>
+      <noderef id="n40" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e28" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n23" port="output" />
-     </from>
-     <to>
-      <noderef id="n41" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e27" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n41" port="split" />
-     </from>
-     <to>
-      <noderef id="n40" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e28" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n25" port="output" />
-     </from>
-     <to>
-      <noderef id="n42" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e29" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n42" port="split" />
-     </from>
-     <to>
-      <noderef id="n40" port="inParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e30" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n40" port="outParam0" />
      </from>
      <to>
       <noderef id="n43" port="input" />
@@ -1080,9 +1119,33 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e31" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e29" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n40" port="outParam1" />
+      <noderef id="n43" port="split" />
+     </from>
+     <to>
+      <noderef id="n42" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e30" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n25" port="output" />
      </from>
      <to>
       <noderef id="n44" port="input" />
@@ -1098,9 +1161,33 @@
        </point>
      </edge-layout>
     </edge>
+    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e31" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n44" port="split" />
+     </from>
+     <to>
+      <noderef id="n42" port="inParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
     <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e32" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n41" port="toEnd" />
+      <noderef id="n42" port="outParam0" />
      </from>
      <to>
       <noderef id="n45" port="input" />
@@ -1114,6 +1201,18 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e33" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n42" port="outParam1" />
+     </from>
+     <to>
+      <noderef id="n46" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1122,12 +1221,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e33" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e34" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n42" port="toEnd" />
+      <noderef id="n43" port="toEnd" />
      </from>
      <to>
-      <noderef id="n46" port="input" />
+      <noderef id="n47" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1146,9 +1245,141 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e38" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e35" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n35" port="output" />
+      <noderef id="n44" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n48" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt; IfTest: false mergedTo: Set()" editable="true" id="e36" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n49" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e37" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n45" port="output" />
+     </from>
+     <to>
+      <noderef id="n50" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e38" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n50" port="0" />
+     </from>
+     <to>
+      <noderef id="n52" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n40" port="0" />
+     </from>
+     <to>
+      <noderef id="n51" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e40" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n52" port="1" />
+     </from>
+     <to>
+      <noderef id="n51" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String" editable="true" id="e45" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam0" />
@@ -1176,12 +1407,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String" editable="true" id="e49" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n34" port="output" />
+      <noderef id="n38" port="output" />
      </from>
      <to>
-      <noderef id="n53" port="input" />
+      <noderef id="n59" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1194,12 +1425,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e43" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree ArrayList within ArrayList&lt;String&gt;" editable="true" id="e50" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n43" port="output" />
+      <noderef id="n52" port="output" />
      </from>
      <to>
-      <noderef id="n54" port="input" />
+      <noderef id="n60" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1212,12 +1443,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e44" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method StaticMethod#method(Ljava/lang/String;):V creation 0; tree String at position ((3,0)) within ArrayList&lt;String&gt;" editable="true" id="e51" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n44" port="output" />
+      <noderef id="n46" port="output" />
      </from>
      <to>
-      <noderef id="n55" port="input" />
+      <noderef id="n61" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1230,12 +1461,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt; IfTest: false mergedTo: Set()" editable="true" id="e52" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n37" port="output" />
+      <noderef id="n49" port="output" />
      </from>
      <to>
-      <noderef id="n58" port="input" />
+      <noderef id="n62" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class StaticMethod static field something; tree List within List&lt;?&gt;" editable="true" id="e55" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n51" port="output" />
+     </from>
+     <to>
+      <noderef id="n65" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1260,7 +1509,7 @@
     </node>
     <node id="n10" kind="OUTGOING">
      <input>
-      <port edge="e39" num="outReceiver0" />
+      <port edge="e46" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1271,42 +1520,42 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e39" num="output" />
+      <port edge="e46" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="SUBBOARD" name="StaticMethod-method-Ljava-lang-String---V">
+    <node id="n53" kind="SUBBOARD" name="StaticMethod-method-Ljava-lang-String---V">
      <input>
-      <port edge="e34" num="inParam0" />
+      <port edge="e41" num="inParam0" />
      </input>
      <output>
-      <port edge="e35" num="outParam0" />
+      <port edge="e42" num="outParam0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="START_SMALL_BALL">
+    <node id="n54" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e41" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n49" kind="CONNECT">
+    <node id="n55" kind="CONNECT">
      <input>
-      <port edge="e35" num="input" />
+      <port edge="e42" num="input" />
      </input>
      <output>
-      <port edge="e36" num="toEnd" />
+      <port edge="e43" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n50" kind="END">
+    <node id="n56" kind="END">
      <input>
-      <port edge="e36" num="input" />
+      <port edge="e43" num="input" />
      </input>
      <output />
      <layout>
@@ -1330,12 +1579,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="YUM" editable="false" id="e34" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="YUM" editable="false" id="e41" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n48" port="output" />
+      <noderef id="n54" port="output" />
      </from>
      <to>
-      <noderef id="n47" port="inParam0" />
+      <noderef id="n53" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -1348,12 +1597,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="YUM" editable="false" id="e35" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="YUM" editable="false" id="e42" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n47" port="outParam0" />
+      <noderef id="n53" port="outParam0" />
      </from>
      <to>
-      <noderef id="n49" port="input" />
+      <noderef id="n55" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1366,12 +1615,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="YUM" editable="false" id="e36" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="YUM" editable="false" id="e43" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n49" port="toEnd" />
+      <noderef id="n55" port="toEnd" />
      </from>
      <to>
-      <noderef id="n50" port="input" />
+      <noderef id="n56" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1384,7 +1633,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method StaticMethod#instMethod():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void instMethod() { method(&quot;YUM&quot;); }Atm: @VarAnnot(3) StaticMethod" editable="true" id="e39" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at method StaticMethod#instMethod():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void instMethod() { method(&quot;YUM&quot;); }Atm: @VarAnnot(3) StaticMethod" editable="true" id="e46" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>

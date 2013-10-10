@@ -65,17 +65,11 @@ BallSizeTestConstraint( input:Variable 3 at method IfElseParam#test(Ljava/lang/S
 
 InequalityConstraint( context: RefinementVP in method IfElseParam#test(Ljava/lang/String;):V, RefinementVariable #4 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: true mergedTo: Set() != Constant(@nninf.quals.Nullable) )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
-
-SubtypeConstraint( Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  CombVariable #9 )
-
-SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #9 )
-
-InequalityConstraint( context: method IfElseParam#test(Ljava/lang/String;):V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 3 at method IfElseParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
 

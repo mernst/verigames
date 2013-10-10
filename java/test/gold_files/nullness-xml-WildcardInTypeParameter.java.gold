@@ -4,57 +4,56 @@
    <edge-set id="WilcardInTypeParameter0">
     <edgeref id="e1" />
     <edgeref id="e18" />
-    <edgeref id="e30" />
+    <edgeref id="e31" />
     <edgeref id="e12" />
-    <edgeref id="e22" />
+    <edgeref id="e23" />
     <edgeref id="e9" />
-    <edgeref id="e19" />
+    <edgeref id="e20" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter1">
     <edgeref id="e2" />
-    <edgeref id="e31" />
+    <edgeref id="e32" />
     <edgeref id="e13" />
-    <edgeref id="e23" />
+    <edgeref id="e24" />
     <edgeref id="e10" />
-    <edgeref id="e20" />
+    <edgeref id="e21" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter2">
     <edgeref id="e3" />
-    <edgeref id="e32" />
+    <edgeref id="e17" />
+    <edgeref id="e19" />
+    <edgeref id="e33" />
     <edgeref id="e14" />
-    <edgeref id="e24" />
+    <edgeref id="e25" />
     <edgeref id="e11" />
-    <edgeref id="e21" />
+    <edgeref id="e22" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter3">
     <edgeref id="e15" />
-    <edgeref id="e33" />
+    <edgeref id="e34" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter4">
     <edgeref id="e16" />
-    <edgeref id="e34" />
+    <edgeref id="e35" />
     <edgeref id="e4" />
-    <edgeref id="e25" />
+    <edgeref id="e26" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter5">
     <edgeref id="e6" />
-    <edgeref id="e27" />
+    <edgeref id="e28" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter6">
     <edgeref id="e7" />
-    <edgeref id="e28" />
+    <edgeref id="e29" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter7">
     <edgeref id="e8" />
-    <edgeref id="e29" />
+    <edgeref id="e30" />
    </edge-set>
    <edge-set id="WilcardInTypeParameter8">
-    <edgeref id="e26" />
+    <edgeref id="e27" />
    </edge-set>
-   <edge-set id="WilcardInTypeParameter14">
-    <edgeref id="e17" />
-   </edge-set>
-   <edge-set id="WilcardInTypeParameter29">
+   <edge-set id="WilcardInTypeParameter30">
     <edgeref id="e5" />
    </edge-set>
   </linked-edges>
@@ -103,7 +102,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
@@ -121,7 +120,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e17" num="output" />
      </output>
      <layout>
       </layout>
@@ -139,7 +138,7 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
@@ -157,39 +156,34 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e17" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n29" kind="MERGE">
+    <node id="n28" kind="MERGE">
      <input>
-      <port edge="e17" num="left" />
-      <port edge="e18" num="right" />
+      <port edge="e18" num="left" />
+      <port edge="e19" num="right" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e31" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n29" kind="SPLIT">
+     <input>
+      <port edge="e17" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="output" />
+      <port edge="e19" num="split" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n30" kind="END">
-     <input>
-      <port edge="e30" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="END">
      <input>
       <port edge="e31" num="input" />
      </input>
@@ -197,7 +191,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="END">
+    <node id="n31" kind="END">
      <input>
       <port edge="e32" num="input" />
      </input>
@@ -205,7 +199,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n33" kind="END">
+    <node id="n32" kind="END">
      <input>
       <port edge="e33" num="input" />
      </input>
@@ -213,9 +207,17 @@
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="END">
+    <node id="n33" kind="END">
      <input>
       <port edge="e34" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n34" kind="END">
+     <input>
+      <port edge="e35" num="input" />
      </input>
      <output />
      <layout>
@@ -311,12 +313,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e17" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e17" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n28" port="output" />
+      <noderef id="n7" port="output" />
      </from>
      <to>
-      <noderef id="n29" port="left" />
+      <noderef id="n29" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -334,7 +336,7 @@
       <noderef id="n3" port="output" />
      </from>
      <to>
-      <noderef id="n29" port="right" />
+      <noderef id="n28" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -353,9 +355,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e30" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e19" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n29" port="output" />
+      <noderef id="n29" port="split" />
+     </from>
+     <to>
+      <noderef id="n28" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e31" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n28" port="output" />
      </from>
      <to>
       <noderef id="n30" port="input" />
@@ -371,7 +391,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e31" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e32" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -389,9 +409,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n7" port="output" />
+      <noderef id="n29" port="output" />
      </from>
      <to>
       <noderef id="n32" port="input" />
@@ -407,7 +427,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class WilcardInTypeParameter extends type; tree &lt;&lt;missing tree&gt;&gt; within  class WilcardInTypeParameter&lt;T extends List&lt;?&gt;&gt; {  WilcardInTypeParameter() { super(); }  private void m1(WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt; test) { } }" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class WilcardInTypeParameter extends type; tree &lt;&lt;missing tree&gt;&gt; within  class WilcardInTypeParameter&lt;T extends List&lt;?&gt;&gt; {  WilcardInTypeParameter() { super(); }  private void m1(WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt; test) { } }" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -425,7 +445,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method WilcardInTypeParameter#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method WilcardInTypeParameter#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -457,10 +477,10 @@
     </node>
     <node id="n9" kind="OUTGOING">
      <input>
-      <port edge="e22" num="outClassTypeParam0" />
-      <port edge="e23" num="outClassTypeParam1" />
-      <port edge="e24" num="outClassTypeParam2" />
-      <port edge="e25" num="outputReturn0" />
+      <port edge="e23" num="outClassTypeParam0" />
+      <port edge="e24" num="outClassTypeParam1" />
+      <port edge="e25" num="outClassTypeParam2" />
+      <port edge="e26" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -479,7 +499,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e25" num="output" />
+      <port edge="e26" num="output" />
      </output>
      <layout>
       </layout>
@@ -489,7 +509,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e22" num="output" />
+      <port edge="e23" num="output" />
      </output>
      <layout>
       </layout>
@@ -499,7 +519,7 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e24" num="output" />
      </output>
      <layout>
       </layout>
@@ -509,7 +529,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e24" num="output" />
+      <port edge="e25" num="output" />
      </output>
      <layout>
       </layout>
@@ -592,7 +612,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e22" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e23" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -610,7 +630,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e23" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e24" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
@@ -628,7 +648,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e25" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -652,7 +672,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method WilcardInTypeParameter#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e25" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method WilcardInTypeParameter#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -688,13 +708,13 @@
     </node>
     <node id="n13" kind="OUTGOING">
      <input>
-      <port edge="e19" num="outClassTypeParam0" />
-      <port edge="e20" num="outClassTypeParam1" />
-      <port edge="e21" num="outClassTypeParam2" />
-      <port edge="e27" num="outParam0" />
-      <port edge="e28" num="outParam1" />
-      <port edge="e29" num="outParam2" />
-      <port edge="e26" num="outReceiver0" />
+      <port edge="e20" num="outClassTypeParam0" />
+      <port edge="e21" num="outClassTypeParam1" />
+      <port edge="e22" num="outClassTypeParam2" />
+      <port edge="e28" num="outParam0" />
+      <port edge="e29" num="outParam1" />
+      <port edge="e30" num="outParam2" />
+      <port edge="e27" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -705,7 +725,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e27" num="output" />
      </output>
      <layout>
       </layout>
@@ -715,7 +735,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e27" num="output" />
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
@@ -725,7 +745,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e29" num="output" />
      </output>
      <layout>
       </layout>
@@ -735,7 +755,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -745,7 +765,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e20" num="output" />
      </output>
      <layout>
       </layout>
@@ -755,7 +775,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e20" num="output" />
+      <port edge="e21" num="output" />
      </output>
      <layout>
       </layout>
@@ -765,7 +785,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e22" num="output" />
      </output>
      <layout>
       </layout>
@@ -908,7 +928,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree List at position ((3,0)) within T extends List&lt;?&gt;" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -932,7 +952,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class WilcardInTypeParameter class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0), (3,0), (2,0)) within T extends List&lt;?&gt;Atm: @VarAnnot(1) Object" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -950,7 +970,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e21" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class WilcardInTypeParameter class type parameter 0; tree T extends List&lt;?&gt;" editable="true" id="e22" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -968,7 +988,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  private void m1(WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt; test) { }Atm: @VarAnnot(5) WilcardInTypeParameter&lt;T extends List&lt;? extends Object&gt;&gt;" editable="true" id="e26" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  private void m1(WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt; test) { }Atm: @VarAnnot(5) WilcardInTypeParameter&lt;T extends List&lt;? extends Object&gt;&gt;" editable="true" id="e27" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
@@ -992,7 +1012,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree WilcardInTypeParameter within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e27" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree WilcardInTypeParameter within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e28" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1010,7 +1030,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree List at position ((3,0)) within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e28" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree List at position ((3,0)) within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e29" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
@@ -1028,7 +1048,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree String at position ((3,0), (3,0), (2,0)) within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e29" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V parameter 0; tree String at position ((3,0), (3,0), (2,0)) within WilcardInTypeParameter&lt;List&lt;? extends String&gt;&gt;" editable="true" id="e30" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
