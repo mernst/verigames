@@ -28,13 +28,12 @@ package scenes.game
 	{		
 		protected var nextParseState:ParseXMLState;
 		
-		//see note below...
-		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader";
-		
 		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../../../../../../../save/all/DashingClay"
+			"../../../../../../Picard/v4/partialworld/PartialWorld"
+			//"../../../../../../Picard/v4/output/5254489fe4b07655ceae563b",
+			//"../../../../../../Picard/v4/output/52544876e4b07655ceae526b"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

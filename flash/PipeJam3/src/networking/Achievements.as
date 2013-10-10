@@ -6,7 +6,7 @@ package networking
 	import flash.utils.Dictionary;
 	
 	import scenes.game.display.World;
-	
+	import events.EdgeSetChangeEvent;
 	import server.LoggingServerInterface;
 	
 	import starling.core.Starling;
@@ -25,9 +25,33 @@ package networking
 		public static var TUTORIAL_FINISHED_ID:String = "5228b505cb99a6030800002a";
 		public static var TUTORIAL_FINISHED_STRING:String = "Achievement: You've Finished All the Tutorials!";
 
+		public static var CLICKED_ONE_ID:String = "52542b720a7470c228000029";
+		public static var CLICKED_ONE_STRING:String = "Achievement: You've Clicked A Widget";
+
+		public static var CLICKED_50_ID:String = "52542ba50a7470c22800002a";
+		public static var CLICKED_50_STRING:String = "Achievement: You've clicked 50 widgets in a single session.";
+
+		public static var CLASH_CLEARED_ID:String = "52542d5a0a7470c22800002e";
+		public static var CLASH_CLEARED_STRING:String = "Achievement: You removed a clash from a level.";
+
+		public static var BEAT_THE_TARGET_ID:String = "52542d8a0a7470c22800002f";
+		public static var BEAT_THE_TARGET_STRING:String = "Achievement: You beat the target score.";
+
+		public static var USED_A_LAYOUT_ID:String = "52542c860a7470c22800002d";
+		public static var USED_A_LAYOUT_STRING:String = "Achievement: you used someone else's layout when reporting a level.";
 		
-		protected var m_id:String;
-		protected var m_message:String;
+		public static var SHARED_A_LAYOUT_ID:String = "52542c360a7470c22800002c";
+		public static var SHARED_A_LAYOUT_STRING:String = "Achievement: You've clicked the Share Layout menu item and shared a layout.";
+		
+		public static var SHARED_WITH_GROUP_ID:String = "52542dab0a7470c228000030";
+		public static var SHARED_WITH_GROUP_STRING:String = "Achievement: You shared a level with your group.";
+
+		public static var REPORTED_A_LEVEL_ID:String = "52542bec0a7470c22800002b";
+		public static var REPORTED_A_LEVEL_STRING:String = "Achievement: You've clicked the Share Layout menu item and reported a level.";
+
+		
+		public var m_id:String;
+		public var m_message:String;
 		
 		static protected var currentAchievementList:Dictionary;
 		
@@ -74,7 +98,7 @@ package networking
 		
 		protected function postMessage(result:int, e:Event):void
 		{
-			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.ACHIEVEMENT_ADDED, m_message));
+			World.m_world.dispatchEvent(new MenuEvent(MenuEvent.ACHIEVEMENT_ADDED, this));
 		}
 		
 		public function sendMessage(type:int, callback:Function):void
@@ -108,6 +132,25 @@ package networking
 			}
 			
 			NetworkConnection.sendMessage(callback, request, data, url, method);
+		}
+		
+		//checks to see if we should award an achievement for the type
+		public static function checkAchievements(type:String, value:int):void
+		{
+			if(type == EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED)
+			{
+				if(value == 1)
+				{
+					if(isAchievementNew(CLICKED_ONE_ID))
+						addAchievement(CLICKED_ONE_ID, CLICKED_ONE_STRING);
+				}
+				else if(value == 50)
+				{
+					if(isAchievementNew(CLICKED_50_ID))
+						addAchievement(CLICKED_50_ID, CLICKED_50_STRING);
+				}
+			}
+			
 		}
 	}
 }

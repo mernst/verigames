@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 public class NodeElement extends Element
 {			
-	public ArrayList<String> inputPorts;
-	public ArrayList<String> outputPorts;
+	public ArrayList<String> inputPortNames;
+	public ArrayList<String> outputPortNames;
+	
+	public ArrayList<Port> inputPorts;
+	public ArrayList<Port> outputPorts;
 	
 	public String levelID;
 	
@@ -20,16 +23,28 @@ public class NodeElement extends Element
 	{
 		super(_id);
 		levelID = _levelID;
-		inputPorts = new ArrayList<String>();
-		outputPorts = new ArrayList<String>();
+		inputPortNames = new ArrayList<String>();
+		outputPortNames = new ArrayList<String>();
+		inputPorts = new ArrayList<Port>();
+		outputPorts = new ArrayList<Port>();
 	}
 	
 	public void addInputPort(String port)
 	{
-		inputPorts.add(port);
+		inputPortNames.add(port);
 	}
 	
 	public void addOutputPort(String port)
+	{
+		outputPortNames.add(port);
+	}
+	
+	public void addInputPort(Port port)
+	{
+		inputPorts.add(port);
+	}
+	
+	public void addOutputPort(Port port)
 	{
 		outputPorts.add(port);
 	}

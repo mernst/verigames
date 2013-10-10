@@ -83,6 +83,8 @@ package scenes.game.display
 		//shim to make it start with a level until we get servers up
 		protected var firstLevel:Level = null;
 		
+		protected var m_currentLevelNumber:int;
+
 		/** Network for this world */
 		public var m_network:Network;
 		
@@ -103,6 +105,8 @@ package scenes.game.display
 		
 		static public var m_world:World;
 		private var m_activeToolTip:TextBubble;
+		
+		static protected var m_numWidgetsClicked:int = 0;
 		
 		/**
 		 * World that contains levels that each contain boards that each contain pipes
@@ -376,16 +380,19 @@ package scenes.game.display
 		
 		public function achievementAdded(event:MenuEvent):void
 		{
-			var dialogText:String = event.data as String;
+			var achievement:Achievements = event.data as Achievements;
+			var dialogText:String = achievement.m_message;
+			var achievementID:String = achievement.m_id;
 			var dialogWidth:Number = 160;
 			var dialogHeight:Number = 60;
 			var socialText:String = "";
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, switchToLevelSelect);
+			var alert:SimpleAlertDialog;
+			if(achievementID == Achievements.TUTORIAL_FINISHED_ID)
+				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, switchToLevelSelect);
+			else
+				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
 			addChild(alert);
-			
-			alert.x = (450 - alert.width)/2;
-			alert.y = (320 - alert.height)/2;
 		}
 		
 		private function loadBestScore(event:MenuEvent):void
@@ -417,9 +424,10 @@ package scenes.game.display
 		 * @param	overwriteWorldXML: True to preserve changes across multiple levels and overwrite local XML, false to create new XML and return that
 		 * @return Instance of current world XML if overwritten, new instance with new updates if not
 		 */
-		public function updateXML(overwriteWorldXML:Boolean = true):XML {
+		public function updateXML(overwriteWorldXML:Boolean = true, returnLevelXMLOnly:Boolean = false):XML {
 			//update xml from original
 			var output_xml:XML = overwriteWorldXML ? world_xml : new XML(world_xml);
+			var activeLevelXML:XML;
 			for each (var my_level:Level in levels) {
 				// Find this level in XML
 				if (my_level.levelNodes == null) {
@@ -467,8 +475,11 @@ package scenes.game.display
 						}
 					}
 				}
+				if (my_level == active_level) {
+					activeLevelXML = output_xml["level"][my_level_xml_indx];
+				}
 			}	
-			return output_xml;
+			return returnLevelXMLOnly ? activeLevelXML : output_xml;
 		}
 		
 		public function onZoomIn(event:MenuEvent):void
@@ -517,6 +528,13 @@ package scenes.game.display
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
 				}
+			}
+			
+			if(!PipeJamGameScene.inTutorial)
+			{
+				m_numWidgetsClicked++;
+				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
+					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
 			}
 		}
 		
@@ -574,7 +592,6 @@ package scenes.game.display
 				}
 				
 				//if this is the first time we've completed these, post the achievement, else just move on
-				var currentLevelNumber:int;
 				if(tutorialsDone)
 				{
 					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID))
@@ -589,23 +606,25 @@ package scenes.game.display
 					var obj:LevelInformation = PipeJamGame.levelInfo;
 					obj.m_levelId = String(tutorialController.getNextUnplayedTutorial());
 					
-					currentLevelNumber = 0;
+					m_currentLevelNumber = 0;
 					for each(var level:Level in levels)
 					{
 						if(level.m_levelQID == obj.m_levelId)
 							break;
 						
-						currentLevelNumber++;
+						m_currentLevelNumber++;
 					}
 					
 				}
 			}
-			else
-				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
+			else {
+				m_currentLevelNumber = (m_currentLevelNumber + 1) % levels.length;
+				updateXML(); // save world progress
+			}
 			var callback:Function =
 				function():void
 				{
-					selectLevel(levels[currentLevelNumber], currentLevelNumber == prevLevelNumber);
+					selectLevel(levels[m_currentLevelNumber], m_currentLevelNumber == prevLevelNumber);
 				};
 			dispatchEvent(new NavigationEvent(NavigationEvent.FADE_SCREEN, "", false, callback));
 		}
@@ -724,11 +743,18 @@ package scenes.game.display
 							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
 						}
 						break;
-					case 88: //'x' for copy xml
+					case 65: //'a' for copy of ALL (world) xml
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
 							var outputXML:XML = updateXML();
 							System.setClipboard(outputXML.toString());
+						}
+						break;
+					case 88: //'x' for copy of level xml
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							var levelXML:XML = updateXML(true, true);
+							System.setClipboard(levelXML.toString());
 						}
 						break;
 				}
