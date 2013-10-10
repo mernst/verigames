@@ -28,7 +28,3 @@ InequalityConstraint( context: class FieldInit field f2 constraint position, Var
 
 SubtypeConstraint( Variable 2 at class FieldInit field f2 creation 0; tree Object  <:  Variable 3 at class FieldInit field f2; tree Object )
 
-SubtypeConstraint( Variable 3 at class FieldInit field f2; tree Object  <:  RefinementVariable #5 Declared Variable: Variable 2 at class FieldInit field f2 creation 0; tree Object IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( Variable 2 at class FieldInit field f2 creation 0; tree Object  <:  RefinementVariable #5 Declared Variable: Variable 2 at class FieldInit field f2 creation 0; tree Object IfTest: false mergedTo: Set() )
-

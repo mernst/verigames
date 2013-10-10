@@ -63,7 +63,3 @@ EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at metho
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method If#test():V local variable a(0); tree String )
 
-SubtypeConstraint( Variable 3 at method If#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
-

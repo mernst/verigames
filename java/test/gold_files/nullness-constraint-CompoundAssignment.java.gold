@@ -38,6 +38,8 @@ class CompoundAssignmentTest {
     }
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
+
 SubtypeConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
 
 checkers.inference.StaticMethodCallConstraint(
@@ -55,4 +57,6 @@ result: List(Variable 2 at method CompoundAssignmentTest#method():I return type;
 InequalityConstraint( context: method CompoundAssignmentTest#main():V constraint position, Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer != Constant(@nninf.quals.Nullable) )
 
 InequalityConstraint( context: method CompoundAssignmentTest#main():V constraint position, Variable 2 at method CompoundAssignmentTest#method():I return type; tree int != Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 2 at method CompoundAssignmentTest#method():I return type; tree int )
 

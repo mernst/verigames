@@ -10,6 +10,8 @@ SubtypeConstraint( Variable 3 at method MyClass#<init>(Ljava/lang/String;):V ret
 
 SubtypeConstraint( Variable 5 at method MyClass#m(Ljava/lang/Object;):V receiver; tree MyClass<T>  <:  Variable 2 at class MyClass extends type; tree Object )
 
+SubtypeConstraint( Variable 1 at class MyClass class type parameter 0; tree T extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 7 at method MyClass#context():V receiver; tree <<missing tree>> within 
 void context() {
     String s = "non null";
@@ -40,6 +42,8 @@ result: List(Variable 3 at method MyClass#<init>(Ljava/lang/String;):V return ty
 EqualityConstraint( RefinementVariable #13 Declared Variable: Variable 9 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: Set() = Variable 11 at method MyClass#context():V creation 0; tree MyClass within MyClass<String> )
 
 SubtypeConstraint( Variable 11 at method MyClass#context():V creation 0; tree MyClass within MyClass<String>  <:  Variable 9 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> )
+
+SubtypeConstraint( Variable 6 at method MyClass#m(Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 9 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: Set()  <:  Variable 9 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> )
 

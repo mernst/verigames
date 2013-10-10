@@ -59,7 +59,3 @@ InequalityConstraint( context: method TernaryExpression#foo(Ljava/lang/Object;):
 
 SubtypeConstraint( CombVariable #9  <:  Variable 8 at method TernaryExpression#foo(Ljava/lang/Object;):V local variable b(0); tree Object )
 
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: true mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: true mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object IfTest: false mergedTo: Set() )
-

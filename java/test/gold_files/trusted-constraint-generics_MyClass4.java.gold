@@ -1,9 +1,17 @@
 Constraints:
+SubtypeConstraint( Variable 1 at class mList class type parameter 0; tree M extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 1 at class mList class type parameter 0; tree M extends Object  <:  Variable 0 at class mList class type parameter bound 0 & 0; tree Object at position ((3,0)) within M extends Object )
+
+SubtypeConstraint( Variable 3 at class mList class type parameter 1; tree M2 extends Object  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 3 at class mList class type parameter 1; tree M2 extends Object  <:  Variable 2 at class mList class type parameter bound 1 & 0; tree Object at position ((3,1)) within M2 extends Object )
 
+SubtypeConstraint( Variable 5 at class MyList class type parameter 0; tree E extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 5 at class MyList class type parameter 0; tree E extends Object  <:  Variable 4 at class MyList class type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object )
+
+SubtypeConstraint( Variable 7 at class MyList class type parameter 1; tree E2 extends Object  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 7 at class MyList class type parameter 1; tree E2 extends Object  <:  Variable 6 at class MyList class type parameter bound 1 & 0; tree Object at position ((3,1)) within E2 extends Object )
 
@@ -13,6 +21,8 @@ SubtypeConstraint( Variable 9 at method MyList#<init>():V return type; tree
 <init>() {
     super();
 }  <:  Variable 8 at class MyList extends type; tree Object )
+
+SubtypeConstraint( Variable 13 at class MyClass class type parameter 0; tree T extends MyList<String, Integer>  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 13 at class MyClass class type parameter 0; tree T extends MyList<String, Integer>  <:  Variable 10 at class MyClass class type parameter bound 0 & 0; tree MyList at position ((3,0)) within T extends MyList<String, Integer> )
 
@@ -44,6 +54,16 @@ SubtypeConstraint( Variable 9 at method MyList#<init>():V return type; tree
 }  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 19 at method MyClass#m(LMyList;):V receiver; tree MyClass<T>  <:  Variable 14 at class MyClass extends type; tree MyList within MyList<T, Double> )
+
+SubtypeConstraint( Variable 28 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V parameter 0; tree F  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 29 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V parameter 1; tree G  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 22 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter 0; tree F extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 24 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter bound 1 & 0; tree F at position ((3,1), (3,0)) within G extends MyList<F, Integer>  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 26 at method MyClass#whatever(Ljava/lang/Object;LMyList;):V method type parameter 1; tree G extends MyList<F, Integer>  <:  Constant(@trusted.quals.Untrusted) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#m(LMyList;):V constraint position; 
@@ -114,6 +134,8 @@ EqualityConstraint( RefinementVariable #47 Declared Variable: Variable 39 at met
 
 SubtypeConstraint( Variable 43 at method MyClass#context():V creation 1; tree MyClass within MyClass<MyList<String, Integer>>  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> )
 
+SubtypeConstraint( Variable 20 at method MyClass#m(LMyList;):V parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( RefinementVariable #47 Declared Variable: Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> IfTest: false mergedTo: Set()  <:  Variable 39 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<MyList<String, Integer>> )
 
 checkers.inference.InstanceMethodCallConstraint(
@@ -127,6 +149,8 @@ classTypeArgs: < List(Variable 40 at method MyClass#context():V local variable m
 args: ( Variable 33 at method MyClass#context():V local variable s(0); tree MyList within MyList<String, Integer> ); 
 result: List(); 
 )
+
+SubtypeConstraint( Variable 50 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree <<missing tree>> at position ((3,1), (3,0), (2,0)) within whatever("Sam", s)Atm: @VarAnnot(50) F extends Object  <:  Constant(@trusted.quals.Untrusted) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 

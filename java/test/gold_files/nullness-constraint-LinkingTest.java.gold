@@ -1,5 +1,9 @@
 Constraints:
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree L  <:  Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 1 at class List class type parameter 0; tree L  <:  Variable 0 at class List class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within LAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Variable 3 at class ArrayList class type parameter 0; tree AL  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 3 at class ArrayList class type parameter 0; tree AL  <:  Variable 2 at class ArrayList class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within ALAtm: @VarAnnot(2) Object )
 
@@ -62,6 +66,8 @@ class Prev<E extends List<Integer>> {
     }
 } )
 
+SubtypeConstraint( Variable 9 at class Prev class type parameter 0; tree E extends List<Integer>  <:  Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String>  <:  Variable 14 at class LinkingTest class type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
@@ -95,6 +101,8 @@ SubtypeConstraint( Variable 21 at method LinkingTest#method2(LList;):V receiver;
 void method2(List<T> arg2) {
 }Atm: @VarAnnot(21) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
 
+SubtypeConstraint( Variable 16 at class LinkingTest class type parameter 0; tree T extends List<String>  <:  Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 24 at method LinkingTest#method3(LList;):V receiver; tree <<missing tree>> within 
 void method3(List<String> arg3) {
 }Atm: @VarAnnot(24) LinkingTest<T extends List<String>>  <:  Variable 17 at class LinkingTest extends type; tree Prev within Prev<List<Integer>> )
@@ -126,6 +134,8 @@ result: List(Variable 6 at method ArrayList#<init>():V return type; tree
 )
 
 InequalityConstraint( context: method LinkingTest#context(LList;):V constraint position, Variable 32 at method LinkingTest#context(LList;):V creation 0; tree ArrayList within ArrayList<Integer> != Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 13 at method Prev#method1(LList;):V parameter 0; tree E  <:  Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 

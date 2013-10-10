@@ -81,7 +81,11 @@ class O1 {
     }
 } )
 
+SubtypeConstraint( Variable 8 at class O1$O2 class type parameter 0; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 8 at class O1$O2 class type parameter 0; tree S  <:  Variable 7 at class O1$O2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within SAtm: @VarAnnot(7) Object )
+
+SubtypeConstraint( Variable 10 at class O1$O2 class type parameter 1; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 10 at class O1$O2 class type parameter 1; tree T  <:  Variable 9 at class O1$O2 class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within TAtm: @VarAnnot(9) Object )
 
@@ -165,7 +169,11 @@ class O3 {
     }
 } )
 
+SubtypeConstraint( Variable 16 at class O1$O2$O3$Nested class type parameter 0; tree U  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 16 at class O1$O2$O3$Nested class type parameter 0; tree U  <:  Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within UAtm: @VarAnnot(15) Object )
+
+SubtypeConstraint( Variable 18 at class O1$O2$O3$Nested class type parameter 1; tree V  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 18 at class O1$O2$O3$Nested class type parameter 1; tree V  <:  Variable 17 at class O1$O2$O3$Nested class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within VAtm: @VarAnnot(17) Object )
 

@@ -1,4 +1,6 @@
 Constraints:
+SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 1 at class List class type parameter 0; tree T extends Object  <:  Variable 0 at class List class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ListImp extends type; tree <<missing tree>> within 
@@ -90,6 +92,10 @@ class CallMethod {
 } )
 
 SubtypeConstraint( Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String>  <:  Variable 8 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter bound 0 & 0; tree List at position ((3,0)) within T extends List<String> )
+
+SubtypeConstraint( Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String>  <:  Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Variable 13 at method CallMethod#call(LList;):Ljava/lang/String; parameter 0; tree T  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "any")  <:  Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; return type; tree String )
 

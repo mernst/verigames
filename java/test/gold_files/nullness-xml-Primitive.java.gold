@@ -1371,7 +1371,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="START_LARGE_BALL">
+    <node id="n48" kind="START_SMALL_BALL">
      <input />
      <output>
       <port edge="e30" num="output" />
@@ -1608,7 +1608,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e30" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="nonnull" editable="false" id="e30" pinch="false" variableID="-5" width="narrow">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -1632,7 +1632,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e31" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="nonnull" editable="false" id="e31" pinch="false" variableID="-5" width="narrow">
      <from>
       <noderef id="n45" port="outParam0" />
      </from>
@@ -1656,7 +1656,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e32" pinch="false" variableID="-4" width="wide">
+    <edge buzzsaw="false" description="nonnull" editable="false" id="e32" pinch="false" variableID="-5" width="narrow">
      <from>
       <noderef id="n49" port="toEnd" />
      </from>

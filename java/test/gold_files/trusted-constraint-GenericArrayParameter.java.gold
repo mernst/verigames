@@ -1,4 +1,6 @@
 Constraints:
+SubtypeConstraint( Variable 1 at class GenericInterface class type parameter 0; tree T extends Object  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 1 at class GenericInterface class type parameter 0; tree T extends Object  <:  Variable 0 at class GenericInterface class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
 
 SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Variable 5 at class GenericArray class type parameter bound 0 & 0; tree Object at position ((3,0)) within Z extends Object )
@@ -40,6 +42,8 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     }
 } )
 
+SubtypeConstraint( Variable 19 at class GenericArray field z; tree Z  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void setZ(Z z) {
     this.z = z;
@@ -59,6 +63,8 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
         return toMap;
     }
 } )
+
+SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree Z extends Object  <:  Variable 19 at class GenericArray field z; tree Z )
 
@@ -96,6 +102,10 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
         return toMap;
     }
 } )
+
+SubtypeConstraint( Variable 2 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; return type; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 4 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 14 at method GenericArray#map([Ljava/lang/String;):[Ljava/lang/String; return type; tree String[]  <:  Variable 2 at method GenericInterface#map(Ljava/lang/Object;):Ljava/lang/Object; return type; tree T )
 

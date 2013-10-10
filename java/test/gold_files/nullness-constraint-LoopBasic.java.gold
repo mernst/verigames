@@ -89,7 +89,11 @@ class LoopBasic {
     }
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int )
+
 InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint position, Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int != Constant(@nninf.quals.Nullable) )
+
+InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
 
 InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint position, Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic != Constant(@nninf.quals.Nullable) )
 
@@ -104,6 +108,12 @@ classTypeArgs: <  >;
 args: (  ); 
 result: List(); 
 )
+
+SubtypeConstraint( Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int  <:  CombVariable #8 )
+
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  CombVariable #8 )
+
+InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint position, CombVariable #8 != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
@@ -186,4 +196,10 @@ class LoopBasic {
         return Math.random() < 0.5;
     }
 } )
+
+InequalityConstraint( context: method LoopBasic#proceed():Z constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  CombVariable #9 )
+
+SubtypeConstraint( CombVariable #9  <:  Variable 5 at method LoopBasic#proceed():Z return type; tree boolean )
 

@@ -46,6 +46,8 @@ class Primitive {
     Object o = null;
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 1 at class Primitive field i; tree int )
+
 SubtypeConstraint( Variable 5 at method Primitive#m(I):I receiver; tree <<missing tree>> within 
 int m(int p) {
     return p;
@@ -101,7 +103,7 @@ methodTypeParamLBs: <  >;
 classTypeParamLBs: <  >; 
 methodTypeArgs: <  >; 
 classTypeArgs: <  >; 
-args: ( Constant(@nninf.quals.Nullable) ); 
+args: ( Constant(@nninf.quals.NonNull) ); 
 result: List(Variable 4 at method Primitive#m(I):I return type; tree int); 
 )
 

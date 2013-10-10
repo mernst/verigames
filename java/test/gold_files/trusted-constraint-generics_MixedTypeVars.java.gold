@@ -1,5 +1,9 @@
 Constraints:
+SubtypeConstraint( Variable 1 at class Test class type parameter 0; tree A  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 1 at class Test class type parameter 0; tree A  <:  Variable 0 at class Test class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within AAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Variable 3 at class Test class type parameter 1; tree B  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 3 at class Test class type parameter 1; tree B  <:  Variable 2 at class Test class type parameter bound 1 & 0; tree <<missing tree>> at position ((3,1)) within BAtm: @VarAnnot(2) Object )
 
@@ -40,6 +44,8 @@ class Test<A, B> {
     void method() {
     }
 } )
+
+SubtypeConstraint( Variable 8 at class Harness class type parameter 0; tree C  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 8 at class Harness class type parameter 0; tree C  <:  Variable 7 at class Harness class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within CAtm: @VarAnnot(7) Object )
 
@@ -86,6 +92,8 @@ class Harness<C, D> {
         td.method();
     }
 } )
+
+SubtypeConstraint( Variable 10 at class Harness class type parameter 1; tree D  <:  Constant(@trusted.quals.Untrusted) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Harness#context1(LTest;):V constraint position; 

@@ -71,6 +71,10 @@ class PrimitivesAndBoxes {
     }
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 6 at method PrimitivesAndBoxes#method():V local variable testy(0); tree Integer )
+
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int )
+
 SubtypeConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
 
 checkers.inference.InstanceMethodCallConstraint(

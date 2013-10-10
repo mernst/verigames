@@ -87,6 +87,8 @@ class Switch {
     }
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 4 at method Switch#test(Ljava/lang/String;):V local variable i(0); tree int )
+
 EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method Switch#test(Ljava/lang/String;):V parameter 0; tree String )

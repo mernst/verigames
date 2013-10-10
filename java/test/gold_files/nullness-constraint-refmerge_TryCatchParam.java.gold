@@ -97,7 +97,3 @@ SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 3 at method
 
 InequalityConstraint( context: method TryCatchParam#test(Ljava/lang/String;):V constraint position, RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
-

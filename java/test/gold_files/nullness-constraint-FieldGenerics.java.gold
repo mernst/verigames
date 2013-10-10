@@ -31,7 +31,11 @@ public class FieldGenerics {
     }
 } )
 
+SubtypeConstraint( Variable 6 at method Generic#<init>(Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Literal(STRING_LITERAL, "str")  <:  Variable 6 at method Generic#<init>(Ljava/lang/Object;):V parameter 0; tree T )
+
+SubtypeConstraint( Literal(STRING_LITERAL, "str")  <:  Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method FieldGenerics#<init>():V constraint position; 
@@ -102,6 +106,8 @@ result: List(Variable 3 at class FieldGenerics field gen; tree Generic within Ge
 
 InequalityConstraint( context: method FieldGenerics#accessGen():V constraint position, Variable 3 at class FieldGenerics field gen; tree Generic within Generic<String> != Constant(@nninf.quals.Nullable) )
 
+SubtypeConstraint( Variable 10 at method Generic#accessor():Ljava/lang/Object; return type; tree T  <:  Constant(@nninf.quals.Nullable) )
+
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method FieldGenerics#accessGen():V constraint position; 
 calledVp: method Generic#accessor():Ljava/lang/Object;; 
@@ -115,6 +121,8 @@ result: List(Variable 10 at method Generic#accessor():Ljava/lang/Object; return 
 )
 
 SubtypeConstraint( Variable 13 at class Generic class type parameter 0; tree T extends Object  <:  Variable 12 at class Generic class type parameter bound 0 & 0; tree Object at position ((3,0)) within T extends Object )
+
+SubtypeConstraint( Variable 15 at class Generic field t; tree T  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 14 at class Generic extends type; tree <<missing tree>> within 
 class Generic<T extends Object> {
@@ -144,6 +152,8 @@ class Generic<T extends Object> {
         return t;
     }
 } )
+
+SubtypeConstraint( Variable 13 at class Generic class type parameter 0; tree T extends Object  <:  Constant(@nninf.quals.Nullable) )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Generic#<init>(Ljava/lang/Object;):V constraint position; 

@@ -3,100 +3,90 @@
   <linked-edges>
    <edge-set id="UseMap0">
     <edgeref id="e9" />
-    <edgeref id="e30" />
-    <edgeref id="e60" />
+    <edgeref id="e29" />
+    <edgeref id="e53" />
     <edgeref id="e10" />
     <edgeref id="e11" />
-    <edgeref id="e38" />
-    <edgeref id="e68" />
+    <edgeref id="e37" />
+    <edgeref id="e60" />
     <edgeref id="e2" />
-    <edgeref id="e31" />
-    <edgeref id="e57" />
+    <edgeref id="e30" />
+    <edgeref id="e50" />
    </edge-set>
    <edge-set id="UseMap1">
     <edgeref id="e12" />
-    <edgeref id="e32" />
-    <edgeref id="e61" />
+    <edgeref id="e31" />
+    <edgeref id="e54" />
     <edgeref id="e13" />
     <edgeref id="e14" />
-    <edgeref id="e21" />
-    <edgeref id="e39" />
+    <edgeref id="e20" />
+    <edgeref id="e38" />
+    <edgeref id="e40" />
     <edgeref id="e41" />
     <edgeref id="e42" />
-    <edgeref id="e43" />
-    <edgeref id="e45" />
-    <edgeref id="e66" />
-    <edgeref id="e3" />
-    <edgeref id="e33" />
+    <edgeref id="e44" />
     <edgeref id="e58" />
+    <edgeref id="e3" />
+    <edgeref id="e32" />
+    <edgeref id="e51" />
    </edge-set>
    <edge-set id="UseMap2">
     <edgeref id="e1" />
-    <edgeref id="e27" />
-    <edgeref id="e29" />
+    <edgeref id="e26" />
+    <edgeref id="e28" />
     <edgeref id="e49" />
-    <edgeref id="e51" />
-    <edgeref id="e56" />
    </edge-set>
    <edge-set id="UseMap3">
     <edgeref id="e4" />
-    <edgeref id="e28" />
-    <edgeref id="e46" />
-    <edgeref id="e48" />
-    <edgeref id="e59" />
+    <edgeref id="e27" />
+    <edgeref id="e52" />
     <edgeref id="e6" />
     <edgeref id="e8" />
-    <edgeref id="e37" />
-    <edgeref id="e67" />
+    <edgeref id="e36" />
+    <edgeref id="e59" />
    </edge-set>
    <edge-set id="UseMap4">
     <edgeref id="e18" />
-    <edgeref id="e47" />
-    <edgeref id="e50" />
-    <edgeref id="e63" />
+    <edgeref id="e21" />
+    <edgeref id="e24" />
+    <edgeref id="e56" />
    </edge-set>
    <edge-set id="UseMap5">
     <edgeref id="e19" />
-    <edgeref id="e22" />
+    <edgeref id="e23" />
     <edgeref id="e25" />
-    <edgeref id="e64" />
+    <edgeref id="e57" />
+    <edgeref id="e15" />
+    <edgeref id="e47" />
    </edge-set>
    <edge-set id="UseMap6">
-    <edgeref id="e20" />
-    <edgeref id="e24" />
-    <edgeref id="e26" />
-    <edgeref id="e65" />
-    <edgeref id="e15" />
-    <edgeref id="e54" />
-   </edge-set>
-   <edge-set id="UseMap7">
     <edgeref id="e17" />
-    <edgeref id="e44" />
-    <edgeref id="e62" />
-   </edge-set>
-   <edge-set id="UseMap8">
-    <edgeref id="e34" />
-    <edgeref id="e35" />
-    <edgeref id="e36" />
-    <edgeref id="e40" />
+    <edgeref id="e43" />
     <edgeref id="e55" />
    </edge-set>
-   <edge-set id="UseMap19">
-    <edgeref id="e23" />
+   <edge-set id="UseMap7">
+    <edgeref id="e33" />
+    <edgeref id="e34" />
+    <edgeref id="e35" />
+    <edgeref id="e39" />
+    <edgeref id="e48" />
    </edge-set>
-   <edge-set id="UseMap45">
+   <edge-set id="UseMap17">
+    <edgeref id="e22" />
+   </edge-set>
+   <edge-set id="UseMap36">
     <edgeref id="e5" />
    </edge-set>
-   <edge-set id="UseMap49">
-    <edgeref id="e52" />
+   <edge-set id="UseMap40">
+    <edgeref id="e45" />
    </edge-set>
-   <edge-set id="UseMap50">
+   <edge-set id="UseMap41">
     <edgeref id="e7" />
    </edge-set>
-   <edge-set id="UseMap54">
-    <edgeref id="e53" />
+   <edge-set id="UseMap45">
+    <edgeref id="e46" />
    </edge-set>
-   <edge-set id="UseMap57">
+   <edge-set id="UseMap48">
     <edgeref id="e16" />
    </edge-set>
   </linked-edges>
@@ -131,7 +121,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e27" num="0" />
+      <port edge="e26" num="0" />
      </output>
      <layout>
       </layout>
@@ -149,7 +139,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -167,7 +157,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
@@ -177,7 +167,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e28" num="0" />
+      <port edge="e27" num="0" />
      </output>
      <layout>
       </layout>
@@ -187,7 +177,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e29" num="output" />
      </output>
      <layout>
       </layout>
@@ -197,7 +187,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
@@ -215,7 +205,7 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e47" num="0" />
+      <port edge="e21" num="0" />
      </output>
      <layout>
       </layout>
@@ -233,22 +223,23 @@
       <port edge="e19" num="input" />
      </input>
      <output>
+      <port edge="e23" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n35" kind="START_LARGE_BALL">
+     <input />
+     <output>
       <port edge="e22" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n33" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
-     <output>
-      <port edge="e20" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n34" kind="CONNECT">
+    <node id="n36" kind="MERGE">
      <input>
-      <port edge="e20" num="input" />
+      <port edge="e21" num="0" />
+      <port edge="e22" num="1" />
      </input>
      <output>
       <port edge="e24" num="0" />
@@ -256,156 +247,133 @@
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="START_LARGE_BALL">
-     <input />
+    <node id="n37" kind="MERGE">
+     <input>
+      <port edge="e24" num="0" />
+      <port edge="e25" num="1" />
+     </input>
      <output>
-      <port edge="e23" num="0" />
+      <port edge="e56" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="MERGE">
+    <node id="n38" kind="SPLIT">
      <input>
-      <port edge="e22" num="0" />
-      <port edge="e23" num="1" />
+      <port edge="e23" num="0" />
      </input>
      <output>
-      <port edge="e25" num="0" />
+      <port edge="e25" num="1" />
+      <port edge="e57" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n39" kind="MERGE">
      <input>
-      <port edge="e25" num="0" />
-      <port edge="e26" num="1" />
+      <port edge="e27" num="0" />
+      <port edge="e28" num="1" />
      </input>
      <output>
-      <port edge="e64" num="output" />
+      <port edge="e52" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n40" kind="SPLIT">
      <input>
-      <port edge="e24" num="0" />
+      <port edge="e26" num="0" />
      </input>
      <output>
-      <port edge="e26" num="1" />
-      <port edge="e65" num="output" />
+      <port edge="e28" num="1" />
+      <port edge="e49" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="MERGE">
+    <node id="n41" kind="CONNECT">
      <input>
-      <port edge="e28" num="0" />
-      <port edge="e29" num="1" />
+      <port edge="e29" num="input" />
      </input>
      <output>
-      <port edge="e46" num="0" />
+      <port edge="e53" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="SPLIT">
+    <node id="n42" kind="CONNECT">
      <input>
-      <port edge="e27" num="0" />
+      <port edge="e30" num="input" />
      </input>
      <output>
-      <port edge="e49" num="0" />
-      <port edge="e29" num="1" />
+      <port edge="e50" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n43" kind="CONNECT">
      <input>
-      <port edge="e30" num="input" />
+      <port edge="e31" num="input" />
      </input>
      <output>
-      <port edge="e60" num="output" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n44" kind="CONNECT">
      <input>
-      <port edge="e31" num="input" />
-     </input>
-     <output>
-      <port edge="e57" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n45" kind="CONNECT">
-     <input>
       <port edge="e32" num="input" />
      </input>
      <output>
-      <port edge="e61" num="output" />
+      <port edge="e51" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="CONNECT">
+    <node id="n55" kind="END">
      <input>
-      <port edge="e33" num="input" />
+      <port edge="e49" num="input" />
      </input>
-     <output>
-      <port edge="e58" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n57" kind="MERGE">
+    <node id="n56" kind="END">
      <input>
-      <port edge="e47" num="0" />
-      <port edge="e48" num="1" />
+      <port edge="e50" num="input" />
      </input>
-     <output>
-      <port edge="e50" num="0" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n58" kind="SPLIT">
+    <node id="n57" kind="END">
      <input>
-      <port edge="e46" num="0" />
+      <port edge="e51" num="input" />
      </input>
-     <output>
-      <port edge="e48" num="1" />
-      <port edge="e59" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="MERGE">
+    <node id="n58" kind="END">
      <input>
-      <port edge="e50" num="0" />
-      <port edge="e51" num="1" />
+      <port edge="e52" num="input" />
      </input>
-     <output>
-      <port edge="e63" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n60" kind="SPLIT">
+    <node id="n59" kind="END">
      <input>
-      <port edge="e49" num="0" />
+      <port edge="e53" num="input" />
      </input>
-     <output>
-      <port edge="e51" num="1" />
-      <port edge="e56" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="END">
+    <node id="n60" kind="END">
      <input>
-      <port edge="e56" num="input" />
+      <port edge="e54" num="input" />
      </input>
      <output />
      <layout>
@@ -413,7 +381,7 @@
     </node>
     <node id="n62" kind="END">
      <input>
-      <port edge="e57" num="input" />
+      <port edge="e56" num="input" />
      </input>
      <output />
      <layout>
@@ -421,55 +389,7 @@
     </node>
     <node id="n63" kind="END">
      <input>
-      <port edge="e58" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n64" kind="END">
-     <input>
-      <port edge="e59" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n65" kind="END">
-     <input>
-      <port edge="e60" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n66" kind="END">
-     <input>
-      <port edge="e61" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n68" kind="END">
-     <input>
-      <port edge="e63" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n69" kind="END">
-     <input>
-      <port edge="e64" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n70" kind="END">
-     <input>
-      <port edge="e65" num="input" />
+      <port edge="e57" num="input" />
      </input>
      <output />
      <layout>
@@ -587,15 +507,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt; IfTest: false mergedTo: Set()" editable="true" id="e18" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n29" port="output" />
      </from>
@@ -613,7 +527,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e19" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n31" port="output" />
      </from>
@@ -631,12 +545,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e20" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e21" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n33" port="output" />
+      <noderef id="n30" port="0" />
      </from>
      <to>
-      <noderef id="n34" port="input" />
+      <noderef id="n36" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="untrusted string" editable="true" id="e22" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n35" port="0" />
+     </from>
+     <to>
+      <noderef id="n36" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -649,7 +587,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e22" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e23" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n32" port="0" />
      </from>
@@ -665,20 +603,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e23" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e24" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n37" port="0" />
+      <noderef id="n36" port="0" />
      </from>
      <to>
-      <noderef id="n38" port="1" />
+      <noderef id="n37" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -689,11 +621,41 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e24" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e25" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n34" port="0" />
+      <noderef id="n38" port="1" />
+     </from>
+     <to>
+      <noderef id="n37" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e26" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n3" port="0" />
      </from>
      <to>
       <noderef id="n40" port="0" />
@@ -709,9 +671,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e25" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e27" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n38" port="0" />
+      <noderef id="n8" port="0" />
      </from>
      <to>
       <noderef id="n39" port="0" />
@@ -733,7 +695,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e26" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n40" port="1" />
      </from>
@@ -755,18 +717,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e27" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n3" port="0" />
-     </from>
-     <to>
-      <noderef id="n42" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -775,51 +725,45 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e28" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n8" port="0" />
-     </from>
-     <to>
-      <noderef id="n41" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e29" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n42" port="1" />
-     </from>
-     <to>
-      <noderef id="n41" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e30" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e29" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n16" port="output" />
+     </from>
+     <to>
+      <noderef id="n41" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap&lt;String, String&gt;" editable="true" id="e30" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n5" port="output" />
+     </from>
+     <to>
+      <noderef id="n42" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e31" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n18" port="output" />
      </from>
      <to>
       <noderef id="n43" port="input" />
@@ -835,9 +779,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap&lt;String, String&gt;" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap&lt;String, String&gt;" editable="true" id="e32" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n5" port="output" />
+      <noderef id="n7" port="output" />
      </from>
      <to>
       <noderef id="n44" port="input" />
@@ -853,114 +797,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e32" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n18" port="output" />
-     </from>
-     <to>
-      <noderef id="n45" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap&lt;String, String&gt;" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n7" port="output" />
-     </from>
-     <to>
-      <noderef id="n46" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e46" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n41" port="0" />
-     </from>
-     <to>
-      <noderef id="n58" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt; IfTest: false mergedTo: Set()" editable="true" id="e47" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n30" port="0" />
-     </from>
-     <to>
-      <noderef id="n57" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e48" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n58" port="1" />
-     </from>
-     <to>
-      <noderef id="n57" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
     <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e49" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n42" port="0" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
-      <noderef id="n60" port="0" />
+      <noderef id="n55" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -973,12 +815,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt; IfTest: false mergedTo: Set()" editable="true" id="e50" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap&lt;String, String&gt;" editable="true" id="e50" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n57" port="0" />
+      <noderef id="n42" port="output" />
      </from>
      <to>
-      <noderef id="n59" port="0" />
+      <noderef id="n56" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -991,45 +833,81 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e51" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n60" port="1" />
-     </from>
-     <to>
-      <noderef id="n59" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt;" editable="true" id="e56" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n60" port="output" />
-     </from>
-     <to>
-      <noderef id="n61" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class UseMap field sm creation 0; tree String at position ((3,0)) within HashMap&lt;String, String&gt;" editable="true" id="e57" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap&lt;String, String&gt;" editable="true" id="e51" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n44" port="output" />
+     </from>
+     <to>
+      <noderef id="n57" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e52" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
+     </from>
+     <to>
+      <noderef id="n58" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e53" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n59" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e54" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n60" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e56" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n37" port="output" />
      </from>
      <to>
       <noderef id="n62" port="input" />
@@ -1045,132 +923,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class UseMap field sm creation 0; tree String at position ((3,1)) within HashMap&lt;String, String&gt;" editable="true" id="e58" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e57" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n46" port="output" />
+      <noderef id="n38" port="output" />
      </from>
      <to>
       <noderef id="n63" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e59" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n58" port="output" />
-     </from>
-     <to>
-      <noderef id="n64" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e60" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n43" port="output" />
-     </from>
-     <to>
-      <noderef id="n65" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e61" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n45" port="output" />
-     </from>
-     <to>
-      <noderef id="n66" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #9 Declared Variable: Variable 1 at class UseMap field sm creation 0; tree HashMap within HashMap&lt;String, String&gt; IfTest: false mergedTo: Set()" editable="true" id="e63" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n59" port="output" />
-     </from>
-     <to>
-      <noderef id="n68" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class UseMap extends type; tree &lt;&lt;missing tree&gt;&gt; within  class UseMap {  UseMap() { super(); } Map&lt;String, String&gt; sm = new HashMap&lt;String, String&gt;();  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); } }" editable="true" id="e64" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n39" port="output" />
-     </from>
-     <to>
-      <noderef id="n69" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e65" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n40" port="output" />
-     </from>
-     <to>
-      <noderef id="n70" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1195,7 +953,7 @@
     </node>
     <node id="n10" kind="OUTGOING">
      <input>
-      <port edge="e52" num="outReceiver0" />
+      <port edge="e45" num="outReceiver0" />
       <port edge="e6" num="outputReturn0" />
       <port edge="e10" num="outputReturn1" />
       <port edge="e13" num="outputReturn2" />
@@ -1209,7 +967,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e52" num="output" />
+      <port edge="e45" num="output" />
      </output>
      <layout>
       </layout>
@@ -1316,7 +1074,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e52" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e45" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -1364,7 +1122,7 @@
       <port edge="e8" num="outParam0" />
       <port edge="e11" num="outParam1" />
       <port edge="e14" num="outParam2" />
-      <port edge="e53" num="outReceiver0" />
+      <port edge="e46" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1375,7 +1133,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e53" num="output" />
+      <port edge="e46" num="output" />
      </output>
      <layout>
       </layout>
@@ -1452,7 +1210,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e53" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e46" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1480,7 +1238,7 @@
     </node>
     <node id="n21" kind="OUTGOING">
      <input>
-      <port edge="e54" num="outputReturn0" />
+      <port edge="e47" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1499,7 +1257,7 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e54" num="output" />
+      <port edge="e47" num="output" />
      </output>
      <layout>
       </layout>
@@ -1522,7 +1280,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e54" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="Variable 7 at method UseMap#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e47" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -1552,7 +1310,7 @@
     </node>
     <node id="n25" kind="OUTGOING">
      <input>
-      <port edge="e55" num="outReceiver0" />
+      <port edge="e48" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1563,7 +1321,7 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
@@ -1581,22 +1339,86 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e44" num="0" />
+      <port edge="e43" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n33" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e20" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="CONNECT">
+    <node id="n34" kind="CONNECT">
      <input>
-      <port edge="e21" num="input" />
+      <port edge="e20" num="input" />
+     </input>
+     <output>
+      <port edge="e40" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="SUBBOARD" name="UseMap-sm--GET">
+     <input>
+      <port edge="e34" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e35" num="outReceiver0" />
+      <port edge="e36" num="outputReturn0" />
+      <port edge="e37" num="outputReturn1" />
+      <port edge="e38" num="outputReturn2" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n46" kind="SPLIT">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output>
+      <port edge="e34" num="split" />
+      <port edge="e39" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="CONNECT">
+     <input>
+      <port edge="e35" num="input" />
+     </input>
+     <output>
+      <port edge="e48" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n48" kind="CONNECT">
+     <input>
+      <port edge="e36" num="input" />
+     </input>
+     <output>
+      <port edge="e59" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n49" kind="CONNECT">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output>
+      <port edge="e60" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n50" kind="CONNECT">
+     <input>
+      <port edge="e38" num="input" />
      </input>
      <output>
       <port edge="e41" num="toMerge" />
@@ -1604,33 +1426,29 @@
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="SUBBOARD" name="UseMap-sm--GET">
+    <node id="n51" kind="END">
      <input>
-      <port edge="e35" num="inReceiver0" />
+      <port edge="e39" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="MERGE">
+     <input>
+      <port edge="e40" num="first" />
+      <port edge="e41" num="second" />
      </input>
      <output>
-      <port edge="e36" num="outReceiver0" />
-      <port edge="e37" num="outputReturn0" />
-      <port edge="e38" num="outputReturn1" />
-      <port edge="e39" num="outputReturn2" />
+      <port edge="e42" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="SPLIT">
+    <node id="n53" kind="MERGE">
      <input>
-      <port edge="e34" num="input" />
-     </input>
-     <output>
-      <port edge="e35" num="split" />
-      <port edge="e40" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n49" kind="CONNECT">
-     <input>
-      <port edge="e36" num="input" />
+      <port edge="e43" num="0" />
+      <port edge="e44" num="1" />
      </input>
      <output>
       <port edge="e55" num="output" />
@@ -1638,104 +1456,44 @@
      <layout>
       </layout>
     </node>
-    <node id="n50" kind="CONNECT">
+    <node id="n54" kind="SPLIT">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e42" num="0" />
      </input>
      <output>
-      <port edge="e67" num="output" />
+      <port edge="e44" num="1" />
+      <port edge="e58" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n51" kind="CONNECT">
+    <node id="n61" kind="END">
      <input>
-      <port edge="e38" num="input" />
-     </input>
-     <output>
-      <port edge="e68" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n52" kind="CONNECT">
-     <input>
-      <port edge="e39" num="input" />
-     </input>
-     <output>
-      <port edge="e42" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n53" kind="END">
-     <input>
-      <port edge="e40" num="input" />
+      <port edge="e55" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n54" kind="MERGE">
+    <node id="n64" kind="END">
      <input>
-      <port edge="e41" num="first" />
-      <port edge="e42" num="second" />
-     </input>
-     <output>
-      <port edge="e43" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n55" kind="MERGE">
-     <input>
-      <port edge="e44" num="0" />
-      <port edge="e45" num="1" />
-     </input>
-     <output>
-      <port edge="e62" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n56" kind="SPLIT">
-     <input>
-      <port edge="e43" num="0" />
-     </input>
-     <output>
-      <port edge="e45" num="1" />
-      <port edge="e66" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n67" kind="END">
-     <input>
-      <port edge="e62" num="input" />
+      <port edge="e58" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="END">
+    <node id="n65" kind="END">
      <input>
-      <port edge="e66" num="input" />
+      <port edge="e59" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="END">
+    <node id="n66" kind="END">
      <input>
-      <port edge="e67" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n73" kind="END">
-     <input>
-      <port edge="e68" num="input" />
+      <port edge="e60" num="input" />
      </input>
      <output />
      <layout>
@@ -1777,12 +1535,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e21" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e20" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n35" port="output" />
+      <noderef id="n33" port="output" />
      </from>
      <to>
-      <noderef id="n36" port="input" />
+      <noderef id="n34" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e33" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n26" port="output" />
+     </from>
+     <to>
+      <noderef id="n46" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1797,7 +1573,43 @@
     </edge>
     <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e34" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n46" port="split" />
+     </from>
+     <to>
+      <noderef id="n45" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e35" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n45" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n47" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n45" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n48" port="input" />
@@ -1813,27 +1625,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e35" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e37" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n48" port="split" />
-     </from>
-     <to>
-      <noderef id="n47" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e36" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n47" port="outReceiver0" />
+      <noderef id="n45" port="outputReturn1" />
      </from>
      <to>
       <noderef id="n49" port="input" />
@@ -1849,9 +1643,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e37" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e38" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n47" port="outputReturn0" />
+      <noderef id="n45" port="outputReturn2" />
      </from>
      <to>
       <noderef id="n50" port="input" />
@@ -1867,9 +1661,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e38" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e39" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n47" port="outputReturn1" />
+      <noderef id="n46" port="toEnd" />
      </from>
      <to>
       <noderef id="n51" port="input" />
@@ -1885,12 +1679,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e39" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e40" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n47" port="outputReturn2" />
+      <noderef id="n34" port="toMerge" />
      </from>
      <to>
-      <noderef id="n52" port="input" />
+      <noderef id="n52" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -1899,18 +1693,6 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e40" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n48" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n53" port="input" />
-     </to>
-     <edge-layout>
       <point>
        </point>
       <point>
@@ -1923,18 +1705,12 @@
     </edge>
     <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e41" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n36" port="toMerge" />
+      <noderef id="n50" port="toMerge" />
      </from>
      <to>
-      <noderef id="n54" port="first" />
+      <noderef id="n52" port="second" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1947,28 +1723,10 @@
     </edge>
     <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n52" port="toMerge" />
+      <noderef id="n52" port="0" />
      </from>
      <to>
-      <noderef id="n54" port="second" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e43" pinch="false" variableID="6" width="narrow">
-     <from>
       <noderef id="n54" port="0" />
-     </from>
-     <to>
-      <noderef id="n56" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1981,12 +1739,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method UseMap#m():V local variable s(0); tree String" editable="true" id="e44" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method UseMap#m():V local variable s(0); tree String" editable="true" id="e43" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n28" port="0" />
      </from>
      <to>
-      <noderef id="n55" port="0" />
+      <noderef id="n53" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1999,12 +1757,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e45" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e44" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n56" port="1" />
+      <noderef id="n54" port="1" />
      </from>
      <to>
-      <noderef id="n55" port="1" />
+      <noderef id="n53" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2017,9 +1775,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e55" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="Variable 8 at method UseMap#m():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void m() { sm.put(&quot;ha!&quot;, &quot;val&quot;); String s = sm.get(&quot;xxx&quot;); }Atm: @VarAnnot(8) UseMap" editable="true" id="e48" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n49" port="output" />
+      <noderef id="n47" port="output" />
      </from>
      <to>
       <noderef id="n25" port="outReceiver0" />
@@ -2047,12 +1805,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method UseMap#m():V local variable s(0); tree String" editable="true" id="e62" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="Variable 10 at method UseMap#m():V local variable s(0); tree String" editable="true" id="e55" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n55" port="output" />
+      <noderef id="n53" port="output" />
      </from>
      <to>
-      <noderef id="n67" port="input" />
+      <noderef id="n61" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2065,12 +1823,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e66" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="Variable 6 at class UseMap field sm; tree String at position ((3,1)) within Map&lt;String, String&gt;" editable="true" id="e58" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n56" port="output" />
+      <noderef id="n54" port="output" />
      </from>
      <to>
-      <noderef id="n71" port="input" />
+      <noderef id="n64" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2089,12 +1847,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e67" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at class UseMap field sm; tree Map within Map&lt;String, String&gt;" editable="true" id="e59" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n50" port="output" />
+      <noderef id="n48" port="output" />
      </from>
      <to>
-      <noderef id="n72" port="input" />
+      <noderef id="n65" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2107,12 +1865,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e68" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 5 at class UseMap field sm; tree String at position ((3,0)) within Map&lt;String, String&gt;" editable="true" id="e60" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n51" port="output" />
+      <noderef id="n49" port="output" />
      </from>
      <to>
-      <noderef id="n73" port="input" />
+      <noderef id="n66" port="input" />
      </to>
      <edge-layout>
       <point>

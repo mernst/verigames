@@ -54,6 +54,10 @@ class Outer<T, S> {
 
 SubtypeConstraint( Variable 7 at class Outer$Inner class type parameter 0; tree T2 extends T  <:  Constant(@trusted.quals.Untrusted) )
 
+SubtypeConstraint( Variable 15 at class Outer$Inner field s; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 16 at class Outer$Inner field t; tree T  <:  Constant(@trusted.quals.Untrusted) )
+
 SubtypeConstraint( Variable 9 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 protected void init(S s, T t) {
     this.s = s;
@@ -73,6 +77,10 @@ class Inner<T2 extends T> {
         init(s, t);
     }
 } )
+
+SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 1 at class Outer class type parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 3 at class Outer class type parameter 1; tree S  <:  Variable 15 at class Outer$Inner field s; tree S )
 
@@ -145,6 +153,10 @@ class Inner<T2 extends T> {
         init(s, t);
     }
 } )
+
+SubtypeConstraint( Variable 10 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 0; tree S  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 11 at method Outer$Inner#init(Ljava/lang/Object;Ljava/lang/Object;):V parameter 1; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Outer$Inner#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 

@@ -3,81 +3,71 @@
   <linked-edges>
    <edge-set id="FieldInitCast0">
     <edgeref id="e1" />
-    <edgeref id="e16" />
-    <edgeref id="e18" />
+    <edgeref id="e15" />
+    <edgeref id="e17" />
+    <edgeref id="e21" />
     <edgeref id="e22" />
     <edgeref id="e23" />
-    <edgeref id="e24" />
-    <edgeref id="e39" />
+    <edgeref id="e32" />
     <edgeref id="e3" />
     <edgeref id="e5" />
    </edge-set>
    <edge-set id="FieldInitCast1">
     <edgeref id="e6" />
-    <edgeref id="e17" />
-    <edgeref id="e25" />
-    <edgeref id="e27" />
-    <edgeref id="e31" />
+    <edgeref id="e16" />
+    <edgeref id="e24" />
+    <edgeref id="e26" />
     <edgeref id="e33" />
-    <edgeref id="e40" />
    </edge-set>
    <edge-set id="FieldInitCast2">
     <edgeref id="e7" />
-    <edgeref id="e26" />
-    <edgeref id="e28" />
-    <edgeref id="e30" />
-    <edgeref id="e41" />
+    <edgeref id="e25" />
+    <edgeref id="e34" />
     <edgeref id="e9" />
     <edgeref id="e11" />
    </edge-set>
    <edge-set id="FieldInitCast3">
     <edgeref id="e13" />
-    <edgeref id="e29" />
-    <edgeref id="e32" />
-    <edgeref id="e42" />
+    <edgeref id="e35" />
    </edge-set>
    <edge-set id="FieldInitCast4">
     <edgeref id="e14" />
-    <edgeref id="e43" />
-   </edge-set>
-   <edge-set id="FieldInitCast5">
-    <edgeref id="e15" />
-    <edgeref id="e44" />
+    <edgeref id="e36" />
     <edgeref id="e12" />
-    <edgeref id="e38" />
+    <edgeref id="e31" />
    </edge-set>
-   <edge-set id="FieldInitCast15">
+   <edge-set id="FieldInitCast13">
+    <edgeref id="e18" />
+   </edge-set>
+   <edge-set id="FieldInitCast14">
     <edgeref id="e19" />
    </edge-set>
-   <edge-set id="FieldInitCast16">
+   <edge-set id="FieldInitCast15">
     <edgeref id="e20" />
    </edge-set>
-   <edge-set id="FieldInitCast17">
-    <edgeref id="e21" />
-   </edge-set>
-   <edge-set id="FieldInitCast36">
+   <edge-set id="FieldInitCast27">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="FieldInitCast38">
-    <edgeref id="e34" />
+   <edge-set id="FieldInitCast29">
+    <edgeref id="e27" />
    </edge-set>
-   <edge-set id="FieldInitCast39">
+   <edge-set id="FieldInitCast30">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="FieldInitCast41">
-    <edgeref id="e35" />
+   <edge-set id="FieldInitCast32">
+    <edgeref id="e28" />
    </edge-set>
-   <edge-set id="FieldInitCast42">
+   <edge-set id="FieldInitCast33">
     <edgeref id="e8" />
    </edge-set>
-   <edge-set id="FieldInitCast44">
-    <edgeref id="e36" />
+   <edge-set id="FieldInitCast35">
+    <edgeref id="e29" />
    </edge-set>
-   <edge-set id="FieldInitCast45">
+   <edge-set id="FieldInitCast36">
     <edgeref id="e10" />
    </edge-set>
-   <edge-set id="FieldInitCast47">
-    <edgeref id="e37" />
+   <edge-set id="FieldInitCast38">
+    <edgeref id="e30" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -102,7 +92,7 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e16" num="output" />
+      <port edge="e15" num="output" />
      </output>
      <layout>
       </layout>
@@ -120,7 +110,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
@@ -130,7 +120,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e25" num="output" />
      </output>
      <layout>
       </layout>
@@ -148,7 +138,7 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
@@ -166,135 +156,84 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e43" num="output" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="START_PIPE_DEPENDENT_BALL">
-     <input />
+    <node id="n28" kind="MERGE">
+     <input>
+      <port edge="e16" num="left" />
+      <port edge="e17" num="right" />
+     </input>
      <output>
-      <port edge="e15" num="output" />
+      <port edge="e24" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n29" kind="CONNECT">
+    <node id="n29" kind="SPLIT">
      <input>
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e44" num="output" />
+      <port edge="e17" num="split" />
+      <port edge="e22" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n30" kind="MERGE">
+    <node id="n30" kind="SUBBOARD" name="FieldInitCast-f--GET">
      <input>
-      <port edge="e17" num="left" />
-      <port edge="e18" num="right" />
+      <port edge="e18" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e25" num="output" />
+      <port edge="e19" num="outReceiver0" />
+      <port edge="e21" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n31" kind="SPLIT">
-     <input>
-      <port edge="e16" num="input" />
-     </input>
-     <output>
-      <port edge="e18" num="split" />
-      <port edge="e23" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n32" kind="SUBBOARD" name="FieldInitCast-f--GET">
-     <input>
-      <port edge="e19" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e20" num="outReceiver0" />
-      <port edge="e22" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="START_LARGE_BALL">
+    <node id="n31" kind="START_LARGE_BALL">
      <input />
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e18" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="CONNECT">
+    <node id="n32" kind="CONNECT">
      <input>
-      <port edge="e20" num="input" />
+      <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e21" num="toEnd" />
+      <port edge="e20" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="END">
+    <node id="n33" kind="END">
      <input>
-      <port edge="e21" num="input" />
+      <port edge="e20" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="CONNECT">
+    <node id="n34" kind="CONNECT">
      <input>
-      <port edge="e22" num="input" />
+      <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e24" num="toMerge" />
+      <port edge="e23" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="MERGE">
+    <node id="n35" kind="MERGE">
      <input>
-      <port edge="e23" num="first" />
-      <port edge="e24" num="second" />
-     </input>
-     <output>
-      <port edge="e39" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n38" kind="MERGE">
-     <input>
-      <port edge="e26" num="left" />
-      <port edge="e27" num="right" />
-     </input>
-     <output>
-      <port edge="e28" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n39" kind="SPLIT">
-     <input>
-      <port edge="e25" num="input" />
-     </input>
-     <output>
-      <port edge="e31" num="output" />
-      <port edge="e27" num="split" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n40" kind="MERGE">
-     <input>
-      <port edge="e29" num="left" />
-      <port edge="e30" num="right" />
+      <port edge="e22" num="first" />
+      <port edge="e23" num="second" />
      </input>
      <output>
       <port edge="e32" num="output" />
@@ -302,82 +241,63 @@
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="SPLIT">
+    <node id="n36" kind="MERGE">
      <input>
-      <port edge="e28" num="input" />
+      <port edge="e25" num="left" />
+      <port edge="e26" num="right" />
      </input>
      <output>
-      <port edge="e41" num="output" />
-      <port edge="e30" num="split" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="MERGE">
+    <node id="n37" kind="SPLIT">
      <input>
-      <port edge="e32" num="left" />
-      <port edge="e33" num="right" />
+      <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e42" num="output" />
+      <port edge="e33" num="output" />
+      <port edge="e26" num="split" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="SPLIT">
+    <node id="n38" kind="END">
      <input>
-      <port edge="e31" num="input" />
-     </input>
-     <output>
-      <port edge="e40" num="output" />
-      <port edge="e33" num="split" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n44" kind="END">
-     <input>
-      <port edge="e39" num="input" />
+      <port edge="e32" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n45" kind="END">
+    <node id="n39" kind="END">
      <input>
-      <port edge="e40" num="input" />
+      <port edge="e33" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="END">
+    <node id="n40" kind="END">
      <input>
-      <port edge="e41" num="input" />
+      <port edge="e34" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="END">
+    <node id="n41" kind="END">
      <input>
-      <port edge="e42" num="input" />
+      <port edge="e35" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="END">
+    <node id="n42" kind="END">
      <input>
-      <port edge="e43" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n49" kind="END">
-     <input>
-      <port edge="e44" num="input" />
+      <port edge="e36" num="input" />
      </input>
      <output />
      <layout>
@@ -437,7 +357,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set()" editable="true" id="e13" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldInitCast extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldInitCast {  FieldInitCast() { super(); } Object f; String g = (String)f; }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>
@@ -455,7 +375,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldInitCast extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldInitCast {  FieldInitCast() { super(); } Object f; String g = (String)f; }" editable="true" id="e14" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e14" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n26" port="output" />
      </from>
@@ -473,9 +393,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e15" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n28" port="output" />
+      <noderef id="n2" port="output" />
      </from>
      <to>
       <noderef id="n29" port="input" />
@@ -491,30 +411,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e16" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n2" port="output" />
-     </from>
-     <to>
-      <noderef id="n31" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e17" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
      <to>
-      <noderef id="n30" port="left" />
+      <noderef id="n28" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -533,12 +435,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e18" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n31" port="split" />
+      <noderef id="n29" port="split" />
      </from>
      <to>
-      <noderef id="n30" port="right" />
+      <noderef id="n28" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -553,6 +455,18 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="nullable" editable="false" id="e18" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n31" port="output" />
+     </from>
+     <to>
+      <noderef id="n30" port="inReceiver0" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -565,12 +479,18 @@
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e19" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n33" port="output" />
+      <noderef id="n30" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n32" port="inReceiver0" />
+      <noderef id="n32" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -583,7 +503,25 @@
     </edge>
     <edge buzzsaw="false" description="nullable" editable="false" id="e20" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n32" port="outReceiver0" />
+      <noderef id="n32" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n33" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n30" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n34" port="input" />
@@ -605,32 +543,20 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="nullable" editable="false" id="e21" pinch="false" variableID="-4" width="wide">
-     <from>
-      <noderef id="n34" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n35" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
     <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e22" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n32" port="outputReturn0" />
+      <noderef id="n29" port="toMerge" />
      </from>
      <to>
-      <noderef id="n36" port="input" />
+      <noderef id="n35" port="first" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -649,10 +575,70 @@
     </edge>
     <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e23" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n31" port="toMerge" />
+      <noderef id="n34" port="toMerge" />
      </from>
      <to>
-      <noderef id="n37" port="first" />
+      <noderef id="n35" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n28" port="output" />
+     </from>
+     <to>
+      <noderef id="n37" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n12" port="output" />
+     </from>
+     <to>
+      <noderef id="n36" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e26" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n37" port="split" />
+     </from>
+     <to>
+      <noderef id="n36" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -677,12 +663,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e24" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e32" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n36" port="toMerge" />
+      <noderef id="n35" port="output" />
      </from>
      <to>
-      <noderef id="n37" port="second" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -693,17 +679,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e25" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n30" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
       <noderef id="n39" port="input" />
@@ -719,12 +699,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n12" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="left" />
+      <noderef id="n40" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -737,33 +717,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e27" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="Variable 0 at class FieldInitCast extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldInitCast {  FieldInitCast() { super(); } Object f; String g = (String)f; }" editable="true" id="e35" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n39" port="split" />
-     </from>
-     <to>
-      <noderef id="n38" port="right" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n25" port="output" />
      </from>
      <to>
       <noderef id="n41" port="input" />
@@ -779,198 +735,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set()" editable="true" id="e29" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n25" port="output" />
-     </from>
-     <to>
-      <noderef id="n40" port="left" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n41" port="split" />
-     </from>
-     <to>
-      <noderef id="n40" port="right" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n39" port="output" />
-     </from>
-     <to>
-      <noderef id="n43" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set()" editable="true" id="e32" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n40" port="output" />
-     </from>
-     <to>
-      <noderef id="n42" port="left" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n43" port="split" />
-     </from>
-     <to>
-      <noderef id="n42" port="right" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at class FieldInitCast field f; tree Object" editable="true" id="e39" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n37" port="output" />
-     </from>
-     <to>
-      <noderef id="n44" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class FieldInitCast field g cast 0; tree String" editable="true" id="e40" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n43" port="output" />
-     </from>
-     <to>
-      <noderef id="n45" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class FieldInitCast field g; tree String" editable="true" id="e41" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n41" port="output" />
-     </from>
-     <to>
-      <noderef id="n46" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set()" editable="true" id="e42" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n42" port="output" />
-     </from>
-     <to>
-      <noderef id="n47" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class FieldInitCast extends type; tree &lt;&lt;missing tree&gt;&gt; within  class FieldInitCast {  FieldInitCast() { super(); } Object f; String g = (String)f; }" editable="true" id="e43" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
      <to>
-      <noderef id="n48" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e44" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n29" port="output" />
-     </from>
-     <to>
-      <noderef id="n49" port="input" />
+      <noderef id="n42" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -995,7 +765,7 @@
     </node>
     <node id="n4" kind="OUTGOING">
      <input>
-      <port edge="e34" num="outReceiver0" />
+      <port edge="e27" num="outReceiver0" />
       <port edge="e3" num="outputReturn0" />
      </input>
      <output />
@@ -1007,7 +777,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e27" num="output" />
      </output>
      <layout>
       </layout>
@@ -1062,7 +832,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e34" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e27" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -1100,7 +870,7 @@
     <node id="n8" kind="OUTGOING">
      <input>
       <port edge="e5" num="outParam0" />
-      <port edge="e35" num="outReceiver0" />
+      <port edge="e28" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1111,7 +881,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e35" num="output" />
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
@@ -1152,7 +922,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e35" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e28" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -1182,7 +952,7 @@
     </node>
     <node id="n14" kind="OUTGOING">
      <input>
-      <port edge="e36" num="outReceiver0" />
+      <port edge="e29" num="outReceiver0" />
       <port edge="e9" num="outputReturn0" />
      </input>
      <output />
@@ -1194,7 +964,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e29" num="output" />
      </output>
      <layout>
       </layout>
@@ -1249,7 +1019,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e36" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e29" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1287,7 +1057,7 @@
     <node id="n18" kind="OUTGOING">
      <input>
       <port edge="e11" num="outParam0" />
-      <port edge="e37" num="outReceiver0" />
+      <port edge="e30" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1298,7 +1068,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -1351,7 +1121,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e37" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="this" editable="false" id="e30" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -1379,7 +1149,7 @@
     </node>
     <node id="n21" kind="OUTGOING">
      <input>
-      <port edge="e38" num="outputReturn0" />
+      <port edge="e31" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1398,7 +1168,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e38" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
@@ -1421,7 +1191,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="Variable 4 at method FieldInitCast#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
