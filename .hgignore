@@ -11,12 +11,12 @@ java/Generation/bin/
 java/Generation/.cache
 java/Generation/.scala_dependencies
 java/Generation/examples/.*/*\.class
-java/build
+java/build/
 java/verigames.jar
 java/test/.*/actual_.*xml
 java/test/.*/actual_.*txt
 java/test/.*/diff_.*txt
-java/dist
+java/dist/
 
 syntax: glob
 *.aux
