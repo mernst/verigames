@@ -417,9 +417,10 @@ package scenes.game.display
 		 * @param	overwriteWorldXML: True to preserve changes across multiple levels and overwrite local XML, false to create new XML and return that
 		 * @return Instance of current world XML if overwritten, new instance with new updates if not
 		 */
-		public function updateXML(overwriteWorldXML:Boolean = true):XML {
+		public function updateXML(overwriteWorldXML:Boolean = true, returnLevelXMLOnly:Boolean = false):XML {
 			//update xml from original
 			var output_xml:XML = overwriteWorldXML ? world_xml : new XML(world_xml);
+			var activeLevelXML:XML;
 			for each (var my_level:Level in levels) {
 				// Find this level in XML
 				if (my_level.levelNodes == null) {
@@ -467,8 +468,11 @@ package scenes.game.display
 						}
 					}
 				}
+				if (my_level == active_level) {
+					activeLevelXML = output_xml["level"][my_level_xml_indx];
+				}
 			}	
-			return output_xml;
+			return returnLevelXMLOnly ? activeLevelXML : output_xml;
 		}
 		
 		public function onZoomIn(event:MenuEvent):void
@@ -601,7 +605,10 @@ package scenes.game.display
 				}
 			}
 			else
+			{
+				updateXML(); // save world progress
 				currentLevelNumber = (currentLevelNumber + 1) % levels.length;
+			}
 			var callback:Function =
 				function():void
 				{
@@ -724,11 +731,18 @@ package scenes.game.display
 							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
 						}
 						break;
-					case 88: //'x' for copy xml
+					case 87: //'w' for copy of world xml
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
 							var outputXML:XML = updateXML();
 							System.setClipboard(outputXML.toString());
+						}
+						break;
+					case 88: //'x' for copy of level xml
+						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
+						{
+							var levelXML:XML = updateXML(true, true);
+							System.setClipboard(levelXML.toString());
 						}
 						break;
 				}
