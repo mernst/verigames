@@ -26,6 +26,9 @@ class TrustedGameSolver extends GameSolver {
     override def handleConstraint(world: World, constraint: Constraint): Boolean = {
         constraint match {
           case SubtypeConstraint(sub, sup) => {
+
+            if (sup.isInstanceOf[CombVariable] || unsupportedVariables.contains(sub) || unsupportedVariables.contains(sup) ) //TODO JB: REMOVE UNHANDLEDS
+              return true;
             // No need to generate something for trivial super/sub-types.
             if (sup != TrustedConstants.UNTRUSTED &&
                 sub != TrustedConstants.TRUSTED) {
@@ -35,7 +38,7 @@ class TrustedGameSolver extends GameSolver {
                 // println("null <: " + sup)
 
                 // Assume sup is a variable. Alternatives?
-                val supvar = sup.asInstanceOf[Variable]
+                val supvar = sup.asInstanceOf[AbstractVariable]
                 val board = variablePosToBoard(supvar.varpos)
                 val blackball = Intersection.factory(Intersection.Kind.START_LARGE_BALL)
                 val merge = Intersection.factory(Intersection.Kind.MERGE)
@@ -178,6 +181,8 @@ class TrustedGameSolver extends GameSolver {
         }
         case cv: CombVariable => {
           // TODO: Combvariables appear for BinaryTrees.
+          // TODO: Is this right?
+          boardNVariableToIntersection.update((board, cv), inters)
         }
         case _ => {
           println("updateIntersection: unmatched slot: " + slot)
