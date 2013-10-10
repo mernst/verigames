@@ -743,7 +743,7 @@ package scenes.game.display
 							System.setClipboard(active_level.m_levelConstraintsXMLWrapper.toString());
 						}
 						break;
-					case 87: //'w' for copy of world xml
+					case 65: //'a' for copy of ALL (world) xml
 						if(this.active_level != null && !PipeJam3.RELEASE_BUILD)
 						{
 							var outputXML:XML = updateXML();
