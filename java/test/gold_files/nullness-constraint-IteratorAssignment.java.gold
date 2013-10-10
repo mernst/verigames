@@ -67,9 +67,13 @@ EqualityConstraint( Variable 4 at method IteratorAssignment#containerMethod():V 
 
 InequalityConstraint( context: method IteratorAssignment#containerMethod():V constraint position, Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List<Integer> != Constant(@nninf.quals.Nullable) )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator<Integer> )
+
 EqualityConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer> = Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List<Integer> )
 
 InequalityConstraint( context: method IteratorAssignment#containerMethod():V constraint position, Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator<Integer> != Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator<Integer>  <:  Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int )
+
+InequalityConstraint( context: method IteratorAssignment#containerMethod():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
 

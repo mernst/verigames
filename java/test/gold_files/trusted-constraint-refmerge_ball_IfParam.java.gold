@@ -57,7 +57,3 @@ EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at metho
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-SubtypeConstraint( Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set() )
-

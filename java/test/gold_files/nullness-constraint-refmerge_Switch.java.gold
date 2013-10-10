@@ -107,6 +107,8 @@ class Switch {
     }
 } )
 
+SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 3 at method Switch#test():V local variable i(0); tree int )
+
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Switch#test():V local variable a(0); tree String )
 
 EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )

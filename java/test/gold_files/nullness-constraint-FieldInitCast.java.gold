@@ -38,7 +38,3 @@ result: List(Variable 1 at class FieldInitCast field f; tree Object);
 
 SubtypeConstraint( Variable 2 at class FieldInitCast field g cast 0; tree String  <:  Variable 3 at class FieldInitCast field g; tree String )
 
-SubtypeConstraint( Variable 3 at class FieldInitCast field g; tree String  <:  RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( Variable 2 at class FieldInitCast field g cast 0; tree String  <:  RefinementVariable #5 Declared Variable: Variable 2 at class FieldInitCast field g cast 0; tree String IfTest: false mergedTo: Set() )
-

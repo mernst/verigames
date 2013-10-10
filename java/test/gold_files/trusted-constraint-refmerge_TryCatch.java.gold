@@ -91,7 +91,3 @@ SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 5 at method TryCatc
 
 EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
 
-SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #8 Declared Variable: Variable 5 at method TryCatch#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
-

@@ -65,7 +65,3 @@ EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 5 at metho
 
 SubtypeConstraint( Variable 4 at method For#test(ILjava/lang/String;):V parameter 1; tree String  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String )
 
-SubtypeConstraint( Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String  <:  RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set() )
-
-SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set() )
-

@@ -75,6 +75,8 @@ class While {
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method While#test():V local variable a(0); tree String )
 
+InequalityConstraint( context: method While#test():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
 SubtypeConstraint( Variable 3 at method While#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) )
 
 SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) )

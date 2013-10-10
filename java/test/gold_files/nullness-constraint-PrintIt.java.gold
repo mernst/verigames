@@ -49,3 +49,5 @@ InequalityConstraint( context: method PrintIt#m():V constraint position, Variabl
 
 SubtypeConstraint( Variable 4 at method PrintIt#m():V creation 0; tree Object  <:  Variable 3 at method PrintIt#m():V local variable o(0); tree Object )
 
+InequalityConstraint( context: method PrintIt#m():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
