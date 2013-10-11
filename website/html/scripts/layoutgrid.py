@@ -159,7 +159,7 @@ def parsebb(line):
 # line: individual line repesenting dot node or edge with position/width/height info
 # returnonlyendpts: True to only parse the enpoints for edges, first and last connecting points
 def parsedot(line, returnonlyendpts = True):
-	line = line.strip()
+	line = line.strip().replace('e ','e').replace('+ ','+')
 	if (line.find('digraph') == 0) or (line.find('graph') == 0) or (line.find('node') == 0) or (line.find('edge') == 0) or (line.find('}') == 0) or (line.find('{') == 0):
 		return None
 	lb = line.find('[')
