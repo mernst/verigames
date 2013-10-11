@@ -2,7 +2,6 @@ package verigames.layout;
 
 import verigames.layout.WorldLayout;
 import verigames.level.*;
-import verigames.sampleLevels.level.LevelWorld;
 import verigames.utilities.FileCompare;
 
 import java.io.*;
@@ -22,12 +21,6 @@ import static verigames.level.Intersection.Kind.*;
  */
 public class XMLComparisonTests
 {
-  @Test
-  public void levelWorldTest() throws FileNotFoundException
-  {
-    comparisonTest("levelWorld.expected.xml", "levelWorld.actual.xml", LevelWorld.getWorld());
-  }
-
   /**
    * Tests that GET node layout is done properly
    */
