@@ -24,4 +24,5 @@ public class Misc
    * greater granularity.
    */
   public static final boolean CHECK_REP_ENABLED = InferenceMain.STRICT();
+  public static final boolean CHECK_REP_FAIL_FAST = InferenceMain.FAIL_FAST();
 }
