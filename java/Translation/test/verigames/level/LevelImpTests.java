@@ -23,13 +23,13 @@ public class LevelImpTests
     b.addNode(incoming);
     b.addNode(outgoing);
 
-    c1 = new Chute();
-    c2 = new Chute();
+    c1 = new Chute(0, null);
+    c2 = new Chute(1, null);
 
     b.addEdge(incoming, "0", outgoing, "0", c1);
     b.addEdge(incoming, "1", outgoing, "1", c2);
 
-    l.makeLinked(c1,c2);
+    l.linkByVarID(0, 1);
   }
 
   /*
