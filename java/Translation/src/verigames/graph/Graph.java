@@ -4,6 +4,8 @@ import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
 
+import verigames.utilities.Misc;
+
 /*>>>
 import checkers.nullness.quals.*;
 */
@@ -161,7 +163,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
           "this already contains given node");
 
     nodes.add(node);
-    checkRep();
+    if (Misc.CHECK_REP_FAIL_FAST) {
+        checkRep();
+    }
   }
 
   /**
@@ -252,7 +256,9 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
     edge.setStart(start, startPort);
     edge.setEnd(end, endPort);
 
-    checkRep();
+    if (Misc.CHECK_REP_FAIL_FAST) {
+        checkRep();
+    }
   }
 
   /**

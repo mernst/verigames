@@ -28,9 +28,6 @@ package scenes.game
 	{		
 		protected var nextParseState:ParseXMLState;
 		
-		//see note below...
-		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader";
-		
 		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
