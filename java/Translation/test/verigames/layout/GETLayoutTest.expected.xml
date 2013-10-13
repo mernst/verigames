@@ -1,187 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "world.dtd">
-<world version="1">
+<world version="2">
  <level name="GetTestLevel">
   <linked-edges>
    <edge-set id="GetTestLevel0">
-    <edgeref id="e511"/>
+    <edgeref id="e1"/>
    </edge-set>
    <edge-set id="GetTestLevel1">
-    <edgeref id="e512"/>
+    <edgeref id="e2"/>
    </edge-set>
    <edge-set id="GetTestLevel2">
-    <edgeref id="e513"/>
+    <edgeref id="e3"/>
    </edge-set>
    <edge-set id="GetTestLevel3">
-    <edgeref id="e514"/>
+    <edgeref id="e4"/>
    </edge-set>
    <edge-set id="GetTestLevel4">
-    <edgeref id="e515"/>
+    <edgeref id="e5"/>
    </edge-set>
   </linked-edges>
   <boards>
    <board name="GetTestBoard">
-    <node kind="INCOMING" id="n343">
+    <node kind="INCOMING" id="n0">
      <input/>
      <output>
-      <port num="0" edge="e511"/>
-      <port num="1" edge="e512"/>
-      <port num="2" edge="e513"/>
-      <port num="3" edge="e514"/>
+      <port num="0" edge="e1"/>
+      <port num="1" edge="e2"/>
+      <port num="2" edge="e3"/>
+      <port num="3" edge="e4"/>
      </output>
      <layout>
-      <x>0.00000</x>
-      <y>0.00000</y>
+      <x>0.0000000000</x>
+      <y>0.0000000000</y>
      </layout>
     </node>
-    <node kind="OUTGOING" id="n344">
+    <node kind="OUTGOING" id="n1">
      <input>
-      <port num="0" edge="e515"/>
+      <port num="0" edge="e5"/>
      </input>
      <output/>
      <layout>
-      <x>0.00000</x>
+      <x>0.0000000000</x>
       <y>7.68000</y>
      </layout>
     </node>
-    <node kind="GET" id="n345">
+    <node kind="GET" id="n2">
      <input>
-      <port num="0" edge="e511"/>
-      <port num="1" edge="e512"/>
-      <port num="2" edge="e513"/>
-      <port num="3" edge="e514"/>
+      <port num="0" edge="e1"/>
+      <port num="1" edge="e2"/>
+      <port num="2" edge="e3"/>
+      <port num="3" edge="e4"/>
      </input>
      <output>
-      <port num="0" edge="e515"/>
+      <port num="0" edge="e5"/>
      </output>
      <layout>
-      <x>0.00000</x>
-      <y>2.02473</y>
+      <x>0.0000000000</x>
+      <y>1.95623</y>
      </layout>
     </node>
-    <edge description="chute511" variableID="-1" pinch="false" width="narrow" editable="true" id="e511" buzzsaw="false">
+    <edge description="chute1" variableID="-1" pinch="false" width="narrow" editable="true" id="e1" buzzsaw="false">
      <from>
-      <noderef id="n343" port="0"/>
+      <noderef id="n0" port="0"/>
      </from>
      <to>
-      <noderef id="n345" port="0"/>
+      <noderef id="n2" port="0"/>
      </to>
      <edge-layout>
       <point>
        <x>0.50000</x>
-       <y>0.00000</y>
+       <y>0.0000000000</y>
       </point>
       <point>
        <x>0.50000</x>
-       <y>0.93871</y>
+       <y>0.95069</y>
       </point>
       <point>
        <x>0.50000</x>
-       <y>1.15584</y>
+       <y>1.27219</y>
       </point>
       <point>
        <x>0.50000</x>
-       <y>2.02473</y>
+       <y>1.95623</y>
       </point>
      </edge-layout>
     </edge>
-    <edge description="chute512" variableID="-1" pinch="false" width="narrow" editable="true" id="e512" buzzsaw="false">
+    <edge description="chute2" variableID="-1" pinch="false" width="narrow" editable="true" id="e2" buzzsaw="false">
      <from>
-      <noderef id="n343" port="1"/>
+      <noderef id="n0" port="1"/>
      </from>
      <to>
-      <noderef id="n345" port="1"/>
+      <noderef id="n2" port="1"/>
      </to>
      <edge-layout>
       <point>
        <x>1.50000</x>
-       <y>0.00000</y>
+       <y>0.0000000000</y>
       </point>
       <point>
        <x>1.50000</x>
-       <y>0.93871</y>
+       <y>0.95069</y>
       </point>
       <point>
        <x>1.50000</x>
-       <y>1.15584</y>
+       <y>1.27219</y>
       </point>
       <point>
        <x>1.50000</x>
-       <y>2.02473</y>
+       <y>1.95623</y>
       </point>
      </edge-layout>
     </edge>
-    <edge description="chute513" variableID="-1" pinch="false" width="narrow" editable="true" id="e513" buzzsaw="false">
+    <edge description="chute3" variableID="-1" pinch="false" width="narrow" editable="true" id="e3" buzzsaw="false">
      <from>
-      <noderef id="n343" port="2"/>
+      <noderef id="n0" port="2"/>
      </from>
      <to>
-      <noderef id="n345" port="2"/>
+      <noderef id="n2" port="2"/>
      </to>
      <edge-layout>
       <point>
        <x>2.50000</x>
-       <y>0.00000</y>
+       <y>0.0000000000</y>
       </point>
       <point>
        <x>2.50000</x>
-       <y>0.93871</y>
+       <y>0.95069</y>
       </point>
       <point>
        <x>2.50000</x>
-       <y>1.15584</y>
+       <y>1.27219</y>
       </point>
       <point>
        <x>2.50000</x>
-       <y>2.02473</y>
+       <y>1.95623</y>
       </point>
      </edge-layout>
     </edge>
-    <edge description="chute514" variableID="-1" pinch="false" width="narrow" editable="true" id="e514" buzzsaw="false">
+    <edge description="chute4" variableID="-1" pinch="false" width="narrow" editable="true" id="e4" buzzsaw="false">
      <from>
-      <noderef id="n343" port="3"/>
+      <noderef id="n0" port="3"/>
      </from>
      <to>
-      <noderef id="n345" port="3"/>
+      <noderef id="n2" port="3"/>
      </to>
      <edge-layout>
       <point>
        <x>3.50000</x>
-       <y>0.00000</y>
+       <y>0.0000000000</y>
       </point>
       <point>
        <x>3.50000</x>
-       <y>0.93871</y>
+       <y>0.95069</y>
       </point>
       <point>
        <x>3.50000</x>
-       <y>1.15584</y>
+       <y>1.27219</y>
       </point>
       <point>
        <x>3.50000</x>
-       <y>2.02473</y>
+       <y>1.95623</y>
       </point>
      </edge-layout>
     </edge>
-    <edge description="chute515" variableID="-1" pinch="false" width="narrow" editable="true" id="e515" buzzsaw="false">
+    <edge description="chute5" variableID="-1" pinch="false" width="narrow" editable="true" id="e5" buzzsaw="false">
      <from>
-      <noderef id="n345" port="0"/>
+      <noderef id="n2" port="0"/>
      </from>
      <to>
-      <noderef id="n344" port="0"/>
+      <noderef id="n1" port="0"/>
      </to>
      <edge-layout>
       <point>
        <x>0.50000</x>
-       <y>3.48473</y>
+       <y>3.41623</y>
       </point>
       <point>
        <x>0.50000</x>
-       <y>5.34938</y>
+       <y>5.38365</y>
       </point>
       <point>
        <x>0.50000</x>
-       <y>5.81535</y>
+       <y>6.11787</y>
       </point>
       <point>
        <x>0.50000</x>
