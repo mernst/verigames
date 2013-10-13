@@ -157,6 +157,9 @@ public class Level
 
   public boolean areVarIDsLinked(int var1, int var2)
   {
+    if (var1 == var2)
+      return true;
+
     for (Set<Integer> s : linkedVarIDs)
     {
       if (s.contains(var1) && s.contains(var2))
