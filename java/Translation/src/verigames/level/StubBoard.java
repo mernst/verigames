@@ -46,4 +46,20 @@ public class StubBoard
   {
     return Collections.unmodifiableList(this.outputs);
   }
+
+  public List<String> getInputIDs() {
+    final List<String> ports = new ArrayList<String>();
+    for(final StubConnection input : inputs ) {
+      ports.add( input.getPortName() );
+    }
+    return ports;
+  }
+
+  public List<String> getOutputIDs() {
+    final List<String> ports = new ArrayList<String>();
+    for(final StubConnection input : outputs ) {
+      ports.add( input.getPortName() );
+    }
+    return ports;
+  }
 }

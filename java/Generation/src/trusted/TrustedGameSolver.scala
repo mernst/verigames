@@ -9,7 +9,7 @@ import verigames.level._
 import checkers.inference.LiteralNull
 import checkers.inference.AbstractLiteral
 import games.GameSolver
-import trusted.handlers.TrustedEqualityConstraintHandler
+import trusted.handlers.{TrustedStubBoardUseConstraintHandler, TrustedEqualityConstraintHandler}
 
 class TrustedGameSolver extends GameSolver {
 
@@ -118,6 +118,10 @@ class TrustedGameSolver extends GameSolver {
               println("TODO: uncovered inequality case!")
             }
           }
+
+          case stubUseConstraint : StubBoardUseConstraint =>
+            TrustedStubBoardUseConstraintHandler( stubUseConstraint, this ).handle()
+
           case _ => {
             return super.handleConstraint(world, constraint)
           }
