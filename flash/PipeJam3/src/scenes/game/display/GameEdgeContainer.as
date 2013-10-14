@@ -315,6 +315,12 @@ package scenes.game.display
 			}
 		}
 		
+		override public function componentMoved(delta:Point):void
+		{
+			super.componentMoved(delta);
+			updateOutsideEdgeComponents();
+		}
+		
 		private var m_debugBoundingBox:Quad = new Quad(1, 1, 0xff00ff);
 		private function updateBoundingBox():void
 		{
