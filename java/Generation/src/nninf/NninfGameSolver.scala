@@ -11,7 +11,7 @@ import checkers.inference.AbstractLiteral
 import games.GameSolver
 import misc.util.VGJavaConversions._
 import Intersection.Kind._
-import nninf.handlers.NninfEqualityConstraintHandler
+import nninf.handlers.{NninfEqualityConstraintHandler, NninfStubBoardUseConstraintHandler}
 
 class NninfGameSolver extends GameSolver {
 
@@ -133,6 +133,10 @@ class NninfGameSolver extends GameSolver {
               println("TODO: uncovered inequality case!")
             }
           }
+
+          case stubUseConstraint : StubBoardUseConstraint =>
+            NninfStubBoardUseConstraintHandler( stubUseConstraint, this ).handle()
+
           case _ => {
             return super.handleConstraint(world, constraint)
           }

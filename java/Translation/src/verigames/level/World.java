@@ -66,6 +66,7 @@ public class World
   public void validateSubboardReferences()
   {
     Map<String, Board> boards = new LinkedHashMap<String, Board>();
+    Map<String, StubBoard> stubBoards = new LinkedHashMap<String, StubBoard>();
 
     // stick all the boards in the map
     for (Level level : this.getLevels().values())
@@ -77,6 +78,16 @@ public class World
         if (boards.containsKey(name))
           throw new IllegalStateException("duplicate board references for " + name);
         boards.put(name, board);
+      }
+
+      for( Map.Entry<String, StubBoard> entry : level.getStubBoards().entrySet() ) {
+          String name = entry.getKey();
+          StubBoard stubs = entry.getValue();
+          if (stubBoards.containsKey(name)) {
+              throw new IllegalStateException("duplicate stubboard references for " + name);
+          }
+
+          stubBoards.put(name, stubs);
       }
     }
 
@@ -90,41 +101,87 @@ public class World
         {
           Subboard subboard = isect.asSubboard();
           String name = subboard.getSubnetworkName();
-          if (!boards.containsKey(name))
-            throw new IllegalStateException("no board exists with name " + name);
+          final boolean isBoard     = boards.containsKey( name );
+          final boolean isStubBoard = stubBoards.containsKey( name );
 
-          Board referent = boards.get(name);
+          if ( !isBoard && !isStubBoard )
+            throw new IllegalStateException("no board or stub board exists with name " + name);
 
-          List<String> boardInputs  = referent.getIncomingNode().getOutputIDs();
-          List<String> boardOutputs = referent.getOutgoingNode().getInputIDs();
-          List<String> subboardInputs  = subboard.getInputIDs();
-          List<String> subboardOutputs = subboard.getOutputIDs();
-
-          if(InferenceMain.STRICT()) {
-            if (boardInputs.size() != subboardInputs.size())
-              throw new IllegalStateException("subboard " + name + " has " +
-                  subboardInputs.size() + " inputs but its referent has " +
-                  boardInputs.size() + " inputs");
-            if (boardOutputs.size() != subboardOutputs.size())
-              throw new IllegalStateException("subboard " + name + " has " +
-                  subboardOutputs.size() + " outputs but its referent has " +
-                  boardOutputs.size() + " outputs" + " caller: " + board.getName());
-
-            if (!boardInputs.equals(subboardInputs))
-              throw new IllegalStateException(String.format("subboard %s does " +
-                  "not have the same input port identifiers as board: subboard " +
-                  "has: %s, board has: %s", name, subboardInputs.toString(),
-                  boardInputs.toString()));
-
-            if (!boardOutputs.equals(subboardOutputs))
-              throw new IllegalStateException(String.format("subboard %s does " +
-                  "not have the same output port identifiers as board: subboard " +
-                  "has: %s, board has: %s, caller: %s", name, subboardOutputs.toString(),
-                  boardOutputs.toString(), board.getName()));
+          if( isBoard ) {
+              validateReferenceToBoard( board, subboard, boards );
+          } else {
+              validateReferenceToStubBoard( board, subboard, stubBoards );
           }
+
         }
       }
     }
+  }
+
+ /**
+  * Expected = board or stub board
+  * actual   = subboard
+  * @param subboardName
+  * @param boardName
+  * @param expectedInputs
+  * @param expectedOutputs
+  * @param actualInputs
+  * @param actualOutputs
+  * @return
+  */
+  private void checkReferences( final String subboardName, final String boardName,
+                                final List<String> expectedInputs,
+                                final List<String> expectedOutputs,
+                                final List<String> actualInputs,
+                                final List<String> actualOutputs) {
+     if(InferenceMain.STRICT()) {
+       if (expectedInputs.size() != actualInputs.size())
+         throw new IllegalStateException("subboard " + subboardName + " has " +
+                                         actualInputs.size() + " inputs but its referent has " +
+                                         expectedInputs.size() + " inputs");
+       if (expectedOutputs.size() != actualOutputs.size())
+         throw new IllegalStateException("subboard " + subboardName + " has " +
+                 actualOutputs.size() + " outputs but its referent has " +
+                 expectedOutputs.size() + " outputs" + " caller: " + boardName );
+
+       if (!expectedInputs.equals(actualInputs))
+         throw new IllegalStateException(String.format("subboard %s does " +
+                 "not have the same input port identifiers as board: subboard " +
+                 "has: %s, board has: %s", subboardName, actualInputs.toString(),
+                 expectedInputs.toString()));
+
+       if (!expectedOutputs.equals(actualOutputs))
+         throw new IllegalStateException(String.format("subboard %s does " +
+                 "not have the same output port identifiers as board: subboard " +
+                 "has: %s, board has: %s, caller: %s", subboardName, actualOutputs.toString(),
+                 expectedOutputs.toString(), boardName));
+     }
+  }
+
+  private void validateReferenceToBoard(final Board currentBoard, final Subboard subboard, final Map<String, Board> boards ) {
+      String name = subboard.getSubnetworkName();
+
+      Board referent = boards.get(name);
+
+      checkReferences( name,  referent.getName(),
+                       referent.getIncomingNode().getOutputIDs(), referent.getOutgoingNode().getInputIDs(),
+                       subboard.getInputIDs(), subboard.getOutputIDs() );
+  }
+
+  private void validateReferenceToStubBoard(final Board currentBoard, final Subboard subboard, final Map<String, StubBoard> stubBoards ) {
+      String name = subboard.getSubnetworkName();
+
+      StubBoard referent = stubBoards.get(name);
+      List<String> referentInputs  = referent.getInputIDs();
+      List<String> referentOutputs = referent.getOutputIDs();
+
+      //Id's are stored in a TreeMap in Intersections and therefore come out in alphabetical order
+      Collections.sort( referentInputs  );
+      Collections.sort( referentOutputs );
+
+      checkReferences( name,  name,
+                       referentInputs, referentOutputs,
+                       subboard.getInputIDs(), subboard.getOutputIDs() );
   }
 
   @Override

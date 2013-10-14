@@ -34,7 +34,6 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
 
   import gameSolver._
 
-
   protected val methodSignature : String
 
   //The board representing the method IN which the call was made
@@ -95,7 +94,13 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
   override def handle() {
     println( "HANDLING " + constraint )
 
-    val subboardISect = addSubboardIntersection(callerBoard, constraint.calledVp, methodSignature)
+    val subboardISect =
+      if( constraint.isLibraryCall ) {
+        val stubUse = constraint.stubBoardUse.get
+        addStubboardIntersection( callerBoard, variablePosToLevel(stubUse.levelVp), methodSignature )
+      } else {
+        addSubboardIntersection(callerBoard, constraint.calledVp.get, methodSignature)
+      }
 
     connectReceiverParamsThrough( subboardISect )
 
