@@ -16,6 +16,13 @@ import nu.xom.*;
 public class WorldXMLPrinter extends Printer<World, Void>
 {
   public static final int version = 2;
+  private final boolean useDescription;
+
+  public WorldXMLPrinter() {
+      final String noDesc = System.getProperty("NO_DESC");
+
+      useDescription = noDesc != null && !noDesc.equalsIgnoreCase("true");
+  }
 
   /**
    * Prints the XML representation for {@code toPrint}<br/>
@@ -285,7 +292,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
 
         Element edgeElt = new Element("edge");
         {
-          edgeElt.addAttribute(new Attribute("description", edge.getDescription()));
+          edgeElt.addAttribute(new Attribute("description", useDescription ? edge.getDescription() : "desc"));
           edgeElt.addAttribute(new Attribute("variableID", Integer.toString(edge.getVariableID())));
           edgeElt.addAttribute(new Attribute("pinch", Boolean.toString(edge.isPinched())));
           edgeElt.addAttribute(new Attribute("width", edge.isNarrow() ? "narrow" : "wide"));
