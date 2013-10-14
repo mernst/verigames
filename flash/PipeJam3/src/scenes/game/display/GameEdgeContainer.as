@@ -182,9 +182,13 @@ package scenes.game.display
 				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && 
-					m_extensionEdge.m_innerBoxSegment.isEnd) {
+					(
+						m_extensionEdge.m_innerBoxSegment.isEnd ||
+						m_extensionEdge.m_innerBoxSegment.hasInnerCircle
+					)){
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
+					m_extensionEdge.m_innerBoxSegment.hasInnerCircle = false;
 					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
