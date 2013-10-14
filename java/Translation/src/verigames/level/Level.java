@@ -45,8 +45,8 @@ public class Level
    * variableID of chutes, the linked chute sets will be generated upon XML
    * printing.<p>
    *
-   * Right now, makeLinked is still supported, but when it is removed, this can
-   * be done away with (after the appropriate updates to the XML IO tools).
+   * Now that makeLinked is removed, we should consider updating the
+   * implementation to not include this.
    */
   @Deprecated
   private final Set<Set<Chute>> linkedEdgeClasses;
@@ -145,71 +145,8 @@ public class Level
     checkRep();
   }
 
-  private boolean makeLinkedCalled = false;
-
-  /**
-   * Makes it so that the given {@link Chute}s are equivalent under the
-   * relation R defined for {@code linkedEdgeClasses}. In other words, for all
-   * a, b in {@code toLink}, aRb<br/>
-   * <br/>
-   * Requires: every {@code Chute} in {@code toLink} must be contained in a
-   * {@link Board} in {@code boards}<br/>
-   * <br/>
-   * Modifies: {@code this}<br/>
-   * <br/>
-   * Runs in O(m*n) time, where m is {@code linkedEdgeClasses.size()} and n is
-   * {@code toLink.length}
-   *
-   * @param toLink
-   * The {@code Chute}s to make equivalent under the equivalence relation R
-   *
-   * @see #makeLinked(Set)
-   */
-  @Deprecated
-  public void makeLinked(Chute... toLink)
-  {
-    makeLinked(new LinkedHashSet<>(Arrays.asList(toLink)));
-  }
-
-  /**
-   * Functions identically to {@link #makeLinked(Chute...)}, except the
-   * elements to link are specified by a {@code Set} instead of an array
-   *
-   * @param toLink
-   * @see #makeLinked(Chute...)
-   */
-  @Deprecated
-  public void makeLinked(Set<Chute> toLink)
-  {
-    makeLinkedCalled = true;
-    link(linkedEdgeClasses, toLink);
-    checkRep();
-  }
-
-  /**
-   * Returns {@code true} iff all of the {@code Chute}s in {@code chutes} are linked.
-   * @param chutes
-   */
-  @Deprecated
-  public boolean areLinked(Set<Chute> chutes)
-  {
-    // A single chute is always linked to itself
-    if (chutes.size() == 1)
-      return true;
-
-    for (Set<Chute> s : linkedEdgeClasses)
-    {
-      if (s.containsAll(chutes))
-        return true;
-    }
-    return false;
-  }
-
   /**
    * Links all {@link Chute}s with the given variable IDs.<p>
-   *
-   * Not to be used in conjunction with {@link #makeLinked}. Results are
-   * undefined if both are called on the same Level.
    */
   // TODO should this be varargs or take a set? Or is linking two at once good
   // enough?
@@ -220,6 +157,9 @@ public class Level
 
   public boolean areVarIDsLinked(int var1, int var2)
   {
+    if (var1 == var2)
+      return true;
+
     for (Set<Integer> s : linkedVarIDs)
     {
       if (s.contains(var1) && s.contains(var2))
@@ -407,8 +347,6 @@ public class Level
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed Level");
 
-    /* TODO THIS IS A HACK -- FIX IT. Really, makeLinked should be deprecated or
-     * removed, and a different data structure should be used.*/
     linkChutesWithLinkedID();
 
     underConstruction = false;
@@ -488,9 +426,6 @@ public class Level
    */
   private void linkChutesWithLinkedID()
   {
-    if (makeLinkedCalled)
-      return;
-
     Set<Chute> chutes = getAllChutes();
 
     // map from variable id to chutes with that variable ID

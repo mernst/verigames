@@ -15,18 +15,6 @@ The first thing you'll notice is a number of deprecated methods. I'll attempt to
 explain why they are deprecated, why they haven't yet been removed, and what
 they're being replaced with.
 
-In Level:
-  - makeLinked, areLinked, and linkedEdgeClasses:
-      These are no longer necessary because chutes are implicitly linked if they
-      have the same variableID (a field of the Chute object). Maintaining a
-      separate copy of this information is wasteful and adds extra complexity.
-      It used to be that chutes did not have a variableID, and to link them you
-      had to call makeLinked directly. Now, you just give them the same variableID.
-
-      These are still in use because the sample levels (package
-      verigames.sampleLevels) use them extensively, and the transformation to
-      the new API will be time consuming.
- 
 In Board:
   - addChuteName, etc.:
       At one point, I thought that any given chute could have more than one
@@ -40,7 +28,7 @@ In Board:
       This is still here because the sample levels use them. It wouldn't be a
       lot of trouble to remove them from the sample levels, it just has yet to
       be done.
- 
+
 In graph package (clearly not actually part of the level package, but a lot of
 level's core functionality comes from graph):
   - int ports:

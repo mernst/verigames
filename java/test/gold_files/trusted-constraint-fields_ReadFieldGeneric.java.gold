@@ -1,0 +1,126 @@
+Constraints:
+SubtypeConstraint( Variable 1 at class ReadFieldGeneric class type parameter 0; tree E  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 1 at class ReadFieldGeneric class type parameter 0; tree E  <:  Variable 0 at class ReadFieldGeneric class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within EAtm: @VarAnnot(0) Object )
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 2 at class ReadFieldGeneric extends type; tree <<missing tree>> within 
+class ReadFieldGeneric<E> {
+    
+    ReadFieldGeneric() {
+        super();
+    }
+    E myField = null;
+    
+    void test() {
+        myField = null;
+    }
+    
+    void test2() {
+        Object o = myField;
+    }
+} )
+
+SubtypeConstraint( Variable 4 at method ReadFieldGeneric#<init>():V return type; tree 
+<init>() {
+    super();
+}  <:  Variable 2 at class ReadFieldGeneric extends type; tree <<missing tree>> within 
+class ReadFieldGeneric<E> {
+    
+    ReadFieldGeneric() {
+        super();
+    }
+    E myField = null;
+    
+    void test() {
+        myField = null;
+    }
+    
+    void test2() {
+        Object o = myField;
+    }
+} )
+
+SubtypeConstraint( Variable 3 at class ReadFieldGeneric field myField; tree E  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at class ReadFieldGeneric field myField; tree E )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Constant(@trusted.quals.Untrusted) )
+
+SubtypeConstraint( Variable 5 at method ReadFieldGeneric#test():V receiver; tree <<missing tree>> within 
+void test() {
+    myField = null;
+}Atm: @VarAnnot(5) ReadFieldGeneric<E extends Object>  <:  Variable 2 at class ReadFieldGeneric extends type; tree <<missing tree>> within 
+class ReadFieldGeneric<E> {
+    
+    ReadFieldGeneric() {
+        super();
+    }
+    E myField = null;
+    
+    void test() {
+        myField = null;
+    }
+    
+    void test2() {
+        Object o = myField;
+    }
+} )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()  <:  Variable 3 at class ReadFieldGeneric field myField; tree E )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()  <:  Constant(@trusted.quals.Untrusted) )
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method ReadFieldGeneric#test():V constraint position; 
+calledVp: class ReadFieldGeneric field myField; 
+receiver: Variable 5 at method ReadFieldGeneric#test():V receiver; tree <<missing tree>> within 
+void test() {
+    myField = null;
+}Atm: @VarAnnot(5) ReadFieldGeneric<E extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 1 at class ReadFieldGeneric class type parameter 0; tree E >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class ReadFieldGeneric class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within EAtm: @VarAnnot(0) Object) >; 
+args: ( Literal(NULL_LITERAL, "null") ); 
+result: List(); 
+)
+
+EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set() = Literal(NULL_LITERAL, "null") )
+
+SubtypeConstraint( Variable 6 at method ReadFieldGeneric#test2():V receiver; tree <<missing tree>> within 
+void test2() {
+    Object o = myField;
+}Atm: @VarAnnot(6) ReadFieldGeneric<E extends Object>  <:  Variable 2 at class ReadFieldGeneric extends type; tree <<missing tree>> within 
+class ReadFieldGeneric<E> {
+    
+    ReadFieldGeneric() {
+        super();
+    }
+    E myField = null;
+    
+    void test() {
+        myField = null;
+    }
+    
+    void test2() {
+        Object o = myField;
+    }
+} )
+
+checkers.inference.FieldAccessConstraint(
+contextVp: method ReadFieldGeneric#test2():V constraint position; 
+calledVp: class ReadFieldGeneric field myField; 
+receiver: Variable 6 at method ReadFieldGeneric#test2():V receiver; tree <<missing tree>> within 
+void test2() {
+    Object o = myField;
+}Atm: @VarAnnot(6) ReadFieldGeneric<E extends Object>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Variable 1 at class ReadFieldGeneric class type parameter 0; tree E >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 0 at class ReadFieldGeneric class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within EAtm: @VarAnnot(0) Object) >; 
+args: (  ); 
+result: List(Variable 3 at class ReadFieldGeneric field myField; tree E); 
+)
+
+SubtypeConstraint( Variable 3 at class ReadFieldGeneric field myField; tree E  <:  Variable 8 at method ReadFieldGeneric#test2():V local variable o(0); tree Object )
+

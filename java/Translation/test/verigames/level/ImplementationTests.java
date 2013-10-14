@@ -13,8 +13,13 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({ IntersectionImpTests.class, BoardImpTests.class,
-  ChuteImpTests.class, BallSizeTestImpTests.class, LevelImpTests.class })
+@SuiteClasses({
+  IntersectionImpTests.class,
+  BoardImpTests.class,
+  ChuteImpTests.class,
+  BallSizeTestImpTests.class,
+})
+
 public class ImplementationTests {
   // Placeholder class
 }

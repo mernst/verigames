@@ -1,3 +1,0 @@
-#!/bin/bash
-
-sed -f names_list -i level.actual.xml
