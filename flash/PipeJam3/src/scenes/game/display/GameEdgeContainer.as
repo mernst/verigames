@@ -953,9 +953,9 @@ package scenes.game.display
 			}
 		}
 		
-		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean, force:Boolean = false):void 
+		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
 		{
-			if(!m_isSelected || force)
+			if(!m_isSelected)
 			{
 				if(isOutgoing)
 				{
@@ -1101,7 +1101,7 @@ package scenes.game.display
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
 			
-			if(this.m_extensionEdge)// && m_extensionEdgeIsOutgoing)
+			if(this.m_extensionEdge && segmentOutgoing)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);
 			}
