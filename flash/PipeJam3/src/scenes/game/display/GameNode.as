@@ -64,7 +64,7 @@ package scenes.game.display
 					trace("WARNING: Edge id " + myEdge.edge_id + " isWide doesn't match edgeSet value = " + isWide().toString);
 				}
 				if (myEdge.editable != m_isEditable) {
-					trace("WARNING: Edge id " + myEdge.edge_id + " editable doesn't match edgeSet value = " + m_isEditable.toString);
+					trace("WARNING: Edge id " + myEdge.edge_id + " editable doesn't match edgeSet value = " + m_isEditable.toString());
 					m_isEditable = true; // default to editable for this case (at least one edge = editable, whole edgeSet = editable)
 				}
 				if (myEdge.from_port.node.kind == NodeTypes.INCOMING) {
