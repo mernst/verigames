@@ -35,9 +35,12 @@ public class ProxyThread extends Thread {
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
 	String betaurl = "http://api.flowjam.verigames.com";
-	private String url = betaurl;
+	String productionurl = "http://api.flowjam.verigames.com";
+	private String url = productionurl;
 	//used for verifycookie call to verify player
-	private String gameURL = "http://flowjam.verigames.com";
+	private String betagameURL = "http://flowjam.verigames.org";
+	private String productiongameURL = "http://flowjam.verigames.com";
+	private String gameURL = productiongameURL;
 	private String httpport = ":80";
 
 	static public int LOG_REQUEST = 0;
@@ -151,6 +154,10 @@ public class ProxyThread extends Thread {
             			out.writeChars("test");
             			out.flush();
             		}
+            		
+            		if(urlToCall.indexOf("/proxy") != -1)
+            			urlToCall = urlToCall.substring(6);
+            		
             		if(urlTokens[1].indexOf("GET") != -1)
             			response = doGet(urlToCall);
             		else if(urlTokens[1].indexOf("PUT") != -1)
@@ -266,8 +273,8 @@ public class ProxyThread extends Thread {
     		"<?xml version=\"1.0\"?>" +
     		"<cross-domain-policy>" +
     		"<site-control permitted-cross-domain-policies=\"all\"/>" +
-    		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"8001\"/>" +
-    		"<allow-access-from domain=\"*.verigames.com\" to-ports=\"8001\"/>" +
+    		"<allow-access-from domain=\"*.cs.washington.edu\" to-ports=\"80\"/>" +
+    		"<allow-access-from domain=\"*.verigames.com\" to-ports=\"80\"/>" +
     		"<allow-http-request-headers-from domain=\"*\" headers=\"*\"/>" +
     		"</cross-domain-policy>";
 			
