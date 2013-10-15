@@ -36,5 +36,8 @@ case class FieldAccessConstraintHandler( override val constraint : FieldAccessCo
                                          override val gameSolver : GameSolver)
   extends SubboardCallConstraintHandler[FieldVP, FieldAccessConstraint]( constraint, gameSolver ) {
 
-  override val methodSignature = gameSolver.getFieldAccessorName( constraint.calledVp )
+  override val methodSignature =
+    constraint.calledVp
+      .map( gameSolver.getFieldAccessorName _ )
+      .getOrElse( gameSolver.getFieldAccessorName( constraint.stubBoardUse.get.methodSignature ) )
 }

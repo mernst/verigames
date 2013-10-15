@@ -88,12 +88,9 @@
       </classpath>
     </junit>
     <copy file="../../world.dtd" todir="${bin}/verigames/level"/>
-    <copy file="${src}/verigames/sampleLevels/level/name_replace" todir="${bin}/verigames/level"/>
-    <copy file="${src}/verigames/sampleLevels/level/names_list" todir="${bin}/verigames/level"/>
   </target>
 
   <target name="test.layout">
-    <copy file="${test}/verigames/layout/levelWorld.expected.xml" todir="${bin}/verigames/layout"/>
     <copy file="${test}/verigames/layout/GETLayoutTest.expected.xml" todir="${bin}/verigames/layout"/>
     <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/layout">
       <test name="verigames.layout.SpecificationTests"/>

@@ -12,7 +12,9 @@ import verigames.level.Intersection.Kind._
 import verigames.layout.LayoutDebugger
 
 import scala.collection.JavaConversions._
-import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallConstraintHandler, FieldAssignmentConstraintHandler, FieldAccessConstraintHandler, BallSizeTestConstraintHandler}
+import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallConstraintHandler,
+                       FieldAssignmentConstraintHandler, FieldAccessConstraintHandler, BallSizeTestConstraintHandler,
+                       StubBoardUseConstraintHandler}
 import checkers.inference.util.CollectionUtil
 import checkers.types.AnnotatedTypeMirror
 
@@ -189,6 +191,7 @@ abstract class GameSolver extends ConstraintSolver {
         val printWorld = Option( System.getProperty("PRINT_WORLD") )
         if( printWorld.map( _ == "true" ).getOrElse(false) ) {
           val dest = InferenceUtils.getOrCreateDir("./debug_world")
+          System.out.println( "Printing boards to: " + dest );
           LayoutDebugger.layout(world, dest.getAbsolutePath)
         }
       }
@@ -196,6 +199,7 @@ abstract class GameSolver extends ConstraintSolver {
         case throwable : Throwable =>
           if( InferenceMain.PRINT_BOARDS_ON_ERROR ) {
             val dest = InferenceUtils.getOrCreateDir("./debug_world")
+            System.out.println( "Printing boards to: " + dest );
             LayoutDebugger.layout(world, dest.getAbsolutePath)
           }
           throw throwable
@@ -479,6 +483,7 @@ abstract class GameSolver extends ConstraintSolver {
             BallSizeTestConstraintHandler(bsTest, this).handle()
 
           case _ =>
+            //TODO : Report these
             // Don't do anything here and hope the subclass does something.
 
         }
@@ -642,6 +647,18 @@ abstract class GameSolver extends ConstraintSolver {
       callerBoard.addNode(subboard)
       // Ensure that called board exists, returned board not used.
       findOrCreateMethodBoard(calledvarpos, calledname)
+      subboard
+    }
+
+  /**
+   * Adds the subboard intersection for a call to Library method (i.e. one that doesn't have an actual
+   * declared board).  It then adds Stubboard to the Level in which the board is used.
+   * @param callerBoard
+   * @param calledName
+   */
+    def addStubboardIntersection( callerBoard : Board, level : Level, calledName : String ) = {
+      val subboard = Intersection.subboardFactory( cleanUpForXML(calledName) )
+      callerBoard.addNode( subboard )
       subboard
     }
 
@@ -829,8 +846,13 @@ abstract class GameSolver extends ConstraintSolver {
             // Constructors are named "<init>" and "<cinit>"
             '<' -> '-',
             '>' -> '-',
+            '?' -> '-',
             // Arrays in bytecode
-            '[' -> '-'
+            '[' -> '-',
+            ']' -> '-',
+            '$' -> '-',
+            ' ' -> '-',
+            ',' -> '-'
       ))
 
     def replaceAll(str : String, transforms : Map[Char,Char]) =
@@ -850,14 +872,28 @@ abstract class GameSolver extends ConstraintSolver {
      * Helper method to determine the name of the subboard used for a field getter.
      */
     def getFieldAccessorName(fvp: FieldVP): String = {
-      fvp.getFQName + GetterSuffix
+      getFieldAccessorName( fvp.getFQName )
+    }
+
+    /**
+     * Public library fields will not have a FieldVP
+     */
+    def getFieldAccessorName( fqName : String): String = {
+      fqName + GetterSuffix
     }
 
     /**
      * Helper method to determine the name of the subboard used for a field setter.
      */
     def getFieldSetterName(fvp: FieldVP): String = {
-      fvp.getFQName + SetterSuffix
+      getFieldSetterName(fvp.getFQName)
+    }
+
+    /**
+     * Helper method to determine the name of the subboard used for a field setter.
+     */
+    def getFieldSetterName(fqName : String): String = {
+      fqName + SetterSuffix
     }
 
     def isFieldSetterName( name : String ) = name.endsWith( SetterSuffix )

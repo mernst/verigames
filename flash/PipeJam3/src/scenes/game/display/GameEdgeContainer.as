@@ -182,9 +182,13 @@ package scenes.game.display
 				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && 
-					m_extensionEdge.m_innerBoxSegment.isEnd) {
+					(
+						m_extensionEdge.m_innerBoxSegment.isEnd ||
+						m_extensionEdge.m_innerBoxSegment.hasInnerCircle
+					)){
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
+					m_extensionEdge.m_innerBoxSegment.hasInnerCircle = false;
 					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
@@ -309,6 +313,12 @@ package scenes.game.display
 				updateOutsideEdgeComponents();
 				updateBoundingBox();
 			}
+		}
+		
+		override public function componentMoved(delta:Point):void
+		{
+			super.componentMoved(delta);
+			updateOutsideEdgeComponents();
 		}
 		
 		private var m_debugBoundingBox:Quad = new Quad(1, 1, 0xff00ff);
@@ -949,9 +959,9 @@ package scenes.game.display
 			}
 		}
 		
-		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean, force:Boolean = false):void 
+		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
 		{
-			if(!m_isSelected || force)
+			if(!m_isSelected)
 			{
 				if(isOutgoing)
 				{
@@ -1097,7 +1107,7 @@ package scenes.game.display
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
 			
-			if(this.m_extensionEdge)// && m_extensionEdgeIsOutgoing)
+			if(this.m_extensionEdge && segmentOutgoing)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);
 			}

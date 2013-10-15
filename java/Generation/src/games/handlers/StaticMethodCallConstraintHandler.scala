@@ -18,6 +18,9 @@ case class StaticMethodCallConstraintHandler( override val constraint : StaticMe
                                               override val gameSolver : GameSolver )
   extends SubboardCallConstraintHandler[CalledMethodPos, StaticMethodCallConstraint](constraint, gameSolver) {
 
-  override val methodSignature = constraint.calledVp.getMethodSignature
+  override val methodSignature =
+    constraint.calledVp
+      .map( _.getMethodSignature )
+      .getOrElse( constraint.stubBoardUse.get.methodSignature )
 
 }
