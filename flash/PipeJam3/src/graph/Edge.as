@@ -306,7 +306,7 @@ package graph
 					// Connect through subnet if possible, otherwise don't bother
 					var subnetPort:SubnetworkPort = thisEdge.from_port as SubnetworkPort;
 					nextPorts = new Vector.<Port>();
-					if (subnetPort) nextPorts.push(subnetPort.linked_subnetwork_edge.to_port);
+					if (subnetPort && subnetPort.linked_subnetwork_edge && subnetPort.linked_subnetwork_edge.to_port) nextPorts.push(subnetPort.linked_subnetwork_edge.to_port);
 				}
 				for (var i:int = 0; i < nextPorts.length; i++) {
 					var nextEdge:Edge = nextPorts[i].edge;
