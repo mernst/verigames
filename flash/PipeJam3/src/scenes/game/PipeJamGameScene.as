@@ -28,15 +28,69 @@ package scenes.game
 	{		
 		protected var nextParseState:ParseXMLState;
 		
-		//see note below...
-		static public var demoButtonWorldFile:String = "../SampleWorlds/net_sf_picard_metrics_VersionHeader";
-		
 		//takes a partial path to the files, using the base file name. -.xml, -Layout.xml and -Constraints.xml will be assumed
 		//we could obviously change it back, but this is the standard use case
 		static public var demoArray:Array = new Array(
-			"../../../../../../Picard/v4/partialworld/PartialWorld"
-			//"../../../../../../Picard/v4/output/5254489fe4b07655ceae563b",
-			//"../../../../../../Picard/v4/output/52544876e4b07655ceae526b"
+			
+//			"../../../../../../Picard/v5/zips/364",
+//			"../../../../../../Picard/v5/zips/348",
+//			"../../../../../../Picard/v5/zips/198",
+//			"../../../../../../Picard/v5/zips/201",
+//			"../../../../../../Picard/v5/zips/325",
+//			"../../../../../../Picard/v5/zips/68",
+//			"../../../../../../Picard/v5/zips/10",
+//			"../../../../../../Picard/v5/zips/37",
+//			"../../../../../../Picard/v5/zips/227",
+//			"../../../../../../Picard/v5/zips/127",
+//			"../../../../../../Picard/v5/zips/216",
+//			"../../../../../../Picard/v5/zips/376",
+//			"../../../../../../Picard/v5/zips/43",
+//			"../../../../../../Picard/v5/zips/350",
+	//		"../../../../../../Picard/v5/zips/92",
+//			"../../../../../../Picard/v5/zips/353",
+//			"../../../../../../Picard/v5/zips/457",
+//			"../../../../../../Picard/v5/zips/27",
+//			"../../../../../../Picard/v5/zips/358",
+//			"../../../../../../Picard/v5/zips/49",
+//			"../../../../../../Picard/v5/zips/214",
+//			"../../../../../../Picard/v5/zips/241",
+//			"../../../../../../Picard/v5/zips/42",
+//			"../../../../../../Picard/v5/zips/385",
+//			"../../../../../../Picard/v5/zips/204",
+//			"../../../../../../Picard/v5/zips/243",
+//			"../../../../../../Picard/v5/zips/94",
+			"../../../../../../Picard/v5/zips/54",
+			"../../../../../../Picard/v5/zips/381",
+			"../../../../../../Picard/v5/zips/196",
+			"../../../../../../Picard/v5/zips/220",
+			"../../../../../../Picard/v5/zips/118",
+			"../../../../../../Picard/v5/zips/442",
+//40			"../../../../../../Picard/v5/zips/369",
+			"../../../../../../Picard/v5/zips/322",
+			"../../../../../../Picard/v5/zips/197",
+			"../../../../../../Picard/v5/zips/247",
+			"../../../../../../Picard/v5/zips/341",
+			"../../../../../../Picard/v5/zips/270",
+			"../../../../../../Picard/v5/zips/31",
+			"../../../../../../Picard/v5/zips/11",
+			"../../../../../../Picard/v5/zips/413",
+			"../../../../../../Picard/v5/zips/128",
+//30			"../../../../../../Picard/v5/zips/418",
+			"../../../../../../Picard/v5/zips/107",
+			"../../../../../../Picard/v5/zips/411",
+			"../../../../../../Picard/v5/zips/265",
+			"../../../../../../Picard/v5/zips/205",
+			"../../../../../../Picard/v5/zips/88",
+			"../../../../../../Picard/v5/zips/71",
+			"../../../../../../Picard/v5/zips/466",
+			"../../../../../../Picard/v5/zips/85",
+			"../../../../../../Picard/v5/zips/146",
+			"../../../../../../Picard/v5/zips/311",
+			"../../../../../../Picard/v5/zips/200",
+			"../../../../../../Picard/v5/zips/399",
+			"../../../../../../Picard/v5/zips/144",
+			"../../../../../../Picard/v5/zips/470",
+			"../../../../../../Picard/v5/zips/32"
 		);
 		
 		static public const DEBUG_PLAY_WORLD_ZIP:String = "";// "../lib/levels/bonus/bonus.zip";

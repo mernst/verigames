@@ -120,6 +120,38 @@ package graph
 			}
 		}
 		
+		private var m_stubInputWidthsByPort:Dictionary = new Dictionary();
+		private var m_stubOutputWidthsByPort:Dictionary = new Dictionary();
+		public function addStubBoardPortWidth(_port_num:String, _stub_width:String, _is_input:Boolean):void
+		{
+			_stub_width = _stub_width.toLowerCase();
+			if ((_stub_width != "narrow") && (_stub_width != "wide")) {
+				throw new Error("Illegal stub width found ('" + _stub_width + "') for board:" + original_board_name + " port_num:" + _port_num);
+			}
+			if (_is_input) {
+				if (m_stubInputWidthsByPort.hasOwnProperty(_port_num)) {
+					throw new Error("Duplicate stub inputs found for board:" + original_board_name + " port_num:" + _port_num);
+				}
+				m_stubInputWidthsByPort[_port_num] = _stub_width;
+			} else {
+				if (m_stubOutputWidthsByPort.hasOwnProperty(_port_num)) {
+					throw new Error("Duplicate stub outputs found for board:" + original_board_name + " port_num:" + _port_num);
+				}
+				m_stubOutputWidthsByPort[_port_num] = _stub_width;
+			}
+		}
+		
+		public function getStubBoardPortWidth(_port_num:String, _is_input:Boolean):String
+		{
+			if (_is_input) {
+				if (!m_stubInputWidthsByPort.hasOwnProperty(_port_num)) return null;
+				return m_stubInputWidthsByPort[_port_num] as String;
+			} else {
+				if (!m_stubOutputWidthsByPort.hasOwnProperty(_port_num)) return null;
+				return m_stubOutputWidthsByPort[_port_num] as String;
+			}
+		}
+		
 		public function get startingEdgeDictionary():Dictionary
 		{
 			if (m_startingEdgeDictionary == null) {

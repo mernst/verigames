@@ -17,4 +17,5 @@ import com.sun.source.tree.Tree;
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 @TypeQualifier
 @SubtypeOf({Plaintext.class})
+@ImplicitFor(trees={Tree.Kind.NULL_LITERAL})
 public @interface Encrypted {}

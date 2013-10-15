@@ -75,9 +75,9 @@ package scenes.game.components
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
-		private static const MIN_SCALE:Number = 4.0 / Constants.GAME_SCALE;
+		private static const MIN_SCALE:Number = 1.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
-		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
+		private static const STARTING_SCALE:Number = 1.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
 		private static const MIN_ERROR_TEXT_DISPLAY_SCALE:Number = 15.0 / Constants.GAME_SCALE;
 		
@@ -450,12 +450,12 @@ package scenes.game.components
 		
 		public function zoomInDiscrete():void
 		{
-			handleMouseWheel(5);
+			handleMouseWheel(20);
 		}
 		
 		public function zoomOutDiscrete():void
 		{
-			handleMouseWheel(-5);
+			handleMouseWheel(-20);
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void

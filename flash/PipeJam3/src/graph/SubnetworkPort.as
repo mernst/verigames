@@ -18,15 +18,25 @@ package graph
 			super(_node, _edge, _id, _type);
 			default_props = new PropDictionary();
 			if (type == INCOMING_PORT_TYPE) {
-				default_ball_type = Edge.BALL_TYPE_NONE;
-				default_is_wide = true;
+				setDefaultWidth("wide");
 			} else {
+				setDefaultWidth("narrow");
+			}
+		}
+		
+		public function setDefaultWidth(width:String):void
+		{
+			if (width == "wide") {
+				default_ball_type = Edge.BALL_TYPE_WIDE;
+				default_is_wide = true;
+			} else if (width == "narrow") {
 				default_ball_type = Edge.BALL_TYPE_NARROW;
 				default_is_wide = false;
+			} else {
+				throw new Error("Illegal width ('" + width + "') for port:" + port_id);
 			}
 			default_props.setProp(PropDictionary.PROP_NARROW, !default_is_wide);
 		}
-		
 	}
 
 }

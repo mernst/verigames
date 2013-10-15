@@ -1,0 +1,2947 @@
+<world version="2">
+ <level name="ReadFieldGeneric">
+  <linked-edges>
+   <edge-set id="ReadFieldGeneric0">
+    <edgeref id="e1" />
+    <edgeref id="e29" />
+    <edgeref id="e85" />
+    <edgeref id="e20" />
+    <edgeref id="e80" />
+    <edgeref id="e14" />
+    <edgeref id="e74" />
+    <edgeref id="e18" />
+    <edgeref id="e78" />
+    <edgeref id="e12" />
+    <edgeref id="e39" />
+    <edgeref id="e40" />
+    <edgeref id="e43" />
+    <edgeref id="e49" />
+    <edgeref id="e72" />
+    <edgeref id="e16" />
+    <edgeref id="e55" />
+    <edgeref id="e56" />
+    <edgeref id="e59" />
+    <edgeref id="e63" />
+    <edgeref id="e76" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric1">
+    <edgeref id="e2" />
+    <edgeref id="e28" />
+    <edgeref id="e30" />
+    <edgeref id="e86" />
+    <edgeref id="e21" />
+    <edgeref id="e81" />
+    <edgeref id="e15" />
+    <edgeref id="e75" />
+    <edgeref id="e19" />
+    <edgeref id="e79" />
+    <edgeref id="e13" />
+    <edgeref id="e41" />
+    <edgeref id="e42" />
+    <edgeref id="e44" />
+    <edgeref id="e50" />
+    <edgeref id="e73" />
+    <edgeref id="e17" />
+    <edgeref id="e57" />
+    <edgeref id="e58" />
+    <edgeref id="e60" />
+    <edgeref id="e64" />
+    <edgeref id="e77" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric2">
+    <edgeref id="e3" />
+    <edgeref id="e31" />
+    <edgeref id="e87" />
+    <edgeref id="e5" />
+    <edgeref id="e7" />
+    <edgeref id="e25" />
+    <edgeref id="e34" />
+    <edgeref id="e92" />
+    <edgeref id="e27" />
+    <edgeref id="e61" />
+    <edgeref id="e65" />
+    <edgeref id="e66" />
+    <edgeref id="e67" />
+    <edgeref id="e69" />
+    <edgeref id="e94" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric3">
+    <edgeref id="e23" />
+    <edgeref id="e90" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric4">
+    <edgeref id="e24" />
+    <edgeref id="e91" />
+    <edgeref id="e8" />
+    <edgeref id="e82" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric5">
+    <edgeref id="e26" />
+    <edgeref id="e93" />
+    <edgeref id="e22" />
+    <edgeref id="e33" />
+    <edgeref id="e35" />
+    <edgeref id="e51" />
+    <edgeref id="e89" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric6">
+    <edgeref id="e36" />
+    <edgeref id="e37" />
+    <edgeref id="e38" />
+    <edgeref id="e48" />
+    <edgeref id="e83" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric7">
+    <edgeref id="e11" />
+    <edgeref id="e68" />
+    <edgeref id="e88" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric8">
+    <edgeref id="e52" />
+    <edgeref id="e53" />
+    <edgeref id="e54" />
+    <edgeref id="e62" />
+    <edgeref id="e84" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric19">
+    <edgeref id="e32" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric26">
+    <edgeref id="e4" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric30">
+    <edgeref id="e70" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric33">
+    <edgeref id="e6" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric37">
+    <edgeref id="e71" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric46">
+    <edgeref id="e9" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric63">
+    <edgeref id="e45" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric64">
+    <edgeref id="e46" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric65">
+    <edgeref id="e47" />
+   </edge-set>
+   <edge-set id="ReadFieldGeneric75">
+    <edgeref id="e10" />
+   </edge-set>
+  </linked-edges>
+  <boards>
+   <board name="ReadFieldGeneric">
+    <node id="n0" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e3" num="output_0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n1" kind="OUTGOING">
+     <input />
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n2" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e1" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n3" kind="CONNECT">
+     <input>
+      <port edge="e1" num="input" />
+     </input>
+     <output>
+      <port edge="e29" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n4" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e2" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n5" kind="CONNECT">
+     <input>
+      <port edge="e2" num="input" />
+     </input>
+     <output>
+      <port edge="e28" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n6" kind="CONNECT">
+     <input>
+      <port edge="e3" num="input" />
+     </input>
+     <output>
+      <port edge="e31" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e23" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="CONNECT">
+     <input>
+      <port edge="e23" num="input" />
+     </input>
+     <output>
+      <port edge="e90" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n40" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e24" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="CONNECT">
+     <input>
+      <port edge="e24" num="input" />
+     </input>
+     <output>
+      <port edge="e91" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e26" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="CONNECT">
+     <input>
+      <port edge="e26" num="input" />
+     </input>
+     <output>
+      <port edge="e93" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n48" kind="MERGE">
+     <input>
+      <port edge="e29" num="left" />
+      <port edge="e30" num="right" />
+     </input>
+     <output>
+      <port edge="e85" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n49" kind="SPLIT">
+     <input>
+      <port edge="e28" num="input" />
+     </input>
+     <output>
+      <port edge="e86" num="output" />
+      <port edge="e30" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n50" kind="MERGE">
+     <input>
+      <port edge="e31" num="left" />
+      <port edge="e32" num="right" />
+     </input>
+     <output>
+      <port edge="e87" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n51" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e32" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n82" kind="END">
+     <input>
+      <port edge="e85" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n83" kind="END">
+     <input>
+      <port edge="e86" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n84" kind="END">
+     <input>
+      <port edge="e87" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n87" kind="END">
+     <input>
+      <port edge="e90" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n88" kind="END">
+     <input>
+      <port edge="e91" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n90" kind="END">
+     <input>
+      <port edge="e93" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e1" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n2" port="output" />
+     </from>
+     <to>
+      <noderef id="n3" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e2" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n4" port="output" />
+     </from>
+     <to>
+      <noderef id="n5" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n0" port="output_0" />
+     </from>
+     <to>
+      <noderef id="n6" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class ReadFieldGeneric extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ReadFieldGeneric&lt;E&gt; {  ReadFieldGeneric() { super(); } E myField = null;  void test() { myField = null; }  void test2() { Object o = myField; } }" editable="true" id="e23" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n38" port="output" />
+     </from>
+     <to>
+      <noderef id="n39" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ReadFieldGeneric#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e24" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n40" port="output" />
+     </from>
+     <to>
+      <noderef id="n41" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e26" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n44" port="output" />
+     </from>
+     <to>
+      <noderef id="n45" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n5" port="output" />
+     </from>
+     <to>
+      <noderef id="n49" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e29" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n3" port="output" />
+     </from>
+     <to>
+      <noderef id="n48" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e30" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n49" port="split" />
+     </from>
+     <to>
+      <noderef id="n48" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e31" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n6" port="output" />
+     </from>
+     <to>
+      <noderef id="n50" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e32" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n51" port="output" />
+     </from>
+     <to>
+      <noderef id="n50" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e85" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n48" port="output" />
+     </from>
+     <to>
+      <noderef id="n82" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e86" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n49" port="output" />
+     </from>
+     <to>
+      <noderef id="n83" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e87" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n50" port="output" />
+     </from>
+     <to>
+      <noderef id="n84" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 2 at class ReadFieldGeneric extends type; tree &lt;&lt;missing tree&gt;&gt; within  class ReadFieldGeneric&lt;E&gt; {  ReadFieldGeneric() { super(); } E myField = null;  void test() { myField = null; }  void test2() { Object o = myField; } }" editable="true" id="e90" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
+     </from>
+     <to>
+      <noderef id="n87" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ReadFieldGeneric#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e91" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n88" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e93" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n45" port="output" />
+     </from>
+     <to>
+      <noderef id="n90" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="ReadFieldGeneric-myField--GET">
+    <node id="n7" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e20" num="inClassTypeParam0" />
+      <port edge="e21" num="inClassTypeParam1" />
+      <port edge="e4" num="inReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n8" kind="OUTGOING">
+     <input>
+      <port edge="e80" num="outClassTypeParam0" />
+      <port edge="e81" num="outClassTypeParam1" />
+      <port edge="e70" num="outReceiver0" />
+      <port edge="e5" num="outputReturn0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n9" kind="CONNECT">
+     <input>
+      <port edge="e4" num="input" />
+     </input>
+     <output>
+      <port edge="e70" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n10" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e5" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n34" kind="CONNECT">
+     <input>
+      <port edge="e20" num="input" />
+     </input>
+     <output>
+      <port edge="e80" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n35" kind="CONNECT">
+     <input>
+      <port edge="e21" num="input" />
+     </input>
+     <output>
+      <port edge="e81" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n7" port="inReceiver0" />
+     </from>
+     <to>
+      <noderef id="n9" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e5" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n10" port="output" />
+     </from>
+     <to>
+      <noderef id="n8" port="outputReturn0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n7" port="inClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n34" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n7" port="inClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n35" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="this" editable="false" id="e70" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n9" port="output" />
+     </from>
+     <to>
+      <noderef id="n8" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e80" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n34" port="output" />
+     </from>
+     <to>
+      <noderef id="n8" port="outClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e81" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n35" port="output" />
+     </from>
+     <to>
+      <noderef id="n8" port="outClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="ReadFieldGeneric-myField--SET">
+    <node id="n11" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e14" num="inClassTypeParam0" />
+      <port edge="e15" num="inClassTypeParam1" />
+      <port edge="e7" num="inParam0" />
+      <port edge="e6" num="inReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n12" kind="OUTGOING">
+     <input>
+      <port edge="e74" num="outClassTypeParam0" />
+      <port edge="e75" num="outClassTypeParam1" />
+      <port edge="e7" num="outParam0" />
+      <port edge="e71" num="outReceiver0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n13" kind="CONNECT">
+     <input>
+      <port edge="e6" num="input" />
+     </input>
+     <output>
+      <port edge="e71" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n28" kind="CONNECT">
+     <input>
+      <port edge="e14" num="input" />
+     </input>
+     <output>
+      <port edge="e74" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n29" kind="CONNECT">
+     <input>
+      <port edge="e15" num="input" />
+     </input>
+     <output>
+      <port edge="e75" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="this" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n11" port="inReceiver0" />
+     </from>
+     <to>
+      <noderef id="n13" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e7" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n11" port="inParam0" />
+     </from>
+     <to>
+      <noderef id="n12" port="outParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e14" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n11" port="inClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n28" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n11" port="inClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n29" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="this" editable="false" id="e71" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n13" port="output" />
+     </from>
+     <to>
+      <noderef id="n12" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e74" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n28" port="output" />
+     </from>
+     <to>
+      <noderef id="n12" port="outClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e75" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n29" port="output" />
+     </from>
+     <to>
+      <noderef id="n12" port="outClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="ReadFieldGeneric--init----V">
+    <node id="n14" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e18" num="inClassTypeParam0" />
+      <port edge="e19" num="inClassTypeParam1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n15" kind="OUTGOING">
+     <input>
+      <port edge="e78" num="outClassTypeParam0" />
+      <port edge="e79" num="outClassTypeParam1" />
+      <port edge="e82" num="outputReturn0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n16" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e8" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n17" kind="CONNECT">
+     <input>
+      <port edge="e8" num="input" />
+     </input>
+     <output>
+      <port edge="e82" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n32" kind="CONNECT">
+     <input>
+      <port edge="e18" num="input" />
+     </input>
+     <output>
+      <port edge="e78" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n33" kind="CONNECT">
+     <input>
+      <port edge="e19" num="input" />
+     </input>
+     <output>
+      <port edge="e79" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="Variable 4 at method ReadFieldGeneric#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e8" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n16" port="output" />
+     </from>
+     <to>
+      <noderef id="n17" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n14" port="inClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n32" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n14" port="inClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n33" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e78" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n32" port="output" />
+     </from>
+     <to>
+      <noderef id="n15" port="outClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e79" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n33" port="output" />
+     </from>
+     <to>
+      <noderef id="n15" port="outClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 4 at method ReadFieldGeneric#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e82" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n17" port="output" />
+     </from>
+     <to>
+      <noderef id="n15" port="outputReturn0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="ReadFieldGeneric-test---V">
+    <node id="n18" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e12" num="inClassTypeParam0" />
+      <port edge="e13" num="inClassTypeParam1" />
+      <port edge="e9" num="inReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n19" kind="OUTGOING">
+     <input>
+      <port edge="e72" num="outClassTypeParam0" />
+      <port edge="e73" num="outClassTypeParam1" />
+      <port edge="e83" num="outReceiver0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n20" kind="CONNECT">
+     <input>
+      <port edge="e9" num="input" />
+     </input>
+     <output>
+      <port edge="e36" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n26" kind="CONNECT">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output>
+      <port edge="e39" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="CONNECT">
+     <input>
+      <port edge="e13" num="input" />
+     </input>
+     <output>
+      <port edge="e41" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n36" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e22" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n37" kind="CONNECT">
+     <input>
+      <port edge="e22" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e25" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="CONNECT">
+     <input>
+      <port edge="e25" num="input" />
+     </input>
+     <output>
+      <port edge="e34" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="MERGE">
+     <input>
+      <port edge="e34" num="left" />
+      <port edge="e35" num="right" />
+     </input>
+     <output>
+      <port edge="e92" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n53" kind="SPLIT">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output>
+      <port edge="e51" num="output" />
+      <port edge="e35" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n54" kind="SUBBOARD" name="ReadFieldGeneric-myField--SET">
+     <input>
+      <port edge="e40" num="inClassTypeParam0" />
+      <port edge="e42" num="inClassTypeParam1" />
+      <port edge="e45" num="inParam0" />
+      <port edge="e37" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e43" num="outClassTypeParam0" />
+      <port edge="e44" num="outClassTypeParam1" />
+      <port edge="e46" num="outParam0" />
+      <port edge="e38" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n55" kind="SPLIT">
+     <input>
+      <port edge="e36" num="input" />
+     </input>
+     <output>
+      <port edge="e37" num="split" />
+      <port edge="e48" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n56" kind="CONNECT">
+     <input>
+      <port edge="e38" num="input" />
+     </input>
+     <output>
+      <port edge="e83" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="SPLIT">
+     <input>
+      <port edge="e39" num="input" />
+     </input>
+     <output>
+      <port edge="e40" num="split" />
+      <port edge="e49" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="SPLIT">
+     <input>
+      <port edge="e41" num="input" />
+     </input>
+     <output>
+      <port edge="e42" num="split" />
+      <port edge="e50" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="CONNECT">
+     <input>
+      <port edge="e43" num="input" />
+     </input>
+     <output>
+      <port edge="e72" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n60" kind="CONNECT">
+     <input>
+      <port edge="e44" num="input" />
+     </input>
+     <output>
+      <port edge="e73" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e45" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n62" kind="CONNECT">
+     <input>
+      <port edge="e46" num="input" />
+     </input>
+     <output>
+      <port edge="e47" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n63" kind="END">
+     <input>
+      <port edge="e47" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n64" kind="END">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="END">
+     <input>
+      <port edge="e49" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="END">
+     <input>
+      <port edge="e50" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n67" kind="CONNECT">
+     <input>
+      <port edge="e51" num="input" />
+     </input>
+     <output>
+      <port edge="e89" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n86" kind="END">
+     <input>
+      <port edge="e89" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n89" kind="END">
+     <input>
+      <port edge="e92" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="this" editable="false" id="e9" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n18" port="inReceiver0" />
+     </from>
+     <to>
+      <noderef id="n20" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e12" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n18" port="inClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e13" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n18" port="inClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n27" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e22" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n36" port="output" />
+     </from>
+     <to>
+      <noderef id="n37" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n43" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e33" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n37" port="output" />
+     </from>
+     <to>
+      <noderef id="n53" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n52" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e35" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n53" port="split" />
+     </from>
+     <to>
+      <noderef id="n52" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method ReadFieldGeneric#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { myField = null; }Atm: @VarAnnot(5) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e36" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n20" port="output" />
+     </from>
+     <to>
+      <noderef id="n55" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method ReadFieldGeneric#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { myField = null; }Atm: @VarAnnot(5) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e37" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n55" port="split" />
+     </from>
+     <to>
+      <noderef id="n54" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method ReadFieldGeneric#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { myField = null; }Atm: @VarAnnot(5) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e38" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n54" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n56" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e39" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n26" port="output" />
+     </from>
+     <to>
+      <noderef id="n57" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e40" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n57" port="split" />
+     </from>
+     <to>
+      <noderef id="n54" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e41" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n27" port="output" />
+     </from>
+     <to>
+      <noderef id="n58" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e42" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n58" port="split" />
+     </from>
+     <to>
+      <noderef id="n54" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e43" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n54" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n59" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e44" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n54" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n60" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e45" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n61" port="output" />
+     </from>
+     <to>
+      <noderef id="n54" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e46" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n54" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n62" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="null" editable="false" id="e47" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n62" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n63" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method ReadFieldGeneric#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { myField = null; }Atm: @VarAnnot(5) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e48" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n55" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n64" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e49" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n57" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n65" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e50" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n58" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n66" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e51" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n53" port="output" />
+     </from>
+     <to>
+      <noderef id="n67" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e72" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n59" port="output" />
+     </from>
+     <to>
+      <noderef id="n19" port="outClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e73" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n60" port="output" />
+     </from>
+     <to>
+      <noderef id="n19" port="outClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 5 at method ReadFieldGeneric#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { myField = null; }Atm: @VarAnnot(5) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e83" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n56" port="output" />
+     </from>
+     <to>
+      <noderef id="n19" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="RefinementVariable #7 Declared Variable: Variable 3 at class ReadFieldGeneric field myField; tree E IfTest: false mergedTo: Set()" editable="false" id="e89" pinch="false" variableID="7" width="wide">
+     <from>
+      <noderef id="n67" port="output" />
+     </from>
+     <to>
+      <noderef id="n86" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e92" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n52" port="output" />
+     </from>
+     <to>
+      <noderef id="n89" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+   <board name="ReadFieldGeneric-test2---V">
+    <node id="n21" kind="INCOMING">
+     <input />
+     <output>
+      <port edge="e16" num="inClassTypeParam0" />
+      <port edge="e17" num="inClassTypeParam1" />
+      <port edge="e10" num="inReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n22" kind="OUTGOING">
+     <input>
+      <port edge="e76" num="outClassTypeParam0" />
+      <port edge="e77" num="outClassTypeParam1" />
+      <port edge="e84" num="outReceiver0" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n23" kind="CONNECT">
+     <input>
+      <port edge="e10" num="input" />
+     </input>
+     <output>
+      <port edge="e52" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n24" kind="START_NO_BALL">
+     <input />
+     <output>
+      <port edge="e11" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n25" kind="CONNECT">
+     <input>
+      <port edge="e11" num="input" />
+     </input>
+     <output>
+      <port edge="e68" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n30" kind="CONNECT">
+     <input>
+      <port edge="e16" num="input" />
+     </input>
+     <output>
+      <port edge="e55" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n31" kind="CONNECT">
+     <input>
+      <port edge="e17" num="input" />
+     </input>
+     <output>
+      <port edge="e57" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n46" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e27" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="CONNECT">
+     <input>
+      <port edge="e27" num="input" />
+     </input>
+     <output>
+      <port edge="e65" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n68" kind="SUBBOARD" name="ReadFieldGeneric-myField--GET">
+     <input>
+      <port edge="e56" num="inClassTypeParam0" />
+      <port edge="e58" num="inClassTypeParam1" />
+      <port edge="e53" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e59" num="outClassTypeParam0" />
+      <port edge="e60" num="outClassTypeParam1" />
+      <port edge="e54" num="outReceiver0" />
+      <port edge="e61" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n69" kind="SPLIT">
+     <input>
+      <port edge="e52" num="input" />
+     </input>
+     <output>
+      <port edge="e53" num="split" />
+      <port edge="e62" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n70" kind="CONNECT">
+     <input>
+      <port edge="e54" num="input" />
+     </input>
+     <output>
+      <port edge="e84" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n71" kind="SPLIT">
+     <input>
+      <port edge="e55" num="input" />
+     </input>
+     <output>
+      <port edge="e56" num="split" />
+      <port edge="e63" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n72" kind="SPLIT">
+     <input>
+      <port edge="e57" num="input" />
+     </input>
+     <output>
+      <port edge="e58" num="split" />
+      <port edge="e64" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n73" kind="CONNECT">
+     <input>
+      <port edge="e59" num="input" />
+     </input>
+     <output>
+      <port edge="e76" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n74" kind="CONNECT">
+     <input>
+      <port edge="e60" num="input" />
+     </input>
+     <output>
+      <port edge="e77" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n75" kind="CONNECT">
+     <input>
+      <port edge="e61" num="input" />
+     </input>
+     <output>
+      <port edge="e66" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n76" kind="END">
+     <input>
+      <port edge="e62" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n77" kind="END">
+     <input>
+      <port edge="e63" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n78" kind="END">
+     <input>
+      <port edge="e64" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n79" kind="MERGE">
+     <input>
+      <port edge="e65" num="first" />
+      <port edge="e66" num="second" />
+     </input>
+     <output>
+      <port edge="e67" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n80" kind="MERGE">
+     <input>
+      <port edge="e68" num="left" />
+      <port edge="e69" num="right" />
+     </input>
+     <output>
+      <port edge="e88" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n81" kind="SPLIT">
+     <input>
+      <port edge="e67" num="input" />
+     </input>
+     <output>
+      <port edge="e94" num="output" />
+      <port edge="e69" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n85" kind="END">
+     <input>
+      <port edge="e88" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n91" kind="END">
+     <input>
+      <port edge="e94" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="this" editable="false" id="e10" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n21" port="inReceiver0" />
+     </from>
+     <to>
+      <noderef id="n23" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method ReadFieldGeneric#test2():V local variable o(0); tree Object" editable="true" id="e11" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n24" port="output" />
+     </from>
+     <to>
+      <noderef id="n25" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n21" port="inClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n30" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n21" port="inClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n31" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e27" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n46" port="output" />
+     </from>
+     <to>
+      <noderef id="n47" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at method ReadFieldGeneric#test2():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test2() { Object o = myField; }Atm: @VarAnnot(6) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e52" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n23" port="output" />
+     </from>
+     <to>
+      <noderef id="n69" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at method ReadFieldGeneric#test2():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test2() { Object o = myField; }Atm: @VarAnnot(6) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e53" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n69" port="split" />
+     </from>
+     <to>
+      <noderef id="n68" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at method ReadFieldGeneric#test2():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test2() { Object o = myField; }Atm: @VarAnnot(6) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e54" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n68" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n70" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e55" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n30" port="output" />
+     </from>
+     <to>
+      <noderef id="n71" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e56" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n71" port="split" />
+     </from>
+     <to>
+      <noderef id="n68" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e57" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n31" port="output" />
+     </from>
+     <to>
+      <noderef id="n72" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e58" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n72" port="split" />
+     </from>
+     <to>
+      <noderef id="n68" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e59" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n68" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n73" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e60" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n68" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n74" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e61" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n68" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n75" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at method ReadFieldGeneric#test2():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test2() { Object o = myField; }Atm: @VarAnnot(6) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e62" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n69" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n76" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e63" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n71" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n77" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e64" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n72" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n78" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e65" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n47" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n79" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e66" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n75" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n79" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e67" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n79" port="output" />
+     </from>
+     <to>
+      <noderef id="n81" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method ReadFieldGeneric#test2():V local variable o(0); tree Object" editable="true" id="e68" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n25" port="output" />
+     </from>
+     <to>
+      <noderef id="n80" port="left" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e69" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n81" port="split" />
+     </from>
+     <to>
+      <noderef id="n80" port="right" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 0 at class ReadFieldGeneric class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within EAtm: @VarAnnot(0) Object" editable="true" id="e76" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n73" port="output" />
+     </from>
+     <to>
+      <noderef id="n22" port="outClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 1 at class ReadFieldGeneric class type parameter 0; tree E" editable="true" id="e77" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n74" port="output" />
+     </from>
+     <to>
+      <noderef id="n22" port="outClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 6 at method ReadFieldGeneric#test2():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test2() { Object o = myField; }Atm: @VarAnnot(6) ReadFieldGeneric&lt;E extends Object&gt;" editable="true" id="e84" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n70" port="output" />
+     </from>
+     <to>
+      <noderef id="n22" port="outReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 8 at method ReadFieldGeneric#test2():V local variable o(0); tree Object" editable="true" id="e88" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n80" port="output" />
+     </from>
+     <to>
+      <noderef id="n85" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="Variable 3 at class ReadFieldGeneric field myField; tree E" editable="true" id="e94" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n81" port="output" />
+     </from>
+     <to>
+      <noderef id="n91" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+   </board>
+  </boards>
+ </level>
+</world>

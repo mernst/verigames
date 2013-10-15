@@ -47,7 +47,7 @@ package scenes.game.components
 		public static const HEIGHT:Number = 82 - 20;
 		
 		public static const OVERLAP:Number = 44 - 10;
-		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108 + 10, 18, 284 - 25, 34);
+		public static const SCORE_PANEL_AREA:Rectangle = new Rectangle(108, 18, 284 - 10, 34);
 		private static const SCORE_PANEL_MAX_SCALEY:Number = 1.5;
 		
 		/** Graphical object showing user's score */
@@ -120,10 +120,9 @@ package scenes.game.components
 			m_scorePanel = new BaseComponent();
 			m_scorePanel.x = SCORE_PANEL_AREA.x;
 			m_scorePanel.y = SCORE_PANEL_AREA.y; 
-			var quad:Quad = new Quad(SCORE_PANEL_AREA.width, SCORE_PANEL_AREA.height, 0x231F20);
-			quad.alpha = 0;
+			var quad:Quad = new Quad(SCORE_PANEL_AREA.width + 10, SCORE_PANEL_AREA.height, 0x231F20);
 			m_scorePanel.addChild(quad);
-			addChild(m_scorePanel);
+			addChildAt(m_scorePanel, 0);
 			
 			m_scoreBarContainer = new Sprite();
 			m_scorePanel.addChild(m_scoreBarContainer);
@@ -136,6 +135,13 @@ package scenes.game.components
 			m_scoreTextfield.y = SCORE_PANEL_AREA.height / 6.0;
 			TextFactory.getInstance().updateAlign(m_scoreTextfield, 2, 1);
 			m_scorePanel.addChild(m_scoreTextfield);
+			
+			// Top shadow over score panel
+			var shadowOverlay:Quad = new Quad(SCORE_PANEL_AREA.width, 10, 0x0);
+			shadowOverlay.setVertexAlpha(2, 0);
+			shadowOverlay.setVertexAlpha(3, 0);
+			shadowOverlay.touchable = false;
+			m_scorePanel.addChild(shadowOverlay);
 			
 			m_levelNameTextfield = TextFactory.getInstance().createTextField("", AssetsFont.FONT_UBUNTU, WIDTH - 2, 10, 10, GameComponent.WIDE_COLOR);
 			m_levelNameTextfield.touchable = false;

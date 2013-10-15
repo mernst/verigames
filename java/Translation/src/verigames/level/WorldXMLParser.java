@@ -138,15 +138,16 @@ public class WorldXMLParser
       linkedEdges = processLinkedEdges(linkedEdgesElt);
     }
 
-    // TODO remove call to makeLinked once the transition has been fully made.
-    // It remains to support parsing of old sample levels that still link chutes
-    // with makeLinked, rather than implicitly linking via variableID.
+    // link the variable IDs of any chutes that are linked in the XML
     for (Set<String> UIDSet : linkedEdges)
     {
-      Set<Chute> chutes = new LinkedHashSet<Chute>();
+      Set<Integer> varIDs = new LinkedHashSet<>();
       for (String UID : UIDSet)
-        chutes.add(chuteUIDs.get(UID));
-      level.makeLinked(chutes);
+        varIDs.add(chuteUIDs.get(UID).getVariableID());
+
+      List<Integer> varIDList = new ArrayList<>(varIDs);
+      for (int i = 0; i < varIDList.size() - 1; i++)
+        level.linkByVarID(varIDList.get(i), varIDList.get(i + 1));
     }
 
     return Pair.of(name, level);

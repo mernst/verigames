@@ -97,6 +97,7 @@ package scenes.game.display
 		
 		public static const NUM_JOINTS:int = 6;
 		public static const DEBUG_BOUNDING_BOX:Boolean = false;
+		public static const DEBUG_LARGE_LEVELS:Boolean = false;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
@@ -182,9 +183,13 @@ package scenes.game.display
 				innerCircle = false;
 				m_extensionEdge.m_extensionEdge = this;
 				if (m_extensionEdge.m_innerBoxSegment && 
-					m_extensionEdge.m_innerBoxSegment.isEnd) {
+					(
+						m_extensionEdge.m_innerBoxSegment.isEnd ||
+						m_extensionEdge.m_innerBoxSegment.hasInnerCircle
+					)){
 					// Since we have two edges linked here, this shouldn't be an end
 					m_extensionEdge.m_innerBoxSegment.isEnd = false;
+					m_extensionEdge.m_innerBoxSegment.hasInnerCircle = false;
 					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
 						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
@@ -309,6 +314,12 @@ package scenes.game.display
 				updateOutsideEdgeComponents();
 				updateBoundingBox();
 			}
+		}
+		
+		override public function componentMoved(delta:Point):void
+		{
+			super.componentMoved(delta);
+			updateOutsideEdgeComponents();
 		}
 		
 		private var m_debugBoundingBox:Quad = new Quad(1, 1, 0xff00ff);
@@ -911,7 +922,7 @@ package scenes.game.display
 				joint.y = m_jointPoints[segIndex].y;
 				
 				if (segIndex > 0) {
-					addChild(joint);
+					if (!DEBUG_LARGE_LEVELS) addChild(joint); // don't add joints for large levels
 				}
 			}
 			
@@ -926,7 +937,7 @@ package scenes.game.display
 			}
 			//addChildAt(lastJoint, 0);
 			
-			addChild(m_innerBoxSegment); // inner segment topmost
+			if (!DEBUG_LARGE_LEVELS) addChild(m_innerBoxSegment); // inner segment topmost
 			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
@@ -949,9 +960,9 @@ package scenes.game.display
 			}
 		}
 		
-		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean, force:Boolean = false):void 
+		public function rubberBandEdge(deltaPoint:Point, isOutgoing:Boolean):void 
 		{
-			if(!m_isSelected || force)
+			if(!m_isSelected)
 			{
 				if(isOutgoing)
 				{
@@ -1097,7 +1108,7 @@ package scenes.game.display
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
 			
-			if(this.m_extensionEdge)// && m_extensionEdgeIsOutgoing)
+			if(this.m_extensionEdge && segmentOutgoing)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);
 			}

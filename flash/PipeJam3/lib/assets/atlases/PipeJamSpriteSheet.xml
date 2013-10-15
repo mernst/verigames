@@ -6,6 +6,9 @@
 	<SubTexture name="BackButton" x="825" y="127" width="30" height="30" />
 	<SubTexture name="BackButtonOver" x="825" y="159" width="30" height="30" />
 	<SubTexture name="BackButtonSelected" x="825" y="191" width="30" height="30" />
+	<SubTexture name="BallSizeTestMapNarrow" x="123" y="823" width="271" height="194" />
+	<SubTexture name="BallSizeTestMapWide" x="398" y="823" width="271" height="194" />
+	<SubTexture name="BallSizeTestSimple" x="672" y="823" width="271" height="194" />
 	<SubTexture name="BlueDarkBox" x="196" y="30" width="192" height="192" />
 	<SubTexture name="BlueDarkBoxBottom" x="260" y="158" width="64" height="64" />
 	<SubTexture name="BlueDarkBoxBottomLeft" x="196" y="158" width="64" height="64" />
@@ -26,16 +29,16 @@
 	<SubTexture name="BlueDarkBoxTop" x="260" y="30" width="64" height="64" />
 	<SubTexture name="BlueDarkBoxTopLeft" x="196" y="30" width="64" height="64" />
 	<SubTexture name="BlueDarkBoxTopRight" x="324" y="30" width="64" height="64" />
-	<SubTexture name="BlueDarkEnd" x="290" y="779" width="28" height="24" />
-	<SubTexture name="BlueDarkJoint" x="370" y="779" width="18" height="18" />
+	<SubTexture name="BlueDarkEnd" x="156" y="779" width="28" height="24" />
+	<SubTexture name="BlueDarkJoint" x="236" y="779" width="18" height="18" />
 	<SubTexture name="BlueDarkPlug" x="3" y="778" width="35" height="57" />
-	<SubTexture name="BlueDarkSegmentBottom" x="491" y="806" width="18" height="9" />
-	<SubTexture name="BlueDarkSegmentHoriz" x="461" y="779" width="18" height="18" />
-	<SubTexture name="BlueDarkSegmentLeft" x="452" y="779" width="9" height="18" />
-	<SubTexture name="BlueDarkSegmentRight" x="479" y="779" width="9" height="18" />
-	<SubTexture name="BlueDarkSegmentTop" x="491" y="779" width="18" height="9" />
-	<SubTexture name="BlueDarkSegmentVert" x="491" y="788" width="18" height="18" />
-	<SubTexture name="BlueDarkStart" x="123" y="778" width="52" height="52" />
+	<SubTexture name="BlueDarkSegmentBottom" x="357" y="806" width="18" height="9" />
+	<SubTexture name="BlueDarkSegmentHoriz" x="327" y="779" width="18" height="18" />
+	<SubTexture name="BlueDarkSegmentLeft" x="318" y="779" width="9" height="18" />
+	<SubTexture name="BlueDarkSegmentRight" x="345" y="779" width="9" height="18" />
+	<SubTexture name="BlueDarkSegmentTop" x="357" y="779" width="18" height="9" />
+	<SubTexture name="BlueDarkSegmentVert" x="357" y="788" width="18" height="18" />
+	<SubTexture name="BlueDarkStart" x="3" y="836" width="52" height="52" />
 	<SubTexture name="BlueLightBox" x="196" y="224" width="192" height="192" />
 	<SubTexture name="BlueLightBoxBottom" x="260" y="352" width="64" height="64" />
 	<SubTexture name="BlueLightBoxBottomLeft" x="196" y="352" width="64" height="64" />
@@ -56,16 +59,16 @@
 	<SubTexture name="BlueLightBoxTop" x="260" y="224" width="64" height="64" />
 	<SubTexture name="BlueLightBoxTopLeft" x="196" y="224" width="64" height="64" />
 	<SubTexture name="BlueLightBoxTopRight" x="324" y="224" width="64" height="64" />
-	<SubTexture name="BlueLightEnd" x="290" y="806" width="12" height="24" />
-	<SubTexture name="BlueLightJoint" x="362" y="799" width="10" height="10" />
+	<SubTexture name="BlueLightEnd" x="124" y="779" width="12" height="24" />
+	<SubTexture name="BlueLightJoint" x="228" y="799" width="10" height="10" />
 	<SubTexture name="BlueLightPlug" x="80" y="778" width="19" height="57" />
-	<SubTexture name="BlueLightSegmentBottom" x="571" y="794" width="10" height="5" />
-	<SubTexture name="BlueLightSegmentHoriz" x="553" y="779" width="10" height="10" />
-	<SubTexture name="BlueLightSegmentLeft" x="548" y="779" width="5" height="10" />
-	<SubTexture name="BlueLightSegmentRight" x="563" y="779" width="5" height="10" />
-	<SubTexture name="BlueLightSegmentTop" x="571" y="779" width="10" height="5" />
-	<SubTexture name="BlueLightSegmentVert" x="571" y="784" width="10" height="10" />
-	<SubTexture name="BlueLightStart" x="231" y="779" width="27" height="27" />
+	<SubTexture name="BlueLightSegmentBottom" x="437" y="794" width="10" height="5" />
+	<SubTexture name="BlueLightSegmentHoriz" x="419" y="779" width="10" height="10" />
+	<SubTexture name="BlueLightSegmentLeft" x="414" y="779" width="5" height="10" />
+	<SubTexture name="BlueLightSegmentRight" x="429" y="779" width="5" height="10" />
+	<SubTexture name="BlueLightSegmentTop" x="437" y="779" width="10" height="5" />
+	<SubTexture name="BlueLightSegmentVert" x="437" y="784" width="10" height="10" />
+	<SubTexture name="BlueLightStart" x="3" y="891" width="27" height="27" />
 	<SubTexture name="GrayDarkBox" x="2" y="30" width="192" height="192" />
 	<SubTexture name="GrayDarkBoxBottom" x="66" y="158" width="64" height="64" />
 	<SubTexture name="GrayDarkBoxBottomLeft" x="2" y="158" width="64" height="64" />
@@ -86,16 +89,16 @@
 	<SubTexture name="GrayDarkBoxTop" x="66" y="30" width="64" height="64" />
 	<SubTexture name="GrayDarkBoxTopLeft" x="2" y="30" width="64" height="64" />
 	<SubTexture name="GrayDarkBoxTopRight" x="130" y="30" width="64" height="64" />
-	<SubTexture name="GrayDarkEnd" x="320" y="779" width="28" height="24" />
-	<SubTexture name="GrayDarkJoint" x="350" y="779" width="18" height="18" />
+	<SubTexture name="GrayDarkEnd" x="186" y="779" width="28" height="24" />
+	<SubTexture name="GrayDarkJoint" x="216" y="779" width="18" height="18" />
 	<SubTexture name="GrayDarkPlug" x="41" y="778" width="35" height="57" />
-	<SubTexture name="GrayDarkSegmentBottom" x="431" y="806" width="18" height="9" />
-	<SubTexture name="GrayDarkSegmentHoriz" x="401" y="779" width="18" height="18" />
-	<SubTexture name="GrayDarkSegmentLeft" x="392" y="779" width="9" height="18" />
-	<SubTexture name="GrayDarkSegmentRight" x="419" y="779" width="9" height="18" />
-	<SubTexture name="GrayDarkSegmentTop" x="431" y="779" width="18" height="9" />
-	<SubTexture name="GrayDarkSegmentVert" x="431" y="788" width="18" height="18" />
-	<SubTexture name="GrayDarkStart" x="177" y="778" width="52" height="52" />
+	<SubTexture name="GrayDarkSegmentBottom" x="297" y="806" width="18" height="9" />
+	<SubTexture name="GrayDarkSegmentHoriz" x="267" y="779" width="18" height="18" />
+	<SubTexture name="GrayDarkSegmentLeft" x="258" y="779" width="9" height="18" />
+	<SubTexture name="GrayDarkSegmentRight" x="285" y="779" width="9" height="18" />
+	<SubTexture name="GrayDarkSegmentTop" x="297" y="779" width="18" height="9" />
+	<SubTexture name="GrayDarkSegmentVert" x="297" y="788" width="18" height="18" />
+	<SubTexture name="GrayDarkStart" x="57" y="836" width="52" height="52" />
 	<SubTexture name="GrayLightBox" x="2" y="224" width="192" height="192" />
 	<SubTexture name="GrayLightBoxBottom" x="66" y="352" width="64" height="64" />
 	<SubTexture name="GrayLightBoxBottomLeft" x="2" y="352" width="64" height="64" />
@@ -116,16 +119,16 @@
 	<SubTexture name="GrayLightBoxTop" x="66" y="224" width="64" height="64" />
 	<SubTexture name="GrayLightBoxTopLeft" x="2" y="224" width="64" height="64" />
 	<SubTexture name="GrayLightBoxTopRight" x="130" y="224" width="64" height="64" />
-	<SubTexture name="GrayLightEnd" x="305" y="806" width="12" height="24" />
-	<SubTexture name="GrayLightJoint" x="350" y="799" width="10" height="10" />
+	<SubTexture name="GrayLightEnd" x="139" y="779" width="12" height="24" />
+	<SubTexture name="GrayLightJoint" x="216" y="799" width="10" height="10" />
 	<SubTexture name="GrayLightPlug" x="102" y="778" width="19" height="57" />
-	<SubTexture name="GrayLightSegmentBottom" x="535" y="794" width="10" height="5" />
-	<SubTexture name="GrayLightSegmentHoriz" x="518" y="779" width="10" height="10" />
-	<SubTexture name="GrayLightSegmentLeft" x="513" y="779" width="5" height="10" />
-	<SubTexture name="GrayLightSegmentRight" x="527" y="779" width="5" height="10" />
-	<SubTexture name="GrayLightSegmentTop" x="535" y="779" width="10" height="5" />
-	<SubTexture name="GrayLightSegmentVert" x="535" y="784" width="10" height="10" />
-	<SubTexture name="GrayLightStart" x="260" y="779" width="27" height="27" />
+	<SubTexture name="GrayLightSegmentBottom" x="401" y="794" width="10" height="5" />
+	<SubTexture name="GrayLightSegmentHoriz" x="384" y="779" width="10" height="10" />
+	<SubTexture name="GrayLightSegmentLeft" x="379" y="779" width="5" height="10" />
+	<SubTexture name="GrayLightSegmentRight" x="393" y="779" width="5" height="10" />
+	<SubTexture name="GrayLightSegmentTop" x="401" y="779" width="10" height="5" />
+	<SubTexture name="GrayLightSegmentVert" x="401" y="784" width="10" height="10" />
+	<SubTexture name="GrayLightStart" x="32" y="891" width="27" height="27" />
 	<SubTexture name="MenuArrowHorizonal" x="785" y="36" width="10" height="19" />
 	<SubTexture name="MenuArrowVertical" x="801" y="40" width="19" height="10" />
 	<SubTexture name="MenuBoxAttached" x="390" y="224" width="192" height="192" />
@@ -193,7 +196,6 @@
 	<SubTexture name="ResetButtonSelected" x="985" y="95" width="30" height="30" />
 	<SubTexture name="ScoreBarBlue" x="825" y="44" width="48" height="48" />
 	<SubTexture name="ScoreBarForeground" x="1" y="419" width="960" height="161" />
-	<SubTexture name="ScoreBarForegroundTutorial" x="1" y="840" width="960" height="161" />
 	<SubTexture name="ScoreBarOrange" x="877" y="44" width="46" height="46" />
 	<SubTexture name="SettingsButton" x="857" y="127" width="30" height="30" />
 	<SubTexture name="SettingsButtonOver" x="857" y="159" width="30" height="30" />

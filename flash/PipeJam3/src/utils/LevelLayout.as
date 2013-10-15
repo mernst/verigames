@@ -26,24 +26,59 @@ package utils
 				return null;
 			}
 			
-			// Obtain boards
+			// Check for boards
 			if (my_level_xml["boards"][0]["board"].length() == 0) {
 				Game.printDebug("NO <boards> <board> 's found. Level not created...");
 				return null;
 			}
-			var boards_xml_list:XMLList = my_level_xml["boards"][0]["board"];
 			
-			// Obtain edges
+			// Check for edges
 			if (my_level_xml["boards"][0]["board"]["edge"].attribute("description").length() == 0) {
 				Game.printDebug("NO <boards> <edge> 's found. Level not created...");
 				return null;
 			}
 			
-			// Obtain linked edge sets
+			// Check for linked edge sets
 			if (my_level_xml["linked-edges"][0]["edge-set"].length() == 0) {
 				Game.printDebug("NO <linked-edges> <edge-set> 's found. Level not created...");
 				return null;
 			}
+			
+			// Retrieve stub board widths
+			var stub_boards_xml_list:XMLList = my_level_xml["boards"][0]["board-stub"];
+			var my_stub_board_xml:XML;
+			for (var sb:uint = 0; sb < stub_boards_xml_list.length(); sb++) {
+				my_stub_board_xml = stub_boards_xml_list[sb];
+				var stub_name:String = my_stub_board_xml.attribute("name");
+				var stub_inputs_list:XMLList;
+				if (my_stub_board_xml["stub-input"] && my_stub_board_xml["stub-input"].length() && my_stub_board_xml["stub-input"][0]) {
+					stub_inputs_list = my_stub_board_xml["stub-input"][0]["stub-connection"];
+				}
+				if (stub_inputs_list) {
+					for (var sbi:uint = 0; sbi < stub_inputs_list.length(); sbi++) {
+						var input_stub_xml:XML = stub_inputs_list[sbi];
+						var input_stub_port_num:String = input_stub_xml.attribute("num");
+						var input_stub_width:String = input_stub_xml.attribute("width");
+						my_levelNodes.addStubBoardPortWidth(stub_name, input_stub_port_num, input_stub_width, true);
+						//trace("Found stub board '" + stub_name + "' input " + input_stub_port_num + " width:" + input_stub_width);
+					}
+				}
+				
+				var stub_outputs_list:XMLList;
+				if (my_stub_board_xml["stub-output"] && my_stub_board_xml["stub-output"].length() && my_stub_board_xml["stub-output"][0]) {
+					stub_outputs_list = my_stub_board_xml["stub-output"][0]["stub-connection"];
+				}
+				if (stub_outputs_list) {
+					for (var sbo:uint = 0; sbo < stub_outputs_list.length(); sbo++) {
+						var output_stub_xml:XML = stub_outputs_list[sbo];
+						var output_stub_port_num:String = output_stub_xml.attribute("num");
+						var output_stub_width:String = output_stub_xml.attribute("width");
+						my_levelNodes.addStubBoardPortWidth(stub_name, output_stub_port_num, output_stub_width, false);
+						//trace("Found stub board '" + stub_name + "' output " + output_stub_port_num + " width:" + output_stub_width);
+					}
+				}
+			}
+			
 			var edge_set_index:int = 0;
 			for each (var le_set:XML in my_level_xml["linked-edges"][0]["edge-set"]) {
 				if (le_set["edgeref"].attribute("id").length() > 0) {
@@ -66,6 +101,7 @@ package utils
 			
 			var my_board_xml:XML;
 			var source_node:Node, dest_node:Node;
+			var boards_xml_list:XMLList = my_level_xml["boards"][0]["board"];
 			for (var b:uint = 0; b < boards_xml_list.length(); b++) {
 				my_board_xml = boards_xml_list[b];
 				Game.printDebug("Processing board: " + my_board_xml.attribute("name"));
@@ -131,6 +167,24 @@ package utils
 					*/
 					// Add this edge!
 					var new_edge:Edge = source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], md1);
+					// Check for stubs
+					var subnet_port:SubnetworkPort, subboard_name:String, foundWidth:String;
+					if (new_edge.from_port is SubnetworkPort) {
+						subnet_port = new_edge.from_port as SubnetworkPort;
+						subboard_name = (subnet_port.node as SubnetworkNode).subboard_name;
+						foundWidth = my_levelNodes.getStubBoardPortWidth(subboard_name, subnet_port.port_id, false);
+						if (foundWidth) {
+							subnet_port.setDefaultWidth(foundWidth);
+						}
+					}
+					if (new_edge.to_port is SubnetworkPort) {
+						subnet_port = new_edge.to_port as SubnetworkPort;
+						subboard_name = (subnet_port.node as SubnetworkNode).subboard_name;
+						foundWidth = my_levelNodes.getStubBoardPortWidth(subboard_name, subnet_port.port_id, true);
+						if (foundWidth) {
+							subnet_port.setDefaultWidth(foundWidth);
+						}
+					}
 					my_levelNodes.addEdge(new_edge);
 				}
 			} // loop over every node a.k.a. board

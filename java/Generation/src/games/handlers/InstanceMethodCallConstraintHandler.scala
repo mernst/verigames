@@ -18,5 +18,8 @@ case class InstanceMethodCallConstraintHandler( override val constraint : Instan
                                                 override val gameSolver : GameSolver )
   extends SubboardCallConstraintHandler[CalledMethodPos, InstanceMethodCallConstraint](constraint, gameSolver) {
 
-  override val methodSignature = constraint.calledVp.getMethodSignature
+  override val methodSignature =
+    constraint.calledVp
+      .map( _.getMethodSignature )
+      .getOrElse( constraint.stubBoardUse.get.methodSignature )
 }

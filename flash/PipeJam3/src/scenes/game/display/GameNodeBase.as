@@ -309,11 +309,11 @@ package scenes.game.display
 		{
 			for each(var oedge1:GameEdgeContainer in this.m_outgoingEdges)
 			{
-				oedge1.rubberBandEdge(endPt, true, true);
+				oedge1.rubberBandEdge(endPt, true);
 			}
 			for each(var iedge1:GameEdgeContainer in this.m_incomingEdges)
 			{
-				iedge1.rubberBandEdge(endPt, false, true);
+				iedge1.rubberBandEdge(endPt, false);
 			}
 		}
 		
@@ -471,14 +471,14 @@ package scenes.game.display
 			trace("rb edge0 " + nextEdge.m_id + " pt:" + (isNextEdgeOutgoing ? nextEdge.m_startPoint : nextEdge.m_endPoint));
 			updateEdgePosition(edge, newPosition);
 			updateNextEdgePosition(nextEdge, newNextPosition);
-			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing, true);
+			nextEdge.rubberBandEdge(new Point(), isNextEdgeOutgoing);
 			trace("rb edge " + nextEdge.m_id + " pt:" + (isNextEdgeOutgoing ? nextEdge.m_startPoint : nextEdge.m_endPoint));
 			if(nextEdge.m_extensionEdge)
 			{
 				var isNextExtensionEdgeOutgoing:Boolean = nextEdge.m_extensionEdge.m_fromComponent == this ? true : false;
 				trace("rb edgex0 " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdge.m_extensionEdge.m_startPoint : nextEdge.m_extensionEdge.m_endPoint));
 				updateNextEdgePosition(nextEdge.m_extensionEdge, newNextPosition);
-				nextEdge.m_extensionEdge.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing, true);
+				nextEdge.m_extensionEdge.rubberBandEdge(new Point(), isNextExtensionEdgeOutgoing);
 				trace("rb edgex " + nextEdge.m_id + " pt:" + (isNextExtensionEdgeOutgoing ? nextEdge.m_extensionEdge.m_startPoint : nextEdge.m_extensionEdge.m_endPoint));
 			}
 			
