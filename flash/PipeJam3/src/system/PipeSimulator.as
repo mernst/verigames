@@ -395,7 +395,6 @@ package system
 				if (edge.enter_ball_type == Edge.BALL_TYPE_UNDETERMINED) {
 					throw new Error("Flow sensitive PipeSimulator: Traversed to edge where we begin with ball_type == BALL_TYPE_UNDETERMINED. Cannot proceed.");
 				}
-				
 				// Deal with incoming properties
 				// Outgoing properties = incoming || edge set properties
 				// Contlict properties = edge set properties NOT IN incoming
@@ -611,13 +610,14 @@ package system
 									case Edge.BALL_TYPE_WIDE:
 									case Edge.BALL_TYPE_WIDE_AND_NARROW:
 										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_WIDE;
+										outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
 										break;
 									default:
 										outgoing_port.edge.enter_ball_type = Edge.BALL_TYPE_NONE;
 										outgoing_props = new PropDictionary();
+										outgoing_props.setProp(PropDictionary.PROP_NARROW, true);
 										break;
 								}
-								outgoing_props.setProp(PropDictionary.PROP_NARROW, false);
 							} else {
 								switch (node.incoming_ports[0].edge.exit_ball_type) {
 									case Edge.BALL_TYPE_NARROW:
