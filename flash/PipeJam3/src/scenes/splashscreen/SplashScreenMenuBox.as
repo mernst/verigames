@@ -62,6 +62,7 @@ package scenes.splashscreen
 			
 		}
 		
+		private static const DEMO_ONLY:Boolean = false; // True to only show demo button
 		protected function buildMainMenu():void
 		{
 			m_mainMenu = new Sprite();
@@ -83,19 +84,19 @@ package scenes.splashscreen
 			{			
 				m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT)
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT && !DEMO_ONLY)
 					m_mainMenu.addChild(signin_button);
 			}
 			else if (PipeJam3.TUTORIAL_DEMO)
 			{
-				m_mainMenu.addChild(play_button);
+				if (!DEMO_ONLY) m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, getNextPlayerLevelDebug);
 			}
 			else if (!PipeJam3.TUTORIAL_DEMO) //not release, not tutorial demo
 			{
-				m_mainMenu.addChild(play_button);
+				if (!DEMO_ONLY) m_mainMenu.addChild(play_button);
 				play_button.addEventListener(starling.events.Event.TRIGGERED, onPlayButtonTriggered);
-				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT)
+				if(!PlayerValidation.playerLoggedIn && !PipeJam3.TUTORIAL_DEMO && !PipeJam3.LOCAL_DEPLOYMENT && !DEMO_ONLY)
 					m_mainMenu.addChild(signin_button);
 			}
 			
@@ -105,12 +106,19 @@ package scenes.splashscreen
 				tutorial_button.addEventListener(starling.events.Event.TRIGGERED, onTutorialButtonTriggered);
 				tutorial_button.x = Constants.GameWidth - tutorial_button.width - 4;
 				tutorial_button.y = 110;
-				m_mainMenu.addChild(tutorial_button);
+				if (!DEMO_ONLY) m_mainMenu.addChild(tutorial_button);
 				
-				demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 56, 22);
-				demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
-				demo_button.x = Constants.GameWidth - demo_button.width - 4;
-				demo_button.y = tutorial_button.y + 30;
+				if (DEMO_ONLY) {
+					demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", play_button.width, play_button.height);
+					demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
+					demo_button.x = play_button.x;
+					demo_button.y = play_button.y;
+				} else {
+					demo_button = ButtonFactory.getInstance().createDefaultButton("Demo", 56, 22);
+					demo_button.addEventListener(starling.events.Event.TRIGGERED, onDemoButtonTriggered);
+					demo_button.x = Constants.GameWidth - demo_button.width - 4;
+					demo_button.y = tutorial_button.y + 30;
+				}
 				m_mainMenu.addChild(demo_button);
 			}
 		}
