@@ -16,6 +16,10 @@ class Port:
 # boardedges[levelname][boardname][1][portnum] = outgoing port
 boardedges = {}
 
+# boardstubwidths[levelname][boardname][0][portnum] = incoming port width ('narrow' or 'wide')
+# boardstubwidths[levelname][boardname][1][portnum] = outgoing port width ('narrow' or 'wide')
+boardstubwidths = {}
+
 # edgesets[edgeid][0] = edge set id
 # edgesets[edgeid][1] = edge set port
 edgesets = {}
@@ -70,6 +74,39 @@ def getboardedge(lname, bname, inout, portnum):
 	if port is None:
 		return None
 	return port
+
+# Safely add a stub port width to the boardstubwidths dictionary
+def addstubport(lname, bname, stubportnum, stubportwidth, inout):
+	boards = boardstubwidths.get(lname)
+	if boards is None:
+		boards = {}
+	board = boards.get(bname)
+	if board is None:
+		board = {}
+	widths = board.get(inout)
+	if widths is None:
+		widths = {}
+	widths[stubportnum] = stubportwidth
+	board[inout] = widths
+	boards[bname] = board
+	boardstubwidths[lname] = boards
+
+# Safely get a stub port width from the boardstubwidths dictionary
+def getstubwidth(lname, bname, inout, portnum):
+	boards = boardstubwidths.get(lname)
+	if boards is None:
+		return None
+	board = boards.get(bname)
+	if board is None:
+		return None
+	widths = board.get(inout)
+	if widths is None:
+		return None
+	width = widths.get(portnum)
+	if width is None:
+		return None
+	return width
+
 
 # Output joint id, XML for a given SUBBOARD node's input or output port
 def port2joint(nid, kind, input, portnum, edgeid, otherlineid=None):
@@ -137,6 +174,19 @@ def classic2grid(infile, outfile):
 					for px in nx.getElementsByTagName('input')[0].getElementsByTagName('port'):
 						port = Port(px.attributes['num'].value, px.attributes['edge'].value, nid)
 						addboardedge(lname, bname, 1, port)
+		for bstubx in lx.getElementsByTagName('board-stub'):
+			bname = bstubx.attributes['name'].value
+			#print 'Found Stub board: %s' % bname
+			for instubx in bstubx.getElementsByTagName('stub-input')[0].getElementsByTagName('stub-connection'):
+				stubportnum = instubx.attributes['num'].value
+				stubportwidth = instubx.attributes['width'].value
+				addstubport(lname, bname, stubportnum, stubportwidth, 0)
+				#print 'Found input num:%s width:%s' % (stubportnum, stubportwidth)
+			for outstubx in bstubx.getElementsByTagName('stub-output')[0].getElementsByTagName('stub-connection'):
+				stubportnum = outstubx.attributes['num'].value
+				stubportwidth = outstubx.attributes['width'].value
+				addstubport(lname, bname, stubportnum, stubportwidth, 1)
+				#print 'Found output num:%s width:%s' % (stubportnum, stubportwidth)
 	# Step 2: Convert line by line to Grid XML:
 	#	a) <node> becomes <joint>
 	#		* ids are all the same EXCEPT for SUBBOARD, INCOMING, OUTGOING
@@ -198,6 +248,10 @@ def classic2grid(infile, outfile):
 		extrasubboardbids = [] # keep track of set ids created for missing (external) subboard calls
 		jointdict = {}
 		suboutportsbyedgeid = {}
+		totalexternalboardinputs = 0
+		totalexternalboardoutputs = 0
+		totalstubinputs = 0
+		totalstuboutputs = 0
 		for nx in lx.getElementsByTagName('node'):
 			nid = nx.attributes['id'].value
 			kind = nx.attributes['kind'].value
@@ -215,17 +269,29 @@ def classic2grid(infile, outfile):
 							if numedgesetedges.get(setid) is None:
 								numedgesetedges[setid] = 0
 								extrasubboardbids.append(setid)
-								edgesetwidth[setid] = 'wide' # make default input to unknown boards wide
+								totalexternalboardinputs += 1
+								# Attempt to find stub width, if none default will be wide for subboard input
+								edgesetwidth[setid] = getstubwidth(lname, boardname, 0, portnum)
+								if edgesetwidth[setid] is None:
+									edgesetwidth[setid] = 'wide'
+								else:
+									totalstubinputs += 1
 								edgeseteditable[setid] = False
-							print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, setid)
+							#print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 						elif edgesets.get(edgeport.edgeid) is None:
 							setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
 							if numedgesetedges.get(setid) is None:
 								numedgesetedges[setid] = 0
 								extrasubboardbids.append(setid)
-								edgesetwidth[setid] = 'wide' # make default input to unknown boards wide
+								totalexternalboardinputs += 1
+								# Attempt to find stub width, if none default will be wide for subboard input
+								edgesetwidth[setid] = getstubwidth(lname, boardname, 0, portnum)
+								if edgesetwidth[setid] is None:
+									edgesetwidth[setid] = 'wide'
+								else:
+									totalstubinputs += 1
 								edgeseteditable[setid] = False
-							print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, setid)
+							#print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, setid)
 						else:
 							setid = edgesets.get(edgeport.edgeid)[0]
 						fromnid = nid + '__IN__' + portnum
@@ -257,9 +323,15 @@ def classic2grid(infile, outfile):
 							if numedgesetedges.get(setid) is None:
 								numedgesetedges[setid] = 0
 								extrasubboardbids.append(setid)
-								edgesetwidth[setid] = 'narrow' # make default output from unknown boards narrow
+								totalexternalboardoutputs += 1
+								# Attempt to find stub width, if none default will be narrow for subboard output
+								edgesetwidth[setid] = getstubwidth(lname, boardname, 1, portnum)
+								if edgesetwidth[setid] is None:
+									edgesetwidth[setid] = 'narrow'
+								else:
+									totalstuboutputs += 1
 								edgeseteditable[setid] = False
-							print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, setid)
+							#print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, setid)
 							tonid = nid + '__OUT__' + portnum
 							lineid = '%s__IN__CPY' % px.attributes['edge'].value
 							if extraedgesetlines.get(setid) is None:
@@ -283,6 +355,8 @@ def classic2grid(infile, outfile):
 				numoutputs = len(nx.getElementsByTagName('output')[0].getElementsByTagName('port'))
 				jointdict[nid] = '<joint id="%s" inputs="%s" outputs="%s" kind="%s"/>' % (nid, numinputs, numoutputs, kind)
 				jointkinds[nid] = kind
+		print 'Total external level inputs  (stubboards): %s (%s)' % (totalexternalboardinputs, totalstubinputs)
+		print 'Total external level outputs (stubboards): %s (%s)' % (totalexternalboardoutputs, totalstuboutputs)
 		# 2b: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
 		boxesout = ''
 		for esx in lx.getElementsByTagName('edge-set'):
