@@ -97,6 +97,7 @@ package scenes.game.display
 		
 		public static const NUM_JOINTS:int = 6;
 		public static const DEBUG_BOUNDING_BOX:Boolean = false;
+		public static const DEBUG_LARGE_LEVELS:Boolean = false;
 		
 		public function GameEdgeContainer(_id:String, edgeArray:Array, 
 										  fromComponent:GameNodeBase, toComponent:GameNodeBase, 
@@ -921,7 +922,7 @@ package scenes.game.display
 				joint.y = m_jointPoints[segIndex].y;
 				
 				if (segIndex > 0) {
-					addChild(joint);
+					if (!DEBUG_LARGE_LEVELS) addChild(joint); // don't add joints for large levels
 				}
 			}
 			
@@ -936,7 +937,7 @@ package scenes.game.display
 			}
 			//addChildAt(lastJoint, 0);
 			
-			addChild(m_innerBoxSegment); // inner segment topmost
+			if (!DEBUG_LARGE_LEVELS) addChild(m_innerBoxSegment); // inner segment topmost
 			if (DEBUG_BOUNDING_BOX) addChild(m_debugBoundingBox);
 		}
 		
