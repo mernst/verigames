@@ -355,10 +355,12 @@ def classic2grid(infile, outfile):
 				numoutputs = len(nx.getElementsByTagName('output')[0].getElementsByTagName('port'))
 				jointdict[nid] = '<joint id="%s" inputs="%s" outputs="%s" kind="%s"/>' % (nid, numinputs, numoutputs, kind)
 				jointkinds[nid] = kind
+		print 'Level: %s' % lname
 		print 'Total external level inputs  (stubboards): %s (%s)' % (totalexternalboardinputs, totalstubinputs)
 		print 'Total external level outputs (stubboards): %s (%s)' % (totalexternalboardoutputs, totalstuboutputs)
 		# 2b: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
 		boxesout = ''
+		totalboxcount = 0
 		for esx in lx.getElementsByTagName('edge-set'):
 			edgesetid = esx.attributes['id'].value
 			# The box will have X number of lines coming from the original edges of the edge set
@@ -368,6 +370,7 @@ def classic2grid(infile, outfile):
 				extraports = len(extraedgesetlines.get(edgesetid))
 			edgesetports = numedgesetedges[edgesetid] + extraports
 			boxesout += '    <box id="%s" lines="%s"/>\n' % (edgesetid, edgesetports)
+			totalboxcount += 1
 		# Process extra boxes created from any external subboards
 		extrasubboardboxes = ''
 		for edgesetid in extrasubboardbids:
@@ -376,7 +379,10 @@ def classic2grid(infile, outfile):
 				extraports = len(extraedgesetlines.get(edgesetid))
 			edgesetports = numedgesetedges[edgesetid] + extraports
 			extrasubboardboxes += '    <box id="%s" lines="%s"/>\n' % (edgesetid, edgesetports)
+			totalboxcount += 1
 		linesout = ''
+		print 'Total boxes: %s' % totalboxcount
+		totallinecount = 0
 		# 2c: Replace <edge> with __IN__ <line> and __OUT__ <line>
 		for ex in lx.getElementsByTagName('edge'):
 			edgeid = ex.attributes['id'].value
@@ -424,6 +430,7 @@ def classic2grid(infile, outfile):
 					fromnid = fromnodex.attributes['id'].value + "__OUT__" + fromport
 					fromport = '0'
 			linesout += makeline2box(fromlineid, fromnid, fromport, setid, setport)
+			totallinecount += 1
 			# Create line from edge-set (box) to bottom node (joint)
 			tolineid = edgeid + '__OUT__'
 			tonodex = ex.getElementsByTagName('to')[0].getElementsByTagName('noderef')[0]
@@ -437,6 +444,7 @@ def classic2grid(infile, outfile):
 				tonid = tonodex.attributes['id'].value + "__IN__" + toport
 				toport = '0'
 			linesout += makeline2joint(tolineid, tonid, toport, setid, setport)
+		print 'Total lines: %s' % totallinecount
 		# Create one string from jointdict
 		jointsout = ''
 		for jointid in jointdict:
