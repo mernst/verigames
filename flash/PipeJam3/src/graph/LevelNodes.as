@@ -20,7 +20,6 @@ package graph
 		/** This is a dictionary of Node's indexed by nodeID - so that nodes may be looked up without needing board information */
 		public var nodeIdToNodeDictionary:Dictionary = new Dictionary();
 		public var edgeIdToEdgeDictionary:Dictionary = new Dictionary();
-		public var boardNodeNameArray:Array = new Array;
 		public var qid:int = -1;
 		
 		public function LevelNodes(_original_level_name:String, _obfuscater:NameObfuscater = null, _edge_set_dictionary:Dictionary = null) 
@@ -49,7 +48,6 @@ package graph
 			}
 			nodeIdToNodeDictionary[_node.node_id] = _node;
 			(boardNodesDictionary[new_board_name] as BoardNodes).addNode(_node);
-			boardNodeNameArray.push(new_board_name);
 		}
 		
 		public function addEdge(_edge:Edge):void {
@@ -57,6 +55,29 @@ package graph
 				throw new Error("Duplicate edges found for edge_id: " + _edge.edge_id);
 			}
 			edgeIdToEdgeDictionary[_edge.edge_id] = _edge;
+		}
+		
+		
+		public function addStubBoardPortWidth(_original_board_name:String, _port_num:String, _stub_width:String, _is_input:Boolean):void
+		{
+			var new_board_name:String = _original_board_name;
+			if (m_obfuscator) {
+				new_board_name = m_obfuscator.getBoardName(_original_board_name, original_level_name);
+			}
+			if (boardNodesDictionary[new_board_name] == null) {
+				boardNodesDictionary[new_board_name] = new BoardNodes(new_board_name, _original_board_name);
+			}
+			(boardNodesDictionary[new_board_name] as BoardNodes).addStubBoardPortWidth(_port_num, _stub_width, _is_input);
+		}
+		
+		public function getStubBoardPortWidth(_original_board_name:String, _port_num:String, _is_input:Boolean):String
+		{
+			var new_board_name:String = _original_board_name;
+			if (m_obfuscator) {
+				new_board_name = m_obfuscator.getBoardName(_original_board_name, original_level_name);
+			}
+			if (!boardNodesDictionary.hasOwnProperty(new_board_name)) return null;
+			return (boardNodesDictionary[new_board_name] as BoardNodes).getStubBoardPortWidth(_port_num, _is_input);
 		}
 		
 		public function getEdge(_edge_id:String):Edge
