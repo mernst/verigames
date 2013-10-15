@@ -232,7 +232,7 @@ def layoutboxes(infile, outfile, outputdotfiles):
 		numnodeinputports = {}
 		numnodeoutputports = {}
 		#print 'Laying out Level: %s' % lname
-		dotin =  'digraph %s {\n' % lname
+		dotin =  'digraph %s {\n' % sanitize(lname)
 		dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
 		dotin += '  graph [\n'
 		dotin += '    rankdir=TB,\n'
