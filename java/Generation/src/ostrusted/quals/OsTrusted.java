@@ -19,6 +19,7 @@ import com.sun.source.tree.Tree;
 @SubtypeOf({OsUntrusted.class})
 @ImplicitFor(
     trees={
-        Tree.Kind.STRING_LITERAL
+        Tree.Kind.STRING_LITERAL,
+        Tree.Kind.NULL_LITERAL
     })
 public @interface OsTrusted {}

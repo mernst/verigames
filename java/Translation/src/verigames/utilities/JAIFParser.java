@@ -17,8 +17,8 @@ import verigames.level.GameResults;
 
 
 public class JAIFParser {
-    private static final String NON_NULL = "@nninf.quals.NonNull";
-    private static final String NULL = "@nninf.quals.Nullable";
+    private static final String DEFAULT_SUBTYPE = "@nninf.quals.NonNull";
+    private static final String DEFAULT_SUPERTYPE = "@nninf.quals.Nullable";
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -26,21 +26,28 @@ public class JAIFParser {
         String xmlPath = "updatedXML.xml";
         String jaifPath = "inference.jaif";
         String outputFile = "updatedInference.jaif";
-        // String checker = "nullness";
+        String subtypeAnno = DEFAULT_SUBTYPE;
+        String supertypeAnno = DEFAULT_SUPERTYPE;
 
-        if(args.length == 4) {
+        if (args.length == 3) {
             xmlPath = args[0];
             jaifPath = args[1];
             outputFile = args[2];
-            // checker = args[3];
-        } else if(args.length != 0) {
+        } else if (args.length == 5) {
+            xmlPath = args[0];
+            jaifPath = args[1];
+            outputFile = args[2];
+            subtypeAnno = args[3];
+            supertypeAnno = args[4];
+        } else if (args.length != 0) {
             System.out.println("ERROR: Requires 0 or 4 arguments");
-            System.out.println("Usage: JAIFParser [xml file] [jaif file] [output file] [checker framework]");
+            System.out.println("Usage: JAIFParser [xml file] [jaif file] [output file] [[subtype annotation] [supertype annotation]]");
         }
+
         Map<Integer, Boolean> results = new HashMap<Integer, Boolean>();
         InputStream in = new FileInputStream(new File(xmlPath));
         results = GameResults.chuteWidth(in);
-        parseJaif(results, jaifPath, outputFile);
+        parseJaif(results, jaifPath, outputFile, subtypeAnno, supertypeAnno);
     }
 
     /**
@@ -53,7 +60,7 @@ public class JAIFParser {
      * directory.
      */
     private static void parseJaif(Map<Integer, Boolean> values, String jaifPath,
-            String outputFile) throws FileNotFoundException {
+            String outputFile, String subtypeAnno, String supertypeAnno) throws FileNotFoundException {
         if(values == null) {
             throw new IllegalArgumentException("Map passed must not be null");
         }
@@ -66,7 +73,7 @@ public class JAIFParser {
                 int end = start + ("@checkers.inference.quals.varAnnot(".length());
                 int key = Integer.parseInt(line.substring(end, line.length() - 1));
                 out.print(line.substring(0,start));
-                out.println(values.get(key)?NON_NULL:NULL);
+                out.println(values.get(key)?subtypeAnno:supertypeAnno);
             } else
                 out.println(line);
         }

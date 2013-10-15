@@ -33,9 +33,9 @@ fi
 
 if [[ ! -z "$DEBUG" ]]; then
     echo "debugging"
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -ea -server -Xmx1024m -Xms512m -Xss1m"
+    JAVA_OPTS="'-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005'"
 fi
 
-CMD=$JAVA_HOME"/bin/java $JAVA_OPTS -jar "$CF_JAR" -cp "$CP" "$@
+CMD=$JAVA_HOME"/bin/java -jar "$CF_JAR" -cp "$CP" "$@" "$JAVA_OPTS
 echo "Executing "$CMD
 eval $CMD
