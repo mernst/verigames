@@ -24,6 +24,11 @@ public class WorldXMLPrinter extends Printer<World, Void>
       useDescription = noDesc != null && !noDesc.equalsIgnoreCase("true");
   }
 
+  public WorldXMLPrinter(boolean useDescription)
+  {
+    this.useDescription = useDescription;
+  }
+
   /**
    * Prints the XML representation for {@code toPrint}<br/>
    *
