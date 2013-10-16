@@ -169,6 +169,17 @@ subprojects {
 	//Switch the compilation order to compile the Scala classes then the Java classes
 	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values - 'compileJava'
 	tasks.compileJava.dependsOn compileScala
+
+	// Task to print the runtime classpath for this program. Very useful in shell
+	// scripts and whatnot.
+	// Usage (from a subproject folder):
+	//     gradle -q printRuntimeClasspath
+	// If the build script is printing a bunch of other nonsense, you might need:
+	//     gradle -q printRuntimeClasspath | tail -n1
+	task printRuntimeClasspath << {
+		println configurations.runtime.collect { File f -> f.getAbsolutePath() } .join(":")
+	}
+
 }
 
 def toJar = [zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' },
