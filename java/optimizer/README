@@ -24,7 +24,7 @@ Get help:
 
 Sample usage:
 
-    ./optimizer.sh <../../flash/PipeJam3/lib/levels/tutorial/setup/SkillsA.xml
+    ./optimizer.sh <../Translation/veritest/layout/GETLayoutTest.expected.xml
 
 
 Hacking
