@@ -471,8 +471,8 @@ def classic2grid(infile, outfile):
 	writeconstr = open(outfile + 'Constraints.xml','w')
 	writeconstr.write(constraintout)
 	writeconstr.close()
-	layoutboxes(outfile + 'Layout', outfile + 'Layout', True)
-	#layoutlines(outfile + 'Layout', outfile + 'Layout', True) ## still too slow at the moment
+	layoutboxes(outfile + 'Layout', outfile + 'Layout', False)
+	#layoutlines(outfile + 'Layout', outfile + 'Layout', False) ## still too slow at the moment
 
 ### Command line interface ###
 if __name__ == "__main__":
