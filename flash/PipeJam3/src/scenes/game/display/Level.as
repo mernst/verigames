@@ -332,6 +332,7 @@ package scenes.game.display
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
+		//	this.m_edgesContainer.flatten();
 			// At this point, there may be multiple lines listening to the same port for trouble points,
 			// fix at this point so that only one line is listening to that port
 			for each (var copyLine:GameEdgeContainer in copyLines) {

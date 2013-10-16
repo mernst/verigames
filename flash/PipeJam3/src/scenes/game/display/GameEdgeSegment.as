@@ -66,7 +66,7 @@
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-			this.blendMode = BlendMode.NONE;
+	//		this.blendMode = BlendMode.NONE;
 			m_isDirty = true;
 		}
 		
@@ -216,7 +216,7 @@
 			
 			addChild(m_quad);
 			
-			this.blendMode = BlendMode.NONE;
+		//	this.blendMode = BlendMode.NONE;
 		}
 		
 		public static function createEdgeSegment(_toPt:Point, _isWide:Boolean, _isEditable:Boolean):Image

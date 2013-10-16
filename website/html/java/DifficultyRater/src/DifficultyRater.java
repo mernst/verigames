@@ -130,7 +130,12 @@ public class DifficultyRater {
                 }
             catch(Exception e)
             {
-               System.out.println(e);     
+               System.out.println(e); 
+               printWriter.flush();
+               printWriter.close();
+               countPrintWriter.println("</files>");
+               countPrintWriter.flush();
+               countPrintWriter.close();
             }
             
             System.out.println("Run Completed"); 

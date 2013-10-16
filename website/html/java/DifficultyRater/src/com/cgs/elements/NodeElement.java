@@ -1,5 +1,6 @@
 package com.cgs.elements;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class NodeElement extends Element
@@ -18,6 +19,12 @@ public class NodeElement extends Element
 	
 	public boolean counted = false;
 	public boolean hasConflict = false;
+	
+	public Board containerBoard;
+	public Level containerLevel;
+	
+	//used by nodes of kind SUBBOARD
+	public String name;
 	
 	public NodeElement(String _id, String _levelID)
 	{
@@ -93,6 +100,38 @@ public class NodeElement extends Element
 //		
 //		buffer.append("</node>\r");
 //		
+	}
+	
+	public void write(PrintWriter printWriter)
+	{
+		printWriter.print("<node ");
+		writeAttributeString(printWriter);
+		printWriter.println(">");
+		if(this.inputPorts.size() > 0)
+		{
+			printWriter.println("<input>");
+			for(int i = 0; i<inputPorts.size(); i++)
+			{
+				Port port = inputPorts.get(i);
+				port.write(printWriter);
+			}
+			printWriter.println("</input>");
+		}
+		else
+			printWriter.println("<input/>");
+		if(this.outputPorts.size() > 0)
+		{
+			printWriter.println("<output>");
+			for(int i = 0; i<outputPorts.size(); i++)
+			{
+				Port port = outputPorts.get(i);
+				port.write(printWriter);
+			}
+			printWriter.println("</output>");
+		}
+		else
+			printWriter.println("<output/>");
+		printWriter.println("</node>");
 	}
 
 }

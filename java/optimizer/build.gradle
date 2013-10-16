@@ -16,13 +16,3 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
 
 }
-
-// Task to print the runtime classpath for this program. Very useful in shell
-// scripts and whatnot.
-// Usage:
-//     gradle -q printRuntimeClasspath
-// If the build script is printing a bunch of other nonsense, you might need:
-//     gradle -q printRuntimeClasspath | tail -n1
-task printRuntimeClasspath {
-    println configurations.runtime.collect { File f -> f.getAbsolutePath() } .join(":")
-}

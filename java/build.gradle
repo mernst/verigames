@@ -25,7 +25,7 @@ apply plugin: 'scala'
 
 //Questions: Mail jburke@cs.washington.edu
 
-//NEED TO USE THE PATHS OF GRADLE VARS IN SUBPROJECTS RATHER THAN CONSTRUCTING THEM IN 
+//NEED TO USE THE PATHS OF GRADLE VARS IN SUBPROJECTS RATHER THAN CONSTRUCTING THEM IN
 // MULTIPLE PLACES
 //(e.g. look at Generation/build.gradle, not construction of classpath should be required)
 
@@ -113,26 +113,23 @@ subprojects {
     apply plugin: 'scala'
 
     ext.dist = file("dist")
-	def classpath = files(cpJars)
-			
+
 	sourceSets {
 		 main {
 	       scala {
 	           exclude "**/*.java"
 	       }
-	       
+
 	       java {
 	           exclude "**/*.scala" //Unnecessary I guess
 	       }
-	       
-	   	   compileClasspath += classpath
-    	}    
+    	}
 	}
-			
+
 	repositories {
 	    mavenCentral()
 	}
-	
+
 	dependencies {
 	    // Libraries needed to run the scala tools
 	    scalaTools 'org.scala-lang:scala-compiler:2.9.2'
@@ -141,7 +138,7 @@ subprojects {
 	    // Libraries needed for scala api
 	    compile 'org.scala-lang:scala-library:2.9.2'
 	    compile 'org.scala-lang:scala-compiler:2.9.2'
-	    
+
 	    //To ensure that we have all appropriate runtime dependencies I have inclduded
 	    //all of the libraries included by the scala shell script
 		//runtime 'org.scala-lang:scala-dbc:2.9.2'
@@ -150,8 +147,10 @@ subprojects {
 		//runtime 'org.scala-lang:scalacheck:2.9.2'
 		runtime 'org.scala-lang:scalap:2.9.2'
 		//runtime 'org.scala-lang:scala-swing:2.9.2'
+
+		compile files(cpJars)
 	}
-	
+
 	tasks.compileJava {
   	 description = 'Compiles both the scala and java files for this project using the checker framework compiler and the scala compiler'
 	  options.fork = true
@@ -162,14 +161,25 @@ subprojects {
 	      '-Awarns', '-Xmaxwarns', '10000']
 	  options.forkOptions.executable="$checkersDir/binary/javac"
 	}
-	
+
 	tasks.compileScala {
 		description = 'Compiles only the scala files for this project.  If you\'d like to compile both Scala and Java use the compileJava task.'
 	}
-	
+
 	//Switch the compilation order to compile the Scala classes then the Java classes
-	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values - 'compileJava'  
-	tasks.compileJava.dependsOn compileScala   
+	tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values - 'compileJava'
+	tasks.compileJava.dependsOn compileScala
+
+	// Task to print the runtime classpath for this program. Very useful in shell
+	// scripts and whatnot.
+	// Usage (from a subproject folder):
+	//     gradle -q printRuntimeClasspath
+	// If the build script is printing a bunch of other nonsense, you might need:
+	//     gradle -q printRuntimeClasspath | tail -n1
+	task printRuntimeClasspath << {
+		println configurations.runtime.collect { File f -> f.getAbsolutePath() } .join(":")
+	}
+
 }
 
 def toJar = [zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' },

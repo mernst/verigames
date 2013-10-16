@@ -1,11 +1,14 @@
 package com.cgs.elements;
 
 import java.io.BufferedWriter;
+import java.io.PrintWriter;
 
 public class EdgeElement extends Element
 {
 	public String fromNodeID;
+	public String fromPortName;
 	public String toNodeID;
+	public String toPortName;
 	public String levelID;
 	public String portName;
 	public EdgeSet parent;
@@ -31,7 +34,7 @@ public class EdgeElement extends Element
 	public void setInputNode(String _fromNodeID, String _portName)
 	{
 		fromNodeID = _fromNodeID;
-		portName = _portName;
+		fromPortName = _portName;
 	}
 	
 	public void setOutputNode(String _toNodeID)
@@ -42,7 +45,7 @@ public class EdgeElement extends Element
 	public void setOutputNode(String _toNodeID, String _portName)
 	{
 		toNodeID = _toNodeID;
-		portName = _portName;
+		toPortName = _portName;
 	}
 	
 	public void writeOutput(BufferedWriter out)
@@ -63,5 +66,19 @@ public class EdgeElement extends Element
 		  }catch (Exception e){//Catch exception if any
 			  System.err.println("Error: " + e.getMessage());
 		  }
+	}
+	
+	public void write(PrintWriter printWriter)
+	{
+		printWriter.write("<edge ");
+		writeAttributeString(printWriter);
+		printWriter.println(">");
+		printWriter.println("<from>");
+		printWriter.println("<noderef id=\"" + fromNodeID + "\" port=\"" + fromPortName + "\"/>");
+		printWriter.println("</from>");
+		printWriter.println("<to>");
+		printWriter.println("<noderef id=\"" + toNodeID + "\" port=\"" + toPortName + "\"/>");
+		printWriter.println("</to>");
+		printWriter.println("</edge>");
 	}
 }
