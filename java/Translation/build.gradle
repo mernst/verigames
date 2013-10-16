@@ -1,7 +1,8 @@
 //This script inherits many settings from java/build.gradle
 
-
-def classpath = fileTree(dir: "lib",  include: "**/*.jar")
+dependencies {
+	compile fileTree(dir: "lib",  include: "**/*.jar")
+}
 
 sourceSets {
 	main {
@@ -12,8 +13,6 @@ sourceSets {
 		java {
 			srcDir 'src'
 		}
-		
-		compileClasspath += classpath
 	}
 }
 
@@ -23,7 +22,7 @@ tasks.compileJava {
 	options.forkOptions.jvmArgs += '-J-Djsr308_imports=checkers.interning.quals.*:checkers.nullness.quals.*:checkers.regex.quals.*:checkers.signature.quals.*'
 }
 
-// IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely 
+// IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely
 // recursive jar task that will fill up your hard drive (eventually)
 tasks.jar {
 	//from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

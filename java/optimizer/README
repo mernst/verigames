@@ -1,0 +1,34 @@
+
+                     -----------------------------------
+                           Verigames XML Optimizer
+                     -----------------------------------
+
+Building
+-------------
+
+Follow the setup instructions in the "USING_GRADLE" file one level up. Then, in
+this folder:
+
+    gradle jar
+
+This will generate the file build/libs/optimizer.jar which the start script
+uses to run the project (below).
+
+
+Running
+-------------
+
+Get help:
+
+    ./optimizer.sh --help
+
+Sample usage:
+
+    ./optimizer.sh <../../flash/PipeJam3/lib/levels/tutorial/setup/SkillsA.xml
+
+
+Hacking
+-------------
+
+All the source is written in Java, and it all lives in src/main/java (which is
+the default expected source path for Gradle's Java plugin).
