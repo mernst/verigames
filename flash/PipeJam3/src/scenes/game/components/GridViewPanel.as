@@ -675,9 +675,6 @@ package scenes.game.components
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
-				const BUFFER:Number = 1.5;
-				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
-					VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
@@ -692,6 +689,9 @@ package scenes.game.components
 					centerOnComponent(foundNode);
 				}
 			}
+			const BUFFER:Number = 1.5;
+			scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
+				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
