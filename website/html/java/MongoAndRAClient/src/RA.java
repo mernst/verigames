@@ -17,10 +17,9 @@ public class RA
 	int gameId = 1;
 	static final Gson gson = getGson();
 
-	static String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
-	static String betaurl = "http://api.flowjam.verigames.com";//"http://ec2-54-226-188-147.compute-1.amazonaws.com"; 
+	static String productionServer = "http://api.flowjam.verigames.com";//"http://ec2-54-226-188-147.compute-1.amazonaws.com"; 
 	static String stagingRAServer = "http://ec2-23-22-125-169.compute-1.amazonaws.com";
-	static String url = betaurl;
+	static String url = productionServer;
 	int port = 80;
 	
   public RA() {

@@ -35,10 +35,13 @@ public class ProxyThread extends Thread {
     
    // String testurl = "http://ec2-184-72-152-11.compute-1.amazonaws.com";
 	String betaurl = "http://api.flowjam.verigames.com";
-	private String url = betaurl;
+	String productionurl = "http://api.flowjam.verigames.com";
+	private String url = productionurl;
 	//used for verifycookie call to verify player
-	private String gameURL = "http://flowjam.verigames.com";
-	private String httpport = ":80";
+	private String betagameURL = "http://flowjam.verigames.org";
+	private String productiongameURL = "http://flowjam.verigames.com";
+	private String gameURL = productiongameURL;
+	private String httpport = "";
 
 	static public int LOG_REQUEST = 0;
 	static public int LOG_RESPONSE = 1;
@@ -139,6 +142,7 @@ public class ProxyThread extends Thread {
             	//check for type of request
             	if(urlTokens.length == 1 && urlTokens[0].indexOf("crossdomain") != -1)
             	{
+            		System.out.println("Sending Crossdomain policy");
             		response = doSendCrossDomain(out);
             		//need to write headers in this case
 	            	out.write("HTTP/1.1 200\r\nContent-Type: text/x-cross-domain-policy\r\nContent-Size: 239\r\n\r\n".getBytes());
@@ -151,6 +155,10 @@ public class ProxyThread extends Thread {
             			out.writeChars("test");
             			out.flush();
             		}
+            		
+            		if(urlToCall.indexOf("/proxy") != -1)
+            			urlToCall = urlToCall.substring(6);
+            		
             		if(urlTokens[1].indexOf("GET") != -1)
             			response = doGet(urlToCall);
             		else if(urlTokens[1].indexOf("PUT") != -1)
@@ -170,6 +178,8 @@ public class ProxyThread extends Thread {
                 ///////////////////////////////////
             	if(response != null)
             	{
+            		long responseLength = response.getEntity().getContentLength();
+            		out.write(("HTTP/1.1 200\r\nContent-Type: text/*\r\nContent-Size: " + responseLength + "\r\n\r\n").getBytes());
             		InputStream isr = response.getEntity().getContent();
 	                //begin send response to client
 	                byte by[] = new byte[ BUFFER_SIZE ];
@@ -195,7 +205,6 @@ public class ProxyThread extends Thread {
                 //processing can continue
                 out.writeBytes("");
             }
-
             //close out all resources
             if (rd != null) {
                 rd.close();
@@ -297,7 +306,7 @@ public class ProxyThread extends Thread {
 		{
 			if(fileInfo.length < 5)
 			{
-				out.write("Error: no player ID".getBytes());
+				writeString("Error: no player ID", out);
 				log(LOG_ERROR, "Error: no player ID");
 				return;
 			}
@@ -314,10 +323,10 @@ public class ProxyThread extends Thread {
 	 	        	   DBObject obj = cursor.next();
 			        	   buff.append(obj.toString());  
 			           }
-			           out.write(buff.toString().getBytes());
+	            	writeString(buff.toString(), out);
 			        } catch(Exception e) {
 			        	buff.append("Error: Can't lookup player saved levels"); 
-			        	out.write(buff.toString().getBytes());
+			        	writeString(buff.toString(), out);
 			        }
 			}
 			else if(fileInfo.length>5 && (fileInfo[5].equals("0") == false))
@@ -331,10 +340,10 @@ public class ProxyThread extends Thread {
 	    			obj = levelCollection.findOne(idObj);
 	    		
     			buff.append(obj.toString()); 
-    			out.write(buff.toString().getBytes());
+    			writeString(buff.toString(), out);
 				} catch(Exception e) {
 		        	buff.append("Error: Can't lookup specific level"); 
-		        	out.write(buff.toString().getBytes());
+		        	writeString(buff.toString(), out);
 		        }
 			}
 		}
@@ -342,7 +351,7 @@ public class ProxyThread extends Thread {
 		{
 			if(fileInfo.length < 4)
 			{
-				out.write("Error: no level id to delete".getBytes());
+				writeString("Error: no level id to delete", out);
 				log(LOG_ERROR, "Error: no player ID");
 				return;
 			}
@@ -353,11 +362,11 @@ public class ProxyThread extends Thread {
 	        query.put("_id", id);
             try {
             	savedLevelsCollection.remove(query);
-		        out.write("{success: true}".getBytes());
+		        writeString("{success: true}", out);
 	        	log(LOG_RESPONSE, "level deleted "+fileInfo[3]);
 		    } 
             catch (Exception e){
-		        	out.write("{success: false}".getBytes());
+            	writeString("{success: false}", out);
 		        	if(fileInfo[2] != null)
 		        		log(LOG_ERROR, "Error: level not deleted "+fileInfo[2]);
 		        	else
@@ -368,7 +377,7 @@ public class ProxyThread extends Thread {
 		{
 			if(fileInfo.length < 4)
 			{
-				out.write("Error: no level ID".getBytes());
+				writeString("Error: no level ID", out);
 				log(LOG_ERROR, "Error: no level ID");
 				return;
 			}
@@ -376,7 +385,7 @@ public class ProxyThread extends Thread {
 			//returns: xml file with doc id
 	    	ObjectId id = new ObjectId(fileInfo[3]);
 	    	outFile = fs.findOne(id);	     		
-	    	outFile.writeTo(out);
+	    	writeFile(outFile, out);
 			}
 		else if(request.indexOf("/level/metadata/get/all") != -1)
 		{
@@ -389,7 +398,7 @@ public class ProxyThread extends Thread {
 		        	   DBObject obj = cursor.next();
 		        	   buff.append(obj.toString());  
 		           }
-		           out.write(buff.toString().getBytes());
+		           writeString(buff.toString(), out);
 		        } finally {
 		           cursor.close();
 		        }
@@ -398,7 +407,7 @@ public class ProxyThread extends Thread {
 		{
 			if(fileInfo.length < 5)
 			{
-				out.write("Error: no xml ID".getBytes());
+				writeString("Error: no xml ID", out);
 				log(LOG_ERROR, "Error: no xml ID");
 				return;
 			}
@@ -413,7 +422,7 @@ public class ProxyThread extends Thread {
  	        	   DBObject obj = cursor.next();
 		        	   buff.append(obj.toString());  
 		           }
-		           out.write(buff.toString().getBytes());
+            	writeString(buff.toString(), out);
 		        } finally {
 		        }
 		}
@@ -421,15 +430,15 @@ public class ProxyThread extends Thread {
 		{
     		if(fileInfo.length < 4)
 			{
-				out.write("Error: no layout ID".getBytes());
+				writeString("Error: no layout ID", out);
 				log(LOG_ERROR, "Error: no layout ID");
 				return;
 			}
 			//format:  /layout/get/name
 			//returns: layout with specified name
     		ObjectId id = new ObjectId(fileInfo[3]);
-	    	outFile = fs.findOne(id);	     		
-	    	outFile.writeTo(out);
+	    	outFile = fs.findOne(id);
+	    	writeFile(outFile, out);
 		}
 		else if(request.indexOf("/layout/save") != -1)
 		{
@@ -445,7 +454,7 @@ public class ProxyThread extends Thread {
 		{
     		if(fileInfo.length < 6)
 			{
-				out.write("Error: tutorial info not saved".getBytes());
+				writeString("Error: tutorial info not saved", out);
 				log(LOG_ERROR, "Error: tutorial info not saved");
 				return;
 			}
@@ -456,13 +465,13 @@ public class ProxyThread extends Thread {
 			WriteResult r1 = tutorialCollection.insert(levelObj);
 			log(LOG_ERROR, r1.getLastError().toString());
 			
-			out.write("{success: true}".getBytes());
+			writeString("{success: true}", out);
 		}
 		else if(request.indexOf("/tutorial/levels/completed") != -1)
 		{
 			if(fileInfo.length < 5)
 			{
-				out.write("Error: no player ID".getBytes());
+				writeString("Error: no player ID", out);
 				log(LOG_ERROR, "Error: no player ID");
 				return;
 			}
@@ -477,12 +486,25 @@ public class ProxyThread extends Thread {
  	        	   DBObject obj = cursor.next();
 		        	   buff.append(obj.toString());  
 		           }
-		           out.write(buff.toString().getBytes());
+		           writeString(buff.toString(), out);
 		           log(LOG_TO_DB, "tutorial complete info returned");
 		        } finally {
 		        }
 		}
 	}
+    
+    public void writeString(String buff, DataOutputStream out) throws Exception
+    {
+    	byte[] bytes = buff.toString().getBytes();
+    	out.write(("HTTP/1.1 200\r\nContent-Type: text/*\r\nContent-Size: " + bytes.length + "\r\n\r\n").getBytes());
+        out.write(bytes);
+    }
+    
+    public void writeFile(GridFSDBFile outFile, DataOutputStream out) throws Exception
+    {
+    	out.write(("HTTP/1.1 200\r\nContent-Type: text/*\r\nContent-Size: " + outFile.getLength() + "\r\n\r\n").getBytes());
+    	outFile.writeTo(out);
+    }
     
     public void submitLayout(byte[] buf, String[] fileInfo, DataOutputStream out) throws Exception
     {
@@ -496,8 +518,7 @@ public class ProxyThread extends Thread {
 	        xmlIn.put("xmlID", fileInfo[4]+"L");
 	        xmlIn.put("name", fileInfo[5]);
 	        xmlIn.save();
-	        
-	        out.write("file saved".getBytes());
+	        writeString("file saved", out);
 	        
 	      //add to "SavedLayouts"
 	        DBObject levelObj = new BasicDBObject();
@@ -525,7 +546,7 @@ public class ProxyThread extends Thread {
 	    	 xmlIn.put("version", fileInfo[16]); //save
 	     xmlIn.save();
 	     currentConstraintFileID = xmlIn.getId().toString();
-	     out.write("file saved".getBytes());
+	     writeString("file saved", out);
 	        
     	if(fileInfo[2].indexOf("submit") != -1)
     	{
