@@ -66,7 +66,7 @@
 		
 		protected function onAddedToStage(event:starling.events.Event):void
 		{
-		//	this.blendMode = BlendMode.NONE;
+	//		this.blendMode = BlendMode.NONE;
 			m_isDirty = true;
 		}
 		
