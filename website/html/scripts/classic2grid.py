@@ -384,6 +384,8 @@ def classic2grid(infile, outfile):
 		print 'Total boxes: %s' % totalboxcount
 		totallinecount = 0
 		# 2c: Replace <edge> with __IN__ <line> and __OUT__ <line>
+		numnodeinputs = {}  # numnodeinputs[nodeid]  = input  lines created for joint (used for port numbering)
+		numnodeoutputs = {} # numnodeoutputs[nodeid] = output lines created for joint (used for port numbering)
 		for ex in lx.getElementsByTagName('edge'):
 			edgeid = ex.attributes['id'].value
 			if edgesets.get(edgeid) is None:
@@ -402,7 +404,13 @@ def classic2grid(infile, outfile):
 			fromlineid = edgeid + '__IN__'
 			fromnodex = ex.getElementsByTagName('from')[0].getElementsByTagName('noderef')[0]
 			fromnid = fromnodex.attributes['id'].value
-			fromport = fromnodex.attributes['port'].value
+			fromport = numnodeoutputs.get(fromnid)
+			if fromport is None:
+				fromport = 0
+			else:
+				fromport += 1
+			numnodeoutputs[fromnid] = fromport
+			fromoriginalport = fromnodex.attributes['port'].value
 			fromkind = nodekinds.get(fromnid)
 			if fromkind is None:
 				print 'Warning: could not find node kind for node id: %s' % fromnid
@@ -427,7 +435,7 @@ def classic2grid(infile, outfile):
 						print 'Warning: could not find OUTGOING joint:%s' % outgoingjointarr[0]
 						continue
 				else:
-					fromnid = fromnodex.attributes['id'].value + "__OUT__" + fromport
+					fromnid = "%s__OUT__%s" % (fromnodex.attributes['id'].value, fromoriginalport)
 					fromport = '0'
 			linesout += makeline2box(fromlineid, fromnid, fromport, setid, setport)
 			totallinecount += 1
@@ -435,13 +443,19 @@ def classic2grid(infile, outfile):
 			tolineid = edgeid + '__OUT__'
 			tonodex = ex.getElementsByTagName('to')[0].getElementsByTagName('noderef')[0]
 			tonid = tonodex.attributes['id'].value
-			toport = tonodex.attributes['port'].value
+			toport = numnodeinputs.get(tonid)
+			if toport is None:
+				toport = 0
+			else:
+				toport += 1
+			numnodeinputs[tonid] = toport
+			tooriginalport = tonodex.attributes['port'].value
 			tokind = nodekinds.get(tonid)
 			if tokind is None:
 				print 'Warning: could not find node kind for node id: %s' % tonid
 				continue
 			if (tokind.lower() == 'subboard') or (tokind.lower() == 'incoming') or (tokind.lower() == 'outgoing'):
-				tonid = tonodex.attributes['id'].value + "__IN__" + toport
+				tonid = "%s__IN__%s" % (tonodex.attributes['id'].value, tooriginalport)
 				toport = '0'
 			linesout += makeline2joint(tolineid, tonid, toport, setid, setport)
 		print 'Total lines: %s' % totallinecount

@@ -398,15 +398,20 @@ def layoutboxes(infile, outfile, outputdotfiles):
 							print 'no box height for: %s' % layout.id
 						# Add points staggered from the outputs so that all box outputs are at different y values
 						try:
-							newpty = getstaggeredlineheight(float(edgex.getElementsByTagName('frombox')[0].attributes['port'].value))
-						except exception:
-							newpty = BOX_HEIGHT / 2.0
+							startyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('frombox')[0].attributes['port'].value))
+						except Exception:
+							startyoff = BOX_HEIGHT / 2.0
+						try:
+							endyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('tojoint')[0].attributes['port'].value))
+						except Exception:
+							print 'except: %s' % portid
+							endyoff = BOX_HEIGHT / 2.0
 						startx = layout.points[0].x
 						starty = layout.points[0].y
 						endx = layout.points[-1].x
 						endy = layout.points[-1].y
-						layout.points.insert(1, Point(startx, starty + newpty))
-						layout.points.insert(2, Point(endx, endy - BOX_HEIGHT / 2.0))
+						layout.points.insert(1, Point(startx, starty + startyoff))
+						layout.points.insert(2, Point(endx, endy - endyoff))
 					elif edgex.getElementsByTagName('tobox'):
 						portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
 						foundendx = portxcoords.get(portid)
@@ -422,15 +427,20 @@ def layoutboxes(infile, outfile, outputdotfiles):
 							print 'no box height for: %s' % layout.id
 						# Add points staggered from the outputs so that all box outputs are at different y values
 						try:
-							newpty = getstaggeredlineheight(float(edgex.getElementsByTagName('tobox')[0].attributes['port'].value))
-						except exception:
-							newpty = BOX_HEIGHT / 2.0
+							startyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('fromjoint')[0].attributes['port'].value))
+						except Exception:
+							print 'except: %s' % portid
+							startyoff = BOX_HEIGHT / 2.0
+						try:
+							endyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('tobox')[0].attributes['port'].value))
+						except Exception:
+							endyoff = BOX_HEIGHT / 2.0
 						startx = layout.points[0].x
 						starty = layout.points[0].y
 						endx = layout.points[-1].x
 						endy = layout.points[-1].y
-						layout.points.insert(1, Point(startx, starty + BOX_HEIGHT / 2.0))
-						layout.points.insert(2, Point(endx, endy - newpty))
+						layout.points.insert(1, Point(startx, starty + startyoff))
+						layout.points.insert(2, Point(endx, endy - endyoff))
 					else:
 						print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
 					# Remove any current layout points, we only want the new layout points to be saved
