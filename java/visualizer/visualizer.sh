@@ -8,5 +8,7 @@ if [ ! -e "$JAR" ]; then
     exit 1
 fi
 
+pushd "$DIR" >/dev/null
 CP="$JAR:$(gradle -q printRuntimeClasspath | tail -n1):$CLASSPATH"
+popd >/dev/null
 exec java -cp "$CP" verigames.visualizer.Main $@
