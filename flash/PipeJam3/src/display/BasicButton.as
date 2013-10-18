@@ -22,6 +22,7 @@ package display
 	public class BasicButton extends ToolTippableSprite
 	{
 		private static const DEBUG_HIT:Boolean = false;
+		private static const DEBUG_STATE:Boolean = true;
 		
 		public static const HOVER_OVER:String = "hoverOver";
 		
@@ -135,6 +136,7 @@ package display
 			Mouse.cursor = (m_useHandCursor && m_enabled && event.interactsWith(this)) ? MouseCursor.BUTTON : MouseCursor.AUTO;
 			
 			var touch:Touch = event.getTouch(this);
+			var isHovering:Boolean = (event.getTouch(event.target as DisplayObject, TouchPhase.HOVER) != null);
 			if (!m_enabled || touch == null) {
 				if(!m_current)
 					m_current = m_up;
@@ -159,7 +161,7 @@ package display
 				toState(m_down);
 			} else if (touch.phase == TouchPhase.ENDED) {
 				if (m_current == m_down) {
-					if (hitTest(touch.getLocation(this))) {
+					if (isHovering) {
 						toState(m_over);
 						if(!m_data) m_data = new Object;
 						m_data.tapCount = touch.tapCount;
@@ -173,13 +175,24 @@ package display
 		
 		public function toState(state:DisplayObject):void
 		{
+			if (DEBUG_STATE) trace("Current: " + getState(m_current));
 			if (m_current != state) {
+				if (DEBUG_STATE) trace("To: " + getState(state));
 				m_current.visible = false;
 				m_current = state;
 				if(!m_current)
 					m_current = m_up;
 				m_current.visible = true;
 			}
+		}
+		
+		private function getState(state:DisplayObject):String
+		{
+			if (state == m_down) return DOWN_STATE;
+			if (state == m_over) return OVER_STATE;
+			if (state == m_up) return UP_STATE;
+			if (state == null) return "null";
+			return "unknown";
 		}
 		
 		public function setStatePosition(stateString:String):void
