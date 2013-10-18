@@ -22,7 +22,7 @@ package display
 	public class BasicButton extends ToolTippableSprite
 	{
 		private static const DEBUG_HIT:Boolean = false;
-		private static const DEBUG_STATE:Boolean = true;
+		private static const DEBUG_STATE:Boolean = false;
 		
 		public static const HOVER_OVER:String = "hoverOver";
 		
@@ -99,6 +99,7 @@ package display
 		{
 			if (m_enabled != value) {
 				m_enabled = value;
+				alpha = m_enabled ? 1.0 : 0.5;
 				toState(m_up);
 			}
 		}

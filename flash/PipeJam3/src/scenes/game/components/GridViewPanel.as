@@ -4,6 +4,7 @@ package scenes.game.components
 	import assets.AssetsFont;
 	import display.NineSliceButton;
 	import display.ToolTipText;
+	import events.MenuEvent;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
@@ -287,11 +288,8 @@ package scenes.game.components
 
 		private function onMouseWheel(evt:MouseEvent):void
 		{
-			//scaleContent(1.0/content.scaleX);
 			var delta:Number = evt.delta;
-			
 			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
-			
 			handleMouseWheel(delta, localMouse);			
 		}
 		
@@ -355,6 +353,18 @@ package scenes.game.components
 			panTo(newX, newY);
 		}
 		
+		public function atMinZoom(scale:Point = null):Boolean
+		{
+			if (!scale) scale = new Point(content.scaleX, content.scaleY);
+			return ((scale.x <= MIN_SCALE) || (scale.y <= MIN_SCALE));
+		}
+		
+		public function atMaxZoom(scale:Point = null):Boolean
+		{
+			if (!scale) scale = new Point(content.scaleX, content.scaleY);
+			return ((scale.x >= MAX_SCALE) || (scale.y >= MAX_SCALE));
+		}
+		
 		/**
 		 * Scale the content by the given scale factor (sizeDiff of 1.5 = 150% the original size)
 		 * @param	sizeDiff Size difference factor, 1.5 = 150% of original size
@@ -377,11 +387,12 @@ package scenes.game.components
 			
 			var origViewCoords:Rectangle = getViewInContentSpace();
 			// Perform scaling
+			var oldScale:Point = new Point(content.scaleX, content.scaleY);
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
 			inactiveContent.scaleX = content.scaleX;
 			inactiveContent.scaleY = content.scaleY;
-			onContentScaleChanged();
+			onContentScaleChanged(oldScale);
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
@@ -396,8 +407,19 @@ package scenes.game.components
 			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
-		private function onContentScaleChanged():void
+		private function onContentScaleChanged(prevScale:Point):void
 		{
+			if (atMaxZoom()) {
+				if (!atMaxZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.MAX_ZOOM_REACHED));
+			} else if (atMinZoom()) {
+				if (!atMinZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.MIN_ZOOM_REACHED));
+			} else {
+				if (atMaxZoom(prevScale) || atMinZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.RESET_ZOOM));
+			}
+			
 			if (m_currentLevel == null) return;
  			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
 				m_currentLevel.hideErrorText();
@@ -652,10 +674,10 @@ package scenes.game.components
 			content.x = 0;
 			content.y = 0;
 			inactiveContent.x = inactiveContent.y = 0;
-			
+			var oldScale:Point = new Point(content.scaleX, content.scaleY);
 			content.scaleX = content.scaleY = STARTING_SCALE;
 			inactiveContent.scaleX = inactiveContent.scaleY = STARTING_SCALE;
-			onContentScaleChanged();
+			onContentScaleChanged(oldScale);
 			content.addChild(m_currentLevel);
 			
 			if (DEBUG_BOUNDING_BOX) {

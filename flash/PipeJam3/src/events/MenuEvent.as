@@ -14,6 +14,9 @@ package events
 		public static const POST_SUBMIT_DIALOG:String = "post_submit_dialog";
 		public static const ZOOM_IN:String = "zoom_in";
 		public static const ZOOM_OUT:String = "zoom_out";
+		public static const MAX_ZOOM_REACHED:String = "max_zoom";
+		public static const MIN_ZOOM_REACHED:String = "min_zoom";
+		public static const RESET_ZOOM:String = "reset_zoom";
 		public static const RECENTER:String = "recenter";
 		public static const ACHIEVEMENT_ADDED:String = "achievementAdded";
 		public static const LOAD_BEST_SCORE:String = "LOAD_BEST_SCORE";

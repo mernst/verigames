@@ -174,6 +174,13 @@ package scenes.game.display
 			
 			gameControlPanel = new GameControlPanel();
 			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
+			if (edgeSetGraphViewPanel.atMaxZoom()) {
+				gameControlPanel.onMaxZoomReached();
+			} else if (edgeSetGraphViewPanel.atMinZoom()) {
+				gameControlPanel.onMinZoomReached();
+			} else {
+				gameControlPanel.onZoomReset();
+			}
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
@@ -231,6 +238,10 @@ package scenes.game.display
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			addEventListener(MenuEvent.RECENTER, onRecenter);
+			
+			addEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
+			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
+			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -495,6 +506,21 @@ package scenes.game.display
 		public function onRecenter(event:MenuEvent):void
 		{
 			edgeSetGraphViewPanel.recenter();
+		}
+		
+		public function onMaxZoomReached(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onMaxZoomReached();
+		}
+		
+		public function onMinZoomReached(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onMinZoomReached();
+		}
+		
+		public function onZoomReset(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onZoomReset();
 		}
 		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
@@ -833,6 +859,13 @@ package scenes.game.display
 			
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
+			if (edgeSetGraphViewPanel.atMaxZoom()) {
+				gameControlPanel.onMaxZoomReached();
+			} else if (edgeSetGraphViewPanel.atMinZoom()) {
+				gameControlPanel.onMinZoomReached();
+			} else {
+				gameControlPanel.onZoomReset();
+			}
 			newLevel.updateScore();
 			
 			var startTime:Number = new Date().getTime();
@@ -882,6 +915,9 @@ package scenes.game.display
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			removeEventListener(MenuEvent.RECENTER, onRecenter);
+			removeEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
+			removeEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
+			removeEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			
