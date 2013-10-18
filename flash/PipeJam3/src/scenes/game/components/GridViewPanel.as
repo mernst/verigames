@@ -222,7 +222,6 @@ package scenes.game.components
 							if (getPanZoomAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
-								var cp:Point = touches[0].getLocation(this.content);
 								var viewRect:Rectangle = getViewInContentSpace();
 								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
@@ -461,39 +460,48 @@ package scenes.game.components
 		{
 			if(m_world.hasDialogOpen())
 					return;
-			
+			var viewRect:Rectangle, newX:Number, newY:Number;
+			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
 			switch(event.keyCode)
 			{
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) {
-						content.y += 5;
-						inactiveContent.y = content.y;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2;
+						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / content.scaleY;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.DOWN:
 				case Keyboard.S:
 				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) {
-						content.y -= 5;
-						inactiveContent.y = content.y;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2;
+						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / content.scaleY;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.LEFT:
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) {
-						content.x += 5;
-						inactiveContent.x = content.x;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / content.scaleX;
+						newY = viewRect.y + viewRect.height / 2;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.RIGHT:
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) {
-						content.x -= 5;
-						inactiveContent.x = content.x;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / content.scaleX;
+						newY = viewRect.y + viewRect.height / 2;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.EQUAL:
