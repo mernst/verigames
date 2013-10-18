@@ -162,8 +162,8 @@ package scenes.game.display
 		
 		override public function draw():void
 		{
-			if (m_box9slice) {
-				m_box9slice.removeFromParent(true);
+			if (m_costume) {
+				m_costume.removeFromParent(true);
 			}
 			
 			var assetName:String;
@@ -182,8 +182,8 @@ package scenes.game.display
 					assetName = AssetInterface.PipeJamSubTexture_GrayLightBoxPrefix;
 			}
 			if (m_isSelected) assetName += "Select";
-			m_box9slice = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
-			addChild(m_box9slice);
+			m_costume = new NineSliceBatch(shapeWidth, shapeHeight, shapeHeight / 3.0, shapeHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", assetName);
+			addChild(m_costume);
 			
 			var wideScore:Number = getWideScore();
 			var narrowScore:Number = getNarrowScore();

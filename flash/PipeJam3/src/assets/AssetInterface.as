@@ -42,6 +42,9 @@ package assets
 		private var gameAssetEmbeds_2x:GameAssetEmbeds_2x;
 		
 		// List of Subtexture names from PipeJamSpriteSheet atlas
+		public static const PipeJamSubTexture_BallSizeTestMapNarrow:String = "BallSizeTestMapNarrow";
+		public static const PipeJamSubTexture_BallSizeTestMapWide:String = "BallSizeTestMapWide";
+		public static const PipeJamSubTexture_BallSizeTestSimple:String = "BallSizeTestSimple";
 		public static const PipeJamSubTexture_GrayDarkBoxPrefix:String = "GrayDarkBox";
 		public static const PipeJamSubTexture_GrayDarkBoxSelectPrefix:String = "GrayDarkBoxSelect";
 		public static const PipeJamSubTexture_GrayDarkStart:String = "GrayDarkStart";

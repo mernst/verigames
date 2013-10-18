@@ -292,10 +292,20 @@ package scenes.game.display
 				}
 				
 				var joint:GameJointNode;
-				if (foundNode && (foundNode.kind == NodeTypes.GET)) {
-					joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				if (foundNode) {
+					switch (foundNode.kind) {
+						case NodeTypes.GET:
+							joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						case NodeTypes.BALL_SIZE_TEST:
+							joint = new GameIfTestJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						default:
+							joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+					}
 				} else {
-					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
 				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);

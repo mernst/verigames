@@ -1120,6 +1120,19 @@ package scenes.game.display
 			}
 		}
 		
+		public function increaseInputHeight(_heightOffset:Number):void
+		{
+			createJointPointsArray(m_startPoint, m_endPoint, _heightOffset, 0.0);
+			positionChildren();
+			m_isDirty = true;
+		}
+		
+		public function increaseOutputHeight(_heightOffset:Number):void
+		{
+			createJointPointsArray(m_startPoint, m_endPoint, 0.0, _heightOffset);
+			positionChildren();
+			m_isDirty = true;
+		}
 		
 		//create 6 joints
 		//  	beginning connection
@@ -1128,7 +1141,7 @@ package scenes.game.display
 		//		middle point 2
 		//		start of incoming port extension
 		//		end connection
-		private function createJointPointsArray(startPoint:Point, endPoint:Point):void
+		private function createJointPointsArray(startPoint:Point, endPoint:Point, inputHeightOffset:Number = 0.0, outputHeightOffset:Number = 0.0):void
 		{
 			var newEdgesNeeded:Boolean = false;
 			//recreate if we have a non-initialized line
@@ -1142,6 +1155,7 @@ package scenes.game.display
 			//makeInitialNodesAndExtension
 			if ((m_jointPoints[0] as Point != null) && (m_jointPoints[1] as Point != null)) {
 				var inputHeight:Number = (m_jointPoints[1] as Point).y - (m_jointPoints[0] as Point).y;
+				inputHeight += inputHeightOffset;
 				m_jointPoints[0] = startPoint.clone();
 				m_jointPoints[1] = new Point(startPoint.x, startPoint.y + inputHeight);
 			} else {
@@ -1150,7 +1164,8 @@ package scenes.game.display
 			}
 			const LNGTH:Number = m_jointPoints.length;
 			if ((m_jointPoints[LNGTH-1] as Point != null) && (m_jointPoints[LNGTH-2] as Point != null)) {
-				var outputHeight:Number = (m_jointPoints[LNGTH-1] as Point).y - (m_jointPoints[LNGTH-2] as Point).y;
+				var outputHeight:Number = (m_jointPoints[LNGTH - 1] as Point).y - (m_jointPoints[LNGTH - 2] as Point).y;
+				outputHeight += outputHeightOffset;
 				m_jointPoints[LNGTH-1] = endPoint.clone();
 				m_jointPoints[LNGTH-2] = new Point(endPoint.x, endPoint.y - outputHeight);
 			} else {

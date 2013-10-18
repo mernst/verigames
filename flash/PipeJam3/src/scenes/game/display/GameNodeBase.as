@@ -1,6 +1,6 @@
 package scenes.game.display
 {
-	import display.NineSliceBatch;
+	import starling.display.DisplayObject;
 	
 	import events.GameComponentEvent;
 	import events.GroupSelectionEvent;
@@ -19,7 +19,7 @@ package scenes.game.display
 	
 	public class GameNodeBase extends GameComponent
 	{
-		public var m_box9slice:NineSliceBatch;
+		public var m_costume:DisplayObject;
 		protected var shapeWidth:Number = 100.0;
 		protected var shapeHeight:Number = 100.0;
 		
@@ -137,8 +137,8 @@ package scenes.game.display
 				return;
 			}
 			disposeChildren();
-			if (m_box9slice) {
-				m_box9slice.removeFromParent(true);
+			if (m_costume) {
+				m_costume.removeFromParent(true);
 			}
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			removeEventListener(TouchEvent.TOUCH, onTouch);
