@@ -1000,7 +1000,12 @@ package scenes.game.display
 				if(m_jointPoints[segmentIndex].x != m_jointPoints[segmentIndex+1].x)
 				{
 					m_jointPoints[segmentIndex].y += deltaPoint.y;
-					m_jointPoints[segmentIndex+1].y += deltaPoint.y;
+					m_jointPoints[segmentIndex + 1].y += deltaPoint.y;
+					if (m_jointPoints.length >= NUM_JOINTS) {
+						// Enforce minimum length on input/output segments
+						m_jointPoints[1].y = m_jointPoints[2].y = Math.max(m_jointPoints[1].y, m_jointPoints[0].y + InnerBoxSegment.PLUG_HEIGHT);
+						m_jointPoints[m_jointPoints.length - 2].y = m_jointPoints[m_jointPoints.length - 3].y = Math.min(m_jointPoints[m_jointPoints.length - 2].y, m_jointPoints[m_jointPoints.length - 1].y - InnerBoxSegment.PLUG_HEIGHT);
+					}
 				}
 				else
 				{
@@ -1156,6 +1161,7 @@ package scenes.game.display
 			if ((m_jointPoints[0] as Point != null) && (m_jointPoints[1] as Point != null)) {
 				var inputHeight:Number = (m_jointPoints[1] as Point).y - (m_jointPoints[0] as Point).y;
 				inputHeight += inputHeightOffset;
+				inputHeight = Math.max(inputHeight, InnerBoxSegment.PLUG_HEIGHT);
 				m_jointPoints[0] = startPoint.clone();
 				m_jointPoints[1] = new Point(startPoint.x, startPoint.y + inputHeight);
 			} else {
@@ -1166,6 +1172,7 @@ package scenes.game.display
 			if ((m_jointPoints[LNGTH-1] as Point != null) && (m_jointPoints[LNGTH-2] as Point != null)) {
 				var outputHeight:Number = (m_jointPoints[LNGTH - 1] as Point).y - (m_jointPoints[LNGTH - 2] as Point).y;
 				outputHeight += outputHeightOffset;
+				outputHeight = Math.max(outputHeight, InnerBoxSegment.PLUG_HEIGHT);
 				m_jointPoints[LNGTH-1] = endPoint.clone();
 				m_jointPoints[LNGTH-2] = new Point(endPoint.x, endPoint.y - outputHeight);
 			} else {
