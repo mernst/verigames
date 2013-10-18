@@ -38,7 +38,7 @@ public class Main {
         File outputFolder;
 
         if (cmd.hasOption("help")) {
-            new HelpFormatter().printHelp(80, "optimizer", "Rewrite Verigames XML files", options, "", true);
+            new HelpFormatter().printHelp(80, "visualizer", "Visualize Verigames XML files", options, "", true);
             return;
         }
 
