@@ -6,6 +6,7 @@ import trusted.TrustedConstants
 import scala.collection.mutable.ListBuffer
 import verigames.level.StubBoard.StubConnection
 import verigames.level.StubBoard
+import checkers.inference.util.SlotUtil
 
 abstract class StubBoardUseConstraintHandler( override val constraint : StubBoardUseConstraint,
                                               val gameSolver : GameSolver)
@@ -18,8 +19,10 @@ abstract class StubBoardUseConstraintHandler( override val constraint : StubBoar
 
   def isNarrow( nonVar : Slot ) = narrowSlotTypes.find( _ == nonVar ).isDefined
 
-  val StubBoardUseConstraint( methodSignature, levelVp, receiver,
-                              methodTypeParamBounds, classTypeParamBounds, args, result ) = constraint
+  val StubBoardUseConstraint( fullyQualifiedClass, methodSignature, levelVp, receiver,
+                              methodTypeParamLBs, classTypeParamLBs,
+                              methodTypeParamUBs, classTypeParamUBs,
+                              args, result ) = constraint
 
   //NOTE: Any methods/variables that don't seem to exist in this class are imported from GameSolver
   import gameSolver._
@@ -27,19 +30,19 @@ abstract class StubBoardUseConstraintHandler( override val constraint : StubBoar
   val level = classToLevel( levelVp.getFQClassName )
 
   override def handle() {
-    val methodTypeParams = interlaceTypeArgsAndBounds( methodTypeParamBounds )
-    val classTypeParams  = interlaceTypeArgsAndBounds( classTypeParamBounds  )
+    val methodTypeParams = SlotUtil.interlaceTypeParamBounds( methodTypeParamUBs, methodTypeParamLBs )
+    val classTypeParams  = SlotUtil.interlaceTypeParamBounds( classTypeParamUBs,  classTypeParamLBs  )
 
     val inputs =
       List( new StubConnection( ReceiverInPort + "0", isNarrow( receiver ) ) ) ++
-      makeStubConnections( MethodTypeParamsInPort, methodTypeParams )    ++
       makeStubConnections( ClassTypeParamsInPort,  classTypeParams  )    ++
+      makeStubConnections( MethodTypeParamsInPort, methodTypeParams )    ++
       makeStubConnections( ParamInPort, args )
 
     val outputs =
       List( new StubConnection( ReceiverOutPort + "0", isNarrow( receiver ) ) ) ++
-      makeStubConnections( MethodTypeParamsOutPort, methodTypeParams )    ++
       makeStubConnections( ClassTypeParamsOutPort,  classTypeParams  )    ++
+      makeStubConnections( MethodTypeParamsOutPort, methodTypeParams )    ++
       makeStubConnections( ParamOutPort, args )                           ++
       makeStubConnections( ReturnOutPort, result )
 

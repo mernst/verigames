@@ -7,6 +7,7 @@ import checkers.inference.FieldAssignmentConstraint
 import checkers.inference.Variable
 import checkers.inference.FieldVP
 import misc.util.VGJavaConversions._
+import checkers.inference.util.SolverUtil
 
 
 case class FieldAssignmentConstraintHandler( override val constraint : FieldAssignmentConstraint,
@@ -15,6 +16,6 @@ case class FieldAssignmentConstraintHandler( override val constraint : FieldAssi
 
   override val methodSignature =
     constraint.calledVp
-      .map( gameSolver.getFieldSetterName _ )
-      .getOrElse( gameSolver.getFieldSetterName( constraint.stubBoardUse.get.methodSignature ) )
+      .map( SolverUtil.getFieldSetterName _ )
+      .getOrElse( SolverUtil.getFieldSetterName( constraint.stubBoardUse.get.methodSignature ) )
 }
