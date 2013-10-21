@@ -162,13 +162,9 @@ package display
 				toState(m_down);
 			} else if (touch.phase == TouchPhase.ENDED) {
 				if (m_current == m_down) {
-					if (isHovering) {
-						toState(m_over);
-						if(!m_data) m_data = new Object;
-						m_data.tapCount = touch.tapCount;
-					} else {
-						toState(m_up);
-					}
+					if(!m_data) m_data = new Object;
+					m_data.tapCount = touch.tapCount;
+					toState(m_up);
 					dispatchEventWith(Event.TRIGGERED, true, m_data);
 				}
 			}
