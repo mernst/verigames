@@ -17,7 +17,10 @@ abstract class StubBoardUseConstraintHandler( override val constraint : StubBoar
   val narrowSlotTypes : List[Slot]
   val wideSlotTypes   : List[Slot]
 
-  def isNarrow( nonVar : Slot ) = narrowSlotTypes.find( _ == nonVar ).isDefined
+  def isNarrow( nonVar : Slot ) = {
+    require( nonVar != null, "Narrowness of null slot is undefined!" )
+    narrowSlotTypes.find( _ == nonVar ).isDefined
+  }
 
   val StubBoardUseConstraint( fullyQualifiedClass, methodSignature, levelVp, receiver,
                               methodTypeParamLBs, classTypeParamLBs,
@@ -33,14 +36,23 @@ abstract class StubBoardUseConstraintHandler( override val constraint : StubBoar
     val methodTypeParams = SlotUtil.interlaceTypeParamBounds( methodTypeParamUBs, methodTypeParamLBs )
     val classTypeParams  = SlotUtil.interlaceTypeParamBounds( classTypeParamUBs,  classTypeParamLBs  )
 
+    val ( inReceiverSeq, outReceiverSeq ) =
+      if( receiver != null ) {
+        val narrowness = isNarrow( receiver )
+        ( Some( new StubConnection( ReceiverInPort + "0", narrowness ) ),
+          Some( new StubConnection( ReceiverOutPort + "0", narrowness) )  )
+      } else {
+        ( None, None )
+      }
+
     val inputs =
-      List( new StubConnection( ReceiverInPort + "0", isNarrow( receiver ) ) ) ++
+      inReceiverSeq.toList ++
       makeStubConnections( ClassTypeParamsInPort,  classTypeParams  )    ++
       makeStubConnections( MethodTypeParamsInPort, methodTypeParams )    ++
       makeStubConnections( ParamInPort, args )
 
     val outputs =
-      List( new StubConnection( ReceiverOutPort + "0", isNarrow( receiver ) ) ) ++
+      outReceiverSeq.toList ++
       makeStubConnections( ClassTypeParamsOutPort,  classTypeParams  )    ++
       makeStubConnections( MethodTypeParamsOutPort, methodTypeParams )    ++
       makeStubConnections( ParamOutPort, args )                           ++
