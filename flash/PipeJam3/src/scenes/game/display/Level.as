@@ -137,6 +137,12 @@ package scenes.game.display
 		
 		public var original_level_name:String;
 		
+		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
+		private var m_currentConflictIndex:int = -1;
+		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
+		private var m_conflictEdgesDirty:Boolean = true;
+		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
 		private static const USE_TILED_BACKGROUND:Boolean = false; // true to include a background that scrolls with the view
@@ -1728,6 +1734,46 @@ package scenes.game.display
 			}
 		}
 		
+		/**
+		 * Get next conflict: used for conflict scrolling
+		 * @param	forward True to scroll forward, false to scroll backwards
+		 * @return Conflict DisplayObject (if any exist)
+		 */
+		public function getNextConflict(forward:Boolean):DisplayObject
+		{
+			if (m_conflictEdgesDirty) {
+				for (var i:int = 0; i < m_edgeList.length; i++) {
+					if (m_edgeList[i].hasError()) {
+						if (!m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+							// Add to list/dict if not on there already
+							if (m_levelConflictEdges.indexOf(m_edgeList[i]) == -1) m_levelConflictEdges.push(m_edgeList[i]);
+							m_levelConflictEdgeDict[m_edgeList[i].m_id] = true;
+						}
+					} else {
+						if (m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+							// Remove from edge conflict list/dict if on it
+							var delindx:int = m_levelConflictEdges.indexOf(m_edgeList[i]);
+							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
+							delete m_levelConflictEdgeDict[m_edgeList[i].m_id];
+						}
+					}
+				}
+				m_conflictEdgesDirty = false;
+			}
+			if (m_levelConflictEdges.length == 0) return null;
+			if (forward) {
+				m_currentConflictIndex++;
+			} else {
+				m_currentConflictIndex--;
+			}
+			if (m_currentConflictIndex >= m_levelConflictEdges.length) {
+				m_currentConflictIndex = 0;
+			} else if (m_currentConflictIndex < 0) {
+				m_currentConflictIndex = m_levelConflictEdges.length - 1;
+			}
+			return m_levelConflictEdges[m_currentConflictIndex].errorContainer;
+		}
+		
 		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
@@ -1886,6 +1932,7 @@ package scenes.game.display
 				fillConstraintsXML(m_levelBestScoreConstraintsXML);
 			}
 			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
+			m_conflictEdgesDirty = true;
 		}
 		
 	}

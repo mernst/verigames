@@ -486,6 +486,12 @@ package scenes.game.components
 			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
 			switch(event.keyCode)
 			{
+				case Keyboard.TAB:
+					if (getPanZoomAllowed() && m_currentLevel) {
+						var conflict:DisplayObject = m_currentLevel.getNextConflict(!event.shiftKey);
+						if (conflict) centerOnComponent(conflict);
+					}
+					break;
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
@@ -861,7 +867,7 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		public function centerOnComponent(component:GameComponent):void
+		public function centerOnComponent(component:DisplayObject):void
 		{
 			startingPoint = new Point(content.x, content.y);
 			
