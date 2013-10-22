@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class DifficultyRater {
+public class DifficultyRater extends ChainBase {
 
     File layoutFile;
     File constraintsFile;
@@ -39,39 +39,6 @@ public class DifficultyRater {
     static File countFile;
     static PrintWriter countPrintWriter;
     static File outputDirectory;
-    
-    ArrayList<Level> levels;
-    protected HashMap<String, NodeElement> nodes;
-    protected HashMap<String, EdgeElement> edges;
-    protected Vector<NodeElement> nodeVector;
-    protected Vector<EdgeElement> edgeVector;
-    
-    //used to build up current element
-    protected Level currentLevel;
-    protected NodeElement currentNode;
-    protected EdgeElement currentEdge;
-
-    Vector<Vector<NodeElement>> nodeChains;
-    Vector<ChainInfo> chainInfo;
-    
-    int editableChainCount;
-	int editableNodes;
-	int uneditableChainCount;
-	int uneditableNodes;
-	int visibleNodes;
-	int visibleEdges;
-	
-	int totalConflicts;
-	int totalBonusNodes;
-	
-	int numChainsWithConflicts;
-	int longestChainSizeWithConflict;
-	int numNodesWithConflictInChain;
-	
-    int currentChainNumber;
-	static int mostNumConflicts;
-	static int totalEditableChains;
-	static int totalUneditableChains;
 	
 	static String scriptName = "";
 	
@@ -154,7 +121,7 @@ public class DifficultyRater {
          	 
             rater.parseLayoutFile();
              rater.parseConstraintsFile();
-             rater.connectNodes();
+             rater.buildChains();
              
             rater.checkChains();
             rater.outputLayout(file, outputDirectory);
@@ -165,30 +132,30 @@ public class DifficultyRater {
             
         }
         
+        public void buildChains()
+        {
+        	 //trace connected nodes       
+            for(int i = 0; i<nodeVector.size(); i++)
+            {
+                NodeElement node = nodeVector.get(i);
+                if(!node.counted)
+                {
+                	node.counted = true;
+                    ChainInfo chain = new ChainInfo();
+                    chainInfoVector.add(chain);
+                    chain.addNode(node);
+                    chain.chainNumber = currentChainNumber;
+                    traceNode(node, chain);
+                    currentChainNumber++;
+              }
+            }
+        }
+        
         public DifficultyRater(File layoutFile, File constraintsFile)
         {
-                try{
-                this.layoutFile = layoutFile;
-                this.constraintsFile = constraintsFile;
-                               
-                levels = new ArrayList<Level>();
-                nodes = new HashMap<String, NodeElement>();
-                edges = new HashMap<String, EdgeElement>();
-                nodeVector = new Vector<NodeElement>();
-                edgeVector = new Vector<EdgeElement>();
-                
-                nodeChains = new Vector<Vector<NodeElement>>();
-                chainInfo = new Vector<ChainInfo>();
-                
-                visibleNodes = 0;
-                visibleEdges = 0;
-                totalConflicts = 0;
-                totalBonusNodes = 0;
-                }
-                catch(Exception e)
-                {
-                        
-                }
+        	super();
+            this.layoutFile = layoutFile;
+            this.constraintsFile = constraintsFile;
         }
         
         public void parseLayoutFile() 
@@ -208,7 +175,7 @@ public class DifficultyRater {
                                         if (qName.equalsIgnoreCase("level")) {
                                                 String levelName = attributes.getValue("id");
                                                 currentLevel = new Level(levelName);
-                                                levels.add(currentLevel);
+                                                levelList.add(currentLevel);
                                         }
                                         else if (qName.equalsIgnoreCase("box") || qName.equalsIgnoreCase("joint")) {
                                                 String nodeName = attributes.getValue("id");
@@ -309,130 +276,6 @@ public class DifficultyRater {
             }        
         }
         
-        public void connectNodes()
-        {
-        	 //trace connected nodes       
-            for(int i = 0; i<nodeVector.size(); i++)
-            {
-                NodeElement node = nodeVector.get(i);
-                if(!node.counted)
-                {
-                    Vector<NodeElement> returnNodes = new Vector<NodeElement>();
-                    chainInfo.add(new ChainInfo());
-                    returnNodes.add(node);
-                    node.chainNumber = currentChainNumber;
-                    node.counted = true;
-                    traceNode(node, returnNodes);
-                    nodeChains.add(returnNodes);
-                    currentChainNumber++;
-              }
-            }
-        }
-        
-        public void checkChains()
-        {
-        	for(int i = 0; i<nodeChains.size();i++)
-        	{
-        		Vector<NodeElement> chain = nodeChains.get(i);
-        		ChainInfo info = chainInfo.get(i);
-        		findConflictsInChain(chain, info);
-        		checkIfChainIsEditable(chain, info);
-        		reportOnChain(chain, info);
-        	}
-        }
-        
-        public void findConflictsInChain(Vector<NodeElement> nodeChain, ChainInfo chainInfo)
-        {
-            //find conflicts
-            for(int i = 0; i<nodeChain.size(); i++)
-            {
-                NodeElement node = nodeChain.get(i);
-               
-                if(node.isBox)
-                {
-                	boolean nodeIsEditable = node.isEditable;
-                    for(int j = 0; j<node.outputPortNames.size(); j++)
-                    {
-                        String outputEdgeID = node.outputPortNames.get(j);
-                        EdgeElement outgoingEdge = edges.get(outputEdgeID);
-                        
-                        boolean incomingWidth = node.isWide;
-                        NodeElement toJoint = nodes.get(outgoingEdge.toNodeID);
-                        if(toJoint.outputPortNames.size() > 0)
-                        {
-                            String jointOutputEdgeID = toJoint.outputPortNames.get(0);
-                            EdgeElement outgoingJointEdge = edges.get(jointOutputEdgeID);
-                            NodeElement toNode = nodes.get(outgoingJointEdge.toNodeID); 
-                            if(toNode.hasConflict)
-                            	continue;
-                            boolean toNodeIsEditable = toNode.isEditable;
-                            boolean outgoingWidth = toNode.isWide;
-                            if(incomingWidth && !outgoingWidth)
-                            {
-                              //  printWriter.println("conflict Node Type " + node.id + " " + outputEdgeID + " " + toNode.id);
-                            	if(toNodeIsEditable || node.isEditable)
-                            		chainInfo.numConflicts++;
-                            	toNode.hasConflict = true;
-                            	break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            totalConflicts += chainInfo.numConflicts;
-            
-            if(chainInfo.numConflicts > 0)
-            {
-            	numChainsWithConflicts++;
-            	if(nodeChain.size() > longestChainSizeWithConflict)
-            		longestChainSizeWithConflict = nodeChain.size();
-        		numNodesWithConflictInChain += nodeChain.size();
-            }
-                
-        }
-        
-        public void checkIfChainIsEditable(Vector<NodeElement> nodeChain, ChainInfo chainInfo)
-        {
-        	chainInfo.isEditable = false;
-            for(int j = 0; j < nodeChain.size(); j++)
-            {
-                NodeElement elem = nodeChain.get(j);
-                if(elem.isEditable)
-                {
-                	chainInfo.isEditable = true;
-                }
-            }
-            
-            if(chainInfo.isEditable)
-            {
-            	editableChainCount++;
-            	editableNodes+= nodeChain.size();
-            }
-            else
-            {
-            	uneditableChainCount++;
-            	uneditableNodes += nodeChain.size();
-            }
-            
-        }
-        
-        public void reportOnChain(Vector<NodeElement> nodeChain, ChainInfo chainInfo)
-        {
-        	if(chainInfo.numConflicts > 0)
-        	{
-        		if(printedFileName == false)
-        		{
-                	printWriter.println(layoutFileName);
-                	printedFileName = true;
-        		}
-
-        		printWriter.println("Chain Length " + nodeChain.size() + " " + "editable " + chainInfo.isEditable + " " + "Num Conflicts " + chainInfo.numConflicts);
-        	}
-        	if(chainInfo.numConflicts > mostNumConflicts)
-        		mostNumConflicts = chainInfo.numConflicts;
-        }
-        
         public void reportOnFile(File file)
         {
 //        	if(numChainsWithConflicts > 0)
@@ -446,6 +289,8 @@ public class DifficultyRater {
 //	        	printWriter.println("\"" + constraintsFileName + "\"'");
 //	        	printWriter.println("\"" + file.getPath() + "\"'");
 //        	}
+        	visibleNodes = nodes.size();
+        	visibleEdges = edges.size();
             countPrintWriter.println("<file id=\"" + fileName + "\" name=\"" + currentLevel.id
             		+ "\" nodes=\"" + nodes.size() + "\" edges=\"" + edges.size()+"\" visible_nodes=\"" 
             		+ visibleNodes + "\" visible_edges=\"" + visibleEdges
@@ -461,130 +306,92 @@ public class DifficultyRater {
        System.out.println("reported");
         }
         
-        public void traceNode(NodeElement startNode, Vector<NodeElement> returnNodes)
-        {
-            for(int j = 0; j<startNode.outputPortNames.size(); j++)
-            {
-                String outputEdgeID = startNode.outputPortNames.get(j);
-                EdgeElement outgoingEdge = edges.get(outputEdgeID);
-                outgoingEdge.chainNumber = currentChainNumber;
-                NodeElement toNode = nodes.get(outgoingEdge.toNodeID);
-                if(toNode.counted == false)
-                {
-                    returnNodes.add(toNode);
-                    toNode.chainNumber = currentChainNumber;
-                    toNode.counted = true;
-                    traceNode(toNode, returnNodes);
-                }
-            }
-                
-                for(int j = 0; j<startNode.inputPortNames.size(); j++)
-            {
-                String inputEdgeID = startNode.inputPortNames.get(j);
-                EdgeElement incomingEdge = edges.get(inputEdgeID);
-                incomingEdge.chainNumber = currentChainNumber;
-                NodeElement fromNode = nodes.get(incomingEdge.fromNodeID);
-                if(fromNode.counted == false)
-                {
-                    returnNodes.add(fromNode);
-                    fromNode.chainNumber = currentChainNumber;
-                    fromNode.counted = true;
-                    traceNode(fromNode, returnNodes);
-                }
-            }
-        }
+ 
         
         public void outputLayout(File layoutFile, File outputDirectory)
         {
-        	try
-        	{
-	        	//open layout dom, make changes, save to new file
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-	
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.parse(layoutFile);
-				
-				//hide all boxes, joints and lines that don't have conflicts in their chain
-				NodeList nodeList = doc.getElementsByTagName("box");
-				for(int i=0; i<nodeList.getLength(); i++)
-				{
-					Element node = (Element)nodeList.item(i);
-					String id = node.getAttribute("id");
-					NodeElement nodeElem = nodes.get(id);
-					if(nodeElem != null)
-					{
-						ChainInfo info = chainInfo.get(nodeElem.chainNumber);
-						if(info.numConflicts > 0)
-						{
-							node.setAttribute("visible", "true");
-							visibleNodes++;
-						}
-						else
-							node.setAttribute("visible", "false");
-					}
-				}
-				
-				NodeList jointList = doc.getElementsByTagName("joint");
-				for(int i=0; i<jointList.getLength(); i++)
-				{
-					Element node = (Element)jointList.item(i);
-					String id = node.getAttribute("id");
-					NodeElement nodeElem = nodes.get(id);
-					if(nodeElem != null)
-					{
-						ChainInfo info = chainInfo.get(nodeElem.chainNumber);
-						if(info.numConflicts > 0)
-						{
-							node.setAttribute("visible", "true");
-							visibleNodes++;
-						}
-						else
-							node.setAttribute("visible", "false");
-					}
-				}
-				
-				NodeList lineList = doc.getElementsByTagName("line");
-				for(int i=0; i<lineList.getLength(); i++)
-				{
-					Element node = (Element)lineList.item(i);
-					String id = node.getAttribute("id");
-					EdgeElement edgeElem = edges.get(id);
-					if(edgeElem != null)
-					{
-						ChainInfo info = chainInfo.get(edgeElem.chainNumber);
-						if(info.numConflicts > 0)
-						{
-							node.setAttribute("visible", "true");
-							visibleEdges++;
-						}
-						else
-							node.setAttribute("visible", "false");
-					}
-				}
-				
-				// Prepare the DOM document for writing
-		        Source source = new DOMSource(doc);
-
-		        // Prepare the output file
-		        File file = new File(outputDirectory, layoutFile.getName());
-		        System.out.println(file.getAbsolutePath());
-		        Result result = new StreamResult(file);
-
-		        // Write the DOM document to the file
-		        Transformer xformer = TransformerFactory.newInstance().newTransformer();
-		        xformer.transform(source, result);
-        	}
-        	catch(Exception e)
-        	{
-        		
-        	}
+//        	try
+//        	{
+//	        	//open layout dom, make changes, save to new file
+//				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//				dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+//	
+//				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//				Document doc = dBuilder.parse(layoutFile);
+//				
+//				//hide all boxes, joints and lines that don't have conflicts in their chain
+//				NodeList nodeList = doc.getElementsByTagName("box");
+//				for(int i=0; i<nodeList.getLength(); i++)
+//				{
+//					Element node = (Element)nodeList.item(i);
+//					String id = node.getAttribute("id");
+//					NodeElement nodeElem = nodes.get(id);
+//					if(nodeElem != null)
+//					{
+//						ChainInfo info = chainInfo.get(nodeElem.chainNumber);
+//						if(info.numConflicts > 0)
+//						{
+//							node.setAttribute("visible", "true");
+//							visibleNodes++;
+//						}
+//						else
+//							node.setAttribute("visible", "false");
+//					}
+//				}
+//				
+//				NodeList jointList = doc.getElementsByTagName("joint");
+//				for(int i=0; i<jointList.getLength(); i++)
+//				{
+//					Element node = (Element)jointList.item(i);
+//					String id = node.getAttribute("id");
+//					NodeElement nodeElem = nodes.get(id);
+//					if(nodeElem != null)
+//					{
+//						ChainInfo info = chainInfo.get(nodeElem.chainNumber);
+//						if(info.numConflicts > 0)
+//						{
+//							node.setAttribute("visible", "true");
+//							visibleNodes++;
+//						}
+//						else
+//							node.setAttribute("visible", "false");
+//					}
+//				}
+//				
+//				NodeList lineList = doc.getElementsByTagName("line");
+//				for(int i=0; i<lineList.getLength(); i++)
+//				{
+//					Element node = (Element)lineList.item(i);
+//					String id = node.getAttribute("id");
+//					EdgeElement edgeElem = edges.get(id);
+//					if(edgeElem != null)
+//					{
+//						ChainInfo info = chainInfo.get(edgeElem.chainNumber);
+//						if(info.numConflicts > 0)
+//						{
+//							node.setAttribute("visible", "true");
+//							visibleEdges++;
+//						}
+//						else
+//							node.setAttribute("visible", "false");
+//					}
+//				}
+//				
+//				// Prepare the DOM document for writing
+//		        Source source = new DOMSource(doc);
+//
+//		        // Prepare the output file
+//		        File file = new File(outputDirectory, layoutFile.getName());
+//		        System.out.println(file.getAbsolutePath());
+//		        Result result = new StreamResult(file);
+//
+//		        // Write the DOM document to the file
+//		        Transformer xformer = TransformerFactory.newInstance().newTransformer();
+//		        xformer.transform(source, result);
+//        	}
+//        	catch(Exception e)
+//        	{
+//        		
+//        	}
         }
-        
-     class ChainInfo
-     {
-    	 boolean isEditable;
-    	 int numConflicts;
-     }
-
 }

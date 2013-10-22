@@ -12,8 +12,6 @@ public class Element
 	public String id;
 	public HashMap<String, String> attributeMap;
 	public Element parent;
-	
-	public int chainNumber;
 		
 	Element(String _id)
 	{
