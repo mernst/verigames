@@ -66,7 +66,7 @@ public class Main {
         World world = parser.parse(input);
         String path = outputFolder.getAbsolutePath();
 
-        boolean success = outputFolder.mkdirs();
+        boolean success = outputFolder.isDirectory() || outputFolder.mkdirs();
         if (!success) {
             System.err.println("Failed to create folder '" + path + "'");
             System.exit(1);
