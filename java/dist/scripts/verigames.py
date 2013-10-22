@@ -11,9 +11,10 @@ SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
 
 # Program constants
-MODES = 'game typecheck autosolve'.split()
+MODES = 'game typecheck autosolve roundtrip'.split()
 AUTOMATIC_SOLVER = 'checkers.inference.floodsolver.FloodSolver'
 DEBUG_OPTS = '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005'
+OUTPUT_DIR = './output'
 
 class Checker():
     def __init__(self, name, visitor=None, transfer=None, analysis=None, solver=None):
@@ -34,7 +35,9 @@ class Checker():
             solf.solver = solver
 
     def to_checker_args(self):
-        args = 'checkers.inference.TTIRun --checker %s --visitor %s' % (self.name, self.visitor)
+        args = 'checkers.inference.TTIRun --checker ' + self.name
+        if self.visitor:
+            args += ' --visitor ' + self.visitor
         if self.transfer:
             args += ' --transfer ' + self.transfer
         if self.analysis:
@@ -51,9 +54,11 @@ nninf_checker = Checker('nninf.NninfChecker', 'nninf.NninfVisitor',
     'nninf.NninfTransferImpl', solver='nninf.NninfGameSolver')
 trusted_checker = Checker('trusted.TrustedChecker', 'trusted.TrustedVisitor',
     solver='trusted.TrustedGameSolver')
+encrypted_checker = Checker('encrypted.EncryptedChecker', 'trusted.TrustedVisitor', solver='encrypted.EncryptedGameSolver')
 
 checkers={nninf_checker.name: nninf_checker,
-        trusted_checker.name: trusted_checker}
+        trusted_checker.name: trusted_checker,
+        encrypted_checker.name: encrypted_checker}
 
 def error(msg):
     print >> sys.stderr, msg
@@ -74,7 +79,7 @@ def main():
     parser.add_argument('--java-args', help='Additional java args to pass in.')
     parser.add_argument('--prog-args', help='Additional args to pass in to program eg -AprintErrorStack.')
     parser.add_argument('--extra-classpath', help='Additional classpath entries.')
-    #parser.add_argument('--outfile', default=os.devnull, help='Capture stdout and stderr to separate fil.e')
+    parser.add_argument('--output_dir', default=OUTPUT_DIR, help='Directory to output artifacts during roundtrip (inference.jaif, annotated file sourc file')
     parser.add_argument('--xmx', default='2048m', help='Java max heap size.')
     parser.add_argument('-p', '--print-only', action='store_true', help='Print command to execute (but do not run).')
     args = parser.parse_args()
@@ -100,16 +105,36 @@ def main():
     else:
         checker = Checker(args.checker, args.visitor, args.transfer, args.analysis, args.solver)
 
-    if args.mode in ['game', 'autosolve']:
-        if args.mode == 'autosolve':
+    if args.mode != 'typecheck':
+        if args.mode in ['autosolve', 'roundtrip']:
             checker.solver = AUTOMATIC_SOLVER
         command = generate_checker_cmd(checker, args.java_args, classpath,
                 args.debug, args.not_strict, args.xmx, args.files)
-        execute(command)
-    elif args.mode == 'typecheck':
+    else:
         command = generate_typecheck_cmd(checker, args.java_args, classpath,
                 args.debug, args.not_strict, args.xmx, args.prog_args, args.files)
-        execute(command)
+
+    execute(command, args)
+
+    if args.mode in ['autosolve', 'roundtrip']:
+        if not args.print_only:
+            if not os.path.exists(args.output_dir):
+                os.mkdir(args.output_dir)
+            os.rename('inference.jaif', os.path.join(args.output_dir, 'inference.jaif'))
+
+    if args.mode == 'roundtrip':
+        command = generate_afu_command(args.files, args.output_dir)
+        execute(command, args)
+        command = generate_typecheck_cmd(checker, args.java_args, classpath,
+                args.debug, args.not_strict, args.xmx, args.prog_args, [os.path.join(args.output_dir, os.path.basename(f)) for f in args.files])
+        execute(command, args)
+
+
+def generate_afu_command(files, outdir):
+    files = [os.path.abspath(f) for f in files]
+    args = 'insert-annotations-to-source -v -d %s %s %s ' % (outdir, os.path.join(outdir, 'inference.jaif'), ' '.join(files))
+    return args
+
 
 def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, files):
     java_path = os.path.join(JAVA_HOME, 'bin', 'java')
@@ -123,11 +148,12 @@ def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, 
     args = ' '.join([java_path, java_opts, checker.to_checker_args(), ' '.join(files)])
     return args
 
-def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict, 
+def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict,
             xmx, prog_args, files):
 
     java_path = os.path.join(JAVA_HOME, 'bin', 'java')
     java_args = java_args if java_args else ""
+    prog_args = prog_args if prog_args else ""
     java_opts = "%s -Xms512m -Xmx%s -jar %s -cp %s " % \
         (java_args, xmx, get_checker_jar(), classpath)
     if debug:
@@ -137,10 +163,16 @@ def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict,
     args = ' '.join([java_path, java_opts, '-processor ', checker.name, prog_args, ' '.join(files)])
     return args
 
-def execute(args):
-    print('Executing command: ' + args)
-    print
-    ret = subprocess.call(args, shell=True)
+def execute(args, cli_args):
+    if cli_args.print_only:
+        print('Would have executed command: \n' + args)
+        print
+    else:
+        print('Executing command: \n' + args)
+        print
+        ret = subprocess.call(args, shell=True)
+        if ret:
+            error('Command exited non zero: %d' % ret)
 
 def get_checker_jar():
     return os.path.join(VERIGAMES_HOME, 'java', 'dist', 'checkers.jar')
