@@ -314,7 +314,7 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
-				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
+		//		trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
 				if(joint.visible)
 					visibleJoints++;
 				else
@@ -581,6 +581,8 @@ package scenes.game.display
 			
 			refreshTroublePoints();
 			flatten();
+			
+			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		
 		public function start():void

@@ -8,8 +8,9 @@ package networking
 	import flash.events.*;
 	import flash.net.*;
 	import flash.net.URLLoader;
-	
+	import starling.events.Event;
 	import scenes.game.PipeJamGameScene;
+	import scenes.Scene;
 	import scenes.game.display.World;
 	
 	import starling.core.Starling;
@@ -188,6 +189,8 @@ package networking
 			var gameFileHandler:GameFileHandler;
 			//do this so I can debug the object...
 			var levelInformation:LevelInformation = PipeJamGame.levelInfo;
+			
+			Scene.m_gameSystem.dispatchEvent(new starling.events.Event(Game.START_BUSY_ANIMATION,true));
 			
 			var m_id:int = 100000;
 			if(PipeJamGame.levelInfo && PipeJamGame.levelInfo.m_id && PipeJamGame.levelInfo.m_id.length < 5)
