@@ -1,1 +1,1 @@
-include 'Generation', 'Translation', 'optimizer'
+include 'Generation', 'Translation', 'optimizer', 'visualizer'

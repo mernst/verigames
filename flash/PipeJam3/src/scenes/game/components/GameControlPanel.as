@@ -293,7 +293,7 @@ package scenes.game.components
 		 */
 		public function updateScore(level:Level, skipAnimatons:Boolean):void 
 		{
-			var currentScore:int = level.currentScore
+			var currentScore:int = level.currentScore;
 			var bestScore:int = level.bestScore;
 			var targetScore:int = level.getTargetScore();
 			var maxScoreShown:Number = Math.max(currentScore, bestScore);
