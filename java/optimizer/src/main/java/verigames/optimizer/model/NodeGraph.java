@@ -255,7 +255,7 @@ public class NodeGraph {
                 newLevel.addBoard(boardName, newBoard);
             }
             newLevel.finishConstruction();
-            world.addLevel(levelName, level);
+            world.addLevel(levelName, newLevel);
         }
 
         return world;
