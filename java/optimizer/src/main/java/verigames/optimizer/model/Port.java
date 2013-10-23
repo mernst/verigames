@@ -25,4 +25,9 @@ public class Port {
         return name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
