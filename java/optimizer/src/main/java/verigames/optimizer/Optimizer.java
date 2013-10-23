@@ -1,9 +1,11 @@
 package verigames.optimizer;
 
+import verigames.level.Intersection;
 import verigames.level.World;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.Subgraph;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -12,18 +14,26 @@ import java.util.Set;
 public class Optimizer {
 
     public void optimize(NodeGraph g) {
-        // TODO: optimization 1: remove immutable getComponents
-//        for (Subgraph subgraph : g.getComponents()) {
-//            boolean mutable = false;
-//            for (NodeGraph.Edge edge : subgraph.getEdges()) {
-//                mutable = edge.getEdgeData().isEditable();
-//                if (mutable)
-//                    break;
-//            }
-//            if (!mutable) {
-//                g.removeSubgraph(subgraph);
-//            }
-//        }
+        // TODO: optimization 1: remove immutable components
+        for (Subgraph subgraph : g.getComponents()) {
+            boolean mutable = false;
+            for (NodeGraph.Edge edge : subgraph.getEdges()) {
+                mutable = edge.getEdgeData().isEditable();
+                if (mutable)
+                    break;
+            }
+            boolean hasFixedNode = false;
+            for (Node node : subgraph.getNodes()) {
+                Intersection.Kind kind = node.getIntersection().getIntersectionKind();
+                hasFixedNode = (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING);
+                if (hasFixedNode)
+                    break;
+            }
+            if (!mutable && !hasFixedNode) {
+                System.err.println("*** REMOVING SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
+                g.removeSubgraph(subgraph);
+            }
+        }
 
         // TODO: optimization 2: remove all small ball drops
 //        Collection<Node> smallBallStarts = new ArrayList<>();
@@ -67,9 +77,9 @@ public class Optimizer {
 
     public World optimizeWorld(World source) {
         NodeGraph g = new NodeGraph(source);
-        System.out.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
+        System.err.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         optimize(g);
-        System.out.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
+        System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         return g.toWorld();
     }
 

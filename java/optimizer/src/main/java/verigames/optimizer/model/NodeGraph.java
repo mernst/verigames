@@ -187,7 +187,6 @@ public class NodeGraph {
         MultiMap<Board, Node> nodesByBoard = new MultiMap<>();
         MultiMap<Level, Board> boardsByLevel = new MultiMap<>();
         Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
-        Set<String> subnetworkNames = new HashSet<>();
         for (Node n : nodes) {
             nodesByLevel.put(n.getLevel(), n);
             nodesByBoard.put(n.getBoard(), n);
@@ -198,7 +197,6 @@ public class NodeGraph {
             if (intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD) {
                 String subnetworkName = intersection.asSubboard().getSubnetworkName();
                 newIntersection = Intersection.subboardFactory(subnetworkName);
-                subnetworkNames.add(subnetworkName);
             } else {
                 newIntersection = Intersection.factory(intersection.getIntersectionKind());
             }
@@ -243,7 +241,7 @@ public class NodeGraph {
                 for (Edge edge : getEdges()) {
                     if (boardNodes.contains(edge.getSrc()) && boardNodes.contains(edge.getDst())) {
                         Chute chute = edge.getEdgeData();
-                        Chute newChute = new Chute();
+                        Chute newChute = new Chute(chute.getVariableID(), chute.getDescription());
                         newChute.setEditable(chute.isEditable());
                         newChute.setBuzzsaw(chute.hasBuzzsaw());
                         newChute.setLayout(chute.getLayout());
@@ -257,7 +255,7 @@ public class NodeGraph {
                 newLevel.addBoard(boardName, newBoard);
             }
             newLevel.finishConstruction();
-            world.addLevel(levelName, level);
+            world.addLevel(levelName, newLevel);
         }
 
         return world;
@@ -268,6 +266,7 @@ public class NodeGraph {
     }
 
     public void removeNode(Node n) {
+        System.err.println("Removing node: " + n.getIntersection());
         edges.remove(n);
         for (Map.Entry<Node, Map<Port, Target>> entry : edges.entrySet()) {
             Map<Port, Target> val = entry.getValue();
@@ -327,6 +326,7 @@ public class NodeGraph {
     }
 
     public void removeEdge(Edge e) {
+        System.err.println("Removing edge: " + e.getEdgeData());
         removeEdge(e.getSrc(), e.getSrcPort(), e.getDst(), e.getDstPort());
     }
 
@@ -365,17 +365,18 @@ public class NodeGraph {
         // Step 2: create subgraphs with nodes
         Map<DisjointSet, Subgraph> subgraphs = new HashMap<>();
         for (Map.Entry<Node, DisjointSet> entry : components.entrySet()) {
-            Subgraph subgraph = subgraphs.get(entry.getValue());
+            DisjointSet set = entry.getValue().id();
+            Subgraph subgraph = subgraphs.get(set);
             if (subgraph == null) {
                 subgraph = new Subgraph();
-                subgraphs.put(entry.getValue(), subgraph);
+                subgraphs.put(set, subgraph);
             }
             subgraph.addNode(entry.getKey());
         }
 
         // Step 3: add edges to each subgraph
         for (Edge edge : edges) {
-            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()));
+            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()).id());
             subgraph.addEdge(edge);
         }
 
