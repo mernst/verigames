@@ -527,7 +527,7 @@ package networking
 					var dataObj:Object = new Object;
 					dataObj.playerId = PlayerValidation.playerID;
 					dataObj.gameId = PipeJam3.GAME_ID;
-					dataObj.levelId = levelID;
+					dataObj.levelId = PipeJamGame.levelInfo.m_levelId;
 					var parameters:Array = new Array;
 					var paramScoreObj:Object = new Object;
 					paramScoreObj.name = "score";

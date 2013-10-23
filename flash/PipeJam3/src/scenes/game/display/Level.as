@@ -91,7 +91,7 @@ package scenes.game.display
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
-		private var m_targetScore:int;
+		public var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
@@ -687,7 +687,7 @@ package scenes.game.display
 		
 		protected function layoutSaved(result:int, e:flash.events.Event):void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT));
+			dispatchEvent(new MenuEvent(MenuEvent.LAYOUT_SAVED));
 		}
 		
 		public function zipXMLFile(xmlFile:XML, name:String):ByteArray

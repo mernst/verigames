@@ -7,6 +7,7 @@ package scenes.game.display
 	import events.EdgeContainerEvent;
 	import events.EdgePropChangeEvent;
 	import events.ToolTipEvent;
+	import scenes.game.PipeJamGameScene;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -15,6 +16,8 @@ package scenes.game.display
 	import graph.NodeTypes;
 	import graph.Port;
 	import graph.PropDictionary;
+	
+	import networking.Achievements;
 	
 	import particle.ErrorParticleSystem;
 	
@@ -531,7 +534,7 @@ package scenes.game.display
 				addError();
 				m_hasError = true;
 			} else {
-				removeError();
+				removeError(evt);
 				m_hasError = false;
 			}
 		}
@@ -614,7 +617,7 @@ package scenes.game.display
 			}
 		}
 		
-		private function removeError():void
+		private function removeError(evt:ConflictChangeEvent = null):void
 		{
 			if (m_errorParticleSystem != null) m_errorParticleSystem.removeFromParent(true);
 			m_errorParticleSystem = null;
@@ -624,6 +627,10 @@ package scenes.game.display
 				m_innerBoxSegment.m_isDirty = true;
 				positionChildren(); // last segment's endpoint will change as the plug moves up/down
 			}
+			
+			if(evt && !PipeJamGameScene.inTutorial)
+				dispatchEventWith(Achievements.CLASH_CLEARED_ID, true);
+
 		}
 		
 		private function onHoverOver(event:EdgeContainerEvent):void
