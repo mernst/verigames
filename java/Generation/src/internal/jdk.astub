@@ -1,4 +1,4 @@
-import internal.quals.*
+import internal.quals.*;
 
 package java.io;
 
