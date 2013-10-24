@@ -1,6 +1,5 @@
 package verigames.level;
 
-import checkers.inference.InferenceMain;
 import verigames.layout.GameCoordinate;
 
 import java.util.ArrayList;
@@ -163,7 +162,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
   public void setNarrow(boolean narrow)
   {
     //TODO JB: REMOVE THE ALLOWANCE UNDER WEAK MODE
-    if (!underConstruction() && InferenceMain.STRICT())
+    if (!underConstruction() && verigames.utilities.Misc.CHECK_REP_STRICT )
       throw new IllegalStateException("Mutation attempted on constructed Chute");
     this.narrow = narrow;
     checkRep();
