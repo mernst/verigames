@@ -146,8 +146,10 @@ public class WorldXMLParser
         varIDs.add(chuteUIDs.get(UID).getVariableID());
 
       List<Integer> varIDList = new ArrayList<>(varIDs);
-      for (int i = 0; i < varIDList.size() - 1; i++)
-        level.linkByVarID(varIDList.get(i), varIDList.get(i + 1));
+//    FIXME commenting out so this compiles with the changes related to version
+//    3 of XML -- it definitely won't work at all, though.
+//      for (int i = 0; i < varIDList.size() - 1; i++)
+//        level.linkByVarID(varIDList.get(i), varIDList.get(i + 1));
     }
 
     return Pair.of(name, level);

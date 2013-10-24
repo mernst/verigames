@@ -15,7 +15,7 @@ import nu.xom.*;
 // TODO add lots of documentation
 public class WorldXMLPrinter extends Printer<World, Void>
 {
-  public static final int version = 2;
+  public static final int version = 3;
   private final boolean useDescription;
 
   public WorldXMLPrinter() {
@@ -52,6 +52,10 @@ public class WorldXMLPrinter extends Printer<World, Void>
     Attribute versionAttr = new Attribute("version", Integer.toString(version));
     worldElt.addAttribute(versionAttr);
 
+    // TODO add stamping
+
+    worldElt.appendChild(constructLinkedVarIDs(toPrint.getLinkedVarIDs()));
+
     for (Map.Entry<String, Level> entry : toPrint.getLevels().entrySet())
     {
       String name = entry.getKey();
@@ -77,6 +81,39 @@ public class WorldXMLPrinter extends Printer<World, Void>
     }
   }
 
+  private Element constructLinkedVarIDs(Set<Set<Integer>> linkedVarIDSets)
+  {
+    Element linkedVarIDsElt = new Element("linked-varIDs");
+
+    // we need to uniquely identify each varIDSet, to allow stamping.
+    int varIDSetID = 0;
+    for (Set<Integer> linkedVarIDs : linkedVarIDSets)
+    {
+      linkedVarIDsElt.appendChild(constructVarIDSet(varIDSetID, linkedVarIDs));
+      varIDSetID++;
+    }
+
+    return linkedVarIDsElt;
+  }
+
+  private Element constructVarIDSet(int setID, Set<Integer> varIDs)
+  {
+    Element varIDSetElt = new Element("varID-set");
+    Attribute idAttr = new Attribute("id", "v" + setID);
+    varIDSetElt.addAttribute(idAttr);
+
+    for (int varID : varIDs)
+    {
+      Element varIDElt = new Element("varID");
+      Attribute varIDAttr = new Attribute("id", Integer.toString(varID));
+      varIDElt.addAttribute(varIDAttr);
+
+      varIDSetElt.appendChild(varIDElt);
+    }
+
+    return varIDSetElt;
+  }
+
   private Element constructLevel(Level l, String name)
   {
     Element levelElt = new Element("level");
@@ -84,97 +121,9 @@ public class WorldXMLPrinter extends Printer<World, Void>
     Attribute nameAttr = new Attribute("name", name);
     levelElt.addAttribute(nameAttr);
 
-    levelElt.appendChild(constructLinkedEdges(l, name));
     levelElt.appendChild(constructBoardsMap(l));
 
     return levelElt;
-  }
-
-  private final Set<String> usedLinkedEdgeIDs = new HashSet<String>();
-
-  private Element constructLinkedEdges(Level l, String name)
-  {
-    Element edgesElt = new Element("linked-edges");
-
-    // Output all linked edges explicitly listed in linkedEdgeClasses
-    Set<Chute> alreadyPrintedEdges = new HashSet<Chute>();
-
-    // TODO: This is an arbitrary number assigned to each edge-set to identify
-    // it for stamping. This should probably be changed to just be the
-    // variableID associated with the linkedEdgeSet, but for now this will work
-    // so that the XML at least validates.
-    int edgeSetNumber = 0;
-    for (Set<Chute> set : l.linkedEdgeClasses())
-    {
-      Element setElt = new Element("edge-set");
-
-      // find an unused string for the edge-set ID. There is very small
-      // probability that there will be collisions, as there would have to be
-      // some really bizarre level names, but it's still possible.
-      String edgeSetID = cleanNameForXML(name + edgeSetNumber);
-      while (usedLinkedEdgeIDs.contains(edgeSetID))
-      {
-        edgeSetNumber++;
-        edgeSetID = cleanNameForXML(name + edgeSetNumber);
-      }
-      // TODO associate linked edge sets with their ID somehow, so that they can
-      // be referred to when needed.
-
-      setElt.addAttribute(new Attribute("id", edgeSetID));
-
-      // TODO add stamp elements here
-
-      for (Chute c : set)
-      {
-        if (c.underConstruction())
-          throw new IllegalStateException(
-              "constructLinkedEdges called when linkedEdgeClasses contains underConstruction Chute");
-        Element edgeElt = new Element("edgeref");
-        edgeElt.addAttribute(new Attribute("id", "e" + c.getUID()));
-        setElt.appendChild(edgeElt);
-
-        alreadyPrintedEdges.add(c);
-      }
-      edgesElt.appendChild(setElt);
-
-      edgeSetNumber++;
-    }
-
-    // TODO remove code cloning:
-    // Output all remaining edges -- edges not listed are in equivalence
-    // classes of size 1
-
-    for (Board b : l.getBoards().values())
-    {
-      for (Chute c : b.getEdges())
-      {
-        if (!alreadyPrintedEdges.contains(c))
-        {
-          Element setElt = new Element("edge-set");
-
-          String edgeSetID = cleanNameForXML(name + edgeSetNumber);
-          while (usedLinkedEdgeIDs.contains(edgeSetID))
-          {
-            edgeSetNumber++;
-            edgeSetID = cleanNameForXML(name + edgeSetNumber);
-          }
-
-          setElt.addAttribute(new Attribute("id", edgeSetID));
-
-          if (c.underConstruction())
-            throw new IllegalStateException(
-                "constructLinkedEdges called when linkedEdgeClasses contains underConstruction Chute");
-          Element edgeElt = new Element("edgeref");
-          edgeElt.addAttribute(new Attribute("id", "e" + c.getUID()));
-          setElt.appendChild(edgeElt);
-          edgesElt.appendChild(setElt);
-        }
-
-        edgeSetNumber++;
-      }
-    }
-
-    return edgesElt;
   }
 
   private void addStubConnections(Collection<StubConnection> connections, Element elt)

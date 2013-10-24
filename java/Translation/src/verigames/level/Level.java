@@ -40,39 +40,8 @@ import checkers.nullness.quals.*;
 
 public class Level
 {
-  /**
-   * Deprecated. This functionality will be represented implicitly by the
-   * variableID of chutes, the linked chute sets will be generated upon XML
-   * printing.<p>
-   *
-   * Now that makeLinked is removed, we should consider updating the
-   * implementation to not include this.
-   */
-  @Deprecated
-  private final Set<Set<Chute>> linkedEdgeClasses;
-
-  /**
-   * Stores linked varIDs. All {@link Chute}s with varIDs listed in the same
-   * {@code Set} will be linked, meaning that in the game they must change width
-   * together.
-   */
-  private final Set<Set<Integer>> linkedVarIDs;
-
   private final Map<String, Board> boardNames;
   private final Map<String, StubBoard> stubBoardNames;
-
-  /**
-   * Contains information about which pipes can be stamped with the colors of
-   * which other pipes in the game. It is a map from variableID to a set of
-   * variableIDs with which it can be stamped.<p>
-   *
-   * This is for map.get in the nullness type system. For any given pipe, this
-   * indicates which other pipes it can be stamped with. This is equivalent to
-   * saying that for any given variable, this indicates what variables could
-   * potentially be keys for it. Obviously, only when the key is a variableID
-   * belonging to a Map object will the corresponding set be non-empty.
-   */
-  private final Map<Integer, Set<Integer>> stampSets;
 
   private boolean underConstruction = true;
 
@@ -88,27 +57,6 @@ public class Level
     if (!CHECK_REP_ENABLED)
       return;
 
-    Set<Chute> encountered = new HashSet<Chute>();
-    for (Set<Chute> s : linkedEdgeClasses)
-    {
-      /*
-       * No set in linkedEdgeClasses may be empty
-       *
-       * No set in linkedEdgeClasses may have size 1 (the fact that a chute
-       * is linked to itself need not be represented)
-       */
-      ensure(s.size() > 1, "(internal error) linked edge set exists of size 1");
-
-      // No chute can be contained in more than one set in
-      // linkedEdgeClasses
-      for (Chute c : s)
-      {
-        ensure(!encountered.contains(c), "(internal error) Chute " + c +
-            " is present in multiple linked edge sets");
-        encountered.add(c);
-      }
-    }
-
     /*
      * If this is constructed, all chutes contained in sets contained in
      * linkedEdgeClasses must also be contained by some Board in
@@ -122,12 +70,6 @@ public class Level
         for (Chute c : b.getEdges())
           containedInBoards.add(c);
       }
-
-      // make sure that the chutes in linkedEdgeClasses are a subset of the
-      // chutes in boardNames
-      ensure(containedInBoards.containsAll(encountered),
-          "A Chute in a linked edge set is not contained in any Board" +
-          " in this level");
     }
   }
 
@@ -137,120 +79,10 @@ public class Level
    */
   public Level()
   {
-    linkedEdgeClasses = new LinkedHashSet<Set<Chute>>();
-    linkedVarIDs = new LinkedHashSet<Set<Integer>>();
     boardNames = new LinkedHashMap<String, Board>();
     stubBoardNames = new LinkedHashMap<String, StubBoard>();
-    stampSets = new LinkedHashMap<Integer, Set<Integer>>();
     checkRep();
   }
-
-  /**
-   * Links all {@link Chute}s with the given variable IDs.<p>
-   */
-  // TODO should this be varargs or take a set? Or is linking two at once good
-  // enough?
-  public void linkByVarID(int var1, int var2)
-  {
-    link(linkedVarIDs, new LinkedHashSet<Integer>(Arrays.asList(var1, var2)));
-  }
-
-  public boolean areVarIDsLinked(int var1, int var2)
-  {
-    if (var1 == var2)
-      return true;
-
-    for (Set<Integer> s : linkedVarIDs)
-    {
-      if (s.contains(var1) && s.contains(var2))
-        return true;
-    }
-    return false;
-  }
-
-  private static <T> void link(Set<Set<T>> linkedClasses, Set<T> toLink)
-  {
-    if (toLink.size() > 1)
-    {
-      /*
-       * Contains the sets that should be removed from linkedClasses
-       * because they will be deprecated by the newly created equivalence
-       * class
-       */
-      Set<Set<T>> toRemove = new LinkedHashSet<Set<T>>();
-
-      /*
-       * The new equivalence class to be added to linkedClasses. It will
-       * at least have all of the elements in toLink.
-       */
-      Set<T> newEquivClass = new LinkedHashSet<T>(toLink);
-
-      for (Set<T> linked : linkedClasses)
-      {
-        for (T c : toLink)
-        {
-          if (linked.contains(c))
-          {
-            toRemove.add(linked);
-            newEquivClass.addAll(linked);
-          }
-        }
-      }
-
-      linkedClasses.removeAll(toRemove);
-
-      linkedClasses.add(newEquivClass);
-    }
-  }
-
-  /**
-   * Adds the pipe identified by {@code stamp} to the list of "colors" with
-   * which the pipe identified by {@code pipe} can be stamped.<p>
-   *
-   * It is extremely important not to mix up the order of the parameters. To be
-   * clear, the first pipe will be able to be stamped by the color belonging to
-   * the second pipe. The first receives the {@code @KeyFor} annotation in the
-   * nullness type system.
-   */
-  public void addPossibleStamping(int pipe, int stamp)
-  {
-    if (stampSets.containsKey(pipe))
-    {
-      stampSets.get(pipe).add(stamp);
-    }
-    else
-    {
-      Set<Integer> set = new LinkedHashSet<Integer>();
-      set.add(stamp);
-      stampSets.put(pipe, set);
-    }
-  }
-
-  /**
-   * Returns a copy of {@code linkedEdgeClasses}. Structurally modifying the
-   * returned {@code Set}, or any of the {@code Set}s it contains, will have
-   * no effect on {@code this}.<p>
-   *
-   * @deprecated This has been replaced by an implicit representation of chute
-   * links. Now, any chutes with the same variableID are considered linked, and
-   * a client can figure this out without an explicit representation.
-   */
-  // protected because most clients shouldn't need this -- areLinked should be
-  // adequate. However, if this turns out to be untrue, access may be
-  // increased.
-  @Deprecated
-  protected Set<Set<Chute>> linkedEdgeClasses()
-  {
-    final Set<Set<Chute>> copy = new LinkedHashSet<Set<Chute>>();
-
-    for (Set<Chute> linkedChutes : linkedEdgeClasses)
-    {
-      copy.add(new LinkedHashSet<Chute>(linkedChutes));
-    }
-
-    return copy;
-  }
-
 
   /**
    * Adds {@code b} to {@code boards}, and adds the mapping from {@code name}
@@ -347,132 +179,10 @@ public class Level
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed Level");
 
-    linkChutesWithLinkedID();
-
     underConstruction = false;
-
-    /* Make sure that all chutes that are linked to each other have the same
-     * width.
-     *
-     * If one chute is uneditable, all will become uneditable.
-     *
-     */
-    for (Set<Chute> linkedChutes : linkedEdgeClasses)
-    {
-        Boolean isNarrow = null;
-        boolean fixedNarrow = false;
-        boolean fixedWide   = false;
-        boolean conflictingChutes = false;
-
-        for (Chute c : linkedChutes)
-        {
-            if (isNarrow == null)
-            {
-                isNarrow = c.isNarrow();
-            }
-
-            if( !c.isEditable() ) {
-                if( c.isNarrow() ) {
-                    fixedNarrow = true;
-                } else {
-                    fixedWide   = true;
-                }
-            }
-
-            if (fixedNarrow && fixedWide) {
-                conflictingChutes = true;
-                break;
-            }
-        }
-
-        if( conflictingChutes ) {
-            if( InferenceMain.STRICT() ) {
-                String chutes = "";
-                for( Chute c : linkedChutes ) {
-                    chutes += c + ", ";
-                }
-                throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
-            }
-        }
-
-        if( fixedNarrow || !fixedWide ) {
-            for( Chute c : linkedChutes ) {
-                c.setNarrow( true );
-                if (fixedNarrow) {
-                    c.setEditable(false);
-                }
-            }
-        } else {
-            for( Chute c : linkedChutes ) {
-                c.setNarrow( false );
-                if (fixedWide) {
-                    c.setEditable(false);
-                }
-            }
-        }
-    }
 
     for (Board b : boardNames.values()) {
         b.finishConstruction();
-    }
-  }
-
-  /**
-   * Links all chutes with the same ID, as long as makeLinked has not been
-   * called (if there are chutes already linked, it is assumed that the user
-   * wants to manually link the chutes, so nothing is done).<p>
-   *
-   * Also links any chutes whose varIDs are linked (through linkByVarID).
-   */
-  private void linkChutesWithLinkedID()
-  {
-    Set<Chute> chutes = getAllChutes();
-
-    // map from variable id to chutes with that variable ID
-    Map<Integer, Set<Chute>> IDMap = new LinkedHashMap<Integer, Set<Chute>>();
-    for (Chute c : chutes)
-    {
-      int varID = c.getVariableID();
-      if (varID >= 0)
-      {
-        // Chutes with negative ID are special and should never be linked.
-        if (IDMap.containsKey(varID))
-        {
-          IDMap.get(varID).add(c);
-        }
-        else
-        {
-          Set<Chute> set = new LinkedHashSet<Chute>();
-          set.add(c);
-          IDMap.put(c.getVariableID(), set);
-        }
-      }
-    }
-
-    // link all chutes that have had their variableIDs explicitly linked
-    for (Set<Integer> linkedVarIDSet : linkedVarIDs)
-    {
-      Set<Chute> linkedChutes = new LinkedHashSet<>();
-      for (int varID : linkedVarIDSet)
-      {
-        //TODO JB: IDENTIFY WHY THIS RETURNS NULL
-        final Set<Chute> toLink = IDMap.get(varID);
-        if( toLink != null ) {
-          linkedChutes.addAll( toLink );
-        }
-
-        // we don't want to add this later
-        IDMap.remove(varID);
-      }
-
-      linkedEdgeClasses.add(linkedChutes);
-    }
-
-    // link the remaining chutes (those that have not had their variableIDs
-    // explicitly linked)
-    for (Map.Entry<Integer, Set<Chute>> entry : IDMap.entrySet())
-    {
-      linkedEdgeClasses.add(entry.getValue());
     }
   }
 

@@ -79,13 +79,13 @@ public class LevelXMLTests
 
     l.addBoard("method", method);
 
-    l.linkByVarID(0, 1);
-    l.linkByVarID(2, 1);
-
-    l.finishConstruction();
-
     World w = new World();
     w.addLevel("TestClass", l);
+
+    w.linkByVarID(0, 1);
+    w.linkByVarID(2, 1);
+
+    w.finishConstruction();
 
     PrintStream p = new PrintStream(new FileOutputStream(new File(
         "TestClass.actual.xml")));
