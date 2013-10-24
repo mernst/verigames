@@ -6,6 +6,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.StubBoard;
 import verigames.level.World;
+import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -207,11 +209,11 @@ public class NodeGraph {
 
         // Build the data structure
         for (Level level : nodesByLevel.keySet()) {
-            String levelName = nodesByLevel.get(level).iterator().next().getLevelName();
+            String levelName = Util.first(nodesByLevel.get(level)).getLevelName();
             Level newLevel = new Level();
             for (Board board : boardsByLevel.get(level)) {
                 Set<Node> boardNodes = nodesByBoard.get(board);
-                String boardName = boardNodes.iterator().next().getBoardName();
+                String boardName = Util.first(boardNodes).getBoardName();
                 Board newBoard = new Board(boardName);
 
                 // Inane restriction on Boards: callers must add incoming node first
@@ -348,6 +350,21 @@ public class NodeGraph {
     public Map<Port, Target> outgoingEdges(Node src) {
         Map<Port, Target> result = edges.get(src);
         return result == null ? Collections.<Port, Target>emptyMap() : Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Get the incoming edges to a node
+     * @param dst the node
+     * @return    the incoming edges to the given node
+     */
+    public Collection<Edge> incomingEdges(Node dst) {
+        Collection<Edge> edges = getEdges();
+        Iterator<Edge> it = edges.iterator();
+        while (it.hasNext()) {
+            if (!it.next().getDst().equals(dst))
+                it.remove();
+        }
+        return edges;
     }
 
     public Collection<Subgraph> getComponents() {

@@ -1,5 +1,6 @@
 package verigames.optimizer;
 
+import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.World;
 import verigames.optimizer.model.Node;
@@ -7,6 +8,7 @@ import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.Subgraph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +16,7 @@ import java.util.Set;
 public class Optimizer {
 
     public void optimize(NodeGraph g) {
-        // TODO: optimization 1: remove immutable components
+        // remove immutable components
         for (Subgraph subgraph : g.getComponents()) {
             boolean mutable = false;
             for (NodeGraph.Edge edge : subgraph.getEdges()) {
@@ -30,12 +32,49 @@ public class Optimizer {
                     break;
             }
             if (!mutable && !hasFixedNode) {
-                System.err.println("*** REMOVING SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
+                System.err.println("*** REMOVING IMMUTABLE SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
                 g.removeSubgraph(subgraph);
             }
         }
 
-        // TODO: optimization 2: remove all small ball drops
+        // remove all "connect" intersections
+        // note: the new ArrayList is because we remove nodes from the graph as we go,
+        // and getNodes just returns a view of the nodes in the graph
+        for (Node node : new ArrayList<>(g.getNodes())) {
+            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
+                // for this node kind: one incoming edge, one outgoing edge
+                NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
+                NodeGraph.Target outgoingEdge = Util.first(g.outgoingEdges(node).values());
+
+                Chute incomingChute = incomingEdge.getEdgeData();
+                Chute outgoingChute = outgoingEdge.getEdgeData();
+
+                // we can't do this if it is an "unfixable conflict" -- i.e. the incoming
+                // chute is wide and uneditable and the outgoing chute is pinched
+                if (!incomingChute.isEditable() && !incomingChute.isNarrow() && outgoingChute.isPinched()) {
+                    continue;
+                }
+
+                System.err.println("*** REMOVING USELESS CONNECTOR");
+
+                // remove the node
+                g.removeNode(node);
+
+                // add an edge where it used to be
+                Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
+                newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+                newChute.setLayout(outgoingChute.getLayout());
+                newChute.setNarrow(incomingChute.isNarrow() && outgoingChute.isNarrow());
+                newChute.setEditable(incomingChute.isEditable() && outgoingChute.isEditable());
+                newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
+                g.addEdge(
+                        incomingEdge.getSrc(), incomingEdge.getSrcPort(),
+                        outgoingEdge.getDst(), outgoingEdge.getDstPort(),
+                        newChute);
+            }
+        }
+
+        // TODO: remove all small ball drops?
 //        Collection<Node> smallBallStarts = new ArrayList<>();
 //        for (Node node : g.getNodes()) {
 //            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
