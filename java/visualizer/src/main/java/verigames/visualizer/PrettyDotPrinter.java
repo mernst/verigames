@@ -85,10 +85,13 @@ public class PrettyDotPrinter {
         result.put("label", intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD ?
                 "SUBBOARD " + intersection.asSubboard().getSubnetworkName() :
                 intersection.getIntersectionKind() + " " + intersection.getUID());
-        if (intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD) {
+        Intersection.Kind kind = intersection.getIntersectionKind();
+        if (kind == Intersection.Kind.SUBBOARD) {
             result.put("style", "filled");
             result.put("fillcolor", "lightgrey");
             result.put("shape", "box");
+        } else if (kind == Intersection.Kind.MERGE || kind == Intersection.Kind.SPLIT) {
+            result.put("shape", "point");
         }
         return result;
     }

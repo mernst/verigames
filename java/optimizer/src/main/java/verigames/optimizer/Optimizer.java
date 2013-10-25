@@ -49,10 +49,17 @@ public class Optimizer {
                 Chute incomingChute = incomingEdge.getEdgeData();
                 Chute outgoingChute = outgoingEdge.getEdgeData();
 
-                // we can't do this if it is an "unfixable conflict" -- i.e. the incoming
-                // chute is wide and uneditable and the outgoing chute is pinched
-                if (!incomingChute.isEditable() && !incomingChute.isNarrow() && outgoingChute.isPinched()) {
-                    continue;
+                // if the edges are different widths, we have to think really hard about how to merge them
+                boolean narrow = incomingChute.isNarrow();
+                if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
+                    if (incomingChute.isEditable())          // if we can edit the incoming chute...
+                        narrow = outgoingChute.isNarrow();   //     ... then make it match the outgoing one
+                    else if (outgoingChute.isEditable())     // if we can edit the outgoing chute...
+                        narrow = incomingChute.isNarrow();   //     ... then make it match the incoming one
+                    else if (incomingChute.isNarrow() && !outgoingChute.isNarrow()) // if the edges are immutable and narrow flows to wide
+                        narrow = true;                       //     ... then make it narrow
+                    else                                     // if the edges are immutable and wide flows to narrow
+                        continue;                            //     ... then we're out of luck
                 }
 
                 Util.logVerbose("*** REMOVING USELESS CONNECTOR");
@@ -64,7 +71,7 @@ public class Optimizer {
                 Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
                 newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
                 newChute.setLayout(outgoingChute.getLayout());
-                newChute.setNarrow(incomingChute.isNarrow() && outgoingChute.isNarrow());
+                newChute.setNarrow(narrow);
                 newChute.setEditable(incomingChute.isEditable() && outgoingChute.isEditable());
                 newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
                 g.addEdge(
