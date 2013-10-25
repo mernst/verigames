@@ -32,7 +32,7 @@ public class Optimizer {
                     break;
             }
             if (!mutable && !hasFixedNode) {
-                System.err.println("*** REMOVING IMMUTABLE SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
+                Util.logVerbose("*** REMOVING IMMUTABLE SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
                 g.removeSubgraph(subgraph);
             }
         }
@@ -55,7 +55,7 @@ public class Optimizer {
                     continue;
                 }
 
-                System.err.println("*** REMOVING USELESS CONNECTOR");
+                Util.logVerbose("*** REMOVING USELESS CONNECTOR");
 
                 // remove the node
                 g.removeNode(node);

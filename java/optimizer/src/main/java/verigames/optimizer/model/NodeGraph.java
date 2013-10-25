@@ -268,7 +268,7 @@ public class NodeGraph {
     }
 
     public void removeNode(Node n) {
-        System.err.println("Removing node: " + n.getIntersection());
+        Util.logVerbose("Removing node: " + n.getIntersection());
         edges.remove(n);
         for (Map.Entry<Node, Map<Port, Target>> entry : edges.entrySet()) {
             Map<Port, Target> val = entry.getValue();
@@ -328,7 +328,7 @@ public class NodeGraph {
     }
 
     public void removeEdge(Edge e) {
-        System.err.println("Removing edge: " + e.getEdgeData());
+        Util.logVerbose("Removing edge: " + e.getEdgeData());
         removeEdge(e.getSrc(), e.getSrcPort(), e.getDst(), e.getDstPort());
     }
 
