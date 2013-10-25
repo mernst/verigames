@@ -74,9 +74,27 @@ public class PrettyDotPrinter {
 
     private Map<String, String> edgeProperties(Chute chute) {
         Map<String, String> result = new HashMap<>();
-        result.put("label", chute.getUID() + (chute.getVariableID() > 0 ? " (var#" + chute.getVariableID() + ")" : ""));
+
+        String label = chute.getUID() + " " + chute.getDescription() + " " +
+                (chute.getVariableID() > 0 ? " (var#" + chute.getVariableID() + ")" : "");
+        label += "\\n(" + (chute.isNarrow() ? "narrow" : "wide") + ")";
+        if (!chute.isEditable()) {
+            label += "\\n(not editable)";
+        }
+        if (chute.isPinched()) {
+            label += "\\n(pinched)";
+        }
+
+        result.put("label", label);
         result.put("penwidth", chute.isNarrow() ? "1" : "5");
-        result.put("color", chute.isEditable() ? "black" : "lightgrey");
+
+        String color = "black";
+        if (!chute.isEditable())
+            color = "lightgrey";
+        if (chute.isPinched())
+            color = "red";
+        result.put("color", color);
+
         return result;
     }
 
@@ -85,14 +103,19 @@ public class PrettyDotPrinter {
         result.put("label", intersection.getIntersectionKind() == Intersection.Kind.SUBBOARD ?
                 "SUBBOARD " + intersection.asSubboard().getSubnetworkName() :
                 intersection.getIntersectionKind() + " " + intersection.getUID());
-        Intersection.Kind kind = intersection.getIntersectionKind();
-        if (kind == Intersection.Kind.SUBBOARD) {
-            result.put("style", "filled");
-            result.put("fillcolor", "lightgrey");
-            result.put("shape", "box");
-        } else if (kind == Intersection.Kind.MERGE || kind == Intersection.Kind.SPLIT) {
-            result.put("shape", "point");
+
+        switch (intersection.getIntersectionKind()) {
+            case SUBBOARD:
+                result.put("style", "filled");
+                result.put("fillcolor", "lightgrey");
+                result.put("shape", "box");
+                break;
+            case MERGE:
+            case SPLIT:
+            case CONNECT:
+                result.put("shape", "point");
         }
+
         return result;
     }
 
