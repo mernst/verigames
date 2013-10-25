@@ -1,0 +1,23 @@
+                  Conflict and Pipe Width Weighting in Verigames
+
+I. Background:
+
+    Currently, Verigames treats all conflicts as equal, deducting a certain point value from the user's score for each conflict. In practice, this is unideal, as different locations for a conflict (or buzzsaw location) may be better or worse in helping the human verifier understand and fix the potential bug.
+
+    The primary tool for motivating the user in the game is scoring. Thus, the scoring of conflicts and pipe widths should be weighted such that a higher-scoring solution is more likely to provide better information to the developer. Furthermore, the user should be given some visual cue regarding potential alternative conflict locations and the relative cost of each conflict. This prevents the user from having to manually explore each possibility and go back to the one with the best score, which would be a tedious process.
+
+II. Weighting Mechanism:
+
+    The mechanism for adding the weights involves changes to the XML and user interface to facilitate pipes and conflicts with different weights.
+
+    1. XML
+
+        The world XML definition will be modified to include an optional "weight" attribute on nodes and edges, providing weighting for merges and pinch points, respectively. The weights will be a floating point number between -1 and 1 and will represent whether the system's analysis made the conflict more or less significant; a positive value indicates that the analysis indicated that the conflict should receive a larger weight, and a negative value indicates the opposite. The absence of a weight attribute is equivalent to including a weight attribute with a value of 0.
+
+    2. User Interface
+
+        a. Scoring - Using the weights from the modified world XML, the game should apply a different score deduction for each conflict and pipe. This will involve interpolating the weights between some min and max point value.
+
+        b. Visualization - The game should produce some visualization so that users can easily see the relative weight of each conflict. This could be accomplished by having the "sparks" produced when there is a conflict scale relative to the weight of the conflicts. Because users should be able to see the relative cost of current conflicts as well as potential conflicts, a modifier key should be introduced (e.g. CTRL) which applies the spark visualization to every potential conflict location and allows the user to estimate the relative weight of each conflict based on the relative size of the sparks at the conflict location.
+
+    Additionally, bytecode instrumentation will be developed to provide dynamic dataflow analysis as a mechanism for determining the weights of pipes and conflicts.

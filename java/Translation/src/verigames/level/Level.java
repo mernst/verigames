@@ -1,7 +1,5 @@
 package verigames.level;
 
-import checkers.inference.InferenceMain;
-
 import static verigames.utilities.Misc.ensure;
 
 import java.util.*;
@@ -386,7 +384,7 @@ public class Level
         }
 
         if( conflictingChutes ) {
-            if( InferenceMain.STRICT() ) {
+            if( verigames.utilities.Misc.CHECK_REP_STRICT ) {
                 String chutes = "";
                 for( Chute c : linkedChutes ) {
                     chutes += c + ", ";
