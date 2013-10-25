@@ -16,7 +16,32 @@ import java.util.Set;
 public class Optimizer {
 
     public void optimize(NodeGraph g) {
-        // remove immutable components
+        removeIsolatedComponents(g);
+        compressConnectors(g);
+
+        // TODO: remove all small ball drops?
+//        Collection<Node> smallBallStarts = new ArrayList<>();
+//        for (Node node : g.getNodes()) {
+//            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
+//                smallBallStarts.add(node);
+//            }
+//        }
+//
+//        for (Node node : smallBallStarts) {
+//            Collection<Node> toRemove = removeSource(g, node);
+//            if (toRemove != null) {
+//                g.removeNodes(toRemove);
+//            }
+//        }
+    }
+
+    /**
+     * Remove isolated, immutable components from the graph. If
+     * every chute in a component is immutable, then the user
+     * probably doesn't care about it.
+     * @param g the graph to modify
+     */
+    public void removeIsolatedComponents(NodeGraph g) {
         for (Subgraph subgraph : g.getComponents()) {
             boolean mutable = false;
             for (NodeGraph.Edge edge : subgraph.getEdges()) {
@@ -36,10 +61,18 @@ public class Optimizer {
                 g.removeSubgraph(subgraph);
             }
         }
+    }
 
-        // remove all "connect" intersections
-        // note: the new ArrayList is because we remove nodes from the graph as we go,
-        // and getNodes just returns a view of the nodes in the graph
+    /**
+     * Remove useless one-input to one-output connectors in the
+     * graph.
+     * @param g the graph to modify
+     */
+    public void compressConnectors(NodeGraph g) {
+        // remove a lot of "connect" intersections
+        // Note: the new ArrayList is because we remove nodes from the graph as we go,
+        // and getNodes just returns a view of the nodes in the graph. We want to
+        // avoid concurrent modifications.
         for (Node node : new ArrayList<>(g.getNodes())) {
             if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
                 // for this node kind: one incoming edge, one outgoing edge
@@ -70,7 +103,8 @@ public class Optimizer {
                 // add an edge where it used to be
                 Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
                 newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-                newChute.setLayout(outgoingChute.getLayout());
+                if (outgoingChute.getLayout() != null)
+                    newChute.setLayout(outgoingChute.getLayout());
                 newChute.setNarrow(narrow);
                 newChute.setEditable(incomingChute.isEditable() && outgoingChute.isEditable());
                 newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
@@ -80,21 +114,6 @@ public class Optimizer {
                         newChute);
             }
         }
-
-        // TODO: remove all small ball drops?
-//        Collection<Node> smallBallStarts = new ArrayList<>();
-//        for (Node node : g.getNodes()) {
-//            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
-//                smallBallStarts.add(node);
-//            }
-//        }
-//
-//        for (Node node : smallBallStarts) {
-//            Collection<Node> toRemove = removeSource(g, node);
-//            if (toRemove != null) {
-//                g.removeNodes(toRemove);
-//            }
-//        }
     }
 
     private Set<Node> removeSource(NodeGraph g, Node node) {

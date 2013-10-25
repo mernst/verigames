@@ -202,8 +202,10 @@ public class NodeGraph {
             } else {
                 newIntersection = Intersection.factory(intersection.getIntersectionKind());
             }
-            newIntersection.setX(intersection.getX());
-            newIntersection.setY(intersection.getY());
+            if (intersection.getX() >= 0)
+                newIntersection.setX(intersection.getX());
+            if (intersection.getY() >= 0)
+                newIntersection.setY(intersection.getY());
             newIntersectionsByNode.put(n, newIntersection);
         }
 
@@ -246,7 +248,8 @@ public class NodeGraph {
                         Chute newChute = new Chute(chute.getVariableID(), chute.getDescription());
                         newChute.setEditable(chute.isEditable());
                         newChute.setBuzzsaw(chute.hasBuzzsaw());
-                        newChute.setLayout(chute.getLayout());
+                        if (chute.getLayout() != null)
+                            newChute.setLayout(chute.getLayout());
                         newChute.setNarrow(chute.isNarrow());
                         newChute.setPinched(chute.isPinched());
                         Intersection start = newIntersectionsByNode.get(edge.getSrc());
