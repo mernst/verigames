@@ -6,18 +6,19 @@ import os.path
 import re
 import subprocess
 
-MODES=['typecheck', 'roundtrip']
+MODES=['typecheck', 'roundtrip', 'xmlsolve']
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', default='typecheck', help='Inference test modes: [%s' % ', '.join(MODES))
     parser.add_argument('-t', '--test', help='Regex to match test names on.')
+    parser.add_argument('-d', '--debug', action='store_true', help='Print out all command output')
     parser.add_argument('--checker', default='encrypted.EncryptedChecker', help='Type system to run')
     args = parser.parse_args()
 
-    execute_tests(args.checker, args.test, args.mode)
+    execute_tests(args.checker, args.test, args.mode, args.debug)
 
-def execute_tests(checker, test_name, mode):
+def execute_tests(checker, test_name, mode, debug):
     pattern = re.compile(test_name) if test_name else None
     print 'build_search_dirs', build_search_dirs()
     test_files = [join(test_dir, test_file)
@@ -32,7 +33,7 @@ def execute_tests(checker, test_name, mode):
     for test_file in test_files:
         print 'Executing test ' + test_file
         cmd = get_verigames_cmd(checker, test_file, mode)
-        success = execute_command(cmd)
+        success = execute_command(cmd, debug)
         if success:
             print 'Success'
             successes.append(test_file)
@@ -67,9 +68,12 @@ def get_this_scripts_dir():
 def get_verigames_exe():
     return os.path.abspath(join(get_this_scripts_dir(), '../dist/scripts/verigames.py'))
 
-def execute_command(args):
-    with open(os.devnull) as out:
-        ret = subprocess.call(args, shell=True, stdout=out, stderr=out)
+def execute_command(args, debug):
+    if debug:
+        ret = subprocess.call(args, shell=True)
+    else:
+        with open(os.devnull) as out:
+            ret = subprocess.call(args, shell=True, stdout=out, stderr=out)
     return ret == 0
 
 if __name__=='__main__':
