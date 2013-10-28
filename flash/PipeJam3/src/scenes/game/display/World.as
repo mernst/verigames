@@ -174,6 +174,13 @@ package scenes.game.display
 			
 			gameControlPanel = new GameControlPanel();
 			gameControlPanel.y = GridViewPanel.HEIGHT - GameControlPanel.OVERLAP;
+			if (edgeSetGraphViewPanel.atMaxZoom()) {
+				gameControlPanel.onMaxZoomReached();
+			} else if (edgeSetGraphViewPanel.atMinZoom()) {
+				gameControlPanel.onMinZoomReached();
+			} else {
+				gameControlPanel.onZoomReset();
+			}
 			addChild(gameControlPanel);
 			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
@@ -207,6 +214,7 @@ package scenes.game.display
 			
 			selectLevel(firstLevel);
 			
+			addEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
 			addEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			addEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			addEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
@@ -222,7 +230,7 @@ package scenes.game.display
 			addEventListener(MenuEvent.LEVEL_SUBMITTED, onLevelUploadSuccess);
 			
 			addEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
-			
+			addEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
 			
 			addEventListener(MenuEvent.ACHIEVEMENT_ADDED, achievementAdded);
 			addEventListener(MenuEvent.LOAD_BEST_SCORE, loadBestScore);
@@ -231,6 +239,10 @@ package scenes.game.display
 			addEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			addEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			addEventListener(MenuEvent.RECENTER, onRecenter);
+			
+			addEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
+			addEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
+			addEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -349,6 +361,11 @@ package scenes.game.display
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_SUBMIT_SCORE, details, active_level.getTimeMs());
 				}
 			}
+			
+			if(PipeJamGame.levelInfo.shareWithGroup == 1)
+			{
+				Achievements.checkAchievements(Achievements.SHARED_WITH_GROUP_ID, 0);
+			}
 		}
 		
 		public function onLevelUploadSuccess(event:MenuEvent):void
@@ -358,13 +375,16 @@ package scenes.game.display
 			var dialogHeight:Number = 80;
 			var socialText:String = "";
 			var numLinesInText:int = 1;
+			var callbackFunction:Function = null;
+			
 			if(event.type == MenuEvent.LEVEL_SAVED)
 			{
 				dialogText = "Level Saved.";
 			}
-			else if(event.type == MenuEvent.SAVE_LAYOUT)
+			else if(event.type == MenuEvent.LAYOUT_SAVED)
 			{
 				dialogText = "Layout Saved.";
+				callbackFunction = reportSavedLayoutAchievement;
 			}
 			else
 			{
@@ -372,10 +392,24 @@ package scenes.game.display
 				numLinesInText = 3;
 				socialText = "I just finished a level!";
 				dialogHeight = 130;
+				callbackFunction = reportSubmitAchievement;
 			}
 			
-			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null, numLinesInText);
+			var alert:SimpleAlertDialog = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, callbackFunction, numLinesInText);
 			addChild(alert);
+		}
+		
+		public function reportSubmitAchievement():void
+		{
+			Achievements.checkAchievements(MenuEvent.LEVEL_SUBMITTED, 0);
+			
+			if(PipeJamGame.levelInfo.m_layoutUpdated)
+				Achievements.checkAchievements(MenuEvent.SET_NEW_LAYOUT, 0);
+		}
+		
+		public function reportSavedLayoutAchievement():void
+		{
+			Achievements.checkAchievements(MenuEvent.SAVE_LAYOUT, 0);
 		}
 		
 		public function achievementAdded(event:MenuEvent):void
@@ -393,6 +427,12 @@ package scenes.game.display
 			else
 				alert = new SimpleAlertDialog(dialogText, dialogWidth, dialogHeight, socialText, null);
 			addChild(alert);
+		}
+		
+		private function checkClashClearedEvent():void
+		{
+			if(active_level && active_level.m_targetScore != 0)
+				Achievements.checkAchievements(Achievements.CLASH_CLEARED_ID, 0);
 		}
 		
 		private function loadBestScore(event:MenuEvent):void
@@ -416,6 +456,7 @@ package scenes.game.display
 					details[VerigameServerConstants.ACTION_PARAMETER_LAYOUT_NAME] = event.data.layoutFile.@id;
 					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_LOAD_LAYOUT, details, active_level.getTimeMs());
 				}
+				PipeJamGame.levelInfo.m_layoutUpdated = true;
 			}
 		}
 		
@@ -497,6 +538,21 @@ package scenes.game.display
 			edgeSetGraphViewPanel.recenter();
 		}
 		
+		public function onMaxZoomReached(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onMaxZoomReached();
+		}
+		
+		public function onMinZoomReached(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onMinZoomReached();
+		}
+		
+		public function onZoomReset(event:MenuEvent):void
+		{
+			if (gameControlPanel) gameControlPanel.onZoomReset();
+		}
+		
 		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
 		{
 			if (!evt.level) return;
@@ -530,11 +586,17 @@ package scenes.game.display
 				}
 			}
 			
-			if(!PipeJamGameScene.inTutorial)
+			if(!PipeJamGameScene.inTutorial && !evt.silent)
 			{
 				m_numWidgetsClicked++;
 				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
 					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
+				
+				//beat the target score?
+				if(newScore  > evt.level.getTargetScore())
+				{
+					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
+				}
 			}
 		}
 		
@@ -833,6 +895,13 @@ package scenes.game.display
 			
 			newLevel.start();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
+			if (edgeSetGraphViewPanel.atMaxZoom()) {
+				gameControlPanel.onMaxZoomReached();
+			} else if (edgeSetGraphViewPanel.atMinZoom()) {
+				gameControlPanel.onMinZoomReached();
+			} else {
+				gameControlPanel.onZoomReset();
+			}
 			newLevel.updateScore();
 			
 			var startTime:Number = new Date().getTime();
@@ -862,12 +931,16 @@ package scenes.game.display
 				m_activeToolTip = null;
 			}
 			
+			removeEventListener(Achievements.CLASH_CLEARED_ID, checkClashClearedEvent);
+			
 			removeEventListener(GameComponentEvent.CENTER_ON_COMPONENT, onCenterOnComponentEvent);
 			removeEventListener(EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED, onEdgeSetChange);
 			removeEventListener(NavigationEvent.SHOW_GAME_MENU, onShowGameMenuEvent);
 			removeEventListener(NavigationEvent.SWITCH_TO_NEXT_LEVEL, onNextLevel);
 			
 			removeEventListener(MenuEvent.SAVE_LAYOUT, onSaveLayoutFile);
+			removeEventListener(MenuEvent.LAYOUT_SAVED, onLevelUploadSuccess);
+			
 			removeEventListener(MenuEvent.SUBMIT_LEVEL, onPutLevelInDatabase);
 			removeEventListener(MenuEvent.POST_SAVE_DIALOG, postSaveDialog);
 			removeEventListener(MenuEvent.POST_SUBMIT_DIALOG, postSubmitDialog);
@@ -882,6 +955,9 @@ package scenes.game.display
 			removeEventListener(MenuEvent.ZOOM_IN, onZoomIn);
 			removeEventListener(MenuEvent.ZOOM_OUT, onZoomOut);
 			removeEventListener(MenuEvent.RECENTER, onRecenter);
+			removeEventListener(MenuEvent.MAX_ZOOM_REACHED, onMaxZoomReached);
+			removeEventListener(MenuEvent.MIN_ZOOM_REACHED, onMinZoomReached);
+			removeEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			

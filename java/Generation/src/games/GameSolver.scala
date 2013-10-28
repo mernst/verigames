@@ -15,8 +15,9 @@ import scala.collection.JavaConversions._
 import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallConstraintHandler,
                        FieldAssignmentConstraintHandler, FieldAccessConstraintHandler, BallSizeTestConstraintHandler,
                        StubBoardUseConstraintHandler}
-import checkers.inference.util.CollectionUtil
+import checkers.inference.util.{SolverUtil, CollectionUtil}
 import checkers.types.AnnotatedTypeMirror
+
 
 /**
  * An abstract base class for all game solvers.
@@ -284,7 +285,7 @@ abstract class GameSolver extends ConstraintSolver {
             // 2. a field getter
             {
               // val getterBoard = newBoard(level, getFieldAccessorName(clvar.asInstanceOf[FieldVP]))
-              val accessorBoardName = getFieldAccessorName(clvar)
+              val accessorBoardName = SolverUtil.getFieldAccessorName(clvar)
               val getterBoard = findOrCreateMethodBoard(clvar, accessorBoardName )
               val outgoing = getterBoard.getOutgoingNode
               getterBoard.add(START_PIPE_DEPENDENT_BALL, "output", outgoing, nextInputId( outgoing, ReturnOutPort ), toChute(cvar))
@@ -299,7 +300,7 @@ abstract class GameSolver extends ConstraintSolver {
             // Pass the receiver and it's type parameters (in this case the class's type parameters)
             // through the subboard but do NOT pass the field through, pass it in only
             {
-              val setterName = getFieldSetterName( clvar )
+              val setterName = SolverUtil.getFieldSetterName( clvar )
               val setterBoard = findOrCreateMethodBoard(clvar, setterName)
               val incoming  = setterBoard.getIncomingNode
               val outgoing  = setterBoard.getOutgoingNode
@@ -727,7 +728,7 @@ abstract class GameSolver extends ConstraintSolver {
         val level = variablePosToLevel(varpos)
         val b = newBoard(level, sig)
         methToBoard += (sig -> b)
-        if( ( isFieldGetterName( sig ) || isFieldSetterName(sig) ) && !varpos.asInstanceOf[WithinFieldVP].isStatic ) {
+        if( ( SolverUtil.isFieldGetterName( sig ) || SolverUtil.isFieldSetterName(sig) ) && !varpos.asInstanceOf[WithinFieldVP].isStatic ) {
           addFieldReceiverStart(b)
         }
         b
@@ -865,42 +866,8 @@ abstract class GameSolver extends ConstraintSolver {
       !(slot.isInstanceOf[Variable] || slot.isInstanceOf[RefinementVariable] || slot == LiteralThis)
     }
 
-    val GetterSuffix = "--GET"
-    val SetterSuffix = "--SET"
-
-    /**
-     * Helper method to determine the name of the subboard used for a field getter.
-     */
-    def getFieldAccessorName(fvp: FieldVP): String = {
-      getFieldAccessorName( fvp.getFQName )
-    }
-
-    /**
-     * Public library fields will not have a FieldVP
-     */
-    def getFieldAccessorName( fqName : String): String = {
-      fqName + GetterSuffix
-    }
-
-    /**
-     * Helper method to determine the name of the subboard used for a field setter.
-     */
-    def getFieldSetterName(fvp: FieldVP): String = {
-      getFieldSetterName(fvp.getFQName)
-    }
-
-    /**
-     * Helper method to determine the name of the subboard used for a field setter.
-     */
-    def getFieldSetterName(fqName : String): String = {
-      fqName + SetterSuffix
-    }
-
-    def isFieldSetterName( name : String ) = name.endsWith( SetterSuffix )
-    def isFieldGetterName( name : String ) = name.endsWith( GetterSuffix )
-
-    def isFieldSetterBoard( board : Board ) = isFieldSetterName( board.getName() )
-    def isFieldGetterBoard( board : Board ) = isFieldGetterName( board.getName() )
+    def isFieldSetterBoard( board : Board ) = SolverUtil.isFieldSetterName( board.getName() )
+    def isFieldGetterBoard( board : Board ) = SolverUtil.isFieldGetterName( board.getName() )
 
     /** Determine the offset for the generic location of the variable,
      * that is, if we want to serialize all the variables for input/output
@@ -996,15 +963,5 @@ abstract class GameSolver extends ConstraintSolver {
       case (board, typeParams) =>
         connectVariablesToOutput( board, typeParams, ClassTypeParamsOutPort )
     })
-  }
-
-  def interlaceTypeArgsAndBounds( typeArgs : List[List[Slot]], lowerBounds : List[Slot] ) : List[Slot] = {
-    assert( typeArgs.length == lowerBounds.length )
-    val slotBuffer = new ListBuffer[Slot]
-    for( (typeArg, lowerBound) <- typeArgs.zip( lowerBounds ) ) {
-      slotBuffer ++= typeArg
-      slotBuffer +=  lowerBound
-    }
-    slotBuffer.toList
   }
 }

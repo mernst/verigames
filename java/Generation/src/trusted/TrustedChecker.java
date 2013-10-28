@@ -66,7 +66,7 @@ public class TrustedChecker extends GameChecker<SubtypingAnnotatedTypeFactory<?>
 
     @Override
     public boolean needsAnnotation(AnnotatedTypeMirror ty) {
-        return !(ty instanceof AnnotatedPrimitiveType);
+        return true;
     }
 
     public AnnotationMirror defaultQualifier(AnnotatedTypeMirror ty) {

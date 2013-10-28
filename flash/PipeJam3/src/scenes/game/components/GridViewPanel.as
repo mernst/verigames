@@ -4,6 +4,7 @@ package scenes.game.components
 	import assets.AssetsFont;
 	import display.NineSliceButton;
 	import display.ToolTipText;
+	import events.MenuEvent;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
@@ -69,13 +70,12 @@ package scenes.game.components
 		private var m_errorTextBubbles:Vector.<Sprite> = new Vector.<Sprite>();
 		
 		private var m_world:World;
-
 		
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
 		protected static const RELEASE_SHIFT_MODE:int = 3;
-		private static const MIN_SCALE:Number = 4.0 / Constants.GAME_SCALE;
+		private static const MIN_SCALE:Number = 5.0 / Constants.GAME_SCALE;
 		private static const MAX_SCALE:Number = 50.0 / Constants.GAME_SCALE;
 		private static const STARTING_SCALE:Number = 22.0 / Constants.GAME_SCALE;
 		// At scales less than this value (zoomed out), error text is hidden - but arrows remain
@@ -223,7 +223,6 @@ package scenes.game.components
 							if (getPanZoomAllowed())
 							{
 								var delta:Point = touches[0].getMovement(parent);
-								var cp:Point = touches[0].getLocation(this.content);
 								var viewRect:Rectangle = getViewInContentSpace();
 								var newX:Number = viewRect.x + viewRect.width / 2 - delta.x / content.scaleX;
 								var newY:Number = viewRect.y + viewRect.height / 2 - delta.y / content.scaleY;
@@ -289,11 +288,8 @@ package scenes.game.components
 
 		private function onMouseWheel(evt:MouseEvent):void
 		{
-			//scaleContent(1.0/content.scaleX);
 			var delta:Number = evt.delta;
-			
 			var localMouse:Point = this.globalToLocal(new Point(evt.stageX, evt.stageY));
-			
 			handleMouseWheel(delta, localMouse);			
 		}
 		
@@ -357,6 +353,18 @@ package scenes.game.components
 			panTo(newX, newY);
 		}
 		
+		public function atMinZoom(scale:Point = null):Boolean
+		{
+			if (!scale) scale = new Point(content.scaleX, content.scaleY);
+			return ((scale.x <= MIN_SCALE) || (scale.y <= MIN_SCALE));
+		}
+		
+		public function atMaxZoom(scale:Point = null):Boolean
+		{
+			if (!scale) scale = new Point(content.scaleX, content.scaleY);
+			return ((scale.x >= MAX_SCALE) || (scale.y >= MAX_SCALE));
+		}
+		
 		/**
 		 * Scale the content by the given scale factor (sizeDiff of 1.5 = 150% the original size)
 		 * @param	sizeDiff Size difference factor, 1.5 = 150% of original size
@@ -379,11 +387,12 @@ package scenes.game.components
 			
 			var origViewCoords:Rectangle = getViewInContentSpace();
 			// Perform scaling
+			var oldScale:Point = new Point(content.scaleX, content.scaleY);
 			content.scaleX = newScaleX;
 			content.scaleY = newScaleY;
 			inactiveContent.scaleX = content.scaleX;
 			inactiveContent.scaleY = content.scaleY;
-			onContentScaleChanged();
+			onContentScaleChanged(oldScale);
 			
 			var newViewCoords:Rectangle = getViewInContentSpace();
 			
@@ -398,8 +407,19 @@ package scenes.game.components
 			//trace("newscale:" + content.scaleX + "new xy:" + content.x + " " + content.y);
 		}
 		
-		private function onContentScaleChanged():void
+		private function onContentScaleChanged(prevScale:Point):void
 		{
+			if (atMaxZoom()) {
+				if (!atMaxZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.MAX_ZOOM_REACHED));
+			} else if (atMinZoom()) {
+				if (!atMinZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.MIN_ZOOM_REACHED));
+			} else {
+				if (atMaxZoom(prevScale) || atMinZoom(prevScale))
+					dispatchEvent(new MenuEvent(MenuEvent.RESET_ZOOM));
+			}
+			
 			if (m_currentLevel == null) return;
  			if ((content.scaleX < MIN_ERROR_TEXT_DISPLAY_SCALE) || (content.scaleY < MIN_ERROR_TEXT_DISPLAY_SCALE)) {
 				m_currentLevel.hideErrorText();
@@ -462,39 +482,54 @@ package scenes.game.components
 		{
 			if(m_world.hasDialogOpen())
 					return;
-			
+			var viewRect:Rectangle, newX:Number, newY:Number;
+			const MOVE_PX:Number = 5.0; // pixels to move when arrow keys pressed
 			switch(event.keyCode)
 			{
+				case Keyboard.TAB:
+					if (getPanZoomAllowed() && m_currentLevel) {
+						var conflict:DisplayObject = m_currentLevel.getNextConflict(!event.shiftKey);
+						if (conflict) centerOnComponent(conflict);
+					}
+					break;
 				case Keyboard.UP:
 				case Keyboard.W:
 				case Keyboard.NUMPAD_8:
 					if (getPanZoomAllowed()) {
-						content.y += 5;
-						inactiveContent.y = content.y;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2;
+						newY = viewRect.y + viewRect.height / 2 - MOVE_PX / content.scaleY;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.DOWN:
 				case Keyboard.S:
 				case Keyboard.NUMPAD_2:
 					if (getPanZoomAllowed()) {
-						content.y -= 5;
-						inactiveContent.y = content.y;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2;
+						newY = viewRect.y + viewRect.height / 2 + MOVE_PX / content.scaleY;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.LEFT:
 				case Keyboard.A:
 				case Keyboard.NUMPAD_4:
 					if (getPanZoomAllowed()) {
-						content.x += 5;
-						inactiveContent.x = content.x;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2 - MOVE_PX / content.scaleX;
+						newY = viewRect.y + viewRect.height / 2;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.RIGHT:
 				case Keyboard.D:
 				case Keyboard.NUMPAD_6:
 					if (getPanZoomAllowed()) {
-						content.x -= 5;
-						inactiveContent.x = content.x;
+						viewRect = getViewInContentSpace();
+						newX = viewRect.x + viewRect.width / 2 + MOVE_PX / content.scaleX;
+						newY = viewRect.y + viewRect.height / 2;
+						moveContent(newX, newY);
 					}
 					break;
 				case Keyboard.EQUAL:
@@ -645,10 +680,10 @@ package scenes.game.components
 			content.x = 0;
 			content.y = 0;
 			inactiveContent.x = inactiveContent.y = 0;
-			
+			var oldScale:Point = new Point(content.scaleX, content.scaleY);
 			content.scaleX = content.scaleY = STARTING_SCALE;
 			inactiveContent.scaleX = inactiveContent.scaleY = STARTING_SCALE;
-			onContentScaleChanged();
+			onContentScaleChanged(oldScale);
 			content.addChild(m_currentLevel);
 			
 			if (DEBUG_BOUNDING_BOX) {
@@ -676,9 +711,6 @@ package scenes.game.components
 				globPt = m_currentLevel.localToGlobal(centerPt);
 				localPt = content.globalToLocal(globPt);
 				moveContent(localPt.x, localPt.y);
-				const BUFFER:Number = 1.5;
-				scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
-					VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			} else {
 				// Otherwise center on the first visible box
 				var nodes:Vector.<GameNode> = m_currentLevel.getNodes();
@@ -693,6 +725,9 @@ package scenes.game.components
 					centerOnComponent(foundNode);
 				}
 			}
+			const BUFFER:Number = 1.5;
+			scaleContent(Math.min(WIDTH  / (BUFFER * m_currentLevel.m_boundingBox.width * content.scaleX),
+				VIEW_HEIGHT / (BUFFER * m_currentLevel.m_boundingBox.height * content.scaleY)));
 			
 			if (m_currentLevel && m_currentLevel.tutorialManager) {
 				var startPtOffset:Point = m_currentLevel.tutorialManager.getStartPanOffset();
@@ -832,7 +867,7 @@ package scenes.game.components
 		 * Centers the current view on the input component
 		 * @param	component
 		 */
-		public function centerOnComponent(component:GameComponent):void
+		public function centerOnComponent(component:DisplayObject):void
 		{
 			startingPoint = new Point(content.x, content.y);
 			

@@ -242,6 +242,24 @@ package scenes.game.components
 			
 		}
 		
+		public function onMaxZoomReached():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = false;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+		}
+		
+		public function onMinZoomReached():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = true;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = false;
+		}
+		
+		public function onZoomReset():void
+		{
+			if (m_zoomInButton) m_zoomInButton.enabled = true;
+			if (m_zoomOutButton) m_zoomOutButton.enabled = true;
+		}
+		
 		public function removedFromStage(event:Event):void
 		{
 			//TODO what? dispose of things?
@@ -275,7 +293,7 @@ package scenes.game.components
 		 */
 		public function updateScore(level:Level, skipAnimatons:Boolean):void 
 		{
-			var currentScore:int = level.currentScore
+			var currentScore:int = level.currentScore;
 			var bestScore:int = level.bestScore;
 			var targetScore:int = level.getTargetScore();
 			var maxScoreShown:Number = Math.max(currentScore, bestScore);

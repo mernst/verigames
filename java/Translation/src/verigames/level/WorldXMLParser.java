@@ -1,13 +1,25 @@
 package verigames.level;
 
-import java.io.*;
-import java.util.*;
-
-import nu.xom.*;
-
-import verigames.level.StubBoard.StubConnection;
+import nu.xom.Attribute;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 import verigames.layout.GameCoordinate;
+import verigames.level.StubBoard.StubConnection;
 import verigames.utilities.Pair;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /*>>>
 import checkers.nullness.quals.*;
@@ -22,7 +34,7 @@ import checkers.nullness.quals.*;
 // TODO document internal methods more thoroughly.
 public class WorldXMLParser
 {
-  public static final int version = 1;
+  public static final int version = 2;
 
   /**
    * Parses the text from {@code in} as XML, and returns a {@link World} object
@@ -216,9 +228,9 @@ public class WorldXMLParser
     for (int i = 0; i < stubBoardElts.size(); i++)
     {
       final Element stubBoardElt = stubBoardElts.get(i);
-      final Elements inputConnectionElts = 
+      final Elements inputConnectionElts =
           stubBoardElt.getFirstChildElement("stub-input").getChildElements("stub-connection");
-      final Elements outputConnectionElts = 
+      final Elements outputConnectionElts =
           stubBoardElt.getFirstChildElement("stub-output").getChildElements("stub-connection");
 
       final List<StubConnection> inputs = getStubConnections(inputConnectionElts);

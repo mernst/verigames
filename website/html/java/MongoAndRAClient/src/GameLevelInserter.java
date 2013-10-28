@@ -48,7 +48,7 @@ public class GameLevelInserter {
         	
         	String raLevelID = "3";
         	String priorityLevel = "5";
-        	boolean activate = false;
+        	boolean activate = true;
         	if(args.length>3)
         	{
 	        	//raLevelID = args[2];

@@ -38,16 +38,24 @@ public class MongoTestBed {
         DB db = mongo.getDB( dbName );
         //Create GridFS object
         GridFS fs = new GridFS( db );
+        listFiles(fs, false);
+      HashMap<String, String> map = new HashMap();
+
+        System.out.println("Level");
+       listEntries(db, "Level", map, false);
+       System.out.println("SavedLevels");
+       listEntries(db, "SavedLevels", map, false);
+       System.out.println("SubmittedLayouts");
+       listEntries(db, "SubmittedLayouts", map, false);
+      System.out.println("SubmittedLevels");
+      listEntries(db, "SubmittedLevels", map, false);
+//       map.put("playerID", "51e5b3460240288229000026");
+//       map.put("levelID", "15");
+       //    listEntries(db, "CompletedTutorials", map, true);
+        // listLog(db);
+            saveAndCleanLog(db, "1022");
         
-  //     listCollection(db, "CompletedTutorials");
-       HashMap<String, String> map = new HashMap();
-       map.put("playerID", "51e5b3460240288229000026");
-       map.put("levelID", "15");
-       listEntries(db, "CompletedTutorials", map, true);
-   //     listLog(db);
-   //     saveAndCleanLog(db, "1008");
-        
-      //  listCollectionNames(db);
+       listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
 	    mongo.close();
 	}
@@ -75,8 +83,21 @@ public class MongoTestBed {
         	if(cursor != null)
         		cursor.close();
         }
-			
-		
+	}
+	
+	static public void listFiles(GridFS fs, boolean removeLevels)
+	{
+        DBCursor cursor1 = fs.getFileList();
+        try { 
+            while(cursor1.hasNext()) {
+            	DBObject obj = cursor1.next();
+                System.out.println(obj);
+                if(removeLevels)
+                	fs.remove(obj);
+            }
+         } finally {
+            cursor1.close();
+         }
 	}
         
  //       db.createCollection("SavedLevels", null);
@@ -170,18 +191,8 @@ public class MongoTestBed {
 //        {
 //        	System.out.println(objList1.toString());
 //        }
-        
-//        DBCursor cursor1 = fs.getFileList();
-//        try { 
-//            while(cursor1.hasNext()) {
-//            	DBObject obj = cursor1.next();
-//                System.out.println(obj);
-//                if(removeLevels)
-//                	fs.remove(obj);
-//            }
-//         } finally {
-//            cursor1.close();
-//         }
+
+
     
 //	
 //	    //Save loaded image from database into new image file

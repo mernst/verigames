@@ -9,6 +9,7 @@ import checkers.inference.InferenceMain._
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable
 import verigames.level.Intersection.Kind._
 import misc.util.VGJavaConversions._
+import checkers.inference.util.SlotUtil
 
 /**
  *
@@ -148,7 +149,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
 
   def connectTypeArgsThrough( subboardISect : Subboard, typeArgs : List[List[Slot]], lowerBounds : List[Slot],
                               inPortPrefix : String, outPortPrefix : String ) = {
-    val slots = interlaceTypeArgsAndBounds( typeArgs, lowerBounds )
+    val slots = SlotUtil.interlaceTypeParamBounds( typeArgs, lowerBounds )
     connectThrough( subboardISect, slots, inPortPrefix, outPortPrefix )
   }
 

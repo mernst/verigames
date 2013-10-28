@@ -3,6 +3,7 @@ package games.handlers
 import games.GameSolver
 import checkers.types.AnnotatedTypeMirror
 import checkers.inference.{FieldVP, FieldAccessConstraint}
+import checkers.inference.util.SolverUtil
 
 /**
  * TODO JB: Revisit this comment
@@ -38,6 +39,6 @@ case class FieldAccessConstraintHandler( override val constraint : FieldAccessCo
 
   override val methodSignature =
     constraint.calledVp
-      .map( gameSolver.getFieldAccessorName _ )
-      .getOrElse( gameSolver.getFieldAccessorName( constraint.stubBoardUse.get.methodSignature ) )
+      .map( SolverUtil.getFieldAccessorName _ )
+      .getOrElse( SolverUtil.getFieldAccessorName( constraint.stubBoardUse.get.methodSignature ) )
 }

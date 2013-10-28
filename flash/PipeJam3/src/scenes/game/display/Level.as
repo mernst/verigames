@@ -91,7 +91,7 @@ package scenes.game.display
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
-		private var m_targetScore:int;
+		public var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
@@ -136,6 +136,12 @@ package scenes.game.display
 		public var targetScoreReached:Boolean;
 		
 		public var original_level_name:String;
+		
+		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
+		private var m_currentConflictIndex:int = -1;
+		private var m_levelConflictEdges:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+		private var m_levelConflictEdgeDict:Dictionary = new Dictionary();
+		private var m_conflictEdgesDirty:Boolean = true;
 		
 		private static const BG_WIDTH:Number = 256;
 		private static const MIN_BORDER:Number = 1000;
@@ -292,13 +298,23 @@ package scenes.game.display
 				}
 				
 				var joint:GameJointNode;
-				if (foundNode && (foundNode.kind == NodeTypes.GET)) {
-					joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+				if (foundNode) {
+					switch (foundNode.kind) {
+						case NodeTypes.GET:
+							joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						case NodeTypes.BALL_SIZE_TEST:
+							joint = new GameIfTestJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						default:
+							joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+					}
 				} else {
-					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
-				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
+		//		trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
 				if(joint.visible)
 					visibleJoints++;
 				else
@@ -332,6 +348,7 @@ package scenes.game.display
 					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
 				}
 			}
+		//	this.m_edgesContainer.flatten();
 			// At this point, there may be multiple lines listening to the same port for trouble points,
 			// fix at this point so that only one line is listening to that port
 			for each (var copyLine:GameEdgeContainer in copyLines) {
@@ -564,6 +581,8 @@ package scenes.game.display
 			
 			refreshTroublePoints();
 			flatten();
+			
+			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		
 		public function start():void
@@ -668,7 +687,7 @@ package scenes.game.display
 		
 		protected function layoutSaved(result:int, e:flash.events.Event):void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT));
+			dispatchEvent(new MenuEvent(MenuEvent.LAYOUT_SAVED));
 		}
 		
 		public function zipXMLFile(xmlFile:XML, name:String):ByteArray
@@ -1717,6 +1736,46 @@ package scenes.game.display
 			}
 		}
 		
+		/**
+		 * Get next conflict: used for conflict scrolling
+		 * @param	forward True to scroll forward, false to scroll backwards
+		 * @return Conflict DisplayObject (if any exist)
+		 */
+		public function getNextConflict(forward:Boolean):DisplayObject
+		{
+			if (m_conflictEdgesDirty) {
+				for (var i:int = 0; i < m_edgeList.length; i++) {
+					if (m_edgeList[i].hasError()) {
+						if (!m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+							// Add to list/dict if not on there already
+							if (m_levelConflictEdges.indexOf(m_edgeList[i]) == -1) m_levelConflictEdges.push(m_edgeList[i]);
+							m_levelConflictEdgeDict[m_edgeList[i].m_id] = true;
+						}
+					} else {
+						if (m_levelConflictEdgeDict.hasOwnProperty(m_edgeList[i].m_id)) {
+							// Remove from edge conflict list/dict if on it
+							var delindx:int = m_levelConflictEdges.indexOf(m_edgeList[i]);
+							if (delindx > -1) m_levelConflictEdges.splice(delindx, 1);
+							delete m_levelConflictEdgeDict[m_edgeList[i].m_id];
+						}
+					}
+				}
+				m_conflictEdgesDirty = false;
+			}
+			if (m_levelConflictEdges.length == 0) return null;
+			if (forward) {
+				m_currentConflictIndex++;
+			} else {
+				m_currentConflictIndex--;
+			}
+			if (m_currentConflictIndex >= m_levelConflictEdges.length) {
+				m_currentConflictIndex = 0;
+			} else if (m_currentConflictIndex < 0) {
+				m_currentConflictIndex = m_levelConflictEdges.length - 1;
+			}
+			return m_levelConflictEdges[m_currentConflictIndex].errorContainer;
+		}
+		
 		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
@@ -1875,6 +1934,7 @@ package scenes.game.display
 				fillConstraintsXML(m_levelBestScoreConstraintsXML);
 			}
 			m_baseScore = Constants.POINTS_PER_LINE * totalLines;
+			m_conflictEdgesDirty = true;
 		}
 		
 	}

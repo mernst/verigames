@@ -3,20 +3,25 @@
 
 import os, sys, re
 import fileinput
-import pipejamDB
+#import pipejamDB
 
 
 ### Main function ###
-def separateLevels(infile, outdirectory, fileMap):
-	print 'parsing xml'
+def separateLevels(infile, outdirectory, fileMap, useRA):
+	print ('parsing xml')
 	count = 1
 	writeLines = False
 	writeNextLine = False
 	isLevel = False
+	nextID = 1
 	#get levelID from RA
-	id = pipejamDB.getNewLevelID()
+	if useRA:
+		id = pipejamDB.getNewLevelID()
+	else:
+		id = str(nextID)
+	nextID = nextID + 1
 	levelFile = open(outdirectory + '/'+id+'.xml','w')
- 	levelFile.write('<world>')
+	levelFile.write('<world>')
 
 	for line in fileinput.input(infile):
 		if line.find('<level') != -1:
@@ -28,7 +33,7 @@ def separateLevels(infile, outdirectory, fileMap):
 			writeLines = True
 			writeNextLine = True
 
-			print name
+			print (name)
 			line = line.replace(".", "_")
 			line = line.replace("$", "__")
 			line = line.replace("-", "_")
@@ -61,8 +66,11 @@ def separateLevels(infile, outdirectory, fileMap):
 			levelFile.close()
 			count+=1
 			#get levelID from RA
-			id = pipejamDB.getNewLevelID()
-
+			if useRA:
+				id = pipejamDB.getNewLevelID()
+			else:
+				id = str(nextID)
+			nextID = nextID + 1
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
 			name = line[nameStart:nameEnd]
@@ -83,8 +91,6 @@ def separateLevels(infile, outdirectory, fileMap):
 	levelFile.close()
 
 
-
-
 ### Command line interface ###
 if __name__ == "__main__":
 	if (len(sys.argv) < 2) or (len(sys.argv) > 3):
@@ -96,7 +102,7 @@ if __name__ == "__main__":
 	else:
 		outdirectory = sys.argv[1]
 	infile = sys.argv[1]
-	print 'calling separateLevels'
-	fileMap = open(outdirectory + '/'+'filemap.xml','w')
+	print ('calling separateLevels')
+	fileMap = open(outdirectory + '/'+'filemap1.xml','w')
 
-	separateLevels(infile, outdirectory, fileMap)
+	separateLevels(infile, outdirectory, fileMap, False)

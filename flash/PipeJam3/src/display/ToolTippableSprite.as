@@ -25,8 +25,8 @@ package display
 		
 		protected function onTouch(event:TouchEvent):void
 		{
-			if (event.getTouches(this, TouchPhase.HOVER).length || event.getTouches(this, TouchPhase.MOVED).length) {
-				var touch:Touch = event.getTouches(this, TouchPhase.HOVER).length ? event.getTouches(this, TouchPhase.HOVER)[0] : event.getTouches(this, TouchPhase.MOVED)[0];
+			if (event.getTouches(this, TouchPhase.HOVER).length) {
+				var touch:Touch = event.getTouches(this, TouchPhase.HOVER)[0];
 				m_hoverPointGlobal = new Point(touch.globalX, touch.globalY);
 				if (!m_hoverTimer) {
 					m_hoverTimer = new Timer(Constants.TOOL_TIP_DELAY_SEC * 1000, 1);

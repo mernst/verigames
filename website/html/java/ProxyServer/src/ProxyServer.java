@@ -18,7 +18,9 @@ public class ProxyServer {
 	//ec2-184-72-152-11.compute-1.amazonaws.com
 	//live site
 	//ec2-107-21-183-34.compute-1.amazonaws.com
-	static public String dbURL = "api.flowjam.verigames.com";
+	static public String betadbURL = "api.flowjam.verigames.org";
+	static public String productiondbURL = "api.flowjam.verigames.com";
+	static public String dbURL = productiondbURL;
 	static public String version = "1.0b";
 	static public int port = 8001;	//default
 	static DBCollection logColl;

@@ -1,7 +1,5 @@
 package verigames.level;
 
-import checkers.inference.InferenceMain;
-
 import java.util.*;
 
 /**
@@ -248,7 +246,7 @@ public class World
 
       if (conflictingChutes)
       {
-        if (InferenceMain.STRICT())
+        if (verigames.utilities.Misc.CHECK_REP_STRICT)
         {
           String chutes = "";
           for (Chute c : linkedChutes)
@@ -374,7 +372,7 @@ public class World
                                 final List<String> expectedOutputs,
                                 final List<String> actualInputs,
                                 final List<String> actualOutputs) {
-     if(InferenceMain.STRICT()) {
+     if( verigames.utilities.Misc.CHECK_REP_STRICT ) {
        if (expectedInputs.size() != actualInputs.size())
          throw new IllegalStateException("subboard " + subboardName + " has " +
                                          actualInputs.size() + " inputs but its referent has " +

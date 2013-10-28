@@ -317,8 +317,6 @@ package scenes.game.display
 					return 1.25;
 				case SKILLS_A_TUTORIAL:
 					return 1.4;
-				case SKILLS_B_TUTORIAL:
-					return 1.2;
 				case CLASH_TUTORIAL:
 				case MERGE_TUTORIAL:
 					return 1.1;
@@ -330,6 +328,7 @@ package scenes.game.display
 				case COLOR_TUTORIAL:
 				case SPLIT_TUTORIAL:
 				case CREATE_JOINT_TUTORIAL:
+				case SKILLS_B_TUTORIAL:
 				case END_TUTORIAL:
 					return 1.0;
 			}
@@ -352,7 +351,7 @@ package scenes.game.display
 				case WIDEN_TUTORIAL:
 					return new Point(0, -10);// move up by 10px
 				case SKILLS_B_TUTORIAL:
-					return new Point(0, -30);// move up by 30px
+					return new Point(0, -25);// move up by 25px
 				case SPLIT_MERGE_PRACTICE_TUTORIAL:
 					return new Point(0, -5);// move up by 5px
 				case PINCH_TUTORIAL:
@@ -601,9 +600,10 @@ package scenes.game.display
 						null, null);
 				case ZOOM_PAN_TUTORIAL:
 					return new TutorialManagerTextInfo(
-						"Larger levels require navigation. Drag the background\n" +
-						"to move around the level. Use the +/- keys to\n" +
-						"zoom in and out.",
+						"       Larger levels require navigation:      \n" +
+						" Drag the background to move around the level.\n" +
+						"      Use the +/- keys to zoom in and out.    \n" +
+						"Navigate between jams using Tab and Shift+Tab.",
 						null,
 						null,
 						null, null);

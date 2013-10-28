@@ -1,7 +1,5 @@
 package verigames.level;
 
-import checkers.inference.InferenceMain;
-
 import static verigames.utilities.Misc.ensure;
 
 import java.util.*;

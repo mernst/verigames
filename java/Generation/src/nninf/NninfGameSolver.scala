@@ -11,7 +11,7 @@ import checkers.inference.AbstractLiteral
 import games.GameSolver
 import misc.util.VGJavaConversions._
 import Intersection.Kind._
-import nninf.handlers.{NninfEqualityConstraintHandler, NninfStubBoardUseConstraintHandler}
+import nninf.handlers.{NninfStubBoardUseConstraintHandler, NninfEqualityConstraintHandler}
 
 class NninfGameSolver extends GameSolver {
 
@@ -104,6 +104,7 @@ class NninfGameSolver extends GameSolver {
           }
           case eqConstraint : EqualityConstraint => NninfEqualityConstraintHandler( eqConstraint, this ).handle()
           case InequalityConstraint(ctx, ell, elr) => {
+
             // println(ell + " != " + elr)
             // TODO: support var!=NULLABLE for now
             if (elr == NninfConstants.NULLABLE) {

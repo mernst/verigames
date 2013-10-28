@@ -9,6 +9,9 @@ verbose = True
 # Width space given to each incoming/outgoing edge plus 1 unit on each end of a box of padding [][i0][i1]...[in][]
 WIDTHPERPORT = 0.6
 
+# Height of widgets
+BOX_HEIGHT = 1.0
+
 ### Classes ###
 class Point:
 	def __init__(self, x, y):
@@ -65,8 +68,8 @@ def desanitize(thing):
 	return thing.replace('_DSH_','-').replace('_SPC_',' ').replace('_DOT_','.').replace('_DLR_','$')
 
 # get height of box used for dot to allow more vertical space based on number of boxlines passing thru
-def getboxheight(lines):
-	return lines * 0.75 + 0.75
+def getstaggeredlineheight(lineindex):
+	return (lineindex * 0.75 + 0.75) / 2.0
 
 # convert points (default for pos information) to inches (default for width, height information)
 def pts2inches(pts):
@@ -231,6 +234,7 @@ def layoutboxes(infile, outfile, outputdotfiles):
 		boxdotheight = {}
 		numnodeinputports = {}
 		numnodeoutputports = {}
+		invisiblenodeindex = 0
 		#print 'Laying out Level: %s' % lname
 		dotin =  'digraph %s {\n' % sanitize(lname)
 		dotin += '  size ="50,50";' # 50 inches by 50 inches to help display large graphs in pdf
@@ -265,14 +269,19 @@ def layoutboxes(infile, outfile, outputdotfiles):
 			blines = int(bx.attributes['lines'].value)
 			blabel = createportlabels(blines, blines, bid, verbose)
 			nodeid = 'B_%s' % sanitize(bid)
-			boxheight = getboxheight(blines)
+			boxheight = BOX_HEIGHT
 			dotin += '  %s [width=%s,height=%s,label="%s"];\n' % (nodeid, (blines + 2) * WIDTHPERPORT, boxheight, blabel)
 			boxdotheight[bid] = boxheight
 			node2xml[lname][nodeid] = bx
 		for linex in lx.getElementsByTagName('line'):
 			lid = linex.attributes['id'].value
+			fromtotalports = 0
+			tototalports = 0
 			if (len(linex.getElementsByTagName('fromjoint')) == 1) and (len(linex.getElementsByTagName('tobox')) == 1):
 				fromid = 'J_%s' % sanitize(linex.getElementsByTagName('fromjoint')[0].attributes['id'].value)
+				fromjointxml = node2xml[lname].get(fromid)
+				if fromjointxml is not None:
+					fromtotalports = int(fromjointxml.attributes['outputs'].value)
 				fromport = linex.getElementsByTagName('fromjoint')[0].attributes['port'].value
 				fromportnum = numnodeoutputports.get(fromid)
 				if fromportnum is None:
@@ -280,6 +289,9 @@ def layoutboxes(infile, outfile, outputdotfiles):
 					numnodeoutputports[fromid] = 0
 				numnodeoutputports[fromid] += 1
 				toid = 'B_%s' % sanitize(linex.getElementsByTagName('tobox')[0].attributes['id'].value)
+				toboxxml = node2xml[lname].get(toid)
+				if toboxxml is not None:
+					tototalports = int(toboxxml.attributes['lines'].value)
 				toport = linex.getElementsByTagName('tobox')[0].attributes['port'].value
 				toportnum = numnodeinputports.get(toid)
 				if toportnum is None:
@@ -288,6 +300,9 @@ def layoutboxes(infile, outfile, outputdotfiles):
 				numnodeinputports[toid] += 1
 			elif (len(linex.getElementsByTagName('frombox')) == 1) and (len(linex.getElementsByTagName('tojoint')) == 1):
 				fromid = 'B_%s' % sanitize(linex.getElementsByTagName('frombox')[0].attributes['id'].value)
+				fromboxxml = node2xml[lname].get(fromid)
+				if fromboxxml is not None:
+					fromtotalports = int(fromboxxml.attributes['lines'].value)
 				fromport = linex.getElementsByTagName('frombox')[0].attributes['port'].value
 				fromportnum = numnodeoutputports.get(fromid)
 				if fromportnum is None:
@@ -295,6 +310,9 @@ def layoutboxes(infile, outfile, outputdotfiles):
 					numnodeoutputports[fromid] = 0
 				numnodeoutputports[fromid] += 1
 				toid = 'J_%s' % sanitize(linex.getElementsByTagName('tojoint')[0].attributes['id'].value)
+				tojointxml = node2xml[lname].get(toid)
+				if tojointxml is not None:
+					tototalports = int(tojointxml.attributes['inputs'].value)
 				toport = linex.getElementsByTagName('tojoint')[0].attributes['port'].value
 				toportnum = numnodeinputports.get(toid)
 				if toportnum is None:
@@ -307,6 +325,17 @@ def layoutboxes(infile, outfile, outputdotfiles):
 			edgeid = '%s:o%s -> %s:i%s' % (fromid, fromportnum, toid, toportnum)
 			edge2linexml[lname][edgeid] = linex
 			dotin += '  %s ;\n' % (edgeid)
+			# Create invisible edges/nodes to increase space between nodes when needed
+			ninvisiblenodes = int((fromtotalports + tototalports + 3) / 5.0)
+			if ninvisiblenodes > 0:
+				invisibleedgeid = '%s:o%s' % (fromid, fromportnum)
+				for p in range(0, ninvisiblenodes):
+					invisiblenodeid = '__INV__%s' % invisiblenodeindex
+					invisiblenodeindex += 1
+					dotin += '  %s [width=0.01,height=0.01,margin=0.01,label="",style="invis"];\n' % invisiblenodeid
+					invisibleedgeid += ' -> %s' % invisiblenodeid
+				invisibleedgeid += ' -> %s:i%s' % (toid, toportnum)
+				dotin += '  %s [style="invis"];\n' % invisibleedgeid
 		dotin += '}'
 		dotinfilename = '%s-%s-BOXES-in.dot' % (outfile, lname)
 		writedot = open(dotinfilename,'w')
@@ -336,6 +365,9 @@ def layoutboxes(infile, outfile, outputdotfiles):
 		dotelms = dotoutput.split(";") #split each element on its own line
 		
 		for line in dotelms:
+			# Don't process invisible nodes/edges
+			if line.find('__INV__') > -1:
+				continue
 			layout = parsedot(line)
 			if layout is not None:
 				if layout.id is None:
@@ -361,20 +393,25 @@ def layoutboxes(infile, outfile, outputdotfiles):
 						foundboxheight = boxdotheight.get(edgex.getElementsByTagName('frombox')[0].attributes['id'].value)
 						if foundboxheight is not None:
 							# Adjust outgoing line height by boxheight to force box to have a height of 1.0
-							layout.points[0].y -= foundboxheight / 2.0 - 0.5
+							layout.points[0].y -= foundboxheight / 2.0 - BOX_HEIGHT / 2.0
 						else:
 							print 'no box height for: %s' % layout.id
 						# Add points staggered from the outputs so that all box outputs are at different y values
 						try:
-							newpty = getboxheight(float(edgex.getElementsByTagName('frombox')[0].attributes['port'].value)) / 2.0
-						except exception:
-							newpty = getboxheight(0) / 2.0
+							startyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('frombox')[0].attributes['port'].value))
+						except Exception:
+							startyoff = BOX_HEIGHT / 2.0
+						try:
+							endyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('tojoint')[0].attributes['port'].value))
+						except Exception:
+							print 'except: %s' % portid
+							endyoff = BOX_HEIGHT / 2.0
 						startx = layout.points[0].x
 						starty = layout.points[0].y
 						endx = layout.points[-1].x
 						endy = layout.points[-1].y
-						layout.points.insert(1, Point(startx, starty + newpty))
-						layout.points.insert(2, Point(endx, endy - getboxheight(0) / 2.0))
+						layout.points.insert(1, Point(startx, starty + startyoff))
+						layout.points.insert(2, Point(endx, endy - endyoff))
 					elif edgex.getElementsByTagName('tobox'):
 						portid = '%s___P___%s' % (edgex.getElementsByTagName('tobox')[0].attributes['id'].value, edgex.getElementsByTagName('tobox')[0].attributes['port'].value)
 						foundendx = portxcoords.get(portid)
@@ -385,20 +422,25 @@ def layoutboxes(infile, outfile, outputdotfiles):
 						foundboxheight = boxdotheight.get(edgex.getElementsByTagName('tobox')[0].attributes['id'].value)
 						if foundboxheight is not None:
 							# Adjust incoming line height by boxheight to force box to have a height of 1.0
-							layout.points[-1].y += foundboxheight / 2.0 - 0.5
+							layout.points[-1].y += foundboxheight / 2.0 - BOX_HEIGHT / 2.0
 						else:
 							print 'no box height for: %s' % layout.id
 						# Add points staggered from the outputs so that all box outputs are at different y values
 						try:
-							newpty = getboxheight(float(edgex.getElementsByTagName('tobox')[0].attributes['port'].value)) / 2.0
-						except exception:
-							newpty = getboxheight(0) / 2.0
+							startyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('fromjoint')[0].attributes['port'].value))
+						except Exception:
+							print 'except: %s' % portid
+							startyoff = BOX_HEIGHT / 2.0
+						try:
+							endyoff = getstaggeredlineheight(float(edgex.getElementsByTagName('tobox')[0].attributes['port'].value))
+						except Exception:
+							endyoff = BOX_HEIGHT / 2.0
 						startx = layout.points[0].x
 						starty = layout.points[0].y
 						endx = layout.points[-1].x
 						endy = layout.points[-1].y
-						layout.points.insert(1, Point(startx, starty + getboxheight(0) / 2.0))
-						layout.points.insert(2, Point(endx, endy - newpty))
+						layout.points.insert(1, Point(startx, starty + startyoff))
+						layout.points.insert(2, Point(endx, endy - endyoff))
 					else:
 						print 'Warning: edge found that has no tobox or frombox id %s' % layout.id
 					# Remove any current layout points, we only want the new layout points to be saved
@@ -427,7 +469,7 @@ def layoutboxes(infile, outfile, outputdotfiles):
 					foundboxheight = boxdotheight.get(bid)
 					if foundboxheight is not None:
 						# Adjust y to account for difference in forcing height to = 1.0
-						#layout.pos.y -= foundboxheight / 2.0 - 0.5
+						#layout.pos.y -= foundboxheight / 2.0 - BOX_HEIGHT / 2.0
 						# Now force height to = 1.0
 						foundboxheight = 1.0
 					else:

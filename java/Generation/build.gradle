@@ -2,6 +2,15 @@
 def classDirs = files(new File(project(':Translation').projectDir, 'bin/classes/main'),
                       new File(project(':Translation').projectDir, 'lib/xom-1.2.7.jar'))
 
+dependencies {
+
+    // local deps: our own stuff
+    compile project(':Translation')
+
+    // we also need the xom jar in the translation folder
+    compile files(new File(project(':Translation').projectDir, 'lib/xom-1.2.7.jar'))
+
+}
 
 //This script inherits many settings from java/build.gradle
 sourceSets {
@@ -15,8 +24,6 @@ sourceSets {
         }
 
         output.classesDir "bin"
-        compileClasspath += classDirs
-        runtimeClasspath += compileClasspath
     }
 }
 
@@ -24,15 +31,9 @@ buildDir = 'bin'
 
 tasks.compileJava {
     options.forkOptions.jvmArgs += '-J-Djsr308_imports=checkers.interning.quals.*:checkers.regex.quals.*:checkers.signature.quals.*:checkers.compilermsgs.quals.*'
-    tasks.compileScala.taskDependencies.values = compileScala.taskDependencies.values + 
-                                                 ':Translation:compileJava' 
-                                                 ':Translation:compileScala'
-    tasks.compileJava.taskDependencies.values = compileJava.taskDependencies.values + 
-                                                 ':Translation:compileJava' 
-                                                 ':Translation:compileScala'
 }
 
-// IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely 
+// IMPORTANT: If "libs" is packaged in the JAR file you end up with an infinitely
 // recursive jar task that will fill up your hard drive (eventually)
 tasks.jar {
     exclude("dependency-cache", "libs", "tmp")
@@ -86,7 +87,7 @@ def checkerMap = [
     new CheckerDef('lock',  'lock.LockInfChecker', 'lock.LockInfVisitor', 'lock.LockInfGameSolver'),
 ].collectEntries{[it.command, it]}
 
-tasks.add(name:'infer', type : JavaExec ) {
+tasks.create(name:'infer', type : JavaExec ) {
   	description = 'Runs an inference checker over the specified Java files.  Use as follows:\n'            +
   				  "\tgradle infer -P $infCheckerKey=<checkerToUse> -P $infArgsKey=\"<srcFiles>\"\n"        +
   				  "\t$infCheckerKey  - Choose one of [" + checkerMap.keySet().join(", ") + ']\n'           +
@@ -146,17 +147,17 @@ tasks.add(name:'infer', type : JavaExec ) {
 
 tasks.infer.doFirst {
 	def rootProps = getRootProject().getProperties()
-	
+
     if ( !rootProps.containsKey( infCheckerKey )) {
         throw new IllegalArgumentException("You must specify an inference checker to use e.g.:\n\t -P infChecker=<checker to use>");
     }
-    
+
     if ( !checkerMap.containsKey( rootProps.get( infCheckerKey ) )) {
-        throw new IllegalArgumentException("You must specify a valid inference checker to use.  Checker specified=" + rootProps.get("infChecker") + 
-        								   "valid checkers=[ " + checkerMap.keySet().join(", ") + " ]") 
+        throw new IllegalArgumentException("You must specify a valid inference checker to use.  Checker specified=" + rootProps.get("infChecker") +
+        								   "valid checkers=[ " + checkerMap.keySet().join(", ") + " ]")
     }
-    
-    if ( !rootProps.containsKey( infArgsKey ) ) { 
+
+    if ( !rootProps.containsKey( infArgsKey ) ) {
         throw new IllegalArgumentException("You must specify file arguments to infer over via:\n\t -P infArgs=<File(s) To Infer Over>");
     }
 }
