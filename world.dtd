@@ -1,17 +1,17 @@
-<!ELEMENT world (level*)>
- <!ATTLIST world version (2) #REQUIRED>
- <!ELEMENT level (linked-edges,boards)>
+<!ELEMENT world (linked-varIDs,level*)>
+ <!ATTLIST world version (3) #REQUIRED>
+ <!ELEMENT linked-varIDs (varID-set*)>
+  <!ELEMENT varID-set (stamp*,varID*)>
+   <!ATTLIST varID-set id ID #REQUIRED>
+   <!-- refers to a possible varID-set with whose color this edge-set can be stamped with -->
+   <!ELEMENT stamp EMPTY>
+    <!-- stamp ID must refer to a varID-set ID -->
+    <!ATTLIST stamp id IDREF #REQUIRED>
+    <!ATTLIST stamp active (true|false) #REQUIRED>
+   <!ELEMENT varID EMPTY>
+    <!ATTLIST varID id CDATA #REQUIRED>
+ <!ELEMENT level (boards)>
   <!ATTLIST level name CDATA #REQUIRED>
-  <!ELEMENT linked-edges (edge-set*)>
-   <!ELEMENT edge-set (stamp*,edgeref*)>
-    <!ATTLIST edge-set id ID #REQUIRED>
-    <!-- refers to a possible edge-set with whose color this edge-set can be stamped with -->
-    <!ELEMENT stamp EMPTY>
-     <!-- stamp ID must refer to an edge-set ID -->
-     <!ATTLIST stamp id IDREF #REQUIRED>
-     <!ATTLIST stamp active (true|false) #REQUIRED>
-    <!ELEMENT edgeref EMPTY>
-     <!ATTLIST edgeref id IDREF #REQUIRED>
   <!ELEMENT boards (board-stub*,board*)>
    <!ELEMENT board-stub (stub-input,stub-output)>
     <!ATTLIST board-stub name ID #REQUIRED>

@@ -11,6 +11,8 @@ java/Generation/.scala_dependencies
 java/test/.*/actual_.*xml
 java/test/.*/actual_.*txt
 java/test/.*/diff_.*txt
+java/dist/
+java/optimizer/build/
 
 syntax: glob
 *.aux
