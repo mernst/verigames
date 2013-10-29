@@ -30,9 +30,4 @@ public class RandomChecker extends TrustedChecker implements
         UNTRUSTED = AnnotationUtils.fromClass(elements, MaybeRandom.class);
         TRUSTED   = AnnotationUtils.fromClass(elements, Random.class);
     }
-
-    @Override
-    public RandomAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
-        return new RandomAnnotatedTypeFactory(this, root);
-    }
 }

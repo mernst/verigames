@@ -19,7 +19,7 @@ import checkers.util.GraphQualifierHierarchy;
 import checkers.util.MultiGraphQualifierHierarchy;
 
 @TypeQualifiers({GuardedBy.class})
-public class LockInfChecker extends GameChecker<LockInfAnnotatedTypeFactory> {
+public class LockInfChecker extends GameChecker {
 	public AnnotationMirror GUARDEDBY, UNQUALIFIED;
 
     public void init(ProcessingEnvironment processingEnv) {
@@ -36,52 +36,9 @@ public class LockInfChecker extends GameChecker<LockInfAnnotatedTypeFactory> {
     }
 
     @Override
-    public LockInfAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
-        return new LockInfAnnotatedTypeFactory(this, root);
-    }
-
-    @Override // TODO make match LockChecker
-    protected MultiGraphQualifierHierarchy.MultiGraphFactory createQualifierHierarchyFactory() {
-        return new MultiGraphQualifierHierarchy.MultiGraphFactory(this);
-        /*
-    	MultiGraphQualifierHierarchy.MultiGraphFactory factory = createQualifierHierarchyFactory();
-
-        factory.addQualifier(GUARDEDBY);
-        factory.addQualifier(UNQUALIFIED);
-        factory.addSubtype(UNQUALIFIED, GUARDEDBY);
-
-        return factory;
-        */
-    }
-
-    // TODO: how do we use this??
-    private final class LockQualifierHierarchy extends GraphQualifierHierarchy {
-
-        public LockQualifierHierarchy(MultiGraphQualifierHierarchy.MultiGraphFactory factory) {
-            super(factory, UNQUALIFIED);
-        }
-
-        @Override
-        public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
-            if (AnnotationUtils.areSameIgnoringValues(rhs, UNQUALIFIED)
-                    && AnnotationUtils.areSameIgnoringValues(lhs, GUARDEDBY)) {
-                return true;
-            }
-            // Ignore annotation values to ensure that annotation is in supertype map.
-            if (AnnotationUtils.areSameIgnoringValues(lhs, GUARDEDBY)) {
-                lhs = GUARDEDBY;
-            }
-            if (AnnotationUtils.areSameIgnoringValues(rhs, GUARDEDBY)) {
-                rhs = GUARDEDBY;
-            }
-            return super.isSubtype(rhs, lhs);
-        }
-    }
-
-    @Override
-    protected LockInfVisitor createSourceVisitor(CompilationUnitTree root) {
+    public LockInfVisitor createInferenceVisitor() {
         // The false turns off inference and enables checking the type system.
-        return new LockInfVisitor(this, root, this, false);
+        return new LockInfVisitor(this, null, false);
     }
 
 	@Override
