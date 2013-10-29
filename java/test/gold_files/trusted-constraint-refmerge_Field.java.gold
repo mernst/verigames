@@ -30,11 +30,25 @@ class Field {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Field#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Field#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 1 at class Field static field f1; tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class Field static field f2 constraint position; 
-calledVp: class Field static field f1; 
+calledVp: Some(class Field static field f1); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -65,7 +79,7 @@ class Field {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Field#test():V constraint position; 
-calledVp: class Field static field f1; 
+calledVp: Some(class Field static field f1); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

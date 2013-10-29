@@ -34,6 +34,20 @@ class ReturnNew {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ReturnNew#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ReturnNew#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method ReturnNew#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Object c = m();
@@ -55,7 +69,7 @@ class ReturnNew {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method ReturnNew#foo():V constraint position; 
-calledVp: method ReturnNew#m():Ljava/lang/Object;; 
+calledVp: Some(method ReturnNew#m():Ljava/lang/Object;); 
 receiver: Variable 2 at method ReturnNew#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Object c = m();
@@ -88,6 +102,18 @@ class ReturnNew {
         return new Object();
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ReturnNew#m():Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 6 at method ReturnNew#m():Ljava/lang/Object; creation 0; tree Object  <:  Variable 3 at method ReturnNew#m():Ljava/lang/Object; return type; tree Object )
 

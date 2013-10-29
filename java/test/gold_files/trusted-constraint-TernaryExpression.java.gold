@@ -26,6 +26,20 @@ public class TernaryExpression {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method TernaryExpression#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method TernaryExpression#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method TernaryExpression#foo(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void foo(Object o) {
     Object b = o == null ? new Object() : o;
@@ -44,6 +58,18 @@ public class TernaryExpression {
 SubtypeConstraint( Variable 4 at method TernaryExpression#foo(Ljava/lang/Object;):V creation 0; tree Object  <:  CombVariable #6 )
 
 SubtypeConstraint( Variable 3 at method TernaryExpression#foo(Ljava/lang/Object;):V parameter 0; tree Object  <:  CombVariable #6 )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method TernaryExpression#foo(Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( CombVariable #6  <:  Variable 5 at method TernaryExpression#foo(Ljava/lang/Object;):V local variable b(0); tree Object )
 

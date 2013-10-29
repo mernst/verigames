@@ -46,6 +46,20 @@ class PrimitivesAndBoxes {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method PrimitivesAndBoxes#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrimitivesAndBoxes#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
 public void method() {
     Integer testy = 2;
@@ -79,7 +93,7 @@ SubtypeConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local vari
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method PrimitivesAndBoxes#method():V constraint position; 
-calledVp: method PrimitivesAndBoxes#forceNarrow(I):I; 
+calledVp: Some(method PrimitivesAndBoxes#forceNarrow(I):I); 
 receiver: Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
 public void method() {
     Integer testy = 2;
@@ -95,7 +109,7 @@ args: ( Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(
 result: List(Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int); 
 )
 
-EqualityConstraint( RefinementVariable #9 Declared Variable: Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer IfTest: false mergedTo: Set() = Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
+EqualityConstraint( RefinementVariable #9 Declared Variable: Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer IfTest: false mergedTo: (Set()) = Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
 
 SubtypeConstraint( Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
 

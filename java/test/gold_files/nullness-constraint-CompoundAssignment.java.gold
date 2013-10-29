@@ -38,13 +38,27 @@ class CompoundAssignmentTest {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CompoundAssignmentTest#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CompoundAssignmentTest#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.NonNull)  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
 
 SubtypeConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
 
 checkers.inference.StaticMethodCallConstraint(
 contextVp: method CompoundAssignmentTest#main():V constraint position; 
-calledVp: method CompoundAssignmentTest#method():I; 
+calledVp: Some(method CompoundAssignmentTest#method():I); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

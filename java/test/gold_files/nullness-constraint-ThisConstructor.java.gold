@@ -36,7 +36,7 @@ class CallThis {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;):V constraint position; 
-calledVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V; 
+calledVp: Some(method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -79,9 +79,23 @@ class CallThis {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 checkers.inference.FieldAccessConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field s; 
+calledVp: Some(class CallThis field s); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -95,7 +109,7 @@ SubtypeConstraint( Variable 4 at method CallThis#<init>(Ljava/lang/String;Ljava/
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field s; 
+calledVp: Some(class CallThis field s); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -107,7 +121,7 @@ result: List();
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field o; 
+calledVp: Some(class CallThis field o); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -121,7 +135,7 @@ SubtypeConstraint( Variable 5 at method CallThis#<init>(Ljava/lang/String;Ljava/
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field o; 
+calledVp: Some(class CallThis field o); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

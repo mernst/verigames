@@ -3,70 +3,82 @@
   <linked-edges>
    <edge-set id="MethodGenericsLocalCall0">
     <edgeref id="e9" />
-    <edgeref id="e37" />
+    <edgeref id="e39" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall1">
     <edgeref id="e10" />
-    <edgeref id="e38" />
+    <edgeref id="e40" />
     <edgeref id="e1" />
-    <edgeref id="e29" />
+    <edgeref id="e31" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall2">
     <edgeref id="e2" />
-    <edgeref id="e12" />
-    <edgeref id="e30" />
+    <edgeref id="e14" />
+    <edgeref id="e32" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall3">
     <edgeref id="e3" />
-    <edgeref id="e11" />
     <edgeref id="e13" />
-    <edgeref id="e31" />
+    <edgeref id="e15" />
+    <edgeref id="e33" />
     <edgeref id="e8" />
-    <edgeref id="e19" />
-    <edgeref id="e20" />
+    <edgeref id="e21" />
     <edgeref id="e22" />
-    <edgeref id="e28" />
-    <edgeref id="e36" />
+    <edgeref id="e24" />
+    <edgeref id="e30" />
+    <edgeref id="e38" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall4">
     <edgeref id="e5" />
-    <edgeref id="e33" />
+    <edgeref id="e35" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall5">
-    <edgeref id="e32" />
+    <edgeref id="e34" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall6">
     <edgeref id="e7" />
-    <edgeref id="e17" />
-    <edgeref id="e18" />
-    <edgeref id="e21" />
-    <edgeref id="e27" />
-    <edgeref id="e35" />
+    <edgeref id="e19" />
+    <edgeref id="e20" />
+    <edgeref id="e23" />
+    <edgeref id="e29" />
+    <edgeref id="e37" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall7">
-    <edgeref id="e14" />
-    <edgeref id="e15" />
     <edgeref id="e16" />
-    <edgeref id="e26" />
-    <edgeref id="e34" />
+    <edgeref id="e17" />
+    <edgeref id="e18" />
+    <edgeref id="e28" />
+    <edgeref id="e36" />
    </edge-set>
-   <edge-set id="MethodGenericsLocalCall16">
+   <edge-set id="MethodGenericsLocalCall13">
+    <edgeref id="e11" />
+   </edge-set>
+   <edge-set id="MethodGenericsLocalCall14">
+    <edgeref id="e12" />
+   </edge-set>
+   <edge-set id="MethodGenericsLocalCall18">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="MethodGenericsLocalCall25">
+   <edge-set id="MethodGenericsLocalCall27">
     <edgeref id="e6" />
-   </edge-set>
-   <edge-set id="MethodGenericsLocalCall37">
-    <edgeref id="e23" />
-   </edge-set>
-   <edge-set id="MethodGenericsLocalCall38">
-    <edgeref id="e24" />
    </edge-set>
    <edge-set id="MethodGenericsLocalCall39">
     <edgeref id="e25" />
    </edge-set>
+   <edge-set id="MethodGenericsLocalCall40">
+    <edgeref id="e26" />
+   </edge-set>
+   <edge-set id="MethodGenericsLocalCall41">
+    <edgeref id="e27" />
+   </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="MethodGenericsLocalCall">
     <node id="n0" kind="INCOMING">
      <input />
@@ -93,7 +105,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e39" num="output" />
      </output>
      <layout>
       </layout>
@@ -111,28 +123,28 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e38" num="output" />
+      <port edge="e40" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="END">
+    <node id="n43" kind="END">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e39" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="END">
+    <node id="n44" kind="END">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e40" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class MethodGenericsLocalCall extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class MethodGenericsLocalCall {  public MethodGenericsLocalCall() { super(); }  public &lt;T extends Object&gt;void genericMethodNoReturn(T t1) { }  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); } }" editable="true" id="e9" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -150,7 +162,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodGenericsLocalCall#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e10" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -168,12 +180,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MethodGenericsLocalCall extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class MethodGenericsLocalCall {  public MethodGenericsLocalCall() { super(); }  public &lt;T extends Object&gt;void genericMethodNoReturn(T t1) { }  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
      <to>
-      <noderef id="n40" port="input" />
+      <noderef id="n43" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -186,12 +198,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodGenericsLocalCall#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
      <to>
-      <noderef id="n41" port="input" />
+      <noderef id="n44" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -214,7 +226,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e29" num="outputReturn0" />
+      <port edge="e31" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -233,12 +245,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e29" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method MethodGenericsLocalCall#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n23" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e11" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n24" kind="CONNECT">
+     <input>
+      <port edge="e11" num="input" />
+     </input>
+     <output>
+      <port edge="e12" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n25" kind="END">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -254,9 +292,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodGenericsLocalCall#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e11" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n23" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n24" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n24" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n25" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -289,10 +375,10 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e30" num="outMethodTypeParam0" />
-      <port edge="e31" num="outMethodTypeParam1" />
-      <port edge="e33" num="outParam0" />
-      <port edge="e32" num="outReceiver0" />
+      <port edge="e32" num="outMethodTypeParam0" />
+      <port edge="e33" num="outMethodTypeParam1" />
+      <port edge="e35" num="outParam0" />
+      <port edge="e34" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -303,7 +389,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e12" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
@@ -313,7 +399,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e11" num="output" />
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
@@ -323,7 +409,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
@@ -333,34 +419,34 @@
       <port edge="e5" num="input" />
      </input>
      <output>
+      <port edge="e35" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n26" kind="MERGE">
+     <input>
+      <port edge="e14" num="left" />
+      <port edge="e15" num="right" />
+     </input>
+     <output>
+      <port edge="e32" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="SPLIT">
+     <input>
+      <port edge="e13" num="input" />
+     </input>
+     <output>
       <port edge="e33" num="output" />
+      <port edge="e15" num="split" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n23" kind="MERGE">
-     <input>
-      <port edge="e12" num="left" />
-      <port edge="e13" num="right" />
-     </input>
-     <output>
-      <port edge="e30" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n24" kind="SPLIT">
-     <input>
-      <port edge="e11" num="input" />
-     </input>
-     <output>
-      <port edge="e31" num="output" />
-      <port edge="e13" num="split" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam0" />
      </from>
@@ -378,7 +464,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam1" />
      </from>
@@ -396,7 +482,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -414,7 +500,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V parameter 0; tree T" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n6" port="inParam0" />
      </from>
@@ -432,12 +518,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e11" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
      <to>
-      <noderef id="n24" port="input" />
+      <noderef id="n27" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -456,12 +542,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e12" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
      <to>
-      <noderef id="n23" port="left" />
+      <noderef id="n26" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -486,12 +572,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e13" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n24" port="split" />
+      <noderef id="n27" port="split" />
      </from>
      <to>
-      <noderef id="n23" port="right" />
+      <noderef id="n26" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -510,9 +596,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e30" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n23" port="output" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam0" />
@@ -528,9 +614,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e31" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n24" port="output" />
+      <noderef id="n27" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam1" />
@@ -546,7 +632,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public &lt;T extends Object&gt;void genericMethodNoReturn(T t1) { }Atm: @VarAnnot(4) MethodGenericsLocalCall" editable="true" id="e32" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -564,7 +650,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V parameter 0; tree T" editable="true" id="e33" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -600,7 +686,7 @@
     </node>
     <node id="n13" kind="OUTGOING">
      <input>
-      <port edge="e34" num="outReceiver0" />
+      <port edge="e36" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -611,7 +697,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e14" num="output" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
@@ -629,7 +715,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e19" num="output" />
      </output>
      <layout>
       </layout>
@@ -647,65 +733,33 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e21" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="SUBBOARD" name="MethodGenericsLocalCall-genericMethodNoReturn-Ljava-lang-Object---V">
+    <node id="n28" kind="SUBBOARD" name="MethodGenericsLocalCall-genericMethodNoReturn-Ljava-lang-Object---V">
      <input>
-      <port edge="e18" num="inMethodTypeParam0" />
-      <port edge="e20" num="inMethodTypeParam1" />
-      <port edge="e23" num="inParam0" />
-      <port edge="e15" num="inReceiver0" />
+      <port edge="e20" num="inMethodTypeParam0" />
+      <port edge="e22" num="inMethodTypeParam1" />
+      <port edge="e25" num="inParam0" />
+      <port edge="e17" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e21" num="outMethodTypeParam0" />
-      <port edge="e22" num="outMethodTypeParam1" />
-      <port edge="e24" num="outParam0" />
-      <port edge="e16" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="SPLIT">
-     <input>
-      <port edge="e14" num="input" />
-     </input>
-     <output>
-      <port edge="e15" num="split" />
-      <port edge="e26" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n27" kind="CONNECT">
-     <input>
-      <port edge="e16" num="input" />
-     </input>
-     <output>
-      <port edge="e34" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n28" kind="SPLIT">
-     <input>
-      <port edge="e17" num="input" />
-     </input>
-     <output>
-      <port edge="e18" num="split" />
-      <port edge="e27" num="toEnd" />
+      <port edge="e23" num="outMethodTypeParam0" />
+      <port edge="e24" num="outMethodTypeParam1" />
+      <port edge="e26" num="outParam0" />
+      <port edge="e18" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n29" kind="SPLIT">
      <input>
-      <port edge="e19" num="input" />
+      <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e20" num="split" />
+      <port edge="e17" num="split" />
       <port edge="e28" num="toEnd" />
      </output>
      <layout>
@@ -713,17 +767,7 @@
     </node>
     <node id="n30" kind="CONNECT">
      <input>
-      <port edge="e21" num="input" />
-     </input>
-     <output>
-      <port edge="e35" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="CONNECT">
-     <input>
-      <port edge="e22" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output>
       <port edge="e36" num="output" />
@@ -731,41 +775,67 @@
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="START_SMALL_BALL">
-     <input />
+    <node id="n31" kind="SPLIT">
+     <input>
+      <port edge="e19" num="input" />
+     </input>
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e20" num="split" />
+      <port edge="e29" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n32" kind="SPLIT">
+     <input>
+      <port edge="e21" num="input" />
+     </input>
+     <output>
+      <port edge="e22" num="split" />
+      <port edge="e30" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n33" kind="CONNECT">
      <input>
-      <port edge="e24" num="input" />
+      <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e25" num="toEnd" />
+      <port edge="e37" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="END">
+    <node id="n34" kind="CONNECT">
      <input>
-      <port edge="e25" num="input" />
+      <port edge="e24" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e38" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="END">
+    <node id="n35" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e25" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n36" kind="CONNECT">
      <input>
       <port edge="e26" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e27" num="toEnd" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="END">
+    <node id="n37" kind="END">
      <input>
       <port edge="e27" num="input" />
      </input>
@@ -773,7 +843,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="END">
+    <node id="n38" kind="END">
      <input>
       <port edge="e28" num="input" />
      </input>
@@ -781,23 +851,39 @@
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="END">
-     <input>
-      <port edge="e35" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
     <node id="n39" kind="END">
      <input>
-      <port edge="e36" num="input" />
+      <port edge="e29" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
+    <node id="n40" kind="END">
+     <input>
+      <port edge="e30" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="END">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="END">
+     <input>
+      <port edge="e38" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n12" port="inReceiver0" />
      </from>
@@ -815,7 +901,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -833,7 +919,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e8" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -851,117 +937,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e14" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n14" port="output" />
-     </from>
-     <to>
-      <noderef id="n26" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e15" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n26" port="split" />
-     </from>
-     <to>
-      <noderef id="n25" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e16" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n25" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n27" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e17" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n16" port="output" />
-     </from>
-     <to>
-      <noderef id="n28" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e18" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n28" port="split" />
-     </from>
-     <to>
-      <noderef id="n25" port="inMethodTypeParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e19" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n18" port="output" />
      </from>
      <to>
       <noderef id="n29" port="input" />
@@ -977,12 +955,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e20" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n29" port="split" />
      </from>
      <to>
-      <noderef id="n25" port="inMethodTypeParam1" />
+      <noderef id="n28" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -993,11 +971,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e21" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n25" port="outMethodTypeParam0" />
+      <noderef id="n28" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n30" port="input" />
@@ -1011,11 +1001,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n25" port="outMethodTypeParam1" />
+      <noderef id="n16" port="output" />
      </from>
      <to>
       <noderef id="n31" port="input" />
@@ -1031,12 +1027,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="test" editable="false" id="e23" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n31" port="split" />
      </from>
      <to>
-      <noderef id="n25" port="inParam0" />
+      <noderef id="n28" port="inMethodTypeParam0" />
      </to>
      <edge-layout>
       <point>
@@ -1049,9 +1045,45 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="test" editable="false" id="e24" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n25" port="outParam0" />
+      <noderef id="n18" port="output" />
+     </from>
+     <to>
+      <noderef id="n32" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n32" port="split" />
+     </from>
+     <to>
+      <noderef id="n28" port="inMethodTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n28" port="outMethodTypeParam0" />
      </from>
      <to>
       <noderef id="n33" port="input" />
@@ -1067,9 +1099,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="test" editable="false" id="e25" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n33" port="toEnd" />
+      <noderef id="n28" port="outMethodTypeParam1" />
      </from>
      <to>
       <noderef id="n34" port="input" />
@@ -1085,12 +1117,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e26" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e25" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n26" port="toEnd" />
+      <noderef id="n35" port="output" />
      </from>
      <to>
-      <noderef id="n35" port="input" />
+      <noderef id="n28" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -1101,17 +1133,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e27" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e26" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n28" port="toEnd" />
+      <noderef id="n28" port="outParam0" />
      </from>
      <to>
       <noderef id="n36" port="input" />
@@ -1127,12 +1153,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e27" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n36" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n37" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n29" port="toEnd" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1151,9 +1195,51 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void localCall() { this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;); }Atm: @VarAnnot(6) MethodGenericsLocalCall" editable="true" id="e34" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n27" port="output" />
+      <noderef id="n31" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n39" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n32" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n40" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n30" port="output" />
      </from>
      <to>
       <noderef id="n13" port="outReceiver0" />
@@ -1169,12 +1255,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at MethodTypeArgumentInMethodVP in method MethodGenericsLocalCall#localCall():V; tree String at position ((3,0)) within this.&lt;String&gt;genericMethodNoReturn(&quot;test&quot;)" editable="true" id="e35" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n30" port="output" />
+      <noderef id="n33" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n41" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1187,12 +1273,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V method type parameter 0; tree T extends Object" editable="true" id="e36" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n31" port="output" />
+      <noderef id="n34" port="output" />
      </from>
      <to>
-      <noderef id="n39" port="input" />
+      <noderef id="n42" port="input" />
      </to>
      <edge-layout>
       <point>

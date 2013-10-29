@@ -2,59 +2,109 @@
  <level name="Switch">
   <linked-edges>
    <edge-set id="Switch0">
-    <edgeref id="e8" />
-    <edgeref id="e11" />
-    <edgeref id="e14" />
-    <edgeref id="e27" />
+    <edgeref id="e10" />
+    <edgeref id="e50" />
    </edge-set>
    <edge-set id="Switch1">
-    <edgeref id="e9" />
-    <edgeref id="e13" />
-    <edgeref id="e15" />
-    <edgeref id="e28" />
+    <edgeref id="e11" />
+    <edgeref id="e51" />
     <edgeref id="e1" />
-    <edgeref id="e20" />
+    <edgeref id="e41" />
    </edge-set>
    <edge-set id="Switch2">
     <edgeref id="e3" />
-    <edgeref id="e10" />
-    <edgeref id="e22" />
+    <edgeref id="e15" />
+    <edgeref id="e43" />
    </edge-set>
    <edge-set id="Switch3">
     <edgeref id="e4" />
     <edgeref id="e17" />
     <edgeref id="e19" />
-    <edgeref id="e23" />
+    <edgeref id="e33" />
+    <edgeref id="e44" />
    </edge-set>
    <edge-set id="Switch4">
     <edgeref id="e5" />
-    <edgeref id="e24" />
+    <edgeref id="e20" />
+    <edgeref id="e22" />
+    <edgeref id="e45" />
    </edge-set>
    <edge-set id="Switch5">
     <edgeref id="e6" />
+    <edgeref id="e23" />
     <edgeref id="e25" />
+    <edgeref id="e46" />
    </edge-set>
    <edge-set id="Switch6">
     <edgeref id="e7" />
+    <edgeref id="e21" />
+    <edgeref id="e24" />
     <edgeref id="e26" />
+    <edgeref id="e28" />
+    <edgeref id="e47" />
    </edge-set>
    <edge-set id="Switch7">
-    <edgeref id="e21" />
+    <edgeref id="e8" />
+    <edgeref id="e29" />
+    <edgeref id="e31" />
+    <edgeref id="e48" />
    </edge-set>
-   <edge-set id="Switch11">
+   <edge-set id="Switch8">
+    <edgeref id="e9" />
+    <edgeref id="e27" />
+    <edgeref id="e30" />
+    <edgeref id="e32" />
+    <edgeref id="e34" />
+    <edgeref id="e35" />
+    <edgeref id="e36" />
+    <edgeref id="e37" />
+    <edgeref id="e40" />
+    <edgeref id="e49" />
+   </edge-set>
+   <edge-set id="Switch9">
+    <edgeref id="e42" />
+   </edge-set>
+   <edge-set id="Switch15">
     <edgeref id="e12" />
    </edge-set>
-   <edge-set id="Switch19">
+   <edge-set id="Switch16">
+    <edgeref id="e13" />
+   </edge-set>
+   <edge-set id="Switch18">
     <edgeref id="e2" />
    </edge-set>
    <edge-set id="Switch26">
-    <edgeref id="e16" />
+    <edgeref id="e14" />
    </edge-set>
    <edge-set id="Switch28">
+    <edgeref id="e16" />
+   </edge-set>
+   <edge-set id="Switch30">
     <edgeref id="e18" />
+   </edge-set>
+   <edge-set id="Switch50">
+    <edgeref id="e38" />
+   </edge-set>
+   <edge-set id="Switch51">
+    <edgeref id="e39" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.lang.String-toString---java.lang.String">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="Switch">
     <node id="n0" kind="INCOMING">
      <input />
@@ -68,105 +118,64 @@
      <layout>
       </layout>
     </node>
-    <node id="n19" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n23" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e8" num="output" />
+      <port edge="e10" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n20" kind="CONNECT">
+    <node id="n24" kind="CONNECT">
      <input>
-      <port edge="e8" num="input" />
+      <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e11" num="0" />
+      <port edge="e50" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n21" kind="START_PIPE_DEPENDENT_BALL">
+    <node id="n25" kind="START_PIPE_DEPENDENT_BALL">
      <input />
      <output>
-      <port edge="e9" num="output" />
+      <port edge="e11" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n22" kind="CONNECT">
+    <node id="n26" kind="CONNECT">
      <input>
-      <port edge="e9" num="input" />
+      <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e13" num="0" />
+      <port edge="e51" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e12" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n25" kind="MERGE">
+    <node id="n59" kind="END">
      <input>
-      <port edge="e11" num="0" />
-      <port edge="e12" num="1" />
-     </input>
-     <output>
-      <port edge="e14" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n26" kind="MERGE">
-     <input>
-      <port edge="e14" num="0" />
-      <port edge="e15" num="1" />
-     </input>
-     <output>
-      <port edge="e27" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n27" kind="SPLIT">
-     <input>
-      <port edge="e13" num="0" />
-     </input>
-     <output>
-      <port edge="e15" num="1" />
-      <port edge="e28" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n37" kind="END">
-     <input>
-      <port edge="e27" num="input" />
+      <port edge="e50" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="END">
+    <node id="n60" kind="END">
      <input>
-      <port edge="e28" num="input" />
+      <port edge="e51" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class Switch extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Switch {  Switch() { super(); }  void test() { int i = 1; String a = null; switch (i) { case 1:  a = &quot;&quot;; break;  case 2:  a = &quot;&quot;; break;  default:  a = null; break;  } a.toString(); } }" editable="true" id="e8" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n19" port="output" />
+      <noderef id="n23" port="output" />
      </from>
      <to>
-      <noderef id="n20" port="input" />
+      <noderef id="n24" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -179,12 +188,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e9" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n21" port="output" />
+      <noderef id="n25" port="output" />
      </from>
      <to>
-      <noderef id="n22" port="input" />
+      <noderef id="n26" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -197,36 +206,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Switch extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Switch {  Switch() { super(); }  void test() { int i = 1; String a = null; switch (i) { case 1:  a = &quot;&quot;; break;  case 2:  a = &quot;&quot;; break;  default:  a = null; break;  } a.toString(); } }" editable="true" id="e11" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e50" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n20" port="0" />
+      <noderef id="n24" port="output" />
      </from>
      <to>
-      <noderef id="n25" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e12" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n24" port="0" />
-     </from>
-     <to>
-      <noderef id="n25" port="1" />
+      <noderef id="n59" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -239,90 +224,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e13" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n22" port="0" />
-     </from>
-     <to>
-      <noderef id="n27" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Switch extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Switch {  Switch() { super(); }  void test() { int i = 1; String a = null; switch (i) { case 1:  a = &quot;&quot;; break;  case 2:  a = &quot;&quot;; break;  default:  a = null; break;  } a.toString(); } }" editable="true" id="e14" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n25" port="0" />
-     </from>
-     <to>
-      <noderef id="n26" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n27" port="1" />
-     </from>
-     <to>
-      <noderef id="n26" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Switch extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Switch {  Switch() { super(); }  void test() { int i = 1; String a = null; switch (i) { case 1:  a = &quot;&quot;; break;  case 2:  a = &quot;&quot;; break;  default:  a = null; break;  } a.toString(); } }" editable="true" id="e27" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e51" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n26" port="output" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n27" port="output" />
-     </from>
-     <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n60" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -345,7 +252,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e20" num="outputReturn0" />
+      <port edge="e41" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -364,12 +271,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e20" num="output" />
+      <port edge="e41" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n27" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e12" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n28" kind="CONNECT">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output>
+      <port edge="e13" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n29" kind="END">
+     <input>
+      <port edge="e13" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -385,9 +318,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Switch#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n27" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n28" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e13" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n28" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n29" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e41" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -417,7 +398,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e21" num="outReceiver0" />
+      <port edge="e42" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -428,7 +409,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e42" num="output" />
      </output>
      <layout>
       </layout>
@@ -446,7 +427,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e10" num="output" />
+      <port edge="e15" num="0" />
      </output>
      <layout>
       </layout>
@@ -482,7 +463,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e24" num="output" />
+      <port edge="e20" num="0" />
      </output>
      <layout>
       </layout>
@@ -500,7 +481,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e25" num="output" />
+      <port edge="e23" num="0" />
      </output>
      <layout>
       </layout>
@@ -518,22 +499,67 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e21" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n23" kind="CONNECT">
+    <node id="n19" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e8" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n20" kind="CONNECT">
      <input>
-      <port edge="e10" num="input" />
+      <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e22" num="output" />
+      <port edge="e29" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="MERGE">
+    <node id="n21" kind="START_PIPE_DEPENDENT_BALL">
+     <input />
+     <output>
+      <port edge="e9" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n22" kind="CONNECT">
+     <input>
+      <port edge="e9" num="input" />
+     </input>
+     <output>
+      <port edge="e27" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n30" kind="MERGE">
+     <input>
+      <port edge="e15" num="0" />
+      <port edge="e14" num="1" />
+     </input>
+     <output>
+      <port edge="e43" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n31" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e14" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n32" kind="MERGE">
      <input>
       <port edge="e17" num="0" />
       <port edge="e16" num="1" />
@@ -544,7 +570,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n29" kind="START_SMALL_BALL">
+    <node id="n33" kind="START_SMALL_BALL">
      <input />
      <output>
       <port edge="e16" num="0" />
@@ -552,18 +578,18 @@
      <layout>
       </layout>
     </node>
-    <node id="n30" kind="MERGE">
+    <node id="n34" kind="MERGE">
      <input>
       <port edge="e19" num="0" />
       <port edge="e18" num="1" />
      </input>
      <output>
-      <port edge="e23" num="output" />
+      <port edge="e33" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n31" kind="START_SMALL_BALL">
+    <node id="n35" kind="START_SMALL_BALL">
      <input />
      <output>
       <port edge="e18" num="0" />
@@ -571,47 +597,231 @@
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="END">
+    <node id="n36" kind="MERGE">
      <input>
-      <port edge="e22" num="input" />
+      <port edge="e21" num="0" />
+      <port edge="e22" num="1" />
+     </input>
+     <output>
+      <port edge="e24" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n37" kind="SPLIT">
+     <input>
+      <port edge="e20" num="0" />
+     </input>
+     <output>
+      <port edge="e22" num="1" />
+      <port edge="e45" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="MERGE">
+     <input>
+      <port edge="e24" num="0" />
+      <port edge="e25" num="1" />
+     </input>
+     <output>
+      <port edge="e26" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="SPLIT">
+     <input>
+      <port edge="e23" num="0" />
+     </input>
+     <output>
+      <port edge="e25" num="1" />
+      <port edge="e46" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n40" kind="MERGE">
+     <input>
+      <port edge="e27" num="0" />
+      <port edge="e28" num="1" />
+     </input>
+     <output>
+      <port edge="e30" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="SPLIT">
+     <input>
+      <port edge="e26" num="0" />
+     </input>
+     <output>
+      <port edge="e28" num="1" />
+      <port edge="e47" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="MERGE">
+     <input>
+      <port edge="e30" num="0" />
+      <port edge="e31" num="1" />
+     </input>
+     <output>
+      <port edge="e32" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="SPLIT">
+     <input>
+      <port edge="e29" num="0" />
+     </input>
+     <output>
+      <port edge="e31" num="1" />
+      <port edge="e48" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="MERGE">
+     <input>
+      <port edge="e33" num="0" />
+      <port edge="e34" num="1" />
+     </input>
+     <output>
+      <port edge="e44" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="SPLIT">
+     <input>
+      <port edge="e32" num="0" />
+     </input>
+     <output>
+      <port edge="e34" num="1" />
+      <port edge="e35" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n46" kind="SUBBOARD" name="java.lang.String-toString---java.lang.String">
+     <input>
+      <port edge="e36" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e37" num="outReceiver0" />
+      <port edge="e38" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="SPLIT">
+     <input>
+      <port edge="e35" num="input" />
+     </input>
+     <output>
+      <port edge="e36" num="split" />
+      <port edge="e40" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n48" kind="CONNECT">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output>
+      <port edge="e49" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n49" kind="CONNECT">
+     <input>
+      <port edge="e38" num="input" />
+     </input>
+     <output>
+      <port edge="e39" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n50" kind="END">
+     <input>
+      <port edge="e39" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n33" kind="END">
+    <node id="n51" kind="END">
      <input>
-      <port edge="e23" num="input" />
+      <port edge="e40" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="END">
+    <node id="n52" kind="END">
      <input>
-      <port edge="e24" num="input" />
+      <port edge="e43" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="END">
+    <node id="n53" kind="END">
      <input>
-      <port edge="e25" num="input" />
+      <port edge="e44" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="END">
+    <node id="n54" kind="END">
      <input>
-      <port edge="e26" num="input" />
+      <port edge="e45" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <node id="n55" kind="END">
+     <input>
+      <port edge="e46" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n56" kind="END">
+     <input>
+      <port edge="e47" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="END">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="END">
+     <input>
+      <port edge="e49" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -629,7 +839,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Switch#test():V local variable i(0); tree int" editable="false" id="e3" pinch="false" variableID="3" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -647,7 +857,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Switch#test():V local variable a(0); tree String" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -665,7 +875,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()))" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -683,7 +893,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()))" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -701,7 +911,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e7" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -719,12 +929,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Switch#test():V local variable i(0); tree int" editable="false" id="e10" pinch="false" variableID="3" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n10" port="output" />
+      <noderef id="n19" port="output" />
      </from>
      <to>
-      <noderef id="n23" port="input" />
+      <noderef id="n20" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -737,36 +947,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e16" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n29" port="0" />
+      <noderef id="n21" port="output" />
      </from>
      <to>
-      <noderef id="n28" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Switch#test():V local variable a(0); tree String" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n12" port="0" />
-     </from>
-     <to>
-      <noderef id="n28" port="0" />
+      <noderef id="n22" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -779,7 +965,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="" editable="false" id="e18" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e14" pinch="false" variableID="-3" width="narrow">
      <from>
       <noderef id="n31" port="0" />
      </from>
@@ -797,9 +983,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Switch#test():V local variable a(0); tree String" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n28" port="0" />
+      <noderef id="n10" port="0" />
      </from>
      <to>
       <noderef id="n30" port="0" />
@@ -821,7 +1007,505 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Switch#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void test() { int i = 1; String a = null; switch (i) { case 1:  a = &quot;&quot;; break;  case 2:  a = &quot;&quot;; break;  default:  a = null; break;  } a.toString(); }Atm: @VarAnnot(2) Switch" editable="true" id="e21" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e16" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n33" port="0" />
+     </from>
+     <to>
+      <noderef id="n32" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n12" port="0" />
+     </from>
+     <to>
+      <noderef id="n32" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e18" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n35" port="0" />
+     </from>
+     <to>
+      <noderef id="n34" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n32" port="0" />
+     </from>
+     <to>
+      <noderef id="n34" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n14" port="0" />
+     </from>
+     <to>
+      <noderef id="n37" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n18" port="0" />
+     </from>
+     <to>
+      <noderef id="n36" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n37" port="1" />
+     </from>
+     <to>
+      <noderef id="n36" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n16" port="0" />
+     </from>
+     <to>
+      <noderef id="n39" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n36" port="0" />
+     </from>
+     <to>
+      <noderef id="n38" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n39" port="1" />
+     </from>
+     <to>
+      <noderef id="n38" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n38" port="0" />
+     </from>
+     <to>
+      <noderef id="n41" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e27" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n22" port="0" />
+     </from>
+     <to>
+      <noderef id="n40" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n41" port="1" />
+     </from>
+     <to>
+      <noderef id="n40" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n20" port="0" />
+     </from>
+     <to>
+      <noderef id="n43" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n40" port="0" />
+     </from>
+     <to>
+      <noderef id="n42" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n43" port="1" />
+     </from>
+     <to>
+      <noderef id="n42" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n42" port="0" />
+     </from>
+     <to>
+      <noderef id="n45" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n34" port="0" />
+     </from>
+     <to>
+      <noderef id="n44" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n45" port="1" />
+     </from>
+     <to>
+      <noderef id="n44" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n45" port="output" />
+     </from>
+     <to>
+      <noderef id="n47" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n47" port="split" />
+     </from>
+     <to>
+      <noderef id="n46" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n46" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n48" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e38" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n46" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n49" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e39" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n49" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n50" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n47" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n51" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e42" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -837,16 +1521,10 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Switch#test():V local variable i(0); tree int" editable="false" id="e22" pinch="false" variableID="3" width="wide">
-     <from>
-      <noderef id="n23" port="output" />
-     </from>
-     <to>
-      <noderef id="n32" port="input" />
-     </to>
-     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -857,12 +1535,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Switch#test():V local variable a(0); tree String" editable="true" id="e23" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e43" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n30" port="output" />
      </from>
      <to>
-      <noderef id="n33" port="input" />
+      <noderef id="n52" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -875,12 +1553,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #5 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()))" editable="true" id="e24" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e44" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n14" port="output" />
+      <noderef id="n44" port="output" />
      </from>
      <to>
-      <noderef id="n34" port="input" />
+      <noderef id="n53" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -893,12 +1571,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #6 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()))" editable="true" id="e25" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e45" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n16" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n35" port="input" />
+      <noderef id="n54" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -911,12 +1589,72 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())" editable="true" id="e26" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e46" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n18" port="output" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
-      <noderef id="n36" port="input" />
+      <noderef id="n55" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e47" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n56" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n57" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e49" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n48" port="output" />
+     </from>
+     <to>
+      <noderef id="n58" port="input" />
      </to>
      <edge-layout>
       <point>

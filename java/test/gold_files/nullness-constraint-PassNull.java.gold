@@ -32,6 +32,20 @@ public class PassNull {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method PassNull#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PassNull#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method PassNull#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     bar(null);
@@ -52,7 +66,7 @@ public class PassNull {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method PassNull#foo():V constraint position; 
-calledVp: method PassNull#bar(Ljava/lang/Object;):V; 
+calledVp: Some(method PassNull#bar(Ljava/lang/Object;):V); 
 receiver: Variable 2 at method PassNull#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     bar(null);

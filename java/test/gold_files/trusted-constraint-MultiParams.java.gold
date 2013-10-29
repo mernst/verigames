@@ -34,6 +34,20 @@ class MultiParams {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MultiParams#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     foo(new Object(), null);
@@ -55,7 +69,19 @@ class MultiParams {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MultiParams#foo():V constraint position; 
-calledVp: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#foo():V constraint position; 
+calledVp: Some(method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V); 
 receiver: Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     foo(new Object(), null);
@@ -86,4 +112,18 @@ class MultiParams {
         a.toString();
     }
 } )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: Variable 4 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V parameter 0; tree Object; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

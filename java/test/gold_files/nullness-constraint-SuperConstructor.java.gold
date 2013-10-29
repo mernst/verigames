@@ -18,6 +18,20 @@ class SuperConstructor {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method SuperConstructor#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SuperConstructor#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class SubConstructor extends type; tree SuperConstructor )
 
 SubtypeConstraint( Variable 3 at method SubConstructor#<init>():V return type; tree 
@@ -27,7 +41,7 @@ public <init>() {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubConstructor#<init>():V constraint position; 
-calledVp: method SuperConstructor#<init>():V; 
+calledVp: Some(method SuperConstructor#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

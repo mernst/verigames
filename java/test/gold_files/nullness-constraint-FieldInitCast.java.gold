@@ -22,11 +22,25 @@ class FieldInitCast {
     String g = (String)f;
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method FieldInitCast#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method FieldInitCast#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 1 at class FieldInitCast field f; tree Object  <:  Variable 2 at class FieldInitCast field g cast 0; tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class FieldInitCast field g constraint position; 
-calledVp: class FieldInitCast field f; 
+calledVp: Some(class FieldInitCast field f); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

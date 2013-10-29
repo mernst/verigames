@@ -66,6 +66,20 @@ class MethodBoundedGenerics {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MethodBoundedGenerics#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodBoundedGenerics#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 5 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; receiver; tree <<missing tree>> within 
 @Nullable()
 public <@NonNull() T>T method(@Nullable()
@@ -124,15 +138,29 @@ SubtypeConstraint( Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/
 
 InequalityConstraint( context: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position, Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T != Constant(@nninf.quals.Nullable) )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
+
 SubtypeConstraint( Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T  <:  Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T )
 
-EqualityConstraint( RefinementVariable #10 Declared Variable: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T IfTest: false mergedTo: Set() = Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T )
+EqualityConstraint( RefinementVariable #10 Declared Variable: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T IfTest: false mergedTo: (Set()) = Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T )
 
 SubtypeConstraint( Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T  <:  Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T )
 
-EqualityConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 )) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T )
 
@@ -140,17 +168,31 @@ SubtypeConstraint( Variable 12 at method MethodBoundedGenerics#method(Ljava/lang
 
 SubtypeConstraint( Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T )
 
-SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())  <:  Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T )
+SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 ))  <:  Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T )
 
-EqualityConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set() = RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set()) )
+EqualityConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: (Set()) = RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 )) )
 
-SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T )
+SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 ))  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T )
 
 SubtypeConstraint( Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T  <:  Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())  <:  Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T )
+SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 ))  <:  Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T )
 
-SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())  <:  Constant(@nninf.quals.Nullable) )
+SubtypeConstraint( RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: (Set(19 ))  <:  Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.util.ArrayList,java.util.ArrayList#<init>():void,method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position,null,List(),List(Constant(@nninf.quals.Nullable)),List(),List(List(Constant(@nninf.quals.NonNull))),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Constant(@nninf.quals.Nullable) >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object) >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 
 InequalityConstraint( context: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position, Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList<@NonNull() T> != Constant(@nninf.quals.Nullable) )
 
@@ -160,11 +202,25 @@ EqualityConstraint( Variable 16 at method MethodBoundedGenerics#method(Ljava/lan
 
 InequalityConstraint( context: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position, Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List<@NonNull() T> != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T )
+StubBoardUseConstraint(java.util.List,java.util.List#add(E):boolean,method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position,Constant(@nninf.quals.NonNull),List(),List(Constant(@nninf.quals.Nullable)),List(),List(List(Constant(@nninf.quals.NonNull))),List(Constant(@nninf.quals.NonNull)),List(Constant(@nninf.quals.NonNull)))
 
-SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()  <:  Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T )
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List<@NonNull() T>; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Constant(@nninf.quals.Nullable) >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object) >; 
+args: ( Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 
-SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()  <:  Constant(@nninf.quals.Nullable) )
+SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: (Set())  <:  Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T )
+
+SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: (Set())  <:  Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T )
+
+SubtypeConstraint( RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: (Set())  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T  <:  Constant(@nninf.quals.Nullable) )
 
@@ -214,7 +270,7 @@ SubtypeConstraint( Literal(STRING_LITERAL, "t")  <:  CombVariable #23 )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MethodBoundedGenerics#test():V constraint position; 
-calledVp: method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object;; 
+calledVp: Some(method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object;); 
 receiver: Variable 8 at method MethodBoundedGenerics#test():V receiver; tree <<missing tree>> within 
 public void test() {
     @Nullable()

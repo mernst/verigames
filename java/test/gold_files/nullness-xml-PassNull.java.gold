@@ -3,45 +3,57 @@
   <linked-edges>
    <edge-set id="PassNull0">
     <edgeref id="e5" />
-    <edgeref id="e18" />
+    <edgeref id="e20" />
    </edge-set>
    <edge-set id="PassNull1">
     <edgeref id="e6" />
-    <edgeref id="e19" />
+    <edgeref id="e21" />
     <edgeref id="e1" />
-    <edgeref id="e14" />
+    <edgeref id="e16" />
    </edge-set>
    <edge-set id="PassNull2">
-    <edgeref id="e7" />
-    <edgeref id="e8" />
     <edgeref id="e9" />
-    <edgeref id="e13" />
+    <edgeref id="e10" />
+    <edgeref id="e11" />
     <edgeref id="e15" />
+    <edgeref id="e17" />
    </edge-set>
    <edge-set id="PassNull3">
     <edgeref id="e4" />
-    <edgeref id="e17" />
+    <edgeref id="e19" />
    </edge-set>
    <edge-set id="PassNull4">
-    <edgeref id="e16" />
+    <edgeref id="e18" />
+   </edge-set>
+   <edge-set id="PassNull10">
+    <edgeref id="e7" />
    </edge-set>
    <edge-set id="PassNull11">
+    <edgeref id="e8" />
+   </edge-set>
+   <edge-set id="PassNull13">
     <edgeref id="e2" />
-   </edge-set>
-   <edge-set id="PassNull15">
-    <edgeref id="e10" />
-   </edge-set>
-   <edge-set id="PassNull16">
-    <edgeref id="e11" />
    </edge-set>
    <edge-set id="PassNull17">
     <edgeref id="e12" />
    </edge-set>
-   <edge-set id="PassNull20">
+   <edge-set id="PassNull18">
+    <edgeref id="e13" />
+   </edge-set>
+   <edge-set id="PassNull19">
+    <edgeref id="e14" />
+   </edge-set>
+   <edge-set id="PassNull22">
     <edgeref id="e3" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="PassNull">
     <node id="n0" kind="INCOMING">
      <input />
@@ -68,7 +80,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e18" num="output" />
+      <port edge="e20" num="output" />
      </output>
      <layout>
       </layout>
@@ -86,28 +98,28 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e19" num="output" />
+      <port edge="e21" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="END">
+    <node id="n27" kind="END">
      <input>
-      <port edge="e18" num="input" />
+      <port edge="e20" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="END">
+    <node id="n28" kind="END">
      <input>
-      <port edge="e19" num="input" />
+      <port edge="e21" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class PassNull extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class PassNull {  public PassNull() { super(); }  void foo() { bar(null); }  void bar(Object o) { } }" editable="true" id="e5" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -125,7 +137,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method PassNull#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -143,12 +155,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class PassNull extends type; tree &lt;&lt;missing tree&gt;&gt; within  public class PassNull {  public PassNull() { super(); }  void foo() { bar(null); }  void bar(Object o) { } }" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
      <to>
-      <noderef id="n24" port="input" />
+      <noderef id="n27" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -161,12 +173,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method PassNull#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
      <to>
-      <noderef id="n25" port="input" />
+      <noderef id="n28" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -189,7 +201,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e14" num="outputReturn0" />
+      <port edge="e16" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -208,12 +220,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e14" num="output" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method PassNull#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n17" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e7" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n18" kind="CONNECT">
+     <input>
+      <port edge="e7" num="input" />
+     </input>
+     <output>
+      <port edge="e8" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n19" kind="END">
+     <input>
+      <port edge="e8" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -229,9 +267,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method PassNull#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e7" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n17" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n18" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n18" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n19" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -261,7 +347,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e15" num="outReceiver0" />
+      <port edge="e17" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -272,79 +358,79 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e7" num="output" />
+      <port edge="e9" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n17" kind="SUBBOARD" name="PassNull-bar-Ljava-lang-Object---V">
+    <node id="n20" kind="SUBBOARD" name="PassNull-bar-Ljava-lang-Object---V">
      <input>
-      <port edge="e10" num="inParam0" />
-      <port edge="e8" num="inReceiver0" />
+      <port edge="e12" num="inParam0" />
+      <port edge="e10" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e11" num="outParam0" />
-      <port edge="e9" num="outReceiver0" />
+      <port edge="e13" num="outParam0" />
+      <port edge="e11" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n18" kind="SPLIT">
-     <input>
-      <port edge="e7" num="input" />
-     </input>
-     <output>
-      <port edge="e8" num="split" />
-      <port edge="e13" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n19" kind="CONNECT">
+    <node id="n21" kind="SPLIT">
      <input>
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e15" num="output" />
+      <port edge="e10" num="split" />
+      <port edge="e15" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n20" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e10" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n21" kind="CONNECT">
+    <node id="n22" kind="CONNECT">
      <input>
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e12" num="toEnd" />
+      <port edge="e17" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n22" kind="END">
-     <input>
-      <port edge="e12" num="input" />
-     </input>
-     <output />
+    <node id="n23" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e12" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n23" kind="END">
+    <node id="n24" kind="CONNECT">
      <input>
       <port edge="e13" num="input" />
      </input>
+     <output>
+      <port edge="e14" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n25" kind="END">
+     <input>
+      <port edge="e14" num="input" />
+     </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <node id="n26" kind="END">
+     <input>
+      <port edge="e15" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -362,99 +448,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e7" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
-     </from>
-     <to>
-      <noderef id="n18" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e8" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n18" port="split" />
-     </from>
-     <to>
-      <noderef id="n17" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e9" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n17" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n19" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e10" pinch="false" variableID="-2" width="wide">
-     <from>
-      <noderef id="n20" port="output" />
-     </from>
-     <to>
-      <noderef id="n17" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e11" pinch="false" variableID="-2" width="wide">
-     <from>
-      <noderef id="n17" port="outParam0" />
      </from>
      <to>
       <noderef id="n21" port="input" />
@@ -468,6 +464,24 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n21" port="split" />
+     </from>
+     <to>
+      <noderef id="n20" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -476,9 +490,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e12" pinch="false" variableID="-2" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n21" port="toEnd" />
+      <noderef id="n20" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n22" port="input" />
@@ -498,6 +512,24 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n23" port="output" />
+     </from>
+     <to>
+      <noderef id="n20" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -506,12 +538,66 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e13" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e13" pinch="false" variableID="-2" width="wide">
      <from>
-      <noderef id="n18" port="toEnd" />
+      <noderef id="n20" port="outParam0" />
      </from>
      <to>
-      <noderef id="n23" port="input" />
+      <noderef id="n24" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e14" pinch="false" variableID="-2" width="wide">
+     <from>
+      <noderef id="n24" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n25" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n21" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -524,9 +610,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method PassNull#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { bar(null); }Atm: @VarAnnot(2) PassNull" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n19" port="output" />
+      <noderef id="n22" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outReceiver0" />
@@ -555,8 +641,8 @@
     </node>
     <node id="n10" kind="OUTGOING">
      <input>
-      <port edge="e17" num="outParam0" />
-      <port edge="e16" num="outReceiver0" />
+      <port edge="e19" num="outParam0" />
+      <port edge="e18" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -567,7 +653,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e16" num="output" />
+      <port edge="e18" num="output" />
      </output>
      <layout>
       </layout>
@@ -577,12 +663,12 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e19" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e3" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e3" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n9" port="inReceiver0" />
      </from>
@@ -600,7 +686,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method PassNull#bar(Ljava/lang/Object;):V parameter 0; tree Object" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n9" port="inParam0" />
      </from>
@@ -618,7 +704,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method PassNull#bar(Ljava/lang/Object;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void bar(Object o) { }Atm: @VarAnnot(3) PassNull" editable="true" id="e16" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -636,7 +722,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method PassNull#bar(Ljava/lang/Object;):V parameter 0; tree Object" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>

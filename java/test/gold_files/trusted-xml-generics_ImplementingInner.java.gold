@@ -3,55 +3,60 @@
   <linked-edges>
    <edge-set id="Outer0">
     <edgeref id="e3" />
-    <edgeref id="e44" />
-    <edgeref id="e49" />
-    <edgeref id="e74" />
+    <edgeref id="e38" />
+    <edgeref id="e43" />
+    <edgeref id="e63" />
     <edgeref id="e7" />
-    <edgeref id="e50" />
-    <edgeref id="e79" />
+    <edgeref id="e44" />
+    <edgeref id="e68" />
    </edge-set>
    <edge-set id="Outer1">
     <edgeref id="e19" />
-    <edgeref id="e27" />
-    <edgeref id="e30" />
-    <edgeref id="e86" />
+    <edgeref id="e75" />
    </edge-set>
    <edge-set id="Outer2">
     <edgeref id="e20" />
-    <edgeref id="e29" />
-    <edgeref id="e31" />
-    <edgeref id="e87" />
+    <edgeref id="e76" />
     <edgeref id="e1" />
-    <edgeref id="e72" />
+    <edgeref id="e61" />
    </edge-set>
    <edge-set id="Outer3">
     <edgeref id="e2" />
-    <edgeref id="e47" />
-    <edgeref id="e73" />
+    <edgeref id="e41" />
+    <edgeref id="e62" />
    </edge-set>
    <edge-set id="Outer4">
     <edgeref id="e6" />
-    <edgeref id="e46" />
-    <edgeref id="e48" />
-    <edgeref id="e78" />
+    <edgeref id="e40" />
+    <edgeref id="e42" />
+    <edgeref id="e67" />
    </edge-set>
    <edge-set id="Outer5">
     <edgeref id="e24" />
-    <edgeref id="e43" />
-    <edgeref id="e45" />
-    <edgeref id="e91" />
+    <edgeref id="e37" />
+    <edgeref id="e39" />
+    <edgeref id="e80" />
    </edge-set>
    <edge-set id="Outer6">
-    <edgeref id="e75" />
+    <edgeref id="e64" />
    </edge-set>
-   <edge-set id="Outer10">
+   <edge-set id="Outer12">
+    <edgeref id="e27" />
+   </edge-set>
+   <edge-set id="Outer13">
     <edgeref id="e28" />
    </edge-set>
-   <edge-set id="Outer20">
+   <edge-set id="Outer17">
     <edgeref id="e4" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="Outer">
     <node id="n0" kind="INCOMING">
      <input />
@@ -78,7 +83,7 @@
       <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e27" num="0" />
+      <port edge="e75" num="output" />
      </output>
      <layout>
       </layout>
@@ -96,69 +101,28 @@
       <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e29" num="0" />
+      <port edge="e76" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e28" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n62" kind="MERGE">
+    <node id="n95" kind="END">
      <input>
-      <port edge="e27" num="0" />
-      <port edge="e28" num="1" />
-     </input>
-     <output>
-      <port edge="e30" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n63" kind="MERGE">
-     <input>
-      <port edge="e30" num="0" />
-      <port edge="e31" num="1" />
-     </input>
-     <output>
-      <port edge="e86" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n64" kind="SPLIT">
-     <input>
-      <port edge="e29" num="0" />
-     </input>
-     <output>
-      <port edge="e31" num="1" />
-      <port edge="e87" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n101" kind="END">
-     <input>
-      <port edge="e86" num="input" />
+      <port edge="e75" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n102" kind="END">
+    <node id="n96" kind="END">
      <input>
-      <port edge="e87" num="input" />
+      <port edge="e76" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class Outer extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Outer {  Outer() { super(); }  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }  public Inner&lt;String&gt; method() { return new Implementor&lt;String&gt;(); } }" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n45" port="output" />
      </from>
@@ -176,7 +140,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n47" port="output" />
      </from>
@@ -194,36 +158,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Outer extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Outer {  Outer() { super(); }  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }  public Inner&lt;String&gt; method() { return new Implementor&lt;String&gt;(); } }" editable="true" id="e27" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e75" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n46" port="0" />
+      <noderef id="n46" port="output" />
      </from>
      <to>
-      <noderef id="n62" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e28" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n61" port="0" />
-     </from>
-     <to>
-      <noderef id="n62" port="1" />
+      <noderef id="n95" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -236,90 +176,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e29" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e76" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n48" port="0" />
+      <noderef id="n48" port="output" />
      </from>
      <to>
-      <noderef id="n64" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Outer extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Outer {  Outer() { super(); }  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }  public Inner&lt;String&gt; method() { return new Implementor&lt;String&gt;(); } }" editable="true" id="e30" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n62" port="0" />
-     </from>
-     <to>
-      <noderef id="n63" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e31" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n64" port="1" />
-     </from>
-     <to>
-      <noderef id="n63" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Outer extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Outer {  Outer() { super(); }  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }  public Inner&lt;String&gt; method() { return new Implementor&lt;String&gt;(); } }" editable="true" id="e86" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n63" port="output" />
-     </from>
-     <to>
-      <noderef id="n101" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e87" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n64" port="output" />
-     </from>
-     <to>
-      <noderef id="n102" port="input" />
+      <noderef id="n96" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -342,7 +204,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e72" num="outputReturn0" />
+      <port edge="e61" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -361,12 +223,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e72" num="output" />
+      <port edge="e61" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n61" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e27" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n62" kind="CONNECT">
+     <input>
+      <port edge="e27" num="input" />
+     </input>
+     <output>
+      <port edge="e28" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n63" kind="END">
+     <input>
+      <port edge="e28" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -382,9 +270,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Outer#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e72" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e27" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n61" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n62" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e28" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n62" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n63" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e61" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -403,7 +339,7 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="Outer-method---LOuter-d-Inner-">
+   <board name="Outer-method---LOuter-Inner-">
     <node id="n6" kind="INCOMING">
      <input />
      <output>
@@ -414,9 +350,9 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e75" num="outReceiver0" />
-      <port edge="e73" num="outputReturn0" />
-      <port edge="e74" num="outputReturn1" />
+      <port edge="e64" num="outReceiver0" />
+      <port edge="e62" num="outputReturn0" />
+      <port edge="e63" num="outputReturn1" />
      </input>
      <output />
      <layout>
@@ -435,7 +371,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e47" num="0" />
+      <port edge="e41" num="0" />
      </output>
      <layout>
       </layout>
@@ -453,7 +389,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e44" num="0" />
+      <port edge="e38" num="0" />
      </output>
      <layout>
       </layout>
@@ -463,7 +399,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e75" num="output" />
+      <port edge="e64" num="output" />
      </output>
      <layout>
       </layout>
@@ -481,7 +417,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e46" num="0" />
+      <port edge="e40" num="0" />
      </output>
      <layout>
       </layout>
@@ -499,7 +435,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e50" num="output" />
+      <port edge="e44" num="output" />
      </output>
      <layout>
       </layout>
@@ -517,100 +453,100 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e43" num="0" />
+      <port edge="e37" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n71" kind="MERGE">
+     <input>
+      <port edge="e38" num="0" />
+      <port edge="e39" num="1" />
+     </input>
+     <output>
+      <port edge="e43" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n72" kind="SPLIT">
+     <input>
+      <port edge="e37" num="0" />
+     </input>
+     <output>
+      <port edge="e39" num="1" />
+      <port edge="e80" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n73" kind="MERGE">
      <input>
-      <port edge="e44" num="0" />
-      <port edge="e45" num="1" />
+      <port edge="e41" num="0" />
+      <port edge="e42" num="1" />
      </input>
      <output>
-      <port edge="e49" num="output" />
+      <port edge="e62" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n74" kind="SPLIT">
      <input>
-      <port edge="e43" num="0" />
+      <port edge="e40" num="0" />
      </input>
      <output>
-      <port edge="e45" num="1" />
-      <port edge="e91" num="output" />
+      <port edge="e42" num="1" />
+      <port edge="e67" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n75" kind="MERGE">
+    <node id="n75" kind="CONNECT">
      <input>
-      <port edge="e47" num="0" />
-      <port edge="e48" num="1" />
+      <port edge="e43" num="input" />
      </input>
      <output>
-      <port edge="e73" num="output" />
+      <port edge="e63" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="SPLIT">
+    <node id="n76" kind="CONNECT">
      <input>
-      <port edge="e46" num="0" />
+      <port edge="e44" num="input" />
      </input>
      <output>
-      <port edge="e48" num="1" />
-      <port edge="e78" num="output" />
+      <port edge="e68" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n77" kind="CONNECT">
+    <node id="n87" kind="END">
      <input>
-      <port edge="e49" num="input" />
-     </input>
-     <output>
-      <port edge="e74" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n78" kind="CONNECT">
-     <input>
-      <port edge="e50" num="input" />
-     </input>
-     <output>
-      <port edge="e79" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n93" kind="END">
-     <input>
-      <port edge="e78" num="input" />
+      <port edge="e67" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n94" kind="END">
+    <node id="n88" kind="END">
      <input>
-      <port edge="e79" num="input" />
+      <port edge="e68" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n106" kind="END">
+    <node id="n100" kind="END">
      <input>
-      <port edge="e91" num="input" />
+      <port edge="e80" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 2 at method Outer#method():LOuter$Inner; return type; tree Inner within Inner&lt;String&gt;" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -628,7 +564,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -646,7 +582,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -664,7 +600,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Outer#method():LOuter$Inner; creation 0; tree Implementor within Implementor&lt;String&gt;" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -682,7 +618,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method Outer#method():LOuter$Inner; creation 0; tree String at position ((3,0)) within Implementor&lt;String&gt;" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -700,7 +636,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e24" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n55" port="output" />
      </from>
@@ -718,9 +654,63 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e43" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n56" port="0" />
+     </from>
+     <to>
+      <noderef id="n72" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n11" port="0" />
+     </from>
+     <to>
+      <noderef id="n71" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n72" port="1" />
+     </from>
+     <to>
+      <noderef id="n71" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n18" port="0" />
      </from>
      <to>
       <noderef id="n74" port="0" />
@@ -736,9 +726,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e44" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e41" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n11" port="0" />
+      <noderef id="n9" port="0" />
      </from>
      <to>
       <noderef id="n73" port="0" />
@@ -752,9 +742,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e45" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n74" port="1" />
      </from>
@@ -772,12 +768,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Outer#method():LOuter$Inner; creation 0; tree Implementor within Implementor&lt;String&gt;" editable="true" id="e46" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e43" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n18" port="0" />
+      <noderef id="n71" port="output" />
      </from>
      <to>
-      <noderef id="n76" port="0" />
+      <noderef id="n75" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -790,72 +786,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Outer#method():LOuter$Inner; return type; tree Inner within Inner&lt;String&gt;" editable="true" id="e47" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n9" port="0" />
-     </from>
-     <to>
-      <noderef id="n75" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Outer#method():LOuter$Inner; creation 0; tree Implementor within Implementor&lt;String&gt;" editable="true" id="e48" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n76" port="1" />
-     </from>
-     <to>
-      <noderef id="n75" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e49" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n73" port="output" />
-     </from>
-     <to>
-      <noderef id="n77" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method Outer#method():LOuter$Inner; creation 0; tree String at position ((3,0)) within Implementor&lt;String&gt;" editable="true" id="e50" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e44" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
      <to>
-      <noderef id="n78" port="input" />
+      <noderef id="n76" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -868,9 +804,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Outer#method():LOuter$Inner; return type; tree Inner within Inner&lt;String&gt;" editable="true" id="e73" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e62" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n75" port="output" />
+      <noderef id="n73" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outputReturn0" />
@@ -886,9 +822,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e74" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e63" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n77" port="output" />
+      <noderef id="n75" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outputReturn1" />
@@ -910,7 +846,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Outer#method():LOuter$Inner; receiver; tree &lt;&lt;missing tree&gt;&gt; within  public Inner&lt;String&gt; method() { return new Implementor&lt;String&gt;(); }Atm: @VarAnnot(4) Outer" editable="true" id="e75" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e64" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -940,48 +876,48 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method Outer#method():LOuter$Inner; creation 0; tree Implementor within Implementor&lt;String&gt;" editable="true" id="e78" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n76" port="output" />
-     </from>
-     <to>
-      <noderef id="n93" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method Outer#method():LOuter$Inner; creation 0; tree String at position ((3,0)) within Implementor&lt;String&gt;" editable="true" id="e79" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n78" port="output" />
-     </from>
-     <to>
-      <noderef id="n94" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e91" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e67" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n74" port="output" />
      </from>
      <to>
-      <noderef id="n106" port="input" />
+      <noderef id="n87" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e68" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n76" port="output" />
+     </from>
+     <to>
+      <noderef id="n88" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e80" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n72" port="output" />
+     </from>
+     <to>
+      <noderef id="n100" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1001,55 +937,48 @@
   <linked-edges>
    <edge-set id="Implementor0">
     <edgeref id="e5" />
-    <edgeref id="e76" />
+    <edgeref id="e65" />
     <edgeref id="e26" />
-    <edgeref id="e56" />
-    <edgeref id="e58" />
-    <edgeref id="e93" />
-   </edge-set>
-   <edge-set id="Implementor1">
-    <edgeref id="e15" />
-    <edgeref id="e70" />
-    <edgeref id="e11" />
-    <edgeref id="e52" />
     <edgeref id="e82" />
    </edge-set>
-   <edge-set id="Implementor2">
-    <edgeref id="e16" />
+   <edge-set id="Implementor1">
+    <edgeref id="e13" />
+    <edgeref id="e57" />
+    <edgeref id="e11" />
+    <edgeref id="e46" />
     <edgeref id="e71" />
+   </edge-set>
+   <edge-set id="Implementor2">
+    <edgeref id="e14" />
+    <edgeref id="e58" />
     <edgeref id="e12" />
-    <edgeref id="e51" />
-    <edgeref id="e53" />
-    <edgeref id="e83" />
+    <edgeref id="e45" />
+    <edgeref id="e47" />
+    <edgeref id="e72" />
    </edge-set>
    <edge-set id="Implementor3">
     <edgeref id="e17" />
-    <edgeref id="e61" />
-    <edgeref id="e62" />
-    <edgeref id="e64" />
-    <edgeref id="e67" />
-    <edgeref id="e84" />
+    <edgeref id="e50" />
+    <edgeref id="e51" />
+    <edgeref id="e53" />
+    <edgeref id="e56" />
+    <edgeref id="e73" />
    </edge-set>
    <edge-set id="Implementor4">
     <edgeref id="e18" />
-    <edgeref id="e59" />
-    <edgeref id="e60" />
-    <edgeref id="e63" />
-    <edgeref id="e66" />
-    <edgeref id="e85" />
+    <edgeref id="e48" />
+    <edgeref id="e49" />
+    <edgeref id="e52" />
+    <edgeref id="e55" />
+    <edgeref id="e74" />
    </edge-set>
    <edge-set id="Implementor5">
-    <edgeref id="e65" />
-    <edgeref id="e94" />
+    <edgeref id="e54" />
+    <edgeref id="e83" />
    </edge-set>
    <edge-set id="Implementor6">
     <edgeref id="e25" />
-    <edgeref id="e54" />
-    <edgeref id="e57" />
-    <edgeref id="e92" />
-   </edge-set>
-   <edge-set id="Implementor35">
-    <edgeref id="e55" />
+    <edgeref id="e81" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -1057,17 +986,17 @@
     <node id="n13" kind="INCOMING">
      <input />
      <output>
-      <port edge="e15" num="inClassTypeParam0" />
-      <port edge="e16" num="inClassTypeParam1" />
+      <port edge="e13" num="inClassTypeParam0" />
+      <port edge="e14" num="inClassTypeParam1" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n14" kind="OUTGOING">
      <input>
-      <port edge="e70" num="outClassTypeParam0" />
-      <port edge="e71" num="outClassTypeParam1" />
-      <port edge="e76" num="outputReturn0" />
+      <port edge="e57" num="outClassTypeParam0" />
+      <port edge="e58" num="outClassTypeParam1" />
+      <port edge="e65" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1086,27 +1015,27 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e76" num="output" />
+      <port edge="e65" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="CONNECT">
+    <node id="n37" kind="CONNECT">
      <input>
-      <port edge="e15" num="input" />
+      <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e70" num="output" />
+      <port edge="e57" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="CONNECT">
+    <node id="n38" kind="CONNECT">
      <input>
-      <port edge="e16" num="input" />
+      <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e71" num="output" />
+      <port edge="e58" num="output" />
      </output>
      <layout>
       </layout>
@@ -1124,7 +1053,7 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e61" num="output" />
+      <port edge="e50" num="output" />
      </output>
      <layout>
       </layout>
@@ -1142,117 +1071,117 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e59" num="output" />
+      <port edge="e48" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n85" kind="SUBBOARD" name="Outer-d-Inner--init----V">
+    <node id="n79" kind="SUBBOARD" name="Outer-Inner--init----V">
      <input>
-      <port edge="e60" num="inClassTypeParam0" />
-      <port edge="e62" num="inClassTypeParam1" />
+      <port edge="e49" num="inClassTypeParam0" />
+      <port edge="e51" num="inClassTypeParam1" />
      </input>
      <output>
-      <port edge="e63" num="outClassTypeParam0" />
-      <port edge="e64" num="outClassTypeParam1" />
-      <port edge="e65" num="outputReturn0" />
+      <port edge="e52" num="outClassTypeParam0" />
+      <port edge="e53" num="outClassTypeParam1" />
+      <port edge="e54" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n86" kind="SPLIT">
+    <node id="n80" kind="SPLIT">
      <input>
-      <port edge="e59" num="input" />
+      <port edge="e48" num="input" />
      </input>
      <output>
-      <port edge="e60" num="split" />
-      <port edge="e66" num="toEnd" />
+      <port edge="e49" num="split" />
+      <port edge="e55" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n87" kind="SPLIT">
+    <node id="n81" kind="SPLIT">
      <input>
-      <port edge="e61" num="input" />
+      <port edge="e50" num="input" />
      </input>
      <output>
-      <port edge="e62" num="split" />
-      <port edge="e67" num="toEnd" />
+      <port edge="e51" num="split" />
+      <port edge="e56" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n88" kind="CONNECT">
+    <node id="n82" kind="CONNECT">
      <input>
-      <port edge="e63" num="input" />
+      <port edge="e52" num="input" />
      </input>
      <output>
-      <port edge="e85" num="output" />
+      <port edge="e74" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n89" kind="CONNECT">
+    <node id="n83" kind="CONNECT">
      <input>
-      <port edge="e64" num="input" />
+      <port edge="e53" num="input" />
      </input>
      <output>
-      <port edge="e84" num="output" />
+      <port edge="e73" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n90" kind="CONNECT">
+    <node id="n84" kind="CONNECT">
      <input>
-      <port edge="e65" num="input" />
+      <port edge="e54" num="input" />
      </input>
      <output>
-      <port edge="e94" num="output" />
+      <port edge="e83" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n91" kind="END">
+    <node id="n85" kind="END">
      <input>
-      <port edge="e66" num="input" />
+      <port edge="e55" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n92" kind="END">
+    <node id="n86" kind="END">
      <input>
-      <port edge="e67" num="input" />
+      <port edge="e56" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n99" kind="END">
+    <node id="n93" kind="END">
      <input>
-      <port edge="e84" num="input" />
+      <port edge="e73" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n100" kind="END">
+    <node id="n94" kind="END">
      <input>
-      <port edge="e85" num="input" />
+      <port edge="e74" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n109" kind="END">
+    <node id="n103" kind="END">
      <input>
-      <port edge="e94" num="input" />
+      <port edge="e83" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1276,12 +1205,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class Implementor class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T2Atm: @VarAnnot(12) Object" editable="true" id="e15" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n13" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n39" port="input" />
+      <noderef id="n37" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1294,12 +1223,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e16" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n13" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n40" port="input" />
+      <noderef id="n38" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1312,7 +1241,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e17" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n41" port="output" />
      </from>
@@ -1330,7 +1259,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e18" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n43" port="output" />
      </from>
@@ -1348,9 +1277,159 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e59" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n44" port="output" />
+     </from>
+     <to>
+      <noderef id="n80" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e49" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n80" port="split" />
+     </from>
+     <to>
+      <noderef id="n79" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e50" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n81" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e51" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n81" port="split" />
+     </from>
+     <to>
+      <noderef id="n79" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e52" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n79" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n82" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e53" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n79" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n83" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e54" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n79" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n84" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e55" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n80" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n85" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e56" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n81" port="toEnd" />
      </from>
      <to>
       <noderef id="n86" port="input" />
@@ -1366,165 +1445,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e60" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e57" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n86" port="split" />
-     </from>
-     <to>
-      <noderef id="n85" port="inClassTypeParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e61" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n42" port="output" />
-     </from>
-     <to>
-      <noderef id="n87" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e62" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n87" port="split" />
-     </from>
-     <to>
-      <noderef id="n85" port="inClassTypeParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e63" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n85" port="outClassTypeParam0" />
-     </from>
-     <to>
-      <noderef id="n88" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e64" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n85" port="outClassTypeParam1" />
-     </from>
-     <to>
-      <noderef id="n89" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e65" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n85" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n90" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e66" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n86" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n91" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e67" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n87" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n92" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at class Implementor class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T2Atm: @VarAnnot(12) Object" editable="true" id="e70" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n37" port="output" />
      </from>
      <to>
       <noderef id="n14" port="outClassTypeParam0" />
@@ -1552,9 +1475,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e71" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e58" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n38" port="output" />
      </from>
      <to>
       <noderef id="n14" port="outClassTypeParam1" />
@@ -1570,7 +1493,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e76" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e65" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
@@ -1588,12 +1511,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e84" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e73" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n89" port="output" />
+      <noderef id="n83" port="output" />
      </from>
      <to>
-      <noderef id="n99" port="input" />
+      <noderef id="n93" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1606,12 +1529,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e85" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e74" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n88" port="output" />
+      <noderef id="n82" port="output" />
      </from>
      <to>
-      <noderef id="n100" port="input" />
+      <noderef id="n94" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1624,12 +1547,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e94" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e83" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n90" port="output" />
+      <noderef id="n84" port="output" />
      </from>
      <to>
-      <noderef id="n109" port="input" />
+      <noderef id="n103" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1669,7 +1592,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e52" num="0" />
+      <port edge="e46" num="0" />
      </output>
      <layout>
       </layout>
@@ -1687,7 +1610,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e51" num="0" />
+      <port edge="e45" num="0" />
      </output>
      <layout>
       </layout>
@@ -1705,7 +1628,7 @@
       <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e54" num="0" />
+      <port edge="e81" num="output" />
      </output>
      <layout>
       </layout>
@@ -1723,75 +1646,58 @@
       <port edge="e26" num="input" />
      </input>
      <output>
-      <port edge="e56" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n79" kind="MERGE">
-     <input>
-      <port edge="e52" num="0" />
-      <port edge="e53" num="1" />
-     </input>
-     <output>
       <port edge="e82" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n80" kind="SPLIT">
+    <node id="n77" kind="MERGE">
      <input>
-      <port edge="e51" num="0" />
+      <port edge="e46" num="0" />
+      <port edge="e47" num="1" />
      </input>
      <output>
-      <port edge="e53" num="1" />
-      <port edge="e83" num="output" />
+      <port edge="e71" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n81" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e55" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n82" kind="MERGE">
+    <node id="n78" kind="SPLIT">
      <input>
-      <port edge="e54" num="0" />
-      <port edge="e55" num="1" />
+      <port edge="e45" num="0" />
      </input>
      <output>
-      <port edge="e57" num="0" />
+      <port edge="e47" num="1" />
+      <port edge="e72" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n83" kind="MERGE">
+    <node id="n91" kind="END">
      <input>
-      <port edge="e57" num="0" />
-      <port edge="e58" num="1" />
+      <port edge="e71" num="input" />
      </input>
-     <output>
-      <port edge="e92" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n84" kind="SPLIT">
+    <node id="n92" kind="END">
      <input>
-      <port edge="e56" num="0" />
+      <port edge="e72" num="input" />
      </input>
-     <output>
-      <port edge="e58" num="1" />
-      <port edge="e93" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n97" kind="END">
+    <node id="n101" kind="END">
+     <input>
+      <port edge="e81" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n102" kind="END">
      <input>
       <port edge="e82" num="input" />
      </input>
@@ -1799,31 +1705,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n98" kind="END">
-     <input>
-      <port edge="e83" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n107" kind="END">
-     <input>
-      <port edge="e92" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n108" kind="END">
-     <input>
-      <port edge="e93" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 12 at class Implementor class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T2Atm: @VarAnnot(12) Object" editable="true" id="e11" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n33" port="output" />
      </from>
@@ -1841,7 +1723,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e12" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e12" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n35" port="output" />
      </from>
@@ -1859,7 +1741,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class Implementor extends type; tree Outer.Inner within Outer.Inner&lt;T2&gt;" editable="true" id="e25" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n57" port="output" />
      </from>
@@ -1877,7 +1759,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e26" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n59" port="output" />
      </from>
@@ -1895,12 +1777,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e51" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e45" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n36" port="0" />
      </from>
      <to>
-      <noderef id="n80" port="0" />
+      <noderef id="n78" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1913,12 +1795,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class Implementor class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T2Atm: @VarAnnot(12) Object" editable="true" id="e52" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e46" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n34" port="0" />
      </from>
      <to>
-      <noderef id="n79" port="0" />
+      <noderef id="n77" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -1937,12 +1819,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e53" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e47" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n80" port="1" />
+      <noderef id="n78" port="1" />
      </from>
      <to>
-      <noderef id="n79" port="1" />
+      <noderef id="n77" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1955,36 +1837,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class Implementor extends type; tree Outer.Inner within Outer.Inner&lt;T2&gt;" editable="true" id="e54" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e71" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n58" port="0" />
+      <noderef id="n77" port="output" />
      </from>
      <to>
-      <noderef id="n82" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e55" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n81" port="0" />
-     </from>
-     <to>
-      <noderef id="n82" port="1" />
+      <noderef id="n91" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1997,12 +1855,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e56" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e72" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n60" port="0" />
+      <noderef id="n78" port="output" />
      </from>
      <to>
-      <noderef id="n84" port="0" />
+      <noderef id="n92" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2015,36 +1873,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at class Implementor extends type; tree Outer.Inner within Outer.Inner&lt;T2&gt;" editable="true" id="e57" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e81" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n82" port="0" />
+      <noderef id="n58" port="output" />
      </from>
      <to>
-      <noderef id="n83" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e58" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n84" port="1" />
-     </from>
-     <to>
-      <noderef id="n83" port="1" />
+      <noderef id="n101" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2057,66 +1891,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at class Implementor class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T2Atm: @VarAnnot(12) Object" editable="true" id="e82" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e82" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n79" port="output" />
+      <noderef id="n60" port="output" />
      </from>
      <to>
-      <noderef id="n97" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Implementor class type parameter 0; tree T2" editable="true" id="e83" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n80" port="output" />
-     </from>
-     <to>
-      <noderef id="n98" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 14 at class Implementor extends type; tree Outer.Inner within Outer.Inner&lt;T2&gt;" editable="true" id="e92" pinch="false" variableID="14" width="narrow">
-     <from>
-      <noderef id="n83" port="output" />
-     </from>
-     <to>
-      <noderef id="n107" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method Implementor#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e93" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n84" port="output" />
-     </from>
-     <to>
-      <noderef id="n108" port="input" />
+      <noderef id="n102" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2136,46 +1916,45 @@
   <linked-edges>
    <edge-set id="Outer-d-Inner0">
     <edgeref id="e8" />
-    <edgeref id="e33" />
-    <edgeref id="e41" />
-    <edgeref id="e80" />
-    <edgeref id="e13" />
-    <edgeref id="e68" />
+    <edgeref id="e30" />
+    <edgeref id="e35" />
+    <edgeref id="e69" />
+    <edgeref id="e15" />
+    <edgeref id="e59" />
    </edge-set>
    <edge-set id="Outer-d-Inner1">
     <edgeref id="e9" />
-    <edgeref id="e32" />
-    <edgeref id="e34" />
-    <edgeref id="e81" />
-    <edgeref id="e14" />
-    <edgeref id="e69" />
+    <edgeref id="e29" />
+    <edgeref id="e31" />
+    <edgeref id="e70" />
+    <edgeref id="e16" />
+    <edgeref id="e60" />
    </edge-set>
    <edge-set id="Outer-d-Inner2">
     <edgeref id="e21" />
-    <edgeref id="e35" />
-    <edgeref id="e38" />
-    <edgeref id="e88" />
+    <edgeref id="e77" />
    </edge-set>
    <edge-set id="Outer-d-Inner3">
     <edgeref id="e22" />
-    <edgeref id="e37" />
-    <edgeref id="e39" />
-    <edgeref id="e89" />
+    <edgeref id="e78" />
     <edgeref id="e10" />
-    <edgeref id="e77" />
+    <edgeref id="e66" />
    </edge-set>
    <edge-set id="Outer-d-Inner4">
     <edgeref id="e23" />
-    <edgeref id="e40" />
-    <edgeref id="e42" />
-    <edgeref id="e90" />
-   </edge-set>
-   <edge-set id="Outer-d-Inner14">
+    <edgeref id="e34" />
     <edgeref id="e36" />
+    <edgeref id="e79" />
+   </edge-set>
+   <edge-set id="Outer-d-Inner24">
+    <edgeref id="e32" />
+   </edge-set>
+   <edge-set id="Outer-d-Inner25">
+    <edgeref id="e33" />
    </edge-set>
   </linked-edges>
   <boards>
-   <board name="Outer-d-Inner">
+   <board name="Outer-Inner">
     <node id="n21" kind="INCOMING">
      <input />
      <output />
@@ -2201,7 +1980,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e33" num="0" />
+      <port edge="e30" num="0" />
      </output>
      <layout>
       </layout>
@@ -2219,7 +1998,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e32" num="0" />
+      <port edge="e29" num="0" />
      </output>
      <layout>
       </layout>
@@ -2237,7 +2016,7 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e35" num="0" />
+      <port edge="e77" num="output" />
      </output>
      <layout>
       </layout>
@@ -2255,7 +2034,7 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e37" num="0" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
@@ -2273,137 +2052,96 @@
       <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e40" num="0" />
+      <port edge="e34" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n65" kind="MERGE">
+    <node id="n64" kind="MERGE">
      <input>
-      <port edge="e33" num="0" />
-      <port edge="e34" num="1" />
+      <port edge="e30" num="0" />
+      <port edge="e31" num="1" />
      </input>
      <output>
-      <port edge="e41" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n66" kind="SPLIT">
-     <input>
-      <port edge="e32" num="0" />
-     </input>
-     <output>
-      <port edge="e34" num="1" />
-      <port edge="e81" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n67" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e36" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n68" kind="MERGE">
-     <input>
       <port edge="e35" num="0" />
-      <port edge="e36" num="1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="SPLIT">
+     <input>
+      <port edge="e29" num="0" />
      </input>
      <output>
-      <port edge="e38" num="0" />
+      <port edge="e31" num="1" />
+      <port edge="e70" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n69" kind="MERGE">
      <input>
-      <port edge="e38" num="0" />
-      <port edge="e39" num="1" />
+      <port edge="e35" num="0" />
+      <port edge="e36" num="1" />
      </input>
      <output>
-      <port edge="e88" num="output" />
+      <port edge="e69" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n70" kind="SPLIT">
      <input>
-      <port edge="e37" num="0" />
+      <port edge="e34" num="0" />
      </input>
      <output>
-      <port edge="e39" num="1" />
-      <port edge="e89" num="output" />
+      <port edge="e36" num="1" />
+      <port edge="e79" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="MERGE">
+    <node id="n89" kind="END">
      <input>
-      <port edge="e41" num="0" />
-      <port edge="e42" num="1" />
-     </input>
-     <output>
-      <port edge="e80" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n72" kind="SPLIT">
-     <input>
-      <port edge="e40" num="0" />
-     </input>
-     <output>
-      <port edge="e42" num="1" />
-      <port edge="e90" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n95" kind="END">
-     <input>
-      <port edge="e80" num="input" />
+      <port edge="e69" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n96" kind="END">
+    <node id="n90" kind="END">
      <input>
-      <port edge="e81" num="input" />
+      <port edge="e70" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n103" kind="END">
+    <node id="n97" kind="END">
      <input>
-      <port edge="e88" num="input" />
+      <port edge="e77" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n104" kind="END">
+    <node id="n98" kind="END">
      <input>
-      <port edge="e89" num="input" />
+      <port edge="e78" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n105" kind="END">
+    <node id="n99" kind="END">
      <input>
-      <port edge="e90" num="input" />
+      <port edge="e79" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -2421,7 +2159,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -2439,7 +2177,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Outer$Inner extends type; tree &lt;&lt;missing tree&gt;&gt; within  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }" editable="true" id="e21" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n49" port="output" />
      </from>
@@ -2457,7 +2195,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e22" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n51" port="output" />
      </from>
@@ -2475,7 +2213,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n53" port="output" />
      </from>
@@ -2493,27 +2231,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e32" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n26" port="0" />
-     </from>
-     <to>
-      <noderef id="n66" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e33" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n24" port="0" />
      </from>
      <to>
       <noderef id="n65" port="0" />
@@ -2527,6 +2247,18 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n24" port="0" />
+     </from>
+     <to>
+      <noderef id="n64" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2535,60 +2267,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e34" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n66" port="1" />
-     </from>
-     <to>
       <noderef id="n65" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Outer$Inner extends type; tree &lt;&lt;missing tree&gt;&gt; within  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }" editable="true" id="e35" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n50" port="0" />
      </from>
      <to>
-      <noderef id="n68" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e36" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n67" port="0" />
-     </from>
-     <to>
-      <noderef id="n68" port="1" />
+      <noderef id="n64" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2601,9 +2285,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e37" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n52" port="0" />
+      <noderef id="n54" port="0" />
      </from>
      <to>
       <noderef id="n70" port="0" />
@@ -2619,9 +2303,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Outer$Inner extends type; tree &lt;&lt;missing tree&gt;&gt; within  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }" editable="true" id="e38" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n68" port="0" />
+      <noderef id="n64" port="0" />
      </from>
      <to>
       <noderef id="n69" port="0" />
@@ -2635,15 +2319,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e39" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n70" port="1" />
      </from>
@@ -2661,108 +2339,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e40" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n54" port="0" />
-     </from>
-     <to>
-      <noderef id="n72" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e41" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n65" port="0" />
-     </from>
-     <to>
-      <noderef id="n71" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e42" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n72" port="1" />
-     </from>
-     <to>
-      <noderef id="n71" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e80" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n71" port="output" />
-     </from>
-     <to>
-      <noderef id="n95" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e81" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n66" port="output" />
-     </from>
-     <to>
-      <noderef id="n96" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Outer$Inner extends type; tree &lt;&lt;missing tree&gt;&gt; within  public static class Inner&lt;T1&gt; {  public Inner() { super(); } }" editable="true" id="e88" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e69" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n69" port="output" />
      </from>
      <to>
-      <noderef id="n103" port="input" />
+      <noderef id="n89" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2775,30 +2357,72 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e89" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e70" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n65" port="output" />
+     </from>
+     <to>
+      <noderef id="n90" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e77" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n50" port="output" />
+     </from>
+     <to>
+      <noderef id="n97" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e78" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n52" port="output" />
+     </from>
+     <to>
+      <noderef id="n98" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e79" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n70" port="output" />
      </from>
      <to>
-      <noderef id="n104" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method Outer#method():LOuter$Inner; return type; tree String at position ((3,0)) within Inner&lt;String&gt;" editable="true" id="e90" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n72" port="output" />
-     </from>
-     <to>
-      <noderef id="n105" port="input" />
+      <noderef id="n99" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2812,21 +2436,21 @@
      </edge-layout>
     </edge>
    </board>
-   <board name="Outer-d-Inner--init----V">
+   <board name="Outer-Inner--init----V">
     <node id="n27" kind="INCOMING">
      <input />
      <output>
-      <port edge="e13" num="inClassTypeParam0" />
-      <port edge="e14" num="inClassTypeParam1" />
+      <port edge="e15" num="inClassTypeParam0" />
+      <port edge="e16" num="inClassTypeParam1" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n28" kind="OUTGOING">
      <input>
-      <port edge="e68" num="outClassTypeParam0" />
-      <port edge="e69" num="outClassTypeParam1" />
-      <port edge="e77" num="outputReturn0" />
+      <port edge="e59" num="outClassTypeParam0" />
+      <port edge="e60" num="outClassTypeParam1" />
+      <port edge="e66" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -2845,32 +2469,58 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e77" num="output" />
+      <port edge="e66" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="CONNECT">
+    <node id="n39" kind="CONNECT">
      <input>
-      <port edge="e13" num="input" />
+      <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e68" num="output" />
+      <port edge="e59" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
+    <node id="n40" kind="CONNECT">
      <input>
-      <port edge="e14" num="input" />
+      <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e69" num="output" />
+      <port edge="e60" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e10" pinch="false" variableID="11" width="narrow">
+    <node id="n66" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e32" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n67" kind="CONNECT">
+     <input>
+      <port edge="e32" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n68" kind="END">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n29" port="output" />
      </from>
@@ -2886,14 +2536,26 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e13" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n27" port="inClassTypeParam0" />
      </from>
      <to>
-      <noderef id="n37" port="input" />
+      <noderef id="n39" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2906,12 +2568,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e14" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n27" port="inClassTypeParam1" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n40" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2922,10 +2584,16 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e32" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n66" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n67" port="input" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -2936,9 +2604,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class Outer$Inner class type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within T1Atm: @VarAnnot(8) Object" editable="true" id="e68" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e33" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n37" port="output" />
+      <noderef id="n67" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n68" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e59" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
      </from>
      <to>
       <noderef id="n28" port="outClassTypeParam0" />
@@ -2952,11 +2638,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class Outer$Inner class type parameter 0; tree T1" editable="true" id="e69" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e60" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
       <noderef id="n28" port="outClassTypeParam1" />
@@ -2972,7 +2664,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Outer$Inner#&lt;init&gt;():V return type; tree  public &lt;init&gt;() { super(); }" editable="true" id="e77" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e66" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n30" port="output" />
      </from>
