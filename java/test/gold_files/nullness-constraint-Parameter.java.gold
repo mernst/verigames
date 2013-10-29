@@ -26,6 +26,20 @@ class Parameter {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Parameter#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Parameter#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method Parameter#m(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 void m(Object o) {
     o.toString();
@@ -42,4 +56,18 @@ class Parameter {
 } )
 
 InequalityConstraint( context: method Parameter#m(Ljava/lang/Object;):V constraint position, Variable 3 at method Parameter#m(Ljava/lang/Object;):V parameter 0; tree Object != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method Parameter#m(Ljava/lang/Object;):V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Parameter#m(Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: Variable 3 at method Parameter#m(Ljava/lang/Object;):V parameter 0; tree Object; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 

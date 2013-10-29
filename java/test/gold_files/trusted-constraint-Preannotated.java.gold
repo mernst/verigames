@@ -22,5 +22,19 @@ class Preannotated {
     String s = "not null";
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Preannotated#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Preannotated#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(STRING_LITERAL, "not null")  <:  Variable 1 at class Preannotated field s; tree String )
 

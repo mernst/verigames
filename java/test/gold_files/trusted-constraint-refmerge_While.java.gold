@@ -42,6 +42,20 @@ class While {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method While#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method While#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method While#test():V receiver; tree <<missing tree>> within 
 void test() {
     String a = "";
@@ -75,9 +89,47 @@ class While {
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method While#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+StubBoardUseConstraint(java.lang.System,java.lang.System#currentTimeMillis():long,method While#test():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.StaticMethodCallConstraint(
+contextVp: method While#test():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+SubtypeConstraint( Variable 3 at method While#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) )
+
+SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(5 ))  <:  RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) )
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at method While#test():V local variable a(0); tree String )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method While#test():V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method While#test():V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method While#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method While#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(5 )) = Literal(STRING_LITERAL, "") )
 

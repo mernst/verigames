@@ -6,28 +6,28 @@ import com.sun.source.tree.CompilationUnitTree;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.SubtypingAnnotatedTypeFactory;
+
 import checkers.types.TreeAnnotator;
+import games.GameAnnotatedTypeFactory;
 import javacutils.TreeUtils;
 
-public class HardCodedAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<HardCodedChecker> {
+public class HardCodedAnnotatedTypeFactory extends GameAnnotatedTypeFactory {
 
-    public HardCodedAnnotatedTypeFactory(HardCodedChecker checker,
-            CompilationUnitTree root) {
-        super(checker, root);
-        if(root != null && this.checker.currentPath != null) {
-        	postInit();
-        }
+    private HardCodedChecker hcChecker;
+
+    public HardCodedAnnotatedTypeFactory(HardCodedChecker checker) {
+        super(checker);
+        postInit();
     }
 
     @Override
-    public TreeAnnotator createTreeAnnotator(HardCodedChecker checker) {
-        return new HardCodedTreeAnnotator(checker);
+    public TreeAnnotator createTreeAnnotator() {
+        return new HardCodedTreeAnnotator();
     }
 
     private class HardCodedTreeAnnotator extends TreeAnnotator {
-        public HardCodedTreeAnnotator(BaseTypeChecker checker) {
-            super(checker, HardCodedAnnotatedTypeFactory.this);
+        public HardCodedTreeAnnotator() {
+            super(HardCodedAnnotatedTypeFactory.this);
         }
 
         /**
@@ -41,10 +41,11 @@ public class HardCodedAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());
 
-                if (lExpr.hasAnnotation(checker.NOTHARDCODED) || rExpr.hasAnnotation(checker.NOTHARDCODED)) {
-                    type.addAnnotation(checker.NOTHARDCODED);
+                final HardCodedChecker hcChecker = (HardCodedChecker) checker;
+                if (lExpr.hasAnnotation(hcChecker.NOTHARDCODED) || rExpr.hasAnnotation(hcChecker.NOTHARDCODED)) {
+                    type.addAnnotation(hcChecker.NOTHARDCODED);
                 } else {
-                    type.addAnnotation(checker.MAYBEHARDCODED);
+                    type.addAnnotation(hcChecker.MAYBEHARDCODED);
                 }
             }
             return super.visitBinary(tree, type);

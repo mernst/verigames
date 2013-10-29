@@ -3,11 +3,9 @@
   <linked-edges>
    <edge-set id="Dereference0">
     <edgeref id="e3" />
-    <edgeref id="e34" />
+    <edgeref id="e36" />
     <edgeref id="e9" />
-    <edgeref id="e15" />
     <edgeref id="e17" />
-    <edgeref id="e18" />
     <edgeref id="e19" />
     <edgeref id="e20" />
     <edgeref id="e21" />
@@ -17,50 +15,64 @@
     <edgeref id="e25" />
     <edgeref id="e26" />
     <edgeref id="e27" />
+    <edgeref id="e28" />
     <edgeref id="e29" />
-    <edgeref id="e36" />
+    <edgeref id="e31" />
+    <edgeref id="e38" />
     <edgeref id="e5" />
     <edgeref id="e7" />
    </edge-set>
    <edge-set id="Dereference1">
     <edgeref id="e10" />
-    <edgeref id="e37" />
+    <edgeref id="e39" />
    </edge-set>
    <edge-set id="Dereference2">
     <edgeref id="e11" />
-    <edgeref id="e38" />
+    <edgeref id="e40" />
     <edgeref id="e1" />
-    <edgeref id="e32" />
+    <edgeref id="e34" />
    </edge-set>
    <edge-set id="Dereference3">
     <edgeref id="e8" />
-    <edgeref id="e28" />
-    <edgeref id="e35" />
+    <edgeref id="e30" />
+    <edgeref id="e37" />
    </edge-set>
    <edge-set id="Dereference4">
-    <edgeref id="e12" />
-    <edgeref id="e13" />
     <edgeref id="e14" />
+    <edgeref id="e15" />
     <edgeref id="e16" />
-    <edgeref id="e33" />
+    <edgeref id="e18" />
+    <edgeref id="e35" />
+   </edge-set>
+   <edge-set id="Dereference12">
+    <edgeref id="e12" />
    </edge-set>
    <edge-set id="Dereference13">
+    <edgeref id="e13" />
+   </edge-set>
+   <edge-set id="Dereference15">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="Dereference37">
+   <edge-set id="Dereference39">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="Dereference39">
-    <edgeref id="e30" />
-   </edge-set>
-   <edge-set id="Dereference40">
-    <edgeref id="e6" />
+   <edge-set id="Dereference41">
+    <edgeref id="e32" />
    </edge-set>
    <edge-set id="Dereference42">
-    <edgeref id="e31" />
+    <edgeref id="e6" />
+   </edge-set>
+   <edge-set id="Dereference44">
+    <edgeref id="e33" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="Dereference">
     <node id="n0" kind="INCOMING">
      <input />
@@ -81,7 +93,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
@@ -99,7 +111,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e39" num="output" />
      </output>
      <layout>
       </layout>
@@ -117,36 +129,36 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e38" num="output" />
+      <port edge="e40" num="output" />
      </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n40" kind="END">
-     <input>
-      <port edge="e34" num="input" />
-     </input>
-     <output />
      <layout>
       </layout>
     </node>
     <node id="n43" kind="END">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e36" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n44" kind="END">
+    <node id="n46" kind="END">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e39" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <node id="n47" kind="END">
+     <input>
+      <port edge="e40" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n0" port="output_0" />
      </from>
@@ -176,7 +188,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Dereference extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Dereference {  Dereference() { super(); } Dereference d;  void foo() { Dereference d2 = d.d; } }" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -194,7 +206,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Dereference#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -212,27 +224,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e34" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
-     </from>
-     <to>
-      <noderef id="n40" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class Dereference extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Dereference {  Dereference() { super(); } Dereference d;  void foo() { Dereference d2 = d.d; } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n22" port="output" />
      </from>
      <to>
       <noderef id="n43" port="input" />
@@ -248,12 +242,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Dereference#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n22" port="output" />
+     </from>
+     <to>
+      <noderef id="n46" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>
      <to>
-      <noderef id="n44" port="input" />
+      <noderef id="n47" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -276,7 +288,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e32" num="outputReturn0" />
+      <port edge="e34" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -295,12 +307,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method Dereference#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n25" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e12" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n26" kind="CONNECT">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output>
+      <port edge="e13" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n27" kind="END">
+     <input>
+      <port edge="e13" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -316,9 +354,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method Dereference#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e32" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n25" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e13" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n26" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n27" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -348,7 +434,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e33" num="outReceiver0" />
+      <port edge="e35" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -359,7 +445,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e12" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
@@ -377,7 +463,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e28" num="output" />
+      <port edge="e30" num="output" />
      </output>
      <layout>
       </layout>
@@ -395,147 +481,36 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e17" num="toMerge" />
+      <port edge="e19" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="SUBBOARD" name="Dereference-d--GET">
+    <node id="n28" kind="SUBBOARD" name="Dereference-d--GET">
      <input>
-      <port edge="e13" num="inReceiver0" />
+      <port edge="e15" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e14" num="outReceiver0" />
-      <port edge="e15" num="outputReturn0" />
+      <port edge="e16" num="outReceiver0" />
+      <port edge="e17" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n26" kind="SPLIT">
-     <input>
-      <port edge="e12" num="input" />
-     </input>
-     <output>
-      <port edge="e13" num="split" />
-      <port edge="e16" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n27" kind="CONNECT">
+    <node id="n29" kind="SPLIT">
      <input>
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e15" num="split" />
+      <port edge="e18" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="CONNECT">
-     <input>
-      <port edge="e15" num="input" />
-     </input>
-     <output>
-      <port edge="e18" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n29" kind="END">
+    <node id="n30" kind="CONNECT">
      <input>
       <port edge="e16" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n30" kind="MERGE">
-     <input>
-      <port edge="e17" num="first" />
-      <port edge="e18" num="second" />
-     </input>
-     <output>
-      <port edge="e19" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="CONNECT">
-     <input>
-      <port edge="e19" num="input" />
-     </input>
-     <output>
-      <port edge="e20" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n32" kind="SUBBOARD" name="Dereference-d--GET">
-     <input>
-      <port edge="e21" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e22" num="outReceiver0" />
-      <port edge="e23" num="outputReturn0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="SPLIT">
-     <input>
-      <port edge="e20" num="input" />
-     </input>
-     <output>
-      <port edge="e21" num="split" />
-      <port edge="e24" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n34" kind="CONNECT">
-     <input>
-      <port edge="e22" num="input" />
-     </input>
-     <output>
-      <port edge="e26" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n35" kind="CONNECT">
-     <input>
-      <port edge="e23" num="input" />
-     </input>
-     <output>
-      <port edge="e25" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n36" kind="END">
-     <input>
-      <port edge="e24" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n37" kind="MERGE">
-     <input>
-      <port edge="e25" num="first" />
-      <port edge="e26" num="second" />
-     </input>
-     <output>
-      <port edge="e27" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n38" kind="MERGE">
-     <input>
-      <port edge="e28" num="left" />
-      <port edge="e29" num="right" />
      </input>
      <output>
       <port edge="e35" num="output" />
@@ -543,34 +518,145 @@
      <layout>
       </layout>
     </node>
-    <node id="n39" kind="SPLIT">
+    <node id="n31" kind="CONNECT">
      <input>
-      <port edge="e27" num="input" />
+      <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e36" num="output" />
-      <port edge="e29" num="split" />
+      <port edge="e20" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="END">
+    <node id="n32" kind="END">
      <input>
-      <port edge="e35" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n42" kind="END">
+    <node id="n33" kind="MERGE">
      <input>
-      <port edge="e36" num="input" />
+      <port edge="e19" num="first" />
+      <port edge="e20" num="second" />
+     </input>
+     <output>
+      <port edge="e21" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n34" kind="CONNECT">
+     <input>
+      <port edge="e21" num="input" />
+     </input>
+     <output>
+      <port edge="e22" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n35" kind="SUBBOARD" name="Dereference-d--GET">
+     <input>
+      <port edge="e23" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e24" num="outReceiver0" />
+      <port edge="e25" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n36" kind="SPLIT">
+     <input>
+      <port edge="e22" num="input" />
+     </input>
+     <output>
+      <port edge="e23" num="split" />
+      <port edge="e26" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n37" kind="CONNECT">
+     <input>
+      <port edge="e24" num="input" />
+     </input>
+     <output>
+      <port edge="e28" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="CONNECT">
+     <input>
+      <port edge="e25" num="input" />
+     </input>
+     <output>
+      <port edge="e27" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="END">
+     <input>
+      <port edge="e26" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <node id="n40" kind="MERGE">
+     <input>
+      <port edge="e27" num="first" />
+      <port edge="e28" num="second" />
+     </input>
+     <output>
+      <port edge="e29" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n41" kind="MERGE">
+     <input>
+      <port edge="e30" num="left" />
+      <port edge="e31" num="right" />
+     </input>
+     <output>
+      <port edge="e37" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="SPLIT">
+     <input>
+      <port edge="e29" num="input" />
+     </input>
+     <output>
+      <port edge="e38" num="output" />
+      <port edge="e31" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="END">
+     <input>
+      <port edge="e37" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="END">
+     <input>
+      <port edge="e38" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -588,7 +674,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Dereference#foo():V local variable d2(0); tree Dereference" editable="true" id="e8" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -606,7 +692,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e9" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -624,81 +710,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Dereference#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { Dereference d2 = d.d; }Atm: @VarAnnot(2) Dereference" editable="true" id="e12" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
-     </from>
-     <to>
-      <noderef id="n26" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Dereference#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { Dereference d2 = d.d; }Atm: @VarAnnot(2) Dereference" editable="true" id="e13" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n26" port="split" />
-     </from>
-     <to>
-      <noderef id="n25" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Dereference#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { Dereference d2 = d.d; }Atm: @VarAnnot(2) Dereference" editable="true" id="e14" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n25" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n27" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e15" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n25" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n28" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Dereference#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { Dereference d2 = d.d; }Atm: @VarAnnot(2) Dereference" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n26" port="toEnd" />
      </from>
      <to>
       <noderef id="n29" port="input" />
@@ -714,36 +728,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e17" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n20" port="toMerge" />
+      <noderef id="n29" port="split" />
      </from>
      <to>
-      <noderef id="n30" port="first" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e18" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n28" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n30" port="second" />
+      <noderef id="n28" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -756,9 +746,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e19" pinch="true" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n30" port="output" />
+      <noderef id="n28" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n30" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n28" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n31" port="input" />
@@ -774,12 +782,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e20" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n31" port="output" />
+      <noderef id="n29" port="toEnd" />
      </from>
      <to>
-      <noderef id="n33" port="input" />
+      <noderef id="n32" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -792,12 +800,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e21" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n33" port="split" />
+      <noderef id="n20" port="toMerge" />
      </from>
      <to>
-      <noderef id="n32" port="inReceiver0" />
+      <noderef id="n33" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -810,9 +818,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n32" port="outReceiver0" />
+      <noderef id="n31" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n33" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="true" variableID="3" width="narrow">
+     <from>
+      <noderef id="n33" port="output" />
      </from>
      <to>
       <noderef id="n34" port="input" />
@@ -828,27 +854,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n32" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n35" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e24" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n33" port="toEnd" />
+      <noderef id="n34" port="output" />
      </from>
      <to>
       <noderef id="n36" port="input" />
@@ -862,20 +870,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n35" port="toMerge" />
+      <noderef id="n36" port="split" />
      </from>
      <to>
-      <noderef id="n37" port="first" />
+      <noderef id="n35" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -888,12 +890,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n34" port="toMerge" />
+      <noderef id="n35" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n37" port="second" />
+      <noderef id="n37" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -906,9 +908,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e27" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n37" port="output" />
+      <noderef id="n35" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n38" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n36" port="toEnd" />
      </from>
      <to>
       <noderef id="n39" port="input" />
@@ -922,14 +942,74 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Dereference#foo():V local variable d2(0); tree Dereference" editable="true" id="e28" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e27" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n38" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n40" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n37" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n40" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n40" port="output" />
+     </from>
+     <to>
+      <noderef id="n42" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="left" />
+      <noderef id="n41" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -942,12 +1022,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n39" port="split" />
+      <noderef id="n42" port="split" />
      </from>
      <to>
-      <noderef id="n38" port="right" />
+      <noderef id="n41" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -960,9 +1040,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method Dereference#foo():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo() { Dereference d2 = d.d; }Atm: @VarAnnot(2) Dereference" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n27" port="output" />
+      <noderef id="n30" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outReceiver0" />
@@ -990,12 +1070,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method Dereference#foo():V local variable d2(0); tree Dereference" editable="true" id="e35" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n38" port="output" />
+      <noderef id="n41" port="output" />
      </from>
      <to>
-      <noderef id="n41" port="input" />
+      <noderef id="n44" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1008,12 +1088,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e36" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n42" port="output" />
      </from>
      <to>
-      <noderef id="n42" port="input" />
+      <noderef id="n45" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1044,7 +1124,7 @@
     </node>
     <node id="n11" kind="OUTGOING">
      <input>
-      <port edge="e30" num="outReceiver0" />
+      <port edge="e32" num="outReceiver0" />
       <port edge="e5" num="outputReturn0" />
      </input>
      <output />
@@ -1056,7 +1136,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
@@ -1069,7 +1149,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n10" port="inReceiver0" />
      </from>
@@ -1087,7 +1167,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e5" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -1111,7 +1191,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e30" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e32" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -1149,7 +1229,7 @@
     <node id="n15" kind="OUTGOING">
      <input>
       <port edge="e7" num="outParam0" />
-      <port edge="e31" num="outReceiver0" />
+      <port edge="e33" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1160,12 +1240,12 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n14" port="inReceiver0" />
      </from>
@@ -1183,7 +1263,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at class Dereference field d; tree Dereference" editable="true" id="e7" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n14" port="inParam0" />
      </from>
@@ -1199,9 +1279,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e31" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e33" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>

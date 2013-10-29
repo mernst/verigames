@@ -28,3 +28,17 @@ SubtypeConstraint( Variable 6 at method ConstructorTypeArgs#<init>(Ljava/lang/Ob
 
 SubtypeConstraint( Variable 1 at class ConstructorTypeArgs class type parameter 0; tree C extends Object  <:  Constant(@trusted.quals.Untrusted) )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ConstructorTypeArgs#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+

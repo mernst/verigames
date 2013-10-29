@@ -30,6 +30,20 @@ class GenericsAndLocals<@NonNull() T> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method GenericsAndLocals#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method GenericsAndLocals#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 4 at method GenericsAndLocals#method():V receiver; tree <<missing tree>> within 
 public void method() {
     @Nullable()
@@ -89,6 +103,18 @@ class GenericsAndLocals2<@Nullable() T> {
         T t2 = incoming;
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method GenericsAndLocals2#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 
 SubtypeConstraint( Variable 9 at method GenericsAndLocals2#method(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void method(@NonNull()
@@ -153,6 +179,18 @@ class GenericsAndLocals3<@NonNull() T> {
         T t2 = incoming;
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method GenericsAndLocals3#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 
 SubtypeConstraint( Variable 15 at method GenericsAndLocals3#method(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void method(@NonNull()

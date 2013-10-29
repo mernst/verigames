@@ -39,10 +39,11 @@ class NninfTransfer(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer])
       firstNode: Node, secondNode: Node,
       firstValue: CFValue, secondValue: CFValue, notEqualTo: Boolean) : TransferResult[CFValue, CFStore] = {
 
-    val typeFactory = analysis.getFactory.asInstanceOf[InferenceAnnotatedTypeFactory[_]]
+    val infChecker = InferenceMain.inferenceChecker
+    val typeFactory = analysis.getTypeFactory.asInstanceOf[InferenceAnnotatedTypeFactory]
     val tree = secondNode.getTree
     val varAtm = typeFactory.getAnnotatedType(tree)
-    val receiver = FlowExpressions.internalReprOf(analysis.getFactory(), secondNode)
+    val receiver = FlowExpressions.internalReprOf(analysis.getTypeFactory(), secondNode)
     if (firstNode.isInstanceOf[NullLiteralNode]
         && InferenceMain.getRealChecker.needsAnnotation(varAtm)
         && (receiver.isInstanceOf[FlowExpressions.FieldAccess]
@@ -54,13 +55,13 @@ class NninfTransfer(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer])
       var anno1: AnnotationMirror = null
       var anno2: AnnotationMirror = null
       // If we have already created a BSTest, use the same RefinementVariables
-      if (!typeFactory.getChecker().ballSizeTestCache.contains(tree)) {
+      if (!infChecker.ballSizeTestCache.contains(tree)) {
         val astPathStr = InferenceUtils.convertASTPathToAFUFormat(InferenceUtils.getASTPathToNode(typeFactory, tree))
         anno1 = slotMgr.createRefinementVariableAnnotation(typeFactory, tree, astPathStr, true)
         anno2 = slotMgr.createRefinementVariableAnnotation(typeFactory, tree, astPathStr, true)
         val subtypeSlot = slotMgr.extractSlot(anno1).asInstanceOf[RefinementVariable]
         val supertypeSlot = slotMgr.extractSlot(anno2).asInstanceOf[RefinementVariable]
-        typeFactory.getChecker().ballSizeTestCache += (tree -> new BallSizeTestConstraint(
+        infChecker.ballSizeTestCache += (tree -> new BallSizeTestConstraint(
             input = inputVar, supertype = supertypeSlot, subtype = subtypeSlot))
       } else {
         // Already created a BSTest
@@ -68,11 +69,11 @@ class NninfTransfer(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer])
         // but we should update the input variable if it changed.
         // The input variable changing means a cycle exists between the input
         // of the bstest and the output's.
-        val bsTest = typeFactory.getChecker().ballSizeTestCache.get(tree).get
+        val bsTest = infChecker.ballSizeTestCache.get(tree).get
         anno1 = bsTest.subtype.getAnnotation
         anno2 = bsTest.supertype.getAnnotation
         if (inputVar != bsTest.input) {
-          typeFactory.getChecker().ballSizeTestCache += (tree -> new BallSizeTestConstraint(
+          infChecker.ballSizeTestCache += (tree -> new BallSizeTestConstraint(
               input = inputVar, supertype = bsTest.supertype, subtype = bsTest.subtype, cycle = true))
         }
       }

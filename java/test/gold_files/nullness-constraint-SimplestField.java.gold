@@ -32,6 +32,20 @@ class SimplestField {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method SimplestField#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SimplestField#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method SimplestField#s():V receiver; tree <<missing tree>> within 
 public void s() {
     final String s2 = "a";
@@ -53,11 +67,11 @@ class SimplestField {
 
 SubtypeConstraint( Literal(STRING_LITERAL, "a")  <:  Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
 
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set()  <:  Variable 3 at class SimplestField field s; tree String )
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at class SimplestField field s; tree String )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimplestField#s():V constraint position; 
-calledVp: class SimplestField field s; 
+calledVp: Some(class SimplestField field s); 
 receiver: Variable 2 at method SimplestField#s():V receiver; tree <<missing tree>> within 
 public void s() {
     final String s2 = "a";
@@ -71,7 +85,7 @@ args: ( Variable 4 at method SimplestField#s():V local variable s2(0); tree Stri
 result: List(); 
 )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: Set() = Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at class SimplestField field s; tree String IfTest: false mergedTo: (Set()) = Variable 4 at method SimplestField#s():V local variable s2(0); tree String )
 
 SubtypeConstraint( Variable 4 at method SimplestField#s():V local variable s2(0); tree String  <:  Variable 3 at class SimplestField field s; tree String )
 

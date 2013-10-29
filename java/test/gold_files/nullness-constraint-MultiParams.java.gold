@@ -34,6 +34,20 @@ class MultiParams {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MultiParams#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     foo(new Object(), null);
@@ -53,11 +67,23 @@ class MultiParams {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#foo():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 InequalityConstraint( context: method MultiParams#foo():V constraint position, Variable 6 at method MultiParams#foo():V creation 0; tree Object != Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MultiParams#foo():V constraint position; 
-calledVp: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V; 
+calledVp: Some(method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V); 
 receiver: Variable 2 at method MultiParams#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     foo(new Object(), null);
@@ -90,4 +116,18 @@ class MultiParams {
 } )
 
 InequalityConstraint( context: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position, Variable 4 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V parameter 0; tree Object != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: Variable 4 at method MultiParams#foo(Ljava/lang/Object;Ljava/lang/String;):V parameter 0; tree Object; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 
