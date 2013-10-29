@@ -26,6 +26,20 @@ class Parameter {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Parameter#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Parameter#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method Parameter#m(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 void m(Object o) {
     o.toString();
@@ -40,4 +54,18 @@ class Parameter {
         o.toString();
     }
 } )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method Parameter#m(Ljava/lang/Object;):V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Parameter#m(Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: Variable 3 at method Parameter#m(Ljava/lang/Object;):V parameter 0; tree Object; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

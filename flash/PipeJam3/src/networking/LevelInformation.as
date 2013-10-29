@@ -39,6 +39,7 @@ package networking
 		public var m_name:String;
 		public var m_layoutName:String;
 		public var m_layoutDescription:String;
+		public var m_layoutUpdated:Boolean;
 		
 		public var m_baseFileName:String;
 		
@@ -86,6 +87,7 @@ package networking
 						trace("Can't find level info property " + id);
 				}
 			}
+			m_layoutUpdated = false;
 		}
 		
 		public function createLevelObject():Object
@@ -120,6 +122,7 @@ package networking
 			levelObj.difficultyRating = difficultyRating;	
 			
 			levelObj.shareWithGroup = shareWithGroup;
+			levelObj.m_layoutChanged = m_layoutUpdated;
 			
 			return levelObj;
 		}

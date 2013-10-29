@@ -24,6 +24,34 @@ class NestedGenerics<X> {
     Map<String, List<Integer>> sm = new HashMap<String, List<Integer>>();
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NestedGenerics#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NestedGenerics#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
+StubBoardUseConstraint(java.util.HashMap,java.util.HashMap#<init>():void,class NestedGenerics field sm constraint position,null,List(),List(Constant(@nninf.quals.Nullable), Constant(@nninf.quals.Nullable)),List(),List(List(Constant(@nninf.quals.NonNull)), List(Constant(@nninf.quals.NonNull))),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class NestedGenerics field sm constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Constant(@nninf.quals.Nullable), Constant(@nninf.quals.Nullable) >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 4 at class NestedGenerics field sm creation 0; tree String at position ((3,0)) within HashMap<String, List<Integer>>), List(Variable 5 at class NestedGenerics field sm creation 0; tree List at position ((3,1)) within HashMap<String, List<Integer>>) >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 InequalityConstraint( context: class NestedGenerics field sm constraint position, Variable 3 at class NestedGenerics field sm creation 0; tree HashMap within HashMap<String, List<Integer>> != Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 3 at class NestedGenerics field sm creation 0; tree HashMap within HashMap<String, List<Integer>>  <:  Variable 7 at class NestedGenerics field sm; tree Map within Map<String, List<Integer>> )

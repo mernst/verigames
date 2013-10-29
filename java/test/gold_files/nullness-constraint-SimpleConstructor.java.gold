@@ -49,11 +49,25 @@ class SimpleConstructor {
     }
 } )
 
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()  <:  Variable 4 at class SimpleConstructor field y; tree String )
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method SimpleConstructor#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SimpleConstructor#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: (Set())  <:  Variable 4 at class SimpleConstructor field y; tree String )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimpleConstructor#<init>():V constraint position; 
-calledVp: class SimpleConstructor field y; 
+calledVp: Some(class SimpleConstructor field y); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -63,7 +77,7 @@ args: ( Literal(NULL_LITERAL, "null") );
 result: List(); 
 )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set() = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: (Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at class SimpleConstructor field y; tree String )
 
@@ -94,11 +108,23 @@ class SimpleConstructor {
     }
 } )
 
-SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set()  <:  Variable 4 at class SimpleConstructor field y; tree String )
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SimpleConstructor#<init>(Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: (Set())  <:  Variable 4 at class SimpleConstructor field y; tree String )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method SimpleConstructor#<init>(Ljava/lang/String;):V constraint position; 
-calledVp: class SimpleConstructor field y; 
+calledVp: Some(class SimpleConstructor field y); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -108,13 +134,13 @@ args: ( Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V para
 result: List(); 
 )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: Set() = Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at class SimpleConstructor field y; tree String IfTest: false mergedTo: (Set()) = Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String )
 
 SubtypeConstraint( Variable 3 at method SimpleConstructor#<init>(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 4 at class SimpleConstructor field y; tree String )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SimpleConstructor#noArg():V constraint position; 
-calledVp: method SimpleConstructor#<init>():V; 
+calledVp: Some(method SimpleConstructor#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -136,7 +162,7 @@ SubtypeConstraint( Literal(STRING_LITERAL, "t")  <:  Variable 3 at method Simple
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SimpleConstructor#oneArg():V constraint position; 
-calledVp: method SimpleConstructor#<init>(Ljava/lang/String;):V; 
+calledVp: Some(method SimpleConstructor#<init>(Ljava/lang/String;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

@@ -38,6 +38,20 @@ class ForList {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ForList#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ForList#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method ForList#test(Ljava/util/List;):V receiver; tree <<missing tree>> within 
 void test(List input) {
     Object out = null;
@@ -67,7 +81,27 @@ class ForList {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: Set()) = Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set(7 )) = Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object )
 
 SubtypeConstraint( Variable 5 at method ForList#test(Ljava/util/List;):V local variable o(0); tree Object  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
+
+SubtypeConstraint( Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set())  <:  Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method ForList#test(Ljava/util/List;):V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ForList#test(Ljava/util/List;):V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #7 Declared Variable: Variable 4 at method ForList#test(Ljava/util/List;):V local variable out(0); tree Object IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

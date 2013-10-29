@@ -34,6 +34,20 @@ class FieldAccessOther<T extends Object> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method FieldAccessOther#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method FieldAccessOther#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at class FieldAccessOther field field; tree String )
 
 SubtypeConstraint( Variable 5 at method FieldAccessOther#locAccess():V receiver; tree <<missing tree>> within 
@@ -56,7 +70,7 @@ class FieldAccessOther<T extends Object> {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method FieldAccessOther#locAccess():V constraint position; 
-calledVp: class FieldAccessOther field field; 
+calledVp: Some(class FieldAccessOther field field); 
 receiver: Variable 5 at method FieldAccessOther#locAccess():V receiver; tree <<missing tree>> within 
 public void locAccess() {
     String la = field;
@@ -100,6 +114,18 @@ class OtherAccess {
         String loc = fao.field;
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method OtherAccess#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 10 at method OtherAccess#method(LFieldAccessOther;):V receiver; tree <<missing tree>> within 
 public void method(FieldAccessOther<String> fao) {

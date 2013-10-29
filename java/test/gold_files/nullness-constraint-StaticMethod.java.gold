@@ -38,11 +38,25 @@ class StaticMethod {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method StaticMethod#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method StaticMethod#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method StaticMethod#method(Ljava/lang/String;):V parameter 0; tree String  <:  Variable 6 at method StaticMethod#method(Ljava/lang/String;):V local variable other(0); tree String )
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method StaticMethod#method(Ljava/lang/String;):V constraint position; 
-calledVp: class StaticMethod static field something; 
+calledVp: Some(class StaticMethod static field something); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -79,7 +93,7 @@ class StaticMethod {
 
 checkers.inference.StaticMethodCallConstraint(
 contextVp: method StaticMethod#instMethod():V constraint position; 
-calledVp: method StaticMethod#method(Ljava/lang/String;):V; 
+calledVp: Some(method StaticMethod#method(Ljava/lang/String;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

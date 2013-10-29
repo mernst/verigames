@@ -28,6 +28,20 @@ public class First {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method First#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method First#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method First#m():V receiver; tree <<missing tree>> within 
 void m() {
     Object o = new Object();
@@ -45,9 +59,21 @@ public class First {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method First#m():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 4 at method First#m():V creation 0; tree Object  <:  Variable 3 at method First#m():V local variable o(0); tree Object )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method First#m():V local variable o(0); tree Object IfTest: false mergedTo: Set() = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method First#m():V local variable o(0); tree Object IfTest: false mergedTo: (Set()) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method First#m():V local variable o(0); tree Object )
 

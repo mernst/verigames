@@ -1,29 +1,40 @@
 package games;
 
 import checkers.basetype.BaseTypeChecker;
-import checkers.inference.InferenceAnnotatedTypeFactory;
+import checkers.basetype.BaseTypeVisitor;
 import checkers.inference.InferenceTypeChecker;
-import checkers.types.AnnotatedTypeMirror;
-import checkers.types.SubtypingAnnotatedTypeFactory;
-import checkers.types.TypeHierarchy;
+import checkers.inference.InferenceVisitor;
+import checkers.types.AnnotatedTypeFactory;
+import com.sun.source.util.Trees;
 
-public abstract class GameChecker<REAL_TYPE_FACTORY extends SubtypingAnnotatedTypeFactory<?>>
-       extends BaseTypeChecker<REAL_TYPE_FACTORY> implements InferenceTypeChecker {
+import java.lang.annotation.Annotation;
+import java.util.Set;
+
+public abstract class GameChecker extends BaseTypeChecker implements InferenceTypeChecker {
 
     @Override
-    protected TypeHierarchy createTypeHierarchy() {
-        return new TypeHierarchy(this, getQualifierHierarchy()) {
-        	@Override
-        	public boolean isSubtype(AnnotatedTypeMirror sub, AnnotatedTypeMirror sup) {
-        	
-		        if (sub.getEffectiveAnnotations().isEmpty() ||
-		                sup.getEffectiveAnnotations().isEmpty()) {
-		            // TODO: The super method complains about empty annotations. Prevent this.
-		            return true;
-		        }
-		        	return super.isSubtype(sub, sup);
-		    	}
-        };
+    public void initChecker() {
+        //In between these brackets, is code copied directly from SourceChecker
+        //except for the last line assigning the visitor
+        {
+            Trees trees = Trees.instance(processingEnv);
+            assert( trees != null ); /*nninvariant*/
+            this.trees = trees;
+
+            this.messager = processingEnv.getMessager();
+            this.messages = getMessages();
+
+            this.visitor = createInferenceVisitor();
+        }
     }
 
+    @Override
+    public Set<Class<? extends Annotation>> getSupportedTypeQualifiers() {
+        return getTypeFactory().getSupportedTypeQualifiers();
+    }
+
+    @Override
+    public AnnotatedTypeFactory getTypeFactory() {
+        return ( (InferenceVisitor<?,?>) this.visitor ).getTypeFactory();
+    }
 }

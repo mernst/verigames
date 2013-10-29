@@ -3,69 +3,92 @@
   <linked-edges>
    <edge-set id="LoopBasic0">
     <edgeref id="e8" />
-    <edgeref id="e12" />
-    <edgeref id="e15" />
-    <edgeref id="e37" />
+    <edgeref id="e38" />
    </edge-set>
    <edge-set id="LoopBasic1">
     <edgeref id="e9" />
-    <edgeref id="e14" />
-    <edgeref id="e16" />
-    <edgeref id="e38" />
+    <edgeref id="e39" />
     <edgeref id="e1" />
-    <edgeref id="e30" />
+    <edgeref id="e31" />
    </edge-set>
    <edge-set id="LoopBasic2">
     <edgeref id="e3" />
+    <edgeref id="e14" />
+    <edgeref id="e15" />
+    <edgeref id="e16" />
     <edgeref id="e17" />
     <edgeref id="e18" />
     <edgeref id="e19" />
     <edgeref id="e20" />
-    <edgeref id="e21" />
     <edgeref id="e22" />
     <edgeref id="e23" />
+    <edgeref id="e24" />
     <edgeref id="e25" />
     <edgeref id="e26" />
-    <edgeref id="e27" />
-    <edgeref id="e28" />
-    <edgeref id="e29" />
-    <edgeref id="e32" />
+    <edgeref id="e33" />
    </edge-set>
    <edge-set id="LoopBasic3">
     <edgeref id="e7" />
-    <edgeref id="e11" />
-    <edgeref id="e36" />
+    <edgeref id="e13" />
+    <edgeref id="e37" />
    </edge-set>
    <edge-set id="LoopBasic4">
-    <edgeref id="e24" />
-    <edgeref id="e39" />
+    <edgeref id="e21" />
+    <edgeref id="e40" />
     <edgeref id="e5" />
-    <edgeref id="e10" />
-    <edgeref id="e34" />
-   </edge-set>
-   <edge-set id="LoopBasic5">
-    <edgeref id="e31" />
-   </edge-set>
-   <edge-set id="LoopBasic6">
-    <edgeref id="e33" />
-   </edge-set>
-   <edge-set id="LoopBasic7">
+    <edgeref id="e30" />
     <edgeref id="e35" />
    </edge-set>
-   <edge-set id="LoopBasic11">
-    <edgeref id="e13" />
+   <edge-set id="LoopBasic5">
+    <edgeref id="e32" />
    </edge-set>
-   <edge-set id="LoopBasic19">
+   <edge-set id="LoopBasic6">
+    <edgeref id="e34" />
+   </edge-set>
+   <edge-set id="LoopBasic7">
+    <edgeref id="e36" />
+   </edge-set>
+   <edge-set id="LoopBasic13">
+    <edgeref id="e10" />
+   </edge-set>
+   <edge-set id="LoopBasic14">
+    <edgeref id="e11" />
+   </edge-set>
+   <edge-set id="LoopBasic16">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="LoopBasic40">
+   <edge-set id="LoopBasic19">
+    <edgeref id="e12" />
+   </edge-set>
+   <edge-set id="LoopBasic38">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="LoopBasic43">
+   <edge-set id="LoopBasic41">
     <edgeref id="e6" />
+   </edge-set>
+   <edge-set id="LoopBasic42">
+    <edgeref id="e27" />
+   </edge-set>
+   <edge-set id="LoopBasic43">
+    <edgeref id="e28" />
+   </edge-set>
+   <edge-set id="LoopBasic44">
+    <edgeref id="e29" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.lang.Math-random---double">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="LoopBasic">
     <node id="n0" kind="INCOMING">
      <input />
@@ -92,7 +115,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e12" num="0" />
+      <port edge="e38" num="output" />
      </output>
      <layout>
       </layout>
@@ -110,61 +133,12 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e14" num="0" />
+      <port edge="e39" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n26" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e13" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n27" kind="MERGE">
-     <input>
-      <port edge="e12" num="0" />
-      <port edge="e13" num="1" />
-     </input>
-     <output>
-      <port edge="e15" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n28" kind="MERGE">
-     <input>
-      <port edge="e15" num="0" />
-      <port edge="e16" num="1" />
-     </input>
-     <output>
-      <port edge="e37" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n29" kind="SPLIT">
-     <input>
-      <port edge="e14" num="0" />
-     </input>
-     <output>
-      <port edge="e16" num="1" />
-      <port edge="e38" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n44" kind="END">
-     <input>
-      <port edge="e37" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n45" kind="END">
+    <node id="n48" kind="END">
      <input>
       <port edge="e38" num="input" />
      </input>
@@ -172,7 +146,15 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class LoopBasic extends type; tree &lt;&lt;missing tree&gt;&gt; within  class LoopBasic {  LoopBasic() { super(); }  void foo(LoopBasic lb) { for (int i = 0; i &lt; 5; i++) { lb.bar(); } while (lb.proceed()) { lb.bar(); } }  void bar() { return; }  boolean proceed() { return Math.random() &lt; 0.5; } }" editable="true" id="e8" pinch="false" variableID="0" width="narrow">
+    <node id="n49" kind="END">
+     <input>
+      <port edge="e39" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -190,7 +172,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e9" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
@@ -208,36 +190,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class LoopBasic extends type; tree &lt;&lt;missing tree&gt;&gt; within  class LoopBasic {  LoopBasic() { super(); }  void foo(LoopBasic lb) { for (int i = 0; i &lt; 5; i++) { lb.bar(); } while (lb.proceed()) { lb.bar(); } }  void bar() { return; }  boolean proceed() { return Math.random() &lt; 0.5; } }" editable="true" id="e12" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n21" port="0" />
+      <noderef id="n21" port="output" />
      </from>
      <to>
-      <noderef id="n27" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e13" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n26" port="0" />
-     </from>
-     <to>
-      <noderef id="n27" port="1" />
+      <noderef id="n48" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -250,90 +208,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n23" port="0" />
+      <noderef id="n23" port="output" />
      </from>
      <to>
-      <noderef id="n29" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class LoopBasic extends type; tree &lt;&lt;missing tree&gt;&gt; within  class LoopBasic {  LoopBasic() { super(); }  void foo(LoopBasic lb) { for (int i = 0; i &lt; 5; i++) { lb.bar(); } while (lb.proceed()) { lb.bar(); } }  void bar() { return; }  boolean proceed() { return Math.random() &lt; 0.5; } }" editable="true" id="e15" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n27" port="0" />
-     </from>
-     <to>
-      <noderef id="n28" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e16" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n29" port="1" />
-     </from>
-     <to>
-      <noderef id="n28" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class LoopBasic extends type; tree &lt;&lt;missing tree&gt;&gt; within  class LoopBasic {  LoopBasic() { super(); }  void foo(LoopBasic lb) { for (int i = 0; i &lt; 5; i++) { lb.bar(); } while (lb.proceed()) { lb.bar(); } }  void bar() { return; }  boolean proceed() { return Math.random() &lt; 0.5; } }" editable="true" id="e37" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n28" port="output" />
-     </from>
-     <to>
-      <noderef id="n44" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n29" port="output" />
-     </from>
-     <to>
-      <noderef id="n45" port="input" />
+      <noderef id="n49" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -356,7 +236,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e30" num="outputReturn0" />
+      <port edge="e31" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -375,12 +255,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n24" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e10" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n25" kind="CONNECT">
+     <input>
+      <port edge="e10" num="input" />
+     </input>
+     <output>
+      <port edge="e11" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n26" kind="END">
+     <input>
+      <port edge="e11" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -396,9 +302,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method LoopBasic#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e30" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e10" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n24" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n25" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e11" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n25" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n26" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -429,8 +383,8 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e32" num="outParam0" />
-      <port edge="e31" num="outReceiver0" />
+      <port edge="e33" num="outParam0" />
+      <port edge="e32" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -441,7 +395,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e32" num="output" />
      </output>
      <layout>
       </layout>
@@ -451,7 +405,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
@@ -469,166 +423,175 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e11" num="output" />
+      <port edge="e13" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n25" kind="CONNECT">
+    <node id="n27" kind="MERGE">
      <input>
-      <port edge="e11" num="input" />
+      <port edge="e13" num="0" />
+      <port edge="e12" num="1" />
      </input>
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e37" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n30" kind="SUBBOARD" name="LoopBasic-bar---V">
+    <node id="n28" kind="START_SMALL_BALL">
+     <input />
+     <output>
+      <port edge="e12" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n29" kind="SUBBOARD" name="LoopBasic-bar---V">
      <input>
-      <port edge="e18" num="inReceiver0" />
+      <port edge="e15" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e19" num="outReceiver0" />
+      <port edge="e16" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n31" kind="SPLIT">
+    <node id="n30" kind="SPLIT">
+     <input>
+      <port edge="e14" num="input" />
+     </input>
+     <output>
+      <port edge="e15" num="split" />
+      <port edge="e17" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n31" kind="CONNECT">
+     <input>
+      <port edge="e16" num="input" />
+     </input>
+     <output>
+      <port edge="e18" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n32" kind="END">
      <input>
       <port edge="e17" num="input" />
-     </input>
-     <output>
-      <port edge="e18" num="split" />
-      <port edge="e20" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n32" kind="CONNECT">
-     <input>
-      <port edge="e19" num="input" />
-     </input>
-     <output>
-      <port edge="e21" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n33" kind="END">
-     <input>
-      <port edge="e20" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n34" kind="SUBBOARD" name="LoopBasic-proceed---Z">
+    <node id="n33" kind="SUBBOARD" name="LoopBasic-proceed---Z">
      <input>
-      <port edge="e22" num="inReceiver0" />
+      <port edge="e19" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e23" num="outReceiver0" />
-      <port edge="e24" num="outputReturn0" />
+      <port edge="e20" num="outReceiver0" />
+      <port edge="e21" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="SPLIT">
+    <node id="n34" kind="SPLIT">
      <input>
-      <port edge="e21" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e22" num="split" />
-      <port edge="e25" num="toEnd" />
+      <port edge="e19" num="split" />
+      <port edge="e22" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n35" kind="CONNECT">
+     <input>
+      <port edge="e20" num="input" />
+     </input>
+     <output>
+      <port edge="e23" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n36" kind="CONNECT">
      <input>
+      <port edge="e21" num="input" />
+     </input>
+     <output>
+      <port edge="e40" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n37" kind="END">
+     <input>
+      <port edge="e22" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="SUBBOARD" name="LoopBasic-bar---V">
+     <input>
+      <port edge="e24" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e25" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n39" kind="SPLIT">
+     <input>
       <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e24" num="split" />
+      <port edge="e26" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="CONNECT">
-     <input>
-      <port edge="e24" num="input" />
-     </input>
-     <output>
-      <port edge="e39" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n38" kind="END">
+    <node id="n40" kind="CONNECT">
      <input>
       <port edge="e25" num="input" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n39" kind="SUBBOARD" name="LoopBasic-bar---V">
-     <input>
-      <port edge="e27" num="inReceiver0" />
-     </input>
      <output>
-      <port edge="e28" num="outReceiver0" />
+      <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="SPLIT">
+    <node id="n41" kind="END">
      <input>
       <port edge="e26" num="input" />
      </input>
-     <output>
-      <port edge="e27" num="split" />
-      <port edge="e29" num="toEnd" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n41" kind="CONNECT">
+    <node id="n47" kind="END">
      <input>
-      <port edge="e28" num="input" />
-     </input>
-     <output>
-      <port edge="e32" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n42" kind="END">
-     <input>
-      <port edge="e29" num="input" />
+      <port edge="e37" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n43" kind="END">
+    <node id="n50" kind="END">
      <input>
-      <port edge="e36" num="input" />
+      <port edge="e40" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="END">
-     <input>
-      <port edge="e39" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -658,7 +621,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n6" port="inParam0" />
      </from>
@@ -676,7 +639,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int" editable="false" id="e7" pinch="false" variableID="7" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -694,12 +657,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int" editable="false" id="e11" pinch="false" variableID="7" width="wide">
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n19" port="output" />
+      <noderef id="n28" port="0" />
      </from>
      <to>
-      <noderef id="n25" port="input" />
+      <noderef id="n27" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -712,9 +675,75 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e17" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n19" port="0" />
+     </from>
+     <to>
+      <noderef id="n27" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
+     </from>
+     <to>
+      <noderef id="n30" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n30" port="split" />
+     </from>
+     <to>
+      <noderef id="n29" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n29" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n31" port="input" />
@@ -730,33 +759,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e18" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n31" port="split" />
-     </from>
-     <to>
-      <noderef id="n30" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e19" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n30" port="outReceiver0" />
+      <noderef id="n30" port="toEnd" />
      </from>
      <to>
       <noderef id="n32" port="input" />
@@ -772,12 +777,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e20" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n31" port="toEnd" />
+      <noderef id="n31" port="output" />
      </from>
      <to>
-      <noderef id="n33" port="input" />
+      <noderef id="n34" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -790,9 +795,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e21" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n34" port="split" />
+     </from>
+     <to>
+      <noderef id="n33" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n33" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n35" port="input" />
@@ -808,27 +831,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n35" port="split" />
-     </from>
-     <to>
-      <noderef id="n34" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n34" port="outReceiver0" />
+      <noderef id="n33" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n36" port="input" />
@@ -844,9 +849,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method LoopBasic#proceed():Z return type; tree boolean" editable="false" id="e24" pinch="false" variableID="5" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n34" port="outputReturn0" />
+      <noderef id="n34" port="toEnd" />
      </from>
      <to>
       <noderef id="n37" port="input" />
@@ -862,12 +867,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n35" port="toEnd" />
+      <noderef id="n35" port="output" />
      </from>
      <to>
-      <noderef id="n38" port="input" />
+      <noderef id="n39" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -880,9 +885,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n36" port="output" />
+      <noderef id="n39" port="split" />
+     </from>
+     <to>
+      <noderef id="n38" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n38" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n40" port="input" />
@@ -898,27 +921,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e27" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n40" port="split" />
-     </from>
-     <to>
-      <noderef id="n39" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n39" port="outReceiver0" />
+      <noderef id="n39" port="toEnd" />
      </from>
      <to>
       <noderef id="n41" port="input" />
@@ -932,24 +937,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
-     <from>
-      <noderef id="n40" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n42" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -958,7 +945,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void foo(LoopBasic lb) { for (int i = 0; i &lt; 5; i++) { lb.bar(); } while (lb.proceed()) { lb.bar(); } }Atm: @VarAnnot(2) LoopBasic" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -988,9 +975,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic" editable="true" id="e32" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n41" port="output" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam0" />
@@ -1006,12 +993,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int" editable="false" id="e36" pinch="false" variableID="7" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n25" port="output" />
+      <noderef id="n27" port="output" />
      </from>
      <to>
-      <noderef id="n43" port="input" />
+      <noderef id="n47" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1024,20 +1011,14 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method LoopBasic#proceed():Z return type; tree boolean" editable="false" id="e39" pinch="false" variableID="5" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n37" port="output" />
+      <noderef id="n36" port="output" />
      </from>
      <to>
-      <noderef id="n46" port="input" />
+      <noderef id="n50" port="input" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1060,7 +1041,7 @@
     </node>
     <node id="n11" kind="OUTGOING">
      <input>
-      <port edge="e33" num="outReceiver0" />
+      <port edge="e34" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1071,12 +1052,12 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e33" num="output" />
+      <port edge="e34" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n10" port="inReceiver0" />
      </from>
@@ -1094,7 +1075,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method LoopBasic#bar():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void bar() { return; }Atm: @VarAnnot(4) LoopBasic" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -1124,8 +1105,8 @@
     </node>
     <node id="n14" kind="OUTGOING">
      <input>
-      <port edge="e35" num="outReceiver0" />
-      <port edge="e34" num="outputReturn0" />
+      <port edge="e36" num="outReceiver0" />
+      <port edge="e35" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -1144,7 +1125,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e10" num="output" />
+      <port edge="e30" num="0" />
      </output>
      <layout>
       </layout>
@@ -1154,22 +1135,57 @@
       <port edge="e6" num="input" />
      </input>
      <output>
+      <port edge="e36" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="SUBBOARD" name="java.lang.Math-random---double">
+     <input />
+     <output>
+      <port edge="e27" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="CONNECT">
+     <input>
+      <port edge="e27" num="input" />
+     </input>
+     <output>
+      <port edge="e28" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="END">
+     <input>
+      <port edge="e28" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="MERGE">
+     <input>
+      <port edge="e30" num="0" />
+      <port edge="e29" num="1" />
+     </input>
+     <output>
       <port edge="e35" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="CONNECT">
-     <input>
-      <port edge="e10" num="input" />
-     </input>
+    <node id="n46" kind="START_SMALL_BALL">
+     <input />
      <output>
-      <port edge="e34" num="output" />
+      <port edge="e29" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 5 at method LoopBasic#proceed():Z return type; tree boolean" editable="false" id="e5" pinch="false" variableID="5" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1187,7 +1203,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n13" port="inReceiver0" />
      </from>
@@ -1205,12 +1221,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method LoopBasic#proceed():Z return type; tree boolean" editable="false" id="e10" pinch="false" variableID="5" width="wide">
+    <edge buzzsaw="false" description="desc" editable="false" id="e27" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n16" port="output" />
+      <noderef id="n42" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n24" port="input" />
+      <noderef id="n43" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1223,9 +1239,69 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method LoopBasic#proceed():Z return type; tree boolean" editable="false" id="e34" pinch="false" variableID="5" width="wide">
+    <edge buzzsaw="false" description="desc" editable="false" id="e28" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n24" port="output" />
+      <noderef id="n43" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n44" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e29" pinch="false" variableID="-3" width="narrow">
+     <from>
+      <noderef id="n46" port="0" />
+     </from>
+     <to>
+      <noderef id="n45" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n16" port="0" />
+     </from>
+     <to>
+      <noderef id="n45" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="5" width="narrow">
+     <from>
+      <noderef id="n45" port="output" />
      </from>
      <to>
       <noderef id="n14" port="outputReturn0" />
@@ -1241,7 +1317,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method LoopBasic#proceed():Z receiver; tree &lt;&lt;missing tree&gt;&gt; within  boolean proceed() { return Math.random() &lt; 0.5; }Atm: @VarAnnot(6) LoopBasic" editable="true" id="e35" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -1249,12 +1325,6 @@
       <noderef id="n14" port="outReceiver0" />
      </to>
      <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>

@@ -28,6 +28,20 @@ class ArrayMethodAccess {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ArrayMethodAccess#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayMethodAccess#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method ArrayMethodAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     System.out.println(array.toString());
@@ -48,7 +62,7 @@ InequalityConstraint( context: method ArrayMethodAccess#context():V constraint p
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayMethodAccess#context():V constraint position; 
-calledVp: class ArrayMethodAccess field array; 
+calledVp: Some(class ArrayMethodAccess field array); 
 receiver: Variable 2 at method ArrayMethodAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     System.out.println(array.toString());
@@ -62,4 +76,32 @@ result: List(Variable 3 at class ArrayMethodAccess field array; tree String[], V
 )
 
 InequalityConstraint( context: method ArrayMethodAccess#context():V constraint position, Variable 3 at class ArrayMethodAccess field array; tree String[] != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#toString():java.lang.String,method ArrayMethodAccess#context():V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayMethodAccess#context():V constraint position; 
+calledVp: None; 
+receiver: Variable 3 at class ArrayMethodAccess field array; tree String[]; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
+
+StubBoardUseConstraint(java.io.PrintStream,java.io.PrintStream#println(java.lang.String):void,method ArrayMethodAccess#context():V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)),List())
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayMethodAccess#context():V constraint position; 
+calledVp: None; 
+receiver: Constant(@nninf.quals.NonNull); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Constant(@nninf.quals.NonNull) ); 
+result: List(); 
+)
 

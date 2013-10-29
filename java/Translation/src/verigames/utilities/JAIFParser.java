@@ -40,7 +40,10 @@ public class JAIFParser {
             subtypeAnno = args[3];
             supertypeAnno = args[4];
         } else if (args.length != 0) {
-            System.out.println("ERROR: Requires 0 or 4 arguments");
+            System.out.println("ERROR: Requires 0 , 3, or 5 arguments.  Arguments given: " );
+            for(String arg : args ) {
+                System.out.println("\t" + arg);
+            }
             System.out.println("Usage: JAIFParser [xml file] [jaif file] [output file] [[subtype annotation] [supertype annotation]]");
         }
 

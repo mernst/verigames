@@ -19,7 +19,7 @@ import checkers.inference.CombVariable
  */
 
 abstract class EqualityConstraintHandler( override val constraint : EqualityConstraint,
-                                 gameSolver : GameSolver )
+                                          gameSolver : GameSolver )
   extends ConstraintHandler[EqualityConstraint] {
   import Intersection.Kind._
   import gameSolver._
@@ -66,7 +66,7 @@ abstract class EqualityConstraintHandler( override val constraint : EqualityCons
     val rightPipe = new Chute(rightVar.id, rightVar.toString())
 
     val level = variablePosToLevel(leftVar.varpos)
-    level.linkByVarID( leftVar.id, rightVar.id )
+    world.linkByVarID( leftVar.id, rightVar.id )
 
     leftBoard.addEdge(lastLeft, "output", leftCon, "input", leftPipe)
     rightBoard.addEdge(lastRight, "output", rightCon, "input", rightPipe)

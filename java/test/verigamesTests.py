@@ -42,7 +42,7 @@ checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor",
 solverArgs = {"nullness": ["nninf.NninfGameSolver"],
         "trusted" : ["trusted.TrustedGameSolver"] }
 
-allTests = ["constraint", "xml"]
+allTests = ["constraint", "xml", "inference", "infer-typecheck"]
 
 def diff_junk_lines(str):
     return not (str.startswith("Total running time: ") or str.startswith("Generation: ")
@@ -108,13 +108,37 @@ def checker_to_args(checkerName):
             "--visitor", chArgs[1], "--solver", soArgs[0], "--transfer", chArgs[2],
             "--analysis", chArgs[3]]
 
+def inference_to_args(checkerName):
+    chArgs = checkerArgs[checkerName]
+    soArgs = 'checkers.inference.floodsolver.FloodSolver'
+    executable = "../../dist/scripts/inference.sh"
+    return [executable, "checkers.inference.TTIRun", "--checker", chArgs[0],
+            "--visitor", chArgs[1], "--solver", soArgs, "--transfer", chArgs[2],
+            "--analysis", chArgs[3]]
+
+def typecheck_to_args(checkerName):
+    executable = "../../dist/scripts/typecheck.sh"
+    chArgs = checkerArgs[checkerName]
+    return [executable, '-processor', chArgs[0]]
+
+def afu_args(jaif, source_file):
+    return ['insert-annotations-to-source', jaif, source_file, '-d', '.']
+
 EXPECTED_DIR = "gold_files"
-def get_expected_name(checker, test, java_file):
-    return os.path.join('../', EXPECTED_DIR, get_test_name(checker, test, java_file) + '.gold')
+def get_expected_name(checker, test, java_file, expected_dir=EXPECTED_DIR):
+    return os.path.join('../', expected_dir, get_test_name(checker, test, java_file) + '.gold')
 
 EXAMPLES_DIR = "/examples/"
 def get_test_name(checker, test, java_file):
     return '%s-%s-%s' % (checker, test, java_file.partition(EXAMPLES_DIR)[2].replace("/", "_"))
+
+def handle_result(ret, checker, testname, generate, new_failure):
+    if generate:
+        print "Generate Error: Test %s-%s exited with return code %d. Recording test as failing." % (testname, checker, ret)
+    elif new_failure:
+        print "Error: Test %s-%s was previously erroring and is still erroring. Return code: %d" % (testname, checker, ret)
+    else:
+        print "ERROR: Test %s-%s was previously succeeding and is now erroring. Return code: %d" % (testname, checker, ret)
 
 def run_xml_tests(checker, java_files, outfile_path, generate):
     ran = False
@@ -135,7 +159,6 @@ def run_xml_tests(checker, java_files, outfile_path, generate):
         # Run the test
         with open(outfile_path, "a") as outfile:
             args = checker_to_args(checker) + [java_files]
-#            print "Running command: %s" % args
             ret = subprocess.call(args, stdout=outfile, stderr=outfile)
             if ret != 0: # Error
                 error = True
@@ -166,6 +189,53 @@ def run_xml_tests(checker, java_files, outfile_path, generate):
 
     return (ran, error, failure)
 
+def run_infer_typcheck_tests(checker, java_file, outfile_path, generate):
+
+    suite_name = "infer-typecheck"
+    ran = True
+    error = False
+    failure = False
+
+    cwd = os.getcwd()
+    expectedName = get_expected_name(checker, suite_name, java_file, 'inference_gold_files')
+    actualName = os.path.join(cwd, get_test_name(checker, suite_name, java_file))
+    diffName = os.path.join(cwd, get_test_name(checker, suite_name, java_file) + '.diff')
+    javaname = os.path.basename(java_file)
+
+    # Run the test
+    with open(outfile_path, "a") as outfile:
+        # Run inference
+        args = inference_to_args(checker) + [java_file]
+        ret = subprocess.call(args, stdout=outfile, stderr=outfile)
+        if ret != 0: # Error
+            error = True
+            handle_result(ret, checker, suite_name, generate, not os.path.isfile(expectedName))
+        else:
+            # Run AFU
+            # Must use abspath otherwise afu utilities might put this somewhere weird
+            args = afu_args('inference.jaif', os.path.abspath(java_file))
+            ret = subprocess.call(args, stdout=outfile, stderr=outfile)
+            if ret != 0: #Error
+                error = True
+                handle_result(ret, checker, "afu", generate, not os.path.isfile(expectedName))
+            else:
+                # Run typecheck
+                os.remove('inference.jaif')
+                args = typecheck_to_args(checker) + [javaname]
+                ret = subprocess.call(args, stdout=outfile, stderr=outfile)
+                if ret != 0: #Error
+                    error = True
+                    handle_result(ret, checker, "typecheck", generate, not os.path.isfile(expectedName))
+
+                classfile = javaname.replace('.java', '.class')
+                if os.path.isfile(classfile):
+                    os.remove(classfile)
+
+    if ret == 0 and generate:
+        open(expectedName, 'a').close()
+        os.remove(javaname)
+
+    return (ran, error, failure)
 
 def run_constraint_tests(checker, java_files, outfile_path, generate):
     ran = False
@@ -186,8 +256,10 @@ def run_constraint_tests(checker, java_files, outfile_path, generate):
         os.putenv("ACTUAL_PATH", actualName)
         # Run the test
         with open(outfile_path, "a") as outfile:
+            infArgs = java_files.replace('../','', 1)
+            outfile.write( "Checker " + checker + " files: " + infArgs )
             ret = subprocess.call(["gradle", "-p", "../../", "--daemon", "infer", "-P", "infChecker="+checker+"Test",
-                    "-P", "infArgs=" + java_files.replace('../','', 1)], stdout=outfile, stderr=outfile)
+                    "-P", "infArgs=" + infArgs], stdout=outfile, stderr=outfile)
 
             if ret != 0: # Error
                 error = True
@@ -290,6 +362,10 @@ def main():
                         (ran, error, failure) = run_xml_tests(checker, java_file, options.outfile, options.update_gold)
                     elif testsuite == "constraint":
                         (ran, error, failure) = run_constraint_tests(checker, java_file, options.outfile, options.update_gold)
+                    elif testsuite == "inference":
+                        (ran, error, failure) = run_inference_tests(checker, java_file, options.outfile, options.update_gold)
+                    elif testsuite == "infer-typecheck":
+                        (ran, error, failure) = run_infer_typcheck_tests(checker, java_file, options.outfile, options.update_gold)
 
                     if ran:
                         numTests += 1
@@ -301,7 +377,6 @@ def main():
                             print "Failure"
                         else:
                             print "Success"
-
 
         if failingTests:
             print

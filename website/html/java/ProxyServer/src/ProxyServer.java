@@ -25,7 +25,7 @@ public class ProxyServer {
 	static public int port = 8001;	//default
 	static DBCollection logColl;
 	//set to true to not log, and display log to console
-	static public boolean runLocally = true;
+	static public boolean runLocally = false;
 	
 	//not currently doing anything, will eventually allow for receiving messages but not forward them
 	//make sure it's false

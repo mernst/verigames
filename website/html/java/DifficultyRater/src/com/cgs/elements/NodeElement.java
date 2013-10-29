@@ -23,6 +23,8 @@ public class NodeElement extends Element
 	public Board containerBoard;
 	public Level containerLevel;
 	
+	public String kind;
+	
 	//used by nodes of kind SUBBOARD
 	public String name;
 	
@@ -30,6 +32,17 @@ public class NodeElement extends Element
 	{
 		super(_id);
 		levelID = _levelID;
+		inputPortNames = new ArrayList<String>();
+		outputPortNames = new ArrayList<String>();
+		inputPorts = new ArrayList<Port>();
+		outputPorts = new ArrayList<Port>();
+	}
+	
+	public NodeElement(String _id, String _levelID, String _kind)
+	{
+		super(_id);
+		levelID = _levelID;
+		kind = _kind;
 		inputPortNames = new ArrayList<String>();
 		outputPortNames = new ArrayList<String>();
 		inputPorts = new ArrayList<Port>();

@@ -3,68 +3,211 @@
   <linked-edges>
    <edge-set id="IteratorAssignment0">
     <edgeref id="e8" />
-    <edgeref id="e25" />
-    <edgeref id="e27" />
-    <edgeref id="e29" />
-    <edgeref id="e37" />
+    <edgeref id="e46" />
+    <edgeref id="e51" />
+    <edgeref id="e52" />
+    <edgeref id="e54" />
+    <edgeref id="e60" />
+    <edgeref id="e64" />
+    <edgeref id="e65" />
+    <edgeref id="e67" />
+    <edgeref id="e70" />
+    <edgeref id="e72" />
+    <edgeref id="e73" />
+    <edgeref id="e74" />
+    <edgeref id="e75" />
+    <edgeref id="e77" />
+    <edgeref id="e85" />
     <edgeref id="e4" />
-    <edgeref id="e21" />
     <edgeref id="e26" />
-    <edgeref id="e33" />
+    <edgeref id="e31" />
+    <edgeref id="e32" />
+    <edgeref id="e34" />
+    <edgeref id="e39" />
+    <edgeref id="e41" />
+    <edgeref id="e42" />
+    <edgeref id="e43" />
+    <edgeref id="e47" />
+    <edgeref id="e81" />
     <edgeref id="e6" />
+    <edgeref id="e14" />
+    <edgeref id="e15" />
+    <edgeref id="e17" />
     <edgeref id="e22" />
-    <edgeref id="e35" />
+    <edgeref id="e27" />
+    <edgeref id="e83" />
    </edge-set>
    <edge-set id="IteratorAssignment1">
     <edgeref id="e10" />
-    <edgeref id="e13" />
-    <edgeref id="e16" />
-    <edgeref id="e39" />
+    <edgeref id="e87" />
    </edge-set>
    <edge-set id="IteratorAssignment2">
     <edgeref id="e11" />
-    <edgeref id="e15" />
-    <edgeref id="e17" />
-    <edgeref id="e40" />
+    <edgeref id="e88" />
     <edgeref id="e1" />
-    <edgeref id="e30" />
+    <edgeref id="e78" />
    </edge-set>
    <edge-set id="IteratorAssignment3">
     <edgeref id="e3" />
-    <edgeref id="e19" />
-    <edgeref id="e32" />
+    <edgeref id="e24" />
+    <edgeref id="e28" />
+    <edgeref id="e29" />
+    <edgeref id="e30" />
+    <edgeref id="e40" />
+    <edgeref id="e80" />
    </edge-set>
    <edge-set id="IteratorAssignment4">
     <edgeref id="e5" />
-    <edgeref id="e18" />
-    <edgeref id="e20" />
-    <edgeref id="e34" />
+    <edgeref id="e23" />
+    <edgeref id="e25" />
+    <edgeref id="e82" />
    </edge-set>
    <edge-set id="IteratorAssignment5">
     <edgeref id="e7" />
-    <edgeref id="e23" />
-    <edgeref id="e36" />
+    <edgeref id="e44" />
+    <edgeref id="e48" />
+    <edgeref id="e49" />
+    <edgeref id="e50" />
+    <edgeref id="e59" />
+    <edgeref id="e61" />
+    <edgeref id="e62" />
+    <edgeref id="e63" />
+    <edgeref id="e71" />
+    <edgeref id="e84" />
    </edge-set>
    <edge-set id="IteratorAssignment6">
     <edgeref id="e9" />
-    <edgeref id="e12" />
-    <edgeref id="e28" />
-    <edgeref id="e38" />
+    <edgeref id="e76" />
+    <edgeref id="e86" />
    </edge-set>
    <edge-set id="IteratorAssignment7">
-    <edgeref id="e31" />
+    <edgeref id="e79" />
    </edge-set>
-   <edge-set id="IteratorAssignment11">
-    <edgeref id="e14" />
+   <edge-set id="IteratorAssignment13">
+    <edgeref id="e12" />
    </edge-set>
-   <edge-set id="IteratorAssignment19">
+   <edge-set id="IteratorAssignment14">
+    <edgeref id="e13" />
+   </edge-set>
+   <edge-set id="IteratorAssignment16">
     <edgeref id="e2" />
    </edge-set>
-   <edge-set id="IteratorAssignment34">
-    <edgeref id="e24" />
+   <edge-set id="IteratorAssignment26">
+    <edgeref id="e16" />
+   </edge-set>
+   <edge-set id="IteratorAssignment28">
+    <edgeref id="e18" />
+   </edge-set>
+   <edge-set id="IteratorAssignment29">
+    <edgeref id="e19" />
+   </edge-set>
+   <edge-set id="IteratorAssignment30">
+    <edgeref id="e20" />
+   </edge-set>
+   <edge-set id="IteratorAssignment31">
+    <edgeref id="e21" />
+   </edge-set>
+   <edge-set id="IteratorAssignment43">
+    <edgeref id="e33" />
+   </edge-set>
+   <edge-set id="IteratorAssignment45">
+    <edgeref id="e35" />
+   </edge-set>
+   <edge-set id="IteratorAssignment46">
+    <edgeref id="e36" />
+   </edge-set>
+   <edge-set id="IteratorAssignment47">
+    <edgeref id="e37" />
+   </edge-set>
+   <edge-set id="IteratorAssignment48">
+    <edgeref id="e38" />
+   </edge-set>
+   <edge-set id="IteratorAssignment55">
+    <edgeref id="e45" />
+   </edge-set>
+   <edge-set id="IteratorAssignment63">
+    <edgeref id="e53" />
+   </edge-set>
+   <edge-set id="IteratorAssignment65">
+    <edgeref id="e55" />
+   </edge-set>
+   <edge-set id="IteratorAssignment66">
+    <edgeref id="e56" />
+   </edge-set>
+   <edge-set id="IteratorAssignment67">
+    <edgeref id="e57" />
+   </edge-set>
+   <edge-set id="IteratorAssignment68">
+    <edgeref id="e58" />
+   </edge-set>
+   <edge-set id="IteratorAssignment76">
+    <edgeref id="e66" />
+   </edge-set>
+   <edge-set id="IteratorAssignment78">
+    <edgeref id="e68" />
+   </edge-set>
+   <edge-set id="IteratorAssignment79">
+    <edgeref id="e69" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.ArrayList--init----void">
+    <stub-input>
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.List-iterator---java.util.Iterator-E-">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+     <stub-connection num="outputReturn1" width="narrow" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.Iterator-hasNext---boolean">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.Iterator-next---E">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outputReturn0" width="narrow" />
+    </stub-output>
+   </board-stub>
    <board name="IteratorAssignment">
     <node id="n0" kind="INCOMING">
      <input />
@@ -91,7 +234,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e13" num="0" />
+      <port edge="e87" num="output" />
      </output>
      <layout>
       </layout>
@@ -109,69 +252,28 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e15" num="0" />
+      <port edge="e88" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n28" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e14" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n29" kind="MERGE">
+    <node id="n94" kind="END">
      <input>
-      <port edge="e13" num="0" />
-      <port edge="e14" num="1" />
-     </input>
-     <output>
-      <port edge="e16" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n30" kind="MERGE">
-     <input>
-      <port edge="e16" num="0" />
-      <port edge="e17" num="1" />
-     </input>
-     <output>
-      <port edge="e39" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n31" kind="SPLIT">
-     <input>
-      <port edge="e15" num="0" />
-     </input>
-     <output>
-      <port edge="e17" num="1" />
-      <port edge="e40" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n49" kind="END">
-     <input>
-      <port edge="e39" num="input" />
+      <port edge="e87" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n50" kind="END">
+    <node id="n95" kind="END">
      <input>
-      <port edge="e40" num="input" />
+      <port edge="e88" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -189,7 +291,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -207,36 +309,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e13" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e87" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n24" port="0" />
+      <noderef id="n24" port="output" />
      </from>
      <to>
-      <noderef id="n29" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e14" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n28" port="0" />
-     </from>
-     <to>
-      <noderef id="n29" port="1" />
+      <noderef id="n94" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -249,90 +327,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e15" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e88" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n26" port="0" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
-      <noderef id="n31" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n29" port="0" />
-     </from>
-     <to>
-      <noderef id="n30" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n31" port="1" />
-     </from>
-     <to>
-      <noderef id="n30" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class IteratorAssignment extends type; tree &lt;&lt;missing tree&gt;&gt; within  class IteratorAssignment {  IteratorAssignment() { super(); }  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } } }" editable="true" id="e39" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n30" port="output" />
-     </from>
-     <to>
-      <noderef id="n49" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e40" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n31" port="output" />
-     </from>
-     <to>
-      <noderef id="n50" port="input" />
+      <noderef id="n95" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -355,7 +355,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e30" num="outputReturn0" />
+      <port edge="e78" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -374,12 +374,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e30" num="output" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n27" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e12" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n28" kind="CONNECT">
+     <input>
+      <port edge="e12" num="input" />
+     </input>
+     <output>
+      <port edge="e13" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n29" kind="END">
+     <input>
+      <port edge="e13" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -395,9 +421,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method IteratorAssignment#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e30" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n27" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n28" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e13" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n28" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n29" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e78" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -427,7 +501,7 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e31" num="outReceiver0" />
+      <port edge="e79" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -438,7 +512,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e31" num="output" />
+      <port edge="e79" num="output" />
      </output>
      <layout>
       </layout>
@@ -456,7 +530,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e19" num="0" />
+      <port edge="e24" num="0" />
      </output>
      <layout>
       </layout>
@@ -474,7 +548,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e21" num="output" />
+      <port edge="e26" num="output" />
      </output>
      <layout>
       </layout>
@@ -492,7 +566,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e18" num="0" />
+      <port edge="e23" num="0" />
      </output>
      <layout>
       </layout>
@@ -510,7 +584,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e22" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
@@ -528,7 +602,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e23" num="0" />
+      <port edge="e44" num="0" />
      </output>
      <layout>
       </layout>
@@ -546,7 +620,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e25" num="output" />
+      <port edge="e46" num="output" />
      </output>
      <layout>
       </layout>
@@ -564,157 +638,216 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e12" num="output" />
+      <port edge="e76" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n27" kind="CONNECT">
+    <node id="n30" kind="SUBBOARD" name="java.util.ArrayList--init----void">
      <input>
-      <port edge="e12" num="input" />
+      <port edge="e15" num="inClassTypeParam0" />
+      <port edge="e16" num="inClassTypeParam1" />
      </input>
      <output>
-      <port edge="e28" num="0" />
+      <port edge="e17" num="outClassTypeParam0" />
+      <port edge="e18" num="outClassTypeParam1" />
+      <port edge="e20" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n32" kind="MERGE">
+    <node id="n31" kind="SPLIT">
      <input>
-      <port edge="e19" num="0" />
-      <port edge="e20" num="1" />
+      <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e32" num="output" />
+      <port edge="e15" num="split" />
+      <port edge="e22" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n33" kind="SPLIT">
+    <node id="n32" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e16" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n33" kind="CONNECT">
      <input>
-      <port edge="e18" num="0" />
+      <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e20" num="1" />
-      <port edge="e34" num="output" />
+      <port edge="e27" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n34" kind="CONNECT">
      <input>
-      <port edge="e21" num="input" />
+      <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e26" num="output" />
+      <port edge="e19" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n35" kind="CONNECT">
+    <node id="n35" kind="END">
+     <input>
+      <port edge="e19" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n36" kind="CONNECT">
+     <input>
+      <port edge="e20" num="input" />
+     </input>
+     <output>
+      <port edge="e21" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n37" kind="END">
+     <input>
+      <port edge="e21" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n38" kind="END">
      <input>
       <port edge="e22" num="input" />
      </input>
-     <output>
-      <port edge="e35" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n36" kind="START_LARGE_BALL">
-     <input />
-     <output>
+    <node id="n39" kind="MERGE">
+     <input>
       <port edge="e24" num="0" />
+      <port edge="e25" num="1" />
+     </input>
+     <output>
+      <port edge="e28" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n37" kind="MERGE">
+    <node id="n40" kind="SPLIT">
      <input>
       <port edge="e23" num="0" />
-      <port edge="e24" num="1" />
      </input>
      <output>
-      <port edge="e36" num="output" />
+      <port edge="e25" num="1" />
+      <port edge="e82" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n38" kind="CONNECT">
-     <input>
-      <port edge="e25" num="input" />
-     </input>
-     <output>
-      <port edge="e27" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n39" kind="CONNECT">
+    <node id="n41" kind="CONNECT">
      <input>
       <port edge="e26" num="input" />
      </input>
+     <output>
+      <port edge="e31" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n42" kind="CONNECT">
+     <input>
+      <port edge="e27" num="input" />
+     </input>
+     <output>
+      <port edge="e83" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n43" kind="SUBBOARD" name="java.util.List-iterator---java.util.Iterator-E-">
+     <input>
+      <port edge="e32" num="inClassTypeParam0" />
+      <port edge="e33" num="inClassTypeParam1" />
+      <port edge="e29" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e34" num="outClassTypeParam0" />
+      <port edge="e35" num="outClassTypeParam1" />
+      <port edge="e30" num="outReceiver0" />
+      <port edge="e37" num="outputReturn0" />
+      <port edge="e39" num="outputReturn1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n44" kind="SPLIT">
+     <input>
+      <port edge="e28" num="input" />
+     </input>
+     <output>
+      <port edge="e29" num="split" />
+      <port edge="e40" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n45" kind="CONNECT">
+     <input>
+      <port edge="e30" num="input" />
+     </input>
+     <output>
+      <port edge="e80" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n46" kind="SPLIT">
+     <input>
+      <port edge="e31" num="input" />
+     </input>
+     <output>
+      <port edge="e32" num="split" />
+      <port edge="e41" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n47" kind="START_LARGE_BALL">
+     <input />
      <output>
       <port edge="e33" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n40" kind="MERGE">
-     <input>
-      <port edge="e28" num="0" />
-      <port edge="e29" num="1" />
-     </input>
-     <output>
-      <port edge="e38" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n41" kind="SPLIT">
-     <input>
-      <port edge="e27" num="0" />
-     </input>
-     <output>
-      <port edge="e29" num="1" />
-      <port edge="e37" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n42" kind="END">
-     <input>
-      <port edge="e32" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n43" kind="END">
-     <input>
-      <port edge="e33" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n44" kind="END">
+    <node id="n48" kind="CONNECT">
      <input>
       <port edge="e34" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e43" num="toMerge" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n45" kind="END">
+    <node id="n49" kind="CONNECT">
      <input>
       <port edge="e35" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e36" num="toEnd" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n46" kind="END">
+    <node id="n50" kind="END">
      <input>
       <port edge="e36" num="input" />
      </input>
@@ -722,15 +855,17 @@
      <layout>
       </layout>
     </node>
-    <node id="n47" kind="END">
+    <node id="n51" kind="CONNECT">
      <input>
       <port edge="e37" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e38" num="toEnd" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n48" kind="END">
+    <node id="n52" kind="END">
      <input>
       <port edge="e38" num="input" />
      </input>
@@ -738,7 +873,398 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <node id="n53" kind="CONNECT">
+     <input>
+      <port edge="e39" num="input" />
+     </input>
+     <output>
+      <port edge="e42" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n54" kind="END">
+     <input>
+      <port edge="e40" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n55" kind="END">
+     <input>
+      <port edge="e41" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n56" kind="MERGE">
+     <input>
+      <port edge="e42" num="first" />
+      <port edge="e43" num="second" />
+     </input>
+     <output>
+      <port edge="e47" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e45" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n58" kind="MERGE">
+     <input>
+      <port edge="e44" num="0" />
+      <port edge="e45" num="1" />
+     </input>
+     <output>
+      <port edge="e48" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="CONNECT">
+     <input>
+      <port edge="e46" num="input" />
+     </input>
+     <output>
+      <port edge="e51" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n60" kind="CONNECT">
+     <input>
+      <port edge="e47" num="input" />
+     </input>
+     <output>
+      <port edge="e81" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n61" kind="SUBBOARD" name="java.util.Iterator-hasNext---boolean">
+     <input>
+      <port edge="e52" num="inClassTypeParam0" />
+      <port edge="e53" num="inClassTypeParam1" />
+      <port edge="e49" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e54" num="outClassTypeParam0" />
+      <port edge="e55" num="outClassTypeParam1" />
+      <port edge="e50" num="outReceiver0" />
+      <port edge="e57" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n62" kind="SPLIT">
+     <input>
+      <port edge="e48" num="input" />
+     </input>
+     <output>
+      <port edge="e49" num="split" />
+      <port edge="e59" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n63" kind="CONNECT">
+     <input>
+      <port edge="e50" num="input" />
+     </input>
+     <output>
+      <port edge="e61" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n64" kind="SPLIT">
+     <input>
+      <port edge="e51" num="input" />
+     </input>
+     <output>
+      <port edge="e52" num="split" />
+      <port edge="e60" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n65" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e53" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="CONNECT">
+     <input>
+      <port edge="e54" num="input" />
+     </input>
+     <output>
+      <port edge="e64" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n67" kind="CONNECT">
+     <input>
+      <port edge="e55" num="input" />
+     </input>
+     <output>
+      <port edge="e56" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n68" kind="END">
+     <input>
+      <port edge="e56" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n69" kind="CONNECT">
+     <input>
+      <port edge="e57" num="input" />
+     </input>
+     <output>
+      <port edge="e58" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n70" kind="END">
+     <input>
+      <port edge="e58" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n71" kind="END">
+     <input>
+      <port edge="e59" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n72" kind="END">
+     <input>
+      <port edge="e60" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n73" kind="SUBBOARD" name="java.util.Iterator-next---E">
+     <input>
+      <port edge="e65" num="inClassTypeParam0" />
+      <port edge="e66" num="inClassTypeParam1" />
+      <port edge="e62" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e67" num="outClassTypeParam0" />
+      <port edge="e68" num="outClassTypeParam1" />
+      <port edge="e63" num="outReceiver0" />
+      <port edge="e70" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n74" kind="SPLIT">
+     <input>
+      <port edge="e61" num="input" />
+     </input>
+     <output>
+      <port edge="e62" num="split" />
+      <port edge="e71" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n75" kind="CONNECT">
+     <input>
+      <port edge="e63" num="input" />
+     </input>
+     <output>
+      <port edge="e84" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n76" kind="SPLIT">
+     <input>
+      <port edge="e64" num="input" />
+     </input>
+     <output>
+      <port edge="e65" num="split" />
+      <port edge="e72" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n77" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e66" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n78" kind="CONNECT">
+     <input>
+      <port edge="e67" num="input" />
+     </input>
+     <output>
+      <port edge="e74" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n79" kind="CONNECT">
+     <input>
+      <port edge="e68" num="input" />
+     </input>
+     <output>
+      <port edge="e69" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n80" kind="END">
+     <input>
+      <port edge="e69" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n81" kind="CONNECT">
+     <input>
+      <port edge="e70" num="input" />
+     </input>
+     <output>
+      <port edge="e73" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n82" kind="END">
+     <input>
+      <port edge="e71" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n83" kind="END">
+     <input>
+      <port edge="e72" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n84" kind="MERGE">
+     <input>
+      <port edge="e73" num="first" />
+      <port edge="e74" num="second" />
+     </input>
+     <output>
+      <port edge="e75" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n85" kind="MERGE">
+     <input>
+      <port edge="e76" num="0" />
+      <port edge="e77" num="1" />
+     </input>
+     <output>
+      <port edge="e86" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n86" kind="SPLIT">
+     <input>
+      <port edge="e75" num="0" />
+     </input>
+     <output>
+      <port edge="e77" num="1" />
+      <port edge="e85" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n87" kind="END">
+     <input>
+      <port edge="e80" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n88" kind="END">
+     <input>
+      <port edge="e81" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n89" kind="END">
+     <input>
+      <port edge="e82" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n90" kind="END">
+     <input>
+      <port edge="e83" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n91" kind="END">
+     <input>
+      <port edge="e84" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n92" kind="END">
+     <input>
+      <port edge="e85" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n93" kind="END">
+     <input>
+      <port edge="e86" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -756,7 +1282,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List&lt;Integer&gt;" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -774,7 +1300,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -792,7 +1318,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -810,7 +1336,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList&lt;Integer&gt;" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -828,7 +1354,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
@@ -846,7 +1372,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e8" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -864,7 +1390,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e9" pinch="false" variableID="9" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -882,12 +1408,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e12" pinch="false" variableID="9" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n22" port="output" />
+      <noderef id="n16" port="output" />
      </from>
      <to>
-      <noderef id="n27" port="input" />
+      <noderef id="n31" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -900,12 +1426,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e18" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n14" port="0" />
+      <noderef id="n31" port="split" />
      </from>
      <to>
-      <noderef id="n33" port="0" />
+      <noderef id="n30" port="inClassTypeParam0" />
      </to>
      <edge-layout>
       <point>
@@ -918,36 +1444,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List&lt;Integer&gt;" editable="true" id="e19" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e16" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n10" port="0" />
+      <noderef id="n32" port="output" />
      </from>
      <to>
-      <noderef id="n32" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e20" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n33" port="1" />
-     </from>
-     <to>
-      <noderef id="n32" port="1" />
+      <noderef id="n30" port="inClassTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -960,9 +1462,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e21" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n12" port="output" />
+      <noderef id="n30" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n33" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e18" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n30" port="outClassTypeParam1" />
      </from>
      <to>
       <noderef id="n34" port="input" />
@@ -978,9 +1498,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList&lt;Integer&gt;" editable="true" id="e22" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e19" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n16" port="output" />
+      <noderef id="n34" port="toEnd" />
      </from>
      <to>
       <noderef id="n35" port="input" />
@@ -996,12 +1516,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e23" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e20" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n18" port="0" />
+      <noderef id="n30" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n37" port="0" />
+      <noderef id="n36" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1020,12 +1540,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e24" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e21" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n36" port="0" />
+      <noderef id="n36" port="toEnd" />
      </from>
      <to>
-      <noderef id="n37" port="1" />
+      <noderef id="n37" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1038,9 +1558,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e25" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n20" port="output" />
+      <noderef id="n31" port="toEnd" />
      </from>
      <to>
       <noderef id="n38" port="input" />
@@ -1054,18 +1574,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n34" port="output" />
-     </from>
-     <to>
-      <noderef id="n39" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1074,27 +1582,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e27" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n38" port="0" />
-     </from>
-     <to>
-      <noderef id="n41" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e28" pinch="false" variableID="9" width="wide">
-     <from>
-      <noderef id="n27" port="0" />
+      <noderef id="n14" port="0" />
      </from>
      <to>
       <noderef id="n40" port="0" />
@@ -1110,12 +1600,60 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e29" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n41" port="1" />
+      <noderef id="n10" port="0" />
      </from>
      <to>
+      <noderef id="n39" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="5" width="narrow">
+     <from>
       <noderef id="n40" port="1" />
+     </from>
+     <to>
+      <noderef id="n39" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n12" port="output" />
+     </from>
+     <to>
+      <noderef id="n41" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1128,7 +1666,1105 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method IteratorAssignment#containerMethod():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void containerMethod() { final List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;(); final Iterator&lt;Integer&gt; intIterator = intList.iterator(); while (intIterator.hasNext()) { final int quality = intIterator.next(); } }Atm: @VarAnnot(2) IteratorAssignment" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e27" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n33" port="output" />
+     </from>
+     <to>
+      <noderef id="n42" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n39" port="output" />
+     </from>
+     <to>
+      <noderef id="n44" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n44" port="split" />
+     </from>
+     <to>
+      <noderef id="n43" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n43" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n45" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n41" port="output" />
+     </from>
+     <to>
+      <noderef id="n46" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n46" port="split" />
+     </from>
+     <to>
+      <noderef id="n43" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e33" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n47" port="output" />
+     </from>
+     <to>
+      <noderef id="n43" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n43" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n48" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e35" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n43" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n49" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e36" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n49" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n50" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e37" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n43" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n51" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e38" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n51" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n52" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n43" port="outputReturn1" />
+     </from>
+     <to>
+      <noderef id="n53" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n44" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n54" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e41" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n46" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n55" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e42" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n53" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n56" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e43" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n48" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n56" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e44" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n18" port="0" />
+     </from>
+     <to>
+      <noderef id="n58" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e45" pinch="false" variableID="-1" width="narrow">
+     <from>
+      <noderef id="n57" port="0" />
+     </from>
+     <to>
+      <noderef id="n58" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e46" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n20" port="output" />
+     </from>
+     <to>
+      <noderef id="n59" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n56" port="output" />
+     </from>
+     <to>
+      <noderef id="n60" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n58" port="output" />
+     </from>
+     <to>
+      <noderef id="n62" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e49" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n62" port="split" />
+     </from>
+     <to>
+      <noderef id="n61" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e50" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n61" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n63" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e51" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n59" port="output" />
+     </from>
+     <to>
+      <noderef id="n64" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e52" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n64" port="split" />
+     </from>
+     <to>
+      <noderef id="n61" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e53" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n65" port="output" />
+     </from>
+     <to>
+      <noderef id="n61" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e54" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n61" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n66" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e55" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n61" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n67" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e56" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n67" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n68" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e57" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n61" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n69" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e58" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n69" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n70" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e59" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n62" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n71" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e60" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n64" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n72" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e61" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n63" port="output" />
+     </from>
+     <to>
+      <noderef id="n74" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e62" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n74" port="split" />
+     </from>
+     <to>
+      <noderef id="n73" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e63" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n73" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n75" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e64" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n66" port="output" />
+     </from>
+     <to>
+      <noderef id="n76" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e65" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n76" port="split" />
+     </from>
+     <to>
+      <noderef id="n73" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e66" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n77" port="output" />
+     </from>
+     <to>
+      <noderef id="n73" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e67" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n73" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n78" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e68" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n73" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n79" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e69" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n79" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n80" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e70" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n73" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n81" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e71" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n74" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n82" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e72" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n76" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n83" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e73" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n81" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n84" port="first" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e74" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n78" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n84" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e75" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n84" port="0" />
+     </from>
+     <to>
+      <noderef id="n86" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e76" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n22" port="0" />
+     </from>
+     <to>
+      <noderef id="n85" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e77" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n86" port="1" />
+     </from>
+     <to>
+      <noderef id="n85" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e79" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -1158,102 +2794,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method IteratorAssignment#containerMethod():V local variable intList(0); tree List within List&lt;Integer&gt;" editable="true" id="e32" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e80" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n32" port="output" />
+      <noderef id="n45" port="output" />
      </from>
      <to>
-      <noderef id="n42" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 4 at method IteratorAssignment#containerMethod():V local variable intList(0); tree Integer at position ((3,0)) within List&lt;Integer&gt;" editable="true" id="e33" pinch="false" variableID="4" width="narrow">
-     <from>
-      <noderef id="n39" port="output" />
-     </from>
-     <to>
-      <noderef id="n43" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method IteratorAssignment#containerMethod():V creation 0; tree ArrayList within ArrayList&lt;Integer&gt;" editable="true" id="e34" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n33" port="output" />
-     </from>
-     <to>
-      <noderef id="n44" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at method IteratorAssignment#containerMethod():V creation 0; tree Integer at position ((3,0)) within ArrayList&lt;Integer&gt;" editable="true" id="e35" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n35" port="output" />
-     </from>
-     <to>
-      <noderef id="n45" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Iterator within Iterator&lt;Integer&gt;" editable="true" id="e36" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n37" port="output" />
-     </from>
-     <to>
-      <noderef id="n46" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at method IteratorAssignment#containerMethod():V local variable intIterator(0); tree Integer at position ((3,0)) within Iterator&lt;Integer&gt;" editable="true" id="e37" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n41" port="output" />
-     </from>
-     <to>
-      <noderef id="n47" port="input" />
+      <noderef id="n87" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1272,12 +2818,102 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method IteratorAssignment#containerMethod():V local variable quality(0); tree int" editable="false" id="e38" pinch="false" variableID="9" width="wide">
+    <edge buzzsaw="false" description="desc" editable="true" id="e81" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n60" port="output" />
+     </from>
+     <to>
+      <noderef id="n88" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e82" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n40" port="output" />
      </from>
      <to>
-      <noderef id="n48" port="input" />
+      <noderef id="n89" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e83" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
+     </from>
+     <to>
+      <noderef id="n90" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e84" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n75" port="output" />
+     </from>
+     <to>
+      <noderef id="n91" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e85" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n86" port="output" />
+     </from>
+     <to>
+      <noderef id="n92" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e86" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n85" port="output" />
+     </from>
+     <to>
+      <noderef id="n93" port="input" />
      </to>
      <edge-layout>
       <point>

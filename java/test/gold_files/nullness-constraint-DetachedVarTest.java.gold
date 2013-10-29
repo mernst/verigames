@@ -26,6 +26,20 @@ class DetachedVarTest {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method DetachedVarTest#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method DetachedVarTest#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 4 at method DetachedVarTest#test():[LDetachedVarTest; receiver; tree <<missing tree>> within 
 public DetachedVarTest[] test() {
     return null;
@@ -74,6 +88,18 @@ class DetachedVarAccess {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method DetachedVarAccess#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 7 at method DetachedVarAccess#method(LDetachedVarTest;):V receiver; tree <<missing tree>> within 
 private void method(DetachedVarTest dt) {
     for (final DetachedVarTest dvt : dt.test()) {
@@ -97,7 +123,7 @@ InequalityConstraint( context: method DetachedVarAccess#method(LDetachedVarTest;
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position; 
-calledVp: method DetachedVarTest#test():[LDetachedVarTest;; 
+calledVp: Some(method DetachedVarTest#test():[LDetachedVarTest;); 
 receiver: Variable 8 at method DetachedVarAccess#method(LDetachedVarTest;):V parameter 0; tree DetachedVarTest; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -109,7 +135,21 @@ result: List(Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; retu
 
 InequalityConstraint( context: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]  <:  Variable 10 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable dvt(0); tree DetachedVarTest )
+StubBoardUseConstraint(java.io.PrintStream,java.io.PrintStream#println(java.lang.Object):void,method DetachedVarAccess#method(LDetachedVarTest;):V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)),List())
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position; 
+calledVp: None; 
+receiver: Constant(@nninf.quals.NonNull); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable dvt(0); tree DetachedVarTest ); 
+result: List(); 
+)
+
+SubtypeConstraint( Variable 3 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest at position ((0,0)) within DetachedVarTest[]  <:  Variable 9 at method DetachedVarAccess#method(LDetachedVarTest;):V local variable dvt(0); tree DetachedVarTest )
 
 InequalityConstraint( context: method DetachedVarAccess#method(LDetachedVarTest;):V constraint position, Variable 2 at method DetachedVarTest#test():[LDetachedVarTest; return type; tree DetachedVarTest[] != Constant(@nninf.quals.Nullable) )
 

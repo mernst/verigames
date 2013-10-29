@@ -10,13 +10,13 @@ import com.sun.source.tree.MethodInvocationTree;
 
 import checkers.basetype.BaseTypeChecker;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.SubtypingAnnotatedTypeFactory;
+
 import checkers.types.TreeAnnotator;
+import games.GameAnnotatedTypeFactory;
 import javacutils.ElementUtils;
 import javacutils.TreeUtils;
 
-public class RandomAnnotatedTypeFactory extends
-        SubtypingAnnotatedTypeFactory<RandomChecker> {
+public class RandomAnnotatedTypeFactory extends GameAnnotatedTypeFactory {
     private final ExecutableElement nextInt;
     private final ExecutableElement nextDouble;
     private final ExecutableElement nextBoolean;
@@ -26,12 +26,9 @@ public class RandomAnnotatedTypeFactory extends
     
     private final String secureRandom = "java.security.SecureRandom";
 
-    public RandomAnnotatedTypeFactory(RandomChecker checker,
-            CompilationUnitTree root) {
-        super(checker, root);
-        if(root != null && this.checker.currentPath != null) {
-        	postInit();
-        }
+    public RandomAnnotatedTypeFactory(RandomChecker checker ) {
+        super(checker);
+        postInit();
 
         nextInt = TreeUtils.getMethod("java.util.Random", "nextInt", 0, checker.getProcessingEnvironment());
         nextDouble = TreeUtils.getMethod("java.util.Random", "nextDouble", 0, checker.getProcessingEnvironment());
@@ -43,13 +40,13 @@ public class RandomAnnotatedTypeFactory extends
     }
 
     @Override
-    public TreeAnnotator createTreeAnnotator(RandomChecker checker) {
-        return new TrustedTreeAnnotator(checker);
+    public TreeAnnotator createTreeAnnotator() {
+        return new TrustedTreeAnnotator();
     }
 
     private class TrustedTreeAnnotator extends TreeAnnotator {
-        public TrustedTreeAnnotator(BaseTypeChecker checker) {
-            super(checker, RandomAnnotatedTypeFactory.this);
+        public TrustedTreeAnnotator() {
+            super(RandomAnnotatedTypeFactory.this);
         }
 
         /**
@@ -63,10 +60,11 @@ public class RandomAnnotatedTypeFactory extends
                 AnnotatedTypeMirror lExpr = getAnnotatedType(tree.getLeftOperand());
                 AnnotatedTypeMirror rExpr = getAnnotatedType(tree.getRightOperand());
 
-                if (lExpr.hasAnnotation(checker.TRUSTED) && rExpr.hasAnnotation(checker.TRUSTED)) {
-                    type.addAnnotation(checker.TRUSTED);
+                final RandomChecker randomChecker = (RandomChecker) checker;
+                if (lExpr.hasAnnotation(randomChecker.TRUSTED) && rExpr.hasAnnotation(randomChecker.TRUSTED)) {
+                    type.addAnnotation(randomChecker.TRUSTED);
                 } else {
-                    type.addAnnotation(checker.UNTRUSTED);
+                    type.addAnnotation(randomChecker.UNTRUSTED);
                 }
             }
             return super.visitBinary(tree, type);
@@ -74,13 +72,14 @@ public class RandomAnnotatedTypeFactory extends
         
         @Override 
         public Void visitMethodInvocation(MethodInvocationTree tree, AnnotatedTypeMirror type) {
+            final RandomChecker randomChecker = (RandomChecker) checker;
         	if (isNext(tree)){
     			if(secureRandom.equals(TreeUtils.elementFromUse(TreeUtils.getReceiverTree(tree)).asType().toString())) {
-    				type.removeAnnotation(checker.UNTRUSTED);
-    				type.addAnnotation(checker.TRUSTED);
+    				type.removeAnnotation(randomChecker.UNTRUSTED);
+    				type.addAnnotation(randomChecker.TRUSTED);
         		} else {
-        			type.removeAnnotation(checker.TRUSTED);
-        			type.addAnnotation(checker.UNTRUSTED);
+        			type.removeAnnotation(randomChecker.TRUSTED);
+        			type.addAnnotation(randomChecker.UNTRUSTED);
         		}
         	}
 			return super.visitMethodInvocation(tree, type);        	
