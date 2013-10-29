@@ -20,6 +20,20 @@ class NestedClassWithTypeAnnotations {
     O1.O2<String, Object>.O3.Nested<Foo, Bar> o;
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NestedClassWithTypeAnnotations#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NestedClassWithTypeAnnotations#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 5 at class O1 extends type; tree <<missing tree>> within 
 class O1 {
     
@@ -81,6 +95,18 @@ class O1 {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 8 at class O1$O2 class type parameter 0; tree S  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 8 at class O1$O2 class type parameter 0; tree S  <:  Variable 7 at class O1$O2 class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within SAtm: @VarAnnot(7) Object )
@@ -136,6 +162,18 @@ class O2<S, T> {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 13 at class O1$O2$O3 extends type; tree <<missing tree>> within 
 class O3 {
     
@@ -169,6 +207,18 @@ class O3 {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2$O3#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 16 at class O1$O2$O3$Nested class type parameter 0; tree U  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 16 at class O1$O2$O3$Nested class type parameter 0; tree U  <:  Variable 15 at class O1$O2$O3$Nested class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within UAtm: @VarAnnot(15) Object )
@@ -196,6 +246,18 @@ class Nested<U, V> {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2$O3$Nested#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 21 at class Foo extends type; tree <<missing tree>> within 
 class Foo {
     
@@ -215,6 +277,18 @@ class Foo {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Foo#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 23 at class Bar extends type; tree <<missing tree>> within 
 class Bar {
     
@@ -233,4 +307,16 @@ class Bar {
         super();
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Bar#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 

@@ -22,7 +22,33 @@ class FieldInit {
     Object f2 = new Object();
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method FieldInit#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method FieldInit#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 1 at class FieldInit field f1; tree Object )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class FieldInit field f2 constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 2 at class FieldInit field f2 creation 0; tree Object  <:  Variable 3 at class FieldInit field f2; tree Object )
 

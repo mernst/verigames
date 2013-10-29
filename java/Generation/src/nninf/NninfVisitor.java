@@ -1,7 +1,9 @@
 package nninf;
 
+import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
 import checkers.inference.InferenceUtils;
+import checkers.util.MultiGraphQualifierHierarchy;
 import com.sun.source.util.TreePath;
 import games.GameVisitor;
 
@@ -29,17 +31,19 @@ import javacutils.TreeUtils;
 import com.sun.source.tree.*;
 import com.sun.source.util.Trees;
 
-public class NninfVisitor extends GameVisitor {
+public class NninfVisitor extends GameVisitor<NninfChecker> {
 
-    private final NninfChecker nninfchecker;
     private final TypeMirror stringType;
 
-    public NninfVisitor(BaseTypeChecker checker, CompilationUnitTree root,
-            NninfChecker nninfchecker, boolean infer) {
-        super(checker, root, infer);
+    public NninfVisitor(NninfChecker checker, InferenceChecker ichecker, boolean infer) {
+        super(checker, ichecker, infer);
 
-        this.nninfchecker = nninfchecker;
         this.stringType = elements.getTypeElement("java.lang.String").asType();
+    }
+
+    @Override
+    protected NninfAnnotatedTypeFactory createRealTypeFactory() {
+        return new NninfAnnotatedTypeFactory(realChecker);
     }
 
     /**
@@ -47,7 +51,7 @@ public class NninfVisitor extends GameVisitor {
      */
     private void checkForNullability(ExpressionTree tree, /*@CompilerMessageKey*/ String errMsg) {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(tree);
-        mainIsNot(type, nninfchecker.NULLABLE, errMsg, tree);
+        mainIsNot(type, realChecker.NULLABLE, errMsg, tree);
     }
 
     @Override

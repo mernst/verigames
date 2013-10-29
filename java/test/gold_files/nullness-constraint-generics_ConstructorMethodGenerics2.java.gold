@@ -32,13 +32,27 @@ SubtypeConstraint( Variable 2 at method MyConstructor#<init>(Ljava/lang/Object;)
 
 SubtypeConstraint( Variable 4 at method MyConstructor#<init>(Ljava/lang/Object;):V parameter 0; tree E  <:  Constant(@nninf.quals.Nullable) )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MyConstructor#<init>(Ljava/lang/Object;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MyConstructor#<init>(Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Literal(STRING_LITERAL, "string")  <:  Variable 4 at method MyConstructor#<init>(Ljava/lang/Object;):V parameter 0; tree E )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "string")  <:  Constant(@nninf.quals.Nullable) )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyConstructor#main():V constraint position; 
-calledVp: method MyConstructor#<init>(Ljava/lang/Object;):V; 
+calledVp: Some(method MyConstructor#<init>(Ljava/lang/Object;):V); 
 receiver: null; 
 methodTypeParamLBs: < Variable 2 at method MyConstructor#<init>(Ljava/lang/Object;):V method type parameter 0; tree E extends Object >; 
 classTypeParamLBs: <  >; 

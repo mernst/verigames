@@ -1,14 +1,14 @@
 package hardcoded;
 
+import checkers.inference.InferenceChecker;
 import games.GameVisitor;
 import checkers.basetype.BaseTypeChecker;
 
 import com.sun.source.tree.CompilationUnitTree;
 
-public class HardCodedVisitor extends GameVisitor {
+public class HardCodedVisitor extends GameVisitor<HardCodedChecker> {
 
-    public HardCodedVisitor(BaseTypeChecker checker, CompilationUnitTree root,
-            HardCodedChecker hardcodedchecker, boolean infer) {
-        super(checker, root, infer);
+    public HardCodedVisitor(HardCodedChecker checker, InferenceChecker ichecker, boolean infer) {
+        super(checker, ichecker, infer);
     }
 }

@@ -6,7 +6,7 @@ package scenes
     
     public class Scene extends BaseComponent
     {	
-		protected var m_gameSystem:Game;
+		public static var m_gameSystem:Game;
 				
 		public static function getScene(className:Class, game:Game):Scene
 		{

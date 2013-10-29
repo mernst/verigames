@@ -24,6 +24,20 @@ public class MissingMethodAccess {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MissingMethodAccess#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MissingMethodAccess#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method MissingMethodAccess#access():V receiver; tree <<missing tree>> within 
 public void access() {
 }Atm: @VarAnnot(2) MissingMethodAccess  <:  Variable 0 at class MissingMethodAccess extends type; tree <<missing tree>> within 
@@ -71,7 +85,19 @@ class OtherAccess {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
-calledVp: method MissingMethodAccess#<init>():V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method OtherAccess#<init>():V constraint position; 
+calledVp: Some(method MissingMethodAccess#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -86,11 +112,11 @@ public <init>() {
 
 InequalityConstraint( context: method OtherAccess#<init>():V constraint position, Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: Set()  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: (Set())  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method OtherAccess#<init>():V constraint position; 
-calledVp: class OtherAccess field mmAccess; 
+calledVp: Some(class OtherAccess field mmAccess); 
 receiver: Constant(@nninf.quals.Nullable); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -100,7 +126,7 @@ args: ( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMeth
 result: List(); 
 )
 
-EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: Set() = Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess )
+EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess IfTest: false mergedTo: (Set()) = Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess )
 
 SubtypeConstraint( Variable 7 at method OtherAccess#<init>():V creation 0; tree MissingMethodAccess  <:  Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess )
 
@@ -123,7 +149,7 @@ class OtherAccess {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method OtherAccess#localAccess():V constraint position; 
-calledVp: class OtherAccess field mmAccess; 
+calledVp: Some(class OtherAccess field mmAccess); 
 receiver: Variable 5 at method OtherAccess#localAccess():V receiver; tree <<missing tree>> within 
 public void localAccess() {
     mmAccess.access();
@@ -140,7 +166,7 @@ InequalityConstraint( context: method OtherAccess#localAccess():V constraint pos
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method OtherAccess#localAccess():V constraint position; 
-calledVp: method MissingMethodAccess#access():V; 
+calledVp: Some(method MissingMethodAccess#access():V); 
 receiver: Variable 6 at class OtherAccess field mmAccess; tree MissingMethodAccess; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

@@ -20,3 +20,17 @@ class ArrayAnnotations {
     String[][][] s;
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ArrayAnnotations#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayAnnotations#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+

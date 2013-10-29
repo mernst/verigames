@@ -11,10 +11,10 @@ def getNewLevelID():
 	c.setopt(c.WRITEFUNCTION, buf.write)
 	c.setopt(c.POSTFIELDS, '')
 	raURL = 'http://api.pipejam.verigames.com/ra/games/1/levels/new'
-	print raURL
+	print (raURL)
 	c.setopt(c.URL, raURL)
 	c.perform()
-	print buf.getvalue()
+	print (buf.getvalue())
 	raObj = json.loads(buf.getvalue())
 	buf.close()
 

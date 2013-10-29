@@ -18,6 +18,20 @@ class MyObj {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MyObj#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MyObj#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 EqualityConstraint( Variable 7 at method ArrayFieldAccess#context():V local variable i(0); tree int = Constant(@nninf.quals.NonNull) )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 2 at class ArrayFieldAccess extends type; tree <<missing tree>> within 
@@ -51,6 +65,18 @@ class ArrayFieldAccess {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayFieldAccess#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 4 at method ArrayFieldAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     int i = array.length;
@@ -71,7 +97,7 @@ class ArrayFieldAccess {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayFieldAccess#context():V constraint position; 
-calledVp: class ArrayFieldAccess field array; 
+calledVp: Some(class ArrayFieldAccess field array); 
 receiver: Variable 4 at method ArrayFieldAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     int i = array.length;
@@ -89,7 +115,7 @@ InequalityConstraint( context: method ArrayFieldAccess#context():V constraint po
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method ArrayFieldAccess#context():V constraint position; 
-calledVp: class ArrayFieldAccess field array; 
+calledVp: Some(class ArrayFieldAccess field array); 
 receiver: Variable 4 at method ArrayFieldAccess#context():V receiver; tree <<missing tree>> within 
 public void context() {
     int i = array.length;
@@ -105,7 +131,7 @@ result: List(Variable 5 at class ArrayFieldAccess field array; tree MyObj[], Var
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method ArrayFieldAccess#context():V constraint position; 
-calledVp: method MyObj#<init>():V; 
+calledVp: Some(method MyObj#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

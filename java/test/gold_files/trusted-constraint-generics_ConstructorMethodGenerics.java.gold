@@ -10,6 +10,20 @@ SubtypeConstraint( Variable 5 at method MyClass#<init>():V return type; tree
 
 SubtypeConstraint( Variable 4 at method MyClass#<init>():V method type parameter 0; tree E extends Object  <:  Variable 3 at method MyClass#<init>():V method type parameter bound 0 & 0; tree Object at position ((3,0)) within E extends Object )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MyClass#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MyClass#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 6 at method MyClass#m(Ljava/lang/Object;):V receiver; tree MyClass<T>  <:  Variable 2 at class MyClass extends type; tree Object )
 
 SubtypeConstraint( Variable 1 at class MyClass class type parameter 0; tree T extends Object  <:  Constant(@trusted.quals.Untrusted) )
@@ -28,7 +42,7 @@ SubtypeConstraint( Variable 4 at method MyClass#<init>():V method type parameter
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 
-calledVp: method MyClass#<init>():V; 
+calledVp: Some(method MyClass#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: < Variable 4 at method MyClass#<init>():V method type parameter 0; tree E extends Object >; 
 classTypeParamLBs: < Variable 1 at class MyClass class type parameter 0; tree T extends Object >; 
@@ -41,18 +55,18 @@ result: List(Variable 5 at method MyClass#<init>():V return type; tree
 }); 
 )
 
-EqualityConstraint( RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: Set() = Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass<String> )
+EqualityConstraint( RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: (Set()) = Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass<String> )
 
 SubtypeConstraint( Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass<String>  <:  Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> )
 
 SubtypeConstraint( Variable 7 at method MyClass#m(Ljava/lang/Object;):V parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
-SubtypeConstraint( RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: Set()  <:  Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> )
+SubtypeConstraint( RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: (Set())  <:  Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MyClass#context():V constraint position; 
-calledVp: method MyClass#m(Ljava/lang/Object;):V; 
-receiver: RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: Set(); 
+calledVp: Some(method MyClass#m(Ljava/lang/Object;):V); 
+receiver: RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass<String> IfTest: false mergedTo: (Set()); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 1 at class MyClass class type parameter 0; tree T extends Object >; 
 methodTypeArgs: <  >; 

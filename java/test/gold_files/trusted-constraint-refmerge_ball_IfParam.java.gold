@@ -32,6 +32,20 @@ class IfParam {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method IfParam#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method IfParam#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method IfParam#test(Ljava/lang/String;):V receiver; tree <<missing tree>> within 
 void test(String a) {
     if (a == null) {
@@ -53,7 +67,27 @@ class IfParam {
     }
 } )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set()) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(5 )) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String )
+
+SubtypeConstraint( Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(5 ))  <:  RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method IfParam#test(Ljava/lang/String;):V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method IfParam#test(Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #5 Declared Variable: Variable 3 at method IfParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

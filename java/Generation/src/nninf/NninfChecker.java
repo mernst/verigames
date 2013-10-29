@@ -25,7 +25,7 @@ import checkers.util.MultiGraphQualifierHierarchy;
 import com.sun.source.tree.CompilationUnitTree;
 
 @TypeQualifiers({ NonNull.class, Nullable.class/*, UnknownKeyFor.class, KeyFor.class*/ })
-public class NninfChecker extends GameChecker<NninfAnnotatedTypeFactory> {
+public class NninfChecker extends GameChecker {
     public AnnotationMirror NULLABLE, NONNULL, UNKNOWNKEYFOR, KEYFOR;
 
     public void init(ProcessingEnvironment processingEnv) {
@@ -35,29 +35,20 @@ public class NninfChecker extends GameChecker<NninfAnnotatedTypeFactory> {
 
     @Override
     public void initChecker() {
-        super.initChecker();
         final Elements elements = processingEnv.getElementUtils();
-
         NULLABLE = AnnotationUtils.fromClass(elements, Nullable.class);
         NONNULL  = AnnotationUtils.fromClass(elements, NonNull.class);
         // UNKNOWNKEYFOR = annoFactory.fromClass(UnknownKeyFor.class);
         // KEYFOR = annoFactory.fromClass(KeyFor.class);
+
+        super.initChecker();
+
     }
 
     @Override
-    public NninfAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
-        return new NninfAnnotatedTypeFactory(this, root);
-    }
-
-    @Override
-    protected MultiGraphQualifierHierarchy.MultiGraphFactory createQualifierHierarchyFactory() {
-        return new MultiGraphQualifierHierarchy.MultiGraphFactory(this);
-    }
-
-    @Override
-    protected NninfVisitor createSourceVisitor(CompilationUnitTree root) {
+    public NninfVisitor createInferenceVisitor() {
         // The false turns off inference and enables checking the type system.
-        return new NninfVisitor(this, root, this, false);
+        return new NninfVisitor(this, null, false);
     }
 
     @Override

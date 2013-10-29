@@ -4,73 +4,73 @@
    <edge-set id="NoVariables0">
     <edgeref id="e1" />
     <edgeref id="e48" />
-    <edgeref id="e87" />
+    <edgeref id="e91" />
     <edgeref id="e3" />
     <edgeref id="e5" />
    </edge-set>
    <edge-set id="NoVariables1">
     <edgeref id="e11" />
     <edgeref id="e44" />
-    <edgeref id="e88" />
+    <edgeref id="e92" />
     <edgeref id="e36" />
-    <edgeref id="e50" />
-    <edgeref id="e95" />
+    <edgeref id="e52" />
+    <edgeref id="e99" />
     <edgeref id="e13" />
     <edgeref id="e15" />
    </edge-set>
    <edge-set id="NoVariables2">
     <edgeref id="e16" />
     <edgeref id="e45" />
-    <edgeref id="e89" />
+    <edgeref id="e93" />
     <edgeref id="e37" />
-    <edgeref id="e53" />
-    <edgeref id="e96" />
+    <edgeref id="e55" />
+    <edgeref id="e100" />
     <edgeref id="e18" />
     <edgeref id="e20" />
    </edge-set>
    <edge-set id="NoVariables3">
     <edgeref id="e21" />
     <edgeref id="e46" />
-    <edgeref id="e90" />
+    <edgeref id="e94" />
     <edgeref id="e38" />
-    <edgeref id="e56" />
-    <edgeref id="e97" />
+    <edgeref id="e58" />
+    <edgeref id="e101" />
     <edgeref id="e23" />
     <edgeref id="e25" />
    </edge-set>
    <edge-set id="NoVariables4">
     <edgeref id="e34" />
-    <edgeref id="e93" />
+    <edgeref id="e97" />
    </edge-set>
    <edge-set id="NoVariables5">
     <edgeref id="e35" />
-    <edgeref id="e94" />
+    <edgeref id="e98" />
     <edgeref id="e6" />
-    <edgeref id="e80" />
+    <edgeref id="e84" />
    </edge-set>
    <edge-set id="NoVariables6">
     <edgeref id="e7" />
     <edgeref id="e41" />
-    <edgeref id="e49" />
     <edgeref id="e51" />
-    <edgeref id="e81" />
+    <edgeref id="e53" />
+    <edgeref id="e85" />
    </edge-set>
    <edge-set id="NoVariables7">
     <edgeref id="e8" />
     <edgeref id="e42" />
-    <edgeref id="e52" />
     <edgeref id="e54" />
-    <edgeref id="e82" />
+    <edgeref id="e56" />
+    <edgeref id="e86" />
    </edge-set>
    <edge-set id="NoVariables8">
     <edgeref id="e9" />
     <edgeref id="e43" />
-    <edgeref id="e55" />
     <edgeref id="e57" />
-    <edgeref id="e83" />
+    <edgeref id="e59" />
+    <edgeref id="e87" />
    </edge-set>
    <edge-set id="NoVariables9">
-    <edgeref id="e84" />
+    <edgeref id="e88" />
    </edge-set>
    <edge-set id="NoVariables19">
     <edgeref id="e47" />
@@ -79,55 +79,67 @@
     <edgeref id="e2" />
    </edge-set>
    <edge-set id="NoVariables29">
-    <edgeref id="e70" />
+    <edgeref id="e74" />
    </edge-set>
    <edge-set id="NoVariables30">
     <edgeref id="e4" />
    </edge-set>
    <edge-set id="NoVariables32">
-    <edgeref id="e71" />
-   </edge-set>
-   <edge-set id="NoVariables59">
-    <edgeref id="e10" />
-   </edge-set>
-   <edge-set id="NoVariables61">
-    <edgeref id="e12" />
-   </edge-set>
-   <edge-set id="NoVariables63">
-    <edgeref id="e72" />
-   </edge-set>
-   <edge-set id="NoVariables64">
-    <edgeref id="e14" />
-   </edge-set>
-   <edge-set id="NoVariables66">
-    <edgeref id="e73" />
-   </edge-set>
-   <edge-set id="NoVariables67">
-    <edgeref id="e17" />
-   </edge-set>
-   <edge-set id="NoVariables69">
-    <edgeref id="e74" />
-   </edge-set>
-   <edge-set id="NoVariables70">
-    <edgeref id="e19" />
-   </edge-set>
-   <edge-set id="NoVariables72">
     <edgeref id="e75" />
    </edge-set>
-   <edge-set id="NoVariables73">
-    <edgeref id="e22" />
+   <edge-set id="NoVariables43">
+    <edgeref id="e49" />
    </edge-set>
-   <edge-set id="NoVariables75">
+   <edge-set id="NoVariables44">
+    <edgeref id="e50" />
+   </edge-set>
+   <edge-set id="NoVariables61">
+    <edgeref id="e10" />
+   </edge-set>
+   <edge-set id="NoVariables63">
+    <edgeref id="e12" />
+   </edge-set>
+   <edge-set id="NoVariables65">
     <edgeref id="e76" />
    </edge-set>
-   <edge-set id="NoVariables76">
-    <edgeref id="e24" />
+   <edge-set id="NoVariables66">
+    <edgeref id="e14" />
+   </edge-set>
+   <edge-set id="NoVariables68">
+    <edgeref id="e77" />
+   </edge-set>
+   <edge-set id="NoVariables69">
+    <edgeref id="e17" />
+   </edge-set>
+   <edge-set id="NoVariables71">
+    <edgeref id="e78" />
+   </edge-set>
+   <edge-set id="NoVariables72">
+    <edgeref id="e19" />
+   </edge-set>
+   <edge-set id="NoVariables74">
+    <edgeref id="e79" />
+   </edge-set>
+   <edge-set id="NoVariables75">
+    <edgeref id="e22" />
+   </edge-set>
+   <edge-set id="NoVariables77">
+    <edgeref id="e80" />
    </edge-set>
    <edge-set id="NoVariables78">
-    <edgeref id="e77" />
+    <edgeref id="e24" />
+   </edge-set>
+   <edge-set id="NoVariables80">
+    <edgeref id="e81" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="NoVariables">
     <node id="n0" kind="INCOMING">
      <input />
@@ -199,7 +211,7 @@
       <port edge="e34" num="input" />
      </input>
      <output>
-      <port edge="e93" num="output" />
+      <port edge="e97" num="output" />
      </output>
      <layout>
       </layout>
@@ -217,7 +229,7 @@
       <port edge="e35" num="input" />
      </input>
      <output>
-      <port edge="e94" num="output" />
+      <port edge="e98" num="output" />
      </output>
      <layout>
       </layout>
@@ -227,7 +239,7 @@
       <port edge="e44" num="input" />
      </input>
      <output>
-      <port edge="e88" num="output" />
+      <port edge="e92" num="output" />
      </output>
      <layout>
       </layout>
@@ -237,7 +249,7 @@
       <port edge="e45" num="input" />
      </input>
      <output>
-      <port edge="e89" num="output" />
+      <port edge="e93" num="output" />
      </output>
      <layout>
       </layout>
@@ -247,7 +259,7 @@
       <port edge="e46" num="input" />
      </input>
      <output>
-      <port edge="e90" num="output" />
+      <port edge="e94" num="output" />
      </output>
      <layout>
       </layout>
@@ -266,46 +278,14 @@
       <port edge="e48" num="right" />
      </input>
      <output>
-      <port edge="e87" num="output" />
+      <port edge="e91" num="output" />
      </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n102" kind="END">
-     <input>
-      <port edge="e87" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n103" kind="END">
-     <input>
-      <port edge="e88" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n104" kind="END">
-     <input>
-      <port edge="e89" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n105" kind="END">
-     <input>
-      <port edge="e90" num="input" />
-     </input>
-     <output />
      <layout>
       </layout>
     </node>
     <node id="n108" kind="END">
      <input>
-      <port edge="e93" num="input" />
+      <port edge="e91" num="input" />
      </input>
      <output />
      <layout>
@@ -313,13 +293,45 @@
     </node>
     <node id="n109" kind="END">
      <input>
+      <port edge="e92" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n110" kind="END">
+     <input>
+      <port edge="e93" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n111" kind="END">
+     <input>
       <port edge="e94" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at class NoVariables field catcher; tree String" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n114" kind="END">
+     <input>
+      <port edge="e97" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n115" kind="END">
+     <input>
+      <port edge="e98" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n0" port="output_0" />
      </from>
@@ -343,7 +355,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e11" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e11" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n0" port="output_1" />
      </from>
@@ -367,7 +379,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e16" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e16" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n0" port="output_2" />
      </from>
@@ -391,7 +403,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e21" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e21" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n0" port="output_3" />
      </from>
@@ -415,7 +427,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NoVariables extends type; tree &lt;&lt;missing tree&gt;&gt; within  class NoVariables { private String catcher = &quot;Here to make sure we don\'t just exit because there are no variables!&quot;; private int minValue; private int maxValue; private int value;  public NoVariables(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }  public void log() { } }" editable="true" id="e34" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e34" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n63" port="output" />
      </from>
@@ -433,7 +445,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method NoVariables#&lt;init&gt;(III):V return type; tree  public &lt;init&gt;(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }" editable="true" id="e35" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n65" port="output" />
      </from>
@@ -451,7 +463,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e44" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e44" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -469,7 +481,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e45" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e45" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n28" port="output" />
      </from>
@@ -487,7 +499,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e46" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e46" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n36" port="output" />
      </from>
@@ -505,7 +517,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Here to make sure we don't just exit because there are no variables!" editable="false" id="e47" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e47" pinch="false" variableID="-3" width="narrow">
      <from>
       <noderef id="n83" port="output" />
      </from>
@@ -521,9 +533,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NoVariables field catcher; tree String" editable="true" id="e48" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n2" port="output" />
      </from>
@@ -539,89 +557,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NoVariables field catcher; tree String" editable="true" id="e87" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e91" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n84" port="output" />
-     </from>
-     <to>
-      <noderef id="n102" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e88" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n80" port="output" />
-     </from>
-     <to>
-      <noderef id="n103" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e89" pinch="false" variableID="8" width="narrow">
-     <from>
-      <noderef id="n81" port="output" />
-     </from>
-     <to>
-      <noderef id="n104" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e90" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n82" port="output" />
-     </from>
-     <to>
-      <noderef id="n105" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class NoVariables extends type; tree &lt;&lt;missing tree&gt;&gt; within  class NoVariables { private String catcher = &quot;Here to make sure we don\'t just exit because there are no variables!&quot;; private int minValue; private int maxValue; private int value;  public NoVariables(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }  public void log() { } }" editable="true" id="e93" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n64" port="output" />
      </from>
      <to>
       <noderef id="n108" port="input" />
@@ -637,12 +577,84 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method NoVariables#&lt;init&gt;(III):V return type; tree  public &lt;init&gt;(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }" editable="true" id="e94" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e92" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n80" port="output" />
+     </from>
+     <to>
+      <noderef id="n109" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e93" pinch="false" variableID="8" width="narrow">
+     <from>
+      <noderef id="n81" port="output" />
+     </from>
+     <to>
+      <noderef id="n110" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e94" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n82" port="output" />
+     </from>
+     <to>
+      <noderef id="n111" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e97" pinch="false" variableID="0" width="narrow">
+     <from>
+      <noderef id="n64" port="output" />
+     </from>
+     <to>
+      <noderef id="n114" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e98" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n66" port="output" />
      </from>
      <to>
-      <noderef id="n109" port="input" />
+      <noderef id="n115" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -667,7 +679,7 @@
     </node>
     <node id="n4" kind="OUTGOING">
      <input>
-      <port edge="e70" num="outReceiver0" />
+      <port edge="e74" num="outReceiver0" />
       <port edge="e3" num="outputReturn0" />
      </input>
      <output />
@@ -679,7 +691,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e70" num="output" />
+      <port edge="e74" num="output" />
      </output>
      <layout>
       </layout>
@@ -692,7 +704,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e2" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n3" port="inReceiver0" />
      </from>
@@ -710,7 +722,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NoVariables field catcher; tree String" editable="true" id="e3" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n6" port="output" />
      </from>
@@ -734,7 +746,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e70" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e74" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -772,7 +784,7 @@
     <node id="n8" kind="OUTGOING">
      <input>
       <port edge="e5" num="outParam0" />
-      <port edge="e71" num="outReceiver0" />
+      <port edge="e75" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -783,12 +795,12 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e71" num="output" />
+      <port edge="e75" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n7" port="inReceiver0" />
      </from>
@@ -806,7 +818,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NoVariables field catcher; tree String" editable="true" id="e5" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n7" port="inParam0" />
      </from>
@@ -822,9 +834,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e71" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e75" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -856,10 +874,10 @@
     </node>
     <node id="n11" kind="OUTGOING">
      <input>
-      <port edge="e81" num="outParam0" />
-      <port edge="e82" num="outParam1" />
-      <port edge="e83" num="outParam2" />
-      <port edge="e80" num="outputReturn0" />
+      <port edge="e85" num="outParam0" />
+      <port edge="e86" num="outParam1" />
+      <port edge="e87" num="outParam2" />
+      <port edge="e84" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -878,7 +896,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e80" num="output" />
+      <port edge="e84" num="output" />
      </output>
      <layout>
       </layout>
@@ -926,7 +944,7 @@
       <port edge="e36" num="input" />
      </input>
      <output>
-      <port edge="e50" num="output" />
+      <port edge="e52" num="output" />
      </output>
      <layout>
       </layout>
@@ -944,7 +962,7 @@
       <port edge="e37" num="input" />
      </input>
      <output>
-      <port edge="e53" num="output" />
+      <port edge="e55" num="output" />
      </output>
      <layout>
       </layout>
@@ -962,7 +980,7 @@
       <port edge="e38" num="input" />
      </input>
      <output>
-      <port edge="e56" num="output" />
+      <port edge="e58" num="output" />
      </output>
      <layout>
       </layout>
@@ -972,7 +990,7 @@
       <port edge="e41" num="input" />
      </input>
      <output>
-      <port edge="e49" num="output" />
+      <port edge="e51" num="output" />
      </output>
      <layout>
       </layout>
@@ -982,7 +1000,7 @@
       <port edge="e42" num="input" />
      </input>
      <output>
-      <port edge="e52" num="output" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
@@ -992,102 +1010,128 @@
       <port edge="e43" num="input" />
      </input>
      <output>
-      <port edge="e55" num="output" />
+      <port edge="e57" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n85" kind="MERGE">
-     <input>
-      <port edge="e50" num="left" />
-      <port edge="e51" num="right" />
-     </input>
+    <node id="n85" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
      <output>
-      <port edge="e95" num="output" />
+      <port edge="e49" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n86" kind="SPLIT">
+    <node id="n86" kind="CONNECT">
      <input>
       <port edge="e49" num="input" />
      </input>
      <output>
-      <port edge="e81" num="output" />
-      <port edge="e51" num="split" />
+      <port edge="e50" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n87" kind="MERGE">
+    <node id="n87" kind="END">
      <input>
-      <port edge="e53" num="left" />
-      <port edge="e54" num="right" />
-     </input>
-     <output>
-      <port edge="e96" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n88" kind="SPLIT">
-     <input>
-      <port edge="e52" num="input" />
-     </input>
-     <output>
-      <port edge="e82" num="output" />
-      <port edge="e54" num="split" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n89" kind="MERGE">
-     <input>
-      <port edge="e56" num="left" />
-      <port edge="e57" num="right" />
-     </input>
-     <output>
-      <port edge="e97" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n90" kind="SPLIT">
-     <input>
-      <port edge="e55" num="input" />
-     </input>
-     <output>
-      <port edge="e83" num="output" />
-      <port edge="e57" num="split" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n110" kind="END">
-     <input>
-      <port edge="e95" num="input" />
+      <port edge="e50" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n111" kind="END">
+    <node id="n88" kind="MERGE">
      <input>
-      <port edge="e96" num="input" />
+      <port edge="e52" num="left" />
+      <port edge="e53" num="right" />
+     </input>
+     <output>
+      <port edge="e99" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n89" kind="SPLIT">
+     <input>
+      <port edge="e51" num="input" />
+     </input>
+     <output>
+      <port edge="e85" num="output" />
+      <port edge="e53" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n90" kind="MERGE">
+     <input>
+      <port edge="e55" num="left" />
+      <port edge="e56" num="right" />
+     </input>
+     <output>
+      <port edge="e100" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n91" kind="SPLIT">
+     <input>
+      <port edge="e54" num="input" />
+     </input>
+     <output>
+      <port edge="e86" num="output" />
+      <port edge="e56" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n92" kind="MERGE">
+     <input>
+      <port edge="e58" num="left" />
+      <port edge="e59" num="right" />
+     </input>
+     <output>
+      <port edge="e101" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n93" kind="SPLIT">
+     <input>
+      <port edge="e57" num="input" />
+     </input>
+     <output>
+      <port edge="e87" num="output" />
+      <port edge="e59" num="split" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n116" kind="END">
+     <input>
+      <port edge="e99" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n112" kind="END">
+    <node id="n117" kind="END">
      <input>
-      <port edge="e97" num="input" />
+      <port edge="e100" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 2 at method NoVariables#&lt;init&gt;(III):V return type; tree  public &lt;init&gt;(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }" editable="true" id="e6" pinch="false" variableID="2" width="narrow">
+    <node id="n118" kind="END">
+     <input>
+      <port edge="e101" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -1105,7 +1149,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method NoVariables#&lt;init&gt;(III):V parameter 0; tree int" editable="false" id="e7" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e7" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n10" port="inParam0" />
      </from>
@@ -1129,7 +1173,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method NoVariables#&lt;init&gt;(III):V parameter 1; tree int" editable="false" id="e8" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n10" port="inParam1" />
      </from>
@@ -1147,7 +1191,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method NoVariables#&lt;init&gt;(III):V parameter 2; tree int" editable="false" id="e9" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e9" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n10" port="inParam2" />
      </from>
@@ -1171,7 +1215,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e36" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e36" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n67" port="output" />
      </from>
@@ -1189,7 +1233,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e37" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e37" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n69" port="output" />
      </from>
@@ -1207,7 +1251,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e38" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e38" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n71" port="output" />
      </from>
@@ -1223,9 +1267,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method NoVariables#&lt;init&gt;(III):V parameter 0; tree int" editable="false" id="e41" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e41" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
@@ -1243,7 +1293,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method NoVariables#&lt;init&gt;(III):V parameter 1; tree int" editable="false" id="e42" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e42" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1261,7 +1311,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method NoVariables#&lt;init&gt;(III):V parameter 2; tree int" editable="false" id="e43" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e43" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n16" port="output" />
      </from>
@@ -1277,17 +1327,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method NoVariables#&lt;init&gt;(III):V parameter 0; tree int" editable="false" id="e49" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e49" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n77" port="output" />
+      <noderef id="n85" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n86" port="input" />
@@ -1303,12 +1347,48 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e50" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e50" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n86" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n87" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e51" pinch="false" variableID="3" width="narrow">
+     <from>
+      <noderef id="n77" port="output" />
+     </from>
+     <to>
+      <noderef id="n89" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e52" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n68" port="output" />
      </from>
      <to>
-      <noderef id="n85" port="left" />
+      <noderef id="n88" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -1327,12 +1407,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method NoVariables#&lt;init&gt;(III):V parameter 0; tree int" editable="false" id="e51" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e53" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n86" port="split" />
+      <noderef id="n89" port="split" />
      </from>
      <to>
-      <noderef id="n85" port="right" />
+      <noderef id="n88" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -1357,12 +1437,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method NoVariables#&lt;init&gt;(III):V parameter 1; tree int" editable="false" id="e52" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e54" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n78" port="output" />
      </from>
      <to>
-      <noderef id="n88" port="input" />
+      <noderef id="n91" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1375,12 +1455,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e53" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e55" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n70" port="output" />
      </from>
      <to>
-      <noderef id="n87" port="left" />
+      <noderef id="n90" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -1399,12 +1479,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method NoVariables#&lt;init&gt;(III):V parameter 1; tree int" editable="false" id="e54" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e56" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n88" port="split" />
+      <noderef id="n91" port="split" />
      </from>
      <to>
-      <noderef id="n87" port="right" />
+      <noderef id="n90" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -1429,12 +1509,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method NoVariables#&lt;init&gt;(III):V parameter 2; tree int" editable="false" id="e55" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e57" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n79" port="output" />
      </from>
      <to>
-      <noderef id="n90" port="input" />
+      <noderef id="n93" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1447,12 +1527,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e56" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e58" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n72" port="output" />
      </from>
      <to>
-      <noderef id="n89" port="left" />
+      <noderef id="n92" port="left" />
      </to>
      <edge-layout>
       <point>
@@ -1469,20 +1549,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method NoVariables#&lt;init&gt;(III):V parameter 2; tree int" editable="false" id="e57" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e59" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n90" port="split" />
+      <noderef id="n93" port="split" />
      </from>
      <to>
-      <noderef id="n89" port="right" />
+      <noderef id="n92" port="right" />
      </to>
      <edge-layout>
       <point>
@@ -1507,7 +1581,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method NoVariables#&lt;init&gt;(III):V return type; tree  public &lt;init&gt;(int min, int max, int value) { super(); this.minValue = min; this.maxValue = max; this.value = value; }" editable="true" id="e80" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e84" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -1531,9 +1605,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method NoVariables#&lt;init&gt;(III):V parameter 0; tree int" editable="false" id="e81" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e85" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n86" port="output" />
+      <noderef id="n89" port="output" />
      </from>
      <to>
       <noderef id="n11" port="outParam0" />
@@ -1555,9 +1629,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method NoVariables#&lt;init&gt;(III):V parameter 1; tree int" editable="false" id="e82" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e86" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n88" port="output" />
+      <noderef id="n91" port="output" />
      </from>
      <to>
       <noderef id="n11" port="outParam1" />
@@ -1579,9 +1653,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method NoVariables#&lt;init&gt;(III):V parameter 2; tree int" editable="false" id="e83" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e87" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n90" port="output" />
+      <noderef id="n93" port="output" />
      </from>
      <to>
       <noderef id="n11" port="outParam2" />
@@ -1609,12 +1683,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e95" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e99" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n85" port="output" />
+      <noderef id="n88" port="output" />
      </from>
      <to>
-      <noderef id="n110" port="input" />
+      <noderef id="n116" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1627,12 +1701,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e96" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e100" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n87" port="output" />
+      <noderef id="n90" port="output" />
      </from>
      <to>
-      <noderef id="n111" port="input" />
+      <noderef id="n117" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1651,14 +1725,26 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e97" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e101" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n89" port="output" />
+      <noderef id="n92" port="output" />
      </from>
      <to>
-      <noderef id="n112" port="input" />
+      <noderef id="n118" port="input" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1681,7 +1767,7 @@
     </node>
     <node id="n18" kind="OUTGOING">
      <input>
-      <port edge="e84" num="outReceiver0" />
+      <port edge="e88" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1692,12 +1778,12 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e84" num="output" />
+      <port edge="e88" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e10" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e10" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n17" port="inReceiver0" />
      </from>
@@ -1715,7 +1801,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method NoVariables#log():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void log() { }Atm: @VarAnnot(6) NoVariables" editable="true" id="e84" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e88" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -1745,7 +1831,7 @@
     </node>
     <node id="n22" kind="OUTGOING">
      <input>
-      <port edge="e72" num="outReceiver0" />
+      <port edge="e76" num="outReceiver0" />
       <port edge="e13" num="outputReturn0" />
      </input>
      <output />
@@ -1757,7 +1843,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e72" num="output" />
+      <port edge="e76" num="output" />
      </output>
      <layout>
       </layout>
@@ -1770,7 +1856,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e12" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e12" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n21" port="inReceiver0" />
      </from>
@@ -1788,7 +1874,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e13" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e13" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>
@@ -1812,7 +1898,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e72" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e76" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -1850,7 +1936,7 @@
     <node id="n26" kind="OUTGOING">
      <input>
       <port edge="e15" num="outParam0" />
-      <port edge="e73" num="outReceiver0" />
+      <port edge="e77" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1861,12 +1947,12 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e73" num="output" />
+      <port edge="e77" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e14" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e14" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n25" port="inReceiver0" />
      </from>
@@ -1884,7 +1970,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at class NoVariables field minValue; tree int" editable="false" id="e15" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e15" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n25" port="inParam0" />
      </from>
@@ -1914,7 +2000,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e73" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e77" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -1944,7 +2030,7 @@
     </node>
     <node id="n30" kind="OUTGOING">
      <input>
-      <port edge="e74" num="outReceiver0" />
+      <port edge="e78" num="outReceiver0" />
       <port edge="e18" num="outputReturn0" />
      </input>
      <output />
@@ -1956,7 +2042,7 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e74" num="output" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
@@ -1969,7 +2055,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e17" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e17" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n29" port="inReceiver0" />
      </from>
@@ -1987,7 +2073,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e18" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e18" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n32" port="output" />
      </from>
@@ -2011,7 +2097,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e74" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e78" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n31" port="output" />
      </from>
@@ -2049,7 +2135,7 @@
     <node id="n34" kind="OUTGOING">
      <input>
       <port edge="e20" num="outParam0" />
-      <port edge="e75" num="outReceiver0" />
+      <port edge="e79" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -2060,12 +2146,12 @@
       <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e75" num="output" />
+      <port edge="e79" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e19" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e19" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n33" port="inReceiver0" />
      </from>
@@ -2083,7 +2169,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at class NoVariables field maxValue; tree int" editable="false" id="e20" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e20" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n33" port="inParam0" />
      </from>
@@ -2113,7 +2199,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e75" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e79" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n35" port="output" />
      </from>
@@ -2143,7 +2229,7 @@
     </node>
     <node id="n38" kind="OUTGOING">
      <input>
-      <port edge="e76" num="outReceiver0" />
+      <port edge="e80" num="outReceiver0" />
       <port edge="e23" num="outputReturn0" />
      </input>
      <output />
@@ -2155,7 +2241,7 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e76" num="output" />
+      <port edge="e80" num="output" />
      </output>
      <layout>
       </layout>
@@ -2168,7 +2254,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e22" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e22" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n37" port="inReceiver0" />
      </from>
@@ -2186,7 +2272,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e23" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e23" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n40" port="output" />
      </from>
@@ -2210,7 +2296,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e76" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e80" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n39" port="output" />
      </from>
@@ -2248,7 +2334,7 @@
     <node id="n42" kind="OUTGOING">
      <input>
       <port edge="e25" num="outParam0" />
-      <port edge="e77" num="outReceiver0" />
+      <port edge="e81" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -2259,12 +2345,12 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e77" num="output" />
+      <port edge="e81" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e24" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e24" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n41" port="inReceiver0" />
      </from>
@@ -2282,7 +2368,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at class NoVariables field value; tree int" editable="false" id="e25" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e25" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n41" port="inParam0" />
      </from>
@@ -2312,7 +2398,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e77" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e81" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n43" port="output" />
      </from>
@@ -2337,51 +2423,57 @@
   <linked-edges>
    <edge-set id="Other0">
     <edgeref id="e28" />
-    <edgeref id="e91" />
+    <edgeref id="e95" />
     <edgeref id="e33" />
-    <edgeref id="e61" />
-    <edgeref id="e63" />
-    <edgeref id="e64" />
     <edgeref id="e65" />
-    <edgeref id="e66" />
     <edgeref id="e67" />
     <edgeref id="e68" />
     <edgeref id="e69" />
-    <edgeref id="e92" />
+    <edgeref id="e70" />
+    <edgeref id="e71" />
+    <edgeref id="e72" />
+    <edgeref id="e73" />
+    <edgeref id="e96" />
     <edgeref id="e30" />
     <edgeref id="e32" />
    </edge-set>
    <edge-set id="Other1">
     <edgeref id="e39" />
-    <edgeref id="e98" />
+    <edgeref id="e102" />
    </edge-set>
    <edge-set id="Other2">
     <edgeref id="e40" />
-    <edgeref id="e99" />
+    <edgeref id="e103" />
     <edgeref id="e26" />
-    <edgeref id="e85" />
+    <edgeref id="e89" />
    </edge-set>
    <edge-set id="Other3">
-    <edgeref id="e58" />
-    <edgeref id="e59" />
-    <edgeref id="e60" />
     <edgeref id="e62" />
-    <edgeref id="e86" />
+    <edgeref id="e63" />
+    <edgeref id="e64" />
+    <edgeref id="e66" />
+    <edgeref id="e90" />
+   </edge-set>
+   <edge-set id="Other11">
+    <edgeref id="e60" />
    </edge-set>
    <edge-set id="Other12">
+    <edgeref id="e61" />
+   </edge-set>
+   <edge-set id="Other14">
     <edgeref id="e27" />
    </edge-set>
-   <edge-set id="Other28">
+   <edge-set id="Other30">
     <edgeref id="e29" />
    </edge-set>
-   <edge-set id="Other30">
-    <edgeref id="e78" />
-   </edge-set>
-   <edge-set id="Other31">
-    <edgeref id="e31" />
+   <edge-set id="Other32">
+    <edgeref id="e82" />
    </edge-set>
    <edge-set id="Other33">
-    <edgeref id="e79" />
+    <edgeref id="e31" />
+   </edge-set>
+   <edge-set id="Other35">
+    <edgeref id="e83" />
    </edge-set>
   </linked-edges>
   <boards>
@@ -2405,7 +2497,7 @@
       <port edge="e28" num="input" />
      </input>
      <output>
-      <port edge="e91" num="output" />
+      <port edge="e95" num="output" />
      </output>
      <layout>
       </layout>
@@ -2423,7 +2515,7 @@
       <port edge="e39" num="input" />
      </input>
      <output>
-      <port edge="e98" num="output" />
+      <port edge="e102" num="output" />
      </output>
      <layout>
       </layout>
@@ -2441,36 +2533,36 @@
       <port edge="e40" num="input" />
      </input>
      <output>
-      <port edge="e99" num="output" />
+      <port edge="e103" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n106" kind="END">
+    <node id="n112" kind="END">
      <input>
-      <port edge="e91" num="input" />
+      <port edge="e95" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n113" kind="END">
+    <node id="n119" kind="END">
      <input>
-      <port edge="e98" num="input" />
+      <port edge="e102" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n114" kind="END">
+    <node id="n120" kind="END">
      <input>
-      <port edge="e99" num="input" />
+      <port edge="e103" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e28" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n44" port="output_0" />
      </from>
@@ -2500,7 +2592,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Other extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Other {  Other() { super(); } private NoVariables nv;  public void throwsAnExceptionInGameSolver() { nv.log(); } }" editable="true" id="e39" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n73" port="output" />
      </from>
@@ -2518,7 +2610,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Other#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e40" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n75" port="output" />
      </from>
@@ -2536,12 +2628,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e91" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e95" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n53" port="output" />
      </from>
      <to>
-      <noderef id="n106" port="input" />
+      <noderef id="n112" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2554,12 +2646,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at class Other extends type; tree &lt;&lt;missing tree&gt;&gt; within  class Other {  Other() { super(); } private NoVariables nv;  public void throwsAnExceptionInGameSolver() { nv.log(); } }" editable="true" id="e98" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e102" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n74" port="output" />
      </from>
      <to>
-      <noderef id="n113" port="input" />
+      <noderef id="n119" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2572,12 +2664,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Other#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e99" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e103" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n76" port="output" />
      </from>
      <to>
-      <noderef id="n114" port="input" />
+      <noderef id="n120" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2600,7 +2692,7 @@
     </node>
     <node id="n47" kind="OUTGOING">
      <input>
-      <port edge="e85" num="outputReturn0" />
+      <port edge="e89" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -2619,12 +2711,38 @@
       <port edge="e26" num="input" />
      </input>
      <output>
-      <port edge="e85" num="output" />
+      <port edge="e89" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 11 at method Other#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e26" pinch="false" variableID="11" width="narrow">
+    <node id="n94" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e60" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n95" kind="CONNECT">
+     <input>
+      <port edge="e60" num="input" />
+     </input>
+     <output>
+      <port edge="e61" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n96" kind="END">
+     <input>
+      <port edge="e61" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -2640,9 +2758,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method Other#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e85" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e60" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n94" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n95" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e61" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n95" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n96" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e89" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n49" port="output" />
      </from>
@@ -2672,7 +2838,7 @@
     </node>
     <node id="n51" kind="OUTGOING">
      <input>
-      <port edge="e86" num="outReceiver0" />
+      <port edge="e90" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -2683,7 +2849,7 @@
       <port edge="e27" num="input" />
      </input>
      <output>
-      <port edge="e58" num="output" />
+      <port edge="e62" num="output" />
      </output>
      <layout>
       </layout>
@@ -2701,130 +2867,130 @@
       <port edge="e33" num="input" />
      </input>
      <output>
-      <port edge="e63" num="toMerge" />
+      <port edge="e67" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n91" kind="SUBBOARD" name="Other-nv--GET">
+    <node id="n97" kind="SUBBOARD" name="Other-nv--GET">
      <input>
-      <port edge="e59" num="inReceiver0" />
+      <port edge="e63" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e60" num="outReceiver0" />
-      <port edge="e61" num="outputReturn0" />
+      <port edge="e64" num="outReceiver0" />
+      <port edge="e65" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n92" kind="SPLIT">
-     <input>
-      <port edge="e58" num="input" />
-     </input>
-     <output>
-      <port edge="e59" num="split" />
-      <port edge="e62" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n93" kind="CONNECT">
-     <input>
-      <port edge="e60" num="input" />
-     </input>
-     <output>
-      <port edge="e86" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n94" kind="CONNECT">
-     <input>
-      <port edge="e61" num="input" />
-     </input>
-     <output>
-      <port edge="e64" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n95" kind="END">
+    <node id="n98" kind="SPLIT">
      <input>
       <port edge="e62" num="input" />
      </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n96" kind="MERGE">
-     <input>
-      <port edge="e63" num="first" />
-      <port edge="e64" num="second" />
-     </input>
      <output>
-      <port edge="e65" num="output" />
+      <port edge="e63" num="split" />
+      <port edge="e66" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n97" kind="CONNECT">
+    <node id="n99" kind="CONNECT">
      <input>
-      <port edge="e65" num="input" />
+      <port edge="e64" num="input" />
      </input>
      <output>
-      <port edge="e66" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n98" kind="SUBBOARD" name="NoVariables-log---V">
-     <input>
-      <port edge="e67" num="inReceiver0" />
-     </input>
-     <output>
-      <port edge="e68" num="outReceiver0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n99" kind="SPLIT">
-     <input>
-      <port edge="e66" num="input" />
-     </input>
-     <output>
-      <port edge="e67" num="split" />
-      <port edge="e69" num="toEnd" />
+      <port edge="e90" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n100" kind="CONNECT">
      <input>
-      <port edge="e68" num="input" />
+      <port edge="e65" num="input" />
      </input>
      <output>
-      <port edge="e92" num="output" />
+      <port edge="e68" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n101" kind="END">
      <input>
-      <port edge="e69" num="input" />
+      <port edge="e66" num="input" />
      </input>
      <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n102" kind="MERGE">
+     <input>
+      <port edge="e67" num="first" />
+      <port edge="e68" num="second" />
+     </input>
+     <output>
+      <port edge="e69" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n103" kind="CONNECT">
+     <input>
+      <port edge="e69" num="input" />
+     </input>
+     <output>
+      <port edge="e70" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n104" kind="SUBBOARD" name="NoVariables-log---V">
+     <input>
+      <port edge="e71" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e72" num="outReceiver0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n105" kind="SPLIT">
+     <input>
+      <port edge="e70" num="input" />
+     </input>
+     <output>
+      <port edge="e71" num="split" />
+      <port edge="e73" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n106" kind="CONNECT">
+     <input>
+      <port edge="e72" num="input" />
+     </input>
+     <output>
+      <port edge="e96" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
     <node id="n107" kind="END">
      <input>
-      <port edge="e92" num="input" />
+      <port edge="e73" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e27" pinch="false" variableID="-1" width="narrow">
+    <node id="n113" kind="END">
+     <input>
+      <port edge="e96" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e27" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n50" port="inReceiver0" />
      </from>
@@ -2842,7 +3008,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e33" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e33" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n61" port="output" />
      </from>
@@ -2860,12 +3026,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void throwsAnExceptionInGameSolver() { nv.log(); }Atm: @VarAnnot(12) Other" editable="true" id="e58" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e62" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n52" port="output" />
      </from>
      <to>
-      <noderef id="n92" port="input" />
+      <noderef id="n98" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2878,12 +3044,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void throwsAnExceptionInGameSolver() { nv.log(); }Atm: @VarAnnot(12) Other" editable="true" id="e59" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e63" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n92" port="split" />
+      <noderef id="n98" port="split" />
      </from>
      <to>
-      <noderef id="n91" port="inReceiver0" />
+      <noderef id="n97" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -2896,123 +3062,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void throwsAnExceptionInGameSolver() { nv.log(); }Atm: @VarAnnot(12) Other" editable="true" id="e60" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e64" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n91" port="outReceiver0" />
-     </from>
-     <to>
-      <noderef id="n93" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e61" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n91" port="outputReturn0" />
-     </from>
-     <to>
-      <noderef id="n94" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void throwsAnExceptionInGameSolver() { nv.log(); }Atm: @VarAnnot(12) Other" editable="true" id="e62" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n92" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n95" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e63" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n62" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n96" port="first" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e64" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n94" port="toMerge" />
-     </from>
-     <to>
-      <noderef id="n96" port="second" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e65" pinch="true" variableID="13" width="narrow">
-     <from>
-      <noderef id="n96" port="output" />
-     </from>
-     <to>
-      <noderef id="n97" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e66" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n97" port="output" />
+      <noderef id="n97" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n99" port="input" />
@@ -3028,27 +3080,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e67" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e65" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n99" port="split" />
-     </from>
-     <to>
-      <noderef id="n98" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e68" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n98" port="outReceiver0" />
+      <noderef id="n97" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n100" port="input" />
@@ -3064,12 +3098,30 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e69" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e66" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n99" port="toEnd" />
+      <noderef id="n98" port="toEnd" />
      </from>
      <to>
       <noderef id="n101" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e67" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n62" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n102" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -3088,9 +3140,123 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void throwsAnExceptionInGameSolver() { nv.log(); }Atm: @VarAnnot(12) Other" editable="true" id="e86" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e68" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n93" port="output" />
+      <noderef id="n100" port="toMerge" />
+     </from>
+     <to>
+      <noderef id="n102" port="second" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e69" pinch="true" variableID="13" width="narrow">
+     <from>
+      <noderef id="n102" port="output" />
+     </from>
+     <to>
+      <noderef id="n103" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e70" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n103" port="output" />
+     </from>
+     <to>
+      <noderef id="n105" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e71" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n105" port="split" />
+     </from>
+     <to>
+      <noderef id="n104" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e72" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n104" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n106" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e73" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n105" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n107" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e90" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n99" port="output" />
      </from>
      <to>
       <noderef id="n51" port="outReceiver0" />
@@ -3118,12 +3284,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e92" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e96" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n100" port="output" />
+      <noderef id="n106" port="output" />
      </from>
      <to>
-      <noderef id="n107" port="input" />
+      <noderef id="n113" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3148,7 +3314,7 @@
     </node>
     <node id="n55" kind="OUTGOING">
      <input>
-      <port edge="e78" num="outReceiver0" />
+      <port edge="e82" num="outReceiver0" />
       <port edge="e30" num="outputReturn0" />
      </input>
      <output />
@@ -3160,7 +3326,7 @@
       <port edge="e29" num="input" />
      </input>
      <output>
-      <port edge="e78" num="output" />
+      <port edge="e82" num="output" />
      </output>
      <layout>
       </layout>
@@ -3173,7 +3339,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e29" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e29" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n54" port="inReceiver0" />
      </from>
@@ -3191,7 +3357,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e30" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n57" port="output" />
      </from>
@@ -3215,7 +3381,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e78" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e82" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n56" port="output" />
      </from>
@@ -3253,7 +3419,7 @@
     <node id="n59" kind="OUTGOING">
      <input>
       <port edge="e32" num="outParam0" />
-      <port edge="e79" num="outReceiver0" />
+      <port edge="e83" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -3264,12 +3430,12 @@
       <port edge="e31" num="input" />
      </input>
      <output>
-      <port edge="e79" num="output" />
+      <port edge="e83" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e31" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e31" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n58" port="inReceiver0" />
      </from>
@@ -3287,7 +3453,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at class Other field nv; tree NoVariables" editable="true" id="e32" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n58" port="inParam0" />
      </from>
@@ -3317,7 +3483,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e79" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e83" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n60" port="output" />
      </from>

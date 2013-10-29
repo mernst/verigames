@@ -3,28 +3,40 @@
   <linked-edges>
    <edge-set id="NNTest0">
     <edgeref id="e1" />
-    <edgeref id="e9" />
+    <edgeref id="e11" />
    </edge-set>
    <edge-set id="NNTest1">
     <edgeref id="e2" />
-    <edgeref id="e10" />
+    <edgeref id="e12" />
     <edgeref id="e4" />
     <edgeref id="e6" />
    </edge-set>
-   <edge-set id="NNTest6">
-    <edgeref id="e3" />
-   </edge-set>
-   <edge-set id="NNTest8">
+   <edge-set id="NNTest3">
     <edgeref id="e7" />
    </edge-set>
-   <edge-set id="NNTest9">
-    <edgeref id="e5" />
+   <edge-set id="NNTest4">
+    <edgeref id="e8" />
+   </edge-set>
+   <edge-set id="NNTest8">
+    <edgeref id="e3" />
+   </edge-set>
+   <edge-set id="NNTest10">
+    <edgeref id="e9" />
    </edge-set>
    <edge-set id="NNTest11">
-    <edgeref id="e8" />
+    <edgeref id="e5" />
+   </edge-set>
+   <edge-set id="NNTest13">
+    <edgeref id="e10" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="NNTest--init----V">
     <node id="n0" kind="INCOMING">
      <input />
@@ -34,7 +46,7 @@
     </node>
     <node id="n1" kind="OUTGOING">
      <input>
-      <port edge="e9" num="outputReturn0" />
+      <port edge="e11" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -53,12 +65,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e9" num="output" />
+      <port edge="e11" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at method NNTest#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="0" width="narrow">
+    <node id="n14" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e7" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n15" kind="CONNECT">
+     <input>
+      <port edge="e7" num="input" />
+     </input>
+     <output>
+      <port edge="e8" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n16" kind="END">
+     <input>
+      <port edge="e8" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n2" port="output" />
      </from>
@@ -74,9 +112,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at method NNTest#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e9" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e7" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n14" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n15" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n15" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n16" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n3" port="output" />
      </from>
@@ -115,20 +201,20 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e10" num="output" />
+      <port edge="e12" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n14" kind="END">
+    <node id="n17" kind="END">
      <input>
-      <port edge="e10" num="input" />
+      <port edge="e12" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at class NNTest field nn; tree String" editable="true" id="e2" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output_0" />
      </from>
@@ -146,12 +232,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NNTest field nn; tree String" editable="true" id="e10" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e12" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n6" port="output" />
      </from>
      <to>
-      <noderef id="n14" port="input" />
+      <noderef id="n17" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -176,7 +262,7 @@
     </node>
     <node id="n8" kind="OUTGOING">
      <input>
-      <port edge="e7" num="outReceiver0" />
+      <port edge="e9" num="outReceiver0" />
       <port edge="e4" num="outputReturn0" />
      </input>
      <output />
@@ -188,7 +274,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e7" num="output" />
+      <port edge="e9" num="output" />
      </output>
      <layout>
       </layout>
@@ -201,7 +287,7 @@
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e3" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e3" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n7" port="inReceiver0" />
      </from>
@@ -219,7 +305,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NNTest field nn; tree String" editable="true" id="e4" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -243,7 +329,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e7" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e9" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n9" port="output" />
      </from>
@@ -281,7 +367,7 @@
     <node id="n12" kind="OUTGOING">
      <input>
       <port edge="e6" num="outParam0" />
-      <port edge="e8" num="outReceiver0" />
+      <port edge="e10" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -292,12 +378,12 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e8" num="output" />
+      <port edge="e10" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e5" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e5" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n11" port="inReceiver0" />
      </from>
@@ -315,7 +401,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class NNTest field nn; tree String" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n11" port="inParam0" />
      </from>
@@ -331,9 +417,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e8" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e10" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>

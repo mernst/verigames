@@ -1,16 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 7 at class NoVariables field minValue; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 8 at class NoVariables field maxValue; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 9 at class NoVariables field value; tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Literal(STRING_LITERAL, "Here to make sure we don't just exit because there are no variables!")  <:  Variable 1 at class NoVariables field catcher; tree String )
 
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class NoVariables extends type; tree <<missing tree>> within 
@@ -55,11 +43,61 @@ class NoVariables {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NoVariables#<init>(III):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NoVariables#<init>(III):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int  <:  Variable 7 at class NoVariables field minValue; tree int )
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method NoVariables#<init>(III):V constraint position; 
+calledVp: Some(class NoVariables field minValue); 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int ); 
+result: List(); 
+)
 
 SubtypeConstraint( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int  <:  Variable 8 at class NoVariables field maxValue; tree int )
 
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method NoVariables#<init>(III):V constraint position; 
+calledVp: Some(class NoVariables field maxValue); 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int ); 
+result: List(); 
+)
+
 SubtypeConstraint( Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int  <:  Variable 9 at class NoVariables field value; tree int )
+
+checkers.inference.FieldAssignmentConstraint(
+contextVp: method NoVariables#<init>(III):V constraint position; 
+calledVp: Some(class NoVariables field value); 
+receiver: Constant(@trusted.quals.Untrusted); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 5 at method NoVariables#<init>(III):V parameter 2; tree int ); 
+result: List(); 
+)
 
 SubtypeConstraint( Variable 6 at method NoVariables#log():V receiver; tree <<missing tree>> within 
 public void log() {
@@ -110,6 +148,18 @@ class Other {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Other#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
 public void throwsAnExceptionInGameSolver() {
     nv.log();
@@ -128,7 +178,7 @@ class Other {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
-calledVp: class Other field nv; 
+calledVp: Some(class Other field nv); 
 receiver: Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
 public void throwsAnExceptionInGameSolver() {
     nv.log();
@@ -143,7 +193,7 @@ result: List(Variable 13 at class Other field nv; tree NoVariables);
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
-calledVp: method NoVariables#log():V; 
+calledVp: Some(method NoVariables#log():V); 
 receiver: Variable 13 at class Other field nv; tree NoVariables; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

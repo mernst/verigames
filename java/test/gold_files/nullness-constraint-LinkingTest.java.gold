@@ -26,6 +26,20 @@ class ArrayList<AL> implements List<AL> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ArrayList#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayList#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 9 at class Prev class type parameter 0; tree E extends List<Integer>  <:  Variable 7 at class Prev class type parameter bound 0 & 0; tree List at position ((3,0)) within E extends List<Integer> )
 
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
@@ -53,6 +67,18 @@ class Prev<E extends List<Integer>> {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Prev#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 12 at method Prev#method1(LList;):V receiver; tree <<missing tree>> within 
 void method1(E arg1) {
 }Atm: @VarAnnot(12) Prev<E extends List<Integer>>  <:  Variable 10 at class Prev extends type; tree <<missing tree>> within 
@@ -79,7 +105,7 @@ SubtypeConstraint( Variable 20 at method LinkingTest#<init>():V return type; tre
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#<init>():V constraint position; 
-calledVp: method Prev#<init>():V; 
+calledVp: Some(method Prev#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 9 at class Prev class type parameter 0; tree E extends List<Integer> >; 
@@ -120,7 +146,7 @@ void context(T t) {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 
-calledVp: method ArrayList#<init>():V; 
+calledVp: Some(method ArrayList#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 3 at class ArrayList class type parameter 0; tree AL >; 
@@ -139,7 +165,7 @@ SubtypeConstraint( Variable 13 at method Prev#method1(LList;):V parameter 0; tre
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 
-calledVp: method Prev#method1(LList;):V; 
+calledVp: Some(method Prev#method1(LList;):V); 
 receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
 void context(T t) {
     method1(new ArrayList<Integer>());
@@ -156,7 +182,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 
-calledVp: method LinkingTest#method3(LList;):V; 
+calledVp: Some(method LinkingTest#method3(LList;):V); 
 receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
 void context(T t) {
     method1(new ArrayList<Integer>());
@@ -173,7 +199,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 
-calledVp: method ArrayList#<init>():V; 
+calledVp: Some(method ArrayList#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 3 at class ArrayList class type parameter 0; tree AL >; 
@@ -190,7 +216,7 @@ InequalityConstraint( context: method LinkingTest#context(LList;):V constraint p
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LinkingTest#context(LList;):V constraint position; 
-calledVp: method LinkingTest#method4(LList;):V; 
+calledVp: Some(method LinkingTest#method4(LList;):V); 
 receiver: Variable 30 at method LinkingTest#context(LList;):V receiver; tree <<missing tree>> within 
 void context(T t) {
     method1(new ArrayList<Integer>());

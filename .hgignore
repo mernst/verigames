@@ -1,22 +1,18 @@
 java/.metadata/
 java/debug_world/
 java/test/test_tmp/
-java/Translation/bin/
 java/Translation/doc/
 java/Translation/check-nullness
 java/Translation/javadoc
 java/DO_NOT_DELETE_Observation_Translation
 java/DO_NOT_DELETE_Speculation_Translation
-java/Generation/bin/
 java/Generation/.cache
 java/Generation/.scala_dependencies
-java/Generation/examples/.*/*\.class
-java/build/
-java/verigames.jar
 java/test/.*/actual_.*xml
 java/test/.*/actual_.*txt
 java/test/.*/diff_.*txt
 java/dist/
+java/optimizer/build/
 
 syntax: glob
 *.aux
@@ -31,7 +27,23 @@ syntax: glob
 *.swp
 *.orig
 *.rej
+*.class
+*.jar
 
+# IntelliJ project files
+*.iml
+*.ipr
+.idea
+
+# build products for various IDEs and build systems
+out
+classes
+bin
+build
+dist
+
+# Mac OS X leaves these around
+.DS_Store
 
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/.settings/
 flash/PipeJam3/build/FlashBuilder/PipeJam3Web/bin-debug

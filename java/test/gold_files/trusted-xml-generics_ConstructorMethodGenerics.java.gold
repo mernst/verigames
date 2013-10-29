@@ -3,151 +3,156 @@
   <linked-edges>
    <edge-set id="MyClass0">
     <edgeref id="e22" />
-    <edgeref id="e56" />
-    <edgeref id="e61" />
-    <edgeref id="e63" />
-    <edgeref id="e64" />
-    <edgeref id="e65" />
-    <edgeref id="e66" />
-    <edgeref id="e76" />
-    <edgeref id="e101" />
-    <edgeref id="e12" />
-    <edgeref id="e57" />
+    <edgeref id="e53" />
     <edgeref id="e58" />
     <edgeref id="e60" />
-    <edgeref id="e97" />
+    <edgeref id="e61" />
+    <edgeref id="e62" />
+    <edgeref id="e63" />
+    <edgeref id="e73" />
+    <edgeref id="e98" />
+    <edgeref id="e12" />
+    <edgeref id="e54" />
+    <edgeref id="e55" />
+    <edgeref id="e57" />
+    <edgeref id="e94" />
    </edge-set>
    <edge-set id="MyClass1">
     <edgeref id="e1" />
     <edgeref id="e27" />
-    <edgeref id="e92" />
+    <edgeref id="e89" />
     <edgeref id="e20" />
-    <edgeref id="e84" />
+    <edgeref id="e81" />
     <edgeref id="e16" />
-    <edgeref id="e80" />
+    <edgeref id="e77" />
     <edgeref id="e18" />
-    <edgeref id="e82" />
+    <edgeref id="e79" />
    </edge-set>
    <edge-set id="MyClass2">
     <edgeref id="e2" />
     <edgeref id="e26" />
     <edgeref id="e28" />
-    <edgeref id="e93" />
+    <edgeref id="e90" />
     <edgeref id="e21" />
-    <edgeref id="e85" />
+    <edgeref id="e82" />
     <edgeref id="e17" />
-    <edgeref id="e81" />
-    <edgeref id="e19" />
-    <edgeref id="e41" />
-    <edgeref id="e42" />
-    <edgeref id="e44" />
-    <edgeref id="e53" />
-    <edgeref id="e69" />
-    <edgeref id="e70" />
-    <edgeref id="e72" />
     <edgeref id="e78" />
-    <edgeref id="e83" />
+    <edgeref id="e19" />
+    <edgeref id="e38" />
+    <edgeref id="e39" />
+    <edgeref id="e41" />
+    <edgeref id="e50" />
+    <edgeref id="e66" />
+    <edgeref id="e67" />
+    <edgeref id="e69" />
+    <edgeref id="e75" />
+    <edgeref id="e80" />
    </edge-set>
    <edge-set id="MyClass3">
     <edgeref id="e24" />
-    <edgeref id="e29" />
-    <edgeref id="e32" />
-    <edgeref id="e103" />
+    <edgeref id="e100" />
    </edge-set>
    <edge-set id="MyClass4">
     <edgeref id="e25" />
-    <edgeref id="e31" />
-    <edgeref id="e33" />
-    <edgeref id="e104" />
+    <edgeref id="e101" />
     <edgeref id="e5" />
-    <edgeref id="e88" />
-    <edgeref id="e51" />
-    <edgeref id="e105" />
+    <edgeref id="e85" />
+    <edgeref id="e48" />
+    <edgeref id="e102" />
    </edge-set>
    <edge-set id="MyClass5">
     <edgeref id="e3" />
-    <edgeref id="e35" />
-    <edgeref id="e86" />
+    <edgeref id="e30" />
+    <edgeref id="e83" />
    </edge-set>
    <edge-set id="MyClass6">
     <edgeref id="e4" />
-    <edgeref id="e34" />
-    <edgeref id="e36" />
-    <edgeref id="e87" />
+    <edgeref id="e29" />
+    <edgeref id="e31" />
+    <edgeref id="e84" />
     <edgeref id="e23" />
+    <edgeref id="e44" />
+    <edgeref id="e45" />
     <edgeref id="e47" />
-    <edgeref id="e48" />
-    <edgeref id="e50" />
-    <edgeref id="e55" />
-    <edgeref id="e102" />
+    <edgeref id="e52" />
+    <edgeref id="e99" />
    </edge-set>
    <edge-set id="MyClass7">
     <edgeref id="e7" />
-    <edgeref id="e90" />
+    <edgeref id="e87" />
    </edge-set>
    <edge-set id="MyClass8">
     <edgeref id="e15" />
-    <edgeref id="e100" />
+    <edgeref id="e97" />
    </edge-set>
    <edge-set id="MyClass9">
-    <edgeref id="e89" />
+    <edgeref id="e86" />
    </edge-set>
    <edge-set id="MyClass10">
     <edgeref id="e9" />
-    <edgeref id="e38" />
-    <edgeref id="e73" />
-    <edgeref id="e74" />
-    <edgeref id="e75" />
-    <edgeref id="e79" />
-    <edgeref id="e94" />
+    <edgeref id="e35" />
+    <edgeref id="e70" />
+    <edgeref id="e71" />
+    <edgeref id="e72" />
+    <edgeref id="e76" />
+    <edgeref id="e91" />
    </edge-set>
    <edge-set id="MyClass11">
     <edgeref id="e10" />
+    <edgeref id="e56" />
     <edgeref id="e59" />
-    <edgeref id="e62" />
-    <edgeref id="e95" />
+    <edgeref id="e92" />
    </edge-set>
    <edge-set id="MyClass12">
     <edgeref id="e11" />
-    <edgeref id="e67" />
+    <edgeref id="e64" />
+    <edgeref id="e65" />
     <edgeref id="e68" />
-    <edgeref id="e71" />
-    <edgeref id="e77" />
-    <edgeref id="e96" />
+    <edgeref id="e74" />
+    <edgeref id="e93" />
    </edge-set>
    <edge-set id="MyClass13">
     <edgeref id="e13" />
-    <edgeref id="e39" />
+    <edgeref id="e36" />
+    <edgeref id="e37" />
     <edgeref id="e40" />
-    <edgeref id="e43" />
-    <edgeref id="e52" />
-    <edgeref id="e98" />
+    <edgeref id="e49" />
+    <edgeref id="e95" />
    </edge-set>
    <edge-set id="MyClass14">
     <edgeref id="e14" />
-    <edgeref id="e45" />
+    <edgeref id="e42" />
+    <edgeref id="e43" />
     <edgeref id="e46" />
-    <edgeref id="e49" />
-    <edgeref id="e54" />
-    <edgeref id="e99" />
+    <edgeref id="e51" />
+    <edgeref id="e96" />
    </edge-set>
    <edge-set id="MyClass15">
-    <edgeref id="e91" />
+    <edgeref id="e88" />
    </edge-set>
-   <edge-set id="MyClass24">
-    <edgeref id="e30" />
+   <edge-set id="MyClass35">
+    <edgeref id="e32" />
    </edge-set>
-   <edge-set id="MyClass45">
+   <edge-set id="MyClass36">
+    <edgeref id="e33" />
+   </edge-set>
+   <edge-set id="MyClass42">
     <edgeref id="e6" />
    </edge-set>
-   <edge-set id="MyClass55">
+   <edge-set id="MyClass52">
     <edgeref id="e8" />
    </edge-set>
-   <edge-set id="MyClass66">
-    <edgeref id="e37" />
+   <edge-set id="MyClass63">
+    <edgeref id="e34" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="MyClass">
     <node id="n0" kind="INCOMING">
      <input />
@@ -210,7 +215,7 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e29" num="0" />
+      <port edge="e100" num="output" />
      </output>
      <layout>
       </layout>
@@ -228,7 +233,7 @@
       <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e31" num="0" />
+      <port edge="e101" num="output" />
      </output>
      <layout>
       </layout>
@@ -239,7 +244,7 @@
       <port edge="e28" num="1" />
      </input>
      <output>
-      <port edge="e92" num="output" />
+      <port edge="e89" num="output" />
      </output>
      <layout>
       </layout>
@@ -250,63 +255,30 @@
      </input>
      <output>
       <port edge="e28" num="1" />
-      <port edge="e93" num="output" />
+      <port edge="e90" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n49" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e30" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n50" kind="MERGE">
+    <node id="n89" kind="END">
      <input>
-      <port edge="e29" num="0" />
-      <port edge="e30" num="1" />
-     </input>
-     <output>
-      <port edge="e32" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n51" kind="MERGE">
-     <input>
-      <port edge="e32" num="0" />
-      <port edge="e33" num="1" />
-     </input>
-     <output>
-      <port edge="e103" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n52" kind="SPLIT">
-     <input>
-      <port edge="e31" num="0" />
-     </input>
-     <output>
-      <port edge="e33" num="1" />
-      <port edge="e104" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n90" kind="END">
-     <input>
-      <port edge="e92" num="input" />
+      <port edge="e89" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n91" kind="END">
+    <node id="n90" kind="END">
      <input>
-      <port edge="e93" num="input" />
+      <port edge="e90" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n100" kind="END">
+     <input>
+      <port edge="e100" num="input" />
      </input>
      <output />
      <layout>
@@ -314,21 +286,13 @@
     </node>
     <node id="n101" kind="END">
      <input>
-      <port edge="e103" num="input" />
+      <port edge="e101" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n102" kind="END">
-     <input>
-      <port edge="e104" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e1" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n2" port="output" />
      </from>
@@ -346,7 +310,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e2" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -364,7 +328,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class MyClass extends type; tree Object" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n43" port="output" />
      </from>
@@ -382,7 +346,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e25" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n45" port="output" />
      </from>
@@ -400,7 +364,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e26" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e26" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="0" />
      </from>
@@ -418,7 +382,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e27" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e27" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n3" port="0" />
      </from>
@@ -442,7 +406,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n48" port="1" />
      </from>
@@ -460,111 +424,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class MyClass extends type; tree Object" editable="true" id="e29" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n44" port="0" />
-     </from>
-     <to>
-      <noderef id="n50" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e30" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n49" port="0" />
-     </from>
-     <to>
-      <noderef id="n50" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e31" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n46" port="0" />
-     </from>
-     <to>
-      <noderef id="n52" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at class MyClass extends type; tree Object" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n50" port="0" />
-     </from>
-     <to>
-      <noderef id="n51" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e33" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n52" port="1" />
-     </from>
-     <to>
-      <noderef id="n51" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e92" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e89" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n47" port="output" />
+     </from>
+     <to>
+      <noderef id="n89" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e90" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n48" port="output" />
      </from>
      <to>
       <noderef id="n90" port="input" />
@@ -580,12 +460,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e93" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e100" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n48" port="output" />
+      <noderef id="n44" port="output" />
      </from>
      <to>
-      <noderef id="n91" port="input" />
+      <noderef id="n100" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -598,30 +478,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at class MyClass extends type; tree Object" editable="true" id="e103" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e101" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n51" port="output" />
+      <noderef id="n46" port="output" />
      </from>
      <to>
       <noderef id="n101" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e104" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n52" port="output" />
-     </from>
-     <to>
-      <noderef id="n102" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -649,11 +511,11 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e84" num="outClassTypeParam0" />
-      <port edge="e85" num="outClassTypeParam1" />
-      <port edge="e86" num="outMethodTypeParam0" />
-      <port edge="e87" num="outMethodTypeParam1" />
-      <port edge="e88" num="outputReturn0" />
+      <port edge="e81" num="outClassTypeParam0" />
+      <port edge="e82" num="outClassTypeParam1" />
+      <port edge="e83" num="outMethodTypeParam0" />
+      <port edge="e84" num="outMethodTypeParam1" />
+      <port edge="e85" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -664,7 +526,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e35" num="0" />
+      <port edge="e30" num="0" />
      </output>
      <layout>
       </layout>
@@ -674,7 +536,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e34" num="0" />
+      <port edge="e29" num="0" />
      </output>
      <layout>
       </layout>
@@ -692,7 +554,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e88" num="output" />
+      <port edge="e85" num="output" />
      </output>
      <layout>
       </layout>
@@ -702,7 +564,7 @@
       <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e84" num="output" />
+      <port edge="e81" num="output" />
      </output>
      <layout>
       </layout>
@@ -712,34 +574,60 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e85" num="output" />
+      <port edge="e82" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n53" kind="MERGE">
+    <node id="n49" kind="MERGE">
      <input>
-      <port edge="e35" num="0" />
-      <port edge="e36" num="1" />
+      <port edge="e30" num="0" />
+      <port edge="e31" num="1" />
      </input>
      <output>
-      <port edge="e86" num="output" />
+      <port edge="e83" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n54" kind="SPLIT">
+    <node id="n50" kind="SPLIT">
      <input>
-      <port edge="e34" num="0" />
+      <port edge="e29" num="0" />
      </input>
      <output>
-      <port edge="e36" num="1" />
-      <port edge="e87" num="output" />
+      <port edge="e31" num="1" />
+      <port edge="e84" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 3 at method MyClass#&lt;init&gt;():V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within E extends Object" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <node id="n51" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e32" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n52" kind="CONNECT">
+     <input>
+      <port edge="e32" num="input" />
+     </input>
+     <output>
+      <port edge="e33" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n53" kind="END">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam0" />
      </from>
@@ -757,7 +645,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam1" />
      </from>
@@ -775,7 +663,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -793,7 +681,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n6" port="inClassTypeParam0" />
      </from>
@@ -809,9 +697,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n6" port="inClassTypeParam1" />
      </from>
@@ -829,12 +723,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e34" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n9" port="0" />
      </from>
      <to>
-      <noderef id="n54" port="0" />
+      <noderef id="n50" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -847,12 +741,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MyClass#&lt;init&gt;():V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within E extends Object" editable="true" id="e35" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n8" port="0" />
      </from>
      <to>
-      <noderef id="n53" port="0" />
+      <noderef id="n49" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -871,12 +765,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e36" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n54" port="1" />
+      <noderef id="n50" port="1" />
      </from>
      <to>
-      <noderef id="n53" port="1" />
+      <noderef id="n49" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -895,7 +789,43 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e84" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e32" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n51" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n52" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e33" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n52" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n53" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e81" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n37" port="output" />
      </from>
@@ -913,7 +843,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e85" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e82" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n38" port="output" />
      </from>
@@ -931,9 +861,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MyClass#&lt;init&gt;():V method type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within E extends Object" editable="true" id="e86" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e83" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n53" port="output" />
+      <noderef id="n49" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam0" />
@@ -949,9 +879,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e87" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e84" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n54" port="output" />
+      <noderef id="n50" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam1" />
@@ -967,7 +897,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e88" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e85" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -1000,10 +930,10 @@
     </node>
     <node id="n13" kind="OUTGOING">
      <input>
-      <port edge="e80" num="outClassTypeParam0" />
-      <port edge="e81" num="outClassTypeParam1" />
-      <port edge="e90" num="outParam0" />
-      <port edge="e89" num="outReceiver0" />
+      <port edge="e77" num="outClassTypeParam0" />
+      <port edge="e78" num="outClassTypeParam1" />
+      <port edge="e87" num="outParam0" />
+      <port edge="e86" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1014,7 +944,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e89" num="output" />
+      <port edge="e86" num="output" />
      </output>
      <layout>
       </layout>
@@ -1024,7 +954,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e90" num="output" />
+      <port edge="e87" num="output" />
      </output>
      <layout>
       </layout>
@@ -1042,7 +972,7 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e100" num="output" />
+      <port edge="e97" num="output" />
      </output>
      <layout>
       </layout>
@@ -1052,7 +982,7 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e80" num="output" />
+      <port edge="e77" num="output" />
      </output>
      <layout>
       </layout>
@@ -1062,20 +992,20 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e81" num="output" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n98" kind="END">
+    <node id="n97" kind="END">
      <input>
-      <port edge="e100" num="input" />
+      <port edge="e97" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e6" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n12" port="inReceiver0" />
      </from>
@@ -1093,7 +1023,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MyClass#m(Ljava/lang/Object;):V parameter 0; tree T" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n12" port="inParam0" />
      </from>
@@ -1111,7 +1041,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 16 at method MyClass#m(Ljava/lang/Object;):V local variable this(0); tree MyClass within MyClass&lt;T&gt;" editable="true" id="e15" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="16" width="narrow">
      <from>
       <noderef id="n31" port="output" />
      </from>
@@ -1129,7 +1059,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n12" port="inClassTypeParam0" />
      </from>
@@ -1153,7 +1083,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n12" port="inClassTypeParam1" />
      </from>
@@ -1171,7 +1101,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e80" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e77" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n33" port="output" />
      </from>
@@ -1189,7 +1119,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e81" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e78" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n34" port="output" />
      </from>
@@ -1207,7 +1137,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MyClass#m(Ljava/lang/Object;):V receiver; tree MyClass&lt;T&gt;" editable="true" id="e89" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e86" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n14" port="output" />
      </from>
@@ -1225,7 +1155,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MyClass#m(Ljava/lang/Object;):V parameter 0; tree T" editable="true" id="e90" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e87" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -1243,12 +1173,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 16 at method MyClass#m(Ljava/lang/Object;):V local variable this(0); tree MyClass within MyClass&lt;T&gt;" editable="true" id="e100" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e97" pinch="false" variableID="16" width="narrow">
      <from>
       <noderef id="n32" port="output" />
      </from>
      <to>
-      <noderef id="n98" port="input" />
+      <noderef id="n97" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1275,9 +1205,9 @@
     </node>
     <node id="n17" kind="OUTGOING">
      <input>
-      <port edge="e82" num="outClassTypeParam0" />
-      <port edge="e83" num="outClassTypeParam1" />
-      <port edge="e91" num="outReceiver0" />
+      <port edge="e79" num="outClassTypeParam0" />
+      <port edge="e80" num="outClassTypeParam1" />
+      <port edge="e88" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -1288,7 +1218,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e91" num="output" />
+      <port edge="e88" num="output" />
      </output>
      <layout>
       </layout>
@@ -1306,7 +1236,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e38" num="0" />
+      <port edge="e35" num="0" />
      </output>
      <layout>
       </layout>
@@ -1324,7 +1254,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e59" num="0" />
+      <port edge="e56" num="0" />
      </output>
      <layout>
       </layout>
@@ -1342,7 +1272,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e67" num="output" />
+      <port edge="e64" num="output" />
      </output>
      <layout>
       </layout>
@@ -1360,7 +1290,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e57" num="output" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
@@ -1378,7 +1308,7 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e39" num="output" />
+      <port edge="e36" num="output" />
      </output>
      <layout>
       </layout>
@@ -1396,7 +1326,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e45" num="output" />
+      <port edge="e42" num="output" />
      </output>
      <layout>
       </layout>
@@ -1406,7 +1336,7 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e82" num="output" />
+      <port edge="e79" num="output" />
      </output>
      <layout>
       </layout>
@@ -1416,7 +1346,7 @@
       <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e41" num="output" />
+      <port edge="e38" num="output" />
      </output>
      <layout>
       </layout>
@@ -1434,7 +1364,7 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e56" num="output" />
+      <port edge="e53" num="output" />
      </output>
      <layout>
       </layout>
@@ -1452,114 +1382,124 @@
       <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e47" num="output" />
+      <port edge="e44" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n55" kind="MERGE">
+    <node id="n54" kind="MERGE">
      <input>
-      <port edge="e38" num="0" />
-      <port edge="e37" num="1" />
+      <port edge="e35" num="0" />
+      <port edge="e34" num="1" />
      </input>
      <output>
-      <port edge="e73" num="output" />
+      <port edge="e70" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n56" kind="START_SMALL_BALL">
+    <node id="n55" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e37" num="0" />
+      <port edge="e34" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n57" kind="SUBBOARD" name="MyClass--init----V">
+    <node id="n56" kind="SUBBOARD" name="MyClass--init----V">
      <input>
-      <port edge="e40" num="inClassTypeParam0" />
-      <port edge="e42" num="inClassTypeParam1" />
-      <port edge="e46" num="inMethodTypeParam0" />
-      <port edge="e48" num="inMethodTypeParam1" />
+      <port edge="e37" num="inClassTypeParam0" />
+      <port edge="e39" num="inClassTypeParam1" />
+      <port edge="e43" num="inMethodTypeParam0" />
+      <port edge="e45" num="inMethodTypeParam1" />
      </input>
      <output>
-      <port edge="e43" num="outClassTypeParam0" />
-      <port edge="e44" num="outClassTypeParam1" />
-      <port edge="e49" num="outMethodTypeParam0" />
-      <port edge="e50" num="outMethodTypeParam1" />
-      <port edge="e51" num="outputReturn0" />
+      <port edge="e40" num="outClassTypeParam0" />
+      <port edge="e41" num="outClassTypeParam1" />
+      <port edge="e46" num="outMethodTypeParam0" />
+      <port edge="e47" num="outMethodTypeParam1" />
+      <port edge="e48" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n57" kind="SPLIT">
+     <input>
+      <port edge="e36" num="input" />
+     </input>
+     <output>
+      <port edge="e37" num="split" />
+      <port edge="e49" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n58" kind="SPLIT">
      <input>
-      <port edge="e39" num="input" />
+      <port edge="e38" num="input" />
      </input>
      <output>
-      <port edge="e40" num="split" />
-      <port edge="e52" num="toEnd" />
+      <port edge="e39" num="split" />
+      <port edge="e50" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="SPLIT">
+    <node id="n59" kind="CONNECT">
      <input>
-      <port edge="e41" num="input" />
+      <port edge="e40" num="input" />
      </input>
      <output>
-      <port edge="e42" num="split" />
-      <port edge="e53" num="toEnd" />
+      <port edge="e95" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n60" kind="CONNECT">
      <input>
-      <port edge="e43" num="input" />
+      <port edge="e41" num="input" />
      </input>
      <output>
-      <port edge="e98" num="output" />
+      <port edge="e66" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="CONNECT">
+    <node id="n61" kind="SPLIT">
      <input>
-      <port edge="e44" num="input" />
+      <port edge="e42" num="input" />
      </input>
      <output>
-      <port edge="e69" num="output" />
+      <port edge="e43" num="split" />
+      <port edge="e51" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n62" kind="SPLIT">
      <input>
-      <port edge="e45" num="input" />
+      <port edge="e44" num="input" />
      </input>
      <output>
-      <port edge="e46" num="split" />
-      <port edge="e54" num="toEnd" />
+      <port edge="e45" num="split" />
+      <port edge="e52" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n63" kind="SPLIT">
+    <node id="n63" kind="CONNECT">
      <input>
-      <port edge="e47" num="input" />
+      <port edge="e46" num="input" />
      </input>
      <output>
-      <port edge="e48" num="split" />
-      <port edge="e55" num="toEnd" />
+      <port edge="e96" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n64" kind="CONNECT">
      <input>
-      <port edge="e49" num="input" />
+      <port edge="e47" num="input" />
      </input>
      <output>
       <port edge="e99" num="output" />
@@ -1569,7 +1509,7 @@
     </node>
     <node id="n65" kind="CONNECT">
      <input>
-      <port edge="e50" num="input" />
+      <port edge="e48" num="input" />
      </input>
      <output>
       <port edge="e102" num="output" />
@@ -1577,19 +1517,17 @@
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="CONNECT">
+    <node id="n66" kind="END">
      <input>
-      <port edge="e51" num="input" />
+      <port edge="e49" num="input" />
      </input>
-     <output>
-      <port edge="e105" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
     <node id="n67" kind="END">
      <input>
-      <port edge="e52" num="input" />
+      <port edge="e50" num="input" />
      </input>
      <output />
      <layout>
@@ -1597,7 +1535,7 @@
     </node>
     <node id="n68" kind="END">
      <input>
-      <port edge="e53" num="input" />
+      <port edge="e51" num="input" />
      </input>
      <output />
      <layout>
@@ -1605,187 +1543,187 @@
     </node>
     <node id="n69" kind="END">
      <input>
-      <port edge="e54" num="input" />
+      <port edge="e52" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n70" kind="END">
+    <node id="n70" kind="CONNECT">
      <input>
-      <port edge="e55" num="input" />
+      <port edge="e53" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e58" num="0" />
+     </output>
      <layout>
       </layout>
     </node>
     <node id="n71" kind="CONNECT">
      <input>
-      <port edge="e56" num="input" />
+      <port edge="e54" num="input" />
      </input>
      <output>
-      <port edge="e61" num="0" />
+      <port edge="e55" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="CONNECT">
+    <node id="n72" kind="MERGE">
      <input>
-      <port edge="e57" num="input" />
+      <port edge="e56" num="0" />
+      <port edge="e57" num="1" />
      </input>
      <output>
-      <port edge="e58" num="0" />
+      <port edge="e59" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n73" kind="MERGE">
+    <node id="n73" kind="SPLIT">
+     <input>
+      <port edge="e55" num="0" />
+     </input>
+     <output>
+      <port edge="e57" num="1" />
+      <port edge="e94" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n74" kind="MERGE">
      <input>
       <port edge="e59" num="0" />
       <port edge="e60" num="1" />
      </input>
      <output>
-      <port edge="e62" num="0" />
+      <port edge="e92" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n74" kind="SPLIT">
+    <node id="n75" kind="SPLIT">
      <input>
       <port edge="e58" num="0" />
      </input>
      <output>
       <port edge="e60" num="1" />
-      <port edge="e97" num="output" />
+      <port edge="e61" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n75" kind="MERGE">
+    <node id="n76" kind="SUBBOARD" name="MyClass-m-Ljava-lang-Object---V">
      <input>
-      <port edge="e62" num="0" />
-      <port edge="e63" num="1" />
+      <port edge="e65" num="inClassTypeParam0" />
+      <port edge="e67" num="inClassTypeParam1" />
+      <port edge="e71" num="inParam0" />
+      <port edge="e62" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e95" num="output" />
+      <port edge="e68" num="outClassTypeParam0" />
+      <port edge="e69" num="outClassTypeParam1" />
+      <port edge="e72" num="outParam0" />
+      <port edge="e63" num="outReceiver0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="SPLIT">
+    <node id="n77" kind="SPLIT">
      <input>
-      <port edge="e61" num="0" />
+      <port edge="e61" num="input" />
      </input>
      <output>
-      <port edge="e63" num="1" />
-      <port edge="e64" num="output" />
+      <port edge="e62" num="split" />
+      <port edge="e73" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n77" kind="SUBBOARD" name="MyClass-m-Ljava-lang-Object---V">
+    <node id="n78" kind="CONNECT">
      <input>
-      <port edge="e68" num="inClassTypeParam0" />
-      <port edge="e70" num="inClassTypeParam1" />
-      <port edge="e74" num="inParam0" />
-      <port edge="e65" num="inReceiver0" />
+      <port edge="e63" num="input" />
      </input>
      <output>
-      <port edge="e71" num="outClassTypeParam0" />
-      <port edge="e72" num="outClassTypeParam1" />
-      <port edge="e75" num="outParam0" />
-      <port edge="e66" num="outReceiver0" />
+      <port edge="e98" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n78" kind="SPLIT">
+    <node id="n79" kind="SPLIT">
      <input>
       <port edge="e64" num="input" />
      </input>
      <output>
       <port edge="e65" num="split" />
-      <port edge="e76" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n79" kind="CONNECT">
-     <input>
-      <port edge="e66" num="input" />
-     </input>
-     <output>
-      <port edge="e101" num="output" />
+      <port edge="e74" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n80" kind="SPLIT">
      <input>
-      <port edge="e67" num="input" />
+      <port edge="e66" num="input" />
      </input>
      <output>
-      <port edge="e68" num="split" />
-      <port edge="e77" num="toEnd" />
+      <port edge="e67" num="split" />
+      <port edge="e75" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n81" kind="SPLIT">
+    <node id="n81" kind="CONNECT">
      <input>
-      <port edge="e69" num="input" />
+      <port edge="e68" num="input" />
      </input>
      <output>
-      <port edge="e70" num="split" />
-      <port edge="e78" num="toEnd" />
+      <port edge="e93" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n82" kind="CONNECT">
      <input>
-      <port edge="e71" num="input" />
+      <port edge="e69" num="input" />
      </input>
      <output>
-      <port edge="e96" num="output" />
+      <port edge="e80" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n83" kind="CONNECT">
+    <node id="n83" kind="SPLIT">
+     <input>
+      <port edge="e70" num="input" />
+     </input>
+     <output>
+      <port edge="e71" num="split" />
+      <port edge="e76" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n84" kind="CONNECT">
      <input>
       <port edge="e72" num="input" />
      </input>
      <output>
-      <port edge="e83" num="output" />
+      <port edge="e91" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n84" kind="SPLIT">
+    <node id="n85" kind="END">
      <input>
       <port edge="e73" num="input" />
      </input>
-     <output>
-      <port edge="e74" num="split" />
-      <port edge="e79" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n85" kind="CONNECT">
-     <input>
-      <port edge="e75" num="input" />
-     </input>
-     <output>
-      <port edge="e94" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
     <node id="n86" kind="END">
      <input>
-      <port edge="e76" num="input" />
+      <port edge="e74" num="input" />
      </input>
      <output />
      <layout>
@@ -1793,7 +1731,7 @@
     </node>
     <node id="n87" kind="END">
      <input>
-      <port edge="e77" num="input" />
+      <port edge="e75" num="input" />
      </input>
      <output />
      <layout>
@@ -1801,15 +1739,15 @@
     </node>
     <node id="n88" kind="END">
      <input>
-      <port edge="e78" num="input" />
+      <port edge="e76" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n89" kind="END">
+    <node id="n91" kind="END">
      <input>
-      <port edge="e79" num="input" />
+      <port edge="e91" num="input" />
      </input>
      <output />
      <layout>
@@ -1817,7 +1755,7 @@
     </node>
     <node id="n92" kind="END">
      <input>
-      <port edge="e94" num="input" />
+      <port edge="e92" num="input" />
      </input>
      <output />
      <layout>
@@ -1825,7 +1763,7 @@
     </node>
     <node id="n93" kind="END">
      <input>
-      <port edge="e95" num="input" />
+      <port edge="e93" num="input" />
      </input>
      <output />
      <layout>
@@ -1833,7 +1771,7 @@
     </node>
     <node id="n94" kind="END">
      <input>
-      <port edge="e96" num="input" />
+      <port edge="e94" num="input" />
      </input>
      <output />
      <layout>
@@ -1841,7 +1779,7 @@
     </node>
     <node id="n95" kind="END">
      <input>
-      <port edge="e97" num="input" />
+      <port edge="e95" num="input" />
      </input>
      <output />
      <layout>
@@ -1849,15 +1787,15 @@
     </node>
     <node id="n96" kind="END">
      <input>
-      <port edge="e98" num="input" />
+      <port edge="e96" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n97" kind="END">
+    <node id="n98" kind="END">
      <input>
-      <port edge="e99" num="input" />
+      <port edge="e98" num="input" />
      </input>
      <output />
      <layout>
@@ -1865,13 +1803,13 @@
     </node>
     <node id="n99" kind="END">
      <input>
-      <port edge="e101" num="input" />
+      <port edge="e99" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n100" kind="END">
+    <node id="n102" kind="END">
      <input>
       <port edge="e102" num="input" />
      </input>
@@ -1879,15 +1817,7 @@
      <layout>
       </layout>
     </node>
-    <node id="n103" kind="END">
-     <input>
-      <port edge="e105" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e8" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n16" port="inReceiver0" />
      </from>
@@ -1923,7 +1853,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n19" port="output" />
      </from>
@@ -1941,7 +1871,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt;" editable="true" id="e10" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n21" port="output" />
      </from>
@@ -1959,7 +1889,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e11" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n23" port="output" />
      </from>
@@ -1977,7 +1907,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass&lt;String&gt;" editable="true" id="e12" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e12" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n25" port="output" />
      </from>
@@ -1995,7 +1925,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e13" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n27" port="output" />
      </from>
@@ -2013,7 +1943,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e14" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n29" port="output" />
      </from>
@@ -2031,7 +1961,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n16" port="inClassTypeParam0" />
      </from>
@@ -2067,7 +1997,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n16" port="inClassTypeParam1" />
      </from>
@@ -2085,7 +2015,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e22" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n39" port="output" />
      </from>
@@ -2103,7 +2033,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e23" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n41" port="output" />
      </from>
@@ -2121,12 +2051,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="non null" editable="false" id="e37" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e34" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n56" port="0" />
+      <noderef id="n55" port="0" />
      </from>
      <to>
-      <noderef id="n55" port="1" />
+      <noderef id="n54" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2145,12 +2075,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e38" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e35" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n20" port="0" />
      </from>
      <to>
-      <noderef id="n55" port="0" />
+      <noderef id="n54" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2169,9 +2099,57 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e39" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n28" port="output" />
+     </from>
+     <to>
+      <noderef id="n57" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n57" port="split" />
+     </from>
+     <to>
+      <noderef id="n56" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n36" port="output" />
      </from>
      <to>
       <noderef id="n58" port="input" />
@@ -2187,12 +2165,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e40" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n58" port="split" />
      </from>
      <to>
-      <noderef id="n57" port="inClassTypeParam0" />
+      <noderef id="n56" port="inClassTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -2203,17 +2181,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e41" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n36" port="output" />
+      <noderef id="n56" port="outClassTypeParam0" />
      </from>
      <to>
       <noderef id="n59" port="input" />
@@ -2229,33 +2201,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e42" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e41" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n59" port="split" />
-     </from>
-     <to>
-      <noderef id="n57" port="inClassTypeParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e43" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n57" port="outClassTypeParam0" />
+      <noderef id="n56" port="outClassTypeParam1" />
      </from>
      <to>
       <noderef id="n60" port="input" />
@@ -2271,9 +2219,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e44" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e42" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n57" port="outClassTypeParam1" />
+      <noderef id="n30" port="output" />
      </from>
      <to>
       <noderef id="n61" port="input" />
@@ -2289,9 +2237,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e45" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e43" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n30" port="output" />
+      <noderef id="n61" port="split" />
+     </from>
+     <to>
+      <noderef id="n56" port="inMethodTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e44" pinch="false" variableID="4" width="narrow">
+     <from>
+      <noderef id="n42" port="output" />
      </from>
      <to>
       <noderef id="n62" port="input" />
@@ -2307,12 +2273,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e46" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e45" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n62" port="split" />
      </from>
      <to>
-      <noderef id="n57" port="inMethodTypeParam0" />
+      <noderef id="n56" port="inMethodTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -2325,9 +2291,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e46" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n42" port="output" />
+      <noderef id="n56" port="outMethodTypeParam0" />
      </from>
      <to>
       <noderef id="n63" port="input" />
@@ -2343,27 +2309,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e48" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e47" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n63" port="split" />
-     </from>
-     <to>
-      <noderef id="n57" port="inMethodTypeParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e49" pinch="false" variableID="14" width="narrow">
-     <from>
-      <noderef id="n57" port="outMethodTypeParam0" />
+      <noderef id="n56" port="outMethodTypeParam1" />
      </from>
      <to>
       <noderef id="n64" port="input" />
@@ -2379,9 +2327,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e50" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="5" width="narrow">
      <from>
-      <noderef id="n57" port="outMethodTypeParam1" />
+      <noderef id="n56" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n65" port="input" />
@@ -2397,9 +2345,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e51" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e49" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n57" port="outputReturn0" />
+      <noderef id="n57" port="toEnd" />
      </from>
      <to>
       <noderef id="n66" port="input" />
@@ -2413,9 +2361,15 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e52" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e50" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n58" port="toEnd" />
      </from>
@@ -2431,17 +2385,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e53" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e51" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n59" port="toEnd" />
+      <noderef id="n61" port="toEnd" />
      </from>
      <to>
       <noderef id="n68" port="input" />
@@ -2455,9 +2403,27 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e54" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e52" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n62" port="toEnd" />
      </from>
@@ -2473,29 +2439,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e55" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e53" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n63" port="toEnd" />
+      <noderef id="n40" port="output" />
      </from>
      <to>
       <noderef id="n70" port="input" />
@@ -2511,9 +2459,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e56" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e54" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n40" port="output" />
+      <noderef id="n26" port="output" />
      </from>
      <to>
       <noderef id="n71" port="input" />
@@ -2529,12 +2477,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass&lt;String&gt;" editable="true" id="e57" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e55" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n26" port="output" />
+      <noderef id="n71" port="0" />
      </from>
      <to>
-      <noderef id="n72" port="input" />
+      <noderef id="n73" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2547,7 +2495,73 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass&lt;String&gt;" editable="true" id="e58" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e56" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n22" port="0" />
+     </from>
+     <to>
+      <noderef id="n72" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e57" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n73" port="1" />
+     </from>
+     <to>
+      <noderef id="n72" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e58" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n70" port="0" />
+     </from>
+     <to>
+      <noderef id="n75" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e59" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n72" port="0" />
      </from>
@@ -2565,96 +2579,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt;" editable="true" id="e59" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e60" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n22" port="0" />
-     </from>
-     <to>
-      <noderef id="n73" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass&lt;String&gt;" editable="true" id="e60" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n74" port="1" />
-     </from>
-     <to>
-      <noderef id="n73" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e61" pinch="false" variableID="15" width="narrow">
-     <from>
-      <noderef id="n71" port="0" />
-     </from>
-     <to>
-      <noderef id="n76" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt;" editable="true" id="e62" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n73" port="0" />
-     </from>
-     <to>
-      <noderef id="n75" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e63" pinch="false" variableID="15" width="narrow">
-     <from>
-      <noderef id="n76" port="1" />
-     </from>
-     <to>
       <noderef id="n75" port="1" />
+     </from>
+     <to>
+      <noderef id="n74" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2679,9 +2609,57 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e64" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e61" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n76" port="output" />
+      <noderef id="n75" port="output" />
+     </from>
+     <to>
+      <noderef id="n77" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e62" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n77" port="split" />
+     </from>
+     <to>
+      <noderef id="n76" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e63" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n76" port="outReceiver0" />
      </from>
      <to>
       <noderef id="n78" port="input" />
@@ -2697,39 +2675,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e65" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e64" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n78" port="split" />
-     </from>
-     <to>
-      <noderef id="n77" port="inReceiver0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e66" pinch="false" variableID="15" width="narrow">
-     <from>
-      <noderef id="n77" port="outReceiver0" />
+      <noderef id="n24" port="output" />
      </from>
      <to>
       <noderef id="n79" port="input" />
@@ -2745,9 +2693,39 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e67" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e65" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n24" port="output" />
+      <noderef id="n79" port="split" />
+     </from>
+     <to>
+      <noderef id="n76" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e66" pinch="false" variableID="1" width="narrow">
+     <from>
+      <noderef id="n60" port="output" />
      </from>
      <to>
       <noderef id="n80" port="input" />
@@ -2763,12 +2741,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e68" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e67" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n80" port="split" />
      </from>
      <to>
-      <noderef id="n77" port="inClassTypeParam0" />
+      <noderef id="n76" port="inClassTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -2779,23 +2757,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e69" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e68" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n61" port="output" />
+      <noderef id="n76" port="outClassTypeParam0" />
      </from>
      <to>
       <noderef id="n81" port="input" />
@@ -2809,18 +2775,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e70" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n81" port="split" />
-     </from>
-     <to>
-      <noderef id="n77" port="inClassTypeParam1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -2829,9 +2783,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e71" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e69" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n77" port="outClassTypeParam0" />
+      <noderef id="n76" port="outClassTypeParam1" />
      </from>
      <to>
       <noderef id="n82" port="input" />
@@ -2845,17 +2799,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e72" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e70" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n77" port="outClassTypeParam1" />
+      <noderef id="n54" port="output" />
      </from>
      <to>
       <noderef id="n83" port="input" />
@@ -2871,9 +2819,45 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e73" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e71" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n55" port="output" />
+      <noderef id="n83" port="split" />
+     </from>
+     <to>
+      <noderef id="n76" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e72" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n76" port="outParam0" />
      </from>
      <to>
       <noderef id="n84" port="input" />
@@ -2889,45 +2873,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e74" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e73" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n84" port="split" />
-     </from>
-     <to>
-      <noderef id="n77" port="inParam0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e75" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n77" port="outParam0" />
+      <noderef id="n77" port="toEnd" />
      </from>
      <to>
       <noderef id="n85" port="input" />
@@ -2943,9 +2891,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e76" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e74" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n78" port="toEnd" />
+      <noderef id="n79" port="toEnd" />
      </from>
      <to>
       <noderef id="n86" port="input" />
@@ -2961,7 +2909,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e77" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e75" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n80" port="toEnd" />
      </from>
@@ -2977,11 +2925,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e78" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e76" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n81" port="toEnd" />
+      <noderef id="n83" port="toEnd" />
      </from>
      <to>
       <noderef id="n88" port="input" />
@@ -2995,33 +2949,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e79" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n84" port="toEnd" />
-     </from>
-     <to>
-      <noderef id="n89" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MyClass class type parameter bound 0 &amp; 0; tree Object at position ((3,0)) within T extends Object" editable="true" id="e82" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e79" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n35" port="output" />
      </from>
@@ -3057,9 +2987,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at class MyClass class type parameter 0; tree T extends Object" editable="true" id="e83" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e80" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n83" port="output" />
+      <noderef id="n82" port="output" />
      </from>
      <to>
       <noderef id="n17" port="outClassTypeParam1" />
@@ -3087,7 +3017,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MyClass#context():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  void context() { String s = &quot;non null&quot;; MyClass&lt;String&gt; myc; myc = new MyClass&lt;String&gt;(); myc.m(s); }Atm: @VarAnnot(8) MyClass&lt;T extends Object&gt;" editable="true" id="e91" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e88" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -3123,9 +3053,27 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MyClass#context():V local variable s(0); tree String" editable="true" id="e94" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e91" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n85" port="output" />
+      <noderef id="n84" port="output" />
+     </from>
+     <to>
+      <noderef id="n91" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e92" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n74" port="output" />
      </from>
      <to>
       <noderef id="n92" port="input" />
@@ -3141,9 +3089,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt;" editable="true" id="e95" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e93" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n75" port="output" />
+      <noderef id="n81" port="output" />
      </from>
      <to>
       <noderef id="n93" port="input" />
@@ -3159,9 +3107,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 11 at method MyClass#context():V local variable myc(0); tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e96" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e94" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n82" port="output" />
+      <noderef id="n73" port="output" />
      </from>
      <to>
       <noderef id="n94" port="input" />
@@ -3177,9 +3125,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MyClass#context():V creation 0; tree MyClass within MyClass&lt;String&gt;" editable="true" id="e97" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e95" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n74" port="output" />
+      <noderef id="n59" port="output" />
      </from>
      <to>
       <noderef id="n95" port="input" />
@@ -3195,9 +3143,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 13 at method MyClass#context():V creation 0; tree String at position ((3,0)) within MyClass&lt;String&gt;" editable="true" id="e98" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e96" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n60" port="output" />
+      <noderef id="n63" port="output" />
      </from>
      <to>
       <noderef id="n96" port="input" />
@@ -3213,12 +3161,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at MethodTypeArgumentInMethodVP in method MyClass#context():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within new MyClass&lt;String&gt;()Atm: @VarAnnot(14) Object" editable="true" id="e99" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e98" pinch="false" variableID="15" width="narrow">
      <from>
-      <noderef id="n64" port="output" />
+      <noderef id="n78" port="output" />
      </from>
      <to>
-      <noderef id="n97" port="input" />
+      <noderef id="n98" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3231,9 +3179,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #15 Declared Variable: Variable 10 at method MyClass#context():V local variable myc(0); tree MyClass within MyClass&lt;String&gt; IfTest: false mergedTo: Set()" editable="true" id="e101" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e99" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n79" port="output" />
+      <noderef id="n64" port="output" />
      </from>
      <to>
       <noderef id="n99" port="input" />
@@ -3249,30 +3197,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MyClass#&lt;init&gt;():V method type parameter 0; tree E extends Object" editable="true" id="e102" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e102" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n65" port="output" />
      </from>
      <to>
-      <noderef id="n100" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MyClass#&lt;init&gt;():V return type; tree  &lt;E extends Object&gt;&lt;init&gt;() { super(); }" editable="true" id="e105" pinch="false" variableID="5" width="narrow">
-     <from>
-      <noderef id="n66" port="output" />
-     </from>
-     <to>
-      <noderef id="n103" port="input" />
+      <noderef id="n102" port="input" />
      </to>
      <edge-layout>
       <point>

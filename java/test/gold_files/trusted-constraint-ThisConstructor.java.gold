@@ -36,7 +36,7 @@ class CallThis {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;):V constraint position; 
-calledVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V; 
+calledVp: Some(method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -79,11 +79,25 @@ class CallThis {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 4 at method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V parameter 0; tree String  <:  Variable 6 at class CallThis field s; tree String )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field s; 
+calledVp: Some(class CallThis field s); 
 receiver: Constant(@trusted.quals.Untrusted); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -97,7 +111,7 @@ SubtypeConstraint( Variable 5 at method CallThis#<init>(Ljava/lang/String;Ljava/
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method CallThis#<init>(Ljava/lang/String;Ljava/lang/Object;):V constraint position; 
-calledVp: class CallThis field o; 
+calledVp: Some(class CallThis field o); 
 receiver: Constant(@trusted.quals.Untrusted); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

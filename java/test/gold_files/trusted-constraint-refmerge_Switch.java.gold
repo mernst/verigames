@@ -1,6 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 3 at method Switch#test():V local variable i(0); tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Switch extends type; tree <<missing tree>> within 
 class Switch {
     
@@ -60,6 +58,20 @@ class Switch {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Switch#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Switch#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method Switch#test():V receiver; tree <<missing tree>> within 
 void test() {
     int i = 1;
@@ -107,13 +119,39 @@ class Switch {
     }
 } )
 
+SubtypeConstraint( Literal(INT_LITERAL, "1")  <:  Variable 3 at method Switch#test():V local variable i(0); tree int )
+
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 4 at method Switch#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(9 )) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 4 at method Switch#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) = Literal(STRING_LITERAL, "") )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(NULL_LITERAL, "null") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) = Literal(NULL_LITERAL, "null") )
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(9 )) )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(9 )) )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(9 ))  <:  RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(9 ))  <:  RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 4 at method Switch#test():V local variable a(0); tree String )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method Switch#test():V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Switch#test():V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #9 Declared Variable: Variable 4 at method Switch#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

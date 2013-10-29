@@ -4,6 +4,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import checkers.basetype.BaseAnnotatedTypeFactory;
 import checkers.inference.ConstraintManager;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
@@ -27,14 +28,14 @@ import javacutils.TreeUtils;
  * constraints are presented in a different order.
  *
  */
-public class GameVisitor extends InferenceVisitor {
-	public GameVisitor(BaseTypeChecker checker, CompilationUnitTree root, boolean infer) {
-		super(checker, root, infer);
+public class GameVisitor<Checker extends BaseTypeChecker> extends InferenceVisitor<Checker, BaseAnnotatedTypeFactory> {
+	public GameVisitor(Checker checker, InferenceChecker ichecker, boolean infer) {
+		super(checker, ichecker, infer);
 	}
 
 	/**
 	 * Re-orders the visitation of variables. Ensures that the modifiers, type, and initializer
-	 * are visited before the super call, which will generate other constraints (e.g. Subtype 
+	 * are visited before the super call, which will generate other constraints (e.g. Subtype
 	 * constraints) which depend on the other constraints having already been represented.
 	 */
     @Override
@@ -95,13 +96,13 @@ public class GameVisitor extends InferenceVisitor {
         /*scan(node.getInitializer(), p);
         return super.visitVariable(node, p);
     }*/
-    
+
 
     /**
-     * An identifier is a field access sometimes, i.e. when there is an implicit "this". 
+     * An identifier is a field access sometimes, i.e. when there is an implicit "this".
      * Don't generate access constraints for RefinementVariables.
      *
-     * Assignments used to create field boards, but no longer do because the identifier is a RefinementVariable 
+     * Assignments used to create field boards, but no longer do because the identifier is a RefinementVariable
      *
      **/
     @Override
@@ -207,7 +208,7 @@ public class GameVisitor extends InferenceVisitor {
         }
         return null;
     }
-    
+
     @Override
     public Void visitReturn(ReturnTree node, Void p) {
         // Don't try to check return expressions for void methods.

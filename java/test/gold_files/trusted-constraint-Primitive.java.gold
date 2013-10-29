@@ -1,12 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 1 at class Primitive field i; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 4 at method Primitive#m(I):I return type; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 6 at method Primitive#m(I):I parameter 0; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 8 at method Primitive#call():V local variable i(0); tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class Primitive extends type; tree <<missing tree>> within 
 class Primitive {
     
@@ -45,6 +37,22 @@ class Primitive {
     }
     Object o = null;
 } )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Primitive#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Primitive#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+SubtypeConstraint( Literal(INT_LITERAL, "5")  <:  Variable 1 at class Primitive field i; tree int )
 
 SubtypeConstraint( Variable 5 at method Primitive#m(I):I receiver; tree <<missing tree>> within 
 int m(int p) {
@@ -92,7 +100,7 @@ class Primitive {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Primitive#call():V constraint position; 
-calledVp: method Primitive#m(I):I; 
+calledVp: Some(method Primitive#m(I):I); 
 receiver: Variable 7 at method Primitive#call():V receiver; tree <<missing tree>> within 
 void call() {
     int i = m(9);
@@ -101,7 +109,7 @@ methodTypeParamLBs: <  >;
 classTypeParamLBs: <  >; 
 methodTypeArgs: <  >; 
 classTypeArgs: <  >; 
-args: ( Constant(@trusted.quals.Untrusted) ); 
+args: ( Literal(INT_LITERAL, "9") ); 
 result: List(Variable 4 at method Primitive#m(I):I return type; tree int); 
 )
 

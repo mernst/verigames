@@ -4,3 +4,17 @@ SubtypeConstraint( Variable 0 at method NNTest#<init>():V return type; tree
     super();
 }  <:  Constant(@nninf.quals.Nullable) )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NNTest#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NNTest#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+

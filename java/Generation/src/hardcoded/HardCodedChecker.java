@@ -23,7 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
  *
  */
 @TypeQualifiers({ MaybeHardCoded.class, NotHardCoded.class })
-public class HardCodedChecker extends GameChecker<HardCodedAnnotatedTypeFactory> {
+public class HardCodedChecker extends GameChecker {
     public AnnotationMirror MAYBEHARDCODED, NOTHARDCODED;
 
     @Override
@@ -39,14 +39,9 @@ public class HardCodedChecker extends GameChecker<HardCodedAnnotatedTypeFactory>
     }
 
     @Override
-    public HardCodedAnnotatedTypeFactory createFactory(CompilationUnitTree root) {
-        return new HardCodedAnnotatedTypeFactory(this, root);
-    }
-
-    @Override
-    protected HardCodedVisitor createSourceVisitor(CompilationUnitTree root) {
+    public HardCodedVisitor createInferenceVisitor() {
         // The false turns off inference and enables checking the type system.
-        return new HardCodedVisitor(this, root, this, false);
+        return new HardCodedVisitor(this, null, false);
     }
 
 //    @Override

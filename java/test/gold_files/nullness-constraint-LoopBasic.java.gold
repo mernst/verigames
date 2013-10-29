@@ -56,6 +56,20 @@ class LoopBasic {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method LoopBasic#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LoopBasic#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree <<missing tree>> within 
 void foo(LoopBasic lb) {
     for (int i = 0; i < 5; i++) {
@@ -99,7 +113,7 @@ InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint po
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#bar():V; 
+calledVp: Some(method LoopBasic#bar():V); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -117,7 +131,7 @@ InequalityConstraint( context: method LoopBasic#foo(LLoopBasic;):V constraint po
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#proceed():Z; 
+calledVp: Some(method LoopBasic#proceed():Z); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -129,7 +143,7 @@ result: List(Variable 5 at method LoopBasic#proceed():Z return type; tree boolea
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#bar():V; 
+calledVp: Some(method LoopBasic#bar():V); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -196,6 +210,20 @@ class LoopBasic {
         return Math.random() < 0.5;
     }
 } )
+
+StubBoardUseConstraint(java.lang.Math,java.lang.Math#random():double,method LoopBasic#proceed():Z constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.StaticMethodCallConstraint(
+contextVp: method LoopBasic#proceed():Z constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 
 InequalityConstraint( context: method LoopBasic#proceed():Z constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
 

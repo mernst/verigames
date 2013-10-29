@@ -22,6 +22,20 @@ class ListImp implements List<String> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ListImp#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ListImp#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 6 at class CallMethod extends type; tree <<missing tree>> within 
 class CallMethod {
     
@@ -67,6 +81,18 @@ class CallMethod {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallMethod#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 12 at method CallMethod#call(LList;):Ljava/lang/String; receiver; tree <<missing tree>> within 
 public <T extends List<String>>String call(T t) {
     return "any";
@@ -103,7 +129,7 @@ SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 14 at method Call
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method CallMethod#<init>():V; 
+calledVp: Some(method CallMethod#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -124,7 +150,7 @@ InequalityConstraint( context: method CallMethod#main():V constraint position, V
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method ListImp#<init>():V; 
+calledVp: Some(method ListImp#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -141,7 +167,7 @@ InequalityConstraint( context: method CallMethod#main():V constraint position, V
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method CallMethod#call(LList;):Ljava/lang/String;; 
+calledVp: Some(method CallMethod#call(LList;):Ljava/lang/String;); 
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 
@@ -153,7 +179,7 @@ result: List(Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; re
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method CallMethod#call(LList;):Ljava/lang/String;; 
+calledVp: Some(method CallMethod#call(LList;):Ljava/lang/String;); 
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 
@@ -167,7 +193,7 @@ SubtypeConstraint( Variable 11 at method CallMethod#call(LList;):Ljava/lang/Stri
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method CallMethod#call(LList;):Ljava/lang/String;; 
+calledVp: Some(method CallMethod#call(LList;):Ljava/lang/String;); 
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 
@@ -179,7 +205,7 @@ result: List(Variable 11 at method CallMethod#call(LList;):Ljava/lang/String; re
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallMethod#main():V constraint position; 
-calledVp: method CallMethod#call(LList;):Ljava/lang/String;; 
+calledVp: Some(method CallMethod#call(LList;):Ljava/lang/String;); 
 receiver: Variable 16 at method CallMethod#main():V local variable cm(0); tree CallMethod; 
 methodTypeParamLBs: < Variable 10 at method CallMethod#call(LList;):Ljava/lang/String; method type parameter 0; tree T extends List<String> >; 
 classTypeParamLBs: <  >; 

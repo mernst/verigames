@@ -91,7 +91,7 @@ package scenes.game.display
 		public var m_tutorialTag:String;
 		public var tutorialManager:TutorialLevelManager;
 		private var m_layoutFixed:Boolean = false;
-		private var m_targetScore:int;
+		public var m_targetScore:int;
 		
 		private var boxDictionary:Dictionary;
 		private var jointDictionary:Dictionary;
@@ -314,7 +314,7 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
-				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
+		//		trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
 				if(joint.visible)
 					visibleJoints++;
 				else
@@ -581,6 +581,8 @@ package scenes.game.display
 			
 			refreshTroublePoints();
 			flatten();
+			
+			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		
 		public function start():void
@@ -685,7 +687,7 @@ package scenes.game.display
 		
 		protected function layoutSaved(result:int, e:flash.events.Event):void
 		{
-			dispatchEvent(new MenuEvent(MenuEvent.SAVE_LAYOUT));
+			dispatchEvent(new MenuEvent(MenuEvent.LAYOUT_SAVED));
 		}
 		
 		public function zipXMLFile(xmlFile:XML, name:String):ByteArray

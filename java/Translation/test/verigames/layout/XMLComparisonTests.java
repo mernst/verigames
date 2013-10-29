@@ -40,7 +40,7 @@ public class XMLComparisonTests
     PrintStream out = new PrintStream(actualOutput);
     try
     {
-      new WorldXMLPrinter().print(w, out, null);
+      new WorldXMLPrinter(true).print(w, out, null);
     }
     finally
     {
