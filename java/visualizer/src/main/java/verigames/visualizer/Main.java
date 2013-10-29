@@ -13,7 +13,10 @@ import verigames.level.WorldXMLParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 
 public class Main {
 
@@ -23,6 +26,7 @@ public class Main {
         options.addOption("h", "help", false, "print help and exit");
         options.addOption("i", "in", true, "input XML file (defaults to stdin)");
         options.addOption("o", "out", true, "output folder");
+        options.addOption("p", "pretty", false, "write prettier output");
 
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine cmd;
@@ -73,7 +77,37 @@ public class Main {
             return;
         }
 
-        LayoutDebugger.layout(world, path);
+        if (cmd.hasOption("pretty")) {
+            File outputFile = new File(path, "out.dot");
+            try {
+                try (PrintStream out = new PrintStream(new FileOutputStream(outputFile))) {
+                    new PrettyDotPrinter().print(world, out);
+                }
+            } catch (FileNotFoundException e) {
+                System.err.println("Failed to write file '" + outputFile.getAbsolutePath() + "'");
+                System.exit(1);
+                return;
+            }
+
+            try {
+                Process process = new ProcessBuilder(
+                        "dot",
+                        "-Tsvg",
+                        "-o",
+                        new File(path, "out.svg").getAbsolutePath(),
+                        outputFile.getAbsolutePath()).start();
+                process.waitFor();
+            } catch (IOException e) {
+                System.err.println("GraphViz dot command failed: " + e);
+                System.exit(1);
+                return;
+            } catch (InterruptedException e) {
+                System.err.println("Interrupted!");
+                return;
+            }
+        } else {
+            LayoutDebugger.layout(world, path);
+        }
 
     }
 

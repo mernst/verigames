@@ -15,4 +15,11 @@ dependencies {
     // remote deps: pulled in from maven central
     compile 'commons-cli:commons-cli:1.2'
 
+    // TestNG for testing
+    testCompile 'org.testng:testng:5.10:jdk15'
+
+}
+
+test {
+    useTestNG()
 }
