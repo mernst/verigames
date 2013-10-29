@@ -1,5 +1,6 @@
 package verigames.optimizer;
 
+import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.World;
 import verigames.optimizer.model.Node;
@@ -7,6 +8,7 @@ import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.Subgraph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +16,32 @@ import java.util.Set;
 public class Optimizer {
 
     public void optimize(NodeGraph g) {
-        // TODO: optimization 1: remove immutable components
+        removeIsolatedComponents(g);
+        compressConnectors(g);
+
+        // TODO: remove all small ball drops?
+//        Collection<Node> smallBallStarts = new ArrayList<>();
+//        for (Node node : g.getNodes()) {
+//            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
+//                smallBallStarts.add(node);
+//            }
+//        }
+//
+//        for (Node node : smallBallStarts) {
+//            Collection<Node> toRemove = removeSource(g, node);
+//            if (toRemove != null) {
+//                g.removeNodes(toRemove);
+//            }
+//        }
+    }
+
+    /**
+     * Remove isolated, immutable components from the graph. If
+     * every chute in a component is immutable, then the user
+     * probably doesn't care about it.
+     * @param g the graph to modify
+     */
+    public void removeIsolatedComponents(NodeGraph g) {
         for (Subgraph subgraph : g.getComponents()) {
             boolean mutable = false;
             for (NodeGraph.Edge edge : subgraph.getEdges()) {
@@ -30,25 +57,63 @@ public class Optimizer {
                     break;
             }
             if (!mutable && !hasFixedNode) {
-                System.err.println("*** REMOVING SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
+                Util.logVerbose("*** REMOVING IMMUTABLE SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
                 g.removeSubgraph(subgraph);
             }
         }
+    }
 
-        // TODO: optimization 2: remove all small ball drops
-//        Collection<Node> smallBallStarts = new ArrayList<>();
-//        for (Node node : g.getNodes()) {
-//            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
-//                smallBallStarts.add(node);
-//            }
-//        }
-//
-//        for (Node node : smallBallStarts) {
-//            Collection<Node> toRemove = removeSource(g, node);
-//            if (toRemove != null) {
-//                g.removeNodes(toRemove);
-//            }
-//        }
+    /**
+     * Remove useless one-input to one-output connectors in the
+     * graph.
+     * @param g the graph to modify
+     */
+    public void compressConnectors(NodeGraph g) {
+        // remove a lot of "connect" intersections
+        // Note: the new ArrayList is because we remove nodes from the graph as we go,
+        // and getNodes just returns a view of the nodes in the graph. We want to
+        // avoid concurrent modifications.
+        for (Node node : new ArrayList<>(g.getNodes())) {
+            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
+                // for this node kind: one incoming edge, one outgoing edge
+                NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
+                NodeGraph.Target outgoingEdge = Util.first(g.outgoingEdges(node).values());
+
+                Chute incomingChute = incomingEdge.getEdgeData();
+                Chute outgoingChute = outgoingEdge.getEdgeData();
+
+                // if the edges are different widths, we have to think really hard about how to merge them
+                boolean narrow = incomingChute.isNarrow();
+                if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
+                    if (incomingChute.isEditable())          // if we can edit the incoming chute...
+                        narrow = outgoingChute.isNarrow();   //     ... then make it match the outgoing one
+                    else if (outgoingChute.isEditable())     // if we can edit the outgoing chute...
+                        narrow = incomingChute.isNarrow();   //     ... then make it match the incoming one
+                    else if (incomingChute.isNarrow() && !outgoingChute.isNarrow()) // if the edges are immutable and narrow flows to wide
+                        narrow = true;                       //     ... then make it narrow
+                    else                                     // if the edges are immutable and wide flows to narrow
+                        continue;                            //     ... then we're out of luck
+                }
+
+                Util.logVerbose("*** REMOVING USELESS CONNECTOR");
+
+                // remove the node
+                g.removeNode(node);
+
+                // add an edge where it used to be
+                Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
+                newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+                if (outgoingChute.getLayout() != null)
+                    newChute.setLayout(outgoingChute.getLayout());
+                newChute.setNarrow(narrow);
+                newChute.setEditable(incomingChute.isEditable() && outgoingChute.isEditable());
+                newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
+                g.addEdge(
+                        incomingEdge.getSrc(), incomingEdge.getSrcPort(),
+                        outgoingEdge.getDst(), outgoingEdge.getDstPort(),
+                        newChute);
+            }
+        }
     }
 
     private Set<Node> removeSource(NodeGraph g, Node node) {
