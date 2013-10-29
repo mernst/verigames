@@ -33,9 +33,7 @@ package scenes.game.display
 		public var m_toComponent:GameNodeBase;
 		public var m_fromPortID:String;
 		public var m_toPortID:String;
-		public var m_extensionEdge:GameEdgeContainer;
-		//if there's an extension edge, this tells us if it's outgoing or incoming
-		private var m_extensionEdgeIsOutgoing:Boolean;
+		//public var m_extensionEdge:GameEdgeContainer;
 		
 		private var m_dir:String;
 		private var m_innerSegmentBorderIsWide:Boolean = false;
@@ -56,7 +54,7 @@ package scenes.game.display
 		public var restoreEdge:Boolean;
 		
 		//used to record current position for both undoing and port tracking (snap back to original)
-		public var undoObject:Object;
+		public var undoObject:Object = new Object();
 		
 		public var m_innerBoxSegment:InnerBoxSegment;
 		
@@ -135,82 +133,7 @@ package scenes.game.display
 			fromComponent.setOutgoingEdge(this);
 			toComponent.setIncomingEdge(this);
 			
-			var innerBoxPt:Point;
-			var boxHeight:Number;
-			var innerCircle:Boolean = false;
-			if (toBox) {
-				boxHeight = (m_toComponent as GameNode).m_boundingBox.height + 0.5;
-				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
-				switch (graphEdge.to_port.node.kind) {
-					case NodeTypes.OUTGOING:
-					case NodeTypes.END:
-					case NodeTypes.SUBBOARD:
-						innerCircle = true;
-						break;
-				}
-			} else {
-				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
-				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
-				switch (graphEdge.from_port.node.kind) {
-					case NodeTypes.INCOMING:
-					case NodeTypes.START_PIPE_DEPENDENT_BALL:
-						innerCircle = true;
-						break;
-				}
-			}
-			if (fromComponent is GameNode) {
-				m_extensionEdge = (fromComponent as GameNode).getExtensionEdge(_fromPortID, true);
-				m_extensionEdgeIsOutgoing = true;
-			} else {
-				m_extensionEdge = (toComponent as GameNode).getExtensionEdge(_toPortID, false);
-				m_extensionEdgeIsOutgoing = false;
-			}
-			if (m_extensionEdge && m_extensionEdge.hideSegments && hideSegments) {
-				// If both edges hidden, show innerCircle for outgoing Edge
-				if (m_extensionEdgeIsOutgoing) {
-					m_extensionEdge.hideInnerSegment = false;
-					m_extensionEdge.m_innerBoxSegment.visible = true;
-				} else {
-					hideInnerSegment = false; // mark invisible when created below
-				}
-				m_extensionEdge = null;
-			} else {
-				// Don't associate extension edges if one edge is hidden
-				if (m_extensionEdge && m_extensionEdge.hideSegments) m_extensionEdge = null;
-				if (hideSegments) m_extensionEdge = null;
-			}
-			if (m_extensionEdge) {
-				innerCircle = false;
-				m_extensionEdge.m_extensionEdge = this;
-				if (m_extensionEdge.m_innerBoxSegment && 
-					(
-						m_extensionEdge.m_innerBoxSegment.isEnd ||
-						m_extensionEdge.m_innerBoxSegment.hasInnerCircle
-					)){
-					// Since we have two edges linked here, this shouldn't be an end
-					m_extensionEdge.m_innerBoxSegment.isEnd = false;
-					m_extensionEdge.m_innerBoxSegment.hasInnerCircle = false;
-					if (m_extensionEdge.m_innerBoxSegment.innerCircleJoint) {
-						m_extensionEdge.m_innerBoxSegment.innerCircleJoint.removeFromParent(true);
-						m_extensionEdge.m_innerBoxSegment.innerCircleJoint = null;
-					}
-					m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
-				}
-				if (toBox) {
-					m_extensionEdge.m_innerSegmentIsEditable = m_innerSegmentIsEditable;
-					m_extensionEdge.m_innerSegmentBorderIsWide = m_innerSegmentBorderIsWide;
-					if (m_extensionEdge.m_innerBoxSegment) {
-						m_extensionEdge.m_innerBoxSegment.m_isDirty = true;
-					}
-				} else {
-					m_innerSegmentIsEditable = m_extensionEdge.m_innerSegmentIsEditable;
-					m_innerSegmentBorderIsWide = m_extensionEdge.m_innerSegmentBorderIsWide;
-				}
-			}
-			var innerIsEnd:Boolean = (m_extensionEdge == null) ? toBox : (toBox && !m_extensionEdge.visible);
-		//	trace(m_id + " hideSegments:" + hideSegments + " innerCircle:" + innerCircle + " innerIsEnd:" + innerIsEnd);
-			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable, hideSegments);
-			if (hideInnerSegment) m_innerBoxSegment.visible = false;
+			updateInnerSegment();
 			updateOutsideEdgeComponents();
 			
 			// Initialize props
@@ -247,6 +170,54 @@ package scenes.game.display
 			
 			m_isDirty = true;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		public function get m_extensionEdge():GameEdgeContainer
+		{
+			return (m_fromComponent is GameNode) ? m_fromComponent.getExtensionEdge(this) : m_toComponent.getExtensionEdge(this);
+		}
+		
+		/**
+		 * Update the parameters used to draw innerBoxSegment and recreate using updated params
+		 * @param	updateExtension Used to avoid infinite loop of updating extension edges
+		 */
+		public function updateInnerSegment(updateExtension:Boolean = true):void
+		{
+			var thisEdgeOutgoing:Boolean = (m_fromComponent is GameNode);
+			var innerCircle:Boolean = false;
+			var innerIsEnd:Boolean = false;// (m_extensionEdge == null) ? toBox : (toBox && !m_extensionEdge.visible);
+			var extEdgeShown:Boolean = (m_extensionEdge && !m_extensionEdge.hideSegments);
+			if (!extEdgeShown) {
+				innerCircle = !hideSegments || toBox;
+				if (innerCircle) hideInnerSegment = false;
+				innerIsEnd = !hideSegments && toBox;
+			}
+			
+			var innerBoxPt:Point;
+			var boxHeight:Number;
+			if (toBox) {
+				boxHeight = (m_toComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_endPoint.x, m_endPoint.y + boxHeight / 2.0);
+			} else {
+				boxHeight = (m_fromComponent as GameNode).m_boundingBox.height + 0.5;
+				innerBoxPt = new Point(m_startPoint.x, m_startPoint.y - boxHeight / 2.0);
+			}
+			
+			if (m_extensionEdge) {
+				if (toBox) {
+					m_extensionEdge.m_innerSegmentIsEditable = m_innerSegmentIsEditable;
+					m_extensionEdge.m_innerSegmentBorderIsWide = m_innerSegmentBorderIsWide;
+					m_extensionEdge.m_isDirty = true;
+				} else {
+					m_innerSegmentIsEditable = m_extensionEdge.m_innerSegmentIsEditable;
+					m_innerSegmentBorderIsWide = m_extensionEdge.m_innerSegmentBorderIsWide;
+				}
+				if (updateExtension) m_extensionEdge.updateInnerSegment(false);
+			}
+			if (m_innerBoxSegment) m_innerBoxSegment.removeFromParent(true);
+			m_innerBoxSegment = new InnerBoxSegment(innerBoxPt, boxHeight / 2.0, m_dir, m_isEditable ? m_isWide : m_innerSegmentBorderIsWide, m_innerSegmentBorderIsWide, m_innerSegmentIsEditable, innerCircle, innerIsEnd, m_isWide, true, draggable, hideSegments);
+			if (hideInnerSegment) m_innerBoxSegment.visible = false;
+			positionChildren(); // this performs addChild of new innersegment
 		}
 		
 		private function onAddedToStage(evt:Event):void
@@ -485,15 +456,15 @@ package scenes.game.display
 		
 		private function onPropsChange(evt:EdgePropChangeEvent):void
 		{
-			var updateInnerSegment:Boolean = false;
+			var innerSegmentChanged:Boolean = false;
 			if (isTopOfEdge() && (evt.type == EdgePropChangeEvent.EXIT_PROPS_CHANGED)) {
-				updateInnerSegment = true;
+				innerSegmentChanged = true;
 			} else {
 				setProps(evt.newProps);
 				m_isDirty = true;
-				if (!isTopOfEdge()) updateInnerSegment = true;
+				if (!isTopOfEdge()) innerSegmentChanged = true;
 			}
-			if (updateInnerSegment && m_innerBoxSegment) {
+			if (innerSegmentChanged && m_innerBoxSegment) {
 				// Change inner box segment
 				if (m_innerBoxSegment.edgeSegment)      m_innerBoxSegment.edgeSegment.setProps(evt.newProps);
 				if (m_innerBoxSegment.innerCircleJoint) m_innerBoxSegment.innerCircleJoint.setProps(evt.newProps);
@@ -651,11 +622,11 @@ package scenes.game.display
 		
 		private function saveLocation():void
 		{
-			hasChanged = false;
+			//hasChanged = false;
 			restoreEdge = true;
 			
-			undoObject = new Object;
-			undoObject.m_savedJointPoints = new Array;
+			undoObject = new Object();
+			undoObject.m_savedJointPoints = new Array();
 			
 			undoObject.m_savedStartPoint = m_startPoint.clone();
 			undoObject.m_savedEndPoint = m_endPoint.clone();
@@ -1113,7 +1084,7 @@ package scenes.game.display
 			
 			rubberBandEdge(deltaPoint, segmentOutgoing);
 			
-			if(this.m_extensionEdge && segmentOutgoing)// && m_extensionEdgeIsOutgoing)
+			if(this.m_extensionEdge)// && segmentOutgoing)// && m_extensionEdgeIsOutgoing)
 			{
 				m_extensionEdge.rubberBandEdge(deltaPoint, !segmentOutgoing);
 			}
@@ -1365,29 +1336,6 @@ package scenes.game.display
 			}
 		}
 		
-		public function getOriginalStartPosition():Point
-		{
-			return m_startJoint.m_originalPoint.clone();
-		}
-		
-		public function setOriginalStartPosition(newPoint:Point):void
-		{
-			m_startJoint.m_originalPoint.x = newPoint.x;
-			m_startJoint.m_originalPoint.y = newPoint.y;
-		}
-		
-		
-		public function getOriginalEndPosition():Point
-		{
-			return m_endJoint.m_originalPoint.clone();
-		}
-		
-		public function setOriginalEndPosition(newPoint:Point):void
-		{
-			m_endJoint.m_originalPoint.x = newPoint.x;
-			m_endJoint.m_originalPoint.y = newPoint.y;
-		}
-		
 		public function getSegment(indx:int):GameEdgeSegment
 		{
 			if ((indx >= 0) && (indx < m_edgeSegments.length)) return m_edgeSegments[indx];
@@ -1416,10 +1364,7 @@ package scenes.game.display
 		
 		public static function sortOutgoingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
-			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
-				return -1;
-			}
-			if(x.localToGlobal(x.m_edgeArray[0]).x < y.localToGlobal(y.m_edgeArray[0]).x)
+			if(x.globalStart.x < y.globalStart.x)
 				return -1;
 			else
 				return 1;
@@ -1427,13 +1372,22 @@ package scenes.game.display
 		
 		public static function sortIncomingXPositions(x:GameEdgeContainer, y:GameEdgeContainer):Number
 		{
-			if (x.m_edgeArray.length == 0 || y.m_edgeArray.length == 0) {
-				return -1;
-			}
-			if(x.localToGlobal(x.m_edgeArray[x.m_edgeArray.length-1]).x < y.localToGlobal(y.m_edgeArray[y.m_edgeArray.length-1]).x)
+			if(x.globalEnd.x < y.globalEnd.x)
 				return -1;
 			else
 				return 1;
+		}
+		
+		public function get globalStart():Point
+		{
+			var start:Point = (m_jointPoints.length > 0) ? m_jointPoints[0].clone() : (new Point());
+			return localToGlobal(start);// new Point(m_boundingBox.x + start.x, m_boundingBox.y + start.y);
+		}
+		
+		public function get globalEnd():Point
+		{
+			var end:Point = (m_jointPoints.length > 0) ? m_jointPoints[m_jointPoints.length - 1].clone() : (new Point());
+			return localToGlobal(end);// new Point(m_boundingBox.x + end.x, m_boundingBox.y + end.y);
 		}
 		
 		// set widths of all edge segments based on ball size from Simulator
