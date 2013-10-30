@@ -346,6 +346,23 @@ public class NodeGraph {
         return edgesList;
     }
 
+    public Collection<Edge> edgeSet(Edge edge) {
+        return edgeSet(edge.getTarget());
+    }
+
+    public Collection<Edge> edgeSet(Target edge) {
+        Collection<Edge> result = new ArrayList<>();
+        for (Edge e : getEdges()) {
+            if (e.getTarget().equals(edge) || (
+                    e.getEdgeData().getVariableID() >= 0 &&
+                    e.getEdgeData().getVariableID() == edge.getEdgeData().getVariableID()
+                    )) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
     /**
      * Get the outgoing edges from a node
      * @param src the node

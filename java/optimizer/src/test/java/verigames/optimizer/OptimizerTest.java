@@ -132,4 +132,45 @@ public class OptimizerTest {
         }
     }
 
+    /**
+     * Connector compression should not remove edges that belong to
+     * an edge set.
+     */
+    @Test
+    public void testConnectorCompression2() {
+        Board board = new Board();
+        Intersection start = board.addNode(Intersection.Kind.INCOMING);
+        Intersection merge = board.addNode(Intersection.Kind.MERGE);
+        Intersection connect = board.addNode(Intersection.Kind.CONNECT);
+
+        // 2 chutes in the same edge set
+        Chute c1 = new Chute(3, "?");
+        Chute c2 = new Chute(3, "?");
+
+        board.add(start, "1", connect, "2", c1);
+        board.add(start, "3", merge, "4", c2);
+        board.add(connect, "5", merge, "6", mutableChute());
+        board.add(connect, "7", Intersection.Kind.OUTGOING, "8", mutableChute());
+        board.finishConstruction();
+        Level level = new Level();
+        level.addBoard("board", board);
+        level.finishConstruction();
+        World world = new World();
+        world.addLevel("level", level);
+        world.validateSubboardReferences();
+        NodeGraph g = new NodeGraph(world);
+
+        new Optimizer().compressConnectors(g);
+
+        World finalWorld = g.toWorld();
+        assert finalWorld.getLevels().size() == 1;
+
+        Level finalLevel = Util.first(finalWorld.getLevels().values());
+        assert finalLevel.getBoards().size() == 1;
+
+        Board finalBoard = Util.first(finalLevel.getBoards().values());
+        assert finalBoard.getNodes().size() == 4;
+        assert finalBoard.getEdges().size() == 4;
+    }
+
 }

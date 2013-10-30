@@ -82,6 +82,11 @@ public class Optimizer {
                 Chute incomingChute = incomingEdge.getEdgeData();
                 Chute outgoingChute = outgoingEdge.getEdgeData();
 
+                // if either edge belongs to an edge set, we can't remove this
+                if (g.edgeSet(incomingEdge).size() > 1 || g.edgeSet(outgoingEdge).size() > 1) {
+                    continue;
+                }
+
                 // if the edges are different widths, we have to think really hard about how to merge them
                 boolean narrow = incomingChute.isNarrow();
                 if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
