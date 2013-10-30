@@ -263,6 +263,7 @@ public class NodeGraph {
             world.addLevel(levelName, newLevel);
         }
 
+        world.finishConstruction();
         return world;
     }
 
