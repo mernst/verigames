@@ -6,7 +6,7 @@ import os.path
 import re
 import subprocess
 
-MODES=['typecheck', 'roundtrip', 'xmlsolve']
+MODES=['typecheck', 'roundtrip', 'xmlsolve', 'xml-roundtrip']
 
 def main():
     parser = argparse.ArgumentParser()

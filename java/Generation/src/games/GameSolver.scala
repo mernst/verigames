@@ -251,7 +251,7 @@ abstract class GameSolver extends ConstraintSolver {
 
           case mvar: NewInMethodVP =>
             // For object creations, add a START_SMALL_BALL Intersection.
-            val connect = board.add(START_SMALL_BALL, "output", CONNECT, "input", toChute(cvar))._2
+            val connect = board.add(START_PIPE_DEPENDENT_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ( (board, cvar) -> connect )
 
           case mtp : WithinMethodVP if mtp.isInstanceOf[MethodTypeParameterVP]      ||

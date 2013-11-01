@@ -76,7 +76,12 @@ public class JAIFParser {
                 int end = start + ("@checkers.inference.quals.varAnnot(".length());
                 int key = Integer.parseInt(line.substring(end, line.length() - 1));
                 out.print(line.substring(0,start));
-                out.println(values.get(key)?subtypeAnno:supertypeAnno);
+                if (values.get(key) == null) {
+                    System.out.println("Warning: Could not find value for " + key + " using supertype");
+                    out.println(supertypeAnno);
+                } else {
+                    out.println(values.get(key)? subtypeAnno: supertypeAnno);
+                }
             } else
                 out.println(line);
         }

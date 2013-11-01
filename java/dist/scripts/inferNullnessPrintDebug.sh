@@ -8,4 +8,4 @@ case `uname -s` in
 esac
 
 sh $thisDir"/inferencePrint.sh" -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005  checkers.inference.TTIRun --checker nninf.NninfChecker --visitor nninf.NninfVisitor \
---solver nninf.NninfGameSolver --transfer nninf.NninfTransfer $@
+--solver checkers.inference.floodsolver.FloodSolver  --transfer nninf.NninfTransferImpl $@

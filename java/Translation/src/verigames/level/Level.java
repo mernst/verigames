@@ -393,20 +393,17 @@ public class Level
             }
         }
 
-        if( fixedNarrow || !fixedWide ) {
-            for( Chute c : linkedChutes ) {
+        for( Chute c : linkedChutes ) {
+            if (fixedNarrow) {
                 c.setNarrow( true );
-                if (fixedNarrow) {
-                    c.setEditable(false);
-                }
-            }
-        } else {
-            for( Chute c : linkedChutes ) {
+            } else if (fixedWide) {
                 c.setNarrow( false );
-                if (fixedWide) {
-                    c.setEditable(false);
-                }
+            } else {
+                // Just make them all the same to start out with
+                // TODO: double check that the xml solver is guaranteed to make all of the same linked chutes the same.
+                c.setNarrow( isNarrow );
             }
+            c.setEditable( !(fixedNarrow || fixedWide) );
         }
     }
 

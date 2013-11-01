@@ -33,10 +33,10 @@ import checkers.inference._
  *
  */
 
-class NninfTransfer(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer]) extends InferenceTransfer(analysis) {
+class NninfTransferImpl(analysis : CFAbstractAnalysis[CFValue, CFStore, CFTransfer]) extends InferenceTransfer(analysis) {
 
-  override def strengthenAnnotationOfEqualTo(res: TransferResult[CFValue,CFStore],
-      firstNode: Node, secondNode: Node,
+  override def strengthenAnnotationOfEqualTo(res: TransferResult[CFValue,CFStore], 
+      firstNode: Node, secondNode: Node, 
       firstValue: CFValue, secondValue: CFValue, notEqualTo: Boolean) : TransferResult[CFValue, CFStore] = {
 
     val typeFactory = analysis.getFactory.asInstanceOf[InferenceAnnotatedTypeFactory[_]]

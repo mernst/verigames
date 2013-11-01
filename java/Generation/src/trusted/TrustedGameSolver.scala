@@ -138,9 +138,7 @@ class TrustedGameSolver extends GameSolver {
           boardNVariableToIntersection( ( board, boardToSelfVariable(board) ) )
         }
         case lit: AbstractLiteral => {
-          val res = Intersection.factory(Intersection.Kind.START_SMALL_BALL)
-          board.addNode(res)
-          res
+          throw new RuntimeException("Should never have literals at this point.")
         }
         case TrustedConstants.UNTRUSTED => {
           val res = Intersection.factory(Intersection.Kind.START_LARGE_BALL)

@@ -25,6 +25,7 @@ if [[ -z "$SCALA_HOME" ]]; then
 else
     CP="$CP:$SCALA_HOME/lib/scala-compiler.jar:$SCALA_HOME/lib/scala-library.jar"
 fi
+CP="/Users/mcarthur/dev/dff/verigames/java/dist/scripts/test01/guava-11.0.2.jar:$CP";
 
 # Used by picard to set picard vars.
 if [[ ! -z "$CP_EXTRA" ]]; then
