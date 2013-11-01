@@ -78,28 +78,6 @@ package scenes.game.display
 			draw();
 		}
 		
-		public function getExtensionEdge(portID:String, isOutgoingPort:Boolean):GameEdgeContainer
-		{
-			if(isOutgoingPort)
-			{
-				for each(var inEdge:GameEdgeContainer in m_incomingEdges)
-				{
-					if(inEdge.m_toPortID == portID)
-						return inEdge;
-				}
-			}
-			else
-			{
-				for each(var outEdge:GameEdgeContainer in m_outgoingEdges)
-				{
-					if(outEdge.m_fromPortID == portID)
-						return outEdge;
-				}
-			}
-			
-			return null;
-		}
-		
 		public override function onClicked(pt:Point):void
 		{
 			var eventToUndo:EdgeSetChangeEvent,  eventToDispatch:UndoEvent;

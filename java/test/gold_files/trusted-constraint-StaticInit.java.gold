@@ -26,11 +26,37 @@ class StaticInit {
     }
 } )
 
-SubtypeConstraint( RefinementVariable #3 Declared Variable: Variable 1 at class StaticInit static field f; tree Object IfTest: false mergedTo: Set()  <:  Variable 1 at class StaticInit static field f; tree Object )
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method StaticInit#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method StaticInit#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: class StaticInit static initializer *0 constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+SubtypeConstraint( RefinementVariable #3 Declared Variable: Variable 1 at class StaticInit static field f; tree Object IfTest: false mergedTo: (Set())  <:  Variable 1 at class StaticInit static field f; tree Object )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: class StaticInit static initializer *0 constraint position; 
-calledVp: class StaticInit static field f; 
+calledVp: Some(class StaticInit static field f); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -40,7 +66,7 @@ args: ( Variable 2 at class StaticInit static initializer *0 creation 0; tree Ob
 result: List(); 
 )
 
-EqualityConstraint( RefinementVariable #3 Declared Variable: Variable 1 at class StaticInit static field f; tree Object IfTest: false mergedTo: Set() = Variable 2 at class StaticInit static initializer *0 creation 0; tree Object )
+EqualityConstraint( RefinementVariable #3 Declared Variable: Variable 1 at class StaticInit static field f; tree Object IfTest: false mergedTo: (Set()) = Variable 2 at class StaticInit static initializer *0 creation 0; tree Object )
 
 SubtypeConstraint( Variable 2 at class StaticInit static initializer *0 creation 0; tree Object  <:  Variable 1 at class StaticInit static field f; tree Object )
 

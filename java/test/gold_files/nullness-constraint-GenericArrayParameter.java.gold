@@ -42,6 +42,20 @@ class GenericArray<Z extends Object> implements GenericInterface<String[]> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method GenericArray#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method GenericArray#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 19 at class GenericArray field z; tree Z  <:  Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
@@ -68,7 +82,7 @@ SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method GenericArray#setZ(Ljava/lang/Object;):V constraint position; 
-calledVp: class GenericArray field z; 
+calledVp: Some(class GenericArray field z); 
 receiver: Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void setZ(Z z) {
     this.z = z;
@@ -85,7 +99,7 @@ SubtypeConstraint( Variable 6 at class GenericArray class type parameter 0; tree
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method GenericArray#setZ(Ljava/lang/Object;):V constraint position; 
-calledVp: class GenericArray field z; 
+calledVp: Some(class GenericArray field z); 
 receiver: Variable 12 at method GenericArray#setZ(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void setZ(Z z) {
     this.z = z;
@@ -154,4 +168,16 @@ class GenericFields {
     }
     private GenericArray<String> genArray;
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method GenericFields#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 

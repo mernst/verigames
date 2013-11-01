@@ -1,8 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 5 at method LoopBasic#proceed():Z return type; tree boolean = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class LoopBasic extends type; tree <<missing tree>> within 
 class LoopBasic {
     
@@ -56,6 +52,20 @@ class LoopBasic {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method LoopBasic#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method LoopBasic#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method LoopBasic#foo(LLoopBasic;):V receiver; tree <<missing tree>> within 
 void foo(LoopBasic lb) {
     for (int i = 0; i < 5; i++) {
@@ -89,9 +99,11 @@ class LoopBasic {
     }
 } )
 
+SubtypeConstraint( Literal(INT_LITERAL, "0")  <:  Variable 7 at method LoopBasic#foo(LLoopBasic;):V local variable i(0); tree int )
+
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#bar():V; 
+calledVp: Some(method LoopBasic#bar():V); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -103,7 +115,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#proceed():Z; 
+calledVp: Some(method LoopBasic#proceed():Z); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -115,7 +127,7 @@ result: List(Variable 5 at method LoopBasic#proceed():Z return type; tree boolea
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method LoopBasic#foo(LLoopBasic;):V constraint position; 
-calledVp: method LoopBasic#bar():V; 
+calledVp: Some(method LoopBasic#bar():V); 
 receiver: Variable 3 at method LoopBasic#foo(LLoopBasic;):V parameter 0; tree LoopBasic; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -180,4 +192,26 @@ class LoopBasic {
         return Math.random() < 0.5;
     }
 } )
+
+StubBoardUseConstraint(java.lang.Math,java.lang.Math#random():double,method LoopBasic#proceed():Z constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.StaticMethodCallConstraint(
+contextVp: method LoopBasic#proceed():Z constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  CombVariable #9 )
+
+SubtypeConstraint( Literal(DOUBLE_LITERAL, "0.5")  <:  CombVariable #9 )
+
+SubtypeConstraint( Literal(DOUBLE_LITERAL, "0.5")  <:  CombVariable #8 )
+
+SubtypeConstraint( Literal(DOUBLE_LITERAL, "0.5")  <:  Variable 5 at method LoopBasic#proceed():Z return type; tree boolean )
 

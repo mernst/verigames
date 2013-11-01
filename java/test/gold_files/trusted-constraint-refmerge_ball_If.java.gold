@@ -34,6 +34,20 @@ class If {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method If#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method If#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method If#test():V receiver; tree <<missing tree>> within 
 void test() {
     String a = null;
@@ -59,7 +73,27 @@ class If {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method If#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(5 )) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method If#test():V local variable a(0); tree String )
+
+SubtypeConstraint( Variable 3 at method If#test():V local variable a(0); tree String  <:  RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(5 ))  <:  RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at method If#test():V local variable a(0); tree String )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method If#test():V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method If#test():V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

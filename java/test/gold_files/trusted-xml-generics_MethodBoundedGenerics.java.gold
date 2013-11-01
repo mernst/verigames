@@ -3,180 +3,276 @@
   <linked-edges>
    <edge-set id="MethodBoundedGenerics0">
     <edgeref id="e19" />
-    <edgeref id="e37" />
-    <edgeref id="e114" />
+    <edgeref id="e40" />
+    <edgeref id="e143" />
     <edgeref id="e6" />
-    <edgeref id="e38" />
-    <edgeref id="e39" />
     <edgeref id="e41" />
-    <edgeref id="e43" />
-    <edgeref id="e48" />
-    <edgeref id="e101" />
+    <edgeref id="e42" />
+    <edgeref id="e44" />
+    <edgeref id="e46" />
+    <edgeref id="e51" />
+    <edgeref id="e130" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics1">
     <edgeref id="e21" />
-    <edgeref id="e50" />
-    <edgeref id="e63" />
-    <edgeref id="e65" />
-    <edgeref id="e66" />
-    <edgeref id="e68" />
-    <edgeref id="e116" />
+    <edgeref id="e53" />
+    <edgeref id="e92" />
+    <edgeref id="e94" />
+    <edgeref id="e95" />
+    <edgeref id="e97" />
+    <edgeref id="e145" />
     <edgeref id="e20" />
-    <edgeref id="e47" />
-    <edgeref id="e49" />
-    <edgeref id="e51" />
+    <edgeref id="e50" />
     <edgeref id="e52" />
     <edgeref id="e54" />
     <edgeref id="e55" />
     <edgeref id="e57" />
-    <edgeref id="e115" />
+    <edgeref id="e58" />
+    <edgeref id="e60" />
+    <edgeref id="e144" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics2">
     <edgeref id="e13" />
-    <edgeref id="e61" />
-    <edgeref id="e108" />
+    <edgeref id="e73" />
+    <edgeref id="e137" />
     <edgeref id="e15" />
-    <edgeref id="e62" />
-    <edgeref id="e110" />
+    <edgeref id="e74" />
+    <edgeref id="e139" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics3">
     <edgeref id="e23" />
-    <edgeref id="e26" />
-    <edgeref id="e29" />
-    <edgeref id="e118" />
+    <edgeref id="e147" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics4">
     <edgeref id="e24" />
-    <edgeref id="e28" />
-    <edgeref id="e30" />
-    <edgeref id="e119" />
+    <edgeref id="e148" />
     <edgeref id="e1" />
-    <edgeref id="e96" />
+    <edgeref id="e125" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics5">
     <edgeref id="e2" />
+    <edgeref id="e29" />
+    <edgeref id="e31" />
     <edgeref id="e32" />
-    <edgeref id="e97" />
+    <edgeref id="e33" />
+    <edgeref id="e36" />
+    <edgeref id="e61" />
+    <edgeref id="e62" />
+    <edgeref id="e64" />
+    <edgeref id="e69" />
+    <edgeref id="e78" />
+    <edgeref id="e79" />
+    <edgeref id="e81" />
+    <edgeref id="e90" />
+    <edgeref id="e126" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics6">
     <edgeref id="e3" />
-    <edgeref id="e31" />
-    <edgeref id="e33" />
-    <edgeref id="e98" />
+    <edgeref id="e28" />
+    <edgeref id="e30" />
+    <edgeref id="e127" />
     <edgeref id="e22" />
-    <edgeref id="e76" />
-    <edgeref id="e77" />
-    <edgeref id="e79" />
-    <edgeref id="e89" />
-    <edgeref id="e117" />
+    <edgeref id="e105" />
+    <edgeref id="e106" />
+    <edgeref id="e108" />
+    <edgeref id="e118" />
+    <edgeref id="e146" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics7">
     <edgeref id="e4" />
-    <edgeref id="e67" />
-    <edgeref id="e99" />
+    <edgeref id="e96" />
+    <edgeref id="e128" />
     <edgeref id="e25" />
-    <edgeref id="e86" />
-    <edgeref id="e91" />
-    <edgeref id="e92" />
-    <edgeref id="e93" />
-    <edgeref id="e95" />
+    <edgeref id="e115" />
     <edgeref id="e120" />
+    <edgeref id="e121" />
+    <edgeref id="e122" />
+    <edgeref id="e124" />
+    <edgeref id="e149" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics8">
     <edgeref id="e7" />
-    <edgeref id="e34" />
-    <edgeref id="e36" />
-    <edgeref id="e44" />
-    <edgeref id="e46" />
-    <edgeref id="e102" />
+    <edgeref id="e37" />
+    <edgeref id="e39" />
+    <edgeref id="e47" />
+    <edgeref id="e49" />
+    <edgeref id="e131" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics9">
     <edgeref id="e9" />
-    <edgeref id="e35" />
-    <edgeref id="e40" />
-    <edgeref id="e104" />
+    <edgeref id="e38" />
+    <edgeref id="e43" />
+    <edgeref id="e133" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics10">
     <edgeref id="e10" />
-    <edgeref id="e45" />
-    <edgeref id="e53" />
-    <edgeref id="e64" />
-    <edgeref id="e105" />
+    <edgeref id="e48" />
+    <edgeref id="e56" />
+    <edgeref id="e93" />
+    <edgeref id="e134" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics11">
     <edgeref id="e11" />
-    <edgeref id="e56" />
-    <edgeref id="e106" />
+    <edgeref id="e59" />
+    <edgeref id="e84" />
+    <edgeref id="e85" />
+    <edgeref id="e86" />
+    <edgeref id="e91" />
+    <edgeref id="e135" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics12">
     <edgeref id="e12" />
-    <edgeref id="e59" />
-    <edgeref id="e107" />
+    <edgeref id="e71" />
+    <edgeref id="e75" />
+    <edgeref id="e76" />
+    <edgeref id="e77" />
+    <edgeref id="e89" />
+    <edgeref id="e136" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics13">
     <edgeref id="e14" />
-    <edgeref id="e58" />
-    <edgeref id="e60" />
-    <edgeref id="e109" />
+    <edgeref id="e70" />
+    <edgeref id="e72" />
+    <edgeref id="e138" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics14">
-    <edgeref id="e100" />
+    <edgeref id="e129" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics15">
     <edgeref id="e16" />
-    <edgeref id="e70" />
-    <edgeref id="e80" />
-    <edgeref id="e81" />
-    <edgeref id="e83" />
-    <edgeref id="e90" />
-    <edgeref id="e111" />
+    <edgeref id="e99" />
+    <edgeref id="e109" />
+    <edgeref id="e110" />
+    <edgeref id="e112" />
+    <edgeref id="e119" />
+    <edgeref id="e140" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics16">
     <edgeref id="e17" />
-    <edgeref id="e94" />
-    <edgeref id="e112" />
+    <edgeref id="e123" />
+    <edgeref id="e141" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics17">
     <edgeref id="e18" />
-    <edgeref id="e74" />
-    <edgeref id="e75" />
-    <edgeref id="e78" />
-    <edgeref id="e88" />
-    <edgeref id="e113" />
+    <edgeref id="e103" />
+    <edgeref id="e104" />
+    <edgeref id="e107" />
+    <edgeref id="e117" />
+    <edgeref id="e142" />
    </edge-set>
    <edge-set id="MethodBoundedGenerics18">
-    <edgeref id="e71" />
-    <edgeref id="e72" />
-    <edgeref id="e73" />
-    <edgeref id="e87" />
-    <edgeref id="e103" />
+    <edgeref id="e100" />
+    <edgeref id="e101" />
+    <edgeref id="e102" />
+    <edgeref id="e116" />
+    <edgeref id="e132" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics22">
+   <edge-set id="MethodBoundedGenerics24">
+    <edgeref id="e26" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics25">
     <edgeref id="e27" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics33">
+   <edge-set id="MethodBoundedGenerics30">
     <edgeref id="e5" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics57">
-    <edgeref id="e42" />
+   <edge-set id="MethodBoundedGenerics49">
+    <edgeref id="e34" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics100">
-    <edgeref id="e8" />
+   <edge-set id="MethodBoundedGenerics50">
+    <edgeref id="e35" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics106">
-    <edgeref id="e69" />
+   <edge-set id="MethodBoundedGenerics60">
+    <edgeref id="e45" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics119">
+   <edge-set id="MethodBoundedGenerics78">
+    <edgeref id="e63" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics80">
+    <edgeref id="e65" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics81">
+    <edgeref id="e66" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics82">
+    <edgeref id="e67" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics83">
+    <edgeref id="e68" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics95">
+    <edgeref id="e80" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics97">
     <edgeref id="e82" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics121">
-    <edgeref id="e84" />
+   <edge-set id="MethodBoundedGenerics98">
+    <edgeref id="e83" />
    </edge-set>
-   <edge-set id="MethodBoundedGenerics122">
-    <edgeref id="e85" />
+   <edge-set id="MethodBoundedGenerics102">
+    <edgeref id="e87" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics103">
+    <edgeref id="e88" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics129">
+    <edgeref id="e8" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics135">
+    <edgeref id="e98" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics148">
+    <edgeref id="e111" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics150">
+    <edgeref id="e113" />
+   </edge-set>
+   <edge-set id="MethodBoundedGenerics151">
+    <edgeref id="e114" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.lang.Object-toString---java.lang.String">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.ArrayList--init----void">
+    <stub-input>
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
+   <board-stub name="java.util.List-add-E--boolean">
+    <stub-input>
+     <stub-connection num="inReceiver0" width="wide" />
+     <stub-connection num="inClassTypeParam0" width="narrow" />
+     <stub-connection num="inClassTypeParam1" width="wide" />
+     <stub-connection num="inParam0" width="narrow" />
+    </stub-input>
+    <stub-output>
+     <stub-connection num="outReceiver0" width="wide" />
+     <stub-connection num="outClassTypeParam0" width="narrow" />
+     <stub-connection num="outClassTypeParam1" width="wide" />
+     <stub-connection num="outParam0" width="narrow" />
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="MethodBoundedGenerics">
     <node id="n0" kind="INCOMING">
      <input />
@@ -203,7 +299,7 @@
       <port edge="e23" num="input" />
      </input>
      <output>
-      <port edge="e26" num="0" />
+      <port edge="e147" num="output" />
      </output>
      <layout>
       </layout>
@@ -221,69 +317,28 @@
       <port edge="e24" num="input" />
      </input>
      <output>
-      <port edge="e28" num="0" />
+      <port edge="e148" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n52" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e27" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n53" kind="MERGE">
+    <node id="n149" kind="END">
      <input>
-      <port edge="e26" num="0" />
-      <port edge="e27" num="1" />
-     </input>
-     <output>
-      <port edge="e29" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n54" kind="MERGE">
-     <input>
-      <port edge="e29" num="0" />
-      <port edge="e30" num="1" />
-     </input>
-     <output>
-      <port edge="e118" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n55" kind="SPLIT">
-     <input>
-      <port edge="e28" num="0" />
-     </input>
-     <output>
-      <port edge="e30" num="1" />
-      <port edge="e119" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n120" kind="END">
-     <input>
-      <port edge="e118" num="input" />
+      <port edge="e147" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n121" kind="END">
+    <node id="n150" kind="END">
      <input>
-      <port edge="e119" num="input" />
+      <port edge="e148" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 0 at class MethodBoundedGenerics extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MethodBoundedGenerics {  MethodBoundedGenerics() { super(); }  @Nullable() public &lt;@NonNull() T&gt;T method(@Nullable() T inc, T inc2) { inc.toString(); T loc1 = inc2; loc1 = inc; inc = null; @NonNull() T loc3 = inc2; loc3 = inc; @Nullable() T loc2 = inc; List&lt;@NonNull() T&gt; list = new ArrayList&lt;@NonNull() T&gt;(); list.add(loc2); return loc3; }  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); } }" editable="true" id="e23" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e23" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n46" port="output" />
      </from>
@@ -301,7 +356,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e24" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e24" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n48" port="output" />
      </from>
@@ -319,36 +374,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MethodBoundedGenerics extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MethodBoundedGenerics {  MethodBoundedGenerics() { super(); }  @Nullable() public &lt;@NonNull() T&gt;T method(@Nullable() T inc, T inc2) { inc.toString(); T loc1 = inc2; loc1 = inc; inc = null; @NonNull() T loc3 = inc2; loc3 = inc; @Nullable() T loc2 = inc; List&lt;@NonNull() T&gt; list = new ArrayList&lt;@NonNull() T&gt;(); list.add(loc2); return loc3; }  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); } }" editable="true" id="e26" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e147" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n47" port="0" />
+      <noderef id="n47" port="output" />
      </from>
      <to>
-      <noderef id="n53" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e27" pinch="false" variableID="-1" width="narrow">
-     <from>
-      <noderef id="n52" port="0" />
-     </from>
-     <to>
-      <noderef id="n53" port="1" />
+      <noderef id="n149" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -361,90 +392,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e28" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e148" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n49" port="0" />
+      <noderef id="n49" port="output" />
      </from>
      <to>
-      <noderef id="n55" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MethodBoundedGenerics extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MethodBoundedGenerics {  MethodBoundedGenerics() { super(); }  @Nullable() public &lt;@NonNull() T&gt;T method(@Nullable() T inc, T inc2) { inc.toString(); T loc1 = inc2; loc1 = inc; inc = null; @NonNull() T loc3 = inc2; loc3 = inc; @Nullable() T loc2 = inc; List&lt;@NonNull() T&gt; list = new ArrayList&lt;@NonNull() T&gt;(); list.add(loc2); return loc3; }  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); } }" editable="true" id="e29" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n53" port="0" />
-     </from>
-     <to>
-      <noderef id="n54" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e30" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n55" port="1" />
-     </from>
-     <to>
-      <noderef id="n54" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class MethodBoundedGenerics extends type; tree &lt;&lt;missing tree&gt;&gt; within  class MethodBoundedGenerics {  MethodBoundedGenerics() { super(); }  @Nullable() public &lt;@NonNull() T&gt;T method(@Nullable() T inc, T inc2) { inc.toString(); T loc1 = inc2; loc1 = inc; inc = null; @NonNull() T loc3 = inc2; loc3 = inc; @Nullable() T loc2 = inc; List&lt;@NonNull() T&gt; list = new ArrayList&lt;@NonNull() T&gt;(); list.add(loc2); return loc3; }  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); } }" editable="true" id="e118" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n54" port="output" />
-     </from>
-     <to>
-      <noderef id="n120" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e119" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n55" port="output" />
-     </from>
-     <to>
-      <noderef id="n121" port="input" />
+      <noderef id="n150" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -467,7 +420,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e96" num="outputReturn0" />
+      <port edge="e125" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -486,12 +439,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e96" num="output" />
+      <port edge="e125" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n52" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e26" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n53" kind="CONNECT">
+     <input>
+      <port edge="e26" num="input" />
+     </input>
+     <output>
+      <port edge="e27" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n54" kind="END">
+     <input>
+      <port edge="e27" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -507,9 +486,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method MethodBoundedGenerics#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e96" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e26" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n52" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n53" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e27" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n53" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n54" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e125" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -517,6 +544,18 @@
       <noderef id="n3" port="outputReturn0" />
      </to>
      <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -543,12 +582,12 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e97" num="outMethodTypeParam0" />
-      <port edge="e98" num="outMethodTypeParam1" />
-      <port edge="e101" num="outParam0" />
-      <port edge="e102" num="outParam1" />
-      <port edge="e100" num="outReceiver0" />
-      <port edge="e99" num="outputReturn0" />
+      <port edge="e126" num="outMethodTypeParam0" />
+      <port edge="e127" num="outMethodTypeParam1" />
+      <port edge="e130" num="outParam0" />
+      <port edge="e131" num="outParam1" />
+      <port edge="e129" num="outReceiver0" />
+      <port edge="e128" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -559,7 +598,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e32" num="0" />
+      <port edge="e29" num="0" />
      </output>
      <layout>
       </layout>
@@ -569,7 +608,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e31" num="0" />
+      <port edge="e28" num="0" />
      </output>
      <layout>
       </layout>
@@ -587,7 +626,7 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e67" num="0" />
+      <port edge="e96" num="0" />
      </output>
      <layout>
       </layout>
@@ -597,7 +636,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e100" num="output" />
+      <port edge="e129" num="output" />
      </output>
      <layout>
       </layout>
@@ -607,7 +646,7 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e38" num="output" />
+      <port edge="e41" num="output" />
      </output>
      <layout>
       </layout>
@@ -617,7 +656,7 @@
       <port edge="e7" num="input" />
      </input>
      <output>
-      <port edge="e34" num="0" />
+      <port edge="e37" num="0" />
      </output>
      <layout>
       </layout>
@@ -635,7 +674,7 @@
       <port edge="e9" num="input" />
      </input>
      <output>
-      <port edge="e35" num="0" />
+      <port edge="e38" num="0" />
      </output>
      <layout>
       </layout>
@@ -653,7 +692,7 @@
       <port edge="e10" num="input" />
      </input>
      <output>
-      <port edge="e45" num="0" />
+      <port edge="e48" num="0" />
      </output>
      <layout>
       </layout>
@@ -671,7 +710,7 @@
       <port edge="e11" num="input" />
      </input>
      <output>
-      <port edge="e56" num="0" />
+      <port edge="e59" num="0" />
      </output>
      <layout>
       </layout>
@@ -689,7 +728,7 @@
       <port edge="e12" num="input" />
      </input>
      <output>
-      <port edge="e59" num="0" />
+      <port edge="e71" num="0" />
      </output>
      <layout>
       </layout>
@@ -707,7 +746,7 @@
       <port edge="e13" num="input" />
      </input>
      <output>
-      <port edge="e61" num="output" />
+      <port edge="e73" num="output" />
      </output>
      <layout>
       </layout>
@@ -725,7 +764,7 @@
       <port edge="e14" num="input" />
      </input>
      <output>
-      <port edge="e58" num="0" />
+      <port edge="e70" num="0" />
      </output>
      <layout>
       </layout>
@@ -743,7 +782,7 @@
       <port edge="e15" num="input" />
      </input>
      <output>
-      <port edge="e62" num="output" />
+      <port edge="e74" num="output" />
      </output>
      <layout>
       </layout>
@@ -761,7 +800,7 @@
       <port edge="e19" num="input" />
      </input>
      <output>
-      <port edge="e37" num="output" />
+      <port edge="e40" num="output" />
      </output>
      <layout>
       </layout>
@@ -779,7 +818,7 @@
       <port edge="e20" num="input" />
      </input>
      <output>
-      <port edge="e47" num="0" />
+      <port edge="e50" num="0" />
      </output>
      <layout>
       </layout>
@@ -797,313 +836,537 @@
       <port edge="e21" num="input" />
      </input>
      <output>
-      <port edge="e50" num="output" />
+      <port edge="e53" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n56" kind="MERGE">
+    <node id="n55" kind="MERGE">
      <input>
-      <port edge="e32" num="0" />
-      <port edge="e33" num="1" />
+      <port edge="e29" num="0" />
+      <port edge="e30" num="1" />
      </input>
      <output>
-      <port edge="e97" num="output" />
+      <port edge="e31" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n57" kind="SPLIT">
+    <node id="n56" kind="SPLIT">
      <input>
-      <port edge="e31" num="0" />
+      <port edge="e28" num="0" />
      </input>
      <output>
-      <port edge="e33" num="1" />
-      <port edge="e98" num="output" />
+      <port edge="e30" num="1" />
+      <port edge="e127" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n58" kind="MERGE">
+    <node id="n57" kind="SUBBOARD" name="java.lang.Object-toString---java.lang.String">
      <input>
-      <port edge="e35" num="0" />
-      <port edge="e36" num="1" />
+      <port edge="e32" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e40" num="0" />
+      <port edge="e33" num="outReceiver0" />
+      <port edge="e34" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n59" kind="SPLIT">
+    <node id="n58" kind="SPLIT">
      <input>
-      <port edge="e34" num="0" />
+      <port edge="e31" num="input" />
      </input>
      <output>
-      <port edge="e44" num="0" />
-      <port edge="e36" num="1" />
+      <port edge="e32" num="split" />
+      <port edge="e36" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n59" kind="CONNECT">
+     <input>
+      <port edge="e33" num="input" />
+     </input>
+     <output>
+      <port edge="e61" num="output" />
      </output>
      <layout>
       </layout>
     </node>
     <node id="n60" kind="CONNECT">
      <input>
-      <port edge="e37" num="input" />
+      <port edge="e34" num="input" />
      </input>
      <output>
-      <port edge="e114" num="output" />
+      <port edge="e35" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n61" kind="CONNECT">
+    <node id="n61" kind="END">
      <input>
-      <port edge="e38" num="input" />
+      <port edge="e35" num="input" />
      </input>
-     <output>
-      <port edge="e39" num="0" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n62" kind="MERGE">
+    <node id="n62" kind="END">
      <input>
-      <port edge="e40" num="0" />
-      <port edge="e41" num="1" />
+      <port edge="e36" num="input" />
      </input>
-     <output>
-      <port edge="e104" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
-    <node id="n63" kind="SPLIT">
+    <node id="n63" kind="MERGE">
      <input>
-      <port edge="e39" num="0" />
+      <port edge="e38" num="0" />
+      <port edge="e39" num="1" />
      </input>
      <output>
       <port edge="e43" num="0" />
-      <port edge="e41" num="1" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n64" kind="MERGE">
+    <node id="n64" kind="SPLIT">
      <input>
-      <port edge="e43" num="0" />
-      <port edge="e42" num="1" />
+      <port edge="e37" num="0" />
      </input>
      <output>
-      <port edge="e48" num="0" />
+      <port edge="e47" num="0" />
+      <port edge="e39" num="1" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n65" kind="START_SMALL_BALL">
-     <input />
+    <node id="n65" kind="CONNECT">
+     <input>
+      <port edge="e40" num="input" />
+     </input>
+     <output>
+      <port edge="e143" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n66" kind="CONNECT">
+     <input>
+      <port edge="e41" num="input" />
+     </input>
      <output>
       <port edge="e42" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n66" kind="MERGE">
+    <node id="n67" kind="MERGE">
      <input>
+      <port edge="e43" num="0" />
+      <port edge="e44" num="1" />
+     </input>
+     <output>
+      <port edge="e133" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n68" kind="SPLIT">
+     <input>
+      <port edge="e42" num="0" />
+     </input>
+     <output>
+      <port edge="e46" num="0" />
+      <port edge="e44" num="1" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n69" kind="MERGE">
+     <input>
+      <port edge="e46" num="0" />
+      <port edge="e45" num="1" />
+     </input>
+     <output>
+      <port edge="e51" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n70" kind="START_SMALL_BALL">
+     <input />
+     <output>
       <port edge="e45" num="0" />
-      <port edge="e46" num="1" />
-     </input>
-     <output>
-      <port edge="e53" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n67" kind="SPLIT">
-     <input>
-      <port edge="e44" num="0" />
-     </input>
-     <output>
-      <port edge="e46" num="1" />
-      <port edge="e102" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n68" kind="MERGE">
+    <node id="n71" kind="MERGE">
      <input>
       <port edge="e48" num="0" />
       <port edge="e49" num="1" />
      </input>
      <output>
-      <port edge="e101" num="output" />
+      <port edge="e56" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n69" kind="SPLIT">
+    <node id="n72" kind="SPLIT">
      <input>
       <port edge="e47" num="0" />
      </input>
      <output>
       <port edge="e49" num="1" />
-      <port edge="e51" num="output" />
+      <port edge="e131" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n70" kind="CONNECT">
+    <node id="n73" kind="MERGE">
      <input>
-      <port edge="e50" num="input" />
+      <port edge="e51" num="0" />
+      <port edge="e52" num="1" />
      </input>
      <output>
-      <port edge="e63" num="0" />
+      <port edge="e130" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n71" kind="CONNECT">
+    <node id="n74" kind="SPLIT">
      <input>
-      <port edge="e51" num="input" />
+      <port edge="e50" num="0" />
      </input>
      <output>
-      <port edge="e52" num="0" />
+      <port edge="e52" num="1" />
+      <port edge="e54" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n72" kind="MERGE">
+    <node id="n75" kind="CONNECT">
      <input>
-      <port edge="e53" num="0" />
-      <port edge="e54" num="1" />
+      <port edge="e53" num="input" />
      </input>
      <output>
-      <port edge="e64" num="0" />
+      <port edge="e92" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n73" kind="SPLIT">
+    <node id="n76" kind="CONNECT">
      <input>
-      <port edge="e52" num="0" />
+      <port edge="e54" num="input" />
      </input>
      <output>
       <port edge="e55" num="0" />
-      <port edge="e54" num="1" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n74" kind="MERGE">
+    <node id="n77" kind="MERGE">
      <input>
       <port edge="e56" num="0" />
       <port edge="e57" num="1" />
      </input>
      <output>
-      <port edge="e106" num="output" />
+      <port edge="e93" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n75" kind="SPLIT">
+    <node id="n78" kind="SPLIT">
      <input>
       <port edge="e55" num="0" />
      </input>
      <output>
+      <port edge="e58" num="0" />
       <port edge="e57" num="1" />
-      <port edge="e115" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n76" kind="MERGE">
+    <node id="n79" kind="MERGE">
      <input>
       <port edge="e59" num="0" />
       <port edge="e60" num="1" />
      </input>
      <output>
-      <port edge="e107" num="output" />
+      <port edge="e84" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n77" kind="SPLIT">
+    <node id="n80" kind="SPLIT">
      <input>
       <port edge="e58" num="0" />
      </input>
      <output>
       <port edge="e60" num="1" />
-      <port edge="e109" num="output" />
+      <port edge="e144" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n78" kind="CONNECT">
+    <node id="n81" kind="SUBBOARD" name="java.util.ArrayList--init----void">
+     <input>
+      <port edge="e62" num="inClassTypeParam0" />
+      <port edge="e63" num="inClassTypeParam1" />
+     </input>
+     <output>
+      <port edge="e64" num="outClassTypeParam0" />
+      <port edge="e65" num="outClassTypeParam1" />
+      <port edge="e67" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n82" kind="SPLIT">
      <input>
       <port edge="e61" num="input" />
      </input>
      <output>
-      <port edge="e108" num="output" />
+      <port edge="e62" num="split" />
+      <port edge="e69" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n79" kind="CONNECT">
-     <input>
-      <port edge="e62" num="input" />
-     </input>
+    <node id="n83" kind="START_LARGE_BALL">
+     <input />
      <output>
-      <port edge="e110" num="output" />
+      <port edge="e63" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n80" kind="MERGE">
+    <node id="n84" kind="CONNECT">
      <input>
-      <port edge="e64" num="0" />
-      <port edge="e65" num="1" />
+      <port edge="e64" num="input" />
      </input>
      <output>
-      <port edge="e105" num="output" />
+      <port edge="e78" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n81" kind="SPLIT">
+    <node id="n85" kind="CONNECT">
      <input>
-      <port edge="e63" num="0" />
+      <port edge="e65" num="input" />
      </input>
      <output>
-      <port edge="e66" num="0" />
-      <port edge="e65" num="1" />
+      <port edge="e66" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n82" kind="MERGE">
+    <node id="n86" kind="END">
      <input>
-      <port edge="e67" num="0" />
-      <port edge="e68" num="1" />
+      <port edge="e66" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n87" kind="CONNECT">
+     <input>
+      <port edge="e67" num="input" />
      </input>
      <output>
-      <port edge="e99" num="output" />
+      <port edge="e68" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n83" kind="SPLIT">
+    <node id="n88" kind="END">
      <input>
-      <port edge="e66" num="0" />
+      <port edge="e68" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n89" kind="END">
+     <input>
+      <port edge="e69" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n90" kind="MERGE">
+     <input>
+      <port edge="e71" num="0" />
+      <port edge="e72" num="1" />
      </input>
      <output>
-      <port edge="e68" num="1" />
-      <port edge="e116" num="output" />
+      <port edge="e75" num="output" />
      </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n91" kind="SPLIT">
+     <input>
+      <port edge="e70" num="0" />
+     </input>
+     <output>
+      <port edge="e72" num="1" />
+      <port edge="e138" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n92" kind="CONNECT">
+     <input>
+      <port edge="e73" num="input" />
+     </input>
+     <output>
+      <port edge="e137" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n93" kind="CONNECT">
+     <input>
+      <port edge="e74" num="input" />
+     </input>
+     <output>
+      <port edge="e139" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n94" kind="SUBBOARD" name="java.util.List-add-E--boolean">
+     <input>
+      <port edge="e79" num="inClassTypeParam0" />
+      <port edge="e80" num="inClassTypeParam1" />
+      <port edge="e85" num="inParam0" />
+      <port edge="e76" num="inReceiver0" />
+     </input>
+     <output>
+      <port edge="e81" num="outClassTypeParam0" />
+      <port edge="e82" num="outClassTypeParam1" />
+      <port edge="e86" num="outParam0" />
+      <port edge="e77" num="outReceiver0" />
+      <port edge="e87" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n95" kind="SPLIT">
+     <input>
+      <port edge="e75" num="input" />
+     </input>
+     <output>
+      <port edge="e76" num="split" />
+      <port edge="e89" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n96" kind="CONNECT">
+     <input>
+      <port edge="e77" num="input" />
+     </input>
+     <output>
+      <port edge="e136" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n97" kind="SPLIT">
+     <input>
+      <port edge="e78" num="input" />
+     </input>
+     <output>
+      <port edge="e79" num="split" />
+      <port edge="e90" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n98" kind="START_LARGE_BALL">
+     <input />
+     <output>
+      <port edge="e80" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n99" kind="CONNECT">
+     <input>
+      <port edge="e81" num="input" />
+     </input>
+     <output>
+      <port edge="e126" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n100" kind="CONNECT">
+     <input>
+      <port edge="e82" num="input" />
+     </input>
+     <output>
+      <port edge="e83" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n101" kind="END">
+     <input>
+      <port edge="e83" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n102" kind="SPLIT">
+     <input>
+      <port edge="e84" num="input" />
+     </input>
+     <output>
+      <port edge="e85" num="split" />
+      <port edge="e91" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n103" kind="CONNECT">
+     <input>
+      <port edge="e86" num="input" />
+     </input>
+     <output>
+      <port edge="e135" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n104" kind="CONNECT">
+     <input>
+      <port edge="e87" num="input" />
+     </input>
+     <output>
+      <port edge="e88" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n105" kind="END">
+     <input>
+      <port edge="e88" num="input" />
+     </input>
+     <output />
      <layout>
       </layout>
     </node>
     <node id="n106" kind="END">
      <input>
-      <port edge="e104" num="input" />
+      <port edge="e89" num="input" />
      </input>
      <output />
      <layout>
@@ -1111,7 +1374,7 @@
     </node>
     <node id="n107" kind="END">
      <input>
-      <port edge="e105" num="input" />
+      <port edge="e90" num="input" />
      </input>
      <output />
      <layout>
@@ -1119,69 +1382,137 @@
     </node>
     <node id="n108" kind="END">
      <input>
-      <port edge="e106" num="input" />
+      <port edge="e91" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n109" kind="END">
+    <node id="n109" kind="MERGE">
      <input>
-      <port edge="e107" num="input" />
+      <port edge="e93" num="0" />
+      <port edge="e94" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e134" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n110" kind="END">
+    <node id="n110" kind="SPLIT">
      <input>
-      <port edge="e108" num="input" />
+      <port edge="e92" num="0" />
      </input>
-     <output />
+     <output>
+      <port edge="e95" num="0" />
+      <port edge="e94" num="1" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n111" kind="END">
+    <node id="n111" kind="MERGE">
      <input>
-      <port edge="e109" num="input" />
+      <port edge="e96" num="0" />
+      <port edge="e97" num="1" />
      </input>
-     <output />
+     <output>
+      <port edge="e128" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n112" kind="END">
+    <node id="n112" kind="SPLIT">
      <input>
-      <port edge="e110" num="input" />
+      <port edge="e95" num="0" />
      </input>
-     <output />
+     <output>
+      <port edge="e97" num="1" />
+      <port edge="e145" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n116" kind="END">
+    <node id="n135" kind="END">
      <input>
-      <port edge="e114" num="input" />
+      <port edge="e133" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n117" kind="END">
+    <node id="n136" kind="END">
      <input>
-      <port edge="e115" num="input" />
+      <port edge="e134" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n118" kind="END">
+    <node id="n137" kind="END">
      <input>
-      <port edge="e116" num="input" />
+      <port edge="e135" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <node id="n138" kind="END">
+     <input>
+      <port edge="e136" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n139" kind="END">
+     <input>
+      <port edge="e137" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n140" kind="END">
+     <input>
+      <port edge="e138" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n141" kind="END">
+     <input>
+      <port edge="e139" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n145" kind="END">
+     <input>
+      <port edge="e143" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n146" kind="END">
+     <input>
+      <port edge="e144" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n147" kind="END">
+     <input>
+      <port edge="e145" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam0" />
      </from>
@@ -1197,15 +1528,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n6" port="inMethodTypeParam1" />
      </from>
@@ -1221,15 +1546,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e4" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -1247,7 +1566,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e5" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e5" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -1281,21 +1600,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="6" width="narrow">
      <from>
       <noderef id="n6" port="inParam0" />
      </from>
@@ -1313,7 +1620,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e7" pinch="false" variableID="7" width="narrow">
      <from>
       <noderef id="n6" port="inParam1" />
      </from>
@@ -1329,15 +1636,9 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e9" pinch="false" variableID="9" width="narrow">
      <from>
       <noderef id="n18" port="output" />
      </from>
@@ -1355,7 +1656,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T" editable="true" id="e10" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="12" width="narrow">
      <from>
       <noderef id="n20" port="output" />
      </from>
@@ -1373,7 +1674,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T" editable="true" id="e11" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="14" width="narrow">
      <from>
       <noderef id="n22" port="output" />
      </from>
@@ -1391,7 +1692,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List&lt;@NonNull() T&gt;" editable="true" id="e12" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e12" pinch="false" variableID="15" width="narrow">
      <from>
       <noderef id="n24" port="output" />
      </from>
@@ -1409,7 +1710,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 16 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree @NonNull() T at position ((3,0)) within List&lt;@NonNull() T&gt;" editable="true" id="e13" pinch="false" variableID="16" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="16" width="narrow">
      <from>
       <noderef id="n26" port="output" />
      </from>
@@ -1427,7 +1728,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e14" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="17" width="narrow">
      <from>
       <noderef id="n28" port="output" />
      </from>
@@ -1445,7 +1746,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree @NonNull() T at position ((3,0)) within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e15" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="18" width="narrow">
      <from>
       <noderef id="n30" port="output" />
      </from>
@@ -1463,7 +1764,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e19" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e19" pinch="false" variableID="10" width="narrow">
      <from>
       <noderef id="n38" port="output" />
      </from>
@@ -1481,7 +1782,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e20" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e20" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n40" port="output" />
      </from>
@@ -1499,7 +1800,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e21" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e21" pinch="false" variableID="13" width="narrow">
      <from>
       <noderef id="n42" port="output" />
      </from>
@@ -1517,27 +1818,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e31" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e28" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n9" port="0" />
-     </from>
-     <to>
-      <noderef id="n57" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
-     <from>
-      <noderef id="n8" port="0" />
      </from>
      <to>
       <noderef id="n56" port="0" />
@@ -1551,6 +1834,24 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e29" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n8" port="0" />
+     </from>
+     <to>
+      <noderef id="n55" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -1559,30 +1860,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e33" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e30" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n57" port="1" />
-     </from>
-     <to>
       <noderef id="n56" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e34" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n14" port="0" />
      </from>
      <to>
-      <noderef id="n59" port="0" />
+      <noderef id="n55" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1593,14 +1876,20 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T" editable="true" id="e35" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e31" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n19" port="0" />
+      <noderef id="n55" port="output" />
      </from>
      <to>
-      <noderef id="n58" port="0" />
+      <noderef id="n58" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1617,20 +1906,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e36" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e32" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n59" port="1" />
+      <noderef id="n58" port="split" />
      </from>
      <to>
-      <noderef id="n58" port="1" />
+      <noderef id="n57" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -1641,10 +1924,16 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e33" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n57" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n59" port="input" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -1655,9 +1944,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e37" pinch="false" variableID="10" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e34" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n39" port="output" />
+      <noderef id="n57" port="outputReturn0" />
      </from>
      <to>
       <noderef id="n60" port="input" />
@@ -1673,9 +1962,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e38" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e35" pinch="false" variableID="-4" width="wide">
      <from>
-      <noderef id="n13" port="output" />
+      <noderef id="n60" port="toEnd" />
      </from>
      <to>
       <noderef id="n61" port="input" />
@@ -1689,11 +1978,53 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e39" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e36" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n61" port="0" />
+      <noderef id="n58" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n62" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e37" pinch="false" variableID="7" width="narrow">
+     <from>
+      <noderef id="n14" port="0" />
+     </from>
+     <to>
+      <noderef id="n64" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e38" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n19" port="0" />
      </from>
      <to>
       <noderef id="n63" port="0" />
@@ -1707,24 +2038,6 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T" editable="true" id="e40" pinch="false" variableID="9" width="narrow">
-     <from>
-      <noderef id="n58" port="0" />
-     </from>
-     <to>
-      <noderef id="n62" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
       <point>
        </point>
       <point>
@@ -1733,30 +2046,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e41" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e39" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n63" port="1" />
-     </from>
-     <to>
-      <noderef id="n62" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e42" pinch="false" variableID="-3" width="narrow">
-     <from>
-      <noderef id="n65" port="0" />
-     </from>
-     <to>
       <noderef id="n64" port="1" />
+     </from>
+     <to>
+      <noderef id="n63" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1767,26 +2062,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e43" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e40" pinch="false" variableID="10" width="narrow">
      <from>
-      <noderef id="n63" port="0" />
+      <noderef id="n39" port="output" />
      </from>
      <to>
-      <noderef id="n64" port="0" />
+      <noderef id="n65" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1797,20 +2080,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e44" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e41" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n59" port="0" />
+      <noderef id="n13" port="output" />
      </from>
      <to>
-      <noderef id="n67" port="0" />
+      <noderef id="n66" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -1821,89 +2098,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T" editable="true" id="e45" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e42" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n21" port="0" />
-     </from>
-     <to>
       <noderef id="n66" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e46" pinch="false" variableID="7" width="narrow">
-     <from>
-      <noderef id="n67" port="1" />
-     </from>
-     <to>
-      <noderef id="n66" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e47" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n41" port="0" />
-     </from>
-     <to>
-      <noderef id="n69" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e48" pinch="false" variableID="6" width="narrow">
-     <from>
-      <noderef id="n64" port="0" />
      </from>
      <to>
       <noderef id="n68" port="0" />
@@ -1917,10 +2116,16 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e43" pinch="false" variableID="9" width="narrow">
+     <from>
+      <noderef id="n63" port="0" />
+     </from>
+     <to>
+      <noderef id="n67" port="0" />
+     </to>
+     <edge-layout>
       <point>
        </point>
       <point>
@@ -1931,42 +2136,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e49" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e44" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n69" port="1" />
-     </from>
-     <to>
       <noderef id="n68" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e50" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n43" port="output" />
      </from>
      <to>
-      <noderef id="n70" port="input" />
+      <noderef id="n67" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1979,12 +2154,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e51" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e45" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n69" port="output" />
+      <noderef id="n70" port="0" />
      </from>
      <to>
-      <noderef id="n71" port="input" />
+      <noderef id="n69" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -1995,20 +2170,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e52" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e46" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n71" port="0" />
+      <noderef id="n68" port="0" />
      </from>
      <to>
-      <noderef id="n73" port="0" />
+      <noderef id="n69" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2019,11 +2188,23 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T" editable="true" id="e53" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e47" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n66" port="0" />
+      <noderef id="n64" port="0" />
      </from>
      <to>
       <noderef id="n72" port="0" />
@@ -2037,44 +2218,56 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e54" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e48" pinch="false" variableID="12" width="narrow">
      <from>
-      <noderef id="n73" port="1" />
+      <noderef id="n21" port="0" />
      </from>
      <to>
+      <noderef id="n71" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e49" pinch="false" variableID="7" width="narrow">
+     <from>
       <noderef id="n72" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e55" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n73" port="0" />
      </from>
      <to>
-      <noderef id="n75" port="0" />
+      <noderef id="n71" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2085,11 +2278,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T" editable="true" id="e56" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e50" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n23" port="0" />
+      <noderef id="n41" port="0" />
      </from>
      <to>
       <noderef id="n74" port="0" />
@@ -2103,6 +2302,36 @@
        </point>
       <point>
        </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e51" pinch="false" variableID="6" width="narrow">
+     <from>
+      <noderef id="n69" port="0" />
+     </from>
+     <to>
+      <noderef id="n73" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2111,12 +2340,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e57" pinch="false" variableID="11" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e52" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n75" port="1" />
+      <noderef id="n74" port="1" />
      </from>
      <to>
-      <noderef id="n74" port="1" />
+      <noderef id="n73" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e53" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n43" port="output" />
+     </from>
+     <to>
+      <noderef id="n75" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2129,9 +2382,45 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e58" pinch="false" variableID="17" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e54" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n29" port="0" />
+      <noderef id="n74" port="output" />
+     </from>
+     <to>
+      <noderef id="n76" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e55" pinch="false" variableID="11" width="narrow">
+     <from>
+      <noderef id="n76" port="0" />
+     </from>
+     <to>
+      <noderef id="n78" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e56" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n71" port="0" />
      </from>
      <to>
       <noderef id="n77" port="0" />
@@ -2147,36 +2436,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List&lt;@NonNull() T&gt;" editable="true" id="e59" pinch="false" variableID="15" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e57" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n25" port="0" />
+      <noderef id="n78" port="1" />
      </from>
      <to>
-      <noderef id="n76" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e60" pinch="false" variableID="17" width="narrow">
-     <from>
       <noderef id="n77" port="1" />
-     </from>
-     <to>
-      <noderef id="n76" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2199,16 +2464,10 @@
        </point>
       <point>
        </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 16 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree @NonNull() T at position ((3,0)) within List&lt;@NonNull() T&gt;" editable="true" id="e61" pinch="false" variableID="16" width="narrow">
-     <from>
-      <noderef id="n27" port="output" />
-     </from>
-     <to>
-      <noderef id="n78" port="input" />
-     </to>
-     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
       <point>
        </point>
       <point>
@@ -2219,45 +2478,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 18 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree @NonNull() T at position ((3,0)) within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e62" pinch="false" variableID="18" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e58" pinch="false" variableID="11" width="narrow">
      <from>
-      <noderef id="n31" port="output" />
-     </from>
-     <to>
-      <noderef id="n79" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e63" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n70" port="0" />
-     </from>
-     <to>
-      <noderef id="n81" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T" editable="true" id="e64" pinch="false" variableID="12" width="narrow">
-     <from>
-      <noderef id="n72" port="0" />
+      <noderef id="n78" port="0" />
      </from>
      <to>
       <noderef id="n80" port="0" />
@@ -2277,38 +2500,236 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e65" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e59" pinch="false" variableID="14" width="narrow">
      <from>
-      <noderef id="n81" port="1" />
+      <noderef id="n23" port="0" />
      </from>
      <to>
+      <noderef id="n79" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e60" pinch="false" variableID="11" width="narrow">
+     <from>
       <noderef id="n80" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e66" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n81" port="0" />
      </from>
      <to>
-      <noderef id="n83" port="0" />
+      <noderef id="n79" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e61" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n59" port="output" />
+     </from>
+     <to>
+      <noderef id="n82" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e62" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n82" port="split" />
+     </from>
+     <to>
+      <noderef id="n81" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e63" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n83" port="output" />
+     </from>
+     <to>
+      <noderef id="n81" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e64" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n81" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n84" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e65" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n81" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n85" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e66" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n85" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n86" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e67" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n81" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n87" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e68" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n87" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n88" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e69" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n82" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n89" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2333,12 +2754,570 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e67" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e70" pinch="false" variableID="17" width="narrow">
+     <from>
+      <noderef id="n29" port="0" />
+     </from>
+     <to>
+      <noderef id="n91" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e71" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n25" port="0" />
+     </from>
+     <to>
+      <noderef id="n90" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e72" pinch="false" variableID="17" width="narrow">
+     <from>
+      <noderef id="n91" port="1" />
+     </from>
+     <to>
+      <noderef id="n90" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e73" pinch="false" variableID="16" width="narrow">
+     <from>
+      <noderef id="n27" port="output" />
+     </from>
+     <to>
+      <noderef id="n92" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e74" pinch="false" variableID="18" width="narrow">
+     <from>
+      <noderef id="n31" port="output" />
+     </from>
+     <to>
+      <noderef id="n93" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e75" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n90" port="output" />
+     </from>
+     <to>
+      <noderef id="n95" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e76" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n95" port="split" />
+     </from>
+     <to>
+      <noderef id="n94" port="inReceiver0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e77" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n94" port="outReceiver0" />
+     </from>
+     <to>
+      <noderef id="n96" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e78" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n84" port="output" />
+     </from>
+     <to>
+      <noderef id="n97" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e79" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n97" port="split" />
+     </from>
+     <to>
+      <noderef id="n94" port="inClassTypeParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e80" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n98" port="output" />
+     </from>
+     <to>
+      <noderef id="n94" port="inClassTypeParam1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e81" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n94" port="outClassTypeParam0" />
+     </from>
+     <to>
+      <noderef id="n99" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e82" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n94" port="outClassTypeParam1" />
+     </from>
+     <to>
+      <noderef id="n100" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e83" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n100" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n101" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e84" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n79" port="output" />
+     </from>
+     <to>
+      <noderef id="n102" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e85" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n102" port="split" />
+     </from>
+     <to>
+      <noderef id="n94" port="inParam0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e86" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n94" port="outParam0" />
+     </from>
+     <to>
+      <noderef id="n103" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e87" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n94" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n104" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e88" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n104" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n105" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e89" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n95" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n106" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e90" pinch="false" variableID="2" width="narrow">
+     <from>
+      <noderef id="n97" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n107" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e91" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n102" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n108" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e92" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n75" port="0" />
+     </from>
+     <to>
+      <noderef id="n110" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e93" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n77" port="0" />
+     </from>
+     <to>
+      <noderef id="n109" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e94" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n110" port="1" />
+     </from>
+     <to>
+      <noderef id="n109" port="1" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e95" pinch="false" variableID="13" width="narrow">
+     <from>
+      <noderef id="n110" port="0" />
+     </from>
+     <to>
+      <noderef id="n112" port="0" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e96" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n11" port="0" />
      </from>
      <to>
-      <noderef id="n82" port="0" />
+      <noderef id="n111" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -2349,20 +3328,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e68" pinch="false" variableID="13" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e97" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n83" port="1" />
+      <noderef id="n112" port="1" />
      </from>
      <to>
-      <noderef id="n82" port="1" />
+      <noderef id="n111" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -2373,23 +3346,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter bound 0 &amp; 0; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within @NonNull() TAtm: @VarAnnot(2) Object" editable="true" id="e97" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e126" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n56" port="output" />
+      <noderef id="n99" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam0" />
@@ -2409,23 +3370,11 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e98" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e127" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n57" port="output" />
+      <noderef id="n56" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outMethodTypeParam1" />
@@ -2465,9 +3414,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e99" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e128" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n82" port="output" />
+      <noderef id="n111" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outputReturn0" />
@@ -2487,9 +3436,21 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 5 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; receiver; tree &lt;&lt;missing tree&gt;&gt; within  @Nullable() public &lt;@NonNull() T&gt;T method(@Nullable() T inc, T inc2) { inc.toString(); T loc1 = inc2; loc1 = inc; inc = null; @NonNull() T loc3 = inc2; loc3 = inc; @Nullable() T loc2 = inc; List&lt;@NonNull() T&gt; list = new ArrayList&lt;@NonNull() T&gt;(); list.add(loc2); return loc3; }Atm: @VarAnnot(5) MethodBoundedGenerics" editable="true" id="e100" pinch="false" variableID="5" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e129" pinch="false" variableID="5" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>
@@ -2511,11 +3472,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T" editable="true" id="e101" pinch="false" variableID="6" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e130" pinch="false" variableID="6" width="narrow">
      <from>
-      <noderef id="n68" port="output" />
+      <noderef id="n73" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam0" />
@@ -2541,11 +3508,17 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 7 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 1; tree T" editable="true" id="e102" pinch="false" variableID="7" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e131" pinch="false" variableID="7" width="narrow">
      <from>
-      <noderef id="n67" port="output" />
+      <noderef id="n72" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outParam1" />
@@ -2573,12 +3546,36 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T" editable="true" id="e104" pinch="false" variableID="9" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e133" pinch="false" variableID="9" width="narrow">
      <from>
-      <noderef id="n62" port="output" />
+      <noderef id="n67" port="output" />
      </from>
      <to>
-      <noderef id="n106" port="input" />
+      <noderef id="n135" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e134" pinch="false" variableID="12" width="narrow">
+     <from>
+      <noderef id="n109" port="output" />
+     </from>
+     <to>
+      <noderef id="n136" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2591,12 +3588,126 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T" editable="true" id="e105" pinch="false" variableID="12" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e135" pinch="false" variableID="14" width="narrow">
+     <from>
+      <noderef id="n103" port="output" />
+     </from>
+     <to>
+      <noderef id="n137" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e136" pinch="false" variableID="15" width="narrow">
+     <from>
+      <noderef id="n96" port="output" />
+     </from>
+     <to>
+      <noderef id="n138" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e137" pinch="false" variableID="16" width="narrow">
+     <from>
+      <noderef id="n92" port="output" />
+     </from>
+     <to>
+      <noderef id="n139" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e138" pinch="false" variableID="17" width="narrow">
+     <from>
+      <noderef id="n91" port="output" />
+     </from>
+     <to>
+      <noderef id="n140" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e139" pinch="false" variableID="18" width="narrow">
+     <from>
+      <noderef id="n93" port="output" />
+     </from>
+     <to>
+      <noderef id="n141" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e143" pinch="false" variableID="10" width="narrow">
+     <from>
+      <noderef id="n65" port="output" />
+     </from>
+     <to>
+      <noderef id="n145" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e144" pinch="false" variableID="11" width="narrow">
      <from>
       <noderef id="n80" port="output" />
      </from>
      <to>
-      <noderef id="n107" port="input" />
+      <noderef id="n146" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2609,150 +3720,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 14 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc2(0); tree T" editable="true" id="e106" pinch="false" variableID="14" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e145" pinch="false" variableID="13" width="narrow">
      <from>
-      <noderef id="n74" port="output" />
+      <noderef id="n112" port="output" />
      </from>
      <to>
-      <noderef id="n108" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 15 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree List within List&lt;@NonNull() T&gt;" editable="true" id="e107" pinch="false" variableID="15" width="narrow">
-     <from>
-      <noderef id="n76" port="output" />
-     </from>
-     <to>
-      <noderef id="n109" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 16 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable list(0); tree @NonNull() T at position ((3,0)) within List&lt;@NonNull() T&gt;" editable="true" id="e108" pinch="false" variableID="16" width="narrow">
-     <from>
-      <noderef id="n78" port="output" />
-     </from>
-     <to>
-      <noderef id="n110" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 17 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree ArrayList within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e109" pinch="false" variableID="17" width="narrow">
-     <from>
-      <noderef id="n77" port="output" />
-     </from>
-     <to>
-      <noderef id="n111" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 18 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; creation 0; tree @NonNull() T at position ((3,0)) within ArrayList&lt;@NonNull() T&gt;" editable="true" id="e110" pinch="false" variableID="18" width="narrow">
-     <from>
-      <noderef id="n79" port="output" />
-     </from>
-     <to>
-      <noderef id="n112" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #10 Declared Variable: Variable 9 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc1(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e114" pinch="false" variableID="10" width="narrow">
-     <from>
-      <noderef id="n60" port="output" />
-     </from>
-     <to>
-      <noderef id="n116" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #11 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set(RefinementVariable #19 Declared Variable: Variable 6 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; parameter 0; tree T IfTest: false mergedTo: Set())" editable="true" id="e115" pinch="false" variableID="11" width="narrow">
-     <from>
-      <noderef id="n75" port="output" />
-     </from>
-     <to>
-      <noderef id="n117" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="RefinementVariable #13 Declared Variable: Variable 12 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; local variable loc3(0); tree T IfTest: false mergedTo: Set()" editable="true" id="e116" pinch="false" variableID="13" width="narrow">
-     <from>
-      <noderef id="n83" port="output" />
-     </from>
-     <to>
-      <noderef id="n118" port="input" />
+      <noderef id="n147" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -2777,7 +3750,7 @@
     </node>
     <node id="n16" kind="OUTGOING">
      <input>
-      <port edge="e103" num="outReceiver0" />
+      <port edge="e132" num="outReceiver0" />
      </input>
      <output />
      <layout>
@@ -2788,7 +3761,7 @@
       <port edge="e8" num="input" />
      </input>
      <output>
-      <port edge="e71" num="output" />
+      <port edge="e100" num="output" />
      </output>
      <layout>
       </layout>
@@ -2806,7 +3779,7 @@
       <port edge="e16" num="input" />
      </input>
      <output>
-      <port edge="e70" num="0" />
+      <port edge="e99" num="0" />
      </output>
      <layout>
       </layout>
@@ -2824,7 +3797,7 @@
       <port edge="e17" num="input" />
      </input>
      <output>
-      <port edge="e94" num="0" />
+      <port edge="e123" num="0" />
      </output>
      <layout>
       </layout>
@@ -2842,7 +3815,7 @@
       <port edge="e18" num="input" />
      </input>
      <output>
-      <port edge="e74" num="output" />
+      <port edge="e103" num="output" />
      </output>
      <layout>
       </layout>
@@ -2860,7 +3833,7 @@
       <port edge="e22" num="input" />
      </input>
      <output>
-      <port edge="e76" num="output" />
+      <port edge="e105" num="output" />
      </output>
      <layout>
       </layout>
@@ -2878,259 +3851,178 @@
       <port edge="e25" num="input" />
      </input>
      <output>
-      <port edge="e91" num="toMerge" />
+      <port edge="e120" num="toMerge" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n84" kind="MERGE">
+    <node id="n113" kind="MERGE">
      <input>
-      <port edge="e70" num="0" />
-      <port edge="e69" num="1" />
+      <port edge="e99" num="0" />
+      <port edge="e98" num="1" />
      </input>
      <output>
-      <port edge="e80" num="output" />
+      <port edge="e109" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n85" kind="START_SMALL_BALL">
+    <node id="n114" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e69" num="0" />
+      <port edge="e98" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n86" kind="SUBBOARD" name="MethodBoundedGenerics-method-Ljava-lang-Object-Ljava-lang-Object---Ljava-lang-Object-">
+    <node id="n115" kind="SUBBOARD" name="MethodBoundedGenerics-method-Ljava-lang-Object-Ljava-lang-Object---Ljava-lang-Object-">
      <input>
-      <port edge="e75" num="inMethodTypeParam0" />
-      <port edge="e77" num="inMethodTypeParam1" />
-      <port edge="e81" num="inParam0" />
-      <port edge="e82" num="inParam1" />
-      <port edge="e72" num="inReceiver0" />
+      <port edge="e104" num="inMethodTypeParam0" />
+      <port edge="e106" num="inMethodTypeParam1" />
+      <port edge="e110" num="inParam0" />
+      <port edge="e111" num="inParam1" />
+      <port edge="e101" num="inReceiver0" />
      </input>
      <output>
-      <port edge="e78" num="outMethodTypeParam0" />
-      <port edge="e79" num="outMethodTypeParam1" />
-      <port edge="e83" num="outParam0" />
-      <port edge="e84" num="outParam1" />
-      <port edge="e73" num="outReceiver0" />
-      <port edge="e86" num="outputReturn0" />
+      <port edge="e107" num="outMethodTypeParam0" />
+      <port edge="e108" num="outMethodTypeParam1" />
+      <port edge="e112" num="outParam0" />
+      <port edge="e113" num="outParam1" />
+      <port edge="e102" num="outReceiver0" />
+      <port edge="e115" num="outputReturn0" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n87" kind="SPLIT">
+    <node id="n116" kind="SPLIT">
      <input>
-      <port edge="e71" num="input" />
+      <port edge="e100" num="input" />
      </input>
      <output>
-      <port edge="e72" num="split" />
-      <port edge="e87" num="toEnd" />
+      <port edge="e101" num="split" />
+      <port edge="e116" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n88" kind="CONNECT">
+    <node id="n117" kind="CONNECT">
      <input>
-      <port edge="e73" num="input" />
+      <port edge="e102" num="input" />
      </input>
      <output>
-      <port edge="e103" num="output" />
+      <port edge="e132" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n89" kind="SPLIT">
+    <node id="n118" kind="SPLIT">
      <input>
-      <port edge="e74" num="input" />
+      <port edge="e103" num="input" />
      </input>
      <output>
-      <port edge="e75" num="split" />
-      <port edge="e88" num="toEnd" />
+      <port edge="e104" num="split" />
+      <port edge="e117" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n90" kind="SPLIT">
+    <node id="n119" kind="SPLIT">
      <input>
-      <port edge="e76" num="input" />
+      <port edge="e105" num="input" />
      </input>
      <output>
-      <port edge="e77" num="split" />
-      <port edge="e89" num="toEnd" />
+      <port edge="e106" num="split" />
+      <port edge="e118" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n91" kind="CONNECT">
+    <node id="n120" kind="CONNECT">
      <input>
-      <port edge="e78" num="input" />
+      <port edge="e107" num="input" />
      </input>
      <output>
-      <port edge="e113" num="output" />
+      <port edge="e142" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n92" kind="CONNECT">
+    <node id="n121" kind="CONNECT">
      <input>
-      <port edge="e79" num="input" />
+      <port edge="e108" num="input" />
      </input>
      <output>
-      <port edge="e117" num="output" />
+      <port edge="e146" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n93" kind="SPLIT">
+    <node id="n122" kind="SPLIT">
      <input>
-      <port edge="e80" num="input" />
+      <port edge="e109" num="input" />
      </input>
      <output>
-      <port edge="e81" num="split" />
-      <port edge="e90" num="toEnd" />
+      <port edge="e110" num="split" />
+      <port edge="e119" num="toEnd" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n94" kind="START_SMALL_BALL">
+    <node id="n123" kind="START_SMALL_BALL">
      <input />
-     <output>
-      <port edge="e82" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n95" kind="CONNECT">
-     <input>
-      <port edge="e83" num="input" />
-     </input>
      <output>
       <port edge="e111" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n96" kind="CONNECT">
-     <input>
-      <port edge="e84" num="input" />
-     </input>
-     <output>
-      <port edge="e85" num="toEnd" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n97" kind="END">
-     <input>
-      <port edge="e85" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n98" kind="CONNECT">
-     <input>
-      <port edge="e86" num="input" />
-     </input>
-     <output>
-      <port edge="e92" num="toMerge" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n99" kind="END">
-     <input>
-      <port edge="e87" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n100" kind="END">
-     <input>
-      <port edge="e88" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n101" kind="END">
-     <input>
-      <port edge="e89" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n102" kind="END">
-     <input>
-      <port edge="e90" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n103" kind="MERGE">
-     <input>
-      <port edge="e91" num="first" />
-      <port edge="e92" num="second" />
-     </input>
-     <output>
-      <port edge="e93" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n104" kind="MERGE">
-     <input>
-      <port edge="e94" num="0" />
-      <port edge="e95" num="1" />
-     </input>
-     <output>
-      <port edge="e112" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n105" kind="SPLIT">
-     <input>
-      <port edge="e93" num="0" />
-     </input>
-     <output>
-      <port edge="e95" num="1" />
-      <port edge="e120" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n113" kind="END">
-     <input>
-      <port edge="e111" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <node id="n114" kind="END">
+    <node id="n124" kind="CONNECT">
      <input>
       <port edge="e112" num="input" />
      </input>
-     <output />
+     <output>
+      <port edge="e140" num="output" />
+     </output>
      <layout>
       </layout>
     </node>
-    <node id="n115" kind="END">
+    <node id="n125" kind="CONNECT">
      <input>
       <port edge="e113" num="input" />
+     </input>
+     <output>
+      <port edge="e114" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n126" kind="END">
+     <input>
+      <port edge="e114" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n119" kind="END">
+    <node id="n127" kind="CONNECT">
+     <input>
+      <port edge="e115" num="input" />
+     </input>
+     <output>
+      <port edge="e121" num="toMerge" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n128" kind="END">
+     <input>
+      <port edge="e116" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n129" kind="END">
      <input>
       <port edge="e117" num="input" />
      </input>
@@ -3138,15 +4030,96 @@
      <layout>
       </layout>
     </node>
-    <node id="n122" kind="END">
+    <node id="n130" kind="END">
      <input>
-      <port edge="e120" num="input" />
+      <port edge="e118" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="this" editable="false" id="e8" pinch="false" variableID="-1" width="narrow">
+    <node id="n131" kind="END">
+     <input>
+      <port edge="e119" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n132" kind="MERGE">
+     <input>
+      <port edge="e120" num="first" />
+      <port edge="e121" num="second" />
+     </input>
+     <output>
+      <port edge="e122" num="0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n133" kind="MERGE">
+     <input>
+      <port edge="e123" num="0" />
+      <port edge="e124" num="1" />
+     </input>
+     <output>
+      <port edge="e141" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n134" kind="SPLIT">
+     <input>
+      <port edge="e122" num="0" />
+     </input>
+     <output>
+      <port edge="e124" num="1" />
+      <port edge="e149" num="output" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n142" kind="END">
+     <input>
+      <port edge="e140" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n143" kind="END">
+     <input>
+      <port edge="e141" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n144" kind="END">
+     <input>
+      <port edge="e142" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n148" kind="END">
+     <input>
+      <port edge="e146" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <node id="n151" kind="END">
+     <input>
+      <port edge="e149" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n15" port="inReceiver0" />
      </from>
@@ -3164,7 +4137,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e16" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="20" width="narrow">
      <from>
       <noderef id="n32" port="output" />
      </from>
@@ -3182,7 +4155,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 21 at method MethodBoundedGenerics#test():V local variable s2(0); tree String" editable="true" id="e17" pinch="false" variableID="21" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e17" pinch="false" variableID="21" width="narrow">
      <from>
       <noderef id="n34" port="output" />
      </from>
@@ -3200,7 +4173,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e18" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e18" pinch="false" variableID="22" width="narrow">
      <from>
       <noderef id="n36" port="output" />
      </from>
@@ -3218,7 +4191,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e22" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n44" port="output" />
      </from>
@@ -3236,7 +4209,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e25" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e25" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n50" port="output" />
      </from>
@@ -3254,12 +4227,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e69" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e98" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n85" port="0" />
+      <noderef id="n114" port="0" />
      </from>
      <to>
-      <noderef id="n84" port="1" />
+      <noderef id="n113" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -3278,12 +4251,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e70" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e99" pinch="false" variableID="20" width="narrow">
      <from>
       <noderef id="n33" port="0" />
      </from>
      <to>
-      <noderef id="n84" port="0" />
+      <noderef id="n113" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3296,12 +4269,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MethodBoundedGenerics#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); }Atm: @VarAnnot(8) MethodBoundedGenerics" editable="true" id="e71" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e100" pinch="false" variableID="8" width="narrow">
      <from>
       <noderef id="n17" port="output" />
      </from>
      <to>
-      <noderef id="n87" port="input" />
+      <noderef id="n116" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3314,12 +4287,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MethodBoundedGenerics#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); }Atm: @VarAnnot(8) MethodBoundedGenerics" editable="true" id="e72" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e101" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n87" port="split" />
+      <noderef id="n116" port="split" />
      </from>
      <to>
-      <noderef id="n86" port="inReceiver0" />
+      <noderef id="n115" port="inReceiver0" />
      </to>
      <edge-layout>
       <point>
@@ -3344,12 +4317,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MethodBoundedGenerics#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); }Atm: @VarAnnot(8) MethodBoundedGenerics" editable="true" id="e73" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e102" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n86" port="outReceiver0" />
+      <noderef id="n115" port="outReceiver0" />
      </from>
      <to>
-      <noderef id="n88" port="input" />
+      <noderef id="n117" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3368,12 +4341,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e74" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e103" pinch="false" variableID="22" width="narrow">
      <from>
       <noderef id="n37" port="output" />
      </from>
      <to>
-      <noderef id="n89" port="input" />
+      <noderef id="n118" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3386,12 +4359,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e75" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e104" pinch="false" variableID="22" width="narrow">
      <from>
-      <noderef id="n89" port="split" />
+      <noderef id="n118" port="split" />
      </from>
      <to>
-      <noderef id="n86" port="inMethodTypeParam0" />
+      <noderef id="n115" port="inMethodTypeParam0" />
      </to>
      <edge-layout>
       <point>
@@ -3404,12 +4377,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e76" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e105" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n45" port="output" />
      </from>
      <to>
-      <noderef id="n90" port="input" />
+      <noderef id="n119" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3422,12 +4395,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e77" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e106" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n90" port="split" />
+      <noderef id="n119" port="split" />
      </from>
      <to>
-      <noderef id="n86" port="inMethodTypeParam1" />
+      <noderef id="n115" port="inMethodTypeParam1" />
      </to>
      <edge-layout>
       <point>
@@ -3446,12 +4419,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e78" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e107" pinch="false" variableID="22" width="narrow">
      <from>
-      <noderef id="n86" port="outMethodTypeParam0" />
+      <noderef id="n115" port="outMethodTypeParam0" />
      </from>
      <to>
-      <noderef id="n91" port="input" />
+      <noderef id="n120" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3464,12 +4437,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e79" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e108" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n86" port="outMethodTypeParam1" />
+      <noderef id="n115" port="outMethodTypeParam1" />
      </from>
      <to>
-      <noderef id="n92" port="input" />
+      <noderef id="n121" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3482,12 +4455,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e80" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e109" pinch="false" variableID="20" width="narrow">
      <from>
-      <noderef id="n84" port="output" />
+      <noderef id="n113" port="output" />
      </from>
      <to>
-      <noderef id="n93" port="input" />
+      <noderef id="n122" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3500,12 +4473,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e81" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e110" pinch="false" variableID="20" width="narrow">
      <from>
-      <noderef id="n93" port="split" />
+      <noderef id="n122" port="split" />
      </from>
      <to>
-      <noderef id="n86" port="inParam0" />
+      <noderef id="n115" port="inParam0" />
      </to>
      <edge-layout>
       <point>
@@ -3530,12 +4503,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e82" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e111" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n94" port="output" />
+      <noderef id="n123" port="output" />
      </from>
      <to>
-      <noderef id="n86" port="inParam1" />
+      <noderef id="n115" port="inParam1" />
      </to>
      <edge-layout>
       <point>
@@ -3548,12 +4521,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e83" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e112" pinch="false" variableID="20" width="narrow">
      <from>
-      <noderef id="n86" port="outParam0" />
+      <noderef id="n115" port="outParam0" />
      </from>
      <to>
-      <noderef id="n95" port="input" />
+      <noderef id="n124" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3566,12 +4539,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e84" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e113" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n86" port="outParam1" />
+      <noderef id="n115" port="outParam1" />
      </from>
      <to>
-      <noderef id="n96" port="input" />
+      <noderef id="n125" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3584,12 +4557,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="t" editable="false" id="e85" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e114" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n96" port="toEnd" />
+      <noderef id="n125" port="toEnd" />
      </from>
      <to>
-      <noderef id="n97" port="input" />
+      <noderef id="n126" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3608,12 +4581,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e86" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e115" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n86" port="outputReturn0" />
+      <noderef id="n115" port="outputReturn0" />
      </from>
      <to>
-      <noderef id="n98" port="input" />
+      <noderef id="n127" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3632,12 +4605,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MethodBoundedGenerics#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); }Atm: @VarAnnot(8) MethodBoundedGenerics" editable="true" id="e87" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e116" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n87" port="toEnd" />
+      <noderef id="n116" port="toEnd" />
      </from>
      <to>
-      <noderef id="n99" port="input" />
+      <noderef id="n128" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3656,12 +4629,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e88" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e117" pinch="false" variableID="22" width="narrow">
      <from>
-      <noderef id="n89" port="toEnd" />
+      <noderef id="n118" port="toEnd" />
      </from>
      <to>
-      <noderef id="n100" port="input" />
+      <noderef id="n129" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3680,12 +4653,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e89" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e118" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n90" port="toEnd" />
+      <noderef id="n119" port="toEnd" />
      </from>
      <to>
-      <noderef id="n101" port="input" />
+      <noderef id="n130" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3716,12 +4689,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e90" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e119" pinch="false" variableID="20" width="narrow">
      <from>
-      <noderef id="n93" port="toEnd" />
+      <noderef id="n122" port="toEnd" />
      </from>
      <to>
-      <noderef id="n102" port="input" />
+      <noderef id="n131" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3732,20 +4705,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e91" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e120" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n51" port="toMerge" />
      </from>
      <to>
-      <noderef id="n103" port="first" />
+      <noderef id="n132" port="first" />
      </to>
      <edge-layout>
       <point>
@@ -3758,12 +4725,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e92" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e121" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n98" port="toMerge" />
+      <noderef id="n127" port="toMerge" />
      </from>
      <to>
-      <noderef id="n103" port="second" />
+      <noderef id="n132" port="second" />
      </to>
      <edge-layout>
       <point>
@@ -3782,12 +4749,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e93" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e122" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n103" port="0" />
+      <noderef id="n132" port="0" />
      </from>
      <to>
-      <noderef id="n105" port="0" />
+      <noderef id="n134" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3800,12 +4767,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 21 at method MethodBoundedGenerics#test():V local variable s2(0); tree String" editable="true" id="e94" pinch="false" variableID="21" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e123" pinch="false" variableID="21" width="narrow">
      <from>
       <noderef id="n35" port="0" />
      </from>
      <to>
-      <noderef id="n104" port="0" />
+      <noderef id="n133" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -3824,12 +4791,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e95" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e124" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n105" port="1" />
+      <noderef id="n134" port="1" />
      </from>
      <to>
-      <noderef id="n104" port="1" />
+      <noderef id="n133" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -3842,9 +4809,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 8 at method MethodBoundedGenerics#test():V receiver; tree &lt;&lt;missing tree&gt;&gt; within  public void test() { @Nullable() String s = null; @Nullable() String s2 = this.method(s, &quot;t&quot;); }Atm: @VarAnnot(8) MethodBoundedGenerics" editable="true" id="e103" pinch="false" variableID="8" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e132" pinch="false" variableID="8" width="narrow">
      <from>
-      <noderef id="n88" port="output" />
+      <noderef id="n117" port="output" />
      </from>
      <to>
       <noderef id="n16" port="outReceiver0" />
@@ -3870,20 +4837,14 @@
        </point>
       <point>
        </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 20 at method MethodBoundedGenerics#test():V local variable s(0); tree String" editable="true" id="e111" pinch="false" variableID="20" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e140" pinch="false" variableID="20" width="narrow">
      <from>
-      <noderef id="n95" port="output" />
+      <noderef id="n124" port="output" />
      </from>
      <to>
-      <noderef id="n113" port="input" />
+      <noderef id="n142" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3896,12 +4857,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 21 at method MethodBoundedGenerics#test():V local variable s2(0); tree String" editable="true" id="e112" pinch="false" variableID="21" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e141" pinch="false" variableID="21" width="narrow">
      <from>
-      <noderef id="n104" port="output" />
+      <noderef id="n133" port="output" />
      </from>
      <to>
-      <noderef id="n114" port="input" />
+      <noderef id="n143" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3914,12 +4875,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 22 at MethodTypeArgumentInMethodVP in method MethodBoundedGenerics#test():V; tree &lt;&lt;missing tree&gt;&gt; at position ((3,0)) within this.method(s, &quot;t&quot;)Atm: @VarAnnot(22) Object" editable="true" id="e113" pinch="false" variableID="22" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e142" pinch="false" variableID="22" width="narrow">
      <from>
-      <noderef id="n91" port="output" />
+      <noderef id="n120" port="output" />
      </from>
      <to>
-      <noderef id="n115" port="input" />
+      <noderef id="n144" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3932,12 +4893,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; method type parameter 0; tree @NonNull() T" editable="true" id="e117" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e146" pinch="false" variableID="3" width="narrow">
      <from>
-      <noderef id="n92" port="output" />
+      <noderef id="n121" port="output" />
      </from>
      <to>
-      <noderef id="n119" port="input" />
+      <noderef id="n148" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -3950,12 +4911,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method MethodBoundedGenerics#method(Ljava/lang/Object;Ljava/lang/Object;):Ljava/lang/Object; return type; tree T" editable="true" id="e120" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e149" pinch="false" variableID="4" width="narrow">
      <from>
-      <noderef id="n105" port="output" />
+      <noderef id="n134" port="output" />
      </from>
      <to>
-      <noderef id="n122" port="input" />
+      <noderef id="n151" port="input" />
      </to>
      <edge-layout>
       <point>

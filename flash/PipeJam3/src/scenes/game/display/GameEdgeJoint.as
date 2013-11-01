@@ -24,8 +24,6 @@ package scenes.game.display
 	public class GameEdgeJoint extends GameComponent
 	{		
 		public var m_jointType:int;
-		//used when moving connection points to allow for snapping back to start, or swapping positions with other connections
-		public var m_originalPoint:Point;
 		public var m_position:int;
 		public var m_closestWall:int = 0;
 		
@@ -47,7 +45,6 @@ package scenes.game.display
 			draggable = _draggable;
 			m_isWide = _isWide;
 			m_jointType = jointType;
-			m_originalPoint = new Point;
 			m_isDirty = true;
 			
 			m_isEditable = _isEditable;

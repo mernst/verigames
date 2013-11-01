@@ -24,6 +24,20 @@ class SuperMethod {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method SuperMethod#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method SuperMethod#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method SuperMethod#m():V receiver; tree <<missing tree>> within 
 public void m() {
 }Atm: @VarAnnot(2) SuperMethod  <:  Variable 0 at class SuperMethod extends type; tree <<missing tree>> within 
@@ -46,7 +60,7 @@ SubtypeConstraint( Variable 4 at method SubMethod#<init>():V return type; tree
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubMethod#<init>():V constraint position; 
-calledVp: method SuperMethod#<init>():V; 
+calledVp: Some(method SuperMethod#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -76,7 +90,7 @@ public void m() {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method SubMethod#m():V constraint position; 
-calledVp: method SuperMethod#m():V; 
+calledVp: Some(method SuperMethod#m():V); 
 receiver: Variable 5 at method SubMethod#m():V receiver; tree <<missing tree>> within 
 public void m() {
     super.m();

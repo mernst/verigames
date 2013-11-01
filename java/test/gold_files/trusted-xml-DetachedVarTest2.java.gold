@@ -3,41 +3,46 @@
   <linked-edges>
    <edge-set id="DetachedVarTest20">
     <edgeref id="e5" />
-    <edgeref id="e7" />
-    <edgeref id="e10" />
-    <edgeref id="e18" />
+    <edgeref id="e15" />
    </edge-set>
    <edge-set id="DetachedVarTest21">
     <edgeref id="e6" />
-    <edgeref id="e9" />
-    <edgeref id="e11" />
-    <edgeref id="e19" />
+    <edgeref id="e16" />
     <edgeref id="e1" />
-    <edgeref id="e14" />
+    <edgeref id="e11" />
    </edge-set>
    <edge-set id="DetachedVarTest22">
     <edgeref id="e2" />
-    <edgeref id="e13" />
-    <edgeref id="e15" />
+    <edgeref id="e10" />
+    <edgeref id="e12" />
    </edge-set>
    <edge-set id="DetachedVarTest23">
     <edgeref id="e3" />
-    <edgeref id="e16" />
+    <edgeref id="e13" />
    </edge-set>
    <edge-set id="DetachedVarTest24">
-    <edgeref id="e17" />
+    <edgeref id="e14" />
    </edge-set>
-   <edge-set id="DetachedVarTest28">
+   <edge-set id="DetachedVarTest210">
+    <edgeref id="e7" />
+   </edge-set>
+   <edge-set id="DetachedVarTest211">
     <edgeref id="e8" />
    </edge-set>
-   <edge-set id="DetachedVarTest218">
+   <edge-set id="DetachedVarTest215">
     <edgeref id="e4" />
    </edge-set>
-   <edge-set id="DetachedVarTest219">
-    <edgeref id="e12" />
+   <edge-set id="DetachedVarTest216">
+    <edgeref id="e9" />
    </edge-set>
   </linked-edges>
   <boards>
+   <board-stub name="java.lang.Object--init----void">
+    <stub-input />
+    <stub-output>
+     <stub-connection num="outputReturn0" width="wide" />
+    </stub-output>
+   </board-stub>
    <board name="DetachedVarTest2">
     <node id="n0" kind="INCOMING">
      <input />
@@ -64,7 +69,7 @@
       <port edge="e5" num="input" />
      </input>
      <output>
-      <port edge="e7" num="0" />
+      <port edge="e15" num="output" />
      </output>
      <layout>
       </layout>
@@ -82,69 +87,28 @@
       <port edge="e6" num="input" />
      </input>
      <output>
-      <port edge="e9" num="0" />
+      <port edge="e16" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n17" kind="START_LARGE_BALL">
-     <input />
-     <output>
-      <port edge="e8" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n18" kind="MERGE">
+    <node id="n22" kind="END">
      <input>
-      <port edge="e7" num="0" />
-      <port edge="e8" num="1" />
+      <port edge="e15" num="input" />
      </input>
-     <output>
-      <port edge="e10" num="0" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n19" kind="MERGE">
-     <input>
-      <port edge="e10" num="0" />
-      <port edge="e11" num="1" />
-     </input>
-     <output>
-      <port edge="e18" num="output" />
-     </output>
-     <layout>
-      </layout>
-    </node>
-    <node id="n20" kind="SPLIT">
-     <input>
-      <port edge="e9" num="0" />
-     </input>
-     <output>
-      <port edge="e11" num="1" />
-      <port edge="e19" num="output" />
-     </output>
+     <output />
      <layout>
       </layout>
     </node>
     <node id="n23" kind="END">
      <input>
-      <port edge="e18" num="input" />
+      <port edge="e16" num="input" />
      </input>
      <output />
      <layout>
       </layout>
     </node>
-    <node id="n24" kind="END">
-     <input>
-      <port edge="e19" num="input" />
-     </input>
-     <output />
-     <layout>
-      </layout>
-    </node>
-    <edge buzzsaw="false" description="Variable 0 at class DetachedVarTest2 extends type; tree &lt;&lt;missing tree&gt;&gt; within  class DetachedVarTest2 {  DetachedVarTest2() { super(); }  public String[] test2() { return null; } }" editable="true" id="e5" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e5" pinch="false" variableID="0" width="narrow">
      <from>
       <noderef id="n13" port="output" />
      </from>
@@ -162,7 +126,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e6" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n15" port="output" />
      </from>
@@ -180,12 +144,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 0 at class DetachedVarTest2 extends type; tree &lt;&lt;missing tree&gt;&gt; within  class DetachedVarTest2 {  DetachedVarTest2() { super(); }  public String[] test2() { return null; } }" editable="true" id="e7" pinch="false" variableID="0" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e15" pinch="false" variableID="0" width="narrow">
      <from>
-      <noderef id="n14" port="0" />
+      <noderef id="n14" port="output" />
      </from>
      <to>
-      <noderef id="n18" port="0" />
+      <noderef id="n22" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -198,108 +162,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="untrusted string" editable="true" id="e8" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e16" pinch="false" variableID="1" width="narrow">
      <from>
-      <noderef id="n17" port="0" />
-     </from>
-     <to>
-      <noderef id="n18" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e9" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n16" port="0" />
-     </from>
-     <to>
-      <noderef id="n20" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class DetachedVarTest2 extends type; tree &lt;&lt;missing tree&gt;&gt; within  class DetachedVarTest2 {  DetachedVarTest2() { super(); }  public String[] test2() { return null; } }" editable="true" id="e10" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n18" port="0" />
-     </from>
-     <to>
-      <noderef id="n19" port="0" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n20" port="1" />
-     </from>
-     <to>
-      <noderef id="n19" port="1" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 0 at class DetachedVarTest2 extends type; tree &lt;&lt;missing tree&gt;&gt; within  class DetachedVarTest2 {  DetachedVarTest2() { super(); }  public String[] test2() { return null; } }" editable="true" id="e18" pinch="false" variableID="0" width="narrow">
-     <from>
-      <noderef id="n19" port="output" />
+      <noderef id="n16" port="output" />
      </from>
      <to>
       <noderef id="n23" port="input" />
-     </to>
-     <edge-layout>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-      <point>
-       </point>
-     </edge-layout>
-    </edge>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e19" pinch="false" variableID="1" width="narrow">
-     <from>
-      <noderef id="n20" port="output" />
-     </from>
-     <to>
-      <noderef id="n24" port="input" />
      </to>
      <edge-layout>
       <point>
@@ -322,7 +190,7 @@
     </node>
     <node id="n3" kind="OUTGOING">
      <input>
-      <port edge="e14" num="outputReturn0" />
+      <port edge="e11" num="outputReturn0" />
      </input>
      <output />
      <layout>
@@ -341,12 +209,38 @@
       <port edge="e1" num="input" />
      </input>
      <output>
-      <port edge="e14" num="output" />
+      <port edge="e11" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
+    <node id="n17" kind="SUBBOARD" name="java.lang.Object--init----void">
+     <input />
+     <output>
+      <port edge="e7" num="outputReturn0" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n18" kind="CONNECT">
+     <input>
+      <port edge="e7" num="input" />
+     </input>
+     <output>
+      <port edge="e8" num="toEnd" />
+     </output>
+     <layout>
+      </layout>
+    </node>
+    <node id="n19" kind="END">
+     <input>
+      <port edge="e8" num="input" />
+     </input>
+     <output />
+     <layout>
+      </layout>
+    </node>
+    <edge buzzsaw="false" description="desc" editable="true" id="e1" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n4" port="output" />
      </from>
@@ -362,9 +256,57 @@
        </point>
       <point>
        </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 1 at method DetachedVarTest2#&lt;init&gt;():V return type; tree  &lt;init&gt;() { super(); }" editable="true" id="e14" pinch="false" variableID="1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e7" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n17" port="outputReturn0" />
+     </from>
+     <to>
+      <noderef id="n18" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="false" id="e8" pinch="false" variableID="-4" width="wide">
+     <from>
+      <noderef id="n18" port="toEnd" />
+     </from>
+     <to>
+      <noderef id="n19" port="input" />
+     </to>
+     <edge-layout>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+      <point>
+       </point>
+     </edge-layout>
+    </edge>
+    <edge buzzsaw="false" description="desc" editable="true" id="e11" pinch="false" variableID="1" width="narrow">
      <from>
       <noderef id="n5" port="output" />
      </from>
@@ -394,9 +336,9 @@
     </node>
     <node id="n7" kind="OUTGOING">
      <input>
-      <port edge="e17" num="outReceiver0" />
-      <port edge="e15" num="outputReturn0" />
-      <port edge="e16" num="outputReturn1" />
+      <port edge="e14" num="outReceiver0" />
+      <port edge="e12" num="outputReturn0" />
+      <port edge="e13" num="outputReturn1" />
      </input>
      <output />
      <layout>
@@ -415,7 +357,7 @@
       <port edge="e2" num="input" />
      </input>
      <output>
-      <port edge="e13" num="0" />
+      <port edge="e10" num="0" />
      </output>
      <layout>
       </layout>
@@ -433,7 +375,7 @@
       <port edge="e3" num="input" />
      </input>
      <output>
-      <port edge="e16" num="output" />
+      <port edge="e13" num="output" />
      </output>
      <layout>
       </layout>
@@ -443,31 +385,31 @@
       <port edge="e4" num="input" />
      </input>
      <output>
-      <port edge="e17" num="output" />
+      <port edge="e14" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n21" kind="MERGE">
+    <node id="n20" kind="MERGE">
      <input>
-      <port edge="e13" num="0" />
-      <port edge="e12" num="1" />
+      <port edge="e10" num="0" />
+      <port edge="e9" num="1" />
      </input>
      <output>
-      <port edge="e15" num="output" />
+      <port edge="e12" num="output" />
      </output>
      <layout>
       </layout>
     </node>
-    <node id="n22" kind="START_SMALL_BALL">
+    <node id="n21" kind="START_SMALL_BALL">
      <input />
      <output>
-      <port edge="e12" num="0" />
+      <port edge="e9" num="0" />
      </output>
      <layout>
       </layout>
     </node>
-    <edge buzzsaw="false" description="Variable 2 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String[]" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e2" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n8" port="output" />
      </from>
@@ -485,7 +427,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String at position ((0,0)) within String[]" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e3" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n10" port="output" />
      </from>
@@ -503,7 +445,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="this" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e4" pinch="false" variableID="-1" width="narrow">
      <from>
       <noderef id="n6" port="inReceiver0" />
      </from>
@@ -521,12 +463,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="null" editable="false" id="e12" pinch="false" variableID="-3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="false" id="e9" pinch="false" variableID="-3" width="narrow">
      <from>
-      <noderef id="n22" port="0" />
+      <noderef id="n21" port="0" />
      </from>
      <to>
-      <noderef id="n21" port="1" />
+      <noderef id="n20" port="1" />
      </to>
      <edge-layout>
       <point>
@@ -539,12 +481,12 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String[]" editable="true" id="e13" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e10" pinch="false" variableID="2" width="narrow">
      <from>
       <noderef id="n9" port="0" />
      </from>
      <to>
-      <noderef id="n21" port="0" />
+      <noderef id="n20" port="0" />
      </to>
      <edge-layout>
       <point>
@@ -563,9 +505,9 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 2 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String[]" editable="true" id="e15" pinch="false" variableID="2" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e12" pinch="false" variableID="2" width="narrow">
      <from>
-      <noderef id="n21" port="output" />
+      <noderef id="n20" port="output" />
      </from>
      <to>
       <noderef id="n7" port="outputReturn0" />
@@ -581,7 +523,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 3 at method DetachedVarTest2#test2():[Ljava/lang/String; return type; tree String at position ((0,0)) within String[]" editable="true" id="e16" pinch="false" variableID="3" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e13" pinch="false" variableID="3" width="narrow">
      <from>
       <noderef id="n11" port="output" />
      </from>
@@ -599,7 +541,7 @@
        </point>
      </edge-layout>
     </edge>
-    <edge buzzsaw="false" description="Variable 4 at method DetachedVarTest2#test2():[Ljava/lang/String; receiver; tree &lt;&lt;missing tree&gt;&gt; within  public String[] test2() { return null; }Atm: @VarAnnot(4) DetachedVarTest2" editable="true" id="e17" pinch="false" variableID="4" width="narrow">
+    <edge buzzsaw="false" description="desc" editable="true" id="e14" pinch="false" variableID="4" width="narrow">
      <from>
       <noderef id="n12" port="output" />
      </from>

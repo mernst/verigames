@@ -28,6 +28,20 @@ class PrintIt {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method PrintIt#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrintIt#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method PrintIt#m():V receiver; tree <<missing tree>> within 
 void m() {
     Object o = new Object();
@@ -45,9 +59,41 @@ class PrintIt {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrintIt#m():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 InequalityConstraint( context: method PrintIt#m():V constraint position, Variable 4 at method PrintIt#m():V creation 0; tree Object != Constant(@nninf.quals.Nullable) )
 
 SubtypeConstraint( Variable 4 at method PrintIt#m():V creation 0; tree Object  <:  Variable 3 at method PrintIt#m():V local variable o(0); tree Object )
 
 InequalityConstraint( context: method PrintIt#m():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.io.PrintStream,java.io.PrintStream#println(java.lang.String):void,method PrintIt#m():V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)),List())
+
+SubtypeConstraint( Literal(STRING_LITERAL, "Object of the day: ")  <:  CombVariable #6 )
+
+SubtypeConstraint( Variable 3 at method PrintIt#m():V local variable o(0); tree Object  <:  CombVariable #6 )
+
+SubtypeConstraint( Variable 3 at method PrintIt#m():V local variable o(0); tree Object  <:  CombVariable #5 )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrintIt#m():V constraint position; 
+calledVp: None; 
+receiver: Constant(@nninf.quals.NonNull); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Variable 3 at method PrintIt#m():V local variable o(0); tree Object ); 
+result: List(); 
+)
 

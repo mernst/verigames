@@ -52,6 +52,20 @@ class CallThis {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CallThis#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 1 at class CallThis field o; tree Object )
 
 SubtypeConstraint( Variable 3 at method CallThis#m1(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
@@ -109,6 +123,18 @@ class CallThis {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#m2():Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 9 at method CallThis#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 5 at method CallThis#m2():Ljava/lang/Object; return type; tree Object )
 
 SubtypeConstraint( Variable 7 at method CallThis#m3(LCallThis;):V receiver; tree <<missing tree>> within 
@@ -146,7 +172,19 @@ class CallThis {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#m3(LCallThis;):V constraint position; 
-calledVp: method CallThis#m1(Ljava/lang/Object;):V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallThis#m3(LCallThis;):V constraint position; 
+calledVp: Some(method CallThis#m1(Ljava/lang/Object;):V); 
 receiver: Variable 7 at method CallThis#m3(LCallThis;):V receiver; tree <<missing tree>> within 
 void m3(CallThis p) {
     this.m1(new Object());
@@ -166,7 +204,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#m3(LCallThis;):V constraint position; 
-calledVp: method CallThis#m1(Ljava/lang/Object;):V; 
+calledVp: Some(method CallThis#m1(Ljava/lang/Object;):V); 
 receiver: Variable 7 at method CallThis#m3(LCallThis;):V receiver; tree <<missing tree>> within 
 void m3(CallThis p) {
     this.m1(new Object());
@@ -194,7 +232,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#m3(LCallThis;):V constraint position; 
-calledVp: method CallThis#m1(Ljava/lang/Object;):V; 
+calledVp: Some(method CallThis#m1(Ljava/lang/Object;):V); 
 receiver: Variable 8 at method CallThis#m3(LCallThis;):V parameter 0; tree CallThis; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -214,7 +252,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#m3(LCallThis;):V constraint position; 
-calledVp: method CallThis#m1(Ljava/lang/Object;):V; 
+calledVp: Some(method CallThis#m1(Ljava/lang/Object;):V); 
 receiver: Variable 7 at method CallThis#m3(LCallThis;):V receiver; tree <<missing tree>> within 
 void m3(CallThis p) {
     this.m1(new Object());
@@ -242,7 +280,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallThis#m3(LCallThis;):V constraint position; 
-calledVp: method CallThis#m2():Ljava/lang/Object;; 
+calledVp: Some(method CallThis#m2():Ljava/lang/Object;); 
 receiver: Variable 7 at method CallThis#m3(LCallThis;):V receiver; tree <<missing tree>> within 
 void m3(CallThis p) {
     this.m1(new Object());

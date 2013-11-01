@@ -38,6 +38,20 @@ class IfElse {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method IfElse#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method IfElse#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method IfElse#test():V receiver; tree <<missing tree>> within 
 void test() {
     String a = null;
@@ -67,17 +81,33 @@ class IfElse {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(6 )) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
 
-EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(6 )) = Literal(STRING_LITERAL, "") )
 
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
+InequalityConstraint( context: method IfElse#test():V constraint position, Constant(@nninf.quals.NonNull) != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
+SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(6 ))  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
 
-SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
+SubtypeConstraint( RefinementVariable #5 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(6 ))  <:  RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
 
-InequalityConstraint( context: method IfElse#test():V constraint position, RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable) )
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at method IfElse#test():V local variable a(0); tree String )
+
+InequalityConstraint( context: method IfElse#test():V constraint position, RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method IfElse#test():V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method IfElse#test():V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #6 Declared Variable: Variable 3 at method IfElse#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 

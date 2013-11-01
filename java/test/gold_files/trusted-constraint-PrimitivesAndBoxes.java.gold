@@ -1,10 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 5 at method PrimitivesAndBoxes#forceNarrow(I):I parameter 0; tree int = Constant(@trusted.quals.Untrusted) )
-
-EqualityConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class PrimitivesAndBoxes extends type; tree <<missing tree>> within 
 class PrimitivesAndBoxes {
     
@@ -46,6 +40,20 @@ class PrimitivesAndBoxes {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method PrimitivesAndBoxes#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method PrimitivesAndBoxes#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
 public void method() {
     Integer testy = 2;
@@ -71,11 +79,15 @@ class PrimitivesAndBoxes {
     }
 } )
 
+SubtypeConstraint( Literal(INT_LITERAL, "2")  <:  Variable 6 at method PrimitivesAndBoxes#method():V local variable testy(0); tree Integer )
+
+SubtypeConstraint( Literal(INT_LITERAL, "1")  <:  Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int )
+
 SubtypeConstraint( Variable 7 at method PrimitivesAndBoxes#method():V local variable primitive(0); tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method PrimitivesAndBoxes#method():V constraint position; 
-calledVp: method PrimitivesAndBoxes#forceNarrow(I):I; 
+calledVp: Some(method PrimitivesAndBoxes#forceNarrow(I):I); 
 receiver: Variable 2 at method PrimitivesAndBoxes#method():V receiver; tree <<missing tree>> within 
 public void method() {
     Integer testy = 2;
@@ -91,7 +103,7 @@ args: ( Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(
 result: List(Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int); 
 )
 
-EqualityConstraint( RefinementVariable #9 Declared Variable: Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer IfTest: false mergedTo: Set() = Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
+EqualityConstraint( RefinementVariable #9 Declared Variable: Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer IfTest: false mergedTo: (Set()) = Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int )
 
 SubtypeConstraint( Variable 3 at method PrimitivesAndBoxes#forceNarrow(I):I return type; tree int  <:  Variable 8 at method PrimitivesAndBoxes#method():V local variable boxed(0); tree Integer )
 

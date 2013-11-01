@@ -32,6 +32,20 @@ public class MethodGenericsLocalCall {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method MethodGenericsLocalCall#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method MethodGenericsLocalCall#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 4 at method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public <T extends Object>void genericMethodNoReturn(T t1) {
 }Atm: @VarAnnot(4) MethodGenericsLocalCall  <:  Variable 0 at class MethodGenericsLocalCall extends type; tree <<missing tree>> within 
@@ -75,7 +89,7 @@ public class MethodGenericsLocalCall {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method MethodGenericsLocalCall#localCall():V constraint position; 
-calledVp: method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V; 
+calledVp: Some(method MethodGenericsLocalCall#genericMethodNoReturn(Ljava/lang/Object;):V); 
 receiver: Variable 6 at method MethodGenericsLocalCall#localCall():V receiver; tree <<missing tree>> within 
 public void localCall() {
     this.<String>genericMethodNoReturn("test");

@@ -34,6 +34,20 @@ class Literals {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Literals#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Literals#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 3 at method Literals#m(Ljava/lang/String;):Ljava/lang/String; receiver; tree <<missing tree>> within 
 String m(String p) {
     return "ha";
@@ -76,7 +90,7 @@ class Literals {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Literals#call():V constraint position; 
-calledVp: method Literals#m(Ljava/lang/String;):Ljava/lang/String;; 
+calledVp: Some(method Literals#m(Ljava/lang/String;):Ljava/lang/String;); 
 receiver: Variable 5 at method Literals#call():V receiver; tree <<missing tree>> within 
 void call() {
     String s = m("dude");

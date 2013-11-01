@@ -28,6 +28,20 @@ class Dereference {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Dereference#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Dereference#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method Dereference#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Dereference d2 = d.d;
@@ -46,7 +60,7 @@ class Dereference {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Dereference#foo():V constraint position; 
-calledVp: class Dereference field d; 
+calledVp: Some(class Dereference field d); 
 receiver: Variable 2 at method Dereference#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Dereference d2 = d.d;

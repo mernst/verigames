@@ -40,6 +40,20 @@ class Outer {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Outer#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Outer#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 9 at class Outer$Inner class type parameter 0; tree T1  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 9 at class Outer$Inner class type parameter 0; tree T1  <:  Variable 8 at class Outer$Inner class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within T1Atm: @VarAnnot(8) Object )
@@ -62,6 +76,18 @@ public static class Inner<T1> {
         super();
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Outer$Inner#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 4 at method Outer#method():LOuter$Inner; receiver; tree <<missing tree>> within 
 public Inner<String> method() {
@@ -106,7 +132,7 @@ SubtypeConstraint( Variable 5 at method Implementor#<init>():V return type; tree
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Implementor#<init>():V constraint position; 
-calledVp: method Outer$Inner#<init>():V; 
+calledVp: Some(method Outer$Inner#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 9 at class Outer$Inner class type parameter 0; tree T1 >; 

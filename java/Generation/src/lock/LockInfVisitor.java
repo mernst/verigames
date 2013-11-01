@@ -11,6 +11,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 
+import checkers.inference.InferenceChecker;
 import lock.quals.GuardedBy;
 import lock.quals.Holding;
 
@@ -34,19 +35,21 @@ import com.sun.source.tree.Tree;
 
 import games.GameVisitor;
 
-public class LockInfVisitor extends GameVisitor {
+public class LockInfVisitor extends GameVisitor<LockInfChecker> {
 
 	LockInfAnnotatedTypeFactory lockatypeFactory;
-	private final LockInfChecker lockChecker;
 
-	public LockInfVisitor(BaseTypeChecker checker, CompilationUnitTree root,
-			LockInfChecker lockChecker, boolean infer) {
-		super(checker, root, infer);
+	public LockInfVisitor(LockInfChecker checker, InferenceChecker iChecker, boolean infer) {
+		super(checker, iChecker, infer);
 
-		this.lockChecker = lockChecker;
-		this.lockatypeFactory = (LockInfAnnotatedTypeFactory) lockChecker.createFactory(root);
+		this.lockatypeFactory = (LockInfAnnotatedTypeFactory) createRealTypeFactory(); //TODO: WHy is this here?
 	}
 
+
+    @Override
+    public LockInfAnnotatedTypeFactory createRealTypeFactory() {
+        return new LockInfAnnotatedTypeFactory(realChecker);
+    }
 
     @Override
     public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -131,7 +134,7 @@ public class LockInfVisitor extends GameVisitor {
         } else if (methodSel.getKind() == Tree.Kind.MEMBER_SELECT) {
             return ((MemberSelectTree)methodSel).getExpression().toString();
         } else {
-            lockChecker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
+            checker.errorAbort("LockVisitor found unknown receiver tree type: " + methodSel);
             return null;
         }
     }

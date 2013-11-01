@@ -55,6 +55,20 @@ class NoVariables {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NoVariables#<init>(III):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NoVariables#<init>(III):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 3 at method NoVariables#<init>(III):V parameter 0; tree int  <:  Variable 7 at class NoVariables field minValue; tree int )
 
 SubtypeConstraint( Variable 4 at method NoVariables#<init>(III):V parameter 1; tree int  <:  Variable 8 at class NoVariables field maxValue; tree int )
@@ -110,6 +124,18 @@ class Other {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Other#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
 public void throwsAnExceptionInGameSolver() {
     nv.log();
@@ -128,7 +154,7 @@ class Other {
 
 checkers.inference.FieldAccessConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
-calledVp: class Other field nv; 
+calledVp: Some(class Other field nv); 
 receiver: Variable 12 at method Other#throwsAnExceptionInGameSolver():V receiver; tree <<missing tree>> within 
 public void throwsAnExceptionInGameSolver() {
     nv.log();
@@ -145,7 +171,7 @@ InequalityConstraint( context: method Other#throwsAnExceptionInGameSolver():V co
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method Other#throwsAnExceptionInGameSolver():V constraint position; 
-calledVp: method NoVariables#log():V; 
+calledVp: Some(method NoVariables#log():V); 
 receiver: Variable 13 at class Other field nv; tree NoVariables; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

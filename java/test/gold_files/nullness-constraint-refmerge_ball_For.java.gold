@@ -40,6 +40,20 @@ class For {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method For#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method For#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method For#test(ILjava/lang/String;):V receiver; tree <<missing tree>> within 
 void test(int i, String b) {
     String a = "";
@@ -71,23 +85,43 @@ SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 5 at method For#tes
 
 InequalityConstraint( context: method For#test(ILjava/lang/String;):V constraint position, Variable 3 at method For#test(ILjava/lang/String;):V parameter 0; tree int != Constant(@nninf.quals.Nullable) )
 
-SubtypeConstraint( Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String  <:  RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set() )
+SubtypeConstraint( Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String  <:  RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
 
-SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()) )
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: (Set(9 ))  <:  RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set(10 )) )
 
-SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()))  <:  RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()) )
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set(9 ))  <:  RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set(10 )) )
 
-SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set() )
+SubtypeConstraint( RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set(10 ))  <:  RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
 
-SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String )
+SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String )
 
-InequalityConstraint( context: method For#test(ILjava/lang/String;):V constraint position, RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable) )
+InequalityConstraint( context: method For#test(ILjava/lang/String;):V constraint position, RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set()) != Constant(@nninf.quals.Nullable) )
 
-BallSizeTestConstraint( input:RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(), super: RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set())), subtype: RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: Set() )
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method For#test(ILjava/lang/String;):V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
 
-InequalityConstraint( context: RefinementVP in method For#test(ILjava/lang/String;):V, RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: Set() != Constant(@nninf.quals.Nullable) )
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method For#test(ILjava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 
-EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: Set())) = Literal(NULL_LITERAL, "null") )
+BallSizeTestConstraint( input:RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set()), super: RefinementVariable #7 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: (Set(9 )), subtype: RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: (Set()) )
+
+InequalityConstraint( context: RefinementVP in method For#test(ILjava/lang/String;):V, RefinementVariable #6 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: true mergedTo: (Set()) != Constant(@nninf.quals.Nullable) )
+
+EqualityConstraint( RefinementVariable #8 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set(9 )) = Literal(NULL_LITERAL, "null") )
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String )
+
+SubtypeConstraint( RefinementVariable #10 Declared Variable: Variable 5 at method For#test(ILjava/lang/String;):V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  CombVariable #11 )
+
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #11 )
+
+InequalityConstraint( context: method For#test(ILjava/lang/String;):V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
 

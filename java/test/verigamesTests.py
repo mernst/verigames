@@ -35,7 +35,7 @@ parent   = os.path.dirname(thisFile)
 
 allCheckers = ["nullness", "trusted"]
 checkerArgs = {"nullness": ["nninf.NninfChecker", "nninf.NninfVisitor",
-                            "nninf.NninfTransferImpl", "checkers.inference.InferenceAnalysis"],
+                            "nninf.NninfTransfer", "checkers.inference.InferenceAnalysis"],
                "trusted":  ["trusted.TrustedChecker", "trusted.TrustedVisitor",
                             "checkers.inference.InferenceTransfer", "checkers.inference.InferenceAnalysis"]  }
 
@@ -256,8 +256,10 @@ def run_constraint_tests(checker, java_files, outfile_path, generate):
         os.putenv("ACTUAL_PATH", actualName)
         # Run the test
         with open(outfile_path, "a") as outfile:
+            infArgs = java_files.replace('../','', 1)
+            outfile.write( "Checker " + checker + " files: " + infArgs )
             ret = subprocess.call(["gradle", "-p", "../../", "--daemon", "infer", "-P", "infChecker="+checker+"Test",
-                    "-P", "infArgs=" + java_files.replace('../','', 1)], stdout=outfile, stderr=outfile)
+                    "-P", "infArgs=" + infArgs], stdout=outfile, stderr=outfile)
 
             if ret != 0: # Error
                 error = True

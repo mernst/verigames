@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
 
+import checkers.util.GraphQualifierHierarchy;
+import checkers.util.MultiGraphQualifierHierarchy;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -16,28 +18,26 @@ import com.sun.source.tree.Tree;
 import checkers.lock.quals.GuardedBy;
 import checkers.quals.Unqualified;
 import checkers.types.AnnotatedTypeMirror;
-import checkers.types.SubtypingAnnotatedTypeFactory;
+
 import checkers.util.AnnotationBuilder;
+import games.GameAnnotatedTypeFactory;
 import javacutils.AnnotationUtils;
 import javacutils.TreeUtils;
 import javacutils.TypesUtils;
 
-public class LockInfAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<LockInfChecker>{
+public class LockInfAnnotatedTypeFactory extends GameAnnotatedTypeFactory {
 
     private List<String> heldLocks = new ArrayList<String>();
     private final AnnotationMirror GUARDED_BY;
 
-	public LockInfAnnotatedTypeFactory(LockInfChecker checker,
-			CompilationUnitTree root) {
-		super(checker, root);
+	public LockInfAnnotatedTypeFactory(LockInfChecker checker) {
+		super( checker );
         GUARDED_BY = AnnotationUtils.fromClass(elements, GuardedBy.class);
 
         addAliasedAnnotation(checkers.lock.quals.GuardedBy.class, GUARDED_BY);
         addAliasedAnnotation(net.jcip.annotations.GuardedBy.class, GUARDED_BY);
 
-        if(root != null && this.checker.currentPath != null) {
-        	postInit();
-        }
+        postInit();
 	}
 
     public void setHeldLocks(List<String> heldLocks) {
@@ -154,6 +154,49 @@ public class LockInfAnnotatedTypeFactory extends SubtypingAnnotatedTypeFactory<L
             return builder.build();
         } else {
             return super.aliasedAnnotation(a);
+        }
+    }
+
+
+
+
+    @Override // TODO make match LockChecker
+    protected MultiGraphQualifierHierarchy.MultiGraphFactory createQualifierHierarchyFactory() {
+        return new MultiGraphQualifierHierarchy.MultiGraphFactory(this);
+        /*
+    	MultiGraphQualifierHierarchy.MultiGraphFactory factory = createQualifierHierarchyFactory();
+
+        factory.addQualifier(GUARDEDBY);
+        factory.addQualifier(UNQUALIFIED);
+        factory.addSubtype(UNQUALIFIED, GUARDEDBY);
+
+        return factory;
+        */
+    }
+
+    // TODO: how do we use this??
+    private final class LockQualifierHierarchy extends GraphQualifierHierarchy {
+        private final LockInfChecker lockChecker;
+
+        public LockQualifierHierarchy(MultiGraphQualifierHierarchy.MultiGraphFactory factory) {
+            super(factory, ((LockInfChecker) checker).UNQUALIFIED);
+            lockChecker = (LockInfChecker) checker;
+        }
+
+        @Override
+        public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
+            if (AnnotationUtils.areSameIgnoringValues(rhs, lockChecker.UNQUALIFIED)
+                    && AnnotationUtils.areSameIgnoringValues(lhs, lockChecker.GUARDEDBY)) {
+                return true;
+            }
+            // Ignore annotation values to ensure that annotation is in supertype map.
+            if (AnnotationUtils.areSameIgnoringValues(lhs, lockChecker.GUARDEDBY)) {
+                lhs = lockChecker.GUARDEDBY;
+            }
+            if (AnnotationUtils.areSameIgnoringValues(rhs, lockChecker.GUARDEDBY)) {
+                rhs = lockChecker.GUARDEDBY;
+            }
+            return super.isSubtype(rhs, lhs);
         }
     }
 

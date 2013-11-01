@@ -28,6 +28,20 @@ class WilcardInTypeParameter<T extends List<?>> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method WilcardInTypeParameter#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method WilcardInTypeParameter#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 5 at method WilcardInTypeParameter#m1(LWilcardInTypeParameter;):V receiver; tree <<missing tree>> within 
 private void m1(WilcardInTypeParameter<List<? extends String>> test) {
 }Atm: @VarAnnot(5) WilcardInTypeParameter<T extends List<? extends Object>>  <:  Variable 3 at class WilcardInTypeParameter extends type; tree <<missing tree>> within 

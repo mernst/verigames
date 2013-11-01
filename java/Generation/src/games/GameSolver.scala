@@ -114,6 +114,8 @@ abstract class GameSolver extends ConstraintSolver {
 
     val boardToSelfVariable = new LinkedHashMap[Board, Variable]
 
+    var world : World = null
+
 
     override def solve(variables: List[Variable],
     combvariables: List[CombVariable],
@@ -131,7 +133,7 @@ abstract class GameSolver extends ConstraintSolver {
 
       println("Creating world")
       // Create the world!
-      val world = createWorld()
+      createWorld()
 
       println("Determining layout")
       // Assign a layout to the world.
@@ -174,7 +176,7 @@ abstract class GameSolver extends ConstraintSolver {
      */
     def createWorld(): World = {
 
-      val world = new World()
+      world = new World()
 
       try {
 

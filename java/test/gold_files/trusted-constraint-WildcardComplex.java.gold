@@ -30,6 +30,20 @@ class ArrayList<T1> implements List<T1> {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method ArrayList#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method ArrayList#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 11 at class WildcardComplex class type parameter 0; tree T  <:  Constant(@trusted.quals.Untrusted) )
 
 SubtypeConstraint( Variable 11 at class WildcardComplex class type parameter 0; tree T  <:  Variable 10 at class WildcardComplex class type parameter bound 0 & 0; tree <<missing tree>> at position ((3,0)) within TAtm: @VarAnnot(10) Object )
@@ -60,4 +74,16 @@ class WildcardComplex<T> {
     public static void method(String param) {
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method WildcardComplex#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

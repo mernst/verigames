@@ -44,6 +44,20 @@ class TryCatchParam {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method TryCatchParam#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method TryCatchParam#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method TryCatchParam#test(Ljava/lang/String;):V receiver; tree <<missing tree>> within 
 void test(String a) {
     Exception e = new Exception();
@@ -77,11 +91,45 @@ class TryCatchParam {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Exception,java.lang.Exception#<init>():void,method TryCatchParam#test(Ljava/lang/String;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method TryCatchParam#test(Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 5 at method TryCatchParam#test(Ljava/lang/String;):V creation 0; tree Exception  <:  Variable 4 at method TryCatchParam#test(Ljava/lang/String;):V local variable e(0); tree Exception )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(8 )) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String )
 
-EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set(RefinementVariable #9 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: Set())) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(8 )) = Literal(STRING_LITERAL, "") )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(8 ))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(9 )) )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(8 ))  <:  RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(9 )) )
+
+SubtypeConstraint( RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(9 ))  <:  Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method TryCatchParam#test(Ljava/lang/String;):V constraint position,Constant(@trusted.quals.Untrusted),List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method TryCatchParam#test(Ljava/lang/String;):V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #8 Declared Variable: Variable 3 at method TryCatchParam#test(Ljava/lang/String;):V parameter 0; tree String IfTest: false mergedTo: (Set(9 )); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 

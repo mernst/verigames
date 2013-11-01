@@ -44,11 +44,25 @@ SubtypeConstraint( Variable 1 at class generics.Base class type parameter 0; tre
 
 SubtypeConstraint( Variable 3 at class generics.Base class type parameter 1; tree Y  <:  Constant(@trusted.quals.Untrusted) )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 1 at class generics.Base class type parameter 0; tree X  <:  Variable 10 at class generics.Base field x; tree X )
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
-calledVp: class generics.Base field x; 
+calledVp: Some(class generics.Base field x); 
 receiver: Constant(@trusted.quals.Untrusted); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 1 at class generics.Base class type parameter 0; tree X, Variable 3 at class generics.Base class type parameter 1; tree Y >; 
@@ -62,7 +76,7 @@ SubtypeConstraint( Variable 3 at class generics.Base class type parameter 1; tre
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V constraint position; 
-calledVp: class generics.Base field y; 
+calledVp: Some(class generics.Base field y); 
 receiver: Constant(@trusted.quals.Untrusted); 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 1 at class generics.Base class type parameter 0; tree X, Variable 3 at class generics.Base class type parameter 1; tree Y >; 
@@ -104,7 +118,7 @@ SubtypeConstraint( Variable 7 at method generics.Base#<init>(Ljava/lang/Object;L
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/String;):V constraint position; 
-calledVp: method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V; 
+calledVp: Some(method generics.Base#<init>(Ljava/lang/Object;Ljava/lang/Object;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 1 at class generics.Base class type parameter 0; tree X, Variable 3 at class generics.Base class type parameter 1; tree Y >; 
@@ -141,7 +155,7 @@ SubtypeConstraint( Variable 13 at class generics.PrintBase class type parameter 
 
 checkers.inference.FieldAssignmentConstraint(
 contextVp: method generics.PrintBase#set(Ljava/lang/Object;):V constraint position; 
-calledVp: class generics.Base field x; 
+calledVp: Some(class generics.Base field x); 
 receiver: Variable 19 at method generics.PrintBase#set(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 public void set(X2 x) {
     this.x = x;
@@ -183,6 +197,18 @@ class Instantiate {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method generics.Instantiate#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 23 at method generics.Instantiate#create():V receiver; tree <<missing tree>> within 
 public void create() {
     final Base<Integer, String> bis = new PrintBase<Integer>(new Integer(0), "Y");
@@ -206,11 +232,39 @@ SubtypeConstraint( Variable 24 at method generics.Instantiate#create():V creatio
 
 SubtypeConstraint( Variable 24 at method generics.Instantiate#create():V creation 1; tree Integer  <:  Constant(@trusted.quals.Untrusted) )
 
+SubtypeConstraint( Literal(INT_LITERAL, "0")  <:  Constant(@trusted.quals.Untrusted) )
+
+StubBoardUseConstraint(java.lang.Integer,java.lang.Integer#<init>(I):void,method generics.Instantiate#create():V constraint position,null,List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method generics.Instantiate#create():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Literal(INT_LITERAL, "0") ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Literal(STRING_LITERAL, "Y")  <:  Variable 18 at method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/String;):V parameter 1; tree String )
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.Instantiate#create():V constraint position; 
-calledVp: method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/String;):V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Literal(INT_LITERAL, "0") ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method generics.Instantiate#create():V constraint position; 
+calledVp: Some(method generics.PrintBase#<init>(Ljava/lang/Object;Ljava/lang/String;):V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 13 at class generics.PrintBase class type parameter 0; tree X2 >; 
@@ -227,9 +281,23 @@ SubtypeConstraint( Variable 28 at method generics.Instantiate#create():V creatio
 
 EqualityConstraint( Variable 26 at method generics.Instantiate#create():V local variable bis(0); tree Integer at position ((3,0)) within Base<Integer, String> = Variable 29 at method generics.Instantiate#create():V creation 0; tree Integer at position ((3,0)) within PrintBase<Integer> )
 
+SubtypeConstraint( Literal(INT_LITERAL, "3")  <:  Constant(@trusted.quals.Untrusted) )
+
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method generics.Instantiate#create():V constraint position; 
-calledVp: method generics.Base#set(Ljava/lang/Object;):V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: ( Literal(INT_LITERAL, "3") ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method generics.Instantiate#create():V constraint position; 
+calledVp: Some(method generics.Base#set(Ljava/lang/Object;):V); 
 receiver: Variable 25 at method generics.Instantiate#create():V local variable bis(0); tree Base within Base<Integer, String>; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: < Variable 1 at class generics.Base class type parameter 0; tree X, Variable 3 at class generics.Base class type parameter 1; tree Y >; 

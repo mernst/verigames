@@ -20,6 +20,20 @@ class NestedClassAnnotations {
     O1.O2.O3.NestedStatic n;
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method NestedClassAnnotations#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method NestedClassAnnotations#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 3 at class O1 extends type; tree <<missing tree>> within 
 class O1 {
     
@@ -81,6 +95,18 @@ class O1 {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 5 at class O1$O2 extends type; tree <<missing tree>> within 
 static class O2 {
     
@@ -128,6 +154,18 @@ static class O2 {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 7 at class O1$O2$O3 extends type; tree <<missing tree>> within 
 static class O3 {
     
@@ -161,6 +199,18 @@ static class O3 {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2$O3#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Constant(@nninf.quals.Nullable)  <:  Variable 9 at class O1$O2$O3$NestedStatic extends type; tree <<missing tree>> within 
 static class NestedStatic {
     
@@ -179,4 +229,16 @@ static class NestedStatic {
         super();
     }
 } )
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method O1$O2$O3$NestedStatic#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
 

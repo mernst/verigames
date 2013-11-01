@@ -1,6 +1,4 @@
 Constraints:
-EqualityConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int = Constant(@trusted.quals.Untrusted) )
-
 SubtypeConstraint( Constant(@trusted.quals.Untrusted)  <:  Variable 0 at class CompoundAssignmentTest extends type; tree <<missing tree>> within 
 class CompoundAssignmentTest {
     
@@ -38,11 +36,27 @@ class CompoundAssignmentTest {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CompoundAssignmentTest#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CompoundAssignmentTest#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+SubtypeConstraint( Literal(INT_LITERAL, "2")  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
+
 SubtypeConstraint( Variable 2 at method CompoundAssignmentTest#method():I return type; tree int  <:  Variable 3 at method CompoundAssignmentTest#main():V local variable i(0); tree Integer )
 
 checkers.inference.StaticMethodCallConstraint(
 contextVp: method CompoundAssignmentTest#main():V constraint position; 
-calledVp: method CompoundAssignmentTest#method():I; 
+calledVp: Some(method CompoundAssignmentTest#method():I); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -51,4 +65,6 @@ classTypeArgs: <  >;
 args: (  ); 
 result: List(Variable 2 at method CompoundAssignmentTest#method():I return type; tree int); 
 )
+
+SubtypeConstraint( Literal(INT_LITERAL, "1")  <:  Variable 2 at method CompoundAssignmentTest#method():I return type; tree int )
 

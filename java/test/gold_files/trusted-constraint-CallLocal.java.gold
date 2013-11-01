@@ -42,6 +42,20 @@ class CallLocal {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method CallLocal#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallLocal#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method CallLocal#m1(Ljava/lang/Object;):V receiver; tree <<missing tree>> within 
 void m1(Object o) {
 }Atm: @VarAnnot(2) CallLocal  <:  Variable 0 at class CallLocal extends type; tree <<missing tree>> within 
@@ -87,6 +101,18 @@ class CallLocal {
     }
 } )
 
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallLocal#m2():Ljava/lang/Object; constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 8 at method CallLocal#m2():Ljava/lang/Object; creation 0; tree Object  <:  Variable 4 at method CallLocal#m2():Ljava/lang/Object; return type; tree Object )
 
 SubtypeConstraint( Variable 6 at method CallLocal#m3(LCallLocal;):V receiver; tree <<missing tree>> within 
@@ -115,7 +141,19 @@ class CallLocal {
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallLocal#m3(LCallLocal;):V constraint position; 
-calledVp: method CallLocal#m1(Ljava/lang/Object;):V; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method CallLocal#m3(LCallLocal;):V constraint position; 
+calledVp: Some(method CallLocal#m1(Ljava/lang/Object;):V); 
 receiver: Variable 7 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -127,7 +165,7 @@ result: List();
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: method CallLocal#m3(LCallLocal;):V constraint position; 
-calledVp: method CallLocal#m2():Ljava/lang/Object;; 
+calledVp: Some(method CallLocal#m2():Ljava/lang/Object;); 
 receiver: Variable 7 at method CallLocal#m3(LCallLocal;):V parameter 0; tree CallLocal; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 

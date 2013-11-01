@@ -32,9 +32,23 @@ enum IlluminaDataType {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Enum,java.lang.Enum#<init>(java.lang.StringI):void,method fromPicard.IlluminaDataType#<init>():V constraint position,null,List(),List(Constant(@trusted.quals.Untrusted)),List(),List(List(Constant(@trusted.quals.Trusted))),List(Constant(@trusted.quals.Untrusted), Constant(@trusted.quals.Untrusted)),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method fromPicard.IlluminaDataType#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Constant(@trusted.quals.Untrusted) >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Constant(@trusted.quals.Untrusted), Constant(@trusted.quals.Untrusted)) >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Position constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field Position; 
+calledVp: Some(class fromPicard.IlluminaDataType static field Position); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -46,7 +60,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Position constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -63,7 +77,7 @@ SubtypeConstraint( Variable 1 at class fromPicard.IlluminaDataType static field 
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field BaseCalls constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field BaseCalls; 
+calledVp: Some(class fromPicard.IlluminaDataType static field BaseCalls); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -75,7 +89,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field BaseCalls constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -92,7 +106,7 @@ SubtypeConstraint( Variable 3 at class fromPicard.IlluminaDataType static field 
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field QualityScores constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field QualityScores; 
+calledVp: Some(class fromPicard.IlluminaDataType static field QualityScores); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -104,7 +118,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field QualityScores constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -121,7 +135,7 @@ SubtypeConstraint( Variable 5 at class fromPicard.IlluminaDataType static field 
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field RawIntensities constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field RawIntensities; 
+calledVp: Some(class fromPicard.IlluminaDataType static field RawIntensities); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -133,7 +147,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field RawIntensities constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -150,7 +164,7 @@ SubtypeConstraint( Variable 7 at class fromPicard.IlluminaDataType static field 
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Noise constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field Noise; 
+calledVp: Some(class fromPicard.IlluminaDataType static field Noise); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -162,7 +176,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Noise constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -179,7 +193,7 @@ SubtypeConstraint( Variable 9 at class fromPicard.IlluminaDataType static field 
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field PF constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field PF; 
+calledVp: Some(class fromPicard.IlluminaDataType static field PF); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -191,7 +205,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field PF constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -208,7 +222,7 @@ SubtypeConstraint( Variable 11 at class fromPicard.IlluminaDataType static field
 
 checkers.inference.FieldAccessConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Barcodes constraint position; 
-calledVp: class fromPicard.IlluminaDataType static field Barcodes; 
+calledVp: Some(class fromPicard.IlluminaDataType static field Barcodes); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -220,7 +234,7 @@ result: List(Constant(@trusted.quals.Untrusted));
 
 checkers.inference.InstanceMethodCallConstraint(
 contextVp: class fromPicard.IlluminaDataType static field Barcodes constraint position; 
-calledVp: method fromPicard.IlluminaDataType#<init>():V; 
+calledVp: Some(method fromPicard.IlluminaDataType#<init>():V); 
 receiver: null; 
 methodTypeParamLBs: <  >; 
 classTypeParamLBs: <  >; 
@@ -255,6 +269,20 @@ public class IlluminaBasecallsToSam {
     }
     public static final IlluminaDataType[] DATA_TYPES_NO_BARCODE = {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF};
 } )
+
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method fromPicard.IlluminaBasecallsToSam#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method fromPicard.IlluminaBasecallsToSam#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 17 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE creation 0; tree {IlluminaDataType.BaseCalls, IlluminaDataType.QualityScores, IlluminaDataType.Position, IlluminaDataType.PF}  <:  Variable 18 at class fromPicard.IlluminaBasecallsToSam static field DATA_TYPES_NO_BARCODE; tree IlluminaDataType[] )
 

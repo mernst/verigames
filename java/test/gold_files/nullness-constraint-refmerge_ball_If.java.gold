@@ -34,6 +34,20 @@ class If {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method If#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@nninf.quals.Nullable)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method If#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.Nullable)); 
+)
+
 SubtypeConstraint( Variable 2 at method If#test():V receiver; tree <<missing tree>> within 
 void test() {
     String a = null;
@@ -59,19 +73,39 @@ class If {
 
 SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  Variable 3 at method If#test():V local variable a(0); tree String )
 
-BallSizeTestConstraint( input:Variable 3 at method If#test():V local variable a(0); tree String, super: RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: Set(), subtype: RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) )
+BallSizeTestConstraint( input:Variable 3 at method If#test():V local variable a(0); tree String, super: RefinementVariable #5 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: (Set()), subtype: RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: (Set(7 )) )
 
-InequalityConstraint( context: RefinementVP in method If#test():V, RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) != Constant(@nninf.quals.Nullable) )
+InequalityConstraint( context: RefinementVP in method If#test():V, RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: (Set(7 )) != Constant(@nninf.quals.Nullable) )
 
-EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set()) = Literal(STRING_LITERAL, "") )
+EqualityConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 )) = Literal(STRING_LITERAL, "") )
 
 SubtypeConstraint( Literal(STRING_LITERAL, "")  <:  Variable 3 at method If#test():V local variable a(0); tree String )
 
-SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
+SubtypeConstraint( Variable 3 at method If#test():V local variable a(0); tree String  <:  CombVariable #8 )
 
-SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set(RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set())  <:  RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set() )
+SubtypeConstraint( Literal(NULL_LITERAL, "null")  <:  CombVariable #8 )
 
-SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set()  <:  Variable 3 at method If#test():V local variable a(0); tree String )
+InequalityConstraint( context: method If#test():V constraint position, Literal(NULL_LITERAL, "null") != Constant(@nninf.quals.Nullable) )
 
-InequalityConstraint( context: method If#test():V constraint position, RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: Set() != Constant(@nninf.quals.Nullable) )
+SubtypeConstraint( RefinementVariable #4 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: true mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #6 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set(7 ))  <:  RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) )
+
+SubtypeConstraint( RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set())  <:  Variable 3 at method If#test():V local variable a(0); tree String )
+
+InequalityConstraint( context: method If#test():V constraint position, RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()) != Constant(@nninf.quals.Nullable) )
+
+StubBoardUseConstraint(java.lang.String,java.lang.String#toString():java.lang.String,method If#test():V constraint position,Constant(@nninf.quals.NonNull),List(),List(),List(),List(),List(),List(Constant(@nninf.quals.NonNull)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method If#test():V constraint position; 
+calledVp: None; 
+receiver: RefinementVariable #7 Declared Variable: Variable 3 at method If#test():V local variable a(0); tree String IfTest: false mergedTo: (Set()); 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@nninf.quals.NonNull)); 
+)
 

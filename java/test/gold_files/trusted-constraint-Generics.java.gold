@@ -26,6 +26,20 @@ class Generics {
     }
 } )
 
+StubBoardUseConstraint(java.lang.Object,java.lang.Object#<init>():void,method Generics#<init>():V constraint position,null,List(),List(),List(),List(),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Generics#<init>():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: <  >; 
+methodTypeArgs: <  >; 
+classTypeArgs: <  >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
+
 SubtypeConstraint( Variable 2 at method Generics#foo():V receiver; tree <<missing tree>> within 
 void foo() {
     Map<String, Object> map = new HashMap<String, Object>();
@@ -40,6 +54,20 @@ class Generics {
         Map<String, Object> map = new HashMap<String, Object>();
     }
 } )
+
+StubBoardUseConstraint(java.util.HashMap,java.util.HashMap#<init>():void,method Generics#foo():V constraint position,null,List(),List(Constant(@trusted.quals.Untrusted), Constant(@trusted.quals.Untrusted)),List(),List(List(Constant(@trusted.quals.Trusted)), List(Constant(@trusted.quals.Trusted))),List(),List(Constant(@trusted.quals.Untrusted)))
+
+checkers.inference.InstanceMethodCallConstraint(
+contextVp: method Generics#foo():V constraint position; 
+calledVp: None; 
+receiver: null; 
+methodTypeParamLBs: <  >; 
+classTypeParamLBs: < Constant(@trusted.quals.Untrusted), Constant(@trusted.quals.Untrusted) >; 
+methodTypeArgs: <  >; 
+classTypeArgs: < List(Variable 7 at method Generics#foo():V creation 0; tree String at position ((3,0)) within HashMap<String, Object>), List(Variable 8 at method Generics#foo():V creation 0; tree Object at position ((3,1)) within HashMap<String, Object>) >; 
+args: (  ); 
+result: List(Constant(@trusted.quals.Untrusted)); 
+)
 
 SubtypeConstraint( Variable 6 at method Generics#foo():V creation 0; tree HashMap within HashMap<String, Object>  <:  Variable 3 at method Generics#foo():V local variable map(0); tree Map within Map<String, Object> )
 
