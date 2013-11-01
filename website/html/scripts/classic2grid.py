@@ -10,7 +10,6 @@ class Port:
 		self.edgeid = edge
 		self.nodeid = node
 
-
 ### Dictionaries ###
 # boardedges[levelname][boardname][0][portnum] = incoming port
 # boardedges[levelname][boardname][1][portnum] = outgoing port
@@ -24,16 +23,25 @@ boardstubwidths = {}
 # edgesets[edgeid][1] = edge set port
 edgesets = {}
 
-# numedgesetedges[edgesetid] = # of edgerefs in this edge-set
-numedgesetedges = {}
+# varidsetedges[varID-set] = array of edgeids
+varidsetedges = {}
 
-# extraedgesetlines[edgesetid] = Array of extra lines generated from SUBBOARD nodes connecting to INCOMING/OUTGOING edges
+# levelvaridsetedges[lname][varID-set] = array of edgeids for the given level name
+levelvaridsetedges = {}
+
+# varid2varidset[varID] = varid-set id
+varid2varidset = {}
+
+# edgeidtovarid[edgeid] = varid
+edgeidtovarid = {}
+
+# extraedgesetlines[edgevaridsetid] = Array of extra lines generated from SUBBOARD nodes connecting to INCOMING/OUTGOING edges
 extraedgesetlines = {}
 
-# edgesetwidth[edgesetid] = isWide (Boolean)
+# edgesetwidth[edgevaridsetid] = isWide (Boolean)
 edgesetwidth = {}
 
-# edgeseteditable[edgesetid] = editable (Boolean)
+# edgeseteditable[edgevaridsetid] = editable (Boolean)
 edgeseteditable = {}
 
 # nodekinds[nodeid] = node kind
@@ -127,17 +135,17 @@ def port2joint(nid, kind, input, portnum, edgeid, otherlineid=None):
 	return [jointid, out]
 
 # Create the line XML for a line leading from a joint to a box
-def makeline2box(lineid, fromnid, fromport, setid, setport):
+def makeline2box(lineid, fromnid, fromport, varidsetid, setport):
 	out =  '    <line id="%s">\n' % lineid
 	out += '      <fromjoint id="%s" port="%s"/>\n' % (fromnid, fromport)
-	out += '      <tobox id="%s" port="%s"/>\n' % (setid, setport)
+	out += '      <tobox id="%s" port="%s"/>\n' % (varidsetid, setport)
 	out += '    </line>\n'
 	return out
 
 # Create the line XML for a line leading from a box to a joint
-def makeline2joint(lineid, tonid, toport, setid, setport):
+def makeline2joint(lineid, tonid, toport, varidsetid, setport):
 	out = '    <line id="%s">\n' % lineid
-	out += '      <frombox id="%s" port="%s"/>\n' % (setid, setport)
+	out += '      <frombox id="%s" port="%s"/>\n' % (varidsetid, setport)
 	out += '      <tojoint id="%s" port="%s"/>\n' % (tonid, toport)
 	out += '    </line>\n'
 	return out
@@ -150,7 +158,17 @@ def classic2grid(infile, outfile):
 		print 'Warning: expecting 1 World, found %d, processing only the first World' % len(worlds)
 	wx = worlds[0]
 	
-	# Step 1: Gather all board incoming/outgoing edges to fill boardedges dictionary
+	# Step 1a: Gather all varID-sets, varIDs, and edgeids associated with them
+	# Initialize varidsetedges, varid2varidset
+	for varsetx in wx.getElementsByTagName('varID-set'): #formerly traversing edge-sets, now varID-set
+		varidvaridsetid = varsetx.attributes['id'].value
+		# varidsetedges[varID-set] = array of edgeids
+		varidsetedges[varidvaridsetid] = []
+		for varidx in varsetx.getElementsByTagName('varID'):
+			varid = varidx.attributes['id'].value
+			# varid2varidset[varID] = varid-set id
+			varid2varidset[varid] = varidvaridsetid
+	# Step 1b: Gather all board incoming/outgoing edges to fill boardedges dictionary
 	# TODO: this could be optimized to only process levels that occur as a SUBBOARD reference
 	for lx in wx.getElementsByTagName('level'):
 		lname = lx.attributes['name'].value
@@ -200,13 +218,13 @@ def classic2grid(infile, outfile):
 	#		* outputs: 'n751__IN__0', 'n751__IN__1', etc
 	#		* where n751 is the original node id for the
 	#		* SUBBOARD node
-	#   b) <edge-set> becomes <box> (same id used)
+	#   b) <varID-set> becomes <box> (same id used)
 	#	c) <edge> becomes 2 separate <line>s
 	#		* The <line> corresponding to the <edge> input
 	#		* with id = e1 (going from n1 to n2) would be:
 	#		*   <line id='e1__IN__'>
 	#		*     <fromjoint id='n1' port='0'/>
-	#		*     <tobox id='Application10' port='0'/> <!-- Links this line to the box (edge-set) id this pipe belongs to at port N -->
+	#		*     <tobox id='Application10' port='0'/> <!-- Links this line to the box (varID-set) id this pipe belongs to at port N -->
 	#		*   </line>
 	#		*   <line id='e1__OUT__'>
 	#		*     <frombox id='Application10' port='0'/> <!-- This should match port N above! -->
@@ -218,29 +236,42 @@ def classic2grid(infile, outfile):
 	out += '<graph id="world">\n'
 	constraintout = out
 	for lx in wx.getElementsByTagName('level'):
+		lname = lx.attributes['name'].value
 		# Reset level-specific dictionaries
-		edgesets = {}
+		edgesets = {} # these keeps track of the linked edges IN THIS LEVEL ONLY (used to create widgets)
+		levelvaridsetedges[lname] = []
+		# these should be unique across all levels: varidsetedges = {}
+		# these should be unique across all levels: varid2varidset = {}
+		# these should be unique across all levels: edgeidtovarid = {}
 		nodekinds = {}
 		jointkinds = {}
 		numedgesetedges = {}
 		extraedgesetlines = {}
 		edgesetwidth = {}
 		edgeseteditable = {}
+		# Gather var ids for all edges, fill varidsetedges and levelvaridsetedges arrays
+		for ex in lx.getElementsByTagName('edge'):
+			edgeid = ex.attributes['id'].value
+			varid = ex.attributes['variableID'].value
+			edgeidtovarid[edgeid] = varid
+			varidvaridsetid = varid2varidset.get(varid)
+			if varidvaridsetid is None:
+				varidvaridsetid = '%s_varIDset' % varid
+				varid2varidset[varid] = varidvaridsetid
+				if varidsetedges.get(varidvaridsetid) is None:
+					varidsetedges[varidvaridsetid] = []
+				if levelvaridsetedges.get(varidvaridsetid) is None:
+					levelvaridsetedges[varidvaridsetid] = []
+			varidsetedges[varidvaridsetid].append(edgeid)
+			levelvaridsetedges[varidvaridsetid].append(edgeid)
+			edgesetport = len(levelvaridsetedges[varidvaridsetid]) - 1
+			edgesets[edgeid] = []
+			edgesets[edgeid].append(varidvaridsetid)
+			edgesets[edgeid].append(varidvaridsetid)
+			edgesetwidth[varidvaridsetid] = 'narrow'
+			edgeseteditable[varidvaridsetid] = False
+	
 		# Node ids for SUBBOARDS, INCOMING, and OUTGOING nodes that correspond to multiple joints (instead of exactly one)
-		lname = lx.attributes['name'].value
-		# Gather the associated edge ids for edgesets dictionary
-		for esx in lx.getElementsByTagName('edge-set'):
-			edgesetid = esx.attributes['id'].value
-			edgesetport = 0
-			for ex in esx.getElementsByTagName('edgeref'):
-				edgeid = ex.attributes['id'].value
-				edgesets[edgeid] = []
-				edgesets[edgeid].append(edgesetid)
-				edgesets[edgeid].append(edgesetport)
-				edgesetport += 1
-			numedgesetedges[edgesetid] = edgesetport
-			edgesetwidth[edgesetid] = 'narrow'
-			edgeseteditable[edgesetid] = False
 		# 2a: Replace <node> with <joint>, making one <joint> per in/out for SUBBOARD, INCOMING, OUTGOING nodes
 		# for subboards, also create lines between subboard joint and inner incoming/outgoing edges within the board
 		# for off-level subboards, create an extra "dummy" box per input and output connecting to joint
@@ -265,42 +296,40 @@ def classic2grid(infile, outfile):
 						portnum = px.attributes['num'].value
 						edgeport = getboardedge(lname, boardname, 0, portnum)
 						if edgeport is None:
-							setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
-							if numedgesetedges.get(setid) is None:
-								numedgesetedges[setid] = 0
-								extrasubboardbids.append(setid)
+							varidsetid = 'EXT__%s__XIN__%s' % (boardname, portnum)
+							if levelvaridsetedges.get(varidsetid) is None:
+								extrasubboardbids.append(varidsetid)
 								totalexternalboardinputs += 1
 								# Attempt to find stub width, if none default will be wide for subboard input
-								edgesetwidth[setid] = getstubwidth(lname, boardname, 0, portnum)
-								if edgesetwidth[setid] is None:
-									edgesetwidth[setid] = 'wide'
+								edgesetwidth[varidsetid] = getstubwidth(lname, boardname, 0, portnum)
+								if edgesetwidth[varidsetid] is None:
+									edgesetwidth[varidsetid] = 'wide'
 								else:
 									totalstubinputs += 1
-								edgeseteditable[setid] = False
-							#print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, setid)
+								edgeseteditable[varidsetid] = False
+							#print 'Edge not found for %s.%s input port #%s. Made box: %s' % (lname, boardname, portnum, varidsetid)
 						elif edgesets.get(edgeport.edgeid) is None:
-							setid = 'EXT__%s__XIN__%s' % (boardname, portnum)
-							if numedgesetedges.get(setid) is None:
-								numedgesetedges[setid] = 0
-								extrasubboardbids.append(setid)
+							varidsetid = 'EXT__%s__XIN__%s' % (boardname, portnum)
+							if levelvaridsetedges.get(varidsetid) is None:
+								extrasubboardbids.append(varidsetid)
 								totalexternalboardinputs += 1
 								# Attempt to find stub width, if none default will be wide for subboard input
-								edgesetwidth[setid] = getstubwidth(lname, boardname, 0, portnum)
-								if edgesetwidth[setid] is None:
-									edgesetwidth[setid] = 'wide'
+								edgesetwidth[varidsetid] = getstubwidth(lname, boardname, 0, portnum)
+								if edgesetwidth[varidsetid] is None:
+									edgesetwidth[varidsetid] = 'wide'
 								else:
 									totalstubinputs += 1
-								edgeseteditable[setid] = False
-							#print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, setid)
+								edgeseteditable[varidsetid] = False
+							#print 'Edge set not found for edge: %s. Made box: %s' % (edgeport.edgeid, varidsetid)
 						else:
-							setid = edgesets.get(edgeport.edgeid)[0]
+							varidsetid = edgesets.get(edgeport.edgeid)[0]
 						fromnid = nid + '__IN__' + portnum
 						lineid = '%s__OUT__CPY' % px.attributes['edge'].value
-						if extraedgesetlines.get(setid) is None:
-							extraedgesetlines[setid] = []
-						setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
-						extraedgesetlines[setid].append(lineid)
-						extrasubboardlines += makeline2box(lineid, fromnid, '0', setid, setport)
+						setport = len(levelvaridsetedges.get(varidsetid, [])) + len(extraedgesetlines.get(varidsetid, []))
+						if extraedgesetlines.get(varidsetid) is None:
+							extraedgesetlines[varidsetid] = []
+						extraedgesetlines[varidsetid].append(lineid)
+						extrasubboardlines += makeline2box(lineid, fromnid, '0', varidsetid, setport)
 						jointarr = port2joint(nid, kind, True, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 						jointdict[jointarr[0]] = jointarr[1]
 						jointkinds[jointarr[0]] = kind
@@ -319,26 +348,25 @@ def classic2grid(infile, outfile):
 						if edgeport is not None:
 							edgesetarr = edgesets.get(edgeport.edgeid)
 						if edgesetarr is None:
-							setid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
-							if numedgesetedges.get(setid) is None:
-								numedgesetedges[setid] = 0
-								extrasubboardbids.append(setid)
+							varidsetid = 'EXT__%s__XOUT__%s' % (boardname, portnum)
+							if levelvaridsetedges.get(varidsetid) is None:
+								extrasubboardbids.append(varidsetid)
 								totalexternalboardoutputs += 1
 								# Attempt to find stub width, if none default will be narrow for subboard output
-								edgesetwidth[setid] = getstubwidth(lname, boardname, 1, portnum)
-								if edgesetwidth[setid] is None:
-									edgesetwidth[setid] = 'narrow'
+								edgesetwidth[varidsetid] = getstubwidth(lname, boardname, 1, portnum)
+								if edgesetwidth[varidsetid] is None:
+									edgesetwidth[varidsetid] = 'narrow'
 								else:
 									totalstuboutputs += 1
-								edgeseteditable[setid] = False
-							#print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, setid)
+								edgeseteditable[varidsetid] = False
+							#print 'Edge not found for %s.%s output port #%s. Made box: %s' % (lname, boardname, portnum, varidsetid)
 							tonid = nid + '__OUT__' + portnum
 							lineid = '%s__IN__CPY' % px.attributes['edge'].value
-							if extraedgesetlines.get(setid) is None:
-								extraedgesetlines[setid] = []
-							setport = numedgesetedges[setid] + len(extraedgesetlines.get(setid))
-							extraedgesetlines[setid].append(lineid)
-							extrasubboardlines += makeline2joint(lineid, tonid, '0', setid, setport)
+							setport = len(levelvaridsetedges.get(varidsetid, [])) + len(extraedgesetlines.get(varidsetid, []))
+							if extraedgesetlines.get(varidsetid) is None:
+								extraedgesetlines[varidsetid] = []
+							extraedgesetlines[varidsetid].append(lineid)
+							extrasubboardlines += makeline2joint(lineid, tonid, '0', varidsetid, setport)
 							jointarr = port2joint(nid, kind, False, px.attributes['num'].value, px.attributes['edge'].value, lineid)
 							jointdict[jointarr[0]] = jointarr[1]
 							jointkinds[jointarr[0]] = kind
@@ -358,27 +386,24 @@ def classic2grid(infile, outfile):
 		print 'Level: %s' % lname
 		print 'Total external level inputs  (stubboards): %s (%s)' % (totalexternalboardinputs, totalstubinputs)
 		print 'Total external level outputs (stubboards): %s (%s)' % (totalexternalboardoutputs, totalstuboutputs)
-		# 2b: Replace <edge-set> with <box> and gather the associated edge ids for edgesets dictionary
+		# 2b: Replace <varID-set> with <box> and gather the associated edge ids for edgesets dictionary
 		boxesout = ''
 		totalboxcount = 0
-		for esx in lx.getElementsByTagName('edge-set'):
-			edgesetid = esx.attributes['id'].value
+		# for esx in lx.getElementsByTagName('varID-set'): # Can't use this because variable ids that are only linked to themselves are excluded
+			# edgevaridsetid = esx.attributes['id'].value
+		for edgevaridsetid in levelvaridsetedges:
 			# The box will have X number of lines coming from the original edges of the edge set
 			# PLUS any lines coming from other edge sets that connect thru SUBBOARD nodes
-			extraports = 0
-			if extraedgesetlines.get(edgesetid) is not None:
-				extraports = len(extraedgesetlines.get(edgesetid))
-			edgesetports = numedgesetedges[edgesetid] + extraports
-			boxesout += '    <box id="%s" lines="%s"/>\n' % (edgesetid, edgesetports)
+			extraports = len(extraedgesetlines.get(edgevaridsetid, []))
+			edgesetports = len(levelvaridsetedges.get(edgevaridsetid, [])) + extraports
+			boxesout += '    <box id="%s" lines="%s"/>\n' % (edgevaridsetid, edgesetports)
 			totalboxcount += 1
 		# Process extra boxes created from any external subboards
 		extrasubboardboxes = ''
-		for edgesetid in extrasubboardbids:
-			extraports = 0
-			if extraedgesetlines.get(edgesetid) is not None:
-				extraports = len(extraedgesetlines.get(edgesetid))
-			edgesetports = numedgesetedges[edgesetid] + extraports
-			extrasubboardboxes += '    <box id="%s" lines="%s"/>\n' % (edgesetid, edgesetports)
+		for edgevaridsetid in extrasubboardbids:
+			extraports = len(extraedgesetlines.get(edgevaridsetid, []))
+			edgesetports = len(levelvaridsetedges.get(edgevaridsetid, [])) + extraports
+			extrasubboardboxes += '    <box id="%s" lines="%s"/>\n' % (edgevaridsetid, edgesetports)
 			totalboxcount += 1
 		linesout = ''
 		print 'Total boxes: %s' % totalboxcount
@@ -389,18 +414,18 @@ def classic2grid(infile, outfile):
 		for ex in lx.getElementsByTagName('edge'):
 			edgeid = ex.attributes['id'].value
 			if edgesets.get(edgeid) is None:
-				print 'Warning: could not find edge-set for edge id: %s' % edgeid
+				print 'Warning: could not find varID for edge id: %s' % edgeid
 				continue
-			setid = edgesets.get(edgeid)[0]
+			varidsetid = edgesets.get(edgeid)[0]
 			setport = edgesets.get(edgeid)[1]
-			# Update edge-set isWide and editable
+			# Update varID-set isWide and editable
 			edgewidth = ex.attributes['width'].value
 			if edgewidth.lower() == 'wide':
-				edgesetwidth[setid] = edgewidth.lower()
+				edgesetwidth[varidsetid] = edgewidth.lower()
 			edgeeditable = ex.attributes['editable'].value
 			if (edgeeditable.lower() == 'true') or (edgeeditable.lower() == 't'):
-				edgeseteditable[setid] = True
-			# Create line from top node (joint) to edge-set (box)
+				edgeseteditable[varidsetid] = True
+			# Create line from top node (joint) to varID-set (box)
 			fromlineid = edgeid + '__IN__'
 			fromnodex = ex.getElementsByTagName('from')[0].getElementsByTagName('noderef')[0]
 			fromnid = fromnodex.attributes['id'].value
@@ -437,9 +462,9 @@ def classic2grid(infile, outfile):
 				else:
 					fromnid = "%s__OUT__%s" % (fromnodex.attributes['id'].value, fromoriginalport)
 					fromport = '0'
-			linesout += makeline2box(fromlineid, fromnid, fromport, setid, setport)
+			linesout += makeline2box(fromlineid, fromnid, fromport, varidsetid, setport)
 			totallinecount += 1
-			# Create line from edge-set (box) to bottom node (joint)
+			# Create line from varID-set (box) to bottom node (joint)
 			tolineid = edgeid + '__OUT__'
 			tonodex = ex.getElementsByTagName('to')[0].getElementsByTagName('noderef')[0]
 			tonid = tonodex.attributes['id'].value
@@ -457,7 +482,7 @@ def classic2grid(infile, outfile):
 			if (tokind.lower() == 'subboard') or (tokind.lower() == 'incoming') or (tokind.lower() == 'outgoing'):
 				tonid = "%s__IN__%s" % (tonodex.attributes['id'].value, tooriginalport)
 				toport = '0'
-			linesout += makeline2joint(tolineid, tonid, toport, setid, setport)
+			linesout += makeline2joint(tolineid, tonid, toport, varidsetid, setport)
 		print 'Total lines: %s' % totallinecount
 		# Create one string from jointdict
 		jointsout = ''
@@ -473,9 +498,9 @@ def classic2grid(infile, outfile):
 		out += '  </level>\n'
 		# Output constaints file
 		constraintout += '  <level id="%s">\n' % lname
-		for setid in edgesetwidth:
-			editablestr = '%s' % edgeseteditable.get(setid, 'narrow')
-			constraintout += '    <box id="%s" width="%s" editable="%s"/>\n' % (setid, edgesetwidth[setid], editablestr.lower())
+		for varidsetid in edgesetwidth:
+			editablestr = '%s' % edgeseteditable.get(varidsetid, 'narrow')
+			constraintout += '    <box id="%s" width="%s" editable="%s"/>\n' % (varidsetid, edgesetwidth[varidsetid], editablestr.lower())
 		constraintout += '  </level>\n'
 	out += '</graph>'
 	constraintout += '</graph>'
