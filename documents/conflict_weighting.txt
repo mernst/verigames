@@ -6,13 +6,21 @@ I. Background:
 
     The primary tool for motivating the user in the game is scoring. Thus, the scoring of conflicts and pipe widths should be weighted such that a higher-scoring solution is more likely to provide better information to the developer. Furthermore, the user should be given some visual cue regarding potential alternative conflict locations and the relative cost of each conflict. This prevents the user from having to manually explore each possibility and go back to the one with the best score, which would be a tedious process.
 
+    To accomplish this, a system should be introduced as an optional step in game board creation that takes as input:
+    - World.xml, as produced by the GameSolver
+    - The .java files for the program.
+    - User input (real or simulated) to produce actual executions of the program
+
+    Using a policy involving static and/or dynamic analysis, it would then output:
+    - The World.xml file modified to contain an additional attribute on nodes and edges indicating the relative cost of a conflict at that point.
+
 II. Weighting Mechanism:
 
     The mechanism for adding the weights involves changes to the XML and user interface to facilitate pipes and conflicts with different weights.
 
     1. XML
 
-        The world XML definition will be modified to include an optional "weight" attribute on nodes and edges, providing weighting for merges and pinch points, respectively. The weights will be a floating point number between -1 and 1 and will represent whether the system's analysis made the conflict more or less significant; a positive value indicates that the analysis indicated that the conflict should receive a larger weight, and a negative value indicates the opposite. The absence of a weight attribute is equivalent to including a weight attribute with a value of 0.
+        The world XML definition will be modified to include an optional "cost" attribute on nodes and edges, providing weighting for merges and pinch points, respectively. The weights will be a floating point number between -1 and 1 and will represent whether the system's analysis made the conflict more or less significant; a positive value indicates that the analysis indicated that the conflict should receive a larger weight. A cost of 1.0 would indicate that the conflict should result in the maximum penalty. Conversely, negative values indicates that the analysis indicated that the conflict should receive a smaller weight, with a cost of -1.0 indicating the conflict should result in the minimum penalty. The absence of a weight attribute is equivalent to including a weight attribute with a value of 0.
 
     2. User Interface
 
