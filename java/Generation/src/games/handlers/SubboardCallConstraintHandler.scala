@@ -4,7 +4,7 @@ import checkers.inference._
 import checkers.types.AnnotatedTypeMirror
 import games.GameSolver
 import scala.collection.mutable.{LinkedHashMap, ListBuffer}
-import verigames.level.{Chute, Subboard, Intersection}
+import verigames.level.{Board, Chute, Subboard, Intersection}
 import checkers.inference.InferenceMain._
 import checkers.types.AnnotatedTypeMirror.AnnotatedTypeVariable
 import verigames.level.Intersection.Kind._
@@ -103,12 +103,15 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
         addSubboardIntersection(callerBoard, constraint.calledVp.get, methodSignature)
       }
 
+    // Add equality and bounding (lowerBound <: slot) above the board before we split, so that we only
+    // have one instance of the same bound
+    addEqualityConstraints()
+    addBoundingConstraints()
+
     connectReceiverParamsThrough( subboardISect )
 
     connectClassTypeArgsThrough( subboardISect )
     connectMethodTypeArgsThrough( subboardISect )
-
-    //TODO JB: ADD EQUIVALENT/BOUNDS RELATIONSHIPS
 
     connectArgumentsThrough( subboardISect )
 
@@ -117,6 +120,22 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
     capSplits()
     mergeOutputs()
 
+  }
+
+  def addEqualityConstraints() {
+    constraint.equivalentSlots.foreach({
+      case ( slot1, slot2 ) => gameSolver.handleConstraint( gameSolver.world, EqualityConstraint( slot1, slot2 ) )
+    })
+  }
+
+  def addBoundingConstraints() {
+    constraint.slotToBounds.foreach({
+      case ( slot : AbstractVariable, lowerBound : AbstractVariable ) =>
+       gameSolver.addVariableSubtypeConstraint( callerBoard, slot, lowerBound )
+
+      case ( slot, lowerBound ) =>
+        gameSolver.handleConstraint( gameSolver.world, SubtypeConstraint( lowerBound, slot ) )
+    })
   }
 
   /**
@@ -343,5 +362,7 @@ abstract class SubboardCallConstraintHandler[CALLED_VP           <: VariablePosi
 
     port.toString
   }
+
+
 
 }

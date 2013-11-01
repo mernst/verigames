@@ -50,6 +50,10 @@ abstract class EqualityConstraintHandler( override val constraint : EqualityCons
   }
 
   protected def handleVars( leftVar : AbstractVariable, rightVar : AbstractVariable ) {
+    if( leftVar == rightVar ) {
+      return
+    }
+
     val leftBoard  = variablePosToBoard(leftVar.varpos)
     val rightBoard = variablePosToBoard(rightVar.varpos)
 

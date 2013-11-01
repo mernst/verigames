@@ -44,7 +44,7 @@ public class Misc
    * However, some classes may ignore this value in favor of their own, for
    * greater granularity.
    */
-  public static final boolean CHECK_REP_STRICT    = booleanPropOrEnv("STRICT",    false);
-  public static final boolean CHECK_REP_ENABLED   = booleanPropOrEnv("STRICT",    false);
+  public static final boolean CHECK_REP_STRICT    = booleanPropOrEnv("STRICT",    true);
+  public static final boolean CHECK_REP_ENABLED   = booleanPropOrEnv("STRICT",    true);
   public static final boolean CHECK_REP_FAIL_FAST = booleanPropOrEnv("FAIL_FAST", false);
 }

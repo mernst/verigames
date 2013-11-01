@@ -5,7 +5,6 @@ import argparse
 import sys
 import os.path
 
-# Required env vars
 VERIGAMES_HOME = os.environ['VERIGAMES']
 SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
