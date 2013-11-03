@@ -20,6 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
   LevelSpecTests.class,
   LevelXMLTests.class,
   WorldSpecTests.class,
+  WorldXMLParserSpecTests.class,
 })
 public class SpecificationTests {
   // Placeholder class

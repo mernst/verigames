@@ -79,6 +79,8 @@
   </target>
 
   <target name="test.level">
+    <copy file="../../world.dtd" todir="${bin}/verigames/level"/>
+    <copy file="test/verigames/level/hadoop-distcp.xml" todir="${bin}/verigames/level"/>
     <junit failureProperty="test.failure" fork="yes" dir="${bin}/verigames/level">
       <test name="verigames.level.SpecificationTests"/>
       <test name="verigames.level.ImplementationTests"/>
@@ -88,7 +90,6 @@
         <pathelement path="${bin}"/>
       </classpath>
     </junit>
-    <copy file="../../world.dtd" todir="${bin}/verigames/level"/>
   </target>
 
   <target name="test.layout">
