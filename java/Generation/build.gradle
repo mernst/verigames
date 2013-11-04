@@ -1,6 +1,6 @@
 
 def classDirs = files(new File(project(':Translation').projectDir, 'bin/classes/main'),
-                      new File(project(':Translation').projectDir, 'lib/xom-1.2.7.jar'))
+                      new File(project(':Translation').projectDir, 'lib/xom-1.2.10.jar'))
 
 dependencies {
 
@@ -8,7 +8,7 @@ dependencies {
     compile project(':Translation')
 
     // we also need the xom jar in the translation folder
-    compile files(new File(project(':Translation').projectDir, 'lib/xom-1.2.7.jar'))
+    compile files(new File(project(':Translation').projectDir, 'lib/xom-1.2.10.jar'))
 
 }
 

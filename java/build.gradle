@@ -172,7 +172,7 @@ subprojects {
 
 def toJar = [zipTree("Generation/bin/libs/Generation.jar"  ).matching { exclude 'META-INF' },
 			 zipTree("Translation/bin/libs/Translation.jar").matching { exclude 'META-INF' },
-			 zipTree("Translation/lib/xom-1.2.7.jar").matching { exclude 'META-INF' }, //Add this to Translation.jar
+			 zipTree("Translation/lib/xom-1.2.10.jar").matching { exclude 'META-INF' }, //Add this to Translation.jar
 			]
 
 //Combine all the files in the jars spe
