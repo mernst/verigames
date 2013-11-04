@@ -74,6 +74,8 @@ package networking
 		public static function addAchievement(type:String, message:String):void
 		{
 			var newAchievement:Achievements = new Achievements(type, message);
+			if(currentAchievementList == null)
+				currentAchievementList = new Dictionary;
 			currentAchievementList[type] = newAchievement;
 			newAchievement.post();
 		}
