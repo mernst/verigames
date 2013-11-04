@@ -88,7 +88,7 @@ package system
 							} else if (!edge.is_wide && edge.editable) {
 								// Try making this wide and widening downstream
 								newPropValue = false;
-								wideEdgeSets = edge.getDownStreamEdgeSetsMatchingPropValue(prop, true);
+								wideEdgeSets = edge.getDownStreamEdgeSetsMatchingPropValue(prop, true, level.original_level_name);
 							}
 							moveSet = new MoveSet();
 							numMoves = 0;

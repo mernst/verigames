@@ -8,8 +8,9 @@ package graph
 	public class EdgeSetRef extends EventDispatcher
 	{
 		public var id:String;
-		public var edge_ids:Vector.<String> = new Vector.<String>();
-		public var edges:Vector.<Edge> = new Vector.<Edge>();
+		// Level name to Vector.<Edge> containing edges for that level
+		private var m_levelNameToEdges:Dictionary = new Dictionary();
+		public var allEdges:Vector.<Edge> = new Vector.<Edge>();
 		private var m_props:PropDictionary = new PropDictionary();
 		// Possible stamps that the edge set can have, can only activate possible props
 		private var m_possibleProps:PropDictionary;
@@ -21,6 +22,20 @@ package graph
 			m_possibleProps = new PropDictionary();
 			// TODO: if edge set not editable, set to false
 			m_possibleProps.setProp(PropDictionary.PROP_NARROW, true);
+		}
+		
+		public function addEdge(edge:Edge, levelName:String):void
+		{
+			allEdges.push(edge);
+			if (!m_levelNameToEdges.hasOwnProperty(levelName)) {
+				m_levelNameToEdges[levelName] = new Vector.<Edge>();
+			}
+			getLevelEdges(levelName).push(edge);
+		}
+		
+		public function getLevelEdges(levelName:String):Vector.<Edge>
+		{
+			return m_levelNameToEdges[levelName] as Vector.<Edge>;
 		}
 		
 		public function addStamp(_edge_set_id:String, _active:Boolean):void {

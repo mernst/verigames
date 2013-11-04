@@ -144,8 +144,6 @@ package graph
 				}
 			}
 			
-			linked_edge_set.edges.push(this);
-			
 			metadata = null;
 		}
 		
@@ -333,7 +331,7 @@ package graph
 		 * @param	value Value of property of interest
 		 * @return List of editable edgeSets matching desired prop, value
 		 */
-		public function getDownStreamEdgeSetsMatchingPropValue(prop:String, value:Boolean):Vector.<EdgeSetRef>
+		public function getDownStreamEdgeSetsMatchingPropValue(prop:String, value:Boolean, levelName:String):Vector.<EdgeSetRef>
 		{
 			var edgeSets:Vector.<EdgeSetRef> = new Vector.<EdgeSetRef>();
 			var edgesToExamine:Vector.<Edge> = new Vector.<Edge>();
@@ -350,8 +348,9 @@ package graph
 				if (edgeSets.indexOf(thisEdge.linked_edge_set) == -1) {
 					edgeSets.push(thisEdge.linked_edge_set);
 					// Continue with any edges originating from this edge set
-					for (var oe:int = 0; oe < thisEdge.linked_edge_set.edges.length; oe++) {
-						var outEdge:Edge = thisEdge.linked_edge_set.edges[oe];
+					var levelEdges:Vector.<Edge> = thisEdge.linked_edge_set.getLevelEdges(levelName);
+					for (var oe:int = 0; oe < levelEdges.length; oe++) {
+						var outEdge:Edge = levelEdges[oe];
 						if (!outEdge) continue;
 						if (!outEdge.isStartingEdge()) continue;
 						if (edgesExamined.hasOwnProperty(outEdge.edge_id)) continue;

@@ -232,7 +232,8 @@ package scenes.game.display
 				} else {
 					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
 					//grab an example edge for it's attributes FIX - use constraints xml file
-					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet);
+					var levelEdges:Vector.<Edge> = edgeSet.getLevelEdges(original_level_name);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, levelEdges);
 				}
 				
 				gameNode.visible = getVisible(boxLayoutXML);
@@ -314,7 +315,7 @@ package scenes.game.display
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
 				joint.visible = getVisible(jointLayoutXML);
-		//		trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
+				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
 				if(joint.visible)
 					visibleJoints++;
 				else
@@ -646,7 +647,7 @@ package scenes.game.display
 			}
 			
 			m_bestScore = m_currentScore;
-			
+			flatten();
 			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
 		}
 		
@@ -1148,6 +1149,7 @@ package scenes.game.display
 					activate(gameJointsToActivate[i]);
 				}
 			}
+			flatten();
 		}
 		
 		private function activate(comp:GameComponent):void
@@ -1448,7 +1450,6 @@ package scenes.game.display
 		public function draw():void
 		{
 			trace("Bounding Box " + m_boundingBox);
-			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
@@ -1491,6 +1492,7 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
+			flatten();
 		}
 		
 		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean
@@ -1538,6 +1540,7 @@ package scenes.game.display
 				marqueeRect.y = pt1.y;
 				//do here to make sure we are on top
 				addChild(marqueeRect);
+				flatten();
 			}
 			else
 			{
@@ -1779,13 +1782,36 @@ package scenes.game.display
 		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
-			if(false) //don't flatten, as texture can be too big
-			{
-				this.m_nodesContainer.flatten();
-				this.m_jointsContainer.flatten();
-			}
-			//doesn't have texture size problem on board I tried, but I don't know why not
-	//		this.m_edgesContainer.flatten();
+			return; // uncomment when more testing performed
+			// Active layers
+			m_nodesContainer.flatten();
+			m_jointsContainer.flatten();
+			//m_errorContainer.flatten();// Can't flatten due to animations
+			m_edgesContainer.flatten();
+			m_plugsContainer.flatten();
+			// Inactive layers
+			m_nodesInactiveContainer.flatten();
+			m_jointsInactiveContainer.flatten();
+			//m_errorInactiveContainer.flatten();// Can't flatten due to animations
+			m_edgesInactiveContainer.flatten();
+			m_plugsInactiveContainer.flatten();
+		}
+		
+		public override function unflatten():void
+		{
+			super.unflatten();
+			// Active layers
+			m_nodesContainer.unflatten();
+			m_jointsContainer.unflatten();
+			//m_errorContainer.unflatten();// Can't flatten due to animations
+			m_edgesContainer.unflatten();
+			m_plugsContainer.unflatten();
+			// Inactive layers
+			m_nodesInactiveContainer.unflatten();
+			m_jointsInactiveContainer.unflatten();
+			//m_errorInactiveContainer.unflatten();// Can't flatten due to animations
+			m_edgesInactiveContainer.unflatten();
+			m_plugsInactiveContainer.unflatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean

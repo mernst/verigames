@@ -1,10 +1,8 @@
 package state 
 {
-	import flash.display.DisplayObject;
-	import tasks.ParseLevelXMLTask;
-	import tasks.Task;
-	import flash.utils.Timer;
 	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	import tasks.Task;
 	
 	public class LoadingState extends GenericState
 	{
