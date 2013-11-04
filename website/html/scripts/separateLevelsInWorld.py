@@ -5,15 +5,19 @@ import os, sys, re
 import fileinput
 #import pipejamDB
 
+nextNameAlias = 1
+nameDict = {}
 
 ### Main function ###
-def separateLevels(infile, outdirectory, fileMap, useRA):
+def separateLevels(infile, outdirectory, fileMap, useRA, startNumber):
 	print ('parsing xml')
 	count = 1
+	global nextNameAlias
+	global nameDict
 	writeLines = False
 	writeNextLine = False
 	isLevel = False
-	nextID = 1
+	nextID = startNumber
 	readLinkedVarIDs = False
 	inLinkedVarIDs = False
 	linkedVarIDs = []
@@ -24,7 +28,7 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 		id = str(nextID)
 	nextID = nextID + 1
 	levelFile = open(outdirectory + '/'+id+'.xml','w')
-	levelFile.write('<world version="3">\n')
+	levelFile.write('<world version="3" id="'+id+'">\n')
 
 	for line in fileinput.input(infile):
 			
@@ -40,34 +44,37 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 		if readLinkedVarIDs == False:
 			continue
 			
+		levelName = ""
 		if line.find('<level') != -1:
 			for item in linkedVarIDs:
 				levelFile.write("%s" % item)
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
-			name = line[nameStart:nameEnd]
-			fileMap.write('<level name="'+name+'" id="'+id+'"/>')
+			levelName = line[nameStart:nameEnd]
+			fileMap.write('<level name="'+levelName+'" id="'+id+'">')
 			writeLines = True
 			writeNextLine = True
 
-			print (name)
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-			line = line.replace("-", "_")
+			print (levelName)
 
-		elif line.find('<board') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
+		if line.find('name=') != -1:
+			nameStart = line.find('name="') + 6
+			nameEnd = line.find('"', nameStart)
+			name = line[nameStart:nameEnd]
+			lineStart = line[:nameStart]
+			lineEnd = line[nameEnd:]
+			
+			#name = name.replace(".", "_")
 
-		elif line.find('<node') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-
-		elif line.find('<edge-set') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-
-
+			nameAlias = str(nextNameAlias)
+			if nameDict.has_key(name):
+				nameAlias = nameDict[name]
+			else:
+				nameDict[name] = nameAlias
+				nextNameAlias = nextNameAlias + 1
+				
+			line = lineStart + nameAlias + lineEnd
+			
 		elif line.find('<layout') != -1:
 			writeLines = False
 			writeNextLine = False
@@ -91,7 +98,6 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
 			name = line[nameStart:nameEnd]
-			fileMap.write('<level name="'+name+'" id="'+id+'"/>')
 
 			levelFile = open(outdirectory + '/'+id+'.xml','w')
 			levelFile.write('<world version="3">\n')
@@ -110,16 +116,32 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 
 ### Command line interface ###
 if __name__ == "__main__":
-	if (len(sys.argv) < 2) or (len(sys.argv) > 3):
-		print ('\n\nUsage: %s input_file output_directory\n\n  input_file: name of classic XML '
-			'file to be parsed, omitting ".xml" extension\n  output_directory: output directory. Must exist.') % (sys.argv[0], sys.argv[0])
+	if (len(sys.argv) < 2) or (len(sys.argv) > 4):
+		print ('\n\nUsage: %s input_directory output_directory (if useRA == false) setNumber\n\n  input_directory: input directory'
+			'\n  output_directory: output directory. Must exist.\n  setNumber: The number of this library in the grand scheme of things.') % (sys.argv[0])
 		quit()
-	if len(sys.argv) == 3:
+	if len(sys.argv) > 2:
 		outdirectory = sys.argv[2]
 	else:
 		outdirectory = sys.argv[1]
 	infile = sys.argv[1]
 	print ('calling separateLevels')
 	fileMap = open(outdirectory + '/'+'filemap.xml','w')
-
-	separateLevels(infile, outdirectory, fileMap, False)
+	
+	#change as needed
+	useRA = False
+	startNumber = 1
+	if useRA == False and len(sys.argv) == 4:
+		startNumber = int(sys.argv[3])*10000
+	else:
+		print("Missing set number")
+		quit()
+		
+	fileMap.write('<levels>')
+	separateLevels(infile, outdirectory, fileMap, useRA, startNumber)
+	fileMap.write('</levels')
+	
+	fileMap.write('<namemaps>')
+	for key, value in nameDict.items():
+		fileMap.write('<namemap name="'+key+'" value="'+value+'"/>')
+	fileMap.write('<namemaps>')
