@@ -59,8 +59,6 @@ package scenes.game.display
 		
 		public function updatePortIndexes():void
 		{
-			if (m_id == "es38" && m_outgoingEdges.length == 4)
-				var d = 1;
 			//sort things
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
 			m_incomingEdges.sort(GameEdgeContainer.sortIncomingXPositions);
@@ -145,7 +143,6 @@ package scenes.game.display
 					currentPos++;
 				}
 			}
-			var e = 1;
 		}
 		
 		public function getNumLines():int
@@ -371,6 +368,12 @@ package scenes.game.display
 			}
 			m_outgoingPortsToEdgeDict[edge.m_fromPortID] = edge;
 			
+			//var extEdge:GameEdgeContainer = getExtensionEdge(edge);
+			//if (edge.hideSegments && extEdge && !extEdge.hideSegments) {
+				//var newStart:Point = edge.globalToLocal(extEdge.globalEnd);
+				//edge.setStartPosition(new Point(newStart.x, edge.m_startPoint.y));
+			//}
+			
 			//I want the edges to be in ascending order according to x position, so do that here
 			//only works when added to stage, so don't rely on initial placements
 			m_outgoingEdges.sort(GameEdgeContainer.sortOutgoingXPositions);
@@ -386,6 +389,12 @@ package scenes.game.display
 				throw new Error("Multiple incoming edges found with same port id: " + edge.m_toPortID + " node:" + m_id + " edge id:" + edge.m_id);
 			}
 			m_incomingPortsToEdgeDict[edge.m_toPortID] = edge;
+			
+			//var extEdge:GameEdgeContainer = getExtensionEdge(edge);
+			//if (edge.hideSegments && extEdge && !extEdge.hideSegments) {
+				//var newEnd:Point = edge.globalToLocal(extEdge.globalStart);
+				//edge.setEndPosition(new Point(newEnd.x, edge.m_endPoint.y));
+			//}
 			
 			//I want the edges to be in ascending order according to x position, so do that here
 			//only works when added to stage, so don't rely on initial placements

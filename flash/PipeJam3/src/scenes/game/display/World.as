@@ -503,18 +503,22 @@ package scenes.game.display
 				} else {
 					throw new Error("World.getUpdatedXML(): Level not found: " + my_level.level_name);
 				}
-				//Update the xml with the stamp state information. Only update existing stamps, not adding new ones
-				var edgeSetXML:XMLList = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"];
-				var numEdgeSets:uint = edgeSetXML.length();
-				for (var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
-					var edgeSetID:String = edgeSetXML[edgeSetIndex].attribute("id").toString();
-					if (my_level.levelNodes.edge_set_dictionary.hasOwnProperty(edgeSetID)) {
-						var linkedEdgeSet:EdgeSetRef = my_level.levelNodes.edge_set_dictionary[edgeSetID] as EdgeSetRef;
-						for (var stampIndex:uint = 0; stampIndex < edgeSetXML[edgeSetIndex]["stamp"].length(); stampIndex++) {
-							var stampID:String = edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@id;
-							edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@active = linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+				if ((m_network.world_version == "1") || (m_network.world_version == "2")) {
+					//Update the xml with the stamp state information. Only update existing stamps, not adding new ones
+					var edgeSetXML:XMLList = output_xml["level"][my_level_xml_indx]["linked-edges"][0]["edge-set"];
+					var numEdgeSets:uint = edgeSetXML.length();
+					for (var edgeSetIndex:uint = 0; edgeSetIndex<numEdgeSets; edgeSetIndex++) {
+						var edgeSetID:String = edgeSetXML[edgeSetIndex].attribute("id").toString();
+						if (my_level.levelNodes.edge_set_dictionary.hasOwnProperty(edgeSetID)) {
+							var linkedEdgeSet:EdgeSetRef = my_level.levelNodes.edge_set_dictionary[edgeSetID] as EdgeSetRef;
+							for (var stampIndex:uint = 0; stampIndex < edgeSetXML[edgeSetIndex]["stamp"].length(); stampIndex++) {
+								var stampID:String = edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@id;
+								edgeSetXML[edgeSetIndex]["stamp"][stampIndex].@active = linkedEdgeSet.hasActiveStampOfEdgeSetId(stampID).toString();
+							}
 						}
 					}
+				} else {
+					// TODO: stamp support not implemented in XML version 3
 				}
 				if (my_level == active_level) {
 					activeLevelXML = output_xml["level"][my_level_xml_indx];

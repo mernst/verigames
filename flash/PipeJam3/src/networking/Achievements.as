@@ -53,7 +53,7 @@ package networking
 		public var m_id:String;
 		public var m_message:String;
 		
-		static protected var currentAchievementList:Dictionary;
+		static protected var currentAchievementList:Dictionary = new Dictionary();
 		
 		public static function getAchievementsEarnedForPlayer():void
 		{

@@ -22,8 +22,7 @@ package tasks
 		
 		public override function perform():void {
 			super.perform();
-			var my_level_nodes:LevelNodes = LevelLayout.parseLevelXML(level_xml, worldNodes.obfuscator);
-			worldNodes.addLevel(my_level_nodes);
+			LevelLayout.parseLevelXML(level_xml, worldNodes, worldNodes.obfuscator);
 			complete = true;
 		}
 		
