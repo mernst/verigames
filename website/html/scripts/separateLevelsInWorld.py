@@ -14,6 +14,9 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 	writeNextLine = False
 	isLevel = False
 	nextID = 1
+	readLinkedVarIDs = False
+	inLinkedVarIDs = False
+	linkedVarIDs = []
 	#get levelID from RA
 	if useRA:
 		id = pipejamDB.getNewLevelID()
@@ -21,11 +24,25 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 		id = str(nextID)
 	nextID = nextID + 1
 	levelFile = open(outdirectory + '/'+id+'.xml','w')
-	levelFile.write('<world>')
+	levelFile.write('<world version="3">\n')
 
 	for line in fileinput.input(infile):
-		if line.find('<level') != -1:
 			
+		if line.find('linked-varIDs') != -1:
+			inLinkedVarIDs = not inLinkedVarIDs;
+			if inLinkedVarIDs == False:
+				linkedVarIDs.append(line)
+				readLinkedVarIDs = True
+			
+		if inLinkedVarIDs == True and readLinkedVarIDs == False:
+			linkedVarIDs.append(line)
+			
+		if readLinkedVarIDs == False:
+			continue
+			
+		if line.find('<level') != -1:
+			for item in linkedVarIDs:
+				levelFile.write("%s" % item)
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
 			name = line[nameStart:nameEnd]
@@ -77,7 +94,7 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 			fileMap.write('<level name="'+name+'" id="'+id+'"/>')
 
 			levelFile = open(outdirectory + '/'+id+'.xml','w')
-			levelFile.write('<world>')
+			levelFile.write('<world version="3">\n')
 		 
 		if writeLines:
 			levelFile.write(line)
@@ -103,6 +120,6 @@ if __name__ == "__main__":
 		outdirectory = sys.argv[1]
 	infile = sys.argv[1]
 	print ('calling separateLevels')
-	fileMap = open(outdirectory + '/'+'filemap1.xml','w')
+	fileMap = open(outdirectory + '/'+'filemap.xml','w')
 
 	separateLevels(infile, outdirectory, fileMap, False)
