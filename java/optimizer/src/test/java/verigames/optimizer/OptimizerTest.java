@@ -150,7 +150,7 @@ public class OptimizerTest {
         board.add(start, "1", connect, "2", c1);
         board.add(start, "3", merge, "4", c2);
         board.add(connect, "5", merge, "6", mutableChute());
-        board.add(connect, "7", Intersection.Kind.OUTGOING, "8", mutableChute());
+        board.add(merge, "7", Intersection.Kind.OUTGOING, "8", mutableChute());
         board.finishConstruction();
         Level level = new Level();
         level.addBoard("board", board);

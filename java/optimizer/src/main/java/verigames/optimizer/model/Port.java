@@ -2,7 +2,9 @@ package verigames.optimizer.model;
 
 public class Port {
 
-    final String name;
+    public static final Port OUTPUT = new Port("output");
+
+    private final String name;
 
     public Port(String name) {
         this.name = name;
