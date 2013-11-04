@@ -258,10 +258,10 @@ def classic2grid(infile, outfile):
 			if varidvaridsetid is None:
 				varidvaridsetid = '%s_varIDset' % varid
 				varid2varidset[varid] = varidvaridsetid
-				if varidsetedges.get(varidvaridsetid) is None:
-					varidsetedges[varidvaridsetid] = []
-				if levelvaridsetedges.get(varidvaridsetid) is None:
-					levelvaridsetedges[varidvaridsetid] = []
+			if varidsetedges.get(varidvaridsetid) is None:
+				varidsetedges[varidvaridsetid] = []
+			if levelvaridsetedges.get(varidvaridsetid) is None:
+				levelvaridsetedges[varidvaridsetid] = []
 			varidsetedges[varidvaridsetid].append(edgeid)
 			levelvaridsetedges[varidvaridsetid].append(edgeid)
 			edgesetport = len(levelvaridsetedges[varidvaridsetid]) - 1
