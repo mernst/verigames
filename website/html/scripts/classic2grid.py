@@ -239,7 +239,7 @@ def classic2grid(infile, outfile):
 		lname = lx.attributes['name'].value
 		# Reset level-specific dictionaries
 		edgesets = {} # these keeps track of the linked edges IN THIS LEVEL ONLY (used to create widgets)
-		levelvaridsetedges[lname] = []
+		levelvaridsetedges = {}
 		# these should be unique across all levels: varidsetedges = {}
 		# these should be unique across all levels: varid2varidset = {}
 		# these should be unique across all levels: edgeidtovarid = {}
@@ -267,7 +267,7 @@ def classic2grid(infile, outfile):
 			edgesetport = len(levelvaridsetedges[varidvaridsetid]) - 1
 			edgesets[edgeid] = []
 			edgesets[edgeid].append(varidvaridsetid)
-			edgesets[edgeid].append(varidvaridsetid)
+			edgesets[edgeid].append(edgesetport)
 			edgesetwidth[varidvaridsetid] = 'narrow'
 			edgeseteditable[varidvaridsetid] = False
 	
