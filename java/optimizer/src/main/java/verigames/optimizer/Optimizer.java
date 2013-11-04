@@ -148,9 +148,8 @@ public class Optimizer {
                 Collection<NodeGraph.Edge> iEdgeSet = g.edgeSet(incomingEdge);
                 Collection<NodeGraph.Edge> oEdgeSet = g.edgeSet(outgoingEdge);
                 if ((iEdgeSet.size() > 1 || oEdgeSet.size() > 1) &&
-                        // if both edges are, together, the sole members of a single
-                        // edge set, then we actually CAN merge them
-                        !(oEdgeSet.size() == 2 && oEdgeSet.contains(incomingEdge))) {
+                        // however, if both edges are part of the same set, we can merge them!
+                        !(incomingChute.getVariableID() == outgoingChute.getVariableID())) {
                     continue;
                 }
 

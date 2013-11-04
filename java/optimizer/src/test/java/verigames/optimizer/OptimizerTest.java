@@ -133,7 +133,7 @@ public class OptimizerTest {
     }
 
     /**
-     * Connector compression should not remove edges that belong to
+     * Connector compression should NOT remove edges that belong to
      * an edge set.
      */
     @Test
@@ -174,22 +174,25 @@ public class OptimizerTest {
     }
 
     /**
-     * Connector compression SHOULD remove edges that belong to
-     * an edge set IF the only members of the edge set are the
-     * incoming and outgoing edges of the connector.
+     * Connector compression SHOULD compress edges that belong to the
+     * same edge set.
      */
     @Test
     public void testConnectorCompression3() {
         Board board = new Board();
         Intersection start = board.addNode(Intersection.Kind.INCOMING);
+        Intersection merge = board.addNode(Intersection.Kind.MERGE);
         Intersection connect = board.addNode(Intersection.Kind.CONNECT);
 
         // 2 chutes in the same edge set
         Chute c1 = new Chute(3, "?");
         Chute c2 = new Chute(3, "?");
+        Chute c3 = new Chute(3, "?");
 
-        board.add(start, "1", connect, "1", c1);
-        board.add(connect, "2", Intersection.Kind.OUTGOING, "1", c2);
+        board.add(start, "1", connect, "2", c1);
+        board.add(start, "3", merge, "4", c2);
+        board.add(connect, "5", merge, "6", c3);
+        board.add(merge, "7", Intersection.Kind.OUTGOING, "8", mutableChute());
         board.finishConstruction();
         Level level = new Level();
         level.addBoard("board", board);
@@ -208,15 +211,12 @@ public class OptimizerTest {
         assert finalLevel.getBoards().size() == 1;
 
         Board finalBoard = Util.first(finalLevel.getBoards().values());
-        assert finalBoard.getNodes().size() == 2;
+        assert finalBoard.getNodes().size() == 3;
         for (Intersection node : finalBoard.getNodes()) {
             assert node.getIntersectionKind() != Intersection.Kind.CONNECT;
         }
 
-        assert finalBoard.getEdges().size() == 1;
-        for (Chute chute : finalBoard.getEdges()) {
-            assert chute.isEditable();
-        }
+        assert finalBoard.getEdges().size() == 3;
     }
 
 }
