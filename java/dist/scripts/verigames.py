@@ -5,7 +5,6 @@ import argparse
 import sys
 import os.path
 
-# Required env vars
 VERIGAMES_HOME = os.environ['VERIGAMES']
 SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
@@ -73,6 +72,7 @@ def error(msg):
 def main():
     parser = argparse.ArgumentParser('Execute verigames on the command line.')
     parser.add_argument('--analysis', help='Dataflow analysis. Typesystem dependent.')
+    parser.add_argument('--stubs', help='Stub files to use.')
     parser.add_argument('--checker', help='Typesystem Checker.')
     parser.add_argument('--debug', action='store_true', help='Listen for java debugger.')
     parser.add_argument('--extra-classpath', help='Additional classpath entries.')
@@ -114,10 +114,10 @@ def main():
         if args.mode in ['autosolve', 'roundtrip']:
             checker.solver = AUTOMATIC_SOLVER
         command = generate_checker_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.print_world, args.files)
+                args.debug, args.not_strict, args.xmx, args.print_world, args.prog_args, args.stubs, args.files)
     else:
         command = generate_typecheck_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.prog_args, args.files)
+                args.debug, args.not_strict, args.xmx, args.prog_args, args.stubs, args.files)
 
     execute(command, args)
 
@@ -157,7 +157,7 @@ def main():
         command = generate_afu_command(args.files, args.output_dir)
         execute(command, args)
         command = generate_typecheck_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.prog_args, [os.path.join(args.output_dir, os.path.basename(f)) for f in args.files])
+                args.debug, args.not_strict, args.xmx, args.prog_args, args.stubs, [os.path.join(args.output_dir, os.path.basename(f)) for f in args.files])
         execute(command, args)
 
 def generate_asp_command(world_file):
@@ -173,9 +173,10 @@ def generate_afu_command(files, outdir):
     args = 'insert-annotations-to-source -v -d %s %s %s ' % (outdir, os.path.join(outdir, 'inference.jaif'), ' '.join(files))
     return args
 
-def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, print_world, files):
+def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, print_world, prog_args, stubs, files):
     java_path = os.path.join(JAVA_HOME, 'bin', 'java')
     java_args = java_args if java_args else ""
+    prog_args = prog_args if prog_args else ""
     java_opts = "%s -Dscala.usejavacp=true -Xms512m -Xmx%s -Xbootclasspath/p:%s -ea " % \
         (java_args, xmx, classpath)
     if debug:
@@ -184,11 +185,13 @@ def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, 
         java_opts += " -DPRINT_WORLD=true "
     if not_strict:
         java_opts += " -DSTRICT=false "
-    args = ' '.join([java_path, java_opts, checker.to_checker_args(), ' '.join(files)])
+    if stubs:
+        prog_args += " --stubs " + stubs
+    args = ' '.join([java_path, java_opts, checker.to_checker_args(), prog_args, ' '.join(files)])
     return args
 
 def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict,
-            xmx, prog_args, files):
+            xmx, prog_args, stubs, files):
 
     java_path = os.path.join(JAVA_HOME, 'bin', 'java')
     java_args = java_args if java_args else ""
@@ -199,6 +202,8 @@ def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict,
         java_opts += " -J" + DEBUG_OPTS
     if not_strict:
         java_opts += " -DSTRICT=false "
+    if stubs:
+        prog_args += " -Astubs=" + stubs
     args = ' '.join([java_path, java_opts, '-processor ', checker.name, prog_args, ' '.join(files)])
     return args
 

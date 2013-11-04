@@ -285,6 +285,11 @@ public class World
     }
   }
 
+  public boolean underConstruction()
+  {
+    return this.underConstruction;
+  }
+
   /**
    * Throws IllegalStateException if the following conditions are not met:
    *

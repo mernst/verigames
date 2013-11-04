@@ -18,7 +18,6 @@ import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallCons
 import checkers.inference.util.{SolverUtil, CollectionUtil}
 import checkers.types.AnnotatedTypeMirror
 
-
 /**
  * An abstract base class for all game solvers.
  */
@@ -332,6 +331,11 @@ abstract class GameSolver extends ConstraintSolver {
 
           case clvar: WithinClassVP if ( cvar.varpos.isInstanceOf[WithinFieldVP]     ||
                                          cvar.varpos.isInstanceOf[WithinStaticInitVP] ) =>
+            val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
+            boardNVariableToIntersection += ((board, cvar) -> connect)
+
+
+          case implVar : ImplementsVP =>
             val connect = board.add(START_NO_BALL, "output", CONNECT, "input", toChute(cvar))._2
             boardNVariableToIntersection += ((board, cvar) -> connect)
 
@@ -919,7 +923,7 @@ abstract class GameSolver extends ConstraintSolver {
     val contextVp = constraint.contextVp
 
     val board = variablePosToBoard( contextVp )
-    val vars = ( constraint.classTypeParamLBs ++ constraint.methodTypeParamLBs ++ constraint.classTypeArgs.flatten ++ constraint.methodTypeArgs.flatten ++ constraint.args :+ constraint.receiver )
+    val vars = ( constraint.slots ).toSet
                   .filterNot( isUniqueSlot _ ) //TODO JB: If these are actually lower bounds, is this not superfluous, remove
                   .map( _.asInstanceOf[AbstractVariable] )
 
@@ -965,5 +969,30 @@ abstract class GameSolver extends ConstraintSolver {
       case (board, typeParams) =>
         connectVariablesToOutput( board, typeParams, ClassTypeParamsOutPort )
     })
+  }
+
+  /**
+   * TODO: Make sub-gamesolvers call this for handling subtype constraints between variables
+   * so that it occurs on the callerBoard
+   * @param supervar
+   * @param subvar
+   */
+  def addVariableSubtypeConstraint( board : Board, supervar : AbstractVariable, subvar : AbstractVariable ) {
+    import Intersection.Kind._
+
+    val lastSubtypeISect   = findIntersection( board, subvar )
+    val lastSupertypeISect = findIntersection( board, supervar )
+
+    //Split the subtype
+    val split = board.add( lastSubtypeISect, "0", SPLIT, "0", createChute( subvar ) )._2
+    //Create a merge in the super type
+    val merge = board.add( lastSupertypeISect, "0", MERGE, "0", createChute( supervar ) )._2
+    //Merge the one side of the subtype's split into the merge
+    board.add( split, "1", merge, "1", createChute( subvar ) )
+
+    //The open end of the split is the subvar's latest intersection
+    updateIntersection( board, subvar, split )
+    //The bottom of the merge is the supervar's latest intersection
+    updateIntersection( board, supervar, merge )
   }
 }

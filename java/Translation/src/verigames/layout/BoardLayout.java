@@ -113,7 +113,7 @@ public class BoardLayout
       
       // gives the upper left hand corner of the node in hundredths of points.
       int xCorner = Math.max(xIn - (width / 2), 0); //TODO JB: Shouldn't we never have a negative here?
-      int yCorner = yIn - (height / 2);
+      int yCorner = Math.max(yIn - (height / 2), 0);
       
       n.setX(((double) xCorner) / 7200d);
       n.setY(((double) yCorner) / 7200d);

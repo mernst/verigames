@@ -50,6 +50,10 @@ abstract class EqualityConstraintHandler( override val constraint : EqualityCons
   }
 
   protected def handleVars( leftVar : AbstractVariable, rightVar : AbstractVariable ) {
+    if( leftVar == rightVar ) {
+      return
+    }
+
     val leftBoard  = variablePosToBoard(leftVar.varpos)
     val rightBoard = variablePosToBoard(rightVar.varpos)
 
@@ -89,8 +93,9 @@ abstract class EqualityConstraintHandler( override val constraint : EqualityCons
     //So this shouldn't happen because all trees that are usually annotated but have a Constant on them
     //should just have an equality constraint between the variable and the Constant
     //but lets check and throw if they don't agree
-    assert ( isNarrow( leftSlot ) == isNarrow(rightSlot ) )
-    assert ( isWide(   leftSlot ) == isWide(  rightSlot ) )
+    if ( isNarrow( leftSlot ) != isNarrow(rightSlot ) || isWide(   leftSlot ) != isWide(  rightSlot ) ) {
+      println("TODO: Unsatisfiable constraint: " + constraint)
+    }
   }
 
   private def forceWidth( variable : AbstractVariable, isNarrow : Boolean ) {

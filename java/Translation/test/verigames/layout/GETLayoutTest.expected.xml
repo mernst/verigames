@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE world SYSTEM "world.dtd">
-<world version="2">
+<!DOCTYPE world SYSTEM "http://types.cs.washington.edu/verigames/world.dtd">
+<world version="3">
+ <linked-varIDs/>
  <level name="GetTestLevel">
-  <linked-edges>
-   <edge-set id="GetTestLevel0">
-    <edgeref id="e1"/>
-   </edge-set>
-   <edge-set id="GetTestLevel1">
-    <edgeref id="e2"/>
-   </edge-set>
-   <edge-set id="GetTestLevel2">
-    <edgeref id="e3"/>
-   </edge-set>
-   <edge-set id="GetTestLevel3">
-    <edgeref id="e4"/>
-   </edge-set>
-   <edge-set id="GetTestLevel4">
-    <edgeref id="e5"/>
-   </edge-set>
-  </linked-edges>
   <boards>
    <board name="GetTestBoard">
     <node kind="INCOMING" id="n0">

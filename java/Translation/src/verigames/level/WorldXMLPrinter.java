@@ -64,7 +64,7 @@ public class WorldXMLPrinter extends Printer<World, Void>
     }
 
     Document doc = new Document(worldElt);
-    DocType docType = new DocType("world", "world.dtd");
+    DocType docType = new DocType("world", "http://types.cs.washington.edu/verigames/world.dtd");
     doc.insertChild(docType, 0);
 
     try

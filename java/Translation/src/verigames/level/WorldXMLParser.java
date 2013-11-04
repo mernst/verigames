@@ -11,15 +11,8 @@ import verigames.layout.GameCoordinate;
 import verigames.level.StubBoard.StubConnection;
 import verigames.utilities.Pair;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /*>>>
 import checkers.nullness.quals.*;
@@ -34,26 +27,30 @@ import checkers.nullness.quals.*;
 // TODO document internal methods more thoroughly.
 public class WorldXMLParser
 {
-  public static final int version = 2;
+  public static final int version = 3;
 
   /**
    * Parses the text from {@code in} as XML, and returns a {@link World} object
    * representing the same information.
    * <p>
-   * The elements in the returned {@code World} are not under construction
-   * (meaning that no structural mutation is allowed). This is because the
-   * {@link Board} graphs cannot currently have nodes or edges removed, and it
-   * is unlikely that any other structural modification would be useful. There
-   * is the possibility that {@link Level}s may benefit from having {@code
-   * Board}s added to them, but currently, there is no reason to do so.
+   * The returned {@code World} is not under construction (meaning that no
+   * structural mutation is allowed). This is because the {@link Board} graphs
+   * cannot currently have nodes or edges removed, and it is unlikely that any
+   * other structural modification would be useful. There is the possibility
+   * that {@link Level}s may benefit from having {@code Board}s added to them,
+   * but currently, there is no reason to do so.
    */
   /* This method should perhaps be static, but it is left as nonstatic so that
    * it is consistent with WorldXMLPrinter, whose print method is nonstatic
    * to facilitate code reuse (it's a subclass of Printer) */
   public World parse(final InputStream in)
   {
-    // creates a Builder that validates the input;
-    final Builder parser = new Builder(true);
+    // creates a Builder that does not validate the input;
+    // TODO we should probably validate the XML, but it has trouble finding a
+    // local DTD, and a hosted copy won't work very well in development. The
+    // parser should catch any syntax errors, as well as other errors, but it
+    // would be nice to have another layer of validation.
+    final Builder parser = new Builder(false);
 
     final Document doc;
 
@@ -95,19 +92,69 @@ public class WorldXMLParser
 
     final World w = new World();
 
-    final Elements children = worldElt.getChildElements();
+    final Element linkedVarIDsElt = worldElt.getFirstChildElement("linked-varIDs");
 
-    for (int i = 0; i < children.size(); i++)
+    final List<List<Integer>> linkedVarIDs = processLinkedVarIDs(linkedVarIDsElt);
+
+    for (final List<Integer> linkedIDList : linkedVarIDs)
     {
-      final Element child = children.get(i);
-      final Pair<String, Level> p = processLevel(child);
-      String name = p.getFirst();
-      Level level = p.getSecond();
-      level.finishConstruction();
+      for (int i = 1; i < linkedIDList.size(); i++)
+      {
+        final int firstID = linkedIDList.get(i - 1);
+        final int secondID = linkedIDList.get(i);
+        w.linkByVarID(firstID, secondID);
+      }
+    }
+
+    final Elements levelsElts = worldElt.getChildElements("level");
+
+    for (int i = 0; i < levelsElts.size(); i++)
+    {
+      final Element levelElt = levelsElts.get(i);
+      final Pair<String, Level> p = processLevel(levelElt);
+      final String name = p.getFirst();
+      final Level level = p.getSecond();
       w.addLevel(name, level);
     }
 
+    w.finishConstruction();
     return w;
+  }
+
+  private static List<List<Integer>> processLinkedVarIDs(final Element linkedVarIDsElt)
+  {
+    checkName(linkedVarIDsElt, "linked-varIDs");
+
+    // TODO add support for stamping
+
+    final List<List<Integer>> linkedVarIDs = new ArrayList<>();
+
+    final Elements varIDSetElts = linkedVarIDsElt.getChildElements();
+
+    for (int i = 0; i < varIDSetElts.size(); i++)
+    {
+      final Element varIDSetElt = varIDSetElts.get(i);
+      final List<Integer> varIDSet = processVarIDSet(varIDSetElt);
+      linkedVarIDs.add(varIDSet);
+    }
+
+    return linkedVarIDs;
+  }
+
+  private static List<Integer> processVarIDSet(final Element varIDSetElt)
+  {
+    List<Integer> varIDs = new ArrayList<>();
+
+    final Elements varIDElts = varIDSetElt.getChildElements();
+
+    for (int i = 0; i < varIDElts.size(); i++)
+    {
+      final Element varIDElt = varIDElts.get(i);
+      final int varID = Integer.parseInt(varIDElt.getAttribute("id").getValue());
+      varIDs.add(varID);
+    }
+
+    return varIDs;
   }
 
   private static Pair<String, Level> processLevel(final Element levelElt)
@@ -144,71 +191,7 @@ public class WorldXMLParser
       level.addBoard(boardName, board);
     }
 
-    final Set<Set<String>> linkedEdges;
-    {
-      Element linkedEdgesElt = levelElt.getFirstChildElement("linked-edges");
-      linkedEdges = processLinkedEdges(linkedEdgesElt);
-    }
-
-    // link the variable IDs of any chutes that are linked in the XML
-    for (Set<String> UIDSet : linkedEdges)
-    {
-      Set<Integer> varIDs = new LinkedHashSet<>();
-      for (String UID : UIDSet)
-        varIDs.add(chuteUIDs.get(UID).getVariableID());
-
-      List<Integer> varIDList = new ArrayList<>(varIDs);
-//    FIXME commenting out so this compiles with the changes related to version
-//    3 of XML -- it definitely won't work at all, though.
-//      for (int i = 0; i < varIDList.size() - 1; i++)
-//        level.linkByVarID(varIDList.get(i), varIDList.get(i + 1));
-    }
-
     return Pair.of(name, level);
-  }
-
-  private static Set<Set<String>> processLinkedEdges(final Element linkedEdgesElt)
-  {
-    checkName(linkedEdgesElt, "linked-edges");
-
-    final Set<Set<String>> linkedEdgeSets = new LinkedHashSet<Set<String>>();
-
-    final Elements edgeSetElts = linkedEdgesElt.getChildElements();
-
-    for (int i = 0; i < edgeSetElts.size(); i++)
-    {
-      final Element edgeSetElt = edgeSetElts.get(i);
-      final Set<String> edgeSet = processEdgeSet(edgeSetElt);
-      linkedEdgeSets.add(edgeSet);
-    }
-
-    return Collections.unmodifiableSet(linkedEdgeSets);
-  }
-
-  private static Set<String> processEdgeSet(Element edgeSetElt)
-  {
-    checkName(edgeSetElt, "edge-set");
-
-    final Set<String> edges = new LinkedHashSet<String>();
-
-    final Elements edgerefElts = edgeSetElt.getChildElements();
-
-    for (int i = 0; i < edgerefElts.size(); i++)
-    {
-      final Element edgerefElt = edgerefElts.get(i);
-      final String edgeUID = processEdgeref(edgerefElt);
-      edges.add(edgeUID);
-    }
-
-    return Collections.unmodifiableSet(edges);
-  }
-
-  private static String processEdgeref(final Element edgerefElt)
-  {
-    checkName(edgerefElt, "edgeref");
-
-    final Attribute idAttr = edgerefElt.getAttribute("id");
-    return idAttr.getValue();
   }
 
   /**

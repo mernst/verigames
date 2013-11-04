@@ -33,7 +33,7 @@ class TrustedGameSolver extends GameSolver {
             if (sup != TrustedConstants.UNTRUSTED &&
                 sub != TrustedConstants.TRUSTED) {
 
-              if (sub == TrustedConstants.UNTRUSTED) {
+              if (sub == TrustedConstants.UNTRUSTED && sup.isInstanceOf[AbstractVariable]) {
                 // For "null <: sup" create a black ball falling into sup.
                 // println("null <: " + sup)
 
@@ -51,7 +51,7 @@ class TrustedGameSolver extends GameSolver {
                 board.addEdge(blackball, "0", merge, "1", new Chute(-1, "untrusted string"))
 
                 boardNVariableToIntersection.update((board, supvar), merge)
-              } else {
+              } else if( sub.isInstanceOf[AbstractVariable] && sup.isInstanceOf[AbstractVariable] ) {
                 // Subtypes between arbitrary variables only happens for local variables.
                 // TODO: what happens for "x = o.f"? Do I always create ASSIGNMENT constraints?
                 // What about m(o.f)?
@@ -87,6 +87,8 @@ class TrustedGameSolver extends GameSolver {
                     updateIntersection(board, sup, merge)
                   }
                 }
+              } else {
+                println("TODO: Unhandled constraint " + constraint )
               }
             }
           }
@@ -97,9 +99,9 @@ class TrustedGameSolver extends GameSolver {
             if (elr == TrustedConstants.UNTRUSTED) {
               if (ell == LiteralThis) {
                 // Nothing to do if the LHS is "this", always non-null.
-              } else {
+              } else if( elr.isInstanceOf[AbstractVariable]) {
                 // TODO: adapt this to Trusted checker
-                val ellvar = ell.asInstanceOf[Variable]
+                val ellvar = ell.asInstanceOf[AbstractVariable]
                 val board = variablePosToBoard(ctx);
 
                 val con = Intersection.factory(Intersection.Kind.CONNECT)
@@ -115,7 +117,7 @@ class TrustedGameSolver extends GameSolver {
                 updateIntersection(board, ellvar, con)
               }
             } else {
-              println("TODO: uncovered inequality case!")
+              println("TODO: uncovered inequality case!" + elr)
             }
           }
 
