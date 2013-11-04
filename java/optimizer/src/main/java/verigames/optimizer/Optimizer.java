@@ -39,16 +39,21 @@ public class Optimizer {
             Set<Node> toRemove2 = new HashSet<>();
 
             for (Node n : g.getNodes()) {
+                if (toRemove.contains(n)) {
+                    toRemove2.add(n);
+                    continue;
+                }
                 Intersection i = n.getIntersection();
-                if (i.getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
+                Intersection.Kind kind = i.getIntersectionKind();
+                if (kind == Intersection.Kind.START_SMALL_BALL || kind == Intersection.Kind.START_NO_BALL) {
                     toRemove2.add(n);
                     break;
                 }
                 Collection<NodeGraph.Edge> incoming = g.incomingEdges(n);
-                if (incoming.size() > 0) {
+                if (incoming.size() > 0 && kind != Intersection.Kind.OUTGOING) {
                     boolean allSourcesBeingRemoved = true;
                     for (NodeGraph.Edge e : incoming) {
-                        if (!toRemove2.contains(e.getSrc())) {
+                        if (!toRemove.contains(e.getSrc())) {
                             allSourcesBeingRemoved = false;
                             break;
                         }
@@ -89,14 +94,6 @@ public class Optimizer {
             g.addNode(n);
             g.addEdge(n, Port.OUTPUT, t.getDst(), t.getDstPort(), chute);
         }
-
-    }
-
-    /**
-     * Converts broken splits & merges into appropriate things.
-     * @param g the graph to modify
-     */
-    public void fixSplitsAndMerges(NodeGraph g) {
 
     }
 
