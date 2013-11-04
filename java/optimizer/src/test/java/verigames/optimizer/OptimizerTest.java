@@ -173,4 +173,50 @@ public class OptimizerTest {
         assert finalBoard.getEdges().size() == 4;
     }
 
+    /**
+     * Connector compression SHOULD remove edges that belong to
+     * an edge set IF the only members of the edge set are the
+     * incoming and outgoing edges of the connector.
+     */
+    @Test
+    public void testConnectorCompression3() {
+        Board board = new Board();
+        Intersection start = board.addNode(Intersection.Kind.INCOMING);
+        Intersection connect = board.addNode(Intersection.Kind.CONNECT);
+
+        // 2 chutes in the same edge set
+        Chute c1 = new Chute(3, "?");
+        Chute c2 = new Chute(3, "?");
+
+        board.add(start, "1", connect, "1", c1);
+        board.add(connect, "2", Intersection.Kind.OUTGOING, "1", c2);
+        board.finishConstruction();
+        Level level = new Level();
+        level.addBoard("board", board);
+        level.finishConstruction();
+        World world = new World();
+        world.addLevel("level", level);
+        world.validateSubboardReferences();
+        NodeGraph g = new NodeGraph(world);
+
+        new Optimizer().compressConnectors(g);
+
+        World finalWorld = g.toWorld();
+        assert finalWorld.getLevels().size() == 1;
+
+        Level finalLevel = Util.first(finalWorld.getLevels().values());
+        assert finalLevel.getBoards().size() == 1;
+
+        Board finalBoard = Util.first(finalLevel.getBoards().values());
+        assert finalBoard.getNodes().size() == 2;
+        for (Intersection node : finalBoard.getNodes()) {
+            assert node.getIntersectionKind() != Intersection.Kind.CONNECT;
+        }
+
+        assert finalBoard.getEdges().size() == 1;
+        for (Chute chute : finalBoard.getEdges()) {
+            assert chute.isEditable();
+        }
+    }
+
 }
