@@ -55,64 +55,64 @@
 
 Node layout information:
 
-   X and Y coordinates are integers starting at 0. (0,0) is the top left
-   corner.
+  X and Y coordinates are integers starting at 0. (0,0) is the top left
+  corner.
 
-   Width:
+  Width:
 
-      - MERGE, SPLIT, and NULL_TEST nodes have a width of 2. That is, a node to
-      the right of a MERGE at (0,0) must be at (2,0) or to the right.
+    - MERGE, SPLIT, and NULL_TEST nodes have a width of 2. That is, a node to
+    the right of a MERGE at (0,0) must be at (2,0) or to the right.
 
-      - SUBBOARD nodes have width = max(#incoming edges, #outgoing edges)
+    - SUBBOARD nodes have width = max(#incoming edges, #outgoing edges)
 
-      - END nodes have a width of 1
+    - END nodes have a width of 1
 
-   Height:
+  Height:
 
-      - MERGE, SPLIT, START_XXX_BALL, and SUBNETWORK nodes have a height of 2.
-      That is, a node below a SPLIT at (0,0) must be at (0,2) or below.
+    - MERGE, SPLIT, START_XXX_BALL, and SUBNETWORK nodes have a height of 2.
+    That is, a node below a SPLIT at (0,0) must be at (0,2) or below.
 
-      - INCOMING nodes have a height of 1.
+    - INCOMING nodes have a height of 1.
 
-      - Nodes connected by an edge with pinch=true must have an extra y
-      coordinate between them.
+    - Nodes connected by an edge with pinch=true must have an extra y
+    coordinate between them.
 
-      - END nodes have a height of 1
+    - END nodes have a height of 1
 
 ================================================================================
 
 Edge layout information:
 
-   Edge layout is given in the form of a list of b-spline control points. The
-   number of control points, x, will always be such that (x = 1 (mod 3)).
-   Equivalently, (x mod 3) = 1, or x = 1 + 3n, where n is any nonnegative
-   integer.
+  Edge layout is given in the form of a list of b-spline control points. The
+  number of control points, x, will always be such that (x = 1 (mod 3)).
+  Equivalently, (x mod 3) = 1, or x = 1 + 3n, where n is any nonnegative
+  integer.
 
 ================================================================================
 
 Requirements not enforced by the DTD:
 
-   - All edges are contained in exactly one edge-set
+  - All edges are contained in exactly one edge-set
 
-   - All nodes that have kind SUBNETWORK must have a name attribute (and the
-     name attribute is meaningless for other kinds of node)
+  - All nodes that have kind SUBNETWORK must have a name attribute (and the
+    name attribute is meaningless for other kinds of node)
 
-   - variableID must be an integer
+  - variableID must be an integer
 
 ================================================================================
 
 Misc:
 
-   - BALL_SIZE_TEST node:
+  - BALL_SIZE_TEST node:
 
-      - Represents the branching that occurs when the variable represented by
-      the input edge is tested against null (or whatever the "large ball" of a
-      given type system represents).
+    - Represents the branching that occurs when the variable represented by
+    the input edge is tested against null (or whatever the "large ball" of a
+    given type system represents).
 
-      - Upon encountering this node, a small ball will roll to the output edge
-      at port "small", which must be the first port, and a large ball will roll
-      to the output edge at port "large".
+    - Upon encountering this node, a small ball will roll to the output edge
+    at port "small", which must be the first port, and a large ball will roll
+    to the output edge at port "large".
 
-      - The output edge at port "small" must be narrow, and the output edge at
-      port "large" must be wide.
+    - The output edge at port "small" must be narrow, and the output edge at
+    port "large" must be wide.
 -->
