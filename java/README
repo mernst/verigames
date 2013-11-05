@@ -18,7 +18,7 @@ These instructions outline how to run a verigames type system in type-checking m
   cd $JSR308/verigames/java
   gradle clean dist
 
-2. Add $JSR308/verigames/java/dist to your CLASSPATH. Due to recent changes in infasture, this is the new location of verigames.jar. You may remove $JSR308/verigames/java/verigames.jar from you CLASSPATH, as it is no longer accurate.
+2. Add $JSR308/verigames/java/dist to your CLASSPATH. Due to recent changes in infrastucture, this is the new location of verigames.jar. You may remove $JSR308/verigames/java/verigames.jar from you CLASSPATH, as it is no longer accurate.
  
 3. Use the typechecking script.
 
