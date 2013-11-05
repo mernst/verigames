@@ -23,6 +23,7 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.OutlineFilter;
@@ -72,6 +73,9 @@ package scenes.game.components
 		
 		private var m_world:World;
 		
+		private var m_lastVisibleRefreshViewRect:Rectangle;
+		
+		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
@@ -133,17 +137,47 @@ package scenes.game.components
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
-		private var m_lastVisibleRefreshViewRect:Rectangle;
 		private function onEnterFrame(evt:EnterFrameEvent):void
 		{
 			if (!m_currentLevel) return;
 			var currentViewRect:Rectangle = getViewInContentSpace();
 			if (m_lastVisibleRefreshViewRect &&
-				currentViewRect.left >= m_lastVisibleRefreshViewRect.left &&
-				currentViewRect.right <= m_lastVisibleRefreshViewRect.right &&
-				currentViewRect.top >= m_lastVisibleRefreshViewRect.top &&
-				currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom) return;
-			// If 
+				(currentViewRect.left >= m_lastVisibleRefreshViewRect.left - VISIBLE_BUFFER_PIXELS) &&
+				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + VISIBLE_BUFFER_PIXELS) &&
+				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top - VISIBLE_BUFFER_PIXELS) &&
+				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + VISIBLE_BUFFER_PIXELS)) {
+					return;
+				}
+			// Update visible objects
+			if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
+					" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
+					" dt:" + int(currentViewRect.top - m_lastVisibleRefreshViewRect.top) +
+					" db:" + int(currentViewRect.bottom - m_lastVisibleRefreshViewRect.bottom));
+			var i:int;
+			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+				if (m_currentLevel.m_edgeList[i].hidden) continue;
+				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].m_boundingBox, currentViewRect);
+			}
+			const gameNodes:Vector.<GameNode> = m_currentLevel.getNodes();
+			for (i = 0; i < gameNodes.length; i++) {
+				if (gameNodes[i].hidden) continue;
+				gameNodes[i].visible = isOnScreen(gameNodes[i].m_boundingBox, currentViewRect);
+			}
+			const gameJoints:Vector.<GameJointNode> = m_currentLevel.getJoints();
+			for (i = 0; i < gameJoints.length; i++) {
+				if (gameJoints[i].hidden) continue;
+				gameJoints[i].visible = isOnScreen(gameJoints[i].m_boundingBox, currentViewRect);
+			}
+			m_lastVisibleRefreshViewRect = currentViewRect;
+		}
+		
+		private static function isOnScreen(bb:Rectangle, view:Rectangle):Boolean
+		{
+			if (bb.right < view.left - VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.left > view.right + VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.bottom < view.top - VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.top > view.bottom + VISIBLE_BUFFER_PIXELS) return false;
+			return true;
 		}
 		
 		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void

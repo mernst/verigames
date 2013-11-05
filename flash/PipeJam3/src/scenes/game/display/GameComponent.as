@@ -29,6 +29,7 @@ package scenes.game.display
 		protected var m_propertyMode:String = PropDictionary.PROP_NARROW;
 		protected var m_props:PropDictionary = new PropDictionary();
 		public var m_forceColor:Number = -1;
+		private var m_hidden:Boolean = false;
 		
 		public static const NARROW_COLOR:uint = 0x6ED4FF;
 		public static const NARROW_COLOR_BORDER:uint = 0x1773B8
@@ -87,8 +88,11 @@ package scenes.game.display
 		public function hideComponent(hide:Boolean):void
 		{
 			visible = !hide;
+			m_hidden = hide;
 			m_isDirty = true;
 		}
+		
+		public function get hidden():Boolean { return m_hidden; }
 		
 		public function getGlobalScaleFactor():Point
 		{

@@ -236,20 +236,18 @@ package scenes.game.display
 					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, levelEdges);
 				}
 				
-				gameNode.visible = getVisible(boxLayoutXML);
-				if(gameNode.visible)
+				if (getVisible(boxLayoutXML)) {
 					visibleNodes++;
-				else
-					boxLayoutXML.@visible="false";
-				
-				m_nodeList.push(gameNode);
-				boxDictionary[boxEdgeSetId] = gameNode;
-				if (gameNode.visible) {
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
 					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
 					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				} else {
+					gameNode.hideComponent(true);
+					boxLayoutXML.@visible="false";
 				}
+				m_nodeList.push(gameNode);
+				boxDictionary[boxEdgeSetId] = gameNode;
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -314,20 +312,20 @@ package scenes.game.display
 				} else {
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
-				joint.visible = getVisible(jointLayoutXML);
-				trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
-				if(joint.visible)
+				
+				if (getVisible(jointLayoutXML)) {
 					visibleJoints++;
-				else
-					jointLayoutXML.@visible="false";
-				m_jointList.push(joint);
-				jointDictionary[joint.m_id] = joint;
-				if (joint.visible) {
 					minX = Math.min(minX, joint.m_boundingBox.left);
 					minY = Math.min(minY, joint.m_boundingBox.top);
 					maxX = Math.max(maxX, joint.m_boundingBox.right);
 					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				} else {
+					joint.hideComponent(true);
+					jointLayoutXML.@visible = "false";
 				}
+				trace("joint:" + joint.m_id + " hidden:" + joint.hidden + " kind:" + foundNode.kind);
+				m_jointList.push(joint);
+				jointDictionary[joint.m_id] = joint;
 			}
 			
 			// Process <line> 's
@@ -488,7 +486,7 @@ package scenes.game.display
 					case NodeTypes.OUTGOING:
 						// Only need to create outgoing joint if others come out of it,
 						// if joint was not created, don't create the line
-						if (myJoint && myJoint.visible) {
+						if (myJoint && !myJoint.hidden) {
 							hideLine = false;
 						} else {
 							hideLine = true;
@@ -552,7 +550,7 @@ package scenes.game.display
 			} else {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy, hideLine);
 			}
-			newGameEdge.visible = getVisible(edgeXML);
+			if (!getVisible(edgeXML)) newGameEdge.hideComponent(true);
 			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
@@ -763,8 +761,8 @@ package scenes.game.display
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					
-					gameNode.visible = getVisible(child);
-					if (gameNode.visible) {
+					gameNode.hideComponent(!getVisible(child));
+					if (!gameNode.hidden) {
 						minX = Math.min(minX, gameNode.m_boundingBox.left);
 						minY = Math.min(minY, gameNode.m_boundingBox.top);
 						maxX = Math.max(maxX, gameNode.m_boundingBox.right);
@@ -847,7 +845,7 @@ package scenes.game.display
 					child.@x = currentLayoutX.toFixed(2);
 					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = currentLayoutY.toFixed(2);
-					child.@visible = edgeSet.visible.toString();
+					child.@visible = (!edgeSet.hidden).toString();
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
@@ -859,7 +857,7 @@ package scenes.game.display
 						child.@x = currentLayoutX.toFixed(2);
 						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = currentLayoutY.toFixed(2);
-						child.@visible = joint.visible.toString();
+						child.@visible = (!joint.hidden).toString();
 					}
 				}
 				else if(childName.indexOf("line") != -1)
@@ -868,7 +866,7 @@ package scenes.game.display
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
 					if(edgeContainer != null)
 					{
-						child.@visible = edgeContainer.visible.toString();
+						child.@visible = (!edgeContainer.hidden).toString();
 						
 						//remove all current points, and then add new ones
 						delete child.point;
