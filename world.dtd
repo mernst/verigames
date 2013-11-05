@@ -3,7 +3,8 @@
  <!ELEMENT linked-varIDs (varID-set*)>
   <!ELEMENT varID-set (stamp*,varID*)>
    <!ATTLIST varID-set id ID #REQUIRED>
-   <!-- refers to a possible varID-set with whose color this edge-set can be stamped with -->
+   <!-- refers to a possible varID-set with whose color this edge-set can be
+        stamped with -->
    <!ELEMENT stamp EMPTY>
     <!-- stamp ID must refer to a varID-set ID -->
     <!ATTLIST stamp id IDREF #REQUIRED>
@@ -25,11 +26,14 @@
     <!ELEMENT node (input,output,layout?)>
      <!ATTLIST node kind (INCOMING|OUTGOING|SPLIT|GET|BALL_SIZE_TEST|MERGE|START_SMALL_BALL|START_LARGE_BALL|START_NO_BALL|START_PIPE_DEPENDENT_BALL|END|SUBBOARD|CONNECT) #REQUIRED>
      <!ATTLIST node id ID #REQUIRED>
+     <!-- the name attribute is required for SUBBOARDs, and meaningless for
+          others -->
      <!ATTLIST node name IDREF #IMPLIED>
      <!ELEMENT input (port*)>
      <!ELEMENT output (port*)>
       <!ELEMENT port EMPTY>
-       <!-- num can be an arbitrary string, and should probably be changed to reflect this -->
+       <!-- num can be an arbitrary string, and should probably be changed to
+            reflect this -->
        <!ATTLIST port num CDATA #REQUIRED>
        <!ATTLIST port edge IDREF #REQUIRED>
      <!ELEMENT layout (x,y)>
@@ -52,11 +56,38 @@
       <!ELEMENT point (x,y)>
 
 <!--
+================================================================================
+
+Requirements not enforced by the DTD:
+
+  - All boards must be well-formed:
+    - There must be an incoming and an outgoing node
+    - Each node must have the correct number of connections for its type (see
+    Intersection class for details)
+    - A SUBBOARD type node must have a name attribute
+    - No node may be connected to a node in another board
+    - No board may contain a cycle
+    - A SUBBOARD type node must have the same number of inputs and outputs as its
+    referent
+    - All nodes that have kind SUBBOARD must have a name attribute (and the name
+    attribute is meaningless for other kinds of node)
+
+  - All linked chutes (chutes with the same variable ID, or linked variableIDs)
+  must have the same width (TODO do we want to enforce this only when they're
+  non-editable?)
+
+  - Every variableID listed in the varID sets must be the variableID of at least
+  one edge
+
+  - variableID must be an integer
+
+  - Layout coordinates (x and y) must be reals
+
+================================================================================
 
 Node layout information:
 
-  X and Y coordinates are integers starting at 0. (0,0) is the top left
-  corner.
+  X and Y coordinates are reals starting at 0. (0,0) is the top left corner.
 
   Width:
 
@@ -90,17 +121,6 @@ Edge layout information:
 
 ================================================================================
 
-Requirements not enforced by the DTD:
-
-  - All edges are contained in exactly one edge-set
-
-  - All nodes that have kind SUBNETWORK must have a name attribute (and the
-    name attribute is meaningless for other kinds of node)
-
-  - variableID must be an integer
-
-================================================================================
-
 Misc:
 
   - BALL_SIZE_TEST node:
@@ -115,4 +135,6 @@ Misc:
 
     - The output edge at port "small" must be narrow, and the output edge at
     port "large" must be wide.
+
+================================================================================
 -->
