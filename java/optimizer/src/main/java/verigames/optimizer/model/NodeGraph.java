@@ -6,6 +6,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.StubBoard;
 import verigames.level.World;
+import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -200,18 +202,20 @@ public class NodeGraph {
             } else {
                 newIntersection = Intersection.factory(intersection.getIntersectionKind());
             }
-            newIntersection.setX(intersection.getX());
-            newIntersection.setY(intersection.getY());
+            if (intersection.getX() >= 0)
+                newIntersection.setX(intersection.getX());
+            if (intersection.getY() >= 0)
+                newIntersection.setY(intersection.getY());
             newIntersectionsByNode.put(n, newIntersection);
         }
 
         // Build the data structure
         for (Level level : nodesByLevel.keySet()) {
-            String levelName = nodesByLevel.get(level).iterator().next().getLevelName();
+            String levelName = Util.first(nodesByLevel.get(level)).getLevelName();
             Level newLevel = new Level();
             for (Board board : boardsByLevel.get(level)) {
                 Set<Node> boardNodes = nodesByBoard.get(board);
-                String boardName = boardNodes.iterator().next().getBoardName();
+                String boardName = Util.first(boardNodes).getBoardName();
                 Board newBoard = new Board(boardName);
 
                 // Inane restriction on Boards: callers must add incoming node first
@@ -244,7 +248,8 @@ public class NodeGraph {
                         Chute newChute = new Chute(chute.getVariableID(), chute.getDescription());
                         newChute.setEditable(chute.isEditable());
                         newChute.setBuzzsaw(chute.hasBuzzsaw());
-                        newChute.setLayout(chute.getLayout());
+                        if (chute.getLayout() != null)
+                            newChute.setLayout(chute.getLayout());
                         newChute.setNarrow(chute.isNarrow());
                         newChute.setPinched(chute.isPinched());
                         Intersection start = newIntersectionsByNode.get(edge.getSrc());
@@ -258,6 +263,7 @@ public class NodeGraph {
             world.addLevel(levelName, newLevel);
         }
 
+        world.finishConstruction();
         return world;
     }
 
@@ -266,7 +272,7 @@ public class NodeGraph {
     }
 
     public void removeNode(Node n) {
-        System.err.println("Removing node: " + n.getIntersection());
+        Util.logVerbose("Removing node: " + n.getIntersection());
         edges.remove(n);
         for (Map.Entry<Node, Map<Port, Target>> entry : edges.entrySet()) {
             Map<Port, Target> val = entry.getValue();
@@ -326,7 +332,7 @@ public class NodeGraph {
     }
 
     public void removeEdge(Edge e) {
-        System.err.println("Removing edge: " + e.getEdgeData());
+        Util.logVerbose("Removing edge: " + e.getEdgeData());
         removeEdge(e.getSrc(), e.getSrcPort(), e.getDst(), e.getDstPort());
     }
 
@@ -340,6 +346,23 @@ public class NodeGraph {
         return edgesList;
     }
 
+    public Collection<Edge> edgeSet(Edge edge) {
+        return edgeSet(edge.getTarget());
+    }
+
+    public Collection<Edge> edgeSet(Target edge) {
+        Collection<Edge> result = new ArrayList<>();
+        for (Edge e : getEdges()) {
+            if (e.getTarget().equals(edge) || (
+                    e.getEdgeData().getVariableID() >= 0 &&
+                    e.getEdgeData().getVariableID() == edge.getEdgeData().getVariableID()
+                    )) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
     /**
      * Get the outgoing edges from a node
      * @param src the node
@@ -348,6 +371,21 @@ public class NodeGraph {
     public Map<Port, Target> outgoingEdges(Node src) {
         Map<Port, Target> result = edges.get(src);
         return result == null ? Collections.<Port, Target>emptyMap() : Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Get the incoming edges to a node
+     * @param dst the node
+     * @return    the incoming edges to the given node
+     */
+    public Collection<Edge> incomingEdges(Node dst) {
+        Collection<Edge> edges = getEdges();
+        Iterator<Edge> it = edges.iterator();
+        while (it.hasNext()) {
+            if (!it.next().getDst().equals(dst))
+                it.remove();
+        }
+        return edges;
     }
 
     public Collection<Subgraph> getComponents() {

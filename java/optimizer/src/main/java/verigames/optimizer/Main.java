@@ -25,6 +25,7 @@ public class Main {
         options.addOption("h", "help", false, "print help and exit");
         options.addOption("i", "in", true, "input XML file (defaults to stdin)");
         options.addOption("o", "out", true, "output XML file (defaults to stdout)");
+        options.addOption("v", "verbose", false, "enable excessive logging to stderr");
 
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine cmd;
@@ -65,6 +66,9 @@ public class Main {
                  return;
             }
         }
+
+        // Enable verbose logging if the user wanted it
+        Util.setVerbose(cmd.hasOption("verbose"));
 
         WorldXMLParser parser = new WorldXMLParser();
         World world = parser.parse(input);

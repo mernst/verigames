@@ -1,78 +1,31 @@
 package verigames.optimizer;
 
-import verigames.level.Intersection;
 import verigames.level.World;
-import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
-import verigames.optimizer.model.Port;
-import verigames.optimizer.model.Subgraph;
+import verigames.optimizer.passes.BallDropElimination;
+import verigames.optimizer.passes.ConnectorCompression;
+import verigames.optimizer.passes.ImmutableComponentElimination;
+import verigames.optimizer.passes.MergeElimination;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 public class Optimizer {
 
-    public void optimize(NodeGraph g) {
-        // TODO: optimization 1: remove immutable components
-        for (Subgraph subgraph : g.getComponents()) {
-            boolean mutable = false;
-            for (NodeGraph.Edge edge : subgraph.getEdges()) {
-                mutable = edge.getEdgeData().isEditable();
-                if (mutable)
-                    break;
-            }
-            boolean hasFixedNode = false;
-            for (Node node : subgraph.getNodes()) {
-                Intersection.Kind kind = node.getIntersection().getIntersectionKind();
-                hasFixedNode = (kind == Intersection.Kind.INCOMING || kind == Intersection.Kind.OUTGOING);
-                if (hasFixedNode)
-                    break;
-            }
-            if (!mutable && !hasFixedNode) {
-                System.err.println("*** REMOVING SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
-                g.removeSubgraph(subgraph);
-            }
-        }
+    public static final List<OptimizationPass> DEFAULT_PASSES = Arrays.asList(
+            new BallDropElimination(),
+            new MergeElimination(),
+            new ConnectorCompression(),
+            new ImmutableComponentElimination());
 
-        // TODO: optimization 2: remove all small ball drops
-//        Collection<Node> smallBallStarts = new ArrayList<>();
-//        for (Node node : g.getNodes()) {
-//            if (node.getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
-//                smallBallStarts.add(node);
-//            }
-//        }
-//
-//        for (Node node : smallBallStarts) {
-//            Collection<Node> toRemove = removeSource(g, node);
-//            if (toRemove != null) {
-//                g.removeNodes(toRemove);
-//            }
-//        }
+    public void optimize(NodeGraph g) {
+        optimize(g, DEFAULT_PASSES);
     }
 
-    private Set<Node> removeSource(NodeGraph g, Node node) {
-        Set<Node> toRemove = new HashSet<>();
-        toRemove.add(node);
-        // for each outgoing edge
-        for (Map.Entry<Port, NodeGraph.Target> edge : g.outgoingEdges(node).entrySet()) {
-            Port port = edge.getKey();
-            NodeGraph.Target target = edge.getValue();
-            if (target.getDst().getIntersection().getIntersectionKind().getNumberOfInputPorts() == 1) {
-                // EITHER the edge connects to a single-input node which we can also remove
-                Set<Node> subNodes = removeSource(g, target.getDst());
-                if (subNodes != null)
-                    toRemove.addAll(subNodes);
-                else
-                    return null;
-            } else if (target.getDst().getIntersection().getIntersectionKind().getNumberOfInputPorts() < 0) {
-                // OR it connects to a variable-input node and we can remove the edge
-                // TODO: remove the edge
-            } else {
-                return null;
-            }
+    public void optimize(NodeGraph g, List<OptimizationPass> passes) {
+        for (OptimizationPass pass : passes) {
+            pass.optimize(g);
         }
-        return toRemove;
     }
 
     public World optimizeWorld(World source) {

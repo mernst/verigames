@@ -1,15 +1,14 @@
 package verigames.level;
 
-import static verigames.utilities.Misc.ensure;
-
 import verigames.graph.Graph;
 import verigames.layout.LayoutDebugger;
 import verigames.level.Intersection.Kind;
-import verigames.utilities.MultiBiMap;
 import verigames.utilities.Pair;
 
 import java.io.File;
 import java.util.Set;
+
+import static verigames.utilities.Misc.ensure;
 
 /*>>>
 import checkers.nullness.quals.*;
@@ -49,14 +48,6 @@ public class Board extends Graph<Intersection, Chute>
    * This field has been added only to identify a board while debugging
    */
   private /*@Nullable*/ String name;
-
-  @Deprecated
-  /**
-   * This is still supported because the sample levels still use it.
-   */
-  // TODO remove this and its associated methods when the sample levels no
-  // longer use it.
-  private final MultiBiMap<String, Chute> nameToChutes;
 
   /**
    * Ensures that the representation invariant holds
@@ -126,7 +117,6 @@ public class Board extends Graph<Intersection, Chute>
   public Board()
   {
     this.name = "NotInited";
-    nameToChutes = new MultiBiMap<String, Chute>();
     checkRep();
   }
 
@@ -144,44 +134,6 @@ public class Board extends Graph<Intersection, Chute>
    */
   public String getName() {
       return name;
-  }
-
-  /**
-   * Adds a name to the chute.
-   *
-   * @deprecated
-   * Give {@link Chute}s descriptions using {@link Chute#Chute(int, String)}.
-   */
-  @Deprecated
-  public void addChuteName(Chute c, String name)
-  {
-    nameToChutes.put(name, c);
-  }
-
-  /**
-   * Gets the names associated with a {@code Chute}.
-   *
-   * @deprecated
-   * Check {@link Chute} descriptions directly using {@link
-   * Chute#getDescription()}.
-   */
-  @Deprecated
-  public Set<String> getChuteNames(Chute c)
-  {
-    return nameToChutes.inverse().get(c);
-  }
-
-  /**
-   * Gets the {@code Chute}s associated with a name.
-   *
-   * @deprecated
-   * Check {@link Chute} descriptions directly using {@link
-   * Chute#getDescription()}.
-   */
-  @Deprecated
-  public Set<Chute> getNameChutes(String name)
-  {
-    return nameToChutes.get(name);
   }
 
   /**

@@ -15,6 +15,17 @@ This will generate the file build/libs/optimizer.jar which the start script
 uses to run the project (below).
 
 
+Running Tests
+-------------
+
+It's as easy as
+
+    gradle test
+
+Gradle will either report success (hopefully) or tell you where it put the
+failure report.
+
+
 Running
 -------------
 
