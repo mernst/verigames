@@ -141,13 +141,32 @@ package scenes.game.components
 		{
 			if (!m_currentLevel) return;
 			var currentViewRect:Rectangle = getViewInContentSpace();
-			if (m_lastVisibleRefreshViewRect &&
-				(currentViewRect.left >= m_lastVisibleRefreshViewRect.left - VISIBLE_BUFFER_PIXELS) &&
-				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + VISIBLE_BUFFER_PIXELS) &&
-				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top - VISIBLE_BUFFER_PIXELS) &&
-				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + VISIBLE_BUFFER_PIXELS)) {
-					return;
+			var movingSelectedComponents:Boolean = ((currentMode == MOVING_MODE) && ((m_currentLevel.totalMoveDist.x != 0) || (m_currentLevel.totalMoveDist.y != 0)));
+			var offLeft:Number = -VISIBLE_BUFFER_PIXELS;
+			var offRight:Number = VISIBLE_BUFFER_PIXELS;
+			var offTop:Number = -VISIBLE_BUFFER_PIXELS;
+			var offBottom:Number = VISIBLE_BUFFER_PIXELS;
+			if (movingSelectedComponents) {
+				// Take account the distance we've dragged objects, if we may have
+				// dragged them into the current viewspace, recompute the visibility
+				if (m_currentLevel.totalMoveDist.x > 0) {
+					offLeft += m_currentLevel.totalMoveDist.x;
+				} else {
+					offRight += m_currentLevel.totalMoveDist.x;
 				}
+				if (m_currentLevel.totalMoveDist.y > 0) {
+					offTop += m_currentLevel.totalMoveDist.y;
+				} else {
+					offBottom += m_currentLevel.totalMoveDist.y;
+				}
+			}
+			if (m_lastVisibleRefreshViewRect &&
+				(currentViewRect.left >= m_lastVisibleRefreshViewRect.left + offLeft) &&
+				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + offRight) &&
+				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top + offTop) &&
+				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + offBottom)) {
+				return;
+			}
 			// Update visible objects
 			if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
 					" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
@@ -168,6 +187,8 @@ package scenes.game.components
 				if (gameJoints[i].hidden) continue;
 				gameJoints[i].visible = isOnScreen(gameJoints[i].m_boundingBox, currentViewRect);
 			}
+			// Reset total move dist, now that we've updated the visible objects around this view
+			m_currentLevel.totalMoveDist = new Point();
 			m_lastVisibleRefreshViewRect = currentViewRect;
 		}
 		
@@ -197,6 +218,11 @@ package scenes.game.components
 			}
 		}
 		
+		private function beginMoveMode():void
+		{
+			startingPoint = new Point(content.x, content.y);
+		}
+		
 		private function endMoveMode():void
 		{
 			//did we really move?
@@ -219,6 +245,7 @@ package scenes.game.components
 			{
 				if(currentMode == SELECTING_MODE)
 				{
+					trace("end select");
 					endSelectMode();
 				}
 				else if(currentMode == MOVING_MODE)
@@ -262,7 +289,7 @@ package scenes.game.components
 					{
 						if (currentMode == SELECTING_MODE) endSelectMode();
 						currentMode = MOVING_MODE;
-						startingPoint = new Point(content.x, content.y);
+						beginMoveMode();
 					}
 					if (touches.length == 1)
 					{

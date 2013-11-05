@@ -134,8 +134,10 @@ package scenes.game.display
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
-		
 		public var original_level_name:String;
+		
+		/** Tracks total distance components have been dragged since last visibile calculation */
+		public var totalMoveDist:Point = new Point();
 		
 		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
 		private var m_currentConflictIndex:int = -1;
@@ -186,6 +188,7 @@ package scenes.game.display
 
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			selectedComponents = new Vector.<GameComponent>;
+			totalMoveDist = new Point();
 			
 			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
 			{
@@ -1342,6 +1345,7 @@ package scenes.game.display
 		{
 			//make a copy of the selected list for the undo event
 			var currentSelection:Vector.<GameComponent> = selectedComponents.concat();
+			totalMoveDist = new Point();
 			selectedComponents = new Vector.<GameComponent>();
 			
 			for each(var comp:GameComponent in currentSelection)
@@ -1380,6 +1384,10 @@ package scenes.game.display
 			}
 			else
 			{
+				//if (selectedComponents.length == 0) {
+				//	totalMoveDist = new Point();
+				//	return;
+				//}
 				var movedGameNode:Boolean = false;
 				for each(var component:GameComponent in selectedComponents)
 				{
@@ -1396,6 +1404,9 @@ package scenes.game.display
 				}
 				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(movedNodes);
 			}
+			totalMoveDist.x += delta.x;
+			totalMoveDist.y += delta.y;
+			trace(totalMoveDist);
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
 		
