@@ -254,7 +254,13 @@ def classic2grid(infile, outfile):
 			edgeid = ex.attributes['id'].value
 			varid = ex.attributes['variableID'].value
 			edgeidtovarid[edgeid] = varid
-			varidvaridsetid = varid2varidset.get(varid)
+			try:
+				if int(varid) < 0:
+					varidvaridsetid = 'NEG_%s' % edgeid
+				else:
+					varidvaridsetid = varid2varidset.get(varid)
+			except ValueError:
+				varidvaridsetid = varid2varidset.get(varid)
 			if varidvaridsetid is None:
 				varidvaridsetid = '%s_varIDset' % varid
 				varid2varidset[varid] = varidvaridsetid

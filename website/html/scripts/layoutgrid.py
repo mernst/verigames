@@ -341,14 +341,15 @@ def layoutboxes(infile, outfile, outputdotfiles):
 		writedot = open(dotinfilename,'w')
 		writedot.write(dotin)
 		writedot.close()
-		dotcmd = os.popen('dot -y ' + dotinfilename)
+		dotcmdpre = 'dot -y -Gmclimit=0.1 -Gnslimit=10 -Gnslimit1=10 '
+		dotcmd = os.popen(dotcmdpre + dotinfilename)
 		dotoutput = dotcmd.read()
 		dotcmd.close()
 		if outputdotfiles:
-			dotcmd = os.popen('dot -y -Teps -o%s-%s-BOXES.eps %s' % (outfile, lname, dotinfilename))
+			dotcmd = os.popen('%s -Teps -o%s-%s-BOXES.eps %s' % (dotcmdpre, outfile, lname, dotinfilename))
 			dotcmd.read()
 			dotcmd.close()
-			dotcmd = os.popen('dot -y -Tpdf -o%s-%s-BOXES.pdf %s' % (outfile, lname, dotinfilename))
+			dotcmd = os.popen('%s -Tpdf -o%s-%s-BOXES.pdf %s' % (dotcmdpre, outfile, lname, dotinfilename))
 			dotcmd.read()
 			dotcmd.close()
 			dotoutfilename = '%s-%s-BOXES-out.dot' % (outfile, lname)

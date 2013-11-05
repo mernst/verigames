@@ -25,6 +25,8 @@ package
 		public static const XML_ANNOT_EXT:String = "EXT__";
 		public static const XML_ANNOT_EXT_IN:String = "__XIN__";
 		public static const XML_ANNOT_EXT_OUT:String = "__XOUT__";
+		public static const XML_ANNOT_NEG:String = "NEG_";
+		public static const XML_ANNOT_VARIDSET:String = "_varIDset";
 		
 		public static const CACHE_MUTE_MUSIC:String = "muteMusic";
 		public static const CACHE_MUTE_SFX:String = "muteSfx";

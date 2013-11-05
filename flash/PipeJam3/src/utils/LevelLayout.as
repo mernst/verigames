@@ -178,6 +178,10 @@ package utils
 					if (network.world_version == "3") {
 						var my_edge_id:String = e1.attribute("id").toString();
 						var my_edge_varid:String = e1.attribute("variableID").toString();
+						if (!isNaN(int(my_edge_varid)) && (int(my_edge_varid) < 0)) {
+							// TODO: Undo this hack for negative variable ids
+							my_edge_varid = Constants.XML_ANNOT_NEG + my_edge_id;
+						}
 						if (!my_edge_id) throw new Error("Bad edge id found:" + my_edge_id);
 						if (!my_edge_varid) throw new Error("Bad edge variable id found:" + my_edge_varid + " edge id:" + my_edge_id);
 						network.addEdge(my_edge_id, my_edge_varid);

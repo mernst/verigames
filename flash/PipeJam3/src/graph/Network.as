@@ -50,7 +50,11 @@ package graph
 		public function addEdge(edge_id:String, variable_id:String):void
 		{
 			if (!m_variableIDToVarIdSetIdDictionary.hasOwnProperty(variable_id)) {
-				variable_id_set = variable_id + "_varIDset";
+				if (variable_id.indexOf(Constants.XML_ANNOT_NEG) == 0) {
+					variable_id_set = variable_id;
+				} else {
+					variable_id_set = variable_id + "_varIDset";
+				}
 				m_variableIDToVarIdSetIdDictionary[variable_id] = variable_id_set;
 			}
 			var variable_id_set:String = m_variableIDToVarIdSetIdDictionary[variable_id];
