@@ -1,5 +1,7 @@
 package verigames.optimizer;
 
+import verigames.level.Chute;
+
 public class Util {
 
     /////////// Config
@@ -33,6 +35,18 @@ public class Util {
     public static void logVerbose(Object o) {
         if (verbose)
             System.err.println(o);
+    }
+
+    public static Chute immutableChute() {
+        Chute result = new Chute();
+        result.setEditable(false);
+        return result;
+    }
+
+    public static Chute mutableChute() {
+        Chute result = new Chute();
+        result.setEditable(true);
+        return result;
     }
 
 }
