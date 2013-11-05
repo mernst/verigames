@@ -190,6 +190,38 @@ public class World
   }
 
   /**
+   * Board names ought to be globally unique for a world. This
+   * convenience method finds the given board across all the
+   * levels.
+   * @param boardName the board to look for
+   * @return the found board, or null if it was missing
+   */
+  public Board getBoard(String boardName) {
+    for (Level level : getLevels().values()) {
+      Board board = level.getBoard(boardName);
+      if (board != null)
+        return board;
+    }
+    return null;
+  }
+
+  /**
+   * Board names ought to be globally unique for a world. This
+   * convenience method finds the given stub board across all the
+   * levels.
+   * @param boardName the stub board to look for
+   * @return the found stub board, or null if it was missing
+   */
+  public StubBoard getStubBoard(String boardName) {
+    for (Level level : getLevels().values()) {
+      StubBoard board = level.getStubBoard(boardName);
+        if (board != null)
+          return board;
+      }
+    return null;
+  }
+
+  /**
    * Marks this {@code World} as completed, runs some integrity checks, and
    * freezes the {@code World}, as well as all of its child elements.
    */

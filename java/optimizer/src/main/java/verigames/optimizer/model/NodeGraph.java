@@ -161,8 +161,8 @@ public class NodeGraph {
                     final Node node;
                     if (intersection.isSubboard()) {
                         String subboardName = intersection.asSubboard().getSubnetworkName();
-                        Board subBoard = level.getBoard(subboardName);
-                        StubBoard stubBoard = level.getStubBoard(subboardName);
+                        Board subBoard = w.getBoard(subboardName);
+                        StubBoard stubBoard = w.getStubBoard(subboardName);
                         assert (subBoard != null) ^ (stubBoard != null);
                         final BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
                         node = new Node(levelName, level, boardName, board, intersection, ref);
@@ -237,8 +237,8 @@ public class NodeGraph {
                     if (node.getIntersection().isSubboard()) {
                         String subboardName = node.getIntersection().asSubboard().getSubnetworkName();
                         BoardRef ref = node.getBoardRef();
-                        if (ref.isStub() && !level.contains(subboardName)) {
-                            level.addStubBoard(subboardName, ref.asStubBoard());
+                        if (ref.isStub() && world.getStubBoard(subboardName) == null && !newLevel.contains(subboardName)) {
+                            newLevel.addStubBoard(subboardName, ref.asStubBoard());
                         }
                     }
                 }
