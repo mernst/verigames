@@ -38,6 +38,7 @@ package scenes.game.components
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
+	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
@@ -118,6 +119,7 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
+			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			//create a clip rect for the window
 			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
 			
@@ -129,6 +131,19 @@ package scenes.game.components
 				stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private var m_lastVisibleRefreshViewRect:Rectangle;
+		private function onEnterFrame(evt:EnterFrameEvent):void
+		{
+			if (!m_currentLevel) return;
+			var currentViewRect:Rectangle = getViewInContentSpace();
+			if (m_lastVisibleRefreshViewRect &&
+				currentViewRect.left >= m_lastVisibleRefreshViewRect.left &&
+				currentViewRect.right <= m_lastVisibleRefreshViewRect.right &&
+				currentViewRect.top >= m_lastVisibleRefreshViewRect.top &&
+				currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom) return;
+			// If 
 		}
 		
 		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void
@@ -441,7 +456,7 @@ package scenes.game.components
 		
 		private function onRemovedFromStage():void
 		{
-			//
+			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
 		override public function dispose():void

@@ -194,13 +194,23 @@ class TrustedGameSolver extends GameSolver {
       }
     }
 
+    override def toChute( abstractVariable : AbstractVariable ) = {
+      val chute = super.toChute( abstractVariable )
+      chute.setNarrow( false )
+      chute
+    }
+
     def createChute(slot: Slot): Chute = {
       slot match {
         case v: Variable => {
-          new Chute(v.id, v.toString())
+          val res = new Chute(v.id, v.toString())
+          res.setNarrow( false )
+          res
         }
         case v: RefinementVariable => {
-          new Chute(v.id, v.toString())
+          val res = new Chute(v.id, v.toString())
+          res.setNarrow( false )
+          res
         }
         case LiteralThis => {
           createThisChute()
