@@ -14,6 +14,7 @@ import java.util.Collection;
  * Remove useless one-input to one-output connectors in the graph.
  */
 public class ConnectorCompression implements OptimizationPass {
+
     @Override
     public void optimize(NodeGraph g) {
         // remove a lot of "connect" intersections
@@ -38,18 +39,9 @@ public class ConnectorCompression implements OptimizationPass {
                     continue;
                 }
 
-                // if the edges are different widths, we have to think really hard about how to merge them
-                boolean narrow = incomingChute.isNarrow();
-                if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
-                    if (incomingChute.isEditable())          // if we can edit the incoming chute...
-                        narrow = outgoingChute.isNarrow();   //     ... then make it match the outgoing one
-                    else if (outgoingChute.isEditable())     // if we can edit the outgoing chute...
-                        narrow = incomingChute.isNarrow();   //     ... then make it match the incoming one
-                    else if (incomingChute.isNarrow() && !outgoingChute.isNarrow()) // if the edges are immutable and narrow flows to wide
-                        narrow = true;                       //     ... then make it narrow
-                    else                                     // if the edges are immutable and wide flows to narrow
-                        continue;                            //     ... then we're out of luck
-                }
+                Chute newChute = compressChutes(incomingChute, outgoingChute);
+                if (newChute == null)
+                    continue;
 
                 Util.logVerbose("*** REMOVING USELESS CONNECTOR");
 
@@ -57,13 +49,6 @@ public class ConnectorCompression implements OptimizationPass {
                 g.removeNode(node);
 
                 // add an edge where it used to be
-                Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
-                newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-                if (outgoingChute.getLayout() != null)
-                    newChute.setLayout(outgoingChute.getLayout());
-                newChute.setNarrow(narrow);
-                newChute.setEditable(incomingChute.isEditable() && outgoingChute.isEditable());
-                newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
                 g.addEdge(
                         incomingEdge.getSrc(), incomingEdge.getSrcPort(),
                         outgoingEdge.getDst(), outgoingEdge.getDstPort(),
@@ -71,4 +56,48 @@ public class ConnectorCompression implements OptimizationPass {
             }
         }
     }
+
+    /**
+     * Compress two chutes into one.
+     * <p>
+     * Precondition: one of the following must hold:
+     * <ul>
+     *     <li>both chutes belong to the same edge set or</li>
+     *     <li>both chutes are the sole members of their respective edge sets</li>
+     * </ul>
+     * @param incomingChute flows into outgoingChute
+     * @param outgoingChute incomingChute flows into this
+     * @return the compressed chute, or null if there is no sensible way to compress them
+     */
+    public Chute compressChutes(Chute incomingChute, Chute outgoingChute) {
+
+        // if the edges are different widths, we have to think really hard about how to merge them
+        boolean narrow = incomingChute.isNarrow();
+        if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
+            if (incomingChute.isEditable())          // if we can edit the incoming chute...
+                narrow = outgoingChute.isNarrow();   //     ... then make it match the outgoing one
+            else if (outgoingChute.isEditable())     // if we can edit the outgoing chute...
+                narrow = incomingChute.isNarrow();   //     ... then make it match the incoming one
+            else if (incomingChute.isNarrow() && !outgoingChute.isNarrow()) // if the edges are immutable and narrow flows to wide
+                narrow = true;                       //     ... then make it narrow
+            else                                     // if the edges are immutable and wide flows to narrow
+                narrow = true;                       //     ... then make it narrow (push conflict up a level)
+        }
+
+        // The result is editable if both are editable, or if one is editable and the other is wide.
+        boolean editable = (
+                (incomingChute.isEditable() && outgoingChute.isEditable()) ||
+                        (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
+                        (outgoingChute.isEditable() && !incomingChute.isNarrow()));
+
+        Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
+        newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+        if (outgoingChute.getLayout() != null)
+            newChute.setLayout(outgoingChute.getLayout());
+        newChute.setNarrow(narrow);
+        newChute.setEditable(editable);
+        newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
+        return newChute;
+    }
+
 }

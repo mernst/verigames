@@ -137,4 +137,48 @@ public class ConnectorCompressionTest {
         assert finalBoard.getEdges().size() == 3;
     }
 
+    /**
+     * Any edge can merge with a wide, pinch-free, and immutable one.
+     */
+    @Test
+    public void mergeWithWideImmutable() {
+
+        ConnectorCompression compress = new ConnectorCompression();
+
+        Chute wide = Util.immutableChute();
+        wide.setPinched(false);
+        wide.setNarrow(false);
+
+        boolean[] bools = { true, false };
+        for (boolean narrow : bools) {
+            for (boolean pinched : bools) {
+                for (boolean editable : bools) {
+                    for (boolean buzzsaw : bools) {
+                        for (boolean swapped : bools) {
+                            Chute chute = new Chute();
+                            chute.setEditable(editable);
+                            chute.setNarrow(narrow);
+                            chute.setPinched(pinched);
+                            chute.setBuzzsaw(buzzsaw);
+
+                            Chute merged = swapped ?
+                                    compress.compressChutes(chute, wide):
+                                    compress.compressChutes(wide, chute);
+
+                            // for debugging
+                            System.out.println(chute + " ---> " + merged);
+
+                            assert merged != null;
+                            assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
+                            assert merged.isEditable() == chute.isEditable();
+                            assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
+                            assert merged.isPinched() == chute.isPinched();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
 }

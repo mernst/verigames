@@ -82,8 +82,12 @@ public class BallDropElimination implements OptimizationPass {
             String boardName = t.getDst().getBoardName();
             Board board = t.getDst().getBoard();
             Intersection intersection = Intersection.factory(Intersection.Kind.START_SMALL_BALL);
+
+            // Arbitrarily, create an immutable wide chute to drop into. We could just as easily
+            // create a mutable narrow one or something, but immutable wide chutes are easier to
+            // reason about.
             Chute chute = new Chute();
-            chute.setNarrow(true);
+            chute.setNarrow(false);
             chute.setEditable(false);
             Node n = new Node(levelName, level, boardName, board, intersection);
             g.addNode(n);
