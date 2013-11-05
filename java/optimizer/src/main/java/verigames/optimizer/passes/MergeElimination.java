@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Eliminates merge nodes in the following form:
+ * Eliminates merge nodes in a few different forms.
+ *
+ * <p>FORM 1:
  *
  * <pre>
  * \  SMALL_DROP     |
@@ -29,6 +31,24 @@ import java.util.List;
  * output from the {@link BallDropElimination} optimization pass. Note that
  * the connect nodes we generate are likely to be eliminated by the
  * {@link ConnectorCompression} pass.
+ *
+ * <p>FORM 2:
+ *
+ * <pre>
+ * \   /             |     |
+ *  \ /              |     |
+ *   Y      ----->   |     |
+ *   |               |     |
+ *  END             END   END
+ * </pre>
+ *
+ * Where the edge connecting to the END node is conflict free.
+ *
+ * This is very common in real worlds, and this transformation assists the
+ * {@link ChuteEndElimination} step immensely.
+ *
+ * Note that the form 1 transformation will always be taken in preference to
+ * form 2. This is just an artifact of this implementation.
  */
 public class MergeElimination implements OptimizationPass {
 
@@ -42,6 +62,8 @@ public class MergeElimination implements OptimizationPass {
             if (n.getIntersection().getIntersectionKind() == Intersection.Kind.MERGE) {
 
                 List<NodeGraph.Edge> incoming = new ArrayList<>(g.incomingEdges(n));
+
+                // expect 2 inputs and 1 output
                 NodeGraph.Edge e1 = incoming.get(0);
                 NodeGraph.Edge e2 = incoming.get(1);
                 NodeGraph.Target dst = Util.first(g.outgoingEdges(n).values());
@@ -67,6 +89,12 @@ public class MergeElimination implements OptimizationPass {
                     g.addNode(connector);
                     g.addEdge(e1.getSrc(), e1.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
+                    g.removeNode(n);
+                    Node end2 = new Node(levelName, level, boardName, board, Intersection.factory(Intersection.Kind.END));
+                    g.addNode(end2);
+                    g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
+                    g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
                 }
 
             }

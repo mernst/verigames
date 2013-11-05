@@ -1,6 +1,7 @@
 package verigames.optimizer;
 
 import verigames.level.Chute;
+import verigames.optimizer.model.NodeGraph;
 
 public class Util {
 
@@ -47,6 +48,34 @@ public class Util {
         Chute result = new Chute();
         result.setEditable(true);
         return result;
+    }
+
+    /**
+     * Determine if an edge is "conflict free" meaning that it cannot
+     * contribute a conflict to the board. Specifically, an edge is
+     * conflict free if it either (1) is immutable and wide or (2) is
+     * mutable and the only member of its edge set.
+     * @param g the graph containing the edge
+     * @param e the edge to consider
+     * @return true if the edge is conflict free, or false otherwise
+     */
+    public static boolean conflictFree(NodeGraph g, NodeGraph.Edge e) {
+        Chute chute = e.getEdgeData();
+        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(e).size() == 1);
+    }
+
+    /**
+     * Determine if an edge is "conflict free" meaning that it cannot
+     * contribute a conflict to the board. Specifically, an edge is
+     * conflict free if it either (1) is immutable and wide or (2) is
+     * mutable and the only member of its edge set.
+     * @param g the graph containing the edge
+     * @param e the edge to consider
+     * @return true if the edge is conflict free, or false otherwise
+     */
+    public static boolean conflictFree(NodeGraph g, NodeGraph.Target e) {
+        Chute chute = e.getEdgeData();
+        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(e).size() == 1);
     }
 
 }

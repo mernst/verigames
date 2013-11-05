@@ -3,18 +3,24 @@ package verigames.optimizer;
 import verigames.level.World;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.passes.BallDropElimination;
+import verigames.optimizer.passes.ChuteEndElimination;
 import verigames.optimizer.passes.ConnectorCompression;
 import verigames.optimizer.passes.ImmutableComponentElimination;
 import verigames.optimizer.passes.MergeElimination;
+import verigames.optimizer.passes.SplitElimination;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Optimizer {
 
+    // This ordering is based on some knowledge of what passes help others,
+    // as well as a good deal of trial and error.
     public static final List<OptimizationPass> DEFAULT_PASSES = Arrays.asList(
             new BallDropElimination(),
             new MergeElimination(),
+            new ChuteEndElimination(),
+            new SplitElimination(),
             new ConnectorCompression(),
             new ImmutableComponentElimination());
 
