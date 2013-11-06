@@ -132,30 +132,49 @@ public class XMLValidator
   }
 
   /**
-   * Make sure that linked chutes have the same width
+   * Make sure that linked chutes have the same width and editableness
    */
   private static void validateLinkedChuteWidth(Set<Set<Integer>> linkedVarIDs,
                                                Map<Integer, Set<Chute>>
                                                chuteByVarID)
   {
     Set<Set<Chute>> linkedChutes = new HashSet<>();
+    Set<Integer> encounteredVarIDs = new HashSet<>();
+
     for (Set<Integer> linkedIDs : linkedVarIDs)
     {
       Set<Chute> chutes = new HashSet<>();
       for (int ID : linkedIDs)
+      {
         chutes.addAll(chuteByVarID.get(ID));
+        encounteredVarIDs.add(ID);
+      }
     }
 
+    for (int ID : chuteByVarID.keySet())
+    {
+      // if we haven't already added this varID's chutes to the set, and it is
+      // actually a set of chutes that should be linked
+      if (ID >= 0 && !encounteredVarIDs.contains(ID))
+        linkedChutes.add(chuteByVarID.get(ID));
+    }
+
+    // do the actual check
     for (Set<Chute> chutes : linkedChutes)
     {
       Boolean narrow = null;
+      Boolean editable = null;
       for (Chute c : chutes)
       {
         if (narrow == null)
           narrow = c.isNarrow();
+        if (editable == null)
+          editable = c.isEditable();
 
         ensure(c.isNarrow() == narrow,
-               "Linked chutes should have the same width");
+               "Linked chutes should have the same width (variable id: " + c.getVariableID() + ")");
+        ensure(c.isEditable() == editable,
+               "Linked chutes should have the same editableness");
       }
     }
   }
