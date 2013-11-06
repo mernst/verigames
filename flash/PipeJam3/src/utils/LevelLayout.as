@@ -16,32 +16,33 @@ package utils
 	public class LevelLayout 
 	{
 	
-		public static function parseLevelXML(my_level_xml:XML, obfuscater:NameObfuscater = null):LevelNodes {
+		public static function parseLevelXML(my_level_xml:XML, network:Network, obfuscater:NameObfuscater = null):void {
 			var level_edge_set_dictionary:Dictionary = new Dictionary();
 			var my_levelNodes:LevelNodes = new LevelNodes(my_level_xml.attribute("name").toString(), obfuscater, level_edge_set_dictionary);
-			var edge_id_to_edge_set_dictionary:Dictionary = new Dictionary();
 			
 			if (my_level_xml["boards"].length() == 0) {
 				Game.printDebug("NO <boards> found. Level not created...");
-				return null;
+				return;
 			}
 			
 			// Check for boards
 			if (my_level_xml["boards"][0]["board"].length() == 0) {
 				Game.printDebug("NO <boards> <board> 's found. Level not created...");
-				return null;
+				return;
 			}
 			
 			// Check for edges
 			if (my_level_xml["boards"][0]["board"]["edge"].attribute("description").length() == 0) {
 				Game.printDebug("NO <boards> <edge> 's found. Level not created...");
-				return null;
+				return;
 			}
 			
-			// Check for linked edge sets
-			if (my_level_xml["linked-edges"][0]["edge-set"].length() == 0) {
-				Game.printDebug("NO <linked-edges> <edge-set> 's found. Level not created...");
-				return null;
+			if ((network.world_version == "1") || (network.world_version == "2")) {
+				// Check for linked edge sets
+				if (my_level_xml["linked-edges"][0]["edge-set"].length() == 0) {
+					Game.printDebug("NO <linked-edges> <edge-set> 's found. Level not created...");
+					return;
+				}
 			}
 			
 			// Retrieve stub board widths
@@ -79,24 +80,31 @@ package utils
 				}
 			}
 			
-			var edge_set_index:int = 0;
-			for each (var le_set:XML in my_level_xml["linked-edges"][0]["edge-set"]) {
-				if (le_set["edgeref"].attribute("id").length() > 0) {
-					var my_id:String = String(le_set.attribute("id"));
-					if (my_id.length == 0) {
-						my_id = edge_set_index.toString();
+			var my_edge_set:EdgeSetRef;
+			var edge_id_to_edge_set_dictionary:Dictionary;
+			if ((network.world_version == "1") || (network.world_version == "2")) {
+				edge_id_to_edge_set_dictionary = new Dictionary();
+				var edge_set_index:int = 0;
+				for each (var le_set:XML in my_level_xml["linked-edges"][0]["edge-set"]) {
+					if (le_set["edgeref"].attribute("id").length() > 0) {
+						var my_id:String = String(le_set.attribute("id"));
+						if (my_id.length == 0) {
+							my_id = edge_set_index.toString();
+						}
+						my_edge_set = new EdgeSetRef(my_id);
+						for (var le_id_indx:uint = 0; le_id_indx < le_set["edgeref"].attribute("id").length(); le_id_indx++) {
+							level_edge_set_dictionary[my_id] = my_edge_set;
+							edge_id_to_edge_set_dictionary[le_set["edgeref"].attribute("id")[le_id_indx].toString()] = my_edge_set;
+						}
+						for (var stamp_id_indx:uint = 0; stamp_id_indx < le_set["stamp"].length(); stamp_id_indx++) {
+							var isActive:Boolean = XString.stringToBool(String(le_set["stamp"][stamp_id_indx].attribute("active")));
+							my_edge_set.addStamp(String(le_set["stamp"][stamp_id_indx].attribute("id")), isActive);
+						}
+						edge_set_index++;
 					}
-					var my_edge_set:EdgeSetRef = new EdgeSetRef(my_id);
-					for (var le_id_indx:uint = 0; le_id_indx < le_set["edgeref"].attribute("id").length(); le_id_indx++) {
-						level_edge_set_dictionary[my_id] = my_edge_set;
-						edge_id_to_edge_set_dictionary[le_set["edgeref"].attribute("id")[le_id_indx].toString()] = my_edge_set;
-					}
-					for (var stamp_id_indx:uint = 0; stamp_id_indx < le_set["stamp"].length(); stamp_id_indx++) {
-						var isActive:Boolean = XString.stringToBool(String(le_set["stamp"][stamp_id_indx].attribute("active")));
-						my_edge_set.addStamp(String(le_set["stamp"][stamp_id_indx].attribute("id")), isActive);
-					}
-					edge_set_index++;
 				}
+			} else if (network.world_version == "3") {
+				edge_id_to_edge_set_dictionary = network.globalEdgeIdToEdgeSetDictionary;
 			}
 			
 			var my_board_xml:XML;
@@ -139,11 +147,11 @@ package utils
 					var md1:Metadata = attributesToMetadata(e1);
 					if ( (e1["from"]["noderef"].attribute("id").length() != 1) || (e1["from"]["noderef"].attribute("port").length() != 1) ) {
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " does not have a source node id/port");
-						return null;
+						return;
 					}
 					if ( (e1["to"]["noderef"].attribute("id").length() != 1) || (e1["to"]["noderef"].attribute("port").length() != 1) ) {
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " does not have a destination node id/port");
-						return null;
+						return;
 					}
 					
 					source_node = my_levelNodes.getNode(/*my_board_xml.attribute("name"),*/ e1["from"]["noderef"].attribute("id").toString());
@@ -151,7 +159,7 @@ package utils
 					
 					if ( (source_node == null) || (dest_node == null) ) {
 						Game.printDebug("WARNING: Edge #id = " + e1.attribute("id") + " could not find node with getNodeById() method.");
-						return null;
+						return;
 					}
 					/*
 					var spline_control_points:Vector.<Point> = new Vector.<Point>();
@@ -165,8 +173,26 @@ package utils
 						}
 					}
 					*/
+					
+					// For v3, add to global edge_id -> edge set dictionary
+					if (network.world_version == "3") {
+						var my_edge_id:String = e1.attribute("id").toString();
+						var my_edge_varid:String = e1.attribute("variableID").toString();
+						if (!isNaN(int(my_edge_varid)) && (int(my_edge_varid) < 0)) {
+							// TODO: Undo this hack for negative variable ids
+							my_edge_varid = Constants.XML_ANNOT_NEG + my_edge_id;
+						}
+						if (!my_edge_id) throw new Error("Bad edge id found:" + my_edge_id);
+						if (!my_edge_varid) throw new Error("Bad edge variable id found:" + my_edge_varid + " edge id:" + my_edge_id);
+						network.addEdge(my_edge_id, my_edge_varid);
+					}
+					
+					if (!edge_id_to_edge_set_dictionary.hasOwnProperty(e1.attribute("id").toString())) {
+						throw new Error("No EdgeSetRef found for edge id:" + e1.attribute("id").toString());
+					}
+					
 					// Add this edge!
-					var new_edge:Edge = source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], md1);
+					var new_edge:Edge = source_node.addOutgoingEdge(e1["from"]["noderef"].attribute("port").toString(), dest_node, e1["to"]["noderef"].attribute("port").toString(), edge_id_to_edge_set_dictionary[e1.attribute("id").toString()], my_levelNodes.original_level_name, md1);
 					// Check for stubs
 					var subnet_port:SubnetworkPort, subboard_name:String, foundWidth:String;
 					if (new_edge.from_port is SubnetworkPort) {
@@ -205,7 +231,7 @@ package utils
 			my_levelNodes.associateSubnetNodesToBoardNodes();
 			
 			Game.printDebug("Level layout LOADED!");
-			return my_levelNodes;
+			network.addLevel(my_levelNodes);
 		}
 		
 		/**
@@ -230,6 +256,22 @@ package utils
 					Game.printWarning("WARNING! More than one attribute '"+attr.name()+"' value was found for this XML.");
 			}
 			return new Metadata(obj, _xml);
+		}
+		
+		public static function parseLinkedVariableIdXML(world_xml:XML, network:Network):void
+		{
+			var link_xml:XML = world_xml["linked-varIDs"][0];
+			for (var i:int = 0; i < link_xml["varID-set"].length(); i++) {
+				var var_set:XML = link_xml["varID-set"][i];
+				var set_id:String = var_set.@id;
+				for (var j:int = 0; j < var_set["varID"].length(); j++) {
+					var var_id_xml:XML = var_set["varID"][j];
+					var var_id:String = var_id_xml.@id;
+					network.addLinkedVariableId(var_id, set_id);
+					
+					// TODO: width, editable, stamps defined here
+				}
+			}
 		}
 		
 	}

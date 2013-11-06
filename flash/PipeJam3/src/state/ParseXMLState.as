@@ -1,6 +1,7 @@
 package state 
 {
 	import starling.events.Event;
+	import utils.LevelLayout;
 	
 	import graph.Network;
 	import tasks.ParseLevelXMLTask;
@@ -10,7 +11,7 @@ package state
 		/** Width of game */
 		public static var WORLD_PARSED:String = "World Parsed";
 
-		private var WORLD_INPUT_XML_VERSION:String = "1";
+		private var WORLD_VALID_XML_VERSIONS:Array = ["1","2","3"];
 		private var world_xml:XML;
 		private var world_nodes:Network;		
 		
@@ -21,27 +22,25 @@ package state
 		}
 		
 		public override function stateLoad():void {
-			
-			var version_failed:Boolean = false;
-			
-			if ("1" == null) {
-				version_failed = true;
-			} else if ("1" != WORLD_INPUT_XML_VERSION) {
-				version_failed = true;
-			}
-			if (version_failed) {
-				throw new Error("World XML version used does not match the version that this game .SWF is designed to read. The game is designed to read version '" + WORLD_INPUT_XML_VERSION + "'");
+			var world_version:String =  world_xml[0].@version;
+			if (WORLD_VALID_XML_VERSIONS.indexOf(world_version) == -1) {
+				var allVers:String = "";
+				for each (var ver:String in WORLD_VALID_XML_VERSIONS) allVers += ver + ", ";
+				throw new Error("World XML version used is not one the game is designed to read. The game is designed to read versions '" + allVers + "'");
 				return;
 			}
 			
 			var my_world_name:String = "World 1";
-			if (world_xml.attribute("name") != null) {
-				if (world_xml.attribute("name").toString().length > 0) {
-					my_world_name = world_xml.attribute("name").toString();
-				}
+			if (world_xml[0].@name && world_xml[0].@name.toString().length) {
+				my_world_name = world_xml[0].@name;
 			}
 			
-			world_nodes = new Network(my_world_name);
+			world_nodes = new Network(my_world_name, world_version);
+			
+			if (world_version == "3") {
+				// Need to pre-parse the linked variable id table for version 3 (and presumably later versions)
+				LevelLayout.parseLinkedVariableIdXML(world_xml, world_nodes);
+			}
 			
 			for (var level_index:uint = 0; level_index < world_xml["level"].length(); level_index++) {
 				var my_level_xml:XML = world_xml["level"][level_index];
@@ -50,7 +49,6 @@ package state
 			}
 			
 			super.stateLoad();
-			
 		}
 		
 		public override function stateUnload():void {

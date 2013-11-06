@@ -23,6 +23,7 @@ package scenes.game.components
 	import scenes.BaseComponent;
 	import scenes.game.display.GameComponent;
 	import scenes.game.display.GameEdgeContainer;
+	import scenes.game.display.GameJointNode;
 	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import scenes.game.display.OutlineFilter;
@@ -38,6 +39,7 @@ package scenes.game.components
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
+	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
@@ -71,6 +73,9 @@ package scenes.game.components
 		
 		private var m_world:World;
 		
+		private var m_lastVisibleRefreshViewRect:Rectangle;
+		
+		private static const VISIBLE_BUFFER_PIXELS:Number = 60.0; // make objects within this many pixels visible, only refresh visible list when we've moved outside of this buffer
 		protected static const NORMAL_MODE:int = 0;
 		protected static const MOVING_MODE:int = 1;
 		protected static const SELECTING_MODE:int = 2;
@@ -118,6 +123,7 @@ package scenes.game.components
 		
 		private function onAddedToStage():void
 		{
+			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 			//create a clip rect for the window
 			clipRect = new Rectangle(x, y, WIDTH, HEIGHT);
 			
@@ -129,6 +135,70 @@ package scenes.game.components
 				stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			Starling.current.nativeStage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		private function onEnterFrame(evt:EnterFrameEvent):void
+		{
+			if (!m_currentLevel) return;
+			var currentViewRect:Rectangle = getViewInContentSpace();
+			var movingSelectedComponents:Boolean = ((currentMode == MOVING_MODE) && ((m_currentLevel.totalMoveDist.x != 0) || (m_currentLevel.totalMoveDist.y != 0)));
+			var offLeft:Number = -VISIBLE_BUFFER_PIXELS;
+			var offRight:Number = VISIBLE_BUFFER_PIXELS;
+			var offTop:Number = -VISIBLE_BUFFER_PIXELS;
+			var offBottom:Number = VISIBLE_BUFFER_PIXELS;
+			if (movingSelectedComponents) {
+				// Take account the distance we've dragged objects, if we may have
+				// dragged them into the current viewspace, recompute the visibility
+				if (m_currentLevel.totalMoveDist.x > 0) {
+					offLeft += m_currentLevel.totalMoveDist.x;
+				} else {
+					offRight += m_currentLevel.totalMoveDist.x;
+				}
+				if (m_currentLevel.totalMoveDist.y > 0) {
+					offTop += m_currentLevel.totalMoveDist.y;
+				} else {
+					offBottom += m_currentLevel.totalMoveDist.y;
+				}
+			}
+			if (m_lastVisibleRefreshViewRect &&
+				(currentViewRect.left >= m_lastVisibleRefreshViewRect.left + offLeft) &&
+				(currentViewRect.right <= m_lastVisibleRefreshViewRect.right + offRight) &&
+				(currentViewRect.top >= m_lastVisibleRefreshViewRect.top + offTop) &&
+				(currentViewRect.bottom <= m_lastVisibleRefreshViewRect.bottom + offBottom)) {
+				return;
+			}
+			// Update visible objects
+			if (m_lastVisibleRefreshViewRect) trace("dl:" + int(currentViewRect.left - m_lastVisibleRefreshViewRect.left) + 
+					" dr:" + int(currentViewRect.right - m_lastVisibleRefreshViewRect.right) +
+					" dt:" + int(currentViewRect.top - m_lastVisibleRefreshViewRect.top) +
+					" db:" + int(currentViewRect.bottom - m_lastVisibleRefreshViewRect.bottom));
+			var i:int;
+			for (i = 0; i < m_currentLevel.m_edgeList.length; i++) {
+				if (m_currentLevel.m_edgeList[i].hidden) continue;
+				m_currentLevel.m_edgeList[i].visible = isOnScreen(m_currentLevel.m_edgeList[i].m_boundingBox, currentViewRect);
+			}
+			const gameNodes:Vector.<GameNode> = m_currentLevel.getNodes();
+			for (i = 0; i < gameNodes.length; i++) {
+				if (gameNodes[i].hidden) continue;
+				gameNodes[i].visible = isOnScreen(gameNodes[i].m_boundingBox, currentViewRect);
+			}
+			const gameJoints:Vector.<GameJointNode> = m_currentLevel.getJoints();
+			for (i = 0; i < gameJoints.length; i++) {
+				if (gameJoints[i].hidden) continue;
+				gameJoints[i].visible = isOnScreen(gameJoints[i].m_boundingBox, currentViewRect);
+			}
+			// Reset total move dist, now that we've updated the visible objects around this view
+			m_currentLevel.totalMoveDist = new Point();
+			m_lastVisibleRefreshViewRect = currentViewRect;
+		}
+		
+		private static function isOnScreen(bb:Rectangle, view:Rectangle):Boolean
+		{
+			if (bb.right < view.left - VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.left > view.right + VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.bottom < view.top - VISIBLE_BUFFER_PIXELS) return false;
+			if (bb.top > view.bottom + VISIBLE_BUFFER_PIXELS) return false;
+			return true;
 		}
 		
 		private function onPropertyModeChange(evt:PropertyModeChangeEvent):void
@@ -146,6 +216,11 @@ package scenes.game.components
 			{
 				m_currentLevel.handleMarquee(null, null);
 			}
+		}
+		
+		private function beginMoveMode():void
+		{
+			startingPoint = new Point(content.x, content.y);
 		}
 		
 		private function endMoveMode():void
@@ -170,6 +245,7 @@ package scenes.game.components
 			{
 				if(currentMode == SELECTING_MODE)
 				{
+					trace("end select");
 					endSelectMode();
 				}
 				else if(currentMode == MOVING_MODE)
@@ -213,7 +289,7 @@ package scenes.game.components
 					{
 						if (currentMode == SELECTING_MODE) endSelectMode();
 						currentMode = MOVING_MODE;
-						startingPoint = new Point(content.x, content.y);
+						beginMoveMode();
 					}
 					if (touches.length == 1)
 					{
@@ -441,7 +517,7 @@ package scenes.game.components
 		
 		private function onRemovedFromStage():void
 		{
-			//
+			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
 		override public function dispose():void

@@ -33,13 +33,13 @@ package scenes.game.display
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
 		
-		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null)
+		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, levelEdgeSetEdges:Vector.<Edge> = null)
 		{
 			super(nodeXML);
 			draggable = _draggable;
 			m_edgeSet = edgeSet;
-			if (m_edgeSet != null) {
-				m_edgeSetEdges = m_edgeSet.edges;
+			if (levelEdgeSetEdges != null) {
+				m_edgeSetEdges = levelEdgeSetEdges.concat();
 			} else {
 				m_edgeSetEdges = new Vector.<Edge>();
 			}

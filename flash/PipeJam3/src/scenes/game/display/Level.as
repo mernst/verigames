@@ -134,8 +134,10 @@ package scenes.game.display
 		
 		/** Set to true when the target score is reached. */
 		public var targetScoreReached:Boolean;
-		
 		public var original_level_name:String;
+		
+		/** Tracks total distance components have been dragged since last visibile calculation */
+		public var totalMoveDist:Point = new Point();
 		
 		// The following are used for conflict scrolling purposes: (tracking list of current conflicts)
 		private var m_currentConflictIndex:int = -1;
@@ -186,6 +188,7 @@ package scenes.game.display
 
 			m_edgeList = new Vector.<GameEdgeContainer>;
 			selectedComponents = new Vector.<GameComponent>;
+			totalMoveDist = new Point();
 			
 			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
 			{
@@ -232,23 +235,22 @@ package scenes.game.display
 				} else {
 					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
 					//grab an example edge for it's attributes FIX - use constraints xml file
-					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet);
+					var levelEdges:Vector.<Edge> = edgeSet.getLevelEdges(original_level_name);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, levelEdges);
 				}
 				
-				gameNode.visible = getVisible(boxLayoutXML);
-				if(gameNode.visible)
+				if (getVisible(boxLayoutXML)) {
 					visibleNodes++;
-				else
-					boxLayoutXML.@visible="false";
-				
-				m_nodeList.push(gameNode);
-				boxDictionary[boxEdgeSetId] = gameNode;
-				if (gameNode.visible) {
 					minX = Math.min(minX, gameNode.m_boundingBox.left);
 					minY = Math.min(minY, gameNode.m_boundingBox.top);
 					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
 					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				} else {
+					gameNode.hideComponent(true);
+					boxLayoutXML.@visible="false";
 				}
+				m_nodeList.push(gameNode);
+				boxDictionary[boxEdgeSetId] = gameNode;
 			}
 			trace("gamenodeset count = " + m_nodeList.length);
 			
@@ -313,20 +315,20 @@ package scenes.game.display
 				} else {
 					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
 				}
-				joint.visible = getVisible(jointLayoutXML);
-		//		trace("joint:" + joint.m_id + " visible:" + joint.visible + " kind:" + foundNode.kind);
-				if(joint.visible)
+				
+				if (getVisible(jointLayoutXML)) {
 					visibleJoints++;
-				else
-					jointLayoutXML.@visible="false";
-				m_jointList.push(joint);
-				jointDictionary[joint.m_id] = joint;
-				if (joint.visible) {
 					minX = Math.min(minX, joint.m_boundingBox.left);
 					minY = Math.min(minY, joint.m_boundingBox.top);
 					maxX = Math.max(maxX, joint.m_boundingBox.right);
 					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				} else {
+					joint.hideComponent(true);
+					jointLayoutXML.@visible = "false";
 				}
+				trace("joint:" + joint.m_id + " hidden:" + joint.hidden + " kind:" + foundNode.kind);
+				m_jointList.push(joint);
+				jointDictionary[joint.m_id] = joint;
 			}
 			
 			// Process <line> 's
@@ -487,7 +489,7 @@ package scenes.game.display
 					case NodeTypes.OUTGOING:
 						// Only need to create outgoing joint if others come out of it,
 						// if joint was not created, don't create the line
-						if (myJoint && myJoint.visible) {
+						if (myJoint && !myJoint.hidden) {
 							hideLine = false;
 						} else {
 							hideLine = true;
@@ -551,7 +553,7 @@ package scenes.game.display
 			} else {
 				newGameEdge = new GameEdgeContainer(edgeXML.@id, edgeArray, myJoint, myNode, fromPortID, toPortID, dir, newEdge, !m_layoutFixed, edgeIsCopy, hideLine);
 			}
-			newGameEdge.visible = getVisible(edgeXML);
+			if (!getVisible(edgeXML)) newGameEdge.hideComponent(true);
 			
 			m_edgeList.push(newGameEdge);
 			if (edgeIsCopy) {
@@ -646,7 +648,7 @@ package scenes.game.display
 			}
 			
 			m_bestScore = m_currentScore;
-			
+			flatten();
 			trace("Loaded: " + m_levelLayoutXML.@id + " for display.");
 		}
 		
@@ -762,8 +764,8 @@ package scenes.game.display
 					gameNode.m_boundingBox.x = child.@x * Constants.GAME_SCALE - gameNode.m_boundingBox.width/2;
 					gameNode.m_boundingBox.y = child.@y * Constants.GAME_SCALE - gameNode.m_boundingBox.height/2;
 					
-					gameNode.visible = getVisible(child);
-					if (gameNode.visible) {
+					gameNode.hideComponent(!getVisible(child));
+					if (!gameNode.hidden) {
 						minX = Math.min(minX, gameNode.m_boundingBox.left);
 						minY = Math.min(minY, gameNode.m_boundingBox.top);
 						maxX = Math.max(maxX, gameNode.m_boundingBox.right);
@@ -846,7 +848,7 @@ package scenes.game.display
 					child.@x = currentLayoutX.toFixed(2);
 					currentLayoutY = (edgeSet.y + /*m_boundingBox.y*/ + edgeSet.m_boundingBox.height/2) / Constants.GAME_SCALE;
 					child.@y = currentLayoutY.toFixed(2);
-					child.@visible = edgeSet.visible.toString();
+					child.@visible = (!edgeSet.hidden).toString();
 				}
 				else if(childName.indexOf("joint") != -1)
 				{
@@ -858,7 +860,7 @@ package scenes.game.display
 						child.@x = currentLayoutX.toFixed(2);
 						currentLayoutY = (joint.y + /*m_boundingBox.y*/ + joint.m_boundingBox.height/2) / Constants.GAME_SCALE;
 						child.@y = currentLayoutY.toFixed(2);
-						child.@visible = joint.visible.toString();
+						child.@visible = (!joint.hidden).toString();
 					}
 				}
 				else if(childName.indexOf("line") != -1)
@@ -867,7 +869,7 @@ package scenes.game.display
 					var edgeContainer:GameEdgeContainer = edgeContainerDictionary[lineID];
 					if(edgeContainer != null)
 					{
-						child.@visible = edgeContainer.visible.toString();
+						child.@visible = (!edgeContainer.hidden).toString();
 						
 						//remove all current points, and then add new ones
 						delete child.point;
@@ -1148,6 +1150,7 @@ package scenes.game.display
 					activate(gameJointsToActivate[i]);
 				}
 			}
+			flatten();
 		}
 		
 		private function activate(comp:GameComponent):void
@@ -1342,6 +1345,7 @@ package scenes.game.display
 		{
 			//make a copy of the selected list for the undo event
 			var currentSelection:Vector.<GameComponent> = selectedComponents.concat();
+			totalMoveDist = new Point();
 			selectedComponents = new Vector.<GameComponent>();
 			
 			for each(var comp:GameComponent in currentSelection)
@@ -1380,6 +1384,10 @@ package scenes.game.display
 			}
 			else
 			{
+				//if (selectedComponents.length == 0) {
+				//	totalMoveDist = new Point();
+				//	return;
+				//}
 				var movedGameNode:Boolean = false;
 				for each(var component:GameComponent in selectedComponents)
 				{
@@ -1396,6 +1404,9 @@ package scenes.game.display
 				}
 				if (tutorialManager && movedGameNode) tutorialManager.onGameNodeMoved(movedNodes);
 			}
+			totalMoveDist.x += delta.x;
+			totalMoveDist.y += delta.y;
+			trace(totalMoveDist);
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
 		
@@ -1448,7 +1459,6 @@ package scenes.game.display
 		public function draw():void
 		{
 			trace("Bounding Box " + m_boundingBox);
-			
 			var maxX:Number = Number.NEGATIVE_INFINITY;
 			var maxY:Number = Number.NEGATIVE_INFINITY;
 			
@@ -1491,6 +1501,7 @@ package scenes.game.display
 				m_backgroundImage.setTexCoords(2, new Point(0.0, texturesToRepeat));
 				m_backgroundImage.setTexCoords(3, new Point(texturesToRepeat, texturesToRepeat));
 			}
+			flatten();
 		}
 		
 		private static function getVisible(_xml:XML, _defaultValue:Boolean = true):Boolean
@@ -1538,6 +1549,7 @@ package scenes.game.display
 				marqueeRect.y = pt1.y;
 				//do here to make sure we are on top
 				addChild(marqueeRect);
+				flatten();
 			}
 			else
 			{
@@ -1779,13 +1791,36 @@ package scenes.game.display
 		//can't flatten errorContainer as particle system is unsupported display object
 		public override function flatten():void
 		{
-			if(false) //don't flatten, as texture can be too big
-			{
-				this.m_nodesContainer.flatten();
-				this.m_jointsContainer.flatten();
-			}
-			//doesn't have texture size problem on board I tried, but I don't know why not
-	//		this.m_edgesContainer.flatten();
+			return; // uncomment when more testing performed
+			// Active layers
+			m_nodesContainer.flatten();
+			m_jointsContainer.flatten();
+			//m_errorContainer.flatten();// Can't flatten due to animations
+			m_edgesContainer.flatten();
+			m_plugsContainer.flatten();
+			// Inactive layers
+			m_nodesInactiveContainer.flatten();
+			m_jointsInactiveContainer.flatten();
+			//m_errorInactiveContainer.flatten();// Can't flatten due to animations
+			m_edgesInactiveContainer.flatten();
+			m_plugsInactiveContainer.flatten();
+		}
+		
+		public override function unflatten():void
+		{
+			super.unflatten();
+			// Active layers
+			m_nodesContainer.unflatten();
+			m_jointsContainer.unflatten();
+			//m_errorContainer.unflatten();// Can't flatten due to animations
+			m_edgesContainer.unflatten();
+			m_plugsContainer.unflatten();
+			// Inactive layers
+			m_nodesInactiveContainer.unflatten();
+			m_jointsInactiveContainer.unflatten();
+			//m_errorInactiveContainer.unflatten();// Can't flatten due to animations
+			m_edgesInactiveContainer.unflatten();
+			m_plugsInactiveContainer.unflatten();
 		}
 		
 		public function getPanZoomAllowed():Boolean
