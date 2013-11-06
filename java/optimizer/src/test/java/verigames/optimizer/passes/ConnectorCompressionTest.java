@@ -9,7 +9,12 @@ import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.NodeGraph;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class ConnectorCompressionTest {
+
+    final boolean[] bools = { true, false };
 
     /**
      * Connectors should be compressed in the expected way
@@ -137,8 +142,27 @@ public class ConnectorCompressionTest {
         assert finalBoard.getEdges().size() == 3;
     }
 
+    public Collection<Chute> allChuteCombos() {
+        Collection<Chute> result = new ArrayList<>();
+        for (boolean narrow : bools) {
+            for (boolean pinched : bools) {
+                for (boolean editable : bools) {
+                    for (boolean buzzsaw : bools) {
+                        Chute chute = new Chute();
+                        chute.setEditable(editable);
+                        chute.setNarrow(narrow);
+                        chute.setPinched(pinched);
+                        chute.setBuzzsaw(buzzsaw);
+                        result.add(chute);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /**
-     * Any edge can merge with a wide, pinch-free, and immutable one.
+     * Test merging for wide & immutable edges
      */
     @Test
     public void mergeWithWideImmutable() {
@@ -150,35 +174,50 @@ public class ConnectorCompressionTest {
         wide.setNarrow(false);
 
         boolean[] bools = { true, false };
-        for (boolean narrow : bools) {
-            for (boolean pinched : bools) {
-                for (boolean editable : bools) {
-                    for (boolean buzzsaw : bools) {
-                        for (boolean swapped : bools) {
-                            Chute chute = new Chute();
-                            chute.setEditable(editable);
-                            chute.setNarrow(narrow);
-                            chute.setPinched(pinched);
-                            chute.setBuzzsaw(buzzsaw);
+        for (Chute chute : allChuteCombos()) {
+            for (boolean swapped : bools) {
+                Chute merged = swapped ?
+                        compress.compressChutes(chute, wide):
+                        compress.compressChutes(wide, chute);
 
-                            Chute merged = swapped ?
-                                    compress.compressChutes(chute, wide):
-                                    compress.compressChutes(wide, chute);
+                // for debugging
+                System.out.println(chute + " ---> " + merged);
 
-                            // for debugging
-                            System.out.println(chute + " ---> " + merged);
-
-                            assert merged != null;
-                            assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
-                            assert merged.isEditable() == chute.isEditable();
-                            assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
-                            assert merged.isPinched() == chute.isPinched();
-                        }
-                    }
-                }
+                assert merged != null;
+                assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
+                assert merged.isEditable() == chute.isEditable();
+                assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
+                assert merged.isPinched() == (chute.isPinched() && !(chute.isNarrow() && !chute.isEditable()));
             }
         }
 
+    }
+
+    /**
+     * Test merging for narrow & immutable edges
+     */
+    @Test
+    public void mergeWithNarrowImmutable() {
+        ConnectorCompression compress = new ConnectorCompression();
+        Chute narrow = Util.immutableChute();
+        narrow.setPinched(false);
+        narrow.setNarrow(true);
+        for (Chute chute : allChuteCombos()) {
+            for (boolean swapped : bools) {
+                Chute merged = swapped ?
+                        compress.compressChutes(chute, narrow):
+                        compress.compressChutes(narrow, chute);
+
+                // for debugging
+                System.out.println(chute + " ---> " + merged);
+
+                assert merged != null;
+                assert !merged.isEditable();
+                assert merged.isNarrow();
+                assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
+                assert !merged.isPinched();
+            }
+        }
     }
 
 }

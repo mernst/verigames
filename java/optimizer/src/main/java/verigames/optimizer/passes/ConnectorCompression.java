@@ -38,17 +38,7 @@ public class ConnectorCompression implements OptimizationPass {
 
                 Chute incomingChute = incomingEdge.getEdgeData();
                 Chute outgoingChute = outgoingEdge.getEdgeData();
-
-                // if either edge belongs to an edge set, we can't merge them
-                Collection<NodeGraph.Edge> iEdgeSet = g.edgeSet(incomingEdge);
-                Collection<NodeGraph.Edge> oEdgeSet = g.edgeSet(outgoingEdge);
-                if ((iEdgeSet.size() > 1 || oEdgeSet.size() > 1) &&
-                        // however, if both edges are part of the same set, we can merge them!
-                        !(incomingChute.getVariableID() == outgoingChute.getVariableID())) {
-                    continue;
-                }
-
-                Chute newChute = compressChutes(incomingChute, outgoingChute);
+                Chute newChute = compressChutes(incomingChute, outgoingChute, g);
                 if (newChute == null)
                     continue;
 
@@ -65,6 +55,24 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
+     * Just like {@link #compressChutes(verigames.level.Chute, verigames.level.Chute)},
+     * but returns null if the preconditions are not met in the given graph.
+     * @param incomingChute flows into outgoingChute
+     * @param outgoingChute incomingChute flows into this
+     * @param context       the world representation
+     * @return the compressed chute, or null if they could not be compressed
+     */
+    public Chute compressChutes(Chute incomingChute, Chute outgoingChute, NodeGraph context) {
+        if (incomingChute.getVariableID() == outgoingChute.getVariableID())
+            return compressChutes(incomingChute, outgoingChute);
+        Collection<NodeGraph.Edge> iEdgeSet = context.edgeSet(incomingChute.getVariableID());
+        Collection<NodeGraph.Edge> oEdgeSet = context.edgeSet(outgoingChute.getVariableID());
+        if (iEdgeSet.size() <= 1 && oEdgeSet.size() <= 1)
+            return compressChutes(incomingChute, outgoingChute);
+        return null;
+    }
+
+    /**
      * Compress two chutes into one.
      * <p>
      * Precondition: one of the following must hold:
@@ -74,7 +82,7 @@ public class ConnectorCompression implements OptimizationPass {
      * </ul>
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
-     * @return the compressed chute, or null if there is no sensible way to compress them
+     * @return the compressed chute
      */
     public Chute compressChutes(Chute incomingChute, Chute outgoingChute) {
 
@@ -92,10 +100,10 @@ public class ConnectorCompression implements OptimizationPass {
         }
 
         // The result is editable if both are editable, or if one is editable and the other is wide.
-        boolean editable = (
+        boolean editable =
                 (incomingChute.isEditable() && outgoingChute.isEditable()) ||
-                        (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
-                        (outgoingChute.isEditable() && !incomingChute.isNarrow()));
+                (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
+                (outgoingChute.isEditable() && !incomingChute.isNarrow());
 
         Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
         newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
@@ -103,8 +111,15 @@ public class ConnectorCompression implements OptimizationPass {
             newChute.setLayout(outgoingChute.getLayout());
         newChute.setNarrow(narrow);
         newChute.setEditable(editable);
-        newChute.setPinched(incomingChute.isPinched() || outgoingChute.isPinched());
+
+        // The result is pinched if either incoming chute was pinched and it
+        // makes sense to pinch this chute. (It makes no sense to pinch a
+        // narrow immutable edge).
+        boolean pinched = (incomingChute.isPinched() || outgoingChute.isPinched()) && !(narrow && !editable);
+        newChute.setPinched(pinched);
+
         return newChute;
+
     }
 
 }
