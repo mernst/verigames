@@ -1,9 +1,8 @@
 package verigames.optimizer.passes;
 
-import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
-import verigames.level.Level;
+import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
@@ -60,19 +59,13 @@ public class BallDropElimination extends AbstractIterativePass {
             assert !g.getNodes().contains(e.getSrc());
             assert g.getNodes().contains(dst);
 
-            String levelName = dst.getLevelName();
-            Level level = dst.getLevel();
-            String boardName = dst.getBoardName();
-            Board board = dst.getBoard();
-            Intersection intersection = Intersection.factory(Intersection.Kind.START_SMALL_BALL);
-
             // Arbitrarily, create an immutable wide chute to drop into. We could just as easily
             // create a mutable narrow one or something, but immutable wide chutes are easier to
             // reason about.
             Chute chute = new Chute();
             chute.setNarrow(false);
             chute.setEditable(false);
-            Node n = new Node(levelName, level, boardName, board, intersection);
+            Node n = Util.newNodeOnSameBoard(dst, Intersection.Kind.START_SMALL_BALL);
             g.addNode(n);
             g.addEdge(n, Port.OUTPUT, dst, e.getDstPort(), chute);
         }
