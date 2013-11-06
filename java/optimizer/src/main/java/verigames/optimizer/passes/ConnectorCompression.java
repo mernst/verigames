@@ -6,6 +6,7 @@ import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.Port;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +24,14 @@ public class ConnectorCompression implements OptimizationPass {
         // avoid concurrent modifications.
         for (Node node : new ArrayList<>(g.getNodes())) {
             if (node.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT) {
+
+                // HACK: fixes boards with dangling connectors
+                if (g.outgoingEdges(node).size() == 0) {
+                    Chute c = Util.immutableChute();
+                    c.setNarrow(false);
+                    g.addEdge(node, Port.OUTPUT, Util.newNodeOnSameBoard(node, Intersection.Kind.END), Port.INPUT, c);
+                }
+
                 // for this node kind: one incoming edge, one outgoing edge
                 NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
                 NodeGraph.Target outgoingEdge = Util.first(g.outgoingEdges(node).values());
@@ -42,8 +51,6 @@ public class ConnectorCompression implements OptimizationPass {
                 Chute newChute = compressChutes(incomingChute, outgoingChute);
                 if (newChute == null)
                     continue;
-
-                Util.logVerbose("*** REMOVING USELESS CONNECTOR");
 
                 // remove the node
                 g.removeNode(node);

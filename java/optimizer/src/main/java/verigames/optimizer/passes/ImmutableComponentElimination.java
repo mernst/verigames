@@ -2,7 +2,6 @@ package verigames.optimizer.passes;
 
 import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
-import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Subgraph;
@@ -30,7 +29,6 @@ public class ImmutableComponentElimination implements OptimizationPass {
                     break;
             }
             if (!mutable && !hasFixedNode) {
-                Util.logVerbose("*** REMOVING IMMUTABLE SUBGRAPH (" + subgraph.getNodes().size() + " nodes, " + subgraph.getEdges().size() + " edges)");
                 g.removeSubgraph(subgraph);
             }
         }

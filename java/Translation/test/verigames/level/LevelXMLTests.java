@@ -51,7 +51,6 @@ public class LevelXMLTests
     Chute c = new Chute(0, null);
     c.setNarrow(false);
     constructor.addEdge(start, "0", outgoing, "0", c);
-    constructor.addChuteName(c, "s");
 
     l.addBoard("constructor", constructor);
 
@@ -73,9 +72,7 @@ public class LevelXMLTests
     c3.setNarrow(false);
 
     method.addEdge(incoming, "0", end, "0", c2);
-    method.addChuteName(c2, "s");
     method.addEdge(restart, "0", out, "0", c3);
-    method.addChuteName(c3, "s");
 
     l.addBoard("method", method);
 

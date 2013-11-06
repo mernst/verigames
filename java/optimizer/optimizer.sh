@@ -11,4 +11,6 @@ fi
 pushd "$DIR" >/dev/null
 CP="$JAR:$(gradle -q printRuntimeClasspath | tail -n1):$CLASSPATH"
 popd >/dev/null
-exec java -cp "$CP" verigames.optimizer.Main $@
+
+# Note: you may need to raise/lower the max heap size for your workload
+exec java -Xmx6G -cp "$CP" verigames.optimizer.Main $@

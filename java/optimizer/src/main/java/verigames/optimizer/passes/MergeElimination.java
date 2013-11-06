@@ -1,8 +1,6 @@
 package verigames.optimizer.passes;
 
-import verigames.level.Board;
 import verigames.level.Intersection;
-import verigames.level.Level;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
@@ -13,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Eliminates merge nodes in the following form:
+ * Eliminates merge nodes in a few different forms.
+ *
+ * <p>FORM 1:
  *
  * <pre>
  * \  SMALL_DROP     |
@@ -29,6 +29,24 @@ import java.util.List;
  * output from the {@link BallDropElimination} optimization pass. Note that
  * the connect nodes we generate are likely to be eliminated by the
  * {@link ConnectorCompression} pass.
+ *
+ * <p>FORM 2:
+ *
+ * <pre>
+ * \   /             |     |
+ *  \ /              |     |
+ *   Y      ----->   |     |
+ *   |               |     |
+ *  END             END   END
+ * </pre>
+ *
+ * Where the edge connecting to the END node is conflict free.
+ *
+ * This is very common in real worlds, and this transformation assists the
+ * {@link ChuteEndElimination} step immensely.
+ *
+ * Note that the form 1 transformation will always be taken in preference to
+ * form 2. This is just an artifact of this implementation.
  */
 public class MergeElimination implements OptimizationPass {
 
@@ -42,16 +60,13 @@ public class MergeElimination implements OptimizationPass {
             if (n.getIntersection().getIntersectionKind() == Intersection.Kind.MERGE) {
 
                 List<NodeGraph.Edge> incoming = new ArrayList<>(g.incomingEdges(n));
+
+                // expect 2 inputs and 1 output
                 NodeGraph.Edge e1 = incoming.get(0);
                 NodeGraph.Edge e2 = incoming.get(1);
                 NodeGraph.Target dst = Util.first(g.outgoingEdges(n).values());
 
-                String levelName = n.getLevelName();
-                Level level = n.getLevel();
-                String boardName = n.getBoardName();
-                Board board = n.getBoard();
-                Intersection i = Intersection.factory(Intersection.Kind.CONNECT);
-                Node connector = new Node(levelName, level, boardName, board, i);
+                Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 
                 // If either node was a small ball drop, we need to remove this
                 // merge and the drop and place a connector instead.
@@ -67,6 +82,12 @@ public class MergeElimination implements OptimizationPass {
                     g.addNode(connector);
                     g.addEdge(e1.getSrc(), e1.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst.getEdgeData())) {
+                    g.removeNode(n);
+                    Node end2 = Util.newNodeOnSameBoard(n, Intersection.Kind.END);
+                    g.addNode(end2);
+                    g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
+                    g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
                 }
 
             }

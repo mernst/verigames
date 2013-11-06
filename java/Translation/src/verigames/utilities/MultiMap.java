@@ -76,4 +76,32 @@ public class MultiMap<K,V>
     return delegate.keySet();
   }
 
+  /**
+   * Remove all associated mappings for a key
+   * @param key the key
+   * @return all things the key was mapped to
+   */
+  public Set<V> remove(K key)
+  {
+    return delegate.remove(key);
+  }
+
+  /**
+   * Remove a specific mapping
+   * @param key the key
+   * @param value the value
+   * @return true if the mapping was present (or equivalently, if the
+   *         multimap changed as a result of this call)
+   */
+  public boolean remove(K key, V value)
+  {
+    Set<V> vals = delegate.get(key);
+    if (vals == null)
+      return false;
+    boolean removed = vals.remove(value);
+    if (vals.size() == 0)
+      delegate.remove(key);
+    return removed;
+  }
+
 }

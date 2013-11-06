@@ -9,6 +9,7 @@ VERIGAMES_HOME = os.environ['VERIGAMES']
 SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
 VERIGAMES_ASP_HOME = os.environ['VERIGAMES_ASP_HOME']
+AFU_HOME = os.environ.get('AFU_HOME')
 
 # Program constants
 MODES = 'game typecheck autosolve roundtrip xmlsolve xml-roundtrip'.split()
@@ -170,7 +171,9 @@ def generate_buzzsaw_check(world_file):
 
 def generate_afu_command(files, outdir):
     files = [os.path.abspath(f) for f in files]
-    args = 'insert-annotations-to-source -v -d %s %s %s ' % (outdir, os.path.join(outdir, 'inference.jaif'), ' '.join(files))
+    insert_path = 'insert-annotations-to-source' if not AFU_HOME \
+            else os.path.join(AFU_HOME, 'annotation-file-utilities', 'scripts', 'insert-annotations-to-source')
+    args = '%s -v -d %s %s %s ' % (insert_path, outdir, os.path.join(outdir, 'inference.jaif'), ' '.join(files))
     return args
 
 def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, print_world, prog_args, stubs, files):

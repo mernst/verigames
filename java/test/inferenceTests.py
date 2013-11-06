@@ -55,7 +55,8 @@ def get_verigames_cmd(checker, file_name, mode):
 
 def build_search_dirs():
     dirs = []
-    dirs.append(join(os.environ['CHECKERS'], 'tests', 'all-systems'))
+    checkersdir = os.environ['CHECKERS_TESTS'] if 'CHECKERS_TESTS' in os.environ else os.environ['CHECKERS']
+    dirs.append(join(checkersdir, 'tests', 'all-systems'))
     dirs.append(join(get_this_scripts_dir(), 'inference_test_files', 'encrypted'))
     dirs.append(join(os.environ['VERIGAMES'], 'java', 'Generation', 'examples'))
     dirs.append(join(os.environ['VERIGAMES'], 'java', 'Generation', 'examples', 'refmerge'))
