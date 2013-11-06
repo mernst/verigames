@@ -15,6 +15,7 @@ package graph
 		// Possible stamps that the edge set can have, can only activate possible props
 		private var m_possibleProps:PropDictionary;
 		public var editable:Boolean = false;
+		public var propsInitialized:Boolean = false;
 		
 		public function EdgeSetRef(_id:String) 
 		{
