@@ -112,6 +112,9 @@ package graph
 				metadata = new Metadata(null);
 			} else if (_metadata.data != null) {
 				//Example: <edge description="chute1" variableID="-1" pinch="false" width="wide" id="e1" buzzsaw="false">
+				if (String(_metadata.data.id).length > 0) {
+					edge_id = String(_metadata.data.id);
+				}
 				if (metadata.data.description) {
 					if (String(metadata.data.description).length > 0) {
 						description = String(metadata.data.description);
@@ -127,20 +130,27 @@ package graph
 				}
 				if (String(metadata.data.editable).toLowerCase() == "true") {
 					editable = true;
-					linked_edge_set.editable = true;
+				}
+				if (!linked_edge_set.propsInitialized) {
+					linked_edge_set.editable = editable;
+				} else if (linked_edge_set.editable != editable) {
+					trace("WARNING! Edge doesn't match linked edge set, edge_id " + edge_id + " editable:" + editable + ", edge_set_id:" + linked_edge_set.id + " editable:" + linked_edge_set.editable);
+					editable = linked_edge_set.editable; // force this edge to match edge set
 				}
 				if (String(metadata.data.width).toLowerCase() == "wide") {
 					starting_is_wide = true;
-					linked_edge_set.setProp(PropDictionary.PROP_NARROW, false);
-				} else {
-					linked_edge_set.setProp(PropDictionary.PROP_NARROW, true);
 				}
+				if (!linked_edge_set.propsInitialized) {
+					linked_edge_set.setProp(PropDictionary.PROP_NARROW, !starting_is_wide);
+				} else if (linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW) == starting_is_wide) {
+					trace("WARNING! Edge doesn't match linked edge set, edge_id " + edge_id + " narrow?:" + !starting_is_wide + ", edge_set_id:" + linked_edge_set.id + " narrow?:" + linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW));
+					starting_is_wide = !linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW); // force this edge to match edge set
+				}
+				linked_edge_set.propsInitialized = true;
+				
 				if (String(metadata.data.buzzsaw).toLowerCase() == "true") {
 					starting_has_buzzsaw = true;
 					has_buzzsaw = true;
-				}
-				if (String(_metadata.data.id).length > 0) {
-					edge_id = String(_metadata.data.id);
 				}
 			}
 			

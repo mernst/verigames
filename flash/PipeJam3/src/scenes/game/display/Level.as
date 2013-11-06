@@ -182,213 +182,6 @@ package scenes.game.display
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);	
 		}
 		
-		protected function initialize():void
-		{
-			this.alpha = .999;
-
-			m_edgeList = new Vector.<GameEdgeContainer>;
-			selectedComponents = new Vector.<GameComponent>;
-			totalMoveDist = new Point();
-			
-			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
-			{
-				for each(var node:Node in boardNode.nodeDictionary)
-				{
-					//collect all the edges and edge sets
-					for each(var port:Port in node.outgoing_ports)
-					{
-						var edge:Edge = port.edge;
-						edgeDictionary[edge.edge_id] = edge;
-						edgeSetDictionary[edge.linked_edge_set.id] = edge.linked_edge_set;
-					}
-				}
-			}
-			trace(m_levelLayoutXML.@id);
-			
-			var minX:Number, minY:Number, maxX:Number, maxY:Number;
-			minX = minY = Number.POSITIVE_INFINITY;
-			maxX = maxY = Number.NEGATIVE_INFINITY;
-			
-			//create node for sets
-			m_nodeList = new Vector.<GameNode>(); 
-			boxDictionary = new Dictionary();
-			edgeContainerDictionary = new Dictionary();
-
-			// Process <box> 's
-			var visibleNodes:int = 0;
-			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
-			{
-				var boxEdgeSetId:String = boxLayoutXML.@id;
-				var gameNode:GameNode;
-				if (!edgeSetDictionary.hasOwnProperty(boxEdgeSetId)) {
-					// TODO: If we have another level with this subboard, produce a link here:
-					if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT) == 0) {
-						// Found a reference to an external SUBBOARD, create fixed node
-						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
-						if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT_OUT) > -1) {
-							isWide = false;
-						}
-						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide);
-					} else {
-						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
-					}
-				} else {
-					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
-					//grab an example edge for it's attributes FIX - use constraints xml file
-					var levelEdges:Vector.<Edge> = edgeSet.getLevelEdges(original_level_name);
-					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, levelEdges);
-				}
-				
-				if (getVisible(boxLayoutXML)) {
-					visibleNodes++;
-					minX = Math.min(minX, gameNode.m_boundingBox.left);
-					minY = Math.min(minY, gameNode.m_boundingBox.top);
-					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
-					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
-				} else {
-					gameNode.hideComponent(true);
-					boxLayoutXML.@visible="false";
-				}
-				m_nodeList.push(gameNode);
-				boxDictionary[boxEdgeSetId] = gameNode;
-			}
-			trace("gamenodeset count = " + m_nodeList.length);
-			
-			m_jointList = new Vector.<GameJointNode>();
-			jointDictionary = new Dictionary();
-			// Process <joint> 's
-			var visibleJoints:int = 0;
-			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
-			{
-				var jointID:String = jointLayoutXML.@id;
-				var foundNode:Node = levelNodes.getNode(jointLayoutXML.@id);
-				var inIndx:int = jointID.indexOf(Constants.XML_ANNOT_IN);
-				var outIndx:int = jointID.indexOf(Constants.XML_ANNOT_OUT);
-				var foundPort:Port;
-				if (inIndx > -1) {
-					foundNode = levelNodes.getNode(jointID.substring(0, inIndx));
-					var inPortID:String = jointID.substring(inIndx + Constants.XML_ANNOT_IN.length);
-					if (foundNode) {
-						foundPort = foundNode.getIncomingPort(inPortID);
-					}
-				} else if (outIndx > -1) {
-					foundNode = levelNodes.getNode(jointID.substring(0, outIndx));
-					var outPortID:String = jointID.substring(outIndx + Constants.XML_ANNOT_OUT.length);
-					if (foundNode) {
-						foundNode.getOutgoingPort(outPortID);
-					}
-				}
-				
-				if (foundNode) {
-					// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
-					switch (foundNode.kind) {
-						case NodeTypes.INCOMING:
-						case NodeTypes.START_PIPE_DEPENDENT_BALL:
-						case NodeTypes.END:
-							jointLayoutXML.@visible="false";
-							break;
-						case NodeTypes.OUTGOING:
-							// Only create the joint for an outgoing node if other lines connect
-							// to it (these lines are the SUBBOARD outgoing ports that correspond
-							// to this OUTGOING edge)
-							var numOutputs:Number = Number(jointLayoutXML.@outputs);
-							if (isNaN(numOutputs) || (numOutputs == 0)) {
-								jointLayoutXML.@visible="false";
-							}
-							break;
-					}
-				}
-				
-				var joint:GameJointNode;
-				if (foundNode) {
-					switch (foundNode.kind) {
-						case NodeTypes.GET:
-							joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
-							break;
-						case NodeTypes.BALL_SIZE_TEST:
-							joint = new GameIfTestJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
-							break;
-						default:
-							joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
-							break;
-					}
-				} else {
-					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
-				}
-				
-				if (getVisible(jointLayoutXML)) {
-					visibleJoints++;
-					minX = Math.min(minX, joint.m_boundingBox.left);
-					minY = Math.min(minY, joint.m_boundingBox.top);
-					maxX = Math.max(maxX, joint.m_boundingBox.right);
-					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
-				} else {
-					joint.hideComponent(true);
-					jointLayoutXML.@visible = "false";
-				}
-				trace("joint:" + joint.m_id + " hidden:" + joint.hidden + " kind:" + foundNode.kind);
-				m_jointList.push(joint);
-				jointDictionary[joint.m_id] = joint;
-			}
-			
-			// Process <line> 's
-			var visibleLines:int = 0;
-			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
-			for each(var edgeXML:XML in m_levelLayoutXML.line)
-			{
-				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
-				var edgeVisible:Boolean = (boundingBox != null);
-				if(edgeVisible) {
-					visibleLines++;
-				} else {
-					edgeXML.@visible="false";
-				}
-				if (boundingBox && edgeVisible) {
-					minX = Math.min(minX, boundingBox.x);
-					minY = Math.min(minY, boundingBox.y);
-					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
-					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
-				}
-			}
-		//	this.m_edgesContainer.flatten();
-			// At this point, there may be multiple lines listening to the same port for trouble points,
-			// fix at this point so that only one line is listening to that port
-			for each (var copyLine:GameEdgeContainer in copyLines) {
-				var lineID:String = copyLine.m_id;
-				var cpyIndx:int = lineID.indexOf(Constants.XML_ANNOT_COPY);
-				if (cpyIndx == -1) {
-					throw new Error("Unexpected line id found for copy line: " + lineID);
-				}
-				var nonCopyID:String = lineID.substring(0, cpyIndx);
-				var foundLine:GameEdgeContainer = edgeContainerDictionary[nonCopyID];
-				if (!foundLine) {
-					throw new Error("No line found for lineID: " + nonCopyID);
-				}
-				foundLine.removeDuplicatePortListeners(copyLine);
-			}
-			
-			//		trace("edge count = " + m_edgeVector.length);
-			//set bounds based on largest x, y found in boxes, joints, edges
-			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
-			
-			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
-			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
-			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
-			addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
-			addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
-			addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
-			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
-			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
-			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
-			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
-			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
-			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
-			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
-			
-			trace(visibleNodes, visibleJoints, visibleLines);
-		}
-		
 		public function loadBestScoringConfiguration():void
 		{
 			setConstraints(m_levelBestScoreConstraintsXML, true);
@@ -407,24 +200,17 @@ package scenes.game.display
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");
 				var widthMismatch:Boolean = (gameNode.isWide() != constraintIsWide);
-				if (constraintIsEditable) {
-					gameNode.handleWidthChange(constraintIsWide, true);
-					if (updateTutorialManager && tutorialManager && widthMismatch) {
-						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
-					}
-				} else {
-					if (widthMismatch) {
-						trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and loaded layout box isWide=" + gameNode.isWide());
-					}
-					gameNode.handleWidthChange(constraintIsWide, true);
-					if (updateTutorialManager && tutorialManager && widthMismatch) {
-						tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
-					}
+				gameNode.handleWidthChange(constraintIsWide, true);
+				if (updateTutorialManager && tutorialManager && widthMismatch) {
+					tutorialManager.onEdgeSetChange(new EdgeSetChangeEvent(EdgeSetChangeEvent.EDGE_SET_CHANGED, gameNode, PropDictionary.PROP_NARROW, !constraintIsWide, this, true));
+				}
+				if (!constraintIsEditable && widthMismatch && !(gameNode is GameNodeFixed)) {
+					trace(gameNode.m_id, "Mismatch in uneditable gameNode where constraints file isWide=" + constraintIsWide + " and edges in XML have isWide=" + gameNode.isWide());
 				}
 				if (constraintIsEditable != gameNode.isEditable()) {
 					gameNode.m_isEditable = constraintIsEditable;
 					gameNode.m_isDirty = true;
-					trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and loaded layout box editable=" + gameNode.isEditable());
+					if (!(gameNode is GameNodeFixed)) trace(gameNode.m_id, "Mismatch between constraints file editable=" + constraintIsEditable + " and edges in XML have editable=" + gameNode.isEditable());
 				}
 			}
 			if(gameNode)
@@ -587,50 +373,258 @@ package scenes.game.display
 			dispatchEvent(new starling.events.Event(Game.STOP_BUSY_ANIMATION,true));
 		}
 		
+		public function initialize():void
+		{
+			if (initialized) return;
+			if (USE_TILED_BACKGROUND && !m_backgroundImage) {
+				// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
+				var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
+				background.repeat = true;
+				m_backgroundImage = new Image(background);
+				m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
+				m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
+				m_backgroundImage.blendMode = BlendMode.NONE;
+				addChild(m_backgroundImage);
+			}
+			
+			if (inactiveLayer == null)  inactiveLayer  = new Sprite();
+			if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
+			if (m_jointsInactiveContainer == null) m_jointsInactiveContainer = new Sprite();
+			if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
+			if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
+			if (m_plugsInactiveContainer == null)  m_plugsInactiveContainer  = new Sprite();
+			inactiveLayer.addChild(m_nodesInactiveContainer);
+			inactiveLayer.addChild(m_jointsInactiveContainer);
+			inactiveLayer.addChild(m_errorInactiveContainer);
+			inactiveLayer.addChild(m_edgesInactiveContainer);
+			inactiveLayer.addChild(m_plugsInactiveContainer);
+			
+			if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
+			if (m_jointsContainer == null) m_jointsContainer = new Sprite();
+			if (m_errorContainer == null)  m_errorContainer  = new Sprite();
+			if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
+			if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
+			//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
+			addChild(m_nodesContainer);
+			addChild(m_jointsContainer);
+			addChild(m_errorContainer);
+			addChild(m_edgesContainer);
+			addChild(m_plugsContainer);
+			
+			this.alpha = .999;
+
+			m_edgeList = new Vector.<GameEdgeContainer>;
+			selectedComponents = new Vector.<GameComponent>;
+			totalMoveDist = new Point();
+			
+			for each(var boardNode:BoardNodes in levelNodes.boardNodesDictionary)
+			{
+				for each(var node:Node in boardNode.nodeDictionary)
+				{
+					//collect all the edges and edge sets
+					for each(var port:Port in node.outgoing_ports)
+					{
+						var edge:Edge = port.edge;
+						edgeDictionary[edge.edge_id] = edge;
+						edgeSetDictionary[edge.linked_edge_set.id] = edge.linked_edge_set;
+					}
+				}
+			}
+			trace(m_levelLayoutXML.@id);
+			
+			var minX:Number, minY:Number, maxX:Number, maxY:Number;
+			minX = minY = Number.POSITIVE_INFINITY;
+			maxX = maxY = Number.NEGATIVE_INFINITY;
+			
+			//create node for sets
+			m_nodeList = new Vector.<GameNode>(); 
+			boxDictionary = new Dictionary();
+			edgeContainerDictionary = new Dictionary();
+
+			// Process <box> 's
+			var visibleNodes:int = 0;
+			for each(var boxLayoutXML:XML in m_levelLayoutXML.box)
+			{
+				var boxEdgeSetId:String = boxLayoutXML.@id;
+				var gameNode:GameNode;
+				if (!edgeSetDictionary.hasOwnProperty(boxEdgeSetId)) {
+					// TODO: If we have another level with this subboard, produce a link here:
+					if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT) == 0) {
+						// Found a reference to an external SUBBOARD, create fixed node
+						var isWide:Boolean = true; // TODO: get this from the defaultWidth property of the subboard port
+						if (boxEdgeSetId.indexOf(Constants.XML_ANNOT_EXT_OUT) > -1) {
+							isWide = false;
+						}
+						gameNode = new GameNodeFixed(boxLayoutXML, !m_layoutFixed, isWide);
+					} else {
+						throw new Error("Couldn't find edge set for box id: " + boxLayoutXML.@id);
+					}
+				} else {
+					var edgeSet:EdgeSetRef = edgeSetDictionary[boxEdgeSetId];
+					//grab an example edge for it's attributes FIX - use constraints xml file
+					var levelEdges:Vector.<Edge> = edgeSet.getLevelEdges(original_level_name);
+					gameNode = new GameNode(boxLayoutXML, !m_layoutFixed, edgeSet, levelEdges);
+				}
+				
+				gameNode.addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
+				
+				if (getVisible(boxLayoutXML)) {
+					visibleNodes++;
+					minX = Math.min(minX, gameNode.m_boundingBox.left);
+					minY = Math.min(minY, gameNode.m_boundingBox.top);
+					maxX = Math.max(maxX, gameNode.m_boundingBox.right);
+					maxY = Math.max(maxY, gameNode.m_boundingBox.bottom);
+				} else {
+					gameNode.hideComponent(true);
+					boxLayoutXML.@visible="false";
+				}
+				m_nodeList.push(gameNode);
+				boxDictionary[boxEdgeSetId] = gameNode;
+			}
+			trace("gamenodeset count = " + m_nodeList.length);
+			
+			m_jointList = new Vector.<GameJointNode>();
+			jointDictionary = new Dictionary();
+			// Process <joint> 's
+			var visibleJoints:int = 0;
+			for each(var jointLayoutXML:XML in m_levelLayoutXML.joint)
+			{
+				var jointID:String = jointLayoutXML.@id;
+				var foundNode:Node = levelNodes.getNode(jointLayoutXML.@id);
+				var inIndx:int = jointID.indexOf(Constants.XML_ANNOT_IN);
+				var outIndx:int = jointID.indexOf(Constants.XML_ANNOT_OUT);
+				var foundPort:Port;
+				if (inIndx > -1) {
+					foundNode = levelNodes.getNode(jointID.substring(0, inIndx));
+					var inPortID:String = jointID.substring(inIndx + Constants.XML_ANNOT_IN.length);
+					if (foundNode) {
+						foundPort = foundNode.getIncomingPort(inPortID);
+					}
+				} else if (outIndx > -1) {
+					foundNode = levelNodes.getNode(jointID.substring(0, outIndx));
+					var outPortID:String = jointID.substring(outIndx + Constants.XML_ANNOT_OUT.length);
+					if (foundNode) {
+						foundNode.getOutgoingPort(outPortID);
+					}
+				}
+				
+				if (foundNode) {
+					// Check for INCOMING/OUTGOING/END/START_PIPE_DEPENDENT_BALL nodes, skip these
+					switch (foundNode.kind) {
+						case NodeTypes.INCOMING:
+						case NodeTypes.START_PIPE_DEPENDENT_BALL:
+						case NodeTypes.END:
+							jointLayoutXML.@visible="false";
+							break;
+						case NodeTypes.OUTGOING:
+							// Only create the joint for an outgoing node if other lines connect
+							// to it (these lines are the SUBBOARD outgoing ports that correspond
+							// to this OUTGOING edge)
+							var numOutputs:Number = Number(jointLayoutXML.@outputs);
+							if (isNaN(numOutputs) || (numOutputs == 0)) {
+								jointLayoutXML.@visible="false";
+							}
+							break;
+					}
+				}
+				
+				var joint:GameJointNode;
+				if (foundNode) {
+					switch (foundNode.kind) {
+						case NodeTypes.GET:
+							joint = new GameMapGetJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						case NodeTypes.BALL_SIZE_TEST:
+							joint = new GameIfTestJoint(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+						default:
+							joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, foundNode, foundPort);
+							break;
+					}
+				} else {
+					joint = new GameJointNode(jointLayoutXML, !m_layoutFixed, null, foundPort);
+				}
+				
+				if (getVisible(jointLayoutXML)) {
+					visibleJoints++;
+					minX = Math.min(minX, joint.m_boundingBox.left);
+					minY = Math.min(minY, joint.m_boundingBox.top);
+					maxX = Math.max(maxX, joint.m_boundingBox.right);
+					maxY = Math.max(maxY, joint.m_boundingBox.bottom);
+				} else {
+					joint.hideComponent(true);
+					jointLayoutXML.@visible = "false";
+				}
+				//trace("joint:" + joint.m_id + " hidden:" + joint.hidden + " kind:" + foundNode.kind);
+				m_jointList.push(joint);
+				jointDictionary[joint.m_id] = joint;
+			}
+			
+			// Process <line> 's
+			var visibleLines:int = 0;
+			var copyLines:Vector.<GameEdgeContainer> = new Vector.<GameEdgeContainer>();
+			for each(var edgeXML:XML in m_levelLayoutXML.line)
+			{
+				var boundingBox:Rectangle = createLine(edgeXML, copyLines);
+				var edgeVisible:Boolean = (boundingBox != null);
+				if(edgeVisible) {
+					visibleLines++;
+				} else {
+					edgeXML.@visible="false";
+				}
+				if (boundingBox && edgeVisible) {
+					minX = Math.min(minX, boundingBox.x);
+					minY = Math.min(minY, boundingBox.y);
+					maxX = Math.max(maxX, boundingBox.x + boundingBox.width);
+					maxY = Math.max(maxY, boundingBox.y + boundingBox.height);
+				}
+			}
+		//	this.m_edgesContainer.flatten();
+			// At this point, there may be multiple lines listening to the same port for trouble points,
+			// fix at this point so that only one line is listening to that port
+			for each (var copyLine:GameEdgeContainer in copyLines) {
+				var lineID:String = copyLine.m_id;
+				var cpyIndx:int = lineID.indexOf(Constants.XML_ANNOT_COPY);
+				if (cpyIndx == -1) {
+					throw new Error("Unexpected line id found for copy line: " + lineID);
+				}
+				var nonCopyID:String = lineID.substring(0, cpyIndx);
+				var foundLine:GameEdgeContainer = edgeContainerDictionary[nonCopyID];
+				if (!foundLine) {
+					throw new Error("No line found for lineID: " + nonCopyID);
+				}
+				foundLine.removeDuplicatePortListeners(copyLine);
+			}
+			
+			//		trace("edge count = " + m_edgeVector.length);
+			//set bounds based on largest x, y found in boxes, joints, edges
+			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			trace("Level " + m_levelLayoutXML.@id + " m_boundingBox = " + m_boundingBox);
+			
+			addEventListener(EdgeContainerEvent.CREATE_JOINT, onCreateJoint);
+			addEventListener(EdgeContainerEvent.SEGMENT_MOVED, onSegmentMoved);
+			addEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
+			addEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
+			//addEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange); // do these per-box
+			addEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
+			addEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
+			addEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentUnselection);
+			addEventListener(GroupSelectionEvent.GROUP_SELECTED, onGroupSelection);
+			addEventListener(GroupSelectionEvent.GROUP_UNSELECTED, onGroupUnselection);
+			addEventListener(MoveEvent.MOVE_EVENT, onMoveEvent);
+			addEventListener(MoveEvent.FINISHED_MOVING, onFinishedMoving);
+			
+			trace(visibleNodes, visibleJoints, visibleLines);
+			
+			setConstraints(m_levelConstraintsXML);
+			initialized = true;
+		}
+		
 		public function start():void
 		{
 			m_segmentHovered = null;
-			if (!initialized) {
-				if (USE_TILED_BACKGROUND && !m_backgroundImage) {
-					// TODO: may need to refine GridViewPanel .onTouch method as well to get this to work: if(this.m_currentLevel && event.target == m_backgroundImage)
-					var background:Texture = AssetInterface.getTexture("Game", "BoxesGamePanelBackgroundImageClass");
-					background.repeat = true;
-					m_backgroundImage = new Image(background);
-					m_backgroundImage.width = m_backgroundImage.height = 2 * MIN_BORDER;
-					m_backgroundImage.x = m_backgroundImage.y = -MIN_BORDER;
-					m_backgroundImage.blendMode = BlendMode.NONE;
-					addChild(m_backgroundImage);
-				}
-				
-				if (inactiveLayer == null)  inactiveLayer  = new Sprite();
-				if (m_nodesInactiveContainer == null)  m_nodesInactiveContainer  = new Sprite();
-				if (m_jointsInactiveContainer == null) m_jointsInactiveContainer = new Sprite();
-				if (m_errorInactiveContainer == null)  m_errorInactiveContainer  = new Sprite();
-				if (m_edgesInactiveContainer == null)  m_edgesInactiveContainer  = new Sprite();
-				if (m_plugsInactiveContainer == null)  m_plugsInactiveContainer  = new Sprite();
-				inactiveLayer.addChild(m_nodesInactiveContainer);
-				inactiveLayer.addChild(m_jointsInactiveContainer);
-				inactiveLayer.addChild(m_errorInactiveContainer);
-				inactiveLayer.addChild(m_edgesInactiveContainer);
-				inactiveLayer.addChild(m_plugsInactiveContainer);
-				
-				if (m_nodesContainer == null)  m_nodesContainer  = new Sprite();
-				if (m_jointsContainer == null) m_jointsContainer = new Sprite();
-				if (m_errorContainer == null)  m_errorContainer  = new Sprite();
-				if (m_edgesContainer == null)  m_edgesContainer  = new Sprite();
-				if (m_plugsContainer == null)  m_plugsContainer  = new Sprite();
-				//m_nodesContainer.filter = BlurFilter.createDropShadow(4.0, 0.78, 0x0, 0.85, 2, 1); //only works up to 2048px
-				addChild(m_nodesContainer);
-				addChild(m_jointsContainer);
-				addChild(m_errorContainer);
-				addChild(m_edgesContainer);
-				addChild(m_plugsContainer);
-				
-				initialize();
-				setConstraints(m_levelConstraintsXML);
-				
-				initialized = true;
-			}
+			initialize();
 			
 			m_disposed = false;
 			m_levelStartTime = new Date().time;
@@ -960,6 +954,7 @@ package scenes.game.display
 			
 			for each(var gameNodeSet:GameNode in m_nodeList) {
 				gameNodeSet.removeFromParent(true);
+				gameNodeSet.removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
 			}
 			m_nodeList = new Vector.<GameNode>();
 			boxDictionary = new Dictionary();
@@ -1002,7 +997,7 @@ package scenes.game.display
 			removeEventListener(EdgeContainerEvent.SEGMENT_DELETED, onSegmentDeleted);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OVER, onHoverOver);
 			removeEventListener(EdgeContainerEvent.HOVER_EVENT_OUT, onHoverOut);
-			removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange);
+			//removeEventListener(EdgeSetChangeEvent.EDGE_SET_CHANGED, onEdgeSetChange); // do these per-box
 			removeEventListener(PropertyModeChangeEvent.PROPERTY_MODE_CHANGE, onPropertyModeChange);
 			removeEventListener(GameComponentEvent.COMPONENT_SELECTED, onComponentSelection);
 			removeEventListener(GameComponentEvent.COMPONENT_UNSELECTED, onComponentSelection);
