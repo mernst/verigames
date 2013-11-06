@@ -70,16 +70,21 @@ public class Main {
         // Enable verbose logging if the user wanted it
         Util.setVerbose(cmd.hasOption("verbose"));
 
+        System.err.println("Reading world...");
         WorldXMLParser parser = new WorldXMLParser();
         World world = parser.parse(input);
 
+        System.err.println("Starting optimization...");
         Optimizer optimizer = new Optimizer();
         world = optimizer.optimizeWorld(world);
 
+        System.err.println("Writing world...");
         try (PrintStream printStream = new PrintStream(output)) {
             WorldXMLPrinter writer = new WorldXMLPrinter();
             writer.print(world, printStream, null);
         }
+
+        System.err.println("Done");
 
     }
 
