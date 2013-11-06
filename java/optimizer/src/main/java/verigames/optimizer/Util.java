@@ -64,7 +64,7 @@ public class Util {
      * @return true if the edge is conflict free, or false otherwise
      */
     public static boolean conflictFree(NodeGraph g, Chute chute) {
-        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() == 1);
+        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() <= 1);
     }
 
     /**
