@@ -315,12 +315,8 @@ public class Graph<NodeType extends Node<EdgeType>, EdgeType extends Edge<NodeTy
 
   /**
    * Returns true if and only if this graph is acyclic.<p>
-   *
-   * This is currently {@code protected} because it is a costly operation and it
-   * is not clear that it needs to be exposed to clients. It is currently used
-   * only in subclasses, but it may be exposed publicly if need be.
    */
-  protected boolean isAcyclic()
+  public boolean isAcyclic()
   {
     /* Strategy: Attempt a topological sort. If it succeeds, there are no
      * cycles. If it fails, there are cycles. Runs in O(n+e) time, where n is
