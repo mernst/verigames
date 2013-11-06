@@ -43,34 +43,6 @@ public class Level
 
   private boolean underConstruction = true;
 
-  private static final boolean CHECK_REP_ENABLED =
-      verigames.utilities.Misc.CHECK_REP_ENABLED;
-
-  /**
-   * Enforces the Representation Invariant
-   */
-  private void checkRep()
-  {
-    // Representation Invariant:
-    if (!CHECK_REP_ENABLED)
-      return;
-
-    /*
-     * If this is constructed, all chutes contained in sets contained in
-     * linkedEdgeClasses must also be contained by some Board in
-     * boardNames.values()
-     */
-    if (!this.underConstruction())
-    {
-      Set<Chute> containedInBoards = new HashSet<Chute>();
-      for (Board b : boardNames.values())
-      {
-        for (Chute c : b.getEdges())
-          containedInBoards.add(c);
-      }
-    }
-  }
-
   /**
    * Creates a new {@code Level} with an empty {@code linkedEdgeClasses},
    * {@code boards}, and {@code boardNames}
@@ -79,7 +51,6 @@ public class Level
   {
     boardNames = new LinkedHashMap<String, Board>();
     stubBoardNames = new LinkedHashMap<String, StubBoard>();
-    checkRep();
   }
 
   /**
@@ -103,7 +74,6 @@ public class Level
     if (boardNames.containsValue(b))
       throw new IllegalArgumentException("Board " + b + " already contained");
     boardNames.put(name, b);
-    checkRep();
   }
 
   public void addStubBoard(String name, StubBoard b)
@@ -113,7 +83,6 @@ public class Level
     if (stubBoardNames.containsValue(b))
       throw new IllegalArgumentException("StubBoard " + b + " already contained");
     stubBoardNames.put(name, b);
-    checkRep();
   }
 
   /**
