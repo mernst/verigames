@@ -79,6 +79,9 @@ Requirements not enforced by the DTD:
   - Every variableID listed in the varID sets must be the variableID of at least
   one edge
 
+  - variableIDs that are negative indicate chutes that should not be linked with
+  anything -- as such, no negative variableID should be included in a varID-set.
+
   - variableID must be an integer
 
   - Layout coordinates (x and y) must be reals
