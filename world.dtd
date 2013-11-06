@@ -64,8 +64,7 @@ Requirements not enforced by the DTD:
     - There must be an incoming and an outgoing node
     - Each node must have the correct number of connections for its type (see
     Intersection class for details)
-    - A SUBBOARD type node must have a name attribute
-    - No node may be connected to a node in another board
+    - No node or edge may be connected to a node or edge in another board
     - No board may contain a cycle
     - A SUBBOARD type node must have the same number of inputs and outputs as its
     referent
