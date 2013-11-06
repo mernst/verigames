@@ -11,9 +11,9 @@ public interface OptimizationPass {
 
     /**
      * Simplify the graph. There isn't much of a contract here, but the
-     * simplification should hopefully reduce the complexity of the graph in
-     * some way. It can assume that the graph represents a valid world, and it
-     * should always continue to be a valid world after optimization.
+     * simplification must NOT increase the number of nodes or edges.
+     * Subclasses can assume that the graph represents a valid world, and
+     * they must preserve that property.
      *
      * @param g the graph to simplify
      */
