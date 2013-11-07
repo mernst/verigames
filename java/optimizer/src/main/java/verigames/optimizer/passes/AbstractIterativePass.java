@@ -7,7 +7,6 @@ import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,25 +38,31 @@ public abstract class AbstractIterativePass implements OptimizationPass {
     @Override
     public void optimize(NodeGraph g, ReverseMapping mapping) {
 
-        Set<Node> toRemove = Collections.emptySet();
+        Set<Node> toRemove = new HashSet<>();
 
         boolean shouldContinue;
 
         do {
-            Set<Node> toRemove2 = new HashSet<>();
+            shouldContinue = false;
+            Collection<Node> toRemove2 = new ArrayList<>();
 
             for (Node n : g.getNodes()) {
+
+                // no need to consider nodes we are already removing
                 if (toRemove.contains(n)) {
-                    toRemove2.add(n);
                     continue;
                 }
+
                 if (shouldRemove(g, n, toRemove)) {
                     toRemove2.add(n);
+
+                    // if we are removing a node, we may need to do another pass
+                    shouldContinue = true;
                 }
+
             }
 
-            shouldContinue = !toRemove.equals(toRemove2);
-            toRemove = toRemove2;
+            toRemove.addAll(toRemove2);
         } while (shouldContinue);
 
         Collection<NodeGraph.Edge> brokenEdges = new ArrayList<>();
