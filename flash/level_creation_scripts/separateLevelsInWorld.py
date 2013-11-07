@@ -7,7 +7,7 @@ import fileinput
 
 
 ### Main function ###
-def separateLevels(infile, outdirectory, fileMap, useRA):
+def separateLevels(infile, outdirectory, useRA):
 	print ('parsing xml')
 	count = 1
 	writeLines = False
@@ -46,28 +46,11 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
 			name = line[nameStart:nameEnd]
-			fileMap.write('<level name="'+name+'" id="'+id+'"/>')
 			writeLines = True
 			writeNextLine = True
 
 			print (name)
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-			line = line.replace("-", "_")
-
-		elif line.find('<board') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-
-		elif line.find('<node') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-
-		elif line.find('<edge-set') != -1:
-			line = line.replace(".", "_")
-			line = line.replace("$", "__")
-
-
+	
 		elif line.find('<layout') != -1:
 			writeLines = False
 			writeNextLine = False
@@ -91,7 +74,6 @@ def separateLevels(infile, outdirectory, fileMap, useRA):
 			nameStart = line.find('name="') + 6
 			nameEnd = line.find('"', nameStart)
 			name = line[nameStart:nameEnd]
-			fileMap.write('<level name="'+name+'" id="'+id+'"/>')
 
 			levelFile = open(outdirectory + '/'+id+'.xml','w')
 			levelFile.write('<world version="3">\n')
@@ -120,6 +102,5 @@ if __name__ == "__main__":
 		outdirectory = sys.argv[1]
 	infile = sys.argv[1]
 	print ('calling separateLevels')
-	fileMap = open(outdirectory + '/'+'filemap.xml','w')
 
-	separateLevels(infile, outdirectory, fileMap, False)
+	separateLevels(infile, outdirectory, False)

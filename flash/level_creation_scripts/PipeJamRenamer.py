@@ -44,7 +44,7 @@ if __name__ == "__main__":
 	index4 = 0
 
 	#find all constraints files
-	cmd = os.popen('dir /w %s*Constraints.xml' % inputpath)
+	cmd = os.popen('ls /w %s*Constraints.xml' % inputpath)
 	for filename in cmd:
 		#get root file name
 		fileroot = filename.strip().lstrip(inputpath).rstrip('Constraints.xml')
