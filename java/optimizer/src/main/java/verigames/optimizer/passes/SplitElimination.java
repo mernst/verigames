@@ -6,6 +6,7 @@ import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 public class SplitElimination implements OptimizationPass {
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
 
         // wrap the nodes in a new array list to avoid concurrent modification
         // of a list we are iterating over
@@ -49,8 +50,8 @@ public class SplitElimination implements OptimizationPass {
                 int e2VarId = e2.getEdgeData().getVariableID();
                 int srcVarId = src.getEdgeData().getVariableID();
 
-                // If either node was a small ball drop, we need to remove this
-                // merge and the drop and place a connector instead.
+                // If either node is an END node, we can remove this
+                // split and the END and place a connector instead.
                 if (e1.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
                         (Util.conflictFree(g, e1.getEdgeData()) || e1VarId == srcVarId)) {
                     g.removeNode(e1.getDst());
@@ -58,6 +59,12 @@ public class SplitElimination implements OptimizationPass {
                     g.addNode(connector);
                     g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e2.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
+
+                    // If the removed edge belongs to the same edge set as the src, then
+                    // we're ok. Otherwise it needs to be made wide.
+                    if (e1VarId != srcVarId) {
+                        mapping.forceWide(e1.getEdgeData());
+                    }
                 } else if (e2.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
                         (Util.conflictFree(g, e2.getEdgeData()) || e2VarId == srcVarId)) {
                     g.removeNode(e2.getDst());
@@ -65,6 +72,12 @@ public class SplitElimination implements OptimizationPass {
                     g.addNode(connector);
                     g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
+
+                    // If the removed edge belongs to the same edge set as the src, then
+                    // we're ok. Otherwise it needs to be made wide.
+                    if (e2VarId != srcVarId) {
+                        mapping.forceWide(e2.getEdgeData());
+                    }
                 }
             }
         }

@@ -59,12 +59,19 @@ public class Util {
      * contribute a conflict to the board. Specifically, an edge is
      * conflict free if it either (1) is immutable and wide or (2) is
      * mutable and the only member of its edge set.
+     *
+     * <p>In particular, if you have a {@link verigames.optimizer.model.ReverseMapping}
+     * and this function returns true for a chute, then it is always
+     * safe to call {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.level.Chute)}
+     * or {@link verigames.optimizer.model.ReverseMapping#forceWide(verigames.level.Chute)}
+     * on the given chute.
      * @param g the graph containing the edge
      * @param chute the edge to consider
      * @return true if the edge is conflict free, or false otherwise
      */
     public static boolean conflictFree(NodeGraph g, Chute chute) {
-        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() <= 1);
+        return (!chute.isEditable() && !chute.isNarrow()) ||
+               (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() <= 1);
     }
 
     /**

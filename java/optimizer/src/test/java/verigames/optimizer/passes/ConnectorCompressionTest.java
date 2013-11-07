@@ -8,6 +8,7 @@ import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class ConnectorCompressionTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new ConnectorCompression().optimize(g);
+        new ConnectorCompression().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;
@@ -83,7 +84,7 @@ public class ConnectorCompressionTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new ConnectorCompression().optimize(g);
+        new ConnectorCompression().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;
@@ -125,7 +126,7 @@ public class ConnectorCompressionTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new ConnectorCompression().optimize(g);
+        new ConnectorCompression().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;

@@ -3,6 +3,7 @@ package verigames.optimizer.passes;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,11 +32,12 @@ public abstract class AbstractIterativePass implements OptimizationPass {
      * require some fixing to make it legal again.
      * @param g           the graph to fix
      * @param brokenEdges the edges from the original graph where one node was removed but not the other
+     * @param mapping     the reverse mapping to update
      */
-    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges) { }
+    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges, ReverseMapping mapping) { }
 
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
 
         Set<Node> toRemove = Collections.emptySet();
 
@@ -65,6 +67,6 @@ public abstract class AbstractIterativePass implements OptimizationPass {
         }
 
         g.removeNodes(toRemove);
-        fixup(g, brokenEdges);
+        fixup(g, brokenEdges, mapping);
     }
 }

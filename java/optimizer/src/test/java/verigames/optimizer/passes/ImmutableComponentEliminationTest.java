@@ -6,9 +6,9 @@ import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
-import verigames.optimizer.Optimizer;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 
 public class ImmutableComponentEliminationTest {
 
@@ -31,7 +31,7 @@ public class ImmutableComponentEliminationTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new ImmutableComponentElimination().optimize(g);
+        new ImmutableComponentElimination().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;
@@ -70,7 +70,7 @@ public class ImmutableComponentEliminationTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new ImmutableComponentElimination().optimize(g);
+        new ImmutableComponentElimination().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;

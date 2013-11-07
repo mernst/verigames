@@ -7,6 +7,7 @@ import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 
 public class BallDropEliminationTest {
 
@@ -34,7 +35,7 @@ public class BallDropEliminationTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new BallDropElimination().optimize(g);
+        new BallDropElimination().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;
@@ -82,7 +83,7 @@ public class BallDropEliminationTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new BallDropElimination().optimize(g);
+        new BallDropElimination().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;
@@ -123,7 +124,7 @@ public class BallDropEliminationTest {
         world.validateSubboardReferences();
         NodeGraph g = new NodeGraph(world);
 
-        new BallDropElimination().optimize(g);
+        new BallDropElimination().optimize(g, new ReverseMapping());
 
         World finalWorld = g.toWorld();
         assert finalWorld.getLevels().size() == 1;

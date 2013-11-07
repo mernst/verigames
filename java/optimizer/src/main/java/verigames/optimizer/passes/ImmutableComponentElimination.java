@@ -4,6 +4,7 @@ import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 import verigames.optimizer.model.Subgraph;
 
 /**
@@ -13,7 +14,7 @@ import verigames.optimizer.model.Subgraph;
  */
 public class ImmutableComponentElimination implements OptimizationPass {
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
         for (Subgraph subgraph : g.getComponents()) {
             boolean mutable = false;
             for (NodeGraph.Edge edge : subgraph.getEdges()) {

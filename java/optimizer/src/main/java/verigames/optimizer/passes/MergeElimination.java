@@ -6,6 +6,7 @@ import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ import java.util.List;
 public class MergeElimination implements OptimizationPass {
 
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
 
         // wrap the nodes in a new array list to avoid concurrent modification
         // of a list we are iterating over
@@ -68,8 +69,9 @@ public class MergeElimination implements OptimizationPass {
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 
-                // If either node was a small ball drop, we need to remove this
-                // merge and the drop and place a connector instead.
+                // If either node was a small ball drop, we can remove this
+                // merge and the drop and place a connector instead. No mapping
+                // needs to take place.
                 if (e1.getSrc().getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
                     g.removeNode(e1.getSrc());
                     g.removeNode(n);
@@ -82,12 +84,15 @@ public class MergeElimination implements OptimizationPass {
                     g.addNode(connector);
                     g.addEdge(e1.getSrc(), e1.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                // If this merge drops to an END node we can split it up (described above).
+                // The deleted outgoing edge should be made wide to avoid conflicts.
                 } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst.getEdgeData())) {
                     g.removeNode(n);
                     Node end2 = Util.newNodeOnSameBoard(n, Intersection.Kind.END);
                     g.addNode(end2);
                     g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
                     g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
+                    mapping.forceWide(dst.getEdgeData());
                 }
 
             }

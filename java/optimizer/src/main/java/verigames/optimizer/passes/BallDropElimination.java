@@ -6,6 +6,7 @@ import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.Collection;
 import java.util.Set;
@@ -51,9 +52,14 @@ public class BallDropElimination extends AbstractIterativePass {
     }
 
     @Override
-    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges) {
+    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges, ReverseMapping mapping) {
         for (NodeGraph.Edge e : brokenEdges) {
             Node dst = e.getDst();
+
+            // for all removed mutable edges, force them to be narrow
+            if (e.getEdgeData().isEditable()) {
+                mapping.forceNarrow(e.getEdgeData());
+            }
 
             // we should only have edges with missing sources, or something has gone very wrong
             assert !g.getNodes().contains(e.getSrc());

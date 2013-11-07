@@ -1,6 +1,7 @@
 package verigames.optimizer;
 
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 
 /**
  * Used by the {@link Optimizer}. Each pass does one very specific
@@ -16,7 +17,8 @@ public interface OptimizationPass {
      * they must preserve that property.
      *
      * @param g the graph to simplify
+     * @param mapping the mapping to log changes
      */
-    public void optimize(NodeGraph g);
+    public void optimize(NodeGraph g, ReverseMapping mapping);
 
 }

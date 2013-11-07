@@ -7,6 +7,7 @@ import verigames.optimizer.Util;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +18,7 @@ import java.util.Collection;
 public class ConnectorCompression implements OptimizationPass {
 
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
         // remove a lot of "connect" intersections
         // Note: the new ArrayList is because we remove nodes from the graph as we go,
         // and getNodes just returns a view of the nodes in the graph. We want to
@@ -50,6 +51,10 @@ public class ConnectorCompression implements OptimizationPass {
                         incomingEdge.getSrc(), incomingEdge.getSrcPort(),
                         outgoingEdge.getDst(), outgoingEdge.getDstPort(),
                         newChute);
+
+                // map the old chutes to the new one
+                mapping.mapEdge(incomingChute, newChute);
+                mapping.mapEdge(outgoingChute, newChute);
             }
         }
     }
@@ -73,7 +78,8 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
-     * Compress two chutes into one.
+     * Compress two chutes into one. (NOTE: the variable ID for the resulting
+     * chute will be -1 and it will have no description).
      * <p>
      * Precondition: one of the following must hold:
      * <ul>
@@ -105,7 +111,7 @@ public class ConnectorCompression implements OptimizationPass {
                 (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
                 (outgoingChute.isEditable() && !incomingChute.isNarrow());
 
-        Chute newChute = new Chute(outgoingChute.getVariableID(), outgoingChute.getDescription());
+        Chute newChute = new Chute();
         newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
         if (outgoingChute.getLayout() != null)
             newChute.setLayout(outgoingChute.getLayout());
