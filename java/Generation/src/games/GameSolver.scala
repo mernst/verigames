@@ -590,11 +590,11 @@ abstract class GameSolver extends ConstraintSolver {
 
       }}
 
-      // Finally, deactivate all levels and add them to the world.
+      // Finally, add all levels to the world.
       classToLevel foreach { case (cname, level) =>
-          level.finishConstruction()
           world.addLevel(cname, level)
       }
+      // Finish world and sublevels
       world.finishConstruction()
     }
 
