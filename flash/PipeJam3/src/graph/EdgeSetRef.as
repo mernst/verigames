@@ -1,8 +1,10 @@
 package graph 
 {
-	import events.StampChangeEvent;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
+	
+	import events.StampChangeEvent;
+	
 	import graph.StampRef;
 	
 	public class EdgeSetRef extends EventDispatcher
@@ -35,7 +37,15 @@ package graph
 		
 		public function getLevelEdges(levelName:String):Vector.<Edge>
 		{
-			return m_levelNameToEdges[levelName] as Vector.<Edge>;
+			var edges:Vector.<Edge> =  m_levelNameToEdges[levelName];
+			if(edges != null)
+				return edges;
+			
+			//assume the dictionary only has one element, if name can't be found
+			for(var key:String in m_levelNameToEdges) {
+				return m_levelNameToEdges[key] as Vector.<Edge>;
+			}
+			return null;
 		}
 		
 		public function addStamp(_edge_set_id:String, _active:Boolean):void {
