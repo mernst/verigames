@@ -595,6 +595,7 @@ abstract class GameSolver extends ConstraintSolver {
           level.finishConstruction()
           world.addLevel(cname, level)
       }
+      world.finishConstruction()
     }
 
     def findIntersection(board: Board, slot: Slot): Intersection
