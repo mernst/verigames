@@ -153,7 +153,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
    * Sets the specification field {@code narrow} to the value of the parameter
    * {@code narrow}<br/>
    * <br/>
-   * Requires: {@link #underConstruction() this.underConstruction()}<br/>
+   * Requires: {@link #underConstruction() this.underConstruction()} or {@link #isEditable() this.isEditable()}<br/>
    * <br/>
    * Modifies: {@code this}
    *
@@ -162,8 +162,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
   public void setNarrow(boolean narrow)
   {
     //TODO JB: REMOVE THE ALLOWANCE UNDER WEAK MODE
-    if (!underConstruction() && verigames.utilities.Misc.CHECK_REP_STRICT )
-      throw new IllegalStateException("Mutation attempted on constructed Chute");
+    if (!underConstruction() && !isEditable() && verigames.utilities.Misc.CHECK_REP_STRICT )
+      throw new IllegalStateException("Cannot change the width of an immutable chute");
     this.narrow = narrow;
     checkRep();
   }
@@ -179,14 +179,16 @@ public class Chute extends verigames.graph.Edge<Intersection>
   /**
    * Sets {@code buzzsaw}
    * <br/>
-   * Requires: {@link #underConstruction() this.underConstruction()}<br/>
+   * Requires: {@link #underConstruction() this.underConstruction()} or {@link #isEditable() this.isEditable()}<br/>
+   * <br/>
+   * Modifies: {@code this}
    *
    * @param buzzsaw
    */
   public void setBuzzsaw(boolean buzzsaw)
   {
-    if(!underConstruction())
-      throw new IllegalStateException("Mutation attempted on constructed Chute");
+    if(!underConstruction() && !isEditable())
+      throw new IllegalStateException("Cannot add a buzzsaw to an immutable chute");
     this.buzzsaw = buzzsaw;
     checkRep();
   }
