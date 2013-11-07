@@ -183,6 +183,8 @@ package scenes.game.display
 			}
 			addChild(gameControlPanel);
 			
+			onEdgeSetChange(); //update score
+			
 			if(PipeJamGameScene.inTutorial && levels && levels.length > 0)
 			{
 				var obj:LevelInformation = PipeJamGame.levelInfo;
@@ -557,19 +559,20 @@ package scenes.game.display
 			if (gameControlPanel) gameControlPanel.onZoomReset();
 		}
 		
-		public function onEdgeSetChange(evt:EdgeSetChangeEvent):void
+		public function onEdgeSetChange(evt:EdgeSetChangeEvent = null):void
 		{
-			if (!evt.level) return;
+			var level_changed:Level = evt ? evt.level : active_level;
+			if (!level_changed) return;
 			var edgeSetId:String = "";
-			if (evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
-			m_simulator.updateOnBoxSizeChange(edgeSetId, evt.level.level_name);
-			evt.level.updateScore(true);
-			gameControlPanel.updateScore(evt.level, false);
-			if (!evt.silent) {
-				var oldScore:int = evt.level.prevScore;
-				var newScore:int = evt.level.currentScore;
+			if (evt && evt.edgeSetChanged && evt.edgeSetChanged.m_edgeSet) edgeSetId = evt.edgeSetChanged.m_edgeSet.id;
+			m_simulator.updateOnBoxSizeChange(edgeSetId, level_changed.level_name);
+			level_changed.updateScore(true);
+			gameControlPanel.updateScore(level_changed, false);
+			if (evt && !evt.silent) {
+				var oldScore:int = level_changed.prevScore;
+				var newScore:int = level_changed.currentScore;
 				// TODO: Fanfare for non-tutorial levels? We may want to encourage the players to keep optimizing
-				if (newScore >= evt.level.getTargetScore()) {
+				if (newScore >= level_changed.getTargetScore()) {
 					edgeSetGraphViewPanel.displayContinueButton(true);
 				} else {
 					edgeSetGraphViewPanel.hideContinueButton();
@@ -586,18 +589,18 @@ package scenes.game.display
 						details[VerigameServerConstants.ACTION_PARAMETER_EDGESET_ID] = evt.edgeSetChanged.m_edgeSet.id;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_CHANGED] = evt.prop;
 					details[VerigameServerConstants.ACTION_PARAMETER_PROP_VALUE] = evt.propValue.toString();
-					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, evt.level.getTimeMs());
+					PipeJam3.logging.logQuestAction(VerigameServerConstants.VERIGAME_ACTION_CHANGE_EDGESET_WIDTH, details, level_changed.getTimeMs());
 				}
 			}
 			
-			if(!PipeJamGameScene.inTutorial && !evt.silent)
+			if(!PipeJamGameScene.inTutorial && evt && !evt.silent)
 			{
 				m_numWidgetsClicked++;
 				if(m_numWidgetsClicked == 1 || m_numWidgetsClicked == 50)
 					Achievements.checkAchievements(evt.type, m_numWidgetsClicked);
 				
 				//beat the target score?
-				if(newScore  > evt.level.getTargetScore())
+				if(newScore  > level_changed.getTargetScore())
 				{
 					Achievements.checkAchievements(Achievements.BEAT_THE_TARGET_ID, 0);
 				}
@@ -897,7 +900,8 @@ package scenes.game.display
 			
 			if (inGameMenuBox) inGameMenuBox.setActiveLevelName(active_level.original_level_name);
 			
-			newLevel.start();
+			newLevel.initialize();
+			onEdgeSetChange();
 			edgeSetGraphViewPanel.loadLevel(newLevel);
 			if (edgeSetGraphViewPanel.atMaxZoom()) {
 				gameControlPanel.onMaxZoomReached();
@@ -906,6 +910,7 @@ package scenes.game.display
 			} else {
 				gameControlPanel.onZoomReset();
 			}
+			newLevel.start();
 			newLevel.updateScore();
 			
 			var startTime:Number = new Date().getTime();

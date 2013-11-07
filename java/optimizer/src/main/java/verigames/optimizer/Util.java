@@ -1,6 +1,11 @@
 package verigames.optimizer;
 
+import verigames.level.Board;
 import verigames.level.Chute;
+import verigames.level.Intersection;
+import verigames.level.Level;
+import verigames.optimizer.model.Node;
+import verigames.optimizer.model.NodeGraph;
 
 public class Util {
 
@@ -47,6 +52,35 @@ public class Util {
         Chute result = new Chute();
         result.setEditable(true);
         return result;
+    }
+
+    /**
+     * Determine if an edge is "conflict free" meaning that it cannot
+     * contribute a conflict to the board. Specifically, an edge is
+     * conflict free if it either (1) is immutable and wide or (2) is
+     * mutable and the only member of its edge set.
+     * @param g the graph containing the edge
+     * @param chute the edge to consider
+     * @return true if the edge is conflict free, or false otherwise
+     */
+    public static boolean conflictFree(NodeGraph g, Chute chute) {
+        return (!chute.isEditable() && !chute.isNarrow()) || (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() == 1);
+    }
+
+    /**
+     * Create a new node on the same board as "n". Note that this method does
+     * NOT add the new node to any {@link NodeGraph} "n" belongs to.
+     * @param n the node
+     * @param kind any kind except {@link verigames.level.Intersection.Kind#SUBBOARD}.
+     * @return a new node
+     */
+    public static Node newNodeOnSameBoard(Node n, Intersection.Kind kind) {
+        String levelName = n.getLevelName();
+        Level level = n.getLevel();
+        String boardName = n.getBoardName();
+        Board board = n.getBoard();
+        Intersection i = Intersection.factory(kind);
+        return new Node(levelName, level, boardName, board, i);
     }
 
 }

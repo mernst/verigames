@@ -59,8 +59,9 @@ package scenes.game.display
 				m_isWide = m_edgeSetEdges[0].is_wide;
 			}
 			m_numIncomingNodeEdges = m_numOutgoingNodeEdges = 0;
-			for each (var myEdge:Edge in m_edgeSetEdges) {
-				if (myEdge.is_wide != isWide()) {
+			for (var i:int = 0; i < m_edgeSetEdges.length; i++) {
+				var myEdge:Edge = m_edgeSetEdges[i];
+				if (myEdge.is_wide != m_isWide) {
 					trace("WARNING: Edge id " + myEdge.edge_id + " isWide doesn't match edgeSet value = " + isWide().toString);
 				}
 				if (myEdge.editable != m_isEditable) {

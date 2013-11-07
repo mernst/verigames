@@ -64,20 +64,21 @@ Requirements not enforced by the DTD:
     - There must be an incoming and an outgoing node
     - Each node must have the correct number of connections for its type (see
     Intersection class for details)
-    - A SUBBOARD type node must have a name attribute
-    - No node may be connected to a node in another board
+    - No node or edge may be connected to a node or edge in another board
     - No board may contain a cycle
     - A SUBBOARD type node must have the same number of inputs and outputs as its
     referent
     - All nodes that have kind SUBBOARD must have a name attribute (and the name
     attribute is meaningless for other kinds of node)
 
-  - All linked chutes (chutes with the same variable ID, or linked variableIDs)
-  must have the same width (TODO do we want to enforce this only when they're
-  non-editable?)
-
-  - Every variableID listed in the varID sets must be the variableID of at least
-  one edge
+  - Linked chutes:
+    - variableIDs that are negative indicate chutes that should not be linked with
+    anything -- as such, no negative variableID should be included in a varID-set.
+    - All linked chutes (chutes with the same positive variable ID, or linked
+    variableIDs) must have the same width and must all be either editable or
+    non-editable
+    - Every variableID listed in the varID sets must be the variableID of at least
+    one edge
 
   - variableID must be an integer
 

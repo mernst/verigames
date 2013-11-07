@@ -71,7 +71,7 @@ public class LayoutDebugger
           }
 
           bw.write("\nEdges: \n");
-          for( final Edge edge : b.getEdges() ) {
+          for( final Edge<?> edge : b.getEdges() ) {
               bw.write(edge.toString());
               bw.newLine();
           }
