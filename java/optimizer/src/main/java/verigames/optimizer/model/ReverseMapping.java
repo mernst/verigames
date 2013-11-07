@@ -4,7 +4,6 @@ import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Level;
 import verigames.level.World;
-import verigames.optimizer.Util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -142,7 +141,6 @@ public class ReverseMapping {
     }
 
     protected void mapEdge(int unoptimizedID, int optimizedID) {
-        Util.logVerbose("mapping " + unoptimizedID + " <- " + optimizedID);
         mapping.put(unoptimizedID, new Mapping(optimizedID));
     }
 
@@ -163,7 +161,6 @@ public class ReverseMapping {
     }
 
     protected void forceWide(int unoptimizedID) {
-        Util.logVerbose("mapping " + unoptimizedID + " <- WIDE");
         mapping.put(unoptimizedID, Mapping.WIDE);
     }
 
@@ -184,7 +181,6 @@ public class ReverseMapping {
     }
 
     protected void forceNarrow(int unoptimizedID) {
-        Util.logVerbose("mapping " + unoptimizedID + " <- NARROW");
         mapping.put(unoptimizedID, Mapping.NARROW);
     }
 
