@@ -49,7 +49,7 @@ public class Main {
             return;
         }
 
-        if (cmd.hasOption("in")) {
+        if (cmd.hasOption("in") && !cmd.getOptionValue("in").equals("-")) {
             String filename = cmd.getOptionValue("in");
             try {
                 input = new FileInputStream(filename);
@@ -60,7 +60,7 @@ public class Main {
             }
         }
 
-        if (cmd.hasOption("out")) {
+        if (cmd.hasOption("out") && !cmd.getOptionValue("out").equals("-")) {
             String filename = cmd.getOptionValue("out");
             try {
                 output = new FileOutputStream(filename);
@@ -88,10 +88,9 @@ public class Main {
         world = optimizer.optimizeWorld(world, mapping);
 
         System.err.println("Writing world...");
-        try (PrintStream printStream = new PrintStream(output)) {
-            WorldXMLPrinter writer = new WorldXMLPrinter();
-            writer.print(world, printStream, null);
-        }
+        PrintStream printStream = new PrintStream(output);
+        WorldXMLPrinter writer = new WorldXMLPrinter();
+        writer.print(world, printStream, null);
 
         System.err.println("Writing reverse mapping...");
         try (OutputStream mappingOutputStream = mappingFilename.equals("-") ? System.out : new FileOutputStream(mappingFilename)) {
