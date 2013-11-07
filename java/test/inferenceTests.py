@@ -13,7 +13,7 @@ def main():
     parser.add_argument('--mode', default='typecheck', help='Inference test modes: [%s' % ', '.join(MODES))
     parser.add_argument('-t', '--test', help='Regex to match test names on.')
     parser.add_argument('-d', '--debug', action='store_true', help='Print out all command output')
-    parser.add_argument('-a', '--args', help='verigames.py args')
+    parser.add_argument('-a', '--args', default="", help='verigames.py args')
     parser.add_argument('--checker', default='encrypted.EncryptedChecker', help='Type system to run')
     args = parser.parse_args()
 
