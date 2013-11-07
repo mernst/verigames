@@ -80,6 +80,7 @@ def main():
     parser.add_argument('--extra-classpath', help='Additional classpath entries.')
     parser.add_argument('--java-args', help='Additional java args to pass in.')
     parser.add_argument('--mode', default='game', help='Choose a verigames mode from [%s].' % ', '.join(MODES))
+    parser.add_argument('--steps', default='', help='Manually list steps to run.')
     parser.add_argument('--not-strict', action='store_true', help='Disable some checks on generation.')
     parser.add_argument('--output_dir', default=OUTPUT_DIR, help='Directory to output artifacts during roundtrip (inference.jaif, annotated file sourc file')
     parser.add_argument('--print-world', action='store_true', help='Print debugging constraint output.')
@@ -104,18 +105,21 @@ def main():
     # Only support one order at the moment
     # MODES = 'game typecheck floodsolve flood-roundtrip xmlsolve xml-roundtrip'.split()
     pipeline = []
-    if args.mode == 'typecheck':
-        pipeline = ['typecheck']
-    elif args.mode == 'game':
-        pipeline = ['generate', 'xml-validate']
-    elif args.mode == 'floodsolve':
-        pipeline = ['floodsolve']
-    elif args.mode == 'flood-roundtrip':
-        pipeline = ['floodsolve', 'insert-jaif', 'typecheck']
-    elif args.mode == 'xmlsolve':
-        pipeline = ['generate', 'xmlsolve']
-    elif args.mode == 'xml-roundtrip':
-        pipeline = ['generate', 'xmlsolve', 'update-jaif', 'insert-jaif', 'typecheck']
+    if args.steps:
+        pipeline = args.steps.split(',')
+    else:
+        if args.mode == 'typecheck':
+            pipeline = ['typecheck']
+        elif args.mode == 'game':
+            pipeline = ['generate', 'xml-validate']
+        elif args.mode == 'floodsolve':
+            pipeline = ['floodsolve']
+        elif args.mode == 'flood-roundtrip':
+            pipeline = ['floodsolve', 'insert-jaif', 'typecheck']
+        elif args.mode == 'xmlsolve':
+            pipeline = ['generate', 'xmlsolve']
+        elif args.mode == 'xml-roundtrip':
+            pipeline = ['generate', 'xmlsolve', 'update-jaif', 'insert-jaif', 'typecheck']
 
     # Setup some globaly useful stuff
     classpath = get_verigames_classpath()
