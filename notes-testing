@@ -5,6 +5,19 @@ what is the exact command that one runs in order to perform each test step?
 
 ==========================================================================
 
+Running test suite:
+
+First make sure that you can run verigames.py by following the steps in java/README.
+
+Next run java/tests/inferenceTests.py with different modes.
+java/tests/inferenceTests.py --mode <typecheck | roundtrip | xml-roundtrip>
+
+These modes test typechecking; constraint generation and insertion;
+and board generation, sovling, and insertion.
+
+==========================================================================
+
+
 Checker Inference tests:
 
 Test the Checker Inference type-checkers:

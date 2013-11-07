@@ -8,7 +8,7 @@ import os.path
 VERIGAMES_HOME = os.environ['VERIGAMES']
 SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
-VERIGAMES_ASP_HOME = os.environ['VERIGAMES_ASP_HOME']
+VERIGAMES_ASP_HOME = os.environ.get('VERIGAMES_ASP_HOME')
 AFU_HOME = os.environ.get('AFU_HOME')
 
 # Program constants
@@ -35,7 +35,7 @@ class Checker():
         if analysis:
             self.analysis = analysis
         if solver:
-            solf.solver = solver
+            self.solver = solver
 
     def to_checker_args(self):
         args = 'checkers.inference.TTIRun --checker ' + self.name
@@ -112,7 +112,7 @@ def main():
         checker = Checker(args.checker, args.visitor, args.transfer, args.analysis, args.solver)
 
     if args.mode != 'typecheck':
-        if args.mode in ['autosolve', 'roundtrip']:
+        if args.mode in ['autosolve', 'roundtrip'] and not args.solver:
             checker.solver = AUTOMATIC_SOLVER
         command = generate_checker_cmd(checker, args.java_args, classpath,
                 args.debug, args.not_strict, args.xmx, args.print_world, args.prog_args, args.stubs, args.files)
