@@ -108,7 +108,7 @@ public class ConnectorCompressionTest {
         Intersection merge = board.addNode(Intersection.Kind.MERGE);
         Intersection connect = board.addNode(Intersection.Kind.CONNECT);
 
-        // 2 chutes in the same edge set
+        // 3 chutes in the same edge set
         Chute c1 = new Chute(3, "?");
         Chute c2 = new Chute(3, "?");
         Chute c3 = new Chute(3, "?");
