@@ -31,7 +31,7 @@ public class ReverseMappingTest {
     }
 
     @Test
-    public void testApply() {
+    public void testApply() throws MismatchException {
 
         Board board = new Board();
         board.addNode(Intersection.Kind.INCOMING);

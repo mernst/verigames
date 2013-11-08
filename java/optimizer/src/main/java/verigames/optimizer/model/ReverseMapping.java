@@ -215,7 +215,7 @@ public class ReverseMapping {
      * @param unoptimized  [IN/OUT] the unoptimized world to solve
      * @param optimized    the already solved optimized world
      */
-    public void apply(World unoptimized, World optimized) {
+    public void apply(World unoptimized, World optimized) throws MismatchException {
         Map<Integer, Chute> unoptimizedChutesByID = chutes(unoptimized);
         Map<Integer, Chute> optimizedChutesByID = chutes(optimized);
         for (Integer unoptimizedID : unoptimizedChutesByID.keySet()) {
@@ -224,6 +224,12 @@ public class ReverseMapping {
 
             if (mapping.isMapped) {
                 Chute src = optimizedChutesByID.get(mapping.chuteID);
+                if (src == null) {
+                    throw new MismatchException("Chute " + mapping.chuteID + " was expected in optimized world, but was not found!");
+                }
+                if (dst == null) {
+                    throw new MismatchException("Chute " + mapping.chuteID + " was expected in unoptimized world, but was not found!");
+                }
                 dst.setNarrow(src.isNarrow());
                 dst.setBuzzsaw(src.hasBuzzsaw());
             } else {

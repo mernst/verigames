@@ -7,6 +7,12 @@ import verigames.level.Level;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class Util {
 
     /////////// Config
@@ -88,6 +94,26 @@ public class Util {
         Board board = n.getBoard();
         Intersection i = Intersection.factory(kind);
         return new Node(levelName, level, boardName, board, i);
+    }
+
+    /**
+     * Get an input stream for the given filename. If filename is "-", then stdin is used.
+     * @param filename the filename to load
+     * @return the stream
+     * @throws FileNotFoundException if the input file could not be read from
+     */
+    public static InputStream getInputStream(String filename) throws FileNotFoundException {
+        return filename.equals("-") ? System.in : new FileInputStream(filename);
+    }
+
+    /**
+     * Get an output stream for the given filename. If filename is "-", then stdout is used.
+     * @param filename the filename to load
+     * @return the stream
+     * @throws FileNotFoundException if the output file could not be written to
+     */
+    public static OutputStream getOutputStream(String filename) throws FileNotFoundException {
+        return filename.equals("-") ? System.out : new FileOutputStream(filename);
     }
 
 }

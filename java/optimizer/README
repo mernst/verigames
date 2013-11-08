@@ -38,6 +38,28 @@ Sample usage:
     ./optimizer.sh <../Translation/veritest/layout/GETLayoutTest.expected.xml
 
 
+Transferring Solutions
+-------------
+
+Optimizing a world is fun and useful, but you also need to be able to transfer
+a solution on an optimized world back to the unoptimized one. This can be
+accomplished using the transfer-solution tool.
+
+The optimizer outputs an additional "side-file" called a "mapping" that is used
+to transfer solutions. The transfer-solutions tool uses this mapping to do its
+work.
+
+Get help:
+
+    ./transfer-solution.sh --help
+
+Sample usage:
+
+    ./optimizer.sh --in my-file.xml --out opt.xml --mapping map.txt
+    ... solve opt.xml ...
+    ./transfer-solution.sh --from opt.xml --to my-file.xml --mapping map.txt --out my-file-solved.xml
+
+
 Hacking
 -------------
 
