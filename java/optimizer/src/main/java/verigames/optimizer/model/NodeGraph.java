@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -144,7 +145,7 @@ public class NodeGraph {
      * the (Node, Port) pairs are extracted into the {@link Target}
      * class which encapsulates all this data.
      */
-    private Map<Node, Map<Port, Target>> edges;
+    private final Map<Node, Map<Port, Target>> edges;
 
     /**
      * Very often we want to look up what flows INTO a node, not
@@ -157,25 +158,36 @@ public class NodeGraph {
      * small (typically not more than 3, very very rarely more than
      * 10).
      */
-    private MultiMap<Node, Node> redges;
+    private final MultiMap<Node, Node> redges;
 
     /**
-     * Tracks the edge sets in this graph by mapping each variable
-     * ID to the set of linked edges.
+     * Maps variable IDs (integers) to edge sets. Note that this is
+     * not a simple MultiMap: multiple variable IDs might point to
+     * the same edge set if those variable IDs are linked.
      */
-    private MultiMap<Integer, Edge> edgeSets;
+    private final Map<Integer, Set<Edge>> edgeSets;
 
-    private Set<Node> nodes;
+    /**
+     * Lists all the nodes in this graph
+     */
+    private final Set<Node> nodes;
 
     public NodeGraph() {
         edges = new HashMap<>();
         redges = new MultiMap<>();
-        edgeSets = new MultiMap<>();
+        edgeSets = new HashMap<>();
         nodes = new HashSet<>();
     }
 
     public NodeGraph(World w) {
         this();
+
+        // set up edge sets
+        Set<Set<Integer>> linkedVars = w.getLinkedVarIDs();
+        for (Set<Integer> varIDs : linkedVars) {
+            linkVarIDs(varIDs);
+        }
+
         Map<Intersection, Node> nodeMap = new HashMap<>();
         for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
             final String levelName = levelEntry.getKey();
@@ -205,6 +217,7 @@ public class NodeGraph {
                 }
             }
         }
+
     }
 
     public World toWorld() {
@@ -288,8 +301,21 @@ public class NodeGraph {
                 }
                 newLevel.addBoard(boardName, newBoard);
             }
-            newLevel.finishConstruction();
             world.addLevel(levelName, newLevel);
+        }
+
+        // Link up var IDs
+        Map<Set<Edge>, Integer> canonicalVars = new HashMap<>();
+        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
+            if (!entry.getValue().isEmpty())
+                canonicalVars.put(entry.getValue(), entry.getKey());
+        }
+        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
+            int varID = entry.getKey();
+            Integer canonical = canonicalVars.get(entry.getValue());
+            if (canonical != null && canonical != varID) {
+                world.linkByVarID(varID, canonical);
+            }
         }
 
         world.finishConstruction();
@@ -360,11 +386,16 @@ public class NodeGraph {
         Target target = new Target(dst, dstPort, edgeData);
         dsts.put(srcPort, target);
         redges.put(dst, src);
-        if (edgeData.getVariableID() >= 0)
-            edgeSets.put(edgeData.getVariableID(), new Edge(src, srcPort, target));
-    }
 
-//    public void getEdge
+        if (edgeData.getVariableID() >= 0) {
+            Set<Edge> edgeSet = edgeSets.get(edgeData.getVariableID());
+            if (edgeSet == null) {
+                edgeSet = new HashSet<>();
+                edgeSets.put(edgeData.getVariableID(), edgeSet);
+            }
+            edgeSet.add(new Edge(src, srcPort, target));
+        }
+    }
 
     /**
      * Remove an edge (if present). The getNodes of the edge are not removed, even if they
@@ -378,7 +409,13 @@ public class NodeGraph {
         Target target = dsts.get(srcPort);
         if (target != null && target.dst.equals(dst) && target.dstPort.equals(dstPort)) {
             dsts.remove(srcPort);
-            edgeSets.remove(target.getEdgeData().getVariableID(), new Edge(src, srcPort, target));
+            Set<Edge> edgeSet = edgeSets.get(target.getEdgeData().getVariableID());
+            if (edgeSet != null) {
+                edgeSet.remove(new Edge(src, srcPort, target));
+                // NOTE: we do NOT remove empty edge sets because their presence still
+                // conveys some meaningful info. I.e. even if we remove all edges with
+                // a given var ID, that var ID should remain linked to the same set.
+            }
         }
         if (dsts.isEmpty()) {
             edges.remove(src);
@@ -411,16 +448,42 @@ public class NodeGraph {
         return edgesList;
     }
 
-    public Collection<Edge> edgeSet(Edge edge) {
+    public Set<Edge> edgeSet(Edge edge) {
         return edgeSet(edge.getTarget());
     }
 
-    public Collection<Edge> edgeSet(Target edge) {
+    public Set<Edge> edgeSet(Target edge) {
         return edgeSet(edge.getEdgeData().getVariableID());
     }
 
-    public Collection<Edge> edgeSet(Integer variableID) {
-        return edgeSets.get(variableID);
+    public Set<Edge> edgeSet(Integer variableID) {
+        Set<Edge> result = edgeSets.get(variableID);
+        return result == null ? Collections.<Edge>emptySet() : result;
+    }
+
+    /**
+     * Indicate that all the variables in the given collection should
+     * be linked. See {@link World#linkByVarID(int, int)} for more info.
+     * @param varIDs a collection of var IDs to link
+     */
+    public void linkVarIDs(Collection<Integer> varIDs) {
+        Iterator<Integer> i = varIDs.iterator();
+        if (!i.hasNext())
+            return;
+        Integer v1 = i.next();
+        Set<Edge> set1 = edgeSets.get(v1);
+        if (set1 == null) {
+            set1 = new HashSet<>();
+            edgeSets.put(v1, set1);
+        }
+        while (i.hasNext()) {
+            Integer v2 = i.next();
+            Set<Edge> set2 = edgeSets.get(v2);
+            if (set2 != null) {
+                set1.addAll(set2);
+            }
+            edgeSets.put(v2, set1);
+        }
     }
 
     /**

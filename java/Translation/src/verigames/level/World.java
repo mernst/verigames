@@ -92,9 +92,27 @@ public class World
     return false;
   }
 
-  protected Set<Set<Integer>> getLinkedVarIDs()
+  public Set<Set<Integer>> getLinkedVarIDs()
   {
     return Collections.unmodifiableSet(linkedVarIDs);
+  }
+
+  /**
+   * Get the set of var IDs that are linked to the given one
+   * @param varID the var ID to check
+   * @return the set of var IDs linked to the given one
+   */
+  public Set<Integer> getLinkedVarIDs(int varID)
+  {
+    if (varID >= 0)
+    {
+      for (Set<Integer> set : linkedVarIDs)
+      {
+        if (set.contains(varID))
+          return Collections.unmodifiableSet(set);
+      }
+    }
+    return Collections.singleton(varID);
   }
 
   private static <T> void link(Set<Set<T>> linkedClasses, Set<T> toLink)
@@ -241,32 +259,30 @@ public class World
 
     underConstruction = false;
 
-    if (!parseMode) {
-	    /* Make sure that all chutes that are linked to each other have the same
-	     * width.
-	     *
-	     * If one chute is uneditable, all will become uneditable.
-	     */
-	    Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
-	    Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
-	    for (Set<Integer> linkedIDs : this.linkedVarIDs)
-	    {
-	      Set<Chute> linkedChutes = new HashSet<>();
-	      for (int varID : linkedIDs)
-	      {
-	        linkedChutes.addAll(chutesByVarID.get(varID));
-	        nonLinkedChutes.remove(varID);
-	      } 
-	
-	      ChuteNormalizer norm = new ChuteNormalizer(linkedChutes, inferredSubtypes);
-		  norm.normalizeChutes();
-	    }
-	    
-	    for (Set<Chute> chutes : nonLinkedChutes.values())
-	    {
-	      ChuteNormalizer norm = new ChuteNormalizer(chutes, inferredSubtypes);
-	  	  norm.normalizeChutes();
-	    }
+    /* Make sure that all chutes that are linked to each other have the same
+     * width.
+     *
+     * If one chute is uneditable, all will become uneditable.
+     */
+    Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
+    Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
+    for (Set<Integer> linkedIDs : this.linkedVarIDs)
+    {
+      Set<Chute> linkedChutes = new HashSet<>();
+      for (int varID : linkedIDs)
+      {
+        linkedChutes.addAll(chutesByVarID.get(varID));
+        nonLinkedChutes.remove(varID);
+      }
+
+      ChuteNormalizer norm = new ChuteNormalizer(linkedChutes);
+      norm.normalizeChutes();
+    }
+
+    for (Set<Chute> chutes : nonLinkedChutes.values())
+    {
+      ChuteNormalizer norm = new ChuteNormalizer(chutes);
+      norm.normalizeChutes();
     }
 
     // finish construction on all contained levels
@@ -420,4 +436,5 @@ public class World
   {
     return "World: " + getLevels().keySet().toString();
   }
+
 }
