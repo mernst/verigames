@@ -999,6 +999,11 @@ package scenes.game.display
 					return level;
 			}
 			
+			//if level is null, see if we are a version 3 (global) constraint file without levels
+			if("@version" in xml)
+				if(xml.@version == "3")
+					return xml;
+			
 			return null;
 		}
 		
