@@ -65,7 +65,7 @@ public class MergeElimination implements OptimizationPass {
                 // expect 2 inputs and 1 output
                 NodeGraph.Edge e1 = incoming.get(0);
                 NodeGraph.Edge e2 = incoming.get(1);
-                NodeGraph.Target dst = Util.first(g.outgoingEdges(n).values());
+                NodeGraph.Edge dst = Util.first(g.outgoingEdges(n));
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 

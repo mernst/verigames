@@ -9,7 +9,6 @@ import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,11 +31,11 @@ public class ChuteEndElimination extends AbstractIterativePass {
         // all outgoing nodes are eliminated.
         // Intuition: if all outgoing chutes are wide and eliminated, then all
         // balls dropped out of this node will flow successfully to an END.
-        Map<Port, NodeGraph.Target> outgoing = g.outgoingEdges(node);
+        Collection<NodeGraph.Edge> outgoing = g.outgoingEdges(node);
         if (outgoing.size() > 0 && kind != Intersection.Kind.INCOMING) {
             boolean canEliminate = true;
-            for (NodeGraph.Target t : outgoing.values()) {
-                if (!alreadyRemoved.contains(t.getDst()) || !Util.conflictFree(g, t.getEdgeData())) {
+            for (NodeGraph.Edge e : outgoing) {
+                if (!alreadyRemoved.contains(e.getDst()) || !Util.conflictFree(g, e.getEdgeData())) {
                     canEliminate = false;
                     break;
                 }

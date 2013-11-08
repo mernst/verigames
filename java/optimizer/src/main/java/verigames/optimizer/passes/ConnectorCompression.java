@@ -35,28 +35,46 @@ public class ConnectorCompression implements OptimizationPass {
 
                 // for this node kind: one incoming edge, one outgoing edge
                 NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
-                NodeGraph.Target outgoingEdge = Util.first(g.outgoingEdges(node).values());
+                NodeGraph.Edge outgoingEdge = Util.first(g.outgoingEdges(node));
 
-                Chute incomingChute = incomingEdge.getEdgeData();
-                Chute outgoingChute = outgoingEdge.getEdgeData();
-                Chute newChute = compressChutes(incomingChute, outgoingChute, g);
-                if (newChute == null)
-                    continue;
-
-                // remove the node
-                g.removeNode(node);
-
-                // add an edge where it used to be
-                g.addEdge(
-                        incomingEdge.getSrc(), incomingEdge.getSrcPort(),
-                        outgoingEdge.getDst(), outgoingEdge.getDstPort(),
-                        newChute);
-
-                // map the old chutes to the new one
-                mapping.mapEdge(incomingChute, newChute);
-                mapping.mapEdge(outgoingChute, newChute);
+                compressChutes(incomingEdge, outgoingEdge, g, mapping);
             }
         }
+    }
+
+    /**
+     * Just like
+     * {@link #compressChutes(verigames.level.Chute, verigames.level.Chute, verigames.optimizer.model.NodeGraph)}
+     * but adds appropriate mappings to the given {@link ReverseMapping} and
+     * modifies the graph appropriately.
+     * @param incoming  flows into outgoingChute
+     * @param outgoing  incomingChute flows into this
+     * @param g         [IN/OUT] the world representation
+     * @param mapping   [OUT] the mapping to update
+     * @return the new edge in g, or null if compression did not take place
+     */
+    public NodeGraph.Edge compressChutes(NodeGraph.Edge incoming, NodeGraph.Edge outgoing, NodeGraph g, ReverseMapping mapping) {
+        Chute newChute = compressChutes(incoming.getEdgeData(), outgoing.getEdgeData(), g);
+        if (newChute == null)
+            return null;
+
+        // remove the node
+        Node connector = incoming.getDst();
+        assert outgoing.getSrc().equals(connector);
+        assert connector.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT;
+        g.removeNode(connector);
+
+        // add an edge where it used to be
+        NodeGraph.Edge result = g.addEdge(
+                incoming.getSrc(), incoming.getSrcPort(),
+                outgoing.getDst(), outgoing.getDstPort(),
+                newChute);
+
+        // map the old chutes to the new one
+        mapping.mapEdge(incoming.getEdgeData(), newChute);
+        mapping.mapEdge(outgoing.getEdgeData(), newChute);
+
+        return result;
     }
 
     /**
@@ -78,20 +96,18 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
-     * Compress two chutes into one. (NOTE: the variable ID for the resulting
-     * chute will be -1 and it will have no description).
+     * Compress two chutes into one.
      * <p>
      * Precondition: one of the following must hold:
      * <ul>
      *     <li>both chutes belong to the same edge set or</li>
-     *     <li>both chutes are the sole members of their respective edge sets</li>
+     *     <li>one chute is conflict-free</li>
      * </ul>
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
      * @return the compressed chute
      */
     public Chute compressChutes(Chute incomingChute, Chute outgoingChute) {
-
         // if the edges are different widths, we have to think really hard about how to merge them
         boolean narrow = incomingChute.isNarrow();
         if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
@@ -111,7 +127,8 @@ public class ConnectorCompression implements OptimizationPass {
                 (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
                 (outgoingChute.isEditable() && !incomingChute.isNarrow());
 
-        Chute newChute = new Chute();
+        int varID = incomingChute.isEditable() ? incomingChute.getVariableID() : outgoingChute.getVariableID();
+        Chute newChute = new Chute(varID, "compressed chute");
         newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
         if (outgoingChute.getLayout() != null)
             newChute.setLayout(outgoingChute.getLayout());

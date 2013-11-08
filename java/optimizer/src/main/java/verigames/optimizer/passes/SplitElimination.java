@@ -37,11 +37,11 @@ public class SplitElimination implements OptimizationPass {
         // of a list we are iterating over
         for (Node n : new ArrayList<>(g.getNodes())) {
             if (n.getIntersection().getIntersectionKind() == Intersection.Kind.SPLIT) {
-                List<NodeGraph.Target> outgoing = new ArrayList<>(g.outgoingEdges(n).values());
+                List<NodeGraph.Edge> outgoing = new ArrayList<>(g.outgoingEdges(n));
 
                 // expect 2 outputs and 1 input
-                NodeGraph.Target e1 = outgoing.get(0);
-                NodeGraph.Target e2 = outgoing.get(1);
+                NodeGraph.Edge e1 = outgoing.get(0);
+                NodeGraph.Edge e2 = outgoing.get(1);
                 NodeGraph.Edge src = Util.first(g.incomingEdges(n));
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);

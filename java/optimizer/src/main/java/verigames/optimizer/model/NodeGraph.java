@@ -9,6 +9,7 @@ import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -491,9 +492,34 @@ public class NodeGraph {
      * @param src the node
      * @return    the outgoing edges from the given node
      */
-    public Map<Port, Target> outgoingEdges(Node src) {
-        Map<Port, Target> result = edges.get(src);
-        return result == null ? Collections.<Port, Target>emptyMap() : Collections.unmodifiableMap(result);
+    public Collection<Edge> outgoingEdges(final Node src) {
+        Map<Port, Target> map = edges.get(src);
+        final Map<Port, Target> result = map == null ? Collections.<Port, Target>emptyMap() : map;
+        return new AbstractCollection<Edge>() {
+            @Override
+            public Iterator<Edge> iterator() {
+                final Iterator<Map.Entry<Port, Target>> i = result.entrySet().iterator();
+                return new Iterator<Edge>() {
+                    @Override
+                    public boolean hasNext() {
+                        return i.hasNext();
+                    }
+                    @Override
+                    public Edge next() {
+                        Map.Entry<Port, Target> entry = i.next();
+                        return new Edge(src, entry.getKey(), entry.getValue());
+                    }
+                    @Override
+                    public void remove() {
+                        i.remove();
+                    }
+                };
+            }
+            @Override
+            public int size() {
+                return result.size();
+            }
+        };
     }
 
     /**
