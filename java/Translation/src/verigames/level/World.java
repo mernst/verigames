@@ -238,75 +238,24 @@ public class World
      * If one chute is uneditable, all will become uneditable.
      */
     Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
-
+    Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
     for (Set<Integer> linkedIDs : this.linkedVarIDs)
     {
       Set<Chute> linkedChutes = new HashSet<>();
       for (int varID : linkedIDs)
+      {
         linkedChutes.addAll(chutesByVarID.get(varID));
+        nonLinkedChutes.remove(varID);
+      } 
 
-      Boolean isNarrow = null;
-      boolean fixedNarrow = false;
-      boolean fixedWide   = false;
-      boolean conflictingChutes = false;
-
-      for (Chute c : linkedChutes)
-      {
-        if (isNarrow == null)
-        {
-          isNarrow = c.isNarrow();
-        }
-
-        if (!c.isEditable())
-        {
-          if (c.isNarrow())
-          {
-            fixedNarrow = true;
-          }
-          else
-          {
-            fixedWide   = true;
-          }
-        }
-
-        if (fixedNarrow && fixedWide)
-        {
-          conflictingChutes = true;
-          break;
-        }
-      }
-
-      if (conflictingChutes)
-      {
-        if (verigames.utilities.Misc.CHECK_REP_STRICT)
-        {
-          String chutes = "";
-          for (Chute c : linkedChutes)
-          {
-            chutes += c + ", ";
-          }
-          throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
-        }
-      }
-
-      for( Chute c : linkedChutes )
-      {
-          if (fixedNarrow)
-          {
-              c.setNarrow(true);
-          }
-          else if (fixedWide)
-          {
-              c.setNarrow(false);
-          }
-          else
-          {
-              // Just make them all the same to start out with
-              // TODO: double check that the xml solver is guaranteed to make all of the same linked chutes the same.
-              c.setNarrow( isNarrow );
-          }
-          c.setEditable( !(fixedNarrow || fixedWide) );
-      }
+      ChuteNormalizer norm = new ChuteNormalizer(linkedChutes);
+	  norm.normalizeChutes();
+    }
+    
+    for (Set<Chute> chutes : nonLinkedChutes.values())
+    {
+      ChuteNormalizer norm = new ChuteNormalizer(chutes);
+  	  norm.normalizeChutes();
     }
 
     // finish construction on all contained levels
