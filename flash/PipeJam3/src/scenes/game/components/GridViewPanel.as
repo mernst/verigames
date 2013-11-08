@@ -5,6 +5,7 @@ package scenes.game.components
 	import display.NineSliceButton;
 	import display.ToolTipText;
 	import events.MenuEvent;
+	import events.MiniMapEvent;
 	import events.MouseWheelEvent;
 	import events.MoveEvent;
 	import events.NavigationEvent;
@@ -89,7 +90,7 @@ package scenes.game.components
 		public function GridViewPanel(world:World)
 		{
 			this.alpha = .999;
-			
+			// TODO: we want to avoid class dependency loops, fix this World <-> GridViewPanel to World -> GridViewPanel
 			m_world = world;
 			currentMode = NORMAL_MODE;
 			
@@ -813,6 +814,8 @@ package scenes.game.components
 				inactiveContent.y = content.y;
 				scaleContent(m_currentLevel.tutorialManager.getStartScaleFactor());
 			}
+			
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		private var m_fanfareContainer:Sprite = new Sprite();
@@ -923,7 +926,10 @@ package scenes.game.components
 		
 		public function moveToPoint(percentPoint:Point):void
 		{
-			moveContent(percentPoint.x* m_currentLevel.m_boundingBox.width/scaleX, percentPoint.y * m_currentLevel.m_boundingBox.height/scaleY);
+			var contentX:Number = percentPoint.x * m_currentLevel.m_boundingBox.width / scaleX;
+			var contentY:Number = percentPoint.y * m_currentLevel.m_boundingBox.height / scaleY;
+			trace(contentX, contentY);
+			moveContent(contentX, contentY);
 		}
 		
 		/**
@@ -937,6 +943,7 @@ package scenes.game.components
 			inactiveContent.x = content.x;
 			content.y = ( -panY * content.scaleY + clipRect.height / 2);
 			inactiveContent.y = content.y;
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		/**

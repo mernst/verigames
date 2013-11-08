@@ -7,7 +7,6 @@ package events
 	{
 		public static const ERROR_ADDED:String = "error_added";
 		public static const ERROR_REMOVED:String = "error_removed";
-		public static const ERROR_MOVED:String = "error_moved";
 		
 		public var errorParticleSystem:ErrorParticleSystem;
 		

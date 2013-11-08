@@ -99,8 +99,6 @@ package scenes.game.components
 		/** Display the current best score for this level */
 		private var m_bestScoreLine:TargetScoreDisplay;
 		
-		protected var conflictMap:ConflictMap;
-		
 		public function GameControlPanel()
 		{
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStage);
@@ -186,13 +184,6 @@ package scenes.game.components
 			m_recenterButton.y = m_zoomOutButton.y
 			addChild(m_recenterButton);
 			
-			conflictMap = new ConflictMap();
-			conflictMap.x = m_scorePanel.x + m_scorePanel.width + 2;
-			conflictMap.y = 2;
-			conflictMap.width = width-conflictMap.x - 2;
-			conflictMap.height = height-conflictMap.y - 2;
-			//addChild(conflictMap);
-			
 			m_saveButton = ButtonFactory.getInstance().createButton("Save", 44, 12, 8, 8, "Save your progress\nand optionally share\nit with your group");
 			m_saveButton.addEventListener(Event.TRIGGERED, onSaveButtonTriggered);
 			m_saveButton.x = width - m_saveButton.width - 16;
@@ -270,7 +261,6 @@ package scenes.game.components
 			updateScore(level, true);
 			TextFactory.getInstance().updateText(m_levelNameTextfield, level.original_level_name);
 			TextFactory.getInstance().updateAlign(m_levelNameTextfield, 2, 0);
-			conflictMap.updateLevel(level);
 			setNavigationButtonVisibility(level.getPanZoomAllowed());
 			setSharingButtonVisibility(!PipeJamGameScene.inTutorial);
 		}
@@ -446,21 +436,6 @@ package scenes.game.components
 				// Hover out
 				m_bestPlayerScoreLine.alpha = 0.8;
 			}
-		}
-		
-		public function errorAdded(errorParticleSystem:ErrorParticleSystem, level:Level):void
-		{
-			conflictMap.errorAdded(errorParticleSystem, level);
-		}
-		
-		public function errorRemoved(errorParticleSystem:ErrorParticleSystem):void
-		{
-			conflictMap.errorRemoved(errorParticleSystem);
-		}
-		
-		public function errorMoved(errorParticleSystem:ErrorParticleSystem):void
-		{
-			conflictMap.errorMoved(errorParticleSystem);
 		}
 	}
 }

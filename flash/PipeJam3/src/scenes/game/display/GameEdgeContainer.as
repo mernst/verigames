@@ -416,6 +416,7 @@ package scenes.game.display
 			
 			if (errorContainer) errorContainer.removeFromParent(true);
 			if (m_errorParticleSystem) m_errorParticleSystem.removeFromParent(true);
+			m_errorParticleSystem = null;
 			if (plug)   plug.removeFromParent(true);
 			if (socket) socket.removeFromParent(true);
 			
@@ -502,7 +503,7 @@ package scenes.game.display
 				}
 			}
 			if (conflicts > 0) {
-				addError();
+				if (!m_hasError) addError();
 				m_hasError = true;
 			} else {
 				removeError(evt);
@@ -928,6 +929,8 @@ package scenes.game.display
 			
 			errorContainer.x = newX;
 			errorContainer.y = newY;
+			if (m_errorParticleSystem) ErrorParticleSystem.movedErrorList[m_errorParticleSystem.id] = m_errorParticleSystem;
+			
 			if (plug) {
 				plug.x = newX;
 				plug.y = newY;
@@ -956,7 +959,7 @@ package scenes.game.display
 				createJointPointsArray(m_startPoint, m_endPoint);
 			}
 			positionChildren();
-			m_isDirty = true;
+			//m_isDirty = true; //why?
 		}
 		
 		private function onRubberBandSegment(event:EdgeContainerEvent):void
@@ -1271,10 +1274,10 @@ package scenes.game.display
 			onConflictChange();
 			
 			for each (var seg:GameEdgeSegment in m_edgeSegments) {
-				seg.m_isDirty = true;//.draw();
+				seg.m_isDirty = true;
 			}
 			for each (var joint:GameEdgeJoint in m_edgeJoints) {
-				joint.m_isDirty = true;//.draw();
+				joint.m_isDirty = true;
 			}
 			m_innerBoxSegment.m_isDirty = true;
 		}
@@ -1306,14 +1309,6 @@ package scenes.game.display
 				
 				for each(var joint:GameEdgeJoint in m_edgeJoints)
 				{
-					//if (hasError() && joint.m_jointType == GameEdgeJoint.MARKER_JOINT)
-					//{
-					//joint.m_hasError = true;
-					//}
-					//else
-					//{
-					//joint.m_hasError = false;
-					//}
 					joint.m_isDirty = true;
 				}
 				

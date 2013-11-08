@@ -2,6 +2,7 @@ package scenes.game.display
 {
 	import assets.AssetInterface;
 	import assets.AssetsAudio;
+	import events.MiniMapEvent;
 	
 	import audio.AudioManager;
 	
@@ -827,6 +828,8 @@ package scenes.game.display
 		}
 		
 		//update current layout info based on node/edge position
+		// TODO: We don't want Level to depend on World, let's avoid circular 
+		// class dependency and have World -> Level, not World <-> Level
 		public function updateLayoutXML(world:World, includeThumbnail:Boolean = false):void
 		{
 			var children:XMLList = m_levelLayoutXML.children();
@@ -1402,6 +1405,7 @@ package scenes.game.display
 			totalMoveDist.x += delta.x;
 			totalMoveDist.y += delta.y;
 			trace(totalMoveDist);
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.ERRORS_MOVED));
 			m_boundingBox = new Rectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
 		}
 		
