@@ -7,6 +7,7 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
@@ -217,6 +218,113 @@ public class ConnectorCompressionTest {
                 assert merged.isNarrow();
                 assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
                 assert !merged.isPinched();
+            }
+        }
+    }
+
+    private boolean fitsLargeBall(Chute chute) {
+        return chute.hasBuzzsaw() || !chute.isNarrow();
+    }
+
+    /**
+     * Test the key invariant of connector compression: if a wide ball can
+     * flow down the compressed pipe, then it can flow down the two real
+     * chutes.
+     */
+    @Test
+    public void testFullCompression() throws MismatchException {
+        ConnectorCompression compression = new ConnectorCompression();
+        for (Chute tmp1 : allChuteCombos()) {
+            for (Chute tmp2 : allChuteCombos()) {
+
+                // ugh, gotta copy the chutes since they know and remember
+                // when we add them to boards
+                Chute chute1 = tmp1.copy(tmp1.isEditable() ? 1 : -1, "x");
+                Chute chute2 = tmp2.copy(tmp2.isEditable() ? 2 : -1, "y");
+
+                // Assemble a world
+                Board board = new Board();
+                Intersection start = board.addNode(Intersection.Kind.INCOMING);
+                Intersection connect = board.addNode(Intersection.Kind.CONNECT);
+                Intersection outgoing = board.addNode(Intersection.Kind.OUTGOING);
+                board.add(start, "1", connect, "2", chute1);
+                board.add(connect, "3", outgoing, "4", chute2);
+                Level level = new Level();
+                level.addBoard("board", board);
+                World world = new World();
+                world.addLevel("level", level);
+                world.finishConstruction();
+
+                // Optimize the world
+                NodeGraph g = new NodeGraph(world);
+                ReverseMapping mapping = new ReverseMapping();
+                compression.optimize(g, mapping);
+                World optimizedWorld = g.toWorld();
+
+                // find all the chutes in the optimized world
+                Collection<Chute> optimizedChutes = new ArrayList<>();
+                for (Level l : optimizedWorld.getLevels().values()) {
+                    for (Board b : level.getBoards().values()) {
+                        optimizedChutes.addAll(b.getEdges());
+                    }
+                }
+
+                // player makes all the mutable edges in the optimized
+                // world narrow
+                for (Chute c : optimizedChutes) {
+                    if (c.isEditable())
+                        c.setNarrow(true);
+                }
+
+                // translate this back to the original world
+                mapping.apply(world, optimizedWorld);
+
+                // figure out if there are "conflicts" (we'll just assume
+                // that our incoming node drops large balls)
+                boolean noConflict = true;
+                for (Chute c : optimizedChutes) {
+                    noConflict = noConflict && fitsLargeBall(c);
+                }
+
+                if (noConflict) {
+                    // verify that if there are NO conflicts in the optimized
+                    // world, then there are NO conflicts in the unoptimized one
+                    assert fitsLargeBall(chute1);
+                    assert fitsLargeBall(chute2);
+                } else {
+                    // verify that if there ARE conflicts in the optimized
+                    // world, then there ARE conflicts in the unoptimized one
+                    assert !fitsLargeBall(chute1) || !fitsLargeBall(chute2);
+                }
+
+                // player makes all the mutable edges in the optimized
+                // world wide
+                for (Chute c : optimizedChutes) {
+                    if (c.isEditable())
+                        c.setNarrow(false);
+                }
+
+                // translate this back to the original world
+                mapping.apply(world, optimizedWorld);
+
+                // figure out if there are "conflicts" (we'll just assume
+                // that our incoming node drops large balls)
+                noConflict = true;
+                for (Chute c : optimizedChutes) {
+                    noConflict = noConflict && fitsLargeBall(c);
+                }
+
+                if (noConflict) {
+                    // verify that if there are NO conflicts in the optimized
+                    // world, then there are NO conflicts in the unoptimized one
+                    assert fitsLargeBall(chute1);
+                    assert fitsLargeBall(chute2);
+                } else {
+                    // verify that if there ARE conflicts in the optimized
+                    // world, then there ARE conflicts in the unoptimized one
+                    assert !fitsLargeBall(chute1) || !fitsLargeBall(chute2);
+                }
+
             }
         }
     }

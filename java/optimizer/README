@@ -60,6 +60,16 @@ Sample usage:
     ./transfer-solution.sh --from opt.xml --to my-file.xml --mapping map.txt --out my-file-solved.xml
 
 
+Known Issues
+-------------
+
+Pinched chutes are not supported. To make this work, change all pinched chutes
+to immutable narrow ones, which are equivalent. (Note that there have recently
+been discussions of removing pinched pipes entirely, so you might not need to
+worry about this. As of this writing, pinched pipes are only created by the
+nullness type system.)
+
+
 Hacking
 -------------
 

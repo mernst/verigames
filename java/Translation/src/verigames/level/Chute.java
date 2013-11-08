@@ -276,12 +276,23 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO explicitly document which information is and is not copied.
   public Chute copy()
   {
-    Chute copy = new Chute(variableID, description);
-    copy.setNarrow(narrow);
-    copy.setPinched(pinch);
-    copy.setEditable(editable);
+    return copy(variableID, description);
+  }
 
-    return copy;
+  /**
+   * Returns a deep copy of {@code this}, but with a different variable ID
+   * and description.
+   * @see #copy()
+   * @param newVarID the new variable ID to use
+   * @param newDescription the new description to use
+   * @return a new Chute with the given variable ID and description
+   */
+  public Chute copy(int newVarID, String newDescription) {
+      Chute copy = new Chute(newVarID, newDescription);
+      copy.setNarrow(narrow);
+      copy.setPinched(pinch);
+      copy.setEditable(editable);
+      return copy;
   }
 
   @Override

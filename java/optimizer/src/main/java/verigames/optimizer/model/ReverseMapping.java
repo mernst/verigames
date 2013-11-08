@@ -4,12 +4,15 @@ import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Level;
 import verigames.level.World;
+import verigames.optimizer.Util;
+import verigames.utilities.MultiMap;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,25 +41,25 @@ public class ReverseMapping {
 
     /**
      * Represents what a chute can map to. Either it maps to another chute
-     * (in which case {@link #isMapped} is true and {@link #chuteID} points
-     * to the correct chute ID) or it maps to a specific width (in which
+     * (in which case {@link #isMapped} is true and {@link #varID} points
+     * to the correct variable ID) or it maps to a specific width (in which
      * case {@link #isMapped} is false and {@link #narrow} indicates whether
      * the chute should be narrow or not).
      */
     public static class Mapping {
         public static Mapping NARROW = new Mapping(true);
         public static Mapping WIDE = new Mapping(false);
-        public final int chuteID;
+        public final int varID;
         public final boolean narrow;
         public final boolean isMapped;
-        public Mapping(int chuteID) {
+        public Mapping(int varID) {
             this.isMapped = true;
-            this.chuteID = chuteID;
+            this.varID = varID;
             this.narrow = false;
         }
         public Mapping(boolean narrow) {
             this.isMapped = false;
-            this.chuteID = 0;
+            this.varID = 0;
             this.narrow = narrow;
         }
 
@@ -65,7 +68,7 @@ public class ReverseMapping {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Mapping mapping = (Mapping) o;
-            if (chuteID != mapping.chuteID) return false;
+            if (varID != mapping.varID) return false;
             if (isMapped != mapping.isMapped) return false;
             if (narrow != mapping.narrow) return false;
             return true;
@@ -73,10 +76,17 @@ public class ReverseMapping {
 
         @Override
         public int hashCode() {
-            int result = chuteID;
+            int result = varID;
             result = 31 * result + (narrow ? 1 : 0);
             result = 31 * result + (isMapped ? 1 : 0);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            if (isMapped)
+                return "chute " + varID;
+            return narrow ? "narrow" : "wide";
         }
     }
 
@@ -115,7 +125,7 @@ public class ReverseMapping {
         for (Map.Entry<Integer, Mapping> entry : mapping.entrySet()) {
             Mapping m = entry.getValue();
             if (m.isMapped) {
-                writer.write(entry.getKey() + " chute " + m.chuteID + "\n");
+                writer.write(entry.getKey() + " chute " + m.varID + "\n");
             } else {
                 writer.write(entry.getKey() + " " + (m.narrow ? "narrow" : "wide") + "\n");
             }
@@ -135,9 +145,9 @@ public class ReverseMapping {
         if (!unoptimized.isEditable())
             return;
         // by default, edges with the same ID do the right thing
-        if (unoptimized == optimized)
+        if (unoptimized.getVariableID() == optimized.getVariableID())
             return;
-        mapEdge(unoptimized.getUID(), optimized.getUID());
+        mapEdge(unoptimized.getVariableID(), optimized.getVariableID());
     }
 
     protected void mapEdge(int unoptimizedID, int optimizedID) {
@@ -157,7 +167,7 @@ public class ReverseMapping {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
-        forceWide(unoptimized.getUID());
+        forceWide(unoptimized.getVariableID());
     }
 
     protected void forceWide(int unoptimizedID) {
@@ -177,19 +187,22 @@ public class ReverseMapping {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
-        forceNarrow(unoptimized.getUID());
+        forceNarrow(unoptimized.getVariableID());
     }
 
     protected void forceNarrow(int unoptimizedID) {
         mapping.put(unoptimizedID, Mapping.NARROW);
     }
 
-    private Map<Integer, Chute> chutes(World w) {
-        Map<Integer, Chute> chutesByID = new HashMap<>();
+    private MultiMap<Integer, Chute> chutesByVarID(World w) {
+        MultiMap<Integer, Chute> chutesByID = new MultiMap<>();
         for (Level level : w.getLevels().values()) {
             for (Board board : level.getBoards().values()) {
                 for (Chute chute : board.getEdges()) {
-                    chutesByID.put(chute.getUID(), chute);
+                    int varID = chute.getVariableID();
+                    if (varID >= 0) {
+                        chutesByID.put(varID, chute);
+                    }
                 }
             }
         }
@@ -197,43 +210,69 @@ public class ReverseMapping {
     }
 
     /**
-     * For an edge ID on the original unoptimized world, figure out what
-     * it maps to on the optimized world.
-     * @param unoptimizedID the unoptimized edge ID
-     * @return the optimized edge ID
+     * For a var ID on the original unoptimized world, figure out what it maps
+     * to on the optimized world.
+     * @param unoptimizedID the unoptimized var ID
+     * @return the mapping, or null if there is none (this usually means that
+     * it does not matter what width the edge maps to)
      */
     public Mapping map(int unoptimizedID) {
-        Mapping result = new Mapping(unoptimizedID);
-        while (result.isMapped && mapping.containsKey(result.chuteID))
-            result = mapping.get(result.chuteID);
+        Mapping result = mapping.get(unoptimizedID);
+        if (result == null)
+            return null;
+        while (result.isMapped && mapping.containsKey(result.varID)) {
+            result = mapping.get(result.varID);
+        }
         return result;
     }
 
     /**
      * Convert a solution on the optimized world to a solution on the
      * unoptimized world.
+     *
+     * <p>Precondition: all editable chutes in both worlds have non-negative
+     * var IDs. (This is because negative var IDs are treated specially.)
      * @param unoptimized  [IN/OUT] the unoptimized world to solve
      * @param optimized    the already solved optimized world
      */
     public void apply(World unoptimized, World optimized) throws MismatchException {
-        Map<Integer, Chute> unoptimizedChutesByID = chutes(unoptimized);
-        Map<Integer, Chute> optimizedChutesByID = chutes(optimized);
-        for (Integer unoptimizedID : unoptimizedChutesByID.keySet()) {
+        MultiMap<Integer, Chute> unoptimizedChutesByVarID = chutesByVarID(unoptimized);
+        MultiMap<Integer, Chute> optimizedChutesByID = chutesByVarID(optimized);
+        for (Integer unoptimizedID : unoptimizedChutesByVarID.keySet()) {
             Mapping mapping = map(unoptimizedID);
-            Chute dst = unoptimizedChutesByID.get(unoptimizedID);
+            Collection<Integer> linkedVarIDs = unoptimized.getLinkedVarIDs(unoptimizedID);
+
+            if (mapping == null) {
+                Collection<Chute> srcs = optimizedChutesByID.get(unoptimizedID);
+                if (!srcs.isEmpty()) {
+                    Chute src = Util.first(srcs);
+                    for (Integer varID : linkedVarIDs) {
+                        for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
+                            chute.setNarrow(src.isNarrow());
+                        }
+                    }
+                }
+                continue;
+            }
 
             if (mapping.isMapped) {
-                Chute src = optimizedChutesByID.get(mapping.chuteID);
-                if (src == null) {
-                    throw new MismatchException("Chute " + mapping.chuteID + " was expected in optimized world, but was not found!");
+                Collection<Chute> srcs = optimizedChutesByID.get(mapping.varID);
+                if (srcs.isEmpty()) {
+                    throw new MismatchException("Variable ID " + mapping.varID + " was expected in optimized world, but was not found!");
                 }
-                if (dst == null) {
-                    throw new MismatchException("Chute " + mapping.chuteID + " was expected in unoptimized world, but was not found!");
+                Chute src = Util.first(srcs);
+                for (Integer varID : linkedVarIDs) {
+                    for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
+                        chute.setNarrow(src.isNarrow());
+                        chute.setBuzzsaw(src.hasBuzzsaw());
+                    }
                 }
-                dst.setNarrow(src.isNarrow());
-                dst.setBuzzsaw(src.hasBuzzsaw());
             } else {
-                dst.setNarrow(mapping.narrow);
+                for (Integer varID : linkedVarIDs) {
+                    for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
+                        chute.setNarrow(mapping.narrow);
+                    }
+                }
             }
         }
     }
@@ -249,6 +288,11 @@ public class ReverseMapping {
     @Override
     public int hashCode() {
         return mapping.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return mapping.toString();
     }
 
 }

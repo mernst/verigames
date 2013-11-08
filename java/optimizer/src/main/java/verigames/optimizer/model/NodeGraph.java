@@ -289,13 +289,7 @@ public class NodeGraph {
                 }
                 for (Edge edge : edgesByBoard.get(board)) {
                     Chute chute = edge.getEdgeData();
-                    Chute newChute = new Chute(chute.getVariableID(), chute.getDescription());
-                    newChute.setEditable(chute.isEditable());
-                    newChute.setBuzzsaw(chute.hasBuzzsaw());
-                    if (chute.getLayout() != null)
-                        newChute.setLayout(chute.getLayout());
-                    newChute.setNarrow(chute.isNarrow());
-                    newChute.setPinched(chute.isPinched());
+                    Chute newChute = chute.copy();
                     Intersection start = newIntersectionsByNode.get(edge.getSrc());
                     Intersection end = newIntersectionsByNode.get(edge.getDst());
                     newBoard.add(start, edge.getSrcPort().getName(), end, edge.getDstPort().getName(), newChute);
@@ -308,14 +302,26 @@ public class NodeGraph {
         // Link up var IDs
         Map<Set<Edge>, Integer> canonicalVars = new HashMap<>();
         for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
-            if (!entry.getValue().isEmpty())
-                canonicalVars.put(entry.getValue(), entry.getKey());
+            Integer varID = entry.getKey();
+            Set<Edge> edgeSet = entry.getValue();
+            for (Edge e : edgeSet) {
+                if (e.getEdgeData().getVariableID() == varID) {
+                    canonicalVars.put(edgeSet, varID);
+                    break;
+                }
+            }
         }
         for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
+            Set<Edge> edgeSet = entry.getValue();
             int varID = entry.getKey();
-            Integer canonical = canonicalVars.get(entry.getValue());
+            Integer canonical = canonicalVars.get(edgeSet);
             if (canonical != null && canonical != varID) {
-                world.linkByVarID(varID, canonical);
+                for (Edge e : edgeSet) {
+                    if (e.getEdgeData().getVariableID() == varID) {
+                        world.linkByVarID(varID, canonical);
+                        break;
+                    }
+                }
             }
         }
 
@@ -376,7 +382,7 @@ public class NodeGraph {
      * Add an edge (if it wasn't already present). This will also add the given nodes,
      * if they are not already present.
      */
-    public void addEdge(Node src, Port srcPort, Node dst, Port dstPort, Chute edgeData) {
+    public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, Chute edgeData) {
         nodes.add(src);
         nodes.add(dst);
         Map<Port, Target> dsts = edges.get(src);
@@ -387,15 +393,16 @@ public class NodeGraph {
         Target target = new Target(dst, dstPort, edgeData);
         dsts.put(srcPort, target);
         redges.put(dst, src);
-
+        Edge e = new Edge(src, srcPort, target);
         if (edgeData.getVariableID() >= 0) {
             Set<Edge> edgeSet = edgeSets.get(edgeData.getVariableID());
             if (edgeSet == null) {
                 edgeSet = new HashSet<>();
                 edgeSets.put(edgeData.getVariableID(), edgeSet);
             }
-            edgeSet.add(new Edge(src, srcPort, target));
+            edgeSet.add(e);
         }
+        return e;
     }
 
     /**

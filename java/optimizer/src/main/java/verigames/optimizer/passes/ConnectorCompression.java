@@ -43,10 +43,13 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
-     * Just like
-     * {@link #compressChutes(verigames.level.Chute, verigames.level.Chute, verigames.optimizer.model.NodeGraph)}
-     * but adds appropriate mappings to the given {@link ReverseMapping} and
-     * modifies the graph appropriately.
+     * The non-pure version of
+     * {@link #compressChutes(verigames.level.Chute, verigames.level.Chute, verigames.optimizer.model.NodeGraph)}.
+     * Modifies the given graph by actually compressing the edges and adds
+     * appropriate mappings to the given {@link ReverseMapping}.
+     *
+     * <p>Precondition: incoming flows into a connector node which flows
+     * into outgoing.
      * @param incoming  flows into outgoingChute
      * @param outgoing  incomingChute flows into this
      * @param g         [IN/OUT] the world representation
@@ -101,8 +104,10 @@ public class ConnectorCompression implements OptimizationPass {
      * Precondition: one of the following must hold:
      * <ul>
      *     <li>both chutes belong to the same edge set or</li>
-     *     <li>one chute is conflict-free</li>
+     *     <li>both chutes are the sole members of their respective edge sets</li>
      * </ul>
+     * (Note that if an edge is immutable, it is considered to be the sole
+     * member of its edge set.)
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
      * @return the compressed chute
