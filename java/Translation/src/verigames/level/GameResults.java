@@ -41,7 +41,7 @@ public class GameResults {
   public static Map<Integer, Boolean> chuteWidth(World w) {
     Set<Chute> chutes = getChutes(w);
 
-    ChuteNormalizer norm = new ChuteNormalizer(chutes);
+    ChuteNormalizer norm = new ChuteNormalizer(chutes, true);
     return Collections.unmodifiableMap(norm.getWidths());
   }
 

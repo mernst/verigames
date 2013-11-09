@@ -117,7 +117,7 @@ public class WorldXMLParser
       w.addLevel(name, level);
     }
 
-    w.finishConstruction();
+    w.finishConstruction(true, null);
     return w;
   }
 
