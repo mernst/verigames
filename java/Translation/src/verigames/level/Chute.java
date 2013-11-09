@@ -292,6 +292,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
       copy.setNarrow(narrow);
       copy.setPinched(pinch);
       copy.setEditable(editable);
+      copy.setBuzzsaw(buzzsaw);
       return copy;
   }
 
