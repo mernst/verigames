@@ -37,7 +37,7 @@ public class ConnectorCompression implements OptimizationPass {
                 NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
                 NodeGraph.Edge outgoingEdge = Util.first(g.outgoingEdges(node));
 
-                compressChutes(incomingEdge, outgoingEdge, g, mapping);
+                compressChutes(node, incomingEdge, outgoingEdge, g, mapping);
             }
         }
     }
@@ -48,21 +48,21 @@ public class ConnectorCompression implements OptimizationPass {
      * Modifies the given graph by actually compressing the edges and adds
      * appropriate mappings to the given {@link ReverseMapping}.
      *
-     * <p>Precondition: incoming flows into a connector node which flows
+     * <p>Precondition: incoming flows into connector node which flows
      * into outgoing.
-     * @param incoming  flows into outgoingChute
-     * @param outgoing  incomingChute flows into this
+     * @param connector the connector node
+     * @param incoming  flows into the connector
+     * @param outgoing  connector flows into this
      * @param g         [IN/OUT] the world representation
      * @param mapping   [OUT] the mapping to update
      * @return the new edge in g, or null if compression did not take place
      */
-    public NodeGraph.Edge compressChutes(NodeGraph.Edge incoming, NodeGraph.Edge outgoing, NodeGraph g, ReverseMapping mapping) {
+    public NodeGraph.Edge compressChutes(Node connector, NodeGraph.Edge incoming, NodeGraph.Edge outgoing, NodeGraph g, ReverseMapping mapping) {
         Chute newChute = compressChutes(incoming.getEdgeData(), outgoing.getEdgeData(), g);
         if (newChute == null)
             return null;
 
         // remove the node
-        Node connector = incoming.getDst();
         assert outgoing.getSrc().equals(connector);
         assert connector.getIntersection().getIntersectionKind() == Intersection.Kind.CONNECT;
         g.removeNode(connector);
@@ -74,8 +74,13 @@ public class ConnectorCompression implements OptimizationPass {
                 newChute);
 
         // map the old chutes to the new one
-        mapping.mapEdge(incoming.getEdgeData(), newChute);
-        mapping.mapEdge(outgoing.getEdgeData(), newChute);
+        if (newChute.isEditable()) {
+            mapping.mapEdge(incoming.getEdgeData(), newChute);
+            mapping.mapEdge(outgoing.getEdgeData(), newChute);
+        } else {
+            mapping.forceNarrow(incoming.getEdgeData(), newChute.isNarrow());
+            mapping.forceNarrow(outgoing.getEdgeData(), newChute.isNarrow());
+        }
 
         return result;
     }
@@ -132,7 +137,9 @@ public class ConnectorCompression implements OptimizationPass {
                 (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
                 (outgoingChute.isEditable() && !incomingChute.isNarrow());
 
-        int varID = incomingChute.isEditable() ? incomingChute.getVariableID() : outgoingChute.getVariableID();
+        int varID = editable ?
+                (incomingChute.isEditable() ? incomingChute.getVariableID() : outgoingChute.getVariableID()) :
+                -1;
         Chute newChute = new Chute(varID, "compressed chute");
         newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
         if (outgoingChute.getLayout() != null)
@@ -140,11 +147,8 @@ public class ConnectorCompression implements OptimizationPass {
         newChute.setNarrow(narrow);
         newChute.setEditable(editable);
 
-        // The result is pinched if either incoming chute was pinched and it
-        // makes sense to pinch this chute. (It makes no sense to pinch a
-        // narrow immutable edge).
-        boolean pinched = (incomingChute.isPinched() || outgoingChute.isPinched()) && !(narrow && !editable);
-        newChute.setPinched(pinched);
+        // Pinching is not supported.
+        newChute.setPinched(false);
 
         return newChute;
 

@@ -17,8 +17,8 @@ public class ReverseMappingTest {
     @Test
     public void testIO() throws IOException {
         ReverseMapping mapping = new ReverseMapping();
-        mapping.forceNarrow(1);
-        mapping.forceWide(2);
+        mapping.forceNarrow(1, true);
+        mapping.forceNarrow(2, false);
         mapping.mapEdge(3, 4);
         mapping.mapEdge(6, 7);
 

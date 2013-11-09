@@ -10,7 +10,9 @@ import verigames.level.StubBoard;
 import verigames.level.World;
 import verigames.optimizer.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -129,6 +131,55 @@ public class NodeGraphTest {
         NodeGraph g2 = new NodeGraph(w2);
         assert g1.getNodes().size() == g2.getNodes().size();
         assert g1.getEdges().size() == g2.getEdges().size();
+    }
+
+    /**
+     * Tests for a previously observed bug where edges would lose their width
+     * information on export
+     */
+    @Test
+    public void testEdgeDump() {
+
+        Board board = new Board();
+        Intersection start = board.addNode(Intersection.Kind.INCOMING);
+        Intersection connect = board.addNode(Intersection.Kind.CONNECT);
+        Intersection end = board.addNode(Intersection.Kind.OUTGOING);
+
+        Chute wideImmutable = new Chute(-1, "wide chute");
+        wideImmutable.setNarrow(false);
+        wideImmutable.setEditable(false);
+
+        Chute narrowImmutable = new Chute(-1, "narrow chute");
+        narrowImmutable.setNarrow(true);
+        narrowImmutable.setEditable(false);
+
+        board.add(start, "1", connect, "2", narrowImmutable);
+        board.add(connect, "3", end, "4", wideImmutable);
+        Level level = new Level();
+        level.addBoard("board", board);
+        World world = new World();
+        world.addLevel("level", level);
+        world.finishConstruction();
+
+        NodeGraph g = new NodeGraph(world);
+
+        World finalWorld = g.toWorld();
+        assert finalWorld.getLevels().size() == 1;
+
+        Level finalLevel = Util.first(finalWorld.getLevels().values());
+        assert finalLevel.getBoards().size() == 1;
+
+        Board finalBoard = Util.first(finalLevel.getBoards().values());
+        assert finalBoard.getNodes().size() == 3;
+
+        assert finalBoard.getEdges().size() == 2;
+        List<Chute> chutes = new ArrayList<>(finalBoard.getEdges());
+        assert chutes.get(0).isNarrow() ^ chutes.get(1).isNarrow(); // 1 narrow, 1 wide
+        for (Chute chute : chutes) {
+            assert !chute.isEditable();
+            assert chute.getVariableID() < 0;
+        }
+
     }
 
 }

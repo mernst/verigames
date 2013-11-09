@@ -109,10 +109,10 @@ public class ReverseMapping {
                     map.mapEdge(unopt, scanner.nextInt());
                     break;
                 case "narrow":
-                    map.forceNarrow(unopt);
+                    map.forceNarrow(unopt, true);
                     break;
                 case "wide":
-                    map.forceWide(unopt);
+                    map.forceNarrow(unopt, false);
             }
         }
         return map;
@@ -164,14 +164,7 @@ public class ReverseMapping {
      * @param unoptimized a chute in the unoptimized world
      */
     public void forceWide(Chute unoptimized) {
-        // immutable edges can't map to anything
-        if (!unoptimized.isEditable())
-            return;
-        forceWide(unoptimized.getVariableID());
-    }
-
-    protected void forceWide(int unoptimizedID) {
-        mapping.put(unoptimizedID, Mapping.WIDE);
+        forceNarrow(unoptimized.getVariableID(), false);
     }
 
     /**
@@ -184,14 +177,29 @@ public class ReverseMapping {
      * @param unoptimized a chute in the unoptimized world
      */
     public void forceNarrow(Chute unoptimized) {
+        forceNarrow(unoptimized, true);
+    }
+
+    /**
+     * Force the given chute to be narrow or wide in the solution.
+     * Has no effect if the unoptimized argument is immutable.
+     *
+     * <p>NOTE: either the given chute must not be linked to any
+     * other edges, or you must forceNarrow all the edges in its
+     * edge set to the same value.
+     * @param unoptimized a chute in the unoptimized world
+     * @param narrow      true to force to narrow, false to force
+     *                    to wide
+     */
+    public void forceNarrow(Chute unoptimized, boolean narrow) {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
-        forceNarrow(unoptimized.getVariableID());
+        forceNarrow(unoptimized.getVariableID(), narrow);
     }
 
-    protected void forceNarrow(int unoptimizedID) {
-        mapping.put(unoptimizedID, Mapping.NARROW);
+    protected void forceNarrow(int unoptimizedID, boolean narrow) {
+        mapping.put(unoptimizedID, narrow ? Mapping.NARROW : Mapping.WIDE);
     }
 
     private MultiMap<Integer, Chute> chutesByVarID(World w) {

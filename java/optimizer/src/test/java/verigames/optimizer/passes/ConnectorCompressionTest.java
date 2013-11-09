@@ -12,7 +12,9 @@ import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class ConnectorCompressionTest {
 
@@ -144,13 +146,92 @@ public class ConnectorCompressionTest {
         assert finalBoard.getEdges().size() == 3;
     }
 
-    public Collection<Chute> allChuteCombos() {
+
+    /**
+     * Regression test for an odd bug
+     */
+    @Test
+    public void testConnectorCompression4() {
+
+        // Input:
+        //                   1
+        //    Start  ---------------->  End
+        //         \                    /
+        //          ----> connector ----
+        //           2               3
+        //     where:
+        //        1 is immutable wide
+        //        2 is immutable narrow
+        //        3 is mutable wide
+        //
+        // Expected output:
+        //                   1
+        //    Start  ---------------->  End
+        //         \                    /
+        //          -------------------
+        //                   2
+        //     where:
+        //        1 is immutable wide
+        //        2 is immutable narrow
+
+        Board board = new Board();
+        Intersection start = board.addNode(Intersection.Kind.INCOMING);
+        Intersection connect = board.addNode(Intersection.Kind.CONNECT);
+        Intersection end = board.addNode(Intersection.Kind.OUTGOING);
+
+        Chute narrowImmutable = Util.immutableChute();
+        narrowImmutable.setNarrow(true);
+
+        Chute wideEditable = Util.mutableChute();
+        wideEditable.setNarrow(false);
+        wideEditable = wideEditable.copy(17, "hello");
+
+        Chute wideImmutable = Util.immutableChute();
+        wideImmutable.setNarrow(false);
+
+        board.add(start, "1", connect, "2", narrowImmutable);
+        board.add(connect, "3", end, "4", wideEditable);
+        board.add(start, "5", end, "6", wideImmutable);
+        Level level = new Level();
+        level.addBoard("board", board);
+        World world = new World();
+        world.addLevel("level", level);
+        world.finishConstruction();
+
+        NodeGraph g = new NodeGraph(world);
+
+        new ConnectorCompression().optimize(g, new ReverseMapping());
+
+        World finalWorld = g.toWorld();
+        assert finalWorld.getLevels().size() == 1;
+
+        Level finalLevel = Util.first(finalWorld.getLevels().values());
+        assert finalLevel.getBoards().size() == 1;
+
+        Board finalBoard = Util.first(finalLevel.getBoards().values());
+        assert finalBoard.getNodes().size() == 2;
+        for (Intersection node : finalBoard.getNodes()) {
+            assert node.getIntersectionKind() != Intersection.Kind.CONNECT;
+        }
+
+        assert finalBoard.getEdges().size() == 2;
+        List<Chute> chutes = new ArrayList<>(finalBoard.getEdges());
+        assert chutes.get(0).isNarrow() ^ chutes.get(1).isNarrow(); // 1 narrow, 1 wide
+        for (Chute chute : chutes) {
+            assert !chute.isEditable();
+            assert chute.getVariableID() < 0;
+        }
+    }
+
+    private int varID = 0;
+    private Collection<Chute> allChuteCombos() {
         Collection<Chute> result = new ArrayList<>();
         for (boolean narrow : bools) {
             for (boolean pinched : bools) {
                 for (boolean editable : bools) {
                     for (boolean buzzsaw : bools) {
-                        Chute chute = new Chute();
+                        int id = editable ? (varID++) : -1;
+                        Chute chute = new Chute(id, "no description");
                         chute.setEditable(editable);
                         chute.setNarrow(narrow);
                         chute.setPinched(pinched);
@@ -189,7 +270,6 @@ public class ConnectorCompressionTest {
                 assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
                 assert merged.isEditable() == chute.isEditable();
                 assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
-                assert merged.isPinched() == (chute.isPinched() && !(chute.isNarrow() && !chute.isEditable()));
             }
         }
 
@@ -217,7 +297,6 @@ public class ConnectorCompressionTest {
                 assert !merged.isEditable();
                 assert merged.isNarrow();
                 assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
-                assert !merged.isPinched();
             }
         }
     }
@@ -277,6 +356,10 @@ public class ConnectorCompressionTest {
                 }
 
                 // translate this back to the original world
+                System.out.println("-----");
+                System.out.println(Arrays.asList(chute1, chute2));
+                System.out.println(optimizedChutes);
+                System.out.println(mapping);
                 mapping.apply(world, optimizedWorld);
 
                 // figure out if there are "conflicts" (we'll just assume
