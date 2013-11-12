@@ -252,6 +252,16 @@ public class World
    * If inferredSubtypes is null, chutes will be normalized to the typesystem's default width.
    * 
    */
+  public void finishConstruction()
+  {
+    finishConstruction(false, Collections.<Integer>emptyList());
+  }
+
+  /**
+   * Marks this {@code World} as completed, runs some integrity checks, and
+   * freezes the {@code World}, as well as all of its child elements.
+   * TODO: document parameters
+   */
   public void finishConstruction(boolean parseMode, List<Integer> inferredSubtypes)
   {
     if (!underConstruction)
@@ -259,30 +269,32 @@ public class World
 
     underConstruction = false;
 
-    /* Make sure that all chutes that are linked to each other have the same
-     * width.
-     *
-     * If one chute is uneditable, all will become uneditable.
-     */
-    Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
-    Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
-    for (Set<Integer> linkedIDs : this.linkedVarIDs)
-    {
-      Set<Chute> linkedChutes = new HashSet<>();
-      for (int varID : linkedIDs)
+    if (!parseMode) {
+      /* Make sure that all chutes that are linked to each other have the same
+       * width.
+       *
+       * If one chute is uneditable, all will become uneditable.
+       */
+      Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
+      Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
+      for (Set<Integer> linkedIDs : this.linkedVarIDs)
       {
-        linkedChutes.addAll(chutesByVarID.get(varID));
-        nonLinkedChutes.remove(varID);
+        Set<Chute> linkedChutes = new HashSet<>();
+        for (int varID : linkedIDs)
+        {
+          linkedChutes.addAll(chutesByVarID.get(varID));
+          nonLinkedChutes.remove(varID);
+        }
+
+        ChuteNormalizer norm = new ChuteNormalizer(linkedChutes, inferredSubtypes);
+        norm.normalizeChutes();
       }
 
-      ChuteNormalizer norm = new ChuteNormalizer(linkedChutes);
-      norm.normalizeChutes();
-    }
-
-    for (Set<Chute> chutes : nonLinkedChutes.values())
-    {
-      ChuteNormalizer norm = new ChuteNormalizer(chutes);
-      norm.normalizeChutes();
+      for (Set<Chute> chutes : nonLinkedChutes.values())
+      {
+        ChuteNormalizer norm = new ChuteNormalizer(chutes, inferredSubtypes);
+        norm.normalizeChutes();
+      }
     }
 
     // finish construction on all contained levels
