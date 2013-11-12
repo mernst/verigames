@@ -304,7 +304,8 @@ package scenes.levelselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
-			GameFileHandler.refuseLevels();
+			if(PlayerValidation.playerLoggedIn)
+				GameFileHandler.refuseLevels();
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}
