@@ -167,15 +167,19 @@ package scenes.levelselectscene
 			savedLevelsListBox.setClipRect();
 			newLevelListBox.setClipRect();
 			
-			savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
-			newLevelListBox.startBusyAnimation(newLevelListBox);
-			
-			GameFileHandler.levelInfoVector = null;
-			GameFileHandler.matchArrayObjects = null;
-			GameFileHandler.savedMatchArrayObjects = null;
-			GameFileHandler.requestLevels(onRequestLevels);
-			GameFileHandler.getLevelMetadata(onRequestLevels);
-			GameFileHandler.getSavedLevels(onRequestSavedLevels);
+			if(PlayerValidation.playerLoggedIn)
+			{
+				savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
+				newLevelListBox.startBusyAnimation(newLevelListBox);
+				
+				GameFileHandler.levelInfoVector = null;
+				GameFileHandler.matchArrayObjects = null;
+				GameFileHandler.savedMatchArrayObjects = null;
+				GameFileHandler.requestLevels(onRequestLevels);
+				GameFileHandler.getLevelMetadata(onRequestLevels);
+				GameFileHandler.getSavedLevels(onRequestSavedLevels);
+			}
+
 						
 			setTutorialXMLFile(TutorialController.tutorialXML);
 			

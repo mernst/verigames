@@ -29,6 +29,7 @@ public class MongoTestBed {
 
 	public static void main(String[] args) throws Exception {
 
+	//	String firstArg = args[0];
 
         //staging game level server
         Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
@@ -37,23 +38,24 @@ public class MongoTestBed {
         String dbName = "gameapi";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
-        GridFS fs = new GridFS( db );
-        listFiles(fs, false);
-      HashMap<String, String> map = new HashMap();
+      //  GridFS fs = new GridFS( db );
+      //  listFiles(fs, false);
+      HashMap<String, String> map = new HashMap<String, String>();
 
-        System.out.println("Level");
-       listEntries(db, "Level", map, false);
-       System.out.println("SavedLevels");
-       listEntries(db, "SavedLevels", map, false);
-       System.out.println("SubmittedLayouts");
-       listEntries(db, "SubmittedLayouts", map, false);
-      System.out.println("SubmittedLevels");
-      listEntries(db, "SubmittedLevels", map, false);
-//       map.put("playerID", "51e5b3460240288229000026");
-//       map.put("levelID", "15");
-       //    listEntries(db, "CompletedTutorials", map, true);
+//        System.out.println("Level");
+//       listEntries(db, "Level", map, false);
+//       System.out.println("SavedLevels");
+//       listEntries(db, "SavedLevels", map, false);
+//       System.out.println("SubmittedLayouts");
+//       listEntries(db, "SubmittedLayouts", map, false);
+//      System.out.println("SubmittedLevels");
+//      listEntries(db, "SubmittedLevels", map, false);
+       map.put("playerID", "51e5b3460240288229000026"); 
+ //      map.put("playerID", firstArg);
+ //      map.put("levelID", "15");
+           listEntries(db, "CompletedTutorials", map, true);
         // listLog(db);
-            saveAndCleanLog(db, "1022");
+ //           saveAndCleanLog(db, "1112");
         
        listCollectionNames(db);
     //     listCollection(db, "SavedLevels");
