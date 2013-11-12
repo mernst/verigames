@@ -386,11 +386,11 @@ package scenes.game.display
 				dialogText = "Layout Saved.";
 				callbackFunction = reportSavedLayoutAchievement;
 			}
-			else
+			else //MenuEvent.LEVEL_SUBMITTED
 			{
 				dialogText = "Level Submitted!\n(You can access that level in the future\n from the saved level list.)";
 				numLinesInText = 3;
-				socialText = "I just finished a level!";
+			//	socialText = "I just finished a level!"; wait till social integration library
 				dialogHeight = 130;
 				callbackFunction = reportSubmitAchievement;
 			}
@@ -660,7 +660,7 @@ package scenes.game.display
 				//if this is the first time we've completed these, post the achievement, else just move on
 				if(tutorialsDone)
 				{
-					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID))
+					if(Achievements.isAchievementNew(Achievements.TUTORIAL_FINISHED_ID) && PlayerValidation.playerLoggedIn)
 						Achievements.addAchievement(Achievements.TUTORIAL_FINISHED_ID, Achievements.TUTORIAL_FINISHED_STRING);
 					else
 						switchToLevelSelect();
