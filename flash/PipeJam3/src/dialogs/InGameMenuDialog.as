@@ -10,6 +10,7 @@ package dialogs
 	
 	import networking.LevelInformation;
 	import networking.GameFileHandler;
+	import networking.PlayerValidation;
 	
 	import scenes.BaseComponent;
 	import scenes.game.PipeJamGameScene;
@@ -196,7 +197,8 @@ package dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			GameFileHandler.stopLevel();
+			if(PlayerValidation.playerLoggedIn)
+				GameFileHandler.stopLevel();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		
