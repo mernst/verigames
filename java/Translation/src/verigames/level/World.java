@@ -224,6 +224,15 @@ public class World
   /**
    * Marks this {@code World} as completed, runs some integrity checks, and
    * freezes the {@code World}, as well as all of its child elements.
+   * 
+   * @param parseMode Should be set to true if the world is being generated from a parsed
+   * World.xml file. Finish construction will not modify or normalize chute widths,
+   * as we want the exact widths from file that is being loaded.
+   * 
+   * @param inferredSubtypes A list of all variables inferred to be a subtype. Used
+   * to pre-solve the world by setting chute widths. Only applies when parseMode is false. 
+   * If inferredSubtypes is null, chutes will be normalized to the typesystem's default width.
+   * 
    */
   public void finishConstruction(boolean parseMode, List<Integer> inferredSubtypes)
   {
