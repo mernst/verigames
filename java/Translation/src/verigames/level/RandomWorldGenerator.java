@@ -119,21 +119,15 @@ public class RandomWorldGenerator {
     }
 
     public Chute randomChute() {
-        return randomChute(random.nextBoolean());
-    }
-
-    public Chute randomChute(boolean narrow) {
-        Chute result;
-        if (random.nextBoolean()) {
-            result = new Chute(random.nextInt(30), "no-description");
-        } else {
-            result = new Chute();
-        }
-        result.setEditable(random.nextBoolean());
+        boolean editable = random.nextBoolean();
+        int varID = editable ? random.nextInt(30) : -1;
+        Chute result = new Chute(varID, "no-description");
+        result.setEditable(editable);
+        boolean narrow = !editable && random.nextBoolean();
         result.setPinched(narrow && random.nextBoolean());
         result.setNarrow(narrow);
         result.setBuzzsaw(!narrow && random.nextBoolean());
-        // TODO: result.setLayout(...)
+        // TODO: result.setLayout(...)?
         return result;
     }
 
