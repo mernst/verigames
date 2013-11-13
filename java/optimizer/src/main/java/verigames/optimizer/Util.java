@@ -81,6 +81,15 @@ public class Util {
     }
 
     /**
+     * Determine if a chute is forced to be narrow
+     * @param chute the chute to check
+     * @return true if the chute is pinched or immutable narrow
+     */
+    public static boolean forcedNarrow(Chute chute) {
+        return chute.isPinched() || (chute.isNarrow() && !chute.isEditable());
+    }
+
+    /**
      * Create a new node on the same board as "n". Note that this method does
      * NOT add the new node to any {@link NodeGraph} "n" belongs to.
      * @param n the node
@@ -115,5 +124,4 @@ public class Util {
     public static OutputStream getOutputStream(String filename) throws FileNotFoundException {
         return filename.equals("-") ? System.out : new FileOutputStream(filename);
     }
-
 }

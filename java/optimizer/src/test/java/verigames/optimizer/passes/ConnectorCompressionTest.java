@@ -8,7 +8,9 @@ import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.MismatchException;
+import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class ConnectorCompressionTest {
 
         assert finalBoard.getEdges().size() == 1;
         for (Chute chute : finalBoard.getEdges()) {
-            assert chute.isEditable();
+            assert !chute.isEditable(); // everything is conflict-free
         }
     }
 
@@ -65,6 +67,7 @@ public class ConnectorCompressionTest {
      */
     @Test
     public void testConnectorCompression2() {
+        System.out.println("cc2");
         Board board = new Board();
         Intersection start = board.addNode(Intersection.Kind.INCOMING);
         Intersection merge = board.addNode(Intersection.Kind.MERGE);
@@ -74,10 +77,14 @@ public class ConnectorCompressionTest {
         Chute c1 = new Chute(3, "?");
         Chute c2 = new Chute(3, "?");
 
+        // 2 more chutes in the same edge set
+        Chute c3 = new Chute(4, "?");
+        Chute c4 = new Chute(4, "?");
+
         board.add(start, "1", connect, "2", c1);
         board.add(start, "3", merge, "4", c2);
-        board.add(connect, "5", merge, "6", Util.mutableChute());
-        board.add(merge, "7", Intersection.Kind.OUTGOING, "8", Util.mutableChute());
+        board.add(connect, "5", merge, "6", c3);
+        board.add(merge, "7", Intersection.Kind.OUTGOING, "8", c4);
         board.finishConstruction();
         Level level = new Level();
         level.addBoard("board", board);
@@ -245,6 +252,31 @@ public class ConnectorCompressionTest {
     }
 
     /**
+     * Make a graph that looks like
+     * <pre>
+     *     incoming -------> connector --------> outgoing
+     *                 1                   2
+     * </pre>
+     * Where (1) is the given incoming chute and (2) is the
+     * given outgoing chute.
+     * @param incoming the incoming chute
+     * @param outgoing the outgoing chute
+     * @return a complete graph
+     */
+    private NodeGraph mkGraph(Chute incoming, Chute outgoing) {
+        NodeGraph g = new NodeGraph();
+        Intersection i = Intersection.factory(Intersection.Kind.INCOMING);
+        Intersection c = Intersection.factory(Intersection.Kind.CONNECT);
+        Intersection o = Intersection.factory(Intersection.Kind.OUTGOING);
+        Node in = new Node(null, null, null, null, i);
+        Node cn = new Node(null, null, null, null, c);
+        Node on = new Node(null, null, null, null, o);
+        g.addEdge(in, Port.OUTPUT, cn, Port.INPUT, incoming);
+        g.addEdge(cn, Port.OUTPUT, on, Port.INPUT, outgoing);
+        return g;
+    }
+
+    /**
      * Test merging for wide & immutable edges
      */
     @Test
@@ -259,16 +291,17 @@ public class ConnectorCompressionTest {
         boolean[] bools = { true, false };
         for (Chute chute : allChuteCombos()) {
             for (boolean swapped : bools) {
+                NodeGraph g = swapped ? mkGraph(chute, wide) : mkGraph(wide, chute);
                 Chute merged = swapped ?
-                        compress.compressChutes(chute, wide):
-                        compress.compressChutes(wide, chute);
+                        compress.compressChutes(chute, wide, g):
+                        compress.compressChutes(wide, chute, g);
 
                 // for debugging
                 System.out.println(chute + " ---> " + merged);
 
                 assert merged != null;
                 assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
-                assert merged.isEditable() == chute.isEditable();
+                assert Util.conflictFree(g, chute) ? !merged.isEditable() : merged.isEditable() == chute.isEditable();
                 assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
             }
         }
@@ -287,8 +320,8 @@ public class ConnectorCompressionTest {
         for (Chute chute : allChuteCombos()) {
             for (boolean swapped : bools) {
                 Chute merged = swapped ?
-                        compress.compressChutes(chute, narrow):
-                        compress.compressChutes(narrow, chute);
+                        compress.compressChutes(chute, narrow, mkGraph(chute, narrow)):
+                        compress.compressChutes(narrow, chute, mkGraph(narrow, chute));
 
                 // for debugging
                 System.out.println(chute + " ---> " + merged);

@@ -469,6 +469,12 @@ public class NodeGraph {
         return result == null ? Collections.<Edge>emptySet() : result;
     }
 
+    public boolean areLinked(int variableID1, int variableID2) {
+        return variableID1 >= 0 &&
+                variableID2 >= 0 &&
+                edgeSets.get(variableID1) == edgeSets.get(variableID2);
+    }
+
     /**
      * Indicate that all the variables in the given collection should
      * be linked. See {@link World#linkByVarID(int, int)} for more info.

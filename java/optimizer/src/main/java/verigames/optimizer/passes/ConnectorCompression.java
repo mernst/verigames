@@ -10,7 +10,6 @@ import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Remove useless one-input to one-output connectors in the graph.
@@ -75,6 +74,7 @@ public class ConnectorCompression implements OptimizationPass {
 
         // map the old chutes to the new one
         if (newChute.isEditable()) {
+            assert newChute.getVariableID() >= 0;
             mapping.mapEdge(incoming.getEdgeData(), newChute);
             mapping.mapEdge(outgoing.getEdgeData(), newChute);
         } else {
@@ -86,72 +86,80 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
-     * Just like {@link #compressChutes(verigames.level.Chute, verigames.level.Chute)},
-     * but returns null if the preconditions are not met in the given graph.
+     * Construct a new chute by compressing the given chutes in the given
+     * graph and return the new chute (or null if the chutes could not be
+     * compressed).
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
      * @param context       the world representation
      * @return the compressed chute, or null if they could not be compressed
      */
     public Chute compressChutes(Chute incomingChute, Chute outgoingChute, NodeGraph context) {
-        if (incomingChute.getVariableID() == outgoingChute.getVariableID())
-            return compressChutes(incomingChute, outgoingChute);
-        Collection<NodeGraph.Edge> iEdgeSet = context.edgeSet(incomingChute.getVariableID());
-        Collection<NodeGraph.Edge> oEdgeSet = context.edgeSet(outgoingChute.getVariableID());
-        if (iEdgeSet.size() <= 1 && oEdgeSet.size() <= 1)
-            return compressChutes(incomingChute, outgoingChute);
+        if (context.areLinked(incomingChute.getVariableID(), outgoingChute.getVariableID())) {
+            return compressLinkedChutes(incomingChute, outgoingChute);
+        }
+        boolean incConflictFree = Util.conflictFree(context, incomingChute);
+        boolean outConflictFree = Util.conflictFree(context, outgoingChute);
+        if (incConflictFree && outConflictFree) {
+            return compressUnconstrainedChutes(incomingChute, outgoingChute);
+        } else if (incConflictFree || outConflictFree) {
+            return compressChutes(incomingChute, outgoingChute, incConflictFree);
+        } else if (Util.forcedNarrow(incomingChute) || Util.forcedNarrow(outgoingChute)) {
+            Chute result = new Chute(-1, "compressed chute");
+            result.setNarrow(true);
+            result.setEditable(false);
+            result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+            return result;
+        }
         return null;
     }
 
     /**
-     * Compress two chutes into one.
+     * Construct a new chute by compressing two linked chutes into one.
      * <p>
-     * Precondition: one of the following must hold:
-     * <ul>
-     *     <li>both chutes belong to the same edge set or</li>
-     *     <li>both chutes are the sole members of their respective edge sets</li>
-     * </ul>
-     * (Note that if an edge is immutable, it is considered to be the sole
-     * member of its edge set.)
+     * Precondition: both chutes belong to the same edge set. (Which implies
+     * that they must both be the same width and editable-ness.)
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
      * @return the compressed chute
      */
-    public Chute compressChutes(Chute incomingChute, Chute outgoingChute) {
-        // if the edges are different widths, we have to think really hard about how to merge them
-        boolean narrow = incomingChute.isNarrow();
-        if (incomingChute.isNarrow() != outgoingChute.isNarrow()) {
-            if (incomingChute.isEditable())          // if we can edit the incoming chute...
-                narrow = outgoingChute.isNarrow();   //     ... then make it match the outgoing one
-            else if (outgoingChute.isEditable())     // if we can edit the outgoing chute...
-                narrow = incomingChute.isNarrow();   //     ... then make it match the incoming one
-            else if (incomingChute.isNarrow() && !outgoingChute.isNarrow()) // if the edges are immutable and narrow flows to wide
-                narrow = true;                       //     ... then make it narrow
-            else                                     // if the edges are immutable and wide flows to narrow
-                narrow = true;                       //     ... then make it narrow (push conflict up a level)
-        }
+    public Chute compressLinkedChutes(Chute incomingChute, Chute outgoingChute) {
+        Chute result = incomingChute.copy(incomingChute.getVariableID(), "compressed chute");
+        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+        return result;
+    }
 
-        // The result is editable if both are editable, or if one is editable and the other is wide.
-        boolean editable =
-                (incomingChute.isEditable() && outgoingChute.isEditable()) ||
-                (incomingChute.isEditable() && !outgoingChute.isNarrow()) ||
-                (outgoingChute.isEditable() && !incomingChute.isNarrow());
+    /**
+     * Construct a new chute by compressing two unconstrained chutes into one.
+     * <p>
+     * Precondition: both chutes are conflict-free.
+     * @param incomingChute flows into outgoingChute
+     * @param outgoingChute incomingChute flows into this
+     * @return the compressed chute
+     */
+    public Chute compressUnconstrainedChutes(Chute incomingChute, Chute outgoingChute) {
+        Chute result = new Chute(-1, "compressed chute");
+        result.setEditable(false);
+        result.setNarrow(false);
+        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+        return result;
+    }
 
-        int varID = editable ?
-                (incomingChute.isEditable() ? incomingChute.getVariableID() : outgoingChute.getVariableID()) :
-                -1;
-        Chute newChute = new Chute(varID, "compressed chute");
-        newChute.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-        if (outgoingChute.getLayout() != null)
-            newChute.setLayout(outgoingChute.getLayout());
-        newChute.setNarrow(narrow);
-        newChute.setEditable(editable);
-
-        // Pinching is not supported.
-        newChute.setPinched(false);
-
-        return newChute;
-
+    /**
+     * Construct a new chute by compressing two chutes into one.
+     * <p>
+     * Precondition: one of the chutes is conflict-free
+     * @param incomingChute    flows into outgoingChute
+     * @param outgoingChute    incomingChute flows into this
+     * @param incConflictFree  true if the incoming chute is conflict-free, false if the outgoing chute is
+     * @return the compressed chute
+     */
+    public Chute compressChutes(Chute incomingChute, Chute outgoingChute, boolean incConflictFree) {
+        Chute result = incConflictFree ?
+                outgoingChute.copy(outgoingChute.getVariableID(), "compressed chute") :
+                incomingChute.copy(incomingChute.getVariableID(), "compressed chute");
+        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
+        return result;
     }
 
 }
