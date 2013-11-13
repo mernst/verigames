@@ -9,6 +9,7 @@ import java.util.*;
 import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
+import verigames.level.Subboard;
 import verigames.utilities.Printer;
 
 /**
@@ -46,11 +47,16 @@ class DotPrinter extends AbstractDotPrinter
 
           /* in a "record" shape node, the labels have special meaning, and
            * define ports. The curly braces control the layout. */
-          String label = "{{"
-              + generatePortList(true, n) + "}|{"
-              + generatePortList(false, n) + "}}";
+          String label = "{{" + generatePortList(true, n) + "}|{";
 
-          optionsString = String.format("[shape=record, fixedsize=true, width=%d, height=%f, label=\"%s\"]",
+          /** print the subboard's name in the middle row of the node */
+          if( n.getIntersectionKind() == Intersection.Kind.SUBBOARD ) {
+            Subboard subboard = (Subboard) n;
+            label += subboard.getSubnetworkName() + "}|{";
+          }
+          label += generatePortList(false, n) + "}}";
+
+          optionsString = String.format("[shape=record, width=%d, height=%f, label=\"%s\"]",
                                         width, height, label);
         } else {
           String label = String.format("%s#%d", n.getIntersectionKind().toString().toLowerCase(), n.getUID());
