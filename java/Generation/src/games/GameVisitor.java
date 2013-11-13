@@ -99,22 +99,32 @@ public class GameVisitor<Checker extends BaseTypeChecker> extends InferenceVisit
 
 
     /**
-     * An identifier is a field access sometimes, i.e. when there is an implicit "this".
-     * Don't generate access constraints for RefinementVariables.
+     * Identifier's are usually a field access (providing we aren't referring to the literal "this".  Member selects
+     * are field accesses.
      *
+     * Don't generate access constraints for RefinementVariables.
      * Assignments used to create field boards, but no longer do because the identifier is a RefinementVariable
      *
      **/
-    @Override
-    public Void visitIdentifier(IdentifierTree node, Void p) {
+    public void visitFieldAccess( ExpressionTree node ) {
         Element elem = TreeUtils.elementFromUse(node);
         if (elem.getKind().isField() && !node.toString().equals("this")) {
             if (!infer || !(InferenceMain.slotMgr().extractSlot(this.atypeFactory.getAnnotatedType(node)) instanceof RefinementVariable)) {
                 logFieldAccess(node);
             }
         }
+    }
 
+    @Override
+    public Void visitIdentifier(IdentifierTree node, Void p) {
+        visitFieldAccess( node );
         return super.visitIdentifier(node, p);
+    }
+
+    @Override
+    public Void visitMemberSelect( MemberSelectTree node, Void p ) {
+        visitFieldAccess( node );
+        return super.visitMemberSelect(node, p);
     }
 
     @Override
