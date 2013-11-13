@@ -17,5 +17,5 @@ case class FieldAssignmentConstraintHandler( override val constraint : FieldAssi
   override val methodSignature =
     constraint.calledVp
       .map( SolverUtil.getFieldSetterName _ )
-      .getOrElse( SolverUtil.getFieldSetterName( constraint.stubBoardUse.get.methodSignature ) )
+      .getOrElse( constraint.stubBoardUse.get.methodSignature )
 }

@@ -40,5 +40,5 @@ case class FieldAccessConstraintHandler( override val constraint : FieldAccessCo
   override val methodSignature =
     constraint.calledVp
       .map( SolverUtil.getFieldAccessorName _ )
-      .getOrElse( SolverUtil.getFieldAccessorName( constraint.stubBoardUse.get.methodSignature ) )
+      .getOrElse( constraint.stubBoardUse.get.methodSignature )
 }
