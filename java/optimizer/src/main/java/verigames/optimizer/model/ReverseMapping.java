@@ -28,9 +28,9 @@ import java.util.Set;
  * To function correctly, all you need to do is call one of the following for
  * every removed edge in the unoptimized world:
  * <ul>
- *     <li>{@link #mapEdge(verigames.level.Chute, verigames.level.Chute)}</li>
- *     <li>{@link #forceWide(verigames.level.Chute)}</li>
- *     <li>{@link #forceNarrow(verigames.level.Chute)}</li>
+ *     <li>{@link #mapEdge(Edge, Edge)}</li>
+ *     <li>{@link #forceWide(Edge)}</li>
+ *     <li>{@link #forceNarrow(Edge)}</li>
  * </ul>
  * It is OK if the unoptimized chute wasn't present in the original
  * world (i.e. if you are removing an edge that the optimizer introduced
@@ -141,7 +141,7 @@ public class ReverseMapping {
      * @param unoptimized  the edge in the unoptimized world
      * @param optimized    the edge in the optimized world
      */
-    public void mapEdge(Chute unoptimized, Chute optimized) {
+    public void mapEdge(Edge unoptimized, Edge optimized) {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;
@@ -164,8 +164,12 @@ public class ReverseMapping {
      * edge set.
      * @param unoptimized a chute in the unoptimized world
      */
-    public void forceWide(Chute unoptimized) {
+    public void forceWide(Edge unoptimized) {
         forceNarrow(unoptimized, false);
+    }
+
+    public void forceWide(int variableID) {
+        forceNarrow(variableID, false);
     }
 
     /**
@@ -177,8 +181,12 @@ public class ReverseMapping {
      * edge set.
      * @param unoptimized a chute in the unoptimized world
      */
-    public void forceNarrow(Chute unoptimized) {
+    public void forceNarrow(Edge unoptimized) {
         forceNarrow(unoptimized, true);
+    }
+
+    public void forceNarrow(int variableID) {
+        forceNarrow(variableID, true);
     }
 
     /**
@@ -192,7 +200,7 @@ public class ReverseMapping {
      * @param narrow      true to force to narrow, false to force
      *                    to wide
      */
-    public void forceNarrow(Chute unoptimized, boolean narrow) {
+    public void forceNarrow(Edge unoptimized, boolean narrow) {
         // immutable edges can't map to anything
         if (!unoptimized.isEditable())
             return;

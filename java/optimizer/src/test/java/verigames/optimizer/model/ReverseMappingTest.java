@@ -88,12 +88,12 @@ public class ReverseMappingTest {
         // --------
 
         ReverseMapping mapping = new ReverseMapping();
-        mapping.forceNarrow(c1);
-        mapping.forceWide(c2);
+        mapping.forceNarrow(c1.getVariableID());
+        mapping.forceWide(c2.getVariableID());
         Chute intermediateChute = new Chute(5, "");
         intermediateChute.setEditable(true);
-        mapping.mapEdge(c3, intermediateChute);
-        mapping.mapEdge(intermediateChute, optimizedChute);
+        mapping.mapEdge(c3.getVariableID(), intermediateChute.getVariableID());
+        mapping.mapEdge(intermediateChute.getVariableID(), optimizedChute.getVariableID());
 
         mapping.apply(world, optimized);
         assert c1.isNarrow();

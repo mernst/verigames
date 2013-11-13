@@ -7,7 +7,7 @@ import java.util.Set;
 public class Subgraph {
 
     private final Set<Node> nodes;
-    private final Set<NodeGraph.Edge> edges;
+    private final Set<Edge> edges;
 
     public Subgraph() {
         this.nodes = new HashSet<>();
@@ -18,7 +18,7 @@ public class Subgraph {
         return nodes;
     }
 
-    public Set<NodeGraph.Edge> getEdges() {
+    public Set<Edge> getEdges() {
         return edges;
     }
 
@@ -26,7 +26,7 @@ public class Subgraph {
         nodes.add(node);
     }
 
-    public void addEdge(NodeGraph.Edge edge) {
+    public void addEdge(Edge edge) {
         edges.add(edge);
     }
 

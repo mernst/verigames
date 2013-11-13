@@ -7,14 +7,17 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.Edge;
+import verigames.optimizer.model.EdgeData;
+import verigames.optimizer.model.EdgeSetData;
 import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -67,7 +70,6 @@ public class ConnectorCompressionTest {
      */
     @Test
     public void testConnectorCompression2() {
-        System.out.println("cc2");
         Board board = new Board();
         Intersection start = board.addNode(Intersection.Kind.INCOMING);
         Intersection merge = board.addNode(Intersection.Kind.MERGE);
@@ -145,6 +147,7 @@ public class ConnectorCompressionTest {
         assert finalLevel.getBoards().size() == 1;
 
         Board finalBoard = Util.first(finalLevel.getBoards().values());
+        System.out.println(finalBoard.getNodes());
         assert finalBoard.getNodes().size() == 3;
         for (Intersection node : finalBoard.getNodes()) {
             assert node.getIntersectionKind() != Intersection.Kind.CONNECT;
@@ -231,22 +234,12 @@ public class ConnectorCompressionTest {
     }
 
     private int varID = 0;
-    private Collection<Chute> allChuteCombos() {
-        Collection<Chute> result = new ArrayList<>();
+    private Collection<EdgeData> allChuteCombos() {
+        Collection<EdgeData> result = new ArrayList<>();
+        result.add(EdgeData.WIDE);
+        result.add(EdgeData.NARROW);
         for (boolean narrow : bools) {
-            for (boolean pinched : bools) {
-                for (boolean editable : bools) {
-                    for (boolean buzzsaw : bools) {
-                        int id = editable ? (varID++) : -1;
-                        Chute chute = new Chute(id, "no description");
-                        chute.setEditable(editable);
-                        chute.setNarrow(narrow);
-                        chute.setPinched(pinched);
-                        chute.setBuzzsaw(buzzsaw);
-                        result.add(chute);
-                    }
-                }
-            }
+            result.add(EdgeData.createMutable(varID++, "no desc", new EdgeSetData(narrow)));
         }
         return result;
     }
@@ -263,7 +256,7 @@ public class ConnectorCompressionTest {
      * @param outgoing the outgoing chute
      * @return a complete graph
      */
-    private NodeGraph mkGraph(Chute incoming, Chute outgoing) {
+    private NodeGraph mkGraph(EdgeData incoming, EdgeData outgoing) {
         NodeGraph g = new NodeGraph();
         Intersection i = Intersection.factory(Intersection.Kind.INCOMING);
         Intersection c = Intersection.factory(Intersection.Kind.CONNECT);
@@ -281,18 +274,21 @@ public class ConnectorCompressionTest {
      */
     @Test
     public void mergeWithWideImmutable() {
-
+        System.out.println("mergeWithWideImmutable");
         ConnectorCompression compress = new ConnectorCompression();
-
-        Chute wide = Util.immutableChute();
-        wide.setPinched(false);
-        wide.setNarrow(false);
-
         boolean[] bools = { true, false };
-        for (Chute chute : allChuteCombos()) {
+        for (EdgeData data : allChuteCombos()) {
             for (boolean swapped : bools) {
-                NodeGraph g = swapped ? mkGraph(chute, wide) : mkGraph(wide, chute);
-                Chute merged = swapped ?
+                NodeGraph g = swapped ? mkGraph(data, EdgeData.WIDE) : mkGraph(EdgeData.WIDE, data);
+                Edge wide = null;
+                Edge chute = null;
+                for (Edge e : g.getEdges()) {
+                    if (e.getEdgeData() == EdgeData.WIDE && wide == null)
+                        wide = e;
+                    else
+                        chute = e;
+                }
+                EdgeData merged = swapped ?
                         compress.compressChutes(chute, wide, g):
                         compress.compressChutes(wide, chute, g);
 
@@ -302,7 +298,6 @@ public class ConnectorCompressionTest {
                 assert merged != null;
                 assert chute.isEditable() || merged.isNarrow() == chute.isNarrow();
                 assert Util.conflictFree(g, chute) ? !merged.isEditable() : merged.isEditable() == chute.isEditable();
-                assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
             }
         }
 
@@ -313,15 +308,22 @@ public class ConnectorCompressionTest {
      */
     @Test
     public void mergeWithNarrowImmutable() {
+        System.out.println("mergeWithNarrowImmutable");
         ConnectorCompression compress = new ConnectorCompression();
-        Chute narrow = Util.immutableChute();
-        narrow.setPinched(false);
-        narrow.setNarrow(true);
-        for (Chute chute : allChuteCombos()) {
+        for (EdgeData data : allChuteCombos()) {
             for (boolean swapped : bools) {
-                Chute merged = swapped ?
-                        compress.compressChutes(chute, narrow, mkGraph(chute, narrow)):
-                        compress.compressChutes(narrow, chute, mkGraph(narrow, chute));
+                NodeGraph g = swapped ? mkGraph(data, EdgeData.NARROW) : mkGraph(EdgeData.NARROW, data);
+                Edge narrow = null;
+                Edge chute = null;
+                for (Edge e : g.getEdges()) {
+                    if (e.getEdgeData() == EdgeData.NARROW && narrow == null)
+                        narrow = e;
+                    else
+                        chute = e;
+                }
+                EdgeData merged = swapped ?
+                        compress.compressChutes(chute, narrow, g):
+                        compress.compressChutes(narrow, chute, g);
 
                 // for debugging
                 System.out.println(chute + " ---> " + merged);
@@ -329,13 +331,12 @@ public class ConnectorCompressionTest {
                 assert merged != null;
                 assert !merged.isEditable();
                 assert merged.isNarrow();
-                assert merged.hasBuzzsaw() == chute.hasBuzzsaw();
             }
         }
     }
 
     private boolean fitsLargeBall(Chute chute) {
-        return chute.hasBuzzsaw() || !chute.isNarrow();
+        return chute.hasBuzzsaw() || (!chute.isNarrow() && !chute.isPinched());
     }
 
     /**
@@ -346,21 +347,16 @@ public class ConnectorCompressionTest {
     @Test
     public void testFullCompression() throws MismatchException {
         ConnectorCompression compression = new ConnectorCompression();
-        for (Chute tmp1 : allChuteCombos()) {
-            for (Chute tmp2 : allChuteCombos()) {
-
-                // ugh, gotta copy the chutes since they know and remember
-                // when we add them to boards
-                Chute chute1 = tmp1.copy(tmp1.isEditable() ? 1 : -1, "x");
-                Chute chute2 = tmp2.copy(tmp2.isEditable() ? 2 : -1, "y");
+        for (EdgeData e1 : allChuteCombos()) {
+            for (EdgeData e2 : allChuteCombos()) {
 
                 // Assemble a world
                 Board board = new Board();
                 Intersection start = board.addNode(Intersection.Kind.INCOMING);
                 Intersection connect = board.addNode(Intersection.Kind.CONNECT);
                 Intersection outgoing = board.addNode(Intersection.Kind.OUTGOING);
-                board.add(start, "1", connect, "2", chute1);
-                board.add(connect, "3", outgoing, "4", chute2);
+                board.add(start, "1", connect, "2", e1.toChute());
+                board.add(connect, "3", outgoing, "4", e2.toChute());
                 Level level = new Level();
                 level.addBoard("board", board);
                 World world = new World();
@@ -374,12 +370,8 @@ public class ConnectorCompressionTest {
                 World optimizedWorld = g.toWorld();
 
                 // find all the chutes in the optimized world
-                Collection<Chute> optimizedChutes = new ArrayList<>();
-                for (Level l : optimizedWorld.getLevels().values()) {
-                    for (Board b : level.getBoards().values()) {
-                        optimizedChutes.addAll(b.getEdges());
-                    }
-                }
+                Collection<Chute> optimizedChutes = optimizedWorld.getChutes();
+                Collection<Chute> unoptimizedChutes = world.getChutes();
 
                 // player makes all the mutable edges in the optimized
                 // world narrow
@@ -389,28 +381,37 @@ public class ConnectorCompressionTest {
                 }
 
                 // translate this back to the original world
-                System.out.println("-----");
-                System.out.println(Arrays.asList(chute1, chute2));
-                System.out.println(optimizedChutes);
-                System.out.println(mapping);
+                System.out.println("------------");
                 mapping.apply(world, optimizedWorld);
 
-                // figure out if there are "conflicts" (we'll just assume
-                // that our incoming node drops large balls)
+                // figure out if there are "conflicts" in the optimized world
+                // (we'll just assume that our incoming node drops large balls)
                 boolean noConflict = true;
                 for (Chute c : optimizedChutes) {
                     noConflict = noConflict && fitsLargeBall(c);
                 }
 
+                // figure out if there are "conflicts" in the unoptimized world
+                boolean noConflictU = true;
+                for (Chute c : unoptimizedChutes) {
+                    noConflictU = noConflictU && fitsLargeBall(c);
+                }
+
                 if (noConflict) {
                     // verify that if there are NO conflicts in the optimized
                     // world, then there are NO conflicts in the unoptimized one
-                    assert fitsLargeBall(chute1);
-                    assert fitsLargeBall(chute2);
+                    try {
+                        mapping.export(System.out);
+                    } catch (IOException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                    System.out.println("Unopt: " + e1 + "..." + e2);
+                    System.out.println("Opt: " + g.getEdges());
+                    assert noConflictU;
                 } else {
                     // verify that if there ARE conflicts in the optimized
                     // world, then there ARE conflicts in the unoptimized one
-                    assert !fitsLargeBall(chute1) || !fitsLargeBall(chute2);
+                    assert !noConflictU;
                 }
 
                 // player makes all the mutable edges in the optimized
@@ -430,15 +431,20 @@ public class ConnectorCompressionTest {
                     noConflict = noConflict && fitsLargeBall(c);
                 }
 
+                // figure out if there are "conflicts" in the unoptimized world
+                noConflictU = true;
+                for (Chute c : unoptimizedChutes) {
+                    noConflictU = noConflictU && fitsLargeBall(c);
+                }
+
                 if (noConflict) {
                     // verify that if there are NO conflicts in the optimized
                     // world, then there are NO conflicts in the unoptimized one
-                    assert fitsLargeBall(chute1);
-                    assert fitsLargeBall(chute2);
+                    assert noConflictU;
                 } else {
                     // verify that if there ARE conflicts in the optimized
                     // world, then there ARE conflicts in the unoptimized one
-                    assert !fitsLargeBall(chute1) || !fitsLargeBall(chute2);
+                    assert !noConflictU;
                 }
 
             }

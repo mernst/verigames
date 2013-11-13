@@ -60,14 +60,19 @@ Sample usage:
     ./transfer-solution.sh --from opt.xml --to my-file.xml --mapping map.txt --out my-file-solved.xml
 
 
-Known Issues
+Issues & Gotchas
 -------------
 
-Pinched chutes are not supported. To make this work, change all pinched chutes
-to immutable narrow ones, which are equivalent. (Note that there have recently
-been discussions of removing pinched pipes entirely, so you might not need to
-worry about this. As of this writing, pinched pipes are only created by the
-nullness type system.)
+Pinched chutes are converted into narrow immutable chutes.
+
+Layout is not preserved. If you optimize a graph, you will need to lay it out
+again somehow.
+
+The optimizer assumes that the world you give it is unsolved, so it makes no
+attempt to preserve any existing solution. (This would be somewhat difficult
+due to the transformations it makes.) In particular:
+    - The widths of editable chutes are not preserved.
+    - Buzzsaws are not preserved.
 
 
 Hacking

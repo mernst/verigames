@@ -29,69 +29,11 @@ public class NodeGraph {
     // make most operations very very fast. That results in a lot of
     // complexity in this file.
 
-    public static class Edge {
-        private final Node src;
-        private final Port srcPort;
-        private final Target target;
-
-        public Edge(Node src, Port srcPort, Target target) {
-            this.src = src;
-            this.srcPort = srcPort;
-            this.target = target;
-        }
-
-        public Node getSrc() {
-            return src;
-        }
-
-        public Port getSrcPort() {
-            return srcPort;
-        }
-
-        public Target getTarget() {
-            return target;
-        }
-
-        public Node getDst() {
-            return target.getDst();
-        }
-
-        public Port getDstPort() {
-            return target.getDstPort();
-        }
-
-        public Chute getEdgeData() {
-            return target.getEdgeData();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Edge edge = (Edge) o;
-
-            if (!src.equals(edge.src)) return false;
-            if (!srcPort.equals(edge.srcPort)) return false;
-            if (!target.equals(edge.target)) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = src.hashCode();
-            result = 31 * result + srcPort.hashCode();
-            result = 31 * result + target.hashCode();
-            return result;
-        }
-    }
-
-    public static class Target {
+    protected static class Target {
         private final Node dst;
         private final Port dstPort;
-        private final Chute edgeData;
-        public Target(Node dst, Port dstPort, Chute edgeData) {
+        private final EdgeData edgeData;
+        public Target(Node dst, Port dstPort, EdgeData edgeData) {
             this.dst = dst;
             this.dstPort = dstPort;
             this.edgeData = edgeData;
@@ -105,7 +47,7 @@ public class NodeGraph {
             return dstPort;
         }
 
-        public Chute getEdgeData() {
+        public EdgeData getEdgeData() {
             return edgeData;
         }
 
@@ -184,9 +126,13 @@ public class NodeGraph {
         this();
 
         // set up edge sets
+        Map<Integer, EdgeSetData> edgeSetDatas = new HashMap<>();
         Set<Set<Integer>> linkedVars = w.getLinkedVarIDs();
         for (Set<Integer> varIDs : linkedVars) {
             linkVarIDs(varIDs);
+            EdgeSetData esd = new EdgeSetData();
+            for (Integer i : varIDs)
+                edgeSetDatas.put(i, esd);
         }
 
         Map<Intersection, Node> nodeMap = new HashMap<>();
@@ -212,9 +158,17 @@ public class NodeGraph {
                     addNode(node);
                 }
                 for (Chute chute : board.getEdges()) {
+                    EdgeSetData esd = null;
+                    if (chute.isEditable()) {
+                        esd = edgeSetDatas.get(chute.getVariableID());
+                        if (esd == null) {
+                            esd = new EdgeSetData();
+                            edgeSetDatas.put(chute.getVariableID(), esd);
+                        }
+                    }
                     addEdge(nodeMap.get(chute.getStart()), new Port(chute.getStartPort()),
                             nodeMap.get(chute.getEnd()), new Port(chute.getEndPort()),
-                            chute);
+                            EdgeData.fromChute(chute, esd));
                 }
             }
         }
@@ -288,8 +242,7 @@ public class NodeGraph {
                     }
                 }
                 for (Edge edge : edgesByBoard.get(board)) {
-                    Chute chute = edge.getEdgeData();
-                    Chute newChute = chute.copy();
+                    Chute newChute = edge.getEdgeData().toChute();
                     Intersection start = newIntersectionsByNode.get(edge.getSrc());
                     Intersection end = newIntersectionsByNode.get(edge.getDst());
                     newBoard.add(start, edge.getSrcPort().getName(), end, edge.getDstPort().getName(), newChute);
@@ -382,7 +335,7 @@ public class NodeGraph {
      * Add an edge (if it wasn't already present). This will also add the given nodes,
      * if they are not already present.
      */
-    public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, Chute edgeData) {
+    public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData edgeData) {
         nodes.add(src);
         nodes.add(dst);
         Map<Port, Target> dsts = edges.get(src);
@@ -469,10 +422,10 @@ public class NodeGraph {
         return result == null ? Collections.<Edge>emptySet() : result;
     }
 
-    public boolean areLinked(int variableID1, int variableID2) {
-        return variableID1 >= 0 &&
-                variableID2 >= 0 &&
-                edgeSets.get(variableID1) == edgeSets.get(variableID2);
+    public boolean areLinked(Edge e1, Edge e2) {
+        return e1.getVariableID() >= 0 &&
+                e2.getVariableID() >= 0 &&
+                e1.getEdgeSetData() == e2.getEdgeSetData();
     }
 
     /**

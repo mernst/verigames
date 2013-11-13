@@ -1,8 +1,9 @@
 package verigames.optimizer.passes;
 
-import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.Edge;
+import verigames.optimizer.model.EdgeData;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
@@ -34,10 +35,10 @@ public class BallDropElimination extends AbstractIterativePass {
         // Remove a node if all of its incoming edges are eliminated.
         // Intuition: if all incoming edges are eliminated, then only small
         // balls could flow there, and there can't be any conflicts.
-        Collection<NodeGraph.Edge> incoming = g.incomingEdges(node);
+        Collection<Edge> incoming = g.incomingEdges(node);
         if (incoming.size() > 0 && kind != Intersection.Kind.OUTGOING) {
             boolean allSourcesBeingRemoved = true;
-            for (NodeGraph.Edge e : incoming) {
+            for (Edge e : incoming) {
                 if (!alreadyRemoved.contains(e.getSrc())) {
                     allSourcesBeingRemoved = false;
                     break;
@@ -52,13 +53,13 @@ public class BallDropElimination extends AbstractIterativePass {
     }
 
     @Override
-    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges, ReverseMapping mapping) {
-        for (NodeGraph.Edge e : brokenEdges) {
+    public void fixup(NodeGraph g, Collection<Edge> brokenEdges, ReverseMapping mapping) {
+        for (Edge e : brokenEdges) {
             Node dst = e.getDst();
 
             // for all removed mutable edges, force them to be narrow
             if (e.getEdgeData().isEditable()) {
-                mapping.forceNarrow(e.getEdgeData());
+                mapping.forceNarrow(e);
             }
 
             // we should only have edges with missing sources, or something has gone very wrong
@@ -68,12 +69,9 @@ public class BallDropElimination extends AbstractIterativePass {
             // Arbitrarily, create an immutable wide chute to drop into. We could just as easily
             // create a mutable narrow one or something, but immutable wide chutes are easier to
             // reason about.
-            Chute chute = new Chute();
-            chute.setNarrow(false);
-            chute.setEditable(false);
             Node n = Util.newNodeOnSameBoard(dst, Intersection.Kind.START_SMALL_BALL);
             g.addNode(n);
-            g.addEdge(n, Port.OUTPUT, dst, e.getDstPort(), chute);
+            g.addEdge(n, Port.OUTPUT, dst, e.getDstPort(), EdgeData.WIDE);
         }
     }
 

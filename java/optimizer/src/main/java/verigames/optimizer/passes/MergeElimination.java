@@ -3,6 +3,7 @@ package verigames.optimizer.passes;
 import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
@@ -60,12 +61,12 @@ public class MergeElimination implements OptimizationPass {
 
             if (n.getIntersection().getIntersectionKind() == Intersection.Kind.MERGE) {
 
-                List<NodeGraph.Edge> incoming = new ArrayList<>(g.incomingEdges(n));
+                List<Edge> incoming = new ArrayList<>(g.incomingEdges(n));
 
                 // expect 2 inputs and 1 output
-                NodeGraph.Edge e1 = incoming.get(0);
-                NodeGraph.Edge e2 = incoming.get(1);
-                NodeGraph.Edge dst = Util.first(g.outgoingEdges(n));
+                Edge e1 = incoming.get(0);
+                Edge e2 = incoming.get(1);
+                Edge dst = Util.first(g.outgoingEdges(n));
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 
@@ -86,13 +87,13 @@ public class MergeElimination implements OptimizationPass {
                     g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
                 // If this merge drops to an END node we can split it up (described above).
                 // The deleted outgoing edge should be made wide to avoid conflicts.
-                } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst.getEdgeData())) {
+                } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
                     g.removeNode(n);
                     Node end2 = Util.newNodeOnSameBoard(n, Intersection.Kind.END);
                     g.addNode(end2);
                     g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
                     g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
-                    mapping.forceWide(dst.getEdgeData());
+                    mapping.forceWide(dst);
                 }
 
             }

@@ -25,24 +25,23 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        Chute c1 = new Chute(1, "c1");
-        Chute c2 = new Chute(1, "c2");
+        EdgeData data = EdgeData.createMutable(1, "?", new EdgeSetData());
 
-        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, c1);
-        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, c2);
+        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, data);
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, data);
 
         assert g.edgeSet(0).size() == 0;
-        assert g.edgeSet(c1.getVariableID()).containsAll(g.getEdges());
+        assert g.edgeSet(data.getVariableID()).containsAll(g.getEdges());
 
         g.removeNode(three);
         assert g.edgeSet(1).size() == 1;
-        assert g.edgeSet(c1.getVariableID()).containsAll(g.getEdges());
+        assert g.edgeSet(data.getVariableID()).containsAll(g.getEdges());
 
-        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, c2);
-        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, c2);
-        assert g.edgeSet(c1.getVariableID()).size() == 2;
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, data);
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, data);
+        assert g.edgeSet(data.getVariableID()).size() == 2;
 
-        assert g.edgeSet(c1.getVariableID()).containsAll(g.getEdges());
+        assert g.edgeSet(data.getVariableID()).containsAll(g.getEdges());
     }
 
     @Test
@@ -52,15 +51,16 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        Chute c1 = new Chute(1, "c1");
-        Chute c2 = new Chute(1, "c2");
-        Chute c3 = new Chute(2, "c2");
+        EdgeSetData esd = new EdgeSetData();
+        EdgeData d1 = EdgeData.createMutable(1, "d1", esd);
+        EdgeData d2 = EdgeData.createMutable(1, "d2", esd);
+        EdgeData d3 = EdgeData.createMutable(2, "d3", esd);
 
         g.linkVarIDs(Arrays.asList(1, 2));
 
-        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, c1);
-        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, c2);
-        g.addEdge(one, new Port("x"), two, new Port("y"), c3);
+        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, d1);
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, d2);
+        g.addEdge(one, new Port("x"), two, new Port("y"), d3);
 
         assert g.edgeSet(1).containsAll(g.getEdges());
         assert g.edgeSet(2).containsAll(g.getEdges());
@@ -73,13 +73,13 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        Chute c1 = new Chute(1, "c1");
-        Chute c2 = new Chute(-1, "c2");
-        Chute c3 = new Chute(-1, "c3");
+        EdgeData d1 = EdgeData.createMutable(1, "hello", new EdgeSetData());
+        EdgeData d2 = EdgeData.WIDE;
+        EdgeData d3 = EdgeData.WIDE;
 
-        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, c1);
-        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, c2);
-        g.addEdge(two, new Port("eh"), three, new Port("why"), c3);
+        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, d1);
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, d2);
+        g.addEdge(two, new Port("eh"), three, new Port("why"), d3);
 
         assert g.edgeSet(1).size() == 1;
         assert g.edgeSet(-1).size() == 0; // negative var ID means NO edge set
@@ -111,8 +111,8 @@ public class NodeGraphTest {
         }
 
         // Check edge set presence
-        for (NodeGraph.Edge e1 : g.getEdges()) {
-            for (NodeGraph.Edge e2 : g.getEdges()) {
+        for (Edge e1 : g.getEdges()) {
+            for (Edge e2 : g.getEdges()) {
                 if (w.areVarIDsLinked(e1.getEdgeData().getVariableID(), e2.getEdgeData().getVariableID())) {
                     assert g.edgeSet(e1).equals(g.edgeSet(e2));
                 }

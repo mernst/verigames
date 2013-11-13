@@ -2,6 +2,7 @@ package verigames.optimizer.passes;
 
 import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
@@ -17,7 +18,7 @@ public class ImmutableComponentElimination implements OptimizationPass {
     public void optimize(NodeGraph g, ReverseMapping mapping) {
         for (Subgraph subgraph : g.getComponents()) {
             boolean mutable = false;
-            for (NodeGraph.Edge edge : subgraph.getEdges()) {
+            for (Edge edge : subgraph.getEdges()) {
                 mutable = edge.getEdgeData().isEditable();
                 if (mutable)
                     break;

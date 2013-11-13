@@ -1,6 +1,7 @@
 package verigames.optimizer.passes;
 
 import verigames.optimizer.OptimizationPass;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
@@ -33,7 +34,7 @@ public abstract class AbstractIterativePass implements OptimizationPass {
      * @param brokenEdges the edges from the original graph where one node was removed but not the other
      * @param mapping     the reverse mapping to update
      */
-    public void fixup(NodeGraph g, Collection<NodeGraph.Edge> brokenEdges, ReverseMapping mapping) { }
+    public void fixup(NodeGraph g, Collection<Edge> brokenEdges, ReverseMapping mapping) { }
 
     @Override
     public void optimize(NodeGraph g, ReverseMapping mapping) {
@@ -65,8 +66,8 @@ public abstract class AbstractIterativePass implements OptimizationPass {
             toRemove.addAll(toRemove2);
         } while (shouldContinue);
 
-        Collection<NodeGraph.Edge> brokenEdges = new ArrayList<>();
-        for (NodeGraph.Edge e : g.getEdges()) {
+        Collection<Edge> brokenEdges = new ArrayList<>();
+        for (Edge e : g.getEdges()) {
             if (toRemove.contains(e.getSrc()) != toRemove.contains(e.getDst()))
                 brokenEdges.add(e);
         }

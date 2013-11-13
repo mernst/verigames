@@ -74,4 +74,9 @@ public class Node {
         return intersection.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return intersection.getIntersectionKind().toString();
+    }
+
 }

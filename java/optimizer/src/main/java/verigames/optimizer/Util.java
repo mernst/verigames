@@ -4,6 +4,7 @@ import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.level.Level;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 
@@ -68,16 +69,16 @@ public class Util {
      *
      * <p>In particular, if you have a {@link verigames.optimizer.model.ReverseMapping}
      * and this function returns true for a chute, then it is always
-     * safe to call {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.level.Chute)}
-     * or {@link verigames.optimizer.model.ReverseMapping#forceWide(verigames.level.Chute)}
+     * safe to call {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.optimizer.model.Edge)}
+     * or {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.optimizer.model.Edge)}
      * on the given chute.
      * @param g the graph containing the edge
-     * @param chute the edge to consider
+     * @param e the edge to consider
      * @return true if the edge is conflict free, or false otherwise
      */
-    public static boolean conflictFree(NodeGraph g, Chute chute) {
-        return (!chute.isEditable() && !chute.isNarrow()) ||
-               (chute.isEditable() && g.edgeSet(chute.getVariableID()).size() <= 1);
+    public static boolean conflictFree(NodeGraph g, Edge e) {
+        return (!e.isEditable() && !e.isNarrow()) ||
+               (e.isEditable() && g.edgeSet(e).size() <= 1);
     }
 
     /**
@@ -85,8 +86,8 @@ public class Util {
      * @param chute the chute to check
      * @return true if the chute is pinched or immutable narrow
      */
-    public static boolean forcedNarrow(Chute chute) {
-        return chute.isPinched() || (chute.isNarrow() && !chute.isEditable());
+    public static boolean forcedNarrow(Edge chute) {
+        return chute.isNarrow() && !chute.isEditable();
     }
 
     /**

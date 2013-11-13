@@ -1,9 +1,10 @@
 package verigames.optimizer.passes;
 
-import verigames.level.Chute;
 import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.Edge;
+import verigames.optimizer.model.EdgeData;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
@@ -27,14 +28,12 @@ public class ConnectorCompression implements OptimizationPass {
 
                 // HACK: fixes boards with dangling connectors
                 if (g.outgoingEdges(node).size() == 0) {
-                    Chute c = Util.immutableChute();
-                    c.setNarrow(false);
-                    g.addEdge(node, Port.OUTPUT, Util.newNodeOnSameBoard(node, Intersection.Kind.END), Port.INPUT, c);
+                    g.addEdge(node, Port.OUTPUT, Util.newNodeOnSameBoard(node, Intersection.Kind.END), Port.INPUT, EdgeData.WIDE);
                 }
 
                 // for this node kind: one incoming edge, one outgoing edge
-                NodeGraph.Edge incomingEdge = Util.first(g.incomingEdges(node));
-                NodeGraph.Edge outgoingEdge = Util.first(g.outgoingEdges(node));
+                Edge incomingEdge = Util.first(g.incomingEdges(node));
+                Edge outgoingEdge = Util.first(g.outgoingEdges(node));
 
                 compressChutes(node, incomingEdge, outgoingEdge, g, mapping);
             }
@@ -42,8 +41,6 @@ public class ConnectorCompression implements OptimizationPass {
     }
 
     /**
-     * The non-pure version of
-     * {@link #compressChutes(verigames.level.Chute, verigames.level.Chute, verigames.optimizer.model.NodeGraph)}.
      * Modifies the given graph by actually compressing the edges and adds
      * appropriate mappings to the given {@link ReverseMapping}.
      *
@@ -56,8 +53,8 @@ public class ConnectorCompression implements OptimizationPass {
      * @param mapping   [OUT] the mapping to update
      * @return the new edge in g, or null if compression did not take place
      */
-    public NodeGraph.Edge compressChutes(Node connector, NodeGraph.Edge incoming, NodeGraph.Edge outgoing, NodeGraph g, ReverseMapping mapping) {
-        Chute newChute = compressChutes(incoming.getEdgeData(), outgoing.getEdgeData(), g);
+    public Edge compressChutes(Node connector, Edge incoming, Edge outgoing, NodeGraph g, ReverseMapping mapping) {
+        EdgeData newChute = compressChutes(incoming, outgoing, g);
         if (newChute == null)
             return null;
 
@@ -67,7 +64,7 @@ public class ConnectorCompression implements OptimizationPass {
         g.removeNode(connector);
 
         // add an edge where it used to be
-        NodeGraph.Edge result = g.addEdge(
+        Edge result = g.addEdge(
                 incoming.getSrc(), incoming.getSrcPort(),
                 outgoing.getDst(), outgoing.getDstPort(),
                 newChute);
@@ -75,11 +72,11 @@ public class ConnectorCompression implements OptimizationPass {
         // map the old chutes to the new one
         if (newChute.isEditable()) {
             assert newChute.getVariableID() >= 0;
-            mapping.mapEdge(incoming.getEdgeData(), newChute);
-            mapping.mapEdge(outgoing.getEdgeData(), newChute);
+            mapping.mapEdge(incoming, result);
+            mapping.mapEdge(outgoing, result);
         } else {
-            mapping.forceNarrow(incoming.getEdgeData(), newChute.isNarrow());
-            mapping.forceNarrow(outgoing.getEdgeData(), newChute.isNarrow());
+            mapping.forceNarrow(incoming, newChute.isNarrow());
+            mapping.forceNarrow(outgoing, newChute.isNarrow());
         }
 
         return result;
@@ -94,22 +91,22 @@ public class ConnectorCompression implements OptimizationPass {
      * @param context       the world representation
      * @return the compressed chute, or null if they could not be compressed
      */
-    public Chute compressChutes(Chute incomingChute, Chute outgoingChute, NodeGraph context) {
-        if (context.areLinked(incomingChute.getVariableID(), outgoingChute.getVariableID())) {
+    public EdgeData compressChutes(Edge incomingChute, Edge outgoingChute, NodeGraph context) {
+        if (context.areLinked(incomingChute, outgoingChute)) {
             return compressLinkedChutes(incomingChute, outgoingChute);
+        }
+        if (!incomingChute.isEditable() && !outgoingChute.isEditable()) {
+            return EdgeData.createImmutable(incomingChute.isNarrow() || outgoingChute.isNarrow());
+        }
+        if (Util.forcedNarrow(incomingChute) || Util.forcedNarrow(outgoingChute)) {
+            return EdgeData.NARROW;
         }
         boolean incConflictFree = Util.conflictFree(context, incomingChute);
         boolean outConflictFree = Util.conflictFree(context, outgoingChute);
         if (incConflictFree && outConflictFree) {
-            return compressUnconstrainedChutes(incomingChute, outgoingChute);
+            return EdgeData.WIDE;
         } else if (incConflictFree || outConflictFree) {
             return compressChutes(incomingChute, outgoingChute, incConflictFree);
-        } else if (Util.forcedNarrow(incomingChute) || Util.forcedNarrow(outgoingChute)) {
-            Chute result = new Chute(-1, "compressed chute");
-            result.setNarrow(true);
-            result.setEditable(false);
-            result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-            return result;
         }
         return null;
     }
@@ -121,45 +118,30 @@ public class ConnectorCompression implements OptimizationPass {
      * that they must both be the same width and editable-ness.)
      * @param incomingChute flows into outgoingChute
      * @param outgoingChute incomingChute flows into this
-     * @return the compressed chute
+     * @return the data for the new edge
      */
-    public Chute compressLinkedChutes(Chute incomingChute, Chute outgoingChute) {
-        Chute result = incomingChute.copy(incomingChute.getVariableID(), "compressed chute");
-        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-        return result;
-    }
-
-    /**
-     * Construct a new chute by compressing two unconstrained chutes into one.
-     * <p>
-     * Precondition: both chutes are conflict-free.
-     * @param incomingChute flows into outgoingChute
-     * @param outgoingChute incomingChute flows into this
-     * @return the compressed chute
-     */
-    public Chute compressUnconstrainedChutes(Chute incomingChute, Chute outgoingChute) {
-        Chute result = new Chute(-1, "compressed chute");
-        result.setEditable(false);
-        result.setNarrow(false);
-        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-        return result;
+    public EdgeData compressLinkedChutes(Edge incomingChute, Edge outgoingChute) {
+        return EdgeData.createMutable(
+                incomingChute.getVariableID(),
+                "compressed chute",
+                incomingChute.getEdgeSetData());
     }
 
     /**
      * Construct a new chute by compressing two chutes into one.
      * <p>
-     * Precondition: one of the chutes is conflict-free
+     * Precondition: one of the chutes is conflict-free, and the other is mutable
      * @param incomingChute    flows into outgoingChute
      * @param outgoingChute    incomingChute flows into this
      * @param incConflictFree  true if the incoming chute is conflict-free, false if the outgoing chute is
      * @return the compressed chute
      */
-    public Chute compressChutes(Chute incomingChute, Chute outgoingChute, boolean incConflictFree) {
-        Chute result = incConflictFree ?
-                outgoingChute.copy(outgoingChute.getVariableID(), "compressed chute") :
-                incomingChute.copy(incomingChute.getVariableID(), "compressed chute");
-        result.setBuzzsaw(incomingChute.hasBuzzsaw() || outgoingChute.hasBuzzsaw());
-        return result;
+    public EdgeData compressChutes(Edge incomingChute, Edge outgoingChute, boolean incConflictFree) {
+        if (incConflictFree) {
+            return EdgeData.createMutable(outgoingChute.getVariableID(), "compressed chute", outgoingChute.getEdgeSetData());
+        } else {
+            return EdgeData.createMutable(incomingChute.getVariableID(), "compressed chute", incomingChute.getEdgeSetData());
+        }
     }
 
 }
