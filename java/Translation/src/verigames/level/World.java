@@ -203,7 +203,7 @@ public class World
     }
   }
 
-  private Set<Chute> getChutes()
+  public Set<Chute> getChutes()
   {
     Set<Chute> chutes = new LinkedHashSet<>();
 

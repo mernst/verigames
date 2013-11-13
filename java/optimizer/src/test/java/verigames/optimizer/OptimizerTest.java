@@ -3,9 +3,11 @@ package verigames.optimizer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import verigames.level.Board;
+import verigames.level.Chute;
 import verigames.level.Level;
 import verigames.level.RandomWorldGenerator;
 import verigames.level.World;
+import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
@@ -43,6 +45,24 @@ public class OptimizerTest {
         for (World world1 : worlds) {
             World world2 = optimizer.optimizeWorld(world1, new ReverseMapping());
             world2.validateSubboardReferences();
+        }
+    }
+
+    @Test
+    public void mappingIsValid() throws MismatchException {
+        Optimizer optimizer = new Optimizer();
+        for (World world1 : worlds) {
+            ReverseMapping mapping = new ReverseMapping();
+            World world2 = optimizer.optimizeWorld(world1, mapping);
+            mapping.apply(world1, world2); // no exceptions should be thrown
+
+            // only mutable chutes should be mapped
+            for (Chute c : world1.getChutes()) {
+                if (mapping.map(c.getVariableID()) != null) {
+                    assert c.isEditable();
+                }
+            }
+
         }
     }
 
