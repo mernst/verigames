@@ -115,6 +115,36 @@ public class World
     return Collections.singleton(varID);
   }
 
+  /**
+   * Get all the sets of linked chutes. Every chute in this world will be
+   * in exactly one of the returned sets.
+   * @return a collection of chute sets
+   */
+  public Collection<Set<Chute>> getLinkedChutes() {
+    Collection<Set<Chute>> result = new ArrayList<>();
+    Map<Integer, Set<Chute>> sets = new HashMap<>();
+    for (Set<Integer> linked : linkedVarIDs) {
+      Set<Chute> set = new HashSet<>();
+      for (Integer varID : linked) {
+        sets.put(varID, set);
+      }
+    }
+    for (Chute c : getChutes()) {
+      if (c.getVariableID() >= 0) {
+        Set<Chute> set = sets.get(c.getVariableID());
+        if (set == null) {
+          set = new HashSet<>();
+          sets.put(c.getVariableID(), set);
+        }
+        set.add(c);
+      } else {
+        result.add(Collections.singleton(c));
+      }
+    }
+    result.addAll(sets.values());
+    return result;
+  }
+
   private static <T> void link(Set<Set<T>> linkedClasses, Set<T> toLink)
   {
     if (toLink.size() > 1)

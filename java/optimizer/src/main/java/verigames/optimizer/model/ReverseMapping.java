@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * This class is used to track optimizations made to a world. It can be used
@@ -164,7 +165,7 @@ public class ReverseMapping {
      * @param unoptimized a chute in the unoptimized world
      */
     public void forceWide(Chute unoptimized) {
-        forceNarrow(unoptimized.getVariableID(), false);
+        forceNarrow(unoptimized, false);
     }
 
     /**
@@ -234,6 +235,20 @@ public class ReverseMapping {
         return result;
     }
 
+    private void setWidth(Collection<Chute> chutes, boolean narrow) {
+        for (Chute c : chutes) {
+            if (c.isEditable())
+                c.setNarrow(narrow);
+        }
+    }
+
+    private void setBuzzsaw(Collection<Chute> chutes, boolean buzzsaw) {
+        for (Chute c : chutes) {
+            if (c.isEditable())
+                c.setBuzzsaw(buzzsaw);
+        }
+    }
+
     /**
      * Convert a solution on the optimized world to a solution on the
      * unoptimized world.
@@ -244,43 +259,36 @@ public class ReverseMapping {
      * @param optimized    the already solved optimized world
      */
     public void apply(World unoptimized, World optimized) throws MismatchException {
-        MultiMap<Integer, Chute> unoptimizedChutesByVarID = chutesByVarID(unoptimized);
-        MultiMap<Integer, Chute> optimizedChutesByID = chutesByVarID(optimized);
-        for (Integer unoptimizedID : unoptimizedChutesByVarID.keySet()) {
-            Mapping mapping = map(unoptimizedID);
-            Collection<Integer> linkedVarIDs = unoptimized.getLinkedVarIDs(unoptimizedID);
+        Collection<Set<Chute>> unoptimizedChutes = unoptimized.getLinkedChutes();
+        MultiMap<Integer, Chute> optimizedChutesByVarID = chutesByVarID(optimized);
+        for (Set<Chute> chutes : unoptimizedChutes) {
+            Chute c = Util.first(chutes);
+            if (!c.isEditable())
+                continue; // immutable chutes stay the same
+            Mapping mapping = map(c.getVariableID());
 
-            if (mapping == null) {
-                Collection<Chute> srcs = optimizedChutesByID.get(unoptimizedID);
-                if (!srcs.isEmpty()) {
-                    Chute src = Util.first(srcs);
-                    for (Integer varID : linkedVarIDs) {
-                        for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
-                            chute.setNarrow(src.isNarrow());
-                        }
-                    }
+            if (mapping == null) { // no mapping? copy result from solved world
+
+                Collection<Chute> srcs = optimizedChutesByVarID.get(c.getVariableID());
+                if (srcs.isEmpty()) {
+                    continue; // no correspondence? must not matter.
                 }
-                continue;
-            }
+                setWidth(chutes, Util.first(srcs).isNarrow());
 
-            if (mapping.isMapped) {
-                Collection<Chute> srcs = optimizedChutesByID.get(mapping.varID);
+            } else if (mapping.isMapped) { // mapping? copy result from corresponding chute
+
+                Collection<Chute> srcs = optimizedChutesByVarID.get(mapping.varID);
                 if (srcs.isEmpty()) {
                     throw new MismatchException("Variable ID " + mapping.varID + " was expected in optimized world, but was not found!");
                 }
                 Chute src = Util.first(srcs);
-                for (Integer varID : linkedVarIDs) {
-                    for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
-                        chute.setNarrow(src.isNarrow());
-                        chute.setBuzzsaw(src.hasBuzzsaw());
-                    }
-                }
-            } else {
-                for (Integer varID : linkedVarIDs) {
-                    for (Chute chute : unoptimizedChutesByVarID.get(varID)) {
-                        chute.setNarrow(mapping.narrow);
-                    }
-                }
+                setWidth(chutes, src.isNarrow());
+                setBuzzsaw(chutes, src.hasBuzzsaw());
+
+            } else { // forced value? set it
+
+                setWidth(chutes, mapping.narrow);
+
             }
         }
     }
