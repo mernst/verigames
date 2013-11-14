@@ -37,7 +37,7 @@ package utils
 				return;
 			}
 			
-			if ((network.world_version == "1") || (network.world_version == "2")) {
+			if ((network.world_version == "1") || (network.world_version == "2")  || (network.world_version == "")) {
 				// Check for linked edge sets
 				if (my_level_xml["linked-edges"][0]["edge-set"].length() == 0) {
 					Game.printDebug("NO <linked-edges> <edge-set> 's found. Level not created...");
@@ -82,7 +82,7 @@ package utils
 			
 			var my_edge_set:EdgeSetRef;
 			var edge_id_to_edge_set_dictionary:Dictionary;
-			if ((network.world_version == "1") || (network.world_version == "2")) {
+			if ((network.world_version == "1") || (network.world_version == "2")  || (network.world_version == "")) {
 				edge_id_to_edge_set_dictionary = new Dictionary();
 				var edge_set_index:int = 0;
 				for each (var le_set:XML in my_level_xml["linked-edges"][0]["edge-set"]) {
