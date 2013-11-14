@@ -76,24 +76,22 @@ package networking
 				completedTutorialList[tutorial.levelID] = tutorial;
 			}
 			//also check cookies for levels played when not logged in
-			var tutorialsCompleted:String = HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
-			if(tutorialsCompleted)
-				getTutorialsCompletedFromCookieString(tutorialsCompleted);
-			
-			setTutorialXML(tutorialXML);
-			
-			LoadingScreenScene.getLoadingScreenScene().changeScene();
+			getTutorialsCompletedFromCookieString();
 		}
 		
-		public function getTutorialsCompletedFromCookieString(tutorialsCompleted:String):void
+		public function getTutorialsCompletedFromCookieString():void
 		{
 			if(completedTutorialList == null)
 				completedTutorialList = new Dictionary;
 			
-			var tutorialListArray:Array = tutorialsCompleted.split(",");
-			for each(var tutorial:String in tutorialListArray)
+			var tutorialsCompleted:String = HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
+			if(tutorialsCompleted != null)
 			{
-				completedTutorialList[tutorial] = tutorial;
+				var tutorialListArray:Array = tutorialsCompleted.split(",");
+				for each(var tutorial:String in tutorialListArray)
+				{
+					completedTutorialList[tutorial] = tutorial;
+				}
 			}
 			setTutorialXML(tutorialXML);
 			

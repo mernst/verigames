@@ -203,9 +203,8 @@ package networking
 		public function onValidationFailed():void
 		{
 			controller.setStatus(VALIDATION_FAILED);
-			var tutorialsCompleted:String = HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
-			if(tutorialsCompleted)
-				TutorialController.getTutorialController().getTutorialsCompletedFromCookieString(tutorialsCompleted);
+			
+			TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 		}
 		
 		public function activatePlayer(callback:Function):void
