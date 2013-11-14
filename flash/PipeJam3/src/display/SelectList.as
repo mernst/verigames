@@ -44,6 +44,9 @@ package display
 		private var thumbTrackTop:Number;
 		private var thumbTrackBottom:Number;
 		
+		//store width early in case it changes...
+		protected var storedWidth:Number;
+		
 		//used by page up/down to multipy standard arrow key scroll distance
 		protected var scrollMultiplier:Number = 1.0;
 		
@@ -320,6 +323,8 @@ package display
 		public function setButtonArray(objArray:Array, addDeleteButton:Boolean):void
 		{
 			buttonPaneArray = new Array;
+			
+			storedWidth = width;
 			
 			var xpos:Number = width - scrollbarBackground.width;
 			var widthSpacing:Number = xpos/2;
