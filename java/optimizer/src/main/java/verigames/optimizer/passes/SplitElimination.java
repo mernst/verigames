@@ -47,36 +47,37 @@ public class SplitElimination implements OptimizationPass {
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 
-                int e1VarId = e1.getEdgeData().getVariableID();
-                int e2VarId = e2.getEdgeData().getVariableID();
-                int srcVarId = src.getEdgeData().getVariableID();
+                boolean srcAndE1Linked = g.areLinked(src, e1);
+                boolean srcAndE2Linked = g.areLinked(src, e2);
 
                 // If either node is an END node, we can remove this
                 // split and the END and place a connector instead.
                 if (e1.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
-                        (Util.conflictFree(g, e1) || e1VarId == srcVarId)) {
+                        (Util.conflictFree(g, e1) || srcAndE1Linked)) {
                     g.removeNode(e1.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e2.getEdgeData());
+                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
 
                     // If the removed edge belongs to the same edge set as the src, then
-                    // we're ok. Otherwise it needs to be made wide.
-                    if (e1VarId != srcVarId) {
+                    // we're ok. Otherwise it must be conflict-free, and it needs to be
+                    // made wide.
+                    if (!srcAndE1Linked) {
                         mapping.forceWide(e1);
                     }
                 } else if (e2.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
-                        (Util.conflictFree(g, e2) || e2VarId == srcVarId)) {
+                        (Util.conflictFree(g, e2) || srcAndE2Linked)) {
                     g.removeNode(e2.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
+                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
                     g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
 
                     // If the removed edge belongs to the same edge set as the src, then
-                    // we're ok. Otherwise it needs to be made wide.
-                    if (e2VarId != srcVarId) {
+                    // we're ok. Otherwise it must be conflict-free, and it needs to be
+                    // made wide.
+                    if (!srcAndE2Linked) {
                         mapping.forceWide(e2);
                     }
                 }
