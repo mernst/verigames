@@ -9,6 +9,7 @@ import verigames.optimizer.Util;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.ReverseMapping;
 
+@Test
 public class BallDropEliminationTest {
 
     @Test

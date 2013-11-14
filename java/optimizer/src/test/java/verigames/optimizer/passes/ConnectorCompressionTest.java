@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Test
 public class ConnectorCompressionTest {
 
     final boolean[] bools = { true, false };

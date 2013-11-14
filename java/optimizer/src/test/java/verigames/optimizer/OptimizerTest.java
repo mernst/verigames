@@ -22,6 +22,7 @@ import java.util.Random;
  *     <li>the resulting world should be a valid world</li>
  * </ul>
  */
+@Test
 public class OptimizerTest {
 
     Collection<World> worlds;

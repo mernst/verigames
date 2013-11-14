@@ -10,6 +10,7 @@ import verigames.optimizer.model.Port;
 
 import java.util.Arrays;
 
+@Test
 public class UtilTest {
 
     /**
