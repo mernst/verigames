@@ -131,9 +131,9 @@ package scenes.splashscreen
 			Starling.current.nativeStage.addEventListener(flash.events.Event.ACTIVATE, onActivate);
 			var myURL:URLRequest;
 			if(PipeJam3.RELEASE_BUILD == true)
-				myURL = new URLRequest("http://flowjam.verigames.com/login?redirect=http://flowjam.verigames.com/game/newPlayGame");
+				myURL = new URLRequest("http://flowjam.verigames.com/login?redirect=http://flowjam.verigames.com/game/FlowJam.html");
 			else
-				myURL = new URLRequest("http://flowjam.verigames.org/login?redirect=http://flowjam.verigames.org/game/newPlayGame");
+				myURL = new URLRequest("http://flowjam.verigames.org/login?redirect=http://flowjam.verigames.org/game/FlowJam.html");
 			navigateToURL(myURL, "_self");
 		}
 		
