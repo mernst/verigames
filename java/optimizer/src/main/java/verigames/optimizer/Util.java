@@ -1,9 +1,7 @@
 package verigames.optimizer;
 
-import verigames.level.Board;
 import verigames.level.Chute;
 import verigames.level.Intersection;
-import verigames.level.Level;
 import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;

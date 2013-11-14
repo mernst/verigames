@@ -3,7 +3,13 @@ package verigames.optimizer.model;
 import verigames.level.Chute;
 
 /**
- * Represents all the data that can be associated with an {@link Edge}.
+ * Represents all the data that can be associated with an {@link Edge}. This
+ * class is abstract; to get instances of it you will want to call one of
+ * these:
+ * <ul>
+ *     <li>{@link #createImmutable(boolean)}</li>
+ *     <li>{@link #createMutable(int, String)}</li>
+ * </ul>
  */
 public abstract class EdgeData {
 
@@ -41,7 +47,7 @@ public abstract class EdgeData {
     }
 
     /**
-     * Create an immutable EdgeData with the given parameters
+     * Get EdgeData for an immutable edge.
      * @param narrow  whether the chute is narrow
      * @return a matching EdgeData object
      */
@@ -50,8 +56,7 @@ public abstract class EdgeData {
     }
 
     /**
-     * Create EdgeData for a mutable edge. (For immutable edges, use one of the
-     * static constants.)
+     * Get EdgeData for a mutable edge.
      * @param varID        the variable ID
      * @param description  the description
      * @return a matching EdgeData object
@@ -101,7 +106,7 @@ public abstract class EdgeData {
 
     @Override
     public String toString() {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         s.append(getVariableID());
         if (getDescription() == null) {
             s.append(" (no description)");

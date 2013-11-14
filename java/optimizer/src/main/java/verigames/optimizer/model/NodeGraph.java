@@ -82,18 +82,17 @@ public class NodeGraph {
      * destination pairs.
      *
      * <p>Here, however, we store an additional piece of data:
-     * the {@link Chute} that this edge corresponds to. This
-     * allows us to reconstruct layout data and such later. Thus,
-     * the (Node, Port) pairs are extracted into the {@link Target}
-     * class which encapsulates all this data.
+     * the {@link EdgeData} for the edge. To keep things simple,
+     * the (Node, Port, EdgeData) info is extracted into the
+     * {@link Target} class which encapsulates all this data.
      */
     private final Map<Node, Map<Port, Target>> edges;
 
     /**
      * Very often we want to look up what flows INTO a node, not
      * just OUT of it. This reverse lookup table makes it much
-     * easier to answer that question by linking each node to
-     * the set of nodes that flow directly into it.
+     * easier to answer that question by linking each node X to
+     * the set of nodes that have at least one edge flowing into X.
      *
      * <p>Note that this representation is based on the observation
      * that, for our use case, the degree of a node is very, very
@@ -130,6 +129,7 @@ public class NodeGraph {
             linkVarIDs(varIDs);
         }
 
+        // go through each board and extract all the intersections & chutes
         Map<Intersection, Node> nodeMap = new HashMap<>();
         for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
             final String levelName = levelEntry.getKey();
@@ -144,7 +144,7 @@ public class NodeGraph {
                         Board subBoard = w.getBoard(subboardName);
                         StubBoard stubBoard = w.getStubBoard(subboardName);
                         assert (subBoard != null) ^ (stubBoard != null);
-                        final BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
+                        BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
                         node = new Node(levelName, boardName, intersection, ref);
                     } else {
                         node = new Node(levelName, boardName, intersection);
@@ -506,7 +506,7 @@ public class NodeGraph {
         // Step 2: create subgraphs with nodes
         Map<DisjointSet, Subgraph> subgraphs = new HashMap<>();
         for (Map.Entry<Node, DisjointSet> entry : components.entrySet()) {
-            DisjointSet set = entry.getValue().id();
+            DisjointSet set = entry.getValue();
             Subgraph subgraph = subgraphs.get(set);
             if (subgraph == null) {
                 subgraph = new Subgraph();
@@ -517,7 +517,7 @@ public class NodeGraph {
 
         // Step 3: add edges to each subgraph
         for (Edge edge : edges) {
-            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()).id());
+            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()));
             subgraph.addEdge(edge);
         }
 
