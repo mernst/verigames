@@ -14,6 +14,12 @@ sourceSets {
 			srcDir 'src'
 		}
 	}
+
+	test {
+		java {
+			srcDir 'test'
+		}
+	}
 }
 
 buildDir = 'bin'
@@ -27,4 +33,33 @@ tasks.compileJava {
 tasks.jar {
 	//from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 	exclude("dependency-cache", "libs", "tmp")
+}
+
+task testSetup(type: Copy) {
+	description = "Copies test files to a temporary working directory"
+	from "test/verigames/level/hadoop-distcp.xml"
+	from "test/verigames/layout/GETLayoutTest.expected.xml"
+	into "${buildDir}/test-working-dir"
+}
+
+test {
+	dependsOn testSetup
+	useJUnit()
+	workingDir = "${buildDir}/test-working-dir"
+
+	// Gradle isn't very smart, and will run our test classes twice unless
+	// we specify them manually. (One way to solve this would be to remove
+	// these suite tests entirely so Gradle only finds the tests once, but
+	// this solution works for now.)
+	scanForTestClasses = false
+	includes = [
+		'verigames/level/SpecificationTests.class',
+		'verigames/level/ImplementationTests.class',
+		'verigames/layout/SpecificationTests.class',
+		'verigames/layout/ImplementationTests.class',
+		'verigames/graph/SpecificationTests.class',
+		'verigames/graph/ImplementationTests.class',
+		'verigames/utilities/SpecificationTests.class',
+		'verigames/utilities/ImplementationTests.class'
+	]
 }
