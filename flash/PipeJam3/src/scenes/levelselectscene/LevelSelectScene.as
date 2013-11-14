@@ -179,11 +179,18 @@ package scenes.levelselectscene
 				GameFileHandler.getLevelMetadata(onRequestLevels);
 				GameFileHandler.getSavedLevels(onRequestSavedLevels);
 			}
+			else
+			{
+				new_levels_button.alphaValue = 0.9;
+				saved_levels_button.alphaValue = 0.9;
+				new_levels_button.enabled = false;
+				saved_levels_button.enabled = false;
+			}
 
 						
 			setTutorialXMLFile(TutorialController.tutorialXML);
 			
-			if(!TutorialController.getTutorialController().isTutorialDone())
+			if(!TutorialController.getTutorialController().isTutorialDone() || !PlayerValidation.playerLoggedIn)
 				onTutorialButtonTriggered(null);
 			else
 				onNewButtonTriggered(null);
