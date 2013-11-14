@@ -63,20 +63,22 @@ public class Util {
      * Determine if an edge is "conflict free" meaning that it cannot
      * contribute a conflict to the board. Specifically, an edge is
      * conflict free if it either (1) is immutable and wide or (2) is
-     * mutable and the only member of its edge set.
+     * mutable and the only member of its edge set. An edge is NOT
+     * conflict free if it controls a pipe dependent ball.
      *
      * <p>In particular, if you have a {@link verigames.optimizer.model.ReverseMapping}
      * and this function returns true for a chute, then it is always
      * safe to call {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.optimizer.model.Edge)}
-     * or {@link verigames.optimizer.model.ReverseMapping#forceNarrow(verigames.optimizer.model.Edge)}
+     * or {@link verigames.optimizer.model.ReverseMapping#forceWide(verigames.optimizer.model.Edge)}
      * on the given chute.
      * @param g the graph containing the edge
      * @param e the edge to consider
      * @return true if the edge is conflict free, or false otherwise
      */
     public static boolean conflictFree(NodeGraph g, Edge e) {
-        return (!e.isEditable() && !e.isNarrow()) ||
-               (e.isEditable() && g.edgeSet(e).size() <= 1);
+        return (e.getSrc().getIntersection().getIntersectionKind() != Intersection.Kind.START_PIPE_DEPENDENT_BALL) &&
+                ((!e.isEditable() && !e.isNarrow()) ||
+                 (e.isEditable() && g.edgeSet(e).size() <= 1));
     }
 
     /**
