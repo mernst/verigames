@@ -4,6 +4,7 @@ import com.mongodb.gridfs.*;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.File;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -32,14 +33,14 @@ public class MongoTestBed {
 	//	String firstArg = args[0];
 
         //staging game level server
-        Mongo mongo = new Mongo( "api.flowjam.verigames.com" );
+        Mongo mongo = new Mongo( "54.208.82.42" );
       //  staging RA server
      //  Mongo mongo = new Mongo( "ec2-23-22-125-169.compute-1.amazonaws.com" );
         String dbName = "gameapi";
         DB db = mongo.getDB( dbName );
         //Create GridFS object
-      //  GridFS fs = new GridFS( db );
-      //  listFiles(fs, false);
+        GridFS fs = new GridFS( db );
+   //     listFiles(fs);
       HashMap<String, String> map = new HashMap<String, String>();
 
 //        System.out.println("Level");
@@ -50,10 +51,12 @@ public class MongoTestBed {
 //       listEntries(db, "SubmittedLayouts", map, false);
 //      System.out.println("SubmittedLevels");
 //      listEntries(db, "SubmittedLevels", map, false);
-       map.put("playerID", "51e5b3460240288229000026"); 
+//       map.put("player", "51e5b3460240288229000026"); 
  //      map.put("playerID", firstArg);
  //      map.put("levelID", "15");
-           listEntries(db, "CompletedTutorials", map, true);
+  //    listFilesToFile(fs, "files.txt");
+ //     listEntriesToFile(db, "SavedLevels", map, "savedLevels.txt");
+      downloadSavedLevel(db, fs, "5266f4b3e4b06170777f9dee", "test.zip");
         // listLog(db);
  //           saveAndCleanLog(db, "1112");
         
@@ -62,7 +65,57 @@ public class MongoTestBed {
 	    mongo.close();
 	}
 	
-	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys, boolean remove)
+	
+	static void listEntries(DB db, String collectionName, HashMap<String, String> searchKeys)
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+            System.out.println(obj);
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+	}
+	
+	static void listEntriesToFile(DB db, String collectionName, HashMap<String, String> searchKeys, String fileName) throws Exception
+	{
+		BasicDBObject field = new BasicDBObject();
+		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    field.put(key, value);
+		}
+		
+		FileOutputStream outputFile = new FileOutputStream(fileName);
+		PrintStream out = new PrintStream(outputFile);
+		DBCollection collection = db.getCollection(collectionName);
+		DBCursor cursor = null;
+		 try { 
+			 cursor = collection.find(field);
+			 while(cursor.hasNext()) {
+           	DBObject obj = cursor.next();
+            out.print(obj.toString() + '\n'); 
+            System.out.println(obj);
+           }
+        } finally {
+        	if(cursor != null)
+        		cursor.close();
+        }
+		outputFile.close();
+	}
+	static void listEntriesAndRemove(DB db, String collectionName, HashMap<String, String> searchKeys)
 	{
 		BasicDBObject field = new BasicDBObject();
 		for (Map.Entry<String, String> entry : searchKeys.entrySet()) {
@@ -78,8 +131,7 @@ public class MongoTestBed {
 			 while(cursor.hasNext()) {
            	DBObject obj = cursor.next();
                System.out.println(obj);
-               if(remove)
-            	   collection.remove(obj);
+               collection.remove(obj);
            }
         } finally {
         	if(cursor != null)
@@ -87,19 +139,68 @@ public class MongoTestBed {
         }
 	}
 	
-	static public void listFiles(GridFS fs, boolean removeLevels)
+	static public void listFiles(GridFS fs)
 	{
-        DBCursor cursor1 = fs.getFileList();
+        DBCursor cursor = fs.getFileList();
         try { 
-            while(cursor1.hasNext()) {
-            	DBObject obj = cursor1.next();
+            while(cursor.hasNext()) {
+            	DBObject obj = cursor.next();
                 System.out.println(obj);
-                if(removeLevels)
-                	fs.remove(obj);
             }
          } finally {
-            cursor1.close();
+            cursor.close();
          }
+	}
+	
+	static public void listFilesToFile(GridFS fs, String fileName) throws Exception
+	{
+        DBCursor cursor = fs.getFileList();
+        
+		FileOutputStream outputFile = new FileOutputStream(fileName);
+		PrintStream out = new PrintStream(outputFile);
+
+        try { 
+            while(cursor.hasNext()) {
+            	DBObject obj = cursor.next();
+            	out.print(obj.toString() + '\n'); 
+                System.out.println(obj);
+            }
+         } finally {
+            cursor.close();
+         }
+         
+         outputFile.close();
+	}
+	
+	static public void downloadSavedLevel(DB db, GridFS fs, String levelID, String outputFileName) throws Exception
+	{
+		DBObject level = findOneEntry(db, "SavedLevels", "levelId", levelID);
+		Object obj = null;
+		if(level != null)
+		{
+			obj = level.get("constraintsID");
+
+			String objString = obj.toString();
+			writeFileLocally(fs, objString, outputFileName);
+		}
+	}
+	
+	static public DBObject findOneEntry(DB db, String collectionName, String key, String value)
+	{
+		DBCollection collection = db.getCollection(collectionName);
+		BasicDBObject field = new BasicDBObject();
+		field.put(key, value);
+		DBCursor cursor = null;
+		DBObject obj = null;
+		try { 
+			 cursor = collection.find(field);
+			 if(cursor.hasNext())
+				 obj = cursor.next();
+       } finally {
+       	if(cursor != null)
+       		cursor.close();
+       }
+       return obj;
 	}
         
  //       db.createCollection("SavedLevels", null);
@@ -249,7 +350,7 @@ public class MongoTestBed {
 	        }
 	    }
 	
-	   static void findOneObject(DB db, String collectionName, String objectID)
+	   static void findOneObjectByID(DB db, String collectionName, String objectID)
 	    {
 	        DBCollection coll = db.getCollection(collectionName);
 		    ObjectId field = new ObjectId(objectID);
@@ -362,42 +463,16 @@ public class MongoTestBed {
         }
     }
     
-    static void writeFileLocally(GridFS fs, String objectID ) throws Exception
+    static void writeFileLocally(GridFS fs, String objectID, String outputfilename ) throws Exception
     {
-        BasicDBObject field = new BasicDBObject();
-        field.put("xmlID", objectID);
-		List<GridFSDBFile> cursor = fs.find(field);
+    	ObjectId field = new ObjectId(objectID);
+    	
+		GridFSDBFile obj = fs.find(field);
         try {
-           for(int i=0; i<cursor.size();i++) {
-        	   GridFSDBFile obj = cursor.get(i);	   
-
-        	   if(i ==  cursor.size()-2)
-        	   {
-        		   FileOutputStream outputImage = new FileOutputStream("here.zip");
-        		    obj.writeTo( outputImage );
-        		    outputImage.close();
-        	   }
-        	   if(i ==  1)
-        	   {
-        		   FileOutputStream outputImage = new FileOutputStream("here2.zip");
-        		    obj.writeTo( outputImage );
-        		    outputImage.close();
-        	   }
-//        	if(i>0)
-//        		fs.remove(obj);
-           }
+        		FileOutputStream outputFile = new FileOutputStream(outputfilename);
+        		obj.writeTo( outputFile );
+        		outputFile.close();
         } finally {
         }
     }
-
-    static void listFiles(GridFS fs)
-    {
-        DBCursor cursor = fs.getFileList();
-        List<DBObject> objList = cursor.toArray();
-        for(int i = 0; i<objList.size(); i++)
-        {
-        	System.out.println(objList.get(i).toString());
-        }
-    }
-
 }
