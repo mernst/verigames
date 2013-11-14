@@ -134,8 +134,7 @@ public class ConnectorCompression implements OptimizationPass {
     public EdgeData compressLinkedChutes(Edge incomingChute, Edge outgoingChute) {
         return EdgeData.createMutable(
                 incomingChute.getVariableID(),
-                "compressed chute",
-                incomingChute.getEdgeSetData());
+                "compressed chute");
     }
 
     /**
@@ -148,11 +147,9 @@ public class ConnectorCompression implements OptimizationPass {
      * @return the compressed chute
      */
     public EdgeData compressChutes(Edge incomingChute, Edge outgoingChute, boolean incConflictFree) {
-        if (incConflictFree) {
-            return EdgeData.createMutable(outgoingChute.getVariableID(), "compressed chute", outgoingChute.getEdgeSetData());
-        } else {
-            return EdgeData.createMutable(incomingChute.getVariableID(), "compressed chute", incomingChute.getEdgeSetData());
-        }
+        return EdgeData.createMutable(
+                incConflictFree ? outgoingChute.getVariableID() : incomingChute.getVariableID(),
+                "compressed chute");
     }
 
 }

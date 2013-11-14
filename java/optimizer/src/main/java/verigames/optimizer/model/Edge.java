@@ -54,10 +54,6 @@ public class Edge {
         return target.getEdgeData().isEditable();
     }
 
-    public EdgeSetData getEdgeSetData() {
-        return target.getEdgeData().getEdgeSetData();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

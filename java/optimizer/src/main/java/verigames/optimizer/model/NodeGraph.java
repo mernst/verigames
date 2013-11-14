@@ -126,13 +126,9 @@ public class NodeGraph {
         this();
 
         // set up edge sets
-        Map<Integer, EdgeSetData> edgeSetDatas = new HashMap<>();
         Set<Set<Integer>> linkedVars = w.getLinkedVarIDs();
         for (Set<Integer> varIDs : linkedVars) {
             linkVarIDs(varIDs);
-            EdgeSetData esd = new EdgeSetData();
-            for (Integer i : varIDs)
-                edgeSetDatas.put(i, esd);
         }
 
         Map<Intersection, Node> nodeMap = new HashMap<>();
@@ -158,17 +154,9 @@ public class NodeGraph {
                     addNode(node);
                 }
                 for (Chute chute : board.getEdges()) {
-                    EdgeSetData esd = null;
-                    if (chute.isEditable()) {
-                        esd = edgeSetDatas.get(chute.getVariableID());
-                        if (esd == null) {
-                            esd = new EdgeSetData();
-                            edgeSetDatas.put(chute.getVariableID(), esd);
-                        }
-                    }
                     addEdge(nodeMap.get(chute.getStart()), new Port(chute.getStartPort()),
                             nodeMap.get(chute.getEnd()), new Port(chute.getEndPort()),
-                            EdgeData.fromChute(chute, esd));
+                            EdgeData.fromChute(chute));
                 }
             }
         }
@@ -425,7 +413,7 @@ public class NodeGraph {
     public boolean areLinked(Edge e1, Edge e2) {
         return e1.getVariableID() >= 0 &&
                 e2.getVariableID() >= 0 &&
-                e1.getEdgeSetData() == e2.getEdgeSetData();
+                edgeSet(e1).contains(e2);
     }
 
     /**

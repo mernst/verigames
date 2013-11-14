@@ -15,7 +15,6 @@ public abstract class EdgeData {
         @Override public String getDescription() { return "pinched"; }
         @Override public boolean isNarrow() { return true; }
         @Override public boolean isEditable() { return false; }
-        @Override public EdgeSetData getEdgeSetData() { return EdgeSetData.NARROW; }
     };
 
     /**
@@ -26,20 +25,19 @@ public abstract class EdgeData {
         @Override public String getDescription() { return "wide"; }
         @Override public boolean isNarrow() { return false; }
         @Override public boolean isEditable() { return false; }
-        @Override public EdgeSetData getEdgeSetData() { return EdgeSetData.WIDE; }
     };
 
     /**
      * Get an appropriate EdgeData for the given chute.
      * @param c        the chute
-     * @param edgeSetData  the edge set that this chute belongs to
-     *                     (null indicates that it belongs to its own edge set)
      * @return a matching EdgeData object
      */
-    public static EdgeData fromChute(Chute c, final EdgeSetData edgeSetData) {
+    public static EdgeData fromChute(Chute c) {
+        if (c.isPinched())
+            return createImmutable(true);
         if (!c.isEditable())
-            return createImmutable(c.isPinched() || c.isNarrow());
-        return createMutable(c.getVariableID(), c.getDescription(), edgeSetData);
+            return createImmutable(c.isNarrow());
+        return createMutable(c.getVariableID(), c.getDescription());
     }
 
     /**
@@ -56,16 +54,14 @@ public abstract class EdgeData {
      * static constants.)
      * @param varID        the variable ID
      * @param description  the description
-     * @param edgeSetData  the edge set data to link to (or null if the edge is isolated)
      * @return a matching EdgeData object
      */
-    public static EdgeData createMutable(final int varID, final String description, final EdgeSetData edgeSetData) {
+    public static EdgeData createMutable(final int varID, final String description) {
         return new EdgeData() {
             @Override public int getVariableID() { return varID; }
             @Override public String getDescription() { return description; }
-            @Override public boolean isNarrow() { return edgeSetData != null && edgeSetData.isNarrow(); }
+            @Override public boolean isNarrow() { return false; }
             @Override public boolean isEditable() { return true; }
-            @Override public EdgeSetData getEdgeSetData() { return edgeSetData; }
         };
     }
 
@@ -73,7 +69,6 @@ public abstract class EdgeData {
     public abstract String getDescription();
     public abstract boolean isNarrow();
     public abstract boolean isEditable();
-    public abstract EdgeSetData getEdgeSetData();
 
     public Chute toChute() {
         Chute c = new Chute(getVariableID(), getDescription());
@@ -92,8 +87,7 @@ public abstract class EdgeData {
         return edgeData.getVariableID() == getVariableID() &&
                 edgeData.getDescription().equals(getDescription()) &&
                 edgeData.isNarrow() == isNarrow() &&
-                edgeData.isEditable() == isEditable() &&
-                edgeData.getEdgeSetData().equals(getEdgeSetData());
+                edgeData.isEditable() == isEditable();
     }
 
     @Override
@@ -102,7 +96,6 @@ public abstract class EdgeData {
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (isNarrow() ? 1 : 0);
         result = 31 * result + (isEditable() ? 1 : 0);
-        result = 31 * result + getEdgeSetData().hashCode();
         return result;
     }
 

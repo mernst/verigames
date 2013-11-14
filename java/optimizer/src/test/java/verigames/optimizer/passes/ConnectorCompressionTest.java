@@ -9,7 +9,6 @@ import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.EdgeData;
-import verigames.optimizer.model.EdgeSetData;
 import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
@@ -239,7 +238,7 @@ public class ConnectorCompressionTest {
         result.add(EdgeData.WIDE);
         result.add(EdgeData.NARROW);
         for (boolean narrow : bools) {
-            result.add(EdgeData.createMutable(varID++, "no desc", new EdgeSetData(narrow)));
+            result.add(EdgeData.createMutable(varID++, "no desc"));
         }
         return result;
     }

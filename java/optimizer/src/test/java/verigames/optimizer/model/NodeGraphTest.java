@@ -25,7 +25,7 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        EdgeData data = EdgeData.createMutable(1, "?", new EdgeSetData());
+        EdgeData data = EdgeData.createMutable(1, "?");
 
         g.addEdge(one, Port.OUTPUT, two, Port.INPUT, data);
         g.addEdge(two, Port.OUTPUT, three, Port.INPUT, data);
@@ -51,10 +51,9 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        EdgeSetData esd = new EdgeSetData();
-        EdgeData d1 = EdgeData.createMutable(1, "d1", esd);
-        EdgeData d2 = EdgeData.createMutable(1, "d2", esd);
-        EdgeData d3 = EdgeData.createMutable(2, "d3", esd);
+        EdgeData d1 = EdgeData.createMutable(1, "d1");
+        EdgeData d2 = EdgeData.createMutable(1, "d2");
+        EdgeData d3 = EdgeData.createMutable(2, "d3");
 
         g.linkVarIDs(Arrays.asList(1, 2));
 
@@ -73,7 +72,7 @@ public class NodeGraphTest {
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
-        EdgeData d1 = EdgeData.createMutable(1, "hello", new EdgeSetData());
+        EdgeData d1 = EdgeData.createMutable(1, "hello");
         EdgeData d2 = EdgeData.WIDE;
         EdgeData d3 = EdgeData.WIDE;
 
