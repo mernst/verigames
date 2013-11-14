@@ -1,8 +1,6 @@
 package verigames.optimizer.model;
 
-import verigames.level.Board;
 import verigames.level.Chute;
-import verigames.level.Level;
 import verigames.level.World;
 import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
@@ -13,8 +11,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -168,10 +168,6 @@ public class ReverseMapping {
         forceNarrow(unoptimized, false);
     }
 
-    public void forceWide(int variableID) {
-        forceNarrow(variableID, false);
-    }
-
     /**
      * The given chute must be made narrow in the solution.
      * Has no effect if the unoptimized argument is immutable.
@@ -183,10 +179,6 @@ public class ReverseMapping {
      */
     public void forceNarrow(Edge unoptimized) {
         forceNarrow(unoptimized, true);
-    }
-
-    public void forceNarrow(int variableID) {
-        forceNarrow(variableID, true);
     }
 
     /**
@@ -207,21 +199,14 @@ public class ReverseMapping {
         forceNarrow(unoptimized.getVariableID(), narrow);
     }
 
-    protected void forceNarrow(int unoptimizedID, boolean narrow) {
-        mapping.put(unoptimizedID, narrow ? Mapping.NARROW : Mapping.WIDE);
+    protected void forceNarrow(int varID, boolean narrow) {
+        mapping.put(varID, narrow ? Mapping.NARROW : Mapping.WIDE);
     }
 
     private MultiMap<Integer, Chute> chutesByVarID(World w) {
         MultiMap<Integer, Chute> chutesByID = new MultiMap<>();
-        for (Level level : w.getLevels().values()) {
-            for (Board board : level.getBoards().values()) {
-                for (Chute chute : board.getEdges()) {
-                    int varID = chute.getVariableID();
-                    if (varID >= 0) {
-                        chutesByID.put(varID, chute);
-                    }
-                }
-            }
+        for (Chute chute : w.getChutes()) {
+            chutesByID.put(chute.getVariableID(), chute);
         }
         return chutesByID;
     }
@@ -271,13 +256,22 @@ public class ReverseMapping {
         MultiMap<Integer, Chute> optimizedChutesByVarID = chutesByVarID(optimized);
         for (Set<Chute> chutes : unoptimizedChutes) {
             Chute c = Util.first(chutes);
-            if (!c.isEditable())
-                continue; // immutable chutes stay the same
             Mapping mapping = map(c.getVariableID());
+
+            Set<Integer> vs = new HashSet<>();
+            for (Chute ch : chutes) {
+                vs.add(ch.getVariableID());
+            }
 
             if (mapping == null) { // no mapping? copy result from solved world
 
-                Collection<Chute> srcs = optimizedChutesByVarID.get(c.getVariableID());
+                // Find some matching variable ID in the optimized world
+                Collection<Chute> srcs = Collections.emptySet();
+                for (Integer varID : vs) {
+                    srcs = optimizedChutesByVarID.get(varID);
+                    if (!srcs.isEmpty())
+                        break;
+                }
                 if (srcs.isEmpty()) {
                     continue; // no correspondence? must not matter.
                 }

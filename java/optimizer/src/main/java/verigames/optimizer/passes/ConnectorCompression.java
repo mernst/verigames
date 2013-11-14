@@ -75,8 +75,19 @@ public class ConnectorCompression implements OptimizationPass {
             mapping.mapEdge(incoming, result);
             mapping.mapEdge(outgoing, result);
         } else {
-            mapping.forceNarrow(incoming, newChute.isNarrow());
-            mapping.forceNarrow(outgoing, newChute.isNarrow());
+            // Delicate note: it IS IMPORTANT that we check these edges are
+            // conflict free before mapping them. This is because narrow
+            // immutable chutes always consume an edge, even if it is not
+            // conflict free, and we do NOT want to force an entire edge
+            // set to be narrow just because one of its edges was deemed
+            // useless. Put another way, if an edge is not conflict free,
+            // then we don't want to force its whole edge set to a particular
+            // value. To remove it, we must have already shown that it can't
+            // create any conflicts no matter what it is set to.
+            if (Util.conflictFree(g, incoming))
+                mapping.forceNarrow(incoming, newChute.isNarrow());
+            if (Util.conflictFree(g, outgoing))
+                mapping.forceNarrow(outgoing, newChute.isNarrow());
         }
 
         return result;

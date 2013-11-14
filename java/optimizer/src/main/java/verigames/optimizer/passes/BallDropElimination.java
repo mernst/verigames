@@ -57,11 +57,6 @@ public class BallDropElimination extends AbstractIterativePass {
         for (Edge e : brokenEdges) {
             Node dst = e.getDst();
 
-            // for all removed mutable edges, force them to be narrow
-            if (e.getEdgeData().isEditable()) {
-                mapping.forceNarrow(e);
-            }
-
             // we should only have edges with missing sources, or something has gone very wrong
             assert !g.getNodes().contains(e.getSrc());
             assert g.getNodes().contains(dst);
