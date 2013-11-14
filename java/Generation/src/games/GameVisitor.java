@@ -108,7 +108,7 @@ public class GameVisitor<Checker extends BaseTypeChecker> extends InferenceVisit
      **/
     public void visitFieldAccess( ExpressionTree node ) {
         Element elem = TreeUtils.elementFromUse(node);
-        if (elem.getKind().isField() && !node.toString().equals("this")) {
+        if (elem.getKind().isField() && !node.toString().equals("this") && !node.toString().equals("super")) {
             if (!infer || !(InferenceMain.slotMgr().extractSlot(this.atypeFactory.getAnnotatedType(node)) instanceof RefinementVariable)) {
                 logFieldAccess(node);
             }
