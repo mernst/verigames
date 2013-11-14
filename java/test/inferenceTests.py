@@ -29,6 +29,13 @@ def execute_tests(checker, test_name, mode, debug, args):
                     and test_file.endswith('.java')
                     and (pattern is None or pattern.search(test_file))]
 
+    if mode == 'typecheck':
+        test_files = [f for f in test_files
+                    if 'Basic.java' not in f
+                    and 'Simple.java' not in f]
+
+#    test_files.sort()
+#    print '\n'.join(test_files)
     successes = []
     failures = []
     for test_file in test_files:
