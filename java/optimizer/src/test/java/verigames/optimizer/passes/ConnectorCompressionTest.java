@@ -260,9 +260,11 @@ public class ConnectorCompressionTest {
         Intersection i = Intersection.factory(Intersection.Kind.INCOMING);
         Intersection c = Intersection.factory(Intersection.Kind.CONNECT);
         Intersection o = Intersection.factory(Intersection.Kind.OUTGOING);
-        Node in = new Node(null, null, null, null, i);
-        Node cn = new Node(null, null, null, null, c);
-        Node on = new Node(null, null, null, null, o);
+        String level = "level";
+        String board = "board";
+        Node in = new Node(level, board, i);
+        Node cn = new Node(level, board, c);
+        Node on = new Node(level, board, o);
         g.addEdge(in, Port.OUTPUT, cn, Port.INPUT, incoming);
         g.addEdge(cn, Port.OUTPUT, on, Port.INPUT, outgoing);
         return g;

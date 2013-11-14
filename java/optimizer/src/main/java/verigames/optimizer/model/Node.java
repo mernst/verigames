@@ -1,27 +1,21 @@
 package verigames.optimizer.model;
 
-import verigames.level.Board;
 import verigames.level.Intersection;
-import verigames.level.Level;
 
 public class Node {
 
     private final String levelName;
-    private final Level level;
     private final String boardName;
-    private final Board board;
     private final Intersection intersection;
     private final BoardRef subboard;
 
-    public Node(String levelName, Level level, String boardName, Board board, Intersection intersection) {
-        this(levelName, level, boardName, board, intersection, null);
+    public Node(String levelName, String boardName, Intersection intersection) {
+        this(levelName, boardName, intersection, null);
     }
 
-    public Node(String levelName, Level level, String boardName, Board board, Intersection intersection, BoardRef subboard) {
+    public Node(String levelName, String boardName, Intersection intersection, BoardRef subboard) {
         this.levelName = levelName;
-        this.level = level;
         this.boardName = boardName;
-        this.board = board;
         this.intersection = intersection;
         this.subboard = subboard;
     }
@@ -30,16 +24,8 @@ public class Node {
         return levelName;
     }
 
-    public Level getLevel() {
-        return level;
-    }
-
     public String getBoardName() {
         return boardName;
-    }
-
-    public Board getBoard() {
-        return board;
     }
 
     public Intersection getIntersection() {

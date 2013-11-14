@@ -6,7 +6,6 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.StubBoard;
 import verigames.level.World;
-import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
 import java.util.AbstractCollection;
@@ -146,9 +145,9 @@ public class NodeGraph {
                         StubBoard stubBoard = w.getStubBoard(subboardName);
                         assert (subBoard != null) ^ (stubBoard != null);
                         final BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
-                        node = new Node(levelName, level, boardName, board, intersection, ref);
+                        node = new Node(levelName, boardName, intersection, ref);
                     } else {
-                        node = new Node(levelName, level, boardName, board, intersection);
+                        node = new Node(levelName, boardName, intersection);
                     }
                     nodeMap.put(intersection, node);
                     addNode(node);
@@ -168,15 +167,15 @@ public class NodeGraph {
 
         // Assemble some info
         Collection<Edge> edges = getEdges();
-        MultiMap<Level, Node> nodesByLevel = new MultiMap<>();
-        MultiMap<Board, Node> nodesByBoard = new MultiMap<>();
-        MultiMap<Level, Board> boardsByLevel = new MultiMap<>();
-        MultiMap<Board, Edge> edgesByBoard = new MultiMap<>();
+        MultiMap<String, Node> nodesByLevel = new MultiMap<>();
+        MultiMap<String, Node> nodesByBoard = new MultiMap<>();
+        MultiMap<String, String> boardsByLevel = new MultiMap<>();
+        MultiMap<String, Edge> edgesByBoard = new MultiMap<>();
         Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
         for (Node n : nodes) {
-            nodesByLevel.put(n.getLevel(), n);
-            nodesByBoard.put(n.getBoard(), n);
-            boardsByLevel.put(n.getLevel(), n.getBoard());
+            nodesByLevel.put(n.getLevelName(), n);
+            nodesByBoard.put(n.getBoardName(), n);
+            boardsByLevel.put(n.getLevelName(), n.getBoardName());
 
             Intersection intersection = n.getIntersection();
             Intersection newIntersection;
@@ -193,16 +192,14 @@ public class NodeGraph {
             newIntersectionsByNode.put(n, newIntersection);
         }
         for (Edge e : edges) {
-            edgesByBoard.put(e.getSrc().getBoard(), e);
+            edgesByBoard.put(e.getSrc().getBoardName(), e);
         }
 
         // Build the data structure
-        for (Level level : nodesByLevel.keySet()) {
-            String levelName = Util.first(nodesByLevel.get(level)).getLevelName();
+        for (String levelName : nodesByLevel.keySet()) {
             Level newLevel = new Level();
-            for (Board board : boardsByLevel.get(level)) {
-                Set<Node> boardNodes = nodesByBoard.get(board);
-                String boardName = Util.first(boardNodes).getBoardName();
+            for (String boardName : boardsByLevel.get(levelName)) {
+                Set<Node> boardNodes = nodesByBoard.get(boardName);
                 Board newBoard = new Board(boardName);
 
                 // Inane restriction on Boards: callers must add incoming node first
@@ -229,7 +226,7 @@ public class NodeGraph {
                         }
                     }
                 }
-                for (Edge edge : edgesByBoard.get(board)) {
+                for (Edge edge : edgesByBoard.get(boardName)) {
                     Chute newChute = edge.getEdgeData().toChute();
                     Intersection start = newIntersectionsByNode.get(edge.getSrc());
                     Intersection end = newIntersectionsByNode.get(edge.getDst());

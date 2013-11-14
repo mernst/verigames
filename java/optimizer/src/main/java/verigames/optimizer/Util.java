@@ -99,11 +99,9 @@ public class Util {
      */
     public static Node newNodeOnSameBoard(Node n, Intersection.Kind kind) {
         String levelName = n.getLevelName();
-        Level level = n.getLevel();
         String boardName = n.getBoardName();
-        Board board = n.getBoard();
         Intersection i = Intersection.factory(kind);
-        return new Node(levelName, level, boardName, board, i);
+        return new Node(levelName, boardName, i);
     }
 
     /**

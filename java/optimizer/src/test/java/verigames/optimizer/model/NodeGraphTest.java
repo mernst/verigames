@@ -21,7 +21,7 @@ public class NodeGraphTest {
     @Test
     public void testEdgeSets() {
         NodeGraph g = new NodeGraph();
-        Node one = new Node("a", null, "b", null, Intersection.factory(Intersection.Kind.INCOMING));
+        Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
@@ -47,7 +47,7 @@ public class NodeGraphTest {
     @Test
     public void testLinkedVarIDs() {
         NodeGraph g = new NodeGraph();
-        Node one = new Node("a", null, "b", null, Intersection.factory(Intersection.Kind.INCOMING));
+        Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
@@ -68,7 +68,7 @@ public class NodeGraphTest {
     @Test
     public void testNegativeEdgeSets() {
         NodeGraph g = new NodeGraph();
-        Node one = new Node("a", null, "b", null, Intersection.factory(Intersection.Kind.INCOMING));
+        Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
         Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
         Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
 
@@ -100,9 +100,9 @@ public class NodeGraphTest {
                     if (i.isSubboard()) {
                         Board b1 = w.getBoard(i.asSubboard().getSubnetworkName());
                         StubBoard b2 = w.getStubBoard(i.asSubboard().getSubnetworkName());
-                        n = new Node(levelName, level, boardName, board, i, b1 == null ? new BoardRef(b2) : new BoardRef(b1));
+                        n = new Node(levelName, boardName, i, b1 == null ? new BoardRef(b2) : new BoardRef(b1));
                     } else {
-                        n = new Node(levelName, level, boardName, board, i);
+                        n = new Node(levelName, boardName, i);
                     }
                     assert g.getNodes().contains(n);
                 }
