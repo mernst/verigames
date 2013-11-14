@@ -147,11 +147,13 @@ package graph
 					starting_is_wide = !linked_edge_set.getProps().hasProp(PropDictionary.PROP_NARROW); // force this edge to match edge set
 				}
 				linked_edge_set.propsInitialized = true;
-				
+				/*
+				// Flow Jam: IGNORE BUZZSAW ANNOTATIONS
 				if (String(metadata.data.buzzsaw).toLowerCase() == "true") {
 					starting_has_buzzsaw = true;
 					has_buzzsaw = true;
 				}
+				*/
 			}
 			
 			metadata = null;
