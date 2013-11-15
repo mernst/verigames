@@ -71,7 +71,6 @@ public class ConnectorCompression implements OptimizationPass {
 
         // map the old chutes to the new one
         if (newChute.isEditable()) {
-            assert newChute.getVariableID() >= 0;
             mapping.mapEdge(incoming, result);
             mapping.mapEdge(outgoing, result);
         } else {

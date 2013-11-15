@@ -69,9 +69,10 @@ public class SolutionTransferMain {
         if (toFile == null) { missing("to"); return; }
         if (mappingFile == null) { missing("mapping"); return; }
 
+        final WorldXMLParser parser = new WorldXMLParser(true);
         final World optimized;
         try {
-            optimized = new WorldXMLParser().parse(Util.getInputStream(fromFile));
+            optimized = parser.parse(Util.getInputStream(fromFile));
         } catch (FileNotFoundException e) {
             err("Failed to open optimized XML file '" + fromFile + "' for reading");
             return;
@@ -79,7 +80,7 @@ public class SolutionTransferMain {
 
         final World unoptimized;
         try {
-            unoptimized = new WorldXMLParser().parse(Util.getInputStream(toFile));
+            unoptimized = parser.parse(Util.getInputStream(toFile));
         } catch (FileNotFoundException e) {
             err("Failed to open unoptimized XML file '" + toFile + "' for reading");
             return;

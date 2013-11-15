@@ -91,6 +91,16 @@ public class Chute extends verigames.graph.Edge<Intersection>
    */
   public Chute(int varID, /*@Nullable*/ String description)
   {
+    this(nextUID++, varID, description);
+  }
+
+  /**
+   * Dangerous package-only-level constructor that allows you to set the true
+   * ID of this chute. Used when loading worlds where you want to preserve the
+   * ID of the chutes.
+   */
+  Chute(int id, int varID, /*@Nullable*/ String description)
+  {
     this.editable = true;
 
     this.narrow = true;
@@ -98,8 +108,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
     this.buzzsaw = false;
 
-    this.UID = Chute.nextUID;
-    Chute.nextUID += 1;
+    this.UID = id;
 
     this.variableID = varID;
     if (description != null)
@@ -113,6 +122,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
     this.checkRep();
   }
+
 
   /**
    * Returns {@code pinch}<br/>

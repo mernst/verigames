@@ -61,7 +61,7 @@ public class Main {
         Util.setVerbose(cmd.hasOption("verbose"));
 
         System.err.println("Reading world...");
-        WorldXMLParser parser = new WorldXMLParser();
+        WorldXMLParser parser = new WorldXMLParser(true);
         World world;
         try {
             world = parser.parse(Util.getInputStream(inputFile));
