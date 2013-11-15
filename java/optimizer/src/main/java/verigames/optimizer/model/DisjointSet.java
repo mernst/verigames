@@ -37,13 +37,10 @@ public class DisjointSet {
      * @return the "ID" for this set
      */
     public DisjointSet id() {
-        DisjointSet child = this;
-        DisjointSet p = parent;
-        while (child != p) {
-            child = p;
-            p = child.parent;
-        }
-        return p;
+        if (this == parent)
+            return this;
+        parent = parent.id();
+        return parent;
     }
 
     /**
