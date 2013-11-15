@@ -35,9 +35,6 @@ package assets
 		[Embed(source="../../lib/assets/LoadingAnimation/Loading8.png")]
 		public static const Loading8Class:Class;		
 		
-		[Embed(source="../../lib/assets/ConflictMapBackground.png")]
-		public static const ConflictMapBackgroundImageClass:Class;
-		
 		[Embed(source = "../../lib/assets/atlases/PipeJamSpriteSheet.png")]
 		public static const PipeJamSpriteSheetPNG:Class;
 		

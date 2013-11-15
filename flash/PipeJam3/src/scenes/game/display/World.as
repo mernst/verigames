@@ -188,10 +188,10 @@ package scenes.game.display
 			addChild(gameControlPanel);
 			
 			miniMap = new MiniMap();
-			miniMap.width = 100;
-			miniMap.height = 80;
-			miniMap.x = Constants.GameWidth - miniMap.width - 2;
-			miniMap.y = 2;
+			miniMap.width = MiniMap.WIDTH;
+			miniMap.height = MiniMap.HEIGHT;
+			miniMap.x = Constants.GameWidth - MiniMap.WIDTH;
+			miniMap.y = 0;
 			edgeSetGraphViewPanel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, miniMap.onViewspaceChanged);
 			addChild(miniMap);
 			
@@ -885,7 +885,6 @@ package scenes.game.display
 			if (!newLevel) {
 				return;
 			}
-			ErrorParticleSystem.resetList();
 			
 			if (PipeJam3.logging) {
 				var details:Object, qid:int;
@@ -931,6 +930,7 @@ package scenes.game.display
 			} else {
 				gameControlPanel.onZoomReset();
 			}
+			ErrorParticleSystem.resetList();
 			newLevel.start();
 			newLevel.updateScore();
 			
@@ -944,6 +944,7 @@ package scenes.game.display
 				m_simulator.updateOnBoxSizeChange("", active_level.level_name);
 				active_level.updateScore();
 			}
+			
 			trace("Solver ran in " + (new Date().getTime() / 1000 - startTime / 1000) + " sec");
 			active_level.resetBestScore();
 			

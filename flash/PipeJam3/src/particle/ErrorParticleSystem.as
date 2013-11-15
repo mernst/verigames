@@ -85,7 +85,6 @@ package particle
             
             addChild(mParticleSystem);
             Starling.juggler.add(mParticleSystem);
-			trace("+ " + id);
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_ADDED, this));
         }
 		
@@ -94,7 +93,6 @@ package particle
 			mParticleSystem.stop();
 			mParticleSystem.removeFromParent();
 			Starling.juggler.remove(mParticleSystem);
-			trace("X " + id);
 			delete errorList[id];
 			delete movedErrorList[id];
 			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR_REMOVED, this));
