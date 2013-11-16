@@ -65,8 +65,8 @@ Mapping Format
 
 TODO: document this once it stabilizes
 
-For now the only documentation are the load and export methods in the source.
-See ReverseMapping.java for more info.
+For now the only documentation are the load and export methods in
+ReverseMapping.java in the source code.
 
 
 Issues & Gotchas
@@ -78,11 +78,11 @@ Layout is not preserved. If you optimize a graph, you will need to lay it out
 again somehow.
 
 Edge IDs, node IDs, variable IDs, and descriptions are not preserved. The
-mapping can be used to reconstruct this information.
+mapping can be used to reconstruct this information. (Don't worry though! the
+new IDs will all be perfectly valid in the new world.)
 
 The optimizer assumes that the world you give it is unsolved, so it makes no
-attempt to preserve any existing solution. (This would be somewhat difficult
-due to the transformations it makes.) In particular:
+attempt to preserve any existing solution. In particular:
     - The widths of editable chutes are not preserved.
     - Buzzsaws are not preserved.
 
