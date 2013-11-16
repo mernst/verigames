@@ -1,12 +1,29 @@
 package verigames.optimizer.model;
 
+import verigames.level.Chute;
+import verigames.level.World;
+
 /**
  * An edge in a {@link NodeGraph}.
  */
 public class Edge {
+
+    public static Edge fromChute(World w, Chute c) {
+        return new Edge(
+                Node.fromIntersection(w, c.getStart()), new Port(c.getStartPort()),
+                Node.fromIntersection(w, c.getEnd()), new Port(c.getEndPort()),
+                EdgeData.fromChute(c));
+    }
+
     private final Node src;
     private final Port srcPort;
     private final NodeGraph.Target target;
+
+    public Edge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData data) {
+        this.src = src;
+        this.srcPort = srcPort;
+        this.target = new NodeGraph.Target(dst, dstPort, data);
+    }
 
     public Edge(Node src, Port srcPort, NodeGraph.Target target) {
         this.src = src;

@@ -23,7 +23,7 @@ import java.util.Set;
 public class BallDropElimination extends AbstractIterativePass {
 
     @Override
-    public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved) {
+    public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved, ReverseMapping mapping) {
         Intersection i = node.getIntersection();
         Intersection.Kind kind = i.getIntersectionKind();
 

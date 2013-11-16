@@ -57,8 +57,13 @@ public class SplitElimination implements OptimizationPass {
                     g.removeNode(e1.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
+                    Edge srcReplacement = g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
+                    Edge e2Replacement = g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
+
+                    mapping.mapEdge(g, src, srcReplacement);
+                    mapping.mapEdge(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(g, src, srcReplacement);
+                    mapping.mapBuzzsaw(g, e2, e2Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be
@@ -71,8 +76,13 @@ public class SplitElimination implements OptimizationPass {
                     g.removeNode(e2.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
+                    Edge srcReplacement = g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
+                    Edge e1Replacement = g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
+
+                    mapping.mapEdge(g, src, srcReplacement);
+                    mapping.mapEdge(g, e1, e1Replacement);
+                    mapping.mapBuzzsaw(g, src, srcReplacement);
+                    mapping.mapBuzzsaw(g, e1, e1Replacement);
 
                     // If the removed edge belongs to the same edge set as the src, then
                     // we're ok. Otherwise it must be conflict-free, and it needs to be

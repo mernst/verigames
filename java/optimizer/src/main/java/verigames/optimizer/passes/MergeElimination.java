@@ -77,23 +77,35 @@ public class MergeElimination implements OptimizationPass {
                     g.removeNode(e1.getSrc());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(e2.getSrc(), e2.getSrcPort(), connector, Port.INPUT, e2.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                    Edge e2Replacement = g.addEdge(e2.getSrc(), e2.getSrcPort(), connector, Port.INPUT, e2.getEdgeData());
+                    Edge dstReplacement = g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                    mapping.mapEdge(g, e2, e2Replacement);
+                    mapping.mapEdge(g, dst, dstReplacement);
+                    mapping.mapBuzzsaw(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(g, dst, dstReplacement);
                 } else if (e2.getSrc().getIntersection().getIntersectionKind() == Intersection.Kind.START_SMALL_BALL) {
                     g.removeNode(e2.getSrc());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(e1.getSrc(), e1.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                    Edge e1Replacement = g.addEdge(e1.getSrc(), e1.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
+                    Edge dstReplacement = g.addEdge(connector, Port.OUTPUT, dst.getDst(), dst.getDstPort(), dst.getEdgeData());
+                    mapping.mapEdge(g, e1, e1Replacement);
+                    mapping.mapEdge(g, dst, dstReplacement);
+                    mapping.mapBuzzsaw(g, e1, e1Replacement);
+                    mapping.mapBuzzsaw(g, dst, dstReplacement);
                 // If this merge drops to an END node we can split it up (described above).
                 // The deleted outgoing edge should be made wide to avoid conflicts.
                 } else if (dst.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END && Util.conflictFree(g, dst)) {
                     g.removeNode(n);
                     Node end2 = Util.newNodeOnSameBoard(n, Intersection.Kind.END);
                     g.addNode(end2);
-                    g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
-                    g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
+                    Edge e1Replacement = g.addEdge(e1.getSrc(), e1.getSrcPort(), dst.getDst(), dst.getDstPort(), e1.getEdgeData());
+                    Edge e2Replacement = g.addEdge(e2.getSrc(), e2.getSrcPort(), end2, Port.INPUT, e2.getEdgeData());
                     mapping.forceWide(dst);
+                    mapping.mapEdge(g, e1, e1Replacement);
+                    mapping.mapEdge(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(g, e1, e1Replacement);
+                    mapping.mapBuzzsaw(g, e2, e2Replacement);
                 }
 
             }

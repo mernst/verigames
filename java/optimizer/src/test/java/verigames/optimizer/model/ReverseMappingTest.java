@@ -18,10 +18,18 @@ public class ReverseMappingTest {
     @Test
     public void testIO() throws IOException {
         ReverseMapping mapping = new ReverseMapping();
-        mapping.forceNarrow(1, true);
-        mapping.forceNarrow(2, false);
-        mapping.mapEdge(3, 4);
-        mapping.mapEdge(6, 7);
+
+        ReverseMapping.EdgeID one = new ReverseMapping.EdgeID(1, "a", 2, "b");
+        ReverseMapping.EdgeID two = new ReverseMapping.EdgeID(2, "a", 2, "b");
+        ReverseMapping.EdgeID three = new ReverseMapping.EdgeID(3, "a", 2, "b");
+        ReverseMapping.EdgeID four = new ReverseMapping.EdgeID(4, "a", 2, "b");
+        ReverseMapping.EdgeID five = new ReverseMapping.EdgeID(5, "a", 2, "b");
+        ReverseMapping.EdgeID six = new ReverseMapping.EdgeID(6, "a", 2, "b");
+
+        mapping.forceNarrow(one, true);
+        mapping.forceNarrow(two, false);
+        mapping.mapEdge(three, four);
+        mapping.mapEdge(five, six);
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         mapping.export(output);
@@ -89,12 +97,14 @@ public class ReverseMappingTest {
         // --------
 
         ReverseMapping mapping = new ReverseMapping();
-        mapping.forceNarrow(c1.getVariableID(), true);
-        mapping.forceNarrow(c2.getVariableID(), false);
-        Chute intermediateChute = new Chute(5, "");
-        intermediateChute.setEditable(true);
-        mapping.mapEdge(c3.getVariableID(), intermediateChute.getVariableID());
-        mapping.mapEdge(intermediateChute.getVariableID(), optimizedChute.getVariableID());
+        mapping.forceNarrow(c1, true);
+        mapping.forceNarrow(c2, false);
+        ReverseMapping.EdgeID intermediate = new ReverseMapping.EdgeID(300, "x", 400, "y");
+        mapping.mapEdge(new ReverseMapping.EdgeID(c3), intermediate);
+        mapping.mapEdge(intermediate, new ReverseMapping.EdgeID(optimizedChute));
+
+        mapping.mapBuzzsaw(new ReverseMapping.EdgeID(c3), intermediate);
+        mapping.mapBuzzsaw(intermediate, new ReverseMapping.EdgeID(optimizedChute));
 
         mapping.apply(world, optimized);
         assert c1.isNarrow();

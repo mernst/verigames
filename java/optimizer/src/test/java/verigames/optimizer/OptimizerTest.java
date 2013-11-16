@@ -55,11 +55,12 @@ public class OptimizerTest {
         for (World world1 : worlds) {
             ReverseMapping mapping = new ReverseMapping();
             World world2 = optimizer.optimizeWorld(world1, mapping);
+            mapping.check(world1, world2); // all looks ok?
             mapping.apply(world1, world2); // no exceptions should be thrown
 
             // only mutable chutes should be mapped
             for (Chute c : world1.getChutes()) {
-                if (mapping.map(c.getVariableID()) != null) {
+                if (mapping.mapWidth(c) != null) {
                     assert c.isEditable();
                 }
             }

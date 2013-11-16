@@ -71,8 +71,8 @@ public class ConnectorCompression implements OptimizationPass {
 
         // map the old chutes to the new one
         if (newChute.isEditable()) {
-            mapping.mapEdge(incoming, result);
-            mapping.mapEdge(outgoing, result);
+            mapping.mapEdge(g, incoming, result);
+            mapping.mapEdge(g, outgoing, result);
         } else {
             // Delicate note: it IS IMPORTANT that we check these edges are
             // conflict free before mapping them. This is because narrow
@@ -88,6 +88,8 @@ public class ConnectorCompression implements OptimizationPass {
             if (Util.conflictFree(g, outgoing))
                 mapping.forceNarrow(outgoing, newChute.isNarrow());
         }
+
+        mapping.mapBuzzsaw(g, incoming, result);
 
         return result;
     }

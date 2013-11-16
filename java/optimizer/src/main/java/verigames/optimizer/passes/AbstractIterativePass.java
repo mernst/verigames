@@ -20,12 +20,13 @@ public abstract class AbstractIterativePass implements OptimizationPass {
     /**
      * Determine whether a particular node should be marked for removal on
      * this iteration.
-     * @param g     the graph
-     * @param node  the node to be considered
+     * @param g        the graph
+     * @param node     the node to be considered
      * @param alreadyRemoved the set of nodes already marked for removal
+     * @param mapping  the mapping to update for edges removed
      * @return      true to mark the given node for removal
      */
-    public abstract boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved);
+    public abstract boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved, ReverseMapping mapping);
 
     /**
      * Called after all nodes are removed from the graph. The graph may now
@@ -54,7 +55,7 @@ public abstract class AbstractIterativePass implements OptimizationPass {
                     continue;
                 }
 
-                if (shouldRemove(g, n, toRemove)) {
+                if (shouldRemove(g, n, toRemove, mapping)) {
                     toRemove2.add(n);
 
                     // if we are removing a node, we may need to do another pass

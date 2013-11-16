@@ -45,7 +45,7 @@ Optimizing a world is fun and useful, but you also need to be able to transfer
 a solution on an optimized world back to the unoptimized one. This can be
 accomplished using the transfer-solution tool.
 
-The optimizer outputs an additional "side-file" called a "mapping" that is used
+The optimizer outputs an additional side-file called a "mapping" that is used
 to transfer solutions. The transfer-solutions tool uses this mapping to do its
 work.
 
@@ -60,6 +60,15 @@ Sample usage:
     ./transfer-solution.sh --from opt.xml --to my-file.xml --mapping map.txt --out my-file-solved.xml
 
 
+Mapping Format
+-------------
+
+TODO: document this once it stabilizes
+
+For now the only documentation are the load and export methods in the source.
+See ReverseMapping.java for more info.
+
+
 Issues & Gotchas
 -------------
 
@@ -67,6 +76,9 @@ Pinched chutes are converted into narrow immutable chutes.
 
 Layout is not preserved. If you optimize a graph, you will need to lay it out
 again somehow.
+
+Edge IDs, node IDs, variable IDs, and descriptions are not preserved. The
+mapping can be used to reconstruct this information.
 
 The optimizer assumes that the world you give it is unsolved, so it makes no
 attempt to preserve any existing solution. (This would be somewhat difficult

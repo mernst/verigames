@@ -73,7 +73,7 @@ public class Optimizer {
         optimize(g, mapping);
         System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         System.err.println("Converting data back...");
-        return g.toWorld();
+        return g.toWorld(mapping);
     }
 
 }

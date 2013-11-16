@@ -9,6 +9,7 @@ import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
 import verigames.optimizer.model.ReverseMapping;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -18,7 +19,6 @@ import java.util.Set;
  */
 public class ChuteEndElimination extends AbstractIterativePass {
 
-    @Override
     public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved) {
         Intersection i = node.getIntersection();
         Intersection.Kind kind = i.getIntersectionKind();
@@ -28,14 +28,15 @@ public class ChuteEndElimination extends AbstractIterativePass {
             return true;
         }
 
-        // Remove a node if all of its outgoing chutes are conflict free and
-        // all outgoing nodes are eliminated.
+        // Remove a node if all of its incoming/outgoing chutes are conflict
+        // free and all outgoing nodes are eliminated.
         // Intuition: if all outgoing chutes are wide and eliminated, then all
         // balls dropped out of this node will flow successfully to an END.
-        Collection<Edge> outgoing = g.outgoingEdges(node);
-        if (outgoing.size() > 0 && kind != Intersection.Kind.INCOMING) {
+        Collection<Edge> edges = new ArrayList<>(g.outgoingEdges(node));
+        edges.addAll(g.incomingEdges(node));
+        if (edges.size() > 0 && kind != Intersection.Kind.INCOMING) {
             boolean canEliminate = true;
-            for (Edge e : outgoing) {
+            for (Edge e : edges) {
                 if (!alreadyRemoved.contains(e.getDst()) || !Util.conflictFree(g, e)) {
                     canEliminate = false;
                     break;
@@ -47,6 +48,20 @@ public class ChuteEndElimination extends AbstractIterativePass {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean shouldRemove(NodeGraph g, Node node, Set<Node> alreadyRemoved, ReverseMapping mapping) {
+        boolean canEliminate = shouldRemove(g, node, alreadyRemoved);
+        if (canEliminate) {
+            for (Edge e : g.outgoingEdges(node)) {
+                mapping.forceWide(e);
+            }
+            for (Edge e : g.incomingEdges(node)) {
+                mapping.forceWide(e);
+            }
+        }
+        return canEliminate;
     }
 
     @Override

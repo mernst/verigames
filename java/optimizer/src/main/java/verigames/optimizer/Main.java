@@ -9,6 +9,7 @@ import org.apache.commons.cli.ParseException;
 import verigames.level.World;
 import verigames.level.WorldXMLParser;
 import verigames.level.WorldXMLPrinter;
+import verigames.optimizer.model.MismatchException;
 import verigames.optimizer.model.ReverseMapping;
 
 import java.io.FileNotFoundException;
@@ -74,13 +75,13 @@ public class Main {
         System.err.println("Starting optimization...");
         Optimizer optimizer = new Optimizer();
         ReverseMapping mapping = new ReverseMapping();
-        world = optimizer.optimizeWorld(world, mapping);
+        World optimizedWorld = optimizer.optimizeWorld(world, mapping);
 
         System.err.println("Writing world...");
         try {
             PrintStream printStream = new PrintStream(Util.getOutputStream(outputFile));
             WorldXMLPrinter writer = new WorldXMLPrinter();
-            writer.print(world, printStream, null);
+            writer.print(optimizedWorld, printStream, null);
         } catch (FileNotFoundException e) {
             System.err.println("Failed to open output XML file '" + outputFile + "' for writing");
             System.exit(1);
@@ -96,6 +97,15 @@ public class Main {
             return;
         } catch (IOException e) {
             System.err.println("Failed to write mapping file '" + mappingFile + "': " + e);
+            System.exit(1);
+            return;
+        }
+
+        try {
+            mapping.check(world, optimizedWorld);
+        } catch (MismatchException | AssertionError e) {
+            System.err.println("Uh oh! Something is very very wrong. This is a bug. Here is a stacktrace:");
+            e.printStackTrace();
             System.exit(1);
             return;
         }

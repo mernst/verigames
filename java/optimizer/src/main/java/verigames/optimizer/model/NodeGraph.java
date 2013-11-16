@@ -162,7 +162,20 @@ public class NodeGraph {
 
     }
 
+    /**
+     * @see #toWorld(ReverseMapping)
+     */
     public World toWorld() {
+        return toWorld(new ReverseMapping());
+    }
+
+    /**
+     * Create a new world from this graph. The given mapping will be updated to
+     * reflect any changes in intersection or chute IDs.
+     * @param mapping the reverse mapping
+     * @return a fully constructed world
+     */
+    public World toWorld(ReverseMapping mapping) {
         World world = new World();
 
         // Assemble some info
@@ -229,8 +242,16 @@ public class NodeGraph {
                 for (Edge edge : edgesByBoard.get(boardName)) {
                     Chute newChute = edge.getEdgeData().toChute();
                     Intersection start = newIntersectionsByNode.get(edge.getSrc());
+                    String startPort = edge.getSrcPort().getName();
                     Intersection end = newIntersectionsByNode.get(edge.getDst());
-                    newBoard.add(start, edge.getSrcPort().getName(), end, edge.getDstPort().getName(), newChute);
+                    String endPort = edge.getDstPort().getName();
+                    newBoard.add(start, startPort, end, endPort, newChute);
+                    ReverseMapping.EdgeID e1 = new ReverseMapping.EdgeID(edge);
+                    ReverseMapping.EdgeID e2 = new ReverseMapping.EdgeID(start.getUID(), startPort, end.getUID(), endPort);
+                    if (!mapping.hasWidthMapping(e1))
+                        mapping.mapEdge(e1, e2);
+                    if (!mapping.hasBuzzsawMapping(e2))
+                        mapping.mapBuzzsaw(e1, e2);
                 }
                 newLevel.addBoard(boardName, newBoard);
             }
@@ -407,6 +428,14 @@ public class NodeGraph {
         return result == null ? Collections.<Edge>emptySet() : result;
     }
 
+    /**
+     * Determine whether two edges are linked (should always share the same
+     * width). The edges do NOT need to be in this graph, only their var IDs
+     * are considered.
+     * @param e1 the first edge
+     * @param e2 the second edge
+     * @return true if e1 and e2 are linked
+     */
     public boolean areLinked(Edge e1, Edge e2) {
         return e1.getVariableID() >= 0 &&
                 e2.getVariableID() >= 0 &&

@@ -189,16 +189,12 @@ public class Chute extends verigames.graph.Edge<Intersection>
   /**
    * Sets {@code buzzsaw}
    * <br/>
-   * Requires: {@link #underConstruction() this.underConstruction()} or {@link #isEditable() this.isEditable()}<br/>
-   * <br/>
    * Modifies: {@code this}
    *
    * @param buzzsaw
    */
   public void setBuzzsaw(boolean buzzsaw)
   {
-    if(!underConstruction() && !isEditable())
-      throw new IllegalStateException("Cannot add a buzzsaw to an immutable chute");
     this.buzzsaw = buzzsaw;
     checkRep();
   }
