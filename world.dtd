@@ -56,6 +56,11 @@
       <!ELEMENT point (x,y)>
 
 <!--
+TODO:
+
+- make edge description optional
+- move stub boards to world
+
 ================================================================================
 
 Requirements not enforced by the DTD:
