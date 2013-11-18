@@ -260,6 +260,7 @@ package scenes.game.display
 			
 			addEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
+			addEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 			addEventListener(UndoEvent.UNDO_EVENT, saveEvent);
@@ -574,6 +575,11 @@ package scenes.game.display
 		}
 		
 		public function onErrorsMoved(event:MiniMapEvent):void
+		{
+			if (miniMap) miniMap.isDirty = true;
+		}
+		
+		public function onLevelResized(event:MiniMapEvent):void
 		{
 			if (miniMap) miniMap.isDirty = true;
 		}
@@ -992,6 +998,7 @@ package scenes.game.display
 			removeEventListener(MenuEvent.RESET_ZOOM, onZoomReset);
 			removeEventListener(MiniMapEvent.ERRORS_MOVED, onErrorsMoved);
 			removeEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onViewspaceChanged);
+			removeEventListener(MiniMapEvent.LEVEL_RESIZED, onLevelResized);
 			removeEventListener(ToolTipEvent.ADD_TOOL_TIP, onToolTipAdded);
 			removeEventListener(ToolTipEvent.CLEAR_TOOL_TIP, onToolTipCleared);
 			

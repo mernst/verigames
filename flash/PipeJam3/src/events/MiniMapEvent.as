@@ -8,6 +8,7 @@ package events
 	{
 		public static const VIEWSPACE_CHANGED:String = "VIEWSPACE_CHANGED";
 		public static const ERRORS_MOVED:String = "ERRORS_MOVED";
+		public static const LEVEL_RESIZED:String = "LEVEL_RESIZED";
 		
 		public var contentX:Number;
 		public var contentY:Number;

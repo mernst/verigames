@@ -1,6 +1,8 @@
 package scenes.game.components
 {
 	import assets.AssetInterface;
+	import display.NineSliceBatch;
+	import display.TextBubble;
 	import events.MiniMapEvent;
 	import events.MoveEvent;
 	import flash.geom.Point;
@@ -8,6 +10,7 @@ package scenes.game.components
 	import flash.utils.Dictionary;
 	import particle.ErrorParticleSystem;
 	import scenes.BaseComponent;
+	import scenes.game.display.GameNode;
 	import scenes.game.display.Level;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -29,7 +32,7 @@ package scenes.game.components
 		public static const LEFT_BUFFER_PCT:Number = (44.0 + 15.0) / 280.0;  // extra +15 to avoid bottom left corner (diagonal border)
 		public static const BOTTOM_BUFFER_PCT:Number = (62.0 + 15.0) / 268.0;// extra +15 to avoid bottom left corner (diagonal border)
 		
-		private static const BORDER_PCT:Number = 0.05; // allows empty border around map edges
+		public static const CLICK_AREA:Rectangle = new Rectangle(WIDTH * 44.0 / 280.0, 0.0, (1.0 - 44.0 / 280.0) * WIDTH, (1.0 - 62.0 / 268.0) * HEIGHT);
 		
 		protected var conflictList:Vector.<ErrorPair>;
 		protected var currentLevel:Level;
@@ -38,8 +41,10 @@ package scenes.game.components
 		protected var gameNodeLayer:Sprite;
 		protected var errorLayer:Sprite;
 		protected var viewRectLayer:Sprite;
+		private var m_clickPane:Quad; // clickable area
 		
 		private var m_viewSpaceIndicator:Sprite;
+		private var m_viewSpaceQuads:Vector.<Quad>;
 		
 		private var m_contentX:Number;
 		private var m_contentY:Number;
@@ -63,13 +68,18 @@ package scenes.game.components
 			addChild(errorLayer);
 			viewRectLayer = new Sprite();
 			addChild(viewRectLayer);
+			m_clickPane = new Quad(CLICK_AREA.width / scaleX, CLICK_AREA.height / scaleY);
+			m_clickPane.alpha = 0;
+			m_clickPane.x = CLICK_AREA.x / scaleX;
+			m_clickPane.y = CLICK_AREA.y / scaleY;
+			addChild(m_clickPane);
 			
 			isDirty = true;
 		}
 		
 		public function addedToStage(event:starling.events.Event):void
 		{				
-			addEventListener(TouchEvent.TOUCH, onTouch);
+			if (m_clickPane) m_clickPane.addEventListener(TouchEvent.TOUCH, onTouch);
 			addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -83,15 +93,14 @@ package scenes.game.components
 			if (gameNodeLayer) gameNodeLayer.removeChildren(0, -1, true);
 			if (errorLayer) errorLayer.removeChildren(0, -1, true);
 			if (viewRectLayer) viewRectLayer.removeChildren(0, -1, true);
-			ErrorParticleSystem.errorList = new Dictionary;
-			removeEventListener(TouchEvent.TOUCH, onTouch);
+			if (m_clickPane) m_clickPane.removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 		}
 		
 		override protected function onTouch(event:TouchEvent):void
 		{
 			var touches:Vector.<Touch> = event.touches;
-			if(event.getTouches(this, TouchPhase.ENDED).length)
+			if(event.getTouches(this, TouchPhase.ENDED).length || event.getTouches(this, TouchPhase.MOVED).length)
 			{
 				var currentPoint:Point = touches[0].getLocation(this);
 				//factor in scale
@@ -99,7 +108,6 @@ package scenes.game.components
 				currentPoint.y *= scaleY;
 				// adjust for borders
 				currentPoint.x -= LEFT_BUFFER_PCT * WIDTH;
-				currentPoint.y -= 0*BOTTOM_BUFFER_PCT * HEIGHT;
 				//switch point to percentages
 				currentPoint.x /= (1.0 - LEFT_BUFFER_PCT) * WIDTH;
 				currentPoint.y /= (1.0 - BOTTOM_BUFFER_PCT) * HEIGHT;
@@ -121,17 +129,31 @@ package scenes.game.components
 			drawViewSpaceIndicator();
 		}
 		
-		
 		private function draw():void
 		{
 			if (gameNodeLayer) gameNodeLayer.removeChildren(0, -1, true);
 			if (errorLayer) errorLayer.removeChildren(0, -1, true);
+			
+			if (m_clickPane) {
+				m_clickPane.width = CLICK_AREA.width / scaleX;
+				m_clickPane.height = CLICK_AREA.height / scaleY;
+				m_clickPane.x = CLICK_AREA.x / scaleX;
+				m_clickPane.y = CLICK_AREA.y / scaleY;
+			}
+			
 			for (var errorId:String in ErrorParticleSystem.errorList)
 			{
 				var error:ErrorParticleSystem = ErrorParticleSystem.errorList[errorId];
 				if(error != null && error.parent != null)
 					errorAdded(error);
 			}
+			if (currentLevel) {
+				var widgets:Vector.<GameNode> = currentLevel.getNodes();
+				for (var i:int = 0; i < widgets.length; i++) {
+					addWidget(widgets[i]);
+				}
+			}
+			gameNodeLayer.flatten();
 			drawViewSpaceIndicator();
 			isDirty = false;
 		}
@@ -140,20 +162,60 @@ package scenes.game.components
 		{
 			if (m_viewSpaceIndicator == null) {
 				m_viewSpaceIndicator = new Sprite();
-				
-				var q1:Quad = new Quad(80, 80, 0xFFFF00);
-				q1.alpha = 0.5;
-				m_viewSpaceIndicator.addChild(q1);
-				
+				if (m_viewSpaceQuads == null) {
+					m_viewSpaceQuads = new Vector.<Quad>();
+					for (var i:int = 0; i < 8; i++) {
+						var myq:Quad = new Quad(80, 80, TextBubble.GOLD);
+						m_viewSpaceQuads.push(myq);
+						m_viewSpaceIndicator.addChild(myq);
+					}
+				}
 				viewRectLayer.addChild(m_viewSpaceIndicator);
 			}
-			m_viewSpaceIndicator.width = (1.0 - LEFT_BUFFER_PCT) * (WIDTH / scaleX) * (GridViewPanel.WIDTH / m_contentScale) / visibleBB.width;
-			m_viewSpaceIndicator.height = (1.0 - BOTTOM_BUFFER_PCT) * (HEIGHT / scaleY) * ((GridViewPanel.HEIGHT /*- GameControlPanel.OVERLAP*/) / m_contentScale) / visibleBB.height;
+			
+			
+			var viewWidth:Number = (1.0 - LEFT_BUFFER_PCT) * (WIDTH / scaleX) * (GridViewPanel.WIDTH / m_contentScale) / visibleBB.width;
+			var viewHeight:Number = (1.0 - BOTTOM_BUFFER_PCT) * (HEIGHT / scaleY) * ((GridViewPanel.HEIGHT /*- GameControlPanel.OVERLAP*/) / m_contentScale) / visibleBB.height;
 			
 			var viewTopLeftInLevelSpace:Point = new Point(-m_contentX / m_contentScale, -m_contentY / m_contentScale);
 			var viewTopLeftInMapSpace:Point = level2map(viewTopLeftInLevelSpace);
-			m_viewSpaceIndicator.x = viewTopLeftInMapSpace.x;
-			m_viewSpaceIndicator.y = viewTopLeftInMapSpace.y;
+			var viewX:Number = viewTopLeftInMapSpace.x;
+			var viewY:Number = viewTopLeftInMapSpace.y;
+			
+			// Setup quads to indicate view:
+			//           |2
+			//     ------6-------
+			//0----|4           5|------1
+			//     ------7-------
+			//           |3
+			const THICK:Number = 3.0;
+			const THIN:Number = 1.0;
+			// Crosshairs
+			m_viewSpaceQuads[0].x = CLICK_AREA.left / scaleX;
+			m_viewSpaceQuads[0].width = Math.max(0, viewX - m_viewSpaceQuads[0].x);
+			m_viewSpaceQuads[0].height = m_viewSpaceQuads[1].height = THIN / scaleY;
+			m_viewSpaceQuads[0].y = m_viewSpaceQuads[1].y = viewY + 0.5 * viewHeight;
+			m_viewSpaceQuads[1].x = viewX + viewWidth;
+			m_viewSpaceQuads[1].width = Math.max(0, WIDTH / scaleX - m_viewSpaceQuads[1].x);
+			m_viewSpaceQuads[2].y = 0;
+			m_viewSpaceQuads[2].height = Math.max(0, viewY);
+			m_viewSpaceQuads[2].x = m_viewSpaceQuads[3].x = viewX + 0.5 * viewWidth;
+			m_viewSpaceQuads[2].width = m_viewSpaceQuads[3].width = THIN / scaleX;
+			m_viewSpaceQuads[3].y = viewY + viewHeight;
+			m_viewSpaceQuads[3].height = Math.max(0, CLICK_AREA.bottom / scaleY - m_viewSpaceQuads[3].y);
+			m_viewSpaceQuads[0].alpha = m_viewSpaceQuads[1].alpha = m_viewSpaceQuads[2].alpha = m_viewSpaceQuads[3].alpha = 1;
+			// Border
+			m_viewSpaceQuads[4].x = viewX - 0.5 * THICK / scaleX;
+			m_viewSpaceQuads[4].y = m_viewSpaceQuads[5].y = viewY + 0.5 * THICK / scaleY;
+			m_viewSpaceQuads[4].width = m_viewSpaceQuads[5].width = THICK / scaleX;
+			m_viewSpaceQuads[4].height = m_viewSpaceQuads[5].height = viewHeight - THICK / scaleY;
+			m_viewSpaceQuads[5].x = viewX + viewWidth - 0.5 * THICK / scaleX;
+			m_viewSpaceQuads[6].x = m_viewSpaceQuads[7].x = viewX - 0.5 * THICK / scaleX;
+			m_viewSpaceQuads[6].y = viewY - 0.5 * THICK / scaleY;
+			m_viewSpaceQuads[6].width = m_viewSpaceQuads[7].width = viewWidth + THICK / scaleX;
+			m_viewSpaceQuads[6].height = m_viewSpaceQuads[7].height = THICK / scaleY;
+			m_viewSpaceQuads[7].y = viewY + viewHeight - 0.5 * THICK / scaleY;
+			m_viewSpaceQuads[4].alpha = m_viewSpaceQuads[5].alpha = m_viewSpaceQuads[6].alpha = m_viewSpaceQuads[7].alpha = 0.5;
 		}
 		
 		private function get visibleBB():Rectangle
@@ -169,8 +231,8 @@ package scenes.game.components
 			if (!currentLevel) return;
 			
 			var errImage:Image = new Image(ErrorParticleSystem.errorTexture);
-			errImage.width = errImage.height = 30;
-			errImage.alpha = 0.4;
+			errImage.width = errImage.height = 80;
+			errImage.alpha = 0.6;
 			errImage.color = 0xFF0000;
 			var errorPair:ErrorPair = new ErrorPair(errImage, errorParticle);
 			conflictList.push(errorPair);
@@ -185,11 +247,28 @@ package scenes.game.components
 			errorLayer.flatten();
 		}
 		
+		private function addWidget(widget:GameNode):void
+		{
+			if (!gameNodeLayer) return;
+			if (!currentLevel) return;
+			
+			var iconWidth:Number = widget.m_boundingBox.width / 2.0;
+			var iconHeight:Number = widget.m_boundingBox.height / 2.0;
+			var icon:NineSliceBatch = new NineSliceBatch(iconWidth, iconHeight, iconHeight / 3.0, iconHeight / 3.0, "Game", "PipeJamSpriteSheetPNG", "PipeJamSpriteSheetXML", widget.assetName);
+			
+			var iconLoc:Point = level2map(currentLevel.globalToLocal(widget.localToGlobal(new Point(0.5 * widget.m_boundingBox.width, 0.5 * widget.m_boundingBox.height))));
+			
+			icon.x = iconLoc.x - 0.5 * icon.width;
+			icon.y = iconLoc.y - 0.5 * icon.height; 
+			
+			gameNodeLayer.addChild(icon);
+		}
+		
 		private function level2pct(pt:Point):Point
 		{
 			var pct:Point = new Point((pt.x - visibleBB.x) / visibleBB.width,
 			                          (pt.y - visibleBB.y) / visibleBB.height);
-			trace("level pct:" + pct);
+			//trace("level pct:" + pct);
 			//pct.x = XMath.clamp(pct.x, 0.0, 1.0);
 			//pct.y = XMath.clamp(pct.y, 0.0, 1.0);
 			return pct;
@@ -198,8 +277,8 @@ package scenes.game.components
 		private function map2pct(pt:Point):Point
 		{
 			var pct:Point = new Point((pt.x - LEFT_BUFFER_PCT * WIDTH / scaleX) / ((1.0 - LEFT_BUFFER_PCT) * WIDTH / scaleX),
-			                          (pt.y - 0*BOTTOM_BUFFER_PCT * HEIGHT / scaleY) / ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY));
-			trace("map pct:" + pct);
+			                          pt.y / ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY));
+			//trace("map pct:" + pct);
 			//pct.x = XMath.clamp(pct.x, 0.0, 1.0);
 			//pct.y = XMath.clamp(pct.y, 0.0, 1.0);
 			return pct;
@@ -209,15 +288,15 @@ package scenes.game.components
 		{
 			var pt:Point = new Point(visibleBB.width * pct.x + visibleBB.x,
 			                         visibleBB.height * pct.y + visibleBB.y);
-			trace("level pt:" + pt);
+			//trace("level pt:" + pt);
 			return pt;
 		}
 		
 		private function pct2map(pct:Point):Point
 		{
 			var pt:Point = new Point(pct.x * ((1.0 - LEFT_BUFFER_PCT) * WIDTH / scaleX) + LEFT_BUFFER_PCT * WIDTH / scaleX,
-			                         pct.y * ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY) + 0*BOTTOM_BUFFER_PCT * HEIGHT / scaleY);
-			trace("map pt:" + pt);
+			                         pct.y * ((1.0 - BOTTOM_BUFFER_PCT) * HEIGHT / scaleY));
+			//trace("map pt:" + pt);
 			return pt;
 		}
 		

@@ -651,6 +651,7 @@ package scenes.game.components
 				if(m_currentLevel)
 				{
 					m_currentLevel.removeEventListener(TouchEvent.TOUCH, onTouch);
+					m_currentLevel.removeEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 					content.removeChild(m_currentLevel);
 					if (m_currentLevel.tutorialManager) {
 						m_currentLevel.tutorialManager.removeEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
@@ -678,6 +679,7 @@ package scenes.game.components
 				}
 				swapBackgroundImage(seed);
 				m_currentLevel.addEventListener(TouchEvent.TOUCH, onTouch);
+				m_currentLevel.addEventListener(MiniMapEvent.VIEWSPACE_CHANGED, onLevelViewChanged);
 				if (m_currentLevel.tutorialManager) {
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.SHOW_CONTINUE, displayContinueButton);
 					m_currentLevel.tutorialManager.addEventListener(TutorialEvent.HIGHLIGHT_BOX, onHighlightTutorialEvent);
@@ -750,6 +752,11 @@ package scenes.game.components
 				addChild(tip);
 				m_persistentToolTips.push(tip);
 			}
+		}
+		
+		private function onLevelViewChanged(evt:MiniMapEvent):void
+		{
+			dispatchEvent(new MiniMapEvent(MiniMapEvent.VIEWSPACE_CHANGED, content.x, content.y, content.scaleX, m_currentLevel));
 		}
 		
 		public function recenter():void

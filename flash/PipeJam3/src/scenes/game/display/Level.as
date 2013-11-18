@@ -1319,7 +1319,14 @@ package scenes.game.display
 				maxX = Math.max(maxX, m_edgeList[i].m_boundingBox.right);
 				maxY = Math.max(maxY, m_edgeList[i].m_boundingBox.bottom);
 			}
+			var oldBB:Rectangle = m_boundingBox.clone();
 			m_boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			if (oldBB.x != m_boundingBox.x ||
+			    oldBB.y != m_boundingBox.y ||
+				oldBB.width != m_boundingBox.width ||
+				oldBB.height != m_boundingBox.height) {
+					dispatchEvent(new MiniMapEvent(MiniMapEvent.LEVEL_RESIZED));
+			}
 		}
 		
 		private function addSelectionUndoEvent(selection:Vector.<GameComponent>, selected:Boolean, addToLast:Boolean = false):void

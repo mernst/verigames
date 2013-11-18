@@ -32,6 +32,7 @@ package scenes.game.display
 		private var m_edgeSetEdges:Vector.<Edge>;
 		private var m_gameNodeDictionary:Dictionary = new Dictionary;
 		private var m_scoreBlock:ScoreBlock;
+		public var assetName:String;
 		
 		public function GameNode(nodeXML:XML, _draggable:Boolean = true, edgeSet:EdgeSetRef = null, levelEdgeSetEdges:Vector.<Edge> = null)
 		{
@@ -145,7 +146,6 @@ package scenes.game.display
 				m_costume.removeFromParent(true);
 			}
 			
-			var assetName:String;
 			if(m_isEditable == true)
 			{
 				if (m_isWide == true)
