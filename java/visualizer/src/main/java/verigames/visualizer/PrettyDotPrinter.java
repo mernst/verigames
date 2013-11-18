@@ -84,15 +84,18 @@ public class PrettyDotPrinter {
         if (chute.isPinched()) {
             label += "\\n(pinched)";
         }
+        if (chute.hasBuzzsaw()) {
+            label += "\\n(buzzsaw)";
+        }
 
         result.put("label", label);
-        result.put("penwidth", chute.isNarrow() ? "1" : "5");
+        result.put("penwidth", (chute.isNarrow() || chute.isPinched()) ? "1" : "5");
 
         String color = "black";
         if (!chute.isEditable())
             color = "lightgrey";
-        if (chute.isPinched())
-            color = "red";
+        if (chute.hasBuzzsaw())
+            color = "blue";
         result.put("color", color);
 
         return result;
