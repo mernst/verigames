@@ -123,7 +123,9 @@ public class GameVisitor<Checker extends BaseTypeChecker> extends InferenceVisit
 
     @Override
     public Void visitMemberSelect( MemberSelectTree node, Void p ) {
-        visitFieldAccess( node );
+        if(!node.getIdentifier().toString().equals("class")) {
+            visitFieldAccess( node );
+        }
         return super.visitMemberSelect(node, p);
     }
 
