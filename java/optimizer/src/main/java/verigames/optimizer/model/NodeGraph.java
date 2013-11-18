@@ -259,26 +259,30 @@ public class NodeGraph {
         }
 
         // Link up var IDs
-        Map<Set<Edge>, Integer> canonicalVars = new HashMap<>();
+        Set<Integer> varIDsToSave = new HashSet<>();
+        for (Edge e : edges) {
+            varIDsToSave.add(e.getVariableID());
+        }
+        Map<Integer, Integer> canonicalVars = new HashMap<>();
         for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
             Integer varID = entry.getKey();
-            Set<Edge> edgeSet = entry.getValue();
-            for (Edge e : edgeSet) {
-                if (e.getEdgeData().getVariableID() == varID) {
-                    canonicalVars.put(edgeSet, varID);
-                    break;
+            if (varIDsToSave.contains(varID)) {
+                Set<Edge> edgeSet = entry.getValue();
+                for (Edge e : edgeSet) {
+                    canonicalVars.put(e.getVariableID(), varID);
                 }
             }
         }
         for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
-            Set<Edge> edgeSet = entry.getValue();
-            int varID = entry.getKey();
-            Integer canonical = canonicalVars.get(edgeSet);
-            if (canonical != null && canonical != varID) {
-                for (Edge e : edgeSet) {
-                    if (e.getEdgeData().getVariableID() == varID) {
-                        world.linkByVarID(varID, canonical);
-                        break;
+            Integer varID = entry.getKey();
+            if (varIDsToSave.contains(varID)) {
+                Integer canonical = canonicalVars.get(varID);
+                if (canonical != null && !canonical.equals(varID)) {
+                    for (Edge e : entry.getValue()) {
+                        if (e.getEdgeData().getVariableID() == varID) {
+                            world.linkByVarID(varID, canonical);
+                            break;
+                        }
                     }
                 }
             }
