@@ -67,6 +67,31 @@ public class NodeGraphTest {
     }
 
     @Test
+    public void testLinkedVarIDs2() {
+        NodeGraph g = new NodeGraph();
+        Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
+        Node two = Util.newNodeOnSameBoard(one, Intersection.Kind.OUTGOING);
+        Node three = Util.newNodeOnSameBoard(two, Intersection.Kind.CONNECT);
+
+        EdgeData d1 = EdgeData.createMutable(1, "d1");
+        EdgeData d2 = EdgeData.createMutable(1, "d2");
+        EdgeData d3 = EdgeData.createMutable(2, "d3");
+        EdgeData d4 = EdgeData.createMutable(3, "d4");
+
+        g.linkVarIDs(Arrays.asList(1, 2));
+        g.linkVarIDs(Arrays.asList(2, 3));
+
+        g.addEdge(one, Port.OUTPUT, two, Port.INPUT, d1);
+        g.addEdge(two, Port.OUTPUT, three, Port.INPUT, d2);
+        g.addEdge(one, new Port("x"), two, new Port("y"), d3);
+        g.addEdge(one, new Port("z"), two, new Port("a"), d4);
+
+        assert g.edgeSet(1).containsAll(g.getEdges());
+        assert g.edgeSet(2).containsAll(g.getEdges());
+        assert g.edgeSet(3).containsAll(g.getEdges());
+    }
+
+    @Test
     public void testNegativeEdgeSets() {
         NodeGraph g = new NodeGraph();
         Node one = new Node("a", "b", Intersection.factory(Intersection.Kind.INCOMING));
