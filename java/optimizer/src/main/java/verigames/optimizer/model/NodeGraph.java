@@ -6,14 +6,15 @@ import verigames.level.Intersection;
 import verigames.level.Level;
 import verigames.level.StubBoard;
 import verigames.level.World;
-import verigames.optimizer.Util;
 import verigames.utilities.MultiMap;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,69 +28,11 @@ public class NodeGraph {
     // make most operations very very fast. That results in a lot of
     // complexity in this file.
 
-    public static class Edge {
-        private final Node src;
-        private final Port srcPort;
-        private final Target target;
-
-        public Edge(Node src, Port srcPort, Target target) {
-            this.src = src;
-            this.srcPort = srcPort;
-            this.target = target;
-        }
-
-        public Node getSrc() {
-            return src;
-        }
-
-        public Port getSrcPort() {
-            return srcPort;
-        }
-
-        public Target getTarget() {
-            return target;
-        }
-
-        public Node getDst() {
-            return target.getDst();
-        }
-
-        public Port getDstPort() {
-            return target.getDstPort();
-        }
-
-        public Chute getEdgeData() {
-            return target.getEdgeData();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Edge edge = (Edge) o;
-
-            if (!src.equals(edge.src)) return false;
-            if (!srcPort.equals(edge.srcPort)) return false;
-            if (!target.equals(edge.target)) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = src.hashCode();
-            result = 31 * result + srcPort.hashCode();
-            result = 31 * result + target.hashCode();
-            return result;
-        }
-    }
-
-    public static class Target {
+    protected static class Target {
         private final Node dst;
         private final Port dstPort;
-        private final Chute edgeData;
-        public Target(Node dst, Port dstPort, Chute edgeData) {
+        private final EdgeData edgeData;
+        public Target(Node dst, Port dstPort, EdgeData edgeData) {
             this.dst = dst;
             this.dstPort = dstPort;
             this.edgeData = edgeData;
@@ -103,7 +46,7 @@ public class NodeGraph {
             return dstPort;
         }
 
-        public Chute getEdgeData() {
+        public EdgeData getEdgeData() {
             return edgeData;
         }
 
@@ -139,43 +82,54 @@ public class NodeGraph {
      * destination pairs.
      *
      * <p>Here, however, we store an additional piece of data:
-     * the {@link Chute} that this edge corresponds to. This
-     * allows us to reconstruct layout data and such later. Thus,
-     * the (Node, Port) pairs are extracted into the {@link Target}
-     * class which encapsulates all this data.
+     * the {@link EdgeData} for the edge. To keep things simple,
+     * the (Node, Port, EdgeData) info is extracted into the
+     * {@link Target} class which encapsulates all this data.
      */
-    private Map<Node, Map<Port, Target>> edges;
+    private final Map<Node, Map<Port, Target>> edges;
 
     /**
      * Very often we want to look up what flows INTO a node, not
      * just OUT of it. This reverse lookup table makes it much
-     * easier to answer that question by linking each node to
-     * the set of nodes that flow directly into it.
+     * easier to answer that question by linking each node X to
+     * the set of nodes that have at least one edge flowing into X.
      *
      * <p>Note that this representation is based on the observation
      * that, for our use case, the degree of a node is very, very
      * small (typically not more than 3, very very rarely more than
      * 10).
      */
-    private MultiMap<Node, Node> redges;
+    private final MultiMap<Node, Node> redges;
 
     /**
-     * Tracks the edge sets in this graph by mapping each variable
-     * ID to the set of linked edges.
+     * Maps variable IDs (integers) to edge sets. Note that this is
+     * not a simple MultiMap: multiple variable IDs might point to
+     * the same edge set if those variable IDs are linked.
      */
-    private MultiMap<Integer, Edge> edgeSets;
+    private final Map<Integer, Set<Edge>> edgeSets;
 
-    private Set<Node> nodes;
+    /**
+     * Lists all the nodes in this graph
+     */
+    private final Set<Node> nodes;
 
     public NodeGraph() {
         edges = new HashMap<>();
         redges = new MultiMap<>();
-        edgeSets = new MultiMap<>();
+        edgeSets = new HashMap<>();
         nodes = new HashSet<>();
     }
 
     public NodeGraph(World w) {
         this();
+
+        // set up edge sets
+        Set<Set<Integer>> linkedVars = w.getLinkedVarIDs();
+        for (Set<Integer> varIDs : linkedVars) {
+            linkVarIDs(varIDs);
+        }
+
+        // go through each board and extract all the intersections & chutes
         Map<Intersection, Node> nodeMap = new HashMap<>();
         for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
             final String levelName = levelEntry.getKey();
@@ -190,10 +144,10 @@ public class NodeGraph {
                         Board subBoard = w.getBoard(subboardName);
                         StubBoard stubBoard = w.getStubBoard(subboardName);
                         assert (subBoard != null) ^ (stubBoard != null);
-                        final BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
-                        node = new Node(levelName, level, boardName, board, intersection, ref);
+                        BoardRef ref = subBoard != null ? new BoardRef(subBoard) : new BoardRef(stubBoard);
+                        node = new Node(levelName, boardName, intersection, ref);
                     } else {
-                        node = new Node(levelName, level, boardName, board, intersection);
+                        node = new Node(levelName, boardName, intersection);
                     }
                     nodeMap.put(intersection, node);
                     addNode(node);
@@ -201,26 +155,40 @@ public class NodeGraph {
                 for (Chute chute : board.getEdges()) {
                     addEdge(nodeMap.get(chute.getStart()), new Port(chute.getStartPort()),
                             nodeMap.get(chute.getEnd()), new Port(chute.getEndPort()),
-                            chute);
+                            EdgeData.fromChute(chute));
                 }
             }
         }
+
     }
 
+    /**
+     * @see #toWorld(ReverseMapping)
+     */
     public World toWorld() {
+        return toWorld(new ReverseMapping());
+    }
+
+    /**
+     * Create a new world from this graph. The given mapping will be updated to
+     * reflect any changes in intersection or chute IDs.
+     * @param mapping the reverse mapping
+     * @return a fully constructed world
+     */
+    public World toWorld(ReverseMapping mapping) {
         World world = new World();
 
         // Assemble some info
         Collection<Edge> edges = getEdges();
-        MultiMap<Level, Node> nodesByLevel = new MultiMap<>();
-        MultiMap<Board, Node> nodesByBoard = new MultiMap<>();
-        MultiMap<Level, Board> boardsByLevel = new MultiMap<>();
-        MultiMap<Board, Edge> edgesByBoard = new MultiMap<>();
+        MultiMap<String, Node> nodesByLevel = new MultiMap<>();
+        MultiMap<String, Node> nodesByBoard = new MultiMap<>();
+        MultiMap<String, String> boardsByLevel = new MultiMap<>();
+        MultiMap<String, Edge> edgesByBoard = new MultiMap<>();
         Map<Node, Intersection> newIntersectionsByNode = new HashMap<>();
         for (Node n : nodes) {
-            nodesByLevel.put(n.getLevel(), n);
-            nodesByBoard.put(n.getBoard(), n);
-            boardsByLevel.put(n.getLevel(), n.getBoard());
+            nodesByLevel.put(n.getLevelName(), n);
+            nodesByBoard.put(n.getBoardName(), n);
+            boardsByLevel.put(n.getLevelName(), n.getBoardName());
 
             Intersection intersection = n.getIntersection();
             Intersection newIntersection;
@@ -237,16 +205,14 @@ public class NodeGraph {
             newIntersectionsByNode.put(n, newIntersection);
         }
         for (Edge e : edges) {
-            edgesByBoard.put(e.getSrc().getBoard(), e);
+            edgesByBoard.put(e.getSrc().getBoardName(), e);
         }
 
         // Build the data structure
-        for (Level level : nodesByLevel.keySet()) {
-            String levelName = Util.first(nodesByLevel.get(level)).getLevelName();
+        for (String levelName : nodesByLevel.keySet()) {
             Level newLevel = new Level();
-            for (Board board : boardsByLevel.get(level)) {
-                Set<Node> boardNodes = nodesByBoard.get(board);
-                String boardName = Util.first(boardNodes).getBoardName();
+            for (String boardName : boardsByLevel.get(levelName)) {
+                Set<Node> boardNodes = nodesByBoard.get(boardName);
                 Board newBoard = new Board(boardName);
 
                 // Inane restriction on Boards: callers must add incoming node first
@@ -273,23 +239,53 @@ public class NodeGraph {
                         }
                     }
                 }
-                for (Edge edge : edgesByBoard.get(board)) {
-                    Chute chute = edge.getEdgeData();
-                    Chute newChute = new Chute(chute.getVariableID(), chute.getDescription());
-                    newChute.setEditable(chute.isEditable());
-                    newChute.setBuzzsaw(chute.hasBuzzsaw());
-                    if (chute.getLayout() != null)
-                        newChute.setLayout(chute.getLayout());
-                    newChute.setNarrow(chute.isNarrow());
-                    newChute.setPinched(chute.isPinched());
+                for (Edge edge : edgesByBoard.get(boardName)) {
+                    Chute newChute = edge.getEdgeData().toChute();
                     Intersection start = newIntersectionsByNode.get(edge.getSrc());
+                    String startPort = edge.getSrcPort().getName();
                     Intersection end = newIntersectionsByNode.get(edge.getDst());
-                    newBoard.add(start, edge.getSrcPort().getName(), end, edge.getDstPort().getName(), newChute);
+                    String endPort = edge.getDstPort().getName();
+                    newBoard.add(start, startPort, end, endPort, newChute);
+                    ReverseMapping.EdgeID e1 = new ReverseMapping.EdgeID(edge);
+                    ReverseMapping.EdgeID e2 = new ReverseMapping.EdgeID(start.getUID(), startPort, end.getUID(), endPort);
+                    if (!mapping.hasWidthMapping(e1))
+                        mapping.mapEdge(e1, e2);
+                    if (!mapping.hasBuzzsawMapping(e2))
+                        mapping.mapBuzzsaw(e1, e2);
                 }
                 newLevel.addBoard(boardName, newBoard);
             }
-            newLevel.finishConstruction();
             world.addLevel(levelName, newLevel);
+        }
+
+        // Link up var IDs
+        Set<Integer> varIDsToSave = new HashSet<>();
+        for (Edge e : edges) {
+            varIDsToSave.add(e.getVariableID());
+        }
+        Map<Integer, Integer> canonicalVars = new HashMap<>();
+        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
+            Integer varID = entry.getKey();
+            if (varIDsToSave.contains(varID)) {
+                Set<Edge> edgeSet = entry.getValue();
+                for (Edge e : edgeSet) {
+                    canonicalVars.put(e.getVariableID(), varID);
+                }
+            }
+        }
+        for (Map.Entry<Integer, Set<Edge>> entry : edgeSets.entrySet()) {
+            Integer varID = entry.getKey();
+            if (varIDsToSave.contains(varID)) {
+                Integer canonical = canonicalVars.get(varID);
+                if (canonical != null && !canonical.equals(varID)) {
+                    for (Edge e : entry.getValue()) {
+                        if (e.getEdgeData().getVariableID() == varID) {
+                            world.linkByVarID(varID, canonical);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         world.finishConstruction();
@@ -349,7 +345,7 @@ public class NodeGraph {
      * Add an edge (if it wasn't already present). This will also add the given nodes,
      * if they are not already present.
      */
-    public void addEdge(Node src, Port srcPort, Node dst, Port dstPort, Chute edgeData) {
+    public Edge addEdge(Node src, Port srcPort, Node dst, Port dstPort, EdgeData edgeData) {
         nodes.add(src);
         nodes.add(dst);
         Map<Port, Target> dsts = edges.get(src);
@@ -360,11 +356,17 @@ public class NodeGraph {
         Target target = new Target(dst, dstPort, edgeData);
         dsts.put(srcPort, target);
         redges.put(dst, src);
-        if (edgeData.getVariableID() >= 0)
-            edgeSets.put(edgeData.getVariableID(), new Edge(src, srcPort, target));
+        Edge e = new Edge(src, srcPort, target);
+        if (edgeData.getVariableID() >= 0) {
+            Set<Edge> edgeSet = edgeSets.get(edgeData.getVariableID());
+            if (edgeSet == null) {
+                edgeSet = new HashSet<>();
+                edgeSets.put(edgeData.getVariableID(), edgeSet);
+            }
+            edgeSet.add(e);
+        }
+        return e;
     }
-
-//    public void getEdge
 
     /**
      * Remove an edge (if present). The getNodes of the edge are not removed, even if they
@@ -378,7 +380,13 @@ public class NodeGraph {
         Target target = dsts.get(srcPort);
         if (target != null && target.dst.equals(dst) && target.dstPort.equals(dstPort)) {
             dsts.remove(srcPort);
-            edgeSets.remove(target.getEdgeData().getVariableID(), new Edge(src, srcPort, target));
+            Set<Edge> edgeSet = edgeSets.get(target.getEdgeData().getVariableID());
+            if (edgeSet != null) {
+                edgeSet.remove(new Edge(src, srcPort, target));
+                // NOTE: we do NOT remove empty edge sets because their presence still
+                // conveys some meaningful info. I.e. even if we remove all edges with
+                // a given var ID, that var ID should remain linked to the same set.
+            }
         }
         if (dsts.isEmpty()) {
             edges.remove(src);
@@ -411,16 +419,56 @@ public class NodeGraph {
         return edgesList;
     }
 
-    public Collection<Edge> edgeSet(Edge edge) {
+    public Set<Edge> edgeSet(Edge edge) {
         return edgeSet(edge.getTarget());
     }
 
-    public Collection<Edge> edgeSet(Target edge) {
+    public Set<Edge> edgeSet(Target edge) {
         return edgeSet(edge.getEdgeData().getVariableID());
     }
 
-    public Collection<Edge> edgeSet(Integer variableID) {
-        return edgeSets.get(variableID);
+    public Set<Edge> edgeSet(Integer variableID) {
+        Set<Edge> result = edgeSets.get(variableID);
+        return result == null ? Collections.<Edge>emptySet() : result;
+    }
+
+    /**
+     * Determine whether two edges are linked (should always share the same
+     * width). The edges do NOT need to be in this graph, only their var IDs
+     * are considered.
+     * @param e1 the first edge
+     * @param e2 the second edge
+     * @return true if e1 and e2 are linked
+     */
+    public boolean areLinked(Edge e1, Edge e2) {
+        return e1.getVariableID() >= 0 &&
+                e2.getVariableID() >= 0 &&
+                edgeSet(e1).contains(e2);
+    }
+
+    /**
+     * Indicate that all the variables in the given collection should
+     * be linked. See {@link World#linkByVarID(int, int)} for more info.
+     * @param varIDs a collection of var IDs to link
+     */
+    public void linkVarIDs(Collection<Integer> varIDs) {
+        Iterator<Integer> i = varIDs.iterator();
+        if (!i.hasNext())
+            return;
+        Integer v1 = i.next();
+        Set<Edge> set1 = edgeSets.get(v1);
+        if (set1 == null) {
+            set1 = new HashSet<>();
+            edgeSets.put(v1, set1);
+        }
+        while (i.hasNext()) {
+            Integer v2 = i.next();
+            Set<Edge> set2 = edgeSets.get(v2);
+            if (set2 != null) {
+                set1.addAll(set2);
+            }
+            edgeSets.put(v2, set1);
+        }
     }
 
     /**
@@ -428,9 +476,34 @@ public class NodeGraph {
      * @param src the node
      * @return    the outgoing edges from the given node
      */
-    public Map<Port, Target> outgoingEdges(Node src) {
-        Map<Port, Target> result = edges.get(src);
-        return result == null ? Collections.<Port, Target>emptyMap() : Collections.unmodifiableMap(result);
+    public Collection<Edge> outgoingEdges(final Node src) {
+        Map<Port, Target> map = edges.get(src);
+        final Map<Port, Target> result = map == null ? Collections.<Port, Target>emptyMap() : map;
+        return new AbstractCollection<Edge>() {
+            @Override
+            public Iterator<Edge> iterator() {
+                final Iterator<Map.Entry<Port, Target>> i = result.entrySet().iterator();
+                return new Iterator<Edge>() {
+                    @Override
+                    public boolean hasNext() {
+                        return i.hasNext();
+                    }
+                    @Override
+                    public Edge next() {
+                        Map.Entry<Port, Target> entry = i.next();
+                        return new Edge(src, entry.getKey(), entry.getValue());
+                    }
+                    @Override
+                    public void remove() {
+                        i.remove();
+                    }
+                };
+            }
+            @Override
+            public int size() {
+                return result.size();
+            }
+        };
     }
 
     /**
@@ -466,7 +539,7 @@ public class NodeGraph {
         // Step 2: create subgraphs with nodes
         Map<DisjointSet, Subgraph> subgraphs = new HashMap<>();
         for (Map.Entry<Node, DisjointSet> entry : components.entrySet()) {
-            DisjointSet set = entry.getValue().id();
+            DisjointSet set = entry.getValue();
             Subgraph subgraph = subgraphs.get(set);
             if (subgraph == null) {
                 subgraph = new Subgraph();
@@ -477,7 +550,7 @@ public class NodeGraph {
 
         // Step 3: add edges to each subgraph
         for (Edge edge : edges) {
-            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()).id());
+            Subgraph subgraph = subgraphs.get(components.get(edge.getSrc()));
             subgraph.addEdge(edge);
         }
 

@@ -2,6 +2,7 @@ package verigames.optimizer;
 
 import verigames.level.World;
 import verigames.optimizer.model.NodeGraph;
+import verigames.optimizer.model.ReverseMapping;
 import verigames.optimizer.passes.BallDropElimination;
 import verigames.optimizer.passes.ChuteEndElimination;
 import verigames.optimizer.passes.ConnectorCompression;
@@ -36,15 +37,15 @@ public class Optimizer {
      */
     public static final int DEFAULT_MAX_ITERATIONS = 20;
 
-    public void optimize(NodeGraph g) {
-        optimize(g, DEFAULT_PASSES);
+    public void optimize(NodeGraph g, ReverseMapping map) {
+        optimize(g, map, DEFAULT_PASSES);
     }
 
-    public void optimize(NodeGraph g, List<OptimizationPass> passes) {
-        optimize(g, passes, DEFAULT_MAX_ITERATIONS);
+    public void optimize(NodeGraph g, ReverseMapping map, List<OptimizationPass> passes) {
+        optimize(g, map, passes, DEFAULT_MAX_ITERATIONS);
     }
 
-    public void optimize(NodeGraph g, List<OptimizationPass> passes, int maxIterations) {
+    public void optimize(NodeGraph g, ReverseMapping map, List<OptimizationPass> passes, int maxIterations) {
         int nodes = g.getNodes().size();
         int edges = g.getEdges().size();
         for (int i = 0; i < maxIterations; ++i) {
@@ -52,7 +53,7 @@ public class Optimizer {
             for (OptimizationPass pass : passes) {
                 Util.logVerbose("    pass: " + pass.getClass().getName() + "...");
                 long start = System.currentTimeMillis();
-                pass.optimize(g);
+                pass.optimize(g, map);
                 long end = System.currentTimeMillis();
                 Util.logVerbose("      finished in: " + (end - start) + "ms");
                 Util.logVerbose("      remaining: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
@@ -65,14 +66,14 @@ public class Optimizer {
         }
     }
 
-    public World optimizeWorld(World source) {
+    public World optimizeWorld(World source, ReverseMapping mapping) {
         System.err.println("Converting data...");
         NodeGraph g = new NodeGraph(source);
         System.err.println("Starting optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
-        optimize(g);
+        optimize(g, mapping);
         System.err.println("Finished optimization: " + g.getNodes().size() + " nodes, " + g.getEdges().size() + " edges");
         System.err.println("Converting data back...");
-        return g.toWorld();
+        return g.toWorld(mapping);
     }
 
 }

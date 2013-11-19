@@ -91,6 +91,16 @@ public class Chute extends verigames.graph.Edge<Intersection>
    */
   public Chute(int varID, /*@Nullable*/ String description)
   {
+    this(nextUID++, varID, description);
+  }
+
+  /**
+   * Dangerous package-only-level constructor that allows you to set the true
+   * ID of this chute. Used when loading worlds where you want to preserve the
+   * ID of the chutes.
+   */
+  Chute(int id, int varID, /*@Nullable*/ String description)
+  {
     this.editable = true;
 
     this.narrow = true;
@@ -98,8 +108,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
     this.buzzsaw = false;
 
-    this.UID = Chute.nextUID;
-    Chute.nextUID += 1;
+    this.UID = id;
 
     this.variableID = varID;
     if (description != null)
@@ -113,6 +122,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
 
     this.checkRep();
   }
+
 
   /**
    * Returns {@code pinch}<br/>
@@ -153,7 +163,7 @@ public class Chute extends verigames.graph.Edge<Intersection>
    * Sets the specification field {@code narrow} to the value of the parameter
    * {@code narrow}<br/>
    * <br/>
-   * Requires: {@link #underConstruction() this.underConstruction()}<br/>
+   * Requires: {@link #underConstruction() this.underConstruction()} or {@link #isEditable() this.isEditable()}<br/>
    * <br/>
    * Modifies: {@code this}
    *
@@ -162,8 +172,8 @@ public class Chute extends verigames.graph.Edge<Intersection>
   public void setNarrow(boolean narrow)
   {
     //TODO JB: REMOVE THE ALLOWANCE UNDER WEAK MODE
-    if (!underConstruction() && verigames.utilities.Misc.CHECK_REP_STRICT )
-      throw new IllegalStateException("Mutation attempted on constructed Chute");
+    if (!underConstruction() && !isEditable() && verigames.utilities.Misc.CHECK_REP_STRICT )
+      throw new IllegalStateException("Cannot change the width of an immutable chute");
     this.narrow = narrow;
     checkRep();
   }
@@ -179,14 +189,12 @@ public class Chute extends verigames.graph.Edge<Intersection>
   /**
    * Sets {@code buzzsaw}
    * <br/>
-   * Requires: {@link #underConstruction() this.underConstruction()}<br/>
+   * Modifies: {@code this}
    *
    * @param buzzsaw
    */
   public void setBuzzsaw(boolean buzzsaw)
   {
-    if(!underConstruction())
-      throw new IllegalStateException("Mutation attempted on constructed Chute");
     this.buzzsaw = buzzsaw;
     checkRep();
   }
@@ -274,12 +282,24 @@ public class Chute extends verigames.graph.Edge<Intersection>
   // TODO explicitly document which information is and is not copied.
   public Chute copy()
   {
-    Chute copy = new Chute(variableID, description);
-    copy.setNarrow(narrow);
-    copy.setPinched(pinch);
-    copy.setEditable(editable);
+    return copy(variableID, description);
+  }
 
-    return copy;
+  /**
+   * Returns a deep copy of {@code this}, but with a different variable ID
+   * and description.
+   * @see #copy()
+   * @param newVarID the new variable ID to use
+   * @param newDescription the new description to use
+   * @return a new Chute with the given variable ID and description
+   */
+  public Chute copy(int newVarID, String newDescription) {
+      Chute copy = new Chute(newVarID, newDescription);
+      copy.setNarrow(narrow);
+      copy.setPinched(pinch);
+      copy.setEditable(editable);
+      copy.setBuzzsaw(buzzsaw);
+      return copy;
   }
 
   @Override

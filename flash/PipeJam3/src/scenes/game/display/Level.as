@@ -198,7 +198,8 @@ package scenes.game.display
 			{
 				gameNode = boxDictionary[String(boxConstraint.@id)];
 				if (!gameNode) {
-					throw new Error("Box node not found for id found in constraints file:" + boxConstraint.@id);
+					//throw new Error("Box node not found for id found in constraints file:" + boxConstraint.@id);
+					continue;
 				}
 				var constraintIsEditable:Boolean = XString.stringToBool(String(boxConstraint.@editable));
 				var constraintIsWide:Boolean = (boxConstraint.@width == "wide");

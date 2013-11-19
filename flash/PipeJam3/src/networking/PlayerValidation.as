@@ -100,7 +100,7 @@ package networking
 			}
 			
 			//if we make it this far, just exit
-			controller.setStatus(VALIDATION_FAILED);
+			onValidationFailed();
 			pipejamCallbackFunction();
 		}
 
@@ -129,7 +129,7 @@ package networking
 				}
 			}
 			//if we make it this far, just exit
-			controller.setStatus(VALIDATION_FAILED);
+			onValidationFailed();
 			pipejamCallbackFunction();
 		}
 		
@@ -158,7 +158,7 @@ package networking
 				}
 			}
 			//if we make it this far, just exit
-			controller.setStatus(VALIDATION_FAILED);
+			onValidationFailed();
 			pipejamCallbackFunction();
 
 		}
@@ -177,7 +177,7 @@ package networking
 				}
 			}
 			//if we make it this far, just exit
-			controller.setStatus(VALIDATION_FAILED);
+			onValidationFailed();
 			pipejamCallbackFunction();
 			
 		}
@@ -192,10 +192,19 @@ package networking
 				controller.setStatus(VALIDATION_SUCCEEDED);
 			}
 			else
-				controller.setStatus(VALIDATION_FAILED);
+			{
+				onValidationFailed();
+			}
 			
 			
 			pipejamCallbackFunction();
+		}
+		
+		public function onValidationFailed():void
+		{
+			controller.setStatus(VALIDATION_FAILED);
+			
+			TutorialController.getTutorialController().getTutorialsCompletedFromCookieString();
 		}
 		
 		public function activatePlayer(callback:Function):void

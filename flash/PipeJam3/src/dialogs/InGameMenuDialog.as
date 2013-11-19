@@ -1,17 +1,19 @@
 package dialogs
 {
+	import flash.geom.Rectangle;
+	
 	import display.NineSliceBatch;
 	import display.NineSliceButton;
 	
 	import events.MenuEvent;
 	import events.NavigationEvent;
 	
-	import flash.geom.Rectangle;
-	
-	import networking.LevelInformation;
 	import networking.GameFileHandler;
+	import networking.LevelInformation;
+	import networking.PlayerValidation;
 	
 	import scenes.BaseComponent;
+	import scenes.Scene;
 	import scenes.game.PipeJamGameScene;
 	import scenes.layoutselectscene.LayoutSelectScene;
 	
@@ -182,7 +184,7 @@ package dialogs
 		protected function onRequestLayoutList(result:int, layoutList:Vector.<Object>):void
 		{
 			dispatchEvent(new Event(Game.STOP_BUSY_ANIMATION,true));
-			var layoutSelectScene:LayoutSelectScene = new LayoutSelectScene();
+			var layoutSelectScene:LayoutSelectScene = new LayoutSelectScene(Scene.m_gameSystem as PipeJamGame);
 			layoutSelectScene.setLayouts(layoutList);
 			parent.addChild(layoutSelectScene);
 		}
@@ -196,7 +198,8 @@ package dialogs
 		private function onExitButtonTriggered():void
 		{
 			hideAllDialogs();
-			GameFileHandler.stopLevel();
+			if(PlayerValidation.playerLoggedIn)
+				GameFileHandler.stopLevel();
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "LevelSelectScene"));
 		}
 		

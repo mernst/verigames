@@ -1,5 +1,5 @@
 To run a type checker:
-These instructions outline how to run a verigames type system in type-checking mode. If they are unclear or incorrect in any way, email Steph Dietzel at sdietzel@cs.washington.edu.
+These instructions outline how to run a verigames type system in type-checking mode. If they are unclear or incorrect in any way, email verigames@cs.washington.edu
 
 1. Make sure you have built the most recent code. For verigames, it is important to run the clean target before building if any code that it depends on has changed. This ensures that it uses the most up-to-date build for those projects.
 
@@ -18,14 +18,24 @@ These instructions outline how to run a verigames type system in type-checking m
   cd $JSR308/verigames/java
   gradle clean dist
 
-2. Add $JSR308/verigames/java/dist to your CLASSPATH. Due to recent changes in infrastucture, this is the new location of verigames.jar. You may remove $JSR308/verigames/java/verigames.jar from you CLASSPATH, as it is no longer accurate.
- 
+3. Make sure you have the following environment variables set correctly:
+
+VERIGAMES_HOME
+JAVA_HOME
+
+If you would like to run the XML answer-set-programming solver, you must install the package from<>:
+Then setup the environment variable VERIGAMES_ASP_HOME
+
 3. Use the typechecking script.
 
+  To get help:
   cd $JSR308/verigames/dist/scripts
-  sh typecheck.sh -processor package.CheckerName -Astubs="full_path_to_stub_file" MyFile.java
+  ./verigames.py --help
 
-  For example, 
+  To run typechecking:
+  cd $JSR308/verigames/dist/scripts
+  ./verigames.py --checker package.CheckerName -stubs="full_path_to_stub_file" MyFile.java
 
-  sh typecheck.sh -processor random.RandomChecker -Astubs="/homes/gws/sdietzel/jsr308/verigames/java/Generation/src/random/jdk.astub" /homes/gws/sdietzel/jsr308/verigames/documents/Small_Examples/SecureRandomTest.java
+  Another example:
+  ./typecheck.sh --checker random.RandomChecker -Astubs="/homes/gws/sdietzel/jsr308/verigames/java/Generation/src/random/jdk.astub" /homes/gws/sdietzel/jsr308/verigames/documents/Small_Examples/SecureRandomTest.java
 

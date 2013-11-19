@@ -29,6 +29,24 @@ public class WorldXMLParser
 {
   public static final int version = 3;
 
+  private final boolean preserveIDs;
+
+  public WorldXMLParser()
+  {
+    this(false);
+  }
+
+  /**
+   * @param preserveIDs true to preserve IDs on chutes and intersections
+   *                    (NOTE: enabling this option is dangerous, as it allows
+   *                    the possibility of ID clashes with newly created chutes
+   *                    and intersections.)
+   */
+  public WorldXMLParser(boolean preserveIDs)
+  {
+    this.preserveIDs = preserveIDs;
+  }
+
   /**
    * Parses the text from {@code in} as XML, and returns a {@link World} object
    * representing the same information.
@@ -40,9 +58,6 @@ public class WorldXMLParser
    * that {@link Level}s may benefit from having {@code Board}s added to them,
    * but currently, there is no reason to do so.
    */
-  /* This method should perhaps be static, but it is left as nonstatic so that
-   * it is consistent with WorldXMLPrinter, whose print method is nonstatic
-   * to facilitate code reuse (it's a subclass of Printer) */
   public World parse(final InputStream in)
   {
     // creates a Builder that does not validate the input;
@@ -76,7 +91,7 @@ public class WorldXMLParser
     return processWorld(root);
   }
 
-  private static World processWorld(final Element worldElt)
+  private World processWorld(final Element worldElt)
   {
     checkName(worldElt, "world");
 
@@ -117,11 +132,11 @@ public class WorldXMLParser
       w.addLevel(name, level);
     }
 
-    w.finishConstruction();
+    w.finishConstruction(true, null);
     return w;
   }
 
-  private static List<List<Integer>> processLinkedVarIDs(final Element linkedVarIDsElt)
+  private List<List<Integer>> processLinkedVarIDs(final Element linkedVarIDsElt)
   {
     checkName(linkedVarIDsElt, "linked-varIDs");
 
@@ -141,7 +156,7 @@ public class WorldXMLParser
     return linkedVarIDs;
   }
 
-  private static List<Integer> processVarIDSet(final Element varIDSetElt)
+  private List<Integer> processVarIDSet(final Element varIDSetElt)
   {
     List<Integer> varIDs = new ArrayList<>();
 
@@ -157,7 +172,7 @@ public class WorldXMLParser
     return varIDs;
   }
 
-  private static Pair<String, Level> processLevel(final Element levelElt)
+  private Pair<String, Level> processLevel(final Element levelElt)
   {
     checkName(levelElt, "level");
 
@@ -200,7 +215,7 @@ public class WorldXMLParser
    * @param boards The XML Element countaining the level's boards
    * @return Map from String names to the corresponding StubBoards
    */
-  private static Map<String, StubBoard> processStubBoards(final Element boards)
+  private Map<String, StubBoard> processStubBoards(final Element boards)
   {
     checkName(boards, "boards");
 
@@ -230,7 +245,7 @@ public class WorldXMLParser
   /**
    * Reads the connections from a {@code StubBoard}'s inputs or outputs and returns the StubConnections as a List
    */
-  private static List<StubConnection> getStubConnections(final Elements connectionElts)
+  private List<StubConnection> getStubConnections(final Elements connectionElts)
   {
     final List<StubConnection> connections = new ArrayList<StubConnection>();
     for (int i = 0; i < connectionElts.size(); i++) {
@@ -245,7 +260,7 @@ public class WorldXMLParser
    * Returns a map from {@link Board} names to {@code Board}s and a map from
    * {@link Chute} UIDs to {@code Chute}s.
    */
-  private static Pair<Map<String, Board>, Map<String, Chute>> processBoards(final Element boards)
+  private Pair<Map<String, Board>, Map<String, Chute>> processBoards(final Element boards)
   {
     checkName(boards, "boards");
 
@@ -278,7 +293,7 @@ public class WorldXMLParser
    * element is a map from XML UIDs to the {@link verigames.level.Chute Chute}s
    * they identify
    */
-  private static Pair<Pair<String, Board>, Map<String, Chute>> processBoard(final Element boardElt)
+  private Pair<Pair<String, Board>, Map<String, Chute>> processBoard(final Element boardElt)
   {
     checkName(boardElt, "board");
 
@@ -327,7 +342,7 @@ public class WorldXMLParser
   /**
    *
    */
-  private static Map<String, Intersection> processNodes(final Elements nodeElts)
+  private Map<String, Intersection> processNodes(final Elements nodeElts)
   {
     final Map<String, Intersection> UIDMap = new LinkedHashMap<String, Intersection>();
 
@@ -344,7 +359,7 @@ public class WorldXMLParser
     return Collections.unmodifiableMap(UIDMap);
   }
 
-  private static Pair<String, Intersection> processNode(final Element nodeElt)
+  private Pair<String, Intersection> processNode(final Element nodeElt)
   {
     checkName(nodeElt, "node");
 
@@ -393,10 +408,14 @@ public class WorldXMLParser
         if (nameAttr == null)
           throw new RuntimeException("Subboard node does not have a name attribute");
         final String name = nameAttr.getValue();
-        intersection = Intersection.subboardFactory(name);
+        intersection = preserveIDs ?
+                Intersection.subboardFactory(Integer.parseInt(UID.substring(1)), name) :
+                Intersection.subboardFactory(name);
         break;
       default:
-        intersection = Intersection.factory(kind);
+        intersection = preserveIDs ?
+                Intersection.factory(Integer.parseInt(UID.substring(1)), kind) :
+                Intersection.factory(kind);
     }
 
     if (x != null)
@@ -415,7 +434,7 @@ public class WorldXMLParser
     return Pair.of(UID, intersection);
   }
 
-  private static GameCoordinate processLayoutPoint(Element layoutElt)
+  private GameCoordinate processLayoutPoint(Element layoutElt)
   {
     {
       final String eltName = layoutElt.getLocalName();
@@ -438,7 +457,7 @@ public class WorldXMLParser
     return new GameCoordinate(x, y);
   }
 
-  private static double processCoordinate(Element coordElt)
+  private double processCoordinate(Element coordElt)
   {
     {
       final String eltName = coordElt.getLocalName();
@@ -459,7 +478,7 @@ public class WorldXMLParser
   /**
    * Modifies {@code b}
    */
-  private static Map<String, Chute> processEdges(final Elements edgeElts, final Board b, final Map<String, Intersection> IntersectionUIDMap)
+  private Map<String, Chute> processEdges(final Elements edgeElts, final Board b, final Map<String, Intersection> IntersectionUIDMap)
   {
     final Map<String, Chute> ChuteUIDMap = new LinkedHashMap<String, Chute>();
 
@@ -478,7 +497,7 @@ public class WorldXMLParser
   /**
    * Modifies {@code b}
    */
-  private static Pair<String, Chute> processEdge(final Element edgeElt, final Board b, final Map<String, Intersection> UIDMap)
+  private Pair<String, Chute> processEdge(final Element edgeElt, final Board b, final Map<String, Intersection> UIDMap)
   {
     checkName(edgeElt, "edge");
 
@@ -559,7 +578,9 @@ public class WorldXMLParser
     final Intersection end = UIDMap.get(endID.getFirst());
     final String endPort = endID.getSecond();
 
-    final Chute c = new Chute(variableID, description);
+    final Chute c = preserveIDs ?
+            new Chute(Integer.parseInt(UID.substring(1)), variableID, description) :
+            new Chute(variableID, description);
     c.setPinched(pinch);
     c.setNarrow(narrow);
     c.setEditable(editable);
@@ -572,7 +593,7 @@ public class WorldXMLParser
     return Pair.of(UID, c);
   }
 
-  private static Pair<String, String> processNodeRef(Element nodeRef)
+  private Pair<String, String> processNodeRef(Element nodeRef)
   {
     checkName(nodeRef, "noderef");
 
@@ -591,7 +612,7 @@ public class WorldXMLParser
     return Pair.of(ID, port);
   }
 
-  private static List<GameCoordinate> processEdgeLayout(Element layoutElt)
+  private List<GameCoordinate> processEdgeLayout(Element layoutElt)
   {
     checkName(layoutElt, "edge-layout");
 
@@ -614,7 +635,7 @@ public class WorldXMLParser
    * if elt.getLocalName() does not equal the expected name.<br/>
    * Else has no effect.
    */
-  private static void checkName(Element elt, String expectedName)
+  private void checkName(Element elt, String expectedName)
   {
     if (!elt.getLocalName().equals(expectedName))
       throw new RuntimeException("Encountered " + elt.getLocalName() + " when " + expectedName + " was expected");

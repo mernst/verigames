@@ -92,9 +92,57 @@ public class World
     return false;
   }
 
-  protected Set<Set<Integer>> getLinkedVarIDs()
+  public Set<Set<Integer>> getLinkedVarIDs()
   {
     return Collections.unmodifiableSet(linkedVarIDs);
+  }
+
+  /**
+   * Get the set of var IDs that are linked to the given one
+   * @param varID the var ID to check
+   * @return the set of var IDs linked to the given one
+   */
+  public Set<Integer> getLinkedVarIDs(int varID)
+  {
+    if (varID >= 0)
+    {
+      for (Set<Integer> set : linkedVarIDs)
+      {
+        if (set.contains(varID))
+          return Collections.unmodifiableSet(set);
+      }
+    }
+    return Collections.singleton(varID);
+  }
+
+  /**
+   * Get all the sets of linked chutes. Every chute in this world will be
+   * in exactly one of the returned sets.
+   * @return a collection of chute sets
+   */
+  public Collection<Set<Chute>> getLinkedChutes() {
+    Collection<Set<Chute>> result = new ArrayList<>();
+    Map<Integer, Set<Chute>> sets = new HashMap<>();
+    for (Set<Integer> linked : linkedVarIDs) {
+      Set<Chute> set = new HashSet<>();
+      for (Integer varID : linked) {
+        sets.put(varID, set);
+      }
+    }
+    for (Chute c : getChutes()) {
+      if (c.getVariableID() >= 0) {
+        Set<Chute> set = sets.get(c.getVariableID());
+        if (set == null) {
+          set = new HashSet<>();
+          sets.put(c.getVariableID(), set);
+        }
+        set.add(c);
+      } else {
+        result.add(Collections.singleton(c));
+      }
+    }
+    result.addAll(sets.values());
+    return result;
   }
 
   private static <T> void link(Set<Set<T>> linkedClasses, Set<T> toLink)
@@ -155,7 +203,7 @@ public class World
     }
   }
 
-  private Set<Chute> getChutes()
+  public Set<Chute> getChutes()
   {
     Set<Chute> chutes = new LinkedHashSet<>();
 
@@ -224,88 +272,58 @@ public class World
   /**
    * Marks this {@code World} as completed, runs some integrity checks, and
    * freezes the {@code World}, as well as all of its child elements.
+   * 
+   * @param parseMode Should be set to true if the world is being generated from a parsed
+   * World.xml file. Finish construction will not modify or normalize chute widths,
+   * as we want the exact widths from file that is being loaded.
+   * 
+   * @param inferredSubtypes A list of all variables inferred to be a subtype. Used
+   * to pre-solve the world by setting chute widths. Only applies when parseMode is false. 
+   * If inferredSubtypes is null, chutes will be normalized to the typesystem's default width.
+   * 
    */
   public void finishConstruction()
+  {
+    finishConstruction(false, Collections.<Integer>emptyList());
+  }
+
+  /**
+   * Marks this {@code World} as completed, runs some integrity checks, and
+   * freezes the {@code World}, as well as all of its child elements.
+   * TODO: document parameters
+   */
+  public void finishConstruction(boolean parseMode, List<Integer> inferredSubtypes)
   {
     if (!underConstruction)
       throw new IllegalStateException("Mutation attempted on constructed World");
 
     underConstruction = false;
 
-    /* Make sure that all chutes that are linked to each other have the same
-     * width.
-     *
-     * If one chute is uneditable, all will become uneditable.
-     */
-    Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
-
-    for (Set<Integer> linkedIDs : this.linkedVarIDs)
-    {
-      Set<Chute> linkedChutes = new HashSet<>();
-      for (int varID : linkedIDs)
-        linkedChutes.addAll(chutesByVarID.get(varID));
-
-      Boolean isNarrow = null;
-      boolean fixedNarrow = false;
-      boolean fixedWide   = false;
-      boolean conflictingChutes = false;
-
-      for (Chute c : linkedChutes)
+    if (!parseMode) {
+      /* Make sure that all chutes that are linked to each other have the same
+       * width.
+       *
+       * If one chute is uneditable, all will become uneditable.
+       */
+      Map<Integer, Set<Chute>> chutesByVarID = getChutesByVarID();
+      Map<Integer, Set<Chute>> nonLinkedChutes = getChutesByVarID();
+      for (Set<Integer> linkedIDs : this.linkedVarIDs)
       {
-        if (isNarrow == null)
+        Set<Chute> linkedChutes = new HashSet<>();
+        for (int varID : linkedIDs)
         {
-          isNarrow = c.isNarrow();
+          linkedChutes.addAll(chutesByVarID.get(varID));
+          nonLinkedChutes.remove(varID);
         }
 
-        if (!c.isEditable())
-        {
-          if (c.isNarrow())
-          {
-            fixedNarrow = true;
-          }
-          else
-          {
-            fixedWide   = true;
-          }
-        }
-
-        if (fixedNarrow && fixedWide)
-        {
-          conflictingChutes = true;
-          break;
-        }
+        ChuteNormalizer norm = new ChuteNormalizer(linkedChutes, inferredSubtypes);
+        norm.normalizeChutes();
       }
 
-      if (conflictingChutes)
+      for (Set<Chute> chutes : nonLinkedChutes.values())
       {
-        if (verigames.utilities.Misc.CHECK_REP_STRICT)
-        {
-          String chutes = "";
-          for (Chute c : linkedChutes)
-          {
-            chutes += c + ", ";
-          }
-          throw new RuntimeException("Linked chutes with conflicting widths: " + chutes);
-        }
-      }
-
-      for( Chute c : linkedChutes )
-      {
-          if (fixedNarrow)
-          {
-              c.setNarrow(true);
-          }
-          else if (fixedWide)
-          {
-              c.setNarrow(false);
-          }
-          else
-          {
-              // Just make them all the same to start out with
-              // TODO: double check that the xml solver is guaranteed to make all of the same linked chutes the same.
-              c.setNarrow( isNarrow );
-          }
-          c.setEditable( !(fixedNarrow || fixedWide) );
+        ChuteNormalizer norm = new ChuteNormalizer(chutes, inferredSubtypes);
+        norm.normalizeChutes();
       }
     }
 
@@ -460,4 +478,5 @@ public class World
   {
     return "World: " + getLevels().keySet().toString();
   }
+
 }

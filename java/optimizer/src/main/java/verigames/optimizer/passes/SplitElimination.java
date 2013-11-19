@@ -3,9 +3,11 @@ package verigames.optimizer.passes;
 import verigames.level.Intersection;
 import verigames.optimizer.OptimizationPass;
 import verigames.optimizer.Util;
+import verigames.optimizer.model.Edge;
 import verigames.optimizer.model.Node;
 import verigames.optimizer.model.NodeGraph;
 import verigames.optimizer.model.Port;
+import verigames.optimizer.model.ReverseMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,41 +32,64 @@ import java.util.List;
  */
 public class SplitElimination implements OptimizationPass {
     @Override
-    public void optimize(NodeGraph g) {
+    public void optimize(NodeGraph g, ReverseMapping mapping) {
 
         // wrap the nodes in a new array list to avoid concurrent modification
         // of a list we are iterating over
         for (Node n : new ArrayList<>(g.getNodes())) {
             if (n.getIntersection().getIntersectionKind() == Intersection.Kind.SPLIT) {
-                List<NodeGraph.Target> outgoing = new ArrayList<>(g.outgoingEdges(n).values());
+                List<Edge> outgoing = new ArrayList<>(g.outgoingEdges(n));
 
                 // expect 2 outputs and 1 input
-                NodeGraph.Target e1 = outgoing.get(0);
-                NodeGraph.Target e2 = outgoing.get(1);
-                NodeGraph.Edge src = Util.first(g.incomingEdges(n));
+                Edge e1 = outgoing.get(0);
+                Edge e2 = outgoing.get(1);
+                Edge src = Util.first(g.incomingEdges(n));
 
                 Node connector = Util.newNodeOnSameBoard(n, Intersection.Kind.CONNECT);
 
-                int e1VarId = e1.getEdgeData().getVariableID();
-                int e2VarId = e2.getEdgeData().getVariableID();
-                int srcVarId = src.getEdgeData().getVariableID();
+                boolean srcAndE1Linked = g.areLinked(src, e1);
+                boolean srcAndE2Linked = g.areLinked(src, e2);
 
-                // If either node was a small ball drop, we need to remove this
-                // merge and the drop and place a connector instead.
+                // If either node is an END node, we can remove this
+                // split and the END and place a connector instead.
                 if (e1.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
-                        (Util.conflictFree(g, e1.getEdgeData()) || e1VarId == srcVarId)) {
+                        (Util.conflictFree(g, e1) || srcAndE1Linked)) {
                     g.removeNode(e1.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e2.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
+                    Edge srcReplacement = g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
+                    Edge e2Replacement = g.addEdge(connector, Port.OUTPUT, e2.getDst(), e2.getDstPort(), e2.getEdgeData());
+
+                    mapping.mapEdge(g, src, srcReplacement);
+                    mapping.mapEdge(g, e2, e2Replacement);
+                    mapping.mapBuzzsaw(g, src, srcReplacement);
+                    mapping.mapBuzzsaw(g, e2, e2Replacement);
+
+                    // If the removed edge belongs to the same edge set as the src, then
+                    // we're ok. Otherwise it must be conflict-free, and it needs to be
+                    // made wide.
+                    if (!srcAndE1Linked) {
+                        mapping.forceWide(e1);
+                    }
                 } else if (e2.getDst().getIntersection().getIntersectionKind() == Intersection.Kind.END &&
-                        (Util.conflictFree(g, e2.getEdgeData()) || e2VarId == srcVarId)) {
+                        (Util.conflictFree(g, e2) || srcAndE2Linked)) {
                     g.removeNode(e2.getDst());
                     g.removeNode(n);
                     g.addNode(connector);
-                    g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, e1.getEdgeData());
-                    g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
+                    Edge srcReplacement = g.addEdge(src.getSrc(), src.getSrcPort(), connector, Port.INPUT, src.getEdgeData());
+                    Edge e1Replacement = g.addEdge(connector, Port.OUTPUT, e1.getDst(), e1.getDstPort(), e1.getEdgeData());
+
+                    mapping.mapEdge(g, src, srcReplacement);
+                    mapping.mapEdge(g, e1, e1Replacement);
+                    mapping.mapBuzzsaw(g, src, srcReplacement);
+                    mapping.mapBuzzsaw(g, e1, e1Replacement);
+
+                    // If the removed edge belongs to the same edge set as the src, then
+                    // we're ok. Otherwise it must be conflict-free, and it needs to be
+                    // made wide.
+                    if (!srcAndE2Linked) {
+                        mapping.forceWide(e2);
+                    }
                 }
             }
         }

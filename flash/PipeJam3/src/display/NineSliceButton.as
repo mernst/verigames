@@ -35,6 +35,9 @@ package display
 		protected var fontColor:uint;
 		protected var m_toolTipText:String;
 		
+		//allow for setting other values
+		public var alphaValue:Number = 0.3;
+		
 		public function NineSliceButton(_text:String, _width:Number, _height:Number, _cX:Number, _cY:Number, 
 		                                _atlasFile:String, _atlasImgName:String, _atlasXMLName:String, 
 										_atlasXMLButtonTexturePrefix:String, _fontName:String, _fontColor:uint, _atlasXMLButtonOverTexturePrefix:String = "", 
@@ -199,7 +202,7 @@ package display
 			} else {
 				useHandCursor = false;
 				removeEventListener(TouchEvent.TOUCH, onTouch);
-				alpha = 0.3;
+				alpha = alphaValue;
 			}
 		}
 		

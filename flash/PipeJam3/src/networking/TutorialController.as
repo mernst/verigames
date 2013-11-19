@@ -1,10 +1,10 @@
 package networking
 {
-	import events.MenuEvent;
-	
 	import flash.events.Event;
-	import flash.utils.Dictionary;
 	import flash.net.URLRequestMethod;
+	import flash.utils.Dictionary;
+	
+	import events.MenuEvent;
 	
 	import scenes.game.PipeJamGameScene;
 	import scenes.game.display.Level;
@@ -35,6 +35,8 @@ package networking
 
 		public static var TUTORIAL_LEVEL_COMPLETE:int = 0;
 		public static var GET_COMPLETED_TUTORIAL_LEVELS:int = 1;
+		
+		public static var TUTORIALS_COMPLETED_STRING:String = "tutorials_completed";
 
 		//used as a ordered array of order values containing all tutorial orders
 		protected var tutorialOrderedList:Vector.<Number>;
@@ -49,6 +51,8 @@ package networking
 		protected static var tutorialController:TutorialController;
 		
 		public var fromLevelSelectList:Boolean = false;
+		
+		protected var levelCompletedQID:String;
 		
 		static public function getTutorialController():TutorialController
 		{
@@ -65,10 +69,29 @@ package networking
 		
 		protected function getTutorialsCompleted(result:int, completedTutorials:Vector.<Object>):void
 		{
-			completedTutorialList = new Dictionary;
+			if(completedTutorialList == null)
+				completedTutorialList = new Dictionary;
 			for each(var tutorial:Object in completedTutorials)
 			{
 				completedTutorialList[tutorial.levelID] = tutorial;
+			}
+			//also check cookies for levels played when not logged in
+			getTutorialsCompletedFromCookieString();
+		}
+		
+		public function getTutorialsCompletedFromCookieString():void
+		{
+			if(completedTutorialList == null)
+				completedTutorialList = new Dictionary;
+			
+			var tutorialsCompleted:String = HTTPCookies.getCookie(TutorialController.TUTORIALS_COMPLETED_STRING);
+			if(tutorialsCompleted != null)
+			{
+				var tutorialListArray:Array = tutorialsCompleted.split(",");
+				for each(var tutorial:String in tutorialListArray)
+				{
+					completedTutorialList[tutorial] = tutorial;
+				}
 			}
 			setTutorialXML(tutorialXML);
 			
@@ -85,6 +108,7 @@ package networking
 				if(completedTutorialList[currentLevel] == null)
 				{
 					var newTutorialObj:TutorialController = new TutorialController();
+					newTutorialObj.levelCompletedQID = PipeJamGame.levelInfo.m_levelId;
 					completedTutorialList[currentLevel] = newTutorialObj;
 					newTutorialObj.post();
 				}
@@ -92,7 +116,15 @@ package networking
 		}
 		public function post():void
 		{
-			sendMessage(TUTORIAL_LEVEL_COMPLETE, postMessage);
+			if(PlayerValidation.playerLoggedIn)
+				sendMessage(TUTORIAL_LEVEL_COMPLETE, postMessage);
+			else
+			{
+				//add to cookie string
+				var tutorialsCompleted:String = HTTPCookies.getCookie(TUTORIALS_COMPLETED_STRING);
+				tutorialsCompleted += "," + levelCompletedQID;
+				HTTPCookies.setCookie(TUTORIALS_COMPLETED_STRING, tutorialsCompleted);
+			}
 		}
 		
 		protected function postMessage(result:int, e:Event):void
@@ -217,6 +249,9 @@ package networking
 
 		public function isTutorialDone():Boolean
 		{
+			if(tutorialOrderedList == null)
+				return false;
+			
 			for each(var position:int in tutorialOrderedList)
 			{
 				var level:XML = orderToTutorialDictionary[position];

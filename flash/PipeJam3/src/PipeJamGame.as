@@ -16,28 +16,22 @@ package
 	
 	import feathers.themes.AeonDesktopTheme;
 	
-	import flash.display.LoaderInfo;
-	import flash.events.Event;
 	import flash.external.ExternalInterface;
 	import flash.system.System;
 	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
+	import assets.AssetsAudio;
+	import audio.AudioManager;
 	
 	import networking.*;
 	
-	import scenes.*;
 	import scenes.game.*;
-	import scenes.levelselectscene.LevelSelectScene;
 	import scenes.loadingscreen.LoadingScreenScene;
+	import scenes.levelselectscene.*;
 	import scenes.splashscreen.*;
 	
 	import starling.core.Starling;
-	import starling.display.BlendMode;
-	import starling.display.Image;
-	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.KeyboardEvent;
-	import starling.text.TextField;
-	import starling.utils.VAlign;
 	
 	import utils.XSprite;
 	import flash.net.URLVariables;
@@ -154,6 +148,11 @@ package
 		protected function toggleSoundControl(event:starling.events.Event):void
 		{
 			m_sfxButton.visible = event.data;
+			if(m_sfxButton.visible)
+			{
+				AudioManager.getInstance().reset();
+				AudioManager.getInstance().playMusic(AssetsAudio.MUSIC_FIELD_SONG);
+			}
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void

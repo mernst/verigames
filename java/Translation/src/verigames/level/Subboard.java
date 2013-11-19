@@ -34,7 +34,13 @@ public class Subboard extends Intersection
     subnetworkName = methodName;
   }
 
-  /**
+  Subboard(int id, String methodName)
+  {
+    super(id, Kind.SUBBOARD);
+    subnetworkName = methodName;
+  }
+
+    /**
    * Returns {@code true} iff {@code kind} is
    * {@link Intersection.Kind#SUBBOARD SUBNETWORK}, indicating that this
    * implementation supports only {@code SUBNETWORK}s<br/>

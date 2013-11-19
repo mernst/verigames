@@ -3,25 +3,35 @@ package verigames.optimizer.model;
 import verigames.level.Board;
 import verigames.level.Intersection;
 import verigames.level.Level;
+import verigames.level.World;
+
+import java.util.Map;
 
 public class Node {
 
+    public static Node fromIntersection(World w, Intersection i) {
+        assert !w.underConstruction();
+        Board board = i.getBoard();
+        for (Map.Entry<String, Level> levelEntry : w.getLevels().entrySet()) {
+            if (levelEntry.getValue().getBoards().values().contains(board)) {
+                return new Node(levelEntry.getKey(), board.getName(), i);
+            }
+        }
+        throw new RuntimeException("the given intersection was not found in the given world");
+    }
+
     private final String levelName;
-    private final Level level;
     private final String boardName;
-    private final Board board;
     private final Intersection intersection;
     private final BoardRef subboard;
 
-    public Node(String levelName, Level level, String boardName, Board board, Intersection intersection) {
-        this(levelName, level, boardName, board, intersection, null);
+    public Node(String levelName, String boardName, Intersection intersection) {
+        this(levelName, boardName, intersection, null);
     }
 
-    public Node(String levelName, Level level, String boardName, Board board, Intersection intersection, BoardRef subboard) {
+    public Node(String levelName, String boardName, Intersection intersection, BoardRef subboard) {
         this.levelName = levelName;
-        this.level = level;
         this.boardName = boardName;
-        this.board = board;
         this.intersection = intersection;
         this.subboard = subboard;
     }
@@ -30,16 +40,8 @@ public class Node {
         return levelName;
     }
 
-    public Level getLevel() {
-        return level;
-    }
-
     public String getBoardName() {
         return boardName;
-    }
-
-    public Board getBoard() {
-        return board;
     }
 
     public Intersection getIntersection() {
@@ -72,6 +74,11 @@ public class Node {
     @Override
     public int hashCode() {
         return intersection.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return intersection.getIntersectionKind().toString();
     }
 
 }

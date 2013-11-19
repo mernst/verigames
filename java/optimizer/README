@@ -38,6 +38,55 @@ Sample usage:
     ./optimizer.sh <../Translation/veritest/layout/GETLayoutTest.expected.xml
 
 
+Transferring Solutions
+-------------
+
+Optimizing a world is fun and useful, but you also need to be able to transfer
+a solution on an optimized world back to the unoptimized one. This can be
+accomplished using the transfer-solution tool.
+
+The optimizer outputs an additional side-file called a "mapping" that is used
+to transfer solutions. The transfer-solutions tool uses this mapping to do its
+work.
+
+Get help:
+
+    ./transfer-solution.sh --help
+
+Sample usage:
+
+    ./optimizer.sh --in my-file.xml --out opt.xml --mapping map.txt
+    ... solve opt.xml ...
+    ./transfer-solution.sh --from opt.xml --to my-file.xml --mapping map.txt --out my-file-solved.xml
+
+
+Mapping Format
+-------------
+
+TODO: document this once it stabilizes
+
+For now the only documentation are the load and export methods in
+ReverseMapping.java in the source code.
+
+
+Issues & Gotchas
+-------------
+
+Pinched chutes are converted into narrow immutable chutes.
+
+Layout is not preserved. If you optimize a graph, you will need to lay it out
+again somehow.
+
+Edge IDs, node IDs, variable IDs, and descriptions are not preserved. The
+mapping can be used to reconstruct this information. (Don't worry though! the
+new IDs will all be perfectly valid in the new world.)
+
+The optimizer assumes that the world you give it is unsolved, so it makes no
+attempt to preserve any existing solution. In particular:
+    - The widths of editable chutes are not preserved.
+    - Buzzsaws are not preserved.
+
+
 Hacking
 -------------
 

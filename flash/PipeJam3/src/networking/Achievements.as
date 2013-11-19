@@ -140,6 +140,9 @@ package networking
 		//checks to see if we should award an achievement for the type, and if so, award it
 		public static function checkAchievements(type:String, value:int):void
 		{
+			if(PlayerValidation.playerLoggedIn != true)
+				return;
+			
 			if(type == EdgeSetChangeEvent.LEVEL_EDGE_SET_CHANGED)
 			{
 				if(value == 1)

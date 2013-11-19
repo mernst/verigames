@@ -1,8 +1,10 @@
 package verigames.level;
 
-import static verigames.utilities.Misc.ensure;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
+import static verigames.utilities.Misc.ensure;
 
 /*>>>
 import checkers.nullness.quals.*;
@@ -244,6 +246,20 @@ public class Intersection extends verigames.graph.Node<Chute>
   }
 
   /**
+   * Dangerous package-level factory method that lets you specify the ID.
+   */
+  static Intersection factory(int id, Kind kind)
+  {
+    if (kind == Kind.SUBBOARD)
+      throw new IllegalArgumentException(
+          "intersectionFactory passed Kind.SUBBOARD. Use subboardFactory instead.");
+    else if (kind == Kind.BALL_SIZE_TEST)
+      return new BallSizeTest(id);
+    else
+      return new Intersection(id, kind);
+  }
+
+  /**
    * Returns a {@link Subboard} representing a method with {@code methodName}
    *
    * @param methodName
@@ -251,6 +267,14 @@ public class Intersection extends verigames.graph.Node<Chute>
   public static Subboard subboardFactory(String methodName)
   {
     return new Subboard(methodName);
+  }
+
+  /**
+   * Dangerous package-level factory method that lets you specify the ID.
+   */
+  public static Subboard subboardFactory(int id, String methodName)
+  {
+    return new Subboard(id, methodName);
   }
 
   /**
@@ -270,16 +294,22 @@ public class Intersection extends verigames.graph.Node<Chute>
    */
   protected Intersection(Kind kind)
   {
+    this(nextUID++, kind);
+  }
+
+  /**
+   * Dangerous package-level constructor that lets you specify the ID manually.
+   * @param id   the id of this intersection
+   * @param kind the kind of this intersection
+   */
+  Intersection(int id, Kind kind)
+  {
     if (!checkIntersectionKind(kind)) // if kind is not a valid Kind for this
       // implementation of Intersection
       throw new IllegalArgumentException("Invalid Intersection Kind " + kind
           + " for this implementation");
-
+    this.UID = id;
     this.intersectionKind = kind;
-
-    this.UID = Intersection.nextUID;
-    Intersection.nextUID++;
-
     checkRep();
   }
 

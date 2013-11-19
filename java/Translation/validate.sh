@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z $1 ] ; then
+  echo "no XML file supplied"
+  exit
+fi
+
 # fail on any failed command
 set -e
 

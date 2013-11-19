@@ -56,6 +56,11 @@
       <!ELEMENT point (x,y)>
 
 <!--
+TODO:
+
+- make edge description optional
+- move stub boards to world
+
 ================================================================================
 
 Requirements not enforced by the DTD:
@@ -71,15 +76,14 @@ Requirements not enforced by the DTD:
     - All nodes that have kind SUBBOARD must have a name attribute (and the name
     attribute is meaningless for other kinds of node)
 
-  - All linked chutes (chutes with the same variable ID, or linked variableIDs)
-  must have the same width (TODO do we want to enforce this only when they're
-  non-editable?)
-
-  - Every variableID listed in the varID sets must be the variableID of at least
-  one edge
-
-  - variableIDs that are negative indicate chutes that should not be linked with
-  anything -- as such, no negative variableID should be included in a varID-set.
+  - Linked chutes:
+    - variableIDs that are negative indicate chutes that should not be linked with
+    anything -- as such, no negative variableID should be included in a varID-set.
+    - All linked chutes (chutes with the same positive variable ID, or linked
+    variableIDs) must have the same width and must all be either editable or
+    non-editable
+    - Every variableID listed in the varID sets must be the variableID of at least
+    one edge
 
   - variableID must be an integer
 

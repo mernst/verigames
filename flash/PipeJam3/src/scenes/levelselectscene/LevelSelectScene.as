@@ -167,19 +167,30 @@ package scenes.levelselectscene
 			savedLevelsListBox.setClipRect();
 			newLevelListBox.setClipRect();
 			
-			savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
-			newLevelListBox.startBusyAnimation(newLevelListBox);
-			
-			GameFileHandler.levelInfoVector = null;
-			GameFileHandler.matchArrayObjects = null;
-			GameFileHandler.savedMatchArrayObjects = null;
-			GameFileHandler.requestLevels(onRequestLevels);
-			GameFileHandler.getLevelMetadata(onRequestLevels);
-			GameFileHandler.getSavedLevels(onRequestSavedLevels);
+			if(PlayerValidation.playerLoggedIn)
+			{
+				savedLevelsListBox.startBusyAnimation(savedLevelsListBox);
+				newLevelListBox.startBusyAnimation(newLevelListBox);
+				
+				GameFileHandler.levelInfoVector = null;
+				GameFileHandler.matchArrayObjects = null;
+				GameFileHandler.savedMatchArrayObjects = null;
+				GameFileHandler.requestLevels(onRequestLevels);
+				GameFileHandler.getLevelMetadata(onRequestLevels);
+				GameFileHandler.getSavedLevels(onRequestSavedLevels);
+			}
+			else
+			{
+				new_levels_button.alphaValue = 0.9;
+				saved_levels_button.alphaValue = 0.9;
+				new_levels_button.enabled = false;
+				saved_levels_button.enabled = false;
+			}
+
 						
 			setTutorialXMLFile(TutorialController.tutorialXML);
 			
-			if(!TutorialController.getTutorialController().isTutorialDone())
+			if(!TutorialController.getTutorialController().isTutorialDone() || !PlayerValidation.playerLoggedIn)
 				onTutorialButtonTriggered(null);
 			else
 				onNewButtonTriggered(null);
@@ -300,7 +311,8 @@ package scenes.levelselectscene
 		
 		private function onCancelButtonTriggered(e:Event):void
 		{
-			GameFileHandler.refuseLevels();
+			if(PlayerValidation.playerLoggedIn)
+				GameFileHandler.refuseLevels();
 			dispatchEventWith(MenuEvent.TOGGLE_SOUND_CONTROL, true, true);
 			dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, "SplashScreen"));
 		}

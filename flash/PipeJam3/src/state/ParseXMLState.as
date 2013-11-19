@@ -23,12 +23,12 @@ package state
 		
 		public override function stateLoad():void {
 			var world_version:String =  world_xml[0].@version;
-			if (WORLD_VALID_XML_VERSIONS.indexOf(world_version) == -1) {
-				var allVers:String = "";
-				for each (var ver:String in WORLD_VALID_XML_VERSIONS) allVers += ver + ", ";
-				throw new Error("World XML version used is not one the game is designed to read. The game is designed to read versions '" + allVers + "'");
-				return;
-			}
+//			if (WORLD_VALID_XML_VERSIONS.indexOf(world_version) == -1) {
+//				var allVers:String = "";
+//				for each (var ver:String in WORLD_VALID_XML_VERSIONS) allVers += ver + ", ";
+//				throw new Error("World XML version used is not one the game is designed to read. The game is designed to read versions '" + allVers + "'");
+//				return;
+//			}
 			
 			var my_world_name:String = "World 1";
 			if (world_xml[0].@name && world_xml[0].@name.toString().length) {

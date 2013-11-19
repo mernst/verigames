@@ -75,6 +75,12 @@ public class BallSizeTest extends Intersection
     checkRep();
   }
 
+  BallSizeTest(int id)
+  {
+    super(id, Kind.BALL_SIZE_TEST);
+    checkRep();
+  }
+
   /**
    * Returns {@code true} iff {@code kind} is {@link
    * Intersection.Kind#BALL_SIZE_TEST BALL_SIZE_TEST}, indicating that this

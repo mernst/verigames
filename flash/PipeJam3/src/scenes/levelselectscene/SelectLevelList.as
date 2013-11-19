@@ -86,7 +86,7 @@ package scenes.levelselectscene
 					
 					buttonPane.removeChildren();
 					
-					var xpos:Number = width - scrollbarBackground.width;
+					var xpos:Number = storedWidth - scrollbarBackground.width;
 					var widthSpacing:Number = xpos/2;
 					var heightSpacing:Number = 60;
 					

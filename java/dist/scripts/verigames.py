@@ -4,15 +4,16 @@ import subprocess
 import argparse
 import sys
 import os.path
+import shutil
 
 VERIGAMES_HOME = os.environ['VERIGAMES']
 SCALA_HOME = os.environ['SCALA_HOME']
 JAVA_HOME = os.environ['JAVA_HOME']
-VERIGAMES_ASP_HOME = os.environ['VERIGAMES_ASP_HOME']
+VERIGAMES_ASP_HOME = os.environ.get('VERIGAMES_ASP_HOME')
 AFU_HOME = os.environ.get('AFU_HOME')
 
 # Program constants
-MODES = 'game typecheck autosolve roundtrip xmlsolve xml-roundtrip'.split()
+MODES = 'game typecheck floodsolve flood-roundtrip xmlsolve xml-roundtrip'.split()
 AUTOMATIC_SOLVER = 'checkers.inference.floodsolver.FloodSolver'
 DEBUG_OPTS = '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005'
 OUTPUT_DIR = './output'
@@ -35,7 +36,7 @@ class Checker():
         if analysis:
             self.analysis = analysis
         if solver:
-            solf.solver = solver
+            self.solver = solver
 
     def to_checker_args(self):
         args = 'checkers.inference.TTIRun --checker ' + self.name
@@ -79,6 +80,7 @@ def main():
     parser.add_argument('--extra-classpath', help='Additional classpath entries.')
     parser.add_argument('--java-args', help='Additional java args to pass in.')
     parser.add_argument('--mode', default='game', help='Choose a verigames mode from [%s].' % ', '.join(MODES))
+    parser.add_argument('--steps', default='', help='Manually list steps to run.')
     parser.add_argument('--not-strict', action='store_true', help='Disable some checks on generation.')
     parser.add_argument('--output_dir', default=OUTPUT_DIR, help='Directory to output artifacts during roundtrip (inference.jaif, annotated file sourc file')
     parser.add_argument('--print-world', action='store_true', help='Print debugging constraint output.')
@@ -99,11 +101,32 @@ def main():
         error('Transfer, analysis, solver and visitor cannot be set on the command line.'
                 + ' They are inference by the checker framework based on checker name.')
 
+    # Modes are shortcuts for pipeline steps
+    # Only support one order at the moment
+    # MODES = 'game typecheck floodsolve flood-roundtrip xmlsolve xml-roundtrip'.split()
+    pipeline = []
+    if args.steps:
+        pipeline = args.steps.split(',')
+    else:
+        if args.mode == 'typecheck':
+            pipeline = ['typecheck']
+        elif args.mode == 'game':
+            pipeline = ['generate', 'xml-validate']
+        elif args.mode == 'floodsolve':
+            pipeline = ['floodsolve']
+        elif args.mode == 'flood-roundtrip':
+            pipeline = ['floodsolve', 'insert-jaif', 'typecheck']
+        elif args.mode == 'xmlsolve':
+            pipeline = ['generate', 'xmlsolve']
+        elif args.mode == 'xml-roundtrip':
+            pipeline = ['generate', 'xmlsolve', 'update-jaif', 'insert-jaif', 'typecheck']
+
+    # Setup some globaly useful stuff
     classpath = get_verigames_classpath()
     classpath += ':' + get_scala_classpath()
 
     if args.extra_classpath:
-        classpath += ":" + args.extra_classpath
+        classpath += ':' + args.extra_classpath
 
     if checkers[args.checker]:
         checker = checkers[args.checker]
@@ -111,55 +134,62 @@ def main():
     else:
         checker = Checker(args.checker, args.visitor, args.transfer, args.analysis, args.solver)
 
-    if args.mode != 'typecheck':
-        if args.mode in ['autosolve', 'roundtrip']:
+    # State variable need to communicate between steps
+    state = {'files' : args.files}
+
+    # Execute steps
+    while len(pipeline):
+        step = pipeline.pop(0)
+        print '\n====Executing step ' + step
+        if step == 'generate':
+            execute(args, generate_checker_cmd(checker, args.java_args, classpath,
+                    args.debug, args.not_strict, args.xmx, args.print_world, args.prog_args, args.stubs, args.files))
+        elif step == 'xml-validate':
+            execute(args,generate_xml_validator_cmd(os.path.abspath('World.xml'), classpath))
+            print 'Xml validation successful'
+        elif step == 'typecheck':
+            execute(args, generate_typecheck_cmd(checker, args.java_args, classpath,
+                    args.debug, args.not_strict, args.xmx, args.prog_args, args.stubs, state['files']))
+        elif step == 'floodsolve':
             checker.solver = AUTOMATIC_SOLVER
-        command = generate_checker_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.print_world, args.prog_args, args.stubs, args.files)
-    else:
-        command = generate_typecheck_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.prog_args, args.stubs, args.files)
+            execute(args, generate_checker_cmd(checker, args.java_args, classpath,
+                    args.debug, args.not_strict, args.xmx, args.print_world, args.prog_args, args.stubs, args.files))
 
-    execute(command, args)
+            # Save jaif file
+            if not args.print_only:
+                if not os.path.exists(args.output_dir) and not args.print_only:
+                    os.mkdir(args.output_dir)
+                shutil.copyfile('inference.jaif', pjoin(args.output_dir, 'inference.jaif'))
 
-    if args.mode in ['xmlsolve', 'xml-roundtrip']:
-        world_xml_path = os.path.abspath('World.xml')
-        world_xml_solution = world_xml_path + '.out'
-        oldcwd = os.getcwd()
-        os.chdir(VERIGAMES_ASP_HOME)
-        command = generate_asp_command(world_xml_path)
-        execute(command, args)
-        os.chdir(oldcwd)
-        command = generate_buzzsaw_check(world_xml_solution)
-        ret = execute(command, args, check_return=False)
-        if not args.print_only and not ret:
-            print('Found buzzsaw in xml output.')
-            sys.exit(1)
+            state['files'] = [pjoin(args.output_dir, os.path.basename(f)) for f in args.files]
+        elif step == 'insert-jaif':
+            # inference.jaif needs to be in output dir
+            execute(args, generate_afu_command(args.files, args.output_dir))
+        elif step == 'xmlsolve':
+            world_xml_path = os.path.abspath('World.xml')
+            world_xml_solution = world_xml_path + '.out'
+            oldcwd = os.getcwd()
+            os.chdir(VERIGAMES_ASP_HOME)
+            execute(args, generate_asp_command(world_xml_path))
+            os.chdir(oldcwd)
+            command = generate_buzzsaw_check(world_xml_solution)
+            ret = execute(args, command, check_return=False)
+            # Grep exits 0 when nothing is found.
+            if not args.print_only and not ret:
+                print('Found buzzsaw in xml output.')
+                sys.exit(1)
+            else:
+                print('No Buzzsaw found. Xml solved correctly.')
+
+        elif step == 'update-jaif':
+            execute(args,generate_jaif_cmd(checker, args.java_args, classpath, args.debug,
+                    world_xml_solution, 'inference.jaif', 'updatedInference.jaif'))
+            if not args.print_only:
+                if not os.path.exists(args.output_dir):
+                    os.mkdir(args.output_dir)
+                os.rename('updatedInference.jaif', pjoin(args.output_dir, 'inference.jaif'))
         else:
-            print('No Buzzsaw found. Xml solved correctly.')
-
-
-    if args.mode in ['xml-roundtrip']:
-        command = generate_jaif_cmd(checker, args.java_args, classpath, args.debug,
-                world_xml_solution, 'inference.jaif', 'updatedInference.jaif')
-        execute(command, args)
-        if not args.print_only:
-            if not os.path.exists(args.output_dir):
-                os.mkdir(args.output_dir)
-            os.rename('updatedInference.jaif', os.path.join(args.output_dir, 'inference.jaif'))
-
-    if args.mode in ['autosolve', 'roundtrip']:
-        if not args.print_only:
-            if not os.path.exists(args.output_dir):
-                os.mkdir(args.output_dir)
-            os.rename('inference.jaif', os.path.join(args.output_dir, 'inference.jaif'))
-
-    if args.mode in ['roundtrip', 'xml-roundtrip']:
-        command = generate_afu_command(args.files, args.output_dir)
-        execute(command, args)
-        command = generate_typecheck_cmd(checker, args.java_args, classpath,
-                args.debug, args.not_strict, args.xmx, args.prog_args, args.stubs, [os.path.join(args.output_dir, os.path.basename(f)) for f in args.files])
-        execute(command, args)
+            print 'UNKNOWN STEP'
 
 def generate_asp_command(world_file):
     args = '%s/processworld %s' % (VERIGAMES_ASP_HOME, world_file)
@@ -172,56 +202,63 @@ def generate_buzzsaw_check(world_file):
 def generate_afu_command(files, outdir):
     files = [os.path.abspath(f) for f in files]
     insert_path = 'insert-annotations-to-source' if not AFU_HOME \
-            else os.path.join(AFU_HOME, 'annotation-file-utilities', 'scripts', 'insert-annotations-to-source')
-    args = '%s -v -d %s %s %s ' % (insert_path, outdir, os.path.join(outdir, 'inference.jaif'), ' '.join(files))
+            else pjoin(AFU_HOME, 'annotation-file-utilities/scripts/insert-annotations-to-source')
+    args = '%s -v -d %s %s %s ' % (insert_path, outdir, pjoin(outdir, 'inference.jaif'), ' '.join(files))
+    return args
+
+def generate_xml_validator_cmd(world_file, classpath):
+    xmlcp = pjoin(VERIGAMES_HOME, 'java/Translation/lib/xom-1.2.10.jar')
+    java_path = pjoin(JAVA_HOME, 'bin/java')
+    full_cp = classpath + ':' + xmlcp
+    args = ' '.join([java_path, '-cp', classpath, 'verigames.level.XMLValidator', '<', world_file])
     return args
 
 def generate_checker_cmd(checker, java_args, classpath, debug, not_strict, xmx, print_world, prog_args, stubs, files):
-    java_path = os.path.join(JAVA_HOME, 'bin', 'java')
-    java_args = java_args if java_args else ""
-    prog_args = prog_args if prog_args else ""
-    java_opts = "%s -Dscala.usejavacp=true -Xms512m -Xmx%s -Xbootclasspath/p:%s -ea " % \
+    java_path = pjoin(JAVA_HOME, 'bin/java')
+    java_args = java_args if java_args else ''
+    prog_args = prog_args if prog_args else ''
+    java_opts = '%s -Dscala.usejavacp=true -Xms512m -Xmx%s -Xbootclasspath/p:%s -ea ' % \
         (java_args, xmx, classpath)
     if debug:
-        java_opts += " " + DEBUG_OPTS
+        java_opts += ' ' + DEBUG_OPTS
     if print_world:
-        java_opts += " -DPRINT_WORLD=true "
+        java_opts += ' -DPRINT_WORLD=true '
     if not_strict:
-        java_opts += " -DSTRICT=false "
+        java_opts += ' -DSTRICT=false '
     if stubs:
-        prog_args += " --stubs " + stubs
+        prog_args += ' --stubs ' + stubs
     args = ' '.join([java_path, java_opts, checker.to_checker_args(), prog_args, ' '.join(files)])
     return args
 
 def generate_typecheck_cmd(checker, java_args, classpath, debug, not_strict,
             xmx, prog_args, stubs, files):
 
-    java_path = os.path.join(JAVA_HOME, 'bin', 'java')
-    java_args = java_args if java_args else ""
-    prog_args = prog_args if prog_args else ""
-    java_opts = "%s -Xms512m -Xmx%s -jar %s -cp %s " % \
+    java_path = pjoin(JAVA_HOME, 'bin/java')
+    java_args = java_args if java_args else ''
+    prog_args = prog_args if prog_args else ''
+    java_opts = '%s -Xms512m -Xmx%s -jar %s -cp %s ' % \
         (java_args, xmx, get_checker_jar(), classpath)
     if debug:
-        java_opts += " -J" + DEBUG_OPTS
+        java_opts += ' -J' + DEBUG_OPTS
     if not_strict:
-        java_opts += " -DSTRICT=false "
+        java_opts += ' -DSTRICT=false '
     if stubs:
-        prog_args += " -Astubs=" + stubs
+        prog_args += ' -Astubs=' + stubs
     args = ' '.join([java_path, java_opts, '-processor ', checker.name, prog_args, ' '.join(files)])
     return args
 
 # xml_file, jaif_file, output_file, subtype_annotation, supertype_annotation
 def generate_jaif_cmd(checker, java_args, classpath, debug, xml_file, jaif_file, output_file):
-    java_path = os.path.join(JAVA_HOME, 'bin', 'java')
-    java_args = java_args if java_args else ""
-    java_opts = "%s -cp %s " % (java_args, classpath)
+    java_path = pjoin(JAVA_HOME, 'bin/java')
+    java_args = java_args if java_args else ''
+    java_opts = '%s -cp %s ' % (java_args, classpath)
     if debug:
-        java_opts += " -J" + DEBUG_OPTS
+        java_opts += ' -J' + DEBUG_OPTS
     args = ' '.join([java_path, java_opts, 'verigames.utilities.JAIFParser', xml_file, jaif_file, \
             output_file, checker.subanno, checker.superanno])
     return args
 
-def execute(args, cli_args, check_return=True):
+def execute(cli_args, args, check_return=True):
     if cli_args.print_only:
         print('Would have executed command: \n' + args)
         print
@@ -233,19 +270,21 @@ def execute(args, cli_args, check_return=True):
             error('Command exited with unexpected status code: %d' % ret)
         return ret
 
-
 def get_checker_jar():
-    return os.path.join(VERIGAMES_HOME, 'java', 'dist', 'checkers.jar')
+    return pjoin(VERIGAMES_HOME, 'java/dist/checkers.jar')
 
 def get_verigames_classpath():
-    base_dir = os.path.join(VERIGAMES_HOME, 'java', 'dist')
+    base_dir = pjoin(VERIGAMES_HOME, 'java/dist')
     return get_classpath(base_dir)
 
 def get_scala_classpath():
     scala_dir = os.path.join(SCALA_HOME, 'lib')
-    cp = os.path.join(scala_dir, 'scala-compiler.jar') + ':' +\
-            os.path.join(scala_dir, 'scala-library.jar')
+    cp = pjoin(scala_dir, 'scala-compiler.jar') + ':' +\
+            pjoin(scala_dir, 'scala-library.jar')
     return cp
+
+def pjoin(*parts):
+    return os.path.join(*[os.path.join(part) for part in parts])
 
 def get_classpath(base_dir):
     if not os.path.isdir(base_dir):

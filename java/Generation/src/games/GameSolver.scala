@@ -17,6 +17,8 @@ import games.handlers.{StaticMethodCallConstraintHandler, InstanceMethodCallCons
                        StubBoardUseConstraintHandler}
 import checkers.inference.util.{SolverUtil, CollectionUtil}
 import checkers.types.AnnotatedTypeMirror
+import checkers.inference.floodsolver.FloodSolver
+import java.util.ArrayList
 
 /**
  * An abstract base class for all game solvers.
@@ -45,6 +47,9 @@ abstract class GameSolver extends ConstraintSolver {
 
     /** The command-line parameters. */
     var params: TTIRun = null
+    
+    /** Flood sovler found solution. */
+    var infSolution: List[Int] = null
 
     /**
      * We generate a separate level for every class.
@@ -129,6 +134,13 @@ abstract class GameSolver extends ConstraintSolver {
       this.constraints = constraints
       this.weights = weights
       this.params = params
+      
+      if (! params.disablePresolveGame) {
+        println("Attempting to solve before creating world.")
+        val infSolver = new FloodSolver()
+        val ( tops, subtypes)  = infSolver.solveSubtypes(variables, combvariables, refinementVariables, constraints, weights, params)
+        infSolution = subtypes.diff(tops)
+      }
 
       println("Creating world")
       // Create the world!
@@ -590,10 +602,17 @@ abstract class GameSolver extends ConstraintSolver {
 
       }}
 
-      // Finally, deactivate all levels and add them to the world.
+      // Finally, add all levels to the world.
       classToLevel foreach { case (cname, level) =>
-          level.finishConstruction()
           world.addLevel(cname, level)
+      }
+      // Finish world and sublevels
+      if (infSolution != null) {
+        val jl = new java.util.ArrayList[java.lang.Integer]()
+        infSolution.foreach(jl.add(_))
+        world.finishConstruction(false, jl)
+      } else {
+        world.finishConstruction(false, null)
       }
     }
 
