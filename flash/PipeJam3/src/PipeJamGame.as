@@ -19,7 +19,7 @@ package
 	import flash.external.ExternalInterface;
 	import flash.system.System;
 	import flash.ui.Keyboard;
-	import flash.events.KeyboardEvent;
+	import starling.events.KeyboardEvent;
 	import assets.AssetsAudio;
 	import audio.AudioManager;
 	
@@ -123,7 +123,7 @@ package
 			
 			// use file if set in url, else create and show menu screen
 			if(m_fileName)
-			{
+			{ 
 				showScene("PipeJamGame");
 			}
 			else if(PipeJam3.RELEASE_BUILD && !PipeJam3.LOCAL_DEPLOYMENT)
